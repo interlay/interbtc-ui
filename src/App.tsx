@@ -1,19 +1,34 @@
-import { Component } from 'react';
-import LandingPage from "./views/LandingPage";
-import Help from "./views/Help";
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-import Topbar from "./components/Topbar";
+// theme
+import "./App.scss";
+import './assets/css/custom-bootstrap.css';
+import 'react-toastify/dist/ReactToastify.css';
+import './assets/css/custom.css';
+
+
+// app imports
+import LandingPage from "./views/LandingPage";
+// import Topbar from "./components/Topbar";
 import Footer from "./components/Footer";
 
-class App extends Component {
+export default class App extends Component {
   render() {
     return (
-      <div class="main d-flex flex-column min-vh-100">
-        <div class="mb-5">
-          <LandingPage />
+      <Router>
+        <div className="main d-flex flex-column min-vh-100">
+          <div className="mb-5">
+            <Switch>
+              <Route exact path="/">
+                <LandingPage />
+              </Route>
+            </Switch>
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
+      </Router>
     )
   }
 }
@@ -40,5 +55,3 @@ class App extends Component {
 //     </div>
 //   );
 // }
-
-export default App;
