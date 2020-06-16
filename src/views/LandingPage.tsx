@@ -2,13 +2,40 @@ import React, { Component } from 'react';
 import { withRouter, NavLink } from 'react-router-dom';
 import { Image, Container, Button, Col, Row } from 'react-bootstrap';
 
+import AppState from '../types/AppState';
+import LandingState from '../types/LandingState';
+
 import PolkaBTCImg from '../assets/img/polkabtc/PolkaBTC_black.png';
 import overviewImg from '../assets/img/overview.png';
 import CbAImg from '../assets/img/CbA.png';
 
+export default class LandingPage extends Component<AppState, LandingState> {
+  state: LandingState = {
+    totalPolkaBTC: "loading...",
+    totalDOT: "loading..."
+  }
 
-export default class LandingPage extends Component {
+  constructor(props: AppState) {
+    super(props);
+  }
+
+  async getParachainData() {
+    console.log(this.props.parachain);
+    if (this.props.parachain) {
+      const totalPolkaBTC = await this.props.parachain.getTotalPolkaBTC();
+      this.setState({
+        totalPolkaBTC: totalPolkaBTC
+      });
+    }
+  }
+
+  componentDidMount() {
+    this.getParachainData();
+  }
+
   render() {
+    const totalPolkaBTC = this.state.totalPolkaBTC;
+    const totalDOT = this.state.totalDOT;
     return (
       <div>
         <section className="jumbotron min-vh-100 text-center white-background mt-2">
@@ -19,23 +46,23 @@ export default class LandingPage extends Component {
 
             <Row className="mt-5">
               <Col xs="12" sm={{span: 4, offset: 4}}>
-                <h5 className="text-muted">PolkaBTC issued: 12.4</h5>
+                <h5 className="text-muted">PolkaBTC issued: { totalPolkaBTC }</h5>
               </Col>
             </Row>
             <Row className="mt-1">
               <Col xs="12" sm={{span: 4, offset: 4}}>
-                <h5 className="text-muted">DOT locked: 35.1</h5>
+                <h5 className="text-muted">DOT locked: { totalDOT }</h5>
               </Col>
             </Row>
             <Row className="mt-5">
               <Col className="mt-2" xs="12" sm={{ span: 4 }}>
-                <NavLink className="text-decoration-none" to="/trade"><Button variant="outline-primary" size="lg" block>Buy PolkaBTC</Button></NavLink>
+                <NavLink className="text-decoration-none" to="/"><Button variant="outline-primary" size="lg" block>Buy PolkaBTC</Button></NavLink>
               </Col>
               <Col className="mt-2" xs="12" sm={{ span: 4 }}>
-                <NavLink className="text-decoration-none" to="/help"><Button variant="outline-dark" size="lg" block>Mint PolkaBTC</Button></NavLink>
+                <NavLink className="text-decoration-none" to="/issue"><Button variant="outline-dark" size="lg" block>Mint PolkaBTC</Button></NavLink>
               </Col>
               <Col className="mt-2" xs="12" sm={{ span: 4 }}>
-                <NavLink className="text-decoration-none" to="/trade"><Button variant="outline-primary" size="lg" block>Return BTC</Button></NavLink>
+                <NavLink className="text-decoration-none" to="/redeem"><Button variant="outline-primary" size="lg" block>Return BTC</Button></NavLink>
               </Col>
             </Row>
           </div>
