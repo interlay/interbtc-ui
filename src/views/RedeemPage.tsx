@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { withRouter, Link } from 'react-router-dom';
 import { Image, Button, Col, Row, Modal } from 'react-bootstrap';
 
 import AppState from '../types/AppState';
 import { RedeemProps } from '../types/RedeemState';
+import RedeemWizard from '../components/RedeemWizard';
 
 import PolkaBTCImg from '../assets/img/polkabtc/PolkaBTC_black.png';
 import RedeemRequests from '../components/RedeemRequests';
@@ -28,7 +30,7 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
     })
   }
 
-  handleClose(event: React.MouseEvent<HTMLElement>) {
+  handleClose() {
     this.setState({
       showWizard: false
     })
@@ -59,7 +61,7 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
       <div>
         <section className="jumbotron text-center white-background mt-2">
           <div className="container mt-5">
-            <Image src={ PolkaBTCImg } width='256'></Image>
+          <Link to="/"><Image src={ PolkaBTCImg } width='256'></Image></Link>
 
             <Row className="mt-5">
               <Col xs="12" sm={{span: 6, offset: 3}}>
@@ -78,6 +80,11 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
             </Row>
 
             <RedeemRequests {...this.state} />
+
+
+            <Modal show={this.state.showWizard} onHide={this.handleClose}>
+              <RedeemWizard {...this.state} handleClose={this.handleClose}/>
+            </Modal>
           </div>
         </section>
       </div>

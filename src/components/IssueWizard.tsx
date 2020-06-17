@@ -100,6 +100,7 @@ export default class IssueWizard extends Component<IssueProps  & { handleClose: 
   handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     this.props.handleClose();
+    //TODO: call setter in IssuePage
   }
 
   render() {

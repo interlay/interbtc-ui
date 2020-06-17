@@ -1,5 +1,5 @@
 import React, { Component, ChangeEvent } from 'react';
-import { withRouter, NavLink, RouteComponentProps } from 'react-router-dom';
+import { withRouter, RouteComponentProps, Link} from 'react-router-dom';
 import { Image, Button, Col, Row, Modal } from 'react-bootstrap';
 
 import AppState from '../types/AppState';
@@ -62,7 +62,7 @@ class IssuePage extends Component<AppState, IssueProps> {
       <div>
         <section className="jumbotron text-center white-background mt-2">
           <div className="container mt-5">
-            <Image src={ PolkaBTCImg } width='256'></Image>
+            <Link to="/"><Image src={ PolkaBTCImg } width='256'></Image></Link>
 
             <Row className="mt-5">
               <Col xs="12" sm={{span: 6, offset: 3}}>
