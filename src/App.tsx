@@ -18,6 +18,7 @@ import IssuePage from './views/IssuePage';
 import Footer from './components/Footer';
 import { BTCParachain } from './controllers/BTCParachain';
 import { ALICE } from './constants';
+import VaultPage from './views/VaultPage';
 
 export default class App extends Component<{}, AppState> {
   state: AppState = {
@@ -56,6 +57,9 @@ export default class App extends Component<{}, AppState> {
               </Route>
               <Route path="/issue">
                 <IssuePage {...this.state} />
+              </Route>
+              <Route path="/vault">
+                <VaultPage {...this.state} />
               </Route>
             </Switch>
           </div>
