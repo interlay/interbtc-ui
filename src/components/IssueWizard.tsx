@@ -11,7 +11,7 @@ interface IssueWizardProps {
   vaultBTCAddress: string,
   amountPolkaBTC: string,
   transactionBTC: string,
-  handleChange: Function,
+  handleChange: (event: ChangeEvent<HTMLInputElement>) => void,
 }
 
 export default class IssueWizard extends Component<IssueProps, IssueWizardProps> {
@@ -29,17 +29,17 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
     super(props);
     this._next = this._next.bind(this);
     this._prev = this._prev.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.state.handleChange = this.handleChange.bind(this);
   }
 
   _next() {
-      let step = this.state.step;
-      if (!this.isValid(step - 1)) return;
-      // If the current step is 1 or 2, then add one on "next" button click
-      step = step >= 2 ? 3 : step + 1;
-      this.setState({
-          step: step
-      })
+    let step = this.state.step;
+    if (this.isValid(step - 1)) return;
+    // If the current step is 1 or 2, then add one on "next" button click
+    step = step >= 2 ? 3 : step + 1;
+    this.setState({
+        step: step
+    })
   }
 
   _prev() {
@@ -96,6 +96,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
 
   handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 
+
   }
 
   render() {
@@ -110,6 +111,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
           <Form onSubmit={this.handleSubmit}>
             <EnterBTCAmount {...this.state} />
             <BTCPayment {...this.state} />
+            <Confirmation {...this.state} />
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -136,6 +138,7 @@ class EnterBTCAmount extends Component<IssueWizardProps, EnterBTCAmountProps> {
   }
 
   handleChange(event: ChangeEvent<HTMLInputElement>) {
+    // FIXME: this should also update the amountPolkaBTC in the parent
     let { name, value } = event.target;
     this.setState({
       ...this.state,
@@ -156,7 +159,7 @@ class EnterBTCAmount extends Component<IssueWizardProps, EnterBTCAmountProps> {
           name="amountBTC"
           type="string"
           value={this.props.amountBTC}
-          onChange={this.handleChange}
+          onChange={this.props.handleChange}
         />
       </FormGroup>
     )
@@ -189,6 +192,7 @@ class BTCPayment extends Component<IssueWizardProps, BTCPaymentProps> {
   }
 
   render() {
+    console.log(this.props.step);
     if (this.props.step !== 2) {
       return null
     }
@@ -197,7 +201,7 @@ class BTCPayment extends Component<IssueWizardProps, BTCPaymentProps> {
         <h5>Payment</h5>
           <Row className="justify-content-md-center">
             <Col md="auto" className="text-center">
-                <p>To exercise the option, please make the following Bitcoin payment with a wallet of your choice.</p>
+                <p>To receive PolkaBTC you need to transfer the following BTC amount to a vault.</p>
                 <QRCode value={this.state.paymentUri} />
             </Col>
         </Row>
@@ -205,10 +209,35 @@ class BTCPayment extends Component<IssueWizardProps, BTCPaymentProps> {
           <FormGroup>
               <ListGroup>
                 <ListGroupItem>Sending: <strong>{this.props.amountBTC} BTC</strong></ListGroupItem>
-                <ListGroupItem>Address: <strong>{this.props.vaultBTCAddress}</strong></ListGroupItem>
-                <ListGroupItem>Receiving: <strong>{this.props.amountBTC} DAI</strong></ListGroupItem>
+                <ListGroupItem>Vault address: <strong>{this.props.vaultBTCAddress}</strong></ListGroupItem>
+                <ListGroupItem>Receiving: <strong>{this.props.amountBTC} PolkaBTC</strong></ListGroupItem>
               </ListGroup>
           </FormGroup>
+      </FormGroup>
+    )
+  }
+}
+
+class Confirmation extends Component<IssueWizardProps, {}> {
+  constructor(props: IssueWizardProps) {
+    super(props);
+  }
+
+  render() {
+    console.log(this.props.step);
+    if (this.props.step !== 3) {
+      return null
+    }
+    return (
+      <FormGroup>
+        <h5>Confirmation</h5>
+          <Row className="justify-content-md-center">
+            <Col md="auto" className="text-center">
+                <p>
+                  We will monitor your Bitcoin transaction for you and notify you when the transaction has enough confirmations. You can then complete the process. Depending on the block times and the utilization of the Bitcoin network, this process might take an hour.
+                </p>
+            </Col>
+        </Row>
       </FormGroup>
     )
   }
