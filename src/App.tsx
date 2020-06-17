@@ -23,7 +23,8 @@ import RedeemPage from './views/RedeemPage';
 export default class App extends Component<{}, AppState> {
   state: AppState = {
     parachain: new BTCParachain(),
-    account: undefined
+    account: undefined,
+    balancePolkaBTC: "0.7"
   }
 
   async initParachain() {

@@ -27,7 +27,7 @@ export default class RedeemWizard extends Component<RedeemProps  & { handleClose
     btcAddress: BOB_BTC,
     vaultDOTAddress: ALICE,
     vaultBTCAddress: ALICE_BTC,
-    btcTx: "",
+    btcTx: "...",
     handleChange: () => {},
     balancePolkaBTC: ""
   }

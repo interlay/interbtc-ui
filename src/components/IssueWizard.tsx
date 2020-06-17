@@ -1,6 +1,6 @@
 import React, { Component, FormEvent, ChangeEvent } from "react";
 import { BOB_BTC } from "../constants";
-import { IssueProps } from "../types/IssueState";
+import { IssueProps, IssueRequest } from "../types/IssueState";
 import { Container, Modal, Form, FormGroup, FormControl, ListGroup, ListGroupItem, Row, Col } from "react-bootstrap";
 import QRCode from "qrcode.react";
 
@@ -14,7 +14,7 @@ interface IssueWizardProps {
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void,
 }
 
-export default class IssueWizard extends Component<IssueProps  & { handleClose: () => void; }, IssueWizardProps> {
+export default class IssueWizard extends Component<IssueProps  & { addIssueRequest: (req: IssueRequest) => void; }, IssueWizardProps> {
   state: IssueWizardProps = {
     step: 1,
     issueId: "",
@@ -26,7 +26,7 @@ export default class IssueWizard extends Component<IssueProps  & { handleClose: 
   }
 
   constructor(props: IssueProps &  
-    { handleClose: () => void; }
+    { addIssueRequest: (req: IssueRequest) => void; }
     ) {
     super(props);
     this._next = this._next.bind(this);
@@ -99,8 +99,16 @@ export default class IssueWizard extends Component<IssueProps  & { handleClose: 
 
   handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    this.props.handleClose();
-    //TODO: call setter in IssuePage
+    let date: Date = new Date();  
+    this.props.addIssueRequest({
+      id: "",
+      amount: this.state.amountBTC,
+      creation: date.toLocaleString(),
+      vaultAddress: this.state.vaultBTCAddress,
+      btcTx: "...",
+      confirmations: 0,
+      completed: false
+    });
   }
 
   render() {

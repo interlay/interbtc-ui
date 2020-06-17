@@ -12,7 +12,7 @@ import { ALICE_BTC, BOB_BTC } from '../constants';
 
 export default class RedeemPage extends Component<AppState, RedeemProps> {
   state: RedeemProps = {
-    balancePolkaBTC: "0.7",
+    balancePolkaBTC: "",
     balanceDOT: "loading...",
     redeemRequests: [],
     showWizard: false,
@@ -25,6 +25,7 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.addRedeemRequest = this.addRedeemRequest.bind(this);
+    this.state.balancePolkaBTC = this.props.balancePolkaBTC;
   }
 
   handleShow(event: React.MouseEvent<HTMLElement>) {
@@ -60,7 +61,7 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
         {
           id: "1",
           amount: "0.5",
-          creation: "21 Jun 2020 19:08",
+          creation: "15/06/2020 16:09:01",
           vaultAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
           btcTx: "3b4162a307fab...b588d61a9069e762",
           confirmations: 18,
@@ -71,7 +72,7 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
         {
           id: "2",
           amount: "0.2",
-          creation: "21 Jun 2020 21:08",
+          creation: "13/06/2020 20:08:23",
           vaultAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
           btcTx: "d3c6652dfa406...e4aacb4c441e030e",
           confirmations: 7,
