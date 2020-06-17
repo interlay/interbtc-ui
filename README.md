@@ -35,6 +35,12 @@ It is implemented as a collection of open-source Substrate modules using Rust: <
 You need to have an instance of the BTC Parachain running. Follow the instructions at the [BTC-Parachain repository](https://gitlab.com/interlay/btc-parachain). Once you have successfully build the BTC Parachain, start a development server from the root folder of the BTC Parachain repository.
 
 ```bash
+./target/release/btc-parachain --dev
+```
+
+If you want to reset the development chain, execute the following command.
+
+```bash
 ./target/release/btc-parachain purge-chain --dev
 ```
 
@@ -120,4 +126,5 @@ Email: contact@interlay.io
 
 We would like to thank the following teams for their continuous support:
 
+* [Web3 Foundation](https://web3.foundation/)
 * [Parity Technologies](https://www.parity.io/)

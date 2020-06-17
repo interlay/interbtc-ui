@@ -1,6 +1,13 @@
-interface LandingState {
-  totalPolkaBTC: string;
-  totalDOT: string
+import { RouteComponentProps, Route } from 'react-router-dom';
+
+interface LandingRouterProps {
+  title: string
 }
 
-export default LandingState;
+// interface LandingProps extends RouteComponentProps<LandingRouterProps> {
+interface LandingProps {
+  totalPolkaBTC: string;
+  totalLockedDOT: string
+}
+
+export default LandingProps;

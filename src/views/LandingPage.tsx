@@ -1,30 +1,38 @@
 import React, { Component } from 'react';
-import { withRouter, NavLink } from 'react-router-dom';
-import { Image, Container, Button, Col, Row } from 'react-bootstrap';
+import { withRouter, NavLink, RouteComponentProps } from 'react-router-dom';
+import { Image, Button, Col, Row } from 'react-bootstrap';
 
 import AppState from '../types/AppState';
-import LandingState from '../types/LandingState';
+import LandingProps from '../types/LandingState';
 
 import PolkaBTCImg from '../assets/img/polkabtc/PolkaBTC_black.png';
-import overviewImg from '../assets/img/overview.png';
-import CbAImg from '../assets/img/CbA.png';
+// import overviewImg from '../assets/img/overview.png';
+// import CbAImg from '../assets/img/CbA.png';
 
-export default class LandingPage extends Component<AppState, LandingState> {
-  state: LandingState = {
+// class LandingPage extends Component<AppState & RouteComponentProps, LandingProps> {
+class LandingPage extends Component<AppState, LandingProps> {
+  state: LandingProps = {
     totalPolkaBTC: "loading...",
-    totalDOT: "loading..."
+    totalLockedDOT: "loading..."
   }
 
+  // constructor(props: AppState & RouteComponentProps) {
   constructor(props: AppState) {
     super(props);
   }
 
   async getParachainData() {
-    console.log(this.props.parachain);
-    if (this.props.parachain) {
+    // FIXME: only update when the issuance is actually updated
+    if (!this.props.parachain.api) {
+      await this.props.parachain.connect();
+    }
+    if (this.props.parachain.api) {
       const totalPolkaBTC = await this.props.parachain.getTotalPolkaBTC();
+      const totalLockedDOT = await this.props.parachain.getTotalLockedDOT();
+      const totalDOT = await this.props.parachain.getTotalDOT();
       this.setState({
-        totalPolkaBTC: totalPolkaBTC
+        totalPolkaBTC: totalPolkaBTC,
+        totalLockedDOT: totalLockedDOT
       });
     }
   }
@@ -35,23 +43,23 @@ export default class LandingPage extends Component<AppState, LandingState> {
 
   render() {
     const totalPolkaBTC = this.state.totalPolkaBTC;
-    const totalDOT = this.state.totalDOT;
+    const totalLockedDOT = this.state.totalLockedDOT;
     return (
       <div>
         <section className="jumbotron min-vh-100 text-center white-background mt-2">
           <div className="container mt-5">
             <Image src={ PolkaBTCImg } width='256'></Image>
             <h3 style={{ fontSize: "1.5em" }}className="lead mt-3"></h3>
-            <h3 style={{ fontSize: "1.5em" }}className="lead text-muted mt-3">DeFi access for your Bitcoin. Trustless and open.</h3>
+            <h3 style={{ fontSize: "1.5em" }}className="lead text-muted mt-3">PolkaBTC: Trustless and open DeFi access for your Bitcoin.</h3>
 
             <Row className="mt-5">
-              <Col xs="12" sm={{span: 4, offset: 4}}>
+              <Col xs="12" sm={{span: 6, offset: 3}}>
                 <h5 className="text-muted">PolkaBTC issued: { totalPolkaBTC }</h5>
               </Col>
             </Row>
             <Row className="mt-1">
-              <Col xs="12" sm={{span: 4, offset: 4}}>
-                <h5 className="text-muted">DOT locked: { totalDOT }</h5>
+              <Col xs="12" sm={{span: 6, offset: 3}}>
+                <h5 className="text-muted">DOT locked: { totalLockedDOT }</h5>
               </Col>
             </Row>
             <Row className="mt-5">
@@ -72,6 +80,8 @@ export default class LandingPage extends Component<AppState, LandingState> {
   }
 }
 
+// export default withRouter(LandingPage);
+export default LandingPage;
 
 //         <section>
 //           <div className="container mt-5">

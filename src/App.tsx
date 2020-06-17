@@ -12,23 +12,37 @@ import './assets/css/custom.css';
 import AppState from './types/AppState';
 
 // app imports
-import LandingPage from './views/LandingPage';
 // import Topbar from "./components/Topbar";
+import LandingPage from './views/LandingPage';
+import IssuePage from './views/IssuePage';
 import Footer from './components/Footer';
 import { BTCParachain } from './controllers/BTCParachain';
+import { ALICE } from './constants';
 
 export default class App extends Component<{}, AppState> {
+  state: AppState = {
+    parachain: new BTCParachain(),
+    account: undefined
+  }
 
   async initParachain() {
-    var parachain = new BTCParachain();
-    await parachain.connect();
+    await this.state.parachain.connect();
     this.setState({
-      parachain: parachain,
+      parachain: this.state.parachain,
     });
+  }
+
+  // FIXME: integrate with a wallet
+  getAccount() {
+    const account = ALICE;
+    this.setState({
+      account: account
+    })
   }
 
   componentDidMount() {
     this.initParachain();
+    this.getAccount();
   }
 
   render() {
@@ -39,6 +53,9 @@ export default class App extends Component<{}, AppState> {
             <Switch>
               <Route exact path="/">
                 <LandingPage {...this.state} />
+              </Route>
+              <Route path="/issue">
+                <IssuePage {...this.state} />
               </Route>
             </Switch>
           </div>

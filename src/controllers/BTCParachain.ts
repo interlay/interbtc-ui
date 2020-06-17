@@ -17,15 +17,54 @@ export class BTCParachain implements BTCParachainInterface {
       types: {
         H256Le: 'H256',
         DOT: 'u128',
-        PolkaBTC: 'u128',
+        PolkaBTC: 'Balance',
+        BTCBalance: 'u128',
       }
     });
+    console.log(this.api.query);
   }
 
   async getTotalPolkaBTC(): Promise<string> {
     if (this.api != null) {
-      const polkabtc = await this.api.query.treasury.totalIssuance();
+      const polkabtc = await this.api.query.polkaBtc.totalIssuance();
+      console.log(polkabtc);
       return polkabtc.toString();
+    } else {
+      throw ERR_NOT_CONNECTED;
+    }
+  }
+
+  async getTotalLockedDOT(): Promise<string> {
+    if (this.api != null) {
+      const dot = await this.api.query.collateral.totalCollateral();
+      return dot.toString();
+    } else {
+      throw ERR_NOT_CONNECTED;
+    }
+  }
+
+  async getTotalDOT(): Promise<string> {
+    if (this.api != null) {
+      const dot = await this.api.query.dot.totalIssuance();
+      return dot.toString();
+    } else {
+      throw ERR_NOT_CONNECTED;
+    }
+  }
+
+  async getBalancePolkaBTC(address: string): Promise<string> {
+    if (this.api != null) {
+      const { data: balance } = await this.api.query.system.account(address);
+      return balance.free.toString();
+    } else {
+      throw ERR_NOT_CONNECTED;
+    }
+  }
+
+  async getBalanceDOT(address: string): Promise<string> {
+    if (this.api != null) {
+      const { data: balance } = await this.api.query.system.account(address);
+      return balance.free.toString();
     } else {
       throw ERR_NOT_CONNECTED;
     }
