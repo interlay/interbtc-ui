@@ -1,7 +1,7 @@
 export type RedeemRequest = {
   id: string,
   amount: string,
-  // creation: string,
+  creation: string,
   vaultAddress: string,
   btcTx: string,
   confirmations: number,
@@ -10,6 +10,6 @@ export type RedeemRequest = {
 export interface RedeemProps {
   balancePolkaBTC: string;
   balanceDOT: string;
-  issueRequests: Array<RedeemRequest>;
+  redeemRequests: Array<RedeemRequest>;
   showWizard: boolean;
 }

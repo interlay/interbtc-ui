@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Image, Button, Col, Row, Modal } from 'react-bootstrap';
 
 import AppState from '../types/AppState';
-import { RedeemProps } from '../types/RedeemState';
+import { RedeemProps, RedeemRequest } from '../types/RedeemState';
 
 import PolkaBTCImg from '../assets/img/polkabtc/PolkaBTC_black.png';
 import RedeemRequests from '../components/RedeemRequests';
@@ -11,7 +11,7 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
   state: RedeemProps = {
     balancePolkaBTC: "loading...",
     balanceDOT: "loading...",
-    issueRequests: [],
+    redeemRequests: [],
     showWizard: false,
   }
 
@@ -20,6 +20,7 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
     super(props);
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.addRedeemRequest = this.addRedeemRequest.bind(this);
   }
 
   handleShow(event: React.MouseEvent<HTMLElement>) {
@@ -50,6 +51,34 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
 
   componentDidMount() {
     this.getParachainData();
+    this.setState({
+      redeemRequests: [
+        {
+          id: "1",
+          amount: "0.5 BTC",
+          creation: "21 Jun 2020 19:08",
+          vaultAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
+          btcTx: "3b4162a307fab...b588d61a9069e762",
+          confirmations: 18
+        },
+        {
+          id: "2",
+          amount: "0.2 BTC",
+          creation: "21 Jun 2020 21:08",
+          vaultAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
+          btcTx: "d3c6652dfa406...e4aacb4c441e030e",
+          confirmations: 7
+        }
+      ]
+    })
+  }
+
+  addRedeemRequest(req: RedeemRequest) {
+    let arr = this.state.redeemRequests;
+    arr.push(req);
+    this.setState({
+      redeemRequests: arr,
+    })
   }
 
   render() {
