@@ -30,7 +30,7 @@ class IssuePage extends Component<AppState, IssueProps> {
     })
   }
 
-  handleClose(event: React.MouseEvent<HTMLElement>) {
+  handleClose() {
     this.setState({
       showWizard: false
     })
@@ -79,7 +79,7 @@ class IssuePage extends Component<AppState, IssueProps> {
               </Col>
             </Row>
             <Modal show={this.state.showWizard} onHide={this.handleClose}>
-              <IssueWizard {...this.state} />
+              <IssueWizard {...this.state} handleClose={this.handleClose}/>
             </Modal>
 
           </div>
