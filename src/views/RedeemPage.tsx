@@ -1,17 +1,14 @@
-import React, { Component, ChangeEvent } from 'react';
-import { withRouter, NavLink, RouteComponentProps } from 'react-router-dom';
+import React, { Component } from 'react';
 import { Image, Button, Col, Row, Modal } from 'react-bootstrap';
 
 import AppState from '../types/AppState';
-import { IssueProps, IssueRequest } from '../types/IssueState';
-import IssueWizard from '../components/IssueWizard';
+import { RedeemProps } from '../types/RedeemState';
 
 import PolkaBTCImg from '../assets/img/polkabtc/PolkaBTC_black.png';
-import IssueRequests from '../components/IssueRequests';
+import RedeemRequests from '../components/RedeemRequests';
 
-// class IssuePage extends Component<AppState & RouteComponentProps, IssueProps> {
-class IssuePage extends Component<AppState, IssueProps> {
-  state: IssueProps = {
+export default class RedeemPage extends Component<AppState, RedeemProps> {
+  state: RedeemProps = {
     balancePolkaBTC: "loading...",
     balanceDOT: "loading...",
     issueRequests: [],
@@ -31,7 +28,7 @@ class IssuePage extends Component<AppState, IssueProps> {
     })
   }
 
-  handleClose() {
+  handleClose(event: React.MouseEvent<HTMLElement>) {
     this.setState({
       showWizard: false
     })
@@ -76,22 +73,14 @@ class IssuePage extends Component<AppState, IssueProps> {
             </Row>
             <Row className="mt-5 mb-5">
               <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
-                <Button variant="outline-dark" size="lg" block onClick={this.handleShow}>Request PolkaBTC</Button>
+                <Button variant="outline-dark" size="lg" block onClick={this.handleShow}>Redeem PolkaBTC</Button>
               </Col>
             </Row>
 
-            <IssueRequests {...this.state} />
-
-            <Modal show={this.state.showWizard} onHide={this.handleClose}>
-              <IssueWizard {...this.state} handleClose={this.handleClose}/>
-            </Modal>
-
+            <RedeemRequests {...this.state} />
           </div>
         </section>
       </div>
     )
   }
 }
-
-// export default withRouter(IssuePage);
-export default IssuePage;
