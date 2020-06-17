@@ -23,6 +23,7 @@ class IssuePage extends Component<AppState, IssueProps> {
     super(props);
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.addIssueRequest = this.addIssueRequest.bind(this);
   }
 
   handleShow(event: React.MouseEvent<HTMLElement>) {
@@ -53,6 +54,35 @@ class IssuePage extends Component<AppState, IssueProps> {
 
   componentDidMount() {
     this.getParachainData();
+
+    this.setState({
+      issueRequests: [
+        {
+          id: "1",
+          amount: "0.5 PolkaBTC",
+          creation: "21 Jun 2020 19:08",
+          vaultAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
+          btcTx: "3b4162a307fab...b588d61a9069e762",
+          confirmations: 6
+        },
+        {
+          id: "2",
+          amount: "0.2 PolkaBTC",
+          creation: "21 Jun 2020 21:08",
+          vaultAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
+          btcTx: "d3c6652dfa406...e4aacb4c441e030e",
+          confirmations: 1
+        }
+      ]
+    })
+  }
+
+  addIssueRequest(req: IssueRequest) {
+    let arr = this.state.issueRequests;
+    arr.push(req);
+    this.setState({
+      issueRequests: arr,
+    })
   }
 
   render() {

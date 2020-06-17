@@ -1,7 +1,7 @@
 export type IssueRequest = {
   id: string,
   amount: string,
-  // creation: string,
+  creation: string,
   vaultAddress: string,
   btcTx: string,
   confirmations: number,
