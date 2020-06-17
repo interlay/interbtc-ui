@@ -7,14 +7,17 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "@types/bn.js": "^4.11.6",
     "@types/jest": "^24.0.0",
     "@types/node": "^12.0.0",
+    "@types/qrcode.react": "^1.0.1",
     "@types/react": "^16.9.36",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
     "@types/react-toastify": "^4.1.0",
     "bootstrap": "^4.5.0",
     "node-sass": "^4.14.1",
+    "qrcode.react": "^1.0.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
     "react-dom": "^16.13.1",
@@ -23,10 +26,18 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-toastify": "^6.0.5",
-    "typescript": "~3.7.2"
+    "typescript": "^3.9.0"
+  },
+  "devDependencies": {
+    "@polkadot/typegen": "^1.18.1",
+    "ts-node": "^8.6.2"
   },
   "scripts": {
     "start": "react-scripts start",
+    "generate:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package sample-polkadotjs-typegen/interfaces --input ./src/interfaces",
+    "generate:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package sample-polkadotjs-typegen/interfaces --endpoint btc-parachain.json --output ./src/interfaces",
+    "lint": "tsc --noEmit --pretty",
+    "setup": "yarn generate:defs && yarn generate:meta",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
