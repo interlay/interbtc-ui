@@ -31,7 +31,7 @@ class IssueRequests extends Component<IssueProps, {}> {
                   return (
                     <tr>
                       <td>{request.id}</td>
-                      <td>{request.amount}</td>
+                      <td>{request.amount} PolkaBTC</td>
                       <td>{request.creation}</td>
                       <td>{shortAddress(request.vaultAddress)}</td>
                       <td>{shortTxId(request.btcTx)}</td>

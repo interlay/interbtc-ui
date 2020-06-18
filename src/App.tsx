@@ -12,7 +12,7 @@ import './assets/css/custom.css';
 import AppState from './types/AppState';
 
 // app imports
-// import Topbar from "./components/Topbar";
+import Topbar from "./components/Topbar";
 import LandingPage from './views/LandingPage';
 import IssuePage from './views/IssuePage';
 import Footer from './components/Footer';
@@ -52,6 +52,7 @@ export default class App extends Component<{}, AppState> {
     return (
       <Router>
         <div className="main d-flex flex-column min-vh-100">
+          <Topbar {...this.state} />
           <div className="mb-5">
             <Switch>
               <Route exact path="/">
@@ -62,6 +63,7 @@ export default class App extends Component<{}, AppState> {
               </Route>
               <Route path="/vault">
                 <VaultPage {...this.state} />
+              </Route>
               <Route path="/redeem">
                 <RedeemPage {...this.state} />
               </Route>

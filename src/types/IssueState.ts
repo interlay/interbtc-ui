@@ -13,5 +13,6 @@ export interface IssueProps {
   balanceDOT: string;
   issueRequests: Array<IssueRequest>;
   showWizard: boolean,
-  idCounter: number
+  idCounter: number,
+  addIssueRequest: (req: IssueRequest) => void,
 }

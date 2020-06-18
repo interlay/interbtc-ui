@@ -14,7 +14,7 @@ interface IssueWizardProps {
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void,
 }
 
-export default class IssueWizard extends Component<IssueProps  & { addIssueRequest: (req: IssueRequest) => void; }, IssueWizardProps> {
+export default class IssueWizard extends Component<IssueProps, IssueWizardProps> {
   state: IssueWizardProps = {
     step: 1,
     issueId: "",
@@ -25,7 +25,7 @@ export default class IssueWizard extends Component<IssueProps  & { addIssueReque
     handleChange: () => {},
   }
 
-  constructor(props: IssueProps &  
+  constructor(props: IssueProps &
     { addIssueRequest: (req: IssueRequest) => void; }
     ) {
     super(props);
@@ -99,11 +99,11 @@ export default class IssueWizard extends Component<IssueProps  & { addIssueReque
 
   handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    let date: Date = new Date();  
+    let date: Date = new Date();
     this.props.addIssueRequest({
       id: "",
       amount: this.state.amountBTC,
-      creation: date.toLocaleString(),
+      creation: date.toString(),
       vaultAddress: this.state.vaultBTCAddress,
       btcTx: "...",
       confirmations: 0,
@@ -249,8 +249,8 @@ class Confirmation extends Component<IssueWizardProps, {}> {
                   <b>Please confirm that you have made the Bitcoin payment.</b>
                   <br/>
                   <br/>
-                  We will monitor your Bitcoin transaction and notify you when it has been confirmed. 
-                  
+                  We will monitor your Bitcoin transaction and notify you when it has been confirmed.
+
                   <br/>
                   <br/>
                   You will then see a "Confirm" button next to your issue request to receive PolkaBTC.
