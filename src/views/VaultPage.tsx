@@ -78,7 +78,7 @@ export default class VaultPage extends Component<AppState, VaultProps> {
           <div className="container mt-5">
             <Image src={ PolkaBTCImg } width='256'></Image>
 
-            <Row className="mt-1">
+            <Row className="mt-5">
               <Col xs="12" sm={{span: 4, offset: 2}}>
                 <h5 className="text-muted">DOT balance: { balanceDOT }</h5>
               </Col>

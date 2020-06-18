@@ -77,12 +77,13 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
 
   get nextButton() {
       let step = this.state.step;
+      const buttontext = (step == 1) ? ("Request") : ("Next");
       if (step < 3) {
           return (
               <button
                   className="btn btn-primary float-right"
                   type="button" onClick={() => this._next()}>
-                  Next
+                  { buttontext }
               </button>
           )
       }
