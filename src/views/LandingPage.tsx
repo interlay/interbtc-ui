@@ -82,24 +82,3 @@ class LandingPage extends Component<AppState, LandingProps> {
 
 // export default withRouter(LandingPage);
 export default LandingPage;
-
-//         <section>
-//           <div className="container mt-5">
-//             <h1>Trustless assets</h1>
-//             <Row className="mt-5">
-//               <Col className="mt-5">
-//                 <Image src={ CbAImg } fluid></Image>
-//               </Col>
-//             </Row>
-//           </div>
-//         </section>
-//         <section>
-//           <div className="container mt-5">
-//             <h1>Decentralized Bitcoin Bridge</h1>
-//             <Row className="mt-5">
-//               <Col className="mt-5">
-//                 <Image src={ overviewImg } fluid></Image>
-//               </Col>
-//             </Row>
-//           </div>
-//         </section>
