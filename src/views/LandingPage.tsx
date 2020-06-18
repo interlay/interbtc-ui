@@ -26,15 +26,19 @@ class LandingPage extends Component<AppState, LandingProps> {
     if (!this.props.parachain.api) {
       await this.props.parachain.connect();
     }
-    if (this.props.parachain.api) {
-      const totalPolkaBTC = await this.props.parachain.getTotalPolkaBTC();
-      const totalLockedDOT = await this.props.parachain.getTotalLockedDOT();
-      const totalDOT = await this.props.parachain.getTotalDOT();
-      this.setState({
-        totalPolkaBTC: totalPolkaBTC,
-        totalLockedDOT: totalLockedDOT
-      });
-    }
+    // if (this.props.parachain.api) {
+    //   const totalPolkaBTC = await this.props.parachain.getTotalPolkaBTC();
+    //   const totalLockedDOT = await this.props.parachain.getTotalLockedDOT();
+    //   const totalDOT = await this.props.parachain.getTotalDOT();
+    //   this.setState({
+    //     totalPolkaBTC: totalPolkaBTC,
+    //     totalLockedDOT: totalLockedDOT
+    //   });
+    // }
+    this.setState({
+      totalPolkaBTC: this.props.kvstorage.getValue("totalPolkaBTC"),
+      totalLockedDOT: this.props.kvstorage.getValue("totalLockedDOT")
+    })
   }
 
   componentDidMount() {

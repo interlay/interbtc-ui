@@ -20,13 +20,32 @@ import { BTCParachain } from './controllers/BTCParachain';
 import { ALICE } from './constants';
 import VaultPage from './views/VaultPage';
 import RedeemPage from './views/RedeemPage';
+import Storage from "./controllers/Storage";
+
+// Mocking
+import {
+  MockIssueRequests,
+  MockRedeemRequests,
+  totalPolkaBTC,
+  totalLockedDOT,
+  balancePolkaBTC,
+  balanceDOT,
+  balanceLockedDOT,
+  backedPolkaBTC,
+  collateralRate,
+  feesEarned
+} from "./mock";
+import KVStorage from './controllers/KVStorage';
+import { StorageInterface } from './types/Storage';
 
 export default class App extends Component<{}, AppState> {
   state: AppState = {
     parachain: new BTCParachain(),
     account: undefined,
+    address: undefined,
     vault: false,
-    balancePolkaBTC: "0.7"
+    storage: undefined,
+    kvstorage: new KVStorage(),
   }
 
   async initParachain() {
@@ -37,10 +56,15 @@ export default class App extends Component<{}, AppState> {
   }
 
   // FIXME: integrate with a wallet
-  getAccount() {
-    const account = ALICE;
+  async getAccount() {
+    if (!this.state.parachain.keyring) {
+      await this.initParachain();
+    }
+    const account = this.state.parachain.keyring?.addFromUri('//Alice');
+    const address = account?.address;
     this.setState({
-      account: account
+      account: account,
+      address: address
     })
   }
 
@@ -51,10 +75,51 @@ export default class App extends Component<{}, AppState> {
     })
   }
 
+  async getStorage() {
+    if (!this.state.address) {
+      await this.getAccount();
+    }
+    if (this.state.address) {
+      localStorage.clear();
+      let storage = new Storage(this.state.address);
+      // for mocking load mock data into storage
+      this.mockStorage(storage);
+      this.setState({
+        storage: storage
+      })
+    }
+  }
+
+  mockStorage(storage: StorageInterface) {
+    if (storage) {
+      for (let i=0; i < MockIssueRequests.length; i++) {
+        storage.appendIssueRequest(
+          MockIssueRequests[i]
+        );
+      }
+      for (let i=0; i < MockRedeemRequests.length; i++) {
+        storage.appendRedeemRequest(
+          MockRedeemRequests[i]
+        );
+      }
+    }
+    if (this.state.kvstorage) {
+      this.state.kvstorage.setValue("totalPolkaBTC", totalPolkaBTC);
+      this.state.kvstorage.setValue("totalLockedDOT", totalLockedDOT);
+      this.state.kvstorage.setValue("balancePolkaBTC", balancePolkaBTC);
+      this.state.kvstorage.setValue("balanceDOT", balanceDOT);
+      this.state.kvstorage.setValue("balanceLockedDOT", balanceLockedDOT);
+      this.state.kvstorage.setValue("backedPolkaBTC", backedPolkaBTC);
+      this.state.kvstorage.setValue("collateralRate", collateralRate);
+      this.state.kvstorage.setValue("feesEarned", feesEarned);
+    }
+  }
+
   componentDidMount() {
     this.initParachain();
     this.getAccount();
     this.getVault();
+    this.getStorage();
   }
 
   render() {

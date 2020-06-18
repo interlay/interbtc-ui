@@ -7,8 +7,10 @@ export type Redeem = {
 }
 
 export interface VaultProps {
-  balancePolkaBTC: string,
   balanceDOT: string,
   balanceLockedDOT: string,
+  backedPolkaBTC: string,
+  collateralRate: string,
+  feesEarned: string,
   redeems: Redeem[];
 }

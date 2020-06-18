@@ -46,10 +46,10 @@ export default class Topbar extends Component<AppState, {}> {
             }
           </Nav>
           <Nav>
-            {(this.props.account !== undefined) &&
+            {(this.props.address !== undefined) &&
               <Link className="nav-link" to="/">
                 <Button variant="dark" size="sm" style={{borderRadius: "1em"}}>
-                   Account: {this.props.account.substring(0, 10)}...{this.props.account.substring(38)}
+                   Account: {this.props.address.substring(0, 10)}...{this.props.address.substring(38)}
                 </Button>
               </Link>
             }

@@ -100,15 +100,18 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
   handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     let date: Date = new Date();
-    this.props.addIssueRequest({
-      id: "",
+    date.setMilliseconds(0);
+    date.setSeconds(0);
+    let req: IssueRequest = {
+      id: this.props.idCounter.toString(),
       amount: this.state.amountBTC,
-      creation: date.toString(),
+      creation: date.toISOString(),
       vaultAddress: this.state.vaultBTCAddress,
       btcTx: "...",
       confirmations: 0,
       completed: false
-    });
+    }
+    this.props.addIssueRequest(req);
   }
 
   render() {

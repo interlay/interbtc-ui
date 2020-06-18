@@ -9,9 +9,11 @@ import { Vault } from '../controllers/Vault';
 
 export default class VaultPage extends Component<AppState, VaultProps> {
   state: VaultProps = {
-    balancePolkaBTC: "loading...",
     balanceDOT: "loading...",
     balanceLockedDOT: "loading...",
+    backedPolkaBTC: "loading...",
+    collateralRate: "loading...",
+    feesEarned: "loading...",
     redeems: [],
   }
 
@@ -33,14 +35,16 @@ export default class VaultPage extends Component<AppState, VaultProps> {
     if (!this.props.parachain.api) {
       await this.props.parachain.connect();
     }
-    if (this.props.parachain.api && this.props.account) {
-      const balancePolkaBTC = await this.props.parachain.getBalancePolkaBTC(this.props.account);
-      const balanceDOT = await this.props.parachain.getBalanceDOT(this.props.account);
-      const balanceLockedDOT = await this.props.parachain.getBalanceDOT(this.props.account);
+    if (this.props.parachain.api && this.props.address) {
+      const backedPolkaBTC = await this.props.parachain.getBalancePolkaBTC(this.props.address);
+      const balanceDOT = await this.props.parachain.getBalanceDOT(this.props.address);
+      const balanceLockedDOT = await this.props.parachain.getBalanceDOT(this.props.address);
       this.setState({
-        balancePolkaBTC: balancePolkaBTC,
-        balanceDOT: balanceDOT,
-        balanceLockedDOT: balanceLockedDOT
+        balanceDOT: this.props.kvstorage.getValue("balanceDOT"),
+        balanceLockedDOT: this.props.kvstorage.getValue("balanceLockedDOT"),
+        backedPolkaBTC: this.props.kvstorage.getValue("backedPolkaBTC"),
+        collateralRate: this.props.kvstorage.getValue("collateralRate"),
+        feesEarned: this.props.kvstorage.getValue("feesEarned"),
       });
     }
   }
@@ -61,29 +65,38 @@ export default class VaultPage extends Component<AppState, VaultProps> {
   }
 
   render() {
-    const balancePolkaBTC = this.state.balancePolkaBTC;
-    const balanceDOT = this.state.balanceDOT;
-    const balanceLockedDOT = this.state.balanceLockedDOT;
-    const redeems = this.state.redeems;
+    const { balanceDOT
+      , balanceLockedDOT
+      , backedPolkaBTC
+      , collateralRate
+      , feesEarned
+      , redeems
+    } = this.state;
     return (
       <div>
         <section className="jumbotron text-center white-background mt-2">
           <div className="container mt-5">
             <Image src={ PolkaBTCImg } width='256'></Image>
 
-            <Row className="mt-5">
-              <Col xs="12" sm={{span: 6, offset: 3}}>
-                <h5 className="text-muted">PolkaBTC balance: { balancePolkaBTC }</h5>
-              </Col>
-            </Row>
             <Row className="mt-1">
-              <Col xs="12" sm={{span: 6, offset: 3}}>
+              <Col xs="12" sm={{span: 4, offset: 2}}>
                 <h5 className="text-muted">DOT balance: { balanceDOT }</h5>
               </Col>
-            </Row>
-            <Row className="mt-1">
-              <Col xs="12" sm={{span: 6, offset: 3}}>
+              <Col xs="12" sm={{span: 4 }}>
                 <h5 className="text-muted">Locked DOT balance: { balanceLockedDOT }</h5>
+              </Col>
+            </Row>
+            <Row className="mt-5">
+              <Col xs="12" sm={{span: 4, offset: 2}}>
+                <h5 className="text-muted">PolkaBTC backed: { backedPolkaBTC }</h5>
+              </Col>
+              <Col xs="12" sm={{span: 4 }}>
+                <h5 className="text-muted">Collateral rate: { collateralRate }%</h5>
+              </Col>
+            </Row>
+            <Row className="mt-5">
+              <Col xs="12" sm={{span: 6, offset: 3}}>
+                <h5 className="text-muted">Fees earned: { feesEarned } PolkaBTC</h5>
               </Col>
             </Row>
 
