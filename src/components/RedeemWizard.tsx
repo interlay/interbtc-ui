@@ -2,6 +2,7 @@ import React, { Component, FormEvent, ChangeEvent } from "react";
 import { BOB_BTC, BOB , ALICE_BTC } from "../constants";
 import { RedeemProps, RedeemRequest } from "../types/RedeemState";
 import { Container, Modal, Form, FormGroup, FormControl, ListGroup, ListGroupItem, Row, Col } from "react-bootstrap";
+import { shortAddress } from "../utils/utils";
 import QRCode from "qrcode.react";
 import RedeemRequests from "./RedeemRequests";
 
@@ -136,7 +137,7 @@ export default class RedeemWizard extends Component<RedeemProps  & { handleClose
       vaultAddress: this.state.vaultDOTAddress,
       vaultBTCAddress: this.state.vaultBTCAddress,
       redeemAddress: this.state.btcAddress,
-      btcTx: "",
+      btcTx: "...",
       confirmations: 0,
       completed: false
     });
@@ -311,10 +312,10 @@ class VaultInfo extends Component<RedeemWizardProps, {}> {
             <FormGroup>
               <ListGroup>
               Your redeem request is being processed by Vault
-              <strong>{this.props.vaultDOTAddress}</strong>
+              <b>{shortAddress(this.props.vaultDOTAddress)}</b>
             <br/>
             <br/>
-            You will receive BTC from the following Bitcoin address: <strong>{this.props.vaultBTCAddress}</strong>
+            You will receive BTC from the following Bitcoin address: <b>{this.props.vaultBTCAddress}</b>
               </ListGroup>
           </FormGroup>
           <br/>

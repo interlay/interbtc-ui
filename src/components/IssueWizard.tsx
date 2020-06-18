@@ -11,6 +11,7 @@ interface IssueWizardProps {
   vaultBTCAddress: string,
   amountPolkaBTC: string,
   transactionBTC: string,
+  feeBTC: string,
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void,
 }
 
@@ -22,6 +23,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
     vaultBTCAddress: BOB_BTC,
     amountPolkaBTC: "0",
     transactionBTC: "",
+    feeBTC: "",
     handleChange: () => {},
   }
 
@@ -38,7 +40,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
     let step = this.state.step;
     if (!this.isValid(step - 1)) return;
     // If the current step is 1 or 2, then add one on "next" button click
-    step = step >= 2 ? 3 : step + 1;
+    step = step >= 3 ? 4 : step + 1;
     this.setState({
         step: step
     })
@@ -57,7 +59,9 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
     const {amountBTC} = this.state;
     let valid = [
       parseFloat(amountBTC) > 0,
-      true,]
+      true,
+      true,
+    ]
     return valid[step];
   }
 
@@ -77,8 +81,8 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
 
   get nextButton() {
       let step = this.state.step;
-      const buttontext = (step == 1) ? ("Request") : ("Next");
-      if (step < 3) {
+      const buttontext = (step == 2) ? ("Confirm") : ("Next");
+      if (step < 4) {
           return (
               <button
                   className="btn btn-primary float-right"
@@ -96,6 +100,12 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
       ...this.state,
       [name]: value
     });
+    if (name == "amountBTC") {
+      this.setState({
+        amountPolkaBTC: value,
+        feeBTC: (Number.parseFloat(value) * 0.005).toString()
+      })
+    }
   }
 
   handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -120,12 +130,13 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
       <Container>
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-              Request PolkaBTC
+              Issue PolkaBTC
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={this.handleSubmit}>
             <EnterBTCAmount {...this.state} />
+            <RequestConfirmation {...this.state} />
             <BTCPayment {...this.state} />
             <Confirmation {...this.state} />
           </Form>
@@ -182,6 +193,32 @@ class EnterBTCAmount extends Component<IssueWizardProps, EnterBTCAmountProps> {
   }
 }
 
+class RequestConfirmation extends Component<IssueWizardProps, {}> {
+  constructor(props: IssueWizardProps) {
+    super(props);
+  }
+
+  render() {
+    if (this.props.step !== 2) {
+      return null
+    }
+    return (
+      <FormGroup>
+        <h5>Summary</h5>
+          <FormGroup>
+              <ListGroup>
+                <ListGroupItem>
+                  Fees: <strong>{this.props.feeBTC} BTC</strong>
+                </ListGroupItem>
+                <ListGroupItem>Vault address: <strong>{this.props.vaultBTCAddress}</strong></ListGroupItem>
+                <ListGroupItem>Receiving: <strong>{this.props.amountBTC} PolkaBTC</strong></ListGroupItem>
+              </ListGroup>
+          </FormGroup>
+      </FormGroup>
+    )
+  }
+}
+
 interface BTCPaymentProps {
   paymentUri: string,
   loaded: boolean,
@@ -208,8 +245,9 @@ class BTCPayment extends Component<IssueWizardProps, BTCPaymentProps> {
   }
 
   render() {
+    const amountBTCwithFee = (Number.parseFloat(this.props.amountBTC) + Number.parseFloat(this.props.feeBTC)).toString();
     console.log(this.props.step);
-    if (this.props.step !== 2) {
+    if (this.props.step !== 3) {
       return null
     }
     return (
@@ -224,7 +262,7 @@ class BTCPayment extends Component<IssueWizardProps, BTCPaymentProps> {
         <h5>Summary</h5>
           <FormGroup>
               <ListGroup>
-                <ListGroupItem>Sending: <strong>{this.props.amountBTC} BTC</strong></ListGroupItem>
+                <ListGroupItem>Sending: <strong>{amountBTCwithFee} BTC</strong></ListGroupItem>
                 <ListGroupItem>Vault address: <strong>{this.props.vaultBTCAddress}</strong></ListGroupItem>
                 <ListGroupItem>Receiving: <strong>{this.props.amountBTC} PolkaBTC</strong></ListGroupItem>
               </ListGroup>
@@ -241,7 +279,7 @@ class Confirmation extends Component<IssueWizardProps, {}> {
 
   render() {
     console.log(this.props.step);
-    if (this.props.step !== 3) {
+    if (this.props.step !== 4) {
       return null
     }
     return (

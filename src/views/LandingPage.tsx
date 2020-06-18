@@ -71,7 +71,7 @@ class LandingPage extends Component<AppState, LandingProps> {
                 <NavLink className="text-decoration-none" to="/"><Button variant="outline-primary" size="lg" block>Buy PolkaBTC</Button></NavLink>
               </Col>
               <Col className="mt-2" xs="12" sm={{ span: 4 }}>
-                <NavLink className="text-decoration-none" to="/issue"><Button variant="outline-dark" size="lg" block>Mint PolkaBTC</Button></NavLink>
+                <NavLink className="text-decoration-none" to="/issue"><Button variant="outline-dark" size="lg" block>Issue PolkaBTC</Button></NavLink>
               </Col>
               <Col className="mt-2" xs="12" sm={{ span: 4 }}>
                 <NavLink className="text-decoration-none" to="/redeem"><Button variant="outline-primary" size="lg" block>Redeem PolkaBTC</Button></NavLink>
