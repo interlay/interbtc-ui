@@ -18,6 +18,7 @@ import IssuePage from './views/IssuePage';
 import Footer from './components/Footer';
 import { BTCParachain } from './controllers/BTCParachain';
 import { ALICE } from './constants';
+import VaultPage from './views/VaultPage';
 import RedeemPage from './views/RedeemPage';
 
 export default class App extends Component<{}, AppState> {
@@ -59,6 +60,8 @@ export default class App extends Component<{}, AppState> {
               <Route path="/issue">
                 <IssuePage {...this.state} />
               </Route>
+              <Route path="/vault">
+                <VaultPage {...this.state} />
               <Route path="/redeem">
                 <RedeemPage {...this.state} />
               </Route>
@@ -70,26 +73,3 @@ export default class App extends Component<{}, AppState> {
     )
   }
 }
-
-
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.tsx</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
