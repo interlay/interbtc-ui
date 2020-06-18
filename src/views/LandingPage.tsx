@@ -26,15 +26,19 @@ class LandingPage extends Component<AppState, LandingProps> {
     if (!this.props.parachain.api) {
       await this.props.parachain.connect();
     }
-    if (this.props.parachain.api) {
-      const totalPolkaBTC = await this.props.parachain.getTotalPolkaBTC();
-      const totalLockedDOT = await this.props.parachain.getTotalLockedDOT();
-      const totalDOT = await this.props.parachain.getTotalDOT();
-      this.setState({
-        totalPolkaBTC: totalPolkaBTC,
-        totalLockedDOT: totalLockedDOT
-      });
-    }
+    // if (this.props.parachain.api) {
+    //   const totalPolkaBTC = await this.props.parachain.getTotalPolkaBTC();
+    //   const totalLockedDOT = await this.props.parachain.getTotalLockedDOT();
+    //   const totalDOT = await this.props.parachain.getTotalDOT();
+    //   this.setState({
+    //     totalPolkaBTC: totalPolkaBTC,
+    //     totalLockedDOT: totalLockedDOT
+    //   });
+    // }
+    this.setState({
+      totalPolkaBTC: this.props.kvstorage.getValue("totalPolkaBTC"),
+      totalLockedDOT: this.props.kvstorage.getValue("totalLockedDOT")
+    })
   }
 
   componentDidMount() {
@@ -67,7 +71,7 @@ class LandingPage extends Component<AppState, LandingProps> {
                 <NavLink className="text-decoration-none" to="/"><Button variant="outline-primary" size="lg" block>Buy PolkaBTC</Button></NavLink>
               </Col>
               <Col className="mt-2" xs="12" sm={{ span: 4 }}>
-                <NavLink className="text-decoration-none" to="/issue"><Button variant="outline-dark" size="lg" block>Mint PolkaBTC</Button></NavLink>
+                <NavLink className="text-decoration-none" to="/issue"><Button variant="outline-dark" size="lg" block>Issue PolkaBTC</Button></NavLink>
               </Col>
               <Col className="mt-2" xs="12" sm={{ span: 4 }}>
                 <NavLink className="text-decoration-none" to="/redeem"><Button variant="outline-primary" size="lg" block>Redeem PolkaBTC</Button></NavLink>
@@ -82,24 +86,3 @@ class LandingPage extends Component<AppState, LandingProps> {
 
 // export default withRouter(LandingPage);
 export default LandingPage;
-
-//         <section>
-//           <div className="container mt-5">
-//             <h1>Trustless assets</h1>
-//             <Row className="mt-5">
-//               <Col className="mt-5">
-//                 <Image src={ CbAImg } fluid></Image>
-//               </Col>
-//             </Row>
-//           </div>
-//         </section>
-//         <section>
-//           <div className="container mt-5">
-//             <h1>Decentralized Bitcoin Bridge</h1>
-//             <Row className="mt-5">
-//               <Col className="mt-5">
-//                 <Image src={ overviewImg } fluid></Image>
-//               </Col>
-//             </Row>
-//           </div>
-//         </section>

@@ -1,3 +1,5 @@
+import { StorageInterface, KVStorageInterface } from "./Storage";
+
 export type RedeemRequest = {
   id: string,
   amount: string,
@@ -15,5 +17,7 @@ export interface RedeemProps {
   balanceDOT: string;
   redeemRequests: Array<RedeemRequest>;
   showWizard: boolean,
-  idCounter: number
+  idCounter: number,
+  storage?: StorageInterface,
+  kvstorage: KVStorageInterface,
 }

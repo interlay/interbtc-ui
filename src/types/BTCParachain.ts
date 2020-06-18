@@ -1,8 +1,9 @@
-import { ApiPromise, WsProvider } from '@polkadot/api';
+import { ApiPromise, WsProvider, Keyring } from '@polkadot/api';
 
 interface BTCParachainInterface {
   wsProvider: WsProvider;
   api?: ApiPromise;
+  keyring?: Keyring;
 
   connect(): Promise<void>;
   getTotalPolkaBTC(): Promise<string>;

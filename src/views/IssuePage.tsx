@@ -12,11 +12,14 @@ import IssueRequests from '../components/IssueRequests';
 // class IssuePage extends Component<AppState & RouteComponentProps, IssueProps> {
 class IssuePage extends Component<AppState, IssueProps> {
   state: IssueProps = {
-    balancePolkaBTC: "",
+    balancePolkaBTC: "loading...",
     balanceDOT: "loading...",
     issueRequests: [],
     showWizard: false,
-    idCounter: 0
+    idCounter: 0,
+    storage: this.props.storage,
+    kvstorage: this.props.kvstorage,
+    addIssueRequest: () => {},
   }
 
   // constructor(props: AppState & RouteComponentProps) {
@@ -25,8 +28,7 @@ class IssuePage extends Component<AppState, IssueProps> {
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.addIssueRequest = this.addIssueRequest.bind(this);
-    console.log(this.props.balancePolkaBTC);
-    this.state.balancePolkaBTC = this.props.balancePolkaBTC;
+    this.state.balancePolkaBTC = this.props.kvstorage.getValue("balancePolkaBTC");
     }
 
   handleShow(event: React.MouseEvent<HTMLElement>) {
@@ -45,12 +47,12 @@ class IssuePage extends Component<AppState, IssueProps> {
     if (!this.props.parachain.api) {
       await this.props.parachain.connect();
     }
-    if (this.props.parachain.api && this.props.account) {
-      const balancePolkaBTC = await this.props.parachain.getBalancePolkaBTC(this.props.account);
-      const balanceDOT = await this.props.parachain.getBalanceDOT(this.props.account);
+    if (this.props.parachain.api && this.props.address) {
+      // const balancePolkaBTC = await this.props.parachain.getBalancePolkaBTC(this.props.address);
+      // const balanceDOT = await this.props.parachain.getBalanceDOT(this.props.address);
       this.setState({
-        balancePolkaBTC: balancePolkaBTC,
-        balanceDOT: balanceDOT
+        balancePolkaBTC: this.props.kvstorage.getValue("balancePolkaBTC"),
+        balanceDOT: this.props.kvstorage.getValue("balanceDOT")
       });
     }
   }
@@ -58,44 +60,32 @@ class IssuePage extends Component<AppState, IssueProps> {
   componentDidMount() {
     this.getParachainData();
 
-    this.setState({
-      issueRequests: [
-        {
-          id: "1",
-          amount: "0.5 PolkaBTC",
-          creation: "15/06/2020 19:07:10",
-          vaultAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
-          btcTx: "3b4162a307fab...b588d61a9069e762",
-          confirmations: 6,
-          completed: true
-        },
-        {
-          id: "2",
-          amount: "0.2 PolkaBTC",
-          creation: "16/06/2020 21:08:08",
-          vaultAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
-          btcTx: "d3c6652dfa406...e4aacb4c441e030e",
-          confirmations: 1,
-          completed: true
-        }
-      ],
-      idCounter: 3
-    })
+    if (this.props.storage) {
+      this.setState({
+        issueRequests: this.props.storage.issueRequests,
+        idCounter: 3
+      })
+    }
   }
 
   addIssueRequest(req: IssueRequest) {
-    let arr = this.state.issueRequests;
-    req.id = this.getAndIncrementIdCounter().toString();
+    // let arr = this.state.issueRequests;
+    // req.id = this.getAndIncrementIdCounter().toString();
     /*
     // Actually, we should only increment the balance once the issue request is finalized.
     this.setState({
       balancePolkaBTC: (parseFloat(this.state.balancePolkaBTC) + parseFloat(req.amount)).toString()
     })
     */
-    arr.push(req);
+    // arr.push(req);
+    // this.setState({
+    //   issueRequests: arr,
+    // })
+    let counter = this.state.idCounter;
     this.setState({
-      issueRequests: arr,
+      idCounter:  counter + 1,
     })
+    this.props.storage?.appendIssueRequest(req);
     this.handleClose();
   }
 
@@ -126,7 +116,7 @@ class IssuePage extends Component<AppState, IssueProps> {
             </Row>
             <Row className="mt-5 mb-5">
               <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
-                <Button variant="outline-dark" size="lg" block onClick={this.handleShow}>Request PolkaBTC</Button>
+                <Button variant="outline-dark" size="lg" block onClick={this.handleShow}>Issue PolkaBTC</Button>
               </Col>
             </Row>
 

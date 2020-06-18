@@ -16,7 +16,9 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
     balanceDOT: "loading...",
     redeemRequests: [],
     showWizard: false,
-    idCounter: 0
+    idCounter: 0,
+    storage: this.props.storage,
+    kvstorage: this.props.kvstorage,
   }
 
   // constructor(props: AppState & RouteComponentProps) {
@@ -25,7 +27,6 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.addRedeemRequest = this.addRedeemRequest.bind(this);
-    this.state.balancePolkaBTC = this.props.balancePolkaBTC;
   }
 
   handleShow(event: React.MouseEvent<HTMLElement>) {
@@ -44,45 +45,24 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
     if (!this.props.parachain.api) {
       await this.props.parachain.connect();
     }
-    if (this.props.parachain.api && this.props.account) {
-      const balancePolkaBTC = await this.props.parachain.getBalancePolkaBTC(this.props.account);
-      const balanceDOT = await this.props.parachain.getBalanceDOT(this.props.account);
+    if (this.props.parachain.api && this.props.address) {
+      const balancePolkaBTC = await this.props.parachain.getBalancePolkaBTC(this.props.address);
+      const balanceDOT = await this.props.parachain.getBalanceDOT(this.props.address);
       this.setState({
-        balancePolkaBTC: balancePolkaBTC,
-        balanceDOT: balanceDOT
+        balancePolkaBTC: this.props.kvstorage.getValue("balancePolkaBTC"),
+        balanceDOT: this.props.kvstorage.getValue("balanceDOT")
       });
     }
   }
 
   componentDidMount() {
     this.getParachainData();
-    this.setState({
-      redeemRequests: [
-        {
-          id: "1",
-          amount: "0.5",
-          creation: "15/06/2020 16:09:01",
-          vaultAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
-          btcTx: "3b4162a307fab...b588d61a9069e762",
-          confirmations: 18,
-          redeemAddress: ALICE_BTC,
-          vaultBTCAddress: BOB_BTC,
-          completed: true
-        },
-        {
-          id: "2",
-          amount: "0.2",
-          creation: "13/06/2020 20:08:23",
-          vaultAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
-          btcTx: "d3c6652dfa406...e4aacb4c441e030e",
-          confirmations: 7,
-          redeemAddress: ALICE_BTC,
-          vaultBTCAddress: BOB_BTC,
-          completed: true
-        }
-      ],
-      idCounter: 3
-    })
+    if (this.props.storage) {
+      this.setState({
+        redeemRequests: this.props.storage.redeemRequests,
+        idCounter: 3
+      })
+    }
   }
 
   addRedeemRequest(req: RedeemRequest) {

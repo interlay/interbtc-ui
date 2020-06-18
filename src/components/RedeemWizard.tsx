@@ -1,7 +1,8 @@
 import React, { Component, FormEvent, ChangeEvent } from "react";
-import { BOB_BTC, ALICE, ALICE_BTC } from "../constants";
+import { BOB_BTC, BOB , ALICE_BTC } from "../constants";
 import { RedeemProps, RedeemRequest } from "../types/RedeemState";
 import { Container, Modal, Form, FormGroup, FormControl, ListGroup, ListGroupItem, Row, Col } from "react-bootstrap";
+import { shortAddress } from "../utils/utils";
 import QRCode from "qrcode.react";
 import RedeemRequests from "./RedeemRequests";
 
@@ -14,8 +15,8 @@ interface RedeemWizardProps {
   vaultDOTAddress: string,
   vaultBTCAddress: string,
   btcTx: string,
+  balancePolkaBTC: string,
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void,
-  balancePolkaBTC: string
 }
 
 export default class RedeemWizard extends Component<RedeemProps  & { handleClose: () => void; } & { addRedeemRequest: (req: RedeemRequest) => void; }, RedeemWizardProps> {
@@ -24,23 +25,23 @@ export default class RedeemWizard extends Component<RedeemProps  & { handleClose
     redeemId: "3",
     amountBTC: "0",
     creation: "",
-    btcAddress: BOB_BTC,
-    vaultDOTAddress: ALICE,
-    vaultBTCAddress: ALICE_BTC,
+    btcAddress: ALICE_BTC,
+    vaultDOTAddress: BOB,
+    vaultBTCAddress: BOB_BTC,
     btcTx: "...",
+    balancePolkaBTC: "",
     handleChange: () => {},
-    balancePolkaBTC: ""
   }
 
-  constructor(props: RedeemProps &  
-    { handleClose: () => void; } & 
+  constructor(props: RedeemProps &
+    { handleClose: () => void; } &
     { addRedeemRequest: (req: RedeemRequest) => void; }
     ) {
     super(props);
     this._next = this._next.bind(this);
     this._prev = this._prev.bind(this);
     this.state.handleChange = this.handleChange.bind(this);
-    this.state.balancePolkaBTC = this.props.balancePolkaBTC;
+    this.state.balancePolkaBTC = this.props.kvstorage.getValue("balancePolkaBTC");
   }
 
   _next() {
@@ -112,7 +113,7 @@ export default class RedeemWizard extends Component<RedeemProps  & { handleClose
               Confirm redeem request
           </button>
         )
-      } 
+      }
       return null;
   }
 
@@ -126,15 +127,17 @@ export default class RedeemWizard extends Component<RedeemProps  & { handleClose
 
   confirmRedeem = async () => {
     //TODO: call setter in RedeemPage
-    let date: Date = new Date();  
+    let date: Date = new Date();
+    date.setMilliseconds(0);
+    date.setSeconds(0);
     this.props.addRedeemRequest({
       id: this.state.redeemId,
       amount: this.state.amountBTC,
-      creation: date.toLocaleString(),
+      creation: date.toISOString(),
       vaultAddress: this.state.vaultDOTAddress,
       vaultBTCAddress: this.state.vaultBTCAddress,
       redeemAddress: this.state.btcAddress,
-      btcTx: "",
+      btcTx: "...",
       confirmations: 0,
       completed: false
     });
@@ -309,10 +312,10 @@ class VaultInfo extends Component<RedeemWizardProps, {}> {
             <FormGroup>
               <ListGroup>
               Your redeem request is being processed by Vault
-              <strong>{this.props.vaultDOTAddress}</strong>
+              <b>{shortAddress(this.props.vaultDOTAddress)}</b>
             <br/>
             <br/>
-            You will receive BTC from the following Bitcoin address: <strong>{this.props.vaultBTCAddress}</strong>
+            You will receive BTC from the following Bitcoin address: <b>{this.props.vaultBTCAddress}</b>
               </ListGroup>
           </FormGroup>
           <br/>

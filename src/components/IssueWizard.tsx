@@ -11,10 +11,11 @@ interface IssueWizardProps {
   vaultBTCAddress: string,
   amountPolkaBTC: string,
   transactionBTC: string,
+  feeBTC: string,
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void,
 }
 
-export default class IssueWizard extends Component<IssueProps  & { addIssueRequest: (req: IssueRequest) => void; }, IssueWizardProps> {
+export default class IssueWizard extends Component<IssueProps, IssueWizardProps> {
   state: IssueWizardProps = {
     step: 1,
     issueId: "",
@@ -22,10 +23,11 @@ export default class IssueWizard extends Component<IssueProps  & { addIssueReque
     vaultBTCAddress: BOB_BTC,
     amountPolkaBTC: "0",
     transactionBTC: "",
+    feeBTC: "",
     handleChange: () => {},
   }
 
-  constructor(props: IssueProps &  
+  constructor(props: IssueProps &
     { addIssueRequest: (req: IssueRequest) => void; }
     ) {
     super(props);
@@ -38,7 +40,7 @@ export default class IssueWizard extends Component<IssueProps  & { addIssueReque
     let step = this.state.step;
     if (!this.isValid(step - 1)) return;
     // If the current step is 1 or 2, then add one on "next" button click
-    step = step >= 2 ? 3 : step + 1;
+    step = step >= 3 ? 4 : step + 1;
     this.setState({
         step: step
     })
@@ -57,7 +59,9 @@ export default class IssueWizard extends Component<IssueProps  & { addIssueReque
     const {amountBTC} = this.state;
     let valid = [
       parseFloat(amountBTC) > 0,
-      true,]
+      true,
+      true,
+    ]
     return valid[step];
   }
 
@@ -77,12 +81,13 @@ export default class IssueWizard extends Component<IssueProps  & { addIssueReque
 
   get nextButton() {
       let step = this.state.step;
-      if (step < 3) {
+      const buttontext = (step == 2) ? ("Confirm") : ("Next");
+      if (step < 4) {
           return (
               <button
                   className="btn btn-primary float-right"
                   type="button" onClick={() => this._next()}>
-                  Next
+                  { buttontext }
               </button>
           )
       }
@@ -95,20 +100,29 @@ export default class IssueWizard extends Component<IssueProps  & { addIssueReque
       ...this.state,
       [name]: value
     });
+    if (name == "amountBTC") {
+      this.setState({
+        amountPolkaBTC: value,
+        feeBTC: (Number.parseFloat(value) * 0.005).toString()
+      })
+    }
   }
 
   handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    let date: Date = new Date();  
-    this.props.addIssueRequest({
-      id: "",
+    let date: Date = new Date();
+    date.setMilliseconds(0);
+    date.setSeconds(0);
+    let req: IssueRequest = {
+      id: this.props.idCounter.toString(),
       amount: this.state.amountBTC,
-      creation: date.toLocaleString(),
+      creation: date.toISOString(),
       vaultAddress: this.state.vaultBTCAddress,
       btcTx: "...",
       confirmations: 0,
       completed: false
-    });
+    }
+    this.props.addIssueRequest(req);
   }
 
   render() {
@@ -116,12 +130,13 @@ export default class IssueWizard extends Component<IssueProps  & { addIssueReque
       <Container>
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-              Request PolkaBTC
+              Issue PolkaBTC
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={this.handleSubmit}>
             <EnterBTCAmount {...this.state} />
+            <RequestConfirmation {...this.state} />
             <BTCPayment {...this.state} />
             <Confirmation {...this.state} />
           </Form>
@@ -178,6 +193,32 @@ class EnterBTCAmount extends Component<IssueWizardProps, EnterBTCAmountProps> {
   }
 }
 
+class RequestConfirmation extends Component<IssueWizardProps, {}> {
+  constructor(props: IssueWizardProps) {
+    super(props);
+  }
+
+  render() {
+    if (this.props.step !== 2) {
+      return null
+    }
+    return (
+      <FormGroup>
+        <h5>Summary</h5>
+          <FormGroup>
+              <ListGroup>
+                <ListGroupItem>
+                  Fees: <strong>{this.props.feeBTC} BTC</strong>
+                </ListGroupItem>
+                <ListGroupItem>Vault address: <strong>{this.props.vaultBTCAddress}</strong></ListGroupItem>
+                <ListGroupItem>Receiving: <strong>{this.props.amountBTC} PolkaBTC</strong></ListGroupItem>
+              </ListGroup>
+          </FormGroup>
+      </FormGroup>
+    )
+  }
+}
+
 interface BTCPaymentProps {
   paymentUri: string,
   loaded: boolean,
@@ -204,8 +245,9 @@ class BTCPayment extends Component<IssueWizardProps, BTCPaymentProps> {
   }
 
   render() {
+    const amountBTCwithFee = (Number.parseFloat(this.props.amountBTC) + Number.parseFloat(this.props.feeBTC)).toString();
     console.log(this.props.step);
-    if (this.props.step !== 2) {
+    if (this.props.step !== 3) {
       return null
     }
     return (
@@ -220,7 +262,7 @@ class BTCPayment extends Component<IssueWizardProps, BTCPaymentProps> {
         <h5>Summary</h5>
           <FormGroup>
               <ListGroup>
-                <ListGroupItem>Sending: <strong>{this.props.amountBTC} BTC</strong></ListGroupItem>
+                <ListGroupItem>Sending: <strong>{amountBTCwithFee} BTC</strong></ListGroupItem>
                 <ListGroupItem>Vault address: <strong>{this.props.vaultBTCAddress}</strong></ListGroupItem>
                 <ListGroupItem>Receiving: <strong>{this.props.amountBTC} PolkaBTC</strong></ListGroupItem>
               </ListGroup>
@@ -237,7 +279,7 @@ class Confirmation extends Component<IssueWizardProps, {}> {
 
   render() {
     console.log(this.props.step);
-    if (this.props.step !== 3) {
+    if (this.props.step !== 4) {
       return null
     }
     return (
@@ -249,8 +291,8 @@ class Confirmation extends Component<IssueWizardProps, {}> {
                   <b>Please confirm that you have made the Bitcoin payment.</b>
                   <br/>
                   <br/>
-                  We will monitor your Bitcoin transaction and notify you when it has been confirmed. 
-                  
+                  We will monitor your Bitcoin transaction and notify you when it has been confirmed.
+
                   <br/>
                   <br/>
                   You will then see a "Confirm" button next to your issue request to receive PolkaBTC.
