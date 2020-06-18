@@ -25,6 +25,7 @@ export default class App extends Component<{}, AppState> {
   state: AppState = {
     parachain: new BTCParachain(),
     account: undefined,
+    vault: false,
     balancePolkaBTC: "0.7"
   }
 
@@ -43,9 +44,17 @@ export default class App extends Component<{}, AppState> {
     })
   }
 
+  // FIXME: check if vault server is running
+  getVault() {
+    this.setState({
+      vault: true
+    })
+  }
+
   componentDidMount() {
     this.initParachain();
     this.getAccount();
+    this.getVault();
   }
 
   render() {

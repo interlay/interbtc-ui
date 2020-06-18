@@ -3,7 +3,7 @@ import AppState from "../types/AppState";
 import polkaBTCLogo from "../assets/img/polkabtc/PolkaBTC_black.png";
 import { Navbar, Nav, Image, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { BsFillEjectFill, BsUnlockFill } from "react-icons/bs";
+import { BsFillEjectFill, BsUnlockFill, BsFillBarChartFill } from "react-icons/bs";
 import { IoMdCash } from "react-icons/io";
 
 export default class Topbar extends Component<AppState, {}> {
@@ -14,14 +14,16 @@ export default class Topbar extends Component<AppState, {}> {
     return(
       <Navbar bg="light" expand="lg" className="border-bottom shadow-sm">
         <Navbar.Brand>
-          <Image src={polkaBTCLogo} width="90" className="d-inline-block align-top" height="30" fluid />
+          <Link className="text-decoration-none" to="/">
+            <Image src={polkaBTCLogo} width="90" className="d-inline-block align-top" height="30" fluid />
+          </Link>
           {/* <Link to="/" className="text-decoration-none"> XOpts</Link> */}
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
             {(this.props.account !== undefined) &&
-              <Link className="nav-link" to="/issue">
+              <Link className="nav-link" to="/buy">
                 Buy <IoMdCash/>
               </Link>
 
@@ -35,6 +37,11 @@ export default class Topbar extends Component<AppState, {}> {
             {(this.props.account !== undefined) &&
               <Link className="nav-link" to="/redeem">
                 Redeem <BsFillEjectFill/>
+              </Link>
+            }
+            {this.props.vault &&
+              <Link className="nav-link" to="/vault">
+                Vault <BsFillBarChartFill/>
               </Link>
             }
           </Nav>
