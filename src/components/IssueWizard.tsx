@@ -1,6 +1,6 @@
 import React, { Component, FormEvent, ChangeEvent } from "react";
 import { BOB_BTC } from "../constants";
-import { IssueProps } from "../types/IssueState";
+import { IssueProps, IssueRequest } from "../types/IssueState";
 import { Container, Modal, Form, FormGroup, FormControl, ListGroup, ListGroupItem, Row, Col } from "react-bootstrap";
 import QRCode from "qrcode.react";
 
@@ -14,7 +14,7 @@ interface IssueWizardProps {
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void,
 }
 
-export default class IssueWizard extends Component<IssueProps, IssueWizardProps> {
+export default class IssueWizard extends Component<IssueProps  & { addIssueRequest: (req: IssueRequest) => void; }, IssueWizardProps> {
   state: IssueWizardProps = {
     step: 1,
     issueId: "",
@@ -25,7 +25,9 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
     handleChange: () => {},
   }
 
-  constructor(props: IssueProps) {
+  constructor(props: IssueProps &  
+    { addIssueRequest: (req: IssueRequest) => void; }
+    ) {
     super(props);
     this._next = this._next.bind(this);
     this._prev = this._prev.bind(this);
@@ -34,7 +36,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
 
   _next() {
     let step = this.state.step;
-    if (this.isValid(step - 1)) return;
+    if (!this.isValid(step - 1)) return;
     // If the current step is 1 or 2, then add one on "next" button click
     step = step >= 2 ? 3 : step + 1;
     this.setState({
@@ -52,10 +54,11 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
   }
 
   isValid(step: number) {
-    if (step === 0) {
-        return false;
-    }
-    return true;
+    const {amountBTC} = this.state;
+    let valid = [
+      parseFloat(amountBTC) > 0,
+      true,]
+    return valid[step];
   }
 
   get previousButton() {
@@ -95,8 +98,17 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
   }
 
   handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-
-
+    event.preventDefault();
+    let date: Date = new Date();  
+    this.props.addIssueRequest({
+      id: "",
+      amount: this.state.amountBTC,
+      creation: date.toLocaleString(),
+      vaultAddress: this.state.vaultBTCAddress,
+      btcTx: "...",
+      confirmations: 0,
+      completed: false
+    });
   }
 
   render() {
@@ -230,13 +242,28 @@ class Confirmation extends Component<IssueWizardProps, {}> {
     }
     return (
       <FormGroup>
-        <h5>Confirmation</h5>
+        <h5>Confirm BTC Payment</h5>
           <Row className="justify-content-md-center">
-            <Col md="auto" className="text-center">
+            <Col md="auto" className="text-left">
                 <p>
-                  We will monitor your Bitcoin transaction for you and notify you when the transaction has enough confirmations. You can then complete the process. Depending on the block times and the utilization of the Bitcoin network, this process might take an hour.
+                  <b>Please confirm that you have made the Bitcoin payment.</b>
+                  <br/>
+                  <br/>
+                  We will monitor your Bitcoin transaction and notify you when it has been confirmed. 
+                  
+                  <br/>
+                  <br/>
+                  You will then see a "Confirm" button next to your issue request to receive PolkaBTC.
+                  <br/>
+                  <br/>
+                  <b>Note: Your Bitcoin payment can take up to an hour to confirm.</b>
                 </p>
             </Col>
+            <button
+              className="btn btn-primary float-right"
+              type="submit">
+              I have made the Bitcoin payment
+          </button>
         </Row>
       </FormGroup>
     )

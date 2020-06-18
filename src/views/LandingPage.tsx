@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter, NavLink, RouteComponentProps } from 'react-router-dom';
+import { withRouter, NavLink, RouteComponentProps, Link } from 'react-router-dom';
 import { Image, Button, Col, Row } from 'react-bootstrap';
 
 import AppState from '../types/AppState';
@@ -48,7 +48,7 @@ class LandingPage extends Component<AppState, LandingProps> {
       <div>
         <section className="jumbotron min-vh-100 text-center white-background mt-2">
           <div className="container mt-5">
-            <Image src={ PolkaBTCImg } width='256'></Image>
+          <Link to="/"><Image src={ PolkaBTCImg } width='256'></Image></Link>
             <h3 style={{ fontSize: "1.5em" }}className="lead mt-3"></h3>
             <h3 style={{ fontSize: "1.5em" }}className="lead text-muted mt-3">PolkaBTC: Trustless and open DeFi access for your Bitcoin.</h3>
 
@@ -70,7 +70,7 @@ class LandingPage extends Component<AppState, LandingProps> {
                 <NavLink className="text-decoration-none" to="/issue"><Button variant="outline-dark" size="lg" block>Mint PolkaBTC</Button></NavLink>
               </Col>
               <Col className="mt-2" xs="12" sm={{ span: 4 }}>
-                <NavLink className="text-decoration-none" to="/redeem"><Button variant="outline-primary" size="lg" block>Return BTC</Button></NavLink>
+                <NavLink className="text-decoration-none" to="/redeem"><Button variant="outline-primary" size="lg" block>Redeem PolkaBTC</Button></NavLink>
               </Col>
             </Row>
           </div>

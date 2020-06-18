@@ -1,17 +1,19 @@
-export type IssueRequest = {
+export type RedeemRequest = {
   id: string,
   amount: string,
   creation: string,
   vaultAddress: string,
+  vaultBTCAddress: string,
+  redeemAddress: string,
   btcTx: string,
   confirmations: number,
-  completed: boolean;
+  completed: boolean
 }
 
-export interface IssueProps {
+export interface RedeemProps {
   balancePolkaBTC: string;
   balanceDOT: string;
-  issueRequests: Array<IssueRequest>;
+  redeemRequests: Array<RedeemRequest>;
   showWizard: boolean,
   idCounter: number
 }

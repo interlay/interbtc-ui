@@ -1,20 +1,20 @@
-import React, { Component, ChangeEvent } from 'react';
-import { withRouter, RouteComponentProps, Link} from 'react-router-dom';
+import React, { Component } from 'react';
+import { withRouter, Link } from 'react-router-dom';
 import { Image, Button, Col, Row, Modal } from 'react-bootstrap';
 
 import AppState from '../types/AppState';
-import { IssueProps, IssueRequest } from '../types/IssueState';
-import IssueWizard from '../components/IssueWizard';
+import { RedeemProps, RedeemRequest } from '../types/RedeemState';
+import RedeemWizard from '../components/RedeemWizard';
 
 import PolkaBTCImg from '../assets/img/polkabtc/PolkaBTC_black.png';
-import IssueRequests from '../components/IssueRequests';
+import RedeemRequests from '../components/RedeemRequests';
+import { ALICE_BTC, BOB_BTC } from '../constants';
 
-// class IssuePage extends Component<AppState & RouteComponentProps, IssueProps> {
-class IssuePage extends Component<AppState, IssueProps> {
-  state: IssueProps = {
+export default class RedeemPage extends Component<AppState, RedeemProps> {
+  state: RedeemProps = {
     balancePolkaBTC: "",
     balanceDOT: "loading...",
-    issueRequests: [],
+    redeemRequests: [],
     showWizard: false,
     idCounter: 0
   }
@@ -24,10 +24,9 @@ class IssuePage extends Component<AppState, IssueProps> {
     super(props);
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
-    this.addIssueRequest = this.addIssueRequest.bind(this);
-    console.log(this.props.balancePolkaBTC);
+    this.addRedeemRequest = this.addRedeemRequest.bind(this);
     this.state.balancePolkaBTC = this.props.balancePolkaBTC;
-    }
+  }
 
   handleShow(event: React.MouseEvent<HTMLElement>) {
     this.setState({
@@ -57,25 +56,28 @@ class IssuePage extends Component<AppState, IssueProps> {
 
   componentDidMount() {
     this.getParachainData();
-
     this.setState({
-      issueRequests: [
+      redeemRequests: [
         {
           id: "1",
-          amount: "0.5 PolkaBTC",
-          creation: "15/06/2020 19:07:10",
+          amount: "0.5",
+          creation: "15/06/2020 16:09:01",
           vaultAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
           btcTx: "3b4162a307fab...b588d61a9069e762",
-          confirmations: 6,
+          confirmations: 18,
+          redeemAddress: ALICE_BTC,
+          vaultBTCAddress: BOB_BTC,
           completed: true
         },
         {
           id: "2",
-          amount: "0.2 PolkaBTC",
-          creation: "16/06/2020 21:08:08",
+          amount: "0.2",
+          creation: "13/06/2020 20:08:23",
           vaultAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
           btcTx: "d3c6652dfa406...e4aacb4c441e030e",
-          confirmations: 1,
+          confirmations: 7,
+          redeemAddress: ALICE_BTC,
+          vaultBTCAddress: BOB_BTC,
           completed: true
         }
       ],
@@ -83,20 +85,16 @@ class IssuePage extends Component<AppState, IssueProps> {
     })
   }
 
-  addIssueRequest(req: IssueRequest) {
-    let arr = this.state.issueRequests;
+  addRedeemRequest(req: RedeemRequest) {
+    let arr = this.state.redeemRequests;
     req.id = this.getAndIncrementIdCounter().toString();
-    /*
-    // Actually, we should only increment the balance once the issue request is finalized.
     this.setState({
-      balancePolkaBTC: (parseFloat(this.state.balancePolkaBTC) + parseFloat(req.amount)).toString()
+      balancePolkaBTC: (parseFloat(this.state.balancePolkaBTC) - parseFloat(req.amount)).toString()
     })
-    */
     arr.push(req);
     this.setState({
-      issueRequests: arr,
+      redeemRequests: arr,
     })
-    this.handleClose();
   }
 
   getAndIncrementIdCounter() {
@@ -112,7 +110,7 @@ class IssuePage extends Component<AppState, IssueProps> {
       <div>
         <section className="jumbotron text-center white-background mt-2">
           <div className="container mt-5">
-            <Link to="/"><Image src={ PolkaBTCImg } width='256'></Image></Link>
+          <Link to="/"><Image src={ PolkaBTCImg } width='256'></Image></Link>
 
             <Row className="mt-5">
               <Col xs="12" sm={{span: 6, offset: 3}}>
@@ -126,22 +124,19 @@ class IssuePage extends Component<AppState, IssueProps> {
             </Row>
             <Row className="mt-5 mb-5">
               <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
-                <Button variant="outline-dark" size="lg" block onClick={this.handleShow}>Request PolkaBTC</Button>
+                <Button variant="outline-dark" size="lg" block onClick={this.handleShow}>Redeem PolkaBTC</Button>
               </Col>
             </Row>
 
-            <IssueRequests {...this.state} />
+            <RedeemRequests {...this.state} />
+
 
             <Modal show={this.state.showWizard} onHide={this.handleClose}>
-              <IssueWizard {...this.state} addIssueRequest={this.addIssueRequest}/>
+              <RedeemWizard {...this.state} handleClose={this.handleClose} addRedeemRequest={this.addRedeemRequest}/>
             </Modal>
-
           </div>
         </section>
       </div>
     )
   }
 }
-
-// export default withRouter(IssuePage);
-export default IssuePage;

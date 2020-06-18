@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 
-import { IssueProps, IssueRequest } from "../types/IssueState";
+import { RedeemProps } from "../types/RedeemState";
 import { Table } from 'react-bootstrap';
 import {shortAddress, shortTxId} from '../utils/utils';
 import { FaCheck, FaHourglass } from 'react-icons/fa';
 
-class IssueRequests extends Component<IssueProps, {}> {
-  constructor(props: IssueProps) {
+export default class RedeemRequests extends Component<RedeemProps, {}> {
+  constructor(props: RedeemProps) {
     super(props);
   }
 
@@ -16,28 +16,28 @@ class IssueRequests extends Component<IssueProps, {}> {
         <Table hover responsive size={"md"}>
             <thead>
                 <tr>
-                    <th>Issue ID</th>
+                    <th>Redeem ID</th>
                     <th>Amount</th>
                     <th>Creation</th>
                     <th>Vault BTC Address</th>
                     <th>BTC Transaction</th>
                     <th>Confirmations</th>
-                    <th>Complete</th>
+                    <th>completed</th>
                 </tr>
             </thead>
             <tbody>
               {
-                this.props.issueRequests.map((request) => {
+                this.props.redeemRequests.map((request) => {
                   return (
                     <tr>
                       <td>{request.id}</td>
-                      <td>{request.amount}</td>
+                      <td>{request.amount} BTC</td>
                       <td>{request.creation}</td>
                       <td>{shortAddress(request.vaultAddress)}</td>
                       <td>{shortTxId(request.btcTx)}</td>
                       <td>{request.confirmations}</td>
                       <td>{request.completed ? <FaCheck></FaCheck> :<FaHourglass></FaHourglass>}</td>
-                  </tr>
+                    </tr>
                   );
                 })
               }
@@ -47,5 +47,3 @@ class IssueRequests extends Component<IssueProps, {}> {
     )
   }
 }
-
-export default IssueRequests;
