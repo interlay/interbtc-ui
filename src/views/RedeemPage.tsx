@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
+import { withRouter, Link } from 'react-router-dom';
 import { Image, Button, Col, Row, Modal } from 'react-bootstrap';
 
 import AppState from '../types/AppState';
 import { RedeemProps, RedeemRequest } from '../types/RedeemState';
+import RedeemWizard from '../components/RedeemWizard';
 
 import PolkaBTCImg from '../assets/img/polkabtc/PolkaBTC_black.png';
 import RedeemRequests from '../components/RedeemRequests';
+import { ALICE_BTC, BOB_BTC } from '../constants';
 
 export default class RedeemPage extends Component<AppState, RedeemProps> {
   state: RedeemProps = {
-    balancePolkaBTC: "loading...",
+    balancePolkaBTC: "",
     balanceDOT: "loading...",
     redeemRequests: [],
     showWizard: false,
+    idCounter: 0
   }
 
   // constructor(props: AppState & RouteComponentProps) {
@@ -21,6 +25,7 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.addRedeemRequest = this.addRedeemRequest.bind(this);
+    this.state.balancePolkaBTC = this.props.balancePolkaBTC;
   }
 
   handleShow(event: React.MouseEvent<HTMLElement>) {
@@ -29,7 +34,7 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
     })
   }
 
-  handleClose(event: React.MouseEvent<HTMLElement>) {
+  handleClose() {
     this.setState({
       showWizard: false
     })
@@ -55,30 +60,47 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
       redeemRequests: [
         {
           id: "1",
-          amount: "0.5 BTC",
-          creation: "21 Jun 2020 19:08",
+          amount: "0.5",
+          creation: "15/06/2020 16:09:01",
           vaultAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
           btcTx: "3b4162a307fab...b588d61a9069e762",
-          confirmations: 18
+          confirmations: 18,
+          redeemAddress: ALICE_BTC,
+          vaultBTCAddress: BOB_BTC,
+          completed: true
         },
         {
           id: "2",
-          amount: "0.2 BTC",
-          creation: "21 Jun 2020 21:08",
+          amount: "0.2",
+          creation: "13/06/2020 20:08:23",
           vaultAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
           btcTx: "d3c6652dfa406...e4aacb4c441e030e",
-          confirmations: 7
+          confirmations: 7,
+          redeemAddress: ALICE_BTC,
+          vaultBTCAddress: BOB_BTC,
+          completed: true
         }
-      ]
+      ],
+      idCounter: 3
     })
   }
 
   addRedeemRequest(req: RedeemRequest) {
     let arr = this.state.redeemRequests;
+    req.id = this.getAndIncrementIdCounter().toString();
+    this.setState({
+      balancePolkaBTC: (parseFloat(this.state.balancePolkaBTC) - parseFloat(req.amount)).toString()
+    })
     arr.push(req);
     this.setState({
       redeemRequests: arr,
     })
+  }
+
+  getAndIncrementIdCounter() {
+    let ret = this.state.idCounter;
+    this.state.idCounter++;
+    return ret;
   }
 
   render() {
@@ -88,7 +110,7 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
       <div>
         <section className="jumbotron text-center white-background mt-2">
           <div className="container mt-5">
-            <Image src={ PolkaBTCImg } width='256'></Image>
+          <Link to="/"><Image src={ PolkaBTCImg } width='256'></Image></Link>
 
             <Row className="mt-5">
               <Col xs="12" sm={{span: 6, offset: 3}}>
@@ -107,6 +129,11 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
             </Row>
 
             <RedeemRequests {...this.state} />
+
+
+            <Modal show={this.state.showWizard} onHide={this.handleClose}>
+              <RedeemWizard {...this.state} handleClose={this.handleClose} addRedeemRequest={this.addRedeemRequest}/>
+            </Modal>
           </div>
         </section>
       </div>
