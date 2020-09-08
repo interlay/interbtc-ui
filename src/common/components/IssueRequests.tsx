@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 
-import { IssueProps, IssueRequest } from "../types/IssueState";
+import { IssueProps } from "../types/IssueState";
 import { Table } from 'react-bootstrap';
 import {shortAddress, shortTxId} from '../utils/utils';
 import { FaCheck, FaHourglass } from 'react-icons/fa';
 
 class IssueRequests extends Component<IssueProps, {}> {
-  constructor(props: IssueProps) {
-    super(props);
-  }
 
   render(){
     return(

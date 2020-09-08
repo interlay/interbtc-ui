@@ -1,8 +1,7 @@
 import { Container, Image } from "react-bootstrap";
 import React, { Component } from "react";
-import { withRouter } from 'react-router-dom';
-import { FaTelegramPlane, FaMediumM, FaGitlab, FaGithub, FaTwitter, FaLinkedin } from 'react-icons/fa';
-import interlayImg from "../assets/img/interlay.png";
+import { FaTelegramPlane, FaMediumM, FaGithub, FaTwitter } from 'react-icons/fa';
+import interlayImg from "../../assets/img/interlay.png";
 
 
 export default class Footer extends Component {
@@ -29,32 +28,32 @@ export default class Footer extends Component {
                         </div>
                         <div className="col-lg-4 col-xs-12">
                             <div className="float-lg-right float-md-left">
-                                <a className="nav-link lowercase" rel="tooltip" title="" data-placement="bottom"
-                                    href="mailto:contact@interlay.io" target="_blank" data-original-title="Drop us an email">
+                                <a className="nav-link lowercase" title="" data-placement="bottom" rel="noopener noreferrer"
+                                href="mailto:contact@interlay.io" target="_blank" data-original-title="Drop us an email">
                                     contact@interlay.io
                                      </a>
                             </div>
                             <div className="float-lg-right float-md-left">
-                                <a className="nav-link" rel="tooltip" title="" data-placement="bottom"
+                                <a className="nav-link" rel="noopener noreferrer" title="" data-placement="bottom"
                                     href="https://t.me/interlay" target="_blank"
                                     data-original-title="Join our Telegram channel">
                                     <FaTelegramPlane></FaTelegramPlane>
                                 </a>
                             </div>
                             <div className="float-lg-right float-md-left">
-                                <a className="nav-link" rel="tooltip" title="" data-placement="bottom"
+                                <a className="nav-link" rel="noopener noreferrer" title="" data-placement="bottom"
                                     href="https://medium.com/Interlay" target="_blank" data-original-title="Follow us on Medium">
                                     <FaMediumM></FaMediumM>
                                 </a>
                             </div>
                             <div className="float-lg-right float-md-left">
-                                <a className="nav-link" rel="tooltip" title="" data-placement="bottom"
+                                <a className="nav-link" rel="noopener noreferrer" title="" data-placement="bottom"
                                     href="https://github.com/interlay" target="_blank" data-original-title="Follow us on Github">
                                     <FaGithub></FaGithub>
                                 </a>
                             </div>
                             <div className="float-lg-right float-md-left">
-                                <a className="nav-link" rel="tooltip" title="" data-placement="bottom"
+                                <a className="nav-link" rel="noopener noreferrer" title="" data-placement="bottom"
                                     href="https://twitter.com/interlayHQ" target="_blank"
                                     data-original-title="Follow us on Twitter">
                                     <FaTwitter></FaTwitter>

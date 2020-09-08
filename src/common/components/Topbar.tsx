@@ -1,15 +1,13 @@
 import React, { Component } from "react";
 import AppState from "../types/AppState";
-import polkaBTCLogo from "../assets/img/polkabtc/PolkaBTC_black.png";
+import polkaBTCLogo from "../../assets/img/polkabtc/PolkaBTC_black.png";
 import { Navbar, Nav, Image, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { BsFillEjectFill, BsUnlockFill, BsFillBarChartFill } from "react-icons/bs";
 import { IoMdCash } from "react-icons/io";
 
 export default class Topbar extends Component<AppState, {}> {
-  constructor(props: AppState) {
-    super(props);
-  }
+
   render() {
     return(
       <Navbar bg="light" expand="lg" className="border-bottom shadow-sm">
