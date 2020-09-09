@@ -6,10 +6,6 @@ import {shortAddress, shortTxId} from '../utils/utils';
 import { FaCheck, FaHourglass } from 'react-icons/fa';
 
 export default class RedeemRequests extends Component<RedeemProps, {}> {
-  constructor(props: RedeemProps) {
-    super(props);
-  }
-
   render(){
     return(
       <div>

@@ -1,4 +1,4 @@
-import { Redeem } from './VaultState';
+import { Redeem } from "./VaultState";
 
 export interface VaultInterface {
   getRedeems(): Promise<Redeem[]>;

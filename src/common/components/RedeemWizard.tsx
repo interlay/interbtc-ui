@@ -1,10 +1,8 @@
-import React, { Component, FormEvent, ChangeEvent } from "react";
-import { BOB_BTC, BOB , ALICE_BTC } from "../constants";
+import React, { Component, ChangeEvent } from "react";
+import { BOB_BTC, BOB , ALICE_BTC } from "../../constants";
 import { RedeemProps, RedeemRequest } from "../types/RedeemState";
 import { Container, Modal, Form, FormGroup, FormControl, ListGroup, ListGroupItem, Row, Col } from "react-bootstrap";
 import { shortAddress } from "../utils/utils";
-import QRCode from "qrcode.react";
-import RedeemRequests from "./RedeemRequests";
 
 interface RedeemWizardProps {
   step: number,
@@ -83,7 +81,7 @@ export default class RedeemWizard extends Component<RedeemProps  & { handleClose
                   Previous
               </button>
           )
-      } else if(step == 4) {
+      } else if(step === 4) {
         return (
           <button
               className="btn btn-primary float-right"
@@ -105,7 +103,7 @@ export default class RedeemWizard extends Component<RedeemProps  & { handleClose
                   Next
               </button>
           )
-      } else if (step == 3) {
+      } else if (step === 3) {
         return (
           <button
               className="btn btn-primary float-right"

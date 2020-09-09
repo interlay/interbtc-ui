@@ -1,5 +1,5 @@
 import React, { Component, FormEvent, ChangeEvent } from "react";
-import { BOB_BTC } from "../constants";
+import { BOB_BTC } from "../../constants";
 import { IssueProps, IssueRequest } from "../types/IssueState";
 import { Container, Modal, Form, FormGroup, FormControl, ListGroup, ListGroupItem, Row, Col } from "react-bootstrap";
 import QRCode from "qrcode.react";
@@ -81,7 +81,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
 
   get nextButton() {
       let step = this.state.step;
-      const buttontext = (step == 2) ? ("Confirm") : ("Next");
+      const buttontext = (step === 2) ? ("Confirm") : ("Next");
       if (step < 4) {
           return (
               <button
@@ -100,7 +100,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
       ...this.state,
       [name]: value
     });
-    if (name == "amountBTC") {
+    if (name === "amountBTC") {
       this.setState({
         amountPolkaBTC: value,
         feeBTC: (Number.parseFloat(value) * 0.005).toString()

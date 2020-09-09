@@ -30,13 +30,18 @@
   },
   "devDependencies": {
     "@polkadot/typegen": "^1.18.1",
+    "@typescript-eslint/eslint-plugin": "^4.0.1",
+    "@typescript-eslint/parser": "^4.0.1",
+    "eslint": "^6.8.0",
+    "husky": "^4.2.5",
     "ts-node": "^8.6.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "generate:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package sample-polkadotjs-typegen/interfaces --input ./src/interfaces",
     "generate:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package sample-polkadotjs-typegen/interfaces --endpoint btc-parachain.json --output ./src/interfaces",
-    "lint": "tsc --noEmit --pretty",
+    "lint": "npx eslint ./src/**/*.ts ./src/**/*.tsx",
+    "lint-fix": "npx eslint --fix ./src/**/*.ts ./src/**/*.tsx",
     "setup": "yarn generate:defs && yarn generate:meta",
     "build": "react-scripts build",
     "test": "react-scripts test",

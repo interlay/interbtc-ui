@@ -1,26 +1,24 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 // theme
-import './App.scss';
+import './_general.scss';
 import './assets/css/custom-bootstrap.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './assets/css/custom.css';
 
 // types
-import AppState from './types/AppState';
+import AppState from './common/types/AppState';
 
 // app imports
-import Topbar from "./components/Topbar";
-import LandingPage from './views/LandingPage';
-import IssuePage from './views/IssuePage';
-import Footer from './components/Footer';
-import { BTCParachain } from './controllers/BTCParachain';
-import { ALICE } from './constants';
-import VaultPage from './views/VaultPage';
-import RedeemPage from './views/RedeemPage';
-import Storage from "./controllers/Storage";
+import Topbar from "./common/components/Topbar";
+import LandingPage from './pages/LandingPage';
+import IssuePage from './pages/IssuePage';
+import Footer from './common/components/Footer';
+import { BTCParachain } from './common/controllers/BTCParachain';
+import VaultPage from './pages/VaultPage';
+import RedeemPage from './pages/RedeemPage';
+import Storage from "./common/controllers/Storage";
 
 // Mocking
 import {
@@ -35,8 +33,8 @@ import {
   collateralRate,
   feesEarned
 } from "./mock";
-import KVStorage from './controllers/KVStorage';
-import { StorageInterface } from './types/Storage';
+import KVStorage from './common/controllers/KVStorage';
+import { StorageInterface } from './common/types/Storage';
 
 export default class App extends Component<{}, AppState> {
   state: AppState = {
@@ -126,7 +124,7 @@ export default class App extends Component<{}, AppState> {
     return (
       <Router>
         <div className="main d-flex flex-column min-vh-100">
-          <Topbar {...this.state} />
+          <Topbar address={this.state.address} account={this.state.account} vault={this.state.vault} />
           <div className="mb-5">
             <Switch>
               <Route exact path="/">

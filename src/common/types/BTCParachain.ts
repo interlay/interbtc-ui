@@ -1,4 +1,4 @@
-import { ApiPromise, WsProvider, Keyring } from '@polkadot/api';
+import { ApiPromise, WsProvider, Keyring } from "@polkadot/api";
 
 interface BTCParachainInterface {
   wsProvider: WsProvider;
