@@ -124,7 +124,7 @@ export default class App extends Component<{}, AppState> {
     return (
       <Router>
         <div className="main d-flex flex-column min-vh-100">
-          <Topbar {...this.state} />
+          <Topbar address={this.state.address} account={this.state.account} vault={this.state.vault} />
           <div className="mb-5">
             <Switch>
               <Route exact path="/">

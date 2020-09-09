@@ -1,14 +1,18 @@
-import React, { Component } from "react";
-import AppState from "../types/AppState";
+import React, { ReactElement } from "react";
 import polkaBTCLogo from "../../assets/img/polkabtc/PolkaBTC_black.png";
 import { Navbar, Nav, Image, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { BsFillEjectFill, BsUnlockFill, BsFillBarChartFill } from "react-icons/bs";
 import { IoMdCash } from "react-icons/io";
+import { KeyringPair } from "@polkadot/keyring/types";
 
-export default class Topbar extends Component<AppState, {}> {
+type TopbarProps = {
+  account?: KeyringPair;
+  vault: boolean;
+  address?: string;
+}
 
-  render() {
+export default function Topbar(props: TopbarProps): ReactElement {
     return(
       <Navbar bg="light" expand="lg" className="border-bottom shadow-sm">
         <Navbar.Brand>
@@ -20,34 +24,34 @@ export default class Topbar extends Component<AppState, {}> {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            {(this.props.account !== undefined) &&
+            {(props.account !== undefined) &&
               <Link className="nav-link" to="/buy">
                 Buy <IoMdCash/>
               </Link>
 
             }
-            {(this.props.account !== undefined) &&
+            {(props.account !== undefined) &&
               <Link className="nav-link" to="/issue">
                 Mint <BsUnlockFill/>
               </Link>
 
             }
-            {(this.props.account !== undefined) &&
+            {(props.account !== undefined) &&
               <Link className="nav-link" to="/redeem">
                 Redeem <BsFillEjectFill/>
               </Link>
             }
-            {this.props.vault &&
+            {props.vault &&
               <Link className="nav-link" to="/vault">
                 Vault <BsFillBarChartFill/>
               </Link>
             }
           </Nav>
           <Nav>
-            {(this.props.address !== undefined) &&
+            {(props.address !== undefined) &&
               <Link className="nav-link" to="/">
                 <Button variant="dark" size="sm" style={{borderRadius: "1em"}}>
-                   Account: {this.props.address.substring(0, 10)}...{this.props.address.substring(38)}
+                   Account: {props.address.substring(0, 10)}...{props.address.substring(38)}
                 </Button>
               </Link>
             }
@@ -56,4 +60,3 @@ export default class Topbar extends Component<AppState, {}> {
       </Navbar>
     )
   }
-}
