@@ -24,28 +24,18 @@ export default function Topbar(props: TopbarProps): ReactElement {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            {(props.account !== undefined) &&
-              <Link className="nav-link" to="/buy">
-                Buy <IoMdCash/>
-              </Link>
-
-            }
-            {(props.account !== undefined) &&
-              <Link className="nav-link" to="/issue">
-                Mint <BsUnlockFill/>
-              </Link>
-
-            }
-            {(props.account !== undefined) &&
-              <Link className="nav-link" to="/redeem">
-                Redeem <BsFillEjectFill/>
-              </Link>
-            }
-            {props.vault &&
-              <Link className="nav-link" to="/vault">
-                Vault <BsFillBarChartFill/>
-              </Link>
-            }
+            <Link className="nav-link" to="/buy">
+              Buy <IoMdCash/>
+            </Link>
+            <Link className="nav-link" to="/issue">
+              Mint <BsUnlockFill/>
+            </Link>
+            <Link className="nav-link" to="/redeem">
+              Redeem <BsFillEjectFill/>
+            </Link>
+            <Link className="nav-link" to="/vault">
+              Vault <BsFillBarChartFill/>
+            </Link>
           </Nav>
           <Nav>
             {(props.address !== undefined) &&
