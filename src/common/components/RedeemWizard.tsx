@@ -261,10 +261,6 @@ class EnterBTCAddress extends Component<RedeemWizardProps, EnterBTCAddressProps>
 
 
 class Confirmation extends Component<RedeemWizardProps, {}> {
-  constructor(props: RedeemWizardProps) {
-    super(props);
-  }
-
   render() {
     console.log(this.props.step);
     if (this.props.step !== 3) {
@@ -292,10 +288,6 @@ class Confirmation extends Component<RedeemWizardProps, {}> {
 
 
 class VaultInfo extends Component<RedeemWizardProps, {}> {
-  constructor(props: RedeemWizardProps) {
-    super(props);
-  }
-
   render() {
     console.log(this.props.step);
     if (this.props.step !== 4) {

@@ -1,7 +1,9 @@
 import { ApiPromise, WsProvider, Keyring } from "@polkadot/api";
 import BTCParachainInterface from "../types/BTCParachain";
 
-const ERR_NOT_CONNECTED = new TypeError("Substrate API not connected. Make sure you can connect to a node.");
+const ERR_NOT_CONNECTED = new TypeError(
+    "Substrate API not connected. Make sure you can connect to a node."
+);
 
 export class BTCParachain implements BTCParachainInterface {
   wsProvider: WsProvider;
@@ -12,7 +14,7 @@ export class BTCParachain implements BTCParachainInterface {
       this.wsProvider = new WsProvider("ws://127.0.0.1:9944");
   }
 
-  async connect() {
+  async connect(): Promise<void> {
       this.api = await ApiPromise.create({
           provider: this.wsProvider,
           types: {
@@ -20,7 +22,7 @@ export class BTCParachain implements BTCParachainInterface {
               DOT: "u128",
               PolkaBTC: "Balance",
               BTCBalance: "u128",
-          }
+          },
       });
       this.keyring = new Keyring();
       console.log(this.api.query);

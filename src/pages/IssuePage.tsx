@@ -21,7 +21,7 @@ class IssuePage extends Component<AppState, IssueProps> {
       kvstorage: this.props.kvstorage,
       // eslint-disable-next-line
       addIssueRequest: () => {},
-  }
+  };
 
   // constructor(props: AppState & RouteComponentProps) {
   constructor(props: AppState) {
@@ -29,22 +29,24 @@ class IssuePage extends Component<AppState, IssueProps> {
       this.handleShow = this.handleShow.bind(this);
       this.handleClose = this.handleClose.bind(this);
       this.addIssueRequest = this.addIssueRequest.bind(this);
-      this.state.balancePolkaBTC = this.props.kvstorage.getValue("balancePolkaBTC");
+      this.state.balancePolkaBTC = this.props.kvstorage.getValue(
+          "balancePolkaBTC"
+      );
   }
 
-  handleShow():void {
+  handleShow(): void {
       this.setState({
-          showWizard: true
+          showWizard: true,
       });
   }
 
-  handleClose():void {
+  handleClose(): void {
       this.setState({
-          showWizard: false
+          showWizard: false,
       });
   }
 
-  async getParachainData() {
+  async getParachainData(): Promise<void> {
       if (!this.props.parachain.api) {
           await this.props.parachain.connect();
       }
@@ -53,23 +55,23 @@ class IssuePage extends Component<AppState, IssueProps> {
       // const balanceDOT = await this.props.parachain.getBalanceDOT(this.props.address);
           this.setState({
               balancePolkaBTC: this.props.kvstorage.getValue("balancePolkaBTC"),
-              balanceDOT: this.props.kvstorage.getValue("balanceDOT")
+              balanceDOT: this.props.kvstorage.getValue("balanceDOT"),
           });
       }
   }
 
-  componentDidMount():void {
+  componentDidMount(): void {
       this.getParachainData();
 
       if (this.props.storage) {
           this.setState({
               issueRequests: this.props.storage.issueRequests,
-              idCounter: 3
+              idCounter: 3,
           });
       }
   }
 
-  addIssueRequest(req: IssueRequest):void {
+  addIssueRequest(req: IssueRequest): void {
       // let arr = this.state.issueRequests;
       // req.id = this.getAndIncrementIdCounter().toString();
       /*
@@ -84,42 +86,45 @@ class IssuePage extends Component<AppState, IssueProps> {
       // })
       const counter = this.state.idCounter;
       this.setState({
-          idCounter:  counter + 1,
+          idCounter: counter + 1,
       });
-      // eslint-disable-next-line
-      this.props.storage?.appendIssueRequest(req);
-      this.handleClose();
+    // eslint-disable-next-line
+    this.props.storage?.appendIssueRequest(req);
+    this.handleClose();
   }
 
-  getAndIncrementIdCounter() {
-      const ret = this.state.idCounter;
-      this.state.idCounter++;
-      return ret;
-  }
-
-  render() {
+  render(): JSX.Element {
       const balancePolkaBTC = this.state.balancePolkaBTC;
       const balanceDOT = this.state.balanceDOT;
       return (
           <div>
               <section className="jumbotron text-center white-background mt-2">
                   <div className="container mt-5">
-                      <Link to="/"><Image src={ PolkaBTCImg } width='256'></Image></Link>
+                      <Link to="/">
+                          <Image src={PolkaBTCImg} width="256"></Image>
+                      </Link>
 
                       <Row className="mt-5">
-                          <Col xs="12" sm={{span: 6, offset: 3}}>
-                              <h5 className="text-muted">PolkaBTC balance: { balancePolkaBTC }</h5>
+                          <Col xs="12" sm={{ span: 6, offset: 3 }}>
+                              <h5 className="text-muted">
+                  PolkaBTC balance: {balancePolkaBTC}
+                              </h5>
                           </Col>
                       </Row>
                       <Row className="mt-1">
-                          <Col xs="12" sm={{span: 6, offset: 3}}>
-                              <h5 className="text-muted">DOT balance: { balanceDOT }</h5>
+                          <Col xs="12" sm={{ span: 6, offset: 3 }}>
+                              <h5 className="text-muted">DOT balance: {balanceDOT}</h5>
                           </Col>
                       </Row>
                       <Row className="mt-5 mb-5">
                           <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
-                              <Button variant="outline-dark" size="lg" block onClick={this.handleShow}>
-                                  Issue PolkaBTC
+                              <Button
+                                  variant="outline-dark"
+                                  size="lg"
+                                  block
+                                  onClick={this.handleShow}
+                              >
+                  Issue PolkaBTC
                               </Button>
                           </Col>
                       </Row>
@@ -127,9 +132,11 @@ class IssuePage extends Component<AppState, IssueProps> {
                       <IssueRequests {...this.state} />
 
                       <Modal show={this.state.showWizard} onHide={this.handleClose}>
-                          <IssueWizard {...this.state} addIssueRequest={this.addIssueRequest}/>
+                          <IssueWizard
+                              {...this.state}
+                              addIssueRequest={this.addIssueRequest}
+                          />
                       </Modal>
-
                   </div>
               </section>
           </div>
