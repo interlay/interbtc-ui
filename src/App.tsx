@@ -11,7 +11,6 @@ import './assets/css/custom.css';
 import AppState from './common/types/AppState';
 
 // app imports
-import TempLandingPage from "./pages/TempLandingPage";
 import Topbar from "./common/components/Topbar";
 import LandingPage from './pages/LandingPage';
 import IssuePage from './pages/IssuePage';
@@ -125,30 +124,9 @@ export default class App extends Component<{}, AppState> {
     return (
       <Router>
         <div className="main d-flex flex-column min-vh-100">
-          <div>
-            <Switch>
-            <Route exact path="/">
-                <TempLandingPage {...this.state} />
-              </Route>
-            </Switch>
-          </div>
-          <Footer />
-        </div>
-      </Router>
-    )
-  }
-}
-
-
-/*
-      <Router>
-        <div className="main d-flex flex-column min-vh-100">
           <Topbar address={this.state.address} account={this.state.account} vault={this.state.vault} />
           <div className="mb-5">
             <Switch>
-            <Route exact path="/">
-                <TempLandingPage {...this.state} />
-              </Route>
               <Route exact path="/">
                 <LandingPage {...this.state} />
               </Route>
@@ -166,4 +144,6 @@ export default class App extends Component<{}, AppState> {
           <Footer />
         </div>
       </Router>
-*/
+    )
+  }
+}
