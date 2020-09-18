@@ -3,7 +3,6 @@ import polkaBTCLogo from "../../assets/img/polkabtc/PolkaBTC_black.png";
 import { Navbar, Nav, Image, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { BsFillEjectFill, BsUnlockFill, BsFillBarChartFill } from "react-icons/bs";
-import { IoMdCash } from "react-icons/io";
 import { KeyringPair } from "@polkadot/keyring/types";
 
 type TopbarProps = {
@@ -24,11 +23,8 @@ export default function Topbar(props: TopbarProps): ReactElement {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Link className="nav-link" to="/buy">
-              Buy <IoMdCash/>
-            </Link>
             <Link className="nav-link" to="/issue">
-              Mint <BsUnlockFill/>
+              Issue <BsUnlockFill/>
             </Link>
             <Link className="nav-link" to="/redeem">
               Redeem <BsFillEjectFill/>
