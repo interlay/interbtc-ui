@@ -10,7 +10,7 @@ export default class KVStorage implements KVStorageInterface {
         }
     }
 
-    setValue(key: string, value: string):void {
+    setValue(key: string, value: string): void {
         localStorage.setItem(key, value);
     }
 }

@@ -10,7 +10,7 @@ export const MockIssueRequests: Array<IssueRequest> = [
         vaultAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
         btcTx: "3b4162a307fab...b588d61a9069e762",
         confirmations: 25,
-        completed: true
+        completed: true,
     },
     {
         id: "2",
@@ -19,8 +19,8 @@ export const MockIssueRequests: Array<IssueRequest> = [
         vaultAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
         btcTx: "d3c6652dfa406...e4aacb4c441e030e",
         confirmations: 9,
-        completed: true
-    }
+        completed: true,
+    },
 ];
 
 export const MockRedeemRequests: Array<RedeemRequest> = [
@@ -33,7 +33,7 @@ export const MockRedeemRequests: Array<RedeemRequest> = [
         confirmations: 18,
         redeemAddress: ALICE_BTC,
         vaultBTCAddress: BOB_BTC,
-        completed: true
+        completed: true,
     },
     {
         id: "2",
@@ -44,8 +44,8 @@ export const MockRedeemRequests: Array<RedeemRequest> = [
         confirmations: 7,
         redeemAddress: ALICE_BTC,
         vaultBTCAddress: BOB_BTC,
-        completed: true
-    }
+        completed: true,
+    },
 ];
 
 export const totalPolkaBTC = "12333.41";

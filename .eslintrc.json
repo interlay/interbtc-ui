@@ -30,7 +30,7 @@
             }
           ],
           "react/no-unescaped-entities": 0,
-          "indent": "error",
+          "indent": ["error", 4],
           "max-len": [
             "error",
             {

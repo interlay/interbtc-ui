@@ -11,8 +11,8 @@ import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
 class LandingPage extends Component<AppState, LandingProps> {
   state: LandingProps = {
       totalPolkaBTC: "loading...",
-      totalLockedDOT: "loading..."
-  }
+      totalLockedDOT: "loading...",
+  };
 
   async getParachainData(): Promise<void> {
       // FIXME: only update when the issuance is actually updated
@@ -30,7 +30,7 @@ class LandingPage extends Component<AppState, LandingProps> {
       // }
       this.setState({
           totalPolkaBTC: this.props.kvstorage.getValue("totalPolkaBTC"),
-          totalLockedDOT: this.props.kvstorage.getValue("totalLockedDOT")
+          totalLockedDOT: this.props.kvstorage.getValue("totalLockedDOT"),
       });
   }
 
@@ -45,35 +45,43 @@ class LandingPage extends Component<AppState, LandingProps> {
           <div>
               <section className="jumbotron min-vh-100 text-center white-background mt-2">
                   <div className="container mt-5">
-                      <Link to="/"><Image src={ PolkaBTCImg } width='256'></Image></Link>
-                      <h3 style={{ fontSize: "1.5em" }}className="lead text-muted mt-3">
-                          PolkaBTC: Trustless and open DeFi access for your Bitcoin.
+                      <Link to="/">
+                          <Image src={PolkaBTCImg} width="256"></Image>
+                      </Link>
+                      <h3 style={{ fontSize: "1.5em" }} className="lead text-muted mt-3">
+              PolkaBTC: Trustless and open DeFi access for your Bitcoin.
                       </h3>
 
                       <Row className="mt-5">
-                          <Col xs="12" sm={{span: 6, offset: 3}}>
-                              <h5 className="text-muted">PolkaBTC issued: { totalPolkaBTC }</h5>
+                          <Col xs="12" sm={{ span: 6, offset: 3 }}>
+                              <h5 className="text-muted">PolkaBTC issued: {totalPolkaBTC}</h5>
                           </Col>
                       </Row>
                       <Row className="mt-1">
-                          <Col xs="12" sm={{span: 6, offset: 3}}>
-                              <h5 className="text-muted">DOT locked: { totalLockedDOT }</h5>
+                          <Col xs="12" sm={{ span: 6, offset: 3 }}>
+                              <h5 className="text-muted">DOT locked: {totalLockedDOT}</h5>
                           </Col>
                       </Row>
                       <Row className="mt-5">
                           <Col className="mt-2" xs="12" sm={{ span: 4 }}>
                               <NavLink className="text-decoration-none" to="/">
-                                  <Button variant="outline-primary" size="lg" block>Buy PolkaBTC</Button>
+                                  <Button variant="outline-primary" size="lg" block>
+                    Buy PolkaBTC
+                                  </Button>
                               </NavLink>
                           </Col>
                           <Col className="mt-2" xs="12" sm={{ span: 4 }}>
                               <NavLink className="text-decoration-none" to="/issue">
-                                  <Button variant="outline-dark" size="lg" block>Issue PolkaBTC</Button>
+                                  <Button variant="outline-dark" size="lg" block>
+                    Issue PolkaBTC
+                                  </Button>
                               </NavLink>
                           </Col>
                           <Col className="mt-2" xs="12" sm={{ span: 4 }}>
                               <NavLink className="text-decoration-none" to="/redeem">
-                                  <Button variant="outline-primary" size="lg" block>Redeem PolkaBTC</Button>
+                                  <Button variant="outline-primary" size="lg" block>
+                    Redeem PolkaBTC
+                                  </Button>
                               </NavLink>
                           </Col>
                       </Row>

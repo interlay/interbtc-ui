@@ -7,7 +7,7 @@
 // interface LandingProps extends RouteComponentProps<LandingRouterProps> {
 interface LandingProps {
   totalPolkaBTC: string;
-  totalLockedDOT: string
+  totalLockedDOT: string;
 }
 
 export default LandingProps;

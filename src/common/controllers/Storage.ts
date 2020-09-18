@@ -33,26 +33,26 @@ export default class Storage implements StorageInterface {
       return [[], []];
   }
 
-  getIssueRequests():Array<IssueRequest> {
+  getIssueRequests(): Array<IssueRequest> {
       return this.issueRequests;
   }
 
-  getRedeemRequests():Array<RedeemRequest> {
+  getRedeemRequests(): Array<RedeemRequest> {
       return this.redeemRequests;
   }
 
-  appendIssueRequest(req: IssueRequest):void {
+  appendIssueRequest(req: IssueRequest): void {
       console.log("Storing" + req);
       this.issueRequests.push(req);
       this.writeToStorage();
   }
 
-  appendRedeemRequest(req: RedeemRequest):void {
+  appendRedeemRequest(req: RedeemRequest): void {
       this.redeemRequests.push(req);
       this.writeToStorage();
   }
 
-  modifyIssueRequest(req: IssueRequest):void {
+  modifyIssueRequest(req: IssueRequest): void {
       const id = req.id;
       for (let i = 0; i < this.issueRequests.length; i++) {
           if (this.issueRequests[i].id === id) {
@@ -63,7 +63,7 @@ export default class Storage implements StorageInterface {
       this.writeToStorage();
   }
 
-  modifyRedeemRequest(req: RedeemRequest):void {
+  modifyRedeemRequest(req: RedeemRequest): void {
       const id = req.id;
       for (let i = 0; i < this.redeemRequests.length; i++) {
           if (this.redeemRequests[i].id === id) {
@@ -74,8 +74,8 @@ export default class Storage implements StorageInterface {
       this.writeToStorage();
   }
 
-  deleteIssueRequest(id: string):void {
-      const req = this.issueRequests.find(req => req.id === id);
+  deleteIssueRequest(id: string): void {
+      const req = this.issueRequests.find((req) => req.id === id);
       if (req) {
           const index = this.issueRequests.indexOf(req, 0);
           if (index > -1) {
@@ -85,8 +85,8 @@ export default class Storage implements StorageInterface {
       this.writeToStorage();
   }
 
-  deleteRedeemRequest(id: string):void {
-      const req = this.redeemRequests.find(req => req.id === id);
+  deleteRedeemRequest(id: string): void {
+      const req = this.redeemRequests.find((req) => req.id === id);
       if (req) {
           const index = this.redeemRequests.indexOf(req, 0);
           if (index > -1) {
@@ -96,17 +96,15 @@ export default class Storage implements StorageInterface {
       this.writeToStorage();
   }
 
-  clearStorage():void {
+  clearStorage(): void {
       localStorage.clear();
   }
 
-  writeToStorage():void {
-      const requests = JSON.stringify(
-          {
-              "issueRequests": this.issueRequests,
-              "redeemRequests": this.redeemRequests
-          }
-      );
+  writeToStorage(): void {
+      const requests = JSON.stringify({
+          issueRequests: this.issueRequests,
+          redeemRequests: this.redeemRequests,
+      });
       localStorage.setItem(this.address, requests);
   }
 }

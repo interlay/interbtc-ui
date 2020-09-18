@@ -10,121 +10,134 @@ import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
 import RedeemRequests from "../common/components/RedeemRequests";
 
 export default class RedeemPage extends Component<AppState, RedeemProps> {
-    state: RedeemProps = {
-        balancePolkaBTC: "",
-        balanceDOT: "loading...",
-        redeemRequests: [],
-        showWizard: false,
-        idCounter: 0,
-        storage: this.props.storage,
-        kvstorage: this.props.kvstorage,
-    }
+  state: RedeemProps = {
+      balancePolkaBTC: "",
+      balanceDOT: "loading...",
+      redeemRequests: [],
+      showWizard: false,
+      idCounter: 0,
+      storage: this.props.storage,
+      kvstorage: this.props.kvstorage,
+  };
 
-    // constructor(props: AppState & RouteComponentProps) {
-    constructor(props: AppState) {
-        super(props);
-        this.handleShow = this.handleShow.bind(this);
-        this.handleClose = this.handleClose.bind(this);
-        this.addRedeemRequest = this.addRedeemRequest.bind(this);
-    }
+  // constructor(props: AppState & RouteComponentProps) {
+  constructor(props: AppState) {
+      super(props);
+      this.handleShow = this.handleShow.bind(this);
+      this.handleClose = this.handleClose.bind(this);
+      this.addRedeemRequest = this.addRedeemRequest.bind(this);
+  }
 
-    // FIXME
-    // eslint-disable-next-line  
+  // FIXME
+  // eslint-disable-next-line
     handleShow(event: React.MouseEvent<HTMLElement>): void {
-        this.setState({
-            showWizard: true
-        });
-    }
+      this.setState({
+          showWizard: true,
+      });
+  }
 
-    handleClose(): void {
-        this.setState({
-            showWizard: false
-        });
-    }
+  handleClose(): void {
+      this.setState({
+          showWizard: false,
+      });
+  }
 
-    async getParachainData(): Promise<void> {
-        if (!this.props.parachain.api) {
-            await this.props.parachain.connect();
-        }
-        if (this.props.parachain.api && this.props.address) {
-            // FIXME
-            // eslint-disable-next-line  
-            const _balancePolkaBTC = await this.props.parachain.getBalancePolkaBTC(this.props.address);
-            // FIXME
-            // eslint-disable-next-line
-            const _balanceDOT = await this.props.parachain.getBalanceDOT(this.props.address);
-            this.setState({
-                balancePolkaBTC: this.props.kvstorage.getValue("balancePolkaBTC"),
-                balanceDOT: this.props.kvstorage.getValue("balanceDOT")
-            });
-        }
-    }
+  async getParachainData(): Promise<void> {
+      if (!this.props.parachain.api) {
+          await this.props.parachain.connect();
+      }
+      if (this.props.parachain.api && this.props.address) {
+      // FIXME
+      // eslint-disable-next-line
+      const balancePolkaBTC = await this.props.parachain.getBalancePolkaBTC(this.props.address);
+          // FIXME
+          // eslint-disable-next-line
+      const balanceDOT = await this.props.parachain.getBalanceDOT(this.props.address);
+          this.setState({
+              balancePolkaBTC: this.props.kvstorage.getValue("balancePolkaBTC"),
+              balanceDOT: this.props.kvstorage.getValue("balanceDOT"),
+          });
+      }
+  }
 
-    componentDidMount(): void {
-        this.getParachainData();
-        if (this.props.storage) {
-            this.setState({
-                redeemRequests: this.props.storage.redeemRequests,
-                idCounter: 3
-            });
-        }
-    }
+  componentDidMount(): void {
+      this.getParachainData();
+      if (this.props.storage) {
+          this.setState({
+              redeemRequests: this.props.storage.redeemRequests,
+              idCounter: 3,
+          });
+      }
+  }
 
-    addRedeemRequest(req: RedeemRequest): void {
-        const arr = this.state.redeemRequests;
-        req.id = this.getAndIncrementIdCounter().toString();
-        this.setState({
-            balancePolkaBTC: (parseFloat(this.state.balancePolkaBTC) - parseFloat(req.amount)).toString()
-        });
-        arr.push(req);
-        this.setState({
-            redeemRequests: arr,
-        });
-    }
+  addRedeemRequest(req: RedeemRequest): void {
+      const arr = this.state.redeemRequests;
+      req.id = this.getAndIncrementIdCounter().toString();
+      this.setState({
+          balancePolkaBTC: (
+              parseFloat(this.state.balancePolkaBTC) - parseFloat(req.amount)
+          ).toString(),
+      });
+      arr.push(req);
+      this.setState({
+          redeemRequests: arr,
+      });
+  }
 
-    getAndIncrementIdCounter(): void {
-        const ret = this.state.idCounter;
-        this.setState({ idCounter: (this.state.idCounter + 1) });
-        return ret;
-    }
+  getAndIncrementIdCounter(): number {
+      const ret = this.state.idCounter;
+      this.setState({ idCounter: this.state.idCounter + 1 });
+      return ret;
+  }
 
-    render(): JSX.Element {
-        const balancePolkaBTC = this.state.balancePolkaBTC;
-        const balanceDOT = this.state.balanceDOT;
-        return (
-            <div>
-                <section className="jumbotron text-center white-background mt-2">
-                    <div className="container mt-5">
-                        <Link to="/"><Image src={PolkaBTCImg} width='256'></Image></Link>
+  render(): JSX.Element {
+      const balancePolkaBTC = this.state.balancePolkaBTC;
+      const balanceDOT = this.state.balanceDOT;
+      return (
+          <div>
+              <section className="jumbotron text-center white-background mt-2">
+                  <div className="container mt-5">
+                      <Link to="/">
+                          <Image src={PolkaBTCImg} width="256"></Image>
+                      </Link>
 
-                        <Row className="mt-5">
-                            <Col xs="12" sm={{ span: 6, offset: 3 }}>
-                                <h5 className="text-muted">PolkaBTC balance: {balancePolkaBTC}</h5>
-                            </Col>
-                        </Row>
-                        <Row className="mt-1">
-                            <Col xs="12" sm={{ span: 6, offset: 3 }}>
-                                <h5 className="text-muted">DOT balance: {balanceDOT}</h5>
-                            </Col>
-                        </Row>
-                        <Row className="mt-5 mb-5">
-                            <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
-                                <Button variant="outline-dark" size="lg" block onClick={this.handleShow}>
-                                    Redeem PolkaBTC
-                                </Button>
-                            </Col>
-                        </Row>
+                      <Row className="mt-5">
+                          <Col xs="12" sm={{ span: 6, offset: 3 }}>
+                              <h5 className="text-muted">
+                  PolkaBTC balance: {balancePolkaBTC}
+                              </h5>
+                          </Col>
+                      </Row>
+                      <Row className="mt-1">
+                          <Col xs="12" sm={{ span: 6, offset: 3 }}>
+                              <h5 className="text-muted">DOT balance: {balanceDOT}</h5>
+                          </Col>
+                      </Row>
+                      <Row className="mt-5 mb-5">
+                          <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
+                              <Button
+                                  variant="outline-dark"
+                                  size="lg"
+                                  block
+                                  onClick={this.handleShow}
+                              >
+                  Redeem PolkaBTC
+                              </Button>
+                          </Col>
+                      </Row>
 
-                        <RedeemRequests {...this.state} />
+                      <RedeemRequests {...this.state} />
 
-
-                        <Modal show={this.state.showWizard} onHide={this.handleClose}>
-                            <RedeemWizard {...this.state} handleClose={this.handleClose}
-                                addRedeemRequest={this.addRedeemRequest} />
-                        </Modal>
-                    </div>
-                </section>
-            </div>
-        );
-    }
+                      <Modal show={this.state.showWizard} onHide={this.handleClose}>
+                          <RedeemWizard
+                              {...this.state}
+                              handleClose={this.handleClose}
+                              addRedeemRequest={this.addRedeemRequest}
+                          />
+                      </Modal>
+                  </div>
+              </section>
+          </div>
+      );
+  }
 }
