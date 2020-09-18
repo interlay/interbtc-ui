@@ -3,7 +3,6 @@ import polkaBTCLogo from "../../assets/img/polkabtc/PolkaBTC_black.png";
 import { Navbar, Nav, Image, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { BsFillEjectFill, BsUnlockFill, BsFillBarChartFill } from "react-icons/bs";
-import { IoMdCash } from "react-icons/io";
 import { KeyringPair } from "@polkadot/keyring/types";
 
 type TopbarProps = {
