@@ -24,11 +24,8 @@ export default function Topbar(props: TopbarProps): ReactElement {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Link className="nav-link" to="/buy">
-              Buy <IoMdCash/>
-            </Link>
             <Link className="nav-link" to="/issue">
-              Mint <BsUnlockFill/>
+              Issue <BsUnlockFill/>
             </Link>
             <Link className="nav-link" to="/redeem">
               Redeem <BsFillEjectFill/>

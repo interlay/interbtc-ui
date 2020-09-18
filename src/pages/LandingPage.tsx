@@ -63,14 +63,7 @@ class LandingPage extends Component<AppState, LandingProps> {
                           </Col>
                       </Row>
                       <Row className="mt-5">
-                          <Col className="mt-2" xs="12" sm={{ span: 4 }}>
-                              <NavLink className="text-decoration-none" to="/">
-                                  <Button variant="outline-primary" size="lg" block>
-                    Buy PolkaBTC
-                                  </Button>
-                              </NavLink>
-                          </Col>
-                          <Col className="mt-2" xs="12" sm={{ span: 4 }}>
+                          <Col className="mt-2" xs="12" sm={{ span: 4, offset: 2 }}>
                               <NavLink className="text-decoration-none" to="/issue">
                                   <Button variant="outline-dark" size="lg" block>
                     Issue PolkaBTC
