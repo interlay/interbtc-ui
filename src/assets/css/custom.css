@@ -2,6 +2,17 @@
    background-color: white;
 }
 
+.polkabtc-background {
+  background-image: url("../img/polkabtc/background.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.no-margin-bottom {
+  margin-bottom: 0px;
+}
 
 footer {
    padding: 0.9375rem 0;
@@ -11,7 +22,6 @@ footer {
    /* Safari 6.1+ */
    display: flex;
    font-size: 0.8rem;
-   background-color: #eee;
  }
  
  footer ul {
