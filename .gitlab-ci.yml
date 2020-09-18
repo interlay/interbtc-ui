@@ -14,8 +14,12 @@ test:
     - yarn install
     - yarn lint
     - yarn test --passWithNoTests
+  only:
+    - merge_requests
 
 build:
   script:
     - yarn install
     - yarn build 
+  only:
+    - merge_requests
