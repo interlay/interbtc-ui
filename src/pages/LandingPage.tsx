@@ -14,7 +14,7 @@ class LandingPage extends Component<AppState, LandingProps> {
       totalLockedDOT: "loading..."
   }
 
-  async getParachainData() {
+  async getParachainData(): Promise<void> {
       // FIXME: only update when the issuance is actually updated
       if (!this.props.parachain.api) {
           await this.props.parachain.connect();
@@ -34,11 +34,11 @@ class LandingPage extends Component<AppState, LandingProps> {
       });
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
       this.getParachainData();
   }
 
-  render() {
+  render(): JSX.Element {
       const totalPolkaBTC = this.state.totalPolkaBTC;
       const totalLockedDOT = this.state.totalLockedDOT;
       return (
@@ -46,7 +46,6 @@ class LandingPage extends Component<AppState, LandingProps> {
               <section className="jumbotron min-vh-100 text-center white-background mt-2">
                   <div className="container mt-5">
                       <Link to="/"><Image src={ PolkaBTCImg } width='256'></Image></Link>
-                      <h3 style={{ fontSize: "1.5em" }}className="lead mt-3"></h3>
                       <h3 style={{ fontSize: "1.5em" }}className="lead text-muted mt-3">
                           PolkaBTC: Trustless and open DeFi access for your Bitcoin.
                       </h3>

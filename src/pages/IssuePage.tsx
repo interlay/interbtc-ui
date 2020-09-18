@@ -44,7 +44,7 @@ class IssuePage extends Component<AppState, IssueProps> {
       });
   }
 
-  async getParachainData() {
+  async getParachainData(): Promise<void> {
       if (!this.props.parachain.api) {
           await this.props.parachain.connect();
       }
@@ -86,18 +86,12 @@ class IssuePage extends Component<AppState, IssueProps> {
       this.setState({
           idCounter:  counter + 1,
       });
-      // eslint-disable-next-line
-      this.props.storage?.appendIssueRequest(req);
-      this.handleClose();
+    // eslint-disable-next-line
+    this.props.storage?.appendIssueRequest(req);
+    this.handleClose();
   }
 
-  getAndIncrementIdCounter() {
-      const ret = this.state.idCounter;
-      this.state.idCounter++;
-      return ret;
-  }
-
-  render() {
+  render(): JSX.Element {
       const balancePolkaBTC = this.state.balancePolkaBTC;
       const balanceDOT = this.state.balanceDOT;
       return (

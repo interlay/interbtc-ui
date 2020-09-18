@@ -194,10 +194,6 @@ class EnterBTCAmount extends Component<IssueWizardProps, EnterBTCAmountProps> {
 }
 
 class RequestConfirmation extends Component<IssueWizardProps, {}> {
-  constructor(props: IssueWizardProps) {
-    super(props);
-  }
-
   render() {
     if (this.props.step !== 2) {
       return null
@@ -228,10 +224,6 @@ class BTCPayment extends Component<IssueWizardProps, BTCPaymentProps> {
   state: BTCPaymentProps = {
     paymentUri: '',
     loaded: false
-  }
-
-  constructor(props: IssueWizardProps) {
-    super(props);
   }
 
   async componentDidUpdate() {
@@ -273,10 +265,6 @@ class BTCPayment extends Component<IssueWizardProps, BTCPaymentProps> {
 }
 
 class Confirmation extends Component<IssueWizardProps, {}> {
-  constructor(props: IssueWizardProps) {
-    super(props);
-  }
-
   render() {
     console.log(this.props.step);
     if (this.props.step !== 4) {

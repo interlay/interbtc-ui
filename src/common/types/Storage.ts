@@ -7,7 +7,7 @@ export interface StorageInterface {
   redeemRequests: Array<RedeemRequest>,
 
   // load both issue and redeem requests
-  loadRequests(): any[],
+  loadRequests(): Array<IssueRequest | RedeemRequest> 
 
   // get the current issue requests
   getIssueRequests(): Array<IssueRequest>,
