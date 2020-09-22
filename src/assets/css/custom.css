@@ -94,3 +94,9 @@ footer {
    display: inline-block;
    float: none;
  }
+
+ @media (max-width: 576px) {
+    .float-xs-left{
+      float: left!important;
+    }
+ }

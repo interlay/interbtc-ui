@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { Image, Button, Col, Row } from "react-bootstrap";
+import PolkaBTCAPI from "@interlay/polkabtc/src";
+import { createAPI } from "@interlay/polkabtc/src/factory";
 
 import AppState from "../common/types/AppState";
 import LandingProps from "../common/types/LandingState";
@@ -15,6 +17,10 @@ class LandingPage extends Component<AppState, LandingProps> {
   };
 
   async getParachainData(): Promise<void> {
+
+    const defaultEndpoint = "ws://127.0.0.1:9944";
+    const api = await createAPI(defaultEndpoint);
+    // const polkaBTC = new PolkaBTCAPI(api);
       // FIXME: only update when the issuance is actually updated
       if (!this.props.parachain.api) {
           await this.props.parachain.connect();

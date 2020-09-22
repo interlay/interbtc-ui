@@ -1,4 +1,13 @@
 @import "custom";
+@import "mixins";
+
+@include font-fam("airbnb-cereal-light", "./assets/fonts/airbnb-cereal/AirbnbCerealLight");
+// @include font-fam("airbnb-cereal-medium", "./assets/fonts/airbnb-cereal/AirbnbCerealMedium");
+// @include font-fam("airbnb-cereal-book", "./assets/fonts/airbnb-cereal/AirbnbCerealBook");
+
+html, body, div, p, a, span, button, i, form, table, tr, td, th, li, ul{
+    font-family: airbnb-cereal-light, "Comic Sans MS", Arial;
+}
 
 .header {
   text-align: center;

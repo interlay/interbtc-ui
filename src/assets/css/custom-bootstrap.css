@@ -24,9 +24,8 @@
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
-  --breakpoint-xl: 1200px;
-  --font-family-sans-serif: Roboto;
-  --font-family-monospace: Roboto Mono; }
+  --breakpoint-xl: 1200px; 
+}
 
 *,
 *::before,
@@ -34,7 +33,6 @@
   box-sizing: border-box; }
 
 html {
-  font-family: sans-serif;
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
@@ -44,7 +42,6 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 body {
   margin: 0;
-  font-family: Roboto;
   font-size: 1rem;
   font-weight: 300;
   line-height: 1.5;
@@ -144,7 +141,6 @@ pre,
 code,
 kbd,
 samp {
-  font-family: Roboto Mono;
   font-size: 1em; }
 
 pre {
@@ -4141,7 +4137,6 @@ a.close.disabled {
   z-index: 1070;
   display: block;
   margin: 0;
-  font-family: Roboto;
   font-style: normal;
   font-weight: 300;
   line-height: 1.5;
@@ -4226,7 +4221,6 @@ a.close.disabled {
   z-index: 1060;
   display: block;
   max-width: 276px;
-  font-family: Roboto;
   font-style: normal;
   font-weight: 300;
   line-height: 1.5;
@@ -6786,9 +6780,6 @@ button.bg-dark:focus {
   .ml-xl-auto,
   .mx-xl-auto {
     margin-left: auto !important; } }
-
-.text-monospace {
-  font-family: Roboto Mono !important; }
 
 .text-justify {
   text-align: justify !important; }
