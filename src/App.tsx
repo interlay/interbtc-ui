@@ -12,12 +12,13 @@ import AppState from './common/types/AppState';
 
 // app imports
 import Topbar from "./common/components/Topbar";
-import LandingPage from './pages/LandingPage';
-import IssuePage from './pages/IssuePage';
 import Footer from './common/components/Footer';
 import { BTCParachain } from './common/controllers/BTCParachain';
-import VaultPage from './pages/VaultPage';
-import RedeemPage from './pages/RedeemPage';
+import LandingPage from './pages/landing.page';
+import IssuePage from './pages/issue.page';
+import VaultPage from './pages/vault.page';
+import RedeemPage from './pages/redeem.page';
+import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
 import Storage from "./common/controllers/Storage";
 
 // Mocking
@@ -138,6 +139,9 @@ export default class App extends Component<{}, AppState> {
               </Route>
               <Route path="/redeem">
                 <RedeemPage {...this.state} />
+              </Route>
+              <Route path="/staked-relayer">
+                <StakedRelayerPage></StakedRelayerPage>
               </Route>
             </Switch>
           </div>

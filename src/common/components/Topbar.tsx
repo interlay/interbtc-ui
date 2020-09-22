@@ -32,6 +32,9 @@ export default function Topbar(props: TopbarProps): ReactElement {
             <Link className="nav-link" to="/vault">
               Vault <BsFillBarChartFill/>
             </Link>
+            <Link className="nav-link" to="/staked-relayer">
+              Staked Relayer
+            </Link>
           </Nav>
           <Nav>
             {(props.address !== undefined) &&
