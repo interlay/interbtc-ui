@@ -54,6 +54,24 @@
         background-color: $green-color;
     }
 
+    .yellow-circle{
+        @extend .circle;
+        border: 1px solid $yellow-color;
+        background-color: $yellow-color;
+    }
+
+    .orange-circle{
+        @extend .circle;
+        border: 1px solid $orange-color;
+        background-color: $orange-color;
+    }
+
+    .red-circle{
+        @extend .circle;
+        border: 1px solid $red-color;
+        background-color: $red-color;
+    }
+
     .header{
         font-weight: 600;
         font-size: 1.2rem;
@@ -62,9 +80,9 @@
 
     .report-button-wrapper{
         padding-top: 2rem;
-        width: 1000px;
+        width: 100%;
         margin: auto;
-        text-align: right;
+        text-align: center;
     }
 
     .oracle-table {

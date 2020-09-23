@@ -1,8 +1,13 @@
 import React, { ReactElement, useEffect, useState } from "react";
+import { Button } from "react-bootstrap";
+import VoteModal from "../vote-modal/vote-modal";
 
 export default function BtcParachainTable ():ReactElement{
     const [parachainStatus,setStatus] = useState(false);
     const [parachains,setParachains] = useState([{}]);
+    const [showVoteModal, setShowVoteModal] = useState(false);
+    const handleClose = () => setShowVoteModal(false);
+    const [parachainVote,setParachainVote] = useState();
 
     useEffect(()=>{
         setParachains([{
@@ -36,7 +41,13 @@ export default function BtcParachainTable ():ReactElement{
         setStatus(true);
     },[]);
 
+    const openVoteModal = (parachain: any) => {
+        setShowVoteModal(true);
+        setParachainVote(parachain);
+    };
+
     return <div className="btc-parachain-table">
+        <VoteModal show={showVoteModal} onClose={handleClose} parachain={parachainVote} ></VoteModal>
         <div className="row">
             <div className="col-12">
                 <div className="header">
@@ -70,7 +81,13 @@ export default function BtcParachainTable ():ReactElement{
                                     <td>{parachain.proposedChanges}</td>
                                     <td>{parachain.hash}</td>
                                     <td>{parachain.votes}</td>
-                                    <td>{parachain.result}</td>
+                                    <td>{parachain.result === "Pending" ? 
+                                        <Button variant="outline-primary"
+                                            onClick={()=>openVoteModal(parachain)}>
+                                            Vote
+                                        </Button> 
+                                        : parachain.result}
+                                    </td>
                                 </tr>
                             })}
                         </tbody>
