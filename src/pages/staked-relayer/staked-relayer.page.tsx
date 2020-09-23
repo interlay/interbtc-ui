@@ -15,15 +15,15 @@ export default function StakedRelayerPage(): ReactElement {
     const [showReportModal, setShowReportModal] = useState(false);
     const handleClose = () => setShowReportModal(false);
 
-    useEffect(()=>{
-        const fetchparachains = async() => {
+    useEffect(() => {
+        const fetchparachains = async () => {
             const polkaBTC = await createPolkabtcAPI("mock");
 
-            const activeStakedRelayerId = <AccountId>{};
-            {/* const feesEarnedByActiveStakedRelayer = await polkaBTC.stakedRelayer.getFeesEarned(
+            const activeStakedRelayerId = {} as AccountId;
+            const feesEarnedByActiveStakedRelayer = await polkaBTC.stakedRelayer.getFeesEarned(
                 activeStakedRelayerId
-            ); */}
-        }
+            );
+        };
     });
 
     return <div className="staked-relayer-page container-fluid">
@@ -42,7 +42,7 @@ export default function StakedRelayerPage(): ReactElement {
         <div className="row">
             <div className="col-12">
                 <div className="stats">
-                    Fees earned: 
+                    Fees earned:
                 </div>
             </div>
         </div>
@@ -50,7 +50,7 @@ export default function StakedRelayerPage(): ReactElement {
         <div className="row">
             <div className="col-12">
                 <div className="report-button-wrapper">
-                    <Button variant="primary" onClick={()=>setShowReportModal(true)}>
+                    <Button variant="primary" onClick={() => setShowReportModal(true)}>
                         Report Invalid block
                     </Button>
                 </div>
