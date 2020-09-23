@@ -1,9 +1,73 @@
+@import "../../variables";
+
 .staked-relayer-page{
     .title{
         width: 100%;
         text-align: center;
         font-size: 2rem;
-        margin: 2rem; 
+        margin-top: 2rem; 
         font-weight: 600;
+    }
+    .stats{
+        width: 100%;
+        text-align: center;
+        font-size: 1.2rem;
+    }
+
+    .table-wrapper{
+        width: 100%;
+        overflow-x: scroll;
+        table {
+            table-layout: auto;
+            width: 1200px;
+            margin: auto;
+            overflow: scroll;
+            text-align: center;
+        }
+
+        th, td{
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            i{
+                color: rgba(0, 0, 0, 0.5);
+            }
+            p{
+                margin: 0px;
+            }
+        }
+
+        thead{
+            background-color: #eaeaea;
+        }    
+    }
+
+    .circle {
+        border-radius: 50%;
+        width: 12px;
+        height: 12px;
+        display: inline-block;
+    }
+
+    .green-circle{
+        @extend .circle;
+        border: 1px solid $green-color;
+        background-color: $green-color;
+    }
+
+    .header{
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-top: 2rem;
+    }
+
+    .report-button-wrapper{
+        padding-top: 2rem;
+        width: 1000px;
+        margin: auto;
+        text-align: right;
+    }
+
+    .oracle-table {
+        margin-bottom: 100px;
     }
 }

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { Image, Button, Col, Row } from "react-bootstrap";
-import { PolkaBTCAPI } from "@interlay/polkabtc/src";
-import { createAPI } from "@interlay/polkabtc/src/factory";
+import { PolkaBTCAPI } from "@interlay/polkabtc";
+import { createAPI } from "@interlay/polkabtc";
 
 import AppState from "../common/types/AppState";
 import LandingProps from "../common/types/LandingState";
@@ -21,6 +21,9 @@ class LandingPage extends Component<AppState, LandingProps> {
     const defaultEndpoint = "ws://127.0.0.1:9944";
     const api = await createAPI(defaultEndpoint);
     const polkaBTC = new PolkaBTCAPI(api);
+    const totalP = await polkaBTC.api.query.polkaBtc.totalIssuance();
+    console.log("totalPolkaBTC:");
+    console.log(totalP);
     // await api.query.dot.account(accountId)
       // FIXME: only update when the issuance is actually updated
       if (!this.props.parachain.api) {
