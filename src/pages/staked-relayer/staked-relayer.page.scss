@@ -1,6 +1,12 @@
 @import "../../variables";
 
 .staked-relayer-page{
+    text-align: center;
+
+    .staked-button{
+        margin-top: 20px;
+    }
+
     .title{
         width: 100%;
         text-align: center;
@@ -85,7 +91,28 @@
         text-align: center;
     }
 
-    .oracle-table {
-        margin-bottom: 100px;
+    .de-note{
+        margin-top: 20px;
+        margin-bottom: 50px;
+    }
+
+    .green-text{
+        color: $green-color;
+        font-weight: 600;
+    }
+
+    .orange-text{
+        color: $orange-color;
+        font-weight: 600;
+    }
+
+    .red-text{
+        color: $red-color;
+        font-weight: 600;
+    }
+    
+    .yellow-text{
+        color: $yellow-color;
+        font-weight: 600;
     }
 }

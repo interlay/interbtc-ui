@@ -1,11 +1,11 @@
 import React, { ReactElement, useEffect, useState } from "react";
 
 export default function BitcoinTable(): ReactElement {
-    const [relayStatus,setStatus] = useState(false);
+    const [relayStatus,setStatus] = useState("Online");
     const [btcBlocks,setBlocks] = useState([{}]);
 
     useEffect(()=>{
-        setStatus(true);
+        setStatus("Online");
         setBlocks([
             {source: "Bitcoin Core", hash: "00000000000...42d948799f82d",
             height: "1,835,346", timestamp: "2020-09-21 10:59:13"
@@ -16,11 +16,21 @@ export default function BitcoinTable(): ReactElement {
         ]);
     },[]);
 
+    const getCircle = (status: string): string =>{
+        if(status === "Online"){
+            return "green-circle";
+        }
+        if(status === "Fork"){
+            return "orange-circle";
+        }
+        return "red-circle"
+    }
+
     return <div className="bitcoin-table">
         <div className="row">
             <div className="col-12">
                 <div className="header">
-                    Bitcoin Relay Status: Online &nbsp;<div className="red-circle"></div>{relayStatus}
+                    Bitcoin Relay Status:&nbsp; {relayStatus} &nbsp;<div className={getCircle("Online")}></div>
                 </div>
             </div>
         </div>

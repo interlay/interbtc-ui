@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from "react";
 
 export default function OracleTable ():ReactElement{
-    const [oracleStatus,setStatus] = useState(false);
+    const [oracleStatus,setStatus] = useState("Online");
     const [oracles,setOracles] = useState([{}]);
 
     useEffect(()=>{
@@ -24,14 +24,15 @@ export default function OracleTable ():ReactElement{
             lastPrice: "1 BTC = 123 DOT",
             status: "Online"
         }]);
-        setStatus(true);
+        setStatus("Online");
     },[]);
 
     return <div className="oracle-table">
         <div className="row">
             <div className="col-12">
                 <div className="header">
-                    BTC Parachain Status: Running &nbsp;<div className="green-circle"></div>{oracleStatus}
+                    Oracle Status: &nbsp;{oracleStatus} &nbsp;
+                    <div className={(oracleStatus==="Online" ? "green-circle" : "red-circle")}></div>
                 </div>
             </div>
         </div>
@@ -55,7 +56,7 @@ export default function OracleTable ():ReactElement{
                                     <td>{oracle.feed}</td>
                                     <td>{oracle.lastUpdate}</td>
                                     <td>{oracle.lastPrice}</td>
-                                    <td>{oracle.status}</td>
+                                    <td className={oracle.status === "Online" ? "green-text": ""}>{oracle.status}</td>
                                 </tr>
                             })}
                         </tbody>

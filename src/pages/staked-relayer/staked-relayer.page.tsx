@@ -1,29 +1,32 @@
-import React, { ReactElement, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import BitcoinTable from "./bitcoin-table/bitcoin-table";
 import ReportModal from "./report-modal/report-modal";
 import { Button } from "react-bootstrap";
 import BtcParachainTable from "./btc-parachain-table/btc-parachain-table";
 import VaultTable from "./vault-table/vault-table";
 import OracleTable from "./oracle-table/oracle-table";
-import { AccountId } from "@polkadot/types/interfaces/runtime";
 
 import { createPolkabtcAPI } from "@interlay/polkabtc";
 
 import "./staked-relayer.page.scss";
 
-export default function StakedRelayerPage(): ReactElement {
+export default function StakedRelayerPage() {
     const [showReportModal, setShowReportModal] = useState(false);
     const handleClose = () => setShowReportModal(false);
 
     useEffect(()=>{
         const fetchparachains = async() => {
-            const polkaBTC = await createPolkabtcAPI("mock");
+            // const polkaBTC = await createPolkabtcAPI("mock");
 
-            const activeStakedRelayerId = <AccountId>{};
-            {/* const feesEarnedByActiveStakedRelayer = await polkaBTC.stakedRelayer.getFeesEarned(
-                activeStakedRelayerId
-            ); */}
+            // const activeStakedRelayerId = {} as AccountId;
+            // const activeStakedRelayerId = polkaBTC.api.createType("AccountId", 2);
+            // const feesEarnedByActiveStakedRelayer = await polkaBTC.stakedRelayer.getFeesEarned(
+            //     activeStakedRelayerId
+            // );
+
+            // console.log(feesEarnedByActiveStakedRelayer);
         }
+        fetchparachains();
     });
 
     return <div className="staked-relayer-page container-fluid">
@@ -46,19 +49,24 @@ export default function StakedRelayerPage(): ReactElement {
                 </div>
             </div>
         </div>
+        <Button variant="outline-success" className="staked-button">
+            Register (Lock DOT)
+        </Button>
         <BitcoinTable></BitcoinTable>
-        <div className="row">
-            <div className="col-12">
-                <div className="report-button-wrapper">
-                    <Button variant="primary" onClick={()=>setShowReportModal(true)}>
-                        Report Invalid block
-                    </Button>
-                </div>
-            </div>
-        </div>
+        <Button variant="outline-danger" className="staked-button" onClick={()=>setShowReportModal(true)}>
+            Report Invalid block
+        </Button>
         <ReportModal onClose={handleClose} show={showReportModal}></ReportModal>
         <BtcParachainTable></BtcParachainTable>
         <VaultTable></VaultTable>
         <OracleTable></OracleTable>
+        <Button variant="outline-danger" className="staked-button" onClick={()=>setShowReportModal(true)}>
+            Deregister
+        </Button>
+        <div className="row">
+            <div className="col-12 de-note">
+                Note: You can only deregister if you are not participating in a vote
+            </div>
+        </div>
     </div>;
 }

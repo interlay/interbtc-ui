@@ -3,7 +3,7 @@ import { Button } from "react-bootstrap";
 import VoteModal from "../vote-modal/vote-modal";
 
 export default function BtcParachainTable ():ReactElement{
-    const [parachainStatus,setStatus] = useState(false);
+    const [parachainStatus,setStatus] = useState("Running");
     const [parachains,setParachains] = useState([{}]);
     const [showVoteModal, setShowVoteModal] = useState(false);
     const handleClose = () => setShowVoteModal(false);
@@ -38,7 +38,7 @@ export default function BtcParachainTable ():ReactElement{
             votes: "90 : 227",
             result: "Rejected"
         }]);
-        setStatus(true);
+        setStatus("Running");
     },[]);
 
     const openVoteModal = (parachain: any) => {
@@ -46,12 +46,33 @@ export default function BtcParachainTable ():ReactElement{
         setParachainVote(parachain);
     };
 
+    const getResultColor = (result: string): string => {
+        if (result === "Accepted"){
+            return "green-text";
+        }
+        if (result === "Rejected"){
+            return "red-text";
+        }
+        return "";
+    }
+
+    const getCircle = (status: string): string =>{
+        if(status === "Running"){
+            return "green-circle";
+        }
+        if(status === "Error"){
+            return "yellow-circle";
+        }
+        return "red-circle"
+    }
+
     return <div className="btc-parachain-table">
         <VoteModal show={showVoteModal} onClose={handleClose} parachain={parachainVote} ></VoteModal>
         <div className="row">
             <div className="col-12">
                 <div className="header">
-                    BTC Parachain Status: Running &nbsp;<div className="green-circle"></div>{parachainStatus}
+                    BTC Parachain Status:&nbsp; {parachainStatus} 
+                    &nbsp; <div className={getCircle(parachainStatus)}></div>
                 </div>
             </div>
         </div>
@@ -76,12 +97,12 @@ export default function BtcParachainTable ():ReactElement{
                                 return <tr key={index}>
                                     <td>{parachain.id}</td>
                                     <td>{parachain.timestamp}</td>
-                                    <td>{parachain.proposedStatus}</td>
+                                    <td className={parachain.proposedStatus === "Running" ? "green-text" : "orange-text"}>{parachain.proposedStatus}</td>
                                     <td>{parachain.currentStatus}</td>
                                     <td>{parachain.proposedChanges}</td>
                                     <td>{parachain.hash}</td>
                                     <td>{parachain.votes}</td>
-                                    <td>{parachain.result === "Pending" ? 
+                                    <td className={getResultColor(parachain.result)}>{parachain.result === "Pending" ? 
                                         <Button variant="outline-primary"
                                             onClick={()=>openVoteModal(parachain)}>
                                             Vote
