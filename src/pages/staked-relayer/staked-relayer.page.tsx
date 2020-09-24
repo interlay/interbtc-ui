@@ -14,17 +14,24 @@ export default function StakedRelayerPage() {
     const [showReportModal, setShowReportModal] = useState(false);
     const handleClose = () => setShowReportModal(false);
 
-    useEffect(()=>{
-        const fetchparachains = async() => {
+    useEffect(() => {
+        const fetchparachains = async () => {
             const polkaBTC = await createPolkabtcAPI("mock");
-
             const activeStakedRelayerId = polkaBTC.api.createType("AccountId");
             const feesEarnedByActiveStakedRelayer = await polkaBTC.stakedRelayer.getFeesEarned(
                 activeStakedRelayerId
             );
+            const issues = await polkaBTC.issue.list();
 
-            console.log(feesEarnedByActiveStakedRelayer);
-        }
+            console.log("feesEarnedByActiveStakedRelayer:");
+            console.log(feesEarnedByActiveStakedRelayer.words[0]);
+
+            console.log("issue 0 requester (AccountId converted to string):");
+            console.log(issues[0].requester.toHuman());
+
+            console.log("issue 1:");
+            console.log(issues[1]);
+        };
         fetchparachains();
     });
 
@@ -71,6 +78,5 @@ export default function StakedRelayerPage() {
                 </div>
             </div>
         </div>
-        
     </div>;
 }
