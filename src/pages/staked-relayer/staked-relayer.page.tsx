@@ -14,18 +14,24 @@ export default function StakedRelayerPage() {
     const [showReportModal, setShowReportModal] = useState(false);
     const handleClose = () => setShowReportModal(false);
 
-    useEffect(()=>{
-        const fetchparachains = async() => {
-            // const polkaBTC = await createPolkabtcAPI("mock");
+    useEffect(() => {
+        const fetchparachains = async () => {
+            const polkaBTC = await createPolkabtcAPI("mock");
+            const activeStakedRelayerId = polkaBTC.api.createType("AccountId");
+            const feesEarnedByActiveStakedRelayer = await polkaBTC.stakedRelayer.getFeesEarned(
+                activeStakedRelayerId
+            );
+            const issues = await polkaBTC.issue.list();
 
-            // const activeStakedRelayerId = {} as AccountId;
-            // const activeStakedRelayerId = polkaBTC.api.createType("AccountId", 2);
-            // const feesEarnedByActiveStakedRelayer = await polkaBTC.stakedRelayer.getFeesEarned(
-            //     activeStakedRelayerId
-            // );
+            console.log("feesEarnedByActiveStakedRelayer:");
+            console.log(feesEarnedByActiveStakedRelayer.words[0]);
 
-            // console.log(feesEarnedByActiveStakedRelayer);
-        }
+            console.log("issue 0 requester (AccountId converted to string):");
+            console.log(issues[0].requester.toHuman());
+
+            console.log("issue 1:");
+            console.log(issues[1]);
+        };
         fetchparachains();
     });
 
@@ -53,14 +59,14 @@ export default function StakedRelayerPage() {
             Register (Lock DOT)
         </Button>
         <BitcoinTable></BitcoinTable>
-        <Button variant="outline-danger" className="staked-button" onClick={()=>setShowReportModal(true)}>
+        <Button variant="outline-danger" className="staked-button" onClick={() => setShowReportModal(true)}>
             Report Invalid block
         </Button>
         <ReportModal onClose={handleClose} show={showReportModal}></ReportModal>
         <BtcParachainTable></BtcParachainTable>
         <VaultTable></VaultTable>
         <OracleTable></OracleTable>
-        <Button variant="outline-danger" className="staked-button" onClick={()=>setShowReportModal(true)}>
+        <Button variant="outline-danger" className="staked-button" onClick={() => setShowReportModal(true)}>
             Deregister
         </Button>
         <div className="row">
