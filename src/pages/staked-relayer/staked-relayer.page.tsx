@@ -45,7 +45,7 @@ export default function StakedRelayerPage() {
         <div className="row">
             <div className="col-12">
                 <div className="stats">
-                    Fees earned: 
+                    Fees earned:
                 </div>
             </div>
         </div>
