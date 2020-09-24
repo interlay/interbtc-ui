@@ -22,7 +22,6 @@
 
     .table-wrapper{
         width: 100%;
-        overflow-x: scroll;
         table {
             table-layout: auto;
             width: 1200px;
@@ -110,7 +109,7 @@
         color: $red-color;
         font-weight: 600;
     }
-    
+
     .yellow-text{
         color: $yellow-color;
         font-weight: 600;
