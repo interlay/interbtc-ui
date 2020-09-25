@@ -1,4 +1,5 @@
 import React, { ReactElement, useEffect, useState } from "react";
+import { PolkaBTCAPI } from "@interlay/polkabtc";
 
 export default function OracleTable ():ReactElement{
     const [oracleStatus,setStatus] = useState("Online");

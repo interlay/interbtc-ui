@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-
+import { Provider } from "react-redux";
+import { rootReducer } from "./common/reducers/index";
+import { applyMiddleware, createStore } from "redux";
+import { createPolkabtcAPI } from "@interlay/polkabtc";
+import { addPolkaBtcInstance } from "./common/actions/api.actions";
+import { createLogger } from "redux-logger";
 // theme
 import './_general.scss';
 import './assets/css/custom-bootstrap.css';
@@ -36,6 +41,9 @@ import {
 } from "./mock";
 import KVStorage from './common/controllers/KVStorage';
 import { StorageInterface } from './common/types/Storage';
+
+const storeLogger = createLogger();
+const store = createStore(rootReducer,applyMiddleware(storeLogger));
 
 export default class App extends Component<{}, AppState> {
   state: AppState = {
@@ -114,16 +122,23 @@ export default class App extends Component<{}, AppState> {
     }
   }
 
+  async createAPIInstace() {
+    const polkaBTC = await createPolkabtcAPI("mock");
+    store.dispatch(addPolkaBtcInstance(polkaBTC));
+  }
+
   componentDidMount() {
     this.initParachain();
     this.getAccount();
     this.getVault();
     this.getStorage();
+    this.createAPIInstace()
   }
 
   render() {
     return (
-      <Router>
+      <Provider store={store}>
+        <Router>
         <div className="main d-flex flex-column min-vh-100">
           <Topbar address={this.state.address} account={this.state.account} vault={this.state.vault} />
           <div className="mb-5">
@@ -148,6 +163,7 @@ export default class App extends Component<{}, AppState> {
           <Footer />
         </div>
       </Router>
+      </Provider>
     )
   }
 }

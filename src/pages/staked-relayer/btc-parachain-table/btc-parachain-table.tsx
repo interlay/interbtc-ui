@@ -1,9 +1,12 @@
 import React, { ReactElement, useEffect, useState } from "react";
+import { StoreType } from "../../../common/types/util.types";
+import { useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
 import VoteModal from "../vote-modal/vote-modal";
 
 export default function BtcParachainTable ():ReactElement{
     const [parachainStatus,setStatus] = useState("Running");
+    const polkaBTC = useSelector((state: StoreType) => state.api)
     const [parachains,setParachains] = useState([{}]);
     const [showVoteModal, setShowVoteModal] = useState(false);
     const handleClose = () => setShowVoteModal(false);
@@ -38,6 +41,14 @@ export default function BtcParachainTable ():ReactElement{
             votes: "90 : 227",
             result: "Rejected"
         }]);
+        const fetchData = async () => {
+            if (!polkaBTC) return;
+            
+            polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain().then((result)=>{
+                console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa => ",result);
+            });
+        };
+        fetchData();
         setStatus("Running");
     },[]);
 

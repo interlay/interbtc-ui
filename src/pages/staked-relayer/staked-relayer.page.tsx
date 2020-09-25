@@ -5,26 +5,31 @@ import { Button } from "react-bootstrap";
 import BtcParachainTable from "./btc-parachain-table/btc-parachain-table";
 import VaultTable from "./vault-table/vault-table";
 import OracleTable from "./oracle-table/oracle-table";
-
-import { createPolkabtcAPI } from "@interlay/polkabtc";
+import { useSelector } from "react-redux";
 
 import "./staked-relayer.page.scss";
+import { StoreType } from "../../common/types/util.types";
 
 export default function StakedRelayerPage() {
     const [showReportModal, setShowReportModal] = useState(false);
+    const polkaBTC = useSelector((state: StoreType)=>state.api);
+    const [feesEarned,setFees] = useState(0);
+    const [dotLocked,setLocked] = useState(0);
     const handleClose = () => setShowReportModal(false);
 
     useEffect(() => {
-        const fetchparachains = async () => {
-            const polkaBTC = await createPolkabtcAPI("mock");
-            const activeStakedRelayerId = polkaBTC.api.createType("AccountId");
-            const feesEarnedByActiveStakedRelayer = await polkaBTC.stakedRelayer.getFeesEarned(
-                activeStakedRelayerId
-            );
-            const issues = await polkaBTC.issue.list();
+        const fetchData = async () => {
+            if(!polkaBTC) return;
 
-            console.log("feesEarnedByActiveStakedRelayer:");
-            console.log(feesEarnedByActiveStakedRelayer.words[0]);
+            const activeStakedRelayerId = polkaBTC.api.createType("AccountId");
+            let result = await polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
+            setFees(result.words[0]);
+
+            result = await polkaBTC.stakedRelayer.getTotalStakedDOTAmount();
+            setLocked(result.words[0]);
+
+            polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay();
+            const issues = await polkaBTC.issue.list();
 
             console.log("issue 0 requester (AccountId converted to string):");
             console.log(issues[0].requester.toHuman());
@@ -32,7 +37,7 @@ export default function StakedRelayerPage() {
             console.log("issue 1:");
             console.log(issues[1]);
         };
-        fetchparachains();
+        fetchData();
     });
 
     return <div className="staked-relayer-page container-fluid">
@@ -46,14 +51,14 @@ export default function StakedRelayerPage() {
                 <div className="row">
                     <div className="col-12">
                         <div className="stats">
-                            DOT Locked:
+                            DOT Locked: {dotLocked}
                         </div>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-12">
                         <div className="stats">
-                            Fees earned:
+                            Fees earned: {feesEarned}
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,5 @@
 import React, { ReactElement, useEffect, useState } from "react";
+import { PolkaBTCAPI } from "@interlay/polkabtc";
 
 export default function BitcoinTable(): ReactElement {
     const [relayStatus,setStatus] = useState("Online");
@@ -8,11 +9,9 @@ export default function BitcoinTable(): ReactElement {
         setStatus("Online");
         setBlocks([
             {source: "Bitcoin Core", hash: "00000000000...42d948799f82d",
-            height: "1,835,346", timestamp: "2020-09-21 10:59:13"
-            },
+            height: "1,835,346", timestamp: "2020-09-21 10:59:13"},
             {source: "BTC Parachain", hash: "00000000000...f6499c8547227",
-            height: "2,230,342", timestamp: "2020-08-01 10:37:54"
-        }
+            height: "2,230,342", timestamp: "2020-08-01 10:37:54"}
         ]);
     },[]);
 
