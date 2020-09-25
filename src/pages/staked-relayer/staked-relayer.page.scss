@@ -33,12 +33,17 @@
         th, td{
             padding: 5px 10px;
             border: 1px solid #ddd;
+            
             i{
                 color: rgba(0, 0, 0, 0.5);
             }
             p{
                 margin: 0px;
             }
+        }
+
+        td {
+            word-break: break-all;
         }
 
         thead{

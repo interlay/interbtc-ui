@@ -44,13 +44,11 @@ export default function BtcParachainTable ():ReactElement{
         const fetchData = async () => {
             if (!polkaBTC) return;
             
-            polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain().then((result)=>{
-                console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa => ",result);
-            });
+            let result = await polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
+            setStatus(result.isRunning ? "Running" : result.isError ? "Error" : "Shutdown");
         };
         fetchData();
-        setStatus("Running");
-    },[]);
+    },[polkaBTC]);
 
     const openVoteModal = (parachain: any) => {
         setShowVoteModal(true);

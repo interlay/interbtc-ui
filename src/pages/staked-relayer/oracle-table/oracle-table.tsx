@@ -1,9 +1,11 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { PolkaBTCAPI } from "@interlay/polkabtc";
+import { StoreType } from "../../../common/types/util.types";
+import { useSelector } from "react-redux";
 
 export default function OracleTable ():ReactElement{
     const [oracleStatus,setStatus] = useState("Online");
     const [oracles,setOracles] = useState([{}]);
+    const polkaBTC = useSelector((state: StoreType) => state.api)
 
     useEffect(()=>{
         setOracles([{
@@ -26,6 +28,12 @@ export default function OracleTable ():ReactElement{
             status: "Online"
         }]);
         setStatus("Online");
+        const fetchData = async () => {
+            if (!polkaBTC) return;
+            
+            // let result = await polkaBTC.stakedRelayer.l
+            // setStatus(result.isRunning ? "Running" : result.isError ? "Error" : "Shutdown");
+        };
     },[]);
 
     return <div className="oracle-table">

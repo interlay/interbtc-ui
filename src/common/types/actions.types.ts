@@ -1,4 +1,5 @@
 import { PolkaBTCAPI } from "@interlay/polkabtc";
+import { Prices } from "./util.types";
 
 // API ACTIONS
 
@@ -10,3 +11,14 @@ export interface AddInstance{
 }
 
 export type ApiActions = AddInstance;
+
+// PRICES
+
+export const UPDATE_PRICES = "UPDATE_PRICES";
+
+export interface UpdatePrices {
+    type: typeof UPDATE_PRICES;
+    prices: Prices;
+}
+
+export type PricesActions = UpdatePrices;

@@ -1,37 +1,52 @@
 import React, { ReactElement, useState, useEffect } from "react";
+import { StoreType } from "../../../common/types/util.types";
+import { useSelector, useDispatch } from "react-redux";
+import { Vault } from "../../../common/types/util.types";
+import { fetchPrices } from "../../../common/api/api";
 
 export default function VaultTable(): ReactElement{
     const [vaultStatus,setStatus] = useState("Ok");
     const [vaults,setVaults] = useState([{}]);
+    const prices = useSelector((state: StoreType) => state.prices);
+    const polkaBTC = useSelector((state: StoreType) => state.api)
+    const dispatch = useDispatch();
+
 
     useEffect(()=>{
-        setVaults([{
-            id: "1",
-            vault: "zxczxcxzhcxz",
-            btcAddress: "78443543fdsf",
-            lockedDot: "0.04",
-            lockedBtc: "2.0",
-            collateralization: 250,
-            status: "Ok"
-        },{
-            id: "1",
-            vault: "cczxczxcxzhcxz",
-            btcAddress: "78443543fdsf,78443543abcd",
-            lockedDot: "4.0",
-            lockedBtc: "0.02",
-            collateralization: 130,
-            status: "Theft"
-        },{
-            id: "1",
-            vault: "ddzxczxcxzhcxzsdfds",
-            btcAddress: "1234dsafs,dsadsadsad12332131,232132132131dsadsadsa",
-            lockedDot: "12.0",
-            lockedBtc: "12.0",
-            collateralization: 100,
-            status: "Liquidation"
-        }]);
+        const fetchData = async () => {
+            fetchPrices(dispatch);
+        };
+        fetchData();
+    },[fetchPrices]);
+
+    useEffect(()=>{
+        const fetchData = async () => {
+            if (!polkaBTC || !prices) return;
+            
+            let vaults = await polkaBTC.vaults.list();
+            let vaultsList: Vault[] = [];
+            console.log("vaults ============================ >>>>>>>>>>",vaults);
+            console.log("vaults ============================ >>>>>>>>>>",vaults[0].btc_address.toHuman());
+            vaults.forEach(async (vault)=>{
+                const activeStakedRelayerId = polkaBTC.api.createType("AccountId",vault.id);
+                let lockedDot = await polkaBTC.stakedRelayer.getStakedDOTAmount(activeStakedRelayerId);
+                vaultsList.push({
+                    id: vault.id.toHuman(),
+                    vault: "zxczxcxzhcxz",
+                    lockedBTC: lockedDot.words[0]*prices.dotBtc,
+                    lockedDOT: lockedDot.words[0],
+                    btcAddress: vault.btc_address.toHuman(),
+                    collateralization: 100
+                });
+            });
+            setVaults(vaultsList);
+            console.log("List ====>>>> ",vaultsList);
+            
+            // setStatus(result.isRunning ? "Running" : result.isError ? "Error" : "Shutdown");
+        };
+        fetchData();
         setStatus("Ok");
-    },[]);
+    },[polkaBTC,prices]);
 
     const getStatusColor = (status: string):string =>{
         if (status === "Ok"){
@@ -95,8 +110,8 @@ export default function VaultTable(): ReactElement{
                                     <td>{vault.id}</td>
                                     <td>{vault.vault}</td>
                                     <td>{vault.btcAddress}</td>
-                                    <td>{vault.lockedDot}</td>
-                                    <td>{vault.lockedBtc}</td>
+                                    <td>{vault.lockedDOT && vault.lockedDOT.toFixed(2)}</td>
+                                    <td>{vault.lockedBTC && vault.lockedBTC.toFixed(2)}</td>
                                     <td className={getCollateralizationColor(vault.collateralization)}>{vault.collateralization}%</td>
                                     <td className={getStatusColor(vault.status)}>{vault.status}</td>
                                 </tr>

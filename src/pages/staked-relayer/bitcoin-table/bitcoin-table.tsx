@@ -1,9 +1,11 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { PolkaBTCAPI } from "@interlay/polkabtc";
+import { useSelector } from "react-redux";
+import { StoreType } from "../../../common/types/util.types";
 
 export default function BitcoinTable(): ReactElement {
     const [relayStatus,setStatus] = useState("Online");
     const [btcBlocks,setBlocks] = useState([{}]);
+    const polkaBTC = useSelector((state: StoreType) => state.api)
 
     useEffect(()=>{
         setStatus("Online");
@@ -13,7 +15,12 @@ export default function BitcoinTable(): ReactElement {
             {source: "BTC Parachain", hash: "00000000000...f6499c8547227",
             height: "2,230,342", timestamp: "2020-08-01 10:37:54"}
         ]);
-    },[]);
+        const fetchData = async () => {
+            if (!polkaBTC) return;
+            const result = await polkaBTC.stakedRelayer.list();
+        };
+        fetchData();
+    },[polkaBTC]);
 
     const getCircle = (status: string): string =>{
         if(status === "Online"){

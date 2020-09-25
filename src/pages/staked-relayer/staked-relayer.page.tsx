@@ -30,12 +30,6 @@ export default function StakedRelayerPage() {
 
             polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay();
             const issues = await polkaBTC.issue.list();
-
-            console.log("issue 0 requester (AccountId converted to string):");
-            console.log(issues[0].requester.toHuman());
-
-            console.log("issue 1:");
-            console.log(issues[1]);
         };
         fetchData();
     });
