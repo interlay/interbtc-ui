@@ -48,13 +48,13 @@ If you want to reset the development chain, execute the following command.
 
 If you want to integrate with bitcoin in your testing environment, you will have to setup a relayer that ensures that the BTC Parachain has all the available Bitcoin blockheaders. To achieve this, follow the [instructions in the relayer repository](https://gitlab.com/interlay/relayer).
 
-### Installation
+### Local Installation
 
 Clone this repository and enter into the root folder.
 
 ```bash
-git@gitlab.com:interlay/xclaim-ui.git
-cd xclaim-ui
+git@gitlab.com:interlay/polkabtc-ui.git
+cd polkabtc-ui
 ```
 
 Install the required dependencies.
@@ -69,6 +69,27 @@ The page will reload if you make edits. You will also see any lint errors in the
 
 ```bash
 yarn start
+```
+
+### Docker Installation
+
+Clone this repository and enter into the root folder.
+
+```bash
+git@gitlab.com:interlay/polkabtc-ui.git
+cd polkabtc-ui
+```
+
+Install the required dependencies.
+
+```bash
+docker build -t polkabtc:ui . 
+```
+
+Start the development server. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+```bash
+docker run -it -p 3000:3000 polkabtc:ui
 ```
 
 ### Test
