@@ -28,7 +28,7 @@ export default class BTCPayment extends Component<IssueWizardProps, BTCPaymentPr
         const amountBTCwithFee = (Number.parseFloat(this.props.amountBTC) + Number.parseFloat(this.props.feeBTC)).toString();
         console.log(this.props.step);
         if (this.props.step !== 3) {
-        return null
+            return null
         }
         return (
         <FormGroup>

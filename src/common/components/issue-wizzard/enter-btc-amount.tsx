@@ -1,8 +1,6 @@
-import React, { useState, Component, ChangeEvent, useEffect } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
 import { FormGroup, FormControl } from "react-bootstrap";
 import { IssueWizardProps } from "./issue-wizard";
-import { StoreType } from "../../types/util.types";
 
 interface EnterBTCAmountProps {
     step: number;
@@ -11,7 +9,6 @@ interface EnterBTCAmountProps {
 }
 
 export default function EnterBTCAmount(props: IssueWizardProps | EnterBTCAmountProps){
-    const polkaBTC = useSelector((state: StoreType)=>state.api);
     // const [amountBTC,setAmountBTC] = useState(props.amountBTC);
   
     // const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -21,13 +18,6 @@ export default function EnterBTCAmount(props: IssueWizardProps | EnterBTCAmountP
     //   props.handleChange(event);
     // }
 
-    useEffect(()=>{
-        // const fetchData = async () => {
-        //     const activeStakedRelayerId = polkaBTC.api.createType("AccountId");
-        //     let result = await polkaBTC.api.issue.request(props.amountBTC,activeStakedRelayerId);
-        // }
-        // fetchData();
-    },[polkaBTC])
     if (props.step !== 1) {
         return null
     }

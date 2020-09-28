@@ -5,19 +5,54 @@ import { StoreType } from "../../../common/types/util.types";
 export default function BitcoinTable(): ReactElement {
     const [relayStatus,setStatus] = useState("Online");
     const [btcBlocks,setBlocks] = useState([{}]);
-    const polkaBTC = useSelector((state: StoreType) => state.api)
+    const polkaBTC = useSelector((state: StoreType) => state.api);
 
     useEffect(()=>{
         setStatus("Online");
-        setBlocks([
-            {source: "Bitcoin Core", hash: "00000000000...42d948799f82d",
-            height: "1,835,346", timestamp: "2020-09-21 10:59:13"},
-            {source: "BTC Parachain", hash: "00000000000...f6499c8547227",
-            height: "2,230,342", timestamp: "2020-08-01 10:37:54"}
-        ]);
+        // setBlocks([
+        //     {source: "Bitcoin Core", hash: "00000000000...42d948799f82d",
+        //     height: "1,835,346", timestamp: "2020-09-21 10:59:13"},
+        //     {source: "BTC Parachain", hash: "00000000000...f6499c8547227",
+        //     height: "2,230,342", timestamp: "2020-08-01 10:37:54"}
+        // ]);
         const fetchData = async () => {
-            if (!polkaBTC) return;
-            const result = await polkaBTC.stakedRelayer.list();
+            // if (!polkaBTC) return;
+            // const bestParachainBlock = await polkaBTC.stakedRelayer.getLatestBTCBlockFromBTCRelay();
+            // const parachainHeight = await polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay();
+
+            // const result = await polkaBTC.stakedRelayer.getLatestBTCBlockFromBTCCore();
+            // //const bitcoinHeight = await polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay();
+            // // getLatestBTCBlockHeightFromBTCCore
+            // const base10Number = parseInt("" + result, 10);
+            // const bestBTCBlock = base10Number.toString(16);
+            // const height = (parachainHeight as any).words[0];
+            // setBlocks([{
+            //     source: "BTC Parachain",
+            //     hash: bestParachainBlock.toHuman(),
+            //     timestamp: "2020-10-03 10:59:13", 
+            //     height
+            // },{
+            //     source: "Bitcoin Core",
+            //     hash: bestBTCBlock,
+            //     timestamp: "2020-10-03 10:59:13", 
+            //     height
+            // }])
+
+            // setBlocks(
+            //     [
+            //         {
+            //             source: "BTC Parachain", 
+            //             hash: bestParachainBlock.toHuman(),
+            //             timestamp: "2020-10-03 10:59:13", 
+            //             height: blockHeight
+            //         },{
+            //             source: "Bitcoin Core", 
+            //             hash: bestBTCBlock,
+            //             timestamp: "2020-10-03 10:59:13", 
+            //             height: blockHeight
+            //         }
+            //     ]
+            // );
         };
         fetchData();
     },[polkaBTC]);

@@ -25,8 +25,8 @@ export default function VaultTable(): ReactElement{
             
             let vaults = await polkaBTC.vaults.list();
             let vaultsList: Vault[] = [];
-            console.log("vaults ============================ >>>>>>>>>>",vaults);
-            console.log("vaults ============================ >>>>>>>>>>",vaults[0].btc_address.toHuman());
+            // console.log("vaults ============================ >>>>>>>>>>",vaults);
+            // console.log("vaults ============================ >>>>>>>>>>",vaults[0].btc_address.toHuman());
             vaults.forEach(async (vault)=>{
                 const activeStakedRelayerId = polkaBTC.api.createType("AccountId",vault.id);
                 let lockedDot = await polkaBTC.stakedRelayer.getStakedDOTAmount(activeStakedRelayerId);
