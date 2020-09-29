@@ -11,12 +11,12 @@ export default class Footer extends Component {
             <footer className="footer mt-5 flex-fill fixed-bottom">
                 <Container>
                     <div className="row">
-                        <div className="col-lg-4 col-xs-12 float-left">
+                        <div className="col-xl-4 col-lg-3 col-md-12 col-sm-12 col-xs-12 float-left">
                         <div className="float-left nav-link text-capitalize">
                             A project by &nbsp; <a href="https://www.interlay.io/" target="__blank"><Image src={interlayImg} height="20rem"></Image></a>
                             </div>
                         </div>
-                        <div className="col-lg-4 col-xs-12">
+                        <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12  col-xs-12">
                             <div className="float-left nav-link text-capitalize">
                                 &copy;
                         <script>
@@ -26,33 +26,33 @@ export default class Footer extends Component {
                         </a>
                             </div>
                         </div>
-                        <div className="col-lg-4 col-xs-12">
-                            <div className="float-lg-right float-md-left">
+                        <div className="col-xl-4 col-lg-5 col-md-12 col-sm-12 col-xs-12">
+                            <div className="float-lg-right float-md-left float-sm-left float-xs-left">
                                 <a className="nav-link lowercase" title="" data-placement="bottom" rel="noopener noreferrer"
                                 href="mailto:contact@interlay.io" target="_blank" data-original-title="Drop us an email">
                                     contact@interlay.io
                                      </a>
                             </div>
-                            <div className="float-lg-right float-md-left">
+                            <div className="float-lg-right float-md-left float-sm-left float-xs-left">
                                 <a className="nav-link" rel="noopener noreferrer" title="" data-placement="bottom"
                                     href="https://t.me/interlay" target="_blank"
                                     data-original-title="Join our Telegram channel">
                                     <FaTelegramPlane></FaTelegramPlane>
                                 </a>
                             </div>
-                            <div className="float-lg-right float-md-left">
+                            <div className="float-lg-right float-md-left float-sm-left float-xs-left">
                                 <a className="nav-link" rel="noopener noreferrer" title="" data-placement="bottom"
                                     href="https://medium.com/Interlay" target="_blank" data-original-title="Follow us on Medium">
                                     <FaMediumM></FaMediumM>
                                 </a>
                             </div>
-                            <div className="float-lg-right float-md-left">
+                            <div className="float-lg-right float-md-left float-sm-left float-xs-left">
                                 <a className="nav-link" rel="noopener noreferrer" title="" data-placement="bottom"
                                     href="https://github.com/interlay" target="_blank" data-original-title="Follow us on Github">
                                     <FaGithub></FaGithub>
                                 </a>
                             </div>
-                            <div className="float-lg-right float-md-left">
+                            <div className="float-lg-right float-md-left float-sm-left float-xs-left">
                                 <a className="nav-link" rel="noopener noreferrer" title="" data-placement="bottom"
                                     href="https://twitter.com/interlayHQ" target="_blank"
                                     data-original-title="Follow us on Twitter">

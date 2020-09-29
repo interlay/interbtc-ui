@@ -4,7 +4,7 @@ import { Image, Button, Col, Row, Modal } from "react-bootstrap";
 
 import AppState from "../common/types/AppState";
 import { IssueProps, IssueRequest } from "../common/types/IssueState";
-import IssueWizard from "../common/components/IssueWizard";
+import IssueWizard from "../common/components/issue-wizzard/issue-wizard";
 
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
 import IssueRequests from "../common/components/IssueRequests";
