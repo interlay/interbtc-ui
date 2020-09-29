@@ -4,34 +4,38 @@ import { IssueWizardProps } from "./issue-wizard";
 
 interface EnterBTCAmountProps {
     step: number;
-    amountBTC: string,
-    handleChange: () => void
+    amountPolkaBTC: string,
+    handleChange: () => void,
+    feeBTC: string
 }
 
 export default function EnterBTCAmount(props: IssueWizardProps | EnterBTCAmountProps){
-    // const [amountBTC,setAmountBTC] = useState(props.amountBTC);
+    // const [amountPolkaBTC,setamountPolkaBTC] = useState(props.amountPolkaBTC);
   
     // const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     //   // FIXME: this should also update the amountPolkaBTC in the parent
     //   let { name, value } = event.target;
-    //   setAmountBTC(value);
+    //   setamountPolkaBTC(value);
     //   props.handleChange(event);
     // }
 
     if (props.step !== 1) {
         return null
     }
+    
 
     return(
     <FormGroup>
-        <p>How much BTC to you want to receive in PolkaBTC?</p>
+        <p>Please enter the amount of PolkaBTC you would like to mint:</p>
         <FormControl
-        id="amountBTC"
-        name="amountBTC"
+        id="amountPolkaBTC"
+        name="amountPolkaBTC"
         type="string"
-        value={props.amountBTC}
+        value={props.amountPolkaBTC}
         onChange={props.handleChange}
         />
+        
+        <p>Fee: {props.feeBTC} BTC</p>
     </FormGroup>
     )
     

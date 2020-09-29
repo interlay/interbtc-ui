@@ -3,7 +3,7 @@ import { FormGroup, Row, Col } from "react-bootstrap";
 import { IssueWizardProps } from "./issue-wizard";
 
 export default function Confirmation (props: IssueWizardProps){
-  if (props.step !== 4) {
+  if (props.step !== 3) {
     return null
   }
   

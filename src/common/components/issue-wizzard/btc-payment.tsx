@@ -16,7 +16,7 @@ export default class BTCPayment extends Component<IssueWizardProps, BTCPaymentPr
 
     async componentDidUpdate() {
         if (!this.state.loaded) {
-        const paymentUri = 'bitcoin:' + this.props.vaultBTCAddress + '?amount=' + this.props.amountBTC;
+        const paymentUri = 'bitcoin:' + this.props.vaultBTCAddress + '?amount=' + this.props.amountPolkaBTC;
         this.setState({
             paymentUri: paymentUri,
             loaded: true
@@ -25,9 +25,9 @@ export default class BTCPayment extends Component<IssueWizardProps, BTCPaymentPr
     }
 
     render() {
-        const amountBTCwithFee = (Number.parseFloat(this.props.amountBTC) + Number.parseFloat(this.props.feeBTC)).toString();
+        const amountPolkaBTCwithFee = (Number.parseFloat(this.props.amountPolkaBTC) + Number.parseFloat(this.props.feeBTC)).toString();
         console.log(this.props.step);
-        if (this.props.step !== 3) {
+        if (this.props.step !== 2) {
             return null
         }
         return (
@@ -35,18 +35,10 @@ export default class BTCPayment extends Component<IssueWizardProps, BTCPaymentPr
             <h5>Payment</h5>
             <Row className="justify-content-md-center">
                 <Col md="auto" className="text-center">
-                    <p>To receive PolkaBTC you need to transfer the following BTC amount to a vault.</p>
+                    <p>Please send <strong>exact {amountPolkaBTCwithFee} BTC</strong> to <strong>{this.props.vaultBTCAddress}</strong> or scan the QR code below</p>
                     <QRCode value={this.state.paymentUri} />
                 </Col>
             </Row>
-            <h5>Summary</h5>
-            <FormGroup>
-                <ListGroup>
-                    <ListGroupItem>Sending: <strong>{amountBTCwithFee} BTC</strong></ListGroupItem>
-                    <ListGroupItem>Vault address: <strong>{this.props.vaultBTCAddress}</strong></ListGroupItem>
-                    <ListGroupItem>Receiving: <strong>{this.props.amountBTC} PolkaBTC</strong></ListGroupItem>
-                </ListGroup>
-            </FormGroup>
         </FormGroup>
         )
     }

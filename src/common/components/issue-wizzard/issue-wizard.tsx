@@ -3,31 +3,30 @@ import { BOB_BTC } from "../../../constants";
 import { IssueProps, IssueRequest } from "../../types/IssueState";
 import { Container, Modal, Form } from "react-bootstrap";
 import EnterBTCAmount from "./enter-btc-amount";
-import RequestConfirmation from "./request-confirmation";
 import BTCPayment from "./btc-payment";
 import Confirmation from "./confirmation";
 
 export interface IssueWizardProps {
   step: number,
   issueId: string,
-  amountBTC: string,
   vaultBTCAddress: string,
   amountPolkaBTC: string,
   transactionBTC: string,
   feeBTC: string,
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void,
+  minIssueAmount: string
 }
 
 export default class IssueWizard extends Component<IssueProps, IssueWizardProps> {
   state: IssueWizardProps = {
     step: 1,
     issueId: "",
-    amountBTC: "0",
     vaultBTCAddress: BOB_BTC,
-    amountPolkaBTC: "0",
+    amountPolkaBTC: "0.01", // TODO: set default to minIssueAmount
     transactionBTC: "",
-    feeBTC: "",
     handleChange: () => {},
+    minIssueAmount: "0.01",// TODO: get this from BTC-Parachain/polkadot-js lib
+    feeBTC: "0.00005",// TODO: get this from BTC-Parachain/polkadot-js lib
   }
 
   constructor(props: IssueProps &
@@ -59,9 +58,9 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
   }
 
   isValid(step: number) {
-    const {amountBTC} = this.state;
+    const {amountPolkaBTC} = this.state;
     let valid = [
-      parseFloat(amountBTC) > 0,
+      parseFloat(amountPolkaBTC) > 0,
       true,
       true,
     ]
@@ -84,8 +83,8 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
 
   get nextButton() {
       let step = this.state.step;
-      const buttontext = (step === 2) ? ("Confirm") : ("Next");
-      if (step < 4) {
+      const buttontext = (step === 1) ? ("Mint  " + this.state.amountPolkaBTC + " PolkaBTC") : ("Next");
+      if (step < 3) {
           return (
               <button
                   className="btn btn-primary float-right"
@@ -103,10 +102,11 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
       ...this.state,
       [name]: value
     });
-    if (name === "amountBTC") {
+    if (name === "amountPolkaBTC") {
       this.setState({
         amountPolkaBTC: value,
-        feeBTC: (Number.parseFloat(value) * 0.005).toString()
+        // TODO: replace this with polkabtc-js call to avoid JS rounding errors (request directly from BTC-Parachain so we have the exact amount)
+        feeBTC: value ? Number((Number.parseFloat(value) * 0.005).toFixed(8)).toString() : "0"
       })
     }
   }
@@ -118,7 +118,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
     date.setSeconds(0);
     let req: IssueRequest = {
       id: this.props.idCounter.toString(),
-      amount: this.state.amountBTC,
+      amount: this.state.amountPolkaBTC,
       creation: date.toISOString(),
       vaultAddress: this.state.vaultBTCAddress,
       btcTx: "...",
@@ -139,7 +139,6 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
         <Modal.Body>
           <Form onSubmit={this.handleSubmit}>
             <EnterBTCAmount {...this.state} />
-            <RequestConfirmation {...this.state} />
             <BTCPayment {...this.state} />
             <Confirmation {...this.state} />
           </Form>
