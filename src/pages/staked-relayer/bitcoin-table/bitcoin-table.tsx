@@ -16,43 +16,27 @@ export default function BitcoinTable(): ReactElement {
         //     height: "2,230,342", timestamp: "2020-08-01 10:37:54"}
         // ]);
         const fetchData = async () => {
-            // if (!polkaBTC) return;
-            // const bestParachainBlock = await polkaBTC.stakedRelayer.getLatestBTCBlockFromBTCRelay();
-            // const parachainHeight = await polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay();
+            if (!polkaBTC) return;
+            const bestParachainBlock = await polkaBTC.stakedRelayer.getLatestBTCBlockFromBTCRelay();
+            const parachainHeight = await polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay();
 
-            // const result = await polkaBTC.stakedRelayer.getLatestBTCBlockFromBTCCore();
-            // //const bitcoinHeight = await polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay();
-            // // getLatestBTCBlockHeightFromBTCCore
-            // const base10Number = parseInt("" + result, 10);
-            // const bestBTCBlock = base10Number.toString(16);
-            // const height = (parachainHeight as any).words[0];
-            // setBlocks([{
-            //     source: "BTC Parachain",
-            //     hash: bestParachainBlock.toHuman(),
-            //     timestamp: "2020-10-03 10:59:13", 
-            //     height
-            // },{
-            //     source: "Bitcoin Core",
-            //     hash: bestBTCBlock,
-            //     timestamp: "2020-10-03 10:59:13", 
-            //     height
-            // }])
-
-            // setBlocks(
-            //     [
-            //         {
-            //             source: "BTC Parachain", 
-            //             hash: bestParachainBlock.toHuman(),
-            //             timestamp: "2020-10-03 10:59:13", 
-            //             height: blockHeight
-            //         },{
-            //             source: "Bitcoin Core", 
-            //             hash: bestBTCBlock,
-            //             timestamp: "2020-10-03 10:59:13", 
-            //             height: blockHeight
-            //         }
-            //     ]
-            // );
+            const result = await polkaBTC.stakedRelayer.getLatestBTCBlockFromBTCCore();
+            const bitcoinHeight = await polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCCore();
+            // getLatestBTCBlockHeightFromBTCCore
+            const base10Number = parseInt("" + result, 10);
+            const bestBTCBlock = base10Number.toString(16);
+            const height = (parachainHeight as any).words[0];
+            setBlocks([{
+                source: "BTC Parachain",
+                hash: bestParachainBlock.toHuman(),
+                timestamp: "2020-10-03 10:59:13", 
+                height
+            },{
+                source: "Bitcoin Core",
+                hash: bestBTCBlock,
+                timestamp: "2020-10-03 10:59:13", 
+                height
+            }])
         };
         fetchData();
     },[polkaBTC]);
