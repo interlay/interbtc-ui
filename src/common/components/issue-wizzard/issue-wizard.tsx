@@ -1,9 +1,8 @@
 import React, { Component, FormEvent, ChangeEvent } from "react";
-import { BOB_BTC } from "../../../constants";
 import { IssueProps, IssueRequest } from "../../types/IssueState";
 import { Container, Modal, Form } from "react-bootstrap";
-import EnterBTCAmount from "./enter-btc-amount";
 import RequestConfirmation from "./request-confirmation";
+import EnterBTCAmount from "./enter-btc-amount";
 import BTCPayment from "./btc-payment";
 import Confirmation from "./confirmation";
 
@@ -25,9 +24,9 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
         issueId: "",
         amountBTC: "0",
         vaultBTCAddress: "",
-        amountPolkaBTC: "0",
+        amountPolkaBTC: "0.01",
         transactionBTC: "",
-        feeBTC: "",
+        feeBTC: "", // TODO: get this from the BTC-Parachain
         btcTxId: "",
         handleChange: () => { },
     }
@@ -163,6 +162,3 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
         )
     }
 }
-
-
-

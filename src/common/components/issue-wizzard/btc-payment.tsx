@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormGroup, ListGroup, ListGroupItem, Row, Col } from "react-bootstrap";
+import { FormGroup, ListGroup, ListGroupItem, Row, Col, FormControl } from "react-bootstrap";
 import { IssueWizardProps } from "./issue-wizard";
 import QRCode from "qrcode.react";
 
@@ -31,7 +31,8 @@ export default class BTCPayment extends Component<IssueWizardProps, BTCPaymentPr
         }
         return (
             <FormGroup>
-                <h5>Payment</h5>
+                <h5>Confirmation and Payment</h5>
+                <p> You have requested to mint {this.props.amountBTC} PolkaBTC, incurring a fee of {this.props.feeBTC} BTC.</p>
                 <Row className="justify-content-md-center">
                     <Col md="auto" className="text-center">
                         <p>Please make the following Bitcoin payment.</p>
