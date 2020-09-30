@@ -19,16 +19,16 @@ export default function BitcoinTable(): ReactElement {
             if (!polkaBTC) return;
             const bestParachainBlock = await polkaBTC.stakedRelayer.getLatestBTCBlockFromBTCRelay();
             const parachainHeight = await polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay();
-
+            const bestParachain = bestParachainBlock.toHuman();
             const bestBitcoinBlock = await polkaBTC.stakedRelayer.getLatestBTCBlockFromBTCCore();
             const bitcoinHeight = await polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCCore();
-            // polkaBTC.
+            
             const base10Number = parseInt("" + bestBitcoinBlock, 10);
             const bestBTCBlock = base10Number.toString(16);
-            // polkaBTC.api.
+            
             setBlocks([{
                 source: "BTC Parachain",
-                hash: bestParachainBlock.toHuman(),
+                hash: bestParachain.slice(2,bestParachain.length-1),
                 timestamp: "2020-10-03 10:59:13", 
                 height: (parachainHeight as any).words[0]
             },{

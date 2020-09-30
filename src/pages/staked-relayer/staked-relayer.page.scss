@@ -1,4 +1,5 @@
 @import "../../variables";
+@import "../../mixins";
 
 .staked-relayer-page{
     text-align: center;
@@ -98,6 +99,18 @@
     .de-note{
         margin-top: 20px;
         margin-bottom: 50px;
+    }
+
+    @include mobile-range{
+        .de-note {
+            margin-bottom: 100px;
+        }
+    }
+
+    @include tablet-range{
+        .de-note {
+            margin-bottom: 100px;
+        }
     }
 }
 

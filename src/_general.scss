@@ -1,5 +1,6 @@
 @import "custom";
 @import "mixins";
+@import "variables";
 
 @include font-fam("airbnb-cereal-light", "./assets/fonts/airbnb-cereal/AirbnbCerealLight");
 // @include font-fam("airbnb-cereal-medium", "./assets/fonts/airbnb-cereal/AirbnbCerealMedium");
@@ -61,4 +62,23 @@ span {
   border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   margin-bottom: 1rem;
+  outline: none;
+  :focus{
+    outline: none!important;
+  }
+}
+
+body{
+  .input-error{
+    color: $error-color;
+    margin-top: -1rem;
+  }
+
+  .error-borders{
+      border-color: $error-color;
+  }
+}
+
+textarea:hover, input:hover, textarea:active, input:active, textarea:focus, input:focus {
+  outline:0px !important;
 }

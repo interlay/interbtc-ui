@@ -1,6 +1,8 @@
 import React, { ReactElement } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
+import { StoreType } from "../../../common/types/util.types";
 
 type ReportModalType = {
     onClose: ()=>void;
@@ -13,10 +15,13 @@ type ReportForm = {
 }
 
 export default function ReportModal(props: ReportModalType):ReactElement{
-  const {register,handleSubmit} = useForm<ReportForm>();
+  const {register,handleSubmit,errors} = useForm<ReportForm>();
+  const polkaBTC = useSelector((state: StoreType) => state.api)
 
   const onSubmit = handleSubmit(({btcBlock,message})=>{
     console.log(btcBlock,message);
+    // polkaBTC.relayer.suggestInvalidBlock()
+    //.slice(2,str.length-1)
     props.onClose();
   });
 
@@ -31,8 +36,14 @@ export default function ReportModal(props: ReportModalType):ReactElement{
             BTC-Relay block header
           </div>
           <div className="col-12">
-            <input type="text" className="custom-input" name="btcBlock" 
-              ref={register({required: true, pattern: /^[1-9a-zA-Z]{1,1}[0-9a-zA-Z]{31,31}$/})}></input>
+            <input name="btcBlock" type="text" className={"custom-input"  + (errors.btcBlock ? " error-borders" : "")}
+              ref={register({required: true, pattern: {
+                value: /^[1-9a-zA-Z]{1,1}[0-9a-zA-Z]{31,31}$/,
+                message: "Please enter valid BTC header"
+              }})}></input>
+              {errors.btcBlock && <div className="input-error">
+                {errors.btcBlock.type === "required" ? "BTC-Relay block header is required" : errors.btcBlock.message}
+              </div>}
           </div>
         </div>
         <div className="row">
@@ -40,7 +51,12 @@ export default function ReportModal(props: ReportModalType):ReactElement{
             Proof / Message
           </div>
           <div className="col-12">
-            <textarea className="custom-textarea" name="message" ref={register({required: true})} rows={6}></textarea>
+            <textarea className={"custom-textarea" + (errors.message ? " error-borders" : "")} name="message" 
+              ref={register({required: true})} rows={6}>
+            </textarea>
+            {errors.message && <div className="input-error">
+                Message is required
+            </div>}
           </div>
         </div>
       </Modal.Body>
