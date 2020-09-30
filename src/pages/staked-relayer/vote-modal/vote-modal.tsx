@@ -5,6 +5,7 @@ type VoteModalProps = {
     onClose: ()=>void;
     show: boolean;
     parachain: any;
+    getColor: (changes:string)=>string;
 };
 
 export default function VoteModal(props: VoteModalProps):ReactElement{
@@ -18,41 +19,56 @@ export default function VoteModal(props: VoteModalProps):ReactElement{
       <Modal.Body>
         {props.parachain && <React.Fragment>
           <div className="row">
-            <div className="col-xl-3 col-lg-4 col-md-6">Timestamp:</div>
+            <div className="col-xl-3 col-lg-4 col-md-6 vote-label">Timestamp:</div>
             <div className="col-xl-9 col-lg-8 col-md-6">{props.parachain.timestamp}</div>
           </div>
           <div className="row">
-            <div className="col-xl-3 col-lg-4 col-md-6">Proposer:</div>
+            <div className="col-xl-3 col-lg-4 col-md-6 vote-label">Proposer:</div>
             <div className="col-xl-9 col-lg-8 col-md-6">xdsadsxxxddssasd</div>
           </div>
           <div className="row">
-            <div className="col-xl-3 col-lg-4 col-md-6">Proposed Status:</div>
-            <div className="col-xl-9 col-lg-8 col-md-6">{props.parachain.proposedStatus}</div>
+            <div className="col-xl-3 col-lg-4 col-md-6 vote-label">Proposed Status:</div>
+            <div className="col-xl-9 col-lg-8 col-md-6">
+            <span className={props.parachain.proposedStatus === "Running" ? " green-text" : " orange-text"}>
+              {props.parachain.proposedStatus}
+            </span>
+            </div>
           </div>
           <div className="row">
-            <div className="col-xl-3 col-lg-4 col-md-6">Current Status:</div>
-            <div className="col-xl-9 col-lg-8 col-md-6">{props.parachain.currentStatus}</div>
+            <div className="col-xl-3 col-lg-4 col-md-6 vote-label">Current Status:</div>
+            <div className="col-xl-9 col-lg-8 col-md-6">
+              <span className={props.parachain.currentStatus === "Running" ? " green-text" : " orange-text"}>
+                {props.parachain.currentStatus}
+              </span>
+            </div>
           </div>
           <div className="row">
-            <div className="col-xl-3 col-lg-4 col-md-6">Proposed Changes:</div>
-            <div className="col-xl-9 col-lg-8 col-md-6">{props.parachain.proposedChanges}</div>
+            <div className="col-xl-3 col-lg-4 col-md-6 vote-label">Proposed Changes:</div>
+          <div className="col-xl-9 col-lg-8 col-md-6"> 
+            <span className={props.getColor(props.parachain.proposedChanges)}>
+              {props.parachain.proposedChanges}
+            </span>
+          </div>
           </div>
           <div className="row">
-            <div className="col-xl-3 col-lg-4 col-md-6">BTC Block Hash:</div>
+            <div className="col-xl-3 col-lg-4 col-md-6 vote-label">BTC Block Hash:</div>
             <div className="col-xl-9 col-lg-8 col-md-6">{props.parachain.hash}</div>
           </div>
           <div className="row">
-            <div className="col-xl-3 col-lg-4 col-md-6">Votes:</div>
-            <div className="col-xl-9 col-lg-8 col-md-6">{props.parachain.votes}</div>
+            <div className="col-xl-3 col-lg-4 col-md-6 vote-label">Votes (Yes : No):</div>
+            <div className="col-xl-9 col-lg-8 col-md-6">
+              <span className="green-text">{props.parachain.votes.split(":")[0]}</span>
+              <span className="red-text">{ " : " + props.parachain.votes.split(":")[1] }</span>
+            </div>
           </div>
           </React.Fragment>
         }
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={props.onClose}>
+        <Button variant="outline-danger" type="submit" onClick={props.onClose}>
           No
         </Button>
-        <Button variant="primary" type="submit">
+        <Button variant="outline-success" onClick={props.onClose}>
           Yes
         </Button>
       </Modal.Footer>

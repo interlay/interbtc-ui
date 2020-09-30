@@ -25,24 +25,22 @@ export default function VaultTable(): ReactElement{
             
             let vaults = await polkaBTC.vaults.list();
             let vaultsList: Vault[] = [];
-            // console.log("vaults ============================ >>>>>>>>>>",vaults);
-            // console.log("vaults ============================ >>>>>>>>>>",vaults[0].btc_address.toHuman());
-            vaults.forEach(async (vault)=>{
+            vaults.forEach(async (vault,index)=>{
                 const activeStakedRelayerId = polkaBTC.api.createType("AccountId",vault.id);
                 let lockedDot = await polkaBTC.stakedRelayer.getStakedDOTAmount(activeStakedRelayerId);
+                let collateralization = await polkaBTC.vaults.getCollateralization(vault.id);
+                
                 vaultsList.push({
                     id: vault.id.toHuman(),
                     vault: "zxczxcxzhcxz",
                     lockedBTC: lockedDot.words[0]*prices.dotBtc,
                     lockedDOT: lockedDot.words[0],
                     btcAddress: vault.btc_address.toHuman(),
-                    collateralization: 100
+                    collateralization
                 });
+                if (index+1 === vaults.length) setVaults(vaultsList);
             });
-            setVaults(vaultsList);
             console.log("List ====>>>> ",vaultsList);
-            
-            // setStatus(result.isRunning ? "Running" : result.isError ? "Error" : "Shutdown");
         };
         fetchData();
         setStatus("Ok");
@@ -95,8 +93,7 @@ export default function VaultTable(): ReactElement{
                     <table>
                         <thead>
                             <tr>
-                                <th>Id</th>
-                                <th>Vault</th>
+                                <th>AccountID</th>
                                 <th>BTC Address(es)</th>
                                 <th>locked DOT</th>
                                 <th>locked BTC</th>
@@ -107,7 +104,6 @@ export default function VaultTable(): ReactElement{
                         <tbody>
                             {vaults.map((vault: any, index)=>{
                                 return <tr key={index}>
-                                    <td>{vault.id}</td>
                                     <td>{vault.vault}</td>
                                     <td>{vault.btcAddress}</td>
                                     <td>{vault.lockedDOT && vault.lockedDOT.toFixed(2)}</td>

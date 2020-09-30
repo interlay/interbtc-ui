@@ -67,7 +67,7 @@ export default function StakedRelayerPage() {
                 <BtcParachainTable></BtcParachainTable>
                 <VaultTable></VaultTable>
                 <OracleTable></OracleTable>
-                <Button variant="outline-danger" className="staked-button" onClick={()=>setShowReportModal(true)}>
+                <Button variant="outline-danger" className="staked-button">
                     Deregister
                 </Button>
                 <div className="row">

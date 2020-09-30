@@ -99,24 +99,28 @@
         margin-top: 20px;
         margin-bottom: 50px;
     }
+}
 
-    .green-text{
-        color: $green-color;
-        font-weight: 600;
-    }
+.green-text{
+    color: $green-color;
+    font-weight: 600;
+}
 
-    .orange-text{
-        color: $orange-color;
-        font-weight: 600;
-    }
+.orange-text{
+    color: $orange-color;
+    font-weight: 600;
+}
 
-    .red-text{
-        color: $red-color;
-        font-weight: 600;
-    }
+.red-text{
+    color: $red-color;
+    font-weight: 600;
+}
 
-    .yellow-text{
-        color: $yellow-color;
-        font-weight: 600;
-    }
+.yellow-text{
+    color: $yellow-color;
+    font-weight: 600;
+}
+
+.vote-label{
+    font-weight: 600;
 }
