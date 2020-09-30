@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormGroup, ListGroup, ListGroupItem, Row, Col } from "react-bootstrap";
+import { FormGroup, ListGroup, ListGroupItem, Row, Col, FormControl } from "react-bootstrap";
 import { IssueWizardProps } from "./issue-wizard";
 import QRCode from "qrcode.react";
 
@@ -16,11 +16,11 @@ export default class BTCPayment extends Component<IssueWizardProps, BTCPaymentPr
 
     async componentDidUpdate() {
         if (!this.state.loaded) {
-        const paymentUri = 'bitcoin:' + this.props.vaultBTCAddress + '?amount=' + this.props.amountPolkaBTC;
-        this.setState({
-            paymentUri: paymentUri,
-            loaded: true
-        })
+            const paymentUri = 'bitcoin:' + this.props.vaultBTCAddress + '?amount=' + this.props.amountPolkaBTC;
+            this.setState({
+                paymentUri: paymentUri,
+                loaded: true
+            })
         }
     }
 
@@ -31,15 +31,20 @@ export default class BTCPayment extends Component<IssueWizardProps, BTCPaymentPr
             return null
         }
         return (
-        <FormGroup>
-            <h5>Payment</h5>
-            <Row className="justify-content-md-center">
-                <Col md="auto" className="text-center">
-                    <p>Please send <strong>exact {amountPolkaBTCwithFee} BTC</strong> to <strong>{this.props.vaultBTCAddress}</strong> or scan the QR code below</p>
-                    <QRCode value={this.state.paymentUri} />
-                </Col>
-            </Row>
-        </FormGroup>
+            <FormGroup>
+            <h5>Confirmation and Payment</h5>
+
+                <Row className="justify-content-md-center">
+                    <Col md="auto" className="text-center">
+                        <p> You have requested to mint {this.props.amountPolkaBTC} PolkaBTC, incurring a fee of {this.props.feeBTC} BTC.</p>
+                        <br/>
+                        <p>Please send <strong>exactly {amountPolkaBTCwithFee} BTC</strong> to <strong>{this.props.vaultBTCAddress}</strong>
+                            <br />
+                    or scan the QR code below</p>
+                        <QRCode value={this.state.paymentUri} />
+                    </Col>
+                </Row>
+            </FormGroup>
         )
     }
 }

@@ -83,7 +83,13 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
 
   get nextButton() {
       let step = this.state.step;
-      const buttontext = (step === 1) ? ("Mint  " + this.state.amountPolkaBTC + " PolkaBTC") : ("Next");
+      let buttontext = "";
+      switch (step) {
+        case 1: buttontext = "Mint  " + this.state.amountPolkaBTC + " PolkaBTC";
+        case 2: buttontext = "I have made the Bitcoin payment";
+        case 3: buttontext = "Submit";
+        default: buttontext = "Next";
+      }
       if (step < 3) {
           return (
               <button
