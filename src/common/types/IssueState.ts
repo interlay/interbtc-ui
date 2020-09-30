@@ -2,12 +2,12 @@ import { StorageInterface, KVStorageInterface } from "./Storage";
 
 export type IssueRequest = {
   id: string;
-  amount: string;
-  creation: string;
-  vaultAddress: string;
-  btcTx: string;
+  amountBTC: string;
+  vaultBTCAddress: string;
+  btcTxId: string;
   confirmations: number;
   completed: boolean;
+  creation: string;
 };
 
 export interface IssueProps {

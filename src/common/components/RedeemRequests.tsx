@@ -27,10 +27,10 @@ export default class RedeemRequests extends Component<RedeemProps, {}> {
                   return (
                     <tr>
                       <td>{request.id}</td>
-                      <td>{request.amount} BTC</td>
+                      <td>{request.amountBTC} BTC</td>
                       <td>{request.creation}</td>
                       <td>{shortAddress(request.vaultAddress)}</td>
-                      <td>{shortTxId(request.btcTx)}</td>
+                      <td>{shortTxId(request.btcTxId)}</td>
                       <td>{request.confirmations}</td>
                       <td>{request.completed ? <FaCheck></FaCheck> :<FaHourglass></FaHourglass>}</td>
                     </tr>

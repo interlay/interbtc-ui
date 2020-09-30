@@ -2,12 +2,12 @@ import { StorageInterface, KVStorageInterface } from "./Storage";
 
 export type RedeemRequest = {
   id: string;
-  amount: string;
+  amountBTC: string;
   creation: string;
   vaultAddress: string;
   vaultBTCAddress: string;
   redeemAddress: string;
-  btcTx: string;
+  btcTxId: string;
   confirmations: number;
   completed: boolean;
 };

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
-import { IssueProps } from "../types/IssueState";
-import { Table } from 'react-bootstrap';
-import { shortAddress, shortTxId } from '../utils/utils';
-import { FaCheck, FaHourglass } from 'react-icons/fa';
+import { IssueProps } from "../../types/IssueState";
+import { Table } from "react-bootstrap";
+import { shortAddress, shortTxId } from "../../utils/utils";
+import { FaCheck, FaHourglass } from "react-icons/fa";
 
 class IssueRequests extends Component<IssueProps, {}> {
 
@@ -28,10 +28,10 @@ class IssueRequests extends Component<IssueProps, {}> {
                                 return (
                                     <tr>
                                         <td>{request.id}</td>
-                                        <td>{request.amount} PolkaBTC</td>
+                                        <td>{request.amountBTC} PolkaBTC</td>
                                         <td>{request.creation}</td>
-                                        <td>{shortAddress(request.vaultAddress)}</td>
-                                        <td>{shortTxId(request.btcTx)}</td>
+                                        <td>{shortAddress(request.vaultBTCAddress)}</td>
+                                        <td>{shortTxId(request.btcTxId)}</td>
                                         <td>{request.confirmations}</td>
                                         <td>{request.completed ? <FaCheck></FaCheck> : <FaHourglass></FaHourglass>}</td>
                                     </tr>

@@ -1,15 +1,12 @@
 import React, { Component, FormEvent, ChangeEvent } from "react";
-import { BOB_BTC } from "../../constants";
-import { IssueProps, IssueRequest } from "../types/IssueState";
-import { Container, Modal, Form, FormGroup, FormControl, ListGroup, ListGroupItem, Row, Col } from "react-bootstrap";
-import QRCode from "qrcode.react";
-import BTCPayment from "./issue-wizzard/btc-payment";
-import Confirmation from "./issue-wizzard/confirmation";
-import EnterBTCAmount from "./issue-wizzard/enter-btc-amount";
-import RequestConfirmation from "./issue-wizzard/request-confirmation";
-import BTCTransaction from "./issue-wizzard/btc-transaction";
+import { IssueProps, IssueRequest } from "../../types/IssueState";
+import { Container, Modal, Form } from "react-bootstrap";
+import RequestConfirmation from "./request-confirmation";
+import EnterBTCAmount from "./enter-btc-amount";
+import BTCPayment from "./btc-payment";
+import Confirmation from "./confirmation";
 
-interface IssueWizardProps {
+export interface IssueWizardProps {
     step: number,
     issueId: string,
     amountBTC: string,
@@ -27,9 +24,9 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
         issueId: "",
         amountBTC: "0",
         vaultBTCAddress: "",
-        amountPolkaBTC: "0",
+        amountPolkaBTC: "0.01",
         transactionBTC: "",
-        feeBTC: "",
+        feeBTC: "", // TODO: get this from the BTC-Parachain
         btcTxId: "",
         handleChange: () => { },
     }
@@ -50,7 +47,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
         step = step >= 4 ? 5 : step + 1;
         this.setState({
             step: step
-        });
+        })
     }
 
     _prev() {
@@ -59,7 +56,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
         step = step <= 1 ? 1 : step - 1
         this.setState({
             step: step
-        });
+        })
     }
 
     isValid(step: number) {
@@ -68,7 +65,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
             parseFloat(amountBTC) > 0,
             true,
             true,
-        ];
+        ]
         return valid[step];
     }
 
@@ -116,9 +113,12 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
                 this.setState({
                     amountPolkaBTC: value,
                     feeBTC: (Number.parseFloat(value) * 0.005).toString()
-                });
+                })
             }
         }
+
+
+
     }
 
     handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -128,13 +128,13 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
         date.setSeconds(0);
         let req: IssueRequest = {
             id: this.props.idCounter.toString(),
-            amount: this.state.amountBTC,
+            amountBTC: this.state.amountBTC,
             creation: date.toISOString(),
-            vaultAddress: this.state.vaultBTCAddress,
-            btcTx: "...",
+            vaultBTCAddress: this.state.vaultBTCAddress,
+            btcTxId: "...",
             confirmations: 0,
             completed: false
-        };
+        }
         this.props.addIssueRequest(req);
     }
 
@@ -144,14 +144,13 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
                         Issue PolkaBTC
-                    </Modal.Title>
+          </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={this.handleSubmit}>
                         <EnterBTCAmount {...this.state} />
                         <RequestConfirmation {...this.state} />
                         <BTCPayment {...this.state} />
-                        <BTCTransaction {...this.state} />
                         <Confirmation {...this.state} />
                     </Form>
                 </Modal.Body>
@@ -160,6 +159,6 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
                     {this.nextButton}
                 </Modal.Footer>
             </Container>
-        );
+        )
     }
 }

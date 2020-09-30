@@ -75,7 +75,7 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
       req.id = this.getAndIncrementIdCounter().toString();
       this.setState({
           balancePolkaBTC: (
-              parseFloat(this.state.balancePolkaBTC) - parseFloat(req.amount)
+              parseFloat(this.state.balancePolkaBTC) - parseFloat(req.amountBTC)
           ).toString(),
       });
       arr.push(req);

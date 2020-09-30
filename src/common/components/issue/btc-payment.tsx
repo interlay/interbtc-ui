@@ -1,24 +1,19 @@
 import React, { Component } from "react";
-import { FormGroup, ListGroup, ListGroupItem, Row, Col, FormControl } from "react-bootstrap";
+import { FormGroup, ListGroup, ListGroupItem, Row, Col } from "react-bootstrap";
 import { IssueWizardProps } from "./issue-wizard";
-import QRCode from "qrcode.react";
 
 interface BTCPaymentProps {
-    paymentUri: string,
     loaded: boolean,
 }
 
 export default class BTCPayment extends Component<IssueWizardProps, BTCPaymentProps> {
     state: BTCPaymentProps = {
-        paymentUri: '',
         loaded: false
     }
 
     async componentDidUpdate() {
         if (!this.state.loaded) {
-            const paymentUri = 'bitcoin:' + this.props.vaultBTCAddress + '?amount=' + this.props.amountBTC;
             this.setState({
-                paymentUri: paymentUri,
                 loaded: true
             })
         }

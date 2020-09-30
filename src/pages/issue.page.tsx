@@ -4,10 +4,10 @@ import { Image, Button, Col, Row, Modal } from "react-bootstrap";
 
 import AppState from "../common/types/AppState";
 import { IssueProps, IssueRequest } from "../common/types/IssueState";
-import IssueWizard from "../common/components/issue-wizzard/issue-wizard";
+import IssueWizard from "../common/components/issue/issue-wizard";
 
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
-import IssueRequests from "../common/components/IssueRequests";
+import IssueRequests from "../common/components/issue/issue-requests";
 
 // class IssuePage extends Component<AppState & RouteComponentProps, IssueProps> {
 class IssuePage extends Component<AppState, IssueProps> {
