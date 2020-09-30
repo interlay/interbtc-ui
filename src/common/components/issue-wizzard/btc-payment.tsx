@@ -16,38 +16,37 @@ export default class BTCPayment extends Component<IssueWizardProps, BTCPaymentPr
 
     async componentDidUpdate() {
         if (!this.state.loaded) {
-        const paymentUri = 'bitcoin:' + this.props.vaultBTCAddress + '?amount=' + this.props.amountBTC;
-        this.setState({
-            paymentUri: paymentUri,
-            loaded: true
-        })
+            const paymentUri = 'bitcoin:' + this.props.vaultBTCAddress + '?amount=' + this.props.amountBTC;
+            this.setState({
+                paymentUri: paymentUri,
+                loaded: true
+            })
         }
     }
 
     render() {
         const amountBTCwithFee = (Number.parseFloat(this.props.amountBTC) + Number.parseFloat(this.props.feeBTC)).toString();
-        console.log(this.props.step);
         if (this.props.step !== 3) {
             return null
         }
         return (
-        <FormGroup>
-            <h5>Payment</h5>
-            <Row className="justify-content-md-center">
-                <Col md="auto" className="text-center">
-                    <p>To receive PolkaBTC you need to transfer the following BTC amount to a vault.</p>
-                    <QRCode value={this.state.paymentUri} />
-                </Col>
-            </Row>
-            <h5>Summary</h5>
             <FormGroup>
-                <ListGroup>
-                    <ListGroupItem>Sending: <strong>{amountBTCwithFee} BTC</strong></ListGroupItem>
-                    <ListGroupItem>Vault address: <strong>{this.props.vaultBTCAddress}</strong></ListGroupItem>
-                    <ListGroupItem>Receiving: <strong>{this.props.amountBTC} PolkaBTC</strong></ListGroupItem>
-                </ListGroup>
+                <h5>Payment</h5>
+                <Row className="justify-content-md-center">
+                    <Col md="auto" className="text-center">
+                        <p>Please make the following Bitcoin payment.</p>
+                    </Col>
+                </Row>
+                <h5>Summary</h5>
+                <FormGroup>
+                    <ListGroup>
+                        <ListGroupItem>BTC to send: <strong>{amountBTCwithFee}</strong></ListGroupItem>
+                        <ListGroupItem>OP_RETURN content: <strong> 0xloremipsum </strong></ListGroupItem>
+                        <ListGroupItem>BTC recipient: <strong>{this.props.vaultBTCAddress}</strong></ListGroupItem>
+                        <ListGroupItem>PolkaBTC to receive: <strong>{this.props.amountBTC}</strong></ListGroupItem>
+                    </ListGroup>
+                </FormGroup>
             </FormGroup>
-        </FormGroup>
         )
     }
 }

@@ -2,13 +2,13 @@ import React from "react";
 import { FormGroup, FormControl } from "react-bootstrap";
 import { IssueWizardProps } from "./issue-wizard";
 
-interface EnterBTCAmountProps {
+interface BTCTransactionProps {
+    btcTxId: string,
     step: number;
-    amountBTC: string,
     handleChange: () => void
 }
 
-export default function EnterBTCAmount(props: IssueWizardProps | EnterBTCAmountProps) {
+export default function BTCTransaction(props: IssueWizardProps | BTCTransactionProps) {
     // const [amountBTC,setAmountBTC] = useState(props.amountBTC);
 
     // const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -18,21 +18,21 @@ export default function EnterBTCAmount(props: IssueWizardProps | EnterBTCAmountP
     //   props.handleChange(event);
     // }
 
-    if (props.step !== 1) {
-        return null
+    if (props.step !== 4) {
+        return null;
     }
 
     return (
         <FormGroup>
-            <p>Please enter the amount of BTC you want to receive in PolkaBTC.</p>
+            <p>Please enter your BTC transaction id. We will monitor it for you and notify you when you can complete the process.</p>
             <FormControl
-                id="amountBTC"
-                name="amountBTC"
+                id="btcTxId"
+                name="btcTxId"
                 type="string"
-                value={props.amountBTC}
+                value={props.btcTxId}
                 onChange={props.handleChange}
             />
         </FormGroup>
-    )
+    );
 
 }
