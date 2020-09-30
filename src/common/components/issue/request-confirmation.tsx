@@ -12,6 +12,7 @@ export default function RequestConfirmation(props: IssueWizardProps) {
         if (props.vaultBTCAddress == "") {
             const fetchData = async () => {
                 const polkaBTCObject = polkaBTC.api.createType("Balance", props.amountBTC);
+                // TODO: move this call to the enter-btc-amount part 
                 const vaultBTCAddress = await polkaBTC.vaults.selectRandomVault(polkaBTCObject);
                 console.log(vaultBTCAddress);
                 props.handleChange(

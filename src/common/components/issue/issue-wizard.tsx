@@ -11,7 +11,6 @@ export interface IssueWizardProps {
     issueId: string,
     amountBTC: string,
     vaultBTCAddress: string,
-    amountPolkaBTC: string,
     transactionBTC: string,
     feeBTC: string,
     btcTxId: string,
@@ -24,7 +23,6 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
         issueId: "",
         amountBTC: "0",
         vaultBTCAddress: "",
-        amountPolkaBTC: "0.01",
         transactionBTC: "",
         feeBTC: "", // TODO: get this from the BTC-Parachain
         btcTxId: "",
@@ -44,7 +42,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
         let step = this.state.step;
         if (!this.isValid(step - 1)) return;
         // If the current step is 1 or 2, then add one on "next" button click
-        step = step >= 4 ? 5 : step + 1;
+        step = step >= 3 ? 4 : step + 1;
         this.setState({
             step: step
         })
@@ -62,7 +60,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
     isValid(step: number) {
         const { amountBTC } = this.state;
         let valid = [
-            parseFloat(amountBTC) > 0,
+            parseFloat(amountBTC) > 0, // TODO: add that we need to have found a vault for the amount
             true,
             true,
         ]
@@ -86,7 +84,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
     get nextButton() {
         let step = this.state.step;
         const buttontext = (step === 2) ? ("Confirm") : ("Next");
-        if (step < 5) {
+        if (step < 4) {
             return (
                 <button
                     className="btn btn-primary float-right"
@@ -100,25 +98,17 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
 
     handleChange(event: ChangeEvent<HTMLInputElement>) {
         let { name, value } = event.target;
-        if (name === "vaultBTCAddress") {
+        this.setState({
+            ...this.state,
+            [name]: value
+        });
+        if (name === "amountBTC") {
+            // TODO: query if we found a vault
             this.setState({
-                vaultBTCAddress: value,
-            });
-        } else {
-            this.setState({
-                ...this.state,
-                [name]: value
-            });
-            if (name === "amountBTC") {
-                this.setState({
-                    amountPolkaBTC: value,
-                    feeBTC: (Number.parseFloat(value) * 0.005).toString()
-                })
-            }
+                amountBTC: value,
+                feeBTC: (Number(value)? Number.parseFloat(value) * 0.005 : 0).toString()
+            })
         }
-
-
-
     }
 
     handleSubmit = async (event: FormEvent<HTMLFormElement>) => {

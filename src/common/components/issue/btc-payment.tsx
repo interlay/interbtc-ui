@@ -27,19 +27,20 @@ export default class BTCPayment extends Component<IssueWizardProps, BTCPaymentPr
         return (
             <FormGroup>
                 <h5>Confirmation and Payment</h5>
-                <p> You have requested to mint {this.props.amountBTC} PolkaBTC, incurring a fee of {this.props.feeBTC} BTC.</p>
-                <Row className="justify-content-md-center">
-                    <Col md="auto" className="text-center">
-                        <p>Please make the following Bitcoin payment.</p>
-                    </Col>
-                </Row>
-                <h5>Summary</h5>
+                    <p>You have requested to mint {this.props.amountBTC} PolkaBTC, incurring a fee of {this.props.feeBTC} BTC.</p>
+                    <p>Please make the following Bitcoin payment.</p>
+                <h5>Bitcoin Payment Details</h5>
+                <p>Create a Bitcoin transaction with two outputs.</p>
                 <FormGroup>
                     <ListGroup>
-                        <ListGroupItem>BTC to send: <strong>{amountBTCwithFee}</strong></ListGroupItem>
-                        <ListGroupItem>OP_RETURN content: <strong> 0xloremipsum </strong></ListGroupItem>
-                        <ListGroupItem>BTC recipient: <strong>{this.props.vaultBTCAddress}</strong></ListGroupItem>
-                        <ListGroupItem>PolkaBTC to receive: <strong>{this.props.amountBTC}</strong></ListGroupItem>
+                        <ListGroupItem>Output 1</ListGroupItem>
+                        <ListGroupItem>OP_RETURN: <strong> 0xloremipsum </strong></ListGroupItem>
+                        <ListGroupItem>Amount: <strong>0 BTC</strong></ListGroupItem>
+                    </ListGroup>
+                    <ListGroup>
+                        <ListGroupItem>Output 2</ListGroupItem>
+                        <ListGroupItem>Recipient: <strong>{this.props.vaultBTCAddress}</strong></ListGroupItem>
+                        <ListGroupItem>Amount: <strong>{amountBTCwithFee} BTC</strong></ListGroupItem>
                     </ListGroup>
                 </FormGroup>
             </FormGroup>
