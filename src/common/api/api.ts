@@ -11,4 +11,4 @@ export const fetchPrices = async (dispatch: any) => {
         .then(result => {
             dispatch(updatePricesAction({dotBtc: Number(result.DOT.BTC), dotUsd: Number(result.DOT.USD)}));
         });
-}
+};
