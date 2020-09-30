@@ -8,33 +8,21 @@ export default function OracleTable ():ReactElement{
     const polkaBTC = useSelector((state: StoreType) => state.api)
 
     useEffect(()=>{
-        setOracles([{
-            source: "ChainLink",
-            feed: "BTC/DOT",
-            lastUpdate: "2020-09-21 10:59:13",
-            lastPrice: "1 BTC = 123 DOT",
-            status: "Online"
-        },{
-            source: "ChainLink",
-            feed: "BTC/DOT",
-            lastUpdate: "2020-09-21 10:59:13",
-            lastPrice: "1 BTC = 123 DOT",
-            status: "Online"
-        },{
-            source: "ChainLink",
-            feed: "BTC/DOT",
-            lastUpdate: "2020-09-21 10:59:13",
-            lastPrice: "1 BTC = 123 DOT",
-            status: "Online"
-        }]);
         setStatus("Online");
         const fetchData = async () => {
             if (!polkaBTC) return;
-            
-            // let result = await polkaBTC.stakedRelayer.l
-            // setStatus(result.isRunning ? "Running" : result.isError ? "Error" : "Shutdown");
+            const oracle = await polkaBTC.oracle.getInfo();
+            console.log(oracle);
+            setOracles([{
+                source: oracle.name,
+                feed: oracle.feed,
+                lastUpdate: oracle.lastUpdate.toString().substring(0,25),
+                lastPrice: "1 BTC = 123 DOT",
+                status: oracle.online ? "Online" : "Offline"
+            }]);
         };
-    },[]);
+        fetchData();
+    },[polkaBTC]);
 
     return <div className="oracle-table">
         <div className="row">
@@ -65,7 +53,7 @@ export default function OracleTable ():ReactElement{
                                     <td>{oracle.feed}</td>
                                     <td>{oracle.lastUpdate}</td>
                                     <td>{oracle.lastPrice}</td>
-                                    <td className={oracle.status === "Online" ? "green-text": ""}>{oracle.status}</td>
+                                    <td className={oracle.status === "Online" ? "green-text": "red-text"}>{oracle.status}</td>
                                 </tr>
                             })}
                         </tbody>

@@ -31,7 +31,8 @@ export default function ReportModal(props: ReportModalType):ReactElement{
             BTC-Relay block header
           </div>
           <div className="col-12">
-            <input type="text" className="custom-input" name="btcBlock" ref={register({required: true})}></input>
+            <input type="text" className="custom-input" name="btcBlock" 
+              ref={register({required: true, pattern: /^[1-9a-zA-Z]{1,1}[0-9a-zA-Z]{31,31}$/})}></input>
           </div>
         </div>
         <div className="row">
@@ -48,7 +49,7 @@ export default function ReportModal(props: ReportModalType):ReactElement{
           Cancel
         </Button>
         <Button variant="primary" type="submit">
-          Save Changes
+          Report
         </Button>
       </Modal.Footer>
     </form>

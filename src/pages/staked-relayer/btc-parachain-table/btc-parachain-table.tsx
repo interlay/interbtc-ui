@@ -4,6 +4,10 @@ import { useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
 import VoteModal from "../vote-modal/vote-modal";
 
+const ADD_DATA_ERROR = "Add NO_DATA error";
+const REMOVE_DATA_ERROR = "Remove NO_DATA error";
+const INVALID_BTC_RELAY = "Add INVALID_BTC_RELAY error";
+
 export default function BtcParachainTable ():ReactElement{
     const [parachainStatus,setStatus] = useState("Running");
     const polkaBTC = useSelector((state: StoreType) => state.api)
@@ -18,7 +22,7 @@ export default function BtcParachainTable ():ReactElement{
             timestamp: "22020-09-21 10:59:13",
             proposedStatus: "Error",
             currentStatus: "Running",
-            proposedChanges: "Add NO_DATA error",
+            proposedChanges: ADD_DATA_ERROR,
             hash: "00000000000...42d948799f82d",
             votes: "49 : 20",
             result: "Accepted"
@@ -27,7 +31,7 @@ export default function BtcParachainTable ():ReactElement{
             timestamp: "22020-09-21 10:59:13",
             proposedStatus: "Running",
             currentStatus: "Error",
-            proposedChanges: "Remove NO_DATA error",
+            proposedChanges: REMOVE_DATA_ERROR,
             hash: "00000000000...42d948799f82d",
             votes: "3 : 27",
             result: "Pending"
@@ -36,7 +40,7 @@ export default function BtcParachainTable ():ReactElement{
             timestamp: "22020-09-21 10:59:13",
             proposedStatus: "Error",
             currentStatus: "Error",
-            proposedChanges: "Add INVALID_BTC_RELAY error",
+            proposedChanges: INVALID_BTC_RELAY,
             hash: "00000000000...42d948799f82d",
             votes: "90 : 227",
             result: "Rejected"
@@ -56,27 +60,45 @@ export default function BtcParachainTable ():ReactElement{
     };
 
     const getResultColor = (result: string): string => {
-        if (result === "Accepted"){
-            return "green-text";
-        }
-        if (result === "Rejected"){
-            return "red-text";
-        }
-        return "";
+        switch(result){
+            case "Accepted": return "green-text";
+            case "Rejected": return "red-text";
+            default: return ""; 
+        };
     }
 
     const getCircle = (status: string): string =>{
-        if(status === "Running"){
-            return "green-circle";
+        switch(status){
+            case "Running": return "green-circle";
+            case "Error": return "yellow-circle";
+            default: return "red-circle"; 
+        };
+    }
+
+    const getProposedChangesColor = (changes: string):string => {
+        switch(changes){
+            case ADD_DATA_ERROR: return "orange-text";
+            case REMOVE_DATA_ERROR: return "green-text";
+            default: return "red-text"; 
+        };
+    }
+
+    const getPercentage = (votes: string, type: string): number => {
+        const yes = Number(votes.split(":")[0]);
+        const no = Number(votes.split(":")[1]);
+        const total = yes + no;
+        if (type === "yes") {
+            return Number((yes/(total/100)).toFixed(1));
         }
-        if(status === "Error"){
-            return "yellow-circle";
-        }
-        return "red-circle"
+        return Number((no/(total/100)).toFixed(1));
     }
 
     return <div className="btc-parachain-table">
-        <VoteModal show={showVoteModal} onClose={handleClose} parachain={parachainVote} ></VoteModal>
+        <VoteModal 
+            show={showVoteModal} 
+            onClose={handleClose} 
+            parachain={parachainVote}
+            getColor={getProposedChangesColor} ></VoteModal>
         <div className="row">
             <div className="col-12">
                 <div className="header">
@@ -106,12 +128,38 @@ export default function BtcParachainTable ():ReactElement{
                                 return <tr key={index}>
                                     <td>{parachain.id}</td>
                                     <td>{parachain.timestamp}</td>
-                                    <td className={parachain.proposedStatus === "Running" ? "green-text" : "orange-text"}>{parachain.proposedStatus}</td>
+                                    <td className={
+                                            parachain.proposedStatus === "Running" ? "green-text" : "orange-text"}>
+                                        {parachain.proposedStatus}
+                                    </td>
                                     <td>{parachain.currentStatus}</td>
-                                    <td>{parachain.proposedChanges}</td>
+                                    <td className={getProposedChangesColor(parachain.proposedChanges)}>
+                                        {parachain.proposedChanges}
+                                    </td>
                                     <td>{parachain.hash}</td>
-                                    <td>{parachain.votes}</td>
-                                    <td className={getResultColor(parachain.result)}>{parachain.result === "Pending" ? 
+                                    <td> { parachain.votes && <React.Fragment>
+                                            <p>
+                                                <span className="green-text">
+                                                    {getPercentage(parachain.votes,"yes")}%
+                                                </span>
+                                                <span>&nbsp;:&nbsp;</span>
+                                                <span className="red-text">
+                                                    {getPercentage(parachain.votes,"no")}%
+                                                </span>
+                                            </p>
+                                            <p>
+                                                <span className="green-text">
+                                                    {parachain.votes.split(":")[0]}
+                                                </span>
+                                                <span>:</span>
+                                                <span className="red-text">
+                                                    {parachain.votes.split(":")[1]}
+                                                </span>
+                                            </p>
+                                        </React.Fragment>
+                                        }
+                                    </td>
+                                    <td className={getResultColor(parachain.result)}>{parachain.result === "Pending" ?
                                         <Button variant="outline-primary"
                                             onClick={()=>openVoteModal(parachain)}>
                                             Vote
