@@ -34,7 +34,7 @@ export default function EnterBTCAmount(props: IssueWizardProps | EnterBTCAmountP
         value={props.amountPolkaBTC}
         onChange={props.handleChange}
         />
-        
+
         <p>Fee: {props.feeBTC} BTC</p>
     </FormGroup>
     )

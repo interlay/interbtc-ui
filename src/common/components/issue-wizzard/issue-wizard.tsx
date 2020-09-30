@@ -14,7 +14,7 @@ export interface IssueWizardProps {
   transactionBTC: string,
   feeBTC: string,
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void,
-  minIssueAmount: string
+  minIssueAmount: string,
 }
 
 export default class IssueWizard extends Component<IssueProps, IssueWizardProps> {
@@ -24,14 +24,14 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
     vaultBTCAddress: BOB_BTC,
     amountPolkaBTC: "0.01", // TODO: set default to minIssueAmount
     transactionBTC: "",
-    handleChange: () => {},
+    handleChange: () => { },
     minIssueAmount: "0.01",// TODO: get this from BTC-Parachain/polkadot-js lib
     feeBTC: "0.00005",// TODO: get this from BTC-Parachain/polkadot-js lib
   }
 
   constructor(props: IssueProps &
-    { addIssueRequest: (req: IssueRequest) => void; }
-    ) {
+  { addIssueRequest: (req: IssueRequest) => void; }
+  ) {
     super(props);
     this._next = this._next.bind(this);
     this._prev = this._prev.bind(this);
@@ -42,23 +42,28 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
     let step = this.state.step;
     if (!this.isValid(step - 1)) return;
     // If the current step is 1 or 2, then add one on "next" button click
-    step = step >= 3 ? 4 : step + 1;
+    step = step >= 2 ? 3 : step + 1;
     this.setState({
-        step: step
+      step: step
     })
+
+    // TODO: depending on the step, we need to add the parachain calls here:
+    // step == 1: Make an issue request. (Should validate that there is a vault for this issue request size before that ideally)
+    // step == 2: nothing (user makes BTC payment)
+    // step == 3: submit the provided txid and close modal
   }
 
   _prev() {
-      let step = this.state.step
-      // If the current step is 2 or 3, then subtract one on "previous" button click
-      step = step <= 1 ? 1 : step - 1
-      this.setState({
-          step: step
-      })
+    let step = this.state.step
+    // If the current step is 2 or 3, then subtract one on "previous" button click
+    step = step <= 1 ? 1 : step - 1
+    this.setState({
+      step: step
+    })
   }
 
   isValid(step: number) {
-    const {amountPolkaBTC} = this.state;
+    const { amountPolkaBTC } = this.state;
     let valid = [
       parseFloat(amountPolkaBTC) > 0,
       true,
@@ -68,38 +73,43 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
   }
 
   get previousButton() {
-      let step = this.state.step;
-      if (step !== 1) {
-          return (
-              <button
-                  className="btn btn-secondary float-left"
-                  type="button" onClick={() => this._prev()}>
-                  Previous
-              </button>
-          )
-      }
-      return null;
+    let step = this.state.step;
+    if (step !== 1) {
+      return (
+        <button
+          className="btn btn-secondary float-left"
+          type="button" onClick={() => this._prev()}>
+          Previous
+        </button>
+      )
+    }
+    return null;
   }
 
   get nextButton() {
-      let step = this.state.step;
-      let buttontext = "";
-      switch (step) {
-        case 1: buttontext = "Mint  " + this.state.amountPolkaBTC + " PolkaBTC";
-        case 2: buttontext = "I have made the Bitcoin payment";
-        case 3: buttontext = "Submit";
-        default: buttontext = "Next";
-      }
-      if (step < 3) {
-          return (
-              <button
-                  className="btn btn-primary float-right"
-                  type="button" onClick={() => this._next()}>
-                  { buttontext }
-              </button>
-          )
-      }
-      return null;
+    let step = Number(this.state.step);
+    let buttontext = "";
+    switch (step) {
+      case 1:
+        buttontext = "Mint  " + this.state.amountPolkaBTC + " PolkaBTC";
+        break;
+      case 2:
+        buttontext = "I have made the Bitcoin payment";
+        break;
+      case 3:
+        buttontext = "Submit";
+        break;
+      default:
+        buttontext = "Next";
+        break;
+    }
+    return (
+      <button
+        className="btn btn-primary float-right"
+        type="button" onClick={() => this._next()}>
+        { buttontext}
+      </button>
+    )
   }
 
   handleChange(event: ChangeEvent<HTMLInputElement>) {
@@ -137,22 +147,23 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
   render() {
     return (
       <Container>
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
+        <Form onSubmit={this.handleSubmit}>
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title-vcenter">
               Issue PolkaBTC
           </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={this.handleSubmit}>
+          </Modal.Header>
+          <Modal.Body>
             <EnterBTCAmount {...this.state} />
             <BTCPayment {...this.state} />
             <Confirmation {...this.state} />
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          {this.previousButton}
-          {this.nextButton}
-        </Modal.Footer>
+          </Modal.Body>
+          <Modal.Footer>
+            {this.previousButton}
+            {this.nextButton}
+          </Modal.Footer>
+        </Form>
+
       </Container>
     )
   }
