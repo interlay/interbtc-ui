@@ -1,28 +1,31 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import React, { Component } from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { rootReducer } from "./common/reducers/index";
 import { applyMiddleware, createStore } from "redux";
-import { createPolkabtcAPI } from "@interlay/polkabtc";
-import { addPolkaBtcInstance } from "./common/actions/api.actions";
+import { createPolkabtcAPI, StakedRelayerClient } from "@interlay/polkabtc";
+import {
+  addPolkaBtcInstance,
+  addStakedRelayerInstance,
+} from "./common/actions/api.actions";
 import { createLogger } from "redux-logger";
 // theme
-import './_general.scss';
-import './assets/css/custom-bootstrap.css';
-import 'react-toastify/dist/ReactToastify.css';
-import './assets/css/custom.css';
+import "./_general.scss";
+import "./assets/css/custom-bootstrap.css";
+import "react-toastify/dist/ReactToastify.css";
+import "./assets/css/custom.css";
 
 // types
-import AppState from './common/types/AppState';
+import AppState from "./common/types/AppState";
 
 // app imports
 import Topbar from "./common/components/Topbar";
-import Footer from './common/components/Footer';
-import { BTCParachain } from './common/controllers/BTCParachain';
-import LandingPage from './pages/landing.page';
-import IssuePage from './pages/issue.page';
-import VaultPage from './pages/vault.page';
-import RedeemPage from './pages/redeem.page';
+import Footer from "./common/components/Footer";
+import { BTCParachain } from "./common/controllers/BTCParachain";
+import LandingPage from "./pages/landing.page";
+import IssuePage from "./pages/issue.page";
+import VaultPage from "./pages/vault.page";
+import RedeemPage from "./pages/redeem.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
 import Storage from "./common/controllers/Storage";
 
@@ -37,13 +40,13 @@ import {
   balanceLockedDOT,
   backedPolkaBTC,
   collateralRate,
-  feesEarned
+  feesEarned,
 } from "./mock";
-import KVStorage from './common/controllers/KVStorage';
-import { StorageInterface } from './common/types/Storage';
+import KVStorage from "./common/controllers/KVStorage";
+import { StorageInterface } from "./common/types/Storage";
 
 const storeLogger = createLogger();
-const store = createStore(rootReducer,applyMiddleware(storeLogger));
+const store = createStore(rootReducer, applyMiddleware(storeLogger));
 
 export default class App extends Component<{}, AppState> {
   state: AppState = {
@@ -53,7 +56,7 @@ export default class App extends Component<{}, AppState> {
     vault: false,
     storage: undefined,
     kvstorage: new KVStorage(),
-  }
+  };
 
   async initParachain() {
     await this.state.parachain.connect();
@@ -67,19 +70,19 @@ export default class App extends Component<{}, AppState> {
     if (!this.state.parachain.keyring) {
       await this.initParachain();
     }
-    const account = this.state.parachain.keyring?.addFromUri('//Alice');
+    const account = this.state.parachain.keyring?.addFromUri("//Alice");
     const address = account?.address;
     this.setState({
       account: account,
-      address: address
-    })
+      address: address,
+    });
   }
 
   // FIXME: check if vault server is running
   getVault() {
     this.setState({
-      vault: true
-    })
+      vault: true,
+    });
   }
 
   async getStorage() {
@@ -92,22 +95,18 @@ export default class App extends Component<{}, AppState> {
       // for mocking load mock data into storage
       this.mockStorage(storage);
       this.setState({
-        storage: storage
-      })
+        storage: storage,
+      });
     }
   }
 
   mockStorage(storage: StorageInterface) {
     if (storage) {
-      for (let i=0; i < MockIssueRequests.length; i++) {
-        storage.appendIssueRequest(
-          MockIssueRequests[i]
-        );
+      for (let i = 0; i < MockIssueRequests.length; i++) {
+        storage.appendIssueRequest(MockIssueRequests[i]);
       }
-      for (let i=0; i < MockRedeemRequests.length; i++) {
-        storage.appendRedeemRequest(
-          MockRedeemRequests[i]
-        );
+      for (let i = 0; i < MockRedeemRequests.length; i++) {
+        storage.appendRedeemRequest(MockRedeemRequests[i]);
       }
     }
     if (this.state.kvstorage) {
@@ -125,6 +124,9 @@ export default class App extends Component<{}, AppState> {
   async createAPIInstace() {
     const polkaBTC = await createPolkabtcAPI("mock");
     store.dispatch(addPolkaBtcInstance(polkaBTC));
+
+    const stakedRelayer = new StakedRelayerClient("http://localhost:3030");
+    store.dispatch(addStakedRelayerInstance(stakedRelayer));
   }
 
   componentDidMount() {
@@ -132,38 +134,42 @@ export default class App extends Component<{}, AppState> {
     this.getAccount();
     this.getVault();
     this.getStorage();
-    this.createAPIInstace()
+    this.createAPIInstace();
   }
 
   render() {
     return (
       <Provider store={store}>
         <Router>
-        <div className="main d-flex flex-column min-vh-100">
-          <Topbar address={this.state.address} account={this.state.account} vault={this.state.vault} />
-          <div className="mb-5">
-            <Switch>
-              <Route exact path="/">
-                <LandingPage {...this.state} />
-              </Route>
-              <Route path="/issue">
-                <IssuePage {...this.state} />
-              </Route>
-              <Route path="/vault">
-                <VaultPage {...this.state} />
-              </Route>
-              <Route path="/redeem">
-                <RedeemPage {...this.state} />
-              </Route>
-              <Route path="/staked-relayer">
-                <StakedRelayerPage></StakedRelayerPage>
-              </Route>
-            </Switch>
+          <div className="main d-flex flex-column min-vh-100">
+            <Topbar
+              address={this.state.address}
+              account={this.state.account}
+              vault={this.state.vault}
+            />
+            <div className="mb-5">
+              <Switch>
+                <Route exact path="/">
+                  <LandingPage {...this.state} />
+                </Route>
+                <Route path="/issue">
+                  <IssuePage {...this.state} />
+                </Route>
+                <Route path="/vault">
+                  <VaultPage {...this.state} />
+                </Route>
+                <Route path="/redeem">
+                  <RedeemPage {...this.state} />
+                </Route>
+                <Route path="/staked-relayer">
+                  <StakedRelayerPage></StakedRelayerPage>
+                </Route>
+              </Switch>
+            </div>
+            <Footer />
           </div>
-          <Footer />
-        </div>
-      </Router>
+        </Router>
       </Provider>
-    )
+    );
   }
 }
