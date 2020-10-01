@@ -15,7 +15,8 @@ export default function VoteModal(props: VoteModalProps):ReactElement{
 
   const onClick = async (vote: string) => {
     try {
-      await stakedRelayer.voteOnStatusUpdate(props.parachain.id,true);
+      const result = await stakedRelayer.voteOnStatusUpdate(props.parachain.id,vote==="yes");
+      console.log(result);
     } catch (error) {
       console.log(error);
     }

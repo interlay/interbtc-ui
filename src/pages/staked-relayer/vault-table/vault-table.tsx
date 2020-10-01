@@ -41,7 +41,7 @@ export default function VaultTable(): ReactElement {
           lockedBTC: 0,
           lockedDOT: 0,
           btcAddress: vault.btc_address.toString(),
-          status: vault.status.toString(),
+          status: vault.status && vault.status.toString(),
           collateralization,
         });
         if (index + 1 === vaults.length) setVaults(vaultsList);
