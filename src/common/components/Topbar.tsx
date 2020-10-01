@@ -7,7 +7,6 @@ import { KeyringPair } from "@polkadot/keyring/types";
 
 type TopbarProps = {
   account?: KeyringPair;
-  vault: boolean;
   address?: string;
 }
 
@@ -24,14 +23,14 @@ export default function Topbar(props: TopbarProps): ReactElement {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
             <Link className="nav-link" to="/issue">
-              Issue <BsUnlockFill/>
+              Issue
             </Link>
             <Link className="nav-link" to="/redeem">
-              Redeem <BsFillEjectFill/>
+              Redeem
             </Link>
-            <Link className="nav-link" to="/vault">
+            {/* <Link className="nav-link" to="/vault">
               Vault <BsFillBarChartFill/>
-            </Link>
+            </Link> */}
             <Link className="nav-link" to="/staked-relayer">
               Staked Relayer
             </Link>
