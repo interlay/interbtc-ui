@@ -28,10 +28,10 @@ export default function StakedRelayerPage() {
       let result = await polkaBTC.stakedRelayer.getFeesEarned(
         activeStakedRelayerId
       );
-      setFees(result.words[0]);
+      setFees(result.toNumber());
 
       result = await polkaBTC.stakedRelayer.getTotalStakedDOTAmount();
-      setLocked(result.words[0]);
+      setLocked(result.toNumber());
     };
     fetchData();
   });
@@ -84,7 +84,8 @@ export default function StakedRelayerPage() {
           </Button>
           <div className="row">
             <div className="col-12 de-note">
-              Note: You can only deregister if you are not participating in a vote
+              Note: You can only deregister if you are not participating in a
+              vote
             </div>
           </div>
         </div>
