@@ -23,7 +23,7 @@ export default function BtcParachainTable ():ReactElement{
             proposedStatus: "Error",
             currentStatus: "Running",
             proposedChanges: ADD_DATA_ERROR,
-            hash: "00000000000...42d948799f82d",
+            hash: "00000000000000f86897a7d23e820beb593d30ce834e5bf4a3081e8254f325ab",
             votes: "49 : 20",
             result: "Accepted"
         },{
@@ -32,7 +32,7 @@ export default function BtcParachainTable ():ReactElement{
             proposedStatus: "Running",
             currentStatus: "Error",
             proposedChanges: REMOVE_DATA_ERROR,
-            hash: "00000000000...42d948799f82d",
+            hash: "00000000000000f86897a7d23e820beb593d30ce834e5bf4a3081e8254f325ab",
             votes: "3 : 27",
             result: "Pending"
         },{
@@ -41,7 +41,7 @@ export default function BtcParachainTable ():ReactElement{
             proposedStatus: "Error",
             currentStatus: "Error",
             proposedChanges: INVALID_BTC_RELAY,
-            hash: "00000000000...42d948799f82d",
+            hash: "000000000000008e5969f6f0b306d5e30a5cc78d9857def80b6f81390d34c5a1",
             votes: "90 : 227",
             result: "Rejected"
         }]);
@@ -136,7 +136,12 @@ export default function BtcParachainTable ():ReactElement{
                                     <td className={getProposedChangesColor(parachain.proposedChanges)}>
                                         {parachain.proposedChanges}
                                     </td>
-                                    <td>{parachain.hash}</td>
+                                    <td className="break-words">
+                                        <a href={"https://blockstream.info/testnet/block/" + parachain.hash} 
+                                            target="_blank">
+                                            {parachain.hash}
+                                        </a>
+                                    </td>
                                     <td> { parachain.votes && <React.Fragment>
                                             <p>
                                                 <span className="green-text">

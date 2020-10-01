@@ -35,8 +35,8 @@ export default function StakedRelayerPage() {
     });
 
     return <div className="staked-relayer-page container-fluid">
-        <div className="stacked-container">
-            <div className="stacked-wrapper">
+        <div className="staked-container">
+            <div className="staked-wrapper">
                 <div className="row">
                     <div className="title">
                         PolkaBTC

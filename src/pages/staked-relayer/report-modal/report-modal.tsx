@@ -21,8 +21,13 @@ export default function ReportModal(props: ReportModalType): ReactElement {
   const polkaBTC = useSelector((state: StoreType) => state.api);
   const stakedRelayer = useSelector((state: StoreType) => state.relayer);
 
-  const onSubmit = handleSubmit(async ({ btcBlock, message }) => {
-    await stakedRelayer.suggestInvalidBlock(STATUS_UPDATE_DEPOSIT, btcBlock);
+  const onSubmit = handleSubmit(({ btcBlock, message }) => {
+    const reportInvalidBlock = async () => {
+      let result = await stakedRelayer.suggestInvalidBlock(STATUS_UPDATE_DEPOSIT, btcBlock);
+      // stakedRelayer.registerStakedRelayer()
+      console.log(result);
+    }
+    reportInvalidBlock();
     props.onClose();
   });
 
@@ -43,7 +48,7 @@ export default function ReportModal(props: ReportModalType): ReactElement {
                   "custom-input" + (errors.btcBlock ? " error-borders" : "")
                 }
                 ref={register({
-                  required: false,
+                  required: true,
                   pattern: {
                     value: /^[1-9a-zA-Z]{1,1}[0-9a-zA-Z]{31,31}$/,
                     message: "Please enter valid BTC header",
@@ -67,7 +72,7 @@ export default function ReportModal(props: ReportModalType): ReactElement {
                   "custom-textarea" + (errors.message ? " error-borders" : "")
                 }
                 name="message"
-                ref={register({ required: false })}
+                ref={register({ required: true })}
                 rows={6}
               ></textarea>
               {errors.message && (

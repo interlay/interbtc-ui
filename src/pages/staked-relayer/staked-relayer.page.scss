@@ -4,6 +4,15 @@
 .staked-relayer-page{
     text-align: center;
 
+    .staked-container{
+        max-width: calc(100vw - 30px);
+        overflow-x: scroll;
+        padding: 0px 15px;
+        .staked-wrapper{
+
+        }
+    }
+
     .staked-button{
         margin-top: 20px;
     }
@@ -43,7 +52,7 @@
             }
         }
 
-        td {
+        td.break-words {
             word-break: break-all;
         }
 
