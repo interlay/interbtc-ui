@@ -17,7 +17,7 @@ export default function VaultTable(): ReactElement{
             fetchPrices(dispatch);
         };
         fetchData();
-    },[fetchPrices,dispatch]);
+    },[dispatch]);
 
     useEffect(()=>{
         const fetchData = async () => {
