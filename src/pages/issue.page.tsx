@@ -125,7 +125,7 @@ class IssuePage extends Component<AppState, IssueProps> {
                                     onClick={this.handleShow}
                                 >
                                     Issue PolkaBTC
-                              </Button>
+                                </Button>
                             </Col>
                         </Row>
 
