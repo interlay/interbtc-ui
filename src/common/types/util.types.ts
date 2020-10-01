@@ -9,11 +9,11 @@ export interface Prices {
 }
 
 export type Vault = {
-  id: string;
-  vault: string;
+  vaultId: string;
   btcAddress: string;
   lockedDOT: number;
   lockedBTC: number;
+  status: string;
   collateralization: number;
 };
 
