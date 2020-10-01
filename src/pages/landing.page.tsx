@@ -22,7 +22,7 @@ class LandingPage extends Component<AppState, LandingProps> {
             totalLockedDOT: this.props.kvstorage.getValue("totalLockedDOT"),
         });
     }
-    
+
     componentDidMount(): void {
         this.getParachainData();
     }

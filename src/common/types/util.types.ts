@@ -4,34 +4,30 @@ import { PolkaBTCAPI, StakedRelayerClient } from "@interlay/polkabtc";
 import { rootReducer } from "../reducers/index";
 
 export interface Prices {
-  dotBtc: number;
-  dotUsd: number;
+    dotBtc: number;
+    dotUsd: number;
 }
 
 export type Vault = {
-  vaultId: string;
-  btcAddress: string;
-  lockedDOT: number;
-  lockedBTC: number;
-  status: string;
-  collateralization: number;
+    vaultId: string;
+    btcAddress: string;
+    lockedDOT: number;
+    lockedBTC: number;
+    status: string;
+    collateralization: number;
 };
 
 export type AppState = ReturnType<typeof rootReducer>;
 
 export type StoreType = {
-  api: PolkaBTCAPI;
-  relayer: StakedRelayerClient;
-  prices: Prices;
+    api: PolkaBTCAPI;
+    relayer: StakedRelayerClient;
+    prices: Prices;
 };
 
 export type dispatcher = {
-  // eslint-disable-next-line
-  dispatch: {};
+    // eslint-disable-next-line
+    dispatch: {};
 };
 
-export type StoreState = Store<
-  CombinedState<StoreType>,
-  AddInstance | AddStakedRelayerInstance
-> &
-  dispatcher;
+export type StoreState = Store<CombinedState<StoreType>, AddInstance | AddStakedRelayerInstance> & dispatcher;

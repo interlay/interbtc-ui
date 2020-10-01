@@ -6,8 +6,8 @@ export const priceApiKey = "api_key=0fe74ac7dd16554406f7ec8d305807596571e13bd6b3
 
 export const fetchPrices = async (dispatch: any) => {
     return fetch(priceBaseURL + priceParams + priceApiKey)
-        .then(response => response.json())
-        .then(result => {
-            dispatch(updatePricesAction({dotBtc: Number(result.DOT.BTC), dotUsd: Number(result.DOT.USD)}));
+        .then((response) => response.json())
+        .then((result) => {
+            dispatch(updatePricesAction({ dotBtc: Number(result.DOT.BTC), dotUsd: Number(result.DOT.USD) }));
         });
 };

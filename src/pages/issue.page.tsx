@@ -20,7 +20,7 @@ class IssuePage extends Component<AppState, IssueProps> {
         storage: this.props.storage,
         kvstorage: this.props.kvstorage,
         // eslint-disable-next-line
-        addIssueRequest: () => { },
+        addIssueRequest: () => {},
     };
 
     // constructor(props: AppState & RouteComponentProps) {
@@ -29,9 +29,7 @@ class IssuePage extends Component<AppState, IssueProps> {
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.addIssueRequest = this.addIssueRequest.bind(this);
-        this.state.balancePolkaBTC = this.props.kvstorage.getValue(
-            "balancePolkaBTC"
-        );
+        this.state.balancePolkaBTC = this.props.kvstorage.getValue("balancePolkaBTC");
     }
 
     handleShow(): void {
@@ -106,9 +104,7 @@ class IssuePage extends Component<AppState, IssueProps> {
 
                         <Row className="mt-5">
                             <Col xs="12" sm={{ span: 6, offset: 3 }}>
-                                <h5 className="text-muted">
-                                    PolkaBTC balance: {balancePolkaBTC}
-                                </h5>
+                                <h5 className="text-muted">PolkaBTC balance: {balancePolkaBTC}</h5>
                             </Col>
                         </Row>
                         <Row className="mt-1">
@@ -118,12 +114,7 @@ class IssuePage extends Component<AppState, IssueProps> {
                         </Row>
                         <Row className="mt-5 mb-5">
                             <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
-                                <Button
-                                    variant="outline-dark"
-                                    size="lg"
-                                    block
-                                    onClick={this.handleShow}
-                                >
+                                <Button variant="outline-dark" size="lg" block onClick={this.handleShow}>
                                     Issue PolkaBTC
                                 </Button>
                             </Col>
@@ -132,10 +123,7 @@ class IssuePage extends Component<AppState, IssueProps> {
                         <IssueRequests {...this.state} />
 
                         <Modal show={this.state.showWizard} onHide={this.handleClose}>
-                            <IssueWizard
-                                {...this.state}
-                                addIssueRequest={this.addIssueRequest}
-                            />
+                            <IssueWizard {...this.state} addIssueRequest={this.addIssueRequest} />
                         </Modal>
                     </div>
                 </section>
