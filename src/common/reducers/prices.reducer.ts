@@ -1,4 +1,3 @@
-import { PolkaBTCAPI } from "@interlay/polkabtc";
 import { UPDATE_PRICES, PricesActions } from "../types/actions.types"; 
 import { Prices } from "../types/util.types";
 

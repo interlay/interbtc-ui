@@ -1,4 +1,3 @@
-import { StoreState } from "../types/util.types";
 import { updatePricesAction } from "../actions/prices.actions";
 
 export const priceBaseURL = "https://min-api.cryptocompare.com/data/pricemulti";

@@ -2,7 +2,15 @@ import React from "react";
 import { FormGroup, ListGroup, ListGroupItem } from "react-bootstrap";
 import { IssueWizardProps } from "./issue-wizard";
 
-export default function RequestConfirmation(props: IssueWizardProps) {
+export default function RequestConfirmation(props: IssueWizardProps){
+    const polkaBTC = useSelector((state: StoreType)=>state.api);
+
+    useEffect(()=>{
+        const fetchData = async () => {
+        }
+        fetchData();
+    },[polkaBTC])
+
     if (props.step !== 2) {
         return null;
     }

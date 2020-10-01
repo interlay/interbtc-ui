@@ -1,15 +1,12 @@
 import React, { Component } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { Image, Button, Col, Row } from "react-bootstrap";
-// import { PolkaBTCAPI } from "@interlay/polkabtc";
-// import { createAPI } from "@interlay/polkabtc";
 
 import AppState from "../common/types/AppState";
 import LandingProps from "../common/types/LandingState";
 
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
 
-// class LandingPage extends Component<AppState & RouteComponentProps, LandingProps> {
 class LandingPage extends Component<AppState, LandingProps> {
     state: LandingProps = {
         totalPolkaBTC: "loading...",
@@ -17,26 +14,9 @@ class LandingPage extends Component<AppState, LandingProps> {
     };
 
     async getParachainData(): Promise<void> {
-        const defaultEndpoint = "ws://127.0.0.1:9944";
-        // const api = await createAPI(defaultEndpoint);
-        // const polkaBTC = new PolkaBTCAPI(api);
-        // const totalP = await polkaBTC.api.query.polkaBtc.totalIssuance();
-        // console.log("totalPolkaBTC:");
-        // console.log(totalP);
-        // await api.query.dot.account(accountId)
-        // FIXME: only update when the issuance is actually updated
         if (!this.props.parachain.api) {
             await this.props.parachain.connect();
         }
-        // if (this.props.parachain.api) {
-        //   const totalPolkaBTC = await this.props.parachain.getTotalPolkaBTC();
-        //   const totalLockedDOT = await this.props.parachain.getTotalLockedDOT();
-        //   const totalDOT = await this.props.parachain.getTotalDOT();
-        //   this.setState({
-        //     totalPolkaBTC: totalPolkaBTC,
-        //     totalLockedDOT: totalLockedDOT
-        //   });
-        // }
         this.setState({
             totalPolkaBTC: this.props.kvstorage.getValue("totalPolkaBTC"),
             totalLockedDOT: this.props.kvstorage.getValue("totalLockedDOT"),
@@ -94,5 +74,4 @@ class LandingPage extends Component<AppState, LandingProps> {
     }
 }
 
-// export default withRouter(LandingPage);
 export default LandingPage;

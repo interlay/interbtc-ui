@@ -6,7 +6,6 @@ import VoteModal from "../vote-modal/vote-modal";
 
 const ADD_DATA_ERROR = "Add NO_DATA error";
 const REMOVE_DATA_ERROR = "Remove NO_DATA error";
-const INVALID_BTC_RELAY = "Add INVALID_BTC_RELAY error";
 
 interface StatusUpdate {
   id: string;
@@ -64,18 +63,9 @@ export default function BtcParachainTable(): ReactElement {
         result.isRunning ? "Running" : result.isError ? "Error" : "Shutdown"
       );
     };
+
     const fetchUpdates = async () => {
       if (!polkaBTC) return;
-      // {
-      //   id: "1",
-      //   timestamp: "22020-09-21 10:59:13",
-      //   proposedStatus: "Error",
-      //   currentStatus: "Running",
-      //   proposedChanges: ADD_DATA_ERROR,
-      //   hash: "00000000000...42d948799f82d",
-      //   votes: "49 : 20",
-      //   result: "Accepted",
-      // },
 
       let result = await polkaBTC.stakedRelayer.getAllStatusUpdates();
       setParachains(
@@ -99,6 +89,7 @@ export default function BtcParachainTable(): ReactElement {
         )
       );
     };
+
     fetchStatus();
     fetchUpdates();
   }, [polkaBTC]);
@@ -168,89 +159,76 @@ export default function BtcParachainTable(): ReactElement {
         </div>
       </div>
       <div className="row justify-content-center">
-        <div className="col-12">
-          <div className="table-wrapper">
-            <table>
-              <thead>
-                <tr>
-                  <th>Id</th>
-                  <th>Timestamp</th>
-                  <th>Proposed Status</th>
-                  <th>Current Status</th>
-                  <th>Proposed Changes</th>
-                  <th>BTC Block Hash</th>
-                  <th>Votes (Yes : No)</th>
-                  <th>Result</th>
-                </tr>
-              </thead>
-              <tbody>
-                {parachains.map((parachain: any, index) => {
-                  return (
-                    <tr key={index}>
-                      <td>{parachain.id}</td>
-                      <td>{parachain.timestamp}</td>
-                      <td
-                        className={
-                          parachain.proposedStatus === "Running"
-                            ? "green-text"
-                            : "orange-text"
-                        }
-                      >
-                        {parachain.proposedStatus}
-                      </td>
-                      <td>{parachain.currentStatus}</td>
-                      <td
-                        className={getProposedChangesColor(
-                          parachain.proposedChanges
-                        )}
-                      >
-                        {parachain.proposedChanges}
-                      </td>
-                      <td>{parachain.blockHash}</td>
-                      <td>
-                        {" "}
-                        {parachain.votes && (
-                          <React.Fragment>
-                            <p>
-                              <span className="green-text">
-                                {getPercentage(parachain.votes, "yes")}%
-                              </span>
-                              <span>&nbsp;:&nbsp;</span>
-                              <span className="red-text">
-                                {getPercentage(parachain.votes, "no")}%
-                              </span>
-                            </p>
-                            <p>
-                              <span className="green-text">
-                                {parachain.votes.split(":")[0]}
-                              </span>
-                              <span>:</span>
-                              <span className="red-text">
-                                {parachain.votes.split(":")[1]}
-                              </span>
-                            </p>
-                          </React.Fragment>
-                        )}
-                      </td>
-                      <td className={getResultColor(parachain.result)}>
-                        {parachain.result === "Pending" ? (
-                          <Button
-                            variant="outline-primary"
-                            onClick={() => openVoteModal(parachain)}
-                          >
-                            Vote
-                          </Button>
-                        ) : (
-                          parachain.result
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+          <div className="col-12">
+              <div className="table-wrapper">
+                  <table>
+                      <thead>
+                          <tr>
+                              <th>Id</th>
+                              <th>Timestamp</th>
+                              <th>Proposed Status</th>
+                              <th>Current Status</th>
+                              <th>Proposed Changes</th>
+                              <th>BTC Block Hash</th>
+                              <th>Votes (Yes : No)</th>
+                              <th>Result</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          {parachains.map((parachain: any, index)=>{
+                              return <tr key={index}>
+                                  <td>{parachain.id}</td>
+                                  <td>{parachain.timestamp}</td>
+                                  <td className={
+                                          parachain.proposedStatus === "Running" ? "green-text" : "orange-text"}>
+                                      {parachain.proposedStatus}
+                                  </td>
+                                  <td>{parachain.currentStatus}</td>
+                                  <td className={getProposedChangesColor(parachain.proposedChanges)}>
+                                      {parachain.proposedChanges}
+                                  </td>
+                                  <td className="break-words">
+                                      <a href={"https://blockstream.info/testnet/block/" + parachain.hash} 
+                                          target="_blank"
+                                          rel="noopener noreferrer">
+                                          {parachain.blockHash}
+                                      </a>
+                                  </td>
+                                  <td> { parachain.votes && <React.Fragment>
+                                          <p>
+                                              <span className="green-text">
+                                                  {getPercentage(parachain.votes,"yes")}%
+                                              </span>
+                                              <span>&nbsp;:&nbsp;</span>
+                                              <span className="red-text">
+                                                  {getPercentage(parachain.votes,"no")}%
+                                              </span>
+                                          </p>
+                                          <p>
+                                              <span className="green-text">
+                                                  {parachain.votes.split(":")[0]}
+                                              </span>
+                                              <span>:</span>
+                                              <span className="red-text">
+                                                  {parachain.votes.split(":")[1]}
+                                              </span>
+                                          </p>
+                                      </React.Fragment>
+                                      }
+                                  </td>
+                                  <td className={getResultColor(parachain.result)}>{parachain.result === "Pending" ?
+                                      <Button variant="outline-primary"
+                                          onClick={()=>openVoteModal(parachain)}>
+                                          Vote
+                                      </Button> 
+                                      : parachain.result}
+                                  </td>
+                              </tr>
+                          })}
+                      </tbody>
+                  </table>
+              </div>
           </div>
-        </div>
       </div>
     </div>
   );

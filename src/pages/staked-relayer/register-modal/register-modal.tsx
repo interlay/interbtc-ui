@@ -15,7 +15,6 @@ type RegisterForm = {
 
 export default function ReportModal(props: RegisterModalType): ReactElement {
   const { register, handleSubmit, errors } = useForm<RegisterForm>();
-  const polkaBTC = useSelector((state: StoreType) => state.api);
   const stakedRelayer = useSelector((state: StoreType) => state.relayer);
 
   const onSubmit = handleSubmit(async ({ stake }) => {

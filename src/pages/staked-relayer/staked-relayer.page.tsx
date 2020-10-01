@@ -32,9 +32,6 @@ export default function StakedRelayerPage() {
 
       result = await polkaBTC.stakedRelayer.getTotalStakedDOTAmount();
       setLocked(result.words[0]);
-
-      polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay();
-      const issues = await polkaBTC.issue.list();
     };
     fetchData();
   });
@@ -87,8 +84,7 @@ export default function StakedRelayerPage() {
           </Button>
           <div className="row">
             <div className="col-12 de-note">
-              Note: You can only deregister if you are not participating in a
-              vote
+              Note: You can only deregister if you are not participating in a vote
             </div>
           </div>
         </div>

@@ -17,7 +17,7 @@ export default function VaultTable(): ReactElement{
             fetchPrices(dispatch);
         };
         fetchData();
-    },[fetchPrices]);
+    },[dispatch]);
 
     useEffect(()=>{
         const fetchData = async () => {
@@ -105,7 +105,7 @@ export default function VaultTable(): ReactElement{
                             {vaults.map((vault: any, index)=>{
                                 return <tr key={index}>
                                     <td>{vault.vault}</td>
-                                    <td>{vault.btcAddress}</td>
+                                    <td className="break-words">{vault.btcAddress}</td>
                                     <td>{vault.lockedDOT && vault.lockedDOT.toFixed(2)}</td>
                                     <td>{vault.lockedBTC && vault.lockedBTC.toFixed(2)}</td>
                                     <td className={getCollateralizationColor(vault.collateralization)}>{vault.collateralization}%</td>

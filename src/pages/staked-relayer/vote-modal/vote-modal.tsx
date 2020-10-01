@@ -1,5 +1,7 @@
 import React, { ReactElement } from "react";
 import { Modal, Button } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { StoreType } from "../../../common/types/util.types";
 
 type VoteModalProps = {
     onClose: ()=>void;
@@ -9,6 +11,16 @@ type VoteModalProps = {
 };
 
 export default function VoteModal(props: VoteModalProps):ReactElement{
+  const stakedRelayer = useSelector((state: StoreType) => state.relayer);
+
+  const onClick = async (vote: string) => {
+    try {
+      await stakedRelayer.voteOnStatusUpdate(props.parachain.id,true);
+    } catch (error) {
+      console.log(error);
+    }
+    props.onClose();
+  };
 
   return <Modal show={props.show} onHide={props.onClose} size="lg">
       <Modal.Header closeButton>
@@ -65,10 +77,10 @@ export default function VoteModal(props: VoteModalProps):ReactElement{
         }
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="outline-danger" type="submit" onClick={props.onClose}>
+        <Button variant="outline-danger" type="submit" onClick={()=>onClick("no")}>
           No
         </Button>
-        <Button variant="outline-success" onClick={props.onClose}>
+        <Button variant="outline-success" onClick={()=>onClick("yes")}>
           Yes
         </Button>
       </Modal.Footer>
