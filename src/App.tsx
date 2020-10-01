@@ -122,7 +122,7 @@ export default class App extends Component<{}, AppState> {
   }
 
   async createAPIInstace() {
-    const polkaBTC = await createPolkabtcAPI("mock");
+    const polkaBTC = await createPolkabtcAPI("ws://127.0.0.1:9944");
     store.dispatch(addPolkaBtcInstance(polkaBTC));
 
     const stakedRelayer = new StakedRelayerClient("http://localhost:3030");
