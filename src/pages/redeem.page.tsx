@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import { Image, Button, Col, Row, Modal } from "react-bootstrap";
 
 import AppState from "../common/types/AppState";
-import { RedeemProps, RedeemRequest } from "../common/types/RedeemState";
-import RedeemWizard from "../common/components/RedeemWizard";
+import { RedeemProps, RedeemRequest } from "../common/components/redeem/redeem-state";
+import RedeemWizard from "../common/components/redeem/redeem-wizard";
 
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
-import RedeemRequests from "../common/components/RedeemRequests";
+import RedeemRequests from "../common/components/redeem/redeem-requests";
 
 export default class RedeemPage extends Component<AppState, RedeemProps> {
   state: RedeemProps = {

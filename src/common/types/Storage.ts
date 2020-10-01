@@ -1,5 +1,5 @@
 import { IssueRequest } from "./IssueState";
-import { RedeemRequest } from "./RedeemState";
+import { RedeemRequest } from "../components/redeem/redeem-state";
 
 export interface StorageInterface {
   address: string;

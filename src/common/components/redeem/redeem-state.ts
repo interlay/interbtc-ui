@@ -1,4 +1,4 @@
-import { StorageInterface, KVStorageInterface } from "./Storage";
+import { StorageInterface, KVStorageInterface } from "../../types/Storage";
 
 export type RedeemRequest = {
   id: string;

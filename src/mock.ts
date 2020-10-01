@@ -1,5 +1,5 @@
 import { IssueRequest } from "./common/types/IssueState";
-import { RedeemRequest } from "./common/types/RedeemState";
+import { RedeemRequest } from "./common/components/redeem/redeem-state";
 import { ALICE_BTC, BOB_BTC } from "./constants";
 
 export const MockIssueRequests: Array<IssueRequest> = [
