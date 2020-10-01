@@ -1,8 +1,8 @@
 import React, { Component, ChangeEvent } from "react";
-import { BOB_BTC, BOB, ALICE_BTC } from "../../constants";
-import { RedeemProps, RedeemRequest } from "../types/RedeemState";
+import { BOB_BTC, BOB, ALICE_BTC } from "../../../constants";
+import { RedeemProps, RedeemRequest } from "./redeem-state";
 import { Container, Modal, Form, FormGroup, FormControl, ListGroup, ListGroupItem, Row, Col } from "react-bootstrap";
-import { shortAddress } from "../utils/utils";
+import { shortAddress } from "../../utils/utils";
 
 interface RedeemWizardProps {
   step: number,
