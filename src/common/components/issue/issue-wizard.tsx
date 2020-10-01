@@ -45,30 +45,30 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
         step = step >= 3 ? 4 : step + 1;
         this.setState({
             step: step
-        })
+        });
     }
 
     _prev() {
-        let step = this.state.step
+        let step = this.state.step;
         // If the current step is 2 or 3, then subtract one on "previous" button click
-        step = step <= 1 ? 1 : step - 1
+        step = step <= 1 ? 1 : step - 1;
         this.setState({
             step: step
-        })
+        });
     }
 
     isValid(step: number) {
         const { amountBTC } = this.state;
-        let valid = [
+        const valid = [
             parseFloat(amountBTC) > 0, // TODO: add that we need to have found a vault for the amount
             true,
             true,
-        ]
+        ];
         return valid[step];
     }
 
     get previousButton() {
-        let step = this.state.step;
+        const step = this.state.step;
         if (step !== 1) {
             return (
                 <button
@@ -82,7 +82,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
     }
 
     get nextButton() {
-        let step = this.state.step;
+        const step = this.state.step;
         const buttontext = (step === 2) ? ("Confirm") : ("Next");
         if (step < 4) {
             return (
@@ -91,32 +91,31 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
                     type="button" onClick={() => this._next()}>
                     { buttontext}
                 </button>
-            )
+            );
         }
         return null;
     }
 
     handleChange(event: ChangeEvent<HTMLInputElement>) {
-        let { name, value } = event.target;
+        const { name, value } = event.target;
         this.setState({
             ...this.state,
             [name]: value
         });
         if (name === "amountBTC") {
-            // TODO: query if we found a vault
             this.setState({
                 amountBTC: value,
-                feeBTC: (Number(value)? Number.parseFloat(value) * 0.005 : 0).toString()
-            })
+                feeBTC: (Number(value) ? Number.parseFloat(value) * 0.005 : 0).toString()
+            });
         }
     }
 
     handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        let date: Date = new Date();
+        const date: Date = new Date();
         date.setMilliseconds(0);
         date.setSeconds(0);
-        let req: IssueRequest = {
+        const req: IssueRequest = {
             id: this.props.idCounter.toString(),
             amountBTC: this.state.amountBTC,
             creation: date.toISOString(),
@@ -124,7 +123,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
             btcTxId: "...",
             confirmations: 0,
             completed: false
-        }
+        };
         this.props.addIssueRequest(req);
     }
 
@@ -134,7 +133,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
                         Issue PolkaBTC
-          </Modal.Title>
+                    </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={this.handleSubmit}>
@@ -149,6 +148,6 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
                     {this.nextButton}
                 </Modal.Footer>
             </Container>
-        )
+        );
     }
 }
