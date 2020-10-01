@@ -32,9 +32,6 @@ export default function StakedRelayerPage() {
 
       result = await polkaBTC.stakedRelayer.getTotalStakedDOTAmount();
       setLocked(result.words[0]);
-
-      polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay();
-      const issues = await polkaBTC.issue.list();
     };
     fetchData();
   });

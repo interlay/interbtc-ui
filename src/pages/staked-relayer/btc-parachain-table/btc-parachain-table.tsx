@@ -6,7 +6,6 @@ import VoteModal from "../vote-modal/vote-modal";
 
 const ADD_DATA_ERROR = "Add NO_DATA error";
 const REMOVE_DATA_ERROR = "Remove NO_DATA error";
-const INVALID_BTC_RELAY = "Add INVALID_BTC_RELAY error";
 
 interface StatusUpdate {
   id: string;
@@ -90,7 +89,7 @@ export default function BtcParachainTable(): ReactElement {
         )
       );
     };
-    
+
     fetchStatus();
     fetchUpdates();
   }, [polkaBTC]);
@@ -190,7 +189,8 @@ export default function BtcParachainTable(): ReactElement {
                                   </td>
                                   <td className="break-words">
                                       <a href={"https://blockstream.info/testnet/block/" + parachain.hash} 
-                                          target="_blank">
+                                          target="_blank"
+                                          rel="noopener noreferrer">
                                           {parachain.blockHash}
                                       </a>
                                   </td>

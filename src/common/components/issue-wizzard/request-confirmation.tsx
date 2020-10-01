@@ -9,9 +9,6 @@ export default function RequestConfirmation(props: IssueWizardProps){
 
     useEffect(()=>{
         const fetchData = async () => {
-            const activeStakedRelayerId = polkaBTC.api.createType("AccountId");
-            // let result = await polkaBTC.issue.request(props.amountBTC,activeStakedRelayerId);
-            // console.log(result);
         }
         fetchData();
     },[polkaBTC])

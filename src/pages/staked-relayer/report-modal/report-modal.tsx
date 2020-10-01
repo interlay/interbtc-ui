@@ -18,14 +18,12 @@ type ReportForm = {
 
 export default function ReportModal(props: ReportModalType): ReactElement {
   const { register, handleSubmit, errors } = useForm<ReportForm>();
-  const polkaBTC = useSelector((state: StoreType) => state.api);
   const stakedRelayer = useSelector((state: StoreType) => state.relayer);
 
   const onSubmit = handleSubmit(({ btcBlock, message }) => {
     const reportInvalidBlock = async () => {
       let result = await stakedRelayer.suggestInvalidBlock(STATUS_UPDATE_DEPOSIT, btcBlock);
-      // stakedRelayer.registerStakedRelayer()
-      console.log(result);
+      console.log(result,message);
     }
     reportInvalidBlock();
     props.onClose();

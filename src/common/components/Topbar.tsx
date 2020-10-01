@@ -2,7 +2,6 @@ import React, { ReactElement } from "react";
 import polkaBTCLogo from "../../assets/img/polkabtc/PolkaBTC_black.png";
 import { Navbar, Nav, Image, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { BsFillEjectFill, BsUnlockFill, BsFillBarChartFill } from "react-icons/bs";
 import { KeyringPair } from "@polkadot/keyring/types";
 
 type TopbarProps = {
@@ -17,7 +16,6 @@ export default function Topbar(props: TopbarProps): ReactElement {
           <Link className="text-decoration-none" to="/">
             <Image src={polkaBTCLogo} width="90" className="d-inline-block align-top" height="30" fluid />
           </Link>
-          {/* <Link to="/" className="text-decoration-none"> XOpts</Link> */}
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
@@ -28,9 +26,6 @@ export default function Topbar(props: TopbarProps): ReactElement {
             <Link className="nav-link" to="/redeem">
               Redeem
             </Link>
-            {/* <Link className="nav-link" to="/vault">
-              Vault <BsFillBarChartFill/>
-            </Link> */}
             <Link className="nav-link" to="/staked-relayer">
               Staked Relayer
             </Link>
