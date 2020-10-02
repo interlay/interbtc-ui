@@ -1,8 +1,6 @@
-import React, { Component } from "react";
-import { FormGroup, ListGroup, ListGroupItem, Row, Col } from "react-bootstrap";
+import React from "react";
+import { FormGroup, ListGroup, ListGroupItem } from "react-bootstrap";
 import { IssueWizardProps } from "./issue-wizard";
-import { useSelector } from "react-redux";
-import { StoreType } from "../../types/util.types";
 import { ChangeEvent } from "react";
 import { useEffect } from "react";
 import { Keyring } from "@polkadot/api";
