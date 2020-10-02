@@ -1,5 +1,5 @@
 {
-  "name": "xlcaim-ui",
+  "name": "polkabtc-ui",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -62,6 +62,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "homepage": ".",
   "browserslist": {
     "production": [
       ">0.2%",
