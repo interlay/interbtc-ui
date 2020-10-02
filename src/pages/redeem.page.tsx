@@ -8,6 +8,7 @@ import RedeemWizard from "../common/components/redeem/redeem-wizard";
 import { resetRedeemWizardAction } from "../common/actions/redeem.actions";
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
 import RedeemRequests from "../common/components/redeem/redeem-requests";
+import { ResetRedeemWizard } from "../common/types/actions.types";
 
 class RedeemPage extends Component<AppState, RedeemProps> {
     state: RedeemProps = {
@@ -134,7 +135,7 @@ class RedeemPage extends Component<AppState, RedeemProps> {
     }
 }
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: (action: ResetRedeemWizard)=>void) => {
     return { resetRedeemWizard: () => dispatch(resetRedeemWizardAction()) };
 };
 

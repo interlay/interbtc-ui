@@ -10,7 +10,7 @@ import {
     ChangeBtcAddress,
     ResetRedeemWizard,
     ChangeVaultBtcAddress,
-    ChangeVaultDotAddress
+    ChangeVaultDotAddress,
 } from "../types/actions.types";
 
 export const changeRedeemStepAction = (step: string): ChangeRedeemStep => ({
@@ -32,12 +32,12 @@ export const resetRedeemWizardAction = (): ResetRedeemWizard => ({
     type: RESET_REDEEM_WIZARD,
 });
 
-export const changeVaultBtcAddressAction = (vaultBtcAddress:string): ChangeVaultBtcAddress => ({
+export const changeVaultBtcAddressAction = (vaultBtcAddress: string): ChangeVaultBtcAddress => ({
     type: CHANGE_VAULT_BTC_ADDRESS,
-    vaultBtcAddress
+    vaultBtcAddress,
 });
 
-export const changeVaultDotAddressAction = (vaultDotAddress:string): ChangeVaultDotAddress => ({
+export const changeVaultDotAddressAction = (vaultDotAddress: string): ChangeVaultDotAddress => ({
     type: CHANGE_VAULT_DOT_ADDRESS,
-    vaultDotAddress
+    vaultDotAddress,
 });
