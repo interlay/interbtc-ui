@@ -4,7 +4,8 @@ import { IssueWizardProps } from "./issue-wizard";
 import { ChangeEvent } from "react";
 import { useEffect } from "react";
 import { Keyring } from "@polkadot/api";
-import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
+import { useSelector } from "react-redux";
+import { StoreType } from "../../types/util.types";
 
 interface BTCPaymentProps {
     step: number;
