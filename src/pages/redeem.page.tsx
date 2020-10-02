@@ -135,7 +135,7 @@ class RedeemPage extends Component<AppState, RedeemProps> {
     }
 }
 
-const mapDispatchToProps = (dispatch: (action: ResetRedeemWizard)=>void) => {
+const mapDispatchToProps = (dispatch: (action: ResetRedeemWizard) => void) => {
     return { resetRedeemWizard: () => dispatch(resetRedeemWizardAction()) };
 };
 
