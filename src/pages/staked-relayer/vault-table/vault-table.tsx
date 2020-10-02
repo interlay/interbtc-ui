@@ -106,7 +106,7 @@ export default function VaultTable(): ReactElement {
                                             <td className={getCollateralizationColor(vault.collateralization)}>
                                                 {typeof vault.collateralization !== "undefined"
                                                     ? vault.collateralization.toString() + "%"
-                                                    : "N/A"}
+                                                    : "∞"}
                                             </td>
                                             <td className={getStatusColor(vault.status)}>{vault.status}</td>
                                         </tr>

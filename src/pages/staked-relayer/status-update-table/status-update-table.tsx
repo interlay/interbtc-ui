@@ -152,7 +152,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                             <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>Timestamp</th>
+                                    <th>Parachain Block</th>
                                     <th>Proposed Status</th>
                                     <th>Current Status</th>
                                     <th>Proposed Changes</th>

@@ -103,11 +103,13 @@ export default function StakedRelayerPage() {
                             Deregister
                         </ButtonMaybePending>
                     )}
-                    <div className="row">
-                        <div className="col-12 de-note">
-                            Note: You can only deregister if you are not participating in a vote.
+                    {dotLocked > 0 && (
+                        <div className="row">
+                            <div className="col-12 de-note">
+                                Note: You can only deregister if you are not participating in a vote.
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>
