@@ -7,8 +7,8 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../types/util.types";
 
 type TopbarProps = {
-  account?: KeyringPair;
-  address?: string;
+    account?: KeyringPair;
+    address?: string;
 }
 
 export default function Topbar(props: TopbarProps): ReactElement {
