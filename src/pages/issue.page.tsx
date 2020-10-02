@@ -20,7 +20,8 @@ class IssuePage extends Component<AppState, IssueProps> {
         storage: this.props.storage,
         kvstorage: this.props.kvstorage,
         // eslint-disable-next-line
-        addIssueRequest: () => {},
+        addIssueRequest: () => { },
+        handleUpdatedIssueRequests: () => { },
     };
 
     // constructor(props: AppState & RouteComponentProps) {
@@ -41,6 +42,13 @@ class IssuePage extends Component<AppState, IssueProps> {
     handleClose(): void {
         this.setState({
             showWizard: false,
+        });
+    }
+
+    handleUpdatedIssueRequests(value: Array<IssueRequest>) {
+        this.setState({
+            ...this.state,
+            ["issueRequests"]: value
         });
     }
 
