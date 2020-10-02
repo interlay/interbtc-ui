@@ -59,7 +59,7 @@ export default function StakedRelayerPage() {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <div className="stats">DOT Locked: {dotLocked}</div>
+                            <div className="stats">Locked: {dotLocked} DOT</div>
                         </div>
                     </div>
                     <div className="row">
