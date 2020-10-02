@@ -43,7 +43,7 @@ export default function ReportModal(props: ReportModalType): ReactElement {
                 </Modal.Header>
                 <Modal.Body>
                     <div className="row">
-                        <div className="col-12">Bitcoin Block Header</div>
+                        <div className="col-12">Bitcoin Block Hash</div>
                         <div className="col-12">
                             <input
                                 name="btcBlock"
@@ -52,15 +52,15 @@ export default function ReportModal(props: ReportModalType): ReactElement {
                                 ref={register({
                                     required: true,
                                     pattern: {
-                                        value: /^[0-9a-zA-Z]{160,160}$/,
-                                        message: "Please enter valid BTC header",
+                                        value: /^[0-9a-zA-Z]{64,64}$/,
+                                        message: "Please enter valid BTC block hash",
                                     },
                                 })}
                             ></input>
                             {errors.btcBlock && (
                                 <div className="input-error">
                                     {errors.btcBlock.type === "required"
-                                        ? "BTC-Relay block header is required"
+                                        ? "Bitcoin block hash is required"
                                         : errors.btcBlock.message}
                                 </div>
                             )}
