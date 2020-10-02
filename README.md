@@ -131,7 +131,7 @@ If you are searching for a place to start or would like to discuss features, rea
 
 (C) Copyright 2020 [Interlay](https://www.interlay.io) Ltd
 
-xclaim-ui is licensed under the terms of the Apache License (Version 2.0). See [LICENSE](LICENSE).
+polkabtc-ui is licensed under the terms of the Apache License (Version 2.0). See [LICENSE](LICENSE).
 
 ## Contact
 
