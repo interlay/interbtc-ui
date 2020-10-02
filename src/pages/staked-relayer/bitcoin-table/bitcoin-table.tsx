@@ -22,9 +22,12 @@ export default function BitcoinTable(): ReactElement {
 
         const fetchData = async () => {
             if (!polkaBTC) return;
+
+            // returns a little endian encoded block hash
             const bestParachainBlock = await polkaBTC.stakedRelayer.getLatestBTCBlockFromBTCRelay();
             const bestParachainHeight = await polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay();
 
+            // returns a big endian encoded block hash
             const bestBitcoinBlock = await polkaBTC.btcCore.getLatestBlock();
             const bestBitcoinHeight = await polkaBTC.btcCore.getLatestBlockHeight();
 
@@ -32,7 +35,7 @@ export default function BitcoinTable(): ReactElement {
             setBlocks([
                 {
                     source: "BTC Parachain",
-                    hash: bestParachainBlock.toString().substr(2),
+                    hash: bestParachainBlock.toString().substr(2).split("").reverse().join(""),
                     height: bestParachainHeight.toString(),
                 },
                 {

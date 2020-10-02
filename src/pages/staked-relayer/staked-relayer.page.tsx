@@ -3,7 +3,7 @@ import BitcoinTable from "./bitcoin-table/bitcoin-table";
 import ReportModal from "./report-modal/report-modal";
 import RegisterModal from "./register-modal/register-modal";
 import { Button } from "react-bootstrap";
-import BtcParachainTable from "./btc-parachain-table/btc-parachain-table";
+import StatusUpdateTable from "./status-update-table/status-update-table";
 import VaultTable from "./vault-table/vault-table";
 import OracleTable from "./oracle-table/oracle-table";
 import { useSelector } from "react-redux";
@@ -39,12 +39,14 @@ export default function StakedRelayerPage() {
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBTC) return;
+            if (!stakedRelayer) return;
 
-            const activeStakedRelayerId = polkaBTC.api.createType("AccountId");
+            const address = await stakedRelayer.getAddress();
+            const activeStakedRelayerId = polkaBTC.api.createType("AccountId", address);
             let result = await polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
             setFees(result.toNumber());
 
-            result = await polkaBTC.stakedRelayer.getTotalStakedDOTAmount();
+            result = await polkaBTC.stakedRelayer.getStakedDOTAmount(activeStakedRelayerId);
             setLocked(result.toNumber());
         };
         fetchData();
@@ -59,7 +61,7 @@ export default function StakedRelayerPage() {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <div className="stats">DOT Locked: {dotLocked}</div>
+                            <div className="stats">Locked: {dotLocked} DOT</div>
                         </div>
                     </div>
                     <div className="row">
@@ -67,29 +69,40 @@ export default function StakedRelayerPage() {
                             <div className="stats">Fees earned: {feesEarned}</div>
                         </div>
                     </div>
-                    <Button
-                        variant="outline-success"
-                        className="staked-button"
-                        onClick={() => setShowRegisterModal(true)}
-                    >
-                        Register (Lock DOT)
-                    </Button>
+                    {dotLocked === 0 && (
+                        <Button
+                            variant="outline-success"
+                            className="staked-button"
+                            onClick={() => setShowRegisterModal(true)}
+                        >
+                            Register (Lock DOT)
+                        </Button>
+                    )}
                     <BitcoinTable></BitcoinTable>
-                    <Button variant="outline-danger" className="staked-button" onClick={() => setShowReportModal(true)}>
-                        Report Invalid Block
-                    </Button>
+                    {dotLocked > 0 && (
+                        <Button
+                            variant="outline-danger"
+                            className="staked-button"
+                            onClick={() => setShowReportModal(true)}
+                        >
+                            Report Invalid Block
+                        </Button>
+                    )}
                     <ReportModal onClose={handleReportModalClose} show={showReportModal}></ReportModal>
                     <RegisterModal onClose={handleRegisterModalClose} show={showRegisterModal}></RegisterModal>
-                    <BtcParachainTable></BtcParachainTable>
+                    <StatusUpdateTable dotLocked={dotLocked}></StatusUpdateTable>
                     <VaultTable></VaultTable>
                     <OracleTable></OracleTable>
-                    <ButtonMaybePending
-                        variant="outline-danger"
-                        isPending={isDeregisterPending}
-                        onClick={deregisterStakedRelayer}
-                    >
-                        Deregister
-                    </ButtonMaybePending>
+                    {dotLocked > 0 && (
+                        <ButtonMaybePending
+                            className="staked-button"
+                            variant="outline-danger"
+                            isPending={isDeregisterPending}
+                            onClick={deregisterStakedRelayer}
+                        >
+                            Deregister
+                        </ButtonMaybePending>
+                    )}
                     <div className="row">
                         <div className="col-12 de-note">
                             Note: You can only deregister if you are not participating in a vote.
