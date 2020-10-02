@@ -52,7 +52,7 @@ export default function ReportModal(props: ReportModalType): ReactElement {
                                 ref={register({
                                     required: true,
                                     pattern: {
-                                        value: /^[1-9a-zA-Z]{1,1}[0-9a-zA-Z]{31,31}$/,
+                                        value: /^[0-9a-zA-Z]{160,160}$/,
                                         message: "Please enter valid BTC header",
                                     },
                                 })}
