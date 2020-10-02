@@ -28,9 +28,7 @@ export default function VaultTable(): ReactElement {
                 let collateralization: number | undefined = undefined;
 
                 try {
-                    collateralization = await polkaBTC.vaults.getCollateralization(
-                        vault.id
-                    );
+                    collateralization = await polkaBTC.vaults.getCollateralization(vault.id);
                     // convert into percentage
                     collateralization = collateralization * 100;
                 } catch (error) {
@@ -44,7 +42,7 @@ export default function VaultTable(): ReactElement {
                     lockedDOT: 0,
                     btcAddress: vault.btc_address.toString().substr(2),
                     status: vault.status && vault.status.toString(),
-                    collateralization: collateralization
+                    collateralization: collateralization,
                 });
                 if (index + 1 === vaults.length) setVaults(vaultsList);
             });
@@ -105,16 +103,12 @@ export default function VaultTable(): ReactElement {
                                             <td>{vault.vaultId}</td>
                                             <td className="break-words">{vault.btcAddress}</td>
                                             <td>{vault.lockedBTC.toString()}</td>
-                                            <td
-                                                className={getCollateralizationColor(
-                                                    vault.collateralization
-                                                )}
-                                            >
-                                                {typeof vault.collateralization !== "undefined"? vault.collateralization.toString() + "%" : "N/A"}
-                      </td>
-                                            <td className={getStatusColor(vault.status)}>
-                                                {vault.status}
+                                            <td className={getCollateralizationColor(vault.collateralization)}>
+                                                {typeof vault.collateralization !== "undefined"
+                                                    ? vault.collateralization.toString() + "%"
+                                                    : "N/A"}
                                             </td>
+                                            <td className={getStatusColor(vault.status)}>{vault.status}</td>
                                         </tr>
                                     );
                                 })}

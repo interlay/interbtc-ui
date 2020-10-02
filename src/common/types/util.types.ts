@@ -2,7 +2,8 @@ import { Store, CombinedState } from "redux";
 import { AddInstance, AddStakedRelayerInstance } from "./actions.types";
 import { PolkaBTCAPI, StakedRelayerClient } from "@interlay/polkabtc";
 import { rootReducer } from "../reducers/index";
-import { DOT, PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
+import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
+import { u256 } from "@polkadot/types/primitive";
 
 export interface Prices {
     dotBtc: number;
@@ -17,6 +18,18 @@ export type Vault = {
     status: string;
     collateralization: number | undefined;
 };
+
+export interface StatusUpdate {
+    id: u256;
+    timestamp: string;
+    proposedStatus: string;
+    currentStatus: string;
+    proposedChanges: string;
+    blockHash: string;
+    votes: string;
+    result: string;
+    proposer: string;
+}
 
 export type AppState = ReturnType<typeof rootReducer>;
 
