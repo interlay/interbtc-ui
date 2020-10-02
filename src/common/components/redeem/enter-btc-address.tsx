@@ -18,8 +18,8 @@ export default function EnterBTCAddress() {
 
     const onSubmit = handleSubmit(async ({btcAddress})=>{
         dispatch(changeBTCAddressAction(btcAddress));
-        const amount = polkaBTC.api.createType("Balance",amountPolkaBTC);
-        //await polkaBTC.redeem.request(amount,btcAddress); // TO DO Dom - this request takes forever 
+        // const amount = polkaBTC.api.createType("Balance",amountPolkaBTC);
+        // await polkaBTC.redeem.request(amount,btcAddress); // TO DO Dom - this request takes forever 
         dispatch(changeRedeemStepAction("CONFIRMATION"));
     })
 

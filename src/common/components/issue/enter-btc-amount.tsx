@@ -16,7 +16,7 @@ export default function EnterBTCAmount(props: IssueWizardProps | EnterBTCAmountP
     const polkaBTC = useSelector((state: StoreType) => state.api);
     if (props.step !== 1) {
         return null;
-    } else if (props.vaultBTCAddress == "") {
+    } else if (props.vaultBTCAddress === "") {
         const fetchData = async () => {
             const polkaBTCObject = polkaBTC.api.createType("Balance", props.amountBTC);
             const vaultBTCAddress = await polkaBTC.vaults.selectRandomVaultIssue(polkaBTCObject);
