@@ -3,13 +3,20 @@
 # https://hub.docker.com/r/library/node/tags/
 image: node:latest
 
+stages:
+  - test
+  - build
+  - deploy
+
 # This folder is cached between builds
 # http://docs.gitlab.com/ce/ci/yaml/README.html#cache
 cache:
   paths:
     - node_modules/
 
+# Test and build on PRs
 test:
+  stage: test
   script:
     - yarn install
     - yarn lint
@@ -18,8 +25,35 @@ test:
     - merge_requests
 
 build:
+  stage: test
   script:
     - yarn install
     - yarn build 
   only:
     - merge_requests
+
+# Deployment
+build-app:
+  stage: build
+  script:
+    - yarn install
+    - CI=false yarn build
+  artifacts:
+    expire_in: 1 day
+    paths:
+    - build
+  only:
+  - master
+
+# deploy dapp
+pages:
+  stage: deploy
+  script:
+    - rm -rf public/
+    - mv build/ public/
+    - cp public/index.html public/404.html
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
