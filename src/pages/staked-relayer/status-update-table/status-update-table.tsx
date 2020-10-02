@@ -3,20 +3,10 @@ import { StoreType } from "../../../common/types/util.types";
 import { useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
 import VoteModal from "../vote-modal/vote-modal";
+import { StatusUpdate } from "../../../common/types/util.types";
 
 const ADD_DATA_ERROR = "Add NO_DATA error";
 const REMOVE_DATA_ERROR = "Remove NO_DATA error";
-
-interface StatusUpdateInfo {
-    id: string;
-    timestamp: string;
-    proposedStatus: string;
-    currentStatus: string;
-    proposedChanges: string;
-    blockHash: string;
-    votes: string;
-    result: string;
-}
 
 interface Option<T> {
     isNone: boolean;
@@ -50,10 +40,10 @@ type StatusUpdateTableProps = {
 export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactElement {
     const [parachainStatus, setStatus] = useState("Running");
     const polkaBTC = useSelector((state: StoreType) => state.api);
-    const [statusUpdates, setStatusUpdates] = useState<Array<StatusUpdateInfo>>([]);
+    const [statusUpdates, setStatusUpdates] = useState<Array<StatusUpdate>>([]);
     const [showVoteModal, setShowVoteModal] = useState(false);
     const handleClose = () => setShowVoteModal(false);
-    const [parachainVote, setParachainVote] = useState();
+    const [statusUpdate, setStatusUpdate] = useState<StatusUpdate>();
 
     useEffect(() => {
         const fetchStatus = async () => {
@@ -69,10 +59,10 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
             let result = await polkaBTC.stakedRelayer.getAllStatusUpdates();
             setStatusUpdates(
                 result.map(
-                    (status): StatusUpdateInfo => {
+                    (status): StatusUpdate => {
                         const [id, statusUpdate] = status;
                         return {
-                            id: id.toString(),
+                            id,
                             timestamp: statusUpdate.time.toString(),
                             proposedStatus: statusUpdate.new_status_code.toString(),
                             currentStatus: statusUpdate.old_status_code.toString(),
@@ -80,6 +70,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                             blockHash: displayBlockHash(statusUpdate.btc_block_hash),
                             votes: `${statusUpdate.tally.aye.size} : ${statusUpdate.tally.nay.size}`,
                             result: statusUpdate.proposal_status.toString(),
+                            proposer: statusUpdate.proposer.toString(),
                         };
                     }
                 )
@@ -90,9 +81,9 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
         fetchUpdates();
     }, [polkaBTC]);
 
-    const openVoteModal = (parachain: any) => {
+    const openVoteModal = (statusUpdate: StatusUpdate) => {
         setShowVoteModal(true);
-        setParachainVote(parachain);
+        setStatusUpdate(statusUpdate);
     };
 
     const getResultColor = (result: string): string => {
@@ -143,7 +134,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
             <VoteModal
                 show={showVoteModal}
                 onClose={handleClose}
-                parachain={parachainVote}
+                statusUpdate={statusUpdate!}
                 getColor={getProposedChangesColor}
             ></VoteModal>
             <div className="row">
@@ -174,7 +165,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                 {statusUpdates.map((statusUpdate, index) => {
                                     return (
                                         <tr key={index}>
-                                            <td>{statusUpdate.id}</td>
+                                            <td>{statusUpdate.id.toString()}</td>
                                             <td>{statusUpdate.timestamp}</td>
                                             <td
                                                 className={
