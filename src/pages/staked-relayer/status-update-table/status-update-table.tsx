@@ -28,7 +28,7 @@ function displayBlockHash(option: Option<H256Le>): string {
 function displayProposedChanges(addError: Option<ErrorCode>, removeError: Option<ErrorCode>): string {
     return addError.isNone
         ? removeError.isNone
-            ? "None"
+            ? "-"
             : removeError.unwrap().toString()
         : addError.unwrap().toString();
 }
