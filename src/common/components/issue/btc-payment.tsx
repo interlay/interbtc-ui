@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { Keyring } from "@polkadot/api";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../types/util.types";
+import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 
 interface BTCPaymentProps {
     step: number;

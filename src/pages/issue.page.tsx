@@ -48,6 +48,13 @@ class IssuePage extends Component<AppState, IssueProps> {
         });
     }
 
+    handleUpdatedIssueRequests(value: Array<IssueRequest>) {
+        this.setState({
+            ...this.state,
+            ["issueRequests"]: value
+        });
+    }
+
     async getParachainData(): Promise<void> {
         if (!this.props.parachain.api) {
             await this.props.parachain.connect();
