@@ -6,10 +6,10 @@ import { StoreType } from "../../types/util.types";
 
 interface EnterBTCAmountProps {
     step: number;
-    amountBTC: string,
-    feeBTC: string,
-    vaultBTCAddress: string,
-    handleChange: () => void,
+    amountBTC: string;
+    feeBTC: string;
+    vaultBTCAddress: string;
+    handleChange: () => void;
 }
 
 export default function EnterBTCAmount(props: IssueWizardProps | EnterBTCAmountProps) {

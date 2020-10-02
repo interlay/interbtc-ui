@@ -11,10 +11,12 @@ import { toast } from "react-toastify";
 
 import "./staked-relayer.page.scss";
 import { StoreType } from "../../common/types/util.types";
+import ButtonMaybePending from "../../common/components/staked-relayer/pending-button";
 
 export default function StakedRelayerPage() {
     const [showReportModal, setShowReportModal] = useState(false);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
+    const [isDeregisterPending, setDeregisterPending] = useState(false);
 
     const polkaBTC = useSelector((state: StoreType) => state.api);
     const stakedRelayer = useSelector((state: StoreType) => state.relayer);
@@ -24,12 +26,14 @@ export default function StakedRelayerPage() {
     const handleRegisterModalClose = () => setShowRegisterModal(false);
 
     const deregisterStakedRelayer = async () => {
+        setDeregisterPending(true);
         try {
             await stakedRelayer.deregisterStakedRelayer();
             toast.success("Successfully Deregistered");
         } catch (error) {
             toast.error(error.toString());
         }
+        setDeregisterPending(false);
     };
 
     useEffect(() => {
@@ -72,19 +76,23 @@ export default function StakedRelayerPage() {
                     </Button>
                     <BitcoinTable></BitcoinTable>
                     <Button variant="outline-danger" className="staked-button" onClick={() => setShowReportModal(true)}>
-                        Report Invalid block
+                        Report Invalid Block
                     </Button>
                     <ReportModal onClose={handleReportModalClose} show={showReportModal}></ReportModal>
                     <RegisterModal onClose={handleRegisterModalClose} show={showRegisterModal}></RegisterModal>
                     <BtcParachainTable></BtcParachainTable>
                     <VaultTable></VaultTable>
                     <OracleTable></OracleTable>
-                    <Button variant="outline-danger" className="staked-button" onClick={deregisterStakedRelayer}>
+                    <ButtonMaybePending
+                        variant="outline-danger"
+                        isPending={isDeregisterPending}
+                        onClick={deregisterStakedRelayer}
+                    >
                         Deregister
-                    </Button>
+                    </ButtonMaybePending>
                     <div className="row">
                         <div className="col-12 de-note">
-                            Note: You can only deregister if you are not participating in a vote
+                            Note: You can only deregister if you are not participating in a vote.
                         </div>
                     </div>
                 </div>
