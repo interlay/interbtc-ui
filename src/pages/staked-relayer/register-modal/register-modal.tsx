@@ -1,9 +1,10 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { toast } from "react-toastify";
+import ButtonMaybePending from "../../../common/components/staked-relayer/pending-button";
 
 type RegisterModalType = {
     onClose: () => void;
@@ -17,8 +18,10 @@ type RegisterForm = {
 export default function ReportModal(props: RegisterModalType): ReactElement {
     const { register, handleSubmit, errors } = useForm<RegisterForm>();
     const stakedRelayer = useSelector((state: StoreType) => state.relayer);
+    const [isRegisterPending, setRegisterPending] = useState(false);
 
     const onSubmit = handleSubmit(async ({ stake }) => {
+        setRegisterPending(true);
         try {
             await stakedRelayer.registerStakedRelayer(stake);
             toast.success("Successfully Registered");
@@ -26,6 +29,7 @@ export default function ReportModal(props: RegisterModalType): ReactElement {
         } catch (error) {
             toast.error(error.toString());
         }
+        setRegisterPending(false);
     });
 
     return (
@@ -42,6 +46,7 @@ export default function ReportModal(props: RegisterModalType): ReactElement {
                                 name="stake"
                                 type="number"
                                 className={"custom-input" + (errors.stake ? " error-borders" : "")}
+                                defaultValue={0}
                                 ref={register({
                                     // TODO: validate minimum
                                     required: true,
@@ -59,9 +64,9 @@ export default function ReportModal(props: RegisterModalType): ReactElement {
                     <Button variant="secondary" onClick={props.onClose}>
                         Cancel
                     </Button>
-                    <Button variant="primary" type="submit">
+                    <ButtonMaybePending type="submit" isPending={isRegisterPending}>
                         Register
-                    </Button>
+                    </ButtonMaybePending>
                 </Modal.Footer>
             </form>
         </Modal>
