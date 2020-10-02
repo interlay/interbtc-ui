@@ -2,6 +2,7 @@ import React, { ReactElement } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
+import { toast } from "react-toastify";
 
 type VoteModalProps = {
     onClose: ()=>void;
@@ -15,9 +16,9 @@ export default function VoteModal(props: VoteModalProps):ReactElement{
 
   const onClick = async (vote: string) => {
     try {
-      await stakedRelayer.voteOnStatusUpdate(props.parachain.id,true);
+      await stakedRelayer.voteOnStatusUpdate(props.parachain.id,vote==="yes");
     } catch (error) {
-      console.log(error);
+      toast.error(error.toString());
     }
     props.onClose();
   };

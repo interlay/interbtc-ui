@@ -1,8 +1,10 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import polkaBTCLogo from "../../assets/img/polkabtc/PolkaBTC_black.png";
 import { Navbar, Nav, Image, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { KeyringPair } from "@polkadot/keyring/types";
+import { useSelector } from "react-redux";
+import { StoreType } from "../types/util.types";
 
 type TopbarProps = {
   account?: KeyringPair;
@@ -10,8 +12,19 @@ type TopbarProps = {
 }
 
 export default function Topbar(props: TopbarProps): ReactElement {
-    return(
-      <Navbar bg="light" expand="lg" className="border-bottom shadow-sm">
+    const stakedRelayer = useSelector((state: StoreType) => state.relayer);
+    const [isConnected,setIsConnected] = useState(false);
+    useEffect(()=>{
+      if (!stakedRelayer) return;
+
+      const checkIsConnected = async() => {
+        var connected = await stakedRelayer.connected();
+        setIsConnected(connected);
+      }
+      checkIsConnected();
+    },[stakedRelayer])
+
+    return <Navbar bg="light" expand="lg" className="border-bottom shadow-sm">
         <Navbar.Brand>
           <Link className="text-decoration-none" to="/">
             <Image src={polkaBTCLogo} width="90" className="d-inline-block align-top" height="30" fluid />
@@ -26,9 +39,9 @@ export default function Topbar(props: TopbarProps): ReactElement {
             <Link className="nav-link" to="/redeem">
               Redeem
             </Link>
-            <Link className="nav-link" to="/staked-relayer">
+            {isConnected && <Link className="nav-link" to="/staked-relayer">
               Staked Relayer
-            </Link>
+            </Link>}
           </Nav>
           <Nav>
             {(props.address !== undefined) &&
@@ -41,5 +54,4 @@ export default function Topbar(props: TopbarProps): ReactElement {
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-    )
   }

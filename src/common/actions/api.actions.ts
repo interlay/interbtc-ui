@@ -12,9 +12,7 @@ export const addPolkaBtcInstance = (polkaBtc: PolkaBTCAPI): AddInstance => ({
     polkaBtc,
 });
 
-export const addStakedRelayerInstance = (
-    stakedRelayer: StakedRelayerClient
-): AddStakedRelayerInstance => ({
+export const addStakedRelayerInstance = (stakedRelayer: StakedRelayerClient): AddStakedRelayerInstance => ({
     type: ADD_STAKED_RELAYER_INSTANCE,
     stakedRelayer,
 });

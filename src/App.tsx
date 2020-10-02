@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import { rootReducer } from "./common/reducers/index";
 import { applyMiddleware, createStore } from "redux";
 import { createPolkabtcAPI, StakedRelayerClient } from "@interlay/polkabtc";
+import { ToastContainer } from "react-toastify";
 import {
   addPolkaBtcInstance,
   addStakedRelayerInstance,
@@ -142,6 +143,7 @@ export default class App extends Component<{}, AppState> {
       <Provider store={store}>
         <Router>
           <div className="main d-flex flex-column min-vh-100">
+            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false}/>
             <Topbar
               address={this.state.address}
               account={this.state.account}
