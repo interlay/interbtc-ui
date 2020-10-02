@@ -19,4 +19,5 @@ export interface IssueProps {
   storage?: StorageInterface;
   kvstorage: KVStorageInterface;
   addIssueRequest: (req: IssueRequest) => void;
+  handleUpdatedIssueRequests: (value: Array<IssueRequest>) => void;
 }

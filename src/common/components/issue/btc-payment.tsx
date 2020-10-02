@@ -6,6 +6,7 @@ import { StoreType } from "../../types/util.types";
 import { ChangeEvent } from "react";
 import { useEffect } from "react";
 import { Keyring } from "@polkadot/api";
+import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 
 interface BTCPaymentProps {
     step: number;
@@ -28,8 +29,9 @@ export default function BTCPayment(props: IssueWizardProps | BTCPaymentProps) {
                 const alice = keyring.addFromUri("//Alice");
                 polkaBTC.issue.setAccount(alice);
 
-                const vaultAccountId = polkaBTC.api.createType("AccountId", props.vaultId);
-                const requestResult = await polkaBTC.issue.request(props.amountBTC, vaultAccountId);
+                const vaultAccountId = polkaBTC.api.createType("AccountId", props.vaultId) as any;
+                const polkaBTCAmount = polkaBTC.api.createType("Balance", props.amountBTC) as any;
+                const requestResult = await polkaBTC.issue.request(polkaBTCAmount, vaultAccountId);
                 props.handleChange(
                     {
                         target:

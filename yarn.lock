@@ -1218,13 +1218,12 @@
     axios "^0.19.2"
     typescript "~3.5.2"
 
-"@interlay/polkabtc@0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.1.4.tgz#5a76643a00d348d8117baec22d3f0678508ce40a"
-  integrity sha512-ZpUDtTpM932EpUvSGm4RRQVai6wCWP05UGuceyoOpxEggtB2F6l5N9RNcAVxb9Mc0e/uQb+bbnyYJPBGs4QKlg==
+"@interlay/polkabtc@0.1.9":
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.1.9.tgz#7b77023f4222126fbdef6b770f0ce8fe75f50124"
+  integrity sha512-bBLoloyfeyg2giHbl3dSNaEp9tHfK7TFXVaZa/AKh3U/K4rczVIVeHmrgA2nrUx2r6AcZL1MpvzgJAxKVgg/0w==
   dependencies:
     "@interlay/esplora-btc-api" "^0.1.7"
-    "@polkadot/api" "^1.32.1"
     sinon "^9.0.3"
     ts-mock-imports "^1.3.0"
 
@@ -1482,7 +1481,7 @@
     eventemitter3 "^4.0.7"
     rxjs "^6.6.2"
 
-"@polkadot/api@1.34.1", "@polkadot/api@^1.32.1":
+"@polkadot/api@1.34.1":
   version "1.34.1"
   resolved "https://registry.yarnpkg.com/@polkadot/api/-/api-1.34.1.tgz#c222ac743a427e36dda20a72d95a3a7d83cea094"
   integrity sha512-3gCibNRchH+XbEdULS1bwiV1RgarZW1PDw1Y1mAQBVqPrUpkYqntp1D52SQOpAbRzldkwk296Sj+mx9/IeDRXA==

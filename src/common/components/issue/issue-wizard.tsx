@@ -124,7 +124,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
             amountBTC: this.state.amountBTC,
             creation: date.toISOString(),
             vaultBTCAddress: this.state.vaultBTCAddress,
-            btcTxId: "...",
+            btcTxId: this.state.btcTxId,
             confirmations: 0,
             completed: false
         };
