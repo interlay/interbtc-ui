@@ -3,7 +3,7 @@ import { createLogger } from "redux-logger";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { applyMiddleware, createStore } from "redux";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { createPolkabtcAPI, StakedRelayerClient } from "@interlay/polkabtc";
 
 import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
@@ -68,10 +68,20 @@ export default class App extends Component<{}, AppState> {
     }
 
     async getAccount(): Promise<void> {
+        if (this.state.address) {
+            return;
+        }
         await web3Enable(constants.APP_NAME);
 
         const allAccounts = await web3Accounts();
         if (allAccounts.length === 0) {
+            toast.warn(
+                "No account found, you will not be able to execute any transaction. " +
+                    "Please check that your wallet is configured correctly.",
+                {
+                    autoClose: false,
+                }
+            );
             return;
         }
 
@@ -89,13 +99,10 @@ export default class App extends Component<{}, AppState> {
         });
     }
 
-    async getStorage() {
-        if (!this.state.address) {
-            await this.getAccount();
-        }
+    async getStorage(): Promise<void> {
         if (this.state.address) {
             localStorage.clear();
-            let storage = new Storage(this.state.address);
+            const storage = new Storage(this.state.address);
             // for mocking load mock data into storage
             this.mockStorage(storage);
             this.setState({
@@ -139,12 +146,9 @@ export default class App extends Component<{}, AppState> {
         store.dispatch(addStakedRelayerInstance(stakedRelayer));
     }
 
-    componentDidMount() {
-        this.initParachain();
-        this.getAccount();
+    componentDidMount(): void {
+        Promise.all([this.initParachain(), this.getAccount().then(() => this.getStorage()), this.createAPIInstace()]);
         this.getVault();
-        this.getStorage();
-        this.createAPIInstace();
     }
 
     render() {
