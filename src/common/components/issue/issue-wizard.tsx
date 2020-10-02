@@ -11,9 +11,11 @@ export interface IssueWizardProps {
     issueId: string,
     amountBTC: string,
     vaultBTCAddress: string,
+    vaultId: string,
     transactionBTC: string,
     feeBTC: string,
     btcTxId: string,
+    issueRequestHash: string,
     handleChange: (event: ChangeEvent<HTMLInputElement>) => void,
 }
 
@@ -23,9 +25,11 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
         issueId: "",
         amountBTC: "0",
         vaultBTCAddress: "",
+        vaultId: "",
         transactionBTC: "",
         feeBTC: "", // TODO: get this from the BTC-Parachain
         btcTxId: "",
+        issueRequestHash: "loading...",
         handleChange: () => { },
     }
 

@@ -9,6 +9,7 @@ interface EnterBTCAmountProps {
     amountBTC: string,
     feeBTC: string,
     vaultBTCAddress: string,
+    vaultId: string,
     handleChange: () => void,
 }
 
@@ -16,16 +17,28 @@ export default function EnterBTCAmount(props: IssueWizardProps | EnterBTCAmountP
     const polkaBTC = useSelector((state: StoreType) => state.api);
     if (props.step !== 1) {
         return null;
-    } else if (props.vaultBTCAddress == "") {
+    }
+    else if (props.vaultBTCAddress === "") {
         const fetchData = async () => {
             const polkaBTCObject = polkaBTC.api.createType("Balance", props.amountBTC);
-            const vaultBTCAddress = await polkaBTC.vaults.selectRandomVault(polkaBTCObject);
+            const vaultId = await polkaBTC.vaults.selectRandomVault(polkaBTCObject);
+            const vault = await polkaBTC.vaults.get(vaultId);
             props.handleChange(
                 {
                     target:
                         {
                             name: "vaultBTCAddress",
-                            value: vaultBTCAddress.btc_address.toHuman()
+                            value: vault.btc_address.toHuman()
+                        } as EventTarget & HTMLInputElement
+                } as ChangeEvent<HTMLInputElement>
+            );
+
+            props.handleChange(
+                {
+                    target:
+                        {
+                            name: "vaultId",
+                            value: vault.id.toHuman()
                         } as EventTarget & HTMLInputElement
                 } as ChangeEvent<HTMLInputElement>
             );
