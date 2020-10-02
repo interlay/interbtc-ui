@@ -6,7 +6,8 @@
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:prettier/recommended"
+        "plugin:prettier/recommended",
+        "prettier"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -16,7 +17,8 @@
         }
     },
     "plugins": [
-        "@typescript-eslint", "prettier"
+        "@typescript-eslint",
+        "prettier"
     ],
     "rules": {
         "semi": [
@@ -34,7 +36,6 @@
           }
         ],
         "react/no-unescaped-entities": 0,
-        "indent": ["error", 4],
         "max-len": [
           "error",
           {
@@ -42,11 +43,6 @@
           }
         ],
         "no-eval": "error",
-        "prettier/prettier": [
-          "error",
-          {
-            "endOfLine": "auto"
-          }
-        ]
+        "prettier/prettier": 2
     }
 }
