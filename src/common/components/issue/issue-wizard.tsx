@@ -15,7 +15,7 @@ export interface IssueWizardProps {
     transactionBTC: string,
     feeBTC: string,
     btcTxId: string,
-    issueRequestHash: string,
+    currentIssueRequestHash: string,
     handleChange: (event: ChangeEvent<HTMLInputElement>) => void,
 }
 
@@ -29,7 +29,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
         transactionBTC: "",
         feeBTC: "", // TODO: get this from the BTC-Parachain
         btcTxId: "",
-        issueRequestHash: "loading...",
+        currentIssueRequestHash: "loading...",
         handleChange: () => { },
     }
 
@@ -104,7 +104,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
         const { name, value } = event.target;
         this.setState({
             ...this.state,
-            [name]: value
+            [name]: value,
         });
         if (name === "amountBTC") {
             this.setState({
@@ -126,7 +126,11 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
             vaultBTCAddress: this.state.vaultBTCAddress,
             btcTxId: this.state.btcTxId,
             confirmations: 0,
-            completed: false
+            completed: false,
+            merkleProof: "",
+            transactionBlockHeight: 0,
+            rawTransaction: new Uint8Array(),
+            issueRequestHash: this.state.currentIssueRequestHash,
         };
         this.props.addIssueRequest(req);
     }

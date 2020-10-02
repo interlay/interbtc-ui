@@ -14,7 +14,7 @@ interface BTCPaymentProps {
     feeBTC: string,
     vaultBTCAddress: string,
     vaultId: string,
-    issueRequestHash: string,
+    currentIssueRequestHash: string,
     handleChange: () => void,
 }
 
@@ -31,16 +31,20 @@ export default function BTCPayment(props: IssueWizardProps | BTCPaymentProps) {
 
                 const vaultAccountId = polkaBTC.api.createType("AccountId", props.vaultId) as any;
                 const polkaBTCAmount = polkaBTC.api.createType("Balance", props.amountBTC) as any;
-                const requestResult = await polkaBTC.issue.request(polkaBTCAmount, vaultAccountId);
-                props.handleChange(
-                    {
-                        target:
-                            {
-                                name: "issueRequestHash",
-                                value: requestResult.hash.toString(),
-                            } as EventTarget & HTMLInputElement
-                    } as ChangeEvent<HTMLInputElement>
-                );
+                try {
+                    const requestResult = await polkaBTC.issue.request(polkaBTCAmount, vaultAccountId);
+                    props.handleChange(
+                        {
+                            target:
+                                {
+                                    name: "currentIssueRequestHash",
+                                    value: requestResult.hash.toString(),
+                                } as EventTarget & HTMLInputElement
+                        } as ChangeEvent<HTMLInputElement>
+                    );
+                } catch (e) {
+                    console.log(`Error requesting polkaBTC: \n${e}`);
+                }
             };
             fetchData();
         }
@@ -61,7 +65,7 @@ export default function BTCPayment(props: IssueWizardProps | BTCPaymentProps) {
             <FormGroup>
                 <ListGroup>
                     <ListGroupItem>Output 1</ListGroupItem>
-                    <ListGroupItem>OP_RETURN: <strong> {props.issueRequestHash} </strong></ListGroupItem>
+                    <ListGroupItem>OP_RETURN: <strong> {props.currentIssueRequestHash} </strong></ListGroupItem>
                     <ListGroupItem>Amount: <strong>0 BTC</strong></ListGroupItem>
                 </ListGroup>
                 <ListGroup>

@@ -3,24 +3,30 @@ import { RedeemRequest } from "./common/types/RedeemState";
 import { ALICE_BTC, BOB_BTC } from "./constants";
 
 export const MockIssueRequests: Array<IssueRequest> = [
-    {
-        id: "1",
-        amountBTC: "5.7",
-        creation: "2020-06-15T19:07:00.000Z",
-        vaultBTCAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
-        btcTxId: "3b4162a307fab...b588d61a9069e762",
-        confirmations: 25,
-        completed: true,
-    },
-    {
-        id: "2",
-        amountBTC: "1.5",
-        creation: "2020-06-16T21:08:00.000Z",
-        vaultBTCAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
-        btcTxId: "d3c6652dfa406...e4aacb4c441e030e",
-        confirmations: 9,
-        completed: true,
-    },
+    // {
+    //     id: "1",
+    //     amountBTC: "5.7",
+    //     creation: "2020-06-15T19:07:00.000Z",
+    //     vaultBTCAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
+    //     btcTxId: "3b4162a307fab...b588d61a9069e762",
+    //     confirmations: 25,
+    //     completed: true,
+    // merkleProof: "",
+    // transactionBlockHeight: 1,
+    // rawTransaction: "",
+    // },
+    // {
+    //     id: "2",
+    //     amountBTC: "1.5",
+    //     creation: "2020-06-16T21:08:00.000Z",
+    //     vaultBTCAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
+    //     btcTxId: "d3c6652dfa406...e4aacb4c441e030e",
+    //     confirmations: 9,
+    //     completed: true,
+    // merkleProof: "",
+    // transactionBlockHeight: 1,
+    // rawTransaction: "",
+    // },
 ];
 
 export const MockRedeemRequests: Array<RedeemRequest> = [
