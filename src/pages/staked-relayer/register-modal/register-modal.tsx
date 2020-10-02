@@ -39,6 +39,11 @@ export default function ReportModal(props: RegisterModalType): ReactElement {
                     <Modal.Title>Registration</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    <div className="row mb-2">
+                        <div className="col-12 de-note">
+                            Please note there is a default waiting period before bonding.
+                        </div>
+                    </div>
                     <div className="row">
                         <div className="col-12">Stake</div>
                         <div className="col-12">
