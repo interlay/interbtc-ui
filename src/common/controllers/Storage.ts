@@ -1,6 +1,6 @@
 import { StorageInterface } from "../types/Storage";
 import { IssueRequest } from "../types/IssueState";
-import { RedeemRequest } from "../types/RedeemState";
+import { RedeemRequest } from "../components/redeem/redeem-state";
 
 //
 //                       IssueRequest

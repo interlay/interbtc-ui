@@ -2,10 +2,6 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 
-function displayBlockHash(): string {
-    return "";
-}
-
 interface BlockInfo {
     source: string;
     height: string;

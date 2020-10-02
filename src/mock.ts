@@ -1,5 +1,5 @@
 import { IssueRequest } from "./common/types/IssueState";
-import { RedeemRequest } from "./common/types/RedeemState";
+import { RedeemRequest } from "./common/components/redeem/redeem-state";
 import { ALICE_BTC, BOB_BTC } from "./constants";
 
 export const MockIssueRequests: Array<IssueRequest> = [
@@ -26,7 +26,7 @@ export const MockIssueRequests: Array<IssueRequest> = [
 export const MockRedeemRequests: Array<RedeemRequest> = [
     {
         id: "1",
-        amountBTC: "0.5",
+        amountPolkaBTC: "0.5",
         creation: "2020-06-15T16:09:01.000Z",
         vaultAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
         btcTxId: "3b4162a307fab...b588d61a9069e762",
@@ -37,7 +37,7 @@ export const MockRedeemRequests: Array<RedeemRequest> = [
     },
     {
         id: "2",
-        amountBTC: "0.2",
+        amountPolkaBTC: "0.2",
         creation: "2020-06-13T20:08:23.000Z",
         vaultAddress: "aa269f4bd72bd...7d10a62a9cdd8d7f",
         btcTxId: "d3c6652dfa406...e4aacb4c441e030e",
