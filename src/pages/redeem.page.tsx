@@ -37,7 +37,7 @@ class RedeemPage extends Component<AppState, RedeemProps> {
     }
 
     handleClose(): void {
-        if(this.props.resetRedeemWizard) this.props.resetRedeemWizard();
+        if (this.props.resetRedeemWizard) this.props.resetRedeemWizard();
         this.setState({
             showWizard: false,
         });
@@ -134,8 +134,8 @@ class RedeemPage extends Component<AppState, RedeemProps> {
     }
 }
 
-const mapDispatchToProps = (dispatch:any) => {
+const mapDispatchToProps = (dispatch: any) => {
     return { resetRedeemWizard: () => dispatch(resetRedeemWizardAction()) };
-}
+};
 
-export default connect(null, mapDispatchToProps)(RedeemPage)
+export default connect(null, mapDispatchToProps)(RedeemPage);

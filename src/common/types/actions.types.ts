@@ -67,5 +67,10 @@ export interface ResetRedeemWizard {
     type: typeof RESET_REDEEM_WIZARD;
 }
 
-export type RedeemActions = ChangeRedeemStep | ChangeAmountPolkaBtc | ChangeBtcAddress | 
-ChangeVaultBtcAddress | ChangeVaultDotAddress | ResetRedeemWizard;
+export type RedeemActions =
+    | ChangeRedeemStep
+    | ChangeAmountPolkaBtc
+    | ChangeBtcAddress
+    | ChangeVaultBtcAddress
+    | ChangeVaultDotAddress
+    | ResetRedeemWizard;

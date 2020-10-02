@@ -1,15 +1,17 @@
 import React, { Component } from "react";
+import { createLogger } from "redux-logger";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-import { rootReducer } from "./common/reducers/index";
 import { applyMiddleware, createStore } from "redux";
-import { createPolkabtcAPI, StakedRelayerClient } from "@interlay/polkabtc";
 import { ToastContainer } from "react-toastify";
-import {
-  addPolkaBtcInstance,
-  addStakedRelayerInstance,
-} from "./common/actions/api.actions";
-import { createLogger } from "redux-logger";
+import { createPolkabtcAPI, StakedRelayerClient } from "@interlay/polkabtc";
+
+import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
+
+import { rootReducer } from "./common/reducers/index";
+import { addPolkaBtcInstance, addStakedRelayerInstance } from "./common/actions/api.actions";
+import * as constants from "./constants";
+
 // theme
 import "./_general.scss";
 import "./assets/css/custom-bootstrap.css";
@@ -32,16 +34,16 @@ import Storage from "./common/controllers/Storage";
 
 // Mocking
 import {
-  MockIssueRequests,
-  MockRedeemRequests,
-  totalPolkaBTC,
-  totalLockedDOT,
-  balancePolkaBTC,
-  balanceDOT,
-  balanceLockedDOT,
-  backedPolkaBTC,
-  collateralRate,
-  feesEarned,
+    MockIssueRequests,
+    MockRedeemRequests,
+    totalPolkaBTC,
+    totalLockedDOT,
+    balancePolkaBTC,
+    balanceDOT,
+    balanceLockedDOT,
+    backedPolkaBTC,
+    collateralRate,
+    feesEarned,
 } from "./mock";
 import KVStorage from "./common/controllers/KVStorage";
 import { StorageInterface } from "./common/types/Storage";
@@ -50,127 +52,131 @@ const storeLogger = createLogger();
 const store = createStore(rootReducer, applyMiddleware(storeLogger));
 
 export default class App extends Component<{}, AppState> {
-  state: AppState = {
-    parachain: new BTCParachain(),
-    account: undefined,
-    address: undefined,
-    vault: false,
-    storage: undefined,
-    kvstorage: new KVStorage(),
-  };
+    state: AppState = {
+        parachain: new BTCParachain(),
+        account: undefined,
+        address: undefined,
+        signer: undefined,
+        vault: false,
+        storage: undefined,
+        kvstorage: new KVStorage(),
+    };
 
-  async initParachain() {
-    await this.state.parachain.connect();
-    this.setState({
-      parachain: this.state.parachain,
-    });
-  }
-
-  // FIXME: integrate with a wallet
-  async getAccount() {
-    if (!this.state.parachain.keyring) {
-      await this.initParachain();
+    async initParachain(): Promise<void> {
+        await this.state.parachain.connect();
+        this.setState({ parachain: this.state.parachain });
     }
-    const account = this.state.parachain.keyring?.addFromUri("//Alice");
-    const address = account?.address;
-    this.setState({
-      account: account,
-      address: address,
-    });
-  }
 
-  // FIXME: check if vault server is running
-  getVault() {
-    this.setState({
-      vault: true,
-    });
-  }
+    async getAccount(): Promise<void> {
+        await web3Enable(constants.APP_NAME);
 
-  async getStorage() {
-    if (!this.state.address) {
-      await this.getAccount();
+        const allAccounts = await web3Accounts();
+        if (allAccounts.length === 0) {
+            return;
+        }
+
+        // TODO: allow user to pick account
+        const { address } = allAccounts[0];
+        const { signer } = await web3FromAddress(address);
+
+        this.setState({ signer: signer, address });
     }
-    if (this.state.address) {
-      localStorage.clear();
-      let storage = new Storage(this.state.address);
-      // for mocking load mock data into storage
-      this.mockStorage(storage);
-      this.setState({
-        storage: storage,
-      });
+
+    // FIXME: check if vault server is running
+    getVault() {
+        this.setState({
+            vault: true,
+        });
     }
-  }
 
-  mockStorage(storage: StorageInterface) {
-    if (storage) {
-      for (let i = 0; i < MockIssueRequests.length; i++) {
-        storage.appendIssueRequest(MockIssueRequests[i]);
-      }
-      for (let i = 0; i < MockRedeemRequests.length; i++) {
-        storage.appendRedeemRequest(MockRedeemRequests[i]);
-      }
+    async getStorage() {
+        if (!this.state.address) {
+            await this.getAccount();
+        }
+        if (this.state.address) {
+            localStorage.clear();
+            let storage = new Storage(this.state.address);
+            // for mocking load mock data into storage
+            this.mockStorage(storage);
+            this.setState({
+                storage: storage,
+            });
+        }
     }
-    if (this.state.kvstorage) {
-      this.state.kvstorage.setValue("totalPolkaBTC", totalPolkaBTC);
-      this.state.kvstorage.setValue("totalLockedDOT", totalLockedDOT);
-      this.state.kvstorage.setValue("balancePolkaBTC", balancePolkaBTC);
-      this.state.kvstorage.setValue("balanceDOT", balanceDOT);
-      this.state.kvstorage.setValue("balanceLockedDOT", balanceLockedDOT);
-      this.state.kvstorage.setValue("backedPolkaBTC", backedPolkaBTC);
-      this.state.kvstorage.setValue("collateralRate", collateralRate);
-      this.state.kvstorage.setValue("feesEarned", feesEarned);
+
+    mockStorage(storage: StorageInterface) {
+        if (storage) {
+            for (let i = 0; i < MockIssueRequests.length; i++) {
+                storage.appendIssueRequest(MockIssueRequests[i]);
+            }
+            for (let i = 0; i < MockRedeemRequests.length; i++) {
+                storage.appendRedeemRequest(MockRedeemRequests[i]);
+            }
+        }
+        if (this.state.kvstorage) {
+            this.state.kvstorage.setValue("totalPolkaBTC", totalPolkaBTC);
+            this.state.kvstorage.setValue("totalLockedDOT", totalLockedDOT);
+            this.state.kvstorage.setValue("balancePolkaBTC", balancePolkaBTC);
+            this.state.kvstorage.setValue("balanceDOT", balanceDOT);
+            this.state.kvstorage.setValue("balanceLockedDOT", balanceLockedDOT);
+            this.state.kvstorage.setValue("backedPolkaBTC", backedPolkaBTC);
+            this.state.kvstorage.setValue("collateralRate", collateralRate);
+            this.state.kvstorage.setValue("feesEarned", feesEarned);
+        }
     }
-  }
 
-  async createAPIInstace() {
-    const polkaBTC = await createPolkabtcAPI("ws://127.0.0.1:9944");
-    store.dispatch(addPolkaBtcInstance(polkaBTC));
+    async createAPIInstace() {
+        const polkaBTC = await createPolkabtcAPI(constants.PARACHAIN_URL);
+        if (this.state.account) {
+            polkaBTC.setAccount(this.state.account);
+        }
+        if (this.state.address && this.state.signer) {
+            polkaBTC.setAccount(this.state.address, this.state.signer);
+        }
+        store.dispatch(addPolkaBtcInstance(polkaBTC));
 
-    const stakedRelayer = new StakedRelayerClient("http://localhost:3030");
-    store.dispatch(addStakedRelayerInstance(stakedRelayer));
-  }
+        const stakedRelayer = new StakedRelayerClient(constants.STAKED_RELAYER_URL);
+        store.dispatch(addStakedRelayerInstance(stakedRelayer));
+    }
 
-  componentDidMount() {
-    this.initParachain();
-    this.getAccount();
-    this.getVault();
-    this.getStorage();
-    this.createAPIInstace();
-  }
+    componentDidMount() {
+        this.initParachain();
+        this.getAccount();
+        this.getVault();
+        this.getStorage();
+        this.createAPIInstace();
+    }
 
-  render() {
-    return (
-      <Provider store={store}>
-        <Router>
-          <div className="main d-flex flex-column min-vh-100">
-            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false}/>
-            <Topbar
-              address={this.state.address}
-              account={this.state.account}
-            />
-            <div className="mb-5">
-              <Switch>
-                <Route exact path="/">
-                  <LandingPage {...this.state} />
-                </Route>
-                <Route path="/issue">
-                  <IssuePage {...this.state} />
-                </Route>
-                <Route path="/vault">
-                  <VaultPage {...this.state} />
-                </Route>
-                <Route path="/redeem">
-                  <RedeemPage {...this.state} />
-                </Route>
-                <Route path="/staked-relayer">
-                  <StakedRelayerPage></StakedRelayerPage>
-                </Route>
-              </Switch>
-            </div>
-            <Footer />
-          </div>
-        </Router>
-      </Provider>
-    );
-  }
+    render() {
+        return (
+            <Provider store={store}>
+                <Router>
+                    <div className="main d-flex flex-column min-vh-100">
+                        <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
+                        <Topbar address={this.state.address} account={this.state.account} />
+                        <div className="mb-5">
+                            <Switch>
+                                <Route exact path="/">
+                                    <LandingPage {...this.state} />
+                                </Route>
+                                <Route path="/issue">
+                                    <IssuePage {...this.state} />
+                                </Route>
+                                <Route path="/vault">
+                                    <VaultPage {...this.state} />
+                                </Route>
+                                <Route path="/redeem">
+                                    <RedeemPage {...this.state} />
+                                </Route>
+                                <Route path="/staked-relayer">
+                                    <StakedRelayerPage></StakedRelayerPage>
+                                </Route>
+                            </Switch>
+                        </div>
+                        <Footer />
+                    </div>
+                </Router>
+            </Provider>
+        );
+    }
 }

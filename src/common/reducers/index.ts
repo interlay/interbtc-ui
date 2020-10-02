@@ -8,5 +8,5 @@ export const rootReducer = combineReducers({
     api,
     prices,
     relayer,
-    redeem
+    redeem,
 });

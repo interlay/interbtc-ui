@@ -1,5 +1,17 @@
-import { CHANGE_AMOUNT_POLKA_BTC, CHANGE_REEDEM_STEP, CHANGE_BTC_ADDRESS, RESET_REDEEM_WIZARD,
-    ChangeRedeemStep, ChangeAmountPolkaBtc, ChangeBtcAddress, ResetRedeemWizard } from "../types/actions.types";
+import {
+    CHANGE_AMOUNT_POLKA_BTC,
+    CHANGE_REEDEM_STEP,
+    CHANGE_BTC_ADDRESS,
+    RESET_REDEEM_WIZARD,
+    CHANGE_VAULT_BTC_ADDRESS,
+    CHANGE_VAULT_DOT_ADDRESS,
+    ChangeRedeemStep,
+    ChangeAmountPolkaBtc,
+    ChangeBtcAddress,
+    ResetRedeemWizard,
+    ChangeVaultBtcAddress,
+    ChangeVaultDotAddress
+} from "../types/actions.types";
 
 export const changeRedeemStepAction = (step: string): ChangeRedeemStep => ({
     type: CHANGE_REEDEM_STEP,
@@ -8,14 +20,24 @@ export const changeRedeemStepAction = (step: string): ChangeRedeemStep => ({
 
 export const changeAmountPolkaBTCAction = (amount: number): ChangeAmountPolkaBtc => ({
     type: CHANGE_AMOUNT_POLKA_BTC,
-    amount
+    amount,
 });
 
 export const changeBTCAddressAction = (btcAddress: string): ChangeBtcAddress => ({
     type: CHANGE_BTC_ADDRESS,
-    btcAddress
+    btcAddress,
 });
 
 export const resetRedeemWizardAction = (): ResetRedeemWizard => ({
     type: RESET_REDEEM_WIZARD,
-})
+});
+
+export const changeVaultBtcAddressAction = (vaultBtcAddress:string): ChangeVaultBtcAddress => ({
+    type: CHANGE_VAULT_BTC_ADDRESS,
+    vaultBtcAddress
+});
+
+export const changeVaultDotAddressAction = (vaultDotAddress:string): ChangeVaultDotAddress => ({
+    type: CHANGE_VAULT_DOT_ADDRESS,
+    vaultDotAddress
+});

@@ -33,8 +33,10 @@ export default function EnterPolkaBTCAmount(props: EnterPolkaBTCAmountProps) {
     },[polkaBTC])
         
 
-    const onSubmit = handleSubmit(({amountPolkaBTC})=>{
+    const onSubmit = handleSubmit(async ({amountPolkaBTC})=>{
         dispatch(changeAmountPolkaBTCAction(amountPolkaBTC));
+        // const amount = polkaBTC.api.createType("Balance",amountPolkaBTC);
+        // await polkaBTC.vaults.selectRandomVaultRedeem(amount); // TO DO Dom - this request takes forever
         dispatch(changeRedeemStepAction("ENTER_BTC_ADDRESS"));
     })
 
@@ -46,9 +48,12 @@ export default function EnterPolkaBTCAmount(props: EnterPolkaBTCAmountProps) {
                     name="amountPolkaBTC"
                     type="number"
                     className={"custom-input" + (errors.amountPolkaBTC ? " error-borders" : "")}
-                    ref={register({required: true})}
+                    ref={register({required: true, max: {
+                        value: balancePolkaBTC,
+                        message: "Please enter amount less then " + balancePolkaBTC
+                    }})}
                 />
-                {errors.amountPolkaBTC && (<div className="input-error">
+            {errors.amountPolkaBTC && (<div className="input-error">
                 {errors.amountPolkaBTC.type === "required" ? "Please enter the amount"
                 : errors.amountPolkaBTC.message}
                 </div>

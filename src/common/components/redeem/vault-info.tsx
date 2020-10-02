@@ -11,8 +11,9 @@ type VaultInfoProps = {
 export default function VaultInfo(props: VaultInfoProps){
     const vaultDotAddress = useSelector((state: StoreType)=>state.redeem.vaultDotAddress);
     const vaultBtcAddress = useSelector((state: StoreType)=>state.redeem.vaultBtcAddress);
-
+    // TO DO Dom load vaults with actios that I already made changeVaultBtcAddressAction and changeVaultDotAddressAction
     const onConfirm = () => {
+        // TO DO Dom add redeem to redeem page just one function needs to be passed here from redeem page
         props.closeModal();
     }
 
