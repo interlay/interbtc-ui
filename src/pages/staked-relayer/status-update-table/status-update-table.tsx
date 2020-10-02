@@ -28,7 +28,7 @@ function displayBlockHash(option: Option<H256Le>): string {
 function displayProposedChanges(addError: Option<ErrorCode>, removeError: Option<ErrorCode>): string {
     return addError.isNone
         ? removeError.isNone
-            ? "None"
+            ? "-"
             : removeError.unwrap().toString()
         : addError.unwrap().toString();
 }
@@ -152,7 +152,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                             <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>Timestamp</th>
+                                    <th>Parachain Block</th>
                                     <th>Proposed Status</th>
                                     <th>Current Status</th>
                                     <th>Proposed Changes</th>
