@@ -37,11 +37,7 @@ export default function OracleTable(): ReactElement {
                 <div className="col-12">
                     <div className="header">
                         Oracle Status: &nbsp;{oracleStatus} &nbsp;
-            <div
-                            className={
-                                oracleStatus === "Online" ? "green-circle" : "red-circle"
-                            }
-                        ></div>
+                        <div className={oracleStatus === "Online" ? "green-circle" : "red-circle"}></div>
                     </div>
                 </div>
             </div>
