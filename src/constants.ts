@@ -1,7 +1,7 @@
 export const APP_NAME = "PolkaBTC";
 
 // Set to true is on mainnet.
-export const BTC_MAINNET = false; 
+export const BTC_MAINNET = false;
 
 // testnet btc address validation regex
 export const BTC_ADDRESS_TESTNET_REGEX = /\b([2mn][a-km-zA-HJ-NP-Z1-9]{25,34}|tb1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})\b/;
@@ -11,21 +11,17 @@ export const BTC_ADDRESS_MAINNET_REGEX = /\b([13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1
 export const PARACHAIN_URL = process.env.REACT_APP_PARACHAIN_URL || "ws://127.0.0.1:9944";
 export const STAKED_RELAYER_URL = process.env.REACT_APP_STAKED_RELAYER_URL || "http://localhost:3030";
 
-
-
 export const BTC_EXPLORER_BLOCK_API = "https://blockstream.info/block/";
 export const BTC_TEST_EXPLORER_BLOCK_API = "https://blockstream.info/testnet/block/";
-
 
 //######################################
 // VAULT
 //######################################
 export const VAULT_STATUS_ACTIVE = "Active";
-export const VAULT_STATUS_THEFT= "CommittedTheft";
+export const VAULT_STATUS_THEFT = "CommittedTheft";
 export const VAULT_STATUS_LIQUIDATED = "Liquidated";
 export const VAULT_STATUS_UNDECOLLATERALIZED = "Undercollateralized";
 export const VAULT_STATUS_AUCTION = "Auction";
-
 
 // ####################################################
 // TODO: make sure the constants below are the same as in the BTC-Parachain

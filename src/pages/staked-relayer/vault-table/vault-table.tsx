@@ -10,7 +10,6 @@ export default function VaultTable(): ReactElement {
     const prices = useSelector((state: StoreType) => state.prices);
     const polkaBTC = useSelector((state: StoreType) => state.api);
     const dispatch = useDispatch();
-    const [vaultStatus, setVaultStatus] = useState("Secure");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -36,17 +35,14 @@ export default function VaultTable(): ReactElement {
                 } catch (error) {
                     console.log(error);
                 }
-
-                setVaultStatus(
-                    checkVaultStatus(vault.status.toString(), Number(collateralization))
-                );
+            
                 vaultsList.push({
                     vaultId: accountId.toString(),
                     // TODO: fetch collateral reserved
                     lockedBTC: vault.issued_tokens,
                     lockedDOT: 0,
                     btcAddress: vault.btc_address.toString().substr(2),
-                    status: vault.status && vault.status.toString(),
+                    status: vault.status && checkVaultStatus(vault.status.toString(), Number(collateralization)),
                     collateralization: collateralization,
                 });
                 if (index + 1 === vaults.length) setVaults(vaultsList);
@@ -76,7 +72,7 @@ export default function VaultTable(): ReactElement {
         if (status === constants.VAULT_STATUS_ACTIVE) {
             return "green-text";
         }
-        if (status == constants.VAULT_STATUS_UNDECOLLATERALIZED) {
+        if (status === constants.VAULT_STATUS_UNDECOLLATERALIZED) {
             return "orange-text";
         }
         if (status === constants.VAULT_STATUS_THEFT || status === constants.VAULT_STATUS_AUCTION || status === constants.VAULT_STATUS_LIQUIDATED) {
