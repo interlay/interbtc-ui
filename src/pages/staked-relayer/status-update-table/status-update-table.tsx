@@ -141,8 +141,8 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
             <div className="row">
                 <div className="col-12">
                     <div className="header">
-                        BTC Parachain Status:&nbsp; {parachainStatus}
-                        &nbsp; <div className={getCircle(parachainStatus)}></div>
+                        BTC Parachain Status: &nbsp; <div className={getCircle(parachainStatus)}></div> &nbsp; {parachainStatus}
+                       
                     </div>
                 </div>
             </div>

@@ -60,26 +60,11 @@ export default function ReportModal(props: ReportModalType): ReactElement {
                             {errors.btcBlock && (
                                 <div className="input-error">
                                     {errors.btcBlock.type === "required"
-                                        ? "Please enter the hash of the block that you wish to report as invalid in BTC-Relay"
+                                        ? "Bitcoin block hash is required"
                                         : errors.btcBlock.message}
                                 </div>
                             )}
                         </div>
-                        <div className="col-12">Proof / Message</div>
-                        <div className="col-12">
-                            <textarea
-                                className={
-                                    "custom-textarea" + (errors.message ? " error-borders" : "")
-                                }
-                                name="message"
-                                ref={register({ required: true })}
-                                rows={6}
-                            ></textarea>
-                            {errors.message && (
-                                <div className="input-error">Please provide a proof / message showing why/how the block is invalid.</div>
-                            )}
-                        </div>
-
                     </div>
                 </Modal.Body>
                 <Modal.Footer>

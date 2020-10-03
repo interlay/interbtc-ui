@@ -1,6 +1,5 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { StoreType } from "../../../common/types/util.types";
 import * as constants from "../../../constants";
 import * as utils from "../../../common/utils/utils";
@@ -16,35 +15,43 @@ export default function BitcoinTable(): ReactElement {
     const [relayStatus, setStatus] = useState("Online");
     const [btcBlocks, setBlocks] = useState<Array<BlockInfo>>([]);
     const polkaBTC = useSelector((state: StoreType) => state.api);
-    
-    let noData = false;
-    let fork = false;
-    let heightDiff = 0;
+    const [fork, setFork] = useState(false);
+    const [noData, setNoData] = useState(false);
+    const [heightDiff, setHeightDiff] = useState(0);
 
     useEffect(() => {
 
         const fetchData = async () => {
             if (!polkaBTC) return;
 
-            // returns a little endian encoded block hash
+            // Returns a little endian encoded block hash
+            // Converting to big endian for display
             const bestParachainBlock = utils.uin8ArrayToStringClean(
                 utils.reverseEndianness(
                     await polkaBTC.stakedRelayer.getLatestBTCBlockFromBTCRelay()
                 )
             );
-            const bestParachainHeight = await polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay();
 
-            
-            // Reverse endianness
+            const bestParachainHeight = Number(
+                await polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay()
+            );
 
-            // returns a big endian encoded block hash
-            // TODO: this should return in little endian
+
+            // Returns a big endian encoded block hash
             const bestBitcoinBlock = await polkaBTC.btcCore.getLatestBlock();
             const bestBitcoinHeight = await polkaBTC.btcCore.getLatestBlockHeight();
 
             // Check for NO_DATA, forks and height difference
-            noData = (bestBitcoinBlock != bestParachainBlock) && (bestBitcoinHeight < Number(bestParachainHeight));
-            fork = (bestBitcoinBlock != bestParachainBlock) && (bestBitcoinHeight <= Number(bestParachainHeight));
+            setNoData(
+                (bestBitcoinBlock !== bestParachainBlock) && (bestBitcoinHeight < bestParachainHeight)
+            );
+
+            setFork(
+                (bestBitcoinBlock !== bestParachainBlock) && (bestBitcoinHeight <= bestParachainHeight)
+            );
+            setHeightDiff(
+                bestBitcoinHeight - bestParachainHeight
+            );
 
             setStatus(getRelayStatus());
             // parseInt((bestParachainBlock).toString(16).replace(/^(.(..)*)$/, "0$1").match(/../g).reverse().join(""), 16)
@@ -84,19 +91,22 @@ export default function BitcoinTable(): ReactElement {
         if (noData) {
             status = "Unknown header";
         }
-        if(fork) {
+        if (fork) {
             status = "Fork";
+        }
+        if (heightDiff > constants.BTC_RELAY_DELAY_CRITICAL) {
+            status = "More than " + constants.BTC_RELAY_DELAY_CRITICAL + " blocks behind."
         }
         return status;
     }
 
     const getHeightColor = (): string => {
-        if(Math.abs(heightDiff) > 0) {
+        if (Math.abs(heightDiff) > constants.BTC_RELAY_DELAY_CRITICAL) {
+            return "red-text";
+        }
+        if (Math.abs(heightDiff) > constants.BTC_RELAY_DELAY_WARNING) {
             return "orange-text";
         }
-        if(Math.abs(heightDiff) > 6) {
-            return "red-text";
-        } 
         return "";
     }
 
@@ -105,8 +115,8 @@ export default function BitcoinTable(): ReactElement {
             <div className="row">
                 <div className="col-12">
                     <div className="header">
-                        Bitcoin Relay Status:&nbsp; {relayStatus} &nbsp;
-                        <div className={getCircle(relayStatus)}></div>
+
+                        Bitcoin Relay Status: &nbsp; <div className={getCircle(relayStatus)}></div> &nbsp; {relayStatus}
                     </div>
                 </div>
             </div>
@@ -131,7 +141,8 @@ export default function BitcoinTable(): ReactElement {
                                                 constants.BTC_TEST_EXPLORER_BLOCK_API) +
                                                 block.hash
                                             } target="__blank">{block.hash}</a></td>
-                                            <td>{block.height}</td>
+                                            <td className={getHeightColor()}
+                                            >{block.height}</td>
                                         </tr>
                                     );
                                 })}

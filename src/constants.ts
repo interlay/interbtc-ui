@@ -14,3 +14,6 @@ export const BTC_MAINNET = false; // Set to true is on mainnet.
 
 export const BTC_EXPLORER_BLOCK_API = "https://blockstream.info/block/";
 export const BTC_TEST_EXPLORER_BLOCK_API = "https://blockstream.info/testnet/block/";
+
+export const BTC_RELAY_DELAY_WARNING = 6;
+export const BTC_RELAY_DELAY_CRITICAL = 12;
