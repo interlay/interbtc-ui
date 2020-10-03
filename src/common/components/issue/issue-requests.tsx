@@ -25,8 +25,9 @@ interface IssueRequestsProps {
 
 export default function IssueRequests(props: IssueProps | IssueRequestsProps) {
     const polkaBTC = useSelector((state: StoreType) => state.api);
-    let startedUpdatingIssueRequests = false;
+    // const[startedUpdatingIssueRequests, setUpdatingIssueRequests] = useState({});
     useEffect(() => {
+        // eslint-disable-next-line
         const fetchData = async () => {
             console.log("updating requests");
             const pendingUpdatedIssueRequests = props.issueRequests.map(async (request) => {
@@ -90,10 +91,11 @@ export default function IssueRequests(props: IssueProps | IssueRequestsProps) {
 
             props.handleUpdatedIssueRequests(updatedIssueRequests);
         };
-        if (!startedUpdatingIssueRequests) {
-            setInterval(fetchData, 15000);
-            startedUpdatingIssueRequests = true;
-        }
+        // FIXME: update issue requests
+        // if (!startedUpdatingIssueRequests) {
+        //     setInterval(fetchData, 15000);
+        //     setUpdatingIssueRequests({ startedUpdatingIssueRequests: true})
+        // }
     });
 
     async function execute(
