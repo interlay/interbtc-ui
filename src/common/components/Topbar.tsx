@@ -12,46 +12,46 @@ type TopbarProps = {
 }
 
 export default function Topbar(props: TopbarProps): ReactElement {
-  const stakedRelayer = useSelector((state: StoreType) => state.relayer);
-  const [isConnected, setIsConnected] = useState(false);
-  useEffect(() => {
-    if (!stakedRelayer) return;
+    const stakedRelayer = useSelector((state: StoreType) => state.relayer);
+    const [isConnected, setIsConnected] = useState(false);
+    useEffect(() => {
+        if (!stakedRelayer) return;
 
-    const checkIsConnected = async () => {
-      var connected = await stakedRelayer.connected();
-      setIsConnected(connected);
-    }
-    checkIsConnected();
-  }, [stakedRelayer])
-
-  return <Navbar bg="light" expand="lg" className="border-bottom shadow-sm">
-    <Navbar.Brand>
-      <Link className="text-decoration-none" to="/">
-        <Image src={polkaBTCLogo} width="90" className="d-inline-block align-top" height="30" fluid />
-      </Link>
-    </Navbar.Brand>
-    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-    <Navbar.Collapse id="basic-navbar-nav">
-      <Nav className="mr-auto">
-        <Link className="nav-link" to="/issue">
-          Issue
-            </Link>
-        <Link className="nav-link" to="/redeem">
-          Redeem
-            </Link>
-        {isConnected && <Link className="nav-link" to="/staked-relayer">
-          Staked Relayer
-            </Link>}
-      </Nav>
-      <Nav>
-        {(props.address !== undefined) &&
-          <Link className="nav-link" to="/">
-            <Button variant="dark" size="sm" style={{ borderRadius: "1em" }}>
-              Account: {props.address.substring(0, 10)}...{props.address.substring(38)}
-            </Button>
-          </Link>
+        const checkIsConnected = async () => {
+            var connected = await stakedRelayer.connected();
+            setIsConnected(connected);
         }
-      </Nav>
-    </Navbar.Collapse>
-  </Navbar>
+        checkIsConnected();
+    }, [stakedRelayer])
+
+    return <Navbar bg="light" expand="lg" className="border-bottom shadow-sm">
+        <Navbar.Brand>
+            <Link className="text-decoration-none" to="/">
+                <Image src={polkaBTCLogo} width="90" className="d-inline-block align-top" height="30" fluid />
+            </Link>
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mr-auto">
+                <Link className="nav-link" to="/issue">
+                    Issue
+            </Link>
+                <Link className="nav-link" to="/redeem">
+                    Redeem
+            </Link>
+                {isConnected && <Link className="nav-link" to="/staked-relayer">
+                    Staked Relayer
+            </Link>}
+            </Nav>
+            <Nav>
+                {(props.address !== undefined) &&
+                    <Link className="nav-link" to="/">
+                        <Button variant="dark" size="sm" style={{ borderRadius: "1em" }}>
+                            Account: {props.address.substring(0, 10)}...{props.address.substring(38)}
+                        </Button>
+                    </Link>
+                }
+            </Nav>
+        </Navbar.Collapse>
+    </Navbar>
 }
