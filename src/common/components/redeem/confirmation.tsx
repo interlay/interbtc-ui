@@ -8,6 +8,7 @@ import { RedeemRequest } from "../../types/redeem.types";
 
 export default function Confirmation() {
     const polkaBTC = useSelector((state: StoreType) => state.api);
+    const storage = useSelector((state: StoreType) => state.storage);
     const amountPolkaBTC = useSelector((store: StoreType) => store.redeem.amountPolkaBTC);
     const vaultAddress = useSelector((store: StoreType) => store.redeem.vaultDotAddress);
     const btcAddress = useSelector((store: StoreType) => store.redeem.btcAddress);
@@ -35,6 +36,7 @@ export default function Confirmation() {
                 confirmations: 0,
                 completed: false,
             }
+            storage.appendRedeemRequest(request); 
             dispatch(changeRedeemStepAction("VAULT_INFO"));
         } catch (error) {
             toast.error(error.toString());

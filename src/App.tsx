@@ -30,6 +30,8 @@ import IssuePage from "./pages/issue.page";
 import VaultPage from "./pages/vault.page";
 import RedeemPage from "./pages/redeem.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
+import Storage from "./common/controllers/storage";
+import { addStorageInstace } from "./common/actions/storage.actions";
 
 const storeLogger = createLogger();
 const store = createStore(rootReducer, applyMiddleware(storeLogger));
@@ -80,8 +82,13 @@ export default class App extends Component<{}, AppState> {
         store.dispatch(addStakedRelayerInstance(stakedRelayer));
     }
 
+    createStorage(address?: string) {
+        const storage = new Storage(address);
+        store.dispatch(addStorageInstace(storage));
+    }
+
     componentDidMount(): void {
-        Promise.all([this.getAccount(), this.createAPIInstace()]);
+        Promise.all([this.getAccount().then(() => this.createStorage(this.state.address)), this.createAPIInstace()]);
     }
 
     render() {
@@ -106,7 +113,7 @@ export default class App extends Component<{}, AppState> {
                                     <RedeemPage {...this.state} />
                                 </Route>
                                 <Route path="/staked-relayer">
-                                    <StakedRelayerPage></StakedRelayerPage>
+                                    <StakedRelayerPage/>
                                 </Route>
                             </Switch>
                         </div>

@@ -1,4 +1,5 @@
 import { PolkaBTCAPI, StakedRelayerClient } from "@interlay/polkabtc";
+import Storage from "../controllers/storage";
 import { RedeemRequest } from "./redeem.types";
 import { Prices } from "./util.types";
 
@@ -18,6 +19,18 @@ export interface AddStakedRelayerInstance {
 }
 
 export type ApiActions = AddInstance | AddStakedRelayerInstance;
+
+
+// STORAGE
+
+export const ADD_STORAGE = "ADD_STORAGE";
+
+export interface AddStorage {
+    type: typeof ADD_STORAGE;
+    storage: Storage;
+}
+
+export type StorageActions = AddStorage;
 
 // PRICES
 

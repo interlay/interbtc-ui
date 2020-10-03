@@ -107,7 +107,7 @@ class RedeemPage extends Component<AppState, RedeemProps> {
                             </Col>
                         </Row>
 
-                        <RedeemRequests {...this.state} />
+                        <RedeemRequests/>
 
                         <Modal show={this.state.showWizard} onHide={this.handleClose}>
                             <RedeemWizard

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { Image, Button, Col, Row } from "react-bootstrap";
 
@@ -8,19 +8,24 @@ import { StoreType } from "../common/types/util.types";
 import { CommonStorage } from "../common/types/storage.types";
 
 export default function LandingPage() {
+    const [totalPolkaBTC, setTotalPolkaBTC] = useState("...");
+    const [totalLockedDOT, setTotalLockedDOT] = useState("...");
     const polkaBTC = useSelector((state: StoreType) => state.api);
     const storage = useSelector((state: StoreType) => state.storage);
-    const totalPolkaBTC = storage.getItemCommon(CommonStorage.totalPolkaBTC);
-    const totalLockedDOT = storage.getItemCommon(CommonStorage.totalLockedDOT);
 
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBTC) return;
+            if (!storage) return;
             // TODO: get data from parachain
             // TODO: write parachain data to storage 
+            const totalPolkaBTC = storage.getItemCommon(CommonStorage.totalPolkaBTC);
+            const totalLockedDOT = storage.getItemCommon(CommonStorage.totalLockedDOT);
+            setTotalPolkaBTC(totalPolkaBTC);
+            setTotalLockedDOT(totalLockedDOT);
         };
         fetchData();
-    });
+    }, [polkaBTC, storage]);
 
     return (
         <div>
