@@ -33,9 +33,9 @@ export default function RedeemPage() {
             // TODO: write data to storage
             setBalancePolkaBTC(balancePolkaBTC);
             setBalanceDOT(balanceDOT);
-        }
+        };
         fetchData();
-    }, [polkaBTC, storage])
+    }, [polkaBTC, storage]);
 
     return (
         <div>
@@ -59,16 +59,14 @@ export default function RedeemPage() {
                         <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
                             <Button variant="outline-dark" size="lg" block onClick={handleShow}>
                                 Redeem PolkaBTC
-                                </Button>
+                            </Button>
                         </Col>
                     </Row>
 
                     <RedeemRequests />
 
                     <Modal show={showWizard} onHide={handleClose}>
-                        <RedeemWizard
-                            handleClose={handleClose}
-                        />
+                        <RedeemWizard handleClose={handleClose} />
                     </Modal>
                 </div>
             </section>

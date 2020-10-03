@@ -18,7 +18,7 @@ export default function LandingPage() {
             if (!polkaBTC) return;
             if (!storage) return;
             // TODO: get data from parachain
-            // TODO: write parachain data to storage 
+            // TODO: write parachain data to storage
             const totalPolkaBTC = storage.getItemCommon(CommonStorage.totalPolkaBTC);
             const totalLockedDOT = storage.getItemCommon(CommonStorage.totalLockedDOT);
             setTotalPolkaBTC(totalPolkaBTC);
@@ -36,7 +36,7 @@ export default function LandingPage() {
                     </Link>
                     <h3 style={{ fontSize: "1.5em" }} className="lead text-muted mt-3">
                         PolkaBTC: Trustless and open DeFi access for your Bitcoin.
-                        </h3>
+                    </h3>
 
                     <Row className="mt-5">
                         <Col xs="12" sm={{ span: 6, offset: 3 }}>
@@ -53,14 +53,14 @@ export default function LandingPage() {
                             <NavLink className="text-decoration-none" to="/issue">
                                 <Button variant="outline-dark" size="lg" block>
                                     Issue PolkaBTC
-                                    </Button>
+                                </Button>
                             </NavLink>
                         </Col>
                         <Col className="mt-2" xs="12" sm={{ span: 4 }}>
                             <NavLink className="text-decoration-none" to="/redeem">
                                 <Button variant="outline-primary" size="lg" block>
                                     Redeem PolkaBTC
-                                    </Button>
+                                </Button>
                             </NavLink>
                         </Col>
                     </Row>

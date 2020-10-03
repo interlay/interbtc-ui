@@ -20,7 +20,6 @@ export interface AddStakedRelayerInstance {
 
 export type ApiActions = AddInstance | AddStakedRelayerInstance;
 
-
 // STORAGE
 
 export const ADD_STORAGE = "ADD_STORAGE";

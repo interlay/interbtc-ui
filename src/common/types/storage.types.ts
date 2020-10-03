@@ -20,7 +20,7 @@ export interface StorageInterface {
 
     setItemCommon(key: CommonStorage, value: string): void;
 
-    // user specific storage items 
+    // user specific storage items
     getItemUser(key: UserStorage): string;
 
     setItemUser(key: UserStorage, value: string): void;

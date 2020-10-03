@@ -27,9 +27,6 @@ export default class VaultPage extends Component<AppState, VaultProps> {
         });
     }
 
-    async getParachainData(): Promise<void> {
-    }
-
     renderTableData(): JSX.Element[] {
         return this.state.redeems.map((redeem) => {
             return (
