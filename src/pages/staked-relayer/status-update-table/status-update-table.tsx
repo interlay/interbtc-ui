@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
 import VoteModal from "../vote-modal/vote-modal";
 import { StatusUpdate } from "../../../common/types/util.types";
+import * as constants from "../../../constants";
 
 const ADD_DATA_ERROR = "Add NO_DATA error";
 const REMOVE_DATA_ERROR = "Remove NO_DATA error";
@@ -140,8 +141,8 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
             <div className="row">
                 <div className="col-12">
                     <div className="header">
-                        BTC Parachain Status:&nbsp; {parachainStatus}
-                        &nbsp; <div className={getCircle(parachainStatus)}></div>
+                        BTC Parachain Status: &nbsp; <div className={getCircle(parachainStatus)}></div> &nbsp; {parachainStatus}
+                       
                     </div>
                 </div>
             </div>
@@ -182,8 +183,9 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                             </td>
                                             <td className="break-words">
                                                 <a
-                                                    href={
-                                                        "https://blockstream.info/testnet/block/" +
+                                                    href={(constants.BTC_MAINNET ?
+                                                        constants.BTC_EXPLORER_BLOCK_API :
+                                                        constants.BTC_TEST_EXPLORER_BLOCK_API) +
                                                         statusUpdate.blockHash
                                                     }
                                                     target="_blank"

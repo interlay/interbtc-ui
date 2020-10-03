@@ -3,6 +3,7 @@ import { StoreType } from "../../../common/types/util.types";
 import { useSelector, useDispatch } from "react-redux";
 import { Vault } from "../../../common/types/util.types";
 import { fetchPrices } from "../../../common/api/api";
+import * as constants from "../../../constants";
 
 export default function VaultTable(): ReactElement {
     const [vaults, setVaults] = useState<Array<Vault>>([]);
@@ -34,14 +35,14 @@ export default function VaultTable(): ReactElement {
                 } catch (error) {
                     console.log(error);
                 }
-
+            
                 vaultsList.push({
                     vaultId: accountId.toString(),
                     // TODO: fetch collateral reserved
                     lockedBTC: vault.issued_tokens,
                     lockedDOT: 0,
                     btcAddress: vault.btc_address.toString().substr(2),
-                    status: vault.status && vault.status.toString(),
+                    status: vault.status && checkVaultStatus(vault.status.toString(), Number(collateralization)),
                     collateralization: collateralization,
                 });
                 if (index + 1 === vaults.length) setVaults(vaultsList);
@@ -50,27 +51,48 @@ export default function VaultTable(): ReactElement {
         fetchData();
     }, [polkaBTC, prices]);
 
+
+    const checkVaultStatus = (status: string, collateralization: number): string => {
+        if (status === constants.VAULT_STATUS_THEFT) {
+            return constants.VAULT_STATUS_THEFT;
+        }
+        if (status === constants.VAULT_STATUS_LIQUIDATED) {
+            return constants.VAULT_STATUS_LIQUIDATED;
+        }
+        if (collateralization < constants.VAULT_AUCTION_COLLATERALIZATION) {
+            return constants.VAULT_STATUS_AUCTION;
+        }
+        if (collateralization < constants.VAULT_IDEAL_COLLATERALIZATION) {
+            return constants.VAULT_STATUS_UNDECOLLATERALIZED;
+        }
+        return constants.VAULT_STATUS_ACTIVE;
+    }
+
     const getStatusColor = (status: string): string => {
-        if (status === "Active") {
+        if (status === constants.VAULT_STATUS_ACTIVE) {
             return "green-text";
         }
-        if (status === "Theft") {
+        if (status === constants.VAULT_STATUS_UNDECOLLATERALIZED) {
             return "orange-text";
         }
-        return "red-text";
+        if (status === constants.VAULT_STATUS_THEFT || status === constants.VAULT_STATUS_AUCTION || status === constants.VAULT_STATUS_LIQUIDATED) {
+            return "red-text";
+        }
+        return "black-text";
     };
 
     const getCollateralizationColor = (collateralization: number | undefined): string => {
         if (typeof collateralization !== "undefined") {
-            if (collateralization >= 200) {
+            if (collateralization >= constants.VAULT_IDEAL_COLLATERALIZATION) {
                 return "green-text";
             }
-            if (collateralization >= 150 && collateralization < 200) {
+            if (collateralization >= constants.VAULT_AUCTION_COLLATERALIZATION) {
                 return "yellow-text";
             }
-            if (collateralization > 120 && collateralization < 150) {
+            if (collateralization >= constants.VAULT_AUCTION_COLLATERALIZATION) {
                 return "orange-text";
             }
+            // Liquidation
             return "red-text";
         }
         return "black-text";
