@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { StoreType } from "../../../common/types/util.types";
 import * as constants from "../../../constants";
+import * as utils from "../../../common/utils/utils";
 
 interface BlockInfo {
     source: string;
@@ -30,11 +31,14 @@ export default function BitcoinTable(): ReactElement {
             // TODO: this should return in little endian
             const bestBitcoinBlock = await polkaBTC.btcCore.getLatestBlock();
             const bestBitcoinHeight = await polkaBTC.btcCore.getLatestBlockHeight();
+            
+            console.log(utils.reverseEndianness(bestParachainBlock).toString());
 
+            // parseInt((bestParachainBlock).toString(16).replace(/^(.(..)*)$/, "0$1").match(/../g).reverse().join(""), 16)
             setBlocks([
                 {
                     source: "BTC Parachain",
-                    hash: bestParachainBlock.toString().substr(2).split("").reverse().join(""),
+                    hash: utils.uin8ArrayToStringClean(bestParachainBlock),
                     height: bestParachainHeight.toString(),
                 },
                 {
