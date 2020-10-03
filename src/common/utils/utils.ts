@@ -7,3 +7,7 @@ export function shortTxId(txid: string): string {
     if (txid.length < 20) return txid;
     return txid.substr(0, 10) + "..." + txid.substr(txid.length - 11, txid.length - 1);
 }
+
+export function dateToShortString(date: Date): string {
+    return date.toString().substr(0, 34);
+}
