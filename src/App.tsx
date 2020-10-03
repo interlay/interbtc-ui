@@ -89,7 +89,10 @@ export default class App extends Component<{}, AppState> {
     }
 
     componentDidMount(): void {
-        Promise.all([this.getAccount().then(() => this.createStorage(this.state.address)), this.createAPIInstace()]);
+        this.getAccount().then(() => {
+            this.createStorage(this.state.address);
+            this.createAPIInstace();
+        });
     }
 
     render() {
