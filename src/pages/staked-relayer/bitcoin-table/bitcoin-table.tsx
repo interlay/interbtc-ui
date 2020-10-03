@@ -1,12 +1,15 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { StoreType } from "../../../common/types/util.types";
+import * as constants from "../../../constants";
 
 interface BlockInfo {
     source: string;
     height: string;
     hash: string;
 }
+
 
 export default function BitcoinTable(): ReactElement {
     const [relayStatus, setStatus] = useState("Online");
@@ -24,10 +27,10 @@ export default function BitcoinTable(): ReactElement {
             const bestParachainHeight = await polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay();
 
             // returns a big endian encoded block hash
+            // TODO: this should return in little endian
             const bestBitcoinBlock = await polkaBTC.btcCore.getLatestBlock();
             const bestBitcoinHeight = await polkaBTC.btcCore.getLatestBlockHeight();
 
-            // TODO: link to block explorer
             setBlocks([
                 {
                     source: "BTC Parachain",
@@ -80,7 +83,11 @@ export default function BitcoinTable(): ReactElement {
                                     return (
                                         <tr key={index}>
                                             <td>{block.source}</td>
-                                            <td>{block.hash}</td>
+                                            <td><a href={(constants.BTC_MAINNET ?
+                                                        constants.BTC_EXPLORER_BLOCK_API :
+                                                        constants.BTC_TEST_EXPLORER_BLOCK_API) +
+                                                        block.hash
+                                                    } target="__blank">{block.hash}</a></td>
                                             <td>{block.height}</td>
                                         </tr>
                                     );
