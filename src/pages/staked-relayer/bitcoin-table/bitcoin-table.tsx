@@ -16,29 +16,42 @@ export default function BitcoinTable(): ReactElement {
     const [relayStatus, setStatus] = useState("Online");
     const [btcBlocks, setBlocks] = useState<Array<BlockInfo>>([]);
     const polkaBTC = useSelector((state: StoreType) => state.api);
+    
+    let noData = false;
+    let fork = false;
+    let heightDiff = 0;
 
     useEffect(() => {
-        setStatus("Online");
 
         const fetchData = async () => {
             if (!polkaBTC) return;
 
             // returns a little endian encoded block hash
-            const bestParachainBlock = await polkaBTC.stakedRelayer.getLatestBTCBlockFromBTCRelay();
+            const bestParachainBlock = utils.uin8ArrayToStringClean(
+                utils.reverseEndianness(
+                    await polkaBTC.stakedRelayer.getLatestBTCBlockFromBTCRelay()
+                )
+            );
             const bestParachainHeight = await polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay();
+
+            
+            // Reverse endianness
 
             // returns a big endian encoded block hash
             // TODO: this should return in little endian
             const bestBitcoinBlock = await polkaBTC.btcCore.getLatestBlock();
             const bestBitcoinHeight = await polkaBTC.btcCore.getLatestBlockHeight();
-            
-            console.log(utils.reverseEndianness(bestParachainBlock).toString());
 
+            // Check for NO_DATA, forks and height difference
+            noData = (bestBitcoinBlock != bestParachainBlock) && (bestBitcoinHeight < Number(bestParachainHeight));
+            fork = (bestBitcoinBlock != bestParachainBlock) && (bestBitcoinHeight <= Number(bestParachainHeight));
+
+            setStatus(getRelayStatus());
             // parseInt((bestParachainBlock).toString(16).replace(/^(.(..)*)$/, "0$1").match(/../g).reverse().join(""), 16)
             setBlocks([
                 {
                     source: "BTC Parachain",
-                    hash: utils.uin8ArrayToStringClean(bestParachainBlock),
+                    hash: bestParachainBlock,
                     height: bestParachainHeight.toString(),
                 },
                 {
@@ -61,13 +74,39 @@ export default function BitcoinTable(): ReactElement {
         return "red-circle";
     };
 
+    /**
+     * Checks for BTC-Relay status.
+     * TODO: check parachain for invalid state
+     * TODO: check parachain for ongoing fork
+     */
+    const getRelayStatus = (): string => {
+        let status = "Online";
+        if (noData) {
+            status = "Unknown header";
+        }
+        if(fork) {
+            status = "Fork";
+        }
+        return status;
+    }
+
+    const getHeightColor = (): string => {
+        if(Math.abs(heightDiff) > 0) {
+            return "orange-text";
+        }
+        if(Math.abs(heightDiff) > 6) {
+            return "red-text";
+        } 
+        return "";
+    }
+
     return (
         <div className="bitcoin-table">
             <div className="row">
                 <div className="col-12">
                     <div className="header">
                         Bitcoin Relay Status:&nbsp; {relayStatus} &nbsp;
-                        <div className={getCircle("Online")}></div>
+                        <div className={getCircle(relayStatus)}></div>
                     </div>
                 </div>
             </div>
@@ -88,10 +127,10 @@ export default function BitcoinTable(): ReactElement {
                                         <tr key={index}>
                                             <td>{block.source}</td>
                                             <td><a href={(constants.BTC_MAINNET ?
-                                                        constants.BTC_EXPLORER_BLOCK_API :
-                                                        constants.BTC_TEST_EXPLORER_BLOCK_API) +
-                                                        block.hash
-                                                    } target="__blank">{block.hash}</a></td>
+                                                constants.BTC_EXPLORER_BLOCK_API :
+                                                constants.BTC_TEST_EXPLORER_BLOCK_API) +
+                                                block.hash
+                                            } target="__blank">{block.hash}</a></td>
                                             <td>{block.height}</td>
                                         </tr>
                                     );
