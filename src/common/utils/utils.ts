@@ -1,5 +1,3 @@
-import { off } from "process";
-
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;
     return address.substr(0, 6) + "..." + address.substr(address.length - 7, address.length - 1);
@@ -34,4 +32,20 @@ export function reverseEndianness(bytes: Uint8Array): Uint8Array {
  */
 export function uin8ArrayToStringClean(bytes: Uint8Array): string {
     return bytes.toString().substr(2).split("").join("");
+}
+
+export function satToBTC(sat: number): string {
+    return (sat * 0.00000001).toString();
+}
+
+export function BTCtoSat(btc: string): number {
+    return Number(btc) * 100000000;
+}
+
+export function plankToDOT(plank: number): string {
+    return (plank * 0.0000000001).toString();
+}
+
+export function DOTtoPlank(dot: string): number {
+    return Number(dot) * 10000000000;
 }
