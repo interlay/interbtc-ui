@@ -1,5 +1,5 @@
 import React, { Component, FormEvent, ChangeEvent } from "react";
-import { IssueProps, IssueRequest } from "../../types/IssueState";
+import { IssueProps, IssueRequest } from "../../types/issue.types";
 import { Container, Modal, Form } from "react-bootstrap";
 import RequestConfirmation from "./request-confirmation";
 import EnterBTCAmount from "./enter-btc-amount";
@@ -132,7 +132,7 @@ export default class IssueWizard extends Component<IssueProps, IssueWizardProps>
             rawTransaction: new Uint8Array(),
             issueRequestHash: this.state.currentIssueRequestHash,
         };
-        this.props.addIssueRequest(req);
+        // TODO: store issue request
     }
 
     render() {

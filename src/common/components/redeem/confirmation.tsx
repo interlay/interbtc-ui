@@ -2,15 +2,43 @@ import React from "react";
 import { FormGroup, ListGroup, Row, Col, ListGroupItem, Modal } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../types/util.types";
-import { changeRedeemStepAction } from "../../actions/redeem.actions";
+import { changeRedeemIdAction, changeRedeemStepAction } from "../../actions/redeem.actions";
+import { toast } from "react-toastify";
+import { RedeemRequest } from "../../types/redeem.types";
 
-export default function Confirmation (){
-    const amountPolkaBTC = useSelector((store: StoreType)=>store.redeem.amountPolkaBTC);
-    const btcAddress = useSelector((store: StoreType)=>store.redeem.btcAddress);
+export default function Confirmation() {
+    const polkaBTC = useSelector((state: StoreType) => state.api);
+    const amountPolkaBTC = useSelector((store: StoreType) => store.redeem.amountPolkaBTC);
+    const vaultAddress = useSelector((store: StoreType) => store.redeem.vaultDotAddress);
+    const btcAddress = useSelector((store: StoreType) => store.redeem.btcAddress);
     const dispatch = useDispatch();
 
-    const onConfirm = ()=>{
-        dispatch(changeRedeemStepAction("VAULT_INFO"));
+    const onConfirm = async () => {
+        // send the redeem request
+        try {
+            // const amount = polkaBTC.api.createType("Balance", amountPolkaBTC) as any;
+            // const requestResult = await polkaBTC.redeem.request(amount, btcAddress, vaultAddress);
+            // const id = requestResult.hash.toString();
+            const id = "test";
+            const vaultBTCAddress = "test_address";
+
+            // dispatch(changeRedeemIdAction(id))
+            dispatch(changeRedeemIdAction(id))
+
+            // TODO: store the redeem request in storage
+            const request: RedeemRequest = {
+                id,
+                amountPolkaBTC: amountPolkaBTC.toString(),
+                creation: new Date(),
+                vaultBTCAddress,
+                btcTxId: "",
+                confirmations: 0,
+                completed: false,
+            }
+            dispatch(changeRedeemStepAction("VAULT_INFO"));
+        } catch (error) {
+            toast.error(error.toString());
+        }
     }
 
     const goToPreviousStep = () => {
@@ -18,7 +46,7 @@ export default function Confirmation (){
     }
 
     return <React.Fragment>
-        <Modal.Body> 
+        <Modal.Body>
             <FormGroup>
                 <h5>Confirm Redeem Request</h5>
                 <p>Please verify and confirm your redeem request.</p>
@@ -37,13 +65,13 @@ export default function Confirmation (){
                 </Row>
             </FormGroup>
         </Modal.Body>
-    <Modal.Footer>
-        <button className="btn btn-secondary float-left" onClick={goToPreviousStep}>
-            Previous
+        <Modal.Footer>
+            <button className="btn btn-secondary float-left" onClick={goToPreviousStep}>
+                Previous
         </button>
-        <button className="btn btn-primary float-right" onClick={onConfirm}>
-            Next
+            <button className="btn btn-primary float-right" onClick={onConfirm}>
+                Confirm
         </button>
-    </Modal.Footer>
-</React.Fragment>    
+        </Modal.Footer>
+    </React.Fragment>
 }

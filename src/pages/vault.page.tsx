@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Image, Col, Row, Table } from "react-bootstrap";
 
-import AppState from "../common/types/AppState";
+import AppState from "../common/types/app.types";
 import { VaultProps } from "../common/types/VaultState";
 
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
@@ -28,27 +28,6 @@ export default class VaultPage extends Component<AppState, VaultProps> {
     }
 
     async getParachainData(): Promise<void> {
-        if (!this.props.parachain.api) {
-            await this.props.parachain.connect();
-        }
-        if (this.props.parachain.api && this.props.address) {
-            // FIXME
-            // eslint-disable-next-line
-            const backedPolkaBTC = await this.props.parachain.getBalancePolkaBTC(this.props.address);
-            // FIXME
-            // eslint-disable-next-line
-            const balanceDOT = await this.props.parachain.getBalanceDOT(this.props.address);
-            // FIXME
-            // eslint-disable-next-line
-            const balanceLockedDOT = await this.props.parachain.getBalanceDOT(this.props.address);
-            this.setState({
-                balanceDOT: this.props.kvstorage.getValue("balanceDOT"),
-                balanceLockedDOT: this.props.kvstorage.getValue("balanceLockedDOT"),
-                backedPolkaBTC: this.props.kvstorage.getValue("backedPolkaBTC"),
-                collateralRate: this.props.kvstorage.getValue("collateralRate"),
-                feesEarned: this.props.kvstorage.getValue("feesEarned"),
-            });
-        }
     }
 
     renderTableData(): JSX.Element[] {

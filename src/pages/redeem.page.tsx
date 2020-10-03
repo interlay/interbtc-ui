@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Image, Button, Col, Row, Modal } from "react-bootstrap";
 import { connect } from "react-redux";
-import AppState from "../common/types/AppState";
-import { RedeemProps, RedeemRequest } from "../common/components/redeem/redeem-state";
+import AppState from "../common/types/app.types";
+import { RedeemProps, RedeemRequest } from "../common/types/redeem.types";
 import RedeemWizard from "../common/components/redeem/redeem-wizard";
 import { resetRedeemWizardAction } from "../common/actions/redeem.actions";
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
@@ -17,8 +17,6 @@ class RedeemPage extends Component<AppState, RedeemProps> {
         redeemRequests: [],
         showWizard: false,
         idCounter: 0,
-        storage: this.props.storage,
-        kvstorage: this.props.kvstorage,
     };
 
     // constructor(props: AppState & RouteComponentProps) {
@@ -45,31 +43,21 @@ class RedeemPage extends Component<AppState, RedeemProps> {
     }
 
     async getParachainData(): Promise<void> {
-        if (!this.props.parachain.api) {
-            await this.props.parachain.connect();
-        }
-        if (this.props.parachain.api && this.props.address) {
-            // FIXME
-            // eslint-disable-next-line
-            const balancePolkaBTC = await this.props.parachain.getBalancePolkaBTC(this.props.address);
-            // FIXME
-            // eslint-disable-next-line
-            const balanceDOT = await this.props.parachain.getBalanceDOT(this.props.address);
-            this.setState({
-                balancePolkaBTC: this.props.kvstorage.getValue("balancePolkaBTC"),
-                balanceDOT: this.props.kvstorage.getValue("balanceDOT"),
-            });
-        }
+        // TODO: get from parachain and set storage
+        this.setState({
+            balancePolkaBTC: "20",
+            balanceDOT: "20", 
+        });
+       
     }
 
     componentDidMount(): void {
         this.getParachainData();
-        if (this.props.storage) {
-            this.setState({
-                redeemRequests: this.props.storage.redeemRequests,
-                idCounter: 3,
-            });
-        }
+        // TODO: get from storage
+        this.setState({
+            redeemRequests: [],
+            idCounter: 3,
+        });
     }
 
     addRedeemRequest(req: RedeemRequest): void {

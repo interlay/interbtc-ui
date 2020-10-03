@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { RedeemProps } from "./redeem-state";
+import { RedeemProps } from "../../types/redeem.types";
 import { Table } from "react-bootstrap";
 import { shortAddress, shortTxId } from "../../utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
@@ -29,7 +29,7 @@ export default class RedeemRequests extends Component<RedeemProps, {}> {
                                         <td>{request.id}</td>
                                         <td>{request.amountPolkaBTC} BTC</td>
                                         <td>{request.creation}</td>
-                                        <td>{shortAddress(request.vaultAddress)}</td>
+                                        <td>{shortAddress(request.vaultBTCAddress)}</td>
                                         <td>{shortTxId(request.btcTxId)}</td>
                                         <td>{request.confirmations}</td>
                                         <td>{request.completed ? <FaCheck></FaCheck> : <FaHourglass></FaHourglass>}</td>

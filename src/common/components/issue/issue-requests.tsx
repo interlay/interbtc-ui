@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { IssueProps, IssueRequest } from "../../types/IssueState";
+import { IssueProps, IssueRequest } from "../../types/issue.types";
 import { Button, Table } from "react-bootstrap";
 import { shortAddress, shortTxId } from "../../utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
@@ -18,7 +18,6 @@ interface IssueRequestsProps {
     lastIssueRequestHash: string,
     issueRequests: Array<IssueRequest>,
     lastissueRequestsUpdate: Date,
-    handleUpdatedIssueRequests: () => void,
 }
 
 
@@ -88,8 +87,7 @@ export default function IssueRequests(props: IssueProps | IssueRequestsProps) {
             console.log("props.issueRequests");
             console.log(props.issueRequests);
 
-
-            props.handleUpdatedIssueRequests(updatedIssueRequests);
+            // TODO: update issue requests in storage
         };
         // FIXME: update issue requests
         // if (!startedUpdatingIssueRequests) {

@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Image, Button, Col, Row, Modal } from "react-bootstrap";
 
-import AppState from "../common/types/AppState";
-import { IssueProps, IssueRequest } from "../common/types/IssueState";
+import AppState from "../common/types/app.types";
+import { IssueProps, IssueRequest } from "../common/types/issue.types";
 import IssueWizard from "../common/components/issue/issue-wizard";
 
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
@@ -18,12 +18,6 @@ class IssuePage extends Component<AppState, IssueProps> {
         lastissueRequestsUpdate: new Date(),
         showWizard: false,
         idCounter: 0,
-        storage: this.props.storage,
-        kvstorage: this.props.kvstorage,
-        // eslint-disable-next-line
-        addIssueRequest: () => { },
-        // eslint-disable-next-line
-        handleUpdatedIssueRequests: () => {},
     };
 
     // constructor(props: AppState & RouteComponentProps) {
@@ -32,9 +26,8 @@ class IssuePage extends Component<AppState, IssueProps> {
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.addIssueRequest = this.addIssueRequest.bind(this);
-        this.handleUpdatedIssueRequests = this.handleUpdatedIssueRequests.bind(this);
-        this.state.balancePolkaBTC = this.props.kvstorage.getValue("balancePolkaBTC");
-        this.state.handleUpdatedIssueRequests = this.handleUpdatedIssueRequests;
+        // TODO: get from storage
+        this.state.balancePolkaBTC = "20";
     }
 
     handleShow(): void {
@@ -50,28 +43,23 @@ class IssuePage extends Component<AppState, IssueProps> {
     }
 
     async getParachainData(): Promise<void> {
-        if (!this.props.parachain.api) {
-            await this.props.parachain.connect();
-        }
-        if (this.props.parachain.api && this.props.address) {
-            // const balancePolkaBTC = await this.props.parachain.getBalancePolkaBTC(this.props.address);
-            // const balanceDOT = await this.props.parachain.getBalanceDOT(this.props.address);
-            this.setState({
-                balancePolkaBTC: this.props.kvstorage.getValue("balancePolkaBTC"),
-                balanceDOT: this.props.kvstorage.getValue("balanceDOT"),
-            });
-        }
+        // const balancePolkaBTC = await this.props.parachain.getBalancePolkaBTC(this.props.address);
+        // const balanceDOT = await this.props.parachain.getBalanceDOT(this.props.address);
+        this.setState({
+            // TODO: get from storage
+            balancePolkaBTC: "20",
+            balanceDOT: "20",
+        });
     }
 
     componentDidMount(): void {
         this.getParachainData();
 
-        if (this.props.storage) {
-            this.setState({
-                issueRequests: this.props.storage.issueRequests,
-                idCounter: 3,
-            });
-        }
+        this.setState({
+            // TODO: get from storage
+            issueRequests: [],
+            idCounter: 3,
+        });
     }
 
     addIssueRequest(req: IssueRequest): void {
@@ -87,15 +75,16 @@ class IssuePage extends Component<AppState, IssueProps> {
         // this.setState({
         //   issueRequests: arr,
         // })
-        console.log("appending issueRequest");
-        console.log(req);
-        console.log(this.props.storage?.issueRequests);
+        // console.log("appending issueRequest");
+        // console.log(req);
+        // console.log(this.props.storage?.issueRequests);
         const counter = this.state.idCounter;
         this.setState({
             idCounter: counter + 1,
         });
         // eslint-disable-next-line
-        this.props.storage?.appendIssueRequest(req);
+        // TODO: store issue request
+        // this.props.storage?.appendIssueRequest(req);
         this.handleClose();
     }
 
@@ -137,9 +126,9 @@ class IssuePage extends Component<AppState, IssueProps> {
 
                         <IssueRequests {...this.state} />
 
-                        <Modal show={this.state.showWizard} onHide={this.handleClose}>
+                        {/* <Modal show={this.state.showWizard} onHide={this.handleClose}>
                             <IssueWizard {...this.state} addIssueRequest={this.addIssueRequest} />
-                        </Modal>
+                        </Modal> */}
                     </div>
                 </section>
             </div>

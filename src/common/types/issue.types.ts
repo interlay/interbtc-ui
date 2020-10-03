@@ -1,5 +1,3 @@
-import { StorageInterface, KVStorageInterface } from "./Storage";
-
 export type IssueRequest = {
     id: string;
     amountBTC: string;
@@ -21,8 +19,4 @@ export interface IssueProps {
     lastissueRequestsUpdate: Date;
     showWizard: boolean;
     idCounter: number;
-    storage?: StorageInterface;
-    kvstorage: KVStorageInterface;
-    addIssueRequest: (req: IssueRequest) => void;
-    handleUpdatedIssueRequests: (updatedIssueRequests: Array<IssueRequest>) => void;
 }
