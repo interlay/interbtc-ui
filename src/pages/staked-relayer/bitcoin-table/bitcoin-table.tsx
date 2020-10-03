@@ -13,11 +13,11 @@ interface BlockInfo {
 
 export default function BitcoinTable(): ReactElement {
     const [relayStatus, setStatus] = useState("Online");
-    const [btcBlocks, setBlocks] = useState<Array<BlockInfo>>([]);
-    const polkaBTC = useSelector((state: StoreType) => state.api);
     const [fork, setFork] = useState(false);
     const [noData, setNoData] = useState(false);
     const [heightDiff, setHeightDiff] = useState(0);
+    const [btcBlocks, setBlocks] = useState<Array<BlockInfo>>([]);
+    const polkaBTC = useSelector((state: StoreType) => state.api);
 
     useEffect(() => {
 
@@ -69,6 +69,26 @@ export default function BitcoinTable(): ReactElement {
             ]);
         };
         fetchData();
+
+        /**
+         * Checks for BTC-Relay status.
+         * TODO: check parachain for invalid state
+         * TODO: check parachain for ongoing fork
+         */
+        const getRelayStatus = (): string => {
+            let status = "Online";
+            if (noData) {
+                status = "Unknown header";
+            }
+            if (fork) {
+                status = "Fork";
+            }
+            if (heightDiff > constants.BTC_RELAY_DELAY_CRITICAL) {
+                status = "More than " + constants.BTC_RELAY_DELAY_CRITICAL + " blocks behind."
+            }
+            return status;
+        }
+
     }, [polkaBTC]);
 
     const getCircle = (status: string): string => {
@@ -81,24 +101,6 @@ export default function BitcoinTable(): ReactElement {
         return "red-circle";
     };
 
-    /**
-     * Checks for BTC-Relay status.
-     * TODO: check parachain for invalid state
-     * TODO: check parachain for ongoing fork
-     */
-    const getRelayStatus = (): string => {
-        let status = "Online";
-        if (noData) {
-            status = "Unknown header";
-        }
-        if (fork) {
-            status = "Fork";
-        }
-        if (heightDiff > constants.BTC_RELAY_DELAY_CRITICAL) {
-            status = "More than " + constants.BTC_RELAY_DELAY_CRITICAL + " blocks behind."
-        }
-        return status;
-    }
 
     const getHeightColor = (): string => {
         if (Math.abs(heightDiff) > constants.BTC_RELAY_DELAY_CRITICAL) {
