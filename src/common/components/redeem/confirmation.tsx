@@ -7,10 +7,10 @@ import { toast } from "react-toastify";
 import { RedeemRequest } from "../../types/redeem.types";
 
 export default function Confirmation() {
-    const polkaBTC = useSelector((state: StoreType) => state.api);
+    // const polkaBTC = useSelector((state: StoreType) => state.api);
     const storage = useSelector((state: StoreType) => state.storage);
     const amountPolkaBTC = useSelector((store: StoreType) => store.redeem.amountPolkaBTC);
-    const vaultAddress = useSelector((store: StoreType) => store.redeem.vaultDotAddress);
+    // const vaultAddress = useSelector((store: StoreType) => store.redeem.vaultDotAddress);
     const btcAddress = useSelector((store: StoreType) => store.redeem.btcAddress);
     const dispatch = useDispatch();
 

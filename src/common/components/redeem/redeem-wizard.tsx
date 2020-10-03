@@ -6,12 +6,10 @@ import VaultInfo from "./vault-info";
 import { Container, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../types/util.types";
-import { RedeemRequest } from "../../types/redeem.types";
 
 export interface RedeemWizardProps {
     handleChange?: (event: ChangeEvent<HTMLInputElement>) => void,
     handleClose: () => void,
-    addRedeemRequest: (req: RedeemRequest) => void 
 }
 
 export default function RedeemWizard (props: RedeemWizardProps) {

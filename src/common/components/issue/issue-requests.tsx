@@ -29,6 +29,7 @@ export default function IssueRequests(props: IssueProps | IssueRequestsProps) {
         // eslint-disable-next-line
         const fetchData = async () => {
             console.log("updating requests");
+            // eslint-disable-next-line
             const pendingUpdatedIssueRequests = props.issueRequests.map(async (request) => {
                 let txStatus: TxStatus = { confirmed: false, confirmations: 0 };
                 try {
@@ -83,7 +84,7 @@ export default function IssueRequests(props: IssueProps | IssueRequestsProps) {
                 }
                 return {} as IssueRequest;
             });
-            const updatedIssueRequests: Array<IssueRequest> = await Promise.all(pendingUpdatedIssueRequests);
+            // const updatedIssueRequests: Array<IssueRequest> = await Promise.all(pendingUpdatedIssueRequests);
             console.log("props.issueRequests");
             console.log(props.issueRequests);
 
@@ -94,6 +95,7 @@ export default function IssueRequests(props: IssueProps | IssueRequestsProps) {
         //     setInterval(fetchData, 15000);
         //     setUpdatingIssueRequests({ startedUpdatingIssueRequests: true})
         // }
+        fetchData();
     });
 
     async function execute(

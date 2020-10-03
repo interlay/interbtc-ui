@@ -11,8 +11,6 @@ export type RedeemRequest = {
 export interface RedeemProps {
     balancePolkaBTC: string;
     balanceDOT: string;
-    redeemRequests: Array<RedeemRequest>;
     showWizard: boolean;
-    idCounter: number;
     resetRedeemWizard?: () => void;
 }

@@ -1,4 +1,3 @@
-import { RedeemRequest } from "../types/redeem.types";
 import {
     CHANGE_AMOUNT_POLKA_BTC,
     CHANGE_REEDEM_STEP,

@@ -32,7 +32,7 @@ export default function EnterPolkaBTCAmount(props: EnterPolkaBTCAmountProps) {
 
     const onSubmit = handleSubmit(async ({amountPolkaBTC})=>{
         dispatch(changeAmountPolkaBTCAction(amountPolkaBTC));
-        const amount = polkaBTC.api.createType("Balance",amountPolkaBTC);
+        // const amount = polkaBTC.api.createType("Balance",amountPolkaBTC);
         // const vaultId = await polkaBTC.vaults.selectRandomVaultRedeem(amount); // TO DO Dom - this request takes forever
         // const vault = await polkaBTC.vaults.get(vaultId);
         dispatch(changeRedeemStepAction("ENTER_BTC_ADDRESS"));

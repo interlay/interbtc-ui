@@ -111,7 +111,7 @@ export default class App extends Component<{}, AppState> {
                                     <VaultPage {...this.state} />
                                 </Route>
                                 <Route path="/redeem">
-                                    <RedeemPage {...this.state} />
+                                    <RedeemPage />
                                 </Route>
                                 <Route path="/staked-relayer">
                                     <StakedRelayerPage/>

@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Image, Button, Col, Row, Modal } from "react-bootstrap";
+import { Image, Button, Col, Row } from "react-bootstrap";
 
 import AppState from "../common/types/app.types";
 import { IssueProps, IssueRequest } from "../common/types/issue.types";
-import IssueWizard from "../common/components/issue/issue-wizard";
 
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
 import IssueRequests from "../common/components/issue/issue-requests";

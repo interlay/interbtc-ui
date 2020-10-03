@@ -20,7 +20,6 @@ export default function RedeemRequests() {
         fetchData();
     }, [storage]);
 
-    console.log(redeemRequests);
     return (
         <div>
             <Table hover responsive size={"md"}>

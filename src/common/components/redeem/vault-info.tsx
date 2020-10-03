@@ -1,5 +1,5 @@
 import React from "react";
-import { FormGroup, ListGroup, Row, Col, Modal } from "react-bootstrap";
+import { FormGroup, Modal } from "react-bootstrap";
 import { shortAddress } from "../../utils/utils";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../types/util.types";
