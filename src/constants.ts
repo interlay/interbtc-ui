@@ -16,6 +16,17 @@ export const STAKED_RELAYER_URL = process.env.REACT_APP_STAKED_RELAYER_URL || "h
 export const BTC_EXPLORER_BLOCK_API = "https://blockstream.info/block/";
 export const BTC_TEST_EXPLORER_BLOCK_API = "https://blockstream.info/testnet/block/";
 
+
+//######################################
+// VAULT
+//######################################
+export const VAULT_STATUS_ACTIVE = "Active";
+export const VAULT_STATUS_THEFT= "CommittedTheft";
+export const VAULT_STATUS_LIQUIDATED = "Liquidated";
+export const VAULT_STATUS_UNDECOLLATERALIZED = "Undercollateralized";
+export const VAULT_STATUS_AUCTION = "Auction";
+
+
 // ####################################################
 // TODO: make sure the constants below are the same as in the BTC-Parachain
 // Best to fetch from API
@@ -26,7 +37,6 @@ export const BTC_RELAY_DELAY_CRITICAL = 12;
 export const VAULT_IDEAL_COLLATERALIZATION = 200; // in %
 export const VAULT_AUCTION_COLLATERALIZATION = 150; // in %
 export const VAULT_LIQUIDATION_COLLATERALIZATION = 120; // in %
-
 
 // ####################################################
 // FOR TESTING PURPOSES ONLY
