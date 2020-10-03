@@ -15,12 +15,15 @@ class IssuePage extends Component<AppState, IssueProps> {
         balancePolkaBTC: "loading...",
         balanceDOT: "loading...",
         issueRequests: [],
+        lastissueRequestsUpdate: new Date(),
         showWizard: false,
         idCounter: 0,
         storage: this.props.storage,
         kvstorage: this.props.kvstorage,
         // eslint-disable-next-line
-        addIssueRequest: () => {},
+        addIssueRequest: () => { },
+        // eslint-disable-next-line
+        handleUpdatedIssueRequests: () => {},
     };
 
     // constructor(props: AppState & RouteComponentProps) {
@@ -29,7 +32,9 @@ class IssuePage extends Component<AppState, IssueProps> {
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.addIssueRequest = this.addIssueRequest.bind(this);
+        this.handleUpdatedIssueRequests = this.handleUpdatedIssueRequests.bind(this);
         this.state.balancePolkaBTC = this.props.kvstorage.getValue("balancePolkaBTC");
+        this.state.handleUpdatedIssueRequests = this.handleUpdatedIssueRequests;
     }
 
     handleShow(): void {
@@ -82,6 +87,9 @@ class IssuePage extends Component<AppState, IssueProps> {
         // this.setState({
         //   issueRequests: arr,
         // })
+        console.log("appending issueRequest");
+        console.log(req);
+        console.log(this.props.storage?.issueRequests);
         const counter = this.state.idCounter;
         this.setState({
             idCounter: counter + 1,
@@ -89,6 +97,13 @@ class IssuePage extends Component<AppState, IssueProps> {
         // eslint-disable-next-line
         this.props.storage?.appendIssueRequest(req);
         this.handleClose();
+    }
+
+    handleUpdatedIssueRequests(updatedIssueRequests: Array<IssueRequest>): void {
+        this.setState({
+            ...this.state,
+            issueRequests: updatedIssueRequests,
+        });
     }
 
     render(): JSX.Element {

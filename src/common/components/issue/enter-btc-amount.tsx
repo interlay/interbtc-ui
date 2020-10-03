@@ -6,10 +6,11 @@ import { StoreType } from "../../types/util.types";
 
 interface EnterBTCAmountProps {
     step: number;
-    amountBTC: string;
-    feeBTC: string;
-    vaultBTCAddress: string;
-    handleChange: () => void;
+    amountBTC: string,
+    feeBTC: string,
+    vaultBTCAddress: string,
+    vaultId: string,
+    handleChange: () => void,
 }
 
 export default function EnterBTCAmount(props: IssueWizardProps | EnterBTCAmountProps) {
@@ -18,15 +19,27 @@ export default function EnterBTCAmount(props: IssueWizardProps | EnterBTCAmountP
         return null;
     } else if (props.vaultBTCAddress === "") {
         const fetchData = async () => {
-            const polkaBTCObject = polkaBTC.api.createType("Balance", props.amountBTC);
-            const vaultBTCAddress = await polkaBTC.vaults.selectRandomVaultIssue(polkaBTCObject);
-            const vault = await polkaBTC.vaults.get(vaultBTCAddress);
-            props.handleChange({
-                target: {
-                    name: "vaultBTCAddress",
-                    value: vault.btc_address.toHuman(),
-                } as EventTarget & HTMLInputElement,
-            } as ChangeEvent<HTMLInputElement>);
+            const polkaBTCObject = polkaBTC.api.createType("Balance", props.amountBTC) as any;
+            const vaultId = await polkaBTC.vaults.selectRandomVaultIssue(polkaBTCObject);
+            const vault = await polkaBTC.vaults.get(vaultId);
+            props.handleChange(
+                {
+                    target: {
+                        name: "vaultBTCAddress",
+                        value: vault.btc_address.toHuman()
+                    } as EventTarget & HTMLInputElement
+                } as ChangeEvent<HTMLInputElement>
+            );
+
+            props.handleChange(
+                {
+                    target:
+                        {
+                            name: "vaultId",
+                            value: vault.id.toHuman()
+                        } as EventTarget & HTMLInputElement
+                } as ChangeEvent<HTMLInputElement>
+            );
         };
         fetchData();
     }

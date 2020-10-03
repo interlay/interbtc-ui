@@ -3,31 +3,50 @@ import { FormGroup, ListGroup, ListGroupItem } from "react-bootstrap";
 import { IssueWizardProps } from "./issue-wizard";
 import { ChangeEvent } from "react";
 import { useEffect } from "react";
+import { Keyring } from "@polkadot/api";
+import { useSelector } from "react-redux";
+import { StoreType } from "../../types/util.types";
 
 interface BTCPaymentProps {
     step: number;
     amountBTC: string,
     feeBTC: string,
-    loaded: boolean,
     vaultBTCAddress: string,
+    vaultId: string,
+    currentIssueRequestHash: string,
     handleChange: () => void,
 }
 
 export default function BTCPayment(props: IssueWizardProps | BTCPaymentProps) {
+    const polkaBTC = useSelector((state: StoreType) => state.api);
 
     useEffect(() => {
-        const fetchData = async () => {
-            props.handleChange(
-                {
-                    target:
+        if (props.step === 3) {
+            const fetchData = async () => {
+
+                const keyring = new Keyring({ type: "sr25519" });
+                const alice = keyring.addFromUri("//Alice");
+                polkaBTC.issue.setAccount(alice);
+
+                const vaultAccountId = polkaBTC.api.createType("AccountId", props.vaultId) as any;
+                const polkaBTCAmount = polkaBTC.api.createType("Balance", props.amountBTC) as any;
+                try {
+                    const requestResult = await polkaBTC.issue.request(polkaBTCAmount, vaultAccountId);
+                    props.handleChange(
                         {
-                            name: "loaded",
-                            value: "true"
-                        } as EventTarget & HTMLInputElement
-                } as ChangeEvent<HTMLInputElement>
-            );
-        };
-        fetchData();
+                            target:
+                                {
+                                    name: "currentIssueRequestHash",
+                                    value: requestResult.hash.toString(),
+                                } as EventTarget & HTMLInputElement
+                        } as ChangeEvent<HTMLInputElement>
+                    );
+                } catch (e) {
+                    console.log(`Error requesting polkaBTC: \n${e}`);
+                }
+            };
+            fetchData();
+        }
     });
 
     const amountBTCwithFee = (Number.parseFloat(props.amountBTC) + Number.parseFloat(props.feeBTC)).toString();
@@ -45,7 +64,7 @@ export default function BTCPayment(props: IssueWizardProps | BTCPaymentProps) {
             <FormGroup>
                 <ListGroup>
                     <ListGroupItem>Output 1</ListGroupItem>
-                    <ListGroupItem>OP_RETURN: <strong> 0xloremipsum </strong></ListGroupItem>
+                    <ListGroupItem>OP_RETURN: <strong> {props.currentIssueRequestHash} </strong></ListGroupItem>
                     <ListGroupItem>Amount: <strong>0 BTC</strong></ListGroupItem>
                 </ListGroup>
                 <ListGroup>
@@ -55,5 +74,5 @@ export default function BTCPayment(props: IssueWizardProps | BTCPaymentProps) {
                 </ListGroup>
             </FormGroup>
         </FormGroup>
-    )
+    );
 }
