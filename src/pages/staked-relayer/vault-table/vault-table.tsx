@@ -9,7 +9,8 @@ export default function VaultTable(): ReactElement {
     const prices = useSelector((state: StoreType) => state.prices);
     const polkaBTC = useSelector((state: StoreType) => state.api);
     const dispatch = useDispatch();
-
+    const [vaultStatus, setVaultStatus] = useState("Secure");
+    
     useEffect(() => {
         const fetchData = async () => {
             fetchPrices(dispatch);
@@ -74,6 +75,19 @@ export default function VaultTable(): ReactElement {
             return "red-text";
         }
         return "black-text";
+    };
+
+    const getCircle = (status: string): string => {
+        if (status === "Secure") {
+            return "green-circle";
+        }
+        if (status === "Undercollateralized") {
+            return "orange-circle";
+        }
+        if (status === "Theft" || status === "Liquidation" ) {
+            return "red-circle";
+        }
+        return "";
     };
 
     return (
