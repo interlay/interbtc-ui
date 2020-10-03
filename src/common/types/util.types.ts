@@ -5,6 +5,14 @@ import { rootReducer } from "../reducers/index";
 import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 import { u256 } from "@polkadot/types/primitive";
 
+export interface Redeem {
+    step: string;
+    amountPolkaBTC: number;
+    btcAddress: string;
+    vaultDotAddress: string;
+    vaultBtcAddress: string;
+}
+
 export interface Prices {
     dotBtc: number;
     dotUsd: number;
@@ -37,6 +45,7 @@ export type StoreType = {
     api: PolkaBTCAPI;
     relayer: StakedRelayerClient;
     prices: Prices;
+    redeem: Redeem;
 };
 
 export type dispatcher = {

@@ -11,6 +11,7 @@ interface AppState {
     vault: boolean;
     storage?: StorageInterface;
     kvstorage: KVStorageInterface;
+    resetRedeemWizard?: () => void;
 }
 
 export default AppState;

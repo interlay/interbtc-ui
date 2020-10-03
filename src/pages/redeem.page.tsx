@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Image, Button, Col, Row, Modal } from "react-bootstrap";
-
+import { connect } from "react-redux";
 import AppState from "../common/types/AppState";
 import { RedeemProps, RedeemRequest } from "../common/components/redeem/redeem-state";
 import RedeemWizard from "../common/components/redeem/redeem-wizard";
-
+import { resetRedeemWizardAction } from "../common/actions/redeem.actions";
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
 import RedeemRequests from "../common/components/redeem/redeem-requests";
 import { ResetRedeemWizard } from "../common/types/actions.types";
 
-export default class RedeemPage extends Component<AppState, RedeemProps> {
+class RedeemPage extends Component<AppState, RedeemProps> {
     state: RedeemProps = {
         balancePolkaBTC: "",
         balanceDOT: "loading...",
@@ -38,6 +38,7 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
     }
 
     handleClose(): void {
+        if (this.props.resetRedeemWizard) this.props.resetRedeemWizard();
         this.setState({
             showWizard: false,
         });
@@ -75,7 +76,7 @@ export default class RedeemPage extends Component<AppState, RedeemProps> {
         const arr = this.state.redeemRequests;
         req.id = this.getAndIncrementIdCounter().toString();
         this.setState({
-            balancePolkaBTC: (parseFloat(this.state.balancePolkaBTC) - parseFloat(req.amountBTC)).toString(),
+            balancePolkaBTC: (parseFloat(this.state.balancePolkaBTC) - parseFloat(req.amountPolkaBTC)).toString(),
         });
         arr.push(req);
         this.setState({

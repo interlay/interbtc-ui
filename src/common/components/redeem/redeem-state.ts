@@ -2,7 +2,7 @@ import { StorageInterface, KVStorageInterface } from "../../types/Storage";
 
 export type RedeemRequest = {
     id: string;
-    amountBTC: string;
+    amountPolkaBTC: string;
     creation: string;
     vaultAddress: string;
     vaultBTCAddress: string;
@@ -20,4 +20,5 @@ export interface RedeemProps {
     idCounter: number;
     storage?: StorageInterface;
     kvstorage: KVStorageInterface;
+    resetRedeemWizard?: () => void;
 }
