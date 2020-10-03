@@ -10,4 +10,19 @@ export function shortTxId(txid: string): string {
 
 export function dateToShortString(date: Date): string {
     return date.toString().substr(0, 34);
+
+export function satToBTC(sat: number): string {
+    return (sat * 0.00000001).toString();
+}
+
+export function BTCtoSat(btc: string): number {
+    return Number(btc) * 100000000;
+}
+
+export function plankToDOT(plank: number): string {
+    return (plank * 0.0000000001).toString();
+}
+
+export function DOTtoPlank(dot: string): number {
+    return Number(dot) * 10000000000;
 }
