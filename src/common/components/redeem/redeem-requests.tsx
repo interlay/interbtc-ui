@@ -39,10 +39,10 @@ export default function RedeemRequests() {
                         redeemRequests.map((request) => {
                             return (
                                 <tr>
-                                    <td key={request.id}>{request.id}</td>
+                                    <td key={request.id}>{shortAddress(request.id)}</td>
                                     <td>{request.amountPolkaBTC} BTC</td>
                                     <td>{dateToShortString(request.creation)}</td>
-                                    <td>{shortAddress(request.vaultBTCAddress)}</td>
+                                    <td>{shortAddress(request.vaultBTCAddress.substr(2))}</td>
                                     <td>{shortTxId(request.btcTxId)}</td>
                                     <td>{request.confirmations}</td>
                                     <td>{request.completed ? <FaCheck></FaCheck> : <FaHourglass></FaHourglass>}</td>

@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { toast } from "react-toastify";
 import { StatusUpdate } from "../../../common/types/util.types";
-import ButtonMaybePending from "../../../common/components/staked-relayer/pending-button";
+import ButtonMaybePending from "../../../common/components/pending-button";
 
 type VoteModalProps = {
     onClose: () => void;

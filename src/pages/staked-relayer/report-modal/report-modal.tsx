@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { toast } from "react-toastify";
-import ButtonMaybePending from "../../../common/components/staked-relayer/pending-button";
+import ButtonMaybePending from "../../../common/components/pending-button";
 
 const STATUS_UPDATE_DEPOSIT = 100;
 
