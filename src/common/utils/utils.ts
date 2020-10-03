@@ -19,7 +19,7 @@ export function reverseEndianness(bytes: Uint8Array): Uint8Array {
     for (let index = 0; index < bytes.length; index += bytes.length) {
         offset--;
         for (let x = 0; x < offset; x++) {
-            let b = bytes[index + x];
+            const b = bytes[index + x];
             bytes[index + x] = bytes[index + offset];
             bytes[index + offset] = b;
             offset--;
@@ -30,7 +30,7 @@ export function reverseEndianness(bytes: Uint8Array): Uint8Array {
 
 /**
  * Converts a Uin8Array to string, removing the leading "0x"
- * @param bytes 
+ * @param bytes
  */
 export function uin8ArrayToStringClean(bytes: Uint8Array): string {
     return bytes.toString().substr(2).split("").join("");
