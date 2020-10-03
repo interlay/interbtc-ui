@@ -30,7 +30,7 @@ export function reverseEndianness(bytes: Uint8Array): Uint8Array {
  * Converts a Uin8Array to string, removing the leading "0x"
  * @param bytes
  */
-export function uin8ArrayToStringClean(bytes: Uint8Array): string {
+export function uint8ArrayToStringClean(bytes: Uint8Array): string {
     return bytes.toString().substr(2).split("").join("");
 }
 

@@ -20,13 +20,12 @@ export default function BitcoinTable(): ReactElement {
     const polkaBTC = useSelector((state: StoreType) => state.api);
 
     useEffect(() => {
-
         const fetchData = async () => {
             if (!polkaBTC) return;
 
             // Returns a little endian encoded block hash
             // Converting to big endian for display
-            const bestParachainBlock = utils.uin8ArrayToStringClean(
+            const bestParachainBlock = utils.uint8ArrayToStringClean(
                 utils.reverseEndianness(
                     await polkaBTC.stakedRelayer.getLatestBTCBlockFromBTCRelay()
                 )
@@ -89,7 +88,7 @@ export default function BitcoinTable(): ReactElement {
             return status;
         }
 
-    }, [polkaBTC]);
+    }, [polkaBTC, noData, fork, heightDiff]);
 
     const getCircle = (status: string): string => {
         if (status === "Online") {
