@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import { IssueProps, IssueRequest } from "../../types/IssueState";
 import { Button, Table } from "react-bootstrap";
