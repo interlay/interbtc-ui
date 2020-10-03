@@ -22,7 +22,8 @@ class IssuePage extends Component<AppState, IssueProps> {
         kvstorage: this.props.kvstorage,
         // eslint-disable-next-line
         addIssueRequest: () => { },
-        handleUpdatedIssueRequests: () => { },
+        // eslint-disable-next-line
+        handleUpdatedIssueRequests: () => {},
     };
 
     // constructor(props: AppState & RouteComponentProps) {
