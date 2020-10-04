@@ -1,5 +1,5 @@
 import React, { Component, FormEvent, ChangeEvent } from "react";
-import { IssueProps, IssueRequest } from "../../types/issue.types";
+import { IssueProps, IssueRequest } from "../../../common/types/issue.types";
 import { Container, Modal, Form } from "react-bootstrap";
 import RequestConfirmation from "./request-confirmation";
 import EnterBTCAmount from "./enter-btc-amount";

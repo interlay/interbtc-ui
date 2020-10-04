@@ -5,7 +5,7 @@ import { ChangeEvent } from "react";
 import { useEffect } from "react";
 import { Keyring } from "@polkadot/api";
 import { useSelector } from "react-redux";
-import { StoreType } from "../../types/util.types";
+import { StoreType } from "../../../common/types/util.types";
 
 interface BTCPaymentProps {
     step: number;

@@ -2,7 +2,7 @@ import React, { ChangeEvent } from "react";
 import { FormGroup, FormControl } from "react-bootstrap";
 import { IssueWizardProps } from "./issue-wizard";
 import { useSelector } from "react-redux";
-import { StoreType } from "../../types/util.types";
+import { StoreType } from "../../../common/types/util.types";
 
 interface EnterBTCAmountProps {
     step: number;
