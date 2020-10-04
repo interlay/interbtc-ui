@@ -16,7 +16,7 @@ import {
     ChangeIssueId,
     ChangeAmountBtc,
     ChangeBtcTxId,
-    ChangeFeeBtc, 
+    ChangeFeeBtc,
 } from "../types/actions.types";
 
 export const changeIssueStepAction = (step: string): ChangeIssueStep => ({

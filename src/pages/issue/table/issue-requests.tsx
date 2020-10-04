@@ -7,14 +7,13 @@ import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { useEffect } from "react";
-import { TxStatus } from "@interlay/polkabtc/build/apis/btc-core";
-import { request } from 'http';
+// import { TxStatus } from "@interlay/polkabtc/build/apis/btc-core";
 import ButtonMaybePending from '../../../common/components/pending-button';
 import { toast } from 'react-toastify';
 
 export default function IssueRequests() {
     const [issueRequests, setIssueRequests] = useState<Array<IssueRequest>>([]);
-    const [startedUpdatingIssueRequests, setUpdatingIssueRequests] = useState({});
+    // const [startedUpdatingIssueRequests, setUpdatingIssueRequests] = useState({});
     const [isExecutePending, setExecutePending] = useState(false);
     const storage = useSelector((state: StoreType) => state.storage);
     const polkaBTC = useSelector((state: StoreType) => state.api);
