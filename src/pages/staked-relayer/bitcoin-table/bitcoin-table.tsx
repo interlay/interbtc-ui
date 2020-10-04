@@ -1,6 +1,8 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
+import * as constants from "../../../constants";
+import * as utils from "../../../common/utils/utils";
 
 interface BlockInfo {
     source: string;
@@ -8,30 +10,54 @@ interface BlockInfo {
     hash: string;
 }
 
+
 export default function BitcoinTable(): ReactElement {
     const [relayStatus, setStatus] = useState("Online");
+    const [fork, setFork] = useState(false);
+    const [noData, setNoData] = useState(false);
+    const [heightDiff, setHeightDiff] = useState(0);
     const [btcBlocks, setBlocks] = useState<Array<BlockInfo>>([]);
     const polkaBTC = useSelector((state: StoreType) => state.api);
 
     useEffect(() => {
-        setStatus("Online");
-
         const fetchData = async () => {
             if (!polkaBTC) return;
 
-            // returns a little endian encoded block hash
-            const bestParachainBlock = await polkaBTC.stakedRelayer.getLatestBTCBlockFromBTCRelay();
-            const bestParachainHeight = await polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay();
+            // Returns a little endian encoded block hash
+            // Converting to big endian for display
+            const bestParachainBlock = utils.uint8ArrayToStringClean(
+                utils.reverseEndianness(
+                    await polkaBTC.stakedRelayer.getLatestBTCBlockFromBTCRelay()
+                )
+            );
 
-            // returns a big endian encoded block hash
+            const bestParachainHeight = Number(
+                await polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay()
+            );
+
+
+            // Returns a big endian encoded block hash
             const bestBitcoinBlock = await polkaBTC.btcCore.getLatestBlock();
             const bestBitcoinHeight = await polkaBTC.btcCore.getLatestBlockHeight();
 
-            // TODO: link to block explorer
+            // Check for NO_DATA, forks and height difference
+            setNoData(
+                (bestBitcoinBlock !== bestParachainBlock) && (bestBitcoinHeight < bestParachainHeight)
+            );
+
+            setFork(
+                (bestBitcoinBlock !== bestParachainBlock) && (bestBitcoinHeight <= bestParachainHeight)
+            );
+            setHeightDiff(
+                bestBitcoinHeight - bestParachainHeight
+            );
+
+            setStatus(getRelayStatus());
+            // parseInt((bestParachainBlock).toString(16).replace(/^(.(..)*)$/, "0$1").match(/../g).reverse().join(""), 16)
             setBlocks([
                 {
                     source: "BTC Parachain",
-                    hash: bestParachainBlock.toString().substr(2).split("").reverse().join(""),
+                    hash: bestParachainBlock,
                     height: bestParachainHeight.toString(),
                 },
                 {
@@ -42,7 +68,27 @@ export default function BitcoinTable(): ReactElement {
             ]);
         };
         fetchData();
-    }, [polkaBTC]);
+
+        /**
+         * Checks for BTC-Relay status.
+         * TODO: check parachain for invalid state
+         * TODO: check parachain for ongoing fork
+         */
+        const getRelayStatus = (): string => {
+            let status = "Online";
+            if (noData) {
+                status = "Unknown header";
+            }
+            if (fork) {
+                status = "Fork";
+            }
+            if (heightDiff > constants.BTC_RELAY_DELAY_CRITICAL) {
+                status = "More than " + constants.BTC_RELAY_DELAY_CRITICAL + " blocks behind."
+            }
+            return status;
+        }
+
+    }, [polkaBTC, noData, fork, heightDiff]);
 
     const getCircle = (status: string): string => {
         if (status === "Online") {
@@ -54,13 +100,24 @@ export default function BitcoinTable(): ReactElement {
         return "red-circle";
     };
 
+
+    const getHeightColor = (): string => {
+        if (Math.abs(heightDiff) > constants.BTC_RELAY_DELAY_CRITICAL) {
+            return "red-text";
+        }
+        if (Math.abs(heightDiff) > constants.BTC_RELAY_DELAY_WARNING) {
+            return "orange-text";
+        }
+        return "";
+    }
+
     return (
         <div className="bitcoin-table">
             <div className="row">
                 <div className="col-12">
                     <div className="header">
-                        Bitcoin Relay Status:&nbsp; {relayStatus} &nbsp;
-                        <div className={getCircle("Online")}></div>
+
+                        Bitcoin Relay Status: &nbsp; <div className={getCircle(relayStatus)}></div> &nbsp; {relayStatus}
                     </div>
                 </div>
             </div>
@@ -80,8 +137,13 @@ export default function BitcoinTable(): ReactElement {
                                     return (
                                         <tr key={index}>
                                             <td>{block.source}</td>
-                                            <td>{block.hash}</td>
-                                            <td>{block.height}</td>
+                                            <td><a href={(constants.BTC_MAINNET ?
+                                                constants.BTC_EXPLORER_BLOCK_API :
+                                                constants.BTC_TEST_EXPLORER_BLOCK_API) +
+                                                block.hash
+                                            } target="__blank">{block.hash}</a></td>
+                                            <td className={getHeightColor()}
+                                            >{block.height}</td>
                                         </tr>
                                     );
                                 })}
