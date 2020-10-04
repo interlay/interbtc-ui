@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../common/types/util.types";
 import { CommonStorage } from "../common/types/storage.types";
 
-export default function LandingPage() {
+export default function LandingPage(): JSX.Element {
     const [totalPolkaBTC, setTotalPolkaBTC] = useState("...");
     const [totalLockedDOT, setTotalLockedDOT] = useState("...");
     const polkaBTC = useSelector((state: StoreType) => state.api);

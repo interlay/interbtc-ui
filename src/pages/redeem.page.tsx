@@ -8,7 +8,7 @@ import RedeemRequests from "../common/components/redeem/redeem-requests";
 import { StoreType } from "../common/types/util.types";
 import { resetRedeemWizardAction } from "../common/actions/redeem.actions";
 
-export default function RedeemPage() {
+export default function RedeemPage(): JSX.Element {
     const polkaBTC = useSelector((state: StoreType) => state.api);
     const storage = useSelector((state: StoreType) => state.storage);
     const dispatch = useDispatch();

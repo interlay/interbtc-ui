@@ -5,7 +5,6 @@ import AppState from "../common/types/app.types";
 import { VaultProps } from "../common/types/VaultState";
 
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
-import { Vault } from "../common/controllers/Vault";
 
 export default class VaultPage extends Component<AppState, VaultProps> {
     state: VaultProps = {
@@ -16,16 +15,6 @@ export default class VaultPage extends Component<AppState, VaultProps> {
         feesEarned: "loading...",
         redeems: [],
     };
-
-    async componentDidMount(): Promise<void> {
-        await this.getParachainData();
-        const vault = new Vault();
-        const result = await vault.getRedeems();
-
-        this.setState({
-            redeems: result,
-        });
-    }
 
     renderTableData(): JSX.Element[] {
         return this.state.redeems.map((redeem) => {

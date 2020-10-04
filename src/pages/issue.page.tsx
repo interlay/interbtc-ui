@@ -61,6 +61,7 @@ class IssuePage extends Component<AppState, IssueProps> {
         });
     }
 
+    // eslint-disable-next-line
     addIssueRequest(req: IssueRequest): void {
         // let arr = this.state.issueRequests;
         // req.id = this.getAndIncrementIdCounter().toString();
