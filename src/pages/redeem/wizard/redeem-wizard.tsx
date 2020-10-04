@@ -5,15 +5,11 @@ import Confirmation from "./confirmation";
 import VaultInfo from "./vault-info";
 import { Container, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { StoreType } from "../../types/util.types";
-import { RedeemRequest } from "./redeem-state";
-import { KVStorageInterface } from "../../types/Storage";
+import { StoreType } from "../../../common/types/util.types";
 
 export interface RedeemWizardProps {
     handleChange?: (event: ChangeEvent<HTMLInputElement>) => void,
     handleClose: () => void,
-    addRedeemRequest: (req: RedeemRequest) => void 
-    kvstorage: KVStorageInterface;
 }
 
 export default function RedeemWizard (props: RedeemWizardProps) {

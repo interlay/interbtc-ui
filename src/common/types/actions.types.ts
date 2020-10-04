@@ -1,4 +1,6 @@
 import { PolkaBTCAPI, StakedRelayerClient } from "@interlay/polkabtc";
+import Storage from "../controllers/storage";
+import { RedeemRequest } from "./redeem.types";
 import { Prices } from "./util.types";
 
 // API ACTIONS
@@ -18,6 +20,17 @@ export interface AddStakedRelayerInstance {
 
 export type ApiActions = AddInstance | AddStakedRelayerInstance;
 
+// STORAGE
+
+export const ADD_STORAGE = "ADD_STORAGE";
+
+export interface AddStorage {
+    type: typeof ADD_STORAGE;
+    storage: Storage;
+}
+
+export type StorageActions = AddStorage;
+
 // PRICES
 
 export const UPDATE_PRICES = "UPDATE_PRICES";
@@ -36,7 +49,9 @@ export const CHANGE_AMOUNT_POLKA_BTC = "CHANGE_AMOUNT_POLKA_BTC";
 export const CHANGE_BTC_ADDRESS = "CHANGE_BTC_ADDRESS";
 export const CHANGE_VAULT_BTC_ADDRESS = "CHANGE_VAULT_BTC_ADDRESS";
 export const CHANGE_VAULT_DOT_ADDRESS = "CHANGE_VAULT_DOT_ADDRESS";
+export const CHANGE_REDEEM_ID = "CHANGE_REDEEM_ID";
 export const RESET_REDEEM_WIZARD = "RESET_REDEEM_WIZARD";
+export const STORE_REDEEM_REQUEST = "STORE_REDEEM_REQUEST";
 
 export interface ChangeRedeemStep {
     type: typeof CHANGE_REEDEM_STEP;
@@ -63,8 +78,18 @@ export interface ChangeVaultDotAddress {
     vaultDotAddress: string;
 }
 
+export interface ChangeRedeemId {
+    type: typeof CHANGE_REDEEM_ID;
+    id: string;
+}
+
 export interface ResetRedeemWizard {
     type: typeof RESET_REDEEM_WIZARD;
+}
+
+export interface StoreRedeemRequest {
+    type: typeof STORE_REDEEM_REQUEST;
+    request: RedeemRequest;
 }
 
 export type RedeemActions =
@@ -73,4 +98,6 @@ export type RedeemActions =
     | ChangeBtcAddress
     | ChangeVaultBtcAddress
     | ChangeVaultDotAddress
-    | ResetRedeemWizard;
+    | ChangeRedeemId
+    | ResetRedeemWizard
+    | StoreRedeemRequest;

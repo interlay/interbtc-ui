@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { IssueProps, IssueRequest } from "../../types/IssueState";
+import { IssueProps, IssueRequest } from "../../types/issue.types";
 import { Button, Table } from "react-bootstrap";
 import { shortAddress, shortTxId } from "../../utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
@@ -18,7 +18,6 @@ interface IssueRequestsProps {
     lastIssueRequestHash: string,
     issueRequests: Array<IssueRequest>,
     lastissueRequestsUpdate: Date,
-    handleUpdatedIssueRequests: () => void,
 }
 
 
@@ -30,6 +29,7 @@ export default function IssueRequests(props: IssueProps | IssueRequestsProps) {
         // eslint-disable-next-line
         const fetchData = async () => {
             console.log("updating requests");
+            // eslint-disable-next-line
             const pendingUpdatedIssueRequests = props.issueRequests.map(async (request) => {
                 let txStatus: TxStatus = { confirmed: false, confirmations: 0 };
                 try {
@@ -84,18 +84,18 @@ export default function IssueRequests(props: IssueProps | IssueRequestsProps) {
                 }
                 return {} as IssueRequest;
             });
-            const updatedIssueRequests: Array<IssueRequest> = await Promise.all(pendingUpdatedIssueRequests);
+            // const updatedIssueRequests: Array<IssueRequest> = await Promise.all(pendingUpdatedIssueRequests);
             console.log("props.issueRequests");
             console.log(props.issueRequests);
 
-
-            props.handleUpdatedIssueRequests(updatedIssueRequests);
+            // TODO: update issue requests in storage
         };
         // FIXME: update issue requests
         // if (!startedUpdatingIssueRequests) {
         //     setInterval(fetchData, 15000);
         //     setUpdatingIssueRequests({ startedUpdatingIssueRequests: true})
         // }
+        fetchData();
     });
 
     async function execute(

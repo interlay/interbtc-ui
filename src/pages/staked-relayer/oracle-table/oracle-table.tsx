@@ -1,6 +1,7 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { StoreType } from "../../../common/types/util.types";
 import { useSelector } from "react-redux";
+import { dateToShortString } from "../../../common/utils/utils";
 
 interface OracleInfo {
     source: string;
@@ -23,7 +24,7 @@ export default function OracleTable(): ReactElement {
                 {
                     source: oracle.name,
                     feed: oracle.feed,
-                    lastUpdate: oracle.lastUpdate.toString().substr(0, 34),
+                    lastUpdate: dateToShortString(oracle.lastUpdate),
                     exchangeRate: oracle.exchangeRate,
                 },
             ]);

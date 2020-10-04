@@ -4,6 +4,7 @@ import { PolkaBTCAPI, StakedRelayerClient } from "@interlay/polkabtc";
 import { rootReducer } from "../reducers/index";
 import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 import { u256 } from "@polkadot/types/primitive";
+import Storage from "../controllers/storage";
 
 export interface Redeem {
     step: string;
@@ -11,6 +12,7 @@ export interface Redeem {
     btcAddress: string;
     vaultDotAddress: string;
     vaultBtcAddress: string;
+    id: string;
 }
 
 export interface Prices {
@@ -46,6 +48,7 @@ export type StoreType = {
     relayer: StakedRelayerClient;
     prices: Prices;
     redeem: Redeem;
+    storage: Storage;
 };
 
 export type dispatcher = {

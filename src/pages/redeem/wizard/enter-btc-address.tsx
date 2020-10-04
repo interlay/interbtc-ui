@@ -1,10 +1,9 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { changeRedeemStepAction, changeBTCAddressAction } from "../../actions/redeem.actions";
+import { changeRedeemStepAction, changeBTCAddressAction } from "../../../common/actions/redeem.actions";
 import { BTC_ADDRESS_TESTNET_REGEX } from "../../../constants";
-import { StoreType } from "../../types/util.types";
 
 type BTCaddressForm = {
     btcAddress: string;
@@ -12,15 +11,10 @@ type BTCaddressForm = {
 
 export default function EnterBTCAddress() {
     const { register, handleSubmit, errors } = useForm<BTCaddressForm>();
-    const polkaBTC = useSelector((state: StoreType) => state.api);
-    const amountPolkaBTC = useSelector((state: StoreType)=> state.redeem.amountPolkaBTC)
     const dispatch = useDispatch();
 
     const onSubmit = handleSubmit(async ({btcAddress})=>{
         dispatch(changeBTCAddressAction(btcAddress));
-        const amount = polkaBTC.api.createType("Balance",amountPolkaBTC);
-        console.log(amount);
-        // await polkaBTC.redeem.request(amount,btcAddress); // TO DO Dom - this request takes forever 
         dispatch(changeRedeemStepAction("CONFIRMATION"));
     })
 
@@ -36,7 +30,8 @@ export default function EnterBTCAddress() {
                 type="string"
                 className={"custom-input" + (errors.btcAddress ? " error-borders" : "")}
                 ref={register({required: true, pattern: {
-                    value: BTC_ADDRESS_TESTNET_REGEX, // TO DO Dom we are using testnet regex here
+                    // FIXME: regex need to depend on global mainnet | testnet parameter
+                    value: BTC_ADDRESS_TESTNET_REGEX, 
                     message: "Please enter valid BTC address"}})}
             />
             {errors.btcAddress && (<div className="input-error">

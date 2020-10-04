@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 
 import "./staked-relayer.page.scss";
 import { StoreType } from "../../common/types/util.types";
-import ButtonMaybePending from "../../common/components/staked-relayer/pending-button";
+import ButtonMaybePending from "../../common/components/pending-button";
 
 export default function StakedRelayerPage() {
     const [showReportModal, setShowReportModal] = useState(false);

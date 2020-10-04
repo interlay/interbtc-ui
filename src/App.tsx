@@ -13,59 +13,35 @@ import { addPolkaBtcInstance, addStakedRelayerInstance } from "./common/actions/
 import * as constants from "./constants";
 
 // theme
+// FIXME: Clean-up and move to scss
 import "./_general.scss";
 import "./assets/css/custom-bootstrap.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./assets/css/custom.css";
 
 // types
-import AppState from "./common/types/AppState";
+import AppState from "./common/types/app.types";
 
 // app imports
-import Topbar from "./common/components/Topbar";
-import Footer from "./common/components/Footer";
-import { BTCParachain } from "./common/controllers/BTCParachain";
+import Topbar from "./common/components/topbar";
+import Footer from "./common/components/footer";
 import LandingPage from "./pages/landing.page";
 import IssuePage from "./pages/issue.page";
 import VaultPage from "./pages/vault.page";
-import RedeemPage from "./pages/redeem.page";
+import RedeemPage from "./pages/redeem/redeem.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
-import Storage from "./common/controllers/Storage";
-
-// Mocking
-import {
-    MockIssueRequests,
-    MockRedeemRequests,
-    totalPolkaBTC,
-    totalLockedDOT,
-    balancePolkaBTC,
-    balanceDOT,
-    balanceLockedDOT,
-    backedPolkaBTC,
-    collateralRate,
-    feesEarned,
-} from "./mock";
-import KVStorage from "./common/controllers/KVStorage";
-import { StorageInterface } from "./common/types/Storage";
+import Storage from "./common/controllers/storage";
+import { addStorageInstace } from "./common/actions/storage.actions";
 
 const storeLogger = createLogger();
 const store = createStore(rootReducer, applyMiddleware(storeLogger));
 
 export default class App extends Component<{}, AppState> {
     state: AppState = {
-        parachain: new BTCParachain(),
         account: undefined,
         address: undefined,
         signer: undefined,
-        vault: false,
-        storage: undefined,
-        kvstorage: new KVStorage(),
     };
-
-    async initParachain(): Promise<void> {
-        await this.state.parachain.connect();
-        this.setState({ parachain: this.state.parachain });
-    }
 
     async getAccount(): Promise<void> {
         if (this.state.address) {
@@ -92,46 +68,6 @@ export default class App extends Component<{}, AppState> {
         this.setState({ signer: signer, address });
     }
 
-    // FIXME: check if vault server is running
-    getVault() {
-        this.setState({
-            vault: true,
-        });
-    }
-
-    async getStorage(): Promise<void> {
-        if (this.state.address) {
-            localStorage.clear();
-            const storage = new Storage(this.state.address);
-            // for mocking load mock data into storage
-            this.mockStorage(storage);
-            this.setState({
-                storage: storage,
-            });
-        }
-    }
-
-    mockStorage(storage: StorageInterface) {
-        if (storage) {
-            for (let i = 0; i < MockIssueRequests.length; i++) {
-                storage.appendIssueRequest(MockIssueRequests[i]);
-            }
-            for (let i = 0; i < MockRedeemRequests.length; i++) {
-                storage.appendRedeemRequest(MockRedeemRequests[i]);
-            }
-        }
-        if (this.state.kvstorage) {
-            this.state.kvstorage.setValue("totalPolkaBTC", totalPolkaBTC);
-            this.state.kvstorage.setValue("totalLockedDOT", totalLockedDOT);
-            this.state.kvstorage.setValue("balancePolkaBTC", balancePolkaBTC);
-            this.state.kvstorage.setValue("balanceDOT", balanceDOT);
-            this.state.kvstorage.setValue("balanceLockedDOT", balanceLockedDOT);
-            this.state.kvstorage.setValue("backedPolkaBTC", backedPolkaBTC);
-            this.state.kvstorage.setValue("collateralRate", collateralRate);
-            this.state.kvstorage.setValue("feesEarned", feesEarned);
-        }
-    }
-
     async createAPIInstace() {
         const polkaBTC = await createPolkabtcAPI(constants.PARACHAIN_URL);
         if (this.state.account) {
@@ -146,9 +82,16 @@ export default class App extends Component<{}, AppState> {
         store.dispatch(addStakedRelayerInstance(stakedRelayer));
     }
 
+    createStorage(address?: string) {
+        const storage = new Storage(address);
+        store.dispatch(addStorageInstace(storage));
+    }
+
     componentDidMount(): void {
-        Promise.all([this.initParachain(), this.getAccount().then(() => this.getStorage()), this.createAPIInstace()]);
-        this.getVault();
+        this.getAccount().then(() => {
+            this.createStorage(this.state.address);
+            this.createAPIInstace();
+        });
     }
 
     render() {
@@ -161,7 +104,7 @@ export default class App extends Component<{}, AppState> {
                         <div className="mb-5">
                             <Switch>
                                 <Route exact path="/">
-                                    <LandingPage {...this.state} />
+                                    <LandingPage/>
                                 </Route>
                                 <Route path="/issue">
                                     <IssuePage {...this.state} />
@@ -170,10 +113,10 @@ export default class App extends Component<{}, AppState> {
                                     <VaultPage {...this.state} />
                                 </Route>
                                 <Route path="/redeem">
-                                    <RedeemPage {...this.state} />
+                                    <RedeemPage />
                                 </Route>
                                 <Route path="/staked-relayer">
-                                    <StakedRelayerPage></StakedRelayerPage>
+                                    <StakedRelayerPage/>
                                 </Route>
                             </Switch>
                         </div>
