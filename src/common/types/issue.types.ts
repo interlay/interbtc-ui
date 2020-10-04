@@ -1,4 +1,4 @@
-export type IssueRequest = {
+export interface IssueRequest {
     id: string;
     amountBTC: string;
     creation: Date;
@@ -9,7 +9,7 @@ export type IssueRequest = {
     merkleProof: string;
     transactionBlockHeight: number;
     rawTransaction: Uint8Array;
-};
+}
 
 export interface Issue {
     step: string;
