@@ -1,6 +1,6 @@
 import {
     CHANGE_AMOUNT_POLKA_BTC,
-    CHANGE_REEDEM_STEP,
+    CHANGE_REDEEM_STEP,
     CHANGE_BTC_ADDRESS,
     RESET_REDEEM_WIZARD,
     CHANGE_VAULT_BTC_ADDRESS,
@@ -16,7 +16,7 @@ import {
 } from "../types/actions.types";
 
 export const changeRedeemStepAction = (step: string): ChangeRedeemStep => ({
-    type: CHANGE_REEDEM_STEP,
+    type: CHANGE_REDEEM_STEP,
     step,
 });
 

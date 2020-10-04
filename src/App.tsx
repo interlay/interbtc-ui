@@ -26,7 +26,7 @@ import AppState from "./common/types/app.types";
 import Topbar from "./common/components/topbar";
 import Footer from "./common/components/footer";
 import LandingPage from "./pages/landing.page";
-import IssuePage from "./pages/issue.page";
+import IssuePage from "./pages/issue/issue.page";
 import VaultPage from "./pages/vault.page";
 import RedeemPage from "./pages/redeem/redeem.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
@@ -107,7 +107,7 @@ export default class App extends Component<{}, AppState> {
                                     <LandingPage/>
                                 </Route>
                                 <Route path="/issue">
-                                    <IssuePage {...this.state} />
+                                    <IssuePage />
                                 </Route>
                                 <Route path="/vault">
                                     <VaultPage {...this.state} />
@@ -116,7 +116,7 @@ export default class App extends Component<{}, AppState> {
                                     <RedeemPage />
                                 </Route>
                                 <Route path="/staked-relayer">
-                                    <StakedRelayerPage/>
+                                    <StakedRelayerPage />
                                 </Route>
                             </Switch>
                         </div>

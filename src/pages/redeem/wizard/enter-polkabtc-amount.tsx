@@ -7,15 +7,11 @@ import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
 
-interface EnterPolkaBTCAmountProps {
-    handleChange?: (props: any) => void,
-}
-
 type EnterPolkaBTCForm = {
     amountPolkaBTC: number;
 };
 
-export default function EnterPolkaBTCAmount(props: EnterPolkaBTCAmountProps) {
+export default function EnterPolkaBTCAmount() {
     const [isRequestPending, setRequestPending] = useState(false);
     const polkaBTC = useSelector((state: StoreType) => state.api);
     const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
@@ -48,7 +44,7 @@ export default function EnterPolkaBTCAmount(props: EnterPolkaBTCAmountProps) {
 
     return <form onSubmit={onSubmit}>
         <Modal.Body>
-            <p>Please enter the amount of BTC you want to receive in PolkaBTC.</p>
+            <p>Please enter the amount of PolkaBTC you want to receive in BTC.</p>
             <p>You have {balancePolkaBTC} PolkaBTC</p>
             <input
                 name="amountPolkaBTC"

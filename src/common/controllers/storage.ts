@@ -80,6 +80,10 @@ export default class Storage implements StorageInterface {
         return this.issueRequests;
     }
 
+    getIssueRequest(id: string): IssueRequest | undefined {
+        return this.issueRequests.find((r) => r.id === id);
+    }
+
     getRedeemRequests(): Array<RedeemRequest> {
         return this.redeemRequests;
     }

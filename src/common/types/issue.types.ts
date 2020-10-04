@@ -1,22 +1,22 @@
 export type IssueRequest = {
     id: string;
     amountBTC: string;
+    creation: Date;
     vaultBTCAddress: string;
     btcTxId: string;
     confirmations: number;
     completed: boolean;
-    creation: string;
     merkleProof: string;
     transactionBlockHeight: number;
     rawTransaction: Uint8Array;
-    issueRequestHash: string;
 };
 
-export interface IssueProps {
-    balancePolkaBTC: string;
-    balanceDOT: string;
-    issueRequests: Array<IssueRequest>;
-    lastissueRequestsUpdate: Date;
-    showWizard: boolean;
-    idCounter: number;
+export interface Issue {
+    step: string;
+    amountBTC: number;
+    feeBTC: number;
+    vaultDotAddress: string;
+    vaultBtcAddress: string;
+    id: string;
+    btcTxId: string;
 }

@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React from "react";
 import EnterPolkaBTCAmount from "./enter-polkabtc-amount";
 import EnterBTCAddress from "./enter-btc-address";
 import Confirmation from "./confirmation";
@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 
 export interface RedeemWizardProps {
-    handleChange?: (event: ChangeEvent<HTMLInputElement>) => void,
     handleClose: () => void,
 }
 
@@ -25,7 +24,7 @@ export default function RedeemWizard (props: RedeemWizardProps) {
                 Redeem PolkaBTC
             </Modal.Title>
         </Modal.Header>
-        {step === "ENTER_POLKABTC" && <EnterPolkaBTCAmount {...props} />}
+        {step === "ENTER_POLKABTC" && <EnterPolkaBTCAmount/>}
         {step === "ENTER_BTC_ADDRESS" && <EnterBTCAddress/>}
         {step === "CONFIRMATION" && <Confirmation/>}
         {step === "VAULT_INFO" && <VaultInfo closeModal={handleClose}/>}
