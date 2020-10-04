@@ -12,6 +12,10 @@ export function dateToShortString(date: Date): string {
     return date.toString().substr(0, 34);
 }
 
+export function remove0x(hash: string): string {
+    return hash.substr(2);
+}
+
 export function satToBTC(sat: number): string {
     return (sat * 0.000_000_01).toString();
 }

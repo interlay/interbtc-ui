@@ -3,6 +3,7 @@ import { StoreType } from "../../../common/types/util.types";
 import { useSelector, useDispatch } from "react-redux";
 import { Vault } from "../../../common/types/util.types";
 import { fetchPrices } from "../../../common/api/api";
+import { remove0x } from "../../../common/utils/utils";
 
 export default function VaultTable(): ReactElement {
     const [vaults, setVaults] = useState<Array<Vault>>([]);
@@ -40,7 +41,7 @@ export default function VaultTable(): ReactElement {
                     // TODO: fetch collateral reserved
                     lockedBTC: vault.issued_tokens,
                     lockedDOT: 0,
-                    btcAddress: vault.btc_address.toString().substr(2),
+                    btcAddress: remove0x(vault.btc_address.toString()),
                     status: vault.status && vault.status.toString(),
                     collateralization: collateralization,
                 });

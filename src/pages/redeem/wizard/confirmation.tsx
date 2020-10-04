@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { FormGroup, ListGroup, Row, Col, ListGroupItem, Modal } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { StoreType } from "../../types/util.types";
-import { changeRedeemIdAction, changeRedeemStepAction } from "../../actions/redeem.actions";
+import { StoreType } from "../../../common/types/util.types";
+import { changeRedeemIdAction, changeRedeemStepAction } from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
-import { RedeemRequest } from "../../types/redeem.types";
-import ButtonMaybePending from "../pending-button";
+import { RedeemRequest } from "../../../common/types/redeem.types";
+import ButtonMaybePending from "../../../common/components/pending-button";
 import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 
 export default function Confirmation() {

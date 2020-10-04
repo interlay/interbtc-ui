@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Image, Button, Col, Row, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import RedeemWizard from "../common/components/redeem/redeem-wizard";
-import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
-import RedeemRequests from "../common/components/redeem/redeem-requests";
-import { StoreType } from "../common/types/util.types";
-import { resetRedeemWizardAction } from "../common/actions/redeem.actions";
+import RedeemWizard from "./wizard/redeem-wizard";
+import PolkaBTCImg from "../../assets/img/polkabtc/PolkaBTC_black.png";
+import RedeemRequests from "./table/redeem-requests";
+import { StoreType } from "../../common/types/util.types";
+import { resetRedeemWizardAction } from "../../common/actions/redeem.actions";
 
 export default function RedeemPage(): JSX.Element {
     const polkaBTC = useSelector((state: StoreType) => state.api);

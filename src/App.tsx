@@ -28,7 +28,7 @@ import Footer from "./common/components/footer";
 import LandingPage from "./pages/landing.page";
 import IssuePage from "./pages/issue.page";
 import VaultPage from "./pages/vault.page";
-import RedeemPage from "./pages/redeem.page";
+import RedeemPage from "./pages/redeem/redeem.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
 import Storage from "./common/controllers/storage";
 import { addStorageInstace } from "./common/actions/storage.actions";

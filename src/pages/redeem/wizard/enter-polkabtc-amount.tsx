@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { StoreType } from "../../types/util.types";
 import { useForm } from "react-hook-form";
-import { changeRedeemStepAction, changeAmountPolkaBTCAction, changeVaultBtcAddressAction, changeVaultDotAddressAction } from "../../actions/redeem.actions";
+import { changeRedeemStepAction, changeAmountPolkaBTCAction, changeVaultBtcAddressAction, changeVaultDotAddressAction } from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
-import ButtonMaybePending from "../pending-button";
+import { StoreType } from "../../../common/types/util.types";
+import ButtonMaybePending from "../../../common/components/pending-button";
 
 interface EnterPolkaBTCAmountProps {
     handleChange?: (props: any) => void,
@@ -31,6 +31,8 @@ export default function EnterPolkaBTCAmount(props: EnterPolkaBTCAmountProps) {
             dispatch(changeAmountPolkaBTCAction(amountPolkaBTC));
             const amount = polkaBTC.api.createType("Balance", amountPolkaBTC);
             const vaultId = await polkaBTC.vaults.selectRandomVaultRedeem(amount);
+
+            toast.success("Found vault: " + vaultId.toString());
 
             // get the vault's data
             const vault = await polkaBTC.vaults.get(vaultId);
