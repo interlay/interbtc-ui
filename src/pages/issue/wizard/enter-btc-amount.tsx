@@ -1,60 +1,70 @@
-import React, { ChangeEvent } from "react";
-import { FormGroup, FormControl } from "react-bootstrap";
-import { IssueWizardProps } from "./issue-wizard";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
+import { Modal } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
+import { changeAmountBTCAction, changeIssueStepAction, changeVaultBtcAddressAction, changeVaultDotAddressAction } from "../../../common/actions/issue.actions";
+import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
+import ButtonMaybePending from "../../../common/components/pending-button";
 
-interface EnterBTCAmountProps {
-    step: number;
-    amountBTC: string,
-    feeBTC: string,
-    vaultBTCAddress: string,
-    vaultId: string,
-    handleChange: () => void,
-}
 
-export default function EnterBTCAmount(props: IssueWizardProps | EnterBTCAmountProps) {
+type EnterBTCForm = {
+    amountBTC: number;
+};
+
+export default function EnterBTCAmount() {
+    const [isRequestPending, setRequestPending] = useState(false);
     const polkaBTC = useSelector((state: StoreType) => state.api);
-    if (props.step !== 1) {
-        return null;
-    } else if (props.vaultBTCAddress === "") {
-        const fetchData = async () => {
-            const polkaBTCObject = polkaBTC.api.createType("Balance", props.amountBTC) as any;
-            const vaultId = await polkaBTC.vaults.selectRandomVaultIssue(polkaBTCObject);
+    const amount = useSelector((state: StoreType) => state.issue.amountBTC);
+    // const feeBTC = useSelector((state: StoreType) => state.issue.feeBTC);
+    const defaultValues = amount ? { defaultValues: { amountBTC: amount } } : undefined;
+    const { register, handleSubmit, errors } = useForm<EnterBTCForm>(defaultValues);
+    const dispatch = useDispatch();
+
+    const onSubmit = handleSubmit(async ({ amountBTC }) => {
+        setRequestPending(true);
+        try {
+            dispatch(changeAmountBTCAction(amountBTC));
+            // FIXME: hardcoded until we have a fee model
+            // dispatch(changeFeeBTCAction(amountBTC * 0.005));
+            const amount = polkaBTC.api.createType("Balance", amountBTC);
+            const vaultId = await polkaBTC.vaults.selectRandomVaultIssue(amount);
+
+            toast.success("Found vault: " + vaultId.toString());
+
+            // get the vault's data
             const vault = await polkaBTC.vaults.get(vaultId);
-            props.handleChange(
-                {
-                    target: {
-                        name: "vaultBTCAddress",
-                        value: vault.btc_address.toHuman()
-                    } as EventTarget & HTMLInputElement
-                } as ChangeEvent<HTMLInputElement>
-            );
+            const vaultBTCAddress = vault.btc_address.toString();
 
-            props.handleChange(
-                {
-                    target:
-                        {
-                            name: "vaultId",
-                            value: vault.id.toHuman()
-                        } as EventTarget & HTMLInputElement
-                } as ChangeEvent<HTMLInputElement>
-            );
-        };
-        fetchData();
-    }
+            dispatch(changeVaultBtcAddressAction(vaultBTCAddress));
+            dispatch(changeVaultDotAddressAction(vaultId.toString()));
+            dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
+        } catch (error) {
+            toast.error(error.toString());
+        }
+        setRequestPending(false);
+    })
 
-    return (
-        <FormGroup>
+    return <form onSubmit={onSubmit}>
+        <Modal.Body>
             <p>Please enter the amount of BTC you want to receive in PolkaBTC.</p>
-            <FormControl
-                id="amountBTC"
+            <input
                 name="amountBTC"
-                type="string"
-                value={props.amountBTC}
-                onChange={props.handleChange}
+                type="number"
+                className={"custom-input" + (errors.amountBTC ? " error-borders" : "")}
+                ref={register({required: true})}
             />
-            <p>Fee: {props.feeBTC} BTC</p>
-        </FormGroup>
-    );
+            {errors.amountBTC && (<div className="input-error">
+                {errors.amountBTC.type === "required" ? "Please enter the amount"
+                    : errors.amountBTC.message}
+            </div>
+            )}
+            {/* <p>Fee: {feeBTC} BTC</p> */}
+        </Modal.Body>
+        <Modal.Footer>
+            <ButtonMaybePending className="btn btn-primary float-right" isPending={isRequestPending} onClick={onSubmit}>
+                Search Vault
+            </ButtonMaybePending>
+        </Modal.Footer>
+    </form>
 }

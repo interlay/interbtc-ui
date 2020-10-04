@@ -31,6 +31,9 @@ export interface StorageInterface {
     // get the current issue requests
     getIssueRequests(): Array<IssueRequest>;
 
+    // maybe get a specific issue requests
+    getIssueRequest(id: string): IssueRequest | undefined;
+
     // get the current redeem requests
     getRedeemRequests(): Array<RedeemRequest>;
 

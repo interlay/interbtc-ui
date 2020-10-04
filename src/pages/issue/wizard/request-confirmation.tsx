@@ -1,22 +1,86 @@
-import React from "react";
-import { FormGroup, ListGroup, ListGroupItem } from "react-bootstrap";
-import { IssueWizardProps } from "./issue-wizard";
+import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
+import React, { useState } from "react";
+import { FormGroup, ListGroup, ListGroupItem, Modal } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { changeIssueIdAction, changeIssueStepAction } from "../../../common/actions/issue.actions";
+import ButtonMaybePending from "../../../common/components/pending-button";
+import { IssueRequest } from "../../../common/types/issue.types";
+import { StoreType } from "../../../common/types/util.types";
 
-export default function RequestConfirmation(props: IssueWizardProps){
-    if (props.step !== 2) {
-        return null;
+export default function RequestConfirmation() {
+    const [isRequestPending, setRequestPending] = useState(false);
+    const polkaBTC = useSelector((state: StoreType) => state.api);
+    const storage = useSelector((state: StoreType) => state.storage);
+    const amountBTC = useSelector((state: StoreType) => state.issue.amountBTC);
+    const feeBTC = useSelector((state: StoreType) => state.issue.feeBTC);
+    const vaultAddress = useSelector((store: StoreType) => store.issue.vaultDotAddress);
+    const vaultBTCAddress = useSelector((state: StoreType) => state.issue.vaultBtcAddress);
+    const dispatch = useDispatch();
+
+    const onConfirm = async () => {
+        setRequestPending(true);
+        // send the issue request
+        try {
+            const amount = polkaBTC.api.createType("Balance", amountBTC) as PolkaBTC;
+            // FIXME: use AccountId type from @polkadot/types/interfaces
+            const vaultAccountId = polkaBTC.api.createType("AccountId", vaultAddress) as any;
+            const requestResult = await polkaBTC.issue.request(amount, vaultAccountId);
+
+            // get the issue id from the request issue event
+            const id = requestResult.hash.toString();
+
+            // update the issue status 
+            dispatch(changeIssueIdAction(id));
+
+            // store the issue request in storage
+            const request: IssueRequest = {
+                id,
+                amountBTC: amountBTC.toString(),
+                creation: new Date(),
+                vaultBTCAddress,
+                btcTxId: "",
+                confirmations: 0,
+                completed: false,
+                merkleProof: "",
+                transactionBlockHeight: 0,
+                rawTransaction: new Uint8Array(),
+            }
+            storage.appendIssueRequest(request);
+            dispatch(changeIssueStepAction("BTC_PAYMENT"));
+        } catch (error) {
+            toast.error(error.toString());
+        }
+        setRequestPending(false);
     }
 
-    return <FormGroup>
-        <h5>Summary</h5>
-        <FormGroup>
-            <ListGroup>
-                <ListGroupItem>
-                    Fees: <strong>{props.feeBTC} BTC</strong>
-                </ListGroupItem>
-                <ListGroupItem>Vault address: <strong>{props.vaultBTCAddress}</strong></ListGroupItem>
-                <ListGroupItem>Receiving: <strong>{props.amountBTC} PolkaBTC</strong></ListGroupItem>
-            </ListGroup>
-        </FormGroup>
-    </FormGroup>;
+    const goToPreviousStep = () => {
+        dispatch(changeIssueStepAction("ENTER_BTC_AMOUNT"));
+    }
+
+    return <React.Fragment>
+        <Modal.Body>
+            <FormGroup>
+                <h5>Confirm Issue Request</h5>
+                <p>Please verify and confirm your issue request.</p>
+                <FormGroup>
+                    <ListGroup>
+                        <ListGroupItem>Receiving: <strong>{amountBTC} PolkaBTC</strong></ListGroupItem>
+                        <ListGroupItem>Vault address: <strong>{vaultBTCAddress}</strong></ListGroupItem>
+                        <ListGroupItem>
+                            Fees: <strong>{feeBTC} BTC</strong>
+                        </ListGroupItem>
+                    </ListGroup>
+                </FormGroup>
+            </FormGroup>
+        </Modal.Body>
+            <Modal.Footer>
+                <button className="btn btn-secondary float-left" onClick={goToPreviousStep}>
+                    Previous
+                </button>
+                <ButtonMaybePending className="btn btn-primary float-right" isPending={isRequestPending} onClick={onConfirm}>
+                    Confirm
+                </ButtonMaybePending>
+            </Modal.Footer>
+    </React.Fragment>
 }

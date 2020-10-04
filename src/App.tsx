@@ -107,7 +107,7 @@ export default class App extends Component<{}, AppState> {
                                     <LandingPage/>
                                 </Route>
                                 <Route path="/issue">
-                                    <IssuePage {...this.state} />
+                                    <IssuePage />
                                 </Route>
                                 <Route path="/vault">
                                     <VaultPage {...this.state} />
@@ -116,7 +116,7 @@ export default class App extends Component<{}, AppState> {
                                     <RedeemPage />
                                 </Route>
                                 <Route path="/staked-relayer">
-                                    <StakedRelayerPage/>
+                                    <StakedRelayerPage />
                                 </Route>
                             </Switch>
                         </div>

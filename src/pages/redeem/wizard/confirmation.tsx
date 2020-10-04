@@ -9,7 +9,7 @@ import ButtonMaybePending from "../../../common/components/pending-button";
 import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 
 export default function Confirmation() {
-    const[isRequestPending, setRequestPending] = useState(false);
+    const [isRequestPending, setRequestPending] = useState(false);
     const polkaBTC = useSelector((state: StoreType) => state.api);
     const storage = useSelector((state: StoreType) => state.storage);
     const amountPolkaBTC = useSelector((store: StoreType) => store.redeem.amountPolkaBTC);
@@ -82,9 +82,6 @@ export default function Confirmation() {
             <ButtonMaybePending className="btn btn-primary float-right" isPending={isRequestPending} onClick={onConfirm}>
                 Confirm
             </ButtonMaybePending>
-            {/* <button className="btn btn-primary float-right" onClick={onConfirm}>
-                Confirm
-            </button> */}
         </Modal.Footer>
     </React.Fragment>
 }

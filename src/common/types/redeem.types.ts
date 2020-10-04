@@ -8,9 +8,11 @@ export type RedeemRequest = {
     completed: boolean;
 };
 
-export interface RedeemProps {
-    balancePolkaBTC: string;
-    balanceDOT: string;
-    showWizard: boolean;
-    resetRedeemWizard?: () => void;
+export interface Redeem {
+    step: string;
+    amountPolkaBTC: number;
+    btcAddress: string;
+    vaultDotAddress: string;
+    vaultBtcAddress: string;
+    id: string;
 }

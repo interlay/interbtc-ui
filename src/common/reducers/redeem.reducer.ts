@@ -1,5 +1,5 @@
 import {
-    CHANGE_REEDEM_STEP,
+    CHANGE_REDEEM_STEP,
     CHANGE_VAULT_BTC_ADDRESS,
     CHANGE_VAULT_DOT_ADDRESS,
     RESET_REDEEM_WIZARD,
@@ -8,7 +8,7 @@ import {
     CHANGE_REDEEM_ID,
     RedeemActions,
 } from "../types/actions.types";
-import { Redeem } from "../types/util.types";
+import { Redeem } from "../types/redeem.types";
 
 const initialState = {
     step: "ENTER_POLKABTC",
@@ -21,7 +21,7 @@ const initialState = {
 
 export const redeemReducer = (state: Redeem = initialState, action: RedeemActions): Redeem => {
     switch (action.type) {
-        case CHANGE_REEDEM_STEP:
+        case CHANGE_REDEEM_STEP:
             return { ...state, step: action.step };
         case CHANGE_AMOUNT_POLKA_BTC:
             return { ...state, amountPolkaBTC: action.amount };
