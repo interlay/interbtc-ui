@@ -13,7 +13,10 @@ export function dateToShortString(date: Date): string {
 }
 
 export function remove0x(hash: string): string {
-    return hash.substr(2);
+    if (hash.substr(0, 2) === "0x") {
+        return hash.substr(2);
+    }
+    return hash;
 }
 
 /**

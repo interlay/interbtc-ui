@@ -1,4 +1,4 @@
-export type RedeemRequest = {
+export interface RedeemRequest {
     id: string;
     amountPolkaBTC: string;
     creation: Date;
@@ -6,7 +6,7 @@ export type RedeemRequest = {
     btcTxId: string;
     confirmations: number;
     completed: boolean;
-};
+}
 
 export interface Redeem {
     step: string;
