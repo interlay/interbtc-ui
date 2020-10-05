@@ -5,7 +5,7 @@ import { Image, Button, Col, Row } from "react-bootstrap";
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
 import { useSelector } from "react-redux";
 import { StoreType } from "../common/types/util.types";
-import { CommonStorage } from "../common/types/storage.types";
+import { planckToDOT, satToBTC } from "@interlay/polkabtc";
 
 export default function LandingPage(): JSX.Element {
     const [totalPolkaBTC, setTotalPolkaBTC] = useState("...");
@@ -17,10 +17,11 @@ export default function LandingPage(): JSX.Element {
         const fetchData = async () => {
             if (!polkaBTC) return;
             if (!storage) return;
-            // TODO: get data from parachain
+            const totalPolkaSAT = await polkaBTC.treasury.totalPolkaBTC(); 
+            const totalLockedPLANCK = await polkaBTC.collateral.totalLockedDOT(); 
+            const totalPolkaBTC = satToBTC(totalPolkaSAT.toString());
+            const totalLockedDOT = planckToDOT(totalLockedPLANCK.toString());
             // TODO: write parachain data to storage
-            const totalPolkaBTC = storage.getItemCommon(CommonStorage.totalPolkaBTC);
-            const totalLockedDOT = storage.getItemCommon(CommonStorage.totalLockedDOT);
             setTotalPolkaBTC(totalPolkaBTC);
             setTotalLockedDOT(totalLockedDOT);
         };

@@ -9,7 +9,7 @@ import ButtonMaybePending from "../../../common/components/pending-button";
 
 
 type EnterBTCForm = {
-    amountBTC: number;
+    amountBTC: string;
 };
 
 export default function EnterBTCAmount() {
@@ -50,7 +50,7 @@ export default function EnterBTCAmount() {
             <p>Please enter the amount of BTC you want to receive in PolkaBTC.</p>
             <input
                 name="amountBTC"
-                type="number"
+                type="string"
                 className={"custom-input" + (errors.amountBTC ? " error-borders" : "")}
                 ref={register({required: true})}
             />

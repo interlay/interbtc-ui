@@ -1219,9 +1219,9 @@
     typescript "~3.5.2"
 
 "@interlay/polkabtc@latest":
-  version "0.1.15"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.1.15.tgz#923dfd44afea528758977b8d7e39be4fec64faf6"
-  integrity sha512-Lcq7fS+vJ2eCB9Sw3hF0yD8ZYrqxtT/c0OHu5kQz5d/OjGdhCJaeIItjSTSi8h16o9dtYKP5EsP6Ie9qM9+Evw==
+  version "0.1.16"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.1.16.tgz#6350dc5cc48f391229335445c6b0a6bfe13c80c1"
+  integrity sha512-i8aqI2bkpBE4gfikRTYqJZJt8mm7dzVHYq+aGaWxtj8vfn+j07EM3tIELg34UTHuFmJMpNG6TI04lrWLFdRG6w==
   dependencies:
     "@interlay/esplora-btc-api" "^0.1.7"
     "@types/big.js" "^4.0.5"

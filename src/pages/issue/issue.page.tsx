@@ -8,7 +8,7 @@ import { resetIssueWizardAction } from "../../common/actions/issue.actions";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../common/types/util.types";
 import IssueWizard from "./wizard/issue-wizard";
-import utils from "@interlay/polkabtc";
+import {satToBTC, planckToDOT} from "@interlay/polkabtc";
 
 export default function IssuePage(): JSX.Element {
     const polkaBTC = useSelector((state: StoreType) => state.api);
@@ -34,8 +34,8 @@ export default function IssuePage(): JSX.Element {
             const balancePolkaSAT = await polkaBTC.treasury.balancePolkaBTC(accountId);
             const balancePLANCK = await polkaBTC.collateral.balanceDOT(accountId);
             // TODO: write data to storage
-            const balancePolkaBTC = utils.satToBTC(balancePolkaSAT.toString());
-            const balanceDOT = utils.planckToDOT(balancePLANCK.toString()); 
+            const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
+            const balanceDOT = planckToDOT(balancePLANCK.toString()); 
             setBalancePolkaBTC(balancePolkaBTC);
             setBalanceDOT(balanceDOT.toString());
         };
