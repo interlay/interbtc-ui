@@ -6,10 +6,11 @@ import { changeAmountBTCAction, changeIssueStepAction, changeVaultBtcAddressActi
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
+import { btcToSat, getP2WPKHFromH160 } from "@interlay/polkabtc";
 
 
 type EnterBTCForm = {
-    amountBTC: number;
+    amountBTC: string;
 };
 
 export default function EnterBTCAmount() {
@@ -24,18 +25,25 @@ export default function EnterBTCAmount() {
     const onSubmit = handleSubmit(async ({ amountBTC }) => {
         setRequestPending(true);
         try {
+            const amountSAT = btcToSat(amountBTC);
+            if (amountSAT === undefined) {
+                throw new Error("Invalid BTC amount input.");
+            }
             dispatch(changeAmountBTCAction(amountBTC));
             // FIXME: hardcoded until we have a fee model
             // dispatch(changeFeeBTCAction(amountBTC * 0.005));
-            const amount = polkaBTC.api.createType("Balance", amountBTC);
+
+            const amount = polkaBTC.api.createType("Balance", amountSAT);
             const vaultId = await polkaBTC.vaults.selectRandomVaultIssue(amount);
 
             toast.success("Found vault: " + vaultId.toString());
 
             // get the vault's data
             const vault = await polkaBTC.vaults.get(vaultId);
-            const vaultBTCAddress = vault.btc_address.toString();
-
+            const vaultBTCAddress = getP2WPKHFromH160(vault.btc_address);
+            if (vaultBTCAddress === undefined) {
+                throw new Error("Vault has invalid BTC address.");
+            }
             dispatch(changeVaultBtcAddressAction(vaultBTCAddress));
             dispatch(changeVaultDotAddressAction(vaultId.toString()));
             dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
@@ -50,7 +58,7 @@ export default function EnterBTCAmount() {
             <p>Please enter the amount of BTC you want to receive in PolkaBTC.</p>
             <input
                 name="amountBTC"
-                type="number"
+                type="string"
                 className={"custom-input" + (errors.amountBTC ? " error-borders" : "")}
                 ref={register({required: true})}
             />

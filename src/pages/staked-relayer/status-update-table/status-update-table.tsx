@@ -35,7 +35,8 @@ function displayProposedChanges(addError: Option<ErrorCode>, removeError: Option
 }
 
 type StatusUpdateTableProps = {
-    dotLocked: number;
+    dotLocked: string;
+    planckLocked: string;
     stakedRelayerAddress: string;
 };
 
@@ -235,7 +236,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                                 )}
                                             </td>
                                             <td className={getResultColor(statusUpdate.result)}>
-                                                {props.dotLocked > 0 &&
+                                                {Number(props.planckLocked) > 0 &&
                                                 !statusUpdate.hasVoted &&
                                                 statusUpdate.result === "Pending" ? (
                                                     <Button

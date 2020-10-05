@@ -7,6 +7,7 @@ import PolkaBTCImg from "../../assets/img/polkabtc/PolkaBTC_black.png";
 import RedeemRequests from "./table/redeem-requests";
 import { StoreType } from "../../common/types/util.types";
 import { resetRedeemWizardAction } from "../../common/actions/redeem.actions";
+import { planckToDOT, satToBTC } from "@interlay/polkabtc";
 
 export default function RedeemPage(): JSX.Element {
     const polkaBTC = useSelector((state: StoreType) => state.api);
@@ -27,10 +28,13 @@ export default function RedeemPage(): JSX.Element {
             if (!polkaBTC) return;
             if (!storage) return;
 
-            // TODO: implement call to get balances
-            const balancePolkaBTC = "";
-            const balanceDOT = "";
+            const address = polkaBTC.account?.toString();
+            const accountId = polkaBTC.api.createType("AccountId", address) as any;
+            const balancePolkaSAT = await polkaBTC.treasury.balancePolkaBTC(accountId);
+            const balancePLANCK = await polkaBTC.collateral.balanceDOT(accountId);
             // TODO: write data to storage
+            const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
+            const balanceDOT = planckToDOT(balancePLANCK.toString()); 
             setBalancePolkaBTC(balancePolkaBTC);
             setBalanceDOT(balanceDOT);
         };

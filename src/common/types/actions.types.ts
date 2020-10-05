@@ -74,7 +74,7 @@ export interface ChangeRedeemStep {
 
 export interface ChangeAmountPolkaBtc {
     type: typeof CHANGE_AMOUNT_POLKA_BTC;
-    amount: number;
+    amount: string;
 }
 
 export interface ChangeBtcAddress {
@@ -123,12 +123,12 @@ export interface ChangeIssueStep {
 
 export interface ChangeAmountBtc {
     type: typeof CHANGE_AMOUNT_BTC;
-    amount: number;
+    amount: string;
 }
 
 export interface ChangeFeeBtc {
     type: typeof CHANGE_FEE_BTC;
-    fee: number;
+    fee: string;
 }
 
 export interface ChangeBtcAddress {

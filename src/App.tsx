@@ -84,7 +84,6 @@ export default class App extends Component<{}, AppState> {
 
     createStorage(address?: string) {
         const storage = new Storage(address);
-        storage.clearStorage();
         store.dispatch(addStorageInstace(storage));
     }
 

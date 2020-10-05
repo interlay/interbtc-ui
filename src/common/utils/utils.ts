@@ -44,19 +44,3 @@ export function reverseEndianness(bytes: Uint8Array): Uint8Array {
 export function uint8ArrayToStringClean(bytes: Uint8Array): string {
     return bytes.toString().substr(2).split("").join("");
 }
-
-export function satToBTC(sat: number): string {
-    return (sat * 0.000_000_01).toString();
-}
-
-export function BTCtoSat(btc: string): number {
-    return Number(btc) * 100_000_000;
-}
-
-export function plankToDOT(plank: number): string {
-    return (plank * 0.000_000_000_1).toString();
-}
-
-export function DOTtoPlank(dot: string): number {
-    return Number(dot) * 10_000_000_000;
-}

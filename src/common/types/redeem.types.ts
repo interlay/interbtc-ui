@@ -10,7 +10,7 @@ export interface RedeemRequest {
 
 export interface Redeem {
     step: string;
-    amountPolkaBTC: number;
+    amountPolkaBTC: string;
     btcAddress: string;
     vaultDotAddress: string;
     vaultBtcAddress: string;

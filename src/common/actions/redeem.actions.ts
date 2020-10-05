@@ -20,7 +20,7 @@ export const changeRedeemStepAction = (step: string): ChangeRedeemStep => ({
     step,
 });
 
-export const changeAmountPolkaBTCAction = (amount: number): ChangeAmountPolkaBtc => ({
+export const changeAmountPolkaBTCAction = (amount: string): ChangeAmountPolkaBtc => ({
     type: CHANGE_AMOUNT_POLKA_BTC,
     amount,
 });
