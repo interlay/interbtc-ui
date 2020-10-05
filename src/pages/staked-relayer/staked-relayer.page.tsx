@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import "./staked-relayer.page.scss";
 import { StoreType } from "../../common/types/util.types";
 import ButtonMaybePending from "../../common/components/pending-button";
+import { planckToDOT } from "@interlay/polkabtc";
 
 export default function StakedRelayerPage() {
     const [showReportModal, setShowReportModal] = useState(false);
@@ -20,8 +21,10 @@ export default function StakedRelayerPage() {
 
     const polkaBTC = useSelector((state: StoreType) => state.api);
     const stakedRelayer = useSelector((state: StoreType) => state.relayer);
-    const [feesEarned, setFees] = useState(0);
-    const [dotLocked, setLocked] = useState(0);
+    const [feesEarned, setFees] = useState("0");
+    // store this in both DOT and Planck
+    const [dotLocked, setDotLocked] = useState("0");
+    const [planckLocked, setPlanckLocked] = useState("0");
     const handleReportModalClose = () => setShowReportModal(false);
     const handleRegisterModalClose = () => setShowRegisterModal(false);
 
@@ -43,11 +46,13 @@ export default function StakedRelayerPage() {
 
             const address = await stakedRelayer.getAddress();
             const activeStakedRelayerId = polkaBTC.api.createType("AccountId", address);
-            let result = await polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
-            setFees(result.toNumber());
+            const feesEarned = await polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
+            setFees(feesEarned.toString());
 
-            result = await polkaBTC.stakedRelayer.getStakedDOTAmount(activeStakedRelayerId);
-            setLocked(result.toNumber());
+            const lockedPlanck = (await polkaBTC.stakedRelayer.getStakedDOTAmount(activeStakedRelayerId)).toString();
+            const lockedDOT = planckToDOT(lockedPlanck);
+            setDotLocked(lockedDOT);
+            setPlanckLocked(lockedPlanck);
         };
         fetchData();
     });
@@ -69,7 +74,7 @@ export default function StakedRelayerPage() {
                             <div className="stats">Fees earned: {feesEarned}</div>
                         </div>
                     </div>
-                    {dotLocked === 0 && (
+                    {Number(planckLocked) === 0 && (
                         <Button
                             variant="outline-success"
                             className="staked-button"
@@ -79,7 +84,7 @@ export default function StakedRelayerPage() {
                         </Button>
                     )}
                     <BitcoinTable></BitcoinTable>
-                    {dotLocked > 0 && (
+                    {Number(planckLocked) > 0 && (
                         <Button
                             variant="outline-danger"
                             className="staked-button"
@@ -90,10 +95,10 @@ export default function StakedRelayerPage() {
                     )}
                     <ReportModal onClose={handleReportModalClose} show={showReportModal}></ReportModal>
                     <RegisterModal onClose={handleRegisterModalClose} show={showRegisterModal}></RegisterModal>
-                    <StatusUpdateTable dotLocked={dotLocked}></StatusUpdateTable>
+                    <StatusUpdateTable dotLocked={dotLocked} planckLocked={planckLocked}></StatusUpdateTable>
                     <VaultTable></VaultTable>
                     <OracleTable></OracleTable>
-                    {dotLocked > 0 && (
+                    {Number(planckLocked) > 0 && (
                         <ButtonMaybePending
                             className="staked-button"
                             variant="outline-danger"
@@ -103,7 +108,7 @@ export default function StakedRelayerPage() {
                             Deregister
                         </ButtonMaybePending>
                     )}
-                    {dotLocked > 0 && (
+                    {Number(planckLocked) > 0 && (
                         <div className="row">
                             <div className="col-12 de-note">
                                 Note: You can only deregister if you are not participating in a vote.

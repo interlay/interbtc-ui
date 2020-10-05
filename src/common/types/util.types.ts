@@ -16,8 +16,8 @@ export interface Prices {
 export type Vault = {
     vaultId: string;
     btcAddress?: string;
-    lockedDOT: number;
-    lockedBTC: PolkaBTC;
+    lockedDOT: string;
+    lockedBTC: string;
     status: string;
     collateralization: number | undefined;
 };

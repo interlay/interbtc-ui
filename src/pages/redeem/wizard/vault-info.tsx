@@ -2,7 +2,7 @@ import React from "react";
 import { FormGroup, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import { remove0x, shortAddress } from "../../../common/utils/utils";
+import { shortAddress } from "../../../common/utils/utils";
 
 type VaultInfoProps = {
     closeModal: () => void

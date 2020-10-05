@@ -5,6 +5,7 @@ import { Vault } from "../../../common/types/util.types";
 import { fetchPrices } from "../../../common/api/api";
 import * as constants from "../../../constants";
 import * as bitcoin from "bitcoinjs-lib";
+import { planckToDOT, satToBTC } from "@interlay/polkabtc";
 
 export default function VaultTable(): ReactElement {
     const [vaults, setVaults] = useState<Array<Vault>>([]);
@@ -49,11 +50,14 @@ export default function VaultTable(): ReactElement {
                     console.log(error);
                 }
 
+                const balanceLockedPlanck = await polkaBTC.collateral.balanceLockedDOT(accountId);
+                const balanceLockedDOT = planckToDOT(balanceLockedPlanck.toString()); 
+
                 vaultsList.push({
                     vaultId: accountId.toString(),
                     // TODO: fetch collateral reserved
-                    lockedBTC: vault.issued_tokens,
-                    lockedDOT: 0,
+                    lockedBTC: satToBTC(vault.issued_tokens.toString()),
+                    lockedDOT: balanceLockedDOT,
                     btcAddress,
                     status: vault.status && checkVaultStatus(vault.status.toString(), Number(collateralization)),
                     collateralization: collateralization,
@@ -129,6 +133,7 @@ export default function VaultTable(): ReactElement {
                                 <tr>
                                     <th>AccountID</th>
                                     <th>BTC Address</th>
+                                    <th>Locked DOT</th>
                                     <th>Locked BTC</th>
                                     <th>Collateralization</th>
                                     <th>Status</th>
@@ -140,7 +145,8 @@ export default function VaultTable(): ReactElement {
                                         <tr key={index}>
                                             <td>{vault.vaultId}</td>
                                             <td className="break-words">{vault.btcAddress}</td>
-                                            <td>{vault.lockedBTC.toString()}</td>
+                                            <td>{vault.lockedDOT}</td>
+                                            <td>{vault.lockedBTC}</td>
                                             <td className={getCollateralizationColor(vault.collateralization)}>
                                                 {typeof vault.collateralization !== "undefined"
                                                     ? vault.collateralization.toString() + "%"

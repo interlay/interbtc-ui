@@ -35,7 +35,8 @@ function displayProposedChanges(addError: Option<ErrorCode>, removeError: Option
 }
 
 type StatusUpdateTableProps = {
-    dotLocked: number;
+    dotLocked: string;
+    planckLocked: string;
 };
 
 export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactElement {
@@ -220,7 +221,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                                 )}
                                             </td>
                                             <td className={getResultColor(statusUpdate.result)}>
-                                                {props.dotLocked > 0 && statusUpdate.result === "Pending" ? (
+                                                {Number(props.planckLocked) > 0 && statusUpdate.result === "Pending" ? (
                                                     <Button
                                                         variant="outline-primary"
                                                         onClick={() => openVoteModal(statusUpdate)}

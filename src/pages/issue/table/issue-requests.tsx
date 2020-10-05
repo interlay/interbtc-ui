@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { IssueRequest } from "../../../common/types/issue.types";
 import { Table } from "react-bootstrap";
-import { dateToShortString, remove0x, shortAddress, shortTxId } from "../../../common/utils/utils";
+import { dateToShortString, shortAddress, shortTxId } from "../../../common/utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
