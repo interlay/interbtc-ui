@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
@@ -6,33 +6,54 @@ import { changeRedeemStepAction, changeAmountPolkaBTCAction, changeVaultBtcAddre
 import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
+import { btcToSat, getP2WPKHFromH160, satToBTC } from "@interlay/polkabtc";
 
 type EnterPolkaBTCForm = {
-    amountPolkaBTC: number;
+    amountPolkaBTC: string;
 };
 
 export default function EnterPolkaBTCAmount() {
     const [isRequestPending, setRequestPending] = useState(false);
+    const [balancePolkaBTC, setBalancePolkaBTC] = useState("0");
     const polkaBTC = useSelector((state: StoreType) => state.api);
     const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
     const defaultValues = amount ? { defaultValues: { amountPolkaBTC: amount } } : undefined;
     const { register, handleSubmit, errors } = useForm<EnterPolkaBTCForm>(defaultValues);
-    // TODO: get from storage
-    const balancePolkaBTC = "2000";
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!polkaBTC) return;
+
+            const address = polkaBTC.account?.toString();
+            const accountId = polkaBTC.api.createType("AccountId", address) as any;
+            const balancePolkaSAT = await polkaBTC.treasury.balancePolkaBTC(accountId);
+            // TODO: write data to storage
+            const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
+            setBalancePolkaBTC(balancePolkaBTC);
+        }
+        fetchData();
+    }, [polkaBTC]);
 
     const onSubmit = handleSubmit(async ({ amountPolkaBTC }) => {
         setRequestPending(true);
         try {
+            const amountPolkaSAT = btcToSat(amountPolkaBTC);
+            if (amountPolkaSAT === undefined) {
+                throw new Error("Invalid PolkaBTC amount input");
+            }
             dispatch(changeAmountPolkaBTCAction(amountPolkaBTC));
-            const amount = polkaBTC.api.createType("Balance", amountPolkaBTC);
+            const amount = polkaBTC.api.createType("Balance", amountPolkaSAT);
             const vaultId = await polkaBTC.vaults.selectRandomVaultRedeem(amount);
 
             toast.success("Found vault: " + vaultId.toString());
 
             // get the vault's data
             const vault = await polkaBTC.vaults.get(vaultId);
-            const vaultBTCAddress = vault.btc_address.toString();
+            const vaultBTCAddress = getP2WPKHFromH160(vault.btc_address);
+            if (vaultBTCAddress === undefined) {
+                throw new Error("Vault has invalid BTC address.");
+            }
 
             dispatch(changeVaultBtcAddressAction(vaultBTCAddress));
             dispatch(changeVaultDotAddressAction(vaultId.toString()));
@@ -40,6 +61,7 @@ export default function EnterPolkaBTCAmount() {
         } catch (error) {
             toast.error(error.toString());
         }
+        setRequestPending(false);
     })
 
     return <form onSubmit={onSubmit}>
@@ -48,7 +70,7 @@ export default function EnterPolkaBTCAmount() {
             <p>You have {balancePolkaBTC} PolkaBTC</p>
             <input
                 name="amountPolkaBTC"
-                type="number"
+                type="string"
                 className={"custom-input" + (errors.amountPolkaBTC ? " error-borders" : "")}
                 ref={register({
                     required: true, max: {

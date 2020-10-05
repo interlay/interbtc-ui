@@ -26,7 +26,7 @@ export default function VaultInfo(props: VaultInfoProps) {
                 </p>
                 <p>
                     You will receive BTC from the following Bitcoin address:
-                    <b>{remove0x(vaultBtcAddress)}</b>
+                    <b>{vaultBtcAddress}</b>
                 </p>
                 <p>
                     We will inform you when your redeem request has been executed.

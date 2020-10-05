@@ -101,7 +101,7 @@ export default function IssueRequests() {
                                     <td>{shortAddress(request.id)}</td>
                                     <td>{request.amountBTC} PolkaBTC</td>
                                     <td>{dateToShortString(request.creation)}</td>
-                                    <td>{shortAddress(remove0x(request.vaultBTCAddress))}</td>
+                                    <td>{shortAddress(request.vaultBTCAddress)}</td>
                                     <td>{shortTxId(request.btcTxId)}</td>
                                     <td>{request.confirmations}</td>
                                     <td>{handleCompleted(request)}</td>

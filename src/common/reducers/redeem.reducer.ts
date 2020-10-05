@@ -12,7 +12,7 @@ import { Redeem } from "../types/redeem.types";
 
 const initialState = {
     step: "ENTER_POLKABTC",
-    amountPolkaBTC: 0,
+    amountPolkaBTC: "",
     btcAddress: "",
     vaultBtcAddress: "",
     vaultDotAddress: "",

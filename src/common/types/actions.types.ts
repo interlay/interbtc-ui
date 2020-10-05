@@ -74,7 +74,7 @@ export interface ChangeRedeemStep {
 
 export interface ChangeAmountPolkaBtc {
     type: typeof CHANGE_AMOUNT_POLKA_BTC;
-    amount: number;
+    amount: string;
 }
 
 export interface ChangeBtcAddress {
