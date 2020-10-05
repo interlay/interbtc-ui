@@ -115,6 +115,10 @@ export const CHANGE_ISSUE_ID = "CHANGE_ISSUE_ID";
 export const RESET_ISSUE_WIZARD = "RESET_ISSUE_WIZARD";
 export const STORE_ISSUE_REQUEST = "STORE_ISSUE_REQUEST";
 export const CHANGE_BTC_TX_ID = "CHANGE_BTC_TX_ID";
+export const ADD_ISSUE_REQUEST = "ADD_ISSUE_REQUEST";
+export const UPDATE_ISSUE_REQUEST = "UPDATE_ISSUE_REQUEST";
+export const ADD_TRANSACTION_LISTENER = "ADD_TRANSACTION_LISTENER";
+export const ADD_PROOF_LISTENER = "ADD_PROOF_LISTENER";
 
 export interface ChangeIssueStep {
     type: typeof CHANGE_ISSUE_STEP;
@@ -155,6 +159,26 @@ export interface StoreIssueRequest {
     request: IssueRequest;
 }
 
+export interface AddIssueRequest {
+    type: typeof ADD_ISSUE_REQUEST;
+    request: IssueRequest;
+}
+
+export interface UpdateIssueRequest {
+    type: typeof UPDATE_ISSUE_REQUEST;
+    request: IssueRequest;
+}
+
+export interface AddTransactionListener {
+    type: typeof ADD_TRANSACTION_LISTENER;
+    id: string;
+}
+
+export interface AddProofListener {
+    type: typeof ADD_PROOF_LISTENER;
+    id: string;
+}
+
 export type IssueActions =
     | ChangeIssueStep
     | ChangeAmountBtc
@@ -165,4 +189,8 @@ export type IssueActions =
     | ChangeIssueId
     | ChangeBtcTxId
     | ResetIssueWizard
-    | StoreIssueRequest;
+    | StoreIssueRequest
+    | AddIssueRequest
+    | UpdateIssueRequest
+    | AddTransactionListener
+    | AddProofListener;

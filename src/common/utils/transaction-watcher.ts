@@ -2,38 +2,46 @@ import { PolkaBTCAPI } from "@interlay/polkabtc";
 import { toast } from "react-toastify";
 import Storage from "../controllers/storage";
 import { remove0x } from "./utils";
+import { Dispatch } from "redux";
+import { IssueRequest } from "../../common/types/issue.types";
+import { IssueActions } from "../types/actions.types";
+import { updateIssueRequestAction, addTransactionListener, addProofListener } from "../actions/issue.actions";
 
-export async function startTransactionWatcherIssue(id: string, polkaBTC: PolkaBTCAPI, storage: Storage) {
-    updateTransactionStatusIssue(id, polkaBTC, storage).then(() => {
-        setInterval(() => updateTransactionStatusIssue(id, polkaBTC, storage), 10_000);
+export async function startTransactionWatcherIssue(request: IssueRequest, polkaBTC: PolkaBTCAPI, 
+    storage: Storage, dispatch: Dispatch<IssueActions>) {
+    dispatch(addTransactionListener(request.id));
+    updateTransactionStatusIssue(request, polkaBTC, storage, dispatch).then(() => {
+        setInterval(() => updateTransactionStatusIssue(request, polkaBTC, storage,dispatch), 10_000);
     });
 }
 
-export async function startTransactionProofWatcherIssue(id: string, polkaBTC: PolkaBTCAPI, storage: Storage) {
-    updateTransactionProofData(id, polkaBTC, storage).then(() => {
-        setInterval(() => updateTransactionProofData(id, polkaBTC, storage), 10_000);
+export async function startTransactionProofWatcherIssue(request: IssueRequest, polkaBTC: PolkaBTCAPI, 
+    storage: Storage, dispatch: Dispatch<IssueActions>) {
+    dispatch(addProofListener(request.id));
+    updateTransactionProofData(request, polkaBTC, storage, dispatch).then(() => {
+        setInterval(() => updateTransactionProofData(request, polkaBTC, storage, dispatch), 10_000);
     });
 }
 
-export async function updateTransactionStatusIssue(id: string, polkaBTC: PolkaBTCAPI, storage: Storage) {
-    const request = storage.getIssueRequest(id);
-
+export async function updateTransactionStatusIssue(request: IssueRequest, polkaBTC: PolkaBTCAPI, 
+    storage: Storage, dispatch: Dispatch<IssueActions>) {
     if (request && request.btcTxId) {
         try {
             const txStatus = await polkaBTC.btcCore.getTransactionStatus(remove0x(request.btcTxId));
             const updatedRequest = request;
-            updatedRequest.confirmations = txStatus.confirmations;
-
-            storage.modifyIssueRequest(updatedRequest);
+            if (request.confirmations !== txStatus.confirmations) {
+                updatedRequest.confirmations = txStatus.confirmations;
+                dispatch(updateIssueRequestAction(updatedRequest));
+                storage.modifyIssueRequest(updatedRequest);
+            }
         } catch (error) {
             toast.error(error.toString());
         }
     }
 }
 
-export async function updateTransactionProofData(id: string, polkaBTC: PolkaBTCAPI, storage: Storage) {
-    const request = storage.getIssueRequest(id);
-
+export async function updateTransactionProofData(request: IssueRequest, polkaBTC: PolkaBTCAPI, 
+    storage: Storage, dispatch: Dispatch<IssueActions>) {
     if (request && request.confirmations > 6 && !request.completed && request.btcTxId) {
         try {
             const txId = remove0x(request.btcTxId);
@@ -42,12 +50,15 @@ export async function updateTransactionProofData(id: string, polkaBTC: PolkaBTCA
             const rawTx = await polkaBTC.btcCore.getRawTransaction(txId);
 
             const updatedRequest = request;
-
-            updatedRequest.transactionBlockHeight = transactionBlockHeight ? transactionBlockHeight : 0;
-            updatedRequest.merkleProof = merkleProof;
-            updatedRequest.rawTransaction = rawTx;
-
-            storage.modifyIssueRequest(updatedRequest);
+            const newHeight = transactionBlockHeight ? transactionBlockHeight : 0;
+            if (updatedRequest.transactionBlockHeight !== newHeight || updatedRequest.merkleProof !== merkleProof
+                || updatedRequest.rawTransaction.byteLength !== rawTx.byteLength) {
+                updatedRequest.transactionBlockHeight = newHeight;
+                updatedRequest.merkleProof = merkleProof;
+                updatedRequest.rawTransaction = rawTx;
+                dispatch(updateIssueRequestAction(updatedRequest));
+                storage.modifyIssueRequest(updatedRequest);
+            }
         } catch (error) {
             toast.error(error.toString());
         }

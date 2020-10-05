@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { FormGroup, ListGroup, ListGroupItem, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { changeIssueIdAction, changeIssueStepAction } from "../../../common/actions/issue.actions";
+import { changeIssueIdAction, changeIssueStepAction, addIssueRequestAction } from "../../../common/actions/issue.actions";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { IssueRequest } from "../../../common/types/issue.types";
 import { StoreType } from "../../../common/types/util.types";
@@ -47,6 +47,7 @@ export default function RequestConfirmation() {
                 rawTransaction: new Uint8Array(),
             }
             storage.appendIssueRequest(request);
+            dispatch(addIssueRequestAction(request));
             dispatch(changeIssueStepAction("BTC_PAYMENT"));
         } catch (error) {
             toast.error(error.toString());
