@@ -21,10 +21,13 @@ export default function StakedRelayerPage() {
 
     const polkaBTC = useSelector((state: StoreType) => state.api);
     const stakedRelayer = useSelector((state: StoreType) => state.relayer);
+
     const [feesEarned, setFees] = useState("0");
     // store this in both DOT and Planck
     const [dotLocked, setDotLocked] = useState("0");
     const [planckLocked, setPlanckLocked] = useState("0");
+    const [stakedRelayerAddress, setStakedRelayerAddress] = useState("");
+
     const handleReportModalClose = () => setShowReportModal(false);
     const handleRegisterModalClose = () => setShowRegisterModal(false);
 
@@ -46,8 +49,11 @@ export default function StakedRelayerPage() {
 
             const address = await stakedRelayer.getAddress();
             const activeStakedRelayerId = polkaBTC.api.createType("AccountId", address);
+
             const feesEarned = await polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
             setFees(feesEarned.toString());
+
+            setStakedRelayerAddress(address);
 
             const lockedPlanck = (await polkaBTC.stakedRelayer.getStakedDOTAmount(activeStakedRelayerId)).toString();
             const lockedDOT = planckToDOT(lockedPlanck);
@@ -95,7 +101,11 @@ export default function StakedRelayerPage() {
                     )}
                     <ReportModal onClose={handleReportModalClose} show={showReportModal}></ReportModal>
                     <RegisterModal onClose={handleRegisterModalClose} show={showRegisterModal}></RegisterModal>
-                    <StatusUpdateTable dotLocked={dotLocked} planckLocked={planckLocked}></StatusUpdateTable>
+                    <StatusUpdateTable
+                        dotLocked={dotLocked}
+                        planckLocked={planckLocked}
+                        stakedRelayerAddress={stakedRelayerAddress}
+                    ></StatusUpdateTable>
                     <VaultTable></VaultTable>
                     <OracleTable></OracleTable>
                     {Number(planckLocked) > 0 && (
