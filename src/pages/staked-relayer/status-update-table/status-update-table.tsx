@@ -36,6 +36,7 @@ function displayProposedChanges(addError: Option<ErrorCode>, removeError: Option
 
 type StatusUpdateTableProps = {
     dotLocked: number;
+    stakedRelayerAddress: string;
 };
 
 export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactElement {
@@ -57,30 +58,43 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
         const fetchUpdates = async () => {
             if (!polkaBTC) return;
 
-            let result = await polkaBTC.stakedRelayer.getAllStatusUpdates();
+            let statusUpdates = await polkaBTC.stakedRelayer.getAllStatusUpdates();
             setStatusUpdates(
-                result.map(
-                    (status): StatusUpdate => {
-                        const [id, statusUpdate] = status;
-                        return {
-                            id,
-                            timestamp: statusUpdate.time.toString(),
-                            proposedStatus: statusUpdate.new_status_code.toString(),
-                            currentStatus: statusUpdate.old_status_code.toString(),
-                            proposedChanges: displayProposedChanges(statusUpdate.add_error, statusUpdate.remove_error),
-                            blockHash: displayBlockHash(statusUpdate.btc_block_hash),
-                            votes: `${statusUpdate.tally.aye.size} : ${statusUpdate.tally.nay.size}`,
-                            result: statusUpdate.proposal_status.toString(),
-                            proposer: statusUpdate.proposer.toString(),
-                        };
-                    }
-                )
+                statusUpdates.map((status) => {
+                    const [id, statusUpdate] = status;
+
+                    // NOTE: passing the `AccountId` in props cases a weird infinite reload bug,
+                    // so we pass the address obtained from the staked relayer client and reconstruct
+                    const stakedRelayerId = polkaBTC.api.createType("AccountId", props.stakedRelayerAddress);
+
+                    // FIXME: Set.has() doesn't work for objects
+                    let hasVoted = false;
+                    statusUpdate.tally.aye.forEach((acc) => {
+                        hasVoted = acc.hash.toHex() === stakedRelayerId.hash.toHex() ? true : hasVoted;
+                    });
+                    statusUpdate.tally.nay.forEach((acc) => {
+                        hasVoted = acc.hash.toHex() === stakedRelayerId.hash.toHex() ? true : hasVoted;
+                    });
+
+                    return {
+                        id,
+                        timestamp: statusUpdate.time.toString(),
+                        proposedStatus: statusUpdate.new_status_code.toString(),
+                        currentStatus: statusUpdate.old_status_code.toString(),
+                        proposedChanges: displayProposedChanges(statusUpdate.add_error, statusUpdate.remove_error),
+                        blockHash: displayBlockHash(statusUpdate.btc_block_hash),
+                        votes: `${statusUpdate.tally.aye.size} : ${statusUpdate.tally.nay.size}`,
+                        result: statusUpdate.proposal_status.toString(),
+                        proposer: statusUpdate.proposer.toString(),
+                        hasVoted,
+                    };
+                })
             );
         };
 
         fetchStatus();
         fetchUpdates();
-    }, [polkaBTC]);
+    }, [polkaBTC, props.stakedRelayerAddress]);
 
     const openVoteModal = (statusUpdate: StatusUpdate) => {
         setShowVoteModal(true);
@@ -141,8 +155,8 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
             <div className="row">
                 <div className="col-12">
                     <div className="header">
-                        BTC Parachain Status: &nbsp; <div className={getCircle(parachainStatus)}></div> &nbsp; {parachainStatus}
-                       
+                        BTC Parachain Status: &nbsp; <div className={getCircle(parachainStatus)}></div> &nbsp;{" "}
+                        {parachainStatus}
                     </div>
                 </div>
             </div>
@@ -183,9 +197,10 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                             </td>
                                             <td className="break-words">
                                                 <a
-                                                    href={(constants.BTC_MAINNET ?
-                                                        constants.BTC_EXPLORER_BLOCK_API :
-                                                        constants.BTC_TEST_EXPLORER_BLOCK_API) +
+                                                    href={
+                                                        (constants.BTC_MAINNET
+                                                            ? constants.BTC_EXPLORER_BLOCK_API
+                                                            : constants.BTC_TEST_EXPLORER_BLOCK_API) +
                                                         statusUpdate.blockHash
                                                     }
                                                     target="_blank"
@@ -220,7 +235,9 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                                 )}
                                             </td>
                                             <td className={getResultColor(statusUpdate.result)}>
-                                                {props.dotLocked > 0 && statusUpdate.result === "Pending" ? (
+                                                {props.dotLocked > 0 &&
+                                                !statusUpdate.hasVoted &&
+                                                statusUpdate.result === "Pending" ? (
                                                     <Button
                                                         variant="outline-primary"
                                                         onClick={() => openVoteModal(statusUpdate)}

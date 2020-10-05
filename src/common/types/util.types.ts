@@ -32,6 +32,7 @@ export interface StatusUpdate {
     votes: string;
     result: string;
     proposer: string;
+    hasVoted: boolean;
 }
 
 export type AppState = ReturnType<typeof rootReducer>;

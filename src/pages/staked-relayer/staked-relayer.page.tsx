@@ -20,8 +20,12 @@ export default function StakedRelayerPage() {
 
     const polkaBTC = useSelector((state: StoreType) => state.api);
     const stakedRelayer = useSelector((state: StoreType) => state.relayer);
+
+    const [stakedRelayerAddress, setStakedRelayerAddress] = useState("");
+
     const [feesEarned, setFees] = useState(0);
     const [dotLocked, setLocked] = useState(0);
+
     const handleReportModalClose = () => setShowReportModal(false);
     const handleRegisterModalClose = () => setShowRegisterModal(false);
 
@@ -43,6 +47,8 @@ export default function StakedRelayerPage() {
 
             const address = await stakedRelayer.getAddress();
             const activeStakedRelayerId = polkaBTC.api.createType("AccountId", address);
+            setStakedRelayerAddress(address);
+
             let result = await polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
             setFees(result.toNumber());
 
@@ -90,7 +96,10 @@ export default function StakedRelayerPage() {
                     )}
                     <ReportModal onClose={handleReportModalClose} show={showReportModal}></ReportModal>
                     <RegisterModal onClose={handleRegisterModalClose} show={showRegisterModal}></RegisterModal>
-                    <StatusUpdateTable dotLocked={dotLocked}></StatusUpdateTable>
+                    <StatusUpdateTable
+                        dotLocked={dotLocked}
+                        stakedRelayerAddress={stakedRelayerAddress}
+                    ></StatusUpdateTable>
                     <VaultTable></VaultTable>
                     <OracleTable></OracleTable>
                     {dotLocked > 0 && (
