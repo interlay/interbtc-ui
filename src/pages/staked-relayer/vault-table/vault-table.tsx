@@ -3,8 +3,8 @@ import { StoreType } from "../../../common/types/util.types";
 import { useSelector, useDispatch } from "react-redux";
 import { Vault } from "../../../common/types/util.types";
 import { fetchPrices } from "../../../common/api/api";
-import { remove0x } from "../../../common/utils/utils";
 import * as constants from "../../../constants";
+import * as bitcoin from "bitcoinjs-lib";
 
 export default function VaultTable(): ReactElement {
     const [vaults, setVaults] = useState<Array<Vault>>([]);
@@ -36,13 +36,25 @@ export default function VaultTable(): ReactElement {
                 } catch (error) {
                     console.log(error);
                 }
-            
+
+                let btcAddress: string | undefined;
+                try {
+                    // TODO: specify script format in parachain
+                    const payment = bitcoin.payments.p2wpkh({
+                        hash: Buffer.from(vault.btc_address.buffer),
+                        network: bitcoin.networks.testnet,
+                    });
+                    btcAddress = payment.address;
+                } catch (error) {
+                    console.log(error);
+                }
+
                 vaultsList.push({
                     vaultId: accountId.toString(),
                     // TODO: fetch collateral reserved
                     lockedBTC: vault.issued_tokens,
                     lockedDOT: 0,
-                    btcAddress: remove0x(vault.btc_address.toString()),
+                    btcAddress,
                     status: vault.status && checkVaultStatus(vault.status.toString(), Number(collateralization)),
                     collateralization: collateralization,
                 });
@@ -51,7 +63,6 @@ export default function VaultTable(): ReactElement {
         };
         fetchData();
     }, [polkaBTC, prices]);
-
 
     const checkVaultStatus = (status: string, collateralization: number): string => {
         if (status === constants.VAULT_STATUS_THEFT) {
@@ -67,7 +78,7 @@ export default function VaultTable(): ReactElement {
             return constants.VAULT_STATUS_UNDECOLLATERALIZED;
         }
         return constants.VAULT_STATUS_ACTIVE;
-    }
+    };
 
     const getStatusColor = (status: string): string => {
         if (status === constants.VAULT_STATUS_ACTIVE) {
@@ -76,7 +87,11 @@ export default function VaultTable(): ReactElement {
         if (status === constants.VAULT_STATUS_UNDECOLLATERALIZED) {
             return "orange-text";
         }
-        if (status === constants.VAULT_STATUS_THEFT || status === constants.VAULT_STATUS_AUCTION || status === constants.VAULT_STATUS_LIQUIDATED) {
+        if (
+            status === constants.VAULT_STATUS_THEFT ||
+            status === constants.VAULT_STATUS_AUCTION ||
+            status === constants.VAULT_STATUS_LIQUIDATED
+        ) {
             return "red-text";
         }
         return "black-text";
