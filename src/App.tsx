@@ -5,9 +5,11 @@ import { Provider } from "react-redux";
 import { applyMiddleware, createStore } from "redux";
 import { toast, ToastContainer } from "react-toastify";
 import { createPolkabtcAPI, StakedRelayerClient } from "@interlay/polkabtc";
+import { Modal } from "react-bootstrap";
 
 import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
 
+import AccountSelector from "./pages/account-selector";
 import { rootReducer } from "./common/reducers/index";
 import { addPolkaBtcInstance, addStakedRelayerInstance } from "./common/actions/api.actions";
 import * as constants from "./constants";
@@ -30,17 +32,17 @@ import IssuePage from "./pages/issue/issue.page";
 import VaultPage from "./pages/vault.page";
 import RedeemPage from "./pages/redeem/redeem.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
-import Storage from "./common/controllers/storage";
-import { addStorageInstace } from "./common/actions/storage.actions";
+import { clearStorage, changeStorageAddress } from "./common/actions/storage.actions";
 
 const storeLogger = createLogger();
 const store = createStore(rootReducer, applyMiddleware(storeLogger));
 
 export default class App extends Component<{}, AppState> {
     state: AppState = {
-        account: undefined,
+        accounts: undefined,
         address: undefined,
         signer: undefined,
+        showSelectAccount: false,
     };
 
     async getAccount(): Promise<void> {
@@ -61,37 +63,57 @@ export default class App extends Component<{}, AppState> {
             return;
         }
 
-        // TODO: allow user to pick account
-        const { address } = allAccounts[0];
-        const { signer } = await web3FromAddress(address);
+        const accounts = allAccounts.map(({ address }) => address);
+        const currentAddress = store.getState().storage.retrieveUserAddress();
 
-        this.setState({ signer: signer, address });
+        let address: string | undefined = undefined;
+        if (currentAddress && accounts.includes(currentAddress)) {
+            address = currentAddress;
+        } else if (allAccounts.length === 1) {
+            address = allAccounts[0].address;
+        }
+
+        if (address) {
+            this.setState({ accounts });
+            this.selectAccount(address);
+        } else {
+            this.setState({ accounts, showSelectAccount: true });
+        }
     }
 
-    async createAPIInstace() {
+    async createAPIInstace(): Promise<void> {
         const polkaBTC = await createPolkabtcAPI(constants.PARACHAIN_URL);
-        if (this.state.account) {
-            polkaBTC.setAccount(this.state.account);
-        }
-        if (this.state.address && this.state.signer) {
-            polkaBTC.setAccount(this.state.address, this.state.signer);
-        }
         store.dispatch(addPolkaBtcInstance(polkaBTC));
 
         const stakedRelayer = new StakedRelayerClient(constants.STAKED_RELAYER_URL);
         store.dispatch(addStakedRelayerInstance(stakedRelayer));
     }
 
-    createStorage(address?: string) {
-        const storage = new Storage(address);
-        store.dispatch(addStorageInstace(storage));
+    async componentDidMount(): Promise<void> {
+        store.dispatch(clearStorage(true));
+        try {
+            await this.createAPIInstace();
+        } catch (e) {
+            toast.warn("Could not connect to the Parachain, please try again in a few seconds", {
+                autoClose: false,
+            });
+        }
+
+        await this.getAccount();
     }
 
-    componentDidMount(): void {
-        this.getAccount().then(() => {
-            this.createStorage(this.state.address);
-            this.createAPIInstace();
-        });
+    async selectAccount(address: string): Promise<void> {
+        const polkaBTC = store.getState().api;
+        if (!polkaBTC) {
+            return;
+        }
+
+        const { signer } = await web3FromAddress(address);
+        polkaBTC.setAccount(address, signer);
+        this.setState({ address, showSelectAccount: false });
+
+        store.dispatch(addPolkaBtcInstance(polkaBTC));
+        store.dispatch(changeStorageAddress(address));
     }
 
     render() {
@@ -100,11 +122,14 @@ export default class App extends Component<{}, AppState> {
                 <Router>
                     <div className="main d-flex flex-column min-vh-100">
                         <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
-                        <Topbar address={this.state.address} account={this.state.account} />
+                        <Topbar
+                            address={this.state.address}
+                            onAccountClick={() => this.setState({ showSelectAccount: true })}
+                        />
                         <div className="mb-5">
                             <Switch>
                                 <Route exact path="/">
-                                    <LandingPage/>
+                                    <LandingPage />
                                 </Route>
                                 <Route path="/issue">
                                     <IssuePage />
@@ -123,6 +148,13 @@ export default class App extends Component<{}, AppState> {
                         <Footer />
                     </div>
                 </Router>
+                <Modal show={this.state.showSelectAccount}>
+                    <AccountSelector
+                        selected={this.state.address}
+                        accounts={this.state.accounts}
+                        onSelected={this.selectAccount.bind(this)}
+                    ></AccountSelector>
+                </Modal>
             </Provider>
         );
     }

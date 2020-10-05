@@ -24,13 +24,25 @@ export type ApiActions = AddInstance | AddStakedRelayerInstance;
 // STORAGE
 
 export const ADD_STORAGE = "ADD_STORAGE";
+export const CHANGE_STORAGE_ADDRESS = "CHANGE_STORAGE_ADDRESS";
+export const CLEAR_STORAGE = "CLEAR_STORAGE";
 
 export interface AddStorage {
     type: typeof ADD_STORAGE;
     storage: Storage;
 }
 
-export type StorageActions = AddStorage;
+export interface ChangeStorageAddress {
+    type: typeof CHANGE_STORAGE_ADDRESS;
+    address: string;
+}
+
+export interface ClearStorage {
+    type: typeof CLEAR_STORAGE;
+    keepAddress: boolean;
+}
+
+export type StorageActions = AddStorage | ChangeStorageAddress | ClearStorage;
 
 // PRICES
 
