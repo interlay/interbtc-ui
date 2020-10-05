@@ -33,12 +33,12 @@ export const changeIssueStepAction = (step: string): ChangeIssueStep => ({
     step,
 });
 
-export const changeAmountBTCAction = (amount: number): ChangeAmountBtc => ({
+export const changeAmountBTCAction = (amount: string): ChangeAmountBtc => ({
     type: CHANGE_AMOUNT_BTC,
     amount,
 });
 
-export const changeFeeBTCAction = (fee: number): ChangeFeeBtc => ({
+export const changeFeeBTCAction = (fee: string): ChangeFeeBtc => ({
     type: CHANGE_FEE_BTC,
     fee,
 });

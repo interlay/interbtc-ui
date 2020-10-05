@@ -36,7 +36,7 @@ export default function Confirmation() {
             // store the redeem request in storage
             const request: RedeemRequest = {
                 id,
-                amountPolkaBTC: amountPolkaBTC.toString(),
+                amountPolkaBTC,
                 creation: new Date(),
                 vaultBTCAddress,
                 btcTxId: "",

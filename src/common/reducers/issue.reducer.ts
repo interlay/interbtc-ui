@@ -17,8 +17,8 @@ import { Issue, IssueRequest } from "../types/issue.types";
 
 const initialState = {
     step: "ENTER_BTC_AMOUNT",
-    amountBTC: 0,
-    feeBTC: 0,
+    amountBTC: "",
+    feeBTC: "",
     vaultBtcAddress: "",
     vaultDotAddress: "",
     id: "",

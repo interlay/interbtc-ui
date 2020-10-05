@@ -13,8 +13,8 @@ export interface IssueRequest {
 
 export interface Issue {
     step: string;
-    amountBTC: number;
-    feeBTC: number;
+    amountBTC: string;
+    feeBTC: string;
     vaultDotAddress: string;
     vaultBtcAddress: string;
     id: string;

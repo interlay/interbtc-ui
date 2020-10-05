@@ -2,7 +2,7 @@ import React from "react";
 import { FormGroup, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import { remove0x, shortAddress } from "../../../common/utils/utils";
+import { shortAddress } from "../../../common/utils/utils";
 
 type VaultInfoProps = {
     closeModal: () => void
@@ -26,7 +26,7 @@ export default function VaultInfo(props: VaultInfoProps) {
                 </p>
                 <p>
                     You will receive BTC from the following Bitcoin address:
-                    <b>{remove0x(vaultBtcAddress)}</b>
+                    <b>{vaultBtcAddress}</b>
                 </p>
                 <p>
                     We will inform you when your redeem request has been executed.
