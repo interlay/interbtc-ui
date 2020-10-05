@@ -1,6 +1,5 @@
 import { PolkaBTCAPI } from "@interlay/polkabtc";
 import { toast } from "react-toastify";
-import Storage from "../controllers/storage";
 import { remove0x } from "./utils";
 import { Dispatch } from "redux";
 import { IssueRequest } from "../../common/types/issue.types";
@@ -10,31 +9,28 @@ import { updateIssueRequestAction, addTransactionListener, addProofListener } fr
 export async function startTransactionWatcherIssue(
     request: IssueRequest,
     polkaBTC: PolkaBTCAPI,
-    storage: Storage,
     dispatch: Dispatch<IssueActions>
 ) {
     dispatch(addTransactionListener(request.id));
-    updateTransactionStatusIssue(request, polkaBTC, storage, dispatch).then(() => {
-        setInterval(() => updateTransactionStatusIssue(request, polkaBTC, storage, dispatch), 10_000);
+    updateTransactionStatusIssue(request, polkaBTC, dispatch).then(() => {
+        setInterval(() => updateTransactionStatusIssue(request, polkaBTC, dispatch), 10_000);
     });
 }
 
 export async function startTransactionProofWatcherIssue(
     request: IssueRequest,
     polkaBTC: PolkaBTCAPI,
-    storage: Storage,
     dispatch: Dispatch<IssueActions>
 ) {
     dispatch(addProofListener(request.id));
-    updateTransactionProofData(request, polkaBTC, storage, dispatch).then(() => {
-        setInterval(() => updateTransactionProofData(request, polkaBTC, storage, dispatch), 10_000);
+    updateTransactionProofData(request, polkaBTC, dispatch).then(() => {
+        setInterval(() => updateTransactionProofData(request, polkaBTC, dispatch), 10_000);
     });
 }
 
 export async function updateTransactionStatusIssue(
     request: IssueRequest,
     polkaBTC: PolkaBTCAPI,
-    storage: Storage,
     dispatch: Dispatch<IssueActions>
 ) {
     if (request && request.btcTxId) {
@@ -44,7 +40,6 @@ export async function updateTransactionStatusIssue(
             if (request.confirmations !== txStatus.confirmations) {
                 updatedRequest.confirmations = txStatus.confirmations;
                 dispatch(updateIssueRequestAction(updatedRequest));
-                storage.modifyIssueRequest(updatedRequest);
             }
         } catch (error) {
             toast.error(error.toString());
@@ -55,7 +50,6 @@ export async function updateTransactionStatusIssue(
 export async function updateTransactionProofData(
     request: IssueRequest,
     polkaBTC: PolkaBTCAPI,
-    storage: Storage,
     dispatch: Dispatch<IssueActions>
 ) {
     if (request && request.confirmations > 6 && !request.completed && request.btcTxId) {
@@ -76,7 +70,6 @@ export async function updateTransactionProofData(
                 updatedRequest.merkleProof = merkleProof;
                 updatedRequest.rawTransaction = rawTx;
                 dispatch(updateIssueRequestAction(updatedRequest));
-                storage.modifyIssueRequest(updatedRequest);
             }
         } catch (error) {
             toast.error(error.toString());

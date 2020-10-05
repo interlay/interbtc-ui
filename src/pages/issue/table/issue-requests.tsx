@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import ButtonMaybePending from '../../../common/components/pending-button';
 import { toast } from 'react-toastify';
 import { startTransactionProofWatcherIssue, startTransactionWatcherIssue } from '../../../common/utils/transaction-watcher';
+import { updateIssueRequestAction } from '../../../common/actions/issue.actions';
 
 export default function IssueRequests() {
     const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests);
@@ -17,7 +18,6 @@ export default function IssueRequests() {
     const proofListeners = useSelector((state: StoreType) => state.issue.proofListeners);
 
     const [isExecutePending, setExecutePending] = useState(false);
-    const storage = useSelector((state: StoreType) => state.storage);
     const polkaBTC = useSelector((state: StoreType) => state.api);
     const dispatch = useDispatch();
 
@@ -25,17 +25,17 @@ export default function IssueRequests() {
         const fetchData = async () => {
             issueRequests.map(async (request: IssueRequest) => {
                 if(transactionListeners.indexOf(request.id) === -1){
-                    startTransactionWatcherIssue(request, polkaBTC, storage, dispatch);
+                    startTransactionWatcherIssue(request, polkaBTC, dispatch);
                 }
             });
             issueRequests.map(async (request: IssueRequest) => {
                 if(proofListeners.indexOf(request.id) === -1){
-                    startTransactionProofWatcherIssue(request, polkaBTC, storage, dispatch);                    
+                    startTransactionProofWatcherIssue(request, polkaBTC, dispatch);                    
                 }
             });
         }
         fetchData();
-    }, [polkaBTC, issueRequests]);
+    }, [polkaBTC, issueRequests, proofListeners, transactionListeners, dispatch]);
 
     const execute = async (request: IssueRequest) => {
         setExecutePending(true);
@@ -48,11 +48,11 @@ export default function IssueRequests() {
 
             await polkaBTC.issue.execute(parsedIssuedId, parsedTxId, parsedTxBlockHeight, parsedMerkleProof, parsedRawTx);
 
-            const req = storage.getIssueRequest(request.id);
+            const req = issueRequests.find((issueRequest: IssueRequest) => issueRequest.id === request.id);
             if (req) {
                 let updatedReq = req;
                 updatedReq.completed = true;
-                storage.modifyIssueRequest(updatedReq);
+                dispatch(updateIssueRequestAction(updatedReq));
             }
 
             toast.success("Succesfully executed redeem request: " + request.id);
