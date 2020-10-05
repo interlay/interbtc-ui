@@ -17,8 +17,8 @@ export default function LandingPage(): JSX.Element {
         const fetchData = async () => {
             if (!polkaBTC) return;
             if (!storage) return;
-            const totalPolkaSAT = await polkaBTC.treasury.totalPolkaBTC(); 
-            const totalLockedPLANCK = await polkaBTC.collateral.totalLockedDOT(); 
+            const totalPolkaSAT = await polkaBTC.treasury.totalPolkaBTC();
+            const totalLockedPLANCK = await polkaBTC.collateral.totalLockedDOT();
             const totalPolkaBTC = satToBTC(totalPolkaSAT.toString());
             const totalLockedDOT = planckToDOT(totalLockedPLANCK.toString());
             // TODO: write parachain data to storage

@@ -1,3 +1,4 @@
+import { btcToSat } from "@interlay/polkabtc";
 import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 import React, { useState } from "react";
 import { FormGroup, ListGroup, ListGroupItem, Modal } from "react-bootstrap";
@@ -13,7 +14,9 @@ export default function RequestConfirmation() {
     const polkaBTC = useSelector((state: StoreType) => state.api);
     const storage = useSelector((state: StoreType) => state.storage);
     const amountBTC = useSelector((state: StoreType) => state.issue.amountBTC);
-    const feeBTC = useSelector((state: StoreType) => state.issue.feeBTC);
+    const feeBTC = "0"; 
+    // TODO: fee model
+    // const feeBTC = useSelector((state: StoreType) => state.issue.feeBTC);
     const vaultAddress = useSelector((store: StoreType) => store.issue.vaultDotAddress);
     const vaultBTCAddress = useSelector((state: StoreType) => state.issue.vaultBtcAddress);
     const dispatch = useDispatch();
@@ -22,7 +25,11 @@ export default function RequestConfirmation() {
         setRequestPending(true);
         // send the issue request
         try {
-            const amount = polkaBTC.api.createType("Balance", amountBTC) as PolkaBTC;
+            const amountSAT = btcToSat(amountBTC);
+            if (amountSAT === undefined) {
+                throw new Error("Invalid BTC amount input.");
+            }
+            const amount = polkaBTC.api.createType("Balance", amountSAT) as PolkaBTC;
             // FIXME: use AccountId type from @polkadot/types/interfaces
             const vaultAccountId = polkaBTC.api.createType("AccountId", vaultAddress) as any;
             const requestResult = await polkaBTC.issue.request(amount, vaultAccountId);
@@ -36,7 +43,7 @@ export default function RequestConfirmation() {
             // store the issue request in storage
             const request: IssueRequest = {
                 id,
-                amountBTC: amountBTC.toString(),
+                amountBTC: amountBTC,
                 creation: new Date(),
                 vaultBTCAddress,
                 btcTxId: "",

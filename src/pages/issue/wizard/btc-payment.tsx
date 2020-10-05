@@ -33,13 +33,13 @@ export default function BTCPayment() {
                 <FormGroup>
                     <ListGroup>
                         <ListGroupItem>Output 1</ListGroupItem>
-                        <ListGroupItem>OP_RETURN: <strong> {remove0x(issueId)} </strong></ListGroupItem>
-                        <ListGroupItem>Amount: <strong>0 BTC</strong></ListGroupItem>
+                        <ListGroupItem>Recipient: <strong>{remove0x(vaultBTCAddress)}</strong></ListGroupItem>
+                        <ListGroupItem>Amount: <strong>{amountBTCwithFee} BTC</strong></ListGroupItem>
                     </ListGroup>
                     <ListGroup>
                         <ListGroupItem>Output 2</ListGroupItem>
-                        <ListGroupItem>Recipient: <strong>{remove0x(vaultBTCAddress)}</strong></ListGroupItem>
-                        <ListGroupItem>Amount: <strong>{amountBTCwithFee} BTC</strong></ListGroupItem>
+                        <ListGroupItem>OP_RETURN: <strong> {remove0x(issueId)} </strong></ListGroupItem>
+                        <ListGroupItem>Amount: <strong>0 BTC</strong></ListGroupItem>
                     </ListGroup>
                 </FormGroup>
             </FormGroup>
