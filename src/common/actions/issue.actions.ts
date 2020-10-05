@@ -24,7 +24,7 @@ import {
     AddIssueRequest,
     UpdateIssueRequest,
     AddTransactionListener,
-    AddProofListener
+    AddProofListener,
 } from "../types/actions.types";
 import { IssueRequest } from "../types/issue.types";
 
@@ -84,10 +84,10 @@ export const updateIssueRequestAction = (request: IssueRequest): UpdateIssueRequ
 
 export const addTransactionListener = (id: string): AddTransactionListener => ({
     type: ADD_TRANSACTION_LISTENER,
-    id
+    id,
 });
 
 export const addProofListener = (id: string): AddProofListener => ({
     type: ADD_PROOF_LISTENER,
-    id
+    id,
 });

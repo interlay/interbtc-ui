@@ -7,24 +7,36 @@ import { IssueRequest } from "../../common/types/issue.types";
 import { IssueActions } from "../types/actions.types";
 import { updateIssueRequestAction, addTransactionListener, addProofListener } from "../actions/issue.actions";
 
-export async function startTransactionWatcherIssue(request: IssueRequest, polkaBTC: PolkaBTCAPI, 
-    storage: Storage, dispatch: Dispatch<IssueActions>) {
+export async function startTransactionWatcherIssue(
+    request: IssueRequest,
+    polkaBTC: PolkaBTCAPI,
+    storage: Storage,
+    dispatch: Dispatch<IssueActions>
+) {
     dispatch(addTransactionListener(request.id));
     updateTransactionStatusIssue(request, polkaBTC, storage, dispatch).then(() => {
-        setInterval(() => updateTransactionStatusIssue(request, polkaBTC, storage,dispatch), 10_000);
+        setInterval(() => updateTransactionStatusIssue(request, polkaBTC, storage, dispatch), 10_000);
     });
 }
 
-export async function startTransactionProofWatcherIssue(request: IssueRequest, polkaBTC: PolkaBTCAPI, 
-    storage: Storage, dispatch: Dispatch<IssueActions>) {
+export async function startTransactionProofWatcherIssue(
+    request: IssueRequest,
+    polkaBTC: PolkaBTCAPI,
+    storage: Storage,
+    dispatch: Dispatch<IssueActions>
+) {
     dispatch(addProofListener(request.id));
     updateTransactionProofData(request, polkaBTC, storage, dispatch).then(() => {
         setInterval(() => updateTransactionProofData(request, polkaBTC, storage, dispatch), 10_000);
     });
 }
 
-export async function updateTransactionStatusIssue(request: IssueRequest, polkaBTC: PolkaBTCAPI, 
-    storage: Storage, dispatch: Dispatch<IssueActions>) {
+export async function updateTransactionStatusIssue(
+    request: IssueRequest,
+    polkaBTC: PolkaBTCAPI,
+    storage: Storage,
+    dispatch: Dispatch<IssueActions>
+) {
     if (request && request.btcTxId) {
         try {
             const txStatus = await polkaBTC.btcCore.getTransactionStatus(remove0x(request.btcTxId));
@@ -40,8 +52,12 @@ export async function updateTransactionStatusIssue(request: IssueRequest, polkaB
     }
 }
 
-export async function updateTransactionProofData(request: IssueRequest, polkaBTC: PolkaBTCAPI, 
-    storage: Storage, dispatch: Dispatch<IssueActions>) {
+export async function updateTransactionProofData(
+    request: IssueRequest,
+    polkaBTC: PolkaBTCAPI,
+    storage: Storage,
+    dispatch: Dispatch<IssueActions>
+) {
     if (request && request.confirmations > 6 && !request.completed && request.btcTxId) {
         try {
             const txId = remove0x(request.btcTxId);
@@ -51,8 +67,11 @@ export async function updateTransactionProofData(request: IssueRequest, polkaBTC
 
             const updatedRequest = request;
             const newHeight = transactionBlockHeight ? transactionBlockHeight : 0;
-            if (updatedRequest.transactionBlockHeight !== newHeight || updatedRequest.merkleProof !== merkleProof
-                || updatedRequest.rawTransaction.byteLength !== rawTx.byteLength) {
+            if (
+                updatedRequest.transactionBlockHeight !== newHeight ||
+                updatedRequest.merkleProof !== merkleProof ||
+                updatedRequest.rawTransaction.byteLength !== rawTx.byteLength
+            ) {
                 updatedRequest.transactionBlockHeight = newHeight;
                 updatedRequest.merkleProof = merkleProof;
                 updatedRequest.rawTransaction = rawTx;

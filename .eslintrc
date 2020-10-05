@@ -28,6 +28,9 @@
         "jsx-quotes": [
           "off"
         ],
+        "no-case-declarations": [
+          "off"
+        ],
         "quotes": [
           "error",
           "double",

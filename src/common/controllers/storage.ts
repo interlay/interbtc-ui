@@ -86,8 +86,8 @@ export default class Storage implements StorageInterface {
 
     addIssueRequestListeners(id: string): void {
         const requestListeners = localStorage.getItem("requestListeners");
-        if (requestListeners){
-            localStorage.add("requestListeners", [...requestListeners.split(","),id]);
+        if (requestListeners) {
+            localStorage.add("requestListeners", [...requestListeners.split(","), id]);
         } else {
             localStorage.add("requestListeners", id);
         }
