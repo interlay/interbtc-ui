@@ -28,6 +28,7 @@ export default function IssueRequests(props: IssueRequestProps) {
 
     const [isExecutePending, setExecutePending] = useState(false);
     const polkaBTC = useSelector((state: StoreType) => state.api);
+    const storage = useSelector((state: StoreType) => state.storage);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -61,6 +62,7 @@ export default function IssueRequests(props: IssueRequestProps) {
             provenReq.merkleProof = merkleProof;
             provenReq.rawTransaction = rawTx;
             dispatch(updateIssueRequestAction(provenReq));
+            storage.modifyIssueRequest(provenReq);
 
             toast.success("Fetching proof data for Bitcoin transaction: " + txId);
             console.log("txid" + txId);
@@ -82,6 +84,7 @@ export default function IssueRequests(props: IssueRequestProps) {
             let completedReq = provenReq;
             completedReq.completed = true;
             dispatch(updateIssueRequestAction(completedReq));
+            storage.modifyIssueRequest(completedReq);
 
             toast.success("Succesfully executed redeem request: " + request.id);
         } catch (error) {
