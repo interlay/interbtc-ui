@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { changeBtcTxIdAction, changeIssueStepAction } from "../../../common/actions/issue.actions";
 import { StoreType } from "../../../common/types/util.types";
+import { remove0x } from "../../../common/utils/utils";
 
 type BTCPaymentConfirmationProps = {
     closeModal: () => void;
@@ -28,7 +29,7 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
     const onChange = async (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         if (name === "btcTxId") {
-            const txId = value;
+            const txId = remove0x(value);
             dispatch(changeBtcTxIdAction(txId));
             let request = storage.getIssueRequest(issueId);
             if (request) {

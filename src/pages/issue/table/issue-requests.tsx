@@ -9,15 +9,16 @@ import { StoreType } from "../../../common/types/util.types";
 import { useEffect } from "react";
 import ButtonMaybePending from '../../../common/components/pending-button';
 import { toast } from 'react-toastify';
-import { startTransactionProofWatcherIssue, startTransactionWatcherIssue } from '../../../common/utils/transaction-watcher';
-import { 
-    updateIssueRequestAction, 
-    changeIssueStepAction, 
-    changeBtcTxIdAction, 
-    changeIssueIdAction } from '../../../common/actions/issue.actions';
+import { startTransactionWatcherIssue } from '../../../common/utils/transaction-watcher';
+import {
+    updateIssueRequestAction,
+    changeIssueStepAction,
+    changeBtcTxIdAction,
+    changeIssueIdAction
+} from '../../../common/actions/issue.actions';
 
 type IssueRequestProps = {
-    handleShow: ()=>void;
+    handleShow: () => void;
 }
 
 export default function IssueRequests(props: IssueRequestProps) {
@@ -32,36 +33,55 @@ export default function IssueRequests(props: IssueRequestProps) {
     useEffect(() => {
         const fetchData = async () => {
             issueRequests.map(async (request: IssueRequest) => {
-                if(transactionListeners.indexOf(request.id) === -1){
+                if (transactionListeners.indexOf(request.id) === -1) {
                     startTransactionWatcherIssue(request, polkaBTC, dispatch);
-                }
-            });
-            issueRequests.map(async (request: IssueRequest) => {
-                if(proofListeners.indexOf(request.id) === -1){
-                    startTransactionProofWatcherIssue(request, polkaBTC, dispatch);                    
                 }
             });
         }
         fetchData();
     }, [polkaBTC, issueRequests, proofListeners, transactionListeners, dispatch]);
 
+
     const execute = async (request: IssueRequest) => {
         setExecutePending(true);
         try {
-            const parsedIssuedId = polkaBTC.api.createType("H256", request.id);
-            const parsedTxId = polkaBTC.api.createType("H256", request.btcTxId);
-            const parsedTxBlockHeight = polkaBTC.api.createType("u32", request.transactionBlockHeight);
-            const parsedMerkleProof = polkaBTC.api.createType("Bytes", request.merkleProof);
-            const parsedRawTx = polkaBTC.api.createType("Bytes", request.rawTransaction);
+            // get proof data from bitcoin
+            const txId = request.btcTxId;
+            const [transactionBlockHeight, merkleProof, rawTx] = await Promise.all([
+                polkaBTC.btcCore.getTransactionBlockHeight(txId),
+                polkaBTC.btcCore.getMerkleProof(txId),
+                polkaBTC.btcCore.getRawTransaction(txId),
+            ]);
 
+            if (!transactionBlockHeight) {
+                throw new Error("Transaction not yet included in Bitcoin.");
+            }
+            let provenReq = request;
+            provenReq.transactionBlockHeight = transactionBlockHeight;
+            provenReq.merkleProof = merkleProof;
+            provenReq.rawTransaction = rawTx;
+            dispatch(updateIssueRequestAction(provenReq));
+
+            toast.success("Fetching proof data for Bitcoin transaction: " + txId);
+            console.log("txid" + txId);
+            console.log("height" + transactionBlockHeight);
+            console.log("proof" + merkleProof);
+            console.log("raw" + rawTx);
+
+            // prepare types for polkadot
+            const parsedIssuedId = polkaBTC.api.createType("H256", provenReq.id);
+            const parsedTxId = polkaBTC.api.createType("H256", txId);
+            const parsedTxBlockHeight = polkaBTC.api.createType("u32", transactionBlockHeight);
+            const parsedMerkleProof = polkaBTC.api.createType("Bytes", merkleProof);
+            const parsedRawTx = polkaBTC.api.createType("Bytes", rawTx);
+
+            toast.success("Executing redeem request: " + request.id);
+            // execute issue
             await polkaBTC.issue.execute(parsedIssuedId, parsedTxId, parsedTxBlockHeight, parsedMerkleProof, parsedRawTx);
 
-            const req = issueRequests.find((issueRequest: IssueRequest) => issueRequest.id === request.id);
-            if (req) {
-                let updatedReq = req;
-                updatedReq.completed = true;
-                dispatch(updateIssueRequestAction(updatedReq));
-            }
+            let completedReq = provenReq;
+            completedReq.completed = true;
+            dispatch(updateIssueRequestAction(completedReq));
 
             toast.success("Succesfully executed redeem request: " + request.id);
         } catch (error) {
@@ -82,7 +102,7 @@ export default function IssueRequests(props: IssueRequestProps) {
                     isPending={isExecutePending}
                     size="lg"
                     block
-                    onClick={(event: MouseEvent<HTMLElement>) => {event.stopPropagation(); execute(request);}}>
+                    onClick={(event: MouseEvent<HTMLElement>) => { event.stopPropagation(); execute(request); }}>
                     Execute
                 </ButtonMaybePending>
 
@@ -91,7 +111,7 @@ export default function IssueRequests(props: IssueRequestProps) {
     };
 
     const requestClicked = (request: IssueRequest): void => {
-        if(request.completed) return;
+        if (request.completed) return;
 
         dispatch(changeBtcTxIdAction(request.btcTxId));
         dispatch(changeIssueIdAction(request.id));
@@ -117,7 +137,7 @@ export default function IssueRequests(props: IssueRequestProps) {
                     {
                         issueRequests && issueRequests.map((request: IssueRequest) => {
                             return (
-                                <tr onClick={()=>requestClicked(request)}>
+                                <tr onClick={() => requestClicked(request)}>
                                     <td>{shortAddress(request.id)}</td>
                                     <td>{request.amountBTC} PolkaBTC</td>
                                     <td>{dateToShortString(request.creation)}</td>
