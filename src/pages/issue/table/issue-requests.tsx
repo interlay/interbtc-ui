@@ -1,4 +1,5 @@
 import React, { useState, MouseEvent } from 'react';
+import { Bytes } from "@polkadot/types/primitive";
 
 import { IssueRequest } from "../../../common/types/issue.types";
 import { Table } from "react-bootstrap";
@@ -65,22 +66,16 @@ export default function IssueRequests(props: IssueRequestProps) {
             storage.modifyIssueRequest(provenReq);
 
             toast.success("Fetching proof data for Bitcoin transaction: " + txId);
-            console.log("txid: " + txId);
-            console.log("height: " + transactionBlockHeight);
-            console.log("proof: " + merkleProof);
-            console.log("raw: " + rawTx);
+            const txIdBuffer = Buffer.from(txId, "hex").reverse();
+            const merkleProofBuffer = Buffer.from(merkleProof, "hex");
 
             // prepare types for polkadot
             const parsedIssuedId = polkaBTC.api.createType("H256", provenReq.id);
-            const parsedTxId = polkaBTC.api.createType("H256", txId);
+            const parsedTxId = polkaBTC.api.createType("H256", txIdBuffer);
             const parsedTxBlockHeight = polkaBTC.api.createType("u32", transactionBlockHeight);
-            const parsedMerkleProof = polkaBTC.api.createType("Bytes", merkleProof);
+            const parsedMerkleProof = polkaBTC.api.createType("Bytes", "0x" + merkleProof);
             const parsedRawTx = polkaBTC.api.createType("Bytes", rawTx);
 
-            console.log("txid: " + parsedTxId);
-            console.log("height: " + parsedTxBlockHeight);
-            console.log("proof: " + parsedMerkleProof);
-            console.log("raw: " + parsedRawTx);
             toast.success("Executing redeem request: " + request.id);
             // execute issue
             const success = await polkaBTC.issue.execute(parsedIssuedId, parsedTxId, parsedTxBlockHeight, parsedMerkleProof, parsedRawTx);
