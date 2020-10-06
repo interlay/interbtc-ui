@@ -3,7 +3,7 @@ import { FormGroup, Row, Col, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { changeBtcTxIdAction, changeIssueStepAction } from "../../../common/actions/issue.actions";
+import { changeBtcTxIdAction, changeIssueStepAction, updateIssueRequestAction } from "../../../common/actions/issue.actions";
 import { StoreType } from "../../../common/types/util.types";
 import { remove0x } from "../../../common/utils/utils";
 
@@ -35,6 +35,7 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
             if (request) {
                 request.btcTxId = txId;
                 storage.modifyIssueRequest(request);
+                dispatch(updateIssueRequestAction(request));
             } else {
                 toast.error("Exception: Issue request not found.");
             }
