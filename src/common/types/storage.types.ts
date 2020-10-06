@@ -6,6 +6,7 @@ export enum CommonStorage {
     totalLockedDOT = "TOTAL_LOCKED_DOT",
     collateralization = "COLLATERALIZATION",
     feesEarned = "FEES_EARNED",
+    userAddress = "POLKABTC_USER_ADDRESS",
 }
 
 export enum UserStorage {

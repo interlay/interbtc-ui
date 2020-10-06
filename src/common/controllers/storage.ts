@@ -25,13 +25,24 @@ export default class Storage implements StorageInterface {
     private redeemRequests: Array<RedeemRequest>;
 
     // load requests based on user account
-    constructor(address?: string) {
-        if (address) {
+    constructor() {
+        const address = this.retrieveUserAddress();
+        if (address.length > 0) {
             this.address = address;
             [this.issueRequests, this.redeemRequests] = this.loadRequests();
         } else {
             [this.issueRequests, this.redeemRequests] = [[], []];
         }
+    }
+
+    retrieveUserAddress(): string {
+        return this.getItemCommon(CommonStorage.userAddress);
+    }
+
+    setUserAddress(address: string): void {
+        this.address = address;
+        this.setItemCommon(CommonStorage.userAddress, address);
+        [this.issueRequests, this.redeemRequests] = this.loadRequests();
     }
 
     getItemCommon(key: CommonStorage): string {
@@ -151,8 +162,13 @@ export default class Storage implements StorageInterface {
         this.storeRequests();
     }
 
-    clearStorage(): void {
+    clearStorage(keepAddress = false): void {
         localStorage.clear();
+        if (keepAddress && this.address) {
+            this.setUserAddress(this.address);
+        } else {
+            delete this.address;
+        }
     }
 
     private storeRequests(): void {

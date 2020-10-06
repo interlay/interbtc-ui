@@ -1,10 +1,10 @@
 import { Signer } from "@polkadot/api/types";
-import { KeyringPair } from "@polkadot/keyring/types";
 
 interface AppState {
-    account?: KeyringPair;
+    accounts?: string[];
     address?: string;
     signer?: Signer;
+    showSelectAccount: boolean;
 }
 
 export default AppState;

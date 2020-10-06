@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { NavLink, Link } from "react-router-dom";
-import { Image, Button, Col, Row } from "react-bootstrap";
-
-import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
-import { useSelector } from "react-redux";
-import { StoreType } from "../common/types/util.types";
 import { planckToDOT, satToBTC } from "@interlay/polkabtc";
+import React, { useEffect, useState } from "react";
+import { Button, Col, Image, Row } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { Link, NavLink } from "react-router-dom";
+import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
+import { StoreType } from "../common/types/util.types";
 
 export default function LandingPage(): JSX.Element {
     const [totalPolkaBTC, setTotalPolkaBTC] = useState("...");

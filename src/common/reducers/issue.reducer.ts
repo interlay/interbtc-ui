@@ -12,6 +12,7 @@ import {
     IssueActions,
     ADD_PROOF_LISTENER,
     ADD_TRANSACTION_LISTENER,
+    SET_ISSUE_REQUESTS,
 } from "../types/actions.types";
 import { Issue, IssueRequest } from "../types/issue.types";
 
@@ -56,6 +57,8 @@ export const issueReducer = (state: Issue = initialState, action: IssueActions):
                 issueRequests = [...state.issueRequests, ...issueRequests];
             }
             return { ...state, issueRequests };
+        case SET_ISSUE_REQUESTS:
+            return { ...state, issueRequests: action.requests };
         case UPDATE_ISSUE_REQUEST:
             const updatedRequests = state.issueRequests.map((issue: IssueRequest) => {
                 return issue.id === action.request.id ? action.request : issue;
