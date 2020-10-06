@@ -6,6 +6,7 @@ import {
     CHANGE_VAULT_BTC_ADDRESS,
     CHANGE_VAULT_DOT_ADDRESS,
     CHANGE_REDEEM_ID,
+    SET_REDEEM_REQUESTS,
     ChangeRedeemStep,
     ChangeAmountPolkaBtc,
     ChangeBtcAddress,
@@ -13,7 +14,9 @@ import {
     ChangeVaultBtcAddress,
     ChangeVaultDotAddress,
     ChangeRedeemId,
+    SetRedeemRequests,
 } from "../types/actions.types";
+import { RedeemRequest } from "../types/redeem.types";
 
 export const changeRedeemStepAction = (step: string): ChangeRedeemStep => ({
     type: CHANGE_REDEEM_STEP,
@@ -28,6 +31,11 @@ export const changeAmountPolkaBTCAction = (amount: string): ChangeAmountPolkaBtc
 export const changeBTCAddressAction = (btcAddress: string): ChangeBtcAddress => ({
     type: CHANGE_BTC_ADDRESS,
     btcAddress,
+});
+
+export const setRedeemRequestsAction = (requests: RedeemRequest[]): SetRedeemRequests => ({
+    type: SET_REDEEM_REQUESTS,
+    requests,
 });
 
 export const resetRedeemWizardAction = (): ResetRedeemWizard => ({

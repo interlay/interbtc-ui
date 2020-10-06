@@ -76,6 +76,7 @@ export const CHANGE_REDEEM_STEP = "CHANGE_REDEEM_STEP";
 export const CHANGE_AMOUNT_POLKA_BTC = "CHANGE_AMOUNT_POLKA_BTC";
 export const CHANGE_BTC_ADDRESS = "CHANGE_BTC_ADDRESS";
 export const CHANGE_REDEEM_ID = "CHANGE_REDEEM_ID";
+export const SET_REDEEM_REQUESTS = "SET_REDEEM_REQUESTS";
 export const RESET_REDEEM_WIZARD = "RESET_REDEEM_WIZARD";
 export const STORE_REDEEM_REQUEST = "STORE_REDEEM_REQUEST";
 
@@ -103,6 +104,11 @@ export interface ResetRedeemWizard {
     type: typeof RESET_REDEEM_WIZARD;
 }
 
+export interface SetRedeemRequests {
+    type: typeof SET_REDEEM_REQUESTS;
+    requests: RedeemRequest[];
+}
+
 export interface StoreRedeemRequest {
     type: typeof STORE_REDEEM_REQUEST;
     request: RedeemRequest;
@@ -116,6 +122,7 @@ export type RedeemActions =
     | ChangeVaultDotAddress
     | ChangeRedeemId
     | ResetRedeemWizard
+    | SetRedeemRequests
     | StoreRedeemRequest;
 
 // ISSUE
@@ -128,6 +135,7 @@ export const RESET_ISSUE_WIZARD = "RESET_ISSUE_WIZARD";
 export const STORE_ISSUE_REQUEST = "STORE_ISSUE_REQUEST";
 export const CHANGE_BTC_TX_ID = "CHANGE_BTC_TX_ID";
 export const ADD_ISSUE_REQUEST = "ADD_ISSUE_REQUEST";
+export const SET_ISSUE_REQUESTS = "SET_ISSUE_REQUESTS";
 export const UPDATE_ISSUE_REQUEST = "UPDATE_ISSUE_REQUEST";
 export const ADD_TRANSACTION_LISTENER = "ADD_TRANSACTION_LISTENER";
 export const ADD_PROOF_LISTENER = "ADD_PROOF_LISTENER";
@@ -176,6 +184,11 @@ export interface AddIssueRequest {
     request: IssueRequest;
 }
 
+export interface SetIssueRequests {
+    type: typeof SET_ISSUE_REQUESTS;
+    requests: IssueRequest[];
+}
+
 export interface UpdateIssueRequest {
     type: typeof UPDATE_ISSUE_REQUEST;
     request: IssueRequest;
@@ -204,5 +217,6 @@ export type IssueActions =
     | StoreIssueRequest
     | AddIssueRequest
     | UpdateIssueRequest
+    | SetIssueRequests
     | AddTransactionListener
     | AddProofListener;

@@ -32,7 +32,7 @@ import IssuePage from "./pages/issue/issue.page";
 import VaultPage from "./pages/vault.page";
 import RedeemPage from "./pages/redeem/redeem.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
-import { changeStorageAddress } from "./common/actions/storage.actions";
+import { setUser } from "./common/utils/storage";
 
 const storeLogger = createLogger();
 const store = createStore(rootReducer, applyMiddleware(storeLogger));
@@ -112,7 +112,7 @@ export default class App extends Component<{}, AppState> {
         this.setState({ address, showSelectAccount: false });
 
         store.dispatch(addPolkaBtcInstance(polkaBTC));
-        store.dispatch(changeStorageAddress(address));
+        setUser(address, store.getState().storage, store.dispatch);
     }
 
     render() {
