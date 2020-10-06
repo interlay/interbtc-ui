@@ -29,6 +29,7 @@ export async function updateTransactionStatusIssue(
             if (request.confirmations !== txStatus.confirmations) {
                 updatedRequest.confirmations = txStatus.confirmations;
                 dispatch(updateIssueRequestAction(updatedRequest));
+                // FIXME: this should update the browser storage as well
             }
         } catch (error) {
             toast.error(error.toString());
