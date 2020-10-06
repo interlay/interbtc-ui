@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, MouseEvent } from 'react';
 
 import { IssueRequest } from "../../../common/types/issue.types";
 import { Table } from "react-bootstrap";
@@ -82,7 +82,7 @@ export default function IssueRequests(props: IssueRequestProps) {
                     isPending={isExecutePending}
                     size="lg"
                     block
-                    onClick={() => execute(request)}>
+                    onClick={(event: MouseEvent<HTMLElement>) => {event.stopPropagation(); execute(request);}}>
                     Execute
                 </ButtonMaybePending>
 
