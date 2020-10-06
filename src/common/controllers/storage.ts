@@ -42,6 +42,7 @@ export default class Storage implements StorageInterface {
     setUserAddress(address: string): void {
         this.address = address;
         this.setItemCommon(CommonStorage.userAddress, address);
+        [this.issueRequests, this.redeemRequests] = this.loadRequests();
     }
 
     getItemCommon(key: CommonStorage): string {

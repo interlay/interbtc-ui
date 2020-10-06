@@ -32,7 +32,7 @@ import IssuePage from "./pages/issue/issue.page";
 import VaultPage from "./pages/vault.page";
 import RedeemPage from "./pages/redeem/redeem.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
-import { clearStorage, changeStorageAddress } from "./common/actions/storage.actions";
+import { changeStorageAddress } from "./common/actions/storage.actions";
 
 const storeLogger = createLogger();
 const store = createStore(rootReducer, applyMiddleware(storeLogger));
@@ -90,7 +90,6 @@ export default class App extends Component<{}, AppState> {
     }
 
     async componentDidMount(): Promise<void> {
-        store.dispatch(clearStorage(true));
         try {
             await this.createAPIInstace();
         } catch (e) {
