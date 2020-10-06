@@ -17,7 +17,7 @@ type BTCTxIdForm = {
 export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProps) {
     const issueId = useSelector((state: StoreType) => state.issue.id);
     const btcTxId = useSelector((state: StoreType) => state.issue.btcTxId);
-    const { register, handleSubmit, errors } = useForm<BTCTxIdForm>();
+    const { register, handleSubmit, errors } = useForm<BTCTxIdForm>({defaultValues: {btcTxId}});
     const storage = useSelector((state: StoreType) => state.storage);
     const dispatch = useDispatch();
 

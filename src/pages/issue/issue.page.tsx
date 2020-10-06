@@ -65,11 +65,11 @@ export default function IssuePage(): JSX.Element {
                         <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
                             <Button variant="outline-dark" size="lg" block onClick={handleShow}>
                                 Issue PolkaBTC
-                                </Button>
+                            </Button>
                         </Col>
                     </Row>
 
-                    <IssueRequests />
+                    <IssueRequests handleShow={handleShow}/>
 
                     <Modal show={showWizard} onHide={handleClose}>
                         <IssueWizard handleClose={handleClose} />

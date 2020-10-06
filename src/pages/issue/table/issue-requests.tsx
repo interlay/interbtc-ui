@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, MouseEvent } from 'react';
 
 import { IssueRequest } from "../../../common/types/issue.types";
 import { Table } from "react-bootstrap";
@@ -10,9 +10,17 @@ import { useEffect } from "react";
 import ButtonMaybePending from '../../../common/components/pending-button';
 import { toast } from 'react-toastify';
 import { startTransactionProofWatcherIssue, startTransactionWatcherIssue } from '../../../common/utils/transaction-watcher';
-import { updateIssueRequestAction } from '../../../common/actions/issue.actions';
+import { 
+    updateIssueRequestAction, 
+    changeIssueStepAction, 
+    changeBtcTxIdAction, 
+    changeIssueIdAction } from '../../../common/actions/issue.actions';
 
-export default function IssueRequests() {
+type IssueRequestProps = {
+    handleShow: ()=>void;
+}
+
+export default function IssueRequests(props: IssueRequestProps) {
     const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests);
     const transactionListeners = useSelector((state: StoreType) => state.issue.transactionListeners);
     const proofListeners = useSelector((state: StoreType) => state.issue.proofListeners);
@@ -74,13 +82,22 @@ export default function IssueRequests() {
                     isPending={isExecutePending}
                     size="lg"
                     block
-                    onClick={() => execute(request)}>
+                    onClick={(event: MouseEvent<HTMLElement>) => {event.stopPropagation(); execute(request);}}>
                     Execute
                 </ButtonMaybePending>
 
             );
         }
     };
+
+    const requestClicked = (request: IssueRequest): void => {
+        if(request.completed) return;
+
+        dispatch(changeBtcTxIdAction(request.btcTxId));
+        dispatch(changeIssueIdAction(request.id));
+        dispatch(changeIssueStepAction("BTC_PAYMENT_CONFIRMATION"));
+        props.handleShow();
+    }
 
     return (
         <div>
@@ -98,9 +115,9 @@ export default function IssueRequests() {
                 </thead>
                 <tbody>
                     {
-                        issueRequests && issueRequests.map((request) => {
+                        issueRequests && issueRequests.map((request: IssueRequest) => {
                             return (
-                                <tr>
+                                <tr onClick={()=>requestClicked(request)}>
                                     <td>{shortAddress(request.id)}</td>
                                     <td>{request.amountBTC} PolkaBTC</td>
                                     <td>{dateToShortString(request.creation)}</td>
