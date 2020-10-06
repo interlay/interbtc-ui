@@ -95,15 +95,6 @@ export default class Storage implements StorageInterface {
         return this.issueRequests.find((r) => r.id === id);
     }
 
-    addIssueRequestListeners(id: string): void {
-        const requestListeners = localStorage.getItem("requestListeners");
-        if (requestListeners) {
-            localStorage.add("requestListeners", [...requestListeners.split(","), id]);
-        } else {
-            localStorage.add("requestListeners", id);
-        }
-    }
-
     getRedeemRequests(): Array<RedeemRequest> {
         return this.redeemRequests;
     }

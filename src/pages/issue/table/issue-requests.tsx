@@ -40,7 +40,7 @@ export default function IssueRequests(props: IssueRequestProps) {
             });
         }
         fetchData();
-    }, [polkaBTC, issueRequests, proofListeners, transactionListeners, dispatch]);
+    }, [polkaBTC, issueRequests, proofListeners, transactionListeners, dispatch, storage]);
 
 
     const execute = async (request: IssueRequest) => {
