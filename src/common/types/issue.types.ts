@@ -19,4 +19,7 @@ export interface Issue {
     vaultBtcAddress: string;
     id: string;
     btcTxId: string;
+    issueRequests: IssueRequest[];
+    transactionListeners: string[];
+    proofListeners: string[];
 }

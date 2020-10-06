@@ -4,35 +4,38 @@ import { IssueRequest } from "../../../common/types/issue.types";
 import { Table } from "react-bootstrap";
 import { dateToShortString, shortAddress, shortTxId } from "../../../common/utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { useEffect } from "react";
 import ButtonMaybePending from '../../../common/components/pending-button';
 import { toast } from 'react-toastify';
 import { startTransactionProofWatcherIssue, startTransactionWatcherIssue } from '../../../common/utils/transaction-watcher';
+import { updateIssueRequestAction } from '../../../common/actions/issue.actions';
 
 export default function IssueRequests() {
-    const [issueRequests, setIssueRequests] = useState<Array<IssueRequest>>([]);
-    // const [startedUpdatingIssueRequests, setUpdatingIssueRequests] = useState({});
+    const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests);
+    const transactionListeners = useSelector((state: StoreType) => state.issue.transactionListeners);
+    const proofListeners = useSelector((state: StoreType) => state.issue.proofListeners);
+
     const [isExecutePending, setExecutePending] = useState(false);
-    const storage = useSelector((state: StoreType) => state.storage);
     const polkaBTC = useSelector((state: StoreType) => state.api);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!storage) return;
-            // Load issue requests
-            const issueRequests = storage.getIssueRequests();
-            setIssueRequests(issueRequests);
             issueRequests.map(async (request: IssueRequest) => {
-                startTransactionWatcherIssue(request.id, polkaBTC, storage);
+                if(transactionListeners.indexOf(request.id) === -1){
+                    startTransactionWatcherIssue(request, polkaBTC, dispatch);
+                }
             });
             issueRequests.map(async (request: IssueRequest) => {
-                startTransactionProofWatcherIssue (request.id, polkaBTC, storage);
+                if(proofListeners.indexOf(request.id) === -1){
+                    startTransactionProofWatcherIssue(request, polkaBTC, dispatch);                    
+                }
             });
         }
         fetchData();
-    }, [polkaBTC, storage]);
+    }, [polkaBTC, issueRequests, proofListeners, transactionListeners, dispatch]);
 
     const execute = async (request: IssueRequest) => {
         setExecutePending(true);
@@ -45,11 +48,11 @@ export default function IssueRequests() {
 
             await polkaBTC.issue.execute(parsedIssuedId, parsedTxId, parsedTxBlockHeight, parsedMerkleProof, parsedRawTx);
 
-            const req = storage.getIssueRequest(request.id);
+            const req = issueRequests.find((issueRequest: IssueRequest) => issueRequest.id === request.id);
             if (req) {
                 let updatedReq = req;
                 updatedReq.completed = true;
-                storage.modifyIssueRequest(updatedReq);
+                dispatch(updateIssueRequestAction(updatedReq));
             }
 
             toast.success("Succesfully executed redeem request: " + request.id);
@@ -95,7 +98,7 @@ export default function IssueRequests() {
                 </thead>
                 <tbody>
                     {
-                        issueRequests.map((request) => {
+                        issueRequests && issueRequests.map((request) => {
                             return (
                                 <tr>
                                     <td>{shortAddress(request.id)}</td>
