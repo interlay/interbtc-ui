@@ -35,7 +35,7 @@ export default function IssueRequests(props: IssueRequestProps) {
         const fetchData = async () => {
             issueRequests.map(async (request: IssueRequest) => {
                 if (transactionListeners.indexOf(request.id) === -1) {
-                    startTransactionWatcherIssue(request, polkaBTC, dispatch);
+                    startTransactionWatcherIssue(request, polkaBTC, dispatch, storage);
                 }
             });
         }
