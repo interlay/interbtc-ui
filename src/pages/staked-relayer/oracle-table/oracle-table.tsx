@@ -10,7 +10,11 @@ interface OracleInfo {
     exchangeRate: number;
 }
 
-export default function OracleTable(): ReactElement {
+type OracleTableProps = {
+    planckLocked: string;
+}
+
+export default function OracleTable(props: OracleTableProps): ReactElement {
     const [oracleStatus, setStatus] = useState("Online");
     const [oracles, setOracles] = useState<Array<OracleInfo>>([]);
     const polkaBTC = useSelector((state: StoreType) => state.api);
@@ -33,7 +37,7 @@ export default function OracleTable(): ReactElement {
     }, [polkaBTC]);
 
     return (
-        <div className="oracle-table">
+        <div className={"oracle-table " + (Number(props.planckLocked)<=0 ? "oracle-space" : "")}>
             <div className="row">
                 <div className="col-12">
                     <div className="header">

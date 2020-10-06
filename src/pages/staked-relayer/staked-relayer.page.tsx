@@ -107,8 +107,8 @@ export default function StakedRelayerPage() {
                         stakedRelayerAddress={stakedRelayerAddress}
                     ></StatusUpdateTable>
                     <VaultTable></VaultTable>
-                    <OracleTable></OracleTable>
-                    {Number(planckLocked) > 0 && (
+                    <OracleTable planckLocked={planckLocked}></OracleTable>
+                    {Number(planckLocked) > 0 && <React.Fragment>
                         <ButtonMaybePending
                             className="staked-button"
                             variant="outline-danger"
@@ -117,14 +117,12 @@ export default function StakedRelayerPage() {
                         >
                             Deregister
                         </ButtonMaybePending>
-                    )}
-                    {Number(planckLocked) > 0 && (
                         <div className="row">
                             <div className="col-12 de-note">
                                 Note: You can only deregister if you are not participating in a vote.
                             </div>
                         </div>
-                    )}
+                    </React.Fragment>}
                 </div>
             </div>
         </div>
