@@ -30,7 +30,7 @@ export default function IssuePage(): JSX.Element {
             if (!storage) return;
 
             const address = polkaBTC.account?.toString();
-            const accountId = polkaBTC.api.createType("AccountId", address) as any;
+            const accountId = polkaBTC.api.createType("AccountId", address);
             const balancePolkaSAT = await polkaBTC.treasury.balancePolkaBTC(accountId);
             const balancePLANCK = await polkaBTC.collateral.balanceDOT(accountId);
             // TODO: write data to storage
