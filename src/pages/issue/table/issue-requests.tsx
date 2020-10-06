@@ -1,5 +1,4 @@
 import React, { useState, MouseEvent } from 'react';
-import { Bytes } from "@polkadot/types/primitive";
 
 import { IssueRequest } from "../../../common/types/issue.types";
 import { Table } from "react-bootstrap";
@@ -67,7 +66,6 @@ export default function IssueRequests(props: IssueRequestProps) {
 
             toast.success("Fetching proof data for Bitcoin transaction: " + txId);
             const txIdBuffer = Buffer.from(txId, "hex").reverse();
-            const merkleProofBuffer = Buffer.from(merkleProof, "hex");
 
             // prepare types for polkadot
             const parsedIssuedId = polkaBTC.api.createType("H256", provenReq.id);
