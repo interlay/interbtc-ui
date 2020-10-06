@@ -65,10 +65,10 @@ export default function IssueRequests(props: IssueRequestProps) {
             storage.modifyIssueRequest(provenReq);
 
             toast.success("Fetching proof data for Bitcoin transaction: " + txId);
-            console.log("txid" + txId);
-            console.log("height" + transactionBlockHeight);
-            console.log("proof" + merkleProof);
-            console.log("raw" + rawTx);
+            console.log("txid: " + txId);
+            console.log("height: " + transactionBlockHeight);
+            console.log("proof: " + merkleProof);
+            console.log("raw: " + rawTx);
 
             // prepare types for polkadot
             const parsedIssuedId = polkaBTC.api.createType("H256", provenReq.id);
@@ -77,9 +77,17 @@ export default function IssueRequests(props: IssueRequestProps) {
             const parsedMerkleProof = polkaBTC.api.createType("Bytes", merkleProof);
             const parsedRawTx = polkaBTC.api.createType("Bytes", rawTx);
 
+            console.log("txid: " + parsedTxId);
+            console.log("height: " + parsedTxBlockHeight);
+            console.log("proof: " + parsedMerkleProof);
+            console.log("raw: " + parsedRawTx);
             toast.success("Executing redeem request: " + request.id);
             // execute issue
-            await polkaBTC.issue.execute(parsedIssuedId, parsedTxId, parsedTxBlockHeight, parsedMerkleProof, parsedRawTx);
+            const success = await polkaBTC.issue.execute(parsedIssuedId, parsedTxId, parsedTxBlockHeight, parsedMerkleProof, parsedRawTx);
+
+            if (!success) {
+                throw new Error("Execute failed.");
+            }
 
             let completedReq = provenReq;
             completedReq.completed = true;
