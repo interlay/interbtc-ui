@@ -105,6 +105,10 @@
         text-align: center;
     }
 
+    .oracle-space{
+        margin-bottom: 80px;
+    }
+
     .de-note{
         margin-top: 20px;
         margin-bottom: 50px;
@@ -114,11 +118,17 @@
         .de-note {
             margin-bottom: 100px;
         }
+        .oracle-space{
+            margin-bottom: 150px;
+        }
     }
 
     @include tablet-range{
         .de-note {
             margin-bottom: 100px;
+        }
+        .oracle-space{
+            margin-bottom: 150px;
         }
     }
 }
