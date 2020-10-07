@@ -72,7 +72,7 @@ export const changeIssueIdAction = (id: string): ChangeIssueId => ({
 });
 
 export const openWizardInEditModeAction = (): OpenWizardInEditMode => ({
-    type: OPEN_WIZARD_IN_EDIT_MODE
+    type: OPEN_WIZARD_IN_EDIT_MODE,
 });
 
 export const changeBtcTxIdAction = (btcTxId: string): ChangeBtcTxId => ({
