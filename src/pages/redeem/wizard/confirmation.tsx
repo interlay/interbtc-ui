@@ -24,7 +24,11 @@ export default function Confirmation() {
         // send the redeem request
         try {
             const amountPolkaSAT = btcToSat(amountPolkaBTC);
+            if (amountPolkaSAT === undefined) {
+                throw new Error("Invalid PolkaBTC amount input");
+            }
             const amount = polkaBTC.api.createType("Balance", amountPolkaSAT);
+
             // FIXME: use AccountId type from @polkadot/types/interfaces
             const vaultAccountId = polkaBTC.api.createType("AccountId", vaultAddress) as any;
             const requestResult = await polkaBTC.redeem.request(amount, btcAddress, vaultAccountId);
