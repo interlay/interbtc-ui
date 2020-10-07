@@ -139,6 +139,7 @@ export const SET_ISSUE_REQUESTS = "SET_ISSUE_REQUESTS";
 export const UPDATE_ISSUE_REQUEST = "UPDATE_ISSUE_REQUEST";
 export const ADD_TRANSACTION_LISTENER = "ADD_TRANSACTION_LISTENER";
 export const ADD_PROOF_LISTENER = "ADD_PROOF_LISTENER";
+export const OPEN_WIZARD_IN_EDIT_MODE = "OPEN_WIZARD_IN_EDIT_MODE";
 
 export interface ChangeIssueStep {
     type: typeof CHANGE_ISSUE_STEP;
@@ -204,6 +205,10 @@ export interface AddProofListener {
     id: string;
 }
 
+export interface OpenWizardInEditMode {
+    type: typeof OPEN_WIZARD_IN_EDIT_MODE;
+}
+
 export type IssueActions =
     | ChangeIssueStep
     | ChangeAmountBtc
@@ -219,4 +224,5 @@ export type IssueActions =
     | UpdateIssueRequest
     | SetIssueRequests
     | AddTransactionListener
-    | AddProofListener;
+    | AddProofListener
+    | OpenWizardInEditMode;
