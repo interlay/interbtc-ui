@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
+import { btcToSat } from "@interlay/polkabtc";
 
 export default function Confirmation() {
     const [isRequestPending, setRequestPending] = useState(false);
@@ -22,7 +23,8 @@ export default function Confirmation() {
         setRequestPending(true);
         // send the redeem request
         try {
-            const amount = polkaBTC.api.createType("Balance", amountPolkaBTC) as PolkaBTC;
+            const amountPolkaSAT = btcToSat(amountPolkaBTC);
+            const amount = polkaBTC.api.createType("Balance", amountPolkaSAT);
             // FIXME: use AccountId type from @polkadot/types/interfaces
             const vaultAccountId = polkaBTC.api.createType("AccountId", vaultAddress) as any;
             const requestResult = await polkaBTC.redeem.request(amount, btcAddress, vaultAccountId);
