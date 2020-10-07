@@ -9,6 +9,7 @@ import ReactMarkdown from "react-markdown";
 import * as constants from "../constants";
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_white.svg";
 
+//import * as PolkaBTCInfo from "../assets/polkaBTCInfo.md";
 
 export default function LandingPage(): JSX.Element {
     const [totalPolkaBTC, setTotalPolkaBTC] = useState("...");
@@ -28,7 +29,6 @@ export default function LandingPage(): JSX.Element {
             // TODO: write parachain data to storage
             setTotalPolkaBTC(totalPolkaBTC);
             setTotalLockedDOT(totalLockedDOT);
-            // fetch markdown
         };
         fetchData();
     }, [polkaBTC, storage, markdown]);
