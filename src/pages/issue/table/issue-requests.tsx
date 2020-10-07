@@ -14,7 +14,8 @@ import {
     updateIssueRequestAction,
     changeIssueStepAction,
     changeBtcTxIdAction,
-    changeIssueIdAction
+    changeIssueIdAction,
+    openWizardInEditModeAction
 } from '../../../common/actions/issue.actions';
 
 type IssueRequestProps = {
@@ -116,6 +117,7 @@ export default function IssueRequests(props: IssueRequestProps) {
     const requestClicked = (request: IssueRequest): void => {
         if (request.completed) return;
 
+        dispatch(openWizardInEditModeAction());
         dispatch(changeBtcTxIdAction(request.btcTxId));
         dispatch(changeIssueIdAction(request.id));
         dispatch(changeIssueStepAction("BTC_PAYMENT_CONFIRMATION"));

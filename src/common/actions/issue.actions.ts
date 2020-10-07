@@ -13,6 +13,7 @@ import {
     UPDATE_ISSUE_REQUEST,
     ADD_TRANSACTION_LISTENER,
     ADD_PROOF_LISTENER,
+    OPEN_WIZARD_IN_EDIT_MODE,
     ChangeIssueStep,
     ChangeBtcAddress,
     ResetIssueWizard,
@@ -27,6 +28,7 @@ import {
     UpdateIssueRequest,
     AddTransactionListener,
     AddProofListener,
+    OpenWizardInEditMode,
 } from "../types/actions.types";
 import { IssueRequest } from "../types/issue.types";
 
@@ -67,6 +69,10 @@ export const changeVaultDotAddressAction = (vaultDotAddress: string): ChangeVaul
 export const changeIssueIdAction = (id: string): ChangeIssueId => ({
     type: CHANGE_ISSUE_ID,
     id,
+});
+
+export const openWizardInEditModeAction = (): OpenWizardInEditMode => ({
+    type: OPEN_WIZARD_IN_EDIT_MODE
 });
 
 export const changeBtcTxIdAction = (btcTxId: string): ChangeBtcTxId => ({

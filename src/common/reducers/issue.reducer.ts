@@ -13,6 +13,7 @@ import {
     ADD_PROOF_LISTENER,
     ADD_TRANSACTION_LISTENER,
     SET_ISSUE_REQUESTS,
+    OPEN_WIZARD_IN_EDIT_MODE
 } from "../types/actions.types";
 import { Issue, IssueRequest } from "../types/issue.types";
 
@@ -27,6 +28,7 @@ const initialState = {
     issueRequests: [],
     transactionListeners: [],
     proofListeners: [],
+    wizardInEditMode: false
 };
 
 export const issueReducer = (state: Issue = initialState, action: IssueActions): Issue => {
@@ -72,6 +74,8 @@ export const issueReducer = (state: Issue = initialState, action: IssueActions):
         case ADD_TRANSACTION_LISTENER:
             if (state.transactionListeners.indexOf(action.id) !== -1) return state;
             return { ...state, transactionListeners: [...state.transactionListeners, action.id] };
+        case OPEN_WIZARD_IN_EDIT_MODE:
+            return {...state, wizardInEditMode: true};
         default:
             return state;
     }

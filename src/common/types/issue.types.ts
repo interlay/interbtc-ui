@@ -22,4 +22,5 @@ export interface Issue {
     issueRequests: IssueRequest[];
     transactionListeners: string[];
     proofListeners: string[];
+    wizardInEditMode: boolean;
 }
