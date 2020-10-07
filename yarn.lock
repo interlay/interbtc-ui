@@ -1218,7 +1218,7 @@
     axios "^0.19.2"
     typescript "~3.5.2"
 
-"@interlay/polkabtc@0.1.23":
+"@interlay/polkabtc@latest":
   version "0.1.23"
   resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.1.23.tgz#45456e703231ffa57e16c64cd63f137a9e3c296a"
   integrity sha512-/3qarcIZMlvnCqn4UTNr9ItfevChpZ3iUnHZHBMflM6mqpkZnXHAq1fBl3HNEu5B48u/gXEkMcDS6wcJGgG/GQ==

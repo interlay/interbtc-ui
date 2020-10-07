@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Col, Image, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
-import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
+import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_white.svg";
 import { StoreType } from "../common/types/util.types";
 import Big from "big.js";
 
@@ -30,36 +30,36 @@ export default function LandingPage(): JSX.Element {
 
     return (
         <div>
-            <section className="jumbotron min-vh-100 text-center white-background mt-2">
+            <section className="jumbotron min-vh-100 text-center polkabtc-background">
                 <div className="container mt-5">
                     <Link to="/">
                         <Image src={PolkaBTCImg} width="256"></Image>
                     </Link>
-                    <h3 style={{ fontSize: "1.5em" }} className="lead text-muted mt-3">
+                    <h3 style={{ fontSize: "1.5em" }} className="lead text-white mt-5">
                         PolkaBTC: Trustless and open DeFi access for your Bitcoin.
                     </h3>
 
-                    <Row className="mt-5">
+                    <Row className="mt-4">
                         <Col xs="12" sm={{ span: 6, offset: 3 }}>
-                            <h5 className="text-muted">Issued: {totalPolkaBTC} PolkaBTC</h5>
+                            <h5 className="text-white">Issued: {totalPolkaBTC} PolkaBTC</h5>
                         </Col>
                     </Row>
                     <Row className="mt-1">
                         <Col xs="12" sm={{ span: 6, offset: 3 }}>
-                            <h5 className="text-muted">Locked: {totalLockedDOT} DOT</h5>
+                            <h5 className="text-white">Locked: {totalLockedDOT} DOT</h5>
                         </Col>
                     </Row>
                     <Row className="mt-5">
                         <Col className="mt-2" xs="12" sm={{ span: 4, offset: 2 }}>
                             <NavLink className="text-decoration-none" to="/issue">
-                                <Button variant="outline-dark" size="lg" block>
+                                <Button variant="outline-polkadot" size="lg" block>
                                     Issue PolkaBTC
                                 </Button>
                             </NavLink>
                         </Col>
                         <Col className="mt-2" xs="12" sm={{ span: 4 }}>
                             <NavLink className="text-decoration-none" to="/redeem">
-                                <Button variant="outline-primary" size="lg" block>
+                                <Button variant="outline-bitcoin" size="lg" block>
                                     Redeem PolkaBTC
                                 </Button>
                             </NavLink>

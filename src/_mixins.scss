@@ -34,3 +34,12 @@
      font-style: normal;
    }
  }
+
+ @mixin button-variant(
+  $background,
+  $border,
+  $hover-background,
+  $hover-border,
+  $active-background,
+  $active-border
+){}
