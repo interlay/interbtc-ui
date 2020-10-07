@@ -62,7 +62,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
             let statusUpdates = await polkaBTC.stakedRelayer.getAllStatusUpdates();
             setStatusUpdates(
                 statusUpdates.map((status) => {
-                    const [id, statusUpdate] = status;
+                    const { id, statusUpdate } = status;
 
                     // NOTE: passing the `AccountId` in props cases a weird infinite reload bug,
                     // so we pass the address obtained from the staked relayer client and reconstruct
