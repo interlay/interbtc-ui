@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
 import { StoreType } from "../common/types/util.types";
-import Big from "big.js";  
+import Big from "big.js";
 
 export default function LandingPage(): JSX.Element {
     const [totalPolkaBTC, setTotalPolkaBTC] = useState("...");
