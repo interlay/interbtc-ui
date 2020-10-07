@@ -29,6 +29,10 @@ build:
   script:
     - yarn install
     - yarn build
+  artifacts:
+    expire_in: 1 day
+    paths:
+    - build
   only:
     - merge_requests
 
