@@ -1218,10 +1218,10 @@
     axios "^0.19.2"
     typescript "~3.5.2"
 
-"@interlay/polkabtc@0.1.20":
-  version "0.1.20"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.1.20.tgz#ef3be7c42ade9618cab72520b09be9c8d09b7d05"
-  integrity sha512-vmahSS5pneaHA+icKh4QTrXCm7u/XZmUAwHH+MDHXOSlzjknQXf6UKaLgarW07LpJefNwoLsINb/QiEP8YzdkQ==
+"@interlay/polkabtc@0.1.23":
+  version "0.1.23"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.1.23.tgz#45456e703231ffa57e16c64cd63f137a9e3c296a"
+  integrity sha512-/3qarcIZMlvnCqn4UTNr9ItfevChpZ3iUnHZHBMflM6mqpkZnXHAq1fBl3HNEu5B48u/gXEkMcDS6wcJGgG/GQ==
   dependencies:
     "@interlay/esplora-btc-api" "^0.1.7"
     "@types/big.js" "^4.0.5"
