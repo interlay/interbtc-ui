@@ -27,7 +27,7 @@ export default function IssueRequests(props: IssueRequestProps) {
     const transactionListeners = useSelector((state: StoreType) => state.issue.transactionListeners);
     const proofListeners = useSelector((state: StoreType) => state.issue.proofListeners);
 
-    const [isExecutePending, setExecutePending] = useState(false);
+    const [executePending, setExecutePending] = useState([""]);
     const polkaBTC = useSelector((state: StoreType) => state.api);
     const storage = useSelector((state: StoreType) => state.storage);
     const dispatch = useDispatch();
@@ -45,7 +45,7 @@ export default function IssueRequests(props: IssueRequestProps) {
 
 
     const execute = async (request: IssueRequest) => {
-        setExecutePending(true);
+        setExecutePending([...executePending, request.id]);
         try {
             // get proof data from bitcoin
             const txId = request.btcTxId;
@@ -91,7 +91,7 @@ export default function IssueRequests(props: IssueRequestProps) {
         } catch (error) {
             toast.error(error.toString());
         }
-        setExecutePending(false);
+        setExecutePending(executePending.splice(executePending.indexOf(request.id),1));
     };
 
     const handleCompleted = (request: IssueRequest) => {
@@ -100,10 +100,11 @@ export default function IssueRequests(props: IssueRequestProps) {
         } else if (request.completed) {
             return (<FaCheck></FaCheck>);
         } else {
+            console.log("Pending list ===>>>> ", executePending.toString());
             return (
                 <ButtonMaybePending
                     variant="outline-dark"
-                    isPending={isExecutePending}
+                    isPending={executePending.indexOf(request.id)!==-1}
                     size="lg"
                     block
                     onClick={(event: MouseEvent<HTMLElement>) => { event.stopPropagation(); execute(request); }}>
