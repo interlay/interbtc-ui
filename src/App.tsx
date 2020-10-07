@@ -55,7 +55,7 @@ export default class App extends Component<{}, AppState> {
         if (allAccounts.length === 0) {
             toast.warn(
                 "No account found, you will not be able to execute any transaction. " +
-                    "Please check that your wallet is configured correctly.",
+                "Please check that your wallet is configured correctly.",
                 {
                     autoClose: false,
                 }
@@ -90,15 +90,18 @@ export default class App extends Component<{}, AppState> {
     }
 
     async componentDidMount(): Promise<void> {
-        try {
-            await this.createAPIInstace();
-        } catch (e) {
-            toast.warn("Could not connect to the Parachain, please try again in a few seconds", {
-                autoClose: false,
-            });
-        }
+        // Do not load data if showing static landing page only
+        if (!constants.STATIC_PAGE_ONLY) {
+            try {
+                await this.createAPIInstace();
+            } catch (e) {
+                toast.warn("Could not connect to the Parachain, please try again in a few seconds", {
+                    autoClose: false,
+                });
+            }
 
-        await this.getAccount();
+            await this.getAccount();
+        }
     }
 
     async selectAccount(address: string): Promise<void> {
@@ -115,46 +118,66 @@ export default class App extends Component<{}, AppState> {
         setUser(address, store.getState().storage, store.dispatch);
     }
 
+
     render() {
-        return (
-            <Provider store={store}>
-                <Router>
-                    <div className="main d-flex flex-column min-vh-100">
-                        <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
-                        <Topbar
-                            address={this.state.address}
-                            onAccountClick={() => this.setState({ showSelectAccount: true })}
-                        />
-                        <div className="mb-5">
-                            <Switch>
-                                <Route exact path="/">
-                                    <LandingPage />
-                                </Route>
-                                <Route path="/issue">
-                                    <IssuePage />
-                                </Route>
-                                <Route path="/vault">
-                                    <VaultPage {...this.state} />
-                                </Route>
-                                <Route path="/redeem">
-                                    <RedeemPage />
-                                </Route>
-                                <Route path="/staked-relayer">
-                                    <StakedRelayerPage />
-                                </Route>
-                            </Switch>
+        if (constants.STATIC_PAGE_ONLY) {
+            return (
+                <Provider store={store}>
+                   <Router>
+                        <div className="main d-flex flex-column min-vh-100">
+                            <div className="mb-5">
+                                <Switch>
+                                    <Route path="/">
+                                        <LandingPage />
+                                    </Route>
+                                </Switch>
+                            </div>
+                            <Footer />
                         </div>
-                        <Footer />
-                    </div>
-                </Router>
-                <Modal show={this.state.showSelectAccount}>
-                    <AccountSelector
-                        selected={this.state.address}
-                        accounts={this.state.accounts}
-                        onSelected={this.selectAccount.bind(this)}
-                    ></AccountSelector>
-                </Modal>
-            </Provider>
-        );
+                    </Router>
+                </Provider>
+            );
+        } else {
+            return (
+                <Provider store={store}>
+                    <Router>
+                        <div className="main d-flex flex-column min-vh-100">
+                            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
+                            <Topbar
+                                address={this.state.address}
+                                onAccountClick={() => this.setState({ showSelectAccount: true })}
+                            />
+                            <div className="mb-5">
+                                <Switch>
+                                    <Route exact path="/">
+                                        <LandingPage />
+                                    </Route>
+                                    <Route path="/issue">
+                                        <IssuePage />
+                                    </Route>
+                                    <Route path="/vault">
+                                        <VaultPage {...this.state} />
+                                    </Route>
+                                    <Route path="/redeem">
+                                        <RedeemPage />
+                                    </Route>
+                                    <Route path="/staked-relayer">
+                                        <StakedRelayerPage />
+                                    </Route>
+                                </Switch>
+                            </div>
+                            <Footer />
+                        </div>
+                    </Router>
+                    <Modal show={this.state.showSelectAccount}>
+                        <AccountSelector
+                            selected={this.state.address}
+                            accounts={this.state.accounts}
+                            onSelected={this.selectAccount.bind(this)}
+                        ></AccountSelector>
+                    </Modal>
+                </Provider>
+            );
+        }
     }
 }
