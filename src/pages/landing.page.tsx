@@ -9,7 +9,7 @@ import ReactMarkdown from "react-markdown";
 import * as constants from "../constants";
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_white.svg";
 
-//import * as PolkaBTCInfo from "../assets/polkaBTCInfo.md";
+//import * as PolkaBTCInfo from "../assets/polkaBTCInfo.txt";
 
 export default function LandingPage(): JSX.Element {
     const [totalPolkaBTC, setTotalPolkaBTC] = useState("...");
