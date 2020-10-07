@@ -5,11 +5,9 @@ import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import { StoreType } from "../common/types/util.types";
 import Big from "big.js";
-import ReactMarkdown from "react-markdown";
 import * as constants from "../constants";
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_white.svg";
 
-//import * as PolkaBTCInfo from "../assets/polkaBTCInfo.txt";
 
 export default function LandingPage(): JSX.Element {
     const [totalPolkaBTC, setTotalPolkaBTC] = useState("...");
@@ -75,25 +73,6 @@ export default function LandingPage(): JSX.Element {
                         </div>
                         : ""
                     }
-                    <Row className="mt-5">
-                        <Col className="mt-2" xs="12" sm={{ span: 4, offset: 2 }}>
-                            <NavLink className="text-decoration-none" to="/issue">
-                                <Button variant="outline-polkadot" size="lg" block>
-                                    Specification
-                                </Button>
-                            </NavLink>
-                        </Col>
-                        <Col className="mt-2" xs="12" sm={{ span: 4 }}>
-                            <NavLink className="text-decoration-none" to="/redeem">
-                                <Button variant="outline-bitcoin" size="lg" block>
-                                    Code
-                                </Button>
-                            </NavLink>
-                        </Col>
-                    </Row>
-                    <Row>
-                    <ReactMarkdown source={markdown} />
-                    </Row>
                 </div>
             </section>
         </div>
