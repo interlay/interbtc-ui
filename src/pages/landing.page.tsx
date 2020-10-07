@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_black.png";
 import { StoreType } from "../common/types/util.types";
+import Big from "big.js";
 
 export default function LandingPage(): JSX.Element {
     const [totalPolkaBTC, setTotalPolkaBTC] = useState("...");
@@ -18,8 +19,8 @@ export default function LandingPage(): JSX.Element {
             if (!storage) return;
             const totalPolkaSAT = await polkaBTC.treasury.totalPolkaBTC();
             const totalLockedPLANCK = await polkaBTC.collateral.totalLockedDOT();
-            const totalPolkaBTC = satToBTC(totalPolkaSAT.toString());
-            const totalLockedDOT = planckToDOT(totalLockedPLANCK.toString());
+            const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
+            const totalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
             // TODO: write parachain data to storage
             setTotalPolkaBTC(totalPolkaBTC);
             setTotalLockedDOT(totalLockedDOT);

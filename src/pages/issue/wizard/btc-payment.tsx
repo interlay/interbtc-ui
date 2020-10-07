@@ -4,15 +4,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { changeIssueStepAction } from "../../../common/actions/issue.actions";
 import { remove0x } from "../../../common/utils/utils";
+import { btcToSat, satToMBTC } from "@interlay/polkabtc";
 
 export default function BTCPayment() {
     const issueId = useSelector((state: StoreType) => state.issue.id);
+    // FIXME: returns an empty string when loaded again
     const amountBTC = useSelector((state: StoreType) => state.issue.amountBTC);
     const feeBTC = useSelector((state: StoreType) => state.issue.feeBTC);
+
     const isEditMode = useSelector((state: StoreType) => state.issue.wizardInEditMode);
 
     // FIXME: add once fee model is there
     const amountBTCwithFee = amountBTC;
+    const amountSATwithFee = btcToSat(amountBTCwithFee);
+    const amountMBTCwithFee = satToMBTC(amountSATwithFee? amountSATwithFee : ""); 
+    // FIXME: returns an empty string when loaded again
     const vaultBTCAddress = useSelector((state: StoreType) => state.issue.vaultBtcAddress);
     const dispatch = useDispatch();
 
@@ -36,12 +42,12 @@ export default function BTCPayment() {
                     <ListGroup>
                         <ListGroupItem>Output 1</ListGroupItem>
                         <ListGroupItem>Recipient: <strong>{remove0x(vaultBTCAddress)}</strong></ListGroupItem>
-                        <ListGroupItem>Amount: <strong>{amountBTCwithFee} BTC</strong></ListGroupItem>
+                        <ListGroupItem>Amount: <strong>{amountBTCwithFee} BTC ({amountMBTCwithFee} mBTC)</strong></ListGroupItem>
                     </ListGroup>
                     <ListGroup>
                         <ListGroupItem>Output 2</ListGroupItem>
                         <ListGroupItem>OP_RETURN: <strong> {remove0x(issueId)} </strong></ListGroupItem>
-                        <ListGroupItem>Amount: <strong>0 BTC</strong></ListGroupItem>
+                        <ListGroupItem>Amount: <strong>0 BTC (0 mBTC)</strong></ListGroupItem>
                     </ListGroup>
                 </FormGroup>
             </FormGroup>
