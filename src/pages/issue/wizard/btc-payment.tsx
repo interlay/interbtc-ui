@@ -9,6 +9,8 @@ export default function BTCPayment() {
     const issueId = useSelector((state: StoreType) => state.issue.id);
     const amountBTC = useSelector((state: StoreType) => state.issue.amountBTC);
     const feeBTC = useSelector((state: StoreType) => state.issue.feeBTC);
+    const isEditMode = useSelector((state: StoreType) => state.issue.wizardInEditMode);
+
     // FIXME: add once fee model is there
     const amountBTCwithFee = amountBTC;
     const vaultBTCAddress = useSelector((state: StoreType) => state.issue.vaultBtcAddress);
@@ -45,9 +47,11 @@ export default function BTCPayment() {
             </FormGroup>
         </Modal.Body>
         <Modal.Footer>
-            <button className="btn btn-secondary float-left" onClick={goToPreviousStep}>
-                Previous
-            </button>
+            {!isEditMode && 
+                <button className="btn btn-secondary float-left" onClick={goToPreviousStep}>
+                    Previous
+                </button>
+            }
             <button className="btn btn-primary float-right" onClick={goToNextStep}>
                 Next
             </button>
