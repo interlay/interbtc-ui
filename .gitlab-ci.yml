@@ -28,7 +28,7 @@ build:
   stage: test
   script:
     - yarn install
-    - yarn build 
+    - yarn build
   only:
     - merge_requests
 
@@ -57,3 +57,15 @@ pages:
     - public
   only:
   - master
+
+build_container:
+  stage: deploy
+
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/DockerfileProd --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  only:
+  - merge_requests
