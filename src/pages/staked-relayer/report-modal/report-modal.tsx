@@ -26,7 +26,7 @@ export default function ReportModal(props: ReportModalType): ReactElement {
     const onSubmit = handleSubmit(async ({ btcBlock, message }) => {
         setReportPending(true);
         try {
-            await stakedRelayer.suggestInvalidBlock(STATUS_UPDATE_DEPOSIT, btcBlock);
+            await stakedRelayer.suggestInvalidBlock(STATUS_UPDATE_DEPOSIT, btcBlock, message);
             toast.success("Status Update Suggested");
             props.onClose();
         } catch (error) {
@@ -64,6 +64,18 @@ export default function ReportModal(props: ReportModalType): ReactElement {
                                         : errors.btcBlock.message}
                                 </div>
                             )}
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">Message</div>
+                        <div className="col-12">
+                            <textarea
+                                className={"custom-textarea" + (errors.message ? " error-borders" : "")}
+                                name="message"
+                                ref={register({ required: false })}
+                                rows={6}
+                            ></textarea>
+                            {errors.message && <div className="input-error">Message is required</div>}
                         </div>
                     </div>
                 </Modal.Body>
