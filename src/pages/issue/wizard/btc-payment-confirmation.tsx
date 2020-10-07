@@ -18,7 +18,6 @@ type BTCTxIdForm = {
 export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProps) {
     const issueId = useSelector((state: StoreType) => state.issue.id);
     const btcTxId = useSelector((state: StoreType) => state.issue.btcTxId);
-    const isEditMode = useSelector((state: StoreType) => state.issue.wizardInEditMode);
     const { register, handleSubmit, errors } = useForm<BTCTxIdForm>({defaultValues: {btcTxId}});
     const storage = useSelector((state: StoreType) => state.storage);
     const dispatch = useDispatch();
@@ -92,12 +91,10 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
                 </Row>
             </FormGroup>
         </Modal.Body>
-        { !isEditMode && 
-            <Modal.Footer>
-                <button className="btn btn-secondary float-left" onClick={goToPreviousStep}>
-                    Previous
-                </button>
-            </Modal.Footer>
-        }
+        <Modal.Footer>
+            <button className="btn btn-secondary float-left" onClick={goToPreviousStep}>
+                Previous
+            </button>
+        </Modal.Footer>
     </form>
 }
