@@ -6,7 +6,6 @@ import { changeRedeemIdAction, changeRedeemStepAction } from "../../../common/ac
 import { toast } from "react-toastify";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 import { btcToSat } from "@interlay/polkabtc";
 
 export default function Confirmation() {
