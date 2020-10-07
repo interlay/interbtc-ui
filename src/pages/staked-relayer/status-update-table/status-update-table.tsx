@@ -5,6 +5,7 @@ import { Button } from "react-bootstrap";
 import VoteModal from "../vote-modal/vote-modal";
 import { StatusUpdate } from "../../../common/types/util.types";
 import * as constants from "../../../constants";
+import MessageModal from "../message-modal/message-modal";
 
 const ADD_DATA_ERROR = "Add NO_DATA error";
 const REMOVE_DATA_ERROR = "Remove NO_DATA error";
@@ -45,7 +46,11 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
     const polkaBTC = useSelector((state: StoreType) => state.api);
     const [statusUpdates, setStatusUpdates] = useState<Array<StatusUpdate>>([]);
     const [showVoteModal, setShowVoteModal] = useState(false);
-    const handleClose = () => setShowVoteModal(false);
+    const [showMessageModal, setShowMessageModal] = useState(false);
+    const handleClose = () => {
+        setShowVoteModal(false);
+        setShowMessageModal(false);
+    };
     const [statusUpdate, setStatusUpdate] = useState<StatusUpdate>();
 
     useEffect(() => {
@@ -79,7 +84,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
 
                     return {
                         id,
-                        timestamp: statusUpdate.time.toString(),
+                        timestamp: statusUpdate.end.toString(),
                         proposedStatus: statusUpdate.new_status_code.toString(),
                         currentStatus: statusUpdate.old_status_code.toString(),
                         proposedChanges: displayProposedChanges(statusUpdate.add_error, statusUpdate.remove_error),
@@ -87,6 +92,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                         votes: `${statusUpdate.tally.aye.size} : ${statusUpdate.tally.nay.size}`,
                         result: statusUpdate.proposal_status.toString(),
                         proposer: statusUpdate.proposer.toString(),
+                        message: statusUpdate.message.toString(),
                         hasVoted,
                     };
                 })
@@ -99,6 +105,11 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
 
     const openVoteModal = (statusUpdate: StatusUpdate) => {
         setShowVoteModal(true);
+        setStatusUpdate(statusUpdate);
+    };
+
+    const openMessageModal = (statusUpdate: StatusUpdate) => {
+        setShowMessageModal(true);
         setStatusUpdate(statusUpdate);
     };
 
@@ -153,6 +164,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                 statusUpdate={statusUpdate!}
                 getColor={getProposedChangesColor}
             ></VoteModal>
+            <MessageModal show={showMessageModal} onClose={handleClose} statusUpdate={statusUpdate!}></MessageModal>
             <div className="row">
                 <div className="col-12">
                     <div className="header">
@@ -168,7 +180,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                             <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>Parachain Block</th>
+                                    <th>Expiration</th>
                                     <th>Proposed Status</th>
                                     <th>Current Status</th>
                                     <th>Proposed Changes</th>
@@ -181,7 +193,12 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                 {statusUpdates.map((statusUpdate, index) => {
                                     return (
                                         <tr key={index}>
-                                            <td>{statusUpdate.id.toString()}</td>
+                                            <td
+                                                style={{ cursor: "pointer" }}
+                                                onClick={() => openMessageModal(statusUpdate)}
+                                            >
+                                                {statusUpdate.id.toString()}
+                                            </td>
                                             <td>{statusUpdate.timestamp}</td>
                                             <td
                                                 className={

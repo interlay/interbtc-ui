@@ -31,6 +31,7 @@ export interface StatusUpdate {
     votes: string;
     result: string;
     proposer: string;
+    message: string;
     hasVoted: boolean;
 }
 
