@@ -8,8 +8,8 @@ import Big from "big.js";
 import ReactMarkdown from "react-markdown";
 import * as constants from "../constants";
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_white.svg";
-
-//import * as PolkaBTCInfo from "../assets/polkaBTCInfo.txt";
+// eslint-disable-next-line
+const polkaBTCInfo = require("../assets/polkaBTCInfo.txt");
 
 export default function LandingPage(): JSX.Element {
     const [totalPolkaBTC, setTotalPolkaBTC] = useState("...");
@@ -31,6 +31,15 @@ export default function LandingPage(): JSX.Element {
             setTotalLockedDOT(totalLockedDOT);
         };
         fetchData();
+        fetch(polkaBTCInfo).then(response => {
+            let text = response.text();
+            console.log(text);
+            return text;
+        })
+        .then(data => {
+            // HERE IS THE CONTENT OF THE FILE
+            console.log(data);
+        });
     }, [polkaBTC, storage, markdown]);
 
     return (
