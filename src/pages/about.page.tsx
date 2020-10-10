@@ -42,7 +42,8 @@ export default function AboutPage(): JSX.Element {
                             <a
                                 className="link d-inline text-white"
                                 href="https://eprint.iacr.org/2018/643"
-                                target="_blank" rel="noopener noreferrer"
+                                target="_blank"
+                                rel="noopener noreferrer"
                             >
                                 <Image src={paperImg} width="64" />
                                 <h4 className="text-white">Research Paper</h4>
@@ -52,14 +53,20 @@ export default function AboutPage(): JSX.Element {
                             <a
                                 className="link d-inline text-white"
                                 href="https://interlay.gitlab.io/polkabtc-spec/"
-                                target="_blank" rel="noopener noreferrer"
+                                target="_blank"
+                                rel="noopener noreferrer"
                             >
                                 <Image src={specImg} width="64" />
                                 <h4 className="text-white">Specification</h4>
                             </a>
                         </Col>
                         <Col className="mt-2" xs="12" sm={{ span: 4 }}>
-                            <a className="link d-inline text-white " href="https://github.com/interlay/BTC-Parachain" target="_blank" rel="noopener noreferrer">
+                            <a
+                                className="link d-inline text-white"
+                                href="https://github.com/interlay/BTC-Parachain"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
                                 <Image src={codeImg} width="64" />
                                 <h4 className="text-white">Source Code</h4>
                             </a>
