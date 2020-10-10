@@ -2,58 +2,60 @@ import { Container, Image } from "react-bootstrap";
 import React, { Component } from "react";
 import { FaTelegramPlane, FaMediumM, FaGithub, FaTwitter } from 'react-icons/fa';
 import interlayImg from "../../assets/img/interlay.png";
-
+import web3FoundationImg from "../../assets/img/polkabtc/web3 foundation_grants_badge_black.png"
+// eslint-disable-next-line
+const privacyPolicy = require("../../assets/docs/privacy-policy.pdf");
 
 export default class Footer extends Component {
 
     render() {
         return (
-            <footer className="footer mt-5 flex-fill fixed-bottom">
+            <footer className="footer flex-fill transparent-background text-white">
                 <Container>
-                    <div className="row">
-                        <div className="col-xl-4 col-lg-3 col-md-12 col-sm-12 col-xs-12 float-left">
-                        <div className="float-left nav-link text-capitalize">
-                            A project by &nbsp; <a href="https://www.interlay.io/" target="__blank"><Image src={interlayImg} height="20rem"></Image></a>
+                    <div className="col-xs-12 col-lg-8 offset-lg-2">
+                        <div className="row">
+                            <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12  col-xs-12">
+                                <div className="nav-link text-capitalize">
+                                    <h3 style={{ fontSize: "1.5em", color: "white" }}>
+                                        PolkaBTC is built and powered by &nbsp; <a href="https://www.interlay.io/" target="__blank"><Image src={interlayImg} height="30em"></Image></a>
+                    &nbsp; &nbsp; &nbsp; &nbsp;
+                            <a href="https://web3.foundation/" target="__blank"><Image src={web3FoundationImg} height="40rem"></Image></a>
+                                    </h3>
+                                </div>
                             </div>
                         </div>
-                        <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12  col-xs-12">
-                            <div className="float-left nav-link text-capitalize">
-                                &copy;
-                        <script>
-                                    document.write(new Date().getFullYear())
-                        </script> Interlay. All Rights Reserved | <a className=" text-capitalize" rel="tooltip" title="" data-placement="bottom"
-                                    href="../docs/privacy-policy.pdf" target="_blank">Privacy Policy
-                        </a>
+                        <div className="row">
+                            <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12  col-xs-12">
+                                <div className="nav-link text-capitalize">
+                                    &copy; 2020 Interlay. All Rights Reserved | <a className=" text-capitalize" rel="noopener noreferrer"
+                                        href={privacyPolicy} target="_blank">Privacy Policy</a>
+                                </div>
                             </div>
                         </div>
-                        <div className="col-xl-4 col-lg-5 col-md-12 col-sm-12 col-xs-12">
-                            <div className="float-lg-right float-md-left float-sm-left float-xs-left">
-                                <a className="nav-link lowercase" title="" data-placement="bottom" rel="noopener noreferrer"
-                                href="mailto:contact@interlay.io" target="_blank" data-original-title="Drop us an email">
-                                    contact@interlay.io
+                        <div className="row">
+                            <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12  col-xs-12">
+                                <a className="nav-link d-inline" title="" data-placement="bottom" rel="noopener noreferrer"
+                                    href="mailto:polkabtc@interlay.io" target="_blank" data-original-title="Drop us an email">
+                                    polkabtc@interlay.io
                                      </a>
-                            </div>
-                            <div className="float-lg-right float-md-left float-sm-left float-xs-left">
-                                <a className="nav-link" rel="noopener noreferrer" title="" data-placement="bottom"
+                           
+                                <a className="nav-link d-inline" rel="noopener noreferrer" title="" data-placement="bottom"
                                     href="https://t.me/interlay" target="_blank"
                                     data-original-title="Join our Telegram channel">
                                     <FaTelegramPlane></FaTelegramPlane>
                                 </a>
-                            </div>
-                            <div className="float-lg-right float-md-left float-sm-left float-xs-left">
-                                <a className="nav-link" rel="noopener noreferrer" title="" data-placement="bottom"
+                            
+                                <a className="nav-link d-inline" rel="noopener noreferrer" title="" data-placement="bottom"
                                     href="https://medium.com/Interlay" target="_blank" data-original-title="Follow us on Medium">
                                     <FaMediumM></FaMediumM>
                                 </a>
-                            </div>
-                            <div className="float-lg-right float-md-left float-sm-left float-xs-left">
-                                <a className="nav-link" rel="noopener noreferrer" title="" data-placement="bottom"
+                            
+                                <a className="nav-link d-inline" rel="noopener noreferrer" title="" data-placement="bottom"
                                     href="https://github.com/interlay" target="_blank" data-original-title="Follow us on Github">
                                     <FaGithub></FaGithub>
                                 </a>
-                            </div>
-                            <div className="float-lg-right float-md-left float-sm-left float-xs-left">
-                                <a className="nav-link" rel="noopener noreferrer" title="" data-placement="bottom"
+                            
+                                <a className="nav-link d-inline" rel="noopener noreferrer" title="" data-placement="bottom"
                                     href="https://twitter.com/interlayHQ" target="_blank"
                                     data-original-title="Follow us on Twitter">
                                     <FaTwitter></FaTwitter>

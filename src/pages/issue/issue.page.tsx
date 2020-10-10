@@ -45,7 +45,7 @@ export default function IssuePage(): JSX.Element {
 
     return (
         <div>
-            <section className="jumbotron text-center white-background">
+            <section className="jumbotron text-center white-background min-vh-100">
                 <div className="container mt-5">
                     <Link to="/">
                         <Image src={PolkaBTCImg} width="256"></Image>

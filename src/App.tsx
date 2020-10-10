@@ -31,6 +31,7 @@ import LandingPage from "./pages/landing.page";
 import IssuePage from "./pages/issue/issue.page";
 import VaultPage from "./pages/vault.page";
 import RedeemPage from "./pages/redeem/redeem.page";
+import AboutPage from "./pages/about.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
 import { setUser } from "./common/utils/storage";
 
@@ -123,17 +124,18 @@ export default class App extends Component<{}, AppState> {
         if (constants.STATIC_PAGE_ONLY) {
             return (
                 <Provider store={store}>
-                   <Router>
+                    <Router>
                         <div className="main d-flex flex-column min-vh-100">
-                            <div className="mb-5">
-                                <Switch>
-                                    <Route path="/">
-                                        <LandingPage />
-                                    </Route>
-                                </Switch>
-                            </div>
-                            <Footer />
+                            <Switch>
+                                <Route path="/about">
+                                    <AboutPage />
+                                </Route>
+                                <Route path="/">
+                                    <LandingPage />
+                                </Route>
+                            </Switch>
                         </div>
+                        <Footer />
                     </Router>
                 </Provider>
             );
@@ -147,25 +149,26 @@ export default class App extends Component<{}, AppState> {
                                 address={this.state.address}
                                 onAccountClick={() => this.setState({ showSelectAccount: true })}
                             />
-                            <div className="mb-5">
-                                <Switch>
-                                    <Route exact path="/">
-                                        <LandingPage />
-                                    </Route>
-                                    <Route path="/issue">
-                                        <IssuePage />
-                                    </Route>
-                                    <Route path="/vault">
-                                        <VaultPage {...this.state} />
-                                    </Route>
-                                    <Route path="/redeem">
-                                        <RedeemPage />
-                                    </Route>
-                                    <Route path="/staked-relayer">
-                                        <StakedRelayerPage />
-                                    </Route>
-                                </Switch>
-                            </div>
+                            <Switch>
+                                <Route path="/about">
+                                    <AboutPage />
+                                </Route>
+                                <Route path="/issue">
+                                    <IssuePage />
+                                </Route>
+                                <Route path="/vault">
+                                    <VaultPage {...this.state} />
+                                </Route>
+                                <Route path="/redeem">
+                                    <RedeemPage />
+                                </Route>
+                                <Route path="/staked-relayer">
+                                    <StakedRelayerPage />
+                                </Route>
+                                <Route path="/">
+                                    <LandingPage />
+                                </Route>
+                            </Switch>
                             <Footer />
                         </div>
                     </Router>

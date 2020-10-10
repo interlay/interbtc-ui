@@ -7,7 +7,8 @@ import { StoreType } from "../common/types/util.types";
 import Big from "big.js";
 import * as constants from "../constants";
 import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_white.svg";
-
+// eslint-disable-next-line
+const polkaBTCInfo = require("../assets/polkaBTCInfo.md");
 
 export default function LandingPage(): JSX.Element {
     const [totalPolkaBTC, setTotalPolkaBTC] = useState("...");
@@ -16,6 +17,7 @@ export default function LandingPage(): JSX.Element {
     const storage = useSelector((state: StoreType) => state.storage);
     const [markdown, setMarkdown] = useState("");
 
+    console.log(polkaBTCInfo);
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBTC) return;
@@ -29,20 +31,27 @@ export default function LandingPage(): JSX.Element {
             setTotalLockedDOT(totalLockedDOT);
         };
         fetchData();
+        fetch(polkaBTCInfo)
+            .then((response) => {
+                const text = response.text();
+                console.log(text);
+                return text;
+            })
+            .then((data) => {
+                setMarkdown(data);
+                console.log(data);
+            });
     }, [polkaBTC, storage, markdown]);
 
     return (
         <div>
-            <section className="jumbotron min-vh-100 text-center polkabtc-background">
+            <section className="jumbotron min-vh-100 text-center transparent-background">
                 <div className="container mt-5">
                     <Link to="/">
-                        <Image src={PolkaBTCImg} width="256"></Image>
+                        <Image src={PolkaBTCImg} width="316"></Image>
                     </Link>
-                    <h3 style={{ fontSize: "1.5em" }} className="lead text-white mt-5">
-                        PolkaBTC: Trustless and open DeFi access for your Bitcoin.
-                    </h3>
-                    {!constants.STATIC_PAGE_ONLY
-                        ?
+                    <h1 className="text-white mt-5">PolkaBTC: Bitcoin for Polkadot's DeFi Ecosystem</h1>
+                    {!constants.STATIC_PAGE_ONLY ? (
                         <div>
                             <Row className="mt-4">
                                 <Col xs="12" sm={{ span: 6, offset: 3 }}>
@@ -59,22 +68,45 @@ export default function LandingPage(): JSX.Element {
                                     <NavLink className="text-decoration-none" to="/issue">
                                         <Button variant="outline-polkadot" size="lg" block>
                                             Issue PolkaBTC
-                                </Button>
+                                        </Button>
                                     </NavLink>
                                 </Col>
                                 <Col className="mt-2" xs="12" sm={{ span: 4 }}>
                                     <NavLink className="text-decoration-none" to="/redeem">
                                         <Button variant="outline-bitcoin" size="lg" block>
                                             Redeem PolkaBTC
-                                </Button>
+                                        </Button>
                                     </NavLink>
                                 </Col>
                             </Row>
                         </div>
-                        : ""
-                    }
+                    ) : (
+                        ""
+                    )}
+                    <Row className="mt-5">
+                        <Col className="mt-2" xs="12" sm={{ span: 4, offset: 2 }}>
+                            <NavLink className="text-decoration-none" to="/about">
+                                <Button variant="outline-bitcoin" size="lg" block>
+                                    How it works
+                                </Button>
+                            </NavLink>
+                        </Col>
+                        <Col className="mt-2" xs="12" sm={{ span: 4 }}>
+                            <a className="text-decoration-none" href="https://forms.gle/c5mi1sz6QV7CJoee6">
+                                <Button variant="outline-polkadot" size="lg" block>
+                                    Sign up for testing
+                                </Button>
+                            </a>
+                        </Col>
+                    </Row>
                 </div>
             </section>
         </div>
     );
 }
+
+/*
+[**Sign up here.](https://forms.gle/c5mi1sz6QV7CJoee6)**
+
+
+*/

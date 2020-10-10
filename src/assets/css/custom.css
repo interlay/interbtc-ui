@@ -1,3 +1,24 @@
+body {
+	background: linear-gradient(-90deg, #ff9900e1, #f07353, #ef6b59, #e9436f);
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 25%;
+	}
+	50% {
+		background-position: 100% 25%;
+	}
+	100% {
+		background-position: 0% 25%;
+	}
+}
+
+.markdown img {
+  max-width: 100%;
+}
 
 .btn-outline-bitcoin {
   color: #343a40;
@@ -60,9 +81,12 @@
 
 .btn-outline-polkadot:not(:disabled):not(.disabled):active:focus, .btn-outline-polkadot:not(:disabled):not(.disabled).active:focus,
 .show > .btn-outline-polkadot.dropdown-toggle:focus {
-  box-shadow: 0 0 0 0.2rem rgba230, 1, 122, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(230, 1, 122, 0.5);
 }
 
+.transparent-background {
+  background-color: transparent;
+}
 .polkabtc-background {
   background-image: url("../img/polkabtc/background.png");
   background-position: center center;

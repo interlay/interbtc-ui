@@ -44,11 +44,14 @@ export default function Topbar(props: TopbarProps): ReactElement {
                             Staked Relayer
                         </Link>
                     )}
+                    <Link className="nav-link" to="/about">
+                        About
+                    </Link>
                 </Nav>
-                <Nav>
+                <Nav className="d-inline">
                     {props.address !== undefined && (
                         <Button
-                            variant="dark"
+                            variant="outline-polkadot"
                             size="sm"
                             style={{ borderRadius: "1em" }}
                             onClick={() => props.onAccountClick()}
