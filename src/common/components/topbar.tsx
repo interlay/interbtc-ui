@@ -4,6 +4,7 @@ import { Navbar, Nav, Image, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { StoreType } from "../types/util.types";
+import * as constants from "../../constants";
 
 type TopbarProps = {
     address?: string;
@@ -33,12 +34,16 @@ export default function Topbar(props: TopbarProps): ReactElement {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
-                    <Link className="nav-link" to="/issue">
-                        Issue
-                    </Link>
-                    <Link className="nav-link" to="/redeem">
-                        Redeem
-                    </Link>
+                    {!constants.STATIC_PAGE_ONLY && (
+                        <Link className="nav-link" to="/issue">
+                            Issue
+                        </Link>
+                    )}
+                    {!constants.STATIC_PAGE_ONLY && (
+                        <Link className="nav-link" to="/redeem">
+                            Redeem
+                        </Link>
+                    )}
                     {isConnected && (
                         <Link className="nav-link" to="/staked-relayer">
                             Staked Relayer
