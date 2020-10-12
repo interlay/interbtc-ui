@@ -1,7 +1,7 @@
 export const APP_NAME = "PolkaBTC";
 
 // Set to true to show only the static landing page
-export const STATIC_PAGE_ONLY = process.env.STATIC_PAGE_ONLY || false;
+export const REACT_APP_STATIC_PAGE_ONLY = process.env.REACT_APP_STATIC_PAGE_ONLY || false;
 
 // Set to true is on mainnet.
 export const BTC_MAINNET = false;

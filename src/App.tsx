@@ -26,8 +26,8 @@ import AppState from "./common/types/app.types";
 
 // app imports
 import Topbar from "./common/components/topbar";
-import Footer from "./common/components/footer";
-import LandingPage from "./pages/landing.page";
+import Footer from "./common/components/footer/footer";
+import LandingPage from "./pages/landing/landing.page";
 import IssuePage from "./pages/issue/issue.page";
 import VaultPage from "./pages/vault.page";
 import RedeemPage from "./pages/redeem/redeem.page";
@@ -92,7 +92,7 @@ export default class App extends Component<{}, AppState> {
 
     async componentDidMount(): Promise<void> {
         // Do not load data if showing static landing page only
-        if (!constants.STATIC_PAGE_ONLY) {
+        if (!constants.REACT_APP_STATIC_PAGE_ONLY) {
             try {
                 await this.createAPIInstace();
             } catch (e) {
@@ -121,38 +121,18 @@ export default class App extends Component<{}, AppState> {
 
 
     render() {
-        if (constants.STATIC_PAGE_ONLY) {
-            return (
-                <Provider store={store}>
-                    <Router>
-                        <div className="main d-flex flex-column min-vh-100">
-                            <Switch>
-                                <Route path="/about">
-                                    <AboutPage />
-                                </Route>
-                                <Route path="/">
-                                    <LandingPage />
-                                </Route>
-                            </Switch>
-                        </div>
-                        <Footer />
-                    </Router>
-                </Provider>
-            );
-        } else {
-            return (
-                <Provider store={store}>
-                    <Router>
-                        <div className="main d-flex flex-column min-vh-100">
-                            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
-                            <Topbar
-                                address={this.state.address}
-                                onAccountClick={() => this.setState({ showSelectAccount: true })}
-                            />
-                            <Switch>
-                                <Route path="/about">
-                                    <AboutPage />
-                                </Route>
+        return (
+            <Provider store={store}>
+                <Router>
+                    <div className="main d-flex flex-column min-vh-100">
+                        <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
+                        <Topbar
+                            address={this.state.address}
+                            onAccountClick={() => this.setState({ showSelectAccount: true })}
+                        />
+                        <Switch>
+                            {!constants.REACT_APP_STATIC_PAGE_ONLY && 
+                            <React.Fragment>
                                 <Route path="/issue">
                                     <IssuePage />
                                 </Route>
@@ -164,23 +144,27 @@ export default class App extends Component<{}, AppState> {
                                 </Route>
                                 <Route path="/staked-relayer">
                                     <StakedRelayerPage />
-                                </Route>
-                                <Route path="/">
-                                    <LandingPage />
-                                </Route>
-                            </Switch>
-                            <Footer />
-                        </div>
-                    </Router>
-                    <Modal show={this.state.showSelectAccount}>
-                        <AccountSelector
-                            selected={this.state.address}
-                            accounts={this.state.accounts}
-                            onSelected={this.selectAccount.bind(this)}
-                        ></AccountSelector>
-                    </Modal>
-                </Provider>
-            );
-        }
+                                </Route>       
+                            </React.Fragment>
+                            }
+                            <Route path="/">
+                                <LandingPage />
+                            </Route>
+                            <Route path="/about">
+                                <AboutPage />
+                            </Route>
+                        </Switch>
+                        <Footer />
+                    </div>
+                </Router>
+                <Modal show={this.state.showSelectAccount}>
+                    <AccountSelector
+                        selected={this.state.address}
+                        accounts={this.state.accounts}
+                        onSelected={this.selectAccount.bind(this)}
+                    ></AccountSelector>
+                </Modal>
+            </Provider>
+        );
     }
 }

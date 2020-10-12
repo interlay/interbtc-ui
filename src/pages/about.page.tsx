@@ -13,7 +13,6 @@ const polkaBTCInfo = require("../assets/polkaBTCInfo.md");
 export default function AboutPage(): JSX.Element {
     const [markdown, setMarkdown] = useState("");
 
-    console.log(polkaBTCInfo);
     useEffect(() => {
         fetch(polkaBTCInfo)
             .then((response) => {
@@ -86,19 +85,3 @@ export default function AboutPage(): JSX.Element {
         </div>
     );
 }
-
-/*
-[**Sign up here.](https://forms.gle/c5mi1sz6QV7CJoee6)**
-
-## Helpful Links
-
-* BTC Parachain open-source code: h[ttps://github.com/interlay/BTC-Parachain](https://github.com/interlay/BTC-Parachain)
-
-* BTC Parachain specification: [https://interlay.gitlab.io/polkabtc-spec/](https://interlay.gitlab.io/polkabtc-spec/)
-
-* Interlay:[ ](https://www.interlay.io/careers)[https://www.interlay.io/](https://www.interlay.io/)
-
-* XCLAIM peer-reviewed paper: [https://eprint.iacr.org/2018/643.pdf](https://eprint.iacr.org/2018/643.pdf)
-
-* XCLAIM project website: [https://www.xclaim.io/](https://www.xclaim.io/)
-*/
