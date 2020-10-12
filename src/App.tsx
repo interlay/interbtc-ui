@@ -142,11 +142,11 @@ export default class App extends Component<{}, AppState> {
                                 <Route path="/staked-relayer">
                                     <StakedRelayerPage />
                                 </Route>       
+                                <Route path="/vault">
+                                    <VaultPage {...this.state} />
+                                </Route>
                             </React.Fragment>
                             }
-                            <Route path="/vault">
-                                <VaultPage {...this.state} />
-                            </Route>
                             <Route path="/">
                                 <LandingPage />
                             </Route>
