@@ -77,7 +77,7 @@ export default function IssueRequests(props: IssueRequestProps) {
             const parsedMerkleProof = polkaBTC.api.createType("Bytes", "0x" + merkleProof);
             const parsedRawTx = polkaBTC.api.createType("Bytes", rawTx);
 
-            toast.success("Executing redeem request: " + request.id);
+            toast.success("Executing issue request: " + request.id);
             // execute issue
             const success = await polkaBTC.issue.execute(parsedIssuedId, parsedTxId, parsedTxBlockHeight, parsedMerkleProof, parsedRawTx);
 
@@ -90,7 +90,7 @@ export default function IssueRequests(props: IssueRequestProps) {
             dispatch(updateIssueRequestAction(completedReq));
             storage.modifyIssueRequest(completedReq);
 
-            toast.success("Succesfully executed redeem request: " + request.id);
+            toast.success("Succesfully executed issue request: " + request.id);
         } catch (error) {
             toast.error(error.toString());
         }
