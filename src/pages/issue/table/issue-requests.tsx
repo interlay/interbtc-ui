@@ -37,7 +37,7 @@ export default function IssueRequests(props: IssueRequestProps) {
     useEffect(() => {
         const fetchData = async () => {
             issueRequests.map(async (request: IssueRequest) => {
-                if (transactionListeners.indexOf(request.id) === -1) {
+                if (transactionListeners.indexOf(request.id) === -1 && polkaBTC) {
                     startTransactionWatcherIssue(request, polkaBTC, dispatch, storage);
                 }
             });
@@ -47,6 +47,7 @@ export default function IssueRequests(props: IssueRequestProps) {
 
 
     const execute = async (request: IssueRequest) => {
+        if (!polkaBTC) return;
         setExecutePending([...executePending, request.id]);
         try {
             // get proof data from bitcoin
@@ -103,7 +104,6 @@ export default function IssueRequests(props: IssueRequestProps) {
         } else if (request.completed) {
             return (<FaCheck></FaCheck>);
         } else {
-            console.log("Pending list ===>>>> ", executePending.toString());
             return (
                 <ButtonMaybePending
                     variant="outline-dark"

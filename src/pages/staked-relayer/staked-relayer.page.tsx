@@ -32,6 +32,7 @@ export default function StakedRelayerPage() {
     const handleRegisterModalClose = () => setShowRegisterModal(false);
 
     const deregisterStakedRelayer = async () => {
+        if (!stakedRelayer) return;
         setDeregisterPending(true);
         try {
             await stakedRelayer.deregisterStakedRelayer();
@@ -44,8 +45,7 @@ export default function StakedRelayerPage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!polkaBTC) return;
-            if (!stakedRelayer) return;
+            if (!polkaBTC || !stakedRelayer) return;
 
             const address = await stakedRelayer.getAddress();
             const activeStakedRelayerId = polkaBTC.api.createType("AccountId", address);

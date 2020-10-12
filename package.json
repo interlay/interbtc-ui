@@ -51,7 +51,7 @@
     "ts-node": "^8.6.2"
   },
   "scripts": {
-    "start": "react-scripts start --no-cache",
+    "start": "react-scripts start",
     "generate:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package sample-polkadotjs-typegen/interfaces --input ./src/interfaces",
     "generate:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package sample-polkadotjs-typegen/interfaces --endpoint btc-parachain.json --output ./src/interfaces",
     "lint": "npx eslint ./src/**/*.ts ./src/**/*.tsx",

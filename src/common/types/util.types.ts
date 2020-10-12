@@ -1,5 +1,10 @@
 import { Store, CombinedState } from "redux";
-import { AddInstance, AddStakedRelayerInstance } from "./actions.types";
+import { ApiActions
+    ,StorageActions
+    ,PricesActions
+    ,RedeemActions
+    ,IssueActions
+} from "./actions.types";
 import { PolkaBTCAPI, StakedRelayerClient } from "@interlay/polkabtc";
 import { rootReducer } from "../reducers/index";
 import { u256 } from "@polkadot/types/primitive";
@@ -38,8 +43,8 @@ export interface StatusUpdate {
 export type AppState = ReturnType<typeof rootReducer>;
 
 export type StoreType = {
-    api: PolkaBTCAPI;
-    relayer: StakedRelayerClient;
+    api: PolkaBTCAPI | null;
+    relayer: StakedRelayerClient | null;
     prices: Prices;
     issue: Issue;
     redeem: Redeem;
@@ -51,4 +56,8 @@ export type dispatcher = {
     dispatch: {};
 };
 
-export type StoreState = Store<CombinedState<StoreType>, AddInstance | AddStakedRelayerInstance> & dispatcher;
+export type StoreState = Store<CombinedState<StoreType>, ApiActions
+    | StorageActions 
+    | PricesActions 
+    | RedeemActions
+    | IssueActions> & dispatcher;

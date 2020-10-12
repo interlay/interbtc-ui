@@ -23,6 +23,7 @@ export default function EnterBTCAmount() {
     const dispatch = useDispatch();
 
     const onSubmit = handleSubmit(async ({ amountBTC }) => {
+        if(!polkaBTC) return;
         setRequestPending(true);
         try {
             const amountSAT = btcToSat(amountBTC);

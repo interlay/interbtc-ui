@@ -21,6 +21,7 @@ export default function ReportModal(props: RegisterModalType): ReactElement {
     const [isRegisterPending, setRegisterPending] = useState(false);
 
     const onSubmit = handleSubmit(async ({ stake }) => {
+        if (!stakedRelayer) return;
         setRegisterPending(true);
         try {
             await stakedRelayer.registerStakedRelayer(stake);

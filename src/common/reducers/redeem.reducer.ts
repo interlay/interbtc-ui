@@ -1,7 +1,7 @@
 import {
     CHANGE_REDEEM_STEP,
-    CHANGE_VAULT_BTC_ADDRESS,
-    CHANGE_VAULT_DOT_ADDRESS,
+    CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM,
+    CHANGE_VAULT_DOT_ADDRESS_ON_REDEEM,
     RESET_REDEEM_WIZARD,
     CHANGE_AMOUNT_POLKA_BTC,
     CHANGE_BTC_ADDRESS,
@@ -27,9 +27,9 @@ export const redeemReducer = (state: Redeem = initialState, action: RedeemAction
             return { ...state, amountPolkaBTC: action.amount };
         case CHANGE_BTC_ADDRESS:
             return { ...state, btcAddress: action.btcAddress };
-        case CHANGE_VAULT_BTC_ADDRESS:
+        case CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM:
             return { ...state, vaultBtcAddress: action.vaultBtcAddress };
-        case CHANGE_VAULT_DOT_ADDRESS:
+        case CHANGE_VAULT_DOT_ADDRESS_ON_REDEEM:
             return { ...state, vaultDotAddress: action.vaultDotAddress };
         case CHANGE_REDEEM_ID:
             return { ...state, id: action.id };

@@ -24,6 +24,7 @@ export default function ReportModal(props: ReportModalType): ReactElement {
     const [isReportPending, setReportPending] = useState(false);
 
     const onSubmit = handleSubmit(async ({ btcBlock, message }) => {
+        if (!stakedRelayer) return;
         setReportPending(true);
         try {
             await stakedRelayer.suggestInvalidBlock(STATUS_UPDATE_DEPOSIT, btcBlock, message);

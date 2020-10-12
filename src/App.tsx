@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import { createLogger } from "redux-logger";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-import { applyMiddleware, createStore } from "redux";
 import { toast, ToastContainer } from "react-toastify";
 import { createPolkabtcAPI, StakedRelayerClient } from "@interlay/polkabtc";
 import { Modal } from "react-bootstrap";
@@ -10,7 +8,6 @@ import { Modal } from "react-bootstrap";
 import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
 
 import AccountSelector from "./pages/account-selector";
-import { rootReducer } from "./common/reducers/index";
 import { addPolkaBtcInstance, addStakedRelayerInstance } from "./common/actions/api.actions";
 import * as constants from "./constants";
 
@@ -33,9 +30,9 @@ import VaultPage from "./pages/vault.page";
 import RedeemPage from "./pages/redeem/redeem.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
 import { setUser } from "./common/utils/storage";
+import { configureStore } from "./store";
 
-const storeLogger = createLogger();
-const store = createStore(rootReducer, applyMiddleware(storeLogger));
+const store = configureStore();
 
 export default class App extends Component<{}, AppState> {
     state: AppState = {

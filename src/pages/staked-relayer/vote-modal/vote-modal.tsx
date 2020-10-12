@@ -18,6 +18,7 @@ export default function VoteModal(props: VoteModalProps): ReactElement {
     const [isVotePending, setVotePending] = useState(false);
 
     const onClick = async (vote: string) => {
+        if (!stakedRelayer) return;
         setVotePending(true);
         try {
             await stakedRelayer.voteOnStatusUpdate(props.statusUpdate.id, vote === "yes");

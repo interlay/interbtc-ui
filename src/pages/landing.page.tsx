@@ -15,8 +15,7 @@ export default function LandingPage(): JSX.Element {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!polkaBTC) return;
-            if (!storage) return;
+            if (!polkaBTC || !storage) return;
             const totalPolkaSAT = await polkaBTC.treasury.totalPolkaBTC();
             const totalLockedPLANCK = await polkaBTC.collateral.totalLockedDOT();
             const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();

@@ -26,8 +26,7 @@ export default function IssuePage(): JSX.Element {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!polkaBTC) return;
-            if (!storage) return;
+            if (!polkaBTC || !storage) return;
 
             const address = polkaBTC.account?.toString();
             const accountId = polkaBTC.api.createType("AccountId", address);

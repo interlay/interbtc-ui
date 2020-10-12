@@ -19,6 +19,8 @@ export default function Confirmation() {
     const dispatch = useDispatch();
 
     const onConfirm = async () => {
+        if (!polkaBTC) return;
+
         setRequestPending(true);
         // send the redeem request
         try {

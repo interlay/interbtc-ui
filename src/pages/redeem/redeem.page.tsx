@@ -25,8 +25,7 @@ export default function RedeemPage(): JSX.Element {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!polkaBTC) return;
-            if (!storage) return;
+            if (!storage || !polkaBTC) return;
 
             const address = polkaBTC.account?.toString();
             const accountId = polkaBTC.api.createType("AccountId", address) as any;
