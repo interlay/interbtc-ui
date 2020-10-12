@@ -6,8 +6,7 @@ import { createLogger } from "redux-logger";
 import { applyMiddleware, createStore } from "redux";
 
 export const getInitialState = (): StoreType => {
-
-    const emptyStore : StoreType = {
+    const emptyStore: StoreType = {
         api: null,
         relayer: null,
         prices: { dotBtc: 0, dotUsd: 0 },
@@ -22,7 +21,7 @@ export const getInitialState = (): StoreType => {
             issueRequests: [],
             transactionListeners: [],
             proofListeners: [],
-            wizardInEditMode: false 
+            wizardInEditMode: false,
         },
         redeem: {
             step: "ENTER_POLKABTC",
@@ -32,23 +31,25 @@ export const getInitialState = (): StoreType => {
             vaultDotAddress: "",
             id: "",
         },
-        storage: new Storage()
+        storage: new Storage(),
     };
     return emptyStore;
-}
+};
 
 export const loadState = (): StoreType => {
     try {
         const serializedState = localStorage.getItem("store");
         if (serializedState === null) {
-            let initialState = getInitialState();
+            const initialState = getInitialState();
             return initialState;
         }
         return JSON.parse(serializedState);
-    } catch(error) {
-        setTimeout(()=>
-            toast.error("Local storage is disabled. In order to use platform please enable local storage"), 2000);
-        let initialState = getInitialState();
+    } catch (error) {
+        setTimeout(
+            () => toast.error("Local storage is disabled. In order to use platform please enable local storage"),
+            2000
+        );
+        const initialState = getInitialState();
         return initialState;
     }
 };
@@ -57,16 +58,18 @@ export const saveState = (store: AppState): void => {
     try {
         const serializedState = JSON.stringify(store);
         localStorage.setItem("store", serializedState);
-    } catch(error) {
-        setTimeout(()=> 
-        toast.error("Local storage is disabled. In order to use platform please enable local storage"), 2000);
+    } catch (error) {
+        setTimeout(
+            () => toast.error("Local storage is disabled. In order to use platform please enable local storage"),
+            2000
+        );
     }
 };
 
 export const configureStore = (): StoreState => {
     const storeLogger = createLogger();
     const state = loadState();
-    const store = createStore(rootReducer,state,applyMiddleware(storeLogger));
+    const store = createStore(rootReducer, state, applyMiddleware(storeLogger));
     store.subscribe(() => {
         saveState(store.getState());
     });

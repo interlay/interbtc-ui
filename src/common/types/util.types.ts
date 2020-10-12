@@ -1,10 +1,5 @@
 import { Store, CombinedState } from "redux";
-import { ApiActions
-    ,StorageActions
-    ,PricesActions
-    ,RedeemActions
-    ,IssueActions
-} from "./actions.types";
+import { ApiActions, StorageActions, PricesActions, RedeemActions, IssueActions } from "./actions.types";
 import { PolkaBTCAPI, StakedRelayerClient } from "@interlay/polkabtc";
 import { rootReducer } from "../reducers/index";
 import { u256 } from "@polkadot/types/primitive";
@@ -56,8 +51,8 @@ export type dispatcher = {
     dispatch: {};
 };
 
-export type StoreState = Store<CombinedState<StoreType>, ApiActions
-    | StorageActions 
-    | PricesActions 
-    | RedeemActions
-    | IssueActions> & dispatcher;
+export type StoreState = Store<
+    CombinedState<StoreType>,
+    ApiActions | StorageActions | PricesActions | RedeemActions | IssueActions
+> &
+    dispatcher;
