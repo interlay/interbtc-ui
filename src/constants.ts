@@ -7,8 +7,8 @@ const getStaticPage = () => {
             return true;
         }
     }
-    return false
-}
+    return false;
+};
 
 export const STATIC_PAGE_ONLY = getStaticPage();
 
