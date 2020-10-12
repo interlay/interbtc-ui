@@ -39,7 +39,7 @@ export default function LandingPage(): JSX.Element {
                         <Image src={PolkaBTCImg} width="316"></Image>
                     </Link>
                     <h1 className="text-white mt-5">PolkaBTC: Bitcoin for Polkadot's DeFi Ecosystem</h1>
-                    {!constants.REACT_APP_STATIC_PAGE_ONLY ? (
+                    {!constants.STATIC_PAGE_ONLY ? (
                         <div>
                             <Row className="mt-4">
                                 <Col xs="12" sm={{ span: 6, offset: 3 }}>

@@ -92,7 +92,7 @@ export default class App extends Component<{}, AppState> {
 
     async componentDidMount(): Promise<void> {
         // Do not load data if showing static landing page only
-        if (!constants.REACT_APP_STATIC_PAGE_ONLY) {
+        if (!constants.STATIC_PAGE_ONLY) {
             try {
                 await this.createAPIInstace();
             } catch (e) {
@@ -131,23 +131,27 @@ export default class App extends Component<{}, AppState> {
                             onAccountClick={() => this.setState({ showSelectAccount: true })}
                         />
                         <Switch>
-                            {!constants.REACT_APP_STATIC_PAGE_ONLY && 
-                            <React.Fragment>
+                            {!constants.STATIC_PAGE_ONLY && (
                                 <Route path="/issue">
                                     <IssuePage />
                                 </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
                                 <Route path="/redeem">
                                     <RedeemPage />
                                 </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
                                 <Route path="/staked-relayer">
                                     <StakedRelayerPage />
-                                </Route>       
+                                </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
                                 <Route path="/vault">
                                     <VaultPage {...this.state} />
                                 </Route>
-                            </React.Fragment>
-                            }
-                            <Route path="/">
+                            )}
+                            <Route exact path="/">
                                 <LandingPage />
                             </Route>
                             <Route path="/about">
