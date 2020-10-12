@@ -136,9 +136,6 @@ export default class App extends Component<{}, AppState> {
                                 <Route path="/issue">
                                     <IssuePage />
                                 </Route>
-                                <Route path="/vault">
-                                    <VaultPage {...this.state} />
-                                </Route>
                                 <Route path="/redeem">
                                     <RedeemPage />
                                 </Route>
@@ -147,6 +144,9 @@ export default class App extends Component<{}, AppState> {
                                 </Route>       
                             </React.Fragment>
                             }
+                            <Route path="/vault">
+                                <VaultPage {...this.state} />
+                            </Route>
                             <Route path="/">
                                 <LandingPage />
                             </Route>
