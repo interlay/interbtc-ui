@@ -26,11 +26,12 @@ import AppState from "./common/types/app.types";
 
 // app imports
 import Topbar from "./common/components/topbar";
-import Footer from "./common/components/footer";
-import LandingPage from "./pages/landing.page";
+import Footer from "./common/components/footer/footer";
+import LandingPage from "./pages/landing/landing.page";
 import IssuePage from "./pages/issue/issue.page";
 import VaultPage from "./pages/vault.page";
 import RedeemPage from "./pages/redeem/redeem.page";
+import AboutPage from "./pages/about.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
 import { setUser } from "./common/utils/storage";
 
@@ -55,7 +56,7 @@ export default class App extends Component<{}, AppState> {
         if (allAccounts.length === 0) {
             toast.warn(
                 "No account found, you will not be able to execute any transaction. " +
-                    "Please check that your wallet is configured correctly.",
+                "Please check that your wallet is configured correctly.",
                 {
                     autoClose: false,
                 }
@@ -90,15 +91,18 @@ export default class App extends Component<{}, AppState> {
     }
 
     async componentDidMount(): Promise<void> {
-        try {
-            await this.createAPIInstace();
-        } catch (e) {
-            toast.warn("Could not connect to the Parachain, please try again in a few seconds", {
-                autoClose: false,
-            });
-        }
+        // Do not load data if showing static landing page only
+        if (!constants.STATIC_PAGE_ONLY) {
+            try {
+                await this.createAPIInstace();
+            } catch (e) {
+                toast.warn("Could not connect to the Parachain, please try again in a few seconds", {
+                    autoClose: false,
+                });
+            }
 
-        await this.getAccount();
+            await this.getAccount();
+        }
     }
 
     async selectAccount(address: string): Promise<void> {
@@ -115,6 +119,7 @@ export default class App extends Component<{}, AppState> {
         setUser(address, store.getState().storage, store.dispatch);
     }
 
+
     render() {
         return (
             <Provider store={store}>
@@ -125,25 +130,34 @@ export default class App extends Component<{}, AppState> {
                             address={this.state.address}
                             onAccountClick={() => this.setState({ showSelectAccount: true })}
                         />
-                        <div className="mb-5">
-                            <Switch>
-                                <Route exact path="/">
-                                    <LandingPage />
-                                </Route>
+                        <Switch>
+                            {!constants.STATIC_PAGE_ONLY && (
                                 <Route path="/issue">
                                     <IssuePage />
                                 </Route>
-                                <Route path="/vault">
-                                    <VaultPage {...this.state} />
-                                </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
                                 <Route path="/redeem">
                                     <RedeemPage />
                                 </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
                                 <Route path="/staked-relayer">
                                     <StakedRelayerPage />
                                 </Route>
-                            </Switch>
-                        </div>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/vault">
+                                    <VaultPage {...this.state} />
+                                </Route>
+                            )}
+                            <Route exact path="/">
+                                <LandingPage />
+                            </Route>
+                            <Route path="/about">
+                                <AboutPage />
+                            </Route>
+                        </Switch>
                         <Footer />
                     </div>
                 </Router>

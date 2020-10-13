@@ -48,7 +48,7 @@ export default class VaultPage extends Component<AppState, VaultProps> {
         } = this.state;
         return (
             <div>
-                <section className="jumbotron text-center white-background mt-2">
+                <section className="jumbotron text-center white-background min-vh-100">
                     <div className="container mt-5">
                         <Image src={PolkaBTCImg} width="256"></Image>
 

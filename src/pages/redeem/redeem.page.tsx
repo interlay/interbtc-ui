@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Image, Button, Col, Row, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import RedeemWizard from "./wizard/redeem-wizard";
-import PolkaBTCImg from "../../assets/img/polkabtc/PolkaBTC_black.png";
+import PolkaBTCImg from "../../assets/img/polkabtc/PolkaBTC_black.svg";
 import RedeemRequests from "./table/redeem-requests";
 import { StoreType } from "../../common/types/util.types";
 import { resetRedeemWizardAction } from "../../common/actions/redeem.actions";
@@ -43,7 +43,7 @@ export default function RedeemPage(): JSX.Element {
 
     return (
         <div>
-            <section className="jumbotron text-center white-background mt-2">
+            <section className="jumbotron text-center white-background min-vh-100">
                 <div className="container mt-5">
                     <Link to="/">
                         <Image src={PolkaBTCImg} width="256"></Image>
