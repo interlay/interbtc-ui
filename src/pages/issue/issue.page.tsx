@@ -71,7 +71,7 @@ export default function IssuePage(): JSX.Element {
 
                     <IssueRequests handleShow={handleShow}/>
 
-                    <Modal show={showWizard} onHide={handleClose}>
+                    <Modal show={showWizard} onHide={handleClose} size={"lg"}>
                         <IssueWizard handleClose={handleClose} />
                     </Modal>
                 </div>

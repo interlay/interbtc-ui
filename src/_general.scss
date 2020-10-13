@@ -130,3 +130,182 @@ input[type=number] {
 .show > .btn-outline-polkadot.dropdown-toggle:focus {
   box-shadow: 0 0 0 0.2rem rgba(230, 1, 122, 0.5);
 }
+
+body {
+	background: linear-gradient(-90deg, #ff9900e1, #f07353, #ef6b59, #e9436f);
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 25%;
+	}
+	50% {
+		background-position: 100% 25%;
+	}
+	100% {
+		background-position: 0% 25%;
+	}
+}
+
+.transparent-background {
+  background-color: transparent;
+}
+.polkabtc-background {
+  background-image: url("./assets/img/polkabtc/background.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.white-background {
+   background-color: white;
+}
+
+.text-white {
+  color: white;
+}
+
+
+ @media (max-width: 576px) {
+    .float-xs-left{
+      float: left!important;
+    }
+ }
+
+ a {
+  color: #510101;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+a:hover {
+  color: #050000;
+  text-decoration: underline;
+}
+
+a:not([href]):not([tabindex]) {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:not([href]):not([tabindex]):hover, a:not([href]):not([tabindex]):focus {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:not([href]):not([tabindex]):focus {
+  outline: 0;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #510101;
+  border-color: #510101;
+}
+
+.btn-primary:hover {
+  color: #fff;
+  background-color: #2b0101;
+  border-color: #1f0000;
+}
+
+.btn-primary:focus, .btn-primary.focus {
+  box-shadow: 0 0 0 0.2rem rgba(107, 39, 39, 0.5);
+}
+
+.btn-primary.disabled, .btn-primary:disabled {
+  color: #fff;
+  background-color: #510101;
+  border-color: #510101;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show>.btn-primary.dropdown-toggle {
+  color: #fff;
+  background-color: #1f0000;
+  border-color: #120000;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus, .show>.btn-primary.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(107, 39, 39, 0.5);
+}
+
+.btn-secondary {
+  color: #212529;
+  background-color: #fff;
+  border-color: #fff;
+}
+
+.btn-secondary:hover {
+  color: #212529;
+  background-color: #ececec;
+  border-color: #e6e6e6;
+}
+
+.btn-secondary:focus, .btn-secondary.focus {
+  box-shadow: 0 0 0 0.2rem rgba(222, 222, 223, 0.5);
+}
+
+.btn-secondary.disabled, .btn-secondary:disabled {
+  color: #212529;
+  background-color: #fff;
+  border-color: #fff;
+}
+
+.btn-secondary:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active, .show>.btn-secondary.dropdown-toggle {
+  color: #212529;
+  background-color: #e6e6e6;
+  border-color: #dfdfdf;
+}
+
+.btn-secondary:not(:disabled):not(.disabled):active:focus, .btn-secondary:not(:disabled):not(.disabled).active:focus, .show>.btn-secondary.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(222, 222, 223, 0.5);
+}
+
+.btn-success {
+  color: #fff;
+  background-color: #73A839;
+  border-color: #73A839;
+}
+
+.btn-success:hover {
+  color: #fff;
+  background-color: #5f8b2f;
+  border-color: #59822c;
+}
+
+.btn-success:focus, .btn-success.focus {
+  box-shadow: 0 0 0 0.2rem rgba(136, 181, 87, 0.5);
+}
+
+.btn-success.disabled, .btn-success:disabled {
+  color: #fff;
+  background-color: #73A839;
+  border-color: #73A839;
+}
+
+.btn-success:not(:disabled):not(.disabled):active, .btn-success:not(:disabled):not(.disabled).active, .show>.btn-success.dropdown-toggle {
+  color: #fff;
+  background-color: #59822c;
+  border-color: #527829;
+}
+
+.btn-success:not(:disabled):not(.disabled):active:focus, .btn-success:not(:disabled):not(.disabled).active:focus, .show>.btn-success.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(136, 181, 87, 0.5);
+}
+
+.form-group{
+  .list-group-item{
+    strong{
+      word-break: break-all;
+    }
+  }
+}
+
+.form-check{
+  .form-check-label{
+    word-break: break-all;
+  }
+}
