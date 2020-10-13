@@ -20,6 +20,8 @@
   --danger: #C71C22;
   --light: #f8f9fa;
   --dark: #343a40;
+  --polkadot: #e6017a;
+  --bitcoin: #ff9900;
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;
@@ -4518,8 +4520,8 @@ a.badge-dark:focus, a.badge-dark.focus {
 .jumbotron {
   padding: 2rem 1rem;
   margin-bottom: 2rem;
-  background-color: #whitesmoke;
-  border-radius: 0.3rem;
+  background-color: whitesmoke;
+  border-radius: 0rem;
 }
 
 @media (min-width: 576px) {

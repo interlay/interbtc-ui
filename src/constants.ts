@@ -1,5 +1,17 @@
 export const APP_NAME = "PolkaBTC";
 
+// Set to true to show only the static landing page
+const getStaticPage = () => {
+    if (process.env.REACT_APP_STATIC_PAGE_ONLY !== undefined) {
+        if (process.env.REACT_APP_STATIC_PAGE_ONLY === "true") {
+            return true;
+        }
+    }
+    return false;
+};
+
+export const STATIC_PAGE_ONLY = getStaticPage();
+
 // Set to true is on mainnet.
 export const BTC_MAINNET = false;
 
@@ -43,3 +55,6 @@ export const ALICE = "//Alice";
 export const BOB = "5DTestUPts3kjeXSTMyerHihn1uwMfLj8vU8sqF7qYrFabHE";
 export const ALICE_BTC = "tb1qmwv7aqktv5l44x65qmsk6u4z9wh66nazv9rgv3"; //Alexei's testnet BTC address
 export const BOB_BTC = "tb1q4kspwcf42cqp66hrhw407djna4dgpw9lsnfx5e"; // Dom's testnet BTC address
+
+// Landing page
+export const MARKDOWN_PATH = "../assets/polkBTCInfo.md";

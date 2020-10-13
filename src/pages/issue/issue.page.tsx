@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Image, Button, Col, Row, Modal } from "react-bootstrap";
 
-import PolkaBTCImg from "../../assets/img/polkabtc/PolkaBTC_black.png";
+import PolkaBTCImg from "../../assets/img/polkabtc/PolkaBTC_black.svg";
 import IssueRequests from "./table/issue-requests";
 import { resetIssueWizardAction } from "../../common/actions/issue.actions";
 import { useDispatch, useSelector } from "react-redux";
@@ -44,7 +44,7 @@ export default function IssuePage(): JSX.Element {
 
     return (
         <div>
-            <section className="jumbotron text-center white-background mt-2">
+            <section className="jumbotron text-center white-background min-vh-100">
                 <div className="container mt-5">
                     <Link to="/">
                         <Image src={PolkaBTCImg} width="256"></Image>
