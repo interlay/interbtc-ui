@@ -33,12 +33,13 @@ export default function LandingPage(): JSX.Element {
 
     return (
         <div>
-            <section className="jumbotron min-vh-100 text-center transparent-background">
+            <section className="jumbotron min-vh-90 text-center transparent-background">
                 <div className="container mt-5">
                     <Link to="/">
                         <Image src={PolkaBTCImg} width="316"></Image>
                     </Link>
-                    <h1 className="text-white mt-5">PolkaBTC: Bitcoin for Polkadot's DeFi Ecosystem</h1>
+                    <h1 className="text-white mt-5">PolkaBTC</h1>
+                    <h2 className="text-white">Bitcoin for Polkadot's DeFi Ecosystem</h2>
                     {!constants.STATIC_PAGE_ONLY ? (
                         <div>
                             <Row className="mt-4">

@@ -126,10 +126,12 @@ export default class App extends Component<{}, AppState> {
                 <Router>
                     <div className="main d-flex flex-column min-vh-100">
                         <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
-                        <Topbar
-                            address={this.state.address}
-                            onAccountClick={() => this.setState({ showSelectAccount: true })}
-                        />
+                        {!constants.STATIC_PAGE_ONLY && (
+                            <Topbar
+                                address={this.state.address}
+                                onAccountClick={() => this.setState({ showSelectAccount: true })}
+                            />
+                        )}
                         <Switch>
                             {!constants.STATIC_PAGE_ONLY && (
                                 <Route path="/issue">
