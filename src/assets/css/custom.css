@@ -1,18 +1,21 @@
 body {
-	background: linear-gradient(-90deg, #ff9900e1, #f07353, #ef6b59, #e9436f);
-	background-size: 400% 400%;
-	animation: gradient 15s ease infinite;
+	background-image: url("../img/polkabtc/background.png");
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+	
 }
 
 @keyframes gradient {
 	0% {
-		background-position: 0% 25%;
+		background-position: 0% 50%;
 	}
 	50% {
-		background-position: 100% 25%;
+		background-position: 100% 50%;
 	}
 	100% {
-		background-position: 0% 25%;
+		background-position: 0% 50%;
 	}
 }
 

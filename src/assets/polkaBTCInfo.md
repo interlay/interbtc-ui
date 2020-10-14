@@ -1,3 +1,14 @@
+## Content
+- ##### [Introduction](#into)
+- ##### [Roadmap](#roadmap)
+- ##### [Security Guarantees](#security)
+- ##### [Design](#design)
+
+<br/>
+<br/>
+<div id="into"></div>
+
+## Introduction
 In 2016, the [Polkadot whitepaper](https://polkadot.network/PolkaDotPaper.pdf) identified secure interoperability with Bitcoin as a critical and also challenging feature. In January 2020, with the launch of Polkadot on the horizon, the [Web3 Foundation](https://web3.foundation/in) commissioned [Interlay](https://www.interlay.io/) to design a trustless bridge from Bitcoin to Polkadot based on [XCLAIM](https://www.xclaim.io/) — a carefully designed, open and trustless system that guarantees the security of user’s funds.
 
 
@@ -6,11 +17,37 @@ The BTC-Parachain allows users to mint 1:1 Bitcoin-backed assets onto Polkadot -
 Funded by a [Web3 Foundation grant](https://web3.foundation/grants/), the BTC-Parachain is implemented in [Rust](https://www.rust-lang.org/) using [Parity](https://www.parity.io/)'s [Substrate framework](https://substrate.dev/).
 
 
+##### Helpful Links
 
+- [BTC Parachain specification](https://interlay.gitlab.io/polkabtc-spec/)
+
+- [BTC Parachain open-source code](https://github.com/interlay/BTC-Parachain)
+
+- [XCLAIM peer-reviewed paper](https://eprint.iacr.org/2018/643.pdf)
+
+- [Interlay](https://www.interlay.io/)
+
+<div id="roadmap"></div>
+
+<br/>
+<br/>
+
+## Roadmap
+The Interlay team is building a customized Substrate environment for PolkaBTC, optimized to verify Bitcoin payments. The BTC Parachain includes a Bitcoin cross-chain SPV client (BTC-Relay), integrations with secure price oracles and XCMP, as well as support for hardware wallets. In addition, Interlay is also building client software for Vaults, Staked Relayers (who make sure BTC-Relay is up to date), as well as an easy-to-use web interface. 
+
+A first Alpha testnet is scheduled for November 2020 and a feature-ready Beta testnet will be launched in January 2021 . Once the audit of the code base is completed in February 2021 and parachains are enabled on Polkadot and Kusama, the BTC Parachain will go live: first on Kusama, then on Polkadot mainnet. 
+
+
+Sign up to get early access to PolkaBTC and be the first to test the first truly decentralized cross-chain bridge: https://forms.gle/JrNBD6Pe1F5QAg4z8 
+
+![](https://gitlab.com/interlay/polkabtc-ui/-/raw/master/src/assets/img/polkabtc/PolkaBTC_roadmap.png)
 
 <div id="security"></div>
 
-### Security Guarantees: Trustless and Fully Decentralized
+<br/>
+<br/>
+
+## Security Guarantees: Trustless and Fully Decentralized
 
 What makes the BTC-Parachain unique is the strict dedication to being trustless and decentralized:
  
@@ -33,10 +70,12 @@ Read on to get a better understanding of the BTC-Parachain design and security g
 
 
 
+<br/>
+<br/>
 
 <div id="design"></div>
 
-### Design: The XCLAIM Framework 
+## Design: The XCLAIM Framework 
 
 <div id="cba"></div>
 
@@ -133,17 +172,3 @@ In practice, a less strict approach will be taken, where Vaults remain unpunishe
 
 ![High-level PolkaBTC Redeem process](https://cdn-images-1.medium.com/max/3200/0*GeYgUaeduwBxfgfN)*High-level PolkaBTC Redeem process*
 
-
-<div id="links"></div>
-
-### Helpful Links
-
-BTC Parachain open-source code: h[ttps://github.com/interlay/BTC-Parachain](https://github.com/interlay/BTC-Parachain)
-
-BTC Parachain specification: [https://interlay.gitlab.io/polkabtc-spec/](https://interlay.gitlab.io/polkabtc-spec/)
-
-Interlay:[ ](https://www.interlay.io/careers)[https://www.interlay.io/](https://www.interlay.io/)
-
-XCLAIM peer-reviewed paper: [https://eprint.iacr.org/2018/643.pdf](https://eprint.iacr.org/2018/643.pdf)
-
-XCLAIM project website: [https://www.xclaim.io/](https://www.xclaim.io/)
