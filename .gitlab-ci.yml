@@ -77,3 +77,4 @@ build_container:
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/DockerfileProd --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
   only:
   - merge_requests
+  - master
