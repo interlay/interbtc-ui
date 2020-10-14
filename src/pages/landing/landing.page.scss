@@ -1,0 +1,63 @@
+.btn-outline-bitcoin {
+    color: #343a40;
+    border-color: #343a40;
+  }
+  
+  .btn-outline-bitcoin:hover {
+    color: #000000;
+    background-color: #ff9900;
+    border-color: #ff9900;
+  }
+  
+  .btn-outline-bitcoin:focus, .btn-outline-bitcoin.focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 153, 0, 0.5);
+  }
+  
+  .btn-outline-bitcoin.disabled, .btn-outline-bitcoin:disabled {
+    color: #000000;
+    background-color: transparent;
+  }
+  
+  .btn-outline-bitcoin:not(:disabled):not(.disabled):active, .btn-outline-bitcoin:not(:disabled):not(.disabled).active,
+  .show > .btn-outline-bitcoin.dropdown-toggle {
+    color: #000000;
+    background-color: #ff9900;
+    border-color: #ff9900;
+  }
+  
+  .btn-outline-bitcoin:not(:disabled):not(.disabled):active:focus, .btn-outline-bitcoin:not(:disabled):not(.disabled).active:focus,
+  .show > .btn-outline-bitcoin.dropdown-toggle:focus {
+    box-shadow: 0 0 0 0.2rem rgba(230, 1, 122, 0.5);
+  }
+
+  .btn-outline-polkadot {
+    color: #510101;
+    border-color: #510101;
+  }
+  
+  .btn-outline-polkadot:hover {
+    color: whitesmoke;
+    background-color: #ed3855;
+    border-color: #ed3855;
+  }
+  
+  .btn-outline-polkadot:focus, .btn-outline-polkadot.focus {
+    box-shadow: 0 0 0 0.2rem rgba(230, 1, 122, 0.5);
+  }
+  
+  .btn-outline-polkadot.disabled, .btn-outline-polkadot:disabled {
+    color: #000000;
+    background-color: transparent;
+  }
+  
+  .btn-outline-polkadot:not(:disabled):not(.disabled):active, .btn-outline-polkadot:not(:disabled):not(.disabled).active,
+  .show > .btn-outline-polkadot.dropdown-toggle {
+    color: #000000;
+    background-color: #ed3855;
+    border-color: #ed3855;
+  }
+  
+  .btn-outline-polkadot:not(:disabled):not(.disabled):active:focus, .btn-outline-polkadot:not(:disabled):not(.disabled).active:focus,
+  .show > .btn-outline-polkadot.dropdown-toggle:focus {
+    box-shadow: 0 0 0 0.2rem rgba(230, 1, 122, 0.5);
+  }

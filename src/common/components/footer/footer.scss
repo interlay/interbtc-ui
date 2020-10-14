@@ -1,0 +1,90 @@
+
+footer {
+    padding: 0.9375rem 0;
+    text-align: center;
+    display: -webkit-flex;
+    /* Safari */
+    /* Safari 6.1+ */
+    display: flex;
+    font-size: 0.8rem;
+    background-color: #eee;
+    ul {
+        margin-bottom: 0;
+        padding: 0;
+        list-style: none;
+    }
+  
+    ul li {
+        display: inline-block;
+    }
+  
+    ul li a {
+        color: inherit;
+        padding: 0.9375rem;
+        text-transform: uppercase;
+        border-radius: 3px;
+        text-decoration: none;
+        position: relative;
+        display: block;
+    }
+  
+    ul li a:hover {
+        text-decoration: none;
+    }
+  
+    ul li .btn {
+        margin: 0;
+    }
+  
+    ul.links-horizontal:first-child a {
+        padding-left: 0;
+    }
+  
+    ul.links-horizontal:last-child a {
+        padding-right: 0;
+    }
+  
+    ul.links-vertical li {
+        display: block;
+        margin-left: -5px;
+        margin-right: -5px;
+    }
+  
+    ul.links-vertical li a {
+        padding: 5px;
+    }
+  
+   .social-buttons a, .social-buttons .btn {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+  
+    .footer-brand {
+        float: left;
+        height: 50px;
+        padding: 15px 15px;
+        font-size: 18px;
+        line-height: 20px;
+        margin-left: -15px;
+    }
+  
+    .footer-brand:hover,
+    .footer-brand:focus {
+        color: #310000;
+    }
+  
+    .copyright {
+        padding: 15px 0;
+    }
+  
+    .copyright .material-icons {
+        font-size: 18px;
+        position: relative;
+        top: 3px;
+    }
+  
+    .pull-center {
+        display: inline-block;
+        float: none;
+    }
+}

@@ -1,99 +1,40 @@
+body {
+	background: linear-gradient(-90deg, #ff9900e1, #f07353, #ef6b59, #e9436f);
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 25%;
+	}
+	50% {
+		background-position: 100% 25%;
+	}
+	100% {
+		background-position: 0% 25%;
+	}
+}
+
+.transparent-background {
+  background-color: transparent;
+}
+.polkabtc-background {
+  background-image: url("../img/polkabtc/background.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
 .white-background {
    background-color: white;
 }
 
+.text-white {
+  color: white;
+}
 
-footer {
-   padding: 0.9375rem 0;
-   text-align: center;
-   display: -webkit-flex;
-   /* Safari */
-   /* Safari 6.1+ */
-   display: flex;
-   font-size: 0.8rem;
-   background-color: #eee;
- }
- 
- footer ul {
-   margin-bottom: 0;
-   padding: 0;
-   list-style: none;
- }
- 
- footer ul li {
-   display: inline-block;
- }
- 
- footer ul li a {
-   color: inherit;
-   padding: 0.9375rem;
-   text-transform: uppercase;
-   border-radius: 3px;
-   text-decoration: none;
-   position: relative;
-   display: block;
- }
- 
- footer ul li a:hover {
-   text-decoration: none;
- }
- 
- footer ul li .btn {
-   margin: 0;
- }
- 
- footer ul.links-horizontal:first-child a {
-   padding-left: 0;
- }
- 
- footer ul.links-horizontal:last-child a {
-   padding-right: 0;
- }
- 
- footer ul.links-vertical li {
-   display: block;
-   margin-left: -5px;
-   margin-right: -5px;
- }
- 
- footer ul.links-vertical li a {
-   padding: 5px;
- }
- 
- footer .social-buttons a,
- footer .social-buttons .btn {
-   margin-top: 5px;
-   margin-bottom: 5px;
- }
- 
- footer .footer-brand {
-   float: left;
-   height: 50px;
-   padding: 15px 15px;
-   font-size: 18px;
-   line-height: 20px;
-   margin-left: -15px;
- }
- 
- footer .footer-brand:hover,
- footer .footer-brand:focus {
-   color: #310000;
- }
- 
- footer .copyright {
-   padding: 15px 0;
- }
- 
- footer .copyright .material-icons {
-   font-size: 18px;
-   position: relative;
-   top: 3px;
- }
- 
- footer .pull-center {
-   display: inline-block;
-   float: none;
- }
 
  @media (max-width: 576px) {
     .float-xs-left{

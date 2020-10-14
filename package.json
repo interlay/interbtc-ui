@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@interlay/polkabtc": "latest",
+    "@interlay/polkabtc": "^0.2.0",
     "@polkadot/api": "^1.32.1",
     "@polkadot/extension-dapp": "0.32.1",
     "@testing-library/jest-dom": "^4.2.4",
@@ -30,6 +30,7 @@
     "react-dom": "^16.13.1",
     "react-hook-form": "^6.8.4",
     "react-icons": "^3.10.0",
+    "react-markdown": "^4.3.1",
     "react-redux": "^7.2.1",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",

@@ -64,7 +64,7 @@ export default function StakedRelayerPage() {
     });
 
     return (
-        <div className="staked-relayer-page container-fluid">
+        <div className="staked-relayer-page container-fluid white-background">
             <div className="stacked-container">
                 <div className="stacked-wrapper">
                     <div className="row">
