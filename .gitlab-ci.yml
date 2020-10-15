@@ -16,6 +16,7 @@ cache:
 
 variables:
   REACT_APP_STATIC_PAGE_ONLY: "false"
+  NODE_ENV: production
 
 
 # Test and build on PRs
