@@ -16,7 +16,6 @@ cache:
 
 variables:
   REACT_APP_STATIC_PAGE_ONLY: "false"
-  NODE_ENV: production
 
 
 # Test and build on PRs
@@ -37,22 +36,24 @@ build:
   artifacts:
     expire_in: 1 day
     paths:
-    - build
+      - build
   only:
     - merge_requests
 
 # Deployment
 build-app:
   stage: build
+  variables:
+    NODE_ENV: production
   script:
     - yarn install
-    - CI=false yarn build
+    - yarn build
   artifacts:
     expire_in: 1 day
     paths:
-    - build
+      - build
   only:
-  - master
+    - master
 
 # deploy dapp
 pages:
@@ -63,9 +64,9 @@ pages:
     - cp public/index.html public/404.html
   artifacts:
     paths:
-    - public
+      - public
   only:
-  - master
+    - master
 
 build_container:
   stage: deploy
@@ -77,5 +78,5 @@ build_container:
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/DockerfileProd --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
   only:
-  - merge_requests
-  - master
+    - merge_requests
+    - master
