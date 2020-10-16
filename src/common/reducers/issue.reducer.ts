@@ -1,7 +1,7 @@
 import {
     CHANGE_ISSUE_STEP,
-    CHANGE_VAULT_BTC_ADDRESS,
-    CHANGE_VAULT_DOT_ADDRESS,
+    CHANGE_VAULT_BTC_ADDRESS_ON_ISSUE,
+    CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE,
     RESET_ISSUE_WIZARD,
     CHANGE_AMOUNT_BTC,
     CHANGE_FEE_BTC,
@@ -43,9 +43,9 @@ export const issueReducer = (state: Issue = initialState, action: IssueActions):
             return { ...state, amountBTC: action.amount };
         case CHANGE_FEE_BTC:
             return { ...state, feeBTC: action.fee };
-        case CHANGE_VAULT_BTC_ADDRESS:
+        case CHANGE_VAULT_BTC_ADDRESS_ON_ISSUE:
             return { ...state, vaultBtcAddress: action.vaultBtcAddress };
-        case CHANGE_VAULT_DOT_ADDRESS:
+        case CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE:
             return { ...state, vaultDotAddress: action.vaultDotAddress };
         case CHANGE_ISSUE_ID:
             return { ...state, id: action.id };

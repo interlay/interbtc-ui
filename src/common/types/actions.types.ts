@@ -206,8 +206,8 @@ export type IssueActions =
     | ChangeIssueStep
     | ChangeAmountBtc
     | ChangeFeeBtc
-    | ChangeVaultBtcAddress
-    | ChangeVaultDotAddress
+    | ChangeVaultBtcAddressOnIssue
+    | ChangeVaultDotAddressOnIssue
     | ChangeIssueId
     | ChangeBtcTxId
     | ResetIssueWizard
