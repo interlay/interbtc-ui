@@ -1,16 +1,29 @@
 import { rootReducer } from "./common/reducers/index";
 import { toast } from "react-toastify";
-import Storage from "./common/controllers/storage";
 import { AppState, StoreType, StoreState } from "./common/types/util.types";
 import { createLogger } from "redux-logger";
 import { applyMiddleware, createStore } from "redux";
+import { initializeState } from "./common/actions/general.actions";
+import { PolkaBTCAPI, StakedRelayerClient } from "@interlay/polkabtc";
+import { mapToArray, arrayToMap } from "./common/utils/utils";
 
+declare global {
+    interface Window { 
+        polkaBTC: PolkaBTCAPI; 
+        relayer: StakedRelayerClient;
+    }
+}
+  
 export const getInitialState = (): StoreType => {
     const emptyStore: StoreType = {
-        api: null,
-        relayer: null,
+        general: {
+            polkaBtcLoaded: false,
+            relayerLoaded: false,
+            address: ""
+        },
         prices: { dotBtc: 0, dotUsd: 0 },
         issue: {
+            address: "",
             step: "ENTER_BTC_AMOUNT",
             amountBTC: "",
             feeBTC: "0",
@@ -18,32 +31,52 @@ export const getInitialState = (): StoreType => {
             vaultDotAddress: "",
             id: "",
             btcTxId: "",
-            issueRequests: [],
+            issueRequests: new Map(),
             transactionListeners: [],
             proofListeners: [],
             wizardInEditMode: false,
         },
         redeem: {
+            address: "",
             step: "ENTER_POLKABTC",
             amountPolkaBTC: "",
             btcAddress: "",
             vaultBtcAddress: "",
             vaultDotAddress: "",
             id: "",
-        },
-        storage: new Storage(),
+            redeemRequests: new Map()
+        }
     };
     return emptyStore;
 };
 
 export const loadState = (): StoreType => {
     try {
-        const serializedState = localStorage.getItem("store");
+        const serializedState = localStorage.getItem("pbtc-store");
         if (serializedState === null) {
             const initialState = getInitialState();
             return initialState;
         }
-        return JSON.parse(serializedState);
+        let rawStore = JSON.parse(serializedState);
+        let deserializedState = {
+            ...rawStore, 
+            general: {
+                polkaBtcLoaded: false, 
+                relayerLoaded: false,
+                address: rawStore.general.address
+            }
+        };
+        return {
+            ...deserializedState,
+            issue: {
+                ...deserializedState.issue,
+                issueRequests: arrayToMap(deserializedState.issue.issueRequests)
+            },
+            redeem: {
+                ...deserializedState.redeem,
+                redeemRequests: arrayToMap(deserializedState.redeem.redeemRequests)
+            }
+        }
     } catch (error) {
         setTimeout(
             () => toast.error("Local storage is disabled. In order to use platform please enable local storage"),
@@ -56,8 +89,19 @@ export const loadState = (): StoreType => {
 
 export const saveState = (store: AppState): void => {
     try {
-        const serializedState = JSON.stringify(store);
-        localStorage.setItem("store", serializedState);
+        const preperedState = {
+            ...store, 
+            issue: {
+                ...store.issue,
+                issueRequests: mapToArray(store.issue.issueRequests)
+            },
+            redeem: {
+                ...store.redeem,
+                redeemRequests: mapToArray(store.redeem.redeemRequests)
+            }
+        };
+        const serializedState = JSON.stringify(preperedState);
+        localStorage.setItem("pbtc-store", serializedState);
     } catch (error) {
         setTimeout(
             () => toast.error("Local storage is disabled. In order to use platform please enable local storage"),
@@ -70,6 +114,7 @@ export const configureStore = (): StoreState => {
     const storeLogger = createLogger();
     const state = loadState();
     const store = createStore(rootReducer, state, applyMiddleware(storeLogger));
+    store.dispatch(initializeState(state));
     store.subscribe(() => {
         saveState(store.getState());
     });

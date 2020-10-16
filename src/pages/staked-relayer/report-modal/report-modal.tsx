@@ -20,14 +20,14 @@ type ReportForm = {
 
 export default function ReportModal(props: ReportModalType): ReactElement {
     const { register, handleSubmit, errors } = useForm<ReportForm>();
-    const stakedRelayer = useSelector((state: StoreType) => state.relayer);
+    const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
     const [isReportPending, setReportPending] = useState(false);
 
     const onSubmit = handleSubmit(async ({ btcBlock, message }) => {
-        if (!stakedRelayer) return;
+        if (!relayerLoaded) return;
         setReportPending(true);
         try {
-            await stakedRelayer.suggestInvalidBlock(STATUS_UPDATE_DEPOSIT, btcBlock, message);
+            await window.relayer.suggestInvalidBlock(STATUS_UPDATE_DEPOSIT, btcBlock, message);
             toast.success("Status Update Suggested");
             props.onClose();
         } catch (error) {

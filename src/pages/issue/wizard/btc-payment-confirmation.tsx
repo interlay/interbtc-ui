@@ -19,7 +19,8 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
     const issueId = useSelector((state: StoreType) => state.issue.id);
     const btcTxId = useSelector((state: StoreType) => state.issue.btcTxId);
     const { register, handleSubmit, errors } = useForm<BTCTxIdForm>({defaultValues: {btcTxId}});
-    const storage = useSelector((state: StoreType) => state.storage);
+    const address = useSelector((state: StoreType) => state.general.address);
+    const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
     const dispatch = useDispatch();
 
     const onSubmit = handleSubmit(async () => {
@@ -28,13 +29,12 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
 
     const onChange = async (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
-        if (name === "btcTxId") {
+        if (name === "btcTxId" && issueRequests) {
             const txId = remove0x(value);
             dispatch(changeBtcTxIdAction(txId));
-            let request = storage.getIssueRequest(issueId);
+            let request = issueRequests.find((r) => r.id === issueId);
             if (request) {
                 request.btcTxId = txId;
-                storage.modifyIssueRequest(request);
                 dispatch(updateIssueRequestAction(request));
             } else {
                 toast.error("Exception: Issue request not found.");

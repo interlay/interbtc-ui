@@ -15,7 +15,7 @@ type EnterPolkaBTCForm = {
 export default function EnterPolkaBTCAmount() {
     const [isRequestPending, setRequestPending] = useState(false);
     const [balancePolkaBTC, setBalancePolkaBTC] = useState("0");
-    const polkaBTC = useSelector((state: StoreType) => state.api);
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
     const defaultValues = amount ? { defaultValues: { amountPolkaBTC: amount } } : undefined;
     const { register, handleSubmit, errors } = useForm<EnterPolkaBTCForm>(defaultValues);
@@ -23,20 +23,20 @@ export default function EnterPolkaBTCAmount() {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!polkaBTC) return;
+            if (!polkaBtcLoaded) return;
 
-            const address = polkaBTC.account?.toString();
-            const accountId = polkaBTC.api.createType("AccountId", address) as any;
-            const balancePolkaSAT = await polkaBTC.treasury.balancePolkaBTC(accountId);
+            const address = window.polkaBTC.account?.toString();
+            const accountId = window.polkaBTC.api.createType("AccountId", address) as any;
+            const balancePolkaSAT = await window.polkaBTC.treasury.balancePolkaBTC(accountId);
             // TODO: write data to storage
             const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
             setBalancePolkaBTC(balancePolkaBTC);
         }
         fetchData();
-    }, [polkaBTC]);
+    }, [polkaBtcLoaded]);
 
     const onSubmit = handleSubmit(async ({ amountPolkaBTC }) => {
-        if (!polkaBTC) return;
+        if (!polkaBtcLoaded) return;
 
         setRequestPending(true);
         try {
@@ -45,13 +45,13 @@ export default function EnterPolkaBTCAmount() {
                 throw new Error("Invalid PolkaBTC amount input");
             }
             dispatch(changeAmountPolkaBTCAction(amountPolkaBTC));
-            const amount = polkaBTC.api.createType("Balance", amountPolkaSAT);
-            const vaultId = await polkaBTC.vaults.selectRandomVaultRedeem(amount);
+            const amount = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
+            const vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amount);
 
             toast.success("Found vault: " + vaultId.toString());
 
             // get the vault's data
-            const vault = await polkaBTC.vaults.get(vaultId);
+            const vault = await window.polkaBTC.vaults.get(vaultId);
             const vaultBTCAddress = getP2WPKHFromH160(vault.btc_address);
             if (vaultBTCAddress === undefined) {
                 throw new Error("Vault has invalid BTC address.");

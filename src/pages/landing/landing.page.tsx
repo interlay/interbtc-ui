@@ -13,15 +13,13 @@ import "./landing.page.scss";
 export default function LandingPage(): JSX.Element {
     const [totalPolkaBTC, setTotalPolkaBTC] = useState("...");
     const [totalLockedDOT, setTotalLockedDOT] = useState("...");
-    const polkaBTC = useSelector((state: StoreType) => state.api);
-    const storage = useSelector((state: StoreType) => state.storage);
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!polkaBTC) return;
-            if (!storage) return;
-            const totalPolkaSAT = await polkaBTC.treasury.totalPolkaBTC();
-            const totalLockedPLANCK = await polkaBTC.collateral.totalLockedDOT();
+            if (!polkaBtcLoaded) return;
+            const totalPolkaSAT = await window.polkaBTC.treasury.totalPolkaBTC();
+            const totalLockedPLANCK = await window.polkaBTC.collateral.totalLockedDOT();
             const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
             const totalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
             // TODO: write parachain data to storage
@@ -29,7 +27,7 @@ export default function LandingPage(): JSX.Element {
             setTotalLockedDOT(totalLockedDOT);
         };
         fetchData();
-    }, [polkaBTC, storage]);
+    }, [polkaBtcLoaded]);
 
     return (
         <div>

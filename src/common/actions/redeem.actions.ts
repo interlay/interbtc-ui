@@ -7,6 +7,7 @@ import {
     CHANGE_VAULT_DOT_ADDRESS_ON_REDEEM,
     CHANGE_REDEEM_ID,
     SET_REDEEM_REQUESTS,
+    ADD_REDEEM_REQUEST,
     ChangeRedeemStep,
     ChangeAmountPolkaBtc,
     ChangeBtcAddress,
@@ -15,6 +16,7 @@ import {
     ChangeVaultDotAddressOnRedeem,
     ChangeRedeemId,
     SetRedeemRequests,
+    AddRedeemRequest,
 } from "../types/actions.types";
 import { RedeemRequest } from "../types/redeem.types";
 
@@ -55,4 +57,9 @@ export const changeVaultDotAddressAction = (vaultDotAddress: string): ChangeVaul
 export const changeRedeemIdAction = (id: string): ChangeRedeemId => ({
     type: CHANGE_REDEEM_ID,
     id,
+});
+
+export const addRedeemRequestAction = (request: RedeemRequest): AddRedeemRequest => ({
+    type: ADD_REDEEM_REQUEST,
+    request,
 });

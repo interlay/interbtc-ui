@@ -44,3 +44,23 @@ export function reverseEndianness(bytes: Uint8Array): Uint8Array {
 export function uint8ArrayToStringClean(bytes: Uint8Array): string {
     return bytes.toString().substr(2).split("").join("");
 }
+
+export const arrayToMap = (arr: any[]): Map<string,any[]> => {
+    let map = new Map();
+    for(let key in arr) {
+        map.set(key,arr[key]);
+    }
+    return map;
+};
+
+interface DynamicObject {
+    [key: string]: any
+}
+
+export const mapToArray = (map: Map<string,any[]>): DynamicObject => {
+    var result: DynamicObject = {};
+    map.forEach((value, key)=>{
+        result[key] = value;
+    });
+    return result;
+};

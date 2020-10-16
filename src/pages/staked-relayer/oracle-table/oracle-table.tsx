@@ -17,12 +17,12 @@ type OracleTableProps = {
 export default function OracleTable(props: OracleTableProps): ReactElement {
     const [oracleStatus, setStatus] = useState("Online");
     const [oracles, setOracles] = useState<Array<OracleInfo>>([]);
-    const polkaBTC = useSelector((state: StoreType) => state.api);
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!polkaBTC) return;
-            const oracle = await polkaBTC.oracle.getInfo();
+            if (!polkaBtcLoaded) return;
+            const oracle = await window.polkaBTC.oracle.getInfo();
             setStatus(oracle.online ? "Online" : "Offline");
             setOracles([
                 {
@@ -34,7 +34,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
             ]);
         };
         fetchData();
-    }, [polkaBTC]);
+    }, [polkaBtcLoaded]);
 
     return (
         <div className={"oracle-table " + (Number(props.planckLocked)<=0 ? "oracle-space" : "")}>

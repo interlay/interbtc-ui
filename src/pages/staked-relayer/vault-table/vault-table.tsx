@@ -10,7 +10,7 @@ import { planckToDOT, satToBTC } from "@interlay/polkabtc";
 export default function VaultTable(): ReactElement {
     const [vaults, setVaults] = useState<Array<Vault>>([]);
     const prices = useSelector((state: StoreType) => state.prices);
-    const polkaBTC = useSelector((state: StoreType) => state.api);
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -22,16 +22,16 @@ export default function VaultTable(): ReactElement {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!polkaBTC || !prices) return;
+            if (!polkaBtcLoaded || !prices) return;
 
-            let vaults = await polkaBTC.vaults.list();
+            let vaults = await window.polkaBTC.vaults.list();
             let vaultsList: Vault[] = [];
             vaults.forEach(async (vault, index) => {
-                const accountId = polkaBTC.api.createType("AccountId", vault.id);
+                const accountId = window.polkaBTC.api.createType("AccountId", vault.id);
                 let collateralization: number | undefined = undefined;
 
                 try {
-                    collateralization = await polkaBTC.vaults.getCollateralization(vault.id);
+                    collateralization = await window.polkaBTC.vaults.getCollateralization(vault.id);
                     // convert into percentage
                     collateralization = collateralization * 100;
                 } catch (error) {
@@ -50,7 +50,7 @@ export default function VaultTable(): ReactElement {
                     console.log(error);
                 }
 
-                const balanceLockedPlanck = await polkaBTC.collateral.balanceLockedDOT(accountId);
+                const balanceLockedPlanck = await window.polkaBTC.collateral.balanceLockedDOT(accountId);
                 const balanceLockedDOT = planckToDOT(balanceLockedPlanck.toString()); 
 
                 vaultsList.push({
@@ -66,7 +66,7 @@ export default function VaultTable(): ReactElement {
             });
         };
         fetchData();
-    }, [polkaBTC, prices]);
+    }, [polkaBtcLoaded, prices]);
 
     const checkVaultStatus = (status: string, collateralization: number): string => {
         if (status === constants.VAULT_STATUS_THEFT) {

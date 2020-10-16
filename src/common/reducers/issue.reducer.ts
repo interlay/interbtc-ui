@@ -9,15 +9,18 @@ import {
     CHANGE_ISSUE_ID,
     ADD_ISSUE_REQUEST,
     UPDATE_ISSUE_REQUEST,
+    CHANGE_ADDRESS,
     IssueActions,
     ADD_PROOF_LISTENER,
     ADD_TRANSACTION_LISTENER,
-    SET_ISSUE_REQUESTS,
     OPEN_WIZARD_IN_EDIT_MODE,
+    INIT_STATE
 } from "../types/actions.types";
-import { Issue, IssueRequest } from "../types/issue.types";
+import { Issue } from "../types/issue.types";
+import { arrayToMap } from "../utils/utils";
 
 const initialState = {
+    address: "",
     step: "ENTER_BTC_AMOUNT",
     amountBTC: "",
     feeBTC: "0",
@@ -25,14 +28,16 @@ const initialState = {
     vaultDotAddress: "",
     id: "",
     btcTxId: "",
-    issueRequests: [],
+    issueRequests: new Map(),
     transactionListeners: [],
     proofListeners: [],
-    wizardInEditMode: false,
+    wizardInEditMode: false
 };
 
 export const issueReducer = (state: Issue = initialState, action: IssueActions): Issue => {
     switch (action.type) {
+        case CHANGE_ADDRESS:
+            return { ...state, address: action.address }
         case CHANGE_ISSUE_STEP:
             return { ...state, step: action.step };
         case CHANGE_AMOUNT_BTC:
@@ -48,24 +53,31 @@ export const issueReducer = (state: Issue = initialState, action: IssueActions):
         case RESET_ISSUE_WIZARD:
             const newState = {
                 ...initialState,
+                address: state.address,
                 issueRequests: state.issueRequests,
                 transactionListeners: state.transactionListeners,
                 proofListeners: state.proofListeners,
             };
             return newState;
         case ADD_ISSUE_REQUEST:
-            let issueRequests = [action.request];
-            if (state.issueRequests) {
-                issueRequests = [...state.issueRequests, ...issueRequests];
+            let newMap = new Map(state.issueRequests);
+            const requests = state.issueRequests.get(state.address);
+            if(requests){
+                newMap.set(state.address,[...requests,action.request]);
+            } else {
+                newMap.set(state.address,[action.request]);
             }
-            return { ...state, issueRequests };
-        case SET_ISSUE_REQUESTS:
-            return { ...state, issueRequests: action.requests };
+            return {...state, issueRequests: newMap};
         case UPDATE_ISSUE_REQUEST:
-            const updatedRequests = state.issueRequests.map((issue: IssueRequest) => {
-                return issue.id === action.request.id ? action.request : issue;
+            let map = new Map(state.issueRequests);
+            let reqs = state.issueRequests.get(state.address);
+            if (!reqs) return state; 
+            let updateRequests = reqs.map((request) => {
+                if (action.request.id !== request.id) return request;
+                else return action.request;
             });
-            return { ...state, issueRequests: updatedRequests };
+            map.set(state.address,updateRequests);
+            return {...state, issueRequests: map};
         case CHANGE_BTC_TX_ID:
             return { ...state, btcTxId: action.btcTxId };
         case ADD_PROOF_LISTENER:
@@ -76,6 +88,9 @@ export const issueReducer = (state: Issue = initialState, action: IssueActions):
             return { ...state, transactionListeners: [...state.transactionListeners, action.id] };
         case OPEN_WIZARD_IN_EDIT_MODE:
             return { ...state, wizardInEditMode: true };
+        case INIT_STATE:
+            let localStorageRequests = action.state.issue.issueRequests;
+            return state;
         default:
             return state;
     }

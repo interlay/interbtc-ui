@@ -28,34 +28,4 @@ export interface StorageInterface {
 
     // load both issue and redeem requests
     loadRequests(): [Array<IssueRequest>, Array<RedeemRequest>];
-
-    // get the current issue requests
-    getIssueRequests(): Array<IssueRequest>;
-
-    // maybe get a specific issue requests
-    getIssueRequest(id: string): IssueRequest | undefined;
-
-    // get the current redeem requests
-    getRedeemRequests(): Array<RedeemRequest>;
-
-    // append a new issue request
-    appendIssueRequest(req: IssueRequest): void;
-
-    // append a new redeem request
-    appendRedeemRequest(req: RedeemRequest): void;
-
-    // modify an issue request
-    modifyIssueRequest(req: IssueRequest): void;
-
-    // modify a redeem request
-    modifyRedeemRequest(req: RedeemRequest): void;
-
-    // delete a issue request
-    deleteIssueRequest(id: string): void;
-
-    // delete a redeem request
-    deleteRedeemRequest(id: string): void;
-
-    // clear storage
-    clearStorage(): void;
 }
