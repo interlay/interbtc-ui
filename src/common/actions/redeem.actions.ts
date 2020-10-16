@@ -44,12 +44,12 @@ export const resetRedeemWizardAction = (): ResetRedeemWizard => ({
     type: RESET_REDEEM_WIZARD,
 });
 
-export const changeVaultBtcAddressAction = (vaultBtcAddress: string): ChangeVaultBtcAddressOnRedeem => ({
+export const changeVaultBtcAddressOnRedeemAction = (vaultBtcAddress: string): ChangeVaultBtcAddressOnRedeem => ({
     type: CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM,
     vaultBtcAddress,
 });
 
-export const changeVaultDotAddressAction = (vaultDotAddress: string): ChangeVaultDotAddressOnRedeem => ({
+export const changeVaultDotAddressOnRedeemAction = (vaultDotAddress: string): ChangeVaultDotAddressOnRedeem => ({
     type: CHANGE_VAULT_DOT_ADDRESS_ON_REDEEM,
     vaultDotAddress,
 });

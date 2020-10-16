@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { changeRedeemStepAction, changeAmountPolkaBTCAction, changeVaultBtcAddressAction, changeVaultDotAddressAction } from "../../../common/actions/redeem.actions";
+import { 
+    changeRedeemStepAction, 
+    changeAmountPolkaBTCAction, 
+    changeVaultBtcAddressOnRedeemAction, 
+    changeVaultDotAddressOnRedeemAction 
+} from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
@@ -57,8 +62,8 @@ export default function EnterPolkaBTCAmount() {
                 throw new Error("Vault has invalid BTC address.");
             }
 
-            dispatch(changeVaultBtcAddressAction(vaultBTCAddress));
-            dispatch(changeVaultDotAddressAction(vaultId.toString()));
+            dispatch(changeVaultBtcAddressOnRedeemAction(vaultBTCAddress));
+            dispatch(changeVaultDotAddressOnRedeemAction(vaultId.toString()));
             dispatch(changeRedeemStepAction("ENTER_BTC_ADDRESS"));
         } catch (error) {
             toast.error(error.toString());

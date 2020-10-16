@@ -7,16 +7,15 @@ import {
     IsStakedRelayerLoaded,
     ChangeAddress,
     InitState,
-
 } from "../types/actions.types";
 import { StoreType } from "../types/util.types";
 
-export const isPolkaBtcLoaded = (isLoaded: boolean = false): IsPolkaBtcLoaded => ({
+export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
     type: IS_POLKA_BTC_LOADED,
     isLoaded,
 });
 
-export const isStakedRelayerLoaded = (isLoaded: boolean = false): IsStakedRelayerLoaded => ({
+export const isStakedRelayerLoaded = (isLoaded = false): IsStakedRelayerLoaded => ({
     type: IS_STAKED_RELAYER_LOADED,
     isLoaded,
 });
@@ -28,5 +27,5 @@ export const changeAddressAction = (address: string): ChangeAddress => ({
 
 export const initializeState = (state: StoreType): InitState => ({
     type: INIT_STATE,
-    state
+    state,
 });

@@ -20,7 +20,7 @@ const initialState = {
     vaultBtcAddress: "",
     vaultDotAddress: "",
     id: "",
-    redeemRequests: new Map()
+    redeemRequests: new Map(),
 };
 
 export const redeemReducer = (state: Redeem = initialState, action: RedeemActions): Redeem => {
@@ -40,19 +40,16 @@ export const redeemReducer = (state: Redeem = initialState, action: RedeemAction
         case CHANGE_REDEEM_ID:
             return { ...state, id: action.id };
         case RESET_REDEEM_WIZARD:
-            return {...initialState, 
-                address: state.address,
-                redeemRequests: state.redeemRequests
-            };
+            return { ...initialState, address: state.address, redeemRequests: state.redeemRequests };
         case ADD_REDEEM_REQUEST:
-            let newMap = new Map(state.redeemRequests);
+            const newMap = new Map(state.redeemRequests);
             const requests = state.redeemRequests.get(state.address);
-            if(requests){
-                newMap.set(state.address,[...requests,action.request]);
+            if (requests) {
+                newMap.set(state.address, [...requests, action.request]);
             } else {
-                newMap.set(state.address,[action.request]);
+                newMap.set(state.address, [action.request]);
             }
-            return {...state, redeemRequests: newMap};
+            return { ...state, redeemRequests: newMap };
         default:
             return state;
     }

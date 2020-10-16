@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import { changeAmountBTCAction, changeIssueStepAction, changeVaultBtcAddressAction, changeVaultDotAddressAction } from "../../../common/actions/issue.actions";
+import { 
+    changeAmountBTCAction, 
+    changeIssueStepAction, 
+    changeVaultBtcAddressOnIssueAction, 
+    changeVaultDotAddressOnIssueAction 
+} from "../../../common/actions/issue.actions";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
@@ -45,8 +50,8 @@ export default function EnterBTCAmount() {
             if (vaultBTCAddress === undefined) {
                 throw new Error("Vault has invalid BTC address.");
             }
-            dispatch(changeVaultBtcAddressAction(vaultBTCAddress));
-            dispatch(changeVaultDotAddressAction(vaultId.toString()));
+            dispatch(changeVaultBtcAddressOnIssueAction(vaultBTCAddress));
+            dispatch(changeVaultDotAddressOnIssueAction(vaultId.toString()));
             dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
         } catch (error) {
             toast.error(error.toString());

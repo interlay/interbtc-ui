@@ -12,7 +12,6 @@ export interface IssueRequest {
 }
 
 export interface IssueMap {
-
     [key: string]: IssueRequest[];
 }
 
@@ -25,7 +24,7 @@ export interface Issue {
     vaultBtcAddress: string;
     id: string;
     btcTxId: string;
-    issueRequests: Map<string,IssueRequest[]>;
+    issueRequests: Map<string, IssueRequest[]>;
     transactionListeners: string[];
     proofListeners: string[];
     wizardInEditMode: boolean;

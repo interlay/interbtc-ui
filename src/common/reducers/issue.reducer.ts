@@ -14,10 +14,9 @@ import {
     ADD_PROOF_LISTENER,
     ADD_TRANSACTION_LISTENER,
     OPEN_WIZARD_IN_EDIT_MODE,
-    INIT_STATE
+    INIT_STATE,
 } from "../types/actions.types";
 import { Issue } from "../types/issue.types";
-import { arrayToMap } from "../utils/utils";
 
 const initialState = {
     address: "",
@@ -31,13 +30,13 @@ const initialState = {
     issueRequests: new Map(),
     transactionListeners: [],
     proofListeners: [],
-    wizardInEditMode: false
+    wizardInEditMode: false,
 };
 
 export const issueReducer = (state: Issue = initialState, action: IssueActions): Issue => {
     switch (action.type) {
         case CHANGE_ADDRESS:
-            return { ...state, address: action.address }
+            return { ...state, address: action.address };
         case CHANGE_ISSUE_STEP:
             return { ...state, step: action.step };
         case CHANGE_AMOUNT_BTC:
@@ -60,24 +59,24 @@ export const issueReducer = (state: Issue = initialState, action: IssueActions):
             };
             return newState;
         case ADD_ISSUE_REQUEST:
-            let newMap = new Map(state.issueRequests);
+            const newMap = new Map(state.issueRequests);
             const requests = state.issueRequests.get(state.address);
-            if(requests){
-                newMap.set(state.address,[...requests,action.request]);
+            if (requests) {
+                newMap.set(state.address, [...requests, action.request]);
             } else {
-                newMap.set(state.address,[action.request]);
+                newMap.set(state.address, [action.request]);
             }
-            return {...state, issueRequests: newMap};
+            return { ...state, issueRequests: newMap };
         case UPDATE_ISSUE_REQUEST:
-            let map = new Map(state.issueRequests);
-            let reqs = state.issueRequests.get(state.address);
-            if (!reqs) return state; 
-            let updateRequests = reqs.map((request) => {
+            const map = new Map(state.issueRequests);
+            const reqs = state.issueRequests.get(state.address);
+            if (!reqs) return state;
+            const updateRequests = reqs.map((request) => {
                 if (action.request.id !== request.id) return request;
                 else return action.request;
             });
-            map.set(state.address,updateRequests);
-            return {...state, issueRequests: map};
+            map.set(state.address, updateRequests);
+            return { ...state, issueRequests: map };
         case CHANGE_BTC_TX_ID:
             return { ...state, btcTxId: action.btcTxId };
         case ADD_PROOF_LISTENER:
@@ -89,7 +88,6 @@ export const issueReducer = (state: Issue = initialState, action: IssueActions):
         case OPEN_WIZARD_IN_EDIT_MODE:
             return { ...state, wizardInEditMode: true };
         case INIT_STATE:
-            let localStorageRequests = action.state.issue.issueRequests;
             return state;
         default:
             return state;

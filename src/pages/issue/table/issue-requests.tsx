@@ -17,7 +17,7 @@ import {
     changeIssueIdAction,
     openWizardInEditModeAction,
     changeAmountBTCAction,
-    changeVaultBtcAddressAction
+    changeVaultBtcAddressOnIssueAction
 } from '../../../common/actions/issue.actions';
 
 type IssueRequestProps = {
@@ -121,7 +121,7 @@ export default function IssueRequests(props: IssueRequestProps) {
         if (request.completed) return;
 
         dispatch(openWizardInEditModeAction());
-        dispatch(changeVaultBtcAddressAction(request.vaultBTCAddress));
+        dispatch(changeVaultBtcAddressOnIssueAction(request.vaultBTCAddress));
         dispatch(changeAmountBTCAction(request.amountBTC));
         dispatch(changeBtcTxIdAction(request.btcTxId));
         dispatch(changeIssueIdAction(request.id));

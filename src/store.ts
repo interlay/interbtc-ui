@@ -8,18 +8,18 @@ import { PolkaBTCAPI, StakedRelayerClient } from "@interlay/polkabtc";
 import { mapToArray, arrayToMap } from "./common/utils/utils";
 
 declare global {
-    interface Window { 
-        polkaBTC: PolkaBTCAPI; 
+    interface Window {
+        polkaBTC: PolkaBTCAPI;
         relayer: StakedRelayerClient;
     }
 }
-  
+
 export const getInitialState = (): StoreType => {
     const emptyStore: StoreType = {
         general: {
             polkaBtcLoaded: false,
             relayerLoaded: false,
-            address: ""
+            address: "",
         },
         prices: { dotBtc: 0, dotUsd: 0 },
         issue: {
@@ -44,8 +44,8 @@ export const getInitialState = (): StoreType => {
             vaultBtcAddress: "",
             vaultDotAddress: "",
             id: "",
-            redeemRequests: new Map()
-        }
+            redeemRequests: new Map(),
+        },
     };
     return emptyStore;
 };
@@ -57,26 +57,26 @@ export const loadState = (): StoreType => {
             const initialState = getInitialState();
             return initialState;
         }
-        let rawStore = JSON.parse(serializedState);
-        let deserializedState = {
-            ...rawStore, 
+        const rawStore = JSON.parse(serializedState);
+        const deserializedState = {
+            ...rawStore,
             general: {
-                polkaBtcLoaded: false, 
+                polkaBtcLoaded: false,
                 relayerLoaded: false,
-                address: rawStore.general.address
-            }
+                address: rawStore.general.address,
+            },
         };
         return {
             ...deserializedState,
             issue: {
                 ...deserializedState.issue,
-                issueRequests: arrayToMap(deserializedState.issue.issueRequests)
+                issueRequests: arrayToMap(deserializedState.issue.issueRequests),
             },
             redeem: {
                 ...deserializedState.redeem,
-                redeemRequests: arrayToMap(deserializedState.redeem.redeemRequests)
-            }
-        }
+                redeemRequests: arrayToMap(deserializedState.redeem.redeemRequests),
+            },
+        };
     } catch (error) {
         setTimeout(
             () => toast.error("Local storage is disabled. In order to use platform please enable local storage"),
@@ -90,15 +90,15 @@ export const loadState = (): StoreType => {
 export const saveState = (store: AppState): void => {
     try {
         const preperedState = {
-            ...store, 
+            ...store,
             issue: {
                 ...store.issue,
-                issueRequests: mapToArray(store.issue.issueRequests)
+                issueRequests: mapToArray(store.issue.issueRequests),
             },
             redeem: {
                 ...store.redeem,
-                redeemRequests: mapToArray(store.redeem.redeemRequests)
-            }
+                redeemRequests: mapToArray(store.redeem.redeemRequests),
+            },
         };
         const serializedState = JSON.stringify(preperedState);
         localStorage.setItem("pbtc-store", serializedState);

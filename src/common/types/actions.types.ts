@@ -119,8 +119,8 @@ export type RedeemActions =
 
 // ISSUE
 
-export const CHANGE_VAULT_BTC_ADDRESS = "CHANGE_VAULT_BTC_ADDRESS";
-export const CHANGE_VAULT_DOT_ADDRESS = "CHANGE_VAULT_DOT_ADDRESS";
+export const CHANGE_VAULT_BTC_ADDRESS_ON_ISSUE = "CHANGE_VAULT_BTC_ADDRESS_ON_ISSUE";
+export const CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE = "CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE";
 export const CHANGE_ISSUE_STEP = "CHANGE_ISSUE_STEP";
 export const CHANGE_AMOUNT_BTC = "CHANGE_AMOUNT_BTC";
 export const CHANGE_FEE_BTC = "CHANGE_FEE_BTC";
@@ -134,13 +134,13 @@ export const ADD_TRANSACTION_LISTENER = "ADD_TRANSACTION_LISTENER";
 export const ADD_PROOF_LISTENER = "ADD_PROOF_LISTENER";
 export const OPEN_WIZARD_IN_EDIT_MODE = "OPEN_WIZARD_IN_EDIT_MODE";
 
-export interface ChangeVaultBtcAddress {
-    type: typeof CHANGE_VAULT_BTC_ADDRESS;
+export interface ChangeVaultBtcAddressOnIssue {
+    type: typeof CHANGE_VAULT_BTC_ADDRESS_ON_ISSUE;
     vaultBtcAddress: string;
 }
 
-export interface ChangeVaultDotAddress {
-    type: typeof CHANGE_VAULT_DOT_ADDRESS;
+export interface ChangeVaultDotAddressOnIssue {
+    type: typeof CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE;
     vaultDotAddress: string;
 }
 
