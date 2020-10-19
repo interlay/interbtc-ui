@@ -17,9 +17,7 @@ import * as constants from "./constants";
 // theme
 // FIXME: Clean-up and move to scss
 import "./_general.scss";
-import "./assets/css/custom-bootstrap.css";
 import "react-toastify/dist/ReactToastify.css";
-import "./assets/css/custom.css";
 
 // types
 import AppState from "./common/types/app.types";
@@ -163,7 +161,7 @@ export default class App extends Component<{}, AppState> {
                         <Footer />
                     </div>
                 </Router>
-                <Modal show={this.state.showSelectAccount}>
+                <Modal show={this.state.showSelectAccount} size={"lg"}>
                     <AccountSelector
                         selected={this.state.address}
                         accounts={this.state.accounts}

@@ -36,7 +36,7 @@ export default function ReportModal(props: ReportModalType): ReactElement {
     });
 
     return (
-        <Modal show={props.show} onHide={props.onClose}>
+        <Modal show={props.show} onHide={props.onClose} size={"lg"}>
             <form onSubmit={onSubmit}>
                 <Modal.Header closeButton>
                     <Modal.Title>Report Invalid BTC Block in BTC-Relay</Modal.Title>

@@ -69,7 +69,7 @@ export default function RedeemPage(): JSX.Element {
 
                     <RedeemRequests />
 
-                    <Modal show={showWizard} onHide={handleClose}>
+                    <Modal show={showWizard} onHide={handleClose} size={"lg"}>
                         <RedeemWizard handleClose={handleClose} />
                     </Modal>
                 </div>
