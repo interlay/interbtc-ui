@@ -26,6 +26,5 @@ export interface Issue {
     btcTxId: string;
     issueRequests: Map<string, IssueRequest[]>;
     transactionListeners: string[];
-    proofListeners: string[];
     wizardInEditMode: boolean;
 }

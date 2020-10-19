@@ -131,7 +131,6 @@ export const CHANGE_BTC_TX_ID = "CHANGE_BTC_TX_ID";
 export const ADD_ISSUE_REQUEST = "ADD_ISSUE_REQUEST";
 export const UPDATE_ISSUE_REQUEST = "UPDATE_ISSUE_REQUEST";
 export const ADD_TRANSACTION_LISTENER = "ADD_TRANSACTION_LISTENER";
-export const ADD_PROOF_LISTENER = "ADD_PROOF_LISTENER";
 export const OPEN_WIZARD_IN_EDIT_MODE = "OPEN_WIZARD_IN_EDIT_MODE";
 
 export interface ChangeVaultBtcAddressOnIssue {
@@ -193,11 +192,6 @@ export interface AddTransactionListener {
     id: string;
 }
 
-export interface AddProofListener {
-    type: typeof ADD_PROOF_LISTENER;
-    id: string;
-}
-
 export interface OpenWizardInEditMode {
     type: typeof OPEN_WIZARD_IN_EDIT_MODE;
 }
@@ -215,7 +209,6 @@ export type IssueActions =
     | AddIssueRequest
     | UpdateIssueRequest
     | AddTransactionListener
-    | AddProofListener
     | OpenWizardInEditMode
     | ChangeAddress
     | InitState;

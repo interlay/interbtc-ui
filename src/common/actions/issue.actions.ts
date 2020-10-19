@@ -11,7 +11,6 @@ import {
     ADD_ISSUE_REQUEST,
     UPDATE_ISSUE_REQUEST,
     ADD_TRANSACTION_LISTENER,
-    ADD_PROOF_LISTENER,
     OPEN_WIZARD_IN_EDIT_MODE,
     ChangeIssueStep,
     ChangeBtcAddress,
@@ -25,7 +24,6 @@ import {
     AddIssueRequest,
     UpdateIssueRequest,
     AddTransactionListener,
-    AddProofListener,
     OpenWizardInEditMode,
 } from "../types/actions.types";
 import { IssueRequest } from "../types/issue.types";
@@ -90,10 +88,5 @@ export const updateIssueRequestAction = (request: IssueRequest): UpdateIssueRequ
 
 export const addTransactionListener = (id: string): AddTransactionListener => ({
     type: ADD_TRANSACTION_LISTENER,
-    id,
-});
-
-export const addProofListener = (id: string): AddProofListener => ({
-    type: ADD_PROOF_LISTENER,
     id,
 });

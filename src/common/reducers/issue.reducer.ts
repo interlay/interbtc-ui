@@ -11,7 +11,6 @@ import {
     UPDATE_ISSUE_REQUEST,
     CHANGE_ADDRESS,
     IssueActions,
-    ADD_PROOF_LISTENER,
     ADD_TRANSACTION_LISTENER,
     OPEN_WIZARD_IN_EDIT_MODE,
     INIT_STATE,
@@ -29,7 +28,6 @@ const initialState = {
     btcTxId: "",
     issueRequests: new Map(),
     transactionListeners: [],
-    proofListeners: [],
     wizardInEditMode: false,
 };
 
@@ -55,7 +53,6 @@ export const issueReducer = (state: Issue = initialState, action: IssueActions):
                 address: state.address,
                 issueRequests: state.issueRequests,
                 transactionListeners: state.transactionListeners,
-                proofListeners: state.proofListeners,
             };
             return newState;
         case ADD_ISSUE_REQUEST:
@@ -79,16 +76,13 @@ export const issueReducer = (state: Issue = initialState, action: IssueActions):
             return { ...state, issueRequests: map };
         case CHANGE_BTC_TX_ID:
             return { ...state, btcTxId: action.btcTxId };
-        case ADD_PROOF_LISTENER:
-            if (state.proofListeners.indexOf(action.id) !== -1) return state;
-            return { ...state, proofListeners: [...state.proofListeners, action.id] };
         case ADD_TRANSACTION_LISTENER:
             if (state.transactionListeners.indexOf(action.id) !== -1) return state;
             return { ...state, transactionListeners: [...state.transactionListeners, action.id] };
         case OPEN_WIZARD_IN_EDIT_MODE:
             return { ...state, wizardInEditMode: true };
         case INIT_STATE:
-            return state;
+            return { ...state, transactionListeners: [] };
         default:
             return state;
     }

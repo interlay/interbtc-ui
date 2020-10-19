@@ -33,7 +33,6 @@ export const getInitialState = (): StoreType => {
             btcTxId: "",
             issueRequests: new Map(),
             transactionListeners: [],
-            proofListeners: [],
             wizardInEditMode: false,
         },
         redeem: {

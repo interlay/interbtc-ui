@@ -28,7 +28,6 @@ export default function IssueRequests(props: IssueRequestProps) {
     const address = useSelector((state: StoreType) => state.general.address);
     const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
     const transactionListeners = useSelector((state: StoreType) => state.issue.transactionListeners);
-    const proofListeners = useSelector((state: StoreType) => state.issue.proofListeners);
 
     const [executePending, setExecutePending] = useState([""]);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -44,7 +43,7 @@ export default function IssueRequests(props: IssueRequestProps) {
             });
         }
         fetchData();
-    }, [polkaBtcLoaded, issueRequests, proofListeners, transactionListeners, dispatch]);
+    }, [polkaBtcLoaded, issueRequests, transactionListeners, dispatch]);
 
 
     const execute = async (request: IssueRequest) => {
