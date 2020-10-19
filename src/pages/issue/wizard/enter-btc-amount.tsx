@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import { changeAmountBTCAction, changeIssueStepAction, changeVaultBtcAddressAction, changeVaultDotAddressAction } from "../../../common/actions/issue.actions";
+import { 
+    changeAmountBTCAction, 
+    changeIssueStepAction, 
+    changeVaultBtcAddressOnIssueAction, 
+    changeVaultDotAddressOnIssueAction 
+} from "../../../common/actions/issue.actions";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
@@ -15,7 +20,7 @@ type EnterBTCForm = {
 
 export default function EnterBTCAmount() {
     const [isRequestPending, setRequestPending] = useState(false);
-    const polkaBTC = useSelector((state: StoreType) => state.api);
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const amount = useSelector((state: StoreType) => state.issue.amountBTC);
     // const feeBTC = useSelector((state: StoreType) => state.issue.feeBTC);
     const defaultValues = amount ? { defaultValues: { amountBTC: amount } } : undefined;
@@ -23,6 +28,7 @@ export default function EnterBTCAmount() {
     const dispatch = useDispatch();
 
     const onSubmit = handleSubmit(async ({ amountBTC }) => {
+        if(!polkaBtcLoaded) return;
         setRequestPending(true);
         try {
             const amountSAT = btcToSat(amountBTC);
@@ -33,19 +39,19 @@ export default function EnterBTCAmount() {
             // FIXME: hardcoded until we have a fee model
             // dispatch(changeFeeBTCAction(amountBTC * 0.005));
 
-            const amount = polkaBTC.api.createType("Balance", amountSAT);
-            const vaultId = await polkaBTC.vaults.selectRandomVaultIssue(amount);
+            const amount = window.polkaBTC.api.createType("Balance", amountSAT);
+            const vaultId = await window.polkaBTC.vaults.selectRandomVaultIssue(amount);
 
             toast.success("Found vault: " + vaultId.toString());
 
             // get the vault's data
-            const vault = await polkaBTC.vaults.get(vaultId);
+            const vault = await window.polkaBTC.vaults.get(vaultId);
             const vaultBTCAddress = getP2WPKHFromH160(vault.btc_address);
             if (vaultBTCAddress === undefined) {
                 throw new Error("Vault has invalid BTC address.");
             }
-            dispatch(changeVaultBtcAddressAction(vaultBTCAddress));
-            dispatch(changeVaultDotAddressAction(vaultId.toString()));
+            dispatch(changeVaultBtcAddressOnIssueAction(vaultBTCAddress));
+            dispatch(changeVaultDotAddressOnIssueAction(vaultId.toString()));
             dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
         } catch (error) {
             toast.error(error.toString());

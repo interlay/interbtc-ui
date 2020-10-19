@@ -12,17 +12,17 @@ type TopbarProps = {
 };
 
 export default function Topbar(props: TopbarProps): ReactElement {
-    const stakedRelayer = useSelector((state: StoreType) => state.relayer);
+    const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
     const [isConnected, setIsConnected] = useState(false);
     useEffect(() => {
-        if (!stakedRelayer) return;
+        if (!relayerLoaded) return;
 
         const checkIsConnected = async () => {
-            const connected = await stakedRelayer.connected();
+            const connected = await window.relayer.connected();
             setIsConnected(connected);
         };
         checkIsConnected();
-    }, [stakedRelayer]);
+    }, [relayerLoaded]);
 
     return (
         <Navbar bg="light" expand="lg" className="border-bottom shadow-sm">

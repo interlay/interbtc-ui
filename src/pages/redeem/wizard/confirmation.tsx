@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FormGroup, ListGroup, Row, Col, ListGroupItem, Modal } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import { changeRedeemIdAction, changeRedeemStepAction } from "../../../common/actions/redeem.actions";
+import { changeRedeemIdAction, changeRedeemStepAction, addRedeemRequestAction } from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
@@ -10,8 +10,7 @@ import { btcToSat } from "@interlay/polkabtc";
 
 export default function Confirmation() {
     const [isRequestPending, setRequestPending] = useState(false);
-    const polkaBTC = useSelector((state: StoreType) => state.api);
-    const storage = useSelector((state: StoreType) => state.storage);
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const amountPolkaBTC = useSelector((store: StoreType) => store.redeem.amountPolkaBTC);
     const vaultAddress = useSelector((store: StoreType) => store.redeem.vaultDotAddress);
     const vaultBTCAddress = useSelector((store: StoreType) => store.redeem.vaultBtcAddress);
@@ -19,6 +18,8 @@ export default function Confirmation() {
     const dispatch = useDispatch();
 
     const onConfirm = async () => {
+        if (!polkaBtcLoaded) return;
+
         setRequestPending(true);
         // send the redeem request
         try {
@@ -26,11 +27,11 @@ export default function Confirmation() {
             if (amountPolkaSAT === undefined) {
                 throw new Error("Invalid PolkaBTC amount input");
             }
-            const amount = polkaBTC.api.createType("Balance", amountPolkaSAT);
+            const amount = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
 
             // FIXME: use AccountId type from @polkadot/types/interfaces
-            const vaultAccountId = polkaBTC.api.createType("AccountId", vaultAddress) as any;
-            const requestResult = await polkaBTC.redeem.request(amount, btcAddress, vaultAccountId);
+            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultAddress) as any;
+            const requestResult = await window.polkaBTC.redeem.request(amount, btcAddress, vaultAccountId);
 
             // get the redeem id from the request redeem event
             const id = requestResult.hash.toString();
@@ -38,7 +39,6 @@ export default function Confirmation() {
             // update the redeem status 
             dispatch(changeRedeemIdAction(id));
 
-            // store the redeem request in storage
             const request: RedeemRequest = {
                 id,
                 amountPolkaBTC,
@@ -48,7 +48,7 @@ export default function Confirmation() {
                 confirmations: 0,
                 completed: false,
             }
-            storage.appendRedeemRequest(request); 
+            dispatch(addRedeemRequestAction(request));
             dispatch(changeRedeemStepAction("VAULT_INFO"));
         } catch (error) {
             toast.error(error.toString());

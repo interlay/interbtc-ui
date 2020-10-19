@@ -17,13 +17,14 @@ type RegisterForm = {
 
 export default function ReportModal(props: RegisterModalType): ReactElement {
     const { register, handleSubmit, errors } = useForm<RegisterForm>();
-    const stakedRelayer = useSelector((state: StoreType) => state.relayer);
+    const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
     const [isRegisterPending, setRegisterPending] = useState(false);
 
     const onSubmit = handleSubmit(async ({ stake }) => {
+        if (!relayerLoaded) return;
         setRegisterPending(true);
         try {
-            await stakedRelayer.registerStakedRelayer(stake);
+            await window.relayer.registerStakedRelayer(stake);
             toast.success("Successfully Registered");
             props.onClose();
         } catch (error) {

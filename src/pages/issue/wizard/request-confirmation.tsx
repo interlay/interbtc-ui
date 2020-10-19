@@ -11,8 +11,7 @@ import { StoreType } from "../../../common/types/util.types";
 
 export default function RequestConfirmation() {
     const [isRequestPending, setRequestPending] = useState(false);
-    const polkaBTC = useSelector((state: StoreType) => state.api);
-    const storage = useSelector((state: StoreType) => state.storage);
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const amountBTC = useSelector((state: StoreType) => state.issue.amountBTC);
     const feeBTC = "0"; 
     // TODO: fee model
@@ -29,10 +28,11 @@ export default function RequestConfirmation() {
             if (amountSAT === undefined) {
                 throw new Error("Invalid BTC amount input.");
             }
-            const amount = polkaBTC.api.createType("Balance", amountSAT) as PolkaBTC;
+            if(!polkaBtcLoaded) return;
+            const amount = window.polkaBTC.api.createType("Balance", amountSAT) as PolkaBTC;
             // FIXME: use AccountId type from @polkadot/types/interfaces
-            const vaultAccountId = polkaBTC.api.createType("AccountId", vaultAddress) as any;
-            const requestResult = await polkaBTC.issue.request(amount, vaultAccountId);
+            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultAddress) as any;
+            const requestResult = await window.polkaBTC.issue.request(amount, vaultAccountId);
 
             // get the issue id from the request issue event
             const id = requestResult.hash.toString();
@@ -40,7 +40,6 @@ export default function RequestConfirmation() {
             // update the issue status 
             dispatch(changeIssueIdAction(id));
 
-            // store the issue request in storage
             const request: IssueRequest = {
                 id,
                 amountBTC: amountBTC,
@@ -53,7 +52,6 @@ export default function RequestConfirmation() {
                 transactionBlockHeight: 0,
                 rawTransaction: new Uint8Array(),
             }
-            storage.appendIssueRequest(request);
             dispatch(addIssueRequestAction(request));
             dispatch(changeIssueStepAction("BTC_PAYMENT"));
         } catch (error) {

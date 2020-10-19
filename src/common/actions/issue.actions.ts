@@ -2,32 +2,28 @@ import {
     CHANGE_ISSUE_STEP,
     CHANGE_BTC_ADDRESS,
     RESET_ISSUE_WIZARD,
-    CHANGE_VAULT_BTC_ADDRESS,
-    CHANGE_VAULT_DOT_ADDRESS,
+    CHANGE_VAULT_BTC_ADDRESS_ON_ISSUE,
+    CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE,
     CHANGE_ISSUE_ID,
     CHANGE_BTC_TX_ID,
     CHANGE_AMOUNT_BTC,
     CHANGE_FEE_BTC,
     ADD_ISSUE_REQUEST,
-    SET_ISSUE_REQUESTS,
     UPDATE_ISSUE_REQUEST,
     ADD_TRANSACTION_LISTENER,
-    ADD_PROOF_LISTENER,
     OPEN_WIZARD_IN_EDIT_MODE,
     ChangeIssueStep,
     ChangeBtcAddress,
     ResetIssueWizard,
-    ChangeVaultBtcAddress,
-    ChangeVaultDotAddress,
+    ChangeVaultBtcAddressOnIssue,
+    ChangeVaultDotAddressOnIssue,
     ChangeIssueId,
     ChangeAmountBtc,
     ChangeBtcTxId,
     ChangeFeeBtc,
     AddIssueRequest,
-    SetIssueRequests,
     UpdateIssueRequest,
     AddTransactionListener,
-    AddProofListener,
     OpenWizardInEditMode,
 } from "../types/actions.types";
 import { IssueRequest } from "../types/issue.types";
@@ -56,13 +52,13 @@ export const resetIssueWizardAction = (): ResetIssueWizard => ({
     type: RESET_ISSUE_WIZARD,
 });
 
-export const changeVaultBtcAddressAction = (vaultBtcAddress: string): ChangeVaultBtcAddress => ({
-    type: CHANGE_VAULT_BTC_ADDRESS,
+export const changeVaultBtcAddressOnIssueAction = (vaultBtcAddress: string): ChangeVaultBtcAddressOnIssue => ({
+    type: CHANGE_VAULT_BTC_ADDRESS_ON_ISSUE,
     vaultBtcAddress,
 });
 
-export const changeVaultDotAddressAction = (vaultDotAddress: string): ChangeVaultDotAddress => ({
-    type: CHANGE_VAULT_DOT_ADDRESS,
+export const changeVaultDotAddressOnIssueAction = (vaultDotAddress: string): ChangeVaultDotAddressOnIssue => ({
+    type: CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE,
     vaultDotAddress,
 });
 
@@ -85,11 +81,6 @@ export const addIssueRequestAction = (request: IssueRequest): AddIssueRequest =>
     request,
 });
 
-export const setIssueRequestsAction = (requests: IssueRequest[]): SetIssueRequests => ({
-    type: SET_ISSUE_REQUESTS,
-    requests,
-});
-
 export const updateIssueRequestAction = (request: IssueRequest): UpdateIssueRequest => ({
     type: UPDATE_ISSUE_REQUEST,
     request,
@@ -97,10 +88,5 @@ export const updateIssueRequestAction = (request: IssueRequest): UpdateIssueRequ
 
 export const addTransactionListener = (id: string): AddTransactionListener => ({
     type: ADD_TRANSACTION_LISTENER,
-    id,
-});
-
-export const addProofListener = (id: string): AddProofListener => ({
-    type: ADD_PROOF_LISTENER,
     id,
 });

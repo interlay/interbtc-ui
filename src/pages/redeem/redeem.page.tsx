@@ -10,8 +10,7 @@ import { resetRedeemWizardAction } from "../../common/actions/redeem.actions";
 import { planckToDOT, satToBTC } from "@interlay/polkabtc";
 
 export default function RedeemPage(): JSX.Element {
-    const polkaBTC = useSelector((state: StoreType) => state.api);
-    const storage = useSelector((state: StoreType) => state.storage);
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const dispatch = useDispatch();
     const [showWizard, setShowWizard] = useState(false);
     const [balancePolkaBTC, setBalancePolkaBTC] = useState("...");
@@ -25,13 +24,12 @@ export default function RedeemPage(): JSX.Element {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!polkaBTC) return;
-            if (!storage) return;
+            if (!polkaBtcLoaded) return;
 
-            const address = polkaBTC.account?.toString();
-            const accountId = polkaBTC.api.createType("AccountId", address) as any;
-            const balancePolkaSAT = await polkaBTC.treasury.balancePolkaBTC(accountId);
-            const balancePLANCK = await polkaBTC.collateral.balanceDOT(accountId);
+            const address = window.polkaBTC.account?.toString();
+            const accountId = window.polkaBTC.api.createType("AccountId", address) as any;
+            const balancePolkaSAT = await window.polkaBTC.treasury.balancePolkaBTC(accountId);
+            const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
             // TODO: write data to storage
             const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
             const balanceDOT = planckToDOT(balancePLANCK.toString()); 
@@ -39,7 +37,7 @@ export default function RedeemPage(): JSX.Element {
             setBalanceDOT(balanceDOT);
         };
         fetchData();
-    }, [polkaBTC, storage]);
+    }, [polkaBtcLoaded]);
 
     return (
         <div>

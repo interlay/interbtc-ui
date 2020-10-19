@@ -1,48 +1,34 @@
-import { PolkaBTCAPI, StakedRelayerClient } from "@interlay/polkabtc";
-import Storage from "../controllers/storage";
 import { IssueRequest } from "./issue.types";
 import { RedeemRequest } from "./redeem.types";
-import { Prices } from "./util.types";
+import { Prices, StoreType } from "./util.types";
 
-// API ACTIONS
+// GENERAL ACTIONS
+export const IS_POLKA_BTC_LOADED = "IS_POLKA_BTC_LOADED";
+export const IS_STAKED_RELAYER_LOADED = "IS_STAKED_RELAYER_LOADED";
+export const INIT_STATE = "INIT_STATE";
+export const CHANGE_ADDRESS = "CHANGE_ADDRESS";
 
-export const ADD_INSTANCE = "ADD_INSTANCE";
-export const ADD_STAKED_RELAYER_INSTANCE = "ADD_STAKED_RELAYER_INSTANCE";
-
-export interface AddInstance {
-    type: typeof ADD_INSTANCE;
-    polkaBtc: PolkaBTCAPI;
+export interface IsPolkaBtcLoaded {
+    type: typeof IS_POLKA_BTC_LOADED;
+    isLoaded: boolean;
 }
 
-export interface AddStakedRelayerInstance {
-    type: typeof ADD_STAKED_RELAYER_INSTANCE;
-    stakedRelayer: StakedRelayerClient;
+export interface IsStakedRelayerLoaded {
+    type: typeof IS_STAKED_RELAYER_LOADED;
+    isLoaded: boolean;
 }
 
-export type ApiActions = AddInstance | AddStakedRelayerInstance;
-
-// STORAGE
-
-export const ADD_STORAGE = "ADD_STORAGE";
-export const CHANGE_STORAGE_ADDRESS = "CHANGE_STORAGE_ADDRESS";
-export const CLEAR_STORAGE = "CLEAR_STORAGE";
-
-export interface AddStorage {
-    type: typeof ADD_STORAGE;
-    storage: Storage;
-}
-
-export interface ChangeStorageAddress {
-    type: typeof CHANGE_STORAGE_ADDRESS;
+export interface ChangeAddress {
+    type: typeof CHANGE_ADDRESS;
     address: string;
 }
 
-export interface ClearStorage {
-    type: typeof CLEAR_STORAGE;
-    keepAddress: boolean;
+export interface InitState {
+    type: typeof INIT_STATE;
+    state: StoreType;
 }
 
-export type StorageActions = AddStorage | ChangeStorageAddress | ClearStorage;
+export type GeneralActions = IsPolkaBtcLoaded | IsStakedRelayerLoaded | ChangeAddress | InitState;
 
 // PRICES
 
@@ -55,23 +41,10 @@ export interface UpdatePrices {
 
 export type PricesActions = UpdatePrices;
 
-// COMMON ISSUE AND REDEEM
-
-export const CHANGE_VAULT_BTC_ADDRESS = "CHANGE_VAULT_BTC_ADDRESS";
-export const CHANGE_VAULT_DOT_ADDRESS = "CHANGE_VAULT_DOT_ADDRESS";
-
-export interface ChangeVaultBtcAddress {
-    type: typeof CHANGE_VAULT_BTC_ADDRESS;
-    vaultBtcAddress: string;
-}
-
-export interface ChangeVaultDotAddress {
-    type: typeof CHANGE_VAULT_DOT_ADDRESS;
-    vaultDotAddress: string;
-}
-
 // REDEEM
 
+export const CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM = "CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM";
+export const CHANGE_VAULT_DOT_ADDRESS_ON_REDEEM = "CHANGE_VAULT_DOT_ADDRESS_ON_REDEEM";
 export const CHANGE_REDEEM_STEP = "CHANGE_REDEEM_STEP";
 export const CHANGE_AMOUNT_POLKA_BTC = "CHANGE_AMOUNT_POLKA_BTC";
 export const CHANGE_BTC_ADDRESS = "CHANGE_BTC_ADDRESS";
@@ -79,6 +52,17 @@ export const CHANGE_REDEEM_ID = "CHANGE_REDEEM_ID";
 export const SET_REDEEM_REQUESTS = "SET_REDEEM_REQUESTS";
 export const RESET_REDEEM_WIZARD = "RESET_REDEEM_WIZARD";
 export const STORE_REDEEM_REQUEST = "STORE_REDEEM_REQUEST";
+export const ADD_REDEEM_REQUEST = "ADD_REDEEM_REQUEST";
+
+export interface ChangeVaultBtcAddressOnRedeem {
+    type: typeof CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM;
+    vaultBtcAddress: string;
+}
+
+export interface ChangeVaultDotAddressOnRedeem {
+    type: typeof CHANGE_VAULT_DOT_ADDRESS_ON_REDEEM;
+    vaultDotAddress: string;
+}
 
 export interface ChangeRedeemStep {
     type: typeof CHANGE_REDEEM_STEP;
@@ -114,19 +98,29 @@ export interface StoreRedeemRequest {
     request: RedeemRequest;
 }
 
+export interface AddRedeemRequest {
+    type: typeof ADD_REDEEM_REQUEST;
+    request: RedeemRequest;
+}
+
 export type RedeemActions =
     | ChangeRedeemStep
     | ChangeAmountPolkaBtc
     | ChangeBtcAddress
-    | ChangeVaultBtcAddress
-    | ChangeVaultDotAddress
+    | ChangeVaultBtcAddressOnRedeem
+    | ChangeVaultDotAddressOnRedeem
     | ChangeRedeemId
     | ResetRedeemWizard
     | SetRedeemRequests
-    | StoreRedeemRequest;
+    | StoreRedeemRequest
+    | AddRedeemRequest
+    | ChangeAddress
+    | InitState;
 
 // ISSUE
 
+export const CHANGE_VAULT_BTC_ADDRESS_ON_ISSUE = "CHANGE_VAULT_BTC_ADDRESS_ON_ISSUE";
+export const CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE = "CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE";
 export const CHANGE_ISSUE_STEP = "CHANGE_ISSUE_STEP";
 export const CHANGE_AMOUNT_BTC = "CHANGE_AMOUNT_BTC";
 export const CHANGE_FEE_BTC = "CHANGE_FEE_BTC";
@@ -135,11 +129,19 @@ export const RESET_ISSUE_WIZARD = "RESET_ISSUE_WIZARD";
 export const STORE_ISSUE_REQUEST = "STORE_ISSUE_REQUEST";
 export const CHANGE_BTC_TX_ID = "CHANGE_BTC_TX_ID";
 export const ADD_ISSUE_REQUEST = "ADD_ISSUE_REQUEST";
-export const SET_ISSUE_REQUESTS = "SET_ISSUE_REQUESTS";
 export const UPDATE_ISSUE_REQUEST = "UPDATE_ISSUE_REQUEST";
 export const ADD_TRANSACTION_LISTENER = "ADD_TRANSACTION_LISTENER";
-export const ADD_PROOF_LISTENER = "ADD_PROOF_LISTENER";
 export const OPEN_WIZARD_IN_EDIT_MODE = "OPEN_WIZARD_IN_EDIT_MODE";
+
+export interface ChangeVaultBtcAddressOnIssue {
+    type: typeof CHANGE_VAULT_BTC_ADDRESS_ON_ISSUE;
+    vaultBtcAddress: string;
+}
+
+export interface ChangeVaultDotAddressOnIssue {
+    type: typeof CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE;
+    vaultDotAddress: string;
+}
 
 export interface ChangeIssueStep {
     type: typeof CHANGE_ISSUE_STEP;
@@ -154,11 +156,6 @@ export interface ChangeAmountBtc {
 export interface ChangeFeeBtc {
     type: typeof CHANGE_FEE_BTC;
     fee: string;
-}
-
-export interface ChangeBtcAddress {
-    type: typeof CHANGE_BTC_ADDRESS;
-    btcAddress: string;
 }
 
 export interface ChangeIssueId {
@@ -185,11 +182,6 @@ export interface AddIssueRequest {
     request: IssueRequest;
 }
 
-export interface SetIssueRequests {
-    type: typeof SET_ISSUE_REQUESTS;
-    requests: IssueRequest[];
-}
-
 export interface UpdateIssueRequest {
     type: typeof UPDATE_ISSUE_REQUEST;
     request: IssueRequest;
@@ -197,11 +189,6 @@ export interface UpdateIssueRequest {
 
 export interface AddTransactionListener {
     type: typeof ADD_TRANSACTION_LISTENER;
-    id: string;
-}
-
-export interface AddProofListener {
-    type: typeof ADD_PROOF_LISTENER;
     id: string;
 }
 
@@ -213,16 +200,15 @@ export type IssueActions =
     | ChangeIssueStep
     | ChangeAmountBtc
     | ChangeFeeBtc
-    | ChangeBtcAddress
-    | ChangeVaultBtcAddress
-    | ChangeVaultDotAddress
+    | ChangeVaultBtcAddressOnIssue
+    | ChangeVaultDotAddressOnIssue
     | ChangeIssueId
     | ChangeBtcTxId
     | ResetIssueWizard
     | StoreIssueRequest
     | AddIssueRequest
     | UpdateIssueRequest
-    | SetIssueRequests
     | AddTransactionListener
-    | AddProofListener
-    | OpenWizardInEditMode;
+    | OpenWizardInEditMode
+    | ChangeAddress
+    | InitState;

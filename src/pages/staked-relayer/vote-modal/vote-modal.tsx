@@ -14,13 +14,14 @@ type VoteModalProps = {
 };
 
 export default function VoteModal(props: VoteModalProps): ReactElement {
-    const stakedRelayer = useSelector((state: StoreType) => state.relayer);
+    const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
     const [isVotePending, setVotePending] = useState(false);
 
     const onClick = async (vote: string) => {
+        if (!relayerLoaded) return;
         setVotePending(true);
         try {
-            await stakedRelayer.voteOnStatusUpdate(props.statusUpdate.id, vote === "yes");
+            await window.relayer.voteOnStatusUpdate(props.statusUpdate.id, vote === "yes");
             props.onClose();
         } catch (error) {
             toast.error(error.toString());

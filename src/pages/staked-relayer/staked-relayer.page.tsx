@@ -19,8 +19,8 @@ export default function StakedRelayerPage() {
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [isDeregisterPending, setDeregisterPending] = useState(false);
 
-    const polkaBTC = useSelector((state: StoreType) => state.api);
-    const stakedRelayer = useSelector((state: StoreType) => state.relayer);
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+    const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
 
     const [feesEarned, setFees] = useState("0");
     // store this in both DOT and Planck
@@ -32,9 +32,10 @@ export default function StakedRelayerPage() {
     const handleRegisterModalClose = () => setShowRegisterModal(false);
 
     const deregisterStakedRelayer = async () => {
+        if (!relayerLoaded) return;
         setDeregisterPending(true);
         try {
-            await stakedRelayer.deregisterStakedRelayer();
+            await window.relayer.deregisterStakedRelayer();
             toast.success("Successfully Deregistered");
         } catch (error) {
             toast.error(error.toString());
@@ -44,24 +45,23 @@ export default function StakedRelayerPage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!polkaBTC) return;
-            if (!stakedRelayer) return;
+            if (!polkaBtcLoaded || !relayerLoaded) return;
 
-            const address = await stakedRelayer.getAddress();
-            const activeStakedRelayerId = polkaBTC.api.createType("AccountId", address);
+            const address = await window.relayer.getAddress();
+            const activeStakedRelayerId = window.polkaBTC.api.createType("AccountId", address);
 
-            const feesEarned = await polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
+            const feesEarned = await window.polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
             setFees(feesEarned.toString());
 
             setStakedRelayerAddress(address);
 
-            const lockedPlanck = (await polkaBTC.stakedRelayer.getStakedDOTAmount(activeStakedRelayerId)).toString();
+            const lockedPlanck = (await window.polkaBTC.stakedRelayer.getStakedDOTAmount(activeStakedRelayerId)).toString();
             const lockedDOT = planckToDOT(lockedPlanck);
             setDotLocked(lockedDOT);
             setPlanckLocked(lockedPlanck);
         };
         fetchData();
-    });
+    },[polkaBtcLoaded, relayerLoaded]);
 
     return (
         <div className="staked-relayer-page container-fluid white-background">

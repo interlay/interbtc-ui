@@ -11,7 +11,12 @@ export interface IssueRequest {
     rawTransaction: Uint8Array;
 }
 
+export interface IssueMap {
+    [key: string]: IssueRequest[];
+}
+
 export interface Issue {
+    address: string;
     step: string;
     amountBTC: string;
     feeBTC: string;
@@ -19,8 +24,7 @@ export interface Issue {
     vaultBtcAddress: string;
     id: string;
     btcTxId: string;
-    issueRequests: IssueRequest[];
+    issueRequests: Map<string, IssueRequest[]>;
     transactionListeners: string[];
-    proofListeners: string[];
     wizardInEditMode: boolean;
 }

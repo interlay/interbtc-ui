@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import { createLogger } from "redux-logger";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-import { applyMiddleware, createStore } from "redux";
 import { toast, ToastContainer } from "react-toastify";
 import { createPolkabtcAPI, StakedRelayerClient } from "@interlay/polkabtc";
 import { Modal } from "react-bootstrap";
@@ -10,8 +8,7 @@ import { Modal } from "react-bootstrap";
 import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
 
 import AccountSelector from "./pages/account-selector";
-import { rootReducer } from "./common/reducers/index";
-import { addPolkaBtcInstance, addStakedRelayerInstance } from "./common/actions/api.actions";
+import { isPolkaBtcLoaded, isStakedRelayerLoaded, changeAddressAction } from "./common/actions/general.actions";
 import * as constants from "./constants";
 
 // theme
@@ -31,10 +28,9 @@ import VaultPage from "./pages/vault.page";
 import RedeemPage from "./pages/redeem/redeem.page";
 import AboutPage from "./pages/about.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
-import { setUser } from "./common/utils/storage";
+import { configureStore } from "./store";
 
-const storeLogger = createLogger();
-const store = createStore(rootReducer, applyMiddleware(storeLogger));
+const store = configureStore();
 
 export default class App extends Component<{}, AppState> {
     state: AppState = {
@@ -63,7 +59,7 @@ export default class App extends Component<{}, AppState> {
         }
 
         const accounts = allAccounts.map(({ address }) => address);
-        const currentAddress = store.getState().storage.retrieveUserAddress();
+        const currentAddress = store.getState().general.address;
 
         let address: string | undefined = undefined;
         if (currentAddress && accounts.includes(currentAddress)) {
@@ -81,11 +77,11 @@ export default class App extends Component<{}, AppState> {
     }
 
     async createAPIInstace(): Promise<void> {
-        const polkaBTC = await createPolkabtcAPI(constants.PARACHAIN_URL);
-        store.dispatch(addPolkaBtcInstance(polkaBTC));
+        window.polkaBTC = await createPolkabtcAPI(constants.PARACHAIN_URL);
+        store.dispatch(isPolkaBtcLoaded(true));
 
-        const stakedRelayer = new StakedRelayerClient(constants.STAKED_RELAYER_URL);
-        store.dispatch(addStakedRelayerInstance(stakedRelayer));
+        window.relayer = new StakedRelayerClient(constants.STAKED_RELAYER_URL);
+        store.dispatch(isStakedRelayerLoaded(true));
     }
 
     async componentDidMount(): Promise<void> {
@@ -104,17 +100,17 @@ export default class App extends Component<{}, AppState> {
     }
 
     async selectAccount(address: string): Promise<void> {
-        const polkaBTC = store.getState().api;
-        if (!polkaBTC) {
+        const polkaBtcLoaded = store.getState().general.polkaBtcLoaded;
+        if (!polkaBtcLoaded) {
             return;
         }
 
         const { signer } = await web3FromAddress(address);
-        polkaBTC.setAccount(address, signer);
+        window.polkaBTC.setAccount(address, signer);
         this.setState({ address, showSelectAccount: false });
 
-        store.dispatch(addPolkaBtcInstance(polkaBTC));
-        setUser(address, store.getState().storage, store.dispatch);
+        store.dispatch(isPolkaBtcLoaded(true));
+        store.dispatch(changeAddressAction(address));
     }
 
 

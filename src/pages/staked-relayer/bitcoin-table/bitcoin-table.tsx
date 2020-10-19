@@ -17,28 +17,28 @@ export default function BitcoinTable(): ReactElement {
     const [noData, setNoData] = useState(false);
     const [heightDiff, setHeightDiff] = useState(0);
     const [btcBlocks, setBlocks] = useState<Array<BlockInfo>>([]);
-    const polkaBTC = useSelector((state: StoreType) => state.api);
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!polkaBTC) return;
+            if (!polkaBtcLoaded) return;
 
             // Returns a little endian encoded block hash
             // Converting to big endian for display
             const bestParachainBlock = utils.uint8ArrayToStringClean(
                 utils.reverseEndianness(
-                    await polkaBTC.stakedRelayer.getLatestBTCBlockFromBTCRelay()
+                    await window.polkaBTC.stakedRelayer.getLatestBTCBlockFromBTCRelay()
                 )
             );
 
             const bestParachainHeight = Number(
-                await polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay()
+                await window.polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay()
             );
 
 
             // Returns a big endian encoded block hash
-            const bestBitcoinBlock = await polkaBTC.btcCore.getLatestBlock();
-            const bestBitcoinHeight = await polkaBTC.btcCore.getLatestBlockHeight();
+            const bestBitcoinBlock = await window.polkaBTC.btcCore.getLatestBlock();
+            const bestBitcoinHeight = await window.polkaBTC.btcCore.getLatestBlockHeight();
 
             // Check for NO_DATA, forks and height difference
             setNoData(
@@ -88,7 +88,7 @@ export default function BitcoinTable(): ReactElement {
             return status;
         }
 
-    }, [polkaBTC, noData, fork, heightDiff]);
+    }, [polkaBtcLoaded, noData, fork, heightDiff]);
 
     const getCircle = (status: string): string => {
         if (status === "Online") {

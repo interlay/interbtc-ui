@@ -43,7 +43,7 @@ type StatusUpdateTableProps = {
 
 export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactElement {
     const [parachainStatus, setStatus] = useState("Running");
-    const polkaBTC = useSelector((state: StoreType) => state.api);
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const [statusUpdates, setStatusUpdates] = useState<Array<StatusUpdate>>([]);
     const [showVoteModal, setShowVoteModal] = useState(false);
     const [showMessageModal, setShowMessageModal] = useState(false);
@@ -55,23 +55,23 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
 
     useEffect(() => {
         const fetchStatus = async () => {
-            if (!polkaBTC) return;
+            if (!polkaBtcLoaded) return;
 
-            let result = await polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
+            let result = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
             setStatus(result.isRunning ? "Running" : result.isError ? "Error" : "Shutdown");
         };
 
         const fetchUpdates = async () => {
-            if (!polkaBTC) return;
+            if (!polkaBtcLoaded) return;
 
-            let statusUpdates = await polkaBTC.stakedRelayer.getAllStatusUpdates();
+            let statusUpdates = await window.polkaBTC.stakedRelayer.getAllStatusUpdates();
             setStatusUpdates(
                 statusUpdates.map((status) => {
                     const { id, statusUpdate } = status;
 
                     // NOTE: passing the `AccountId` in props cases a weird infinite reload bug,
                     // so we pass the address obtained from the staked relayer client and reconstruct
-                    const stakedRelayerId = polkaBTC.api.createType("AccountId", props.stakedRelayerAddress);
+                    const stakedRelayerId = window.polkaBTC.api.createType("AccountId", props.stakedRelayerAddress);
 
                     // FIXME: Set.has() doesn't work for objects
                     let hasVoted = false;
@@ -101,7 +101,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
 
         fetchStatus();
         fetchUpdates();
-    }, [polkaBTC, props.stakedRelayerAddress]);
+    }, [polkaBtcLoaded, props.stakedRelayerAddress]);
 
     const openVoteModal = (statusUpdate: StatusUpdate) => {
         setShowVoteModal(true);

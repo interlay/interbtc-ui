@@ -1,3 +1,6 @@
+import { IssueRequest } from "../types/issue.types";
+import { RedeemRequest } from "../types/redeem.types";
+
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;
     return address.substr(0, 6) + "..." + address.substr(address.length - 7, address.length - 1);
@@ -44,3 +47,23 @@ export function reverseEndianness(bytes: Uint8Array): Uint8Array {
 export function uint8ArrayToStringClean(bytes: Uint8Array): string {
     return bytes.toString().substr(2).split("").join("");
 }
+
+export const arrayToMap = (arr: IssueRequest[] | RedeemRequest[]): Map<string, IssueRequest[] | RedeemRequest[]> => {
+    const map = new Map();
+    for (const key in arr) {
+        map.set(key, arr[key]);
+    }
+    return map;
+};
+
+interface DynamicObject {
+    [key: string]: IssueRequest[] | RedeemRequest[];
+}
+
+export const mapToArray = (map: Map<string, IssueRequest[] | RedeemRequest[]>): DynamicObject => {
+    const result: DynamicObject = {};
+    map.forEach((value, key) => {
+        result[key] = value;
+    });
+    return result;
+};

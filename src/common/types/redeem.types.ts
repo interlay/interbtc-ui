@@ -9,10 +9,12 @@ export interface RedeemRequest {
 }
 
 export interface Redeem {
+    address: string;
     step: string;
     amountPolkaBTC: string;
     btcAddress: string;
     vaultDotAddress: string;
     vaultBtcAddress: string;
     id: string;
+    redeemRequests: Map<string, RedeemRequest[]>;
 }

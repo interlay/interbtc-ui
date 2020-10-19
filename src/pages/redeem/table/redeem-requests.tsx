@@ -1,24 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { Table } from "react-bootstrap";
 import { dateToShortString, remove0x, shortAddress, shortTxId } from "../../../common/utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import { RedeemRequest } from "../../../common/types/redeem.types";
 
 export default function RedeemRequests() {
-    const [redeemRequests, setRedeemRequests] = useState<Array<RedeemRequest>>([]);
-    const storage = useSelector((state: StoreType) => state.storage);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!storage) return;
-            const redeemRequests = storage.getRedeemRequests();
-            setRedeemRequests(redeemRequests);
-        }
-        fetchData();
-    }, [storage]);
+    const address = useSelector((state: StoreType) => state.general.address);
+    const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
 
     return (
         <div>
@@ -35,11 +25,11 @@ export default function RedeemRequests() {
                     </tr>
                 </thead>
                 <tbody>
-                    {
+                    {redeemRequests &&
                         redeemRequests.map((request) => {
                             return (
-                                <tr>
-                                    <td key={request.id}>{shortAddress(request.id)}</td>
+                                <tr key={request.id}>
+                                    <td>{shortAddress(request.id)}</td>
                                     <td>{request.amountPolkaBTC} BTC</td>
                                     <td>{dateToShortString(request.creation)}</td>
                                     <td>{shortAddress(remove0x(request.vaultBTCAddress))}</td>
