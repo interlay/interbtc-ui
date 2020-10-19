@@ -131,6 +131,37 @@ input[type=number] {
   box-shadow: 0 0 0 0.2rem rgba(230, 1, 122, 0.5);
 }
 
+.btn-outline-danger {
+  color: #C71C22;
+  border-color: #C71C22;
+}
+
+.btn-outline-danger:hover {
+  color: #fff;
+  background-color: #C71C22;
+  border-color: #C71C22;
+}
+
+.btn-outline-danger:focus, .btn-outline-danger.focus {
+  box-shadow: 0 0 0 0.2rem rgba(199, 28, 34, 0.5);
+}
+
+.btn-outline-danger.disabled, .btn-outline-danger:disabled {
+  color: #C71C22;
+  background-color: transparent;
+}
+
+.btn-outline-danger:not(:disabled):not(.disabled):active, .btn-outline-danger:not(:disabled):not(.disabled).active, .show>.btn-outline-danger.dropdown-toggle {
+  color: #fff;
+  background-color: #C71C22;
+  border-color: #C71C22;
+}
+
+.btn-outline-danger:not(:disabled):not(.disabled):active:focus, .btn-outline-danger:not(:disabled):not(.disabled).active:focus, .show>.btn-outline-danger.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(199, 28, 34, 0.5);
+}
+
+
 body {
 	background: linear-gradient(-90deg, #ff9900e1, #f07353, #ef6b59, #e9436f);
 	background-size: 400% 400%;
