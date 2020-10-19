@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 :root {
     --blue: #033C73;
     --indigo: #6610f2;
@@ -8788,3 +8789,51 @@
       border-color: #dee2e6;
     }
   }
+=======
+body {
+	background-image: url("../img/polkabtc/background.png");
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+	
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+.transparent-background {
+  background-color: transparent;
+}
+.polkabtc-background {
+  background-image: url("../img/polkabtc/background.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.white-background {
+   background-color: white;
+}
+
+.text-white {
+  color: white;
+}
+
+
+ @media (max-width: 576px) {
+    .float-xs-left{
+      float: left!important;
+    }
+ }
+>>>>>>> 585b731a56caef68a3b4dc29703ae8e3d345b970

@@ -74,7 +74,7 @@ export default function AboutPage(): JSX.Element {
                 </Col>
             </section>
             <section className="markdown white-background">
-                <div className="container mt-5">
+                <div className="container mt-5 pb-5">
                     <Row className="mt-5">
                         <Col xs="12" lg={{ span: 8, offset: 2 }} className="text-left mt-5">
                             <ReactMarkdown source={markdown} escapeHtml={false} />

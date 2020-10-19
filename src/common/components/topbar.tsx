@@ -50,7 +50,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                         </Link>
                     )}
                     <Link className="nav-link" to="/about">
-                        About
+                        How it works
                     </Link>
                 </Nav>
                 <Nav className="d-inline">
