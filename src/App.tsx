@@ -27,6 +27,7 @@ import IssuePage from "./pages/issue/issue.page";
 import VaultPage from "./pages/vault.page";
 import RedeemPage from "./pages/redeem/redeem.page";
 import AboutPage from "./pages/about.page";
+import DashboardPage from "./pages/dashboard/dashboard.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
 import { configureStore } from "./store";
 
@@ -145,6 +146,11 @@ export default class App extends Component<{}, AppState> {
                             {!constants.STATIC_PAGE_ONLY && (
                                 <Route path="/vault">
                                     <VaultPage {...this.state} />
+                                </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/dashboard">
+                                    <DashboardPage />
                                 </Route>
                             )}
                             <Route exact path="/">

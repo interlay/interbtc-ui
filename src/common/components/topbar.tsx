@@ -44,6 +44,9 @@ export default function Topbar(props: TopbarProps): ReactElement {
                             Redeem
                         </Link>
                     )}
+                    <Link className="nav-link" to="/dashboard">
+                        Dashboard
+                    </Link>
                     {isConnected && (
                         <Link className="nav-link" to="/staked-relayer">
                             Staked Relayer

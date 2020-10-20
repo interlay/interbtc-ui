@@ -1,8 +1,8 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { StoreType } from "../../../common/types/util.types";
+import { StoreType } from "../../types/util.types";
 import * as constants from "../../../constants";
-import * as utils from "../../../common/utils/utils";
+import * as utils from "../../utils/utils";
 
 interface BlockInfo {
     source: string;

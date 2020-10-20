@@ -1,11 +1,11 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { StoreType } from "../../../common/types/util.types";
+import { StoreType } from "../../types/util.types";
 import { useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
-import VoteModal from "../vote-modal/vote-modal";
-import { StatusUpdate } from "../../../common/types/util.types";
+import VoteModal from "../../../pages/staked-relayer/vote-modal/vote-modal";
+import { StatusUpdate } from "../../types/util.types";
 import * as constants from "../../../constants";
-import MessageModal from "../message-modal/message-modal";
+import MessageModal from "../../../pages/staked-relayer/message-modal/message-modal";
 
 const ADD_DATA_ERROR = "Add NO_DATA error";
 const REMOVE_DATA_ERROR = "Remove NO_DATA error";
@@ -39,6 +39,7 @@ type StatusUpdateTableProps = {
     dotLocked: string;
     planckLocked: string;
     stakedRelayerAddress: string;
+    readOnly?: boolean
 };
 
 export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactElement {
@@ -253,9 +254,10 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                                 )}
                                             </td>
                                             <td className={getResultColor(statusUpdate.result)}>
-                                                {Number(props.planckLocked) > 0 &&
+                                                {!props.readOnly ? 
+                                                Number(props.planckLocked) > 0 &&
                                                 !statusUpdate.hasVoted &&
-                                                statusUpdate.result === "Pending" ? (
+                                                statusUpdate.result === "Pending"? (
                                                     <Button
                                                         variant="outline-primary"
                                                         onClick={() => openVoteModal(statusUpdate)}
@@ -264,7 +266,8 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                                     </Button>
                                                 ) : (
                                                     statusUpdate.result
-                                                )}
+                                                ) : "Pending"
+                                                }
                                             </td>
                                         </tr>
                                     );
