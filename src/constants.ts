@@ -33,7 +33,6 @@ export const STAKED_RELAYER_OK = "Ok";
 export const STAKED_RELAYER_THEFT = "Theft";
 export const STAKED_RELAYER_LIQUIDATION = "Liquidation";
 
-
 //######################################
 // VAULT
 //######################################
