@@ -14,10 +14,10 @@ export default function DashboardPage() {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
 
-    const [feesEarned, setFees] = useState("0");
-    // store this in both DOT and Planck
-    const [dotLocked, setDotLocked] = useState("0");
+    const [collateralizationRate, setCollateralizationRate] = useState("0");
+    const [totalDotLocked, setDotLocked] = useState("0");
     const [planckLocked, setPlanckLocked] = useState("0");
+    const [totalIssued,setTotalIssued] = useState("0");
     const [stakedRelayerAddress, setStakedRelayerAddress] = useState("");
 
     useEffect(() => {
@@ -25,17 +25,17 @@ export default function DashboardPage() {
             if (!polkaBtcLoaded || !relayerLoaded) return;
 
             const address = await window.relayer.getAddress();
-            const activeStakedRelayerId = window.polkaBTC.api.createType("AccountId", address);
-
-            const feesEarned = await window.polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
-            setFees(feesEarned.toString());
-
+            const activeStakedRelayerId = window.polkaBTC.api.createType("Balance", address);
             setStakedRelayerAddress(address);
+            // TO DO once API call is implemented fetch collateralizationRate
+            // const collateralization = await window.polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
+            // setCollateralizationRate(collateralization);
 
-            const lockedPlanck = (await window.polkaBTC.stakedRelayer.getStakedDOTAmount(activeStakedRelayerId)).toString();
-            const lockedDOT = planckToDOT(lockedPlanck);
-            setDotLocked(lockedDOT);
-            setPlanckLocked(lockedPlanck);
+            const issued = await window.polkaBTC.treasury.totalPolkaBTC();
+            setTotalIssued(issued.toString());
+
+            const lockedDot = await window.polkaBTC.collateral.totalLockedDOT();
+            setDotLocked(lockedDot.toString());
         };
         fetchData();
     },[polkaBtcLoaded, relayerLoaded]);
@@ -45,26 +45,26 @@ export default function DashboardPage() {
             <div className="dashboard-container">
                 <div className="dashboard-wrapper">
                     <div className="row">
-                        <div className="title">Staked Relayer Dashboard</div>
+                        <div className="title">PolkaBTC Dashboard</div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <div className="stats">Total locked: {dotLocked} DOT</div>
+                            <div className="stats">Total locked: {totalDotLocked} DOT</div>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <div className="stats">Total issued: {feesEarned} PolkaBTC</div>
+                            <div className="stats">Total issued: {totalIssued} PolkaBTC</div>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <div className="stats">Collateralization rate: {feesEarned}</div>
+                            <div className="stats">Collateralization rate: {collateralizationRate}</div>
                         </div>
                     </div>
                     <BitcoinTable></BitcoinTable>
                     <StatusUpdateTable
-                        dotLocked={dotLocked}
+                        dotLocked={totalDotLocked}
                         planckLocked={planckLocked}
                         stakedRelayerAddress={stakedRelayerAddress}
                         readOnly={true}

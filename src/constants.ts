@@ -30,8 +30,8 @@ export const BTC_TEST_EXPLORER_BLOCK_API = "https://blockstream.info/testnet/blo
 // STAKED RELAYER
 //######################################
 export const STAKED_RELAYER_OK = "Ok";
-export const STAKED_RELAYER_THEFT = "Theft";
-export const STAKED_RELAYER_LIQUIDATION = "Liquidation";
+export const STAKED_RELAYER_OFFLINE = "Offline";
+export const STAKED_RELAYER_SLASHED = "Slashed";
 
 //######################################
 // VAULT

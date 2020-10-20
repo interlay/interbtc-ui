@@ -2,8 +2,7 @@ import React from "react";
 import * as constants from "../../../constants";
 
 type StakedRelayer = {
-    id: string,
-    name: string,
+    AccountID: string,
     lockedDOT: number,
     status: string
 }
@@ -11,20 +10,17 @@ type StakedRelayer = {
 export default function StakedRelayerTable () {
     const relayers: StakedRelayer[] = [
         {
-            id: "1",
-            name: "zxczxcxzhcxz",
+            AccountID: "zxczxcxzhcxz",
             lockedDOT: 0.04,
             status: "Ok"
         },
         {
-            id: "2",
-            name: "xxxzxczxcxzhcxz",
+            AccountID: "xxxzxczxcxzhcxz",
             lockedDOT: 0.24,
             status: "Theft"
         },
         {
-            id: "3",
-            name: "zzzzzzxczxcxzhcxz",
+            AccountID: "zzzzzzxczxcxzhcxz",
             lockedDOT: 0.24,
             status: "Liquidation"
         }
@@ -46,10 +42,10 @@ export default function StakedRelayerTable () {
         if (status === constants.STAKED_RELAYER_OK) {
             return "green-text";
         }
-        if (status === constants.STAKED_RELAYER_THEFT) {
+        if (status === constants.STAKED_RELAYER_OFFLINE) {
             return "orange-text";
         }
-        if (status === constants.STAKED_RELAYER_LIQUIDATION) {
+        if (status === constants.STAKED_RELAYER_SLASHED) {
             return "red-text";
         }
         return "black-text";
@@ -69,8 +65,7 @@ export default function StakedRelayerTable () {
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Relayer</th>
+                            <th>AccountID</th>
                             <th>Locked DOT</th>
                             <th>Status</th>
                         </tr>
@@ -79,8 +74,7 @@ export default function StakedRelayerTable () {
                         {relayers.map((relayer, index) => {
                             return (
                                 <tr key={index}>
-                                    <td>{relayer.id}</td>
-                                    <td className="break-words">{relayer.name}</td>
+                                    <td className="break-words">{relayer.AccountID}</td>
                                     <td>{relayer.lockedDOT}</td>
                                     <td className={getStatusColor(relayer.status)}>{relayer.status}</td>
                                 </tr>
