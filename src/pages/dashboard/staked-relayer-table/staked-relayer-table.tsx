@@ -4,25 +4,52 @@ import * as constants from "../../../constants";
 type StakedRelayer = {
     id: string,
     name: string,
-    lockedDOT: string,
+    lockedDOT: number,
     status: string
 }
 
 export default function StakedRelayerTable () {
-    let relayers: StakedRelayer[] = [];
+    const relayers: StakedRelayer[] = [
+        {
+            id: "1",
+            name: "zxczxcxzhcxz",
+            lockedDOT: 0.04,
+            status: "Ok"
+        },
+        {
+            id: "2",
+            name: "xxxzxczxcxzhcxz",
+            lockedDOT: 0.24,
+            status: "Theft"
+        },
+        {
+            id: "3",
+            name: "zzzzzzxczxcxzhcxz",
+            lockedDOT: 0.24,
+            status: "Liquidation"
+        }
+    ];
+    const relayerStatus = "Ok";
+
+
+    const getCircle = (status: string): string => {
+        if (status === "Ok") {
+            return "green-circle";
+        }
+        if (status === "Offline") {
+            return "orange-circle";
+        }
+        return "red-circle";
+    };
 
     const getStatusColor = (status: string): string => {
-        if (status === constants.VAULT_STATUS_ACTIVE) {
+        if (status === constants.STAKED_RELAYER_OK) {
             return "green-text";
         }
-        if (status === constants.VAULT_STATUS_UNDECOLLATERALIZED) {
+        if (status === constants.STAKED_RELAYER_THEFT) {
             return "orange-text";
         }
-        if (
-            status === constants.VAULT_STATUS_THEFT ||
-            status === constants.VAULT_STATUS_AUCTION ||
-            status === constants.VAULT_STATUS_LIQUIDATED
-        ) {
+        if (status === constants.STAKED_RELAYER_LIQUIDATION) {
             return "red-text";
         }
         return "black-text";
@@ -31,7 +58,9 @@ export default function StakedRelayerTable () {
     return <div className="staked-relayer-table">
     <div className="row">
         <div className="col-12">
-            <div className="header">Staked Relayer</div>
+            <div className="header">
+                Staked Relayer &nbsp; <div className={getCircle(relayerStatus)}></div> &nbsp; {relayerStatus}
+            </div>
         </div>
     </div>
     <div className="row justify-content-center">

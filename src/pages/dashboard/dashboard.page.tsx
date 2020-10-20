@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import "./dashboard.page.scss";
 import { StoreType } from "../../common/types/util.types";
 import { planckToDOT } from "@interlay/polkabtc";
+import StakedRelayerTable from "./staked-relayer-table/staked-relayer-table";
 
 export default function DashboardPage() {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -70,6 +71,7 @@ export default function DashboardPage() {
                     ></StatusUpdateTable>
                     <VaultTable></VaultTable>
                     <OracleTable planckLocked={planckLocked}></OracleTable>
+                    <StakedRelayerTable></StakedRelayerTable>
                 </div>
             </div>
         </div>
