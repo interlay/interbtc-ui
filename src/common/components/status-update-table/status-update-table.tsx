@@ -38,7 +38,7 @@ function displayProposedChanges(addError: Option<ErrorCode>, removeError: Option
 type StatusUpdateTableProps = {
     dotLocked: string;
     planckLocked: string;
-    stakedRelayerAddress: string;
+    stakedRelayerAddress?: string;
     readOnly?: boolean
 };
 
@@ -69,19 +69,21 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
             setStatusUpdates(
                 statusUpdates.map((status) => {
                     const { id, statusUpdate } = status;
+                    let hasVoted = false;
 
                     // NOTE: passing the `AccountId` in props cases a weird infinite reload bug,
                     // so we pass the address obtained from the staked relayer client and reconstruct
-                    const stakedRelayerId = window.polkaBTC.api.createType("AccountId", props.stakedRelayerAddress);
+                    if(props.stakedRelayerAddress){
+                        const stakedRelayerId = window.polkaBTC.api.createType("AccountId", props.stakedRelayerAddress);
 
-                    // FIXME: Set.has() doesn't work for objects
-                    let hasVoted = false;
-                    statusUpdate.tally.aye.forEach((acc) => {
-                        hasVoted = acc.hash.toHex() === stakedRelayerId.hash.toHex() ? true : hasVoted;
-                    });
-                    statusUpdate.tally.nay.forEach((acc) => {
-                        hasVoted = acc.hash.toHex() === stakedRelayerId.hash.toHex() ? true : hasVoted;
-                    });
+                        // FIXME: Set.has() doesn't work for objects
+                        statusUpdate.tally.aye.forEach((acc) => {
+                            hasVoted = acc.hash.toHex() === stakedRelayerId.hash.toHex() ? true : hasVoted;
+                        });
+                        statusUpdate.tally.nay.forEach((acc) => {
+                            hasVoted = acc.hash.toHex() === stakedRelayerId.hash.toHex() ? true : hasVoted;
+                        });
+                    }
 
                     return {
                         id,
