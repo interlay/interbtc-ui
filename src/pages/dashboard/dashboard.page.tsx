@@ -9,6 +9,7 @@ import "./dashboard.page.scss";
 import { StoreType } from "../../common/types/util.types";
 import { planckToDOT } from "@interlay/polkabtc";
 import StakedRelayerTable from "./staked-relayer-table/staked-relayer-table";
+import { toast } from "react-toastify";
 
 export default function DashboardPage() {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -24,18 +25,24 @@ export default function DashboardPage() {
         const fetchData = async () => {
             if (!polkaBtcLoaded || !relayerLoaded) return;
 
-            const address = await window.relayer.getAddress();
-            const activeStakedRelayerId = window.polkaBTC.api.createType("Balance", address);
-            setStakedRelayerAddress(address);
-            // TO DO once API call is implemented fetch collateralizationRate
-            // const collateralization = await window.polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
-            // setCollateralizationRate(collateralization);
+            try {
+                debugger;
+                const address = await window.relayer.getAddress();
+                // const activeStakedRelayerId = window.polkaBTC.api.createType("Balance", address);
+                setStakedRelayerAddress(address);
 
-            const issued = await window.polkaBTC.treasury.totalPolkaBTC();
-            setTotalIssued(issued.toString());
+                // TO DO once API call is implemented fetch collateralizationRate
+                // const collateralization = await window.polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
+                // setCollateralizationRate(collateralization);
 
-            const lockedDot = await window.polkaBTC.collateral.totalLockedDOT();
-            setDotLocked(lockedDot.toString());
+                const issued = await window.polkaBTC.treasury.totalPolkaBTC();
+                setTotalIssued(issued.toString());
+
+                const lockedDot = await window.polkaBTC.collateral.totalLockedDOT();
+                setDotLocked(lockedDot.toString());
+            } catch(error){
+                toast.error(error.toString());
+            }
         };
         fetchData();
     },[polkaBtcLoaded, relayerLoaded]);
