@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 
 import "./dashboard.page.scss";
 import { StoreType } from "../../common/types/util.types";
-import { planckToDOT } from "@interlay/polkabtc";
 import StakedRelayerTable from "./staked-relayer-table/staked-relayer-table";
 import { toast } from "react-toastify";
 
@@ -15,9 +14,9 @@ export default function DashboardPage() {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
 
-    const [collateralizationRate, setCollateralizationRate] = useState("0");
+    const [collateralizationRate] = useState("0");
     const [totalDotLocked, setDotLocked] = useState("0");
-    const [planckLocked, setPlanckLocked] = useState("0");
+    const [planckLocked] = useState("0");
     const [totalIssued,setTotalIssued] = useState("0");
     const [stakedRelayerAddress, setStakedRelayerAddress] = useState("");
 
@@ -26,7 +25,6 @@ export default function DashboardPage() {
             if (!polkaBtcLoaded || !relayerLoaded) return;
 
             try {
-                debugger;
                 const address = await window.relayer.getAddress();
                 // const activeStakedRelayerId = window.polkaBTC.api.createType("Balance", address);
                 setStakedRelayerAddress(address);
