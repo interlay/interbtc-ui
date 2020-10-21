@@ -25,7 +25,6 @@ It is implemented as a collection of open-source Substrate modules using Rust: <
 - [polkadot-js](https://polkadot.js.org/)
 - [Yarn](https://github.com/yarnpkg/yarn)
 
-
 ## Getting Started
 
 ### Prerequisites
@@ -44,9 +43,33 @@ If you want to reset the development chain, execute the following command.
 ./target/release/btc-parachain purge-chain --dev
 ```
 
-**Optional: Bitcoin integration**
+**Bitcoin**
 
-If you want to integrate with bitcoin in your testing environment, you will have to setup a relayer that ensures that the BTC Parachain has all the available Bitcoin blockheaders. To achieve this, follow the [instructions in the relayer repository](https://gitlab.com/interlay/relayer).
+Download and start [Bitcoin Core](https://bitcoin.org/en/bitcoin-core/).
+
+```shell
+bitcoind -regtest -server
+```
+
+To mine blocks you may use a command such as the following.
+
+```shell
+bitcoin-cli -regtest generatetoaddress 1 $(bitcoin-cli -regtest getnewaddress)
+```
+
+In order to automatically submit block headers, run the [staked-relayer](https://gitlab.com/interlay/polkabtc-clients/-/tree/dev/staked-relayer) client software.
+
+```shell
+staked-relayer --http-addr '[::0]:3030'
+```
+
+### Docker-Compose
+
+To simplify testing, you may also run all of the required services with `docker-compose`:
+
+```shell
+docker-compose up
+```
 
 ### Local Installation
 
