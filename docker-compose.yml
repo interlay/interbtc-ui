@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+  polkabtc:
+    image: "registry.gitlab.com/interlay/btc-parachain:latest"
+    command:
+      - btc-parachain
+      - --dev
+    network_mode: host
+    ports:
+      - "9944:9944"
+  bitcoind:
+    image: "ruimarinho/bitcoin-core:0.20"
+    command:
+      - -regtest
+      - -rpcuser=rpcuser
+      - -rpcpassword=rpcpassword
+      # - -debug
+    network_mode: host
+    ports:
+      - "18443:18443"
+  staked-relayer:
+    # TODO: add health check
+    image: "registry.gitlab.com/interlay/polkabtc-clients:staked-relayer-latest"
+    command:
+      - /bin/sh
+      - -c
+      - |
+        echo "Sleeping..."
+        sleep 5
+        staked-relayer --http-addr '[::0]:3030'
+    environment:
+      BITCOIN_RPC_URL: http://localhost:18443
+      BITCOIN_RPC_USER: rpcuser
+      BITCOIN_RPC_PASS: rpcpassword
+      RUST_LOG: info
+    network_mode: host
