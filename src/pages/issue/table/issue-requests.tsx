@@ -2,7 +2,7 @@ import React, { useState, MouseEvent } from 'react';
 
 import { IssueRequest } from "../../../common/types/issue.types";
 import { Table } from "react-bootstrap";
-import { dateToShortString, shortAddress, shortTxId } from "../../../common/utils/utils";
+import { formatDateTime, shortAddress, shortTxId } from "../../../common/utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
@@ -149,7 +149,7 @@ export default function IssueRequests(props: IssueRequestProps) {
                                 <tr key={index} onClick={() => requestClicked(request)}>
                                     <td>{shortAddress(request.id)}</td>
                                     <td>{request.amountBTC} PolkaBTC</td>
-                                    <td>{dateToShortString(request.creation)}</td>
+                                    <td>{formatDateTime(request.creation)}</td>
                                     <td>{shortAddress(request.vaultBTCAddress)}</td>
                                     <td>{shortTxId(request.btcTxId)}</td>
                                     <td>{request.confirmations}</td>

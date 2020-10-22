@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Table } from "react-bootstrap";
-import { dateToShortString, remove0x, shortAddress, shortTxId } from "../../../common/utils/utils";
+import { formatDateTime, remove0x, shortAddress, shortTxId } from "../../../common/utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
@@ -31,7 +31,7 @@ export default function RedeemRequests() {
                                 <tr key={request.id}>
                                     <td>{shortAddress(request.id)}</td>
                                     <td>{request.amountPolkaBTC} BTC</td>
-                                    <td>{dateToShortString(request.creation)}</td>
+                                    <td>{formatDateTime(request.creation)}</td>
                                     <td>{shortAddress(remove0x(request.vaultBTCAddress))}</td>
                                     <td>{shortTxId(request.btcTxId)}</td>
                                     <td>{request.confirmations}</td>
