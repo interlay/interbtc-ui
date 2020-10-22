@@ -77,11 +77,11 @@ export default class App extends Component<{}, AppState> {
     }
 
     async createAPIInstace(): Promise<void> {
-        window.polkaBTC = await createPolkabtcAPI(constants.PARACHAIN_URL);
-        store.dispatch(isPolkaBtcLoaded(true));
-
         window.relayer = new StakedRelayerClient(constants.STAKED_RELAYER_URL);
         store.dispatch(isStakedRelayerLoaded(true));
+        
+        window.polkaBTC = await createPolkabtcAPI(constants.PARACHAIN_URL);
+        store.dispatch(isPolkaBtcLoaded(true));
     }
 
     async componentDidMount(): Promise<void> {
