@@ -18,17 +18,12 @@ export default function DashboardPage() {
     const [totalDotLocked, setDotLocked] = useState("0");
     const [planckLocked] = useState("0");
     const [totalIssued,setTotalIssued] = useState("0");
-    const [stakedRelayerAddress, setStakedRelayerAddress] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBtcLoaded || !relayerLoaded) return;
 
             try {
-                const address = await window.relayer.getAddress();
-                // const activeStakedRelayerId = window.polkaBTC.api.createType("Balance", address);
-                setStakedRelayerAddress(address);
-
                 // TO DO once API call is implemented fetch collateralizationRate
                 // const collateralization = await window.polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
                 // setCollateralizationRate(collateralization);
@@ -71,7 +66,6 @@ export default function DashboardPage() {
                     <StatusUpdateTable
                         dotLocked={totalDotLocked}
                         planckLocked={planckLocked}
-                        stakedRelayerAddress={stakedRelayerAddress}
                         readOnly={true}
                     ></StatusUpdateTable>
                     <VaultTable></VaultTable>
