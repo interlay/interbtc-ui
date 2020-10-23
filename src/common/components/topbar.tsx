@@ -14,11 +14,14 @@ type TopbarProps = {
 export default function Topbar(props: TopbarProps): ReactElement {
     const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
     const [isConnected, setIsConnected] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
         if (!relayerLoaded) return;
 
         const checkIsConnected = async () => {
             const connected = await window.relayer.connected();
+            setIsLoading(false);
             setIsConnected(connected);
         };
         checkIsConnected();
@@ -33,6 +36,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
+                {!isLoading &&  
                 <Nav className="mr-auto">
                     {!constants.STATIC_PAGE_ONLY && (
                         <Link className="nav-link" to="/issue">
@@ -53,6 +57,8 @@ export default function Topbar(props: TopbarProps): ReactElement {
                         How it works
                     </Link>
                 </Nav>
+                }
+               
                 <Nav className="d-inline">
                     {props.address !== undefined && (
                         <Button
