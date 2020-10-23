@@ -14,14 +14,14 @@ type TopbarProps = {
 export default function Topbar(props: TopbarProps): ReactElement {
     const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
     const [isConnected, setIsConnected] = useState(false);
-    const [isLoading, setIsLoadin] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         if (!relayerLoaded) return;
 
         const checkIsConnected = async () => {
             const connected = await window.relayer.connected();
-            setIsLoadin(false);
+            setIsLoading(false);
             setIsConnected(connected);
         };
         checkIsConnected();
