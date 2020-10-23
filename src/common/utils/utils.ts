@@ -11,8 +11,12 @@ export function shortTxId(txid: string): string {
     return txid.substr(0, 10) + "..." + txid.substr(txid.length - 11, txid.length - 1);
 }
 
+export function formatDateTime(date: Date): string {
+    return date.toDateString().substring(3) + " " + date.toTimeString().substring(0, 5);
+}
+
 export function dateToShortString(date: Date): string {
-    return date.toString().substr(0, 34);
+    return date.toDateString().substring(3) + date.toTimeString().substring(0, date.toTimeString().length);
 }
 
 export function remove0x(hash: string): string {
@@ -48,9 +52,14 @@ export function uint8ArrayToStringClean(bytes: Uint8Array): string {
     return bytes.toString().substr(2).split("").join("");
 }
 
-export const arrayToMap = (arr: IssueRequest[] | RedeemRequest[]): Map<string, IssueRequest[] | RedeemRequest[]> => {
+export const arrayToMap = (
+    arr: IssueRequest[][] | RedeemRequest[][]
+): Map<string, IssueRequest[] | RedeemRequest[]> => {
     const map = new Map();
     for (const key in arr) {
+        arr[key].forEach((request: IssueRequest | RedeemRequest) => {
+            request.creation = new Date(request.creation);
+        });
         map.set(key, arr[key]);
     }
     return map;
