@@ -32,8 +32,11 @@ export const initializeState = (state: StoreType): InitState => ({
     state,
 });
 
-export const setTotalIssuedAndTotalLockedAction = (totalPolkaBTC: string, totalLockedDOT: string): SetTotalIssuedAndTotalLocked => ({
+export const setTotalIssuedAndTotalLockedAction = (
+    totalPolkaBTC: string,
+    totalLockedDOT: string
+): SetTotalIssuedAndTotalLocked => ({
     type: SET_TOTAL_ISSUED_AND_TOTAL_LOCKED,
     totalPolkaBTC,
-    totalLockedDOT
+    totalLockedDOT,
 });

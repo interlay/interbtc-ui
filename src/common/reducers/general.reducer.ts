@@ -27,7 +27,7 @@ export const generalReducer = (state: GeneralType = initialState, action: Genera
         case INIT_STATE:
             return { ...state, polkaBtcLoaded: false, relayerLoaded: false };
         case SET_TOTAL_ISSUED_AND_TOTAL_LOCKED:
-            return { ...state, totalLockedDOT: action.totalLockedDOT, totalPolkaBTC: action.totalPolkaBTC }
+            return { ...state, totalLockedDOT: action.totalLockedDOT, totalPolkaBTC: action.totalPolkaBTC };
         default:
             return state;
     }

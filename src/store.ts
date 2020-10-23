@@ -21,7 +21,7 @@ export const getInitialState = (): StoreType => {
             relayerLoaded: false,
             address: "",
             totalLockedDOT: "",
-            totalPolkaBTC: ""
+            totalPolkaBTC: "",
         },
         prices: { dotBtc: 0, dotUsd: 0 },
         issue: {

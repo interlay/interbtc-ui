@@ -36,9 +36,9 @@ export interface SetTotalIssuedAndTotalLocked {
     totalLockedDOT: string;
 }
 
-export type GeneralActions = 
-    IsPolkaBtcLoaded
-    | IsStakedRelayerLoaded 
+export type GeneralActions =
+    | IsPolkaBtcLoaded
+    | IsStakedRelayerLoaded
     | ChangeAddress
     | InitState
     | SetTotalIssuedAndTotalLocked;
