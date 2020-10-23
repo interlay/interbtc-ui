@@ -1,33 +1,16 @@
-import { planckToDOT, satToBTC } from "@interlay/polkabtc";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button, Col, Image, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import { StoreType } from "../../common/types/util.types";
-import Big from "big.js";
 import * as constants from "../../constants";
 import PolkaBTCImg from "../../assets/img/polkabtc/PolkaBTC_white.svg";
 
 import "./landing.page.scss";
 
 export default function LandingPage(): JSX.Element {
-    const [totalPolkaBTC, setTotalPolkaBTC] = useState("...");
-    const [totalLockedDOT, setTotalLockedDOT] = useState("...");
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!polkaBtcLoaded) return;
-            const totalPolkaSAT = await window.polkaBTC.treasury.totalPolkaBTC();
-            const totalLockedPLANCK = await window.polkaBTC.collateral.totalLockedDOT();
-            const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
-            const totalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
-            // TODO: write parachain data to storage
-            setTotalPolkaBTC(totalPolkaBTC);
-            setTotalLockedDOT(totalLockedDOT);
-        };
-        fetchData();
-    }, [polkaBtcLoaded]);
+    const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
+    const totalLockedDOT = useSelector((state: StoreType) => state.general.totalLockedDOT);
 
     return (
         <div>

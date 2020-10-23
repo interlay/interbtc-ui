@@ -37,7 +37,7 @@ function displayProposedChanges(addError: Option<ErrorCode>, removeError: Option
 
 type StatusUpdateTableProps = {
     dotLocked: string;
-    planckLocked: string;
+    planckLocked?: string;
     stakedRelayerAddress?: string;
     readOnly?: boolean
 };

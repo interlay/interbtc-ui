@@ -13,11 +13,9 @@ import { toast } from "react-toastify";
 export default function DashboardPage() {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
-
+    const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
+    const totalLockedDOT = useSelector((state: StoreType) => state.general.totalLockedDOT);
     const [collateralizationRate] = useState("0");
-    const [totalDotLocked, setDotLocked] = useState("0");
-    const [planckLocked] = useState("0");
-    const [totalIssued,setTotalIssued] = useState("0");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,12 +25,6 @@ export default function DashboardPage() {
                 // TO DO once API call is implemented fetch collateralizationRate
                 // const collateralization = await window.polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
                 // setCollateralizationRate(collateralization);
-
-                const issued = await window.polkaBTC.treasury.totalPolkaBTC();
-                setTotalIssued(issued.toString());
-
-                const lockedDot = await window.polkaBTC.collateral.totalLockedDOT();
-                setDotLocked(lockedDot.toString());
             } catch(error){
                 toast.error(error.toString());
             }
@@ -49,12 +41,12 @@ export default function DashboardPage() {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <div className="stats">Total locked: {totalDotLocked} DOT</div>
+                            <div className="stats">Total locked: {totalLockedDOT} DOT</div>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <div className="stats">Total issued: {totalIssued} PolkaBTC</div>
+                            <div className="stats">Total issued: {totalPolkaBTC} PolkaBTC</div>
                         </div>
                     </div>
                     <div className="row">
@@ -64,12 +56,11 @@ export default function DashboardPage() {
                     </div>
                     <BitcoinTable></BitcoinTable>
                     <StatusUpdateTable
-                        dotLocked={totalDotLocked}
-                        planckLocked={planckLocked}
+                        dotLocked={totalLockedDOT}
                         readOnly={true}
                     ></StatusUpdateTable>
                     <VaultTable></VaultTable>
-                    <OracleTable planckLocked={planckLocked}></OracleTable>
+                    <OracleTable planckLocked={"1"}></OracleTable>
                     <StakedRelayerTable></StakedRelayerTable>
                 </div>
             </div>

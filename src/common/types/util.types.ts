@@ -37,6 +37,8 @@ export type GeneralType = {
     polkaBtcLoaded: boolean;
     relayerLoaded: boolean;
     address: string;
+    totalPolkaBTC: string;
+    totalLockedDOT: string;
 };
 
 export type AppState = ReturnType<typeof rootReducer>;
