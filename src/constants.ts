@@ -27,6 +27,13 @@ export const BTC_EXPLORER_BLOCK_API = "https://blockstream.info/block/";
 export const BTC_TEST_EXPLORER_BLOCK_API = "https://blockstream.info/testnet/block/";
 
 //######################################
+// STAKED RELAYER
+//######################################
+export const STAKED_RELAYER_OK = "Ok";
+export const STAKED_RELAYER_OFFLINE = "Offline";
+export const STAKED_RELAYER_SLASHED = "Slashed";
+
+//######################################
 // VAULT
 //######################################
 export const VAULT_STATUS_ACTIVE = "Active";

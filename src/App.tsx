@@ -1,14 +1,21 @@
 import React, { Component } from "react";
+import { planckToDOT, satToBTC } from "@interlay/polkabtc";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { createPolkabtcAPI, StakedRelayerClient } from "@interlay/polkabtc";
 import { Modal } from "react-bootstrap";
+import Big from "big.js";
 
 import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
 
 import AccountSelector from "./pages/account-selector";
-import { isPolkaBtcLoaded, isStakedRelayerLoaded, changeAddressAction } from "./common/actions/general.actions";
+import { 
+    isPolkaBtcLoaded, 
+    isStakedRelayerLoaded, 
+    changeAddressAction, 
+    setTotalIssuedAndTotalLockedAction 
+} from "./common/actions/general.actions";
 import * as constants from "./constants";
 
 // theme
@@ -27,6 +34,7 @@ import IssuePage from "./pages/issue/issue.page";
 import VaultPage from "./pages/vault.page";
 import RedeemPage from "./pages/redeem/redeem.page";
 import AboutPage from "./pages/about.page";
+import DashboardPage from "./pages/dashboard/dashboard.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
 import { configureStore } from "./store";
 
@@ -84,11 +92,20 @@ export default class App extends Component<{}, AppState> {
         store.dispatch(isPolkaBtcLoaded(true));
     }
 
+    async initDataOnAppBootstrap(): Promise<void> {
+        const totalPolkaSAT = await window.polkaBTC.treasury.totalPolkaBTC();
+        const totalLockedPLANCK = await window.polkaBTC.collateral.totalLockedDOT();
+        const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
+        const totalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
+        store.dispatch(setTotalIssuedAndTotalLockedAction(totalPolkaBTC,totalLockedDOT));
+    }
+
     async componentDidMount(): Promise<void> {
         // Do not load data if showing static landing page only
         if (!constants.STATIC_PAGE_ONLY) {
             try {
                 await this.createAPIInstace();
+                this.initDataOnAppBootstrap();
             } catch (e) {
                 toast.warn("Could not connect to the Parachain, please try again in a few seconds", {
                     autoClose: false,
@@ -145,6 +162,11 @@ export default class App extends Component<{}, AppState> {
                             {!constants.STATIC_PAGE_ONLY && (
                                 <Route path="/vault">
                                     <VaultPage {...this.state} />
+                                </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/dashboard">
+                                    <DashboardPage />
                                 </Route>
                             )}
                             <Route exact path="/">

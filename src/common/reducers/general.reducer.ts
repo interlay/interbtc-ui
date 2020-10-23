@@ -1,9 +1,10 @@
 import {
     IS_POLKA_BTC_LOADED,
     IS_STAKED_RELAYER_LOADED,
-    GeneralActions,
+    SET_TOTAL_ISSUED_AND_TOTAL_LOCKED,
     CHANGE_ADDRESS,
     INIT_STATE,
+    GeneralActions,
 } from "../types/actions.types";
 import { GeneralType } from "../types/util.types";
 
@@ -11,6 +12,8 @@ const initialState = {
     polkaBtcLoaded: false,
     relayerLoaded: false,
     address: "",
+    totalPolkaBTC: "",
+    totalLockedDOT: "",
 };
 
 export const generalReducer = (state: GeneralType = initialState, action: GeneralActions): GeneralType => {
@@ -23,6 +26,8 @@ export const generalReducer = (state: GeneralType = initialState, action: Genera
             return { ...state, address: action.address };
         case INIT_STATE:
             return { ...state, polkaBtcLoaded: false, relayerLoaded: false };
+        case SET_TOTAL_ISSUED_AND_TOTAL_LOCKED:
+            return { ...state, totalLockedDOT: action.totalLockedDOT, totalPolkaBTC: action.totalPolkaBTC };
         default:
             return state;
     }

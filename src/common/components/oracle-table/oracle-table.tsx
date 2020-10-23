@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { StoreType } from "../../../common/types/util.types";
+import { StoreType } from "../../types/util.types";
 import { useSelector } from "react-redux";
-import { dateToShortString } from "../../../common/utils/utils";
+import { dateToShortString } from "../../utils/utils";
 
 interface OracleInfo {
     source: string;

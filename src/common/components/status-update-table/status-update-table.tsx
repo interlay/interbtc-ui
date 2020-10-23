@@ -1,11 +1,11 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { StoreType } from "../../../common/types/util.types";
+import { StoreType } from "../../types/util.types";
 import { useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
-import VoteModal from "../vote-modal/vote-modal";
-import { StatusUpdate } from "../../../common/types/util.types";
+import VoteModal from "../../../pages/staked-relayer/vote-modal/vote-modal";
+import { StatusUpdate } from "../../types/util.types";
 import * as constants from "../../../constants";
-import MessageModal from "../message-modal/message-modal";
+import MessageModal from "../../../pages/staked-relayer/message-modal/message-modal";
 
 const ADD_DATA_ERROR = "Add NO_DATA error";
 const REMOVE_DATA_ERROR = "Remove NO_DATA error";
@@ -37,8 +37,9 @@ function displayProposedChanges(addError: Option<ErrorCode>, removeError: Option
 
 type StatusUpdateTableProps = {
     dotLocked: string;
-    planckLocked: string;
-    stakedRelayerAddress: string;
+    planckLocked?: string;
+    stakedRelayerAddress?: string;
+    readOnly?: boolean
 };
 
 export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactElement {
@@ -68,19 +69,21 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
             setStatusUpdates(
                 statusUpdates.map((status) => {
                     const { id, statusUpdate } = status;
+                    let hasVoted = false;
 
                     // NOTE: passing the `AccountId` in props cases a weird infinite reload bug,
                     // so we pass the address obtained from the staked relayer client and reconstruct
-                    const stakedRelayerId = window.polkaBTC.api.createType("AccountId", props.stakedRelayerAddress);
+                    if(props.stakedRelayerAddress){
+                        const stakedRelayerId = window.polkaBTC.api.createType("AccountId", props.stakedRelayerAddress);
 
-                    // FIXME: Set.has() doesn't work for objects
-                    let hasVoted = false;
-                    statusUpdate.tally.aye.forEach((acc) => {
-                        hasVoted = acc.hash.toHex() === stakedRelayerId.hash.toHex() ? true : hasVoted;
-                    });
-                    statusUpdate.tally.nay.forEach((acc) => {
-                        hasVoted = acc.hash.toHex() === stakedRelayerId.hash.toHex() ? true : hasVoted;
-                    });
+                        // FIXME: Set.has() doesn't work for objects
+                        statusUpdate.tally.aye.forEach((acc) => {
+                            hasVoted = acc.hash.toHex() === stakedRelayerId.hash.toHex() ? true : hasVoted;
+                        });
+                        statusUpdate.tally.nay.forEach((acc) => {
+                            hasVoted = acc.hash.toHex() === stakedRelayerId.hash.toHex() ? true : hasVoted;
+                        });
+                    }
 
                     return {
                         id,
@@ -253,9 +256,10 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                                 )}
                                             </td>
                                             <td className={getResultColor(statusUpdate.result)}>
-                                                {Number(props.planckLocked) > 0 &&
+                                                {!props.readOnly ? 
+                                                Number(props.planckLocked) > 0 &&
                                                 !statusUpdate.hasVoted &&
-                                                statusUpdate.result === "Pending" ? (
+                                                statusUpdate.result === "Pending"? (
                                                     <Button
                                                         variant="outline-primary"
                                                         onClick={() => openVoteModal(statusUpdate)}
@@ -264,7 +268,8 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                                     </Button>
                                                 ) : (
                                                     statusUpdate.result
-                                                )}
+                                                ) : "Pending"
+                                                }
                                             </td>
                                         </tr>
                                     );

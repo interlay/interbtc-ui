@@ -1,16 +1,16 @@
 @import "../../variables";
 @import "../../mixins";
 
-.staked-relayer-page{
+.dashboard-page{
     text-align: center;
 
-    .staked-container{
+    .dashboard-container{
         max-width: calc(100vw - 30px);
         overflow-x: scroll;
         padding: 0px 15px;
     }
 
-    .staked-button{
+    .dashboard-button{
         margin-top: 20px;
     }
 
@@ -21,7 +21,7 @@
         margin-top: 2rem; 
         font-weight: 600;
     }
-    
+
     .stats{
         width: 100%;
         text-align: center;
@@ -72,7 +72,7 @@
         text-align: center;
     }
 
-    .oracle-space{
+    .staked-relayer-table{
         margin-bottom: 80px;
     }
 
@@ -85,7 +85,7 @@
         .de-note {
             margin-bottom: 100px;
         }
-        .oracle-space{
+        .staked-relayer-table{
             margin-bottom: 150px;
         }
     }
@@ -94,7 +94,7 @@
         .de-note {
             margin-bottom: 100px;
         }
-        .oracle-space{
+        .staked-relayer-table{
             margin-bottom: 150px;
         }
     }

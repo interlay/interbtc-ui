@@ -3,10 +3,12 @@ import { RedeemRequest } from "./redeem.types";
 import { Prices, StoreType } from "./util.types";
 
 // GENERAL ACTIONS
+
 export const IS_POLKA_BTC_LOADED = "IS_POLKA_BTC_LOADED";
 export const IS_STAKED_RELAYER_LOADED = "IS_STAKED_RELAYER_LOADED";
 export const INIT_STATE = "INIT_STATE";
 export const CHANGE_ADDRESS = "CHANGE_ADDRESS";
+export const SET_TOTAL_ISSUED_AND_TOTAL_LOCKED = "SET_TOTAL_ISSUED_AND_TOTAL_LOCKED";
 
 export interface IsPolkaBtcLoaded {
     type: typeof IS_POLKA_BTC_LOADED;
@@ -28,7 +30,18 @@ export interface InitState {
     state: StoreType;
 }
 
-export type GeneralActions = IsPolkaBtcLoaded | IsStakedRelayerLoaded | ChangeAddress | InitState;
+export interface SetTotalIssuedAndTotalLocked {
+    type: typeof SET_TOTAL_ISSUED_AND_TOTAL_LOCKED;
+    totalPolkaBTC: string;
+    totalLockedDOT: string;
+}
+
+export type GeneralActions =
+    | IsPolkaBtcLoaded
+    | IsStakedRelayerLoaded
+    | ChangeAddress
+    | InitState
+    | SetTotalIssuedAndTotalLocked;
 
 // PRICES
 

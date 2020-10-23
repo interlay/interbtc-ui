@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import BitcoinTable from "./bitcoin-table/bitcoin-table";
+import BitcoinTable from "../../common/components/bitcoin-table/bitcoin-table";
 import ReportModal from "./report-modal/report-modal";
 import RegisterModal from "./register-modal/register-modal";
 import { Button } from "react-bootstrap";
-import StatusUpdateTable from "./status-update-table/status-update-table";
-import VaultTable from "./vault-table/vault-table";
-import OracleTable from "./oracle-table/oracle-table";
+import StatusUpdateTable from "../../common/components/status-update-table/status-update-table";
+import VaultTable from "../../common/components/vault-table/vault-table";
+import OracleTable from "../../common/components/oracle-table/oracle-table";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -65,7 +65,7 @@ export default function StakedRelayerPage() {
 
     return (
         <div className="staked-relayer-page container-fluid white-background">
-            <div className="stacked-container">
+            <div className="staked-container">
                 <div className="stacked-wrapper">
                     <div className="row">
                         <div className="title">Staked Relayer Dashboard</div>

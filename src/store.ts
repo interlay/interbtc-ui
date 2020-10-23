@@ -20,6 +20,8 @@ export const getInitialState = (): StoreType => {
             polkaBtcLoaded: false,
             relayerLoaded: false,
             address: "",
+            totalLockedDOT: "",
+            totalPolkaBTC: "",
         },
         prices: { dotBtc: 0, dotUsd: 0 },
         issue: {

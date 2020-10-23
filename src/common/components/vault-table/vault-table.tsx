@@ -1,8 +1,8 @@
 import React, { ReactElement, useState, useEffect } from "react";
-import { StoreType } from "../../../common/types/util.types";
+import { StoreType } from "../../types/util.types";
 import { useSelector, useDispatch } from "react-redux";
-import { Vault } from "../../../common/types/util.types";
-import { fetchPrices } from "../../../common/api/api";
+import { Vault } from "../../types/util.types";
+import { fetchPrices } from "../../api/api";
 import * as constants from "../../../constants";
 import * as bitcoin from "bitcoinjs-lib";
 import { planckToDOT, satToBTC } from "@interlay/polkabtc";
