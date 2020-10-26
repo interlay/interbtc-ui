@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { changeBtcTxIdAction, changeIssueStepAction, updateIssueRequestAction } from "../../../common/actions/issue.actions";
 import { StoreType } from "../../../common/types/util.types";
 import { remove0x } from "../../../common/utils/utils";
+import { BTC_TRANSACTION_ID_REGEX } from "../../../constants";
 
 type BTCPaymentConfirmationProps = {
     closeModal: () => void;
@@ -63,11 +64,11 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
                             onChange={onChange}
                             className={"custom-input" + (errors.btcTxId? " error-borders" : "")}
                             ref={register({
-                                // FIXME: add transaction format check that depends on global mainnet | testnet parameter
-                                required: true, // pattern: {
-                                    // value: BTC_ADDRESS_TESTNET_REGEX,
-                                    //message: "Please enter valid BTC address"
-                                // }
+                                required: true, 
+                                pattern: {
+                                    value: BTC_TRANSACTION_ID_REGEX,
+                                    message: "Please enter valid transaction Id"
+                                }
                             })}
                         />
                         {errors.btcTxId && (<div className="input-error">
