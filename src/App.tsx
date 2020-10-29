@@ -90,6 +90,7 @@ export default class App extends Component<{}, AppState> {
         store.dispatch(isStakedRelayerLoaded(true));
         
         window.polkaBTC = await createPolkabtcAPI(constants.PARACHAIN_URL);
+        
         store.dispatch(isPolkaBtcLoaded(true));
     }
 

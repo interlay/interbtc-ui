@@ -38,21 +38,26 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps){
                         <div className="col-12 current-collateral">Current Total Collateral {totalCollateral} DOT </div>
                         <div className="col-12">New Total Collateral</div>
                         <div className="col-12">
-                            <input
-                                name="collateral"
-                                type="number"
-                                className={"custom-input" + (errors.collateral ? " error-borders" : "")}
-                                defaultValue={0}
-                                ref={register({
-                                    required: true,
-                                })}
-                            ></input>
-                            {errors.collateral && (
-                                <div className="input-error">
-                                    {errors.collateral.type === "required" ? 
-                                    "Collateral is required" : errors.collateral.message}
+                            <div className="input-group">
+                                <input
+                                    name="collateral"
+                                    type="number"
+                                    className={"form-control custom-input" + (errors.collateral ? " error-borders" : "")}
+                                    aria-describedby="basic-addon2" 
+                                    ref={register({
+                                        required: true,
+                                    })}
+                                ></input>
+                                <div className="input-group-append">
+                                    <span className="input-group-text" id="basic-addon2">DOT</span>
                                 </div>
-                            )}
+                                {errors.collateral && (
+                                    <div className="input-error">
+                                        {errors.collateral.type === "required" ? 
+                                        "Collateral is required" : errors.collateral.message}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                         <div className="col-12">New Collateralization 340%</div>
                     </div>

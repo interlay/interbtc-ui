@@ -11,6 +11,7 @@ export const INIT_STATE = "INIT_STATE";
 export const CHANGE_ADDRESS = "CHANGE_ADDRESS";
 export const SET_TOTAL_ISSUED_AND_TOTAL_LOCKED = "SET_TOTAL_ISSUED_AND_TOTAL_LOCKED";
 export const UPDATE_BTC_ADDRESS = "UPDATE_BTC_ADDRESS";
+export const UPDATE_COLLATERAL = "UPDATE_COLLATERAL";
 
 export interface IsPolkaBtcLoaded {
     type: typeof IS_POLKA_BTC_LOADED;
@@ -32,9 +33,14 @@ export interface InitState {
     state: StoreType;
 }
 
-export interface UpdateBTCAddressAction {
+export interface UpdateBTCAddress {
     type: typeof UPDATE_BTC_ADDRESS;
     btcAddress: string;
+}
+
+export interface UpdateCollateral {
+    type: typeof UPDATE_COLLATERAL;
+    collateral: number;
 }
 
 export interface SetTotalIssuedAndTotalLocked {
@@ -48,7 +54,9 @@ export type GeneralActions =
     | IsStakedRelayerLoaded
     | ChangeAddress
     | InitState
-    | SetTotalIssuedAndTotalLocked;
+    | SetTotalIssuedAndTotalLocked
+    | UpdateCollateral
+    | UpdateBTCAddress;
 
 // PRICES
 

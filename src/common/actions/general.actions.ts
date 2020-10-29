@@ -5,12 +5,14 @@ import {
     INIT_STATE,
     SET_TOTAL_ISSUED_AND_TOTAL_LOCKED,
     UPDATE_BTC_ADDRESS,
+    UPDATE_COLLATERAL,
     IsPolkaBtcLoaded,
     IsStakedRelayerLoaded,
     ChangeAddress,
     InitState,
     SetTotalIssuedAndTotalLocked,
-    UpdateBTCAddressAction,
+    UpdateBTCAddress,
+    UpdateCollateral
 } from "../types/actions.types";
 import { StoreType } from "../types/util.types";
 
@@ -34,9 +36,14 @@ export const initializeState = (state: StoreType): InitState => ({
     state,
 });
 
-export const updateBTCAddressAction = (btcAddress: string): UpdateBTCAddressAction => ({
+export const updateBTCAddressAction = (btcAddress: string): UpdateBTCAddress => ({
     type: UPDATE_BTC_ADDRESS,
     btcAddress,
+});
+
+export const updateCollateralAction = (collateral: number): UpdateCollateral => ({
+    type: UPDATE_COLLATERAL,
+    collateral,
 });
 
 export const setTotalIssuedAndTotalLockedAction = (

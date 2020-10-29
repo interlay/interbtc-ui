@@ -41,6 +41,7 @@ export type GeneralType = {
     totalPolkaBTC: string;
     totalLockedDOT: string;
     btcAddress: string;
+    collateral: number;
 };
 
 export type AppState = ReturnType<typeof rootReducer>;

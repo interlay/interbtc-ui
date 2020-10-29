@@ -3,7 +3,9 @@ import { Modal, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { BTC_ADDRESS_TESTNET_REGEX } from "../../../constants";
-
+import { dispatch } from "rxjs/internal/observable/range";
+import { useDispatch } from "react-redux";
+import { updateBTCAddressAction, updateCollateralAction } from "../../../common/actions/general.actions";
 
 type RegisterVaultForm = {
     collateral: number;
@@ -17,11 +19,14 @@ type RegisterVaultProps = {
 
 export default function RegisterVaultModal(props: RegisterVaultProps){
     const { register, handleSubmit, errors } = useForm<RegisterVaultForm>();
-    
+    const dispatch = useDispatch();
+
     const onSubmit = handleSubmit(async ({ collateral, address }) => {
         try {
             // TO DO CALL API
             // await window.relayer.registerStakedRelayer(collateral, address);
+            dispatch(updateBTCAddressAction(address));
+            dispatch(updateCollateralAction(collateral));
             toast.success("Successfully registered");
             props.onClose();
         } catch (error) {

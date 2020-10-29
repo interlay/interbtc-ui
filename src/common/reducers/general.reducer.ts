@@ -5,6 +5,8 @@ import {
     CHANGE_ADDRESS,
     INIT_STATE,
     GeneralActions,
+    UPDATE_COLLATERAL,
+    UPDATE_BTC_ADDRESS,
 } from "../types/actions.types";
 import { GeneralType } from "../types/util.types";
 
@@ -15,6 +17,7 @@ const initialState = {
     totalPolkaBTC: "",
     totalLockedDOT: "",
     btcAddress: "",
+    collateral: 0
 };
 
 export const generalReducer = (state: GeneralType = initialState, action: GeneralActions): GeneralType => {
@@ -29,6 +32,10 @@ export const generalReducer = (state: GeneralType = initialState, action: Genera
             return { ...state, polkaBtcLoaded: false, relayerLoaded: false };
         case SET_TOTAL_ISSUED_AND_TOTAL_LOCKED:
             return { ...state, totalLockedDOT: action.totalLockedDOT, totalPolkaBTC: action.totalPolkaBTC };
+        case UPDATE_COLLATERAL:
+            return { ...state, collateral: action.collateral };
+        case UPDATE_BTC_ADDRESS:
+            return { ...state, btcAddress: action.btcAddress };
         default:
             return state;
     }
