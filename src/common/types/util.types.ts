@@ -1,9 +1,10 @@
 import { Store, CombinedState } from "redux";
-import { GeneralActions, PricesActions, RedeemActions, IssueActions } from "./actions.types";
+import { GeneralActions, PricesActions, RedeemActions, IssueActions, ReplaceActions } from "./actions.types";
 import { rootReducer } from "../reducers/index";
 import { u256 } from "@polkadot/types/primitive";
 import { Issue } from "./issue.types";
 import { Redeem } from "./redeem.types";
+import { Replace } from "./replace.types";
 
 export interface Prices {
     dotBtc: number;
@@ -39,6 +40,7 @@ export type GeneralType = {
     address: string;
     totalPolkaBTC: string;
     totalLockedDOT: string;
+    btcAddress: string;
 };
 
 export type AppState = ReturnType<typeof rootReducer>;
@@ -48,6 +50,7 @@ export type StoreType = {
     prices: Prices;
     issue: Issue;
     redeem: Redeem;
+    replace: Replace;
 };
 
 export type dispatcher = {
@@ -57,6 +60,6 @@ export type dispatcher = {
 
 export type StoreState = Store<
     CombinedState<StoreType>,
-    GeneralActions | PricesActions | RedeemActions | IssueActions
+    GeneralActions | PricesActions | RedeemActions | IssueActions | ReplaceActions
 > &
     dispatcher;

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@interlay/polkabtc": "^0.2.0",
+    "@interlay/polkabtc": "^0.2.2",
     "@polkadot/api": "^1.32.1",
     "@polkadot/extension-dapp": "0.32.1",
     "@testing-library/jest-dom": "^4.2.4",

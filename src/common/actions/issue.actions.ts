@@ -10,6 +10,7 @@ import {
     CHANGE_FEE_BTC,
     ADD_ISSUE_REQUEST,
     UPDATE_ISSUE_REQUEST,
+    ADD_VAULT_ISSUES,
     ADD_TRANSACTION_LISTENER,
     OPEN_WIZARD_IN_EDIT_MODE,
     ChangeIssueStep,
@@ -25,8 +26,9 @@ import {
     UpdateIssueRequest,
     AddTransactionListener,
     OpenWizardInEditMode,
+    AddVaultIssues
 } from "../types/actions.types";
-import { IssueRequest } from "../types/issue.types";
+import { IssueRequest, VaultIssue } from "../types/issue.types";
 
 export const changeIssueStepAction = (step: string): ChangeIssueStep => ({
     type: CHANGE_ISSUE_STEP,
@@ -89,4 +91,9 @@ export const updateIssueRequestAction = (request: IssueRequest): UpdateIssueRequ
 export const addTransactionListener = (id: string): AddTransactionListener => ({
     type: ADD_TRANSACTION_LISTENER,
     id,
+});
+
+export const addVaultIssuesAction = (vaultIssues: VaultIssue[]): AddVaultIssues => ({
+    type: ADD_VAULT_ISSUES,
+    vaultIssues,
 });

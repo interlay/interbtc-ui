@@ -1,5 +1,6 @@
-import { IssueRequest } from "./issue.types";
-import { RedeemRequest } from "./redeem.types";
+import { IssueRequest, VaultIssue } from "./issue.types";
+import { RedeemRequest, VaultRedeem } from "./redeem.types";
+import { ReplaceRequest } from "./replace.types";
 import { Prices, StoreType } from "./util.types";
 
 // GENERAL ACTIONS
@@ -9,6 +10,7 @@ export const IS_STAKED_RELAYER_LOADED = "IS_STAKED_RELAYER_LOADED";
 export const INIT_STATE = "INIT_STATE";
 export const CHANGE_ADDRESS = "CHANGE_ADDRESS";
 export const SET_TOTAL_ISSUED_AND_TOTAL_LOCKED = "SET_TOTAL_ISSUED_AND_TOTAL_LOCKED";
+export const UPDATE_BTC_ADDRESS = "UPDATE_BTC_ADDRESS";
 
 export interface IsPolkaBtcLoaded {
     type: typeof IS_POLKA_BTC_LOADED;
@@ -28,6 +30,11 @@ export interface ChangeAddress {
 export interface InitState {
     type: typeof INIT_STATE;
     state: StoreType;
+}
+
+export interface UpdateBTCAddressAction {
+    type: typeof UPDATE_BTC_ADDRESS;
+    btcAddress: string;
 }
 
 export interface SetTotalIssuedAndTotalLocked {
@@ -66,6 +73,7 @@ export const SET_REDEEM_REQUESTS = "SET_REDEEM_REQUESTS";
 export const RESET_REDEEM_WIZARD = "RESET_REDEEM_WIZARD";
 export const STORE_REDEEM_REQUEST = "STORE_REDEEM_REQUEST";
 export const ADD_REDEEM_REQUEST = "ADD_REDEEM_REQUEST";
+export const ADD_VAULT_REDEEMS = "ADD_VAULT_REDEEMS";
 
 export interface ChangeVaultBtcAddressOnRedeem {
     type: typeof CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM;
@@ -116,6 +124,11 @@ export interface AddRedeemRequest {
     request: RedeemRequest;
 }
 
+export interface AddVaultRedeems {
+    type: typeof ADD_VAULT_REDEEMS;
+    vaultRedeems: VaultRedeem[];
+}
+
 export type RedeemActions =
     | ChangeRedeemStep
     | ChangeAmountPolkaBtc
@@ -128,7 +141,8 @@ export type RedeemActions =
     | StoreRedeemRequest
     | AddRedeemRequest
     | ChangeAddress
-    | InitState;
+    | InitState
+    | AddVaultRedeems;
 
 // ISSUE
 
@@ -145,6 +159,12 @@ export const ADD_ISSUE_REQUEST = "ADD_ISSUE_REQUEST";
 export const UPDATE_ISSUE_REQUEST = "UPDATE_ISSUE_REQUEST";
 export const ADD_TRANSACTION_LISTENER = "ADD_TRANSACTION_LISTENER";
 export const OPEN_WIZARD_IN_EDIT_MODE = "OPEN_WIZARD_IN_EDIT_MODE";
+export const ADD_VAULT_ISSUES = "ADD_VAULT_ISSUES";
+
+export interface AddVaultIssues {
+    type: typeof ADD_VAULT_ISSUES;
+    vaultIssues: VaultIssue[];
+}
 
 export interface ChangeVaultBtcAddressOnIssue {
     type: typeof CHANGE_VAULT_BTC_ADDRESS_ON_ISSUE;
@@ -224,4 +244,16 @@ export type IssueActions =
     | AddTransactionListener
     | OpenWizardInEditMode
     | ChangeAddress
-    | InitState;
+    | InitState
+    | AddVaultIssues;
+
+// REPLACE 
+
+export const ADD_REPLACE_REQUESTS = "ADD_REPLACE_REQUESTS";
+
+export interface AddReplaceRequests {
+    type: typeof ADD_REPLACE_REQUESTS;
+    requests: ReplaceRequest[];
+}
+
+export type ReplaceActions = AddReplaceRequests;

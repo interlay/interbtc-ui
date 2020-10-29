@@ -6,6 +6,7 @@ import {
     CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM,
     CHANGE_VAULT_DOT_ADDRESS_ON_REDEEM,
     CHANGE_REDEEM_ID,
+    ADD_VAULT_REDEEMS,
     SET_REDEEM_REQUESTS,
     ADD_REDEEM_REQUEST,
     ChangeRedeemStep,
@@ -17,8 +18,9 @@ import {
     ChangeRedeemId,
     SetRedeemRequests,
     AddRedeemRequest,
+    AddVaultRedeems
 } from "../types/actions.types";
-import { RedeemRequest } from "../types/redeem.types";
+import { RedeemRequest, VaultRedeem } from "../types/redeem.types";
 
 export const changeRedeemStepAction = (step: string): ChangeRedeemStep => ({
     type: CHANGE_REDEEM_STEP,
@@ -63,3 +65,8 @@ export const addRedeemRequestAction = (request: RedeemRequest): AddRedeemRequest
     type: ADD_REDEEM_REQUEST,
     request,
 });
+
+export const addVaultRedeemsAction = (vaultRedeems: VaultRedeem[]): AddVaultRedeems => ({
+    type: ADD_VAULT_REDEEMS,
+    vaultRedeems,
+})

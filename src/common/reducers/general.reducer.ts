@@ -14,6 +14,7 @@ const initialState = {
     address: "",
     totalPolkaBTC: "",
     totalLockedDOT: "",
+    btcAddress: ""
 };
 
 export const generalReducer = (state: GeneralType = initialState, action: GeneralActions): GeneralType => {

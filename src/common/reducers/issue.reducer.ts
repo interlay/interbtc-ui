@@ -13,6 +13,7 @@ import {
     IssueActions,
     ADD_TRANSACTION_LISTENER,
     OPEN_WIZARD_IN_EDIT_MODE,
+    ADD_VAULT_ISSUES,
     INIT_STATE,
 } from "../types/actions.types";
 import { Issue } from "../types/issue.types";
@@ -29,6 +30,7 @@ const initialState = {
     issueRequests: new Map(),
     transactionListeners: [],
     wizardInEditMode: false,
+    vaultIssues: []
 };
 
 export const issueReducer = (state: Issue = initialState, action: IssueActions): Issue => {
@@ -83,6 +85,8 @@ export const issueReducer = (state: Issue = initialState, action: IssueActions):
             return { ...state, wizardInEditMode: true };
         case INIT_STATE:
             return { ...state, transactionListeners: [] };
+        case ADD_VAULT_ISSUES:
+            return {...state, vaultIssues: action.vaultIssues}
         default:
             return state;
     }

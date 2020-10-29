@@ -22,6 +22,7 @@ export const getInitialState = (): StoreType => {
             address: "",
             totalLockedDOT: "",
             totalPolkaBTC: "",
+            btcAddress: ""
         },
         prices: { dotBtc: 0, dotUsd: 0 },
         issue: {
@@ -36,6 +37,7 @@ export const getInitialState = (): StoreType => {
             issueRequests: new Map(),
             transactionListeners: [],
             wizardInEditMode: false,
+            vaultIssues: []
         },
         redeem: {
             address: "",
@@ -46,14 +48,18 @@ export const getInitialState = (): StoreType => {
             vaultDotAddress: "",
             id: "",
             redeemRequests: new Map(),
+            vaultRedeems: []
         },
+        replace: {
+            requests: []
+        }
     };
     return emptyStore;
 };
 
 export const loadState = (): StoreType => {
     try {
-        const serializedState = localStorage.getItem("pbtc-store");
+        const serializedState = localStorage.getItem("pbtc-store-1");
         if (serializedState === null) {
             const initialState = getInitialState();
             return initialState;
@@ -102,7 +108,7 @@ export const saveState = (store: AppState): void => {
             },
         };
         const serializedState = JSON.stringify(preperedState);
-        localStorage.setItem("pbtc-store", serializedState);
+        localStorage.setItem("pbtc-store-1", serializedState);
     } catch (error) {
         setTimeout(
             () => toast.error("Local storage is disabled. In order to use platform please enable local storage"),
