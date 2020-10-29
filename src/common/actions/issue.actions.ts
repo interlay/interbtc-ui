@@ -26,7 +26,7 @@ import {
     UpdateIssueRequest,
     AddTransactionListener,
     OpenWizardInEditMode,
-    AddVaultIssues
+    AddVaultIssues,
 } from "../types/actions.types";
 import { IssueRequest, VaultIssue } from "../types/issue.types";
 

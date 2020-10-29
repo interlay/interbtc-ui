@@ -37,5 +37,5 @@ export interface Issue {
     issueRequests: Map<string, IssueRequest[]>;
     transactionListeners: string[];
     wizardInEditMode: boolean;
-    vaultIssues: VaultIssue[]
+    vaultIssues: VaultIssue[];
 }

@@ -247,7 +247,7 @@ export type IssueActions =
     | InitState
     | AddVaultIssues;
 
-// REPLACE 
+// REPLACE
 
 export const ADD_REPLACE_REQUESTS = "ADD_REPLACE_REQUESTS";
 

@@ -10,7 +10,7 @@ import {
     ChangeAddress,
     InitState,
     SetTotalIssuedAndTotalLocked,
-    UpdateBTCAddressAction
+    UpdateBTCAddressAction,
 } from "../types/actions.types";
 import { StoreType } from "../types/util.types";
 

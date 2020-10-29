@@ -1,11 +1,8 @@
-import {
-    ADD_REPLACE_REQUESTS,
-    ReplaceActions,
-} from "../types/actions.types";
+import { ADD_REPLACE_REQUESTS, ReplaceActions } from "../types/actions.types";
 import { Replace } from "../types/replace.types";
 
 const initialState = {
-    requests: []
+    requests: [],
 };
 
 export const replaceReducer = (state: Replace = initialState, action: ReplaceActions): Replace => {

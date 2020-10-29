@@ -21,7 +21,7 @@ const initialState = {
     vaultDotAddress: "",
     id: "",
     redeemRequests: new Map(),
-    vaultRedeems: []
+    vaultRedeems: [],
 };
 
 export const redeemReducer = (state: Redeem = initialState, action: RedeemActions): Redeem => {

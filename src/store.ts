@@ -22,7 +22,7 @@ export const getInitialState = (): StoreType => {
             address: "",
             totalLockedDOT: "",
             totalPolkaBTC: "",
-            btcAddress: ""
+            btcAddress: "",
         },
         prices: { dotBtc: 0, dotUsd: 0 },
         issue: {
@@ -37,7 +37,7 @@ export const getInitialState = (): StoreType => {
             issueRequests: new Map(),
             transactionListeners: [],
             wizardInEditMode: false,
-            vaultIssues: []
+            vaultIssues: [],
         },
         redeem: {
             address: "",
@@ -48,11 +48,11 @@ export const getInitialState = (): StoreType => {
             vaultDotAddress: "",
             id: "",
             redeemRequests: new Map(),
-            vaultRedeems: []
+            vaultRedeems: [],
         },
         replace: {
-            requests: []
-        }
+            requests: [],
+        },
     };
     return emptyStore;
 };

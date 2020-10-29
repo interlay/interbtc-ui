@@ -18,7 +18,7 @@ import {
     ChangeRedeemId,
     SetRedeemRequests,
     AddRedeemRequest,
-    AddVaultRedeems
+    AddVaultRedeems,
 } from "../types/actions.types";
 import { RedeemRequest, VaultRedeem } from "../types/redeem.types";
 
@@ -69,4 +69,4 @@ export const addRedeemRequestAction = (request: RedeemRequest): AddRedeemRequest
 export const addVaultRedeemsAction = (vaultRedeems: VaultRedeem[]): AddVaultRedeems => ({
     type: ADD_VAULT_REDEEMS,
     vaultRedeems,
-})
+});

@@ -30,7 +30,7 @@ const initialState = {
     issueRequests: new Map(),
     transactionListeners: [],
     wizardInEditMode: false,
-    vaultIssues: []
+    vaultIssues: [],
 };
 
 export const issueReducer = (state: Issue = initialState, action: IssueActions): Issue => {
@@ -86,7 +86,7 @@ export const issueReducer = (state: Issue = initialState, action: IssueActions):
         case INIT_STATE:
             return { ...state, transactionListeners: [] };
         case ADD_VAULT_ISSUES:
-            return {...state, vaultIssues: action.vaultIssues}
+            return { ...state, vaultIssues: action.vaultIssues };
         default:
             return state;
     }
