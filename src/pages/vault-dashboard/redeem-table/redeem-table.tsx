@@ -10,10 +10,11 @@ export default function RedeemTable(): ReactElement {
 
     useEffect(() => {
         const fetchData = async () => {
-            if(!polkaBtcLoaded){
-                // TO DO FETCH REDEEMS AND STORE THEM IN STORE
-                dispatch(addVaultRedeemsAction([]));
-            }
+            if(!polkaBtcLoaded) return;
+            // TO DO FETCH REDEEMS AND STORE THEM IN STORE
+            // var list = await window.polkaBTC.vaults.list()[0];
+            // redeems = await window.polkaBTC.vaults.mapRedeemRequests()
+            dispatch(addVaultRedeemsAction([]));
         };
         fetchData();
     }, [polkaBtcLoaded]);

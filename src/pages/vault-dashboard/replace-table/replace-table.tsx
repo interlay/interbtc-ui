@@ -2,8 +2,13 @@ import React, { ReactElement, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { addReplaceRequestsAction } from "../../../common/actions/replace.actions";
+import { Button } from "react-bootstrap";
 
-export default function ReplaceTable(): ReactElement {
+type ReplaceTableProps = {
+    openModal: (show: boolean) => void;
+}
+
+export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const dispatch = useDispatch();
     const replaceRequests = useSelector((state: StoreType) => state.replace.requests);
@@ -25,6 +30,16 @@ export default function ReplaceTable(): ReactElement {
                     <div className="header">
                         Replace Requests
                     </div>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-12">
+                    <Button
+                        variant="outline-danger"
+                        className="vault-dashboard-button"
+                        onClick={() => props.openModal(true)}>
+                        Replace My Vault
+                    </Button>
                 </div>
             </div>
             <div className="row justify-content-center">

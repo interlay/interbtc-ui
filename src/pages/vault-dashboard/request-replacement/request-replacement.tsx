@@ -2,6 +2,8 @@ import React from "react";
 import { Modal, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { addReplaceRequestAction } from "../../../common/actions/replace.actions";
 
 type RequestReplacementForm = {
     amount: number;
@@ -14,11 +16,12 @@ type RequestReplacementProps = {
 
 export default function RequestReplacementModal(props: RequestReplacementProps){
     const { register, handleSubmit, errors } = useForm<RequestReplacementForm>();
+    const dispatch = useDispatch();
     
     const onSubmit = handleSubmit(async ({ amount }) => {
         try {
             // TO DO CALL API
-            // await window.relayer.registerStakedRelayer(collateral, address);
+            // dispatch(addReplaceRequestAction());
             toast.success("Successfully Registered");
             props.onClose();
         } catch (error) {

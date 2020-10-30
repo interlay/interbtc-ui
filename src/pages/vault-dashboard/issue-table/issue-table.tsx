@@ -13,6 +13,8 @@ export default function IssueTable(): ReactElement {
         const fetchData = async () => {
             if(!polkaBtcLoaded){
                 // TO DO FETCH ISSUES AND STORE THEM IN STORE
+                // var list = await window.polkaBTC.vaults.list()[0];
+                // redeems = await window.polkaBTC.vaults.mapIssueRequests();
                 dispatch(addVaultIssuesAction([]));
             }
         };

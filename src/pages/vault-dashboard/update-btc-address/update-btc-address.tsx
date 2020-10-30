@@ -2,6 +2,10 @@ import React from "react";
 import { Modal, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { useSelector, useDispatch } from "react-redux";
+import { StoreType } from "../../../common/types/util.types";
+import { dispatch } from "rxjs/internal/observable/pairs";
+import { updateBTCAddressAction } from "../../../common/actions/general.actions";
 
 type UpdateBTCAddressForm = {
     btcAddress: string;
@@ -14,11 +18,13 @@ type UpdateBTCAddressProps = {
 
 export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps){
     const { register, handleSubmit, errors } = useForm<UpdateBTCAddressForm>();
+    const btcAddress = useSelector((state: StoreType) => state.general.btcAddress);
+    const dispatch = useDispatch();
     
     const onSubmit = handleSubmit(async ({ btcAddress }) => {
         try {
-            // TO DO CALL API
-            toast.success("Successfully updated address");
+            dispatch(updateBTCAddressAction(btcAddress));
+            toast.success("BTC address successfully updated");
             props.onClose();
         } catch (error) {
             toast.error(error.toString());
@@ -34,14 +40,13 @@ export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps){
                 <Modal.Body>
                     <div className="row">
                         <div className="col-12">Current BTC Address:</div>
-                        <div className="col-12 btc-address">ab327193861491aff23768af782fab372</div>
+                        <div className="col-12 btc-address">{btcAddress}</div>
                         <div className="col-12">New BTC Address:</div>
                         <div className="col-12">
                             <input
                                 name="btcAddress"
                                 type="text"
                                 className={"custom-input" + (errors.btcAddress ? " error-borders" : "")}
-                                defaultValue={0}
                                 ref={register({
                                     required: true,
                                 })}

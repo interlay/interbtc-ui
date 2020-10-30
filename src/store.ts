@@ -23,7 +23,7 @@ export const getInitialState = (): StoreType => {
             totalLockedDOT: "",
             totalPolkaBTC: "",
             btcAddress: "",
-            collateral: 0
+            collateral: 0,
         },
         prices: { dotBtc: 0, dotUsd: 0 },
         issue: {
@@ -69,9 +69,9 @@ export const loadState = (): StoreType => {
         const deserializedState = {
             ...rawStore,
             general: {
+                ...rawStore.general,
                 polkaBtcLoaded: false,
                 relayerLoaded: false,
-                address: rawStore.general.address,
             },
         };
         return {

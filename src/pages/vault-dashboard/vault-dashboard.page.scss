@@ -10,8 +10,16 @@
         padding: 0px 15px;
     }
 
+    .register-vault-dashboard{
+        margin: 1rem;
+    }
+
+    .btc-address-header{
+        margin-top: 1rem;
+    }
+
     .vault-dashboard-button{
-        margin-top: 20px;
+        margin-bottom: 1rem;
     }
 
     .title{
@@ -20,6 +28,14 @@
         font-size: 2rem;
         margin-top: 2rem; 
         font-weight: 600;
+    }
+
+    .header {
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-align: center;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
     }
     
     .stats{
@@ -82,4 +98,8 @@
 .current-collateral{
     margin-top: 1rem;
     margin-bottom: 1rem;
+}
+
+.replace-table {
+    margin-bottom: 2rem;
 }

@@ -51,6 +51,11 @@ export default function Topbar(props: TopbarProps): ReactElement {
                     <Link className="nav-link" to="/dashboard">
                         Dashboard
                     </Link>
+                    {true && (
+                        <Link className="nav-link" to="/vault-dashboard">
+                            Vault Dashboard
+                        </Link>
+                    )}
                     {isConnected && (
                         <Link className="nav-link" to="/staked-relayer">
                             Staked Relayer

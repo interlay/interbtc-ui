@@ -258,10 +258,16 @@ export type IssueActions =
 // REPLACE
 
 export const ADD_REPLACE_REQUESTS = "ADD_REPLACE_REQUESTS";
+export const ADD_REPLACE_REQUEST = "ADD_REPLACE_REQUEST";
 
 export interface AddReplaceRequests {
     type: typeof ADD_REPLACE_REQUESTS;
     requests: ReplaceRequest[];
 }
 
-export type ReplaceActions = AddReplaceRequests;
+export interface AddReplaceRequest {
+    type: typeof ADD_REPLACE_REQUEST;
+    request: ReplaceRequest;
+}
+
+export type ReplaceActions = AddReplaceRequests | AddReplaceRequest;

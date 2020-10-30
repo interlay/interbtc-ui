@@ -19,6 +19,7 @@ export default function VaultDashboardPage(){
     const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const btcAddress = useSelector((state: StoreType) => state.general.btcAddress);
+    const collateral = useSelector((state: StoreType) => state.general.collateral);
     const [dotLocked, setDotLocked] = useState("0");
     const [btcLocked, setBtcLocked] = useState("0");
     const [feesEarned, setFeesEarned] = useState("0");
@@ -48,7 +49,8 @@ export default function VaultDashboardPage(){
 
             // const collateralization = await window.polkaBTC.vaults.getCollateralization(accountId);
             // setCollateralization(collateralization);
-
+            const totalBTC = await window.polkaBTC.vaults.getTotalIssuedPolkaBTCAmount();
+            setBtcLocked(totalBTC.toString());
         };
         fetchData();
     },[polkaBtcLoaded]);
@@ -77,37 +79,31 @@ export default function VaultDashboardPage(){
             </div>
             <div className="row">
                 <div className="col-12">
-                    <div className="stats">
-                        Collateral: {collateralization} 
-                        &nbsp;<i className="fa fa-edit" onClick={() => setShowUpdateCollateralModal(true)}></i>
+                    <div className="stats btc-address-header">
+                        BTC Address: {btcAddress} 
+                        &nbsp;<i className="fa fa-edit" onClick={() => setShowUpdateBTCAddressModal(true)}></i>
                     </div>
                 </div>
             </div>
             <div className="row">
                 <div className="col-12">
                     <div className="stats">
-                        BTC Address: {btcAddress} 
-                        &nbsp;<i className="fa fa-edit" onClick={() => setShowUpdateBTCAddressModal(true)}></i>
+                        Collateral: &nbsp;&nbsp;{collateral} DOT  for  {"2 BTC"} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                        900% Collateralization
+                        &nbsp;<i className="fa fa-edit" onClick={() => setShowUpdateCollateralModal(true)}></i>
                     </div>
                 </div>
             </div>
             <Button
                 variant="outline-success"
-                className="vault-dashboard-button"
+                className="register-vault-dashboard"
                 onClick={() => setShowRegisterVaultModal(true)}
             >
                 Register
             </Button>
             <IssueTable></IssueTable>
             <RedeemTable></RedeemTable>
-            <Button
-                variant="outline-danger"
-                className="vault-dashboard-button"
-                onClick={() => setShowRequestReplacementModal(true)}
-            >
-                Replace My Vault
-            </Button>
-            <ReplaceTable></ReplaceTable>
+            <ReplaceTable openModal={setShowRequestReplacementModal}></ReplaceTable>
             <RegisterVaultModal onClose={closeRegisterVaultModal} show={showRegisterVaultModal}></RegisterVaultModal>
             <UpdateCollateralModal onClose={closeUpdateCollateralModal} show={showUpdateCollateralModal}></UpdateCollateralModal>
             <UpdateBTCAddressModal onClose={closeUpdateBTCAddressModal} show={showUpdateBTCAddressModal}></UpdateBTCAddressModal>
