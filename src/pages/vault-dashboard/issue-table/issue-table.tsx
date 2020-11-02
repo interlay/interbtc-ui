@@ -2,6 +2,8 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { addVaultIssuesAction } from "../../../common/actions/issue.actions";
+import { Vault, IssueRequest } from "@interlay/polkabtc/build/interfaces/default";
+import { issueRequestToVaultIssue } from "../../../common/utils/utils";
 
 
 export default function IssueTable(): ReactElement {
@@ -12,10 +14,17 @@ export default function IssueTable(): ReactElement {
     useEffect(() => {
         const fetchData = async () => {
             if(!polkaBtcLoaded){
-                // TO DO FETCH ISSUES AND STORE THEM IN STORE
-                // var list = await window.polkaBTC.vaults.list()[0];
-                // redeems = await window.polkaBTC.vaults.mapIssueRequests();
-                dispatch(addVaultIssuesAction([]));
+                if(!polkaBtcLoaded) return;
+                let list = (await window.polkaBTC.vaults.list()) as Vault[];
+                let allIssues: IssueRequest[]= [];
+                list.forEach(async (vault) => {
+                    const id = window.polkaBTC.api.createType("AccountId",vault.id.toHuman());
+                    const issuesMap = await window.polkaBTC.vaults.mapIssueRequests(id);
+                    const issues = issuesMap.get(id);
+                    if (!issues) return;
+                    allIssues = [...allIssues,...issues];
+                })
+                dispatch(addVaultIssuesAction(issueRequestToVaultIssue(allIssues)));
             }
         };
         fetchData();

@@ -2,6 +2,8 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { addVaultRedeemsAction } from "../../../common/actions/redeem.actions";
+import { Vault, RedeemRequest } from "@interlay/polkabtc/build/interfaces/default";
+import { redeemRequestToVaultRedeem } from "../../../common/utils/utils";
 
 export default function RedeemTable(): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -11,10 +13,16 @@ export default function RedeemTable(): ReactElement {
     useEffect(() => {
         const fetchData = async () => {
             if(!polkaBtcLoaded) return;
-            // TO DO FETCH REDEEMS AND STORE THEM IN STORE
-            // var list = await window.polkaBTC.vaults.list()[0];
-            // redeems = await window.polkaBTC.vaults.mapRedeemRequests()
-            dispatch(addVaultRedeemsAction([]));
+            let list = (await window.polkaBTC.vaults.list()) as Vault[];
+            let allRedeems: RedeemRequest[]= [];
+            list.forEach(async (vault) => {
+                const id = window.polkaBTC.api.createType("AccountId",vault.id.toHuman());
+                const redeemsMap = await window.polkaBTC.vaults.mapRedeemRequests(id);
+                const redeems = redeemsMap.get(id);
+                if (!redeems) return;
+                allRedeems = [...allRedeems,...redeems];
+            })
+            dispatch(addVaultRedeemsAction(redeemRequestToVaultRedeem(allRedeems)));
         };
         fetchData();
     }, [polkaBtcLoaded]);

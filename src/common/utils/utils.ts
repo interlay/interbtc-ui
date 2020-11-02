@@ -1,5 +1,7 @@
-import { IssueRequest } from "../types/issue.types";
-import { RedeemRequest } from "../types/redeem.types";
+import { RedeemRequest, VaultRedeem } from "../types/redeem.types";
+import { IssueRequest, VaultIssue } from "../types/issue.types";
+import { RedeemRequest as PolkaRedeemRequest } from "@interlay/polkabtc/build/interfaces/default";
+import { IssueRequest as PolkaIssueRequest } from "@interlay/polkabtc/build/interfaces/default";
 
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;
@@ -75,4 +77,32 @@ export const mapToArray = (map: Map<string, IssueRequest[] | RedeemRequest[]>): 
         result[key] = value;
     });
     return result;
+};
+
+export const redeemRequestToVaultRedeem = (requests: PolkaRedeemRequest[]): VaultRedeem[] => {
+    return requests.map((request) => {
+        return {
+            id: request.vault.toHuman().toString(),
+            timestamp: "",
+            user: "",
+            btcAddress: request.btc_address.toString(),
+            polkaBTC: request.amount_polka_btc.toString(),
+            unlockedDOT: request.amount_dot.toString(),
+            status: "",
+        };
+    });
+};
+
+export const issueRequestToVaultIssue = (requests: PolkaIssueRequest[]): VaultIssue[] => {
+    return requests.map((request) => {
+        return {
+            id: request.vault.toHuman(),
+            timestamp: "",
+            user: "",
+            btcAddress: request.btc_address?.toHuman(),
+            polkaBTC: "",
+            lockedDOT: "",
+            status: "",
+        };
+    });
 };
