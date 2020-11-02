@@ -1,32 +1,38 @@
-import React from "react";
+import { planckToDOT } from "@interlay/polkabtc";
+import React, { ReactElement, useEffect, useState } from "react";
+import { isPolkaBtcLoaded } from "../../../common/actions/general.actions";
 import * as constants from "../../../constants";
 
 type StakedRelayer = {
-    AccountID: string,
-    lockedDOT: number,
+    AccountId: string,
+    lockedDOT: string,
     status: string
 }
 
-export default function StakedRelayerTable () {
-    const relayers: StakedRelayer[] = [
-        {
-            AccountID: "zxczxcxzhcxz",
-            lockedDOT: 0.04,
-            status: "Ok"
-        },
-        {
-            AccountID: "xxxzxczxcxzhcxz",
-            lockedDOT: 0.24,
-            status: "Theft"
-        },
-        {
-            AccountID: "zzzzzzxczxcxzhcxz",
-            lockedDOT: 0.24,
-            status: "Liquidation"
-        }
-    ];
-    const relayerStatus = "Ok";
+export default function StakedRelayerTable(): ReactElement {
+    const [relayers, setRelayers] = useState<Array<StakedRelayer>>([]);
+    const [relayerStatus, setRelayerStatus] = useState("Ok");
 
+    useEffect( () => {
+        const fetchData = async () => {
+            if (!isPolkaBtcLoaded) return;
+
+            const relayers = await window.polkaBTC.stakedRelayer.map();
+            let relayersList: StakedRelayer[] = [];
+            relayers.forEach((stake, id) => {
+                relayersList.push({
+                    AccountId: id.toString(),
+                    lockedDOT: planckToDOT(stake.stake.toString()),
+                    // TODO: add a status check for relayers in the parachain
+                    status: constants.STAKED_RELAYER_OK, 
+                });
+            });
+            setRelayers(relayersList);
+            // TODO: add status check for relayers on parachain
+            setRelayerStatus("Ok");
+        };
+        fetchData();
+    });
 
     const getCircle = (status: string): string => {
         if (status === "Ok") {
@@ -74,7 +80,7 @@ export default function StakedRelayerTable () {
                         {relayers.map((relayer, index) => {
                             return (
                                 <tr key={index}>
-                                    <td className="break-words">{relayer.AccountID}</td>
+                                    <td className="break-words">{relayer.AccountId}</td>
                                     <td>{relayer.lockedDOT}</td>
                                     <td className={getStatusColor(relayer.status)}>{relayer.status}</td>
                                 </tr>
