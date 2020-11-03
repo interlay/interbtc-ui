@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { addVaultRedeemsAction } from "../../../common/actions/redeem.actions";
@@ -25,7 +25,7 @@ export default function RedeemTable(): ReactElement {
             dispatch(addVaultRedeemsAction(redeemRequestToVaultRedeem(allRedeems)));
         };
         fetchData();
-    }, [polkaBtcLoaded]);
+    }, [polkaBtcLoaded, dispatch]);
 
     return (
         <div className="redeem-table">

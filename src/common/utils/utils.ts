@@ -128,7 +128,7 @@ export const issueRequestToVaultIssue = (requests: ParachainIssueRequest[]): Vau
 };
 
 export const requestsToVaultReplaceRequests = (requests: ReplaceRequest[]): VaultReplaceRequest[] => {
-    return requests.map((request) => { 
+    return requests.map((request) => {
         return {
             id: request.old_vault.toString(),
             timestamp: request.open_time.toHuman(),
@@ -136,7 +136,7 @@ export const requestsToVaultReplaceRequests = (requests: ReplaceRequest[]): Vaul
             btcAddress: request.btc_address.toString(),
             polkaBTC: request.amount.toString(),
             lockedDOT: request.griefing_collateral.toString(),
-            status: ""
+            status: "",
         };
     });
-}
+};

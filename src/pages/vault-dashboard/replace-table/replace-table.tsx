@@ -34,7 +34,7 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
             
         };
         fetchData();
-    }, [polkaBtcLoaded]);
+    }, [polkaBtcLoaded, dispatch]);
 
     return (
         <div className="replace-table">

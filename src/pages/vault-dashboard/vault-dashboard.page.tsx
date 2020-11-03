@@ -22,7 +22,7 @@ export default function VaultDashboardPage(){
     const collateral = useSelector((state: StoreType) => state.general.collateral);
     const totalLockedDOT = useSelector((state: StoreType) => state.general.totalLockedDOT);
     const [btcLocked, setBtcLocked] = useState("0");
-    const [feesEarned, setFeesEarned] = useState("0");
+    const [feesEarned] = useState("0");
     const [collateralization, setCollateralization] = useState(0);
 
 

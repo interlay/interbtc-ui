@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { addVaultIssuesAction } from "../../../common/actions/issue.actions";
@@ -28,7 +28,7 @@ export default function IssueTable(): ReactElement {
             }
         };
         fetchData();
-    }, [polkaBtcLoaded]);
+    }, [polkaBtcLoaded, dispatch]);
 
     return (
         <div className="issue-table">

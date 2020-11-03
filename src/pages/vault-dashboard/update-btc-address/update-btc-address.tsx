@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import { dispatch } from "rxjs/internal/observable/pairs";
 import { updateBTCAddressAction } from "../../../common/actions/general.actions";
 
 type UpdateBTCAddressForm = {
