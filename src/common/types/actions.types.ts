@@ -1,6 +1,6 @@
 import { IssueRequest, VaultIssue } from "./issue.types";
 import { RedeemRequest, VaultRedeem } from "./redeem.types";
-import { ReplaceRequest } from "./replace.types";
+import { VaultReplaceRequest } from "./replace.types";
 import { Prices, StoreType } from "./util.types";
 
 // GENERAL ACTIONS
@@ -262,12 +262,12 @@ export const ADD_REPLACE_REQUEST = "ADD_REPLACE_REQUEST";
 
 export interface AddReplaceRequests {
     type: typeof ADD_REPLACE_REQUESTS;
-    requests: ReplaceRequest[];
+    requests: VaultReplaceRequest[];
 }
 
 export interface AddReplaceRequest {
     type: typeof ADD_REPLACE_REQUEST;
-    request: ReplaceRequest;
+    request: VaultReplaceRequest;
 }
 
 export type ReplaceActions = AddReplaceRequests | AddReplaceRequest;

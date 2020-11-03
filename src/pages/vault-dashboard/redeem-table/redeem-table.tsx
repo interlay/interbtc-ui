@@ -16,9 +16,9 @@ export default function RedeemTable(): ReactElement {
             let list = (await window.polkaBTC.vaults.list()) as Vault[];
             let allRedeems: RedeemRequest[]= [];
             list.forEach(async (vault) => {
-                const id = window.polkaBTC.api.createType("AccountId",vault.id.toHuman());
-                const redeemsMap = await window.polkaBTC.vaults.mapRedeemRequests(id);
-                const redeems = redeemsMap.get(id);
+                const vaultId = window.polkaBTC.api.createType("AccountId",vault.id.toHuman());
+                const redeemsMap = await window.polkaBTC.vaults.mapRedeemRequests(vaultId);
+                const redeems = redeemsMap.get(vaultId);
                 if (!redeems) return;
                 allRedeems = [...allRedeems,...redeems];
             })

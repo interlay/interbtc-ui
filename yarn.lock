@@ -1218,21 +1218,22 @@
     axios "^0.19.2"
     typescript "~3.5.2"
 
-"@interlay/polkabtc-types@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.1.6.tgz#5afe7db42470087579729f3dcc23373fe7f6ff7e"
-  integrity sha512-gk1NyBlWjnOf399bfRwog7gbqrH+4b7Z7agHS9NlASnnZaBIW/rlHE9mJ+n+xVVuahLuCHHITE2/svdNsU5HKA==
+"@interlay/polkabtc-types@^0.1.8":
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.1.8.tgz#8d646bb0c92f386a600dbdbb1ed2d8b08b65183b"
+  integrity sha512-W7KfI+MXl811saXp05vsSJY1y079CoMCOh1XHOLm8lzpFEpbV2H9YODWUdbRR3PdTWVHA3Ys/bLlUAjMBKvy+g==
 
-"@interlay/polkabtc@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.3.1.tgz#9c699b0ab507ab9637a9ab1a07a6e981b161d38b"
-  integrity sha512-PRMePgoLoV2khUSnN6rfHng+SFGhjv90HH6dmaP9vRAR00rLdp7XzjvrK8BGgLnsOzXcfEnsdCy0YDFyjMG7Sw==
+"@interlay/polkabtc@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.3.2.tgz#de7aa3a97ef398199011f3cd7e4ad686952f002a"
+  integrity sha512-/uURUAiEgNJtILqx+KSvlz9WXLYhumq+0BZdV22uzb0t1OmxuLFq+M6QkFk57XpZMAb254/ZR9dg9YL7v9xMEg==
   dependencies:
     "@interlay/esplora-btc-api" "^0.1.7"
-    "@interlay/polkabtc-types" "^0.1.6"
+    "@interlay/polkabtc-types" "^0.1.8"
     "@types/big.js" "^4.0.5"
     big.js "^6.0.1"
     bitcoinjs-lib "^5.2.0"
+    cross-fetch "^3.0.6"
     sinon "^9.0.3"
     ts-mock-imports "^1.3.0"
 
@@ -4108,6 +4109,13 @@ create-hmac@^1.1.0, create-hmac@^1.1.3, create-hmac@^1.1.4, create-hmac@^1.1.7:
     ripemd160 "^2.0.0"
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
+
+cross-fetch@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.0.6.tgz#3a4040bc8941e653e0e9cf17f29ebcd177d3365c"
+  integrity sha512-KBPUbqgFjzWlVcURG+Svp9TlhA5uliYtiNx/0r8nv0pdypeQCRJ9IaSIc3q/x3q8t3F75cHuwxVql1HFGHCNJQ==
+  dependencies:
+    node-fetch "2.6.1"
 
 cross-spawn@7.0.1:
   version "7.0.1"
@@ -8399,7 +8407,7 @@ no-case@^3.0.3:
     lower-case "^2.0.1"
     tslib "^1.10.0"
 
-node-fetch@^2.6.1:
+node-fetch@2.6.1, node-fetch@^2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
   integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==

@@ -3,6 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { addReplaceRequestsAction } from "../../../common/actions/replace.actions";
 import { Button } from "react-bootstrap";
+import { Vault, ReplaceRequest } from "@interlay/polkabtc/build/interfaces/default";
+import { requestsToVaultReplaceRequests } from "../../../common/utils/utils";
+
 
 type ReplaceTableProps = {
     openModal: (show: boolean) => void;
@@ -15,10 +18,20 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
 
     useEffect(() => {
         const fetchData = async () => {
-            if(!polkaBtcLoaded){
-                // TO DO FETCH REDEEMS AND STORE THEM IN STORE
-                dispatch(addReplaceRequestsAction([]));
-            }
+            if(!polkaBtcLoaded) return;
+
+            let list = (await window.polkaBTC.vaults.list()) as Vault[];
+            let replaceRequests: ReplaceRequest[]= [];
+            list.forEach(async (vault) => {
+                const vaultId = window.polkaBTC.api.createType("AccountId",vault.id.toHuman());
+                const requestsMap = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
+                const requests = requestsMap.get(vaultId);
+                if(!requests) return;
+                replaceRequests = [...replaceRequests, ...requests];
+            });
+            dispatch(addReplaceRequestsAction(requestsToVaultReplaceRequests(replaceRequests)));
+
+            
         };
         fetchData();
     }, [polkaBtcLoaded]);

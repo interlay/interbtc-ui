@@ -1,4 +1,4 @@
-export interface ReplaceRequest {
+export interface VaultReplaceRequest {
     id: string;
     timestamp: string;
     vault: string;
@@ -9,5 +9,5 @@ export interface ReplaceRequest {
 }
 
 export interface Replace {
-    requests: ReplaceRequest[];
+    requests: VaultReplaceRequest[];
 }

@@ -18,12 +18,12 @@ export default function IssueTable(): ReactElement {
                 let list = (await window.polkaBTC.vaults.list()) as Vault[];
                 let allIssues: IssueRequest[]= [];
                 list.forEach(async (vault) => {
-                    const id = window.polkaBTC.api.createType("AccountId",vault.id.toHuman());
-                    const issuesMap = await window.polkaBTC.vaults.mapIssueRequests(id);
-                    const issues = issuesMap.get(id);
+                    const vaultId = window.polkaBTC.api.createType("AccountId",vault.id.toHuman());
+                    const issuesMap = await window.polkaBTC.vaults.mapIssueRequests(vaultId);
+                    const issues = issuesMap.get(vaultId);
                     if (!issues) return;
                     allIssues = [...allIssues,...issues];
-                })
+                });
                 dispatch(addVaultIssuesAction(issueRequestToVaultIssue(allIssues)));
             }
         };

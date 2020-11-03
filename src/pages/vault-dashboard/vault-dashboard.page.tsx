@@ -20,7 +20,7 @@ export default function VaultDashboardPage(){
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const btcAddress = useSelector((state: StoreType) => state.general.btcAddress);
     const collateral = useSelector((state: StoreType) => state.general.collateral);
-    const [dotLocked, setDotLocked] = useState("0");
+    const totalLockedDOT = useSelector((state: StoreType) => state.general.totalLockedDOT);
     const [btcLocked, setBtcLocked] = useState("0");
     const [feesEarned, setFeesEarned] = useState("0");
     const [collateralization, setCollateralization] = useState(0);
@@ -35,22 +35,11 @@ export default function VaultDashboardPage(){
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
-            // const address = await window.polkaBTC.vaults.getAddress();
-            // const accountId = window.polkaBTC.api.createType("AccountId", address);
-
-            // const lockedPlanck = (await window.polkaBTC.vaults.getIssuedPolkaBTCAmount(accountId)).toString();
-            // setDotLocked(planckToDOT(lockedPlanck));
-
-            // // TO DO GET BTC LOCKED AND SET
-            // setBtcLocked("0");
-
-            // const fees = await window.polkaBTC.vaults.getIssuedPolkaBTCAmount(accountId);
-            // setFeesEarned(fees.toString());
-
-            // const collateralization = await window.polkaBTC.vaults.getCollateralization(accountId);
-            // setCollateralization(collateralization);
             const totalBTC = await window.polkaBTC.vaults.getTotalIssuedPolkaBTCAmount();
             setBtcLocked(totalBTC.toString());
+
+            const totalColateralization = await window.polkaBTC.vaults.getTotalCollateralization();
+            setCollateralization(totalColateralization);
         };
         fetchData();
     },[polkaBtcLoaded]);
@@ -64,7 +53,7 @@ export default function VaultDashboardPage(){
             </div>
             <div className="row">
                 <div className="col-12">
-                    <div className="stats">Dot locked: {dotLocked} DOT</div>
+                    <div className="stats">Dot locked: {totalLockedDOT} DOT</div>
                 </div>
             </div>
             <div className="row">
@@ -89,7 +78,7 @@ export default function VaultDashboardPage(){
                 <div className="col-12">
                     <div className="stats">
                         Collateral: &nbsp;&nbsp;{collateral} DOT  for  {"2 BTC"} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                        900% Collateralization
+                        {collateralization}% Collateralization
                         &nbsp;<i className="fa fa-edit" onClick={() => setShowUpdateCollateralModal(true)}></i>
                     </div>
                 </div>

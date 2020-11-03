@@ -1,7 +1,8 @@
 import { RedeemRequest, VaultRedeem } from "../types/redeem.types";
 import { IssueRequest, VaultIssue } from "../types/issue.types";
-import { RedeemRequest as PolkaRedeemRequest } from "@interlay/polkabtc/build/interfaces/default";
+import { RedeemRequest as PolkaRedeemRequest, ReplaceRequest } from "@interlay/polkabtc/build/interfaces/default";
 import { IssueRequest as PolkaIssueRequest } from "@interlay/polkabtc/build/interfaces/default";
+import { VaultReplaceRequest } from "../types/replace.types";
 
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;
@@ -99,10 +100,24 @@ export const issueRequestToVaultIssue = (requests: PolkaIssueRequest[]): VaultIs
             id: request.vault.toHuman(),
             timestamp: "",
             user: "",
-            btcAddress: request.btc_address?.toHuman(),
+            btcAddress: "",
             polkaBTC: "",
             lockedDOT: "",
             status: "",
         };
     });
 };
+
+export const requestsToVaultReplaceRequests = (requests: ReplaceRequest[]): VaultReplaceRequest[] => {
+    return requests.map((request) => { 
+        return {
+            id: request.old_vault.toHuman(),
+            timestamp: request.open_time.toHuman(),
+            vault: "",
+            btcAddress: "",
+            polkaBTC: "",
+            lockedDOT: "",
+            status: ""
+        };
+    });
+}

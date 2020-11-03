@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { addReplaceRequestAction } from "../../../common/actions/replace.actions";
 
+
 type RequestReplacementForm = {
     amount: number;
 }
@@ -20,8 +21,9 @@ export default function RequestReplacementModal(props: RequestReplacementProps){
     
     const onSubmit = handleSubmit(async ({ amount }) => {
         try {
-            // TO DO CALL API
-            // dispatch(addReplaceRequestAction());
+            debugger;
+            const result = await window.vaultClient.requestReplace(Number(amount),100);
+            debugger;
             toast.success("Successfully Registered");
             props.onClose();
         } catch (error) {

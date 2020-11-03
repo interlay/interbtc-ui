@@ -3,7 +3,7 @@ import { planckToDOT, satToBTC } from "@interlay/polkabtc";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
-import { createPolkabtcAPI, StakedRelayerClient } from "@interlay/polkabtc";
+import { createPolkabtcAPI, StakedRelayerClient, VaultClient } from "@interlay/polkabtc";
 import { Modal } from "react-bootstrap";
 import Big from "big.js";
 
@@ -88,6 +88,8 @@ export default class App extends Component<{}, AppState> {
     async createAPIInstace(): Promise<void> {
         window.relayer = new StakedRelayerClient(constants.STAKED_RELAYER_URL);
         store.dispatch(isStakedRelayerLoaded(true));
+
+        window.vaultClient = new VaultClient(constants.VAULT_CLIENT_URL);
         
         window.polkaBTC = await createPolkabtcAPI(constants.PARACHAIN_URL);
         
