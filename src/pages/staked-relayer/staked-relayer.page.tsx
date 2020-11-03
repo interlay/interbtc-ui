@@ -46,19 +46,23 @@ export default function StakedRelayerPage() {
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBtcLoaded || !relayerLoaded) return;
+            
+            try {
+                const address = await window.relayer.getAddress();
+                const activeStakedRelayerId = window.polkaBTC.api.createType("AccountId", address);
 
-            const address = await window.relayer.getAddress();
-            const activeStakedRelayerId = window.polkaBTC.api.createType("AccountId", address);
+                const feesEarned = await window.polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
+                setFees(feesEarned.toString());
 
-            const feesEarned = await window.polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
-            setFees(feesEarned.toString());
+                setStakedRelayerAddress(address);
 
-            setStakedRelayerAddress(address);
-
-            const lockedPlanck = (await window.polkaBTC.stakedRelayer.getStakedDOTAmount(activeStakedRelayerId)).toString();
-            const lockedDOT = planckToDOT(lockedPlanck);
-            setDotLocked(lockedDOT);
-            setPlanckLocked(lockedPlanck);
+                const lockedPlanck = (await window.polkaBTC.stakedRelayer.getStakedDOTAmount(activeStakedRelayerId)).toString();
+                const lockedDOT = planckToDOT(lockedPlanck);
+                setDotLocked(lockedDOT);
+                setPlanckLocked(lockedPlanck);
+            } catch(error){
+                toast.error(error.toString());
+            }
         };
         fetchData();
     },[polkaBtcLoaded, relayerLoaded]);
