@@ -54,6 +54,7 @@ export const getInitialState = (): StoreType => {
         },
         replace: {
             requests: [],
+            isReplacmentPending: false,
         },
     };
     return emptyStore;

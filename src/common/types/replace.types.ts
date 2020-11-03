@@ -10,4 +10,5 @@ export interface VaultReplaceRequest {
 
 export interface Replace {
     requests: VaultReplaceRequest[];
+    isReplacmentPending: boolean;
 }

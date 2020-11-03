@@ -259,6 +259,7 @@ export type IssueActions =
 
 export const ADD_REPLACE_REQUESTS = "ADD_REPLACE_REQUESTS";
 export const ADD_REPLACE_REQUEST = "ADD_REPLACE_REQUEST";
+export const REQUEST_REPLACMENT_PENDING = "REQUEST_REPLACMENT_PENDING";
 
 export interface AddReplaceRequests {
     type: typeof ADD_REPLACE_REQUESTS;
@@ -270,4 +271,9 @@ export interface AddReplaceRequest {
     request: VaultReplaceRequest;
 }
 
-export type ReplaceActions = AddReplaceRequests | AddReplaceRequest;
+export interface RequestReplacmentPending {
+    type: typeof REQUEST_REPLACMENT_PENDING;
+    isReplacmentPending: boolean;
+}
+
+export type ReplaceActions = AddReplaceRequests | AddReplaceRequest | RequestReplacmentPending;

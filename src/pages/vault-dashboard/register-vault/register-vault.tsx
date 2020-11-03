@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
+import ButtonMaybePending from "../../../common/components/pending-button";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { BTC_ADDRESS_TESTNET_REGEX } from "../../../constants";
@@ -19,14 +20,17 @@ type RegisterVaultProps = {
 export default function RegisterVaultModal(props: RegisterVaultProps){
     const { register, handleSubmit, errors } = useForm<RegisterVaultForm>();
     const dispatch = useDispatch();
+    const [isPending, setIsPending] = useState(false);
 
     const onSubmit = handleSubmit(async ({ collateral, address }) => {
         try {
+            setIsPending(true);
             await window.vaultClient.registerVault(collateral,address);
             dispatch(updateBTCAddressAction(address));
             dispatch(updateCollateralAction(collateral));
             toast.success("Successfully registered");
             props.onClose();
+            setIsPending(false);
         } catch (error) {
             toast.error(error.toString());
         }
@@ -80,9 +84,12 @@ export default function RegisterVaultModal(props: RegisterVaultProps){
                     <Button variant="secondary" onClick={props.onClose}>
                         Cancel
                     </Button>
-                    <Button variant="outline-success" type="submit">
+                    <ButtonMaybePending 
+                        variant="outline-success" 
+                        type="submit"
+                        isPending={isPending}>
                         Register
-                    </Button>
+                    </ButtonMaybePending>
                 </Modal.Footer>
             </form>
         </Modal>

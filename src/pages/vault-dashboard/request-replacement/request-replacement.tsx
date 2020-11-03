@@ -1,7 +1,11 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
+import ButtonMaybePending from "../../../common/components/pending-button";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { requestReplacmentPendingAction } from "../../../common/actions/replace.actions";
+import { useDispatch, useSelector } from "react-redux";
+import { StoreType } from "../../../common/types/util.types";
 
 type RequestReplacementForm = {
     amount: number;
@@ -14,12 +18,16 @@ type RequestReplacementProps = {
 
 export default function RequestReplacementModal(props: RequestReplacementProps){
     const { register, handleSubmit, errors } = useForm<RequestReplacementForm>();
+    const dispatch = useDispatch();
+    const isPending = useSelector((state: StoreType) => state.replace.isReplacmentPending);
     
     const onSubmit = handleSubmit(async ({ amount }) => {
         try {
+            dispatch(requestReplacmentPendingAction(true));
             await window.vaultClient.requestReplace(amount,100);
-            toast.success("Successfully Registered");
+            toast.success("Replacment request is submitted");
             props.onClose();
+            dispatch(requestReplacmentPendingAction(false));
         } catch (error) {
             toast.error(error.toString());
         }
@@ -77,9 +85,13 @@ export default function RequestReplacementModal(props: RequestReplacementProps){
                     <Button variant="secondary" onClick={props.onClose}>
                         Cancel
                     </Button>
-                    <Button variant="outline-danger" type="submit">
+                    <ButtonMaybePending
+                        variant="outline-danger" 
+                        type="submit"
+                        isPending={isPending}
+                        >
                         Request
-                    </Button>
+                    </ButtonMaybePending>
                 </Modal.Footer>
             </form>
         </Modal>
