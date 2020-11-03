@@ -3,8 +3,6 @@ import { Modal, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { addReplaceRequestAction } from "../../../common/actions/replace.actions";
-
 
 type RequestReplacementForm = {
     amount: number;
@@ -17,13 +15,10 @@ type RequestReplacementProps = {
 
 export default function RequestReplacementModal(props: RequestReplacementProps){
     const { register, handleSubmit, errors } = useForm<RequestReplacementForm>();
-    const dispatch = useDispatch();
     
     const onSubmit = handleSubmit(async ({ amount }) => {
         try {
-            debugger;
-            const result = await window.vaultClient.requestReplace(Number(amount),100);
-            debugger;
+            await window.vaultClient.requestReplace(amount,100);
             toast.success("Successfully Registered");
             props.onClose();
         } catch (error) {

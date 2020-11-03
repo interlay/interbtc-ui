@@ -13,16 +13,20 @@ type TopbarProps = {
 
 export default function Topbar(props: TopbarProps): ReactElement {
     const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
-    const [isConnected, setIsConnected] = useState(false);
+    const [isRelayerConnected, setIsRelayerConnected] = useState(false);
+    const [isVaultConnected, setIsVaultConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         if (!relayerLoaded) return;
 
         const checkIsConnected = async () => {
-            const connected = await window.relayer.isConnected();
+            const relayerConnected = await window.relayer.isConnected();
+            const vaultConnected = await window.vaultClient.isConnected();
+            setIsRelayerConnected(relayerConnected);
+            setIsVaultConnected(vaultConnected);
             setIsLoading(false);
-            setIsConnected(connected);
+
         };
         checkIsConnected();
     }, [relayerLoaded]);
@@ -51,12 +55,12 @@ export default function Topbar(props: TopbarProps): ReactElement {
                     <Link className="nav-link" to="/dashboard">
                         Dashboard
                     </Link>
-                    {true && (
+                    {isVaultConnected && (
                         <Link className="nav-link" to="/vault-dashboard">
                             Vault Dashboard
                         </Link>
                     )}
-                    {isConnected && (
+                    {isRelayerConnected && (
                         <Link className="nav-link" to="/staked-relayer">
                             Staked Relayer
                         </Link>

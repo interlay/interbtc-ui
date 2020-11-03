@@ -83,9 +83,9 @@ export const mapToArray = (map: Map<string, IssueRequest[] | RedeemRequest[]>): 
 export const redeemRequestToVaultRedeem = (requests: PolkaRedeemRequest[]): VaultRedeem[] => {
     return requests.map((request) => {
         return {
-            id: request.vault.toHuman().toString(),
-            timestamp: "",
-            user: "",
+            id: request.vault.toString(),
+            timestamp: request.opentime.toString(),
+            user: request.redeemer.toString(),
             btcAddress: request.btc_address.toString(),
             polkaBTC: request.amount_polka_btc.toString(),
             unlockedDOT: request.amount_dot.toString(),
@@ -98,9 +98,9 @@ export const issueRequestToVaultIssue = (requests: PolkaIssueRequest[]): VaultIs
     return requests.map((request) => {
         return {
             id: request.vault.toHuman(),
-            timestamp: "",
-            user: "",
-            btcAddress: "",
+            timestamp: request.opentime.toString(),
+            user: request.requester.toString(),
+            btcAddress: request.btc_address.toString(),
             polkaBTC: "",
             lockedDOT: "",
             status: "",
