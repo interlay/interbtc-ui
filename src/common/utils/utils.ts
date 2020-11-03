@@ -1,5 +1,7 @@
 import { IssueRequest } from "../types/issue.types";
 import { RedeemRequest } from "../types/redeem.types";
+import { H256 } from "@polkadot/types/interfaces";
+import { IssueRequest as ParachainIssueRequest } from "@interlay/polkabtc/build/interfaces/default";
 
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;
@@ -50,6 +52,24 @@ export function reverseEndianness(bytes: Uint8Array): Uint8Array {
  */
 export function uint8ArrayToStringClean(bytes: Uint8Array): string {
     return bytes.toString().substr(2).split("").join("");
+}
+
+/**
+ * Converts an IssueRequest object retrieved from the parachain
+ * to a UI IssueRequest object
+ * @param id H256, the key of the IssueRequest object in the parachain map storage object
+ * @param parachainIssueRequest ParachainIssueRequest
+ */
+export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: ParachainIssueRequest): IssueRequest {
+    return {
+        id: id.toString(),
+        amountBTC: parachainIssueRequest.amount.toString(),
+        creation: parachainIssueRequest.opentime.toString(),
+        vaultBTCAddress: parachainIssueRequest.vault.toHuman(),
+        btcTxId: parachainIssueRequest.btc_address.toString(),
+        confirmations: 0,
+        completed: parachainIssueRequest.completed.isTrue,
+    };
 }
 
 export const arrayToMap = (
