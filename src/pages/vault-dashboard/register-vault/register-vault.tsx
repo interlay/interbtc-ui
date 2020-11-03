@@ -25,6 +25,7 @@ export default function RegisterVaultModal(props: RegisterVaultProps){
         try {
             // TO DO CALL API
             // await window.relayer.registerStakedRelayer(collateral, address);
+            await window.vaultClient.registerVault(collateral,address);
             dispatch(updateBTCAddressAction(address));
             dispatch(updateCollateralAction(collateral));
             toast.success("Successfully registered");

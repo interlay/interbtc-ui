@@ -15,16 +15,15 @@ export default function DashboardPage() {
     const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
     const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
     const totalLockedDOT = useSelector((state: StoreType) => state.general.totalLockedDOT);
-    const [collateralizationRate] = useState("0");
+    const [collateralizationRate, setCollateralizationRate] = useState("∞");
 
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBtcLoaded || !relayerLoaded) return;
 
             try {
-                // TO DO once API call is implemented fetch collateralizationRate
-                // const collateralization = await window.polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
-                // setCollateralizationRate(collateralization);
+                const collateralization = await window.polkaBTC.vaults.getTotalCollateralization();
+                setCollateralizationRate((collateralization * 100).toString());
             } catch(error){
                 toast.error(error.toString());
             }

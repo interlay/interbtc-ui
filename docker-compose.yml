@@ -34,3 +34,15 @@ services:
       BITCOIN_RPC_PASS: rpcpassword
       RUST_LOG: info
     network_mode: host
+    ports:
+      - "3030:3030"
+  oracle:
+    image: "registry.gitlab.com/interlay/polkabtc-clients:oracle-latest"
+    command:
+      - /bin/sh
+      - -c
+      - |
+        echo "Sleeping..."
+        sleep 5
+        oracle
+    network_mode: host

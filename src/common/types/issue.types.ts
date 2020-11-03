@@ -1,14 +1,14 @@
 export interface IssueRequest {
     id: string;
     amountBTC: string;
-    creation: Date;
+    creation: string;
     vaultBTCAddress: string;
     btcTxId: string;
     confirmations: number;
     completed: boolean;
-    merkleProof: string;
-    transactionBlockHeight: number;
-    rawTransaction: Uint8Array;
+    merkleProof?: string;
+    transactionBlockHeight?: number;
+    rawTransaction?: Uint8Array;
 }
 
 export interface IssueMap {

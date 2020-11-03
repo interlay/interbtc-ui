@@ -18,8 +18,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps){
     
     const onSubmit = handleSubmit(async ({ collateral }) => {
         try {
-            // TO DO CALL API
-            // await window.polkaBTC..registerStakedRelayer(collateral);
+            await window.vaultClient.lockAdditionalCollateral(collateral);
             toast.success("Successfully updated collateral");
             props.onClose();
         } catch (error) {

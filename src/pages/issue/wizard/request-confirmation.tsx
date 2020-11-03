@@ -43,7 +43,7 @@ export default function RequestConfirmation() {
             const request: IssueRequest = {
                 id,
                 amountBTC: amountBTC,
-                creation: new Date(),
+                creation: "0",
                 vaultBTCAddress,
                 btcTxId: "",
                 confirmations: 0,

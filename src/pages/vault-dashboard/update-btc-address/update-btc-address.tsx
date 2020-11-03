@@ -23,6 +23,7 @@ export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps){
     
     const onSubmit = handleSubmit(async ({ btcAddress }) => {
         try {
+            await window.vaultClient.updateBtcAddress(btcAddress);
             dispatch(updateBTCAddressAction(btcAddress));
             toast.success("BTC address successfully updated");
             props.onClose();

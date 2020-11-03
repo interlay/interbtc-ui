@@ -1,8 +1,8 @@
-import React, { useState, MouseEvent } from 'react';
+import React, { useState, MouseEvent, useRef } from 'react';
 
 import { IssueRequest } from "../../../common/types/issue.types";
 import { Table } from "react-bootstrap";
-import { formatDateTime, shortAddress, shortTxId } from "../../../common/utils/utils";
+import { shortAddress, shortTxId, parachainToUIIssueRequest } from "../../../common/utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
@@ -17,34 +17,49 @@ import {
     changeIssueIdAction,
     openWizardInEditModeAction,
     changeAmountBTCAction,
-    changeVaultBtcAddressOnIssueAction
-} from '../../../common/actions/issue.actions';
+    changeVaultBtcAddressOnIssueAction,
+} from "../../../common/actions/issue.actions";
 
 type IssueRequestProps = {
     handleShow: () => void;
+};
+
+async function getUserIssueRequests(address: string): Promise<IssueRequest[]> {
+    const accountId = window.polkaBTC.api.createType("AccountId", address);
+    const issueRequests: IssueRequest[] = [];
+    const issueRequestMap = await window.polkaBTC.issue.mapForUser(accountId);
+    for (const [key, value] of issueRequestMap) {
+        const issueRequest = parachainToUIIssueRequest(key, value);
+        issueRequests.push(issueRequest);
+    }
+    return issueRequests;
 }
 
 export default function IssueRequests(props: IssueRequestProps) {
     const address = useSelector((state: StoreType) => state.general.address);
-    const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
-    const transactionListeners = useSelector((state: StoreType) => state.issue.transactionListeners);
+    const cachedIssueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
 
+    // store `cachedIssueRequests` in useRef hook, so changes from the useEffect preserve across renders
+    const issueRequests = useRef(cachedIssueRequests);
+    const transactionListeners = useSelector((state: StoreType) => state.issue.transactionListeners);
     const [executePending, setExecutePending] = useState([""]);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchData = async () => {
-            if(!issueRequests) return;
-            issueRequests.map(async (request: IssueRequest) => {
+            issueRequests.current = await getUserIssueRequests(address);
+            if (!issueRequests) return;
+            issueRequests.current.forEach(async (request: IssueRequest) => {
+                // start watcher for new issue requests
                 if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
+                    // the tx watcher updates the storage cache every 10s
                     startTransactionWatcherIssue(request, dispatch);
                 }
             });
-        }
+        };
         fetchData();
-    }, [polkaBtcLoaded, issueRequests, transactionListeners, dispatch]);
-
+    }, [polkaBtcLoaded, issueRequests, transactionListeners, dispatch, address]);
 
     const execute = async (request: IssueRequest) => {
         if (!polkaBtcLoaded) return;
@@ -61,7 +76,7 @@ export default function IssueRequests(props: IssueRequestProps) {
             if (!transactionBlockHeight) {
                 throw new Error("Transaction not yet included in Bitcoin.");
             }
-            let provenReq = request;
+            const provenReq = request;
             provenReq.transactionBlockHeight = transactionBlockHeight;
             provenReq.merkleProof = merkleProof;
             provenReq.rawTransaction = rawTx;
@@ -79,13 +94,19 @@ export default function IssueRequests(props: IssueRequestProps) {
 
             toast.success("Executing issue request: " + request.id);
             // execute issue
-            const success = await window.polkaBTC.issue.execute(parsedIssuedId, parsedTxId, parsedTxBlockHeight, parsedMerkleProof, parsedRawTx);
+            const success = await window.polkaBTC.issue.execute(
+                parsedIssuedId,
+                parsedTxId,
+                parsedTxBlockHeight,
+                parsedMerkleProof,
+                parsedRawTx
+            );
 
             if (!success) {
                 throw new Error("Execute failed.");
             }
 
-            let completedReq = provenReq;
+            const completedReq = provenReq;
             completedReq.completed = true;
             dispatch(updateIssueRequestAction(completedReq));
 
@@ -98,17 +119,21 @@ export default function IssueRequests(props: IssueRequestProps) {
 
     const handleCompleted = (request: IssueRequest) => {
         if (request.confirmations < 6) {
-            return (<FaHourglass></FaHourglass>);
+            return <FaHourglass></FaHourglass>;
         } else if (request.completed) {
-            return (<FaCheck></FaCheck>);
+            return <FaCheck></FaCheck>;
         } else {
             return (
                 <ButtonMaybePending
                     variant="outline-dark"
-                    isPending={executePending.indexOf(request.id)!==-1}
+                    isPending={executePending.indexOf(request.id) !== -1}
                     size="lg"
                     block
-                    onClick={(event: MouseEvent<HTMLElement>) => { event.stopPropagation(); execute(request); }}>
+                    onClick={(event: MouseEvent<HTMLElement>) => {
+                        event.stopPropagation();
+                        execute(request);
+                    }}
+                >
                     Execute
                 </ButtonMaybePending>
 
@@ -126,7 +151,7 @@ export default function IssueRequests(props: IssueRequestProps) {
         dispatch(changeIssueIdAction(request.id));
         dispatch(changeIssueStepAction("BTC_PAYMENT_CONFIRMATION"));
         props.handleShow();
-    }
+    };
 
     return (
         <div>
@@ -135,7 +160,7 @@ export default function IssueRequests(props: IssueRequestProps) {
                     <tr>
                         <th>Issue ID</th>
                         <th>Amount</th>
-                        <th>Creation</th>
+                        <th>Creation Block</th>
                         <th>Vault BTC Address</th>
                         <th>BTC Transaction</th>
                         <th>Confirmations</th>
@@ -144,12 +169,12 @@ export default function IssueRequests(props: IssueRequestProps) {
                 </thead>
                 <tbody>
                     {
-                        issueRequests && issueRequests.map((request: IssueRequest, index: number) => {
+                        issueRequests.current && issueRequests.current.map((request: IssueRequest, index: number) => {
                             return (
                                 <tr key={index} onClick={() => requestClicked(request)}>
                                     <td>{shortAddress(request.id)}</td>
                                     <td>{request.amountBTC} PolkaBTC</td>
-                                    <td>{formatDateTime(request.creation)}</td>
+                                    <td>{request.creation}</td>
                                     <td>{shortAddress(request.vaultBTCAddress)}</td>
                                     <td>{shortTxId(request.btcTxId)}</td>
                                     <td>{request.confirmations}</td>
