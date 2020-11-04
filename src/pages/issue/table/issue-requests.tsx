@@ -48,6 +48,8 @@ export default function IssueRequests(props: IssueRequestProps) {
 
     useEffect(() => {
         const fetchData = async () => {
+            if (!polkaBtcLoaded) return;
+
             issueRequests.current = await getUserIssueRequests(address);
             if (!issueRequests) return;
             issueRequests.current.forEach(async (request: IssueRequest) => {
