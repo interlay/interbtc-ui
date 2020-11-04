@@ -46,3 +46,20 @@ services:
         sleep 5
         oracle
     network_mode: host
+  vault:
+    image: "registry.gitlab.com/interlay/polkabtc-clients:vault-latest"
+    command:
+      - /bin/sh
+      - -c
+      - |
+        echo "Sleeping..."
+        sleep 5
+        vault
+    environment:
+      BITCOIN_RPC_URL: http://localhost:18443
+      BITCOIN_RPC_USER: rpcuser
+      BITCOIN_RPC_PASS: rpcpassword
+      RUST_LOG: info
+    network_mode: host
+    ports:
+      - "3031:3031"
