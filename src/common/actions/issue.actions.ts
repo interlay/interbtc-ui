@@ -10,7 +10,7 @@ import {
     CHANGE_FEE_BTC,
     ADD_ISSUE_REQUEST,
     UPDATE_ISSUE_REQUEST,
-    ADD_TRANSACTION_LISTENER,
+    ADD_TRANSACTION_LISTENER_ISSUE,
     OPEN_WIZARD_IN_EDIT_MODE,
     ChangeIssueStep,
     ChangeBtcAddress,
@@ -23,7 +23,7 @@ import {
     ChangeFeeBtc,
     AddIssueRequest,
     UpdateIssueRequest,
-    AddTransactionListener,
+    AddTransactionListenerIssue,
     OpenWizardInEditMode,
 } from "../types/actions.types";
 import { IssueRequest } from "../types/issue.types";
@@ -86,7 +86,7 @@ export const updateIssueRequestAction = (request: IssueRequest): UpdateIssueRequ
     request,
 });
 
-export const addTransactionListener = (id: string): AddTransactionListener => ({
-    type: ADD_TRANSACTION_LISTENER,
+export const AddTransactionListenerIssue = (id: string): AddTransactionListenerIssue => ({
+    type: ADD_TRANSACTION_LISTENER_ISSUE,
     id,
 });

@@ -3,13 +3,13 @@ import { remove0x } from "./utils";
 import { Dispatch } from "redux";
 import { IssueRequest } from "../../common/types/issue.types";
 import { IssueActions } from "../types/actions.types";
-import { updateIssueRequestAction, addTransactionListener } from "../actions/issue.actions";
+import { updateIssueRequestAction, AddTransactionListenerIssue } from "../actions/issue.actions";
 
 export async function startTransactionWatcherIssue(
     request: IssueRequest,
     dispatch: Dispatch<IssueActions>
 ): Promise<void> {
-    dispatch(addTransactionListener(request.id));
+    dispatch(AddTransactionListenerIssue(request.id));
     updateTransactionStatusIssue(request, dispatch).then(() => {
         setInterval(() => updateTransactionStatusIssue(request, dispatch), 10_000);
     });
@@ -31,4 +31,14 @@ export async function updateTransactionStatusIssue(
             toast.error(error.toString());
         }
     }
+}
+
+export async function startTransactionWatcherRedeem(
+    request: RedeemRequest,
+    dispatch: Dispatch<IssueActions>
+): Promise<void> {
+    dispatch(AddTransactionListenerIssue(request.id));
+    updateTransactionStatusIssue(request, dispatch).then(() => {
+        setInterval(() => updateTransactionStatusIssue(request, dispatch), 10_000);
+    });
 }

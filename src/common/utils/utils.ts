@@ -72,6 +72,24 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
     };
 }
 
+/**
+ * Converts an IssueRequest object retrieved from the parachain
+ * to a UI IssueRequest object
+ * @param id H256, the key of the IssueRequest object in the parachain map storage object
+ * @param parachainIssueRequest ParachainIssueRequest
+ */
+export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: ParachainIssueRequest): IssueRequest {
+    return {
+        id: id.toString(),
+        amountBTC: parachainIssueRequest.amount.toString(),
+        creation: parachainIssueRequest.opentime.toString(),
+        vaultBTCAddress: parachainIssueRequest.vault.toHuman(),
+        btcTxId: parachainIssueRequest.btc_address.toString(),
+        confirmations: 0,
+        completed: parachainIssueRequest.completed.isTrue,
+    };
+}
+
 export const arrayToMap = (
     arr: IssueRequest[][] | RedeemRequest[][]
 ): Map<string, IssueRequest[] | RedeemRequest[]> => {

@@ -11,7 +11,7 @@ import {
     UPDATE_ISSUE_REQUEST,
     CHANGE_ADDRESS,
     IssueActions,
-    ADD_TRANSACTION_LISTENER,
+    ADD_TRANSACTION_LISTENER_ISSUE,
     OPEN_WIZARD_IN_EDIT_MODE,
     INIT_STATE,
 } from "../types/actions.types";
@@ -76,7 +76,7 @@ export const issueReducer = (state: Issue = initialState, action: IssueActions):
             return { ...state, issueRequests: map };
         case CHANGE_BTC_TX_ID:
             return { ...state, btcTxId: action.btcTxId };
-        case ADD_TRANSACTION_LISTENER:
+        case ADD_TRANSACTION_LISTENER_ISSUE:
             if (state.transactionListeners.indexOf(action.id) !== -1) return state;
             return { ...state, transactionListeners: [...state.transactionListeners, action.id] };
         case OPEN_WIZARD_IN_EDIT_MODE:

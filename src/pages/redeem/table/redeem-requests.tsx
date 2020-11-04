@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Table } from "react-bootstrap";
 import { formatDateTime, remove0x, shortAddress, shortTxId } from "../../../common/utils/utils";
@@ -7,8 +7,28 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 
 export default function RedeemRequests() {
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const address = useSelector((state: StoreType) => state.general.address);
-    const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
+    const cachedRedeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
+
+    const redeemRequests = useRef(cachedRedeemRequests);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!polkaBtcLoaded) return;
+
+            redeemRequests.current = await getUserIssueRequests(address);
+            if (!issueRequests) return;
+            issueRequests.current.forEach(async (request: IssueRequest) => {
+                // start watcher for new issue requests
+                if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
+                    // the tx watcher updates the storage cache every 10s
+                    startTransactionWatcherIssue(request, dispatch);
+                }
+            });
+        };
+        fetchData();
+    }, [polkaBtcLoaded, redeemRequests, transactionListeners, dispatch, address]);
 
     return (
         <div>
