@@ -24,15 +24,33 @@ type IssueRequestProps = {
     handleShow: () => void;
 };
 
-async function getUserIssueRequests(address: string): Promise<IssueRequest[]> {
+/**
+ * This function adds new issue requests that are not in the currently stored in this browser's
+ * local storage.
+ * 
+ * @param address the current address of the account
+ * @param currentIssueRequest the current issue requests locally stored
+ */
+async function updateUserIssueRequests(address: string, currentIssueRequests: IssueRequest[] | undefined): Promise<IssueRequest[]> {
     const accountId = window.polkaBTC.api.createType("AccountId", address);
-    const issueRequests: IssueRequest[] = [];
+    // use current issue requests, otherwise init empty array
+    let updatedIssueRequests: IssueRequest[] = currentIssueRequests? currentIssueRequests : [];
     const issueRequestMap = await window.polkaBTC.issue.mapForUser(accountId);
+    
+    // FIXME: this implementation is somewhat inefficient since we need to search in the array
+    // instead of in the mapping.
     for (const [key, value] of issueRequestMap) {
-        const issueRequest = parachainToUIIssueRequest(key, value);
-        issueRequests.push(issueRequest);
+        // only add issue requests that are not yet in the local storage
+        // TODO: integrate the automatic BTC tx monitoring. The parachain
+        // does not store the BTC tx. With the current version,
+        // and in case a user switches browsers,
+        // the user has to manually update the BTC tx id.
+        if (updatedIssueRequests.find(request => request.id !== key.toString())) {
+            const issueRequest = parachainToUIIssueRequest(key, value);
+            updatedIssueRequests.push(issueRequest);
+        }
     }
-    return issueRequests;
+    return updatedIssueRequests;
 }
 
 export default function IssueRequests(props: IssueRequestProps) {
@@ -50,7 +68,7 @@ export default function IssueRequests(props: IssueRequestProps) {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
-            issueRequests.current = await getUserIssueRequests(address);
+            issueRequests.current = await updateUserIssueRequests(address, issueRequests.current);
             if (!issueRequests) return;
             issueRequests.current.forEach(async (request: IssueRequest) => {
                 // start watcher for new issue requests
