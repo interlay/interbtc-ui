@@ -25,17 +25,17 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps){
     const onSubmit = handleSubmit(async ({ collateral }) => {
         try {
             const newCollateral = Number(dotToPlanck(collateral.toString()))
-            if (totalCollateral > collateral) {
-                await window.vaultClient.withdrawCollateral(totalCollateral - newCollateral);
+            if (Number(totalCollateral) > collateral) {
+                await window.vaultClient.withdrawCollateral(Number(totalCollateral) - newCollateral);
             } else {
-                await window.vaultClient.lockAdditionalCollateral(newCollateral - totalCollateral);
+                await window.vaultClient.lockAdditionalCollateral(newCollateral - Number(totalCollateral));
             }
             
             const accountId = await window.vaultClient.getAccountId();    
             const vaultId = window.polkaBTC.api.createType("AccountId",accountId);
             const balanceLockedDOT = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
             const collateralDot = Number(planckToDOT(balanceLockedDOT.toString()));
-            dispatch(updateCollateralAction(collateralDot));
+            dispatch(updateCollateralAction(collateralDot.toString()));
             toast.success("Successfully updated collateral");
             props.onClose();
         } catch (error) {

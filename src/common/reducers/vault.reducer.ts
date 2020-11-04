@@ -15,8 +15,8 @@ const initialState = {
     isReplacmentPending: false,
     btcAddress: "",
     collateralization: 0,
-    collateral: 0,
-    lockedBTC: 0,
+    collateral: "",
+    lockedBTC: "",
 };
 
 export const vaultReducer = (state: VaultState = initialState, action: VaultActions): VaultState => {

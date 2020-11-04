@@ -49,12 +49,12 @@ export default function VaultDashboardPage(){
             dispatch(updateBTCAddressAction(vault.btc_address.toString()));
 
             const balanceLockedDOT = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
-            const collateralDot = Number(planckToDOT(balanceLockedDOT.toString()));
+            const collateralDot = planckToDOT(balanceLockedDOT.toString());
             dispatch(updateCollateralAction(collateralDot));
 
             const totalPolkaSAT = await window.polkaBTC.vaults.getIssuedPolkaBTCAmount(vaultId);
-            const lockedAmountBTC = new Big(satToBTC(totalPolkaSAT.toString())).toString()
-            dispatch(updateLockedBTCAction(Number(lockedAmountBTC)));
+            const lockedAmountBTC = satToBTC(totalPolkaSAT.toString());
+            dispatch(updateLockedBTCAction(lockedAmountBTC));
 
             const totalColateralization = await window.polkaBTC.vaults.getCollateralization(vaultId);
             dispatch(updateCollateralizationAction(totalColateralization));

@@ -9,7 +9,7 @@ import { updateBTCAddressAction, updateCollateralAction } from "../../../common/
 import { planckToDOT, dotToPlanck } from "@interlay/polkabtc";
 
 type RegisterVaultForm = {
-    collateral: number;
+    collateral: string;
     address: string;
 }
 

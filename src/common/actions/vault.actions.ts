@@ -41,12 +41,12 @@ export const updateCollateralizationAction = (collateralization: number): Update
     collateralization,
 });
 
-export const updateCollateralAction = (collateral: number): UpdateCollateral => ({
+export const updateCollateralAction = (collateral: string): UpdateCollateral => ({
     type: UPDATE_COLLATERAL,
     collateral,
 });
 
-export const updateLockedBTCAction = (lockedBTC: number): UpdateLockedBTC => ({
+export const updateLockedBTCAction = (lockedBTC: string): UpdateLockedBTC => ({
     type: UPDATE_LOCKED_BTC,
     lockedBTC,
 });

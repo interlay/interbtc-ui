@@ -274,12 +274,12 @@ export interface UpdateCollateralization {
 
 export interface UpdateCollateral {
     type: typeof UPDATE_COLLATERAL;
-    collateral: number;
+    collateral: string;
 }
 
 export interface UpdateLockedBTC {
     type: typeof UPDATE_LOCKED_BTC;
-    lockedBTC: number;
+    lockedBTC: string;
 }
 
 export type VaultActions =

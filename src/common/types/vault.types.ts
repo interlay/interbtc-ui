@@ -13,6 +13,6 @@ export interface VaultState {
     isReplacmentPending: boolean;
     btcAddress: string;
     collateralization: number;
-    collateral: number;
-    lockedBTC: number;
+    collateral: string;
+    lockedBTC: string;
 }
