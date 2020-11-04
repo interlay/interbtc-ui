@@ -16,7 +16,7 @@ import {
     ADD_VAULT_ISSUES,
     INIT_STATE,
 } from "../types/actions.types";
-import { Issue } from "../types/issue.types";
+import { IssueState } from "../types/issue.types";
 
 const initialState = {
     address: "",
@@ -33,7 +33,7 @@ const initialState = {
     vaultIssues: [],
 };
 
-export const issueReducer = (state: Issue = initialState, action: IssueActions): Issue => {
+export const issueReducer = (state: IssueState = initialState, action: IssueActions): IssueState => {
     switch (action.type) {
         case CHANGE_ADDRESS:
             return { ...state, address: action.address };

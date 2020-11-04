@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import { updateBTCAddressAction } from "../../../common/actions/general.actions";
+import { updateBTCAddressAction } from "../../../common/actions/vault.actions";
 
 type UpdateBTCAddressForm = {
     btcAddress: string;
@@ -17,7 +17,7 @@ type UpdateBTCAddressProps = {
 
 export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps){
     const { register, handleSubmit, errors } = useForm<UpdateBTCAddressForm>();
-    const btcAddress = useSelector((state: StoreType) => state.general.btcAddress);
+    const btcAddress = useSelector((state: StoreType) => state.vault.btcAddress);
     const dispatch = useDispatch();
     
     const onSubmit = handleSubmit(async ({ btcAddress }) => {

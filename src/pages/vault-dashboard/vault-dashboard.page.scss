@@ -19,7 +19,7 @@
     }
 
     .vault-dashboard-button{
-        margin-bottom: 1rem;
+        margin: 2rem;
     }
 
     .title{
@@ -102,4 +102,10 @@
 
 .replace-table {
     margin-bottom: 2rem;
+}
+
+.basic-addon {
+    .input-error {
+        margin-top: 0.1rem;
+    }
 }

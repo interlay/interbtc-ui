@@ -20,13 +20,11 @@ export const getInitialState = (): StoreType => {
         general: {
             polkaBtcLoaded: false,
             relayerLoaded: false,
+            vaultClientLoaded: false,
             address: "",
             totalLockedDOT: "",
             totalPolkaBTC: "",
-            btcAddress: "",
-            collateral: 0,
         },
-        prices: { dotBtc: 0, dotUsd: 0 },
         issue: {
             address: "",
             step: "ENTER_BTC_AMOUNT",
@@ -52,9 +50,13 @@ export const getInitialState = (): StoreType => {
             redeemRequests: new Map(),
             vaultRedeems: [],
         },
-        replace: {
+        vault: {
             requests: [],
             isReplacmentPending: false,
+            btcAddress: "",
+            collateralization: 0,
+            collateral: 0,
+            lockedBTC: 0,
         },
     };
     return emptyStore;

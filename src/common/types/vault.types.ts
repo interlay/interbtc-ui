@@ -8,7 +8,11 @@ export interface VaultReplaceRequest {
     status: string;
 }
 
-export interface Replace {
+export interface VaultState {
     requests: VaultReplaceRequest[];
     isReplacmentPending: boolean;
+    btcAddress: string;
+    collateralization: number;
+    collateral: number;
+    lockedBTC: number;
 }

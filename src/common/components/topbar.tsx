@@ -13,6 +13,7 @@ type TopbarProps = {
 
 export default function Topbar(props: TopbarProps): ReactElement {
     const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
+    const vaultClientLoaded = useSelector((state: StoreType) => state.general.vaultClientLoaded);
     const [isRelayerConnected, setIsRelayerConnected] = useState(false);
     const [isVaultConnected, setIsVaultConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -29,7 +30,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
 
         };
         checkIsConnected();
-    }, [relayerLoaded]);
+    }, [relayerLoaded, vaultClientLoaded]);
 
     return (
         <Navbar bg="light" expand="lg" className="border-bottom shadow-sm">
@@ -56,8 +57,8 @@ export default function Topbar(props: TopbarProps): ReactElement {
                         Dashboard
                     </Link>
                     {isVaultConnected && (
-                        <Link className="nav-link" to="/vault-dashboard">
-                            Vault Dashboard
+                        <Link className="nav-link" to="/vault">
+                            Vault
                         </Link>
                     )}
                     {isRelayerConnected && (

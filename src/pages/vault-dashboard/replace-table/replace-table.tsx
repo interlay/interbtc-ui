@@ -1,10 +1,10 @@
 import React, { ReactElement, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import { addReplaceRequestsAction } from "../../../common/actions/replace.actions";
+import { addReplaceRequestsAction } from "../../../common/actions/vault.actions";
 import { Button } from "react-bootstrap";
-import { Vault, ReplaceRequest } from "@interlay/polkabtc/build/interfaces/default";
 import { requestsToVaultReplaceRequests } from "../../../common/utils/utils";
+import { satToBTC, planckToDOT } from "@interlay/polkabtc";
 
 
 type ReplaceTableProps = {
@@ -14,24 +14,20 @@ type ReplaceTableProps = {
 export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const dispatch = useDispatch();
-    const replaceRequests = useSelector((state: StoreType) => state.replace.requests);
+    const replaceRequests = useSelector((state: StoreType) => state.vault.requests);
 
     useEffect(() => {
         const fetchData = async () => {
             if(!polkaBtcLoaded) return;
 
-            let list = (await window.polkaBTC.vaults.list()) as Vault[];
-            let replaceRequests: ReplaceRequest[]= [];
-            list.forEach(async (vault) => {
-                const vaultId = window.polkaBTC.api.createType("AccountId",vault.id.toHuman());
-                const requestsMap = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
-                const requests = requestsMap.get(vaultId);
-                if(!requests) return;
-                replaceRequests = [...replaceRequests, ...requests];
-            });
-            dispatch(addReplaceRequestsAction(requestsToVaultReplaceRequests(replaceRequests)));
-
+            const accountId = await window.vaultClient.getAccountId();    
+            const vaultId = window.polkaBTC.api.createType("AccountId",accountId);         
             
+            const requestsMap = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
+            const requests = requestsMap.get(vaultId);
+            if(!requests) return;
+
+            dispatch(addReplaceRequestsAction(requestsToVaultReplaceRequests(requests)));
         };
         fetchData();
     }, [polkaBtcLoaded, dispatch]);
@@ -45,16 +41,6 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
                     </div>
                 </div>
             </div>
-            <div className="row">
-                <div className="col-12">
-                    <Button
-                        variant="outline-danger"
-                        className="vault-dashboard-button"
-                        onClick={() => props.openModal(true)}>
-                        Replace My Vault
-                    </Button>
-                </div>
-            </div>
             <div className="row justify-content-center">
                 <div className="col-12">
                     <div className="table-wrapper">
@@ -64,7 +50,7 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
                                     <th>Id</th>
                                     <th>Timestamp</th>
                                     <th>User</th>
-                                    <th>BTC Address(es)</th>
+                                    <th>BTC Address</th>
                                     <th>PolkaBTC</th>
                                     <th>LockedDOT</th>
                                     <th>Status</th>
@@ -78,8 +64,8 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
                                             <td>{redeem.timestamp}</td>
                                             <td>{redeem.vault}</td>
                                             <td>{redeem.btcAddress}</td>
-                                            <td>{redeem.polkaBTC}</td>
-                                            <td>{redeem.lockedDOT}</td>
+                                            <td>{satToBTC(redeem.polkaBTC)}</td>
+                                            <td>{planckToDOT(redeem.lockedDOT)}</td>
                                             <td>{redeem.status}</td>
                                         </tr>
                                     );
@@ -87,6 +73,17 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-12">
+                    { <Button
+                        variant="outline-danger"
+                        className="vault-dashboard-button"
+                        onClick={() => props.openModal(true)}>
+                        Replace My Vault
+                    </Button>
+                    }
                 </div>
             </div>
         </div>

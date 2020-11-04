@@ -8,7 +8,7 @@ export interface RedeemRequest {
     completed: boolean;
 }
 
-export interface Redeem {
+export interface RedeemState {
     address: string;
     step: string;
     amountPolkaBTC: string;

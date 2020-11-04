@@ -10,7 +10,7 @@ import {
     RedeemActions,
     ADD_REDEEM_REQUEST,
 } from "../types/actions.types";
-import { Redeem } from "../types/redeem.types";
+import { RedeemState } from "../types/redeem.types";
 
 const initialState = {
     address: "",
@@ -24,7 +24,7 @@ const initialState = {
     vaultRedeems: [],
 };
 
-export const redeemReducer = (state: Redeem = initialState, action: RedeemActions): Redeem => {
+export const redeemReducer = (state: RedeemState = initialState, action: RedeemActions): RedeemState => {
     switch (action.type) {
         case CHANGE_ADDRESS:
             return { ...state, address: action.address };

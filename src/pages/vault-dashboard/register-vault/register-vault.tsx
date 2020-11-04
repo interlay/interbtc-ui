@@ -5,7 +5,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { BTC_ADDRESS_TESTNET_REGEX } from "../../../constants";
 import { useDispatch } from "react-redux";
-import { updateBTCAddressAction, updateCollateralAction } from "../../../common/actions/general.actions";
+import { updateBTCAddressAction, updateCollateralAction } from "../../../common/actions/vault.actions";
+import { planckToDOT, dotToPlanck } from "@interlay/polkabtc";
 
 type RegisterVaultForm = {
     collateral: number;
@@ -25,9 +26,16 @@ export default function RegisterVaultModal(props: RegisterVaultProps){
     const onSubmit = handleSubmit(async ({ collateral, address }) => {
         try {
             setIsPending(true);
-            await window.vaultClient.registerVault(collateral,address);
+            await window.vaultClient.registerVault(Number(dotToPlanck(collateral.toString())),address);
+
+            const accountId = await window.vaultClient.getAccountId();    
+            const vaultId = window.polkaBTC.api.createType("AccountId",accountId);
+            const collateralPlanck = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
+            const collateralDot = Number(planckToDOT(collateralPlanck.toString()));
+
             dispatch(updateBTCAddressAction(address));
-            dispatch(updateCollateralAction(collateral));
+            dispatch(updateCollateralAction(collateralDot + collateral));
+
             toast.success("Successfully registered");
             props.onClose();
             setIsPending(false);
@@ -45,15 +53,22 @@ export default function RegisterVaultModal(props: RegisterVaultProps){
                 <Modal.Body>
                     <div className="row">
                         <div className="col-12">Collateral</div>
-                        <div className="col-12">
-                            <input
-                                name="collateral"
-                                type="number"
-                                className={"custom-input" + (errors.collateral ? " error-borders" : "")}
-                                ref={register({
-                                    required: true,
-                                })}
-                            ></input>
+                        <div className="col-12 basic-addon">
+                            <div className="input-group">
+                                <input
+                                    name="collateral"
+                                    type="number"
+                                    className={"form-control custom-input" + (errors.collateral ? " error-borders" : "")}
+                                    aria-describedby="basic-addon2" 
+
+                                    ref={register({
+                                        required: true,
+                                    })}
+                                ></input>
+                                <div className="input-group-append">
+                                    <span className="input-group-text" id="basic-addon2">DOT</span>
+                                </div>
+                            </div>
                             {errors.collateral && (
                                 <div className="input-error">
                                     {errors.collateral.type === "required" ? 

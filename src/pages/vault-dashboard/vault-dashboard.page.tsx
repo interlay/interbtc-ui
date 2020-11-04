@@ -5,11 +5,17 @@ import UpdateBTCAddressModal from "./update-btc-address/update-btc-address";
 import RequestReplacementModal from "./request-replacement/request-replacement";
 import { Button } from "react-bootstrap";
 import { StoreType } from "../../common/types/util.types";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import IssueTable from "./issue-table/issue-table";
 import RedeemTable from "./redeem-table/redeem-table";
 import ReplaceTable from "./replace-table/replace-table";
-
+import { satToBTC, planckToDOT } from "@interlay/polkabtc";
+import { 
+    updateBTCAddressAction, 
+    updateCollateralizationAction, 
+    updateCollateralAction,
+    updateLockedBTCAction
+} from "../../common/actions/vault.actions"; 
 import "./vault-dashboard.page.scss";
 
 export default function VaultDashboardPage(){
@@ -18,12 +24,13 @@ export default function VaultDashboardPage(){
     const [showUpdateBTCAddressModal, setShowUpdateBTCAddressModal] = useState(false);
     const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const btcAddress = useSelector((state: StoreType) => state.general.btcAddress);
-    const collateral = useSelector((state: StoreType) => state.general.collateral);
-    const totalLockedDOT = useSelector((state: StoreType) => state.general.totalLockedDOT);
-    const [btcLocked, setBtcLocked] = useState("0");
+    const vaultClientLoaded = useSelector((state: StoreType) => state.general.vaultClientLoaded);
+    const btcAddress = useSelector((state: StoreType) => state.vault.btcAddress);
+    const collateralization = useSelector((state: StoreType) => state.vault.collateralization);
+    const collateral = useSelector((state: StoreType) => state.vault.collateral);
+    const lockedBTC = useSelector((state: StoreType) => state.vault.lockedBTC);
     const [feesEarned] = useState("0");
-    const [collateralization, setCollateralization] = useState(0);
+    const dispatch = useDispatch();
 
 
     const closeRegisterVaultModal = () => setShowRegisterVaultModal(false);
@@ -33,16 +40,28 @@ export default function VaultDashboardPage(){
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!polkaBtcLoaded) return;
+            if (!polkaBtcLoaded || !vaultClientLoaded) return;
 
-            const totalBTC = await window.polkaBTC.vaults.getTotalIssuedPolkaBTCAmount();
-            setBtcLocked(totalBTC.toString());
+            const accountId = await window.vaultClient.getAccountId();    
+            const vaultId = window.polkaBTC.api.createType("AccountId",accountId);
+            const vault = await window.polkaBTC.vaults.get(vaultId);
 
-            const totalColateralization = await window.polkaBTC.vaults.getTotalCollateralization();
-            setCollateralization(totalColateralization);
+            dispatch(updateBTCAddressAction(vault.btc_address.toString()));
+
+            const balanceLockedDOT = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
+            const collateralDot = Number(planckToDOT(balanceLockedDOT.toString()));
+            dispatch(updateCollateralAction(collateralDot));
+
+            const totalPolkaSAT = await window.polkaBTC.vaults.getIssuedPolkaBTCAmount(vaultId);
+            const lockedAmountBTC = new Big(satToBTC(totalPolkaSAT.toString())).toString()
+            dispatch(updateLockedBTCAction(Number(lockedAmountBTC)));
+
+            const totalColateralization = await window.polkaBTC.vaults.getCollateralization(vaultId);
+            dispatch(updateCollateralizationAction(totalColateralization));
+            
         };
         fetchData();
-    },[polkaBtcLoaded]);
+    },[polkaBtcLoaded, vaultClientLoaded, dispatch]);
 
     return <div className="vault-dashboard-page container-fluid white-background">
         <div className="vault-container">
@@ -53,12 +72,12 @@ export default function VaultDashboardPage(){
             </div>
             <div className="row">
                 <div className="col-12">
-                    <div className="stats">Dot locked: {totalLockedDOT} DOT</div>
+                    <div className="stats">Locked: {collateral} DOT</div>
                 </div>
             </div>
             <div className="row">
                 <div className="col-12">
-                    <div className="stats">BTC locked: {btcLocked}</div>
+                    <div className="stats">Locked: {lockedBTC} BTC</div>
                 </div>
             </div>
             <div className="row">
@@ -69,27 +88,34 @@ export default function VaultDashboardPage(){
             <div className="row">
                 <div className="col-12">
                     <div className="stats btc-address-header">
-                        BTC Address: {btcAddress} 
-                        &nbsp;<i className="fa fa-edit" onClick={() => setShowUpdateBTCAddressModal(true)}></i>
+                        BTC Address: &nbsp;&nbsp;{btcAddress} 
+                        &nbsp;&nbsp;&nbsp;<i className="fa fa-edit" onClick={() => setShowUpdateBTCAddressModal(true)}></i>
                     </div>
                 </div>
             </div>
             <div className="row">
                 <div className="col-12">
                     <div className="stats">
-                        Collateral: &nbsp;&nbsp;{collateral} DOT  for  {"2 BTC"} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                        {collateralization}% Collateralization
-                        &nbsp;<i className="fa fa-edit" onClick={() => setShowUpdateCollateralModal(true)}></i>
+                        Collateral: &nbsp; {collateral} DOT  for  {lockedBTC + " BTC"}
+                        &nbsp;&nbsp;&nbsp;<i className="fa fa-edit" onClick={() => setShowUpdateCollateralModal(true)}></i>
                     </div>
                 </div>
             </div>
-            <Button
-                variant="outline-success"
-                className="register-vault-dashboard"
-                onClick={() => setShowRegisterVaultModal(true)}
-            >
-                Register
-            </Button>
+            <div className="row">
+                <div className="col-12">
+                    <div className="stats">
+                        Collateralization: &nbsp;{(collateralization * 100).toFixed(3)}%
+                    </div>
+                </div>
+            </div>
+            {collateralization === 0 && 
+                <Button
+                    variant="outline-success"
+                    className="register-vault-dashboard"
+                    onClick={() => setShowRegisterVaultModal(true)}>
+                    Register
+                </Button>
+            }
             <IssueTable></IssueTable>
             <RedeemTable></RedeemTable>
             <ReplaceTable openModal={setShowRequestReplacementModal}></ReplaceTable>

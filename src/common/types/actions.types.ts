@@ -1,17 +1,16 @@
 import { IssueRequest, VaultIssue } from "./issue.types";
 import { RedeemRequest, VaultRedeem } from "./redeem.types";
-import { VaultReplaceRequest } from "./replace.types";
-import { Prices, StoreType } from "./util.types";
+import { VaultReplaceRequest } from "./vault.types";
+import { StoreType } from "./util.types";
 
 // GENERAL ACTIONS
 
 export const IS_POLKA_BTC_LOADED = "IS_POLKA_BTC_LOADED";
 export const IS_STAKED_RELAYER_LOADED = "IS_STAKED_RELAYER_LOADED";
+export const IS_VAULT_CLIENT_LOADED = "IS_VAULT_CLIENT_LOADED";
 export const INIT_STATE = "INIT_STATE";
 export const CHANGE_ADDRESS = "CHANGE_ADDRESS";
 export const SET_TOTAL_ISSUED_AND_TOTAL_LOCKED = "SET_TOTAL_ISSUED_AND_TOTAL_LOCKED";
-export const UPDATE_BTC_ADDRESS = "UPDATE_BTC_ADDRESS";
-export const UPDATE_COLLATERAL = "UPDATE_COLLATERAL";
 
 export interface IsPolkaBtcLoaded {
     type: typeof IS_POLKA_BTC_LOADED;
@@ -23,6 +22,11 @@ export interface IsStakedRelayerLoaded {
     isLoaded: boolean;
 }
 
+export interface IsVaultClientLoaded {
+    type: typeof IS_VAULT_CLIENT_LOADED;
+    isLoaded: boolean;
+}
+
 export interface ChangeAddress {
     type: typeof CHANGE_ADDRESS;
     address: string;
@@ -31,16 +35,6 @@ export interface ChangeAddress {
 export interface InitState {
     type: typeof INIT_STATE;
     state: StoreType;
-}
-
-export interface UpdateBTCAddress {
-    type: typeof UPDATE_BTC_ADDRESS;
-    btcAddress: string;
-}
-
-export interface UpdateCollateral {
-    type: typeof UPDATE_COLLATERAL;
-    collateral: number;
 }
 
 export interface SetTotalIssuedAndTotalLocked {
@@ -55,19 +49,7 @@ export type GeneralActions =
     | ChangeAddress
     | InitState
     | SetTotalIssuedAndTotalLocked
-    | UpdateCollateral
-    | UpdateBTCAddress;
-
-// PRICES
-
-export const UPDATE_PRICES = "UPDATE_PRICES";
-
-export interface UpdatePrices {
-    type: typeof UPDATE_PRICES;
-    prices: Prices;
-}
-
-export type PricesActions = UpdatePrices;
+    | IsVaultClientLoaded;
 
 // REDEEM
 
@@ -255,11 +237,15 @@ export type IssueActions =
     | InitState
     | AddVaultIssues;
 
-// REPLACE
+// VAULT
 
 export const ADD_REPLACE_REQUESTS = "ADD_REPLACE_REQUESTS";
 export const ADD_REPLACE_REQUEST = "ADD_REPLACE_REQUEST";
 export const REQUEST_REPLACMENT_PENDING = "REQUEST_REPLACMENT_PENDING";
+export const UPDATE_BTC_ADDRESS = "UPDATE_BTC_ADDRESS";
+export const UPDATE_COLLATERALIZATION = "UPDATE_COLLATERALIZATION";
+export const UPDATE_COLLATERAL = "UPDATE_COLLATERAL";
+export const UPDATE_LOCKED_BTC = "UPDATE_LOCKED_BTC";
 
 export interface AddReplaceRequests {
     type: typeof ADD_REPLACE_REQUESTS;
@@ -276,4 +262,31 @@ export interface RequestReplacmentPending {
     isReplacmentPending: boolean;
 }
 
-export type ReplaceActions = AddReplaceRequests | AddReplaceRequest | RequestReplacmentPending;
+export interface UpdateBTCAddress {
+    type: typeof UPDATE_BTC_ADDRESS;
+    btcAddress: string;
+}
+
+export interface UpdateCollateralization {
+    type: typeof UPDATE_COLLATERALIZATION;
+    collateralization: number;
+}
+
+export interface UpdateCollateral {
+    type: typeof UPDATE_COLLATERAL;
+    collateral: number;
+}
+
+export interface UpdateLockedBTC {
+    type: typeof UPDATE_LOCKED_BTC;
+    lockedBTC: number;
+}
+
+export type VaultActions =
+    | AddReplaceRequests
+    | AddReplaceRequest
+    | RequestReplacmentPending
+    | UpdateBTCAddress
+    | UpdateCollateralization
+    | UpdateCollateral
+    | UpdateLockedBTC;

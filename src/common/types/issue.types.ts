@@ -25,7 +25,7 @@ export interface VaultIssue {
     status: string;
 }
 
-export interface Issue {
+export interface IssueState {
     address: string;
     step: string;
     amountBTC: string;

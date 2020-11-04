@@ -3,7 +3,7 @@ import { Modal, Button } from "react-bootstrap";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { requestReplacmentPendingAction } from "../../../common/actions/replace.actions";
+import { requestReplacmentPendingAction } from "../../../common/actions/vault.actions";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 
@@ -19,7 +19,9 @@ type RequestReplacementProps = {
 export default function RequestReplacementModal(props: RequestReplacementProps){
     const { register, handleSubmit, errors } = useForm<RequestReplacementForm>();
     const dispatch = useDispatch();
-    const isPending = useSelector((state: StoreType) => state.replace.isReplacmentPending);
+    const isPending = useSelector((state: StoreType) => state.vault.isReplacmentPending);
+    const lockedDot = useSelector((state: StoreType) => state.vault.collateral);
+    const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
     
     const onSubmit = handleSubmit(async ({ amount }) => {
         try {
@@ -49,10 +51,10 @@ export default function RequestReplacementModal(props: RequestReplacementProps){
                             Your currently have:
                         </div>
                         <div className="col-12">
-                            Locked DOT: 23
+                            Locked: {lockedDot} DOT
                         </div>
                         <div className="col-12 vault-empty-space">
-                            Locked BTC: 12
+                            Locked: {lockedBtc} BTC
                         </div>
                         <div className="col-12 vault-empty-space">
                             Replace amount

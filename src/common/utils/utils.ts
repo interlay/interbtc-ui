@@ -1,7 +1,7 @@
 import { RedeemRequest, VaultRedeem } from "../types/redeem.types";
 import { IssueRequest, VaultIssue } from "../types/issue.types";
 import { RedeemRequest as PolkaRedeemRequest, ReplaceRequest } from "@interlay/polkabtc/build/interfaces/default";
-import { VaultReplaceRequest } from "../types/replace.types";
+import { VaultReplaceRequest } from "../types/vault.types";
 import { H256 } from "@polkadot/types/interfaces";
 import { IssueRequest as ParachainIssueRequest } from "@interlay/polkabtc/build/interfaces/default";
 

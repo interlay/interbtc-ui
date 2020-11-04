@@ -4,15 +4,13 @@ import {
     CHANGE_ADDRESS,
     INIT_STATE,
     SET_TOTAL_ISSUED_AND_TOTAL_LOCKED,
-    UPDATE_BTC_ADDRESS,
-    UPDATE_COLLATERAL,
+    IS_VAULT_CLIENT_LOADED,
     IsPolkaBtcLoaded,
     IsStakedRelayerLoaded,
     ChangeAddress,
     InitState,
     SetTotalIssuedAndTotalLocked,
-    UpdateBTCAddress,
-    UpdateCollateral,
+    IsVaultClientLoaded,
 } from "../types/actions.types";
 import { StoreType } from "../types/util.types";
 
@@ -26,6 +24,11 @@ export const isStakedRelayerLoaded = (isLoaded = false): IsStakedRelayerLoaded =
     isLoaded,
 });
 
+export const isVaultClientLoaded = (isLoaded = false): IsVaultClientLoaded => ({
+    type: IS_VAULT_CLIENT_LOADED,
+    isLoaded,
+});
+
 export const changeAddressAction = (address: string): ChangeAddress => ({
     type: CHANGE_ADDRESS,
     address,
@@ -34,16 +37,6 @@ export const changeAddressAction = (address: string): ChangeAddress => ({
 export const initializeState = (state: StoreType): InitState => ({
     type: INIT_STATE,
     state,
-});
-
-export const updateBTCAddressAction = (btcAddress: string): UpdateBTCAddress => ({
-    type: UPDATE_BTC_ADDRESS,
-    btcAddress,
-});
-
-export const updateCollateralAction = (collateral: number): UpdateCollateral => ({
-    type: UPDATE_COLLATERAL,
-    collateral,
 });
 
 export const setTotalIssuedAndTotalLockedAction = (

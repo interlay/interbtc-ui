@@ -12,7 +12,8 @@ import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-d
 import AccountSelector from "./pages/account-selector";
 import { 
     isPolkaBtcLoaded, 
-    isStakedRelayerLoaded, 
+    isStakedRelayerLoaded,
+    isVaultClientLoaded,
     changeAddressAction, 
     setTotalIssuedAndTotalLockedAction 
 } from "./common/actions/general.actions";
@@ -31,7 +32,6 @@ import Topbar from "./common/components/topbar";
 import Footer from "./common/components/footer/footer";
 import LandingPage from "./pages/landing/landing.page";
 import IssuePage from "./pages/issue/issue.page";
-import VaultPage from "./pages/vault.page";
 import RedeemPage from "./pages/redeem/redeem.page";
 import AboutPage from "./pages/about.page";
 import DashboardPage from "./pages/dashboard/dashboard.page";
@@ -90,7 +90,8 @@ export default class App extends Component<{}, AppState> {
         store.dispatch(isStakedRelayerLoaded(true));
 
         window.vaultClient = new VaultClient(constants.VAULT_CLIENT_URL);
-        
+        store.dispatch(isVaultClientLoaded(true));
+
         window.polkaBTC = await createPolkabtcAPI(constants.PARACHAIN_URL);
         
         store.dispatch(isPolkaBtcLoaded(true));
@@ -164,17 +165,12 @@ export default class App extends Component<{}, AppState> {
                                 </Route>
                             )}
                             {!constants.STATIC_PAGE_ONLY && (
-                                <Route path="/vault">
-                                    <VaultPage {...this.state} />
-                                </Route>
-                            )}
-                            {!constants.STATIC_PAGE_ONLY && (
                                 <Route path="/dashboard">
                                     <DashboardPage />
                                 </Route>
                             )}
                             {!constants.STATIC_PAGE_ONLY && (
-                                <Route path="/vault-dashboard">
+                                <Route path="/vault">
                                     <VaultDashboardPage/>
                                 </Route>
                             )}
