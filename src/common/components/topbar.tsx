@@ -20,7 +20,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
         if (!relayerLoaded) return;
 
         const checkIsConnected = async () => {
-            const connected = await window.relayer.connected();
+            const connected = await window.relayer.isConnected();
             setIsLoading(false);
             setIsConnected(connected);
         };
