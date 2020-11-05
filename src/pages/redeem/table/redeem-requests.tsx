@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-
+import { RedeemRequest } from "../../../common/types/redeem.types";
 import { Table } from "react-bootstrap";
 import { formatDateTime, remove0x, shortAddress, shortTxId } from "../../../common/utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
@@ -11,11 +11,18 @@ export default function RedeemRequests() {
     const address = useSelector((state: StoreType) => state.general.address);
     const cachedRedeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
 
-    const redeemRequests = useRef(cachedRedeemRequests);
-
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
+
+            const accountId = window.polkaBTC.api.createType("AccountId", address);
+            const redeemRequests: RedeemRequest[] = [];
+            const redeemRequestMap = await window.polkaBTC.redeem.mapForUser(accountId);
+            for (const [key, value] of issueRequestMap) {
+                const issueRequest = parachainToUIIssueRequest(key, value);
+                issueRequests.push(issueRequest);
+            }
+            return issueRequests;
 
             redeemRequests.current = await getUserIssueRequests(address);
             if (!issueRequests) return;

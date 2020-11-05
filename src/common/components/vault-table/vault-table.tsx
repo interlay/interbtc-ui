@@ -1,28 +1,18 @@
 import React, { ReactElement, useState, useEffect } from "react";
 import { StoreType } from "../../types/util.types";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Vault } from "../../types/util.types";
-import { fetchPrices } from "../../api/api";
 import * as constants from "../../../constants";
 import * as bitcoin from "bitcoinjs-lib";
 import { planckToDOT, satToBTC } from "@interlay/polkabtc";
 
 export default function VaultTable(): ReactElement {
     const [vaults, setVaults] = useState<Array<Vault>>([]);
-    const prices = useSelector((state: StoreType) => state.prices);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchData = async () => {
-            fetchPrices(dispatch);
-        };
-        fetchData();
-    }, [dispatch]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!polkaBtcLoaded || !prices) return;
+            if (!polkaBtcLoaded) return;
 
             let vaults = await window.polkaBTC.vaults.list();
             let vaultsList: Vault[] = [];
@@ -66,7 +56,7 @@ export default function VaultTable(): ReactElement {
             });
         };
         fetchData();
-    }, [polkaBtcLoaded, prices]);
+    }, [polkaBtcLoaded]);
 
     const checkVaultStatus = (status: string, collateralization: number): string => {
         if (status === constants.VAULT_STATUS_THEFT) {

@@ -1,15 +1,16 @@
 import { toast } from "react-toastify";
 import { remove0x } from "./utils";
 import { Dispatch } from "redux";
-import { IssueRequest } from "../../common/types/issue.types";
+import { IssueRequest } from "../types/issue.types";
 import { IssueActions } from "../types/actions.types";
-import { updateIssueRequestAction, AddTransactionListenerIssue } from "../actions/issue.actions";
+import { RedeemRequest } from "../types/redeem.types";
+import { updateIssueRequestAction, addTransactionListenerIssue, addTransactionListenerRedeem } from "../actions/issue.actions";
 
 export async function startTransactionWatcherIssue(
     request: IssueRequest,
     dispatch: Dispatch<IssueActions>
 ): Promise<void> {
-    dispatch(AddTransactionListenerIssue(request.id));
+    dispatch(addTransactionListenerIssue(request.id));
     updateTransactionStatusIssue(request, dispatch).then(() => {
         setInterval(() => updateTransactionStatusIssue(request, dispatch), 10_000);
     });
@@ -33,12 +34,10 @@ export async function updateTransactionStatusIssue(
     }
 }
 
-export async function startTransactionWatcherRedeem(
-    request: RedeemRequest,
-    dispatch: Dispatch<IssueActions>
-): Promise<void> {
-    dispatch(AddTransactionListenerIssue(request.id));
-    updateTransactionStatusIssue(request, dispatch).then(() => {
-        setInterval(() => updateTransactionStatusIssue(request, dispatch), 10_000);
-    });
+export async function startTransactionWatcherRedeem(request: RedeemRequest, dispatch: Dispatch<IssueActions>): 
+    Promise<void> {
+    dispatch(addTransactionListenerRedeem(request.id));
+    // updateTransactionStatusIssue(request, dispatch).then(() => {
+    //     setInterval(() => updateTransactionStatusIssue(request, dispatch), 10_000);
+    // });
 }

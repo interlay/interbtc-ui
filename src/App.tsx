@@ -3,7 +3,7 @@ import { planckToDOT, satToBTC } from "@interlay/polkabtc";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
-import { createPolkabtcAPI, StakedRelayerClient } from "@interlay/polkabtc";
+import { createPolkabtcAPI, StakedRelayerClient, VaultClient } from "@interlay/polkabtc";
 import { Modal } from "react-bootstrap";
 import Big from "big.js";
 
@@ -12,7 +12,8 @@ import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-d
 import AccountSelector from "./pages/account-selector";
 import { 
     isPolkaBtcLoaded, 
-    isStakedRelayerLoaded, 
+    isStakedRelayerLoaded,
+    isVaultClientLoaded,
     changeAddressAction, 
     setTotalIssuedAndTotalLockedAction 
 } from "./common/actions/general.actions";
@@ -31,10 +32,10 @@ import Topbar from "./common/components/topbar";
 import Footer from "./common/components/footer/footer";
 import LandingPage from "./pages/landing/landing.page";
 import IssuePage from "./pages/issue/issue.page";
-import VaultPage from "./pages/vault.page";
 import RedeemPage from "./pages/redeem/redeem.page";
 import AboutPage from "./pages/about.page";
 import DashboardPage from "./pages/dashboard/dashboard.page";
+import VaultDashboardPage from "./pages/vault-dashboard/vault-dashboard.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
 import { configureStore } from "./store";
 
@@ -87,8 +88,12 @@ export default class App extends Component<{}, AppState> {
     async createAPIInstace(): Promise<void> {
         window.relayer = new StakedRelayerClient(constants.STAKED_RELAYER_URL);
         store.dispatch(isStakedRelayerLoaded(true));
-        
+
+        window.vaultClient = new VaultClient(constants.VAULT_CLIENT_URL);
+        store.dispatch(isVaultClientLoaded(true));
+
         window.polkaBTC = await createPolkabtcAPI(constants.PARACHAIN_URL);
+        
         store.dispatch(isPolkaBtcLoaded(true));
     }
 
@@ -160,13 +165,13 @@ export default class App extends Component<{}, AppState> {
                                 </Route>
                             )}
                             {!constants.STATIC_PAGE_ONLY && (
-                                <Route path="/vault">
-                                    <VaultPage {...this.state} />
+                                <Route path="/dashboard">
+                                    <DashboardPage />
                                 </Route>
                             )}
                             {!constants.STATIC_PAGE_ONLY && (
-                                <Route path="/dashboard">
-                                    <DashboardPage />
+                                <Route path="/vault">
+                                    <VaultDashboardPage/>
                                 </Route>
                             )}
                             <Route exact path="/">

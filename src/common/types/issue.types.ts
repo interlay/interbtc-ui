@@ -15,7 +15,17 @@ export interface IssueMap {
     [key: string]: IssueRequest[];
 }
 
-export interface Issue {
+export interface VaultIssue {
+    id: string;
+    timestamp: string;
+    user: string;
+    btcAddress: string;
+    polkaBTC: string;
+    lockedDOT: string;
+    status: string;
+}
+
+export interface IssueState {
     address: string;
     step: string;
     amountBTC: string;
@@ -27,4 +37,5 @@ export interface Issue {
     issueRequests: Map<string, IssueRequest[]>;
     transactionListeners: string[];
     wizardInEditMode: boolean;
+    vaultIssues: VaultIssue[];
 }

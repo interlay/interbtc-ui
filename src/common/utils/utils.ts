@@ -1,7 +1,10 @@
-import { IssueRequest } from "../types/issue.types";
-import { RedeemRequest } from "../types/redeem.types";
+import { RedeemRequest, VaultRedeem } from "../types/redeem.types";
+import { IssueRequest, VaultIssue } from "../types/issue.types";
+import { RedeemRequest as PolkaRedeemRequest, ReplaceRequest } from "@interlay/polkabtc/build/interfaces/default";
+import { VaultReplaceRequest } from "../types/vault.types";
 import { H256 } from "@polkadot/types/interfaces";
 import { IssueRequest as ParachainIssueRequest } from "@interlay/polkabtc/build/interfaces/default";
+import { RedeemRequest as ParachainRedeemRequest } from "@interlay/polkabtc/build/interfaces/default";
 
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;
@@ -78,14 +81,14 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
  * @param id H256, the key of the IssueRequest object in the parachain map storage object
  * @param parachainIssueRequest ParachainIssueRequest
  */
-export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: ParachainIssueRequest): IssueRequest {
+export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: ParachainRedeemRequest): RedeemRequest {
     return {
         id: id.toString(),
-        amountBTC: parachainIssueRequest.amount.toString(),
-        creation: parachainIssueRequest.opentime.toString(),
-        vaultBTCAddress: parachainIssueRequest.vault.toHuman(),
-        btcTxId: parachainIssueRequest.btc_address.toString(),
-        confirmations: 0,
+        amountPolkaBTC: parachainRedeemRequest.amount_polka_btc.toString(),
+        creation: new Date(parachainRedeemRequest.opentime.toString()),
+        vaultBTCAddress: parachainRedeemRequest.btc_address.toString(),
+        btcTxId: parachainRedeemRequest.btcTxId.toString(),
+        confirmations: parachainRedeemRequest.confirmations,
         completed: parachainIssueRequest.completed.isTrue,
     };
 }
@@ -113,4 +116,46 @@ export const mapToArray = (map: Map<string, IssueRequest[] | RedeemRequest[]>): 
         result[key] = value;
     });
     return result;
+};
+
+export const redeemRequestToVaultRedeem = (requests: PolkaRedeemRequest[]): VaultRedeem[] => {
+    return requests.map((request) => {
+        return {
+            id: request.vault.toString(),
+            timestamp: request.opentime.toString(),
+            user: request.redeemer.toString(),
+            btcAddress: request.btc_address.toString(),
+            polkaBTC: request.amount_polka_btc.toString(),
+            unlockedDOT: request.amount_dot.toString(),
+            status: "",
+        };
+    });
+};
+
+export const issueRequestToVaultIssue = (requests: ParachainIssueRequest[]): VaultIssue[] => {
+    return requests.map((request) => {
+        return {
+            id: request.vault.toString(),
+            timestamp: request.opentime.toString(),
+            user: request.requester.toString(),
+            btcAddress: request.btc_address.toString(),
+            polkaBTC: request.amount.toString(),
+            lockedDOT: request.griefing_collateral.toString(),
+            status: "",
+        };
+    });
+};
+
+export const requestsToVaultReplaceRequests = (requests: ReplaceRequest[]): VaultReplaceRequest[] => {
+    return requests.map((request) => {
+        return {
+            id: request.old_vault.toString(),
+            timestamp: request.open_time.toHuman(),
+            vault: request.new_vault.toString(),
+            btcAddress: request.btc_address.toString(),
+            polkaBTC: request.amount.toString(),
+            lockedDOT: request.griefing_collateral.toString(),
+            status: "",
+        };
+    });
 };
