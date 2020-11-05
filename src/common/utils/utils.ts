@@ -68,8 +68,8 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
         id: id.toString(),
         amountBTC: parachainIssueRequest.amount.toString(),
         creation: parachainIssueRequest.opentime.toString(),
-        vaultBTCAddress: parachainIssueRequest.vault.toHuman(),
-        btcTxId: parachainIssueRequest.btc_address.toString(),
+        vaultBTCAddress: parachainIssueRequest.btc_address.toString(),
+        btcTxId: "",
         confirmations: 0,
         completed: parachainIssueRequest.completed.isTrue,
     };
