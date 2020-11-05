@@ -1203,10 +1203,10 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@interlay/esplora-btc-api@^0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@interlay/esplora-btc-api/-/esplora-btc-api-0.1.7.tgz#c4e1b419f11bad0636b50241668f6e69d7fd789a"
-  integrity sha512-NhExBCONoxtOtAoeoVIe++ySfssztta7WtcQ9kVMHLaKtzCHsoseIPMb2cnxXqah3Uund9i0KfF7Edz02VBtYg==
+"@interlay/esplora-btc-api@^0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@interlay/esplora-btc-api/-/esplora-btc-api-0.3.3.tgz#d9895a1d30c2cd0d7c2d02988e1a3415d605d188"
+  integrity sha512-8+AZBr5Rf1+4NKMaSJV25lKVMJ3vaDcPHsNPxnLm29E+TLwi3deVcfsBnEnyFCVNeV/HnTdDwcdZMXxQYGaQtg==
   dependencies:
     "@types/node" "^14.0.27"
     axios "^0.19.2"
@@ -1217,12 +1217,12 @@
   resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.1.9.tgz#4773373972966e6de7efffe1fd34192cc1b3afe5"
   integrity sha512-v9pFbppbvgxKaYNzX+xVCPb7j1QC+Qu0flcSzABF3puCDUfxAJfbmbmMp/OQgQOSje7eiEkyfG+lqL2Qx4OyKQ==
 
-"@interlay/polkabtc@^0.3.2":
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.3.4.tgz#20d47cb84f0228b7b1ece22e01deff8eaf3ca5b0"
-  integrity sha512-/SUGi3NF3TsZISu52N1iK5FyLZUXIaN6B0k5WVqev4DJFME4//q/1eOzCvZzT/NzQxyLiF2mMgka0JrEp9iZxA==
+"@interlay/polkabtc@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.4.0.tgz#ab12bbb270499cd8ef81ef6e90c472fd4a575c4a"
+  integrity sha512-rsp8pREdZhIA34DpAGMOg7ofeC5ymKHdNA2TSo2JsAopqKG5FgOZV8za6WkMzwWcRlo2nTOxOAP092GF3VVkiQ==
   dependencies:
-    "@interlay/esplora-btc-api" "^0.1.7"
+    "@interlay/esplora-btc-api" "^0.3.3"
     "@interlay/polkabtc-types" "^0.1.9"
     "@types/big.js" "^4.0.5"
     big.js "^6.0.1"

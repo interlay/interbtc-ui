@@ -6,27 +6,32 @@ import { toast } from "react-toastify";
 import { requestReplacmentPendingAction } from "../../../common/actions/vault.actions";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
+import { btcToSat } from "@interlay/polkabtc";
 
 type RequestReplacementForm = {
     amount: number;
-}
+};
 
 type RequestReplacementProps = {
     onClose: () => void;
     show: boolean;
 };
 
-export default function RequestReplacementModal(props: RequestReplacementProps){
+export default function RequestReplacementModal(props: RequestReplacementProps) {
     const { register, handleSubmit, errors } = useForm<RequestReplacementForm>();
     const dispatch = useDispatch();
     const isPending = useSelector((state: StoreType) => state.vault.isReplacmentPending);
     const lockedDot = useSelector((state: StoreType) => state.vault.collateral);
     const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
-    
+
     const onSubmit = handleSubmit(async ({ amount }) => {
         try {
             dispatch(requestReplacmentPendingAction(true));
-            await window.vaultClient.requestReplace(amount,100);
+            const amountAsSatoshis = btcToSat(amount.toString());
+            if (amountAsSatoshis === undefined) {
+                throw new Error("Amount to convert is less than 1 sat.");
+            }
+            await window.vaultClient.requestReplace(amountAsSatoshis, "100");
             toast.success("Replacment request is submitted");
             props.onClose();
             dispatch(requestReplacmentPendingAction(false));
@@ -44,39 +49,34 @@ export default function RequestReplacementModal(props: RequestReplacementProps){
                 <Modal.Body>
                     <div className="row">
                         <div className="col-12 request-header">
-                            You are requesting that your vault is replaced by other vaults in the system. 
-                            If this is successful, you can withdraw your collateral.
+                            You are requesting that your vault is replaced by other vaults in the system. If this is
+                            successful, you can withdraw your collateral.
                         </div>
-                        <div className="col-12">
-                            Your currently have:
-                        </div>
-                        <div className="col-12">
-                            Locked: {lockedDot} DOT
-                        </div>
-                        <div className="col-12 vault-empty-space">
-                            Locked: {lockedBtc} BTC
-                        </div>
-                        <div className="col-12 vault-empty-space">
-                            Replace amount
-                        </div>
+                        <div className="col-12">Your currently have:</div>
+                        <div className="col-12">Locked: {lockedDot} DOT</div>
+                        <div className="col-12 vault-empty-space">Locked: {lockedBtc} BTC</div>
+                        <div className="col-12 vault-empty-space">Replace amount</div>
                         <div className="col-12">
                             <div className="input-group">
                                 <input
                                     name="amount"
                                     type="number"
                                     className={"form-control custom-input" + (errors.amount ? " error-borders" : "")}
-                                    aria-describedby="basic-addon2" 
+                                    aria-describedby="basic-addon2"
                                     ref={register({
                                         required: true,
                                     })}
                                 ></input>
                                 <div className="input-group-append">
-                                    <span className="input-group-text" id="basic-addon2">PolkaBTC</span>
+                                    <span className="input-group-text" id="basic-addon2">
+                                        PolkaBTC
+                                    </span>
                                 </div>
                                 {errors.amount && (
                                     <div className="input-error">
-                                        {errors.amount.type === "required" ? 
-                                        "Amount is required" : errors.amount.message}
+                                        {errors.amount.type === "required"
+                                            ? "Amount is required"
+                                            : errors.amount.message}
                                     </div>
                                 )}
                             </div>
@@ -87,11 +87,7 @@ export default function RequestReplacementModal(props: RequestReplacementProps){
                     <Button variant="secondary" onClick={props.onClose}>
                         Cancel
                     </Button>
-                    <ButtonMaybePending
-                        variant="outline-danger" 
-                        type="submit"
-                        isPending={isPending}
-                        >
+                    <ButtonMaybePending variant="outline-danger" type="submit" isPending={isPending}>
                         Request
                     </ButtonMaybePending>
                 </Modal.Footer>

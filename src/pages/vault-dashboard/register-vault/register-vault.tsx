@@ -11,14 +11,14 @@ import { planckToDOT, dotToPlanck } from "@interlay/polkabtc";
 type RegisterVaultForm = {
     collateral: string;
     address: string;
-}
+};
 
 type RegisterVaultProps = {
     onClose: () => void;
     show: boolean;
 };
 
-export default function RegisterVaultModal(props: RegisterVaultProps){
+export default function RegisterVaultModal(props: RegisterVaultProps) {
     const { register, handleSubmit, errors } = useForm<RegisterVaultForm>();
     const dispatch = useDispatch();
     const [isPending, setIsPending] = useState(false);
@@ -26,10 +26,14 @@ export default function RegisterVaultModal(props: RegisterVaultProps){
     const onSubmit = handleSubmit(async ({ collateral, address }) => {
         try {
             setIsPending(true);
-            await window.vaultClient.registerVault(Number(dotToPlanck(collateral.toString())),address);
+            const collateralAsPlanck = dotToPlanck(collateral.toString());
+            if (collateralAsPlanck === undefined) {
+                throw new Error("Collateral is smaller than 1 planck");
+            }
+            await window.vaultClient.registerVault(collateralAsPlanck, address);
 
-            const accountId = await window.vaultClient.getAccountId();    
-            const vaultId = window.polkaBTC.api.createType("AccountId",accountId);
+            const accountId = await window.vaultClient.getAccountId();
+            const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
             const collateralPlanck = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
             const collateralDot = Number(planckToDOT(collateralPlanck.toString()));
 
@@ -58,21 +62,25 @@ export default function RegisterVaultModal(props: RegisterVaultProps){
                                 <input
                                     name="collateral"
                                     type="number"
-                                    className={"form-control custom-input" + (errors.collateral ? " error-borders" : "")}
-                                    aria-describedby="basic-addon2" 
-
+                                    className={
+                                        "form-control custom-input" + (errors.collateral ? " error-borders" : "")
+                                    }
+                                    aria-describedby="basic-addon2"
                                     ref={register({
                                         required: true,
                                     })}
                                 ></input>
                                 <div className="input-group-append">
-                                    <span className="input-group-text" id="basic-addon2">DOT</span>
+                                    <span className="input-group-text" id="basic-addon2">
+                                        DOT
+                                    </span>
                                 </div>
                             </div>
                             {errors.collateral && (
                                 <div className="input-error">
-                                    {errors.collateral.type === "required" ? 
-                                    "Collateral is required" : errors.collateral.message}
+                                    {errors.collateral.type === "required"
+                                        ? "Collateral is required"
+                                        : errors.collateral.message}
                                 </div>
                             )}
                         </div>
@@ -82,14 +90,19 @@ export default function RegisterVaultModal(props: RegisterVaultProps){
                                 name="address"
                                 type="text"
                                 className={"custom-input" + (errors.address ? " error-borders" : "")}
-                                ref={register({required: true, pattern: {
-                                    value: BTC_ADDRESS_TESTNET_REGEX, 
-                                    message: "Please enter valid BTC address"}})}
+                                ref={register({
+                                    required: true,
+                                    pattern: {
+                                        value: BTC_ADDRESS_TESTNET_REGEX,
+                                        message: "Please enter valid BTC address",
+                                    },
+                                })}
                             ></input>
                             {errors.address && (
                                 <div className="input-error">
-                                    {errors.address.type === "required" ? 
-                                    "Address is required" : errors.address.message}
+                                    {errors.address.type === "required"
+                                        ? "Address is required"
+                                        : errors.address.message}
                                 </div>
                             )}
                         </div>
@@ -99,10 +112,7 @@ export default function RegisterVaultModal(props: RegisterVaultProps){
                     <Button variant="secondary" onClick={props.onClose}>
                         Cancel
                     </Button>
-                    <ButtonMaybePending 
-                        variant="outline-success" 
-                        type="submit"
-                        isPending={isPending}>
+                    <ButtonMaybePending variant="outline-success" type="submit" isPending={isPending}>
                         Register
                     </ButtonMaybePending>
                 </Modal.Footer>

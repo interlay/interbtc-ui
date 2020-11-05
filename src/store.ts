@@ -54,7 +54,7 @@ export const getInitialState = (): StoreType => {
             requests: [],
             isReplacmentPending: false,
             btcAddress: "",
-            collateralization: 0,
+            collateralization: undefined,
             collateral: "",
             lockedBTC: "",
         },

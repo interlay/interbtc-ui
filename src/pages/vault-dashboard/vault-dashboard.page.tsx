@@ -65,7 +65,8 @@ export default function VaultDashboardPage() {
         fetchData();
     }, [polkaBtcLoaded, vaultClientLoaded, dispatch]);
 
-    return <div className="vault-dashboard-page container-fluid white-background">
+    return (
+        <div className="vault-dashboard-page container-fluid white-background">
             <div className="vault-container">
                 <div className="stacked-wrapper">
                     <div className="row">
@@ -99,17 +100,21 @@ export default function VaultDashboardPage() {
                 <div className="row">
                     <div className="col-12">
                         <div className="stats">
-                            Collateral: &nbsp; {collateral} DOT  for  {lockedBTC + " BTC"}
-                            &nbsp;&nbsp;&nbsp;<i className="fa fa-edit" onClick={() => setShowUpdateCollateralModal(true)}></i>
+                            Collateral: &nbsp; {collateral} DOT for {lockedBTC + " BTC"}
+                            &nbsp;&nbsp;&nbsp;
+                            <i className="fa fa-edit" onClick={() => setShowUpdateCollateralModal(true)}></i>
                         </div>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-12">
-                        <div className="stats">Collateralization: &nbsp;{(collateralization * 100).toFixed(3)}%</div>
+                        <div className="stats">
+                            Collateralization: &nbsp;
+                            {collateralization === undefined ? "∞" : (collateralization * 100).toFixed(3)}%
+                        </div>
                     </div>
                 </div>
-                {collateralization === 0 && 
+                {collateralization === 0 && (
                     <Button
                         variant="outline-success"
                         className="register-vault-dashboard"
@@ -117,14 +122,27 @@ export default function VaultDashboardPage() {
                     >
                         Register
                     </Button>
-                }
+                )}
                 <IssueTable></IssueTable>
                 <RedeemTable></RedeemTable>
                 <ReplaceTable openModal={setShowRequestReplacementModal}></ReplaceTable>
-                <RegisterVaultModal onClose={closeRegisterVaultModal} show={showRegisterVaultModal}></RegisterVaultModal>
-                <UpdateCollateralModal onClose={closeUpdateCollateralModal} show={showUpdateCollateralModal}></UpdateCollateralModal>
-                <UpdateBTCAddressModal onClose={closeUpdateBTCAddressModal} show={showUpdateBTCAddressModal}></UpdateBTCAddressModal>
-                <RequestReplacementModal onClose={closeRequestReplacementModal} show={showRequestReplacementModal}></RequestReplacementModal>
+                <RegisterVaultModal
+                    onClose={closeRegisterVaultModal}
+                    show={showRegisterVaultModal}
+                ></RegisterVaultModal>
+                <UpdateCollateralModal
+                    onClose={closeUpdateCollateralModal}
+                    show={showUpdateCollateralModal}
+                ></UpdateCollateralModal>
+                <UpdateBTCAddressModal
+                    onClose={closeUpdateBTCAddressModal}
+                    show={showUpdateBTCAddressModal}
+                ></UpdateBTCAddressModal>
+                <RequestReplacementModal
+                    onClose={closeRequestReplacementModal}
+                    show={showRequestReplacementModal}
+                ></RequestReplacementModal>
             </div>
         </div>
+    );
 }

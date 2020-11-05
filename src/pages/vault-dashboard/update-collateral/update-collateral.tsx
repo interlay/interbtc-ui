@@ -7,32 +7,33 @@ import { updateCollateralAction } from "../../../common/actions/vault.actions";
 import { planckToDOT, dotToPlanck } from "@interlay/polkabtc";
 import { StoreType } from "../../../common/types/util.types";
 
-
 type UpdateCollateralForm = {
     collateral: number;
-}
+};
 
 type UpdateCollateralProps = {
     onClose: () => void;
     show: boolean;
 };
 
-export default function UpdateCollateralModal(props: UpdateCollateralProps){
+export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     const { register, handleSubmit, errors } = useForm<UpdateCollateralForm>();
     const totalCollateral = useSelector((state: StoreType) => state.vault.collateral);
     const dispatch = useDispatch();
-    
+
     const onSubmit = handleSubmit(async ({ collateral }) => {
         try {
-            const newCollateral = Number(dotToPlanck(collateral.toString()))
+            const newCollateral = Number(dotToPlanck(collateral.toString()));
             if (Number(totalCollateral) > collateral) {
-                await window.vaultClient.withdrawCollateral(Number(totalCollateral) - newCollateral);
+                const collateralToWithdraw = Number(totalCollateral) - newCollateral;
+                await window.vaultClient.withdrawCollateral(collateralToWithdraw.toString());
             } else {
-                await window.vaultClient.lockAdditionalCollateral(newCollateral - Number(totalCollateral));
+                const collateralToLock = newCollateral - Number(totalCollateral);
+                await window.vaultClient.lockAdditionalCollateral(collateralToLock.toString());
             }
-            
-            const accountId = await window.vaultClient.getAccountId();    
-            const vaultId = window.polkaBTC.api.createType("AccountId",accountId);
+
+            const accountId = await window.vaultClient.getAccountId();
+            const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
             const balanceLockedDOT = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
             const collateralDot = Number(planckToDOT(balanceLockedDOT.toString()));
             dispatch(updateCollateralAction(collateralDot.toString()));
@@ -58,20 +59,25 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps){
                                 <input
                                     name="collateral"
                                     type="number"
-                                    className={"form-control custom-input" + (errors.collateral ? " error-borders" : "")}
-                                    aria-describedby="basic-addon2" 
+                                    className={
+                                        "form-control custom-input" + (errors.collateral ? " error-borders" : "")
+                                    }
+                                    aria-describedby="basic-addon2"
                                     ref={register({
                                         required: true,
                                     })}
                                 ></input>
                                 <div className="input-group-append">
-                                    <span className="input-group-text" id="basic-addon2">DOT</span>
+                                    <span className="input-group-text" id="basic-addon2">
+                                        DOT
+                                    </span>
                                 </div>
                             </div>
                             {errors.collateral && (
                                 <div className="input-error">
-                                    {errors.collateral.type === "required" ? 
-                                    "Collateral is required" : errors.collateral.message}
+                                    {errors.collateral.type === "required"
+                                        ? "Collateral is required"
+                                        : errors.collateral.message}
                                 </div>
                             )}
                         </div>
