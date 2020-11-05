@@ -8,7 +8,7 @@ export interface RedeemRequest {
     completed: boolean;
 }
 
-export interface Redeem {
+export interface RedeemState {
     address: string;
     step: string;
     amountPolkaBTC: string;
@@ -17,4 +17,15 @@ export interface Redeem {
     vaultBtcAddress: string;
     id: string;
     redeemRequests: Map<string, RedeemRequest[]>;
+    vaultRedeems: VaultRedeem[];
+}
+
+export interface VaultRedeem {
+    id: string;
+    timestamp: string;
+    user: string;
+    btcAddress: string;
+    polkaBTC: string;
+    unlockedDOT: string;
+    status: string;
 }

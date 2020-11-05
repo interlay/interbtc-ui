@@ -1,5 +1,7 @@
-import { IssueRequest } from "../types/issue.types";
-import { RedeemRequest } from "../types/redeem.types";
+import { RedeemRequest, VaultRedeem } from "../types/redeem.types";
+import { IssueRequest, VaultIssue } from "../types/issue.types";
+import { RedeemRequest as PolkaRedeemRequest, ReplaceRequest } from "@interlay/polkabtc/build/interfaces/default";
+import { VaultReplaceRequest } from "../types/vault.types";
 import { H256 } from "@polkadot/types/interfaces";
 import { IssueRequest as ParachainIssueRequest } from "@interlay/polkabtc/build/interfaces/default";
 
@@ -95,4 +97,46 @@ export const mapToArray = (map: Map<string, IssueRequest[] | RedeemRequest[]>): 
         result[key] = value;
     });
     return result;
+};
+
+export const redeemRequestToVaultRedeem = (requests: PolkaRedeemRequest[]): VaultRedeem[] => {
+    return requests.map((request) => {
+        return {
+            id: request.vault.toString(),
+            timestamp: request.opentime.toString(),
+            user: request.redeemer.toString(),
+            btcAddress: request.btc_address.toString(),
+            polkaBTC: request.amount_polka_btc.toString(),
+            unlockedDOT: request.amount_dot.toString(),
+            status: "",
+        };
+    });
+};
+
+export const issueRequestToVaultIssue = (requests: ParachainIssueRequest[]): VaultIssue[] => {
+    return requests.map((request) => {
+        return {
+            id: request.vault.toString(),
+            timestamp: request.opentime.toString(),
+            user: request.requester.toString(),
+            btcAddress: request.btc_address.toString(),
+            polkaBTC: request.amount.toString(),
+            lockedDOT: request.griefing_collateral.toString(),
+            status: "",
+        };
+    });
+};
+
+export const requestsToVaultReplaceRequests = (requests: ReplaceRequest[]): VaultReplaceRequest[] => {
+    return requests.map((request) => {
+        return {
+            id: request.old_vault.toString(),
+            timestamp: request.open_time.toHuman(),
+            vault: request.new_vault.toString(),
+            btcAddress: request.btc_address.toString(),
+            polkaBTC: request.amount.toString(),
+            lockedDOT: request.griefing_collateral.toString(),
+            status: "",
+        };
+    });
 };

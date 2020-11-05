@@ -50,7 +50,6 @@ export default function StakedRelayerPage() {
             try {
                 const address = await window.relayer.getAccountId();
                 const activeStakedRelayerId = window.polkaBTC.api.createType("AccountId", address);
-
                 const feesEarned = await window.polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
                 setFees(feesEarned.toString());
 

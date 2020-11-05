@@ -4,11 +4,13 @@ import {
     CHANGE_ADDRESS,
     INIT_STATE,
     SET_TOTAL_ISSUED_AND_TOTAL_LOCKED,
+    IS_VAULT_CLIENT_LOADED,
     IsPolkaBtcLoaded,
     IsStakedRelayerLoaded,
     ChangeAddress,
     InitState,
     SetTotalIssuedAndTotalLocked,
+    IsVaultClientLoaded,
 } from "../types/actions.types";
 import { StoreType } from "../types/util.types";
 
@@ -19,6 +21,11 @@ export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
 
 export const isStakedRelayerLoaded = (isLoaded = false): IsStakedRelayerLoaded => ({
     type: IS_STAKED_RELAYER_LOADED,
+    isLoaded,
+});
+
+export const isVaultClientLoaded = (isLoaded = false): IsVaultClientLoaded => ({
+    type: IS_VAULT_CLIENT_LOADED,
     isLoaded,
 });
 
