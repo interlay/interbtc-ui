@@ -6,21 +6,10 @@ services:
       - btc-parachain
       - --ws-external
       - --dev
+    network_mode: "host"
     ports:
       - "9944:9944"
-  bitcoind:
-    image: "ruimarinho/bitcoin-core:0.20"
-    command:
-      - -regtest
-      - -server
-      - -rpcbind=0.0.0.0
-      - -rpcallowip=0.0.0.0/0
-      - -rpcuser=rpcuser
-      - -rpcpassword=rpcpassword
-    ports:
-      - "18443:18443"
   staked-relayer:
-    # TODO: add health check
     image: "registry.gitlab.com/interlay/polkabtc-clients:staked-relayer-dev"
     command:
       - /bin/sh
@@ -28,12 +17,13 @@ services:
       - |
         echo "Sleeping..."
         sleep 5
-        staked-relayer --http-addr '[::0]:3030' --polka-btc-url 'ws://polkabtc:9944'
+        staked-relayer --http-addr '[::0]:3030' --polka-btc-url 'ws://localhost:9944'
     environment:
-      BITCOIN_RPC_URL: http://bitcoind:18443
+      BITCOIN_RPC_URL: http://localhost:18332
       BITCOIN_RPC_USER: rpcuser
       BITCOIN_RPC_PASS: rpcpassword
       RUST_LOG: info
+    network_mode: "host"
     ports:
       - "3030:3030"
   oracle:
@@ -47,6 +37,7 @@ services:
         oracle --polka-btc-url 'ws://polkabtc:9944'
     environment:
       RUST_LOG: info
+    network_mode: "host"
   vault:
     image: "registry.gitlab.com/interlay/polkabtc-clients:vault-dev"
     command:
@@ -55,11 +46,12 @@ services:
       - |
         echo "Sleeping..."
         sleep 5
-        vault --http-addr '[::0]:3031' --polka-btc-url 'ws://polkabtc:9944'
+        vault --http-addr '[::0]:3031' --polka-btc-url 'ws://localhost:9944'
     environment:
-      BITCOIN_RPC_URL: http://bitcoind:18443
+      BITCOIN_RPC_URL: http://localhost:18332
       BITCOIN_RPC_USER: rpcuser
       BITCOIN_RPC_PASS: rpcpassword
       RUST_LOG: info
+    network_mode: "host"
     ports:
       - "3031:3031"
