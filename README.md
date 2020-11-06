@@ -71,6 +71,27 @@ To simplify testing, you may also run all of the required services with `docker-
 docker-compose up
 ```
 
+docker will run all services: parachain, staked-relayer, vault, oracle and bitcoin.
+
+Here are some useful commands for the killing process, removing images, removing volumes:
+
+```shell
+docker kill $(docker ps -q)
+docker rm $(docker ps -a -q)
+docker rmi $(docker images -q)
+docker volume rm $(docker volume ls -q)
+```
+
+### Test Data
+
+To simplify testing, you may also need to run test data scripts:
+In the polkabtc-clients repository run:
+
+```shell
+ cd testdata-gen/scripts/
+ bash register.sh
+```
+
 ### Local Installation
 
 Clone this repository and enter into the root folder.
