@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { 
-    changeRedeemStepAction, 
-    changeAmountPolkaBTCAction, 
-    changeVaultBtcAddressOnRedeemAction, 
-    changeVaultDotAddressOnRedeemAction 
+import {
+    changeRedeemStepAction,
+    changeAmountPolkaBTCAction,
+    changeVaultBtcAddressOnRedeemAction,
+    changeVaultDotAddressOnRedeemAction,
 } from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
@@ -36,7 +36,7 @@ export default function EnterPolkaBTCAmount() {
             // TODO: write data to storage
             const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
             setBalancePolkaBTC(balancePolkaBTC);
-        }
+        };
         fetchData();
     }, [polkaBtcLoaded]);
 
@@ -57,7 +57,7 @@ export default function EnterPolkaBTCAmount() {
 
             // get the vault's data
             const vault = await window.polkaBTC.vaults.get(vaultId);
-            const vaultBTCAddress = getP2WPKHFromH160(vault.btc_address);
+            const vaultBTCAddress = getP2WPKHFromH160(vault.wallet.address);
             if (vaultBTCAddress === undefined) {
                 throw new Error("Vault has invalid BTC address.");
             }
@@ -69,33 +69,42 @@ export default function EnterPolkaBTCAmount() {
             toast.error(error.toString());
         }
         setRequestPending(false);
-    })
+    });
 
-    return <form onSubmit={onSubmit}>
-        <Modal.Body>
-            <p>Please enter the amount of PolkaBTC you want to receive in BTC.</p>
-            <p>You have {balancePolkaBTC} PolkaBTC</p>
-            <input
-                name="amountPolkaBTC"
-                type="string"
-                className={"custom-input" + (errors.amountPolkaBTC ? " error-borders" : "")}
-                ref={register({
-                    required: true, max: {
-                        value: balancePolkaBTC,
-                        message: "Please enter amount less then " + balancePolkaBTC
-                    }
-                })}
-            />
-            {errors.amountPolkaBTC && (<div className="input-error">
-                {errors.amountPolkaBTC.type === "required" ? "Please enter the amount"
-                    : errors.amountPolkaBTC.message}
-            </div>
-            )}
-        </Modal.Body>
-        <Modal.Footer>
-            <ButtonMaybePending className="btn btn-primary float-right" isPending={isRequestPending} onClick={onSubmit}>
-                Search Vault
-            </ButtonMaybePending>
-        </Modal.Footer>
-    </form>
+    return (
+        <form onSubmit={onSubmit}>
+            <Modal.Body>
+                <p>Please enter the amount of PolkaBTC you want to receive in BTC.</p>
+                <p>You have {balancePolkaBTC} PolkaBTC</p>
+                <input
+                    name="amountPolkaBTC"
+                    type="string"
+                    className={"custom-input" + (errors.amountPolkaBTC ? " error-borders" : "")}
+                    ref={register({
+                        required: true,
+                        max: {
+                            value: balancePolkaBTC,
+                            message: "Please enter amount less then " + balancePolkaBTC,
+                        },
+                    })}
+                />
+                {errors.amountPolkaBTC && (
+                    <div className="input-error">
+                        {errors.amountPolkaBTC.type === "required"
+                            ? "Please enter the amount"
+                            : errors.amountPolkaBTC.message}
+                    </div>
+                )}
+            </Modal.Body>
+            <Modal.Footer>
+                <ButtonMaybePending
+                    className="btn btn-primary float-right"
+                    isPending={isRequestPending}
+                    onClick={onSubmit}
+                >
+                    Search Vault
+                </ButtonMaybePending>
+            </Modal.Footer>
+        </form>
+    );
 }

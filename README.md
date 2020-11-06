@@ -63,7 +63,7 @@ In order to automatically submit block headers, run the [staked-relayer](https:/
 staked-relayer --http-addr '[::0]:3030'
 ```
 
-### Docker-Compose
+### Docker-Compose (Regtest)
 
 To simplify testing, you may also run all of the required services with `docker-compose`:
 
@@ -81,6 +81,22 @@ docker rm $(docker ps -a -q)
 docker rmi $(docker images -q)
 docker volume rm $(docker volume ls -q)
 ```
+
+### Docker-Compose (Testnet)
+
+To run against Bitcoin testnet first start your daemon:
+
+```shell
+bitcoind -testnet -server
+```
+
+Then start the remaining components with `docker-compose`:
+
+```shell
+docker-compose --file docker-compose.testnet.yml up
+```
+
+> Note: This is only supported on Linux due to issues with `network_mode: "host"` on Mac.
 
 ### Test Data
 
