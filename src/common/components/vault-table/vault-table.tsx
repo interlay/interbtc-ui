@@ -14,8 +14,8 @@ export default function VaultTable(): ReactElement {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
-            let vaults = await window.polkaBTC.vaults.list();
-            let vaultsList: Vault[] = [];
+            const vaults = await window.polkaBTC.vaults.list();
+            const vaultsList: Vault[] = [];
             vaults.forEach(async (vault, index) => {
                 const accountId = window.polkaBTC.api.createType("AccountId", vault.id);
                 let collateralization: number | undefined = undefined;
@@ -32,7 +32,7 @@ export default function VaultTable(): ReactElement {
                 try {
                     // TODO: specify script format in parachain
                     const payment = bitcoin.payments.p2wpkh({
-                        hash: Buffer.from(vault.btc_address.buffer),
+                        hash: Buffer.from(vault.wallet.address.buffer),
                         network: bitcoin.networks.testnet,
                     });
                     btcAddress = payment.address;
@@ -41,7 +41,7 @@ export default function VaultTable(): ReactElement {
                 }
 
                 const balanceLockedPlanck = await window.polkaBTC.collateral.balanceLockedDOT(accountId);
-                const balanceLockedDOT = planckToDOT(balanceLockedPlanck.toString()); 
+                const balanceLockedDOT = planckToDOT(balanceLockedPlanck.toString());
 
                 vaultsList.push({
                     vaultId: accountId.toString(),
