@@ -3,7 +3,7 @@ import { IssueRequest, VaultIssue } from "../types/issue.types";
 import {
     DOT,
     PolkaBTC,
-    RedeemRequest as PolkaRedeemRequest,
+    RedeemRequest as ParachainRedeemRequest,
     ReplaceRequest,
 } from "@interlay/polkabtc/build/interfaces/default";
 import { VaultReplaceRequest } from "../types/vault.types";
@@ -78,6 +78,24 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
         btcTxId: "",
         confirmations: 0,
         completed: parachainIssueRequest.completed.isTrue,
+    };
+}
+
+/**
+ * Converts an IssueRequest object retrieved from the parachain
+ * to a UI IssueRequest object
+ * @param id H256, the key of the IssueRequest object in the parachain map storage object
+ * @param parachainIssueRequest ParachainIssueRequest
+ */
+export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: ParachainRedeemRequest): RedeemRequest {
+    return {
+        id: id.toString(),
+        amountPolkaBTC: parachainRedeemRequest.amount_polka_btc.toString(),
+        creation: new Date(parachainRedeemRequest.opentime.toString()),
+        vaultBTCAddress: parachainRedeemRequest.btc_address.toString(),
+        btcTxId: "",
+        confirmations: 0,
+        completed: false,
     };
 }
 
@@ -158,7 +176,7 @@ function convertParachainTypes(parachainObject: ParsableParachainTypes): [string
     return [parsedBtcAddress, parsedPolkaBTC, parsedDOT];
 }
 
-export const redeemRequestToVaultRedeem = (requests: PolkaRedeemRequest[]): VaultRedeem[] => {
+export const redeemRequestToVaultRedeem = (requests: ParachainRedeemRequest[]): VaultRedeem[] => {
     return requests.map((request) => {
         const [btcAddress, polkaBTC, unlockedDOT] = convertParachainTypes(request);
         return {

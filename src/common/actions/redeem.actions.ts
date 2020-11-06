@@ -5,20 +5,24 @@ import {
     RESET_REDEEM_WIZARD,
     CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM,
     CHANGE_VAULT_DOT_ADDRESS_ON_REDEEM,
+    ADD_TRANSACTION_LISTENER_REDEEM,
     CHANGE_REDEEM_ID,
     ADD_VAULT_REDEEMS,
     SET_REDEEM_REQUESTS,
     ADD_REDEEM_REQUEST,
+    UPDATE_REDEEM_REQUEST,
     ChangeRedeemStep,
     ChangeAmountPolkaBtc,
     ChangeBtcAddress,
     ResetRedeemWizard,
     ChangeVaultBtcAddressOnRedeem,
     ChangeVaultDotAddressOnRedeem,
+    AddTransactionListenerRedeem,
     ChangeRedeemId,
     SetRedeemRequests,
     AddRedeemRequest,
     AddVaultRedeems,
+    UpdateRedeemRequest
 } from "../types/actions.types";
 import { RedeemRequest, VaultRedeem } from "../types/redeem.types";
 
@@ -69,4 +73,14 @@ export const addRedeemRequestAction = (request: RedeemRequest): AddRedeemRequest
 export const addVaultRedeemsAction = (vaultRedeems: VaultRedeem[]): AddVaultRedeems => ({
     type: ADD_VAULT_REDEEMS,
     vaultRedeems,
+});
+
+export const addTransactionListenerRedeem = (id: string): AddTransactionListenerRedeem => ({
+    type: ADD_TRANSACTION_LISTENER_REDEEM,
+    id,
+});
+
+export const updateRedeemRequestAction = (request: RedeemRequest): UpdateRedeemRequest => ({
+    type: UPDATE_REDEEM_REQUEST,
+    request,
 });
