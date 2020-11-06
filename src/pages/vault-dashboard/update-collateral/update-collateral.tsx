@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState } from "react";
+import React, { SyntheticEvent, useState, useRef } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -38,6 +38,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     const totalCollateralString = useSelector((state: StoreType) => state.vault.collateral);
     const dispatch = useDispatch();
     const [isAWithdrawal, setIsAWithdrawal] = useState(false);
+    const newCollaterlization = useRef("∞");
 
     const onSubmit = handleSubmit(async ({ collateral }) => {
         try {
@@ -58,6 +59,8 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
             const balanceLockedDOT = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
             const collateralDotString = planckToDOT(balanceLockedDOT.toString());
             dispatch(updateCollateralAction(collateralDotString));
+            const newCollateralizationNumber = await window.polkaBTC.vaults.getCollateralization(vaultId);
+            newCollaterlization.current = newCollateralizationNumber.toString();
             toast.success("Successfully updated collateral");
             props.onClose();
         } catch (error) {
@@ -121,7 +124,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                                 </div>
                             )}
                         </div>
-                        <div className="col-12">New Collateralization 340%</div>
+                        <div className="col-12">New Collateralization {newCollaterlization.current}%</div>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
