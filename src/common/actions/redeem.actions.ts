@@ -22,7 +22,7 @@ import {
     SetRedeemRequests,
     AddRedeemRequest,
     AddVaultRedeems,
-    UpdateRedeemRequest
+    UpdateRedeemRequest,
 } from "../types/actions.types";
 import { RedeemRequest, VaultRedeem } from "../types/redeem.types";
 

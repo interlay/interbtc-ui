@@ -11,7 +11,7 @@ import {
     INIT_STATE,
     RedeemActions,
     ADD_REDEEM_REQUEST,
-    UPDATE_REDEEM_REQUEST
+    UPDATE_REDEEM_REQUEST,
 } from "../types/actions.types";
 import { RedeemState } from "../types/redeem.types";
 
@@ -54,7 +54,7 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             } else {
                 newMap.set(state.address, [action.request]);
             }
-        return { ...state, redeemRequests: newMap };
+            return { ...state, redeemRequests: newMap };
         case ADD_TRANSACTION_LISTENER_REDEEM:
             if (state.transactionListeners.indexOf(action.id) !== -1) return state;
             return { ...state, transactionListeners: [...state.transactionListeners, action.id] };

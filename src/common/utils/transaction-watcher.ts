@@ -35,8 +35,10 @@ export async function updateTransactionStatusIssue(
     }
 }
 
-export async function startTransactionWatcherRedeem(request: RedeemRequest, dispatch: Dispatch<RedeemActions>): 
-    Promise<void> {
+export async function startTransactionWatcherRedeem(
+    request: RedeemRequest,
+    dispatch: Dispatch<RedeemActions>
+): Promise<void> {
     dispatch(addTransactionListenerRedeem(request.id));
     updateTransactionStatusRedeem(request, dispatch).then(() => {
         setInterval(() => updateTransactionStatusRedeem(request, dispatch), 10_000);
