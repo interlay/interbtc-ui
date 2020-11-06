@@ -10,6 +10,7 @@ import { VaultReplaceRequest } from "../types/vault.types";
 import { H160, H256 } from "@polkadot/types/interfaces";
 import { IssueRequest as ParachainIssueRequest } from "@interlay/polkabtc/build/interfaces/default";
 import { satToBTC, planckToDOT, getP2WPKHFromH160 } from "@interlay/polkabtc";
+import { NUMERIC_STRING_REGEX } from "../../constants";
 
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;
@@ -78,6 +79,17 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
         confirmations: 0,
         completed: parachainIssueRequest.completed.isTrue,
     };
+}
+
+/**
+ * Checks whether string represents an integer or a floating point number
+ * @remarks String of the form ".23" are not considered numeric. Use "0.23" instead.
+ * @param s Arbitrary string
+ * @returns True if string is numeric, false otherwise.
+ */
+export function isNumeric(s: string): boolean {
+    const reg = new RegExp(NUMERIC_STRING_REGEX);
+    return reg.test(s);
 }
 
 export const arrayToMap = (

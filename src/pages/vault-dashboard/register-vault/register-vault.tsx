@@ -7,6 +7,7 @@ import { BTC_ADDRESS_TESTNET_REGEX } from "../../../constants";
 import { useDispatch } from "react-redux";
 import { updateBTCAddressAction, updateCollateralAction } from "../../../common/actions/vault.actions";
 import { planckToDOT, dotToPlanck } from "@interlay/polkabtc";
+import BN from "bn.js";
 
 type RegisterVaultForm = {
     collateral: string;
@@ -35,7 +36,7 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
             const accountId = await window.vaultClient.getAccountId();
             const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
             const collateralPlanck = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
-            const collateralDot = Number(planckToDOT(collateralPlanck.toString()));
+            const collateralDot = new BN(planckToDOT(collateralPlanck.toString()));
 
             dispatch(updateBTCAddressAction(address));
             dispatch(updateCollateralAction(collateralDot + collateral));
