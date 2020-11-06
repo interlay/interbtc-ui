@@ -93,11 +93,6 @@ export const addTransactionListenerIssue = (id: string): AddTransactionListenerI
     id,
 });
 
-export const addTransactionListenerRedeem = (id: string): AddTransactionListenerIssue => ({
-    type: ADD_TRANSACTION_LISTENER_ISSUE,
-    id,
-});
-
 export const addVaultIssuesAction = (vaultIssues: VaultIssue[]): AddVaultIssues => ({
     type: ADD_VAULT_ISSUES,
     vaultIssues,
