@@ -1,9 +1,16 @@
 import { RedeemRequest, VaultRedeem } from "../types/redeem.types";
 import { IssueRequest, VaultIssue } from "../types/issue.types";
-import { RedeemRequest as PolkaRedeemRequest, ReplaceRequest } from "@interlay/polkabtc/build/interfaces/default";
+import {
+    DOT,
+    PolkaBTC,
+    RedeemRequest as PolkaRedeemRequest,
+    ReplaceRequest,
+} from "@interlay/polkabtc/build/interfaces/default";
 import { VaultReplaceRequest } from "../types/vault.types";
-import { H256 } from "@polkadot/types/interfaces";
+import { H160, H256 } from "@polkadot/types/interfaces";
 import { IssueRequest as ParachainIssueRequest } from "@interlay/polkabtc/build/interfaces/default";
+import { satToBTC, planckToDOT, getP2WPKHFromH160 } from "@interlay/polkabtc";
+import { NUMERIC_STRING_REGEX } from "../../constants";
 
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;
@@ -74,6 +81,17 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
     };
 }
 
+/**
+ * Checks whether string represents an integer or a floating point number
+ * @remarks String of the form ".23" are not considered numeric. Use "0.23" instead.
+ * @param s Arbitrary string
+ * @returns True if string is numeric, false otherwise.
+ */
+export function isNumeric(s: string): boolean {
+    const reg = new RegExp(NUMERIC_STRING_REGEX);
+    return reg.test(s);
+}
+
 export const arrayToMap = (
     arr: IssueRequest[][] | RedeemRequest[][]
 ): Map<string, IssueRequest[] | RedeemRequest[]> => {
@@ -99,15 +117,57 @@ export const mapToArray = (map: Map<string, IssueRequest[] | RedeemRequest[]>): 
     return result;
 };
 
+interface ParsableParachainTypes {
+    btc_address: H160;
+    amount_polka_btc?: PolkaBTC;
+    amount?: PolkaBTC;
+    amount_dot?: DOT;
+    griefing_collateral?: DOT;
+}
+
+/**
+ * Parses types which belong to request objects and need parsing/conversion to be displayed in the UI.
+ *
+ * @param parachainObject A request object, which must have a BTC address, a PolkaBTC amount and a DOT amount.
+ * @returns A tuple with the parsed properties
+ */
+function convertParachainTypes(parachainObject: ParsableParachainTypes): [string, string, string] {
+    let parsedPolkaBTC = "";
+    let parsedDOT = "";
+    const parsedBtcAddress = getP2WPKHFromH160(parachainObject.btc_address);
+    if (parsedBtcAddress === undefined) {
+        throw new Error("Invalid BTC address encountered during parsing");
+    }
+
+    if (parachainObject.amount_polka_btc) {
+        parsedPolkaBTC = satToBTC(parachainObject.amount_polka_btc.toString());
+    } else if (parachainObject.amount) {
+        parsedPolkaBTC = satToBTC(parachainObject.amount.toString());
+    } else {
+        throw new Error("No property found for PolkaBTC amount");
+    }
+
+    if (parachainObject.amount_dot) {
+        parsedDOT = planckToDOT(parachainObject.amount_dot.toString());
+    } else if (parachainObject.griefing_collateral) {
+        parsedDOT = planckToDOT(parachainObject.griefing_collateral.toString());
+    } else {
+        throw new Error("No property found for DOT amount");
+    }
+
+    return [parsedBtcAddress, parsedPolkaBTC, parsedDOT];
+}
+
 export const redeemRequestToVaultRedeem = (requests: PolkaRedeemRequest[]): VaultRedeem[] => {
     return requests.map((request) => {
+        const [btcAddress, polkaBTC, unlockedDOT] = convertParachainTypes(request);
         return {
             id: request.vault.toString(),
             timestamp: request.opentime.toString(),
             user: request.redeemer.toString(),
-            btcAddress: request.btc_address.toString(),
-            polkaBTC: request.amount_polka_btc.toString(),
-            unlockedDOT: request.amount_dot.toString(),
+            btcAddress: btcAddress,
+            polkaBTC: polkaBTC,
+            unlockedDOT: unlockedDOT,
             status: "",
         };
     });
@@ -115,13 +175,14 @@ export const redeemRequestToVaultRedeem = (requests: PolkaRedeemRequest[]): Vaul
 
 export const issueRequestToVaultIssue = (requests: ParachainIssueRequest[]): VaultIssue[] => {
     return requests.map((request) => {
+        const [btcAddress, polkaBTC, lockedDOT] = convertParachainTypes(request);
         return {
             id: request.vault.toString(),
             timestamp: request.opentime.toString(),
             user: request.requester.toString(),
-            btcAddress: request.btc_address.toString(),
-            polkaBTC: request.amount.toString(),
-            lockedDOT: request.griefing_collateral.toString(),
+            btcAddress: btcAddress,
+            polkaBTC: polkaBTC,
+            lockedDOT: lockedDOT,
             status: "",
         };
     });
@@ -129,13 +190,14 @@ export const issueRequestToVaultIssue = (requests: ParachainIssueRequest[]): Vau
 
 export const requestsToVaultReplaceRequests = (requests: ReplaceRequest[]): VaultReplaceRequest[] => {
     return requests.map((request) => {
+        const [btcAddress, polkaBTC, lockedDOT] = convertParachainTypes(request);
         return {
             id: request.old_vault.toString(),
             timestamp: request.open_time.toHuman(),
             vault: request.new_vault.toString(),
-            btcAddress: request.btc_address.toString(),
-            polkaBTC: request.amount.toString(),
-            lockedDOT: request.griefing_collateral.toString(),
+            btcAddress: btcAddress,
+            polkaBTC: polkaBTC,
+            lockedDOT: lockedDOT,
             status: "",
         };
     });

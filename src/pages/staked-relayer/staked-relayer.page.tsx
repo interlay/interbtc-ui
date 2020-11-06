@@ -13,6 +13,7 @@ import "./staked-relayer.page.scss";
 import { StoreType } from "../../common/types/util.types";
 import ButtonMaybePending from "../../common/components/pending-button";
 import { planckToDOT } from "@interlay/polkabtc";
+import BN from "bn.js";
 
 export default function StakedRelayerPage() {
     const [showReportModal, setShowReportModal] = useState(false);
@@ -46,7 +47,7 @@ export default function StakedRelayerPage() {
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBtcLoaded || !relayerLoaded) return;
-            
+
             try {
                 const address = await window.relayer.getAccountId();
                 const activeStakedRelayerId = window.polkaBTC.api.createType("AccountId", address);
@@ -55,16 +56,18 @@ export default function StakedRelayerPage() {
 
                 setStakedRelayerAddress(address);
 
-                const lockedPlanck = (await window.polkaBTC.stakedRelayer.getStakedDOTAmount(activeStakedRelayerId)).toString();
+                const lockedPlanck = (
+                    await window.polkaBTC.stakedRelayer.getStakedDOTAmount(activeStakedRelayerId)
+                ).toString();
                 const lockedDOT = planckToDOT(lockedPlanck);
                 setDotLocked(lockedDOT);
                 setPlanckLocked(lockedPlanck);
-            } catch(error){
+            } catch (error) {
                 toast.error(error.toString());
             }
         };
         fetchData();
-    },[polkaBtcLoaded, relayerLoaded]);
+    }, [polkaBtcLoaded, relayerLoaded]);
 
     return (
         <div className="staked-relayer-page container-fluid white-background">
@@ -83,7 +86,7 @@ export default function StakedRelayerPage() {
                             <div className="stats">Fees earned: {feesEarned}</div>
                         </div>
                     </div>
-                    {Number(planckLocked) === 0 && (
+                    {new BN(planckLocked) === new BN(0) && (
                         <Button
                             variant="outline-success"
                             className="staked-button"
@@ -93,7 +96,7 @@ export default function StakedRelayerPage() {
                         </Button>
                     )}
                     <BitcoinTable></BitcoinTable>
-                    {Number(planckLocked) > 0 && (
+                    {new BN(planckLocked) > new BN(0) && (
                         <Button
                             variant="outline-danger"
                             className="staked-button"
@@ -111,21 +114,23 @@ export default function StakedRelayerPage() {
                     ></StatusUpdateTable>
                     <VaultTable></VaultTable>
                     <OracleTable planckLocked={planckLocked}></OracleTable>
-                    {Number(planckLocked) > 0 && <React.Fragment>
-                        <ButtonMaybePending
-                            className="staked-button"
-                            variant="outline-danger"
-                            isPending={isDeregisterPending}
-                            onClick={deregisterStakedRelayer}
-                        >
-                            Deregister
-                        </ButtonMaybePending>
-                        <div className="row">
-                            <div className="col-12 de-note">
-                                Note: You can only deregister if you are not participating in a vote.
+                    {new BN(planckLocked) > new BN(0) && (
+                        <React.Fragment>
+                            <ButtonMaybePending
+                                className="staked-button"
+                                variant="outline-danger"
+                                isPending={isDeregisterPending}
+                                onClick={deregisterStakedRelayer}
+                            >
+                                Deregister
+                            </ButtonMaybePending>
+                            <div className="row">
+                                <div className="col-12 de-note">
+                                    Note: You can only deregister if you are not participating in a vote.
+                                </div>
                             </div>
-                        </div>
-                    </React.Fragment>}
+                        </React.Fragment>
+                    )}
                 </div>
             </div>
         </div>
