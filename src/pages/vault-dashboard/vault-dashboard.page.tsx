@@ -45,7 +45,7 @@ export default function VaultDashboardPage() {
             const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
             const vault = await window.polkaBTC.vaults.get(vaultId);
 
-            const vaultBTCAddress = getP2WPKHFromH160(vault.btc_address);
+            const vaultBTCAddress = getP2WPKHFromH160(vault.wallet.address);
             if (vaultBTCAddress === undefined) {
                 throw new Error("Vault has invalid BTC address.");
             }
