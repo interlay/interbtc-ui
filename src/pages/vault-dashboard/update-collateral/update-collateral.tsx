@@ -26,9 +26,9 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps){
         try {
             const newCollateral = Number(dotToPlanck(collateral.toString()))
             if (Number(totalCollateral) > collateral) {
-                await window.vaultClient.withdrawCollateral(Number(totalCollateral) - newCollateral);
+                await window.vaultClient.withdrawCollateral((Number(totalCollateral) - newCollateral).toString());
             } else {
-                await window.vaultClient.lockAdditionalCollateral(newCollateral - Number(totalCollateral));
+                await window.vaultClient.lockAdditionalCollateral((newCollateral - Number(totalCollateral)).toString());
             }
             
             const accountId = await window.vaultClient.getAccountId();    

@@ -26,7 +26,8 @@ export default function RegisterVaultModal(props: RegisterVaultProps){
     const onSubmit = handleSubmit(async ({ collateral, address }) => {
         try {
             setIsPending(true);
-            await window.vaultClient.registerVault(Number(dotToPlanck(collateral.toString())),address);
+            const planckColateral = dotToPlanck(collateral.toString());
+            await window.vaultClient.registerVault(planckColateral ? planckColateral : "0",address);
 
             const accountId = await window.vaultClient.getAccountId();    
             const vaultId = window.polkaBTC.api.createType("AccountId",accountId);

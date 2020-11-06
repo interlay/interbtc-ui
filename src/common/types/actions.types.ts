@@ -64,6 +64,7 @@ export const RESET_REDEEM_WIZARD = "RESET_REDEEM_WIZARD";
 export const STORE_REDEEM_REQUEST = "STORE_REDEEM_REQUEST";
 export const ADD_REDEEM_REQUEST = "ADD_REDEEM_REQUEST";
 export const ADD_VAULT_REDEEMS = "ADD_VAULT_REDEEMS";
+export const ADD_TRANSACTION_LISTENER_REDEEM = "ADD_TRANSACTION_LISTENER_REDEEM";
 
 export interface ChangeVaultBtcAddressOnRedeem {
     type: typeof CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM;
@@ -119,6 +120,11 @@ export interface AddVaultRedeems {
     vaultRedeems: VaultRedeem[];
 }
 
+export interface AddTransactionListenerRedeem {
+    type: typeof ADD_TRANSACTION_LISTENER_REDEEM;
+    id: string;
+}
+
 export type RedeemActions =
     | ChangeRedeemStep
     | ChangeAmountPolkaBtc
@@ -132,7 +138,8 @@ export type RedeemActions =
     | AddRedeemRequest
     | ChangeAddress
     | InitState
-    | AddVaultRedeems;
+    | AddVaultRedeems
+    | AddTransactionListenerRedeem;
 
 // ISSUE
 

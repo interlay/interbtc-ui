@@ -87,9 +87,9 @@ export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: Par
         amountPolkaBTC: parachainRedeemRequest.amount_polka_btc.toString(),
         creation: new Date(parachainRedeemRequest.opentime.toString()),
         vaultBTCAddress: parachainRedeemRequest.btc_address.toString(),
-        btcTxId: parachainRedeemRequest.btcTxId.toString(),
-        confirmations: parachainRedeemRequest.confirmations,
-        completed: parachainIssueRequest.completed.isTrue,
+        btcTxId: "",
+        confirmations: 0,
+        completed: false,
     };
 }
 

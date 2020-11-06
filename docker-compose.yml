@@ -1,21 +1,29 @@
 version: "3.8"
 services:
+  nginx:
+    image: "nginx:latest"
+    ports:
+      - "8081:80"
   polkabtc:
-    image: "registry.gitlab.com/interlay/btc-parachain:latest"
+    image: "registry.gitlab.com/interlay/btc-parachain:dev"
     command:
       - btc-parachain
+      - --ws-external
       - --dev
-    network_mode: host
+    # network_mode: host
     ports:
       - "9944:9944"
   bitcoind:
     image: "ruimarinho/bitcoin-core:0.20"
     command:
       - -regtest
+      - -server
+      - -rpcbind=0.0.0.0
+      - -rpcallowip=0.0.0.0/0
       - -rpcuser=rpcuser
       - -rpcpassword=rpcpassword
       # - -debug
-    network_mode: host
+    # network_mode: host
     ports:
       - "18443:18443"
   staked-relayer:
@@ -27,13 +35,13 @@ services:
       - |
         echo "Sleeping..."
         sleep 5
-        staked-relayer --http-addr '[::0]:3030'
+        staked-relayer --http-addr '[::0]:3030' --polka-btc-url 'ws://polkabtc:9944'
     environment:
-      BITCOIN_RPC_URL: http://localhost:18443
+      BITCOIN_RPC_URL: http://bitcoind:18443
       BITCOIN_RPC_USER: rpcuser
       BITCOIN_RPC_PASS: rpcpassword
       RUST_LOG: info
-    network_mode: host
+    # network_mode: host
     ports:
       - "3030:3030"
   oracle:
@@ -44,8 +52,8 @@ services:
       - |
         echo "Sleeping..."
         sleep 5
-        oracle
-    network_mode: host
+        oracle --polka-btc-url 'ws://polkabtc:9944'
+    # network_mode: host
   vault:
     image: "registry.gitlab.com/interlay/polkabtc-clients:vault-latest"
     command:
@@ -54,12 +62,12 @@ services:
       - |
         echo "Sleeping..."
         sleep 5
-        vault
+        vault --http-addr '[::0]:3031' --polka-btc-url 'ws://polkabtc:9944'
     environment:
-      BITCOIN_RPC_URL: http://localhost:18443
+      BITCOIN_RPC_URL: http://bitcoind:18443
       BITCOIN_RPC_USER: rpcuser
       BITCOIN_RPC_PASS: rpcpassword
       RUST_LOG: info
-    network_mode: host
+    # network_mode: host
     ports:
       - "3031:3031"

@@ -26,7 +26,7 @@ export default function RequestReplacementModal(props: RequestReplacementProps){
     const onSubmit = handleSubmit(async ({ amount }) => {
         try {
             dispatch(requestReplacmentPendingAction(true));
-            await window.vaultClient.requestReplace(amount,100);
+            await window.vaultClient.requestReplace(amount.toString(),"100");
             toast.success("Replacment request is submitted");
             props.onClose();
             dispatch(requestReplacmentPendingAction(false));
