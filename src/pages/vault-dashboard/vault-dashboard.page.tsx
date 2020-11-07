@@ -17,6 +17,7 @@ import {
     updateLockedBTCAction,
 } from "../../common/actions/vault.actions";
 import "./vault-dashboard.page.scss";
+import * as constants from "../../constants";
 
 export default function VaultDashboardPage() {
     const [showRegisterVaultModal, setShowRegisterVaultModal] = useState(false);
@@ -91,7 +92,18 @@ export default function VaultDashboardPage() {
                 <div className="row">
                     <div className="col-12">
                         <div className="stats btc-address-header">
-                            BTC Address: &nbsp;&nbsp;{btcAddress}
+                            BTC Address: &nbsp;&nbsp;
+                            <a
+                                href={
+                                    (constants.BTC_MAINNET
+                                        ? constants.BTC_EXPLORER_ADDRESS_API
+                                        : constants.BTC_TEST_EXPLORER_ADDRESS_API) + btcAddress
+                                }
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {btcAddress}
+                            </a>
                             &nbsp;&nbsp;&nbsp;
                             <i className="fa fa-edit" onClick={() => setShowUpdateBTCAddressModal(true)}></i>
                         </div>
