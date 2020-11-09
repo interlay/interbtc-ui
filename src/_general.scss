@@ -161,25 +161,6 @@ input[type=number] {
   box-shadow: 0 0 0 0.2rem rgba(199, 28, 34, 0.5);
 }
 
-
-body {
-	background: linear-gradient(-90deg, #ff9900e1, #f07353, #ef6b59, #e9436f);
-	background-size: 400% 400%;
-	animation: gradient 15s ease infinite;
-}
-
-@keyframes gradient {
-	0% {
-		background-position: 0% 25%;
-	}
-	50% {
-		background-position: 100% 25%;
-	}
-	100% {
-		background-position: 0% 25%;
-	}
-}
-
 .transparent-background {
   background-color: transparent;
 }
