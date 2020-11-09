@@ -21,8 +21,6 @@ export default function RequestConfirmation() {
     const dispatch = useDispatch();
 
     const onConfirm = async () => {
-        if(!polkaBtcLoaded) return;
-
         setRequestPending(true);
         // send the issue request
         try {
@@ -30,6 +28,7 @@ export default function RequestConfirmation() {
             if (amountSAT === undefined) {
                 throw new Error("Invalid BTC amount input.");
             }
+            if(!polkaBtcLoaded) return;
             const amount = window.polkaBTC.api.createType("Balance", amountSAT) as PolkaBTC;
             // FIXME: use AccountId type from @polkadot/types/interfaces
             const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultAddress) as any;

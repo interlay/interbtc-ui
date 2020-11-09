@@ -40,7 +40,6 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     const dispatch = useDispatch();
     const [isAWithdrawal, setIsAWithdrawal] = useState(false);
     const [newCollaterlization, setNewCollaterlization] = useState("∞");
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const accountId = useRef("");
 
     async function initializeAccountId() {
@@ -50,7 +49,6 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     }
 
     const onSubmit = handleSubmit(async ({ collateral }) => {
-        if (!polkaBtcLoaded) return;
         try {
             const [totalCollateralAsPlanck, newCollateralAsPlanck] = parseOldAndNewCollateral(
                 totalCollateralString,
@@ -82,7 +80,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     const onChange = async (obj: SyntheticEvent) => {
         const targetObject = obj.target as HTMLInputElement;
         const newCollateralString = targetObject.value;
-        if (newCollateralString === "" || !polkaBtcLoaded) {
+        if (newCollateralString === "") {
             return;
         }
         const [totalCollateralAsPlanck, newCollateralAsPlanck] = parseOldAndNewCollateral(
