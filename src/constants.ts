@@ -32,6 +32,9 @@ export const VAULT_CLIENT_URL = process.env.VAULT_CLIENT_URL || "http://localhos
 export const BTC_EXPLORER_BLOCK_API = "https://blockstream.info/block/";
 export const BTC_TEST_EXPLORER_BLOCK_API = "https://blockstream.info/testnet/block/";
 
+export const BTC_EXPLORER_ADDRESS_API = "https://blockstream.info/address/";
+export const BTC_TEST_EXPLORER_ADDRESS_API = "https://blockstream.info/testnet/address/";
+
 //######################################
 // STAKED RELAYER
 //######################################
