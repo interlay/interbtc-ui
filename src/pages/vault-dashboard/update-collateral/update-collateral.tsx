@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState } from "react";
+import React, { SyntheticEvent, useState, useRef } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -8,6 +8,7 @@ import { planckToDOT, dotToPlanck } from "@interlay/polkabtc";
 import { StoreType } from "../../../common/types/util.types";
 import BN from "bn.js";
 import { isPositiveNumeric } from "../../../common/utils/utils";
+import { DOT } from "@interlay/polkabtc/build/interfaces/default";
 
 type UpdateCollateralForm = {
     collateral: string;
@@ -38,6 +39,14 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     const totalCollateralString = useSelector((state: StoreType) => state.vault.collateral);
     const dispatch = useDispatch();
     const [isAWithdrawal, setIsAWithdrawal] = useState(false);
+    const [newCollaterlization, setNewCollaterlization] = useState("∞");
+    const accountId = useRef("");
+
+    async function initializeAccountId() {
+        if (accountId.current === "") {
+            accountId.current = await window.vaultClient.getAccountId();
+        }
+    }
 
     const onSubmit = handleSubmit(async ({ collateral }) => {
         try {
@@ -48,13 +57,16 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
             if (totalCollateralAsPlanck > newCollateralAsPlanck) {
                 const collateralToWithdraw = totalCollateralAsPlanck.sub(newCollateralAsPlanck);
                 await window.vaultClient.withdrawCollateral(collateralToWithdraw.toString());
-            } else {
+            } else if (totalCollateralAsPlanck < newCollateralAsPlanck) {
                 const collateralToLock = newCollateralAsPlanck.sub(totalCollateralAsPlanck);
                 await window.vaultClient.lockAdditionalCollateral(collateralToLock.toString());
+            } else {
+                props.onClose();
+                return;
             }
 
-            const accountId = await window.vaultClient.getAccountId();
-            const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
+            initializeAccountId();
+            const vaultId = window.polkaBTC.api.createType("AccountId", accountId.current);
             const balanceLockedDOT = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
             const collateralDotString = planckToDOT(balanceLockedDOT.toString());
             dispatch(updateCollateralAction(collateralDotString));
@@ -65,10 +77,12 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
         }
     });
 
-    const onChange = (obj: SyntheticEvent) => {
+    const onChange = async (obj: SyntheticEvent) => {
         const targetObject = obj.target as HTMLInputElement;
         const newCollateralString = targetObject.value;
-
+        if (newCollateralString === "") {
+            return;
+        }
         const [totalCollateralAsPlanck, newCollateralAsPlanck] = parseOldAndNewCollateral(
             totalCollateralString,
             newCollateralString
@@ -78,6 +92,19 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
             setIsAWithdrawal(true);
         } else {
             setIsAWithdrawal(false);
+        }
+
+        initializeAccountId();
+        const vaultId = window.polkaBTC.api.createType("AccountId", accountId.current);
+        const newCollateralAsDOT = window.polkaBTC.api.createType("u128", newCollateralAsPlanck) as DOT;
+        const newCollateralization = await window.polkaBTC.vaults.getVaultCollateralization(
+            vaultId,
+            newCollateralAsDOT
+        );
+        if (newCollateralization !== undefined) {
+            setNewCollaterlization(newCollateralization.toString());
+        } else {
+            setNewCollaterlization("∞");
         }
     };
 
@@ -121,7 +148,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                                 </div>
                             )}
                         </div>
-                        <div className="col-12">New Collateralization 340%</div>
+                        <div className="col-12">New Collateralization {newCollaterlization}%</div>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
