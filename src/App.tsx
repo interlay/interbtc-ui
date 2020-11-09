@@ -10,12 +10,12 @@ import Big from "big.js";
 import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
 
 import AccountSelector from "./pages/account-selector";
-import { 
-    isPolkaBtcLoaded, 
+import {
+    isPolkaBtcLoaded,
     isStakedRelayerLoaded,
     isVaultClientLoaded,
-    changeAddressAction, 
-    setTotalIssuedAndTotalLockedAction 
+    changeAddressAction,
+    setTotalIssuedAndTotalLockedAction,
 } from "./common/actions/general.actions";
 import * as constants from "./constants";
 
@@ -59,7 +59,7 @@ export default class App extends Component<{}, AppState> {
         if (allAccounts.length === 0) {
             toast.warn(
                 "No account found, you will not be able to execute any transaction. " +
-                "Please check that your wallet is configured correctly.",
+                    "Please check that your wallet is configured correctly.",
                 {
                     autoClose: false,
                 }
@@ -93,7 +93,7 @@ export default class App extends Component<{}, AppState> {
             window.vaultClient = new VaultClient(constants.VAULT_CLIENT_URL);
             store.dispatch(isVaultClientLoaded(true));
 
-            window.polkaBTC = await createPolkabtcAPI(constants.PARACHAIN_URL);            
+            window.polkaBTC = await createPolkabtcAPI(constants.PARACHAIN_URL, constants.BITCOIN_NETWORK);            
             store.dispatch(isPolkaBtcLoaded(true));
         }
         catch(error){
@@ -113,7 +113,7 @@ export default class App extends Component<{}, AppState> {
         const totalLockedPLANCK = await window.polkaBTC.collateral.totalLockedDOT();
         const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
         const totalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
-        store.dispatch(setTotalIssuedAndTotalLockedAction(totalPolkaBTC,totalLockedDOT));
+        store.dispatch(setTotalIssuedAndTotalLockedAction(totalPolkaBTC, totalLockedDOT));
     }
 
     async componentDidMount(): Promise<void> {
@@ -145,7 +145,6 @@ export default class App extends Component<{}, AppState> {
         store.dispatch(isPolkaBtcLoaded(true));
         store.dispatch(changeAddressAction(address));
     }
-
 
     render() {
         return (
@@ -182,7 +181,7 @@ export default class App extends Component<{}, AppState> {
                             )}
                             {!constants.STATIC_PAGE_ONLY && (
                                 <Route path="/vault">
-                                    <VaultDashboardPage/>
+                                    <VaultDashboardPage />
                                 </Route>
                             )}
                             <Route exact path="/">

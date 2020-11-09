@@ -34,7 +34,7 @@ services:
       - |
         echo "Sleeping..."
         sleep 5
-        oracle --polka-btc-url 'ws://polkabtc:9944'
+        oracle --polka-btc-url 'ws://localhost:9944'
     environment:
       RUST_LOG: info
     network_mode: "host"
