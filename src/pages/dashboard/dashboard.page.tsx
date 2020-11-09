@@ -22,14 +22,18 @@ export default function DashboardPage() {
             if (!polkaBtcLoaded || !relayerLoaded) return;
 
             try {
-                const collateralization = await window.polkaBTC.vaults.getTotalCollateralization();
-                setCollateralizationRate((collateralization * 100).toString());
-            } catch(error){
+                const collateralization = await window.polkaBTC.vaults.getSystemCollateralization();
+                if (collateralization === undefined) {
+                    setCollateralizationRate("∞");
+                } else {
+                    setCollateralizationRate((collateralization * 100).toString());
+                }
+            } catch (error) {
                 toast.error(error.toString());
             }
         };
         fetchData();
-    },[polkaBtcLoaded, relayerLoaded]);
+    }, [polkaBtcLoaded, relayerLoaded]);
 
     return (
         <div className="dashboard-page container-fluid white-background">
@@ -54,10 +58,7 @@ export default function DashboardPage() {
                         </div>
                     </div>
                     <BitcoinTable></BitcoinTable>
-                    <StatusUpdateTable
-                        dotLocked={totalLockedDOT}
-                        readOnly={true}
-                    ></StatusUpdateTable>
+                    <StatusUpdateTable dotLocked={totalLockedDOT} readOnly={true}></StatusUpdateTable>
                     <VaultTable></VaultTable>
                     <OracleTable planckLocked={"1"}></OracleTable>
                     <StakedRelayerTable></StakedRelayerTable>

@@ -21,9 +21,11 @@ export default function VaultTable(): ReactElement {
                 let collateralization: number | undefined = undefined;
 
                 try {
-                    collateralization = await window.polkaBTC.vaults.getCollateralization(vault.id);
-                    // convert into percentage
-                    collateralization = collateralization * 100;
+                    collateralization = await window.polkaBTC.vaults.getVaultCollateralization(vault.id);
+                    if (collateralization !== undefined) {
+                        // convert into percentage
+                        collateralization = collateralization * 100;
+                    }
                 } catch (error) {
                     console.log(error);
                 }

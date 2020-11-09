@@ -65,8 +65,8 @@ export default function VaultDashboardPage() {
             const lockedAmountBTC = satToBTC(totalPolkaSAT.toString());
             dispatch(updateLockedBTCAction(lockedAmountBTC));
 
-            const totalColateralization = await window.polkaBTC.vaults.getCollateralization(vaultId);
-            dispatch(updateCollateralizationAction(totalColateralization));
+            const collateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId);
+            dispatch(updateCollateralizationAction(collateralization));
         };
         fetchData();
     }, [polkaBtcLoaded, vaultClientLoaded, dispatch]);

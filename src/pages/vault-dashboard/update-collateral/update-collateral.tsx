@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SyntheticEvent, useState, useRef } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -7,7 +7,8 @@ import { updateCollateralAction } from "../../../common/actions/vault.actions";
 import { planckToDOT, dotToPlanck } from "@interlay/polkabtc";
 import { StoreType } from "../../../common/types/util.types";
 import BN from "bn.js";
-import { isNumeric } from "../../../common/utils/utils";
+import { isPositiveNumeric } from "../../../common/utils/utils";
+import { DOT } from "@interlay/polkabtc/build/interfaces/default";
 
 type UpdateCollateralForm = {
     collateral: string;
@@ -18,33 +19,54 @@ type UpdateCollateralProps = {
     show: boolean;
 };
 
+function parseOldAndNewCollateral(oldCollateral: string, newCollateral: string): [BN, BN] {
+    if (!isPositiveNumeric(newCollateral)) {
+        throw new Error("Collateral string must be a positive number");
+    }
+    const oldCollateralAsPlanckString = dotToPlanck(oldCollateral);
+    const newCollateralAsPlanckString = dotToPlanck(newCollateral);
+    if (oldCollateralAsPlanckString === undefined || newCollateralAsPlanckString === undefined) {
+        throw new Error("Collateral is less than 1 planck");
+    }
+    const oldCollateralAsPlanck = new BN(oldCollateralAsPlanckString);
+    const newCollateralAsPlanck = new BN(newCollateralAsPlanckString);
+
+    return [oldCollateralAsPlanck, newCollateralAsPlanck];
+}
+
 export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     const { register, handleSubmit, errors } = useForm<UpdateCollateralForm>();
     const totalCollateralString = useSelector((state: StoreType) => state.vault.collateral);
     const dispatch = useDispatch();
+    const [isAWithdrawal, setIsAWithdrawal] = useState(false);
+    const [newCollaterlization, setNewCollaterlization] = useState("∞");
+    const accountId = useRef("");
+
+    async function initializeAccountId() {
+        if (accountId.current === "") {
+            accountId.current = await window.vaultClient.getAccountId();
+        }
+    }
 
     const onSubmit = handleSubmit(async ({ collateral }) => {
         try {
-            if (!isNumeric(collateral)) {
-                throw new Error("Collateral string must be a positive in");
-            }
-            const totalCollateralAsPlanckString = dotToPlanck(totalCollateralString);
-            const newCollateralAsPlanckString = dotToPlanck(collateral.toString());
-            if (totalCollateralAsPlanckString === undefined || newCollateralAsPlanckString === undefined) {
-                throw new Error("Collateral is less than 1 planck");
-            }
-            const totalCollateralAsPlanck = new BN(totalCollateralString);
-            const newCollateralAsPlanck = new BN(newCollateralAsPlanckString);
+            const [totalCollateralAsPlanck, newCollateralAsPlanck] = parseOldAndNewCollateral(
+                totalCollateralString,
+                collateral
+            );
             if (totalCollateralAsPlanck > newCollateralAsPlanck) {
                 const collateralToWithdraw = totalCollateralAsPlanck.sub(newCollateralAsPlanck);
                 await window.vaultClient.withdrawCollateral(collateralToWithdraw.toString());
-            } else {
+            } else if (totalCollateralAsPlanck < newCollateralAsPlanck) {
                 const collateralToLock = newCollateralAsPlanck.sub(totalCollateralAsPlanck);
                 await window.vaultClient.lockAdditionalCollateral(collateralToLock.toString());
+            } else {
+                props.onClose();
+                return;
             }
 
-            const accountId = await window.vaultClient.getAccountId();
-            const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
+            initializeAccountId();
+            const vaultId = window.polkaBTC.api.createType("AccountId", accountId.current);
             const balanceLockedDOT = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
             const collateralDotString = planckToDOT(balanceLockedDOT.toString());
             dispatch(updateCollateralAction(collateralDotString));
@@ -54,6 +76,33 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
             toast.error(error.toString());
         }
     });
+
+    const onChange = async (obj: SyntheticEvent) => {
+        const targetObject = obj.target as HTMLInputElement;
+        const newCollateralString = targetObject.value;
+        if (newCollateralString === "") {
+            return;
+        }
+        const [totalCollateralAsPlanck, newCollateralAsPlanck] = parseOldAndNewCollateral(
+            totalCollateralString,
+            newCollateralString
+        );
+
+        if (newCollateralAsPlanck.lt(totalCollateralAsPlanck)) {
+            setIsAWithdrawal(true);
+        } else {
+            setIsAWithdrawal(false);
+        }
+
+        initializeAccountId();
+        const vaultId = window.polkaBTC.api.createType("AccountId", accountId.current);
+        const newCollateralAsDOT = window.polkaBTC.api.createType("u128", newCollateralAsPlanck) as DOT;
+        const newCollateralizationAsNumber = await window.polkaBTC.vaults.getCollateralization(
+            vaultId,
+            newCollateralAsDOT
+        );
+        setNewCollaterlization(newCollateralizationAsNumber.toString());
+    };
 
     return (
         <Modal show={props.show} onHide={props.onClose}>
@@ -79,6 +128,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                                     ref={register({
                                         required: true,
                                     })}
+                                    onChange={onChange}
                                 ></input>
                                 <div className="input-group-append">
                                     <span className="input-group-text" id="basic-addon2">
@@ -94,15 +144,15 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                                 </div>
                             )}
                         </div>
-                        <div className="col-12">New Collateralization 340%</div>
+                        <div className="col-12">New Collateralization {newCollaterlization}%</div>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={props.onClose}>
                         Cancel
                     </Button>
-                    <Button variant="outline-success" type="submit">
-                        Update
+                    <Button variant={isAWithdrawal ? "outline-danger" : "outline-success"} type="submit">
+                        {isAWithdrawal ? "Withdraw Collateral" : "Add Collateral"}
                     </Button>
                 </Modal.Footer>
             </form>
