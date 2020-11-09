@@ -49,7 +49,7 @@ export default function VaultDashboardPage() {
 
             const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
             const vault = await window.polkaBTC.vaults.get(vaultId);
-            setVaultId(vaultId.toString());
+            setVaultId(vault.id.toString());
 
             const vaultBTCAddress = getP2WPKHFromH160(vault.wallet.address);
             if (vaultBTCAddress === undefined) {
