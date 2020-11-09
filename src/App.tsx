@@ -140,7 +140,7 @@ export default class App extends Component<{}, AppState> {
         return (
             <Provider store={store}>
                 <Router>
-                    <div className="main d-flex flex-column min-vh-100">
+                    <div className="main d-flex flex-column min-vh-100 polkabtc-background">
                         <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
                         {!constants.STATIC_PAGE_ONLY && (
                             <Topbar
