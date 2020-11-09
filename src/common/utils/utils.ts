@@ -82,12 +82,12 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
 }
 
 /**
- * Checks whether string represents an integer or a floating point number
+ * Checks whether string represents a positive integer or a floating point number
  * @remarks String of the form ".23" are not considered numeric. Use "0.23" instead.
  * @param s Arbitrary string
  * @returns True if string is numeric, false otherwise.
  */
-export function isNumeric(s: string): boolean {
+export function isPositiveNumeric(s: string): boolean {
     const reg = new RegExp(NUMERIC_STRING_REGEX);
     return reg.test(s);
 }
