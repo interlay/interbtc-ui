@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from "react";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 import { Table } from "react-bootstrap";
 import { 
-    formatDateTime,
     remove0x,
     shortAddress,
     shortTxId,
@@ -76,7 +75,7 @@ export default function RedeemRequests() {
                     <tr>
                         <th>Redeem ID</th>
                         <th>Amount</th>
-                        <th>Creation</th>
+                        <th>Block Number</th>
                         <th>Vault BTC Address</th>
                         <th>BTC Transaction</th>
                         <th>Confirmations</th>
@@ -90,7 +89,7 @@ export default function RedeemRequests() {
                                 <tr key={request.id}>
                                     <td>{shortAddress(request.id)}</td>
                                     <td>{request.amountPolkaBTC} BTC</td>
-                                    <td>{formatDateTime(request.creation)}</td>
+                                    <td>{request.creation}</td>
                                     <td>{shortAddress(remove0x(request.vaultBTCAddress))}</td>
                                     <td>{shortTxId(request.btcTxId)}</td>
                                     <td>{request.confirmations}</td>

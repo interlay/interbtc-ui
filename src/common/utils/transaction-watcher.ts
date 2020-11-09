@@ -51,8 +51,9 @@ export async function updateTransactionStatusRedeem(
 ): Promise<void> {
     if (request && request.btcTxId) {
         try {
-            const txStatus = await window.polkaBTC.btcCore.getTransactionStatus(remove0x(request.btcTxId));
             const updatedRequest = request;
+            updatedRequest.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id);
+            const txStatus = await window.polkaBTC.btcCore.getTransactionStatus(remove0x(updatedRequest.btcTxId));
             if (request.confirmations !== txStatus.confirmations) {
                 updatedRequest.confirmations = txStatus.confirmations;
                 dispatch(updateRedeemRequestAction(updatedRequest));

@@ -91,7 +91,7 @@ export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: Par
     return {
         id: id.toString(),
         amountPolkaBTC: parachainRedeemRequest.amount_polka_btc.toString(),
-        creation: new Date(parachainRedeemRequest.opentime.toString()),
+        creation: parachainRedeemRequest.opentime.toString(),
         vaultBTCAddress: parachainRedeemRequest.btc_address.toString(),
         btcTxId: "",
         confirmations: 0,
@@ -115,9 +115,6 @@ export const arrayToMap = (
 ): Map<string, IssueRequest[] | RedeemRequest[]> => {
     const map = new Map();
     for (const key in arr) {
-        arr[key].forEach((request: IssueRequest | RedeemRequest) => {
-            request.creation = new Date(request.creation);
-        });
         map.set(key, arr[key]);
     }
     return map;
