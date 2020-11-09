@@ -86,7 +86,7 @@ export default function StakedRelayerPage() {
                             <div className="stats">Fees earned: {feesEarned}</div>
                         </div>
                     </div>
-                    {new BN(planckLocked) === new BN(0) && (
+                    {new BN(planckLocked).isZero() && (
                         <Button
                             variant="outline-success"
                             className="staked-button"
@@ -96,7 +96,7 @@ export default function StakedRelayerPage() {
                         </Button>
                     )}
                     <BitcoinTable></BitcoinTable>
-                    {new BN(planckLocked) > new BN(0) && (
+                    {new BN(planckLocked).gt(new BN(0)) && (
                         <Button
                             variant="outline-danger"
                             className="staked-button"
@@ -114,7 +114,7 @@ export default function StakedRelayerPage() {
                     ></StatusUpdateTable>
                     <VaultTable></VaultTable>
                     <OracleTable planckLocked={planckLocked}></OracleTable>
-                    {new BN(planckLocked) > new BN(0) && (
+                    {new BN(planckLocked).gt(new BN(0)) && (
                         <React.Fragment>
                             <ButtonMaybePending
                                 className="staked-button"
