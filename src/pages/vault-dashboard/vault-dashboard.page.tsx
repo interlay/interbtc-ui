@@ -31,6 +31,8 @@ export default function VaultDashboardPage() {
     const collateral = useSelector((state: StoreType) => state.vault.collateral);
     const lockedBTC = useSelector((state: StoreType) => state.vault.lockedBTC);
     const [feesEarned] = useState("0");
+    const [vaultId, setVaultId] = useState("0");
+    const [accountId, setAccountId] = useState("0");
     const dispatch = useDispatch();
 
     const closeRegisterVaultModal = () => setShowRegisterVaultModal(false);
@@ -43,8 +45,11 @@ export default function VaultDashboardPage() {
             if (!polkaBtcLoaded || !vaultClientLoaded) return;
 
             const accountId = await window.vaultClient.getAccountId();
+            setAccountId(accountId);
+
             const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
             const vault = await window.polkaBTC.vaults.get(vaultId);
+            setVaultId(vault.id.toString());
 
             const vaultBTCAddress = getP2WPKHFromH160(vault.wallet.address);
             if (vaultBTCAddress === undefined) {
@@ -126,7 +131,7 @@ export default function VaultDashboardPage() {
                         </div>
                     </div>
                 </div>
-                {collateralization === 0 && (
+                {(vaultId !== accountId) && (
                     <Button
                         variant="outline-success"
                         className="register-vault-dashboard"
