@@ -93,10 +93,8 @@ export default class App extends Component<{}, AppState> {
             window.vaultClient = new VaultClient(constants.VAULT_CLIENT_URL);
             store.dispatch(isVaultClientLoaded(true));
 
-            // window.polkaBTC = {}; await createPolkabtcAPI(constants.PARACHAIN_URL);
-            console.log(window.polkaBTC.vaults);
-            
-            // store.dispatch(isPolkaBtcLoaded(true));
+            window.polkaBTC = await createPolkabtcAPI(constants.PARACHAIN_URL);            
+            store.dispatch(isPolkaBtcLoaded(true));
         }
         catch(error){
             if (!window.polkaBTC)
