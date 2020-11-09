@@ -105,7 +105,7 @@ export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: Par
  * @param s Arbitrary string
  * @returns True if string is numeric, false otherwise.
  */
-export function isNumeric(s: string): boolean {
+export function isPositiveNumeric(s: string): boolean {
     const reg = new RegExp(NUMERIC_STRING_REGEX);
     return reg.test(s);
 }

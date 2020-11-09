@@ -21,6 +21,7 @@ export default function LandingPage(): JSX.Element {
                     </Link>
                     <h1 className="text-white mt-5">PolkaBTC</h1>
                     <h2 className="text-white">Bitcoin for Polkadot's DeFi Ecosystem</h2>
+                    
                     {!constants.STATIC_PAGE_ONLY ? (
                         <div>
                             <Row className="mt-4">

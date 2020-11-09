@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import polkaBTCLogo from "../../assets/img/polkabtc/PolkaBTC_black.png";
+import polkaBTCLogo from "../../assets/img/polkabtc/PolkaBTC_black.svg";
 import { Navbar, Nav, Image, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
