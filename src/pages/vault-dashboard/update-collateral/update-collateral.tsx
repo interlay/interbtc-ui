@@ -97,11 +97,15 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
         initializeAccountId();
         const vaultId = window.polkaBTC.api.createType("AccountId", accountId.current);
         const newCollateralAsDOT = window.polkaBTC.api.createType("u128", newCollateralAsPlanck) as DOT;
-        const newCollateralizationAsNumber = await window.polkaBTC.vaults.getCollateralization(
+        const newCollateralization = await window.polkaBTC.vaults.getVaultCollateralization(
             vaultId,
             newCollateralAsDOT
         );
-        setNewCollaterlization(newCollateralizationAsNumber.toString());
+        if (newCollateralization !== undefined) {
+            setNewCollaterlization(newCollateralization.toString());
+        } else {
+            setNewCollaterlization("∞");
+        }
     };
 
     return (
