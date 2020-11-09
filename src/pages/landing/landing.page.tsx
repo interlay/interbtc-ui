@@ -11,6 +11,7 @@ import "./landing.page.scss";
 export default function LandingPage(): JSX.Element {
     const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
     const totalLockedDOT = useSelector((state: StoreType) => state.general.totalLockedDOT);
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
     return (
         <div>
@@ -34,22 +35,24 @@ export default function LandingPage(): JSX.Element {
                                     <h5 className="text-white">Locked: {totalLockedDOT} DOT</h5>
                                 </Col>
                             </Row>
-                            <Row className="mt-5">
-                                <Col className="mt-2" xs="12" sm={{ span: 4, offset: 2 }}>
-                                    <NavLink className="text-decoration-none" to="/issue">
-                                        <Button variant="outline-polkadot" size="lg" block>
-                                            Issue PolkaBTC
-                                        </Button>
-                                    </NavLink>
-                                </Col>
-                                <Col className="mt-2" xs="12" sm={{ span: 4 }}>
-                                    <NavLink className="text-decoration-none" to="/redeem">
-                                        <Button variant="outline-bitcoin" size="lg" block>
-                                            Redeem PolkaBTC
-                                        </Button>
-                                    </NavLink>
-                                </Col>
-                            </Row>
+                            {polkaBtcLoaded && 
+                                <Row className="mt-5">
+                                    <Col className="mt-2" xs="12" sm={{ span: 4, offset: 2 }}>
+                                        <NavLink className="text-decoration-none" to="/issue">
+                                            <Button variant="outline-polkadot" size="lg" block>
+                                                Issue PolkaBTC
+                                            </Button>
+                                        </NavLink>
+                                    </Col>
+                                    <Col className="mt-2" xs="12" sm={{ span: 4 }}>
+                                        <NavLink className="text-decoration-none" to="/redeem">
+                                            <Button variant="outline-bitcoin" size="lg" block>
+                                                Redeem PolkaBTC
+                                            </Button>
+                                        </NavLink>
+                                    </Col>
+                                </Row>
+                            }
                         </div>
                     ) : (
                         ""

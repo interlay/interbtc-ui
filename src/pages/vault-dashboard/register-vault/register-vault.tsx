@@ -4,9 +4,10 @@ import ButtonMaybePending from "../../../common/components/pending-button";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { BTC_ADDRESS_TESTNET_REGEX } from "../../../constants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateBTCAddressAction, updateCollateralAction } from "../../../common/actions/vault.actions";
 import { planckToDOT, dotToPlanck } from "@interlay/polkabtc";
+import { StoreType } from "../../../common/types/util.types";
 import BN from "bn.js";
 
 type RegisterVaultForm = {
@@ -23,8 +24,10 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
     const { register, handleSubmit, errors } = useForm<RegisterVaultForm>();
     const dispatch = useDispatch();
     const [isPending, setIsPending] = useState(false);
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
     const onSubmit = handleSubmit(async ({ collateral, address }) => {
+        if (!polkaBtcLoaded) return;
         try {
             setIsPending(true);
             const collateralAsPlanck = dotToPlanck(collateral.toString());
