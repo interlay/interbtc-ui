@@ -269,7 +269,7 @@ export interface UpdateBTCAddress {
 
 export interface UpdateCollateralization {
     type: typeof UPDATE_COLLATERALIZATION;
-    collateralization: number;
+    collateralization: number | undefined;
 }
 
 export interface UpdateCollateral {
