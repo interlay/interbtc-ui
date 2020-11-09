@@ -64,6 +64,8 @@ export const RESET_REDEEM_WIZARD = "RESET_REDEEM_WIZARD";
 export const STORE_REDEEM_REQUEST = "STORE_REDEEM_REQUEST";
 export const ADD_REDEEM_REQUEST = "ADD_REDEEM_REQUEST";
 export const ADD_VAULT_REDEEMS = "ADD_VAULT_REDEEMS";
+export const ADD_TRANSACTION_LISTENER_REDEEM = "ADD_TRANSACTION_LISTENER_REDEEM";
+export const UPDATE_REDEEM_REQUEST = "UPDATE_REDEEM_REQUEST";
 
 export interface ChangeVaultBtcAddressOnRedeem {
     type: typeof CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM;
@@ -119,6 +121,16 @@ export interface AddVaultRedeems {
     vaultRedeems: VaultRedeem[];
 }
 
+export interface AddTransactionListenerRedeem {
+    type: typeof ADD_TRANSACTION_LISTENER_REDEEM;
+    id: string;
+}
+
+export interface UpdateRedeemRequest {
+    type: typeof UPDATE_REDEEM_REQUEST;
+    request: RedeemRequest;
+}
+
 export type RedeemActions =
     | ChangeRedeemStep
     | ChangeAmountPolkaBtc
@@ -132,7 +144,9 @@ export type RedeemActions =
     | AddRedeemRequest
     | ChangeAddress
     | InitState
-    | AddVaultRedeems;
+    | AddVaultRedeems
+    | AddTransactionListenerRedeem
+    | UpdateRedeemRequest;
 
 // ISSUE
 
@@ -147,7 +161,7 @@ export const STORE_ISSUE_REQUEST = "STORE_ISSUE_REQUEST";
 export const CHANGE_BTC_TX_ID = "CHANGE_BTC_TX_ID";
 export const ADD_ISSUE_REQUEST = "ADD_ISSUE_REQUEST";
 export const UPDATE_ISSUE_REQUEST = "UPDATE_ISSUE_REQUEST";
-export const ADD_TRANSACTION_LISTENER = "ADD_TRANSACTION_LISTENER";
+export const ADD_TRANSACTION_LISTENER_ISSUE = "ADD_TRANSACTION_LISTENER_ISSUE";
 export const OPEN_WIZARD_IN_EDIT_MODE = "OPEN_WIZARD_IN_EDIT_MODE";
 export const ADD_VAULT_ISSUES = "ADD_VAULT_ISSUES";
 
@@ -210,8 +224,8 @@ export interface UpdateIssueRequest {
     request: IssueRequest;
 }
 
-export interface AddTransactionListener {
-    type: typeof ADD_TRANSACTION_LISTENER;
+export interface AddTransactionListenerIssue {
+    type: typeof ADD_TRANSACTION_LISTENER_ISSUE;
     id: string;
 }
 
@@ -231,7 +245,7 @@ export type IssueActions =
     | StoreIssueRequest
     | AddIssueRequest
     | UpdateIssueRequest
-    | AddTransactionListener
+    | AddTransactionListenerIssue
     | OpenWizardInEditMode
     | ChangeAddress
     | InitState

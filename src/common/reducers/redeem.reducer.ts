@@ -7,8 +7,11 @@ import {
     CHANGE_BTC_ADDRESS,
     CHANGE_REDEEM_ID,
     CHANGE_ADDRESS,
+    ADD_TRANSACTION_LISTENER_REDEEM,
+    INIT_STATE,
     RedeemActions,
     ADD_REDEEM_REQUEST,
+    UPDATE_REDEEM_REQUEST,
 } from "../types/actions.types";
 import { RedeemState } from "../types/redeem.types";
 
@@ -21,6 +24,7 @@ const initialState = {
     vaultDotAddress: "",
     id: "",
     redeemRequests: new Map(),
+    transactionListeners: [],
     vaultRedeems: [],
 };
 
@@ -51,6 +55,21 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
                 newMap.set(state.address, [action.request]);
             }
             return { ...state, redeemRequests: newMap };
+        case ADD_TRANSACTION_LISTENER_REDEEM:
+            if (state.transactionListeners.indexOf(action.id) !== -1) return state;
+            return { ...state, transactionListeners: [...state.transactionListeners, action.id] };
+        case UPDATE_REDEEM_REQUEST:
+            const map = new Map(state.redeemRequests);
+            const reqs = state.redeemRequests.get(state.address);
+            if (!reqs) return state;
+            const updateRequests = reqs.map((request) => {
+                if (action.request.id !== request.id) return request;
+                else return action.request;
+            });
+            map.set(state.address, updateRequests);
+            return { ...state, redeemRequests: map };
+        case INIT_STATE:
+            return { ...state, transactionListeners: [] };
         default:
             return state;
     }

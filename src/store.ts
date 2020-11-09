@@ -46,6 +46,7 @@ export const getInitialState = (): StoreType => {
             btcAddress: "",
             vaultBtcAddress: "",
             vaultDotAddress: "",
+            transactionListeners: [],
             id: "",
             redeemRequests: new Map(),
             vaultRedeems: [],

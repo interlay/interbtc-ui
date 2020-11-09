@@ -42,7 +42,7 @@ export default function Confirmation() {
             const request: RedeemRequest = {
                 id,
                 amountPolkaBTC,
-                creation: new Date(),
+                creation: "",
                 vaultBTCAddress,
                 btcTxId: "",
                 confirmations: 0,

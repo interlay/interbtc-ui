@@ -3,7 +3,7 @@ import { IssueRequest, VaultIssue } from "../types/issue.types";
 import {
     DOT,
     PolkaBTC,
-    RedeemRequest as PolkaRedeemRequest,
+    RedeemRequest as ParachainRedeemRequest,
     ReplaceRequest,
 } from "@interlay/polkabtc/build/interfaces/default";
 import { VaultReplaceRequest } from "../types/vault.types";
@@ -82,7 +82,25 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
 }
 
 /**
- * Checks whether string represents a positive integer or a floating point number
+ * Converts an IssueRequest object retrieved from the parachain
+ * to a UI IssueRequest object
+ * @param id H256, the key of the IssueRequest object in the parachain map storage object
+ * @param parachainIssueRequest ParachainIssueRequest
+ */
+export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: ParachainRedeemRequest): RedeemRequest {
+    return {
+        id: id.toString(),
+        amountPolkaBTC: parachainRedeemRequest.amount_polka_btc.toString(),
+        creation: parachainRedeemRequest.opentime.toString(),
+        vaultBTCAddress: parachainRedeemRequest.btc_address.toString(),
+        btcTxId: "",
+        confirmations: 0,
+        completed: false,
+    };
+}
+
+/**
+ * Checks whether string represents an integer or a floating point number
  * @remarks String of the form ".23" are not considered numeric. Use "0.23" instead.
  * @param s Arbitrary string
  * @returns True if string is numeric, false otherwise.
@@ -97,9 +115,6 @@ export const arrayToMap = (
 ): Map<string, IssueRequest[] | RedeemRequest[]> => {
     const map = new Map();
     for (const key in arr) {
-        arr[key].forEach((request: IssueRequest | RedeemRequest) => {
-            request.creation = new Date(request.creation);
-        });
         map.set(key, arr[key]);
     }
     return map;
@@ -158,7 +173,7 @@ function convertParachainTypes(parachainObject: ParsableParachainTypes): [string
     return [parsedBtcAddress, parsedPolkaBTC, parsedDOT];
 }
 
-export const redeemRequestToVaultRedeem = (requests: PolkaRedeemRequest[]): VaultRedeem[] => {
+export const redeemRequestToVaultRedeem = (requests: ParachainRedeemRequest[]): VaultRedeem[] => {
     return requests.map((request) => {
         const [btcAddress, polkaBTC, unlockedDOT] = convertParachainTypes(request);
         return {
