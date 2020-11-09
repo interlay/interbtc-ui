@@ -19,6 +19,24 @@ services:
       - -rpcpassword=rpcpassword
     ports:
       - "18443:18443"
+  electrs:
+    image: "interlayhq/electrs:latest"
+    command:
+      - electrs
+      - -vvvv
+      - --network
+      - regtest
+      - --jsonrpc-import
+      - --cors
+      - "*"
+      - --cookie
+      - "rpcuser:rpcpassword"
+      - --daemon-rpc-addr
+      - bitcoind:18443
+      - --http-addr
+      - "[::0]:3002"
+    ports:
+      - "3002:3002"
   staked-relayer:
     # TODO: add health check
     image: "registry.gitlab.com/interlay/polkabtc-clients:staked-relayer-dev"
