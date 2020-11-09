@@ -14,7 +14,6 @@ type TopbarProps = {
 export default function Topbar(props: TopbarProps): ReactElement {
     const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
     const vaultClientLoaded = useSelector((state: StoreType) => state.general.vaultClientLoaded);
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const [isRelayerConnected, setIsRelayerConnected] = useState(false);
     const [isVaultConnected, setIsVaultConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -44,12 +43,12 @@ export default function Topbar(props: TopbarProps): ReactElement {
             <Navbar.Collapse id="basic-navbar-nav">
                 {!isLoading &&  
                 <Nav className="mr-auto">
-                    {!constants.STATIC_PAGE_ONLY && polkaBtcLoaded && (
+                    {!constants.STATIC_PAGE_ONLY && (
                         <Link className="nav-link" to="/issue">
                             Issue
                         </Link>
                     )}
-                    {!constants.STATIC_PAGE_ONLY && polkaBtcLoaded &&  (
+                    {!constants.STATIC_PAGE_ONLY && (
                         <Link className="nav-link" to="/redeem">
                             Redeem
                         </Link>

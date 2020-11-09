@@ -86,35 +86,18 @@ export default class App extends Component<{}, AppState> {
     }
 
     async createAPIInstace(): Promise<void> {
-        try {
-            window.relayer = new StakedRelayerClient(constants.STAKED_RELAYER_URL);
-            store.dispatch(isStakedRelayerLoaded(true));
+        window.relayer = new StakedRelayerClient(constants.STAKED_RELAYER_URL);
+        store.dispatch(isStakedRelayerLoaded(true));
 
-            window.vaultClient = new VaultClient(constants.VAULT_CLIENT_URL);
-            store.dispatch(isVaultClientLoaded(true));
+        window.vaultClient = new VaultClient(constants.VAULT_CLIENT_URL);
+        store.dispatch(isVaultClientLoaded(true));
 
-            setTimeout(() => {
-                if (!window.polkaBTC) {
-                    toast.warn("Unable to connect to the BTC-Parachain. " + 
-                    "Please check your internet connection or try again later.");
-                }
-            },5000);
-            window.polkaBTC = await createPolkabtcAPI(constants.PARACHAIN_URL, constants.BITCOIN_NETWORK);
-            store.dispatch(isPolkaBtcLoaded(true));
-        } catch(error) {
-            if (!window.polkaBTC)
-                toast.warn("Unable to connect to the BTC-Parachain. " + 
-                "Please check your internet connection or try again later.");
-        }
+        window.polkaBTC = await createPolkabtcAPI(constants.PARACHAIN_URL, constants.BITCOIN_NETWORK);
 
+        store.dispatch(isPolkaBtcLoaded(true));
     }
 
     async initDataOnAppBootstrap(): Promise<void> {
-        const polkaBtcLoaded = store.getState().general.polkaBtcLoaded;
-        if (!polkaBtcLoaded) {
-            return;
-        }
-
         const totalPolkaSAT = await window.polkaBTC.treasury.totalPolkaBTC();
         const totalLockedPLANCK = await window.polkaBTC.collateral.totalLockedDOT();
         const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
