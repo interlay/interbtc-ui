@@ -47,17 +47,25 @@ export default function ReportModal(props: RegisterModalType): ReactElement {
                     </div>
                     <div className="row">
                         <div className="col-12">Stake</div>
-                        <div className="col-12">
-                            <input
-                                name="stake"
-                                type="number"
-                                className={"custom-input" + (errors.stake ? " error-borders" : "")}
-                                defaultValue={0}
-                                ref={register({
-                                    // TODO: validate minimum
-                                    required: true,
-                                })}
-                            ></input>
+                        <div className="col-12 basic-addon">
+                            <div className="input-group">
+                                <input
+                                    name="stake"
+                                    type="number"
+                                    className={"form-control custom-input" + (errors.stake ? " error-borders" : "")}
+                                    defaultValue={0}
+                                    aria-describedby="basic-addon2"
+                                    ref={register({
+                                        // TODO: validate minimum
+                                        required: true,
+                                    })}
+                                ></input>
+                                <div className="input-group-append">
+                                    <span className="input-group-text" id="basic-addon2">
+                                        Planck
+                                    </span>
+                                </div>
+                            </div>
                             {errors.stake && (
                                 <div className="input-error">
                                     {errors.stake.type === "required" ? "stake is required" : errors.stake.message}
