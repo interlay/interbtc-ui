@@ -11,7 +11,8 @@ import {
 import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { btcToSat, getP2WPKHFromH160, satToBTC } from "@interlay/polkabtc";
+import { btcToSat, satToBTC } from "@interlay/polkabtc";
+import { getAddressFromH160 } from "../../../common/utils/utils";
 
 type EnterPolkaBTCForm = {
     amountPolkaBTC: string;
@@ -57,7 +58,7 @@ export default function EnterPolkaBTCAmount() {
 
             // get the vault's data
             const vault = await window.polkaBTC.vaults.get(vaultId);
-            const vaultBTCAddress = getP2WPKHFromH160(vault.wallet.address);
+            const vaultBTCAddress = getAddressFromH160(vault.wallet.address);
             if (vaultBTCAddress === undefined) {
                 throw new Error("Vault has invalid BTC address.");
             }

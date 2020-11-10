@@ -3,7 +3,7 @@ import { Modal, Button } from "react-bootstrap";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { BTC_ADDRESS_TESTNET_REGEX } from "../../../constants";
+import { BTC_ADDRESS_REGEX } from "../../../constants";
 import { useDispatch, useSelector } from "react-redux";
 import { updateBTCAddressAction, updateCollateralAction } from "../../../common/actions/vault.actions";
 import { planckToDOT, dotToPlanck } from "@interlay/polkabtc";
@@ -97,7 +97,7 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
                                 ref={register({
                                     required: true,
                                     pattern: {
-                                        value: BTC_ADDRESS_TESTNET_REGEX,
+                                        value: BTC_ADDRESS_REGEX,
                                         message: "Please enter valid BTC address",
                                     },
                                 })}

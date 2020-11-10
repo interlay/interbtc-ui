@@ -15,17 +15,28 @@ export const STATIC_PAGE_ONLY = getStaticPage();
 // Set to true is on mainnet.
 export const BTC_MAINNET = false;
 
+// regtest btc address validation regex
+export const BTC_REGTEST_REGEX = /\b([2mn][a-km-zA-HJ-NP-Z1-9]{25,34}|bcrt1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})\b/;
 // testnet btc address validation regex
-export const BTC_ADDRESS_TESTNET_REGEX = /\b([2mn][a-km-zA-HJ-NP-Z1-9]{25,34}|tb1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})\b/;
+export const BTC_TESTNET_REGEX = /\b([2mn][a-km-zA-HJ-NP-Z1-9]{25,34}|tb1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})\b/;
 // mainnet btc address validation regex
-export const BTC_ADDRESS_MAINNET_REGEX = /\b([13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})\b/;
+export const BTC_MAINNET_REGEX = /\b([13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})\b/;
 // btc transaction validation regex
 export const BTC_TRANSACTION_ID_REGEX = /[a-fA-F0-9]{64}/;
 
 // regex for validating input strings as numbers
 export const NUMERIC_STRING_REGEX = /^[0-9]+([.][0-9]+)?$/;
 
-export const BITCOIN_NETWORK = process.env.REACT_APP_BITCOIN_NETWORK || "http://localhost:3002";
+export const BITCOIN_NETWORK = process.env.REACT_APP_BITCOIN_NETWORK || "regtest";
+export const BITCOIN_REGTEST_URL = process.env.REACT_APP_BITCOIN_REGTEST_URL || "http://localhost:3002";
+
+export const BTC_ADDRESS_REGEX =
+    BITCOIN_NETWORK === "mainnet"
+        ? BTC_MAINNET_REGEX
+        : BITCOIN_NETWORK === "testnet"
+        ? BTC_TESTNET_REGEX
+        : BTC_REGTEST_REGEX;
+
 export const PARACHAIN_URL = process.env.REACT_APP_PARACHAIN_URL || "ws://127.0.0.1:9944";
 export const STAKED_RELAYER_URL = process.env.REACT_APP_STAKED_RELAYER_URL || "http://localhost:3030";
 export const VAULT_CLIENT_URL = process.env.REACT_APP_VAULT_CLIENT_URL || "http://localhost:3031";
