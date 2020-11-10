@@ -28,7 +28,7 @@ export const NUMERIC_STRING_REGEX = /^[0-9]+([.][0-9]+)?$/;
 export const BITCOIN_NETWORK = process.env.REACT_APP_BITCOIN_NETWORK || "http://localhost:3002";
 export const PARACHAIN_URL = process.env.REACT_APP_PARACHAIN_URL || "ws://127.0.0.1:9944";
 export const STAKED_RELAYER_URL = process.env.REACT_APP_STAKED_RELAYER_URL || "http://localhost:3030";
-export const VAULT_CLIENT_URL = process.env.VAULT_CLIENT_URL || "http://localhost:3031";
+export const VAULT_CLIENT_URL = process.env.REACT_APP_VAULT_CLIENT_URL || "http://localhost:3031";
 
 export const BTC_EXPLORER_BLOCK_API = "https://blockstream.info/block/";
 export const BTC_TEST_EXPLORER_BLOCK_API = "https://blockstream.info/testnet/block/";
