@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { remove0x } from "./utils";
+import { stripHexPrefix } from "@interlay/polkabtc";
 import { Dispatch } from "redux";
 import { IssueRequest } from "../types/issue.types";
 import { RedeemRequest } from "../types/redeem.types";
@@ -23,7 +23,7 @@ export async function updateTransactionStatusIssue(
 ): Promise<void> {
     if (request && request.btcTxId && window.polkaBTC) {
         try {
-            const txStatus = await window.polkaBTC.btcCore.getTransactionStatus(remove0x(request.btcTxId));
+            const txStatus = await window.polkaBTC.btcCore.getTransactionStatus(stripHexPrefix(request.btcTxId));
             const updatedRequest = request;
             if (request.confirmations !== txStatus.confirmations) {
                 updatedRequest.confirmations = txStatus.confirmations;
@@ -53,7 +53,7 @@ export async function updateTransactionStatusRedeem(
         try {
             const updatedRequest = request;
             updatedRequest.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id);
-            const txStatus = await window.polkaBTC.btcCore.getTransactionStatus(remove0x(updatedRequest.btcTxId));
+            const txStatus = await window.polkaBTC.btcCore.getTransactionStatus(stripHexPrefix(updatedRequest.btcTxId));
             if (request.confirmations !== txStatus.confirmations) {
                 updatedRequest.confirmations = txStatus.confirmations;
                 dispatch(updateRedeemRequestAction(updatedRequest));

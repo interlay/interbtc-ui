@@ -30,39 +30,6 @@ export function dateToShortString(date: Date): string {
     return date.toDateString().substring(3) + date.toTimeString().substring(0, date.toTimeString().length);
 }
 
-export function remove0x(hash: string): string {
-    if (hash.substr(0, 2) === "0x") {
-        return hash.substr(2);
-    }
-    return hash;
-}
-
-/**
- * Converts endianness of a Uint8Array
- * @param bytes Uint8Array, to be converted LE<>BE
- */
-export function reverseEndianness(bytes: Uint8Array): Uint8Array {
-    let offset = bytes.length;
-    for (let index = 0; index < bytes.length; index += bytes.length) {
-        offset--;
-        for (let x = 0; x < offset; x++) {
-            const b = bytes[index + x];
-            bytes[index + x] = bytes[index + offset];
-            bytes[index + offset] = b;
-            offset--;
-        }
-    }
-    return bytes;
-}
-
-/**
- * Converts a Uin8Array to string, removing the leading "0x"
- * @param bytes
- */
-export function uint8ArrayToStringClean(bytes: Uint8Array): string {
-    return bytes.toString().substr(2).split("").join("");
-}
-
 /**
  * Converts an IssueRequest object retrieved from the parachain
  * to a UI IssueRequest object
