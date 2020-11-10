@@ -5,21 +5,22 @@ import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { updateBTCAddressAction } from "../../../common/actions/vault.actions";
+import { BTC_ADDRESS_REGEX } from "../../../constants";
 
 type UpdateBTCAddressForm = {
     btcAddress: string;
-}
+};
 
 type UpdateBTCAddressProps = {
     onClose: () => void;
     show: boolean;
 };
 
-export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps){
+export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps) {
     const { register, handleSubmit, errors } = useForm<UpdateBTCAddressForm>();
     const btcAddress = useSelector((state: StoreType) => state.vault.btcAddress);
     const dispatch = useDispatch();
-    
+
     const onSubmit = handleSubmit(async ({ btcAddress }) => {
         try {
             await window.vaultClient.updateBtcAddress(btcAddress);
@@ -49,12 +50,17 @@ export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps){
                                 className={"custom-input" + (errors.btcAddress ? " error-borders" : "")}
                                 ref={register({
                                     required: true,
+                                    pattern: {
+                                        value: BTC_ADDRESS_REGEX,
+                                        message: "Please enter valid BTC address",
+                                    },
                                 })}
                             ></input>
                             {errors.btcAddress && (
                                 <div className="input-error">
-                                    {errors.btcAddress.type === "required" ? 
-                                    "BTC address is required" : errors.btcAddress.message}
+                                    {errors.btcAddress.type === "required"
+                                        ? "BTC address is required"
+                                        : errors.btcAddress.message}
                                 </div>
                             )}
                         </div>
