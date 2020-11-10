@@ -71,15 +71,10 @@ To simplify testing, you may also run all of the required services with `docker-
 docker-compose up
 ```
 
-docker will run all services: parachain, staked-relayer, vault, oracle and bitcoin.
-
-Here are some useful commands for the killing process, removing images, removing volumes:
+Docker will run all services: parachain, staked-relayer, vault, oracle and bitcoin. To kill all services and reset the parachain use:
 
 ```shell
-docker kill $(docker ps -q)
-docker rm $(docker ps -a -q)
-docker rmi $(docker images -q)
-docker volume rm $(docker volume ls -q)
+docker-compose down -v
 ```
 
 ### Docker-Compose (Testnet)
@@ -96,9 +91,15 @@ Then start the remaining components with `docker-compose`:
 docker-compose --file docker-compose.testnet.yml up
 ```
 
+Start the app with:
+
+```shell
+REACT_APP_BITCOIN_NETWORK=testnet yarn start
+```
+
 > Note: This is only supported on Linux due to issues with `network_mode: "host"` on Mac.
 
-### Test Data
+### Test Data (Regtest)
 
 To simplify testing, you may also need to run test data scripts:
 In the polkabtc-clients repository run:
