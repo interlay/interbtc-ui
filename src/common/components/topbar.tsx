@@ -54,9 +54,10 @@ export default function Topbar(props: TopbarProps): ReactElement {
                             Redeem
                         </Link>
                     )}
-                    <Link className="nav-link" to="/dashboard">
+                    {polkaBtcLoaded && <Link className="nav-link" to="/dashboard">
                         Dashboard
                     </Link>
+                    }
                     {isVaultConnected && (
                         <Link className="nav-link" to="/vault">
                             Vault
