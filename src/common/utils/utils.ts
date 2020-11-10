@@ -9,8 +9,8 @@ import {
 import { VaultReplaceRequest } from "../types/vault.types";
 import { H160, H256 } from "@polkadot/types/interfaces";
 import { IssueRequest as ParachainIssueRequest } from "@interlay/polkabtc/build/interfaces/default";
-import { satToBTC, planckToDOT, getP2WPKHFromH160 } from "@interlay/polkabtc";
-import { NUMERIC_STRING_REGEX } from "../../constants";
+import { satToBTC, planckToDOT, getP2WPKHFromH160, bitcoin } from "@interlay/polkabtc";
+import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from "../../constants";
 
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;
@@ -140,6 +140,16 @@ interface ParsableParachainTypes {
     griefing_collateral?: DOT;
 }
 
+export function getAddressFromH160(hash: H160): string | undefined {
+    const btcNetwork =
+        BITCOIN_NETWORK === "mainnet"
+            ? bitcoin.networks.bitcoin
+            : BITCOIN_NETWORK === "testnet"
+            ? bitcoin.networks.testnet
+            : bitcoin.networks.regtest;
+    return getP2WPKHFromH160(hash, btcNetwork);
+}
+
 /**
  * Parses types which belong to request objects and need parsing/conversion to be displayed in the UI.
  *
@@ -149,7 +159,7 @@ interface ParsableParachainTypes {
 function convertParachainTypes(parachainObject: ParsableParachainTypes): [string, string, string] {
     let parsedPolkaBTC = "";
     let parsedDOT = "";
-    const parsedBtcAddress = getP2WPKHFromH160(parachainObject.btc_address);
+    const parsedBtcAddress = getAddressFromH160(parachainObject.btc_address);
     if (parsedBtcAddress === undefined) {
         throw new Error("Invalid BTC address encountered during parsing");
     }

@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import IssueTable from "./issue-table/issue-table";
 import RedeemTable from "./redeem-table/redeem-table";
 import ReplaceTable from "./replace-table/replace-table";
-import { satToBTC, planckToDOT, getP2WPKHFromH160 } from "@interlay/polkabtc";
+import { satToBTC, planckToDOT } from "@interlay/polkabtc";
 import {
     updateBTCAddressAction,
     updateCollateralizationAction,
@@ -18,6 +18,7 @@ import {
 } from "../../common/actions/vault.actions";
 import "./vault-dashboard.page.scss";
 import * as constants from "../../constants";
+import { getAddressFromH160 } from "../../common/utils/utils";
 
 export default function VaultDashboardPage() {
     const [showRegisterVaultModal, setShowRegisterVaultModal] = useState(false);
@@ -51,7 +52,7 @@ export default function VaultDashboardPage() {
             const vault = await window.polkaBTC.vaults.get(vaultId);
             setVaultId(vault.id.toString());
 
-            const vaultBTCAddress = getP2WPKHFromH160(vault.wallet.address);
+            const vaultBTCAddress = getAddressFromH160(vault.wallet.address);
             if (vaultBTCAddress === undefined) {
                 throw new Error("Vault has invalid BTC address.");
             }
@@ -94,48 +95,48 @@ export default function VaultDashboardPage() {
                         <div className="stats">Fees earned: {feesEarned}</div>
                     </div>
                 </div>
-                {(vaultId === accountId) && <React.Fragment>
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="stats btc-address-header">
-                                BTC Address: &nbsp;&nbsp;
-                                <a
-                                    href={
-                                        (constants.BTC_MAINNET
-                                            ? constants.BTC_EXPLORER_ADDRESS_API
-                                            : constants.BTC_TEST_EXPLORER_ADDRESS_API) + btcAddress
-                                    }
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    {btcAddress}
-                                </a>
-                                &nbsp;&nbsp;&nbsp;
-                                <i className="fa fa-edit" onClick={() => setShowUpdateBTCAddressModal(true)}></i>
+                {vaultId === accountId && (
+                    <React.Fragment>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="stats btc-address-header">
+                                    BTC Address: &nbsp;&nbsp;
+                                    <a
+                                        href={
+                                            (constants.BTC_MAINNET
+                                                ? constants.BTC_EXPLORER_ADDRESS_API
+                                                : constants.BTC_TEST_EXPLORER_ADDRESS_API) + btcAddress
+                                        }
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {btcAddress}
+                                    </a>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <i className="fa fa-edit" onClick={() => setShowUpdateBTCAddressModal(true)}></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="stats">
-                                Collateral: &nbsp; {collateral} DOT for {lockedBTC + " BTC"}
-                                &nbsp;&nbsp;&nbsp;
-                                <i className="fa fa-edit" onClick={() => setShowUpdateCollateralModal(true)}></i>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="stats">
+                                    Collateral: &nbsp; {collateral} DOT for {lockedBTC + " BTC"}
+                                    &nbsp;&nbsp;&nbsp;
+                                    <i className="fa fa-edit" onClick={() => setShowUpdateCollateralModal(true)}></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="stats">
-                                Collateralization: &nbsp;
-                                {collateralization === undefined ? "∞" : (collateralization * 100).toFixed(3)}%
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="stats">
+                                    Collateralization: &nbsp;
+                                    {collateralization === undefined ? "∞" : (collateralization * 100).toFixed(3)}%
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </React.Fragment>
-                }
-                
-                {(vaultId !== accountId) && (
+                    </React.Fragment>
+                )}
+                {vaultId !== accountId && (
                     <Button
                         variant="outline-success"
                         className="register-vault-dashboard"

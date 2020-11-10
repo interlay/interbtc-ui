@@ -95,17 +95,23 @@ export default class App extends Component<{}, AppState> {
 
             setTimeout(() => {
                 if (!window.polkaBTC) {
-                    toast.warn("Unable to connect to the BTC-Parachain. " + 
-                    "Please check your internet connection or try again later.");
+                    toast.warn(
+                        "Unable to connect to the BTC-Parachain. " +
+                            "Please check your internet connection or try again later."
+                    );
                 }
-            },5000);
-            window.polkaBTC = await createPolkabtcAPI(constants.PARACHAIN_URL, constants.BITCOIN_NETWORK);
+            }, 5000);
+            window.polkaBTC = await createPolkabtcAPI(
+                constants.PARACHAIN_URL,
+                constants.BITCOIN_NETWORK === "regtest" ? constants.BITCOIN_REGTEST_URL : constants.BITCOIN_NETWORK
+            );
             store.dispatch(isPolkaBtcLoaded(true));
-
-        } catch(error){
+        } catch (error) {
             if (!window.polkaBTC)
-            toast.warn("Unable to connect to the BTC-Parachain. " + 
-            "Please check your internet connection or try again later.");
+                toast.warn(
+                    "Unable to connect to the BTC-Parachain. " +
+                        "Please check your internet connection or try again later."
+                );
         }
     }
 
