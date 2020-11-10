@@ -12,14 +12,13 @@ import { toast } from "react-toastify";
 
 export default function DashboardPage() {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
     const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
     const totalLockedDOT = useSelector((state: StoreType) => state.general.totalLockedDOT);
     const [collateralizationRate, setCollateralizationRate] = useState("∞");
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!polkaBtcLoaded || !relayerLoaded) return;
+            if (!polkaBtcLoaded) return;
 
             try {
                 const collateralization = await window.polkaBTC.vaults.getSystemCollateralization();
@@ -33,7 +32,7 @@ export default function DashboardPage() {
             }
         };
         fetchData();
-    }, [polkaBtcLoaded, relayerLoaded]);
+    }, [polkaBtcLoaded]);
 
     return (
         <div className="dashboard-page container-fluid white-background">
