@@ -3,8 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { addVaultRedeemsAction } from "../../../common/actions/redeem.actions";
 import { redeemRequestToVaultRedeem } from "../../../common/utils/utils";
-import { satToBTC, planckToDOT } from "@interlay/polkabtc";
-
 
 export default function RedeemTable(): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -13,10 +11,10 @@ export default function RedeemTable(): ReactElement {
 
     useEffect(() => {
         const fetchData = async () => {
-            if(!polkaBtcLoaded) return;
-            
-            const accountId = await window.vaultClient.getAccountId();    
-            const vaultId = window.polkaBTC.api.createType("AccountId",accountId);         
+            if (!polkaBtcLoaded) return;
+
+            const accountId = await window.vaultClient.getAccountId();
+            const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
             const redeemsMap = await window.polkaBTC.vaults.mapRedeemRequests(vaultId);
             const redeems = redeemsMap.get(vaultId);
 
@@ -30,9 +28,7 @@ export default function RedeemTable(): ReactElement {
         <div className="redeem-table">
             <div className="row">
                 <div className="col-12">
-                    <div className="header">
-                        Redeem
-                    </div>
+                    <div className="header">Redeem</div>
                 </div>
             </div>
             <div className="row justify-content-center">
@@ -58,8 +54,8 @@ export default function RedeemTable(): ReactElement {
                                             <td>{redeem.timestamp}</td>
                                             <td>{redeem.user}</td>
                                             <td>{redeem.btcAddress}</td>
-                                            <td>{satToBTC(redeem.polkaBTC)}</td>
-                                            <td>{planckToDOT(redeem.unlockedDOT)}</td>
+                                            <td>{redeem.polkaBTC}</td>
+                                            <td>{redeem.unlockedDOT}</td>
                                             <td>{redeem.status}</td>
                                         </tr>
                                     );
