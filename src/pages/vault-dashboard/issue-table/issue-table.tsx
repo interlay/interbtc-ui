@@ -3,23 +3,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { addVaultIssuesAction } from "../../../common/actions/issue.actions";
 import { issueRequestToVaultIssue } from "../../../common/utils/utils";
-import { satToBTC, planckToDOT } from "@interlay/polkabtc";
-
 
 export default function IssueTable(): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const issues = useSelector((state: StoreType) => state.issue.vaultIssues);
     const dispatch = useDispatch();
-    
+
     useEffect(() => {
         const fetchData = async () => {
-            if(!polkaBtcLoaded) return;
+            if (!polkaBtcLoaded) return;
 
-            const accountId = await window.vaultClient.getAccountId();    
-            const vaultId = window.polkaBTC.api.createType("AccountId",accountId);
+            const accountId = await window.vaultClient.getAccountId();
+            const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
             const issuesMap = await window.polkaBTC.vaults.mapIssueRequests(vaultId);
             const issues = issuesMap.get(vaultId);
-            
+
             if (!issues) return;
             dispatch(addVaultIssuesAction(issueRequestToVaultIssue(issues)));
         };
@@ -30,9 +28,7 @@ export default function IssueTable(): ReactElement {
         <div className="issue-table">
             <div className="row">
                 <div className="col-12">
-                    <div className="header">
-                        Issue
-                    </div>
+                    <div className="header">Issue</div>
                 </div>
             </div>
             <div className="row justify-content-center">
@@ -58,8 +54,8 @@ export default function IssueTable(): ReactElement {
                                             <td>{issue.timestamp}</td>
                                             <td>{issue.user}</td>
                                             <td>{issue.btcAddress}</td>
-                                            <td>{satToBTC(issue.polkaBTC)}</td>
-                                            <td>{planckToDOT(issue.lockedDOT)}</td>
+                                            <td>{issue.polkaBTC}</td>
+                                            <td>{issue.lockedDOT}</td>
                                             <td>{issue.status}</td>
                                         </tr>
                                     );

@@ -4,7 +4,6 @@ import { StoreType } from "../../../common/types/util.types";
 import { addReplaceRequestsAction } from "../../../common/actions/vault.actions";
 import { Button } from "react-bootstrap";
 import { requestsToVaultReplaceRequests } from "../../../common/utils/utils";
-import { satToBTC, planckToDOT } from "@interlay/polkabtc";
 import BN from "bn.js";
 
 type ReplaceTableProps = {
@@ -64,8 +63,8 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
                                             <td>{redeem.timestamp}</td>
                                             <td>{redeem.vault}</td>
                                             <td>{redeem.btcAddress}</td>
-                                            <td>{satToBTC(redeem.polkaBTC)}</td>
-                                            <td>{planckToDOT(redeem.lockedDOT)}</td>
+                                            <td>{redeem.polkaBTC}</td>
+                                            <td>{redeem.lockedDOT}</td>
                                             <td>{redeem.status}</td>
                                         </tr>
                                     );
