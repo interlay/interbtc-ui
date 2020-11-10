@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent, useRef } from 'react';
+import React, { useState, MouseEvent, useRef } from "react";
 
 import { IssueRequest } from "../../../common/types/issue.types";
 import { Table } from "react-bootstrap";
@@ -7,9 +7,9 @@ import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { useEffect } from "react";
-import ButtonMaybePending from '../../../common/components/pending-button';
-import { toast } from 'react-toastify';
-import { startTransactionWatcherIssue } from '../../../common/utils/transaction-watcher';
+import ButtonMaybePending from "../../../common/components/pending-button";
+import { toast } from "react-toastify";
+import { startTransactionWatcherIssue } from "../../../common/utils/transaction-watcher";
 import {
     updateIssueRequestAction,
     changeIssueStepAction,
@@ -27,16 +27,19 @@ type IssueRequestProps = {
 /**
  * This function adds new issue requests that are not in the currently stored in this browser's
  * local storage.
- * 
+ *
  * @param address the current address of the account
  * @param currentIssueRequest the current issue requests locally stored
  */
-async function updateUserIssueRequests(address: string, currentIssueRequests: IssueRequest[] | undefined): Promise<IssueRequest[]> {
+async function updateUserIssueRequests(
+    address: string,
+    currentIssueRequests: IssueRequest[] | undefined
+): Promise<IssueRequest[]> {
     const accountId = window.polkaBTC.api.createType("AccountId", address);
     // use current issue requests, otherwise init empty array
-    let updatedIssueRequests: IssueRequest[] = currentIssueRequests? currentIssueRequests : [];
+    let updatedIssueRequests: IssueRequest[] = currentIssueRequests ? currentIssueRequests : [];
     const issueRequestMap = await window.polkaBTC.issue.mapForUser(accountId);
-    
+
     // FIXME: this implementation is somewhat inefficient since we need to search in the array
     // instead of in the mapping.
     for (const [key, value] of issueRequestMap) {
@@ -45,7 +48,7 @@ async function updateUserIssueRequests(address: string, currentIssueRequests: Is
         // does not store the BTC tx. With the current version,
         // and in case a user switches browsers,
         // the user has to manually update the BTC tx id.
-        if (updatedIssueRequests.find(request => request.id !== key.toString())) {
+        if (updatedIssueRequests.find((request) => request.id !== key.toString())) {
             const issueRequest = parachainToUIIssueRequest(key, value);
             updatedIssueRequests.push(issueRequest);
         }
@@ -61,12 +64,15 @@ export default function IssueRequests(props: IssueRequestProps) {
     const issueRequests = useRef(cachedIssueRequests);
     const transactionListeners = useSelector((state: StoreType) => state.issue.transactionListeners);
     const [executePending, setExecutePending] = useState([""]);
+    const [requiredBtcConfirmations, setRequiredBtcConfirmations] = useState(0);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
+
+            setRequiredBtcConfirmations(await window.polkaBTC.btcRelay.getStableBitcoinConfirmations());
 
             issueRequests.current = await updateUserIssueRequests(address, issueRequests.current);
             if (!issueRequests) return;
@@ -134,11 +140,11 @@ export default function IssueRequests(props: IssueRequestProps) {
         } catch (error) {
             toast.error(error.toString());
         }
-        setExecutePending(executePending.splice(executePending.indexOf(request.id),1));
+        setExecutePending(executePending.splice(executePending.indexOf(request.id), 1));
     };
 
     const handleCompleted = (request: IssueRequest) => {
-        if (request.confirmations < 6) {
+        if (request.confirmations < requiredBtcConfirmations) {
             return <FaHourglass></FaHourglass>;
         } else if (request.completed) {
             return <FaCheck></FaCheck>;
@@ -156,7 +162,6 @@ export default function IssueRequests(props: IssueRequestProps) {
                 >
                     Execute
                 </ButtonMaybePending>
-
             );
         }
     };
@@ -188,8 +193,8 @@ export default function IssueRequests(props: IssueRequestProps) {
                     </tr>
                 </thead>
                 <tbody>
-                    {
-                        issueRequests.current && issueRequests.current.map((request: IssueRequest, index: number) => {
+                    {issueRequests.current &&
+                        issueRequests.current.map((request: IssueRequest, index: number) => {
                             return (
                                 <tr key={index} onClick={() => requestClicked(request)}>
                                     <td>{shortAddress(request.id)}</td>
@@ -201,10 +206,9 @@ export default function IssueRequests(props: IssueRequestProps) {
                                     <td>{handleCompleted(request)}</td>
                                 </tr>
                             );
-                        })
-                    }
+                        })}
                 </tbody>
             </Table>
-        </div >
+        </div>
     );
 }
