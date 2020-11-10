@@ -25,12 +25,10 @@ export default function BitcoinTable(): ReactElement {
             // Returns a little endian encoded block hash
             // Converting to big endian for display
             const bestParachainBlock = utils.uint8ArrayToStringClean(
-                utils.reverseEndianness(await window.polkaBTC.stakedRelayer.getLatestBTCBlockFromBTCRelay())
+                utils.reverseEndianness(await window.polkaBTC.btcRelay.getLatestBlock())
             );
 
-            const bestParachainHeight = Number(
-                await window.polkaBTC.stakedRelayer.getLatestBTCBlockHeightFromBTCRelay()
-            );
+            const bestParachainHeight = Number(await window.polkaBTC.btcRelay.getLatestBlockHeight());
 
             let bestBitcoinBlock = "-";
             let bestBitcoinHeight = 0;
