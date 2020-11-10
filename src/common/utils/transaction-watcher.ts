@@ -21,7 +21,7 @@ export async function updateTransactionStatusIssue(
     request: IssueRequest,
     dispatch: Dispatch<IssueActions>
 ): Promise<void> {
-    if (request && request.btcTxId) {
+    if (request && request.btcTxId && window.polkaBTC) {
         try {
             const txStatus = await window.polkaBTC.btcCore.getTransactionStatus(remove0x(request.btcTxId));
             const updatedRequest = request;
@@ -49,7 +49,7 @@ export async function updateTransactionStatusRedeem(
     request: RedeemRequest,
     dispatch: Dispatch<RedeemActions>
 ): Promise<void> {
-    if (request && request.btcTxId) {
+    if (request && request.btcTxId && window.polkaBTC) {
         try {
             const updatedRequest = request;
             updatedRequest.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id);
