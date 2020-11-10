@@ -1,7 +1,9 @@
 import { planckToDOT } from "@interlay/polkabtc";
 import React, { ReactElement, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { isPolkaBtcLoaded } from "../../../common/actions/general.actions";
+import { StoreType } from "../../../common/types/util.types";
 import * as constants from "../../../constants";
 
 type StakedRelayer = {
@@ -11,6 +13,7 @@ type StakedRelayer = {
 }
 
 export default function StakedRelayerTable(): ReactElement {
+    const isPolkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const [relayers, setRelayers] = useState<Array<StakedRelayer>>([]);
     const [relayerStatus, setRelayerStatus] = useState("Ok");
 
@@ -37,7 +40,7 @@ export default function StakedRelayerTable(): ReactElement {
             }
         };
         fetchData();
-    });
+    }, [isPolkaBtcLoaded]);
 
     const getCircle = (status: string): string => {
         if (status === "Ok") {
