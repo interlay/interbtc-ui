@@ -91,6 +91,12 @@ Then start the remaining components with `docker-compose`:
 docker-compose --file docker-compose.testnet.yml up
 ```
 
+Mine at least one block:
+
+```shell
+bitcoin-cli -regtest generatetoaddress 1 $(bitcoin-cli -regtest getnewaddress)
+```
+
 Start the app with:
 
 ```shell
