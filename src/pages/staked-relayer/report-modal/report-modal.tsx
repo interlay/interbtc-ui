@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { toast } from "react-toastify";
 import ButtonMaybePending from "../../../common/components/pending-button";
+import { reverseEndiannessHex } from "@interlay/polkabtc";
 
 const STATUS_UPDATE_DEPOSIT = 100;
 
@@ -27,7 +28,8 @@ export default function ReportModal(props: ReportModalType): ReactElement {
         if (!relayerLoaded) return;
         setReportPending(true);
         try {
-            await window.relayer.suggestInvalidBlock(STATUS_UPDATE_DEPOSIT, btcBlock, message);
+            const btcBlockLE = `0x${reverseEndiannessHex(btcBlock)}`;
+            await window.relayer.suggestInvalidBlock(STATUS_UPDATE_DEPOSIT, btcBlockLE, message);
             toast.success("Status Update Suggested");
             props.onClose();
         } catch (error) {
@@ -44,7 +46,7 @@ export default function ReportModal(props: ReportModalType): ReactElement {
                 </Modal.Header>
                 <Modal.Body>
                     <div className="row">
-                        <div className="col-12">Bitcoin Block Hash</div>
+                        <div className="col-12">Bitcoin Block Hash (Big Endian)</div>
                         <div className="col-12">
                             <input
                                 name="btcBlock"

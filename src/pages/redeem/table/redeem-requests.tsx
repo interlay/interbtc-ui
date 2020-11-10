@@ -1,30 +1,29 @@
 import React, { useEffect, useRef } from "react";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 import { Table } from "react-bootstrap";
-import { 
-    remove0x,
-    shortAddress,
-    shortTxId,
-    parachainToUIRedeemRequest
-} from "../../../common/utils/utils";
+import { shortAddress, shortTxId, parachainToUIRedeemRequest } from "../../../common/utils/utils";
+import { stripHexPrefix } from "@interlay/polkabtc";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import { startTransactionWatcherRedeem } from '../../../common/utils/transaction-watcher';
+import { startTransactionWatcherRedeem } from "../../../common/utils/transaction-watcher";
 
 /**
  * This function adds new redeem requests that are not in the currently stored in this browser's
  * local storage.
- * 
+ *
  * @param address the current address of the account
  * @param currentRedeemRequest the current redeem requests locally stored
  */
-async function updateUserRedeemRequests(address: string, currentRedeemRequests: RedeemRequest[] | undefined): Promise<RedeemRequest[]> {
+async function updateUserRedeemRequests(
+    address: string,
+    currentRedeemRequests: RedeemRequest[] | undefined
+): Promise<RedeemRequest[]> {
     const accountId = window.polkaBTC.api.createType("AccountId", address);
     // use current issue requests, otherwise init empty array
-    let updatedRedeemRequests: RedeemRequest[] = currentRedeemRequests? currentRedeemRequests : [];
+    let updatedRedeemRequests: RedeemRequest[] = currentRedeemRequests ? currentRedeemRequests : [];
     const redeemRequestMap = await window.polkaBTC.redeem.mapForUser(accountId);
-    
+
     // FIXME: this implementation is somewhat inefficient since we need to search in the array
     // instead of in the mapping.
     for (const [key, value] of redeemRequestMap) {
@@ -33,7 +32,7 @@ async function updateUserRedeemRequests(address: string, currentRedeemRequests: 
         // does not store the BTC tx. With the current version,
         // and in case a user switches browsers,
         // the user has to manually update the BTC tx id.
-        if (updatedRedeemRequests.find(request => request.id !== key.toString())) {
+        if (updatedRedeemRequests.find((request) => request.id !== key.toString())) {
             const redeemRequest = parachainToUIRedeemRequest(key, value);
             updatedRedeemRequests.push(redeemRequest);
         }
@@ -90,16 +89,15 @@ export default function RedeemRequests() {
                                     <td>{shortAddress(request.id)}</td>
                                     <td>{request.amountPolkaBTC} BTC</td>
                                     <td>{request.creation}</td>
-                                    <td>{shortAddress(remove0x(request.vaultBTCAddress))}</td>
+                                    <td>{shortAddress(stripHexPrefix(request.vaultBTCAddress))}</td>
                                     <td>{shortTxId(request.btcTxId)}</td>
                                     <td>{request.confirmations}</td>
                                     <td>{request.completed ? <FaCheck></FaCheck> : <FaHourglass></FaHourglass>}</td>
                                 </tr>
                             );
-                        })
-                    }
+                        })}
                 </tbody>
             </Table>
         </div>
-    )
+    );
 }

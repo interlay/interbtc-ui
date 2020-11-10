@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../types/util.types";
 import * as constants from "../../../constants";
-import * as utils from "../../utils/utils";
+import { reverseEndianness, uint8ArrayToString } from "@interlay/polkabtc";
 
 interface BlockInfo {
     source: string;
@@ -24,8 +24,8 @@ export default function BitcoinTable(): ReactElement {
 
             // Returns a little endian encoded block hash
             // Converting to big endian for display
-            const bestParachainBlock = utils.uint8ArrayToStringClean(
-                utils.reverseEndianness(await window.polkaBTC.btcRelay.getLatestBlock())
+            const bestParachainBlock = uint8ArrayToString(
+                reverseEndianness(await window.polkaBTC.btcRelay.getLatestBlock())
             );
 
             const bestParachainHeight = Number(await window.polkaBTC.btcRelay.getLatestBlockHeight());
