@@ -35,6 +35,7 @@ function parseOldAndNewCollateral(oldCollateral: string, newCollateral: string):
 }
 
 export default function UpdateCollateralModal(props: UpdateCollateralProps) {
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const { register, handleSubmit, errors } = useForm<UpdateCollateralForm>();
     const totalCollateralString = useSelector((state: StoreType) => state.vault.collateral);
     const dispatch = useDispatch();
@@ -49,6 +50,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     }
 
     const onSubmit = handleSubmit(async ({ collateral }) => {
+        if (!polkaBtcLoaded) return;
         try {
             const [totalCollateralAsPlanck, newCollateralAsPlanck] = parseOldAndNewCollateral(
                 totalCollateralString,
@@ -80,7 +82,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     const onChange = async (obj: SyntheticEvent) => {
         const targetObject = obj.target as HTMLInputElement;
         const newCollateralString = targetObject.value;
-        if (newCollateralString === "") {
+        if (newCollateralString === "" || !polkaBtcLoaded) {
             return;
         }
         const [totalCollateralAsPlanck, newCollateralAsPlanck] = parseOldAndNewCollateral(
