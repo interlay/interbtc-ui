@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent, useRef } from "react";
+import React, { useState, MouseEvent } from "react";
 
 import { IssueRequest } from "../../../common/types/issue.types";
 import { Table } from "react-bootstrap";
@@ -70,19 +70,22 @@ export default function IssueRequests(props: IssueRequestProps) {
             if (!polkaBtcLoaded) return;
 
             setRequiredBtcConfirmations(await window.polkaBTC.btcRelay.getStableBitcoinConfirmations());
-
             setIssueRequests(await updateUserIssueRequests(address, cachedIssueRequests));
-            if (!issueRequests) return;
-            issueRequests.forEach(async (request: IssueRequest) => {
-                // start watcher for new issue requests
-                if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
-                    // the tx watcher updates the storage cache every 10s
-                    startTransactionWatcherIssue(request, dispatch);
-                }
-            });
+            startWatchers();
         };
         fetchData();
     }, [polkaBtcLoaded, cachedIssueRequests, transactionListeners, dispatch, address]);
+
+    const startWatchers = () => {
+        if (!issueRequests) return;
+        issueRequests.forEach(async (request: IssueRequest) => {
+            // start watcher for new issue requests
+            if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
+                // the tx watcher updates the storage cache every 10s
+                startTransactionWatcherIssue(request, dispatch);
+            }
+        });
+    }
 
     const execute = async (request: IssueRequest) => {
         if (!polkaBtcLoaded) return;
