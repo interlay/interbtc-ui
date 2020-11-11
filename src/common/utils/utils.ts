@@ -150,47 +150,54 @@ function convertParachainTypes(parachainObject: ParsableParachainTypes): [string
     return [parsedBtcAddress, parsedPolkaBTC, parsedDOT];
 }
 
-export const redeemRequestToVaultRedeem = (requests: ParachainRedeemRequest[]): VaultRedeem[] => {
-    return requests.map((request) => {
+export const redeemRequestToVaultRedeem = (requests: Map<H256, ParachainRedeemRequest>): VaultRedeem[] => {
+    let redeemRequests: VaultRedeem[] = [];
+    requests.forEach((request, requestId) => {
         const [btcAddress, polkaBTC, unlockedDOT] = convertParachainTypes(request);
-        return {
-            id: request.vault.toString(),
+        redeemRequests.push({
+            id: requestId.toString(),
             timestamp: request.opentime.toString(),
             user: request.redeemer.toString(),
             btcAddress: btcAddress,
             polkaBTC: polkaBTC,
             unlockedDOT: unlockedDOT,
             status: "",
-        };
+        });
     });
+    return redeemRequests;
 };
 
-export const issueRequestToVaultIssue = (requests: ParachainIssueRequest[]): VaultIssue[] => {
-    return requests.map((request) => {
+export const issueRequestToVaultIssue = (requests: Map<H256, ParachainIssueRequest> ): VaultIssue[] => {
+    let issueRequests: VaultIssue[] = [];
+    requests.forEach((request, requestId) => {
         const [btcAddress, polkaBTC, lockedDOT] = convertParachainTypes(request);
-        return {
-            id: request.vault.toString(),
+        issueRequests.push({
+            id: requestId.toString(),
             timestamp: request.opentime.toString(),
             user: request.requester.toString(),
             btcAddress: btcAddress,
             polkaBTC: polkaBTC,
             lockedDOT: lockedDOT,
             status: "",
-        };
+        });
     });
+    return issueRequests;
 };
 
-export const requestsToVaultReplaceRequests = (requests: ReplaceRequest[]): VaultReplaceRequest[] => {
-    return requests.map((request) => {
+export const requestsToVaultReplaceRequests = (requests: Map<H256, ReplaceRequest>): VaultReplaceRequest[] => {
+    let replaceRequests: VaultReplaceRequest[] = [];
+    requests.forEach((request, requestId) => {
         const [btcAddress, polkaBTC, lockedDOT] = convertParachainTypes(request);
-        return {
-            id: request.old_vault.toString(),
-            timestamp: request.open_time.toHuman(),
-            vault: request.new_vault.toString(),
+        replaceRequests.push({
+            id: requestId.toString(),
+            timestamp: request.open_time.toString(),
+            newVault: request.new_vault.toString(),
+            oldVault: request.old_vault.toString(),
             btcAddress: btcAddress,
             polkaBTC: polkaBTC,
             lockedDOT: lockedDOT,
-            status: "",
-        };
+            status: request.accept_time.isSome ? "Accepted" : "Open", 
+        });
     });
+    return replaceRequests;
 };

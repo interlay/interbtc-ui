@@ -13,13 +13,16 @@ export default function RedeemTable(): ReactElement {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
-            const accountId = await window.vaultClient.getAccountId();
-            const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
-            const redeemsMap = await window.polkaBTC.vaults.mapRedeemRequests(vaultId);
-            const redeems = redeemsMap.get(vaultId);
+            try {
+                const accountId = await window.vaultClient.getAccountId();
+                const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
+                const redeems= await window.polkaBTC.vaults.mapRedeemRequests(vaultId);
 
-            if (!redeems) return;
-            dispatch(addVaultRedeemsAction(redeemRequestToVaultRedeem(redeems)));
+                if (!redeems) return;
+                dispatch(addVaultRedeemsAction(redeemRequestToVaultRedeem(redeems)));
+            } catch(err) {
+                console.log(err);
+            }
         };
         fetchData();
     }, [polkaBtcLoaded, dispatch]);

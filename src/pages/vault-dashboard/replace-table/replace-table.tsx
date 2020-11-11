@@ -20,15 +20,18 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
-            const accountId = await window.vaultClient.getAccountId();
-            const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
-            const issuedPolkaBTCAmount = await window.polkaBTC.vaults.getIssuedPolkaBTCAmount(vaultId);
-            setPolkaBTCamount(issuedPolkaBTCAmount.toBn());
-            const requestsMap = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
-            const requests = requestsMap.get(vaultId);
-            if (!requests) return;
+            try {
+                const accountId = await window.vaultClient.getAccountId();
+                const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
+                const issuedPolkaBTCAmount = await window.polkaBTC.vaults.getIssuedPolkaBTCAmount(vaultId);
+                setPolkaBTCamount(issuedPolkaBTCAmount.toBn());
+                const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
+                if (!requests) return;
 
-            dispatch(addReplaceRequestsAction(requestsToVaultReplaceRequests(requests)));
+                dispatch(addReplaceRequestsAction(requestsToVaultReplaceRequests(requests)));
+            } catch(err) {
+                console.log(err);
+            }
         };
         fetchData();
     }, [polkaBtcLoaded, dispatch]);
@@ -48,7 +51,8 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
                                 <tr>
                                     <th>Id</th>
                                     <th>Creation Block</th>
-                                    <th>User</th>
+                                    <th>Old Vault</th>
+                                    <th>New Vault</th>
                                     <th>BTC Address</th>
                                     <th>PolkaBTC</th>
                                     <th>LockedDOT</th>
@@ -61,7 +65,8 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
                                         <tr key={index}>
                                             <td>{redeem.id}</td>
                                             <td>{redeem.timestamp}</td>
-                                            <td>{redeem.vault}</td>
+                                            <td>{redeem.oldVault}</td>
+                                            <td>{redeem.newVault}</td>
                                             <td>{redeem.btcAddress}</td>
                                             <td>{redeem.polkaBTC}</td>
                                             <td>{redeem.lockedDOT}</td>
