@@ -56,10 +56,10 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                 totalCollateralString,
                 collateral
             );
-            if (totalCollateralAsPlanck > newCollateralAsPlanck) {
+            if (totalCollateralAsPlanck.gt(newCollateralAsPlanck)) {
                 const collateralToWithdraw = totalCollateralAsPlanck.sub(newCollateralAsPlanck);
                 await window.vaultClient.withdrawCollateral(collateralToWithdraw.toString());
-            } else if (totalCollateralAsPlanck < newCollateralAsPlanck) {
+            } else if (totalCollateralAsPlanck.lt(newCollateralAsPlanck)) {
                 const collateralToLock = newCollateralAsPlanck.sub(totalCollateralAsPlanck);
                 await window.vaultClient.lockAdditionalCollateral(collateralToLock.toString());
             } else {
@@ -150,7 +150,10 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                                 </div>
                             )}
                         </div>
-                        <div className="col-12">New Collateralization {newCollaterlization}%</div>
+                        <div className="col-12">
+                            New Collateralization {newCollaterlization}
+                            {newCollaterlization !== "∞" ? "%" : ""}
+                        </div>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
