@@ -109,27 +109,22 @@ To create an OP_RETURN transaction in Electrum, you can follow the following gui
 
 1. Launch the Electrum desktop wallet (in testnet mode!) and connect to your Bitcoin testnet account. You can follow [this guide](https://bitzuma.com/posts/a-beginners-guide-to-the-electrum-bitcoin-wallet/) if you need to set up a new Electrum wallet on your computer. 
 2. Go to the “Send” tab in the wallet.
-3. Copy & paste the Electrum payment instructions into the “Pay to” field. The Electrum payment instructions are displayed in the “Confirmation and Payment” step of the “Issue PolkaBTC” dialogue (see screenshot):
+3. Copy & paste the Electrum payment instructions into the “Pay to” field. The Electrum payment instructions are displayed in the “Confirmation and Payment” step of the “Issue PolkaBTC” dialogue (see screenshots below).
+4. Execute the payment. 
+5. Copy the Bitcoin transaction ID and submit it to the PolkaBTC UI as requested. 
 
  
-![Issue dialogue screenshot](https://gitlab.com/interlay/polkabtc-ui/-/raw/master/src/assets/img/polkabtc/PolkaBTC_roadmap.png)
-
-![alt_text](images/image1.png "image_tooltip")
+![Issue dialogue screenshot](https://gitlab.com/interlay/polkabtc-ui/-/raw/master/src/assets/img/user-guide/issue-modal.png)
 
 
-
-### 
-
-<p id="gdcalert2" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image2.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert3">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image2.png "image_tooltip")
+![Electrum wallet screenshot](https://gitlab.com/interlay/polkabtc-ui/-/raw/master/src/assets/img/user-guide/issue-electrum-wallet.png)
 
 
 <div id="redeem"></div>
 
 <br/>
 <br/>
+
 ## Redeem PolkaBTC (PolkaBTC UI)
 
 
