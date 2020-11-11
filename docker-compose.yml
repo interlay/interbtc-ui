@@ -21,6 +21,15 @@ services:
       - -rpcpassword=rpcpassword
     ports:
       - "18443:18443"
+  bitcoin-cli:
+    image: "ruimarinho/bitcoin-core:0.20"
+    command:
+      - /bin/sh
+      - -c
+      - |
+        ADDRESS=$$(bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword getnewaddress)
+        # coins need 100 confirmations to be spendable
+        bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword generatetoaddress 101 $${ADDRESS}
   electrs:
     image: "interlayhq/electrs:latest"
     command:
@@ -40,7 +49,7 @@ services:
     ports:
       - "3002:3002"
   staked-relayer:
-    # TODO: add health check
+    # only start staked relayer after mining to prevent long catch-up
     image: "registry.gitlab.com/interlay/polkabtc-clients:staked-relayer-dev"
     command:
       - /bin/sh

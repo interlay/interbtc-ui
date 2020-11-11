@@ -38,7 +38,7 @@ export default function RedeemTable(): ReactElement {
                             <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>Timestamp</th>
+                                    <th>Creation Block</th>
                                     <th>User</th>
                                     <th>BTC Address</th>
                                     <th>PolkaBTC</th>
