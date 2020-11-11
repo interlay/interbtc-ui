@@ -9,7 +9,7 @@ import {
 import { VaultReplaceRequest } from "../types/vault.types";
 import { H160, H256 } from "@polkadot/types/interfaces";
 import { IssueRequest as ParachainIssueRequest } from "@interlay/polkabtc/build/interfaces/default";
-import { satToBTC, planckToDOT, getP2WPKHFromH160, bitcoin } from "@interlay/polkabtc";
+import { satToBTC, planckToDOT, getP2WPKHFromH160, bitcoin, stripHexPrefix } from "@interlay/polkabtc";
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from "../../constants";
 
 export function shortAddress(address: string): string {
@@ -38,7 +38,7 @@ export function dateToShortString(date: Date): string {
  */
 export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: ParachainIssueRequest): IssueRequest {
     return {
-        id: id.toString(),
+        id: stripHexPrefix(id.toString()),
         amountBTC: satToBTC(parachainIssueRequest.amount.toString()),
         creation: parachainIssueRequest.opentime.toString(),
         vaultBTCAddress: parachainIssueRequest.btc_address.toString(),
@@ -56,7 +56,7 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
  */
 export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: ParachainRedeemRequest): RedeemRequest {
     return {
-        id: id.toString(),
+        id: stripHexPrefix(id.toString()),
         amountPolkaBTC: parachainRedeemRequest.amount_polka_btc.toString(),
         creation: parachainRedeemRequest.opentime.toString(),
         vaultBTCAddress: parachainRedeemRequest.btc_address.toString(),
@@ -155,13 +155,13 @@ export const redeemRequestToVaultRedeem = (requests: Map<H256, ParachainRedeemRe
     requests.forEach((request, requestId) => {
         const [btcAddress, polkaBTC, unlockedDOT] = convertParachainTypes(request);
         redeemRequests.push({
-            id: requestId.toString(),
+            id: stripHexPrefix(requestId.toString()),
             timestamp: request.opentime.toString(),
             user: request.redeemer.toString(),
             btcAddress: btcAddress,
             polkaBTC: polkaBTC,
             unlockedDOT: unlockedDOT,
-            status: "",
+            status: "Pending",
         });
     });
     return redeemRequests;
@@ -172,13 +172,13 @@ export const issueRequestToVaultIssue = (requests: Map<H256, ParachainIssueReque
     requests.forEach((request, requestId) => {
         const [btcAddress, polkaBTC, lockedDOT] = convertParachainTypes(request);
         issueRequests.push({
-            id: requestId.toString(),
+            id: stripHexPrefix(requestId.toString()),
             timestamp: request.opentime.toString(),
             user: request.requester.toString(),
             btcAddress: btcAddress,
             polkaBTC: polkaBTC,
             lockedDOT: lockedDOT,
-            status: "",
+            status: "Pending",
         });
     });
     return issueRequests;
@@ -189,14 +189,14 @@ export const requestsToVaultReplaceRequests = (requests: Map<H256, ReplaceReques
     requests.forEach((request, requestId) => {
         const [btcAddress, polkaBTC, lockedDOT] = convertParachainTypes(request);
         replaceRequests.push({
-            id: requestId.toString(),
+            id: stripHexPrefix(requestId.toString()),
             timestamp: request.open_time.toString(),
             newVault: request.new_vault.toString(),
             oldVault: request.old_vault.toString(),
             btcAddress: btcAddress,
             polkaBTC: polkaBTC,
             lockedDOT: lockedDOT,
-            status: request.accept_time.isSome ? "Accepted" : "Open", 
+            status: request.accept_time.isSome ? "Accepted" : "Pending", 
         });
     });
     return replaceRequests;
