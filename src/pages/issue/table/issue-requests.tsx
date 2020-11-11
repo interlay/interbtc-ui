@@ -33,11 +33,10 @@ type IssueRequestProps = {
  */
 async function updateUserIssueRequests(
     address: string,
-    currentIssueRequests: IssueRequest[] | undefined
+    cashedIssueRequests: IssueRequest[] = []
 ): Promise<IssueRequest[]> {
     const accountId = window.polkaBTC.api.createType("AccountId", address);
-    // use current issue requests, otherwise init empty array
-    let updatedIssueRequests: IssueRequest[] = currentIssueRequests ? currentIssueRequests : [];
+    let updatedIssueRequests = [...cashedIssueRequests];
     const issueRequestMap = await window.polkaBTC.issue.mapForUser(accountId);
 
     // FIXME: this implementation is somewhat inefficient since we need to search in the array
@@ -49,6 +48,7 @@ async function updateUserIssueRequests(
         // and in case a user switches browsers,
         // the user has to manually update the BTC tx id.
         if (updatedIssueRequests.find((request) => request.id !== key.toString())) {
+            debugger;
             const issueRequest = parachainToUIIssueRequest(key, value);
             updatedIssueRequests.push(issueRequest);
         }
@@ -59,9 +59,7 @@ async function updateUserIssueRequests(
 export default function IssueRequests(props: IssueRequestProps) {
     const address = useSelector((state: StoreType) => state.general.address);
     const cachedIssueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
-
-    // store `cachedIssueRequests` in useRef hook, so changes from the useEffect preserve across renders
-    const issueRequests = useRef(cachedIssueRequests);
+    const [issueRequests,setIssueRequests] = useState(cachedIssueRequests ? cachedIssueRequests : []);
     const transactionListeners = useSelector((state: StoreType) => state.issue.transactionListeners);
     const [executePending, setExecutePending] = useState([""]);
     const [requiredBtcConfirmations, setRequiredBtcConfirmations] = useState(0);
@@ -74,9 +72,9 @@ export default function IssueRequests(props: IssueRequestProps) {
 
             setRequiredBtcConfirmations(await window.polkaBTC.btcRelay.getStableBitcoinConfirmations());
 
-            issueRequests.current = await updateUserIssueRequests(address, issueRequests.current);
+            setIssueRequests(await updateUserIssueRequests(address, cachedIssueRequests));
             if (!issueRequests) return;
-            issueRequests.current.forEach(async (request: IssueRequest) => {
+            issueRequests.forEach(async (request: IssueRequest) => {
                 // start watcher for new issue requests
                 if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
                     // the tx watcher updates the storage cache every 10s
@@ -85,7 +83,7 @@ export default function IssueRequests(props: IssueRequestProps) {
             });
         };
         fetchData();
-    }, [polkaBtcLoaded, issueRequests, transactionListeners, dispatch, address]);
+    }, [polkaBtcLoaded, cachedIssueRequests, transactionListeners, dispatch, address]);
 
     const execute = async (request: IssueRequest) => {
         if (!polkaBtcLoaded) return;
@@ -178,6 +176,9 @@ export default function IssueRequests(props: IssueRequestProps) {
         props.handleShow();
     };
 
+    console.log("cachedIssueRequests ",cachedIssueRequests);
+    console.log("issueRequests ",issueRequests);
+
     return (
         <div>
             <Table hover responsive size={"md"}>
@@ -193,8 +194,8 @@ export default function IssueRequests(props: IssueRequestProps) {
                     </tr>
                 </thead>
                 <tbody>
-                    {issueRequests.current &&
-                        issueRequests.current.map((request: IssueRequest, index: number) => {
+                    {issueRequests &&
+                        issueRequests.map((request: IssueRequest, index: number) => {
                             return (
                                 <tr key={index} onClick={() => requestClicked(request)}>
                                     <td>{shortAddress(request.id)}</td>
