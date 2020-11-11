@@ -65,17 +65,6 @@ export default function IssueRequests(props: IssueRequestProps) {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!polkaBtcLoaded) return;
-
-            setRequiredBtcConfirmations(await window.polkaBTC.btcRelay.getStableBitcoinConfirmations());
-            setIssueRequests(await updateUserIssueRequests(address, cachedIssueRequests));
-            startWatchers();
-        };
-        fetchData();
-    }, [polkaBtcLoaded, cachedIssueRequests, transactionListeners, dispatch, address, startWatchers]);
-
     const startWatchers = () => {
         if (!issueRequests) return;
         issueRequests.forEach(async (request: IssueRequest) => {
@@ -86,6 +75,17 @@ export default function IssueRequests(props: IssueRequestProps) {
             }
         });
     }
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!polkaBtcLoaded) return;
+
+            setRequiredBtcConfirmations(await window.polkaBTC.btcRelay.getStableBitcoinConfirmations());
+            setIssueRequests(await updateUserIssueRequests(address, cachedIssueRequests));
+            startWatchers();
+        };
+        fetchData();
+    }, [polkaBtcLoaded, cachedIssueRequests, transactionListeners, dispatch, address, startWatchers]);
 
     const execute = async (request: IssueRequest) => {
         if (!polkaBtcLoaded) return;
