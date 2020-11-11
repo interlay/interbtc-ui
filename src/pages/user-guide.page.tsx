@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Col, Image, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Col, Row } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
-import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_white.svg";
-import paperImg from "../assets/img/icons/paper-white.png";
-import specImg from "../assets/img/icons/spec-white.png";
-import codeImg from "../assets/img/icons/github-white.png";
 
 // eslint-disable-next-line
 const userGuide = require("../assets/user-guide.md");
