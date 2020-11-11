@@ -8,10 +8,11 @@ import { resetIssueWizardAction } from "../../common/actions/issue.actions";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../common/types/util.types";
 import IssueWizard from "./wizard/issue-wizard";
-import {satToBTC, planckToDOT} from "@interlay/polkabtc";
+import { satToBTC, planckToDOT } from "@interlay/polkabtc";
 
 export default function IssuePage(): JSX.Element {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+    const address = useSelector((state: StoreType) => state.general.address);
     const dispatch = useDispatch();
     const [showWizard, setShowWizard] = useState(false);
     const [balancePolkaBTC, setBalancePolkaBTC] = useState("...");
@@ -27,18 +28,16 @@ export default function IssuePage(): JSX.Element {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
-            const address = window.polkaBTC.account?.toString();
             const accountId = window.polkaBTC.api.createType("AccountId", address);
             const balancePolkaSAT = await window.polkaBTC.treasury.balancePolkaBTC(accountId);
             const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
             const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
-            const balanceDOT = planckToDOT(balancePLANCK.toString()); 
+            const balanceDOT = planckToDOT(balancePLANCK.toString());
             setBalancePolkaBTC(balancePolkaBTC);
             setBalanceDOT(balanceDOT.toString());
         };
         fetchData();
-    }, [polkaBtcLoaded]);
-
+    }, [polkaBtcLoaded, address]);
 
     return (
         <div>
@@ -66,7 +65,7 @@ export default function IssuePage(): JSX.Element {
                         </Col>
                     </Row>
 
-                    <IssueRequests handleShow={handleShow}/>
+                    <IssueRequests handleShow={handleShow} />
 
                     <Modal show={showWizard} onHide={handleClose} size={"lg"}>
                         <IssueWizard handleClose={handleClose} />
