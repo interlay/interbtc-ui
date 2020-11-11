@@ -12,6 +12,7 @@ import {
     RedeemActions,
     ADD_REDEEM_REQUEST,
     UPDATE_REDEEM_REQUEST,
+    UPDATE_ALL_REDEEM_REQUESTS,
 } from "../types/actions.types";
 import { RedeemState } from "../types/redeem.types";
 
@@ -70,6 +71,10 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             return { ...state, redeemRequests: map };
         case INIT_STATE:
             return { ...state, transactionListeners: [] };
+        case UPDATE_ALL_REDEEM_REQUESTS:
+            const newRequests = new Map(state.redeemRequests);
+            newRequests.set(state.address, action.redeemRequests);
+            return { ...state, redeemRequests: newRequests };
         default:
             return state;
     }

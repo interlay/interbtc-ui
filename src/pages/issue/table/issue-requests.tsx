@@ -38,7 +38,7 @@ async function updateUserIssueRequests(
     address: string,
     cashedIssueRequests: IssueRequest[] = [],
     dispatch: Dispatch<IssueActions>
-): Promise<void> {
+): Promise<IssueRequest[]> {
     const accountId = window.polkaBTC.api.createType("AccountId", address);
     let updatedIssueRequests = [...cashedIssueRequests];
     const issueRequestMap = await window.polkaBTC.issue.mapForUser(accountId);
@@ -55,6 +55,8 @@ async function updateUserIssueRequests(
     if(storeNeedsUpdate) {
         dispatch(updateAllIssueRequestsAction(updatedIssueRequests));
     }
+
+    return updatedIssueRequests;
 }
 
 export default function IssueRequests(props: IssueRequestProps) {
@@ -71,10 +73,10 @@ export default function IssueRequests(props: IssueRequestProps) {
             if (!polkaBtcLoaded) return;
 
             setRequiredBtcConfirmations(await window.polkaBTC.btcRelay.getStableBitcoinConfirmations());
-            await updateUserIssueRequests(address, issueRequests, dispatch);
+            const allRequests = await updateUserIssueRequests(address, issueRequests, dispatch);
             
-            if (!issueRequests) return;
-            issueRequests.forEach(async (request: IssueRequest) => {
+            if (!allRequests) return;
+            allRequests.forEach(async (request: IssueRequest) => {
                 // start watcher for new issue requests
                 if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
                     // the tx watcher updates the storage cache every 10s

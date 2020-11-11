@@ -1,7 +1,8 @@
 export interface VaultReplaceRequest {
     id: string;
     timestamp: string;
-    vault: string;
+    newVault: string;
+    oldVault: string;
     btcAddress: string;
     polkaBTC: string;
     lockedDOT: string;

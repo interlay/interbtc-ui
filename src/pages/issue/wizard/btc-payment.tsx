@@ -1,6 +1,7 @@
 import React from "react";
 import { FormGroup, ListGroup, ListGroupItem, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import CopyToClipboard from 'react-copy-to-clipboard';
 import { StoreType } from "../../../common/types/util.types";
 import { changeIssueStepAction } from "../../../common/actions/issue.actions";
 import { btcToSat, satToMBTC, stripHexPrefix } from "@interlay/polkabtc";
@@ -15,11 +16,18 @@ export default function BTCPayment() {
 
     // FIXME: add once fee model is there
     const amountBTCwithFee = amountBTC;
-    const amountSATwithFee = btcToSat(amountBTCwithFee);
-    const amountMBTCwithFee = satToMBTC(amountSATwithFee ? amountSATwithFee : "");
+    let amountMBTCwithFee = "";
+    try {
+        const amountSATwithFee = btcToSat(amountBTCwithFee);
+        amountMBTCwithFee = satToMBTC(amountSATwithFee ? amountSATwithFee : "");
+    } catch (err) {
+        console.log(err)
+    }
     // FIXME: returns an empty string when loaded again
     const vaultBTCAddress = useSelector((state: StoreType) => state.issue.vaultBtcAddress);
     const dispatch = useDispatch();
+
+    const electrumPaytoField = stripHexPrefix(vaultBTCAddress) + ", " + amountMBTCwithFee + "\nOP_RETURN " + stripHexPrefix(issueId) + ", 0";
 
     const goToPreviousStep = () => {
         dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
@@ -62,6 +70,20 @@ export default function BTCPayment() {
                                 Amount: <strong>0 BTC (0 mBTC)</strong>
                             </ListGroupItem>
                         </ListGroup>
+                    </FormGroup>
+
+                    If you are using the Electrum desktop wallet, copy+paste this into the "Pay to" field:
+                    <FormGroup>
+                    <ListGroup>
+                    <ListGroupItem>
+                        <strong>{electrumPaytoField.split('\n').map(str => <div>{str}</div>)}</strong>
+                        <CopyToClipboard text={electrumPaytoField}>
+                        <button className="btn btn-outline-dark float-right">
+                            Copy
+                        </button>
+                        </CopyToClipboard>
+                    </ListGroupItem>
+                    </ListGroup>
                     </FormGroup>
                 </FormGroup>
             </Modal.Body>
