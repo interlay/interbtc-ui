@@ -18,7 +18,10 @@ import {
     openWizardInEditModeAction,
     changeAmountBTCAction,
     changeVaultBtcAddressOnIssueAction,
+    updateAllIssueRequestsAction,
 } from "../../../common/actions/issue.actions";
+import { Dispatch } from "redux";
+import { IssueActions } from "../../../common/types/actions.types";
 
 type IssueRequestProps = {
     handleShow: () => void;
@@ -33,59 +36,54 @@ type IssueRequestProps = {
  */
 async function updateUserIssueRequests(
     address: string,
-    cashedIssueRequests: IssueRequest[] = []
-): Promise<IssueRequest[]> {
+    cashedIssueRequests: IssueRequest[] = [],
+    dispatch: Dispatch<IssueActions>
+): Promise<void> {
     const accountId = window.polkaBTC.api.createType("AccountId", address);
     let updatedIssueRequests = [...cashedIssueRequests];
     const issueRequestMap = await window.polkaBTC.issue.mapForUser(accountId);
+    let storeNeedsUpdate = false;
 
-    // FIXME: this implementation is somewhat inefficient since we need to search in the array
-    // instead of in the mapping.
     for (const [key, value] of issueRequestMap) {
-        // only add issue requests that are not yet in the local storage
-        // TODO: integrate the automatic BTC tx monitoring. The parachain
-        // does not store the BTC tx. With the current version,
-        // and in case a user switches browsers,
-        // the user has to manually update the BTC tx id.
         if (!updatedIssueRequests.find((request) => request.id === key.toString())) {
             const issueRequest = parachainToUIIssueRequest(key, value);
             updatedIssueRequests.push(issueRequest);
+            storeNeedsUpdate = true;
         }
     }
-    return updatedIssueRequests;
+
+    if(storeNeedsUpdate) {
+        dispatch(updateAllIssueRequestsAction(updatedIssueRequests));
+    }
 }
 
 export default function IssueRequests(props: IssueRequestProps) {
     const address = useSelector((state: StoreType) => state.general.address);
-    const cachedIssueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
-    const [issueRequests,setIssueRequests] = useState(cachedIssueRequests ? cachedIssueRequests : []);
+    const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
     const transactionListeners = useSelector((state: StoreType) => state.issue.transactionListeners);
     const [executePending, setExecutePending] = useState([""]);
     const [requiredBtcConfirmations, setRequiredBtcConfirmations] = useState(0);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const dispatch = useDispatch();
 
-    const startWatchers = () => {
-        if (!issueRequests) return;
-        issueRequests.forEach(async (request: IssueRequest) => {
-            // start watcher for new issue requests
-            if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
-                // the tx watcher updates the storage cache every 10s
-                startTransactionWatcherIssue(request, dispatch);
-            }
-        });
-    }
-    
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
             setRequiredBtcConfirmations(await window.polkaBTC.btcRelay.getStableBitcoinConfirmations());
-            setIssueRequests(await updateUserIssueRequests(address, cachedIssueRequests));
-            startWatchers();
+            await updateUserIssueRequests(address, issueRequests, dispatch);
+            
+            if (!issueRequests) return;
+            issueRequests.forEach(async (request: IssueRequest) => {
+                // start watcher for new issue requests
+                if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
+                    // the tx watcher updates the storage cache every 10s
+                    startTransactionWatcherIssue(request, dispatch);
+                }
+            });
         };
         fetchData();
-    }, [polkaBtcLoaded, cachedIssueRequests, transactionListeners, dispatch, address, startWatchers]);
+    }, [polkaBtcLoaded, issueRequests, address, dispatch, transactionListeners]);
 
     const execute = async (request: IssueRequest) => {
         if (!polkaBtcLoaded) return;

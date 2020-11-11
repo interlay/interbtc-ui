@@ -13,6 +13,8 @@ import {
     ADD_TRANSACTION_LISTENER_ISSUE,
     ADD_VAULT_ISSUES,
     OPEN_WIZARD_IN_EDIT_MODE,
+    UPDATE_ALL_ISSUE_REQUESTS,
+    UpdateAllIssueRequests,
     ChangeIssueStep,
     ChangeBtcAddress,
     ResetIssueWizard,
@@ -96,4 +98,9 @@ export const addTransactionListenerIssue = (id: string): AddTransactionListenerI
 export const addVaultIssuesAction = (vaultIssues: VaultIssue[]): AddVaultIssues => ({
     type: ADD_VAULT_ISSUES,
     vaultIssues,
+});
+
+export const updateAllIssueRequestsAction = (issueRequests: IssueRequest[]): UpdateAllIssueRequests => ({
+    type: UPDATE_ALL_ISSUE_REQUESTS,
+    issueRequests,
 });

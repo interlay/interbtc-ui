@@ -164,6 +164,7 @@ export const UPDATE_ISSUE_REQUEST = "UPDATE_ISSUE_REQUEST";
 export const ADD_TRANSACTION_LISTENER_ISSUE = "ADD_TRANSACTION_LISTENER_ISSUE";
 export const OPEN_WIZARD_IN_EDIT_MODE = "OPEN_WIZARD_IN_EDIT_MODE";
 export const ADD_VAULT_ISSUES = "ADD_VAULT_ISSUES";
+export const UPDATE_ALL_ISSUE_REQUESTS = "UPDATE_ALL_ISSUE_REQUESTS";
 
 export interface AddVaultIssues {
     type: typeof ADD_VAULT_ISSUES;
@@ -233,6 +234,11 @@ export interface OpenWizardInEditMode {
     type: typeof OPEN_WIZARD_IN_EDIT_MODE;
 }
 
+export interface UpdateAllIssueRequests {
+    type: typeof UPDATE_ALL_ISSUE_REQUESTS;
+    issueRequests: IssueRequest[];
+}
+
 export type IssueActions =
     | ChangeIssueStep
     | ChangeAmountBtc
@@ -249,7 +255,8 @@ export type IssueActions =
     | OpenWizardInEditMode
     | ChangeAddress
     | InitState
-    | AddVaultIssues;
+    | AddVaultIssues
+    | UpdateAllIssueRequests;
 
 // VAULT
 

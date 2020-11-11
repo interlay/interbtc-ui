@@ -15,6 +15,7 @@ import {
     OPEN_WIZARD_IN_EDIT_MODE,
     ADD_VAULT_ISSUES,
     INIT_STATE,
+    UPDATE_ALL_ISSUE_REQUESTS,
 } from "../types/actions.types";
 import { IssueState } from "../types/issue.types";
 
@@ -87,6 +88,10 @@ export const issueReducer = (state: IssueState = initialState, action: IssueActi
             return { ...state, transactionListeners: [] };
         case ADD_VAULT_ISSUES:
             return { ...state, vaultIssues: action.vaultIssues };
+        case UPDATE_ALL_ISSUE_REQUESTS:
+            const newRequests = new Map(state.issueRequests);
+            newRequests.set(state.address, action.issueRequests);
+            return { ...state, issueRequests: newRequests };
         default:
             return state;
     }
