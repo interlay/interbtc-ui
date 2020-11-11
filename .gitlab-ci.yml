@@ -53,7 +53,10 @@ build-app:
     paths:
       - build
   only:
+    - merge_requests
     - master
+    - prod
+    - dev
 
 # deploy dapp
 pages:
