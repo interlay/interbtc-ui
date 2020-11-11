@@ -74,7 +74,7 @@ export default function IssueRequests(props: IssueRequestProps) {
             startWatchers();
         };
         fetchData();
-    }, [polkaBtcLoaded, cachedIssueRequests, transactionListeners, dispatch, address]);
+    }, [polkaBtcLoaded, cachedIssueRequests, transactionListeners, dispatch, address, startWatchers]);
 
     const startWatchers = () => {
         if (!issueRequests) return;
