@@ -114,10 +114,9 @@ To create an OP_RETURN transaction in Electrum, you can follow the following gui
 4. Execute the payment. 
 5. Copy the Bitcoin transaction ID and submit it to the PolkaBTC UI as requested. 
 
- 
+
+<!-- Only shown on master. TODO: find better way of hosting imported images.--> 
 ![Issue dialogue screenshot](https://gitlab.com/interlay/polkabtc-ui/-/raw/master/src/assets/img/user-guide/issue-modal.png)
-
-
 ![Electrum wallet screenshot](https://gitlab.com/interlay/polkabtc-ui/-/raw/master/src/assets/img/user-guide/issue-electrum-wallet.png)
 
 
