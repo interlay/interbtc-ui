@@ -1,8 +1,8 @@
 ## Content
 - ##### [Getting Started](#getting-started)
-- ##### [Roadmap](#roadmap)
-- ##### [Security Guarantees](#security)
-- ##### [Design](#design)
+- ##### [Issue PolkaBTC](#issue)
+- ##### [Redeem PolkaBTC](#redeem)
+- ##### [Dashboard](#dashboard)
 
 
 <br/>
@@ -28,7 +28,7 @@ Otherwise, a good list of Bitcoin wallets can be found here: https://bitcoin.org
 Please note: manual transaction signing via hardware wallets is WIP and will be released before Beta testnet (Ledger). 
 
 
-#### Getting Testnet Bitcoins
+#### Getting Testnet Bitcoin
 
 Make sure you have at least some tBTC in your wallet. You can get them from a faucet:
 
@@ -41,7 +41,7 @@ Make sure you have at least some tBTC in your wallet. You can get them from a fa
 *   [https://tbtc.bitaps.com/](https://tbtc.bitaps.com/) 
 
 
-#### Electrum: Advanced Users  & OP_RETURN Support
+#### Electrum: Advanced Users & OP_RETURN Support
 
 PolkaBTC currently makes use of OP_RETURN to prevent replay attacks (using same BTC payment for multiple issue requests. 
 
@@ -74,6 +74,7 @@ You can get testnet DOT by clicking on the faucet link in the top bar of the Pol
 
 <br/>
 <br/>
+
 ## Issue PolkaBTC (PolkaBTC UI + Bitcoin Testnet Wallet)
 
 
@@ -150,7 +151,13 @@ To redeem PolkaBTC, follow the “Redeem PolkaBTC” button on the Redeem page. 
 4. The Redeem request is now being processed by the Vault. Updates will appear in the table on the Redeem page. 
 
 
-### Dashboard
+
+<div id="dashboard"></div>
+
+<br/>
+<br/>
+
+## Dashboard
 
 The Dashboard shows the current status of the PolkaBTC bridge / the BTC-Parachain. 
 
@@ -161,7 +168,7 @@ At the top of the page, you can see the total amount of locked DOT collateral ac
 
 This table shows the state of the Bitcoin mainchain, as tracked by the BTC-Parachain and the [Blockstream testnet explorer](https://blockstream.info/testnet/) (“Bitcoin Core”).
 
-As long as the table shows “Online”, you can safely use the bridge. 
+You can safely use the bridge as long as the table shows "Online".
 
 
 ##### Vaults 
@@ -182,7 +189,7 @@ This table displays all Vaults registered with the bridge. For each Vault, you c
 
 This table shows the status of all exchange rate oracles connected to the BTC-Parachain, serving the latest BTC/DOT price. 
 
-As long as the table shows “Online”, you can safely use the bridge. 
+You can safely use the bridge as long as the table shows "Online".
 
 
 ##### Staked Relayer
@@ -195,4 +202,4 @@ This table displays all Staked Relayers registered with the bridge. For each Sta
 *   the amount of locked DOT stake,
 *   whether the Staked Relayer is currently active. 
 
-As long as the table shows “Ok”, you can safely use the bridge. 
+You can safely use the bridge as long as the table shows "Ok".

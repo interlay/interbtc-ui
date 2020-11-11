@@ -28,9 +28,6 @@ export default function AboutPage(): JSX.Element {
         <div>
             <section className="jumbotron text-center transparent-background">
                 <div className="container mt-5">
-                    <Link to="/">
-                        <Image src={PolkaBTCImg} width="256"></Image>
-                    </Link>
                     <h3 style={{ fontSize: "2em" }} className="lead text-white mt-5">
                         About PolkaBTC
                     </h3>

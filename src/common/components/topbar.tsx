@@ -65,11 +65,14 @@ export default function Topbar(props: TopbarProps): ReactElement {
                     )}
                     {isRelayerConnected && (
                         <Link className="nav-link" to="/staked-relayer">
-                            Staked Relayer
+                            Relayer
                         </Link>
                     )}
+                    <Link className="nav-link" to="/user-guide">
+                        User Guide
+                    </Link>
                     <Link className="nav-link" to="/about">
-                        How it works
+                       About
                     </Link>
                 </Nav>
                 }
