@@ -15,7 +15,6 @@ export default function BTCPayment() {
     const isEditMode = useSelector((state: StoreType) => state.issue.wizardInEditMode);
 
     // FIXME: add once fee model is there
-    console.log(amountBTC);
     const amountBTCwithFee = amountBTC;
     const amountSATwithFee = btcToSat(amountBTCwithFee);
     const amountMBTCwithFee = satToMBTC(amountSATwithFee ? amountSATwithFee : "");
