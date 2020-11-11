@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { addVaultIssuesAction } from "../../../common/actions/issue.actions";
-import { issueRequestToVaultIssue } from "../../../common/utils/utils";
+import { issueRequestToVaultIssue, shortAddress } from "../../../common/utils/utils";
 
 export default function IssueTable(): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -13,13 +13,16 @@ export default function IssueTable(): ReactElement {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
-            const accountId = await window.vaultClient.getAccountId();
-            const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
-            const issuesMap = await window.polkaBTC.vaults.mapIssueRequests(vaultId);
-            const issues = issuesMap.get(vaultId);
-
-            if (!issues) return;
-            dispatch(addVaultIssuesAction(issueRequestToVaultIssue(issues)));
+            try {
+                const accountId = await window.vaultClient.getAccountId();
+                const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
+                const issues = await window.polkaBTC.vaults.mapIssueRequests(vaultId);
+                
+                if (!issues) return;
+                dispatch(addVaultIssuesAction(issueRequestToVaultIssue(issues)));
+            } catch(err) {
+                console.log(err);
+            }
         };
         fetchData();
     }, [polkaBtcLoaded, dispatch]);
@@ -50,10 +53,10 @@ export default function IssueTable(): ReactElement {
                                 {issues.map((issue, index) => {
                                     return (
                                         <tr key={index}>
-                                            <td>{issue.id}</td>
+                                            <td>{shortAddress(issue.id)}</td>
                                             <td>{issue.timestamp}</td>
-                                            <td>{issue.user}</td>
-                                            <td>{issue.btcAddress}</td>
+                                            <td>{shortAddress(issue.user)}</td>
+                                            <td>{shortAddress(issue.btcAddress)}</td>
                                             <td>{issue.polkaBTC}</td>
                                             <td>{issue.lockedDOT}</td>
                                             <td>{issue.status}</td>
