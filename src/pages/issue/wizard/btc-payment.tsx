@@ -16,8 +16,13 @@ export default function BTCPayment() {
 
     // FIXME: add once fee model is there
     const amountBTCwithFee = amountBTC;
-    const amountSATwithFee = btcToSat(amountBTCwithFee);
-    const amountMBTCwithFee = satToMBTC(amountSATwithFee ? amountSATwithFee : "");
+    let amountMBTCwithFee = "";
+    try {
+        const amountSATwithFee = btcToSat(amountBTCwithFee);
+        amountMBTCwithFee = satToMBTC(amountSATwithFee ? amountSATwithFee : "");
+    } catch (err) {
+        console.log(err)
+    }
     // FIXME: returns an empty string when loaded again
     const vaultBTCAddress = useSelector((state: StoreType) => state.issue.vaultBtcAddress);
     const dispatch = useDispatch();
