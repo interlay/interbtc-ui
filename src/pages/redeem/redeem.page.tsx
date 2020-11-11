@@ -11,6 +11,7 @@ import { planckToDOT, satToBTC } from "@interlay/polkabtc";
 
 export default function RedeemPage(): JSX.Element {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+    const address = useSelector((state: StoreType) => state.general.address);
     const dispatch = useDispatch();
     const [showWizard, setShowWizard] = useState(false);
     const [balancePolkaBTC, setBalancePolkaBTC] = useState("...");
@@ -26,18 +27,17 @@ export default function RedeemPage(): JSX.Element {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
-            const address = window.polkaBTC.account?.toString();
             const accountId = window.polkaBTC.api.createType("AccountId", address) as any;
             const balancePolkaSAT = await window.polkaBTC.treasury.balancePolkaBTC(accountId);
             const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
             // TODO: write data to storage
             const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
-            const balanceDOT = planckToDOT(balancePLANCK.toString()); 
+            const balanceDOT = planckToDOT(balancePLANCK.toString());
             setBalancePolkaBTC(balancePolkaBTC);
             setBalanceDOT(balanceDOT);
         };
         fetchData();
-    }, [polkaBtcLoaded]);
+    }, [polkaBtcLoaded, address]);
 
     return (
         <div>

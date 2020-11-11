@@ -85,7 +85,7 @@ export default class App extends Component<{}, AppState> {
         }
     }
 
-    async createAPIInstace(): Promise<void> {
+    async createAPIInstance(): Promise<void> {
         try {
             window.relayer = new StakedRelayerClient(constants.STAKED_RELAYER_URL);
             store.dispatch(isStakedRelayerLoaded(true));
@@ -130,7 +130,7 @@ export default class App extends Component<{}, AppState> {
         // Do not load data if showing static landing page only
         if (!constants.STATIC_PAGE_ONLY) {
             try {
-                await this.createAPIInstace();
+                await this.createAPIInstance();
                 this.initDataOnAppBootstrap();
             } catch (e) {
                 toast.warn("Could not connect to the Parachain, please try again in a few seconds", {
