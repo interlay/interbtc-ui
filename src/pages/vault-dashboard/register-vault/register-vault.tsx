@@ -17,6 +17,7 @@ type RegisterVaultForm = {
 
 type RegisterVaultProps = {
     onClose: () => void;
+    onRegister: () => void;
     show: boolean;
 };
 
@@ -40,6 +41,7 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
             const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
             const collateralPlanck = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
             const collateralDot = new BN(planckToDOT(collateralPlanck.toString()));
+            props.onRegister();
 
             dispatch(updateBTCAddressAction(address));
             dispatch(updateCollateralAction(collateralDot + collateral));

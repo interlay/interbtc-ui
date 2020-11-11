@@ -34,6 +34,8 @@ export default function VaultDashboardPage() {
     const [feesEarned] = useState("0");
     const [vaultId, setVaultId] = useState("0");
     const [accountId, setAccountId] = useState("0");
+    const [vaultRegistered, setVaultRegistered] = useState(false);
+
     const dispatch = useDispatch();
 
     const closeRegisterVaultModal = () => setShowRegisterVaultModal(false);
@@ -70,7 +72,7 @@ export default function VaultDashboardPage() {
             dispatch(updateCollateralizationAction(collateralization));
         };
         fetchData();
-    }, [polkaBtcLoaded, vaultClientLoaded, dispatch]);
+    }, [polkaBtcLoaded, vaultClientLoaded, dispatch, vaultRegistered]);
 
     return (
         <div className="vault-dashboard-page container-fluid white-background">
@@ -150,6 +152,7 @@ export default function VaultDashboardPage() {
                 <ReplaceTable openModal={setShowRequestReplacementModal}></ReplaceTable>
                 <RegisterVaultModal
                     onClose={closeRegisterVaultModal}
+                    onRegister={() => setVaultRegistered(true)}
                     show={showRegisterVaultModal}
                 ></RegisterVaultModal>
                 <UpdateCollateralModal
