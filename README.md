@@ -77,6 +77,12 @@ Docker will run all services: parachain, staked-relayer, vault, oracle and bitco
 docker-compose down -v
 ```
 
+Start the app with:
+
+```shell
+REACT_APP_BITCOIN_NETWORK=regtest yarn start
+```
+
 ### Docker-Compose (Testnet)
 
 To run against Bitcoin testnet first start your daemon:
@@ -91,12 +97,6 @@ Then start the remaining components with `docker-compose`:
 docker-compose --file docker-compose.testnet.yml up
 ```
 
-Mine at least one block:
-
-```shell
-bitcoin-cli -regtest generatetoaddress 1 $(bitcoin-cli -regtest getnewaddress)
-```
-
 Start the app with:
 
 ```shell
@@ -107,13 +107,31 @@ REACT_APP_BITCOIN_NETWORK=testnet yarn start
 
 ### Test Data (Regtest)
 
-To simplify testing, you may also need to run test data scripts:
-In the polkabtc-clients repository run:
+To simplify testing, you may also use the `testdata-gen` toolkit:
 
 ```shell
- cd testdata-gen/scripts/
- bash register.sh
+git clone git@gitlab.com:interlay/polkabtc-clients.git
+cd polkabtc-clients
+cargo build -p testdata-gen
+# environment variables for bitcoind
+source .env
 ```
+
+For example, to register `bob` as a vault we can use the following command:
+
+```shell
+testdata-gen --keyring bob register-vault --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --collateral 100000000
+```
+
+Then when `alice` wants to issue 0.001 PolkaBTC, we need to send the equivalent number of Satoshis to `bob`:
+
+```shell
+testdata-gen --keyring alice send-bitcoin --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --op-return ${OP_RETURN} --satoshis 100000
+```
+
+> Set `${OP_RETURN}` to the value presented on the confirmation page of the UI.
+
+Copy the `txid` printed by the `send-bitcoin` command and use this in the UI to execute the issue request.
 
 ### Local Installation
 
