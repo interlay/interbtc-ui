@@ -40,6 +40,7 @@ export default function RequestConfirmation() {
 
             // get the issue id from the request issue event
             const id = requestResult.hash.toString();
+            const issueRequest = await window.polkaBTC.issue.getRequestById(id);
 
             // update the issue status
             dispatch(changeIssueIdAction(id));
@@ -47,7 +48,7 @@ export default function RequestConfirmation() {
             const request: IssueRequest = {
                 id,
                 amountBTC: amountBTC,
-                creation: "0",
+                creation: issueRequest.opentime.toString(),
                 vaultBTCAddress,
                 btcTxId: "",
                 confirmations: 0,
