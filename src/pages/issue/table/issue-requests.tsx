@@ -48,7 +48,6 @@ async function updateUserIssueRequests(
         // and in case a user switches browsers,
         // the user has to manually update the BTC tx id.
         if (updatedIssueRequests.find((request) => request.id !== key.toString())) {
-            debugger;
             const issueRequest = parachainToUIIssueRequest(key, value);
             updatedIssueRequests.push(issueRequest);
         }
