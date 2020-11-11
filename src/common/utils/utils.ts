@@ -151,7 +151,7 @@ function convertParachainTypes(parachainObject: ParsableParachainTypes): [string
 }
 
 export const redeemRequestToVaultRedeem = (requests: Map<H256, ParachainRedeemRequest>): VaultRedeem[] => {
-    let redeemRequests: VaultRedeem[] = [];
+    const redeemRequests: VaultRedeem[] = [];
     requests.forEach((request, requestId) => {
         const [btcAddress, polkaBTC, unlockedDOT] = convertParachainTypes(request);
         redeemRequests.push({
@@ -167,8 +167,8 @@ export const redeemRequestToVaultRedeem = (requests: Map<H256, ParachainRedeemRe
     return redeemRequests;
 };
 
-export const issueRequestToVaultIssue = (requests: Map<H256, ParachainIssueRequest> ): VaultIssue[] => {
-    let issueRequests: VaultIssue[] = [];
+export const issueRequestToVaultIssue = (requests: Map<H256, ParachainIssueRequest>): VaultIssue[] => {
+    const issueRequests: VaultIssue[] = [];
     requests.forEach((request, requestId) => {
         const [btcAddress, polkaBTC, lockedDOT] = convertParachainTypes(request);
         issueRequests.push({
@@ -185,7 +185,7 @@ export const issueRequestToVaultIssue = (requests: Map<H256, ParachainIssueReque
 };
 
 export const requestsToVaultReplaceRequests = (requests: Map<H256, ReplaceRequest>): VaultReplaceRequest[] => {
-    let replaceRequests: VaultReplaceRequest[] = [];
+    const replaceRequests: VaultReplaceRequest[] = [];
     requests.forEach((request, requestId) => {
         const [btcAddress, polkaBTC, lockedDOT] = convertParachainTypes(request);
         replaceRequests.push({
@@ -196,7 +196,7 @@ export const requestsToVaultReplaceRequests = (requests: Map<H256, ReplaceReques
             btcAddress: btcAddress,
             polkaBTC: polkaBTC,
             lockedDOT: lockedDOT,
-            status: request.accept_time.isSome ? "Accepted" : "Pending", 
+            status: request.accept_time.isSome ? "Accepted" : "Pending",
         });
     });
     return replaceRequests;
