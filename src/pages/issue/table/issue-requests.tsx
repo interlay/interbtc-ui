@@ -47,7 +47,7 @@ async function updateUserIssueRequests(
         // does not store the BTC tx. With the current version,
         // and in case a user switches browsers,
         // the user has to manually update the BTC tx id.
-        if (updatedIssueRequests.find((request) => request.id !== key.toString())) {
+        if (!updatedIssueRequests.find((request) => request.id === key.toString())) {
             const issueRequest = parachainToUIIssueRequest(key, value);
             updatedIssueRequests.push(issueRequest);
         }

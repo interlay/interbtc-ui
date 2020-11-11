@@ -39,7 +39,7 @@ export function dateToShortString(date: Date): string {
 export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: ParachainIssueRequest): IssueRequest {
     return {
         id: id.toString(),
-        amountBTC: parachainIssueRequest.amount.toString(),
+        amountBTC: satToBTC(parachainIssueRequest.amount.toString()),
         creation: parachainIssueRequest.opentime.toString(),
         vaultBTCAddress: parachainIssueRequest.btc_address.toString(),
         btcTxId: "",
