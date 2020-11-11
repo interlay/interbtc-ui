@@ -130,7 +130,7 @@ export default function VaultDashboardPage() {
                             <div className="col-12">
                                 <div className="stats">
                                     Collateralization: &nbsp;
-                                    {collateralization === undefined ? "∞" : (collateralization * 100).toFixed(3)}%
+                                    {collateralization === undefined ? "∞" : `${(collateralization * 100).toFixed(3)}%`}
                                 </div>
                             </div>
                         </div>
