@@ -11,6 +11,8 @@ import {
     SET_REDEEM_REQUESTS,
     ADD_REDEEM_REQUEST,
     UPDATE_REDEEM_REQUEST,
+    UPDATE_ALL_REDEEM_REQUESTS,
+    UpdateAllRedeemRequests,
     ChangeRedeemStep,
     ChangeAmountPolkaBtc,
     ChangeBtcAddress,
@@ -83,4 +85,9 @@ export const addTransactionListenerRedeem = (id: string): AddTransactionListener
 export const updateRedeemRequestAction = (request: RedeemRequest): UpdateRedeemRequest => ({
     type: UPDATE_REDEEM_REQUEST,
     request,
+});
+
+export const updateAllRedeemRequestsAction = (redeemRequests: RedeemRequest[]): UpdateAllRedeemRequests => ({
+    type: UPDATE_ALL_REDEEM_REQUESTS,
+    redeemRequests,
 });
