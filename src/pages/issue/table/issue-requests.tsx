@@ -175,9 +175,6 @@ export default function IssueRequests(props: IssueRequestProps) {
         props.handleShow();
     };
 
-    console.log("cachedIssueRequests ",cachedIssueRequests);
-    console.log("issueRequests ",issueRequests);
-
     return (
         <div>
             <Table hover responsive size={"md"}>
