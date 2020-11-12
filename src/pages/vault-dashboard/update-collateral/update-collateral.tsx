@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState, useRef } from "react";
+import React, { SyntheticEvent, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -37,22 +37,18 @@ function parseOldAndNewCollateral(oldCollateral: string, newCollateral: string):
 
 export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+    const vaultClientLoaded = useSelector((state: StoreType) => state.general.vaultClientLoaded);
     const { register, handleSubmit, errors } = useForm<UpdateCollateralForm>();
     const totalCollateralString = useSelector((state: StoreType) => state.vault.collateral);
     const dispatch = useDispatch();
     const [isAWithdrawal, setIsAWithdrawal] = useState(false);
     const [isUpdatePending, setUpdatePending] = useState(false);
     const [newCollaterlization, setNewCollaterlization] = useState("∞");
-    const accountId = useRef("");
-
-    async function initializeAccountId() {
-        if (accountId.current === "") {
-            accountId.current = await window.vaultClient.getAccountId();
-        }
-    }
 
     const onSubmit = handleSubmit(async ({ collateral }) => {
         if (!polkaBtcLoaded) return;
+        if (!vaultClientLoaded) return;
+
         setUpdatePending(true);
         try {
             const [totalCollateralAsPlanck, newCollateralAsPlanck] = parseOldAndNewCollateral(
@@ -70,8 +66,8 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                 return;
             }
 
-            initializeAccountId();
-            const vaultId = window.polkaBTC.api.createType("AccountId", accountId.current);
+            const accountId = await window.vaultClient.getAccountId();
+            const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
             const balanceLockedDOT = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
             const collateralDotString = planckToDOT(balanceLockedDOT.toString());
             dispatch(updateCollateralAction(collateralDotString));
@@ -84,6 +80,8 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     });
 
     const onChange = async (obj: SyntheticEvent) => {
+        if (!vaultClientLoaded) return;
+
         const targetObject = obj.target as HTMLInputElement;
         const newCollateralString = targetObject.value;
         if (newCollateralString === "" || !polkaBtcLoaded) {
@@ -100,8 +98,9 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
             setIsAWithdrawal(false);
         }
 
-        initializeAccountId();
-        const vaultId = window.polkaBTC.api.createType("AccountId", accountId.current);
+        const accountId = await window.vaultClient.getAccountId();
+        const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
+
         const newCollateralAsDOT = window.polkaBTC.api.createType("u128", newCollateralAsPlanck) as DOT;
         const newCollateralization = await window.polkaBTC.vaults.getVaultCollateralization(
             vaultId,
