@@ -77,7 +77,7 @@ export default function VaultDashboardPage() {
                 console.log(err);
                 toast.warn(
                     "Local vault client running, but vault is not yet registered with the parachain."
-                    + "Client needs to be registered and DOT locked to start backing PolkaBTC and earning fees.", 
+                    + " Client needs to be registered and DOT locked to start backing PolkaBTC and earning fees.", 
                     { autoClose: false, toastId: vaultNotRegisteredToastId }
                 )
             }
