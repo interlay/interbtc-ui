@@ -19,6 +19,7 @@ import {
 import "./vault-dashboard.page.scss";
 import * as constants from "../../constants";
 import { getAddressFromH160 } from "../../common/utils/utils";
+import { toast } from "react-toastify";
 
 export default function VaultDashboardPage() {
     const [showRegisterVaultModal, setShowRegisterVaultModal] = useState(false);
@@ -35,6 +36,7 @@ export default function VaultDashboardPage() {
     const [vaultId, setVaultId] = useState("0");
     const [accountId, setAccountId] = useState("0");
     const [vaultRegistered, setVaultRegistered] = useState(false);
+    const vaultNotRegisteredToastId = "vault-not-registered-id";
 
     const dispatch = useDispatch();
 
@@ -47,29 +49,38 @@ export default function VaultDashboardPage() {
         const fetchData = async () => {
             if (!polkaBtcLoaded || !vaultClientLoaded) return;
 
-            const accountId = await window.vaultClient.getAccountId();
-            setAccountId(accountId);
+            try {
+                const accountId = await window.vaultClient.getAccountId();
+                setAccountId(accountId);
 
-            const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
-            const vault = await window.polkaBTC.vaults.get(vaultId);
-            setVaultId(vault.id.toString());
+                const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
+                const vault = await window.polkaBTC.vaults.get(vaultId);
+                setVaultId(vault.id.toString());
 
-            const vaultBTCAddress = getAddressFromH160(vault.wallet.address);
-            if (vaultBTCAddress === undefined) {
-                throw new Error("Vault has invalid BTC address.");
+                const vaultBTCAddress = getAddressFromH160(vault.wallet.address);
+                if (vaultBTCAddress === undefined) {
+                    throw new Error("Vault has invalid BTC address.");
+                }
+                dispatch(updateBTCAddressAction(vaultBTCAddress));
+
+                const balanceLockedDOT = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
+                const collateralDot = planckToDOT(balanceLockedDOT.toString());
+                dispatch(updateCollateralAction(collateralDot));
+
+                const totalPolkaSAT = await window.polkaBTC.vaults.getIssuedPolkaBTCAmount(vaultId);
+                const lockedAmountBTC = satToBTC(totalPolkaSAT.toString());
+                dispatch(updateLockedBTCAction(lockedAmountBTC));
+
+                const collateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId);
+                dispatch(updateCollateralizationAction(collateralization));
+            } catch (err) {
+                console.log(err);
+                toast.warn(
+                    "Local vault client running, but vault is not yet registered with the parachain."
+                    + "Client needs to be registered and DOT locked to start backing PolkaBTC and earning fees.", 
+                    { autoClose: false, toastId: vaultNotRegisteredToastId }
+                )
             }
-            dispatch(updateBTCAddressAction(vaultBTCAddress));
-
-            const balanceLockedDOT = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
-            const collateralDot = planckToDOT(balanceLockedDOT.toString());
-            dispatch(updateCollateralAction(collateralDot));
-
-            const totalPolkaSAT = await window.polkaBTC.vaults.getIssuedPolkaBTCAmount(vaultId);
-            const lockedAmountBTC = satToBTC(totalPolkaSAT.toString());
-            dispatch(updateLockedBTCAction(lockedAmountBTC));
-
-            const collateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId);
-            dispatch(updateCollateralizationAction(collateralization));
         };
         fetchData();
     }, [polkaBtcLoaded, vaultClientLoaded, dispatch, vaultRegistered]);

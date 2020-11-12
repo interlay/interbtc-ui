@@ -19,6 +19,7 @@ export default function StakedRelayerPage() {
     const [showReportModal, setShowReportModal] = useState(false);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [isDeregisterPending, setDeregisterPending] = useState(false);
+    const relayerNotRegisteredToastId = "relayer-not-registered-id";
 
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
@@ -60,6 +61,16 @@ export default function StakedRelayerPage() {
                     await window.polkaBTC.stakedRelayer.getStakedDOTAmount(activeStakedRelayerId)
                 ).toString();
                 const lockedDOT = planckToDOT(lockedPlanck);
+
+                // show warning if relayer is not registered with the parachain
+                if (new BN(lockedPlanck).isZero()) {
+                    toast.warn(
+                        "Local relayer client running, but relayer is not yet registered with the parachain."
+                        + "The client is already submitting blocks, but voting and reporting features are disabled until you register.",
+                        { autoClose: false, toastId: relayerNotRegisteredToastId }
+                    )
+                }
+
                 setDotLocked(lockedDOT);
                 setPlanckLocked(lockedPlanck);
             } catch (error) {
