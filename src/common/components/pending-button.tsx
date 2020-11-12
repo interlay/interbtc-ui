@@ -9,7 +9,7 @@ export default class ButtonMaybePending extends React.Component<
 > {
     render() {
         return (
-            <Button disabled={this.props.isPending} {...this.props}>
+            <Button disabled={this.props.isPending || this.props.disabled} {...this.props}>
                 {(this.props.isPending && <FaHourglass></FaHourglass>) || this.props.children}
             </Button>
         );

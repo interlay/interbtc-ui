@@ -8,6 +8,7 @@ import ButtonMaybePending from "../../../common/components/pending-button";
 
 type RegisterModalType = {
     onClose: () => void;
+    onRegister: () => void;
     show: boolean;
 };
 
@@ -26,6 +27,7 @@ export default function ReportModal(props: RegisterModalType): ReactElement {
         try {
             await window.relayer.registerStakedRelayer(stake);
             toast.success("Successfully Registered");
+            props.onRegister();
             props.onClose();
         } catch (error) {
             toast.error(error.toString());
