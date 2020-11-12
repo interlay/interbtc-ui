@@ -14,21 +14,32 @@
 
 ### Bitcoin Testnet Wallet
 
-Ensure you have a Bitcoin wallet. We recommended you pick one from the (non-exhaustive) list below, as we have tested with these and they have dedicated testnet support:
+You will need a Bitcoin testnet wallet to test PolkaBTC. 
+
+PolkaBTC currently makes use of OP_RETURN to prevent replay attacks (using same BTC payment for multiple issue requests. As such, you need a **Bitcoin testnet wallet with OP_RETURN support**. 
+
+Please pick from the list below:
+
+- Electrum desktop wallet ([https://electrum.org/#download](https://electrum.org/#download)). 
+- If you know what you are doing, you can also use the [bitcoin-core](https://bitcoin.org/en/bitcoin-core/) client with/without bitcoin.js ([example](https://bitcoinjs-guide.bitcoin-studio.com/bitcoinjs-guide/v5/part-four-data-anchoring/data_anchoring_op_return.html)). 
+
+_Know other wallets with OP_RETURN support? Please drop us an email at polkabtc@interlay.io (subject "OpReturn wallet support") and we will test & integrate_.
 
 
+**We recommend that you use the [Electrum desktop wallet](https://electrum.org/#download)**. 
 
-*   Android Testnet Wallet [https://play.google.com/store/apps/details?id=de.schildbach.wallet_test](https://play.google.com/store/apps/details?id=de.schildbach.wallet_test&hl=en&gl=US)
-*   Green Address wallet: [https://greenaddress.it/en/](https://greenaddress.it/en/) 
-*   Mycelium Testnet Wallet (Android or IOS): [https://wallet.mycelium.com/contact.html](https://wallet.mycelium.com/contact.html) 
-*   Electrum desktop wallet: [https://electrum.org/#home](https://electrum.org/#home) (Recommended for advanced users - only wallet that currently supports OP_RETURN for advanced testing)
+You can follow [this guide](https://bitzuma.com/posts/a-beginners-guide-to-the-electrum-bitcoin-wallet/) to set up a new Electrum wallet on your computer. 
+Note: make sure you start **Electrum in testnet mode**. For example, if you are using the Python sources:
 
-Otherwise, a good list of Bitcoin wallets can be found here: https://bitcoin.org/en/choose-your-wallet
+```
+python3 run_electrum --testnet
+```
+
 
 Please note: manual transaction signing via hardware wallets is WIP and will be released before Beta testnet (Ledger). 
 
 
-#### Getting Testnet Bitcoin
+### Getting Testnet Bitcoin
 
 Make sure you have at least some tBTC in your wallet. You can get them from a faucet:
 
@@ -41,32 +52,16 @@ Make sure you have at least some tBTC in your wallet. You can get them from a fa
 *   [https://tbtc.bitaps.com/](https://tbtc.bitaps.com/) 
 
 
-#### Electrum: Advanced Users & OP_RETURN Support
-
-PolkaBTC currently makes use of OP_RETURN to prevent replay attacks (using same BTC payment for multiple issue requests. 
-
-To test the bridge will all security features enabled, you can use the Electrum desktop wallet ([https://electrum.org/#download](https://electrum.org/#download)). While it is possible to use the bitcoin-core client to create and sign OP_RETURN transactions, we recommend you use Electrum except if you know what you are doing.
-
-You can follow [this guide](https://bitzuma.com/posts/a-beginners-guide-to-the-electrum-bitcoin-wallet/) to set up a new Electrum wallet on your computer. 
-
-You can start Electrum in testnet mode assuming you are using the Python sources:
-
-
-```
-python3 run_electrum --testnet
-```
-
-
-### Polkadot Wallet (Polkadot-js Browser Extension)
+### Polkadot Tesnet Wallet (Polkadot-js Browser Extension)
 
 You will need the Polkadot-js browser extension to test PolkaBTC. 
 
 *   Install the Polkadot.js extension in your browser: [https://github.com/polkadot-js/extension](https://github.com/polkadot-js/extension)  
-*   Add an account
+*   Create a new account. 
 
-#### Getting Testnet DOT
+### Getting Testnet DOT
 
-You can get testnet DOT by clicking on the faucet link in the top bar of the PolkaBTC UI. 
+You can get testnet DOT by clicking on the faucet link in the top bar of the PolkaBTC UI. Note: these testnet DOT are only usable on the BTC-Parachain.
 
 
 
@@ -78,12 +73,12 @@ You can get testnet DOT by clicking on the faucet link in the top bar of the Pol
 ## Issue PolkaBTC (PolkaBTC UI + Bitcoin Testnet Wallet)
 
 
-#### Issue page
+### Issue page
 
 The Issue page displays your current PolkaBTC and DOT balances. In addition, a table shows all of your ongoing/pending Issue requests. 
 
 
-#### Issue Process
+### Issue Process
 
 To issue PolkaBTC, follow the “Issue PolkaBTC” button on the Issue page. In the shown pop-up dialogue:
 
@@ -102,7 +97,7 @@ To issue PolkaBTC, follow the “Issue PolkaBTC” button on the Issue page. In 
     6. Click on this “Execute” button to finalize the Issue process and claim your PolkaBTC. 
 
 
-##### Issue process: BTC OP_RETURN Payment (Electrum Wallet)
+#### Issue process: BTC OP_RETURN Payment (Electrum Wallet)
 
 To create an OP_RETURN transaction in Electrum, you can follow the following guide (initially designed for Omnilayer - which also uses Bitcoin OP_RETURN):  [https://jochen-hoenicke.de/crypto/omni/](https://jochen-hoenicke.de/crypto/omni/)
 
@@ -116,8 +111,8 @@ To create an OP_RETURN transaction in Electrum, you can follow the following gui
 
 
 <!-- Only shown on master. TODO: find better way of hosting imported images.--> 
-![Issue dialogue screenshot](https://gitlab.com/interlay/polkabtc-ui/-/raw/master/src/assets/img/user-guide/issue-modal.png)
-![Electrum wallet screenshot](https://gitlab.com/interlay/polkabtc-ui/-/raw/master/src/assets/img/user-guide/issue-electrum-wallet.png)
+![Issue dialogue screenshot](https://gitlab.com/interlay/images/-/raw/master/polkaBTC/user-guide/issue-modal.png)
+![Electrum wallet screenshot](https://gitlab.com/interlay/images/-/raw/master/polkaBTC/user-guide/issue-electrum-wallet.png)
 
 
 <div id="redeem"></div>
@@ -128,14 +123,14 @@ To create an OP_RETURN transaction in Electrum, you can follow the following gui
 ## Redeem PolkaBTC (PolkaBTC UI)
 
 
-#### Redeem page
+### Redeem page
 
 The Redeem page displays your current PolkaBTC and DOT balances. 
 
 In addition, the table shows all of your ongoing Redeem requests. 
 
 
-#### Redeem Process
+### Redeem Process
 
 To redeem PolkaBTC, follow the “Redeem PolkaBTC” button on the Redeem page. In the shown modal:
 
