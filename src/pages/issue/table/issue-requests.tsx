@@ -38,26 +38,30 @@ export default function IssueRequests(props: IssueRequestProps) {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
-            setRequiredBtcConfirmations(await window.polkaBTC.btcRelay.getStableBitcoinConfirmations());
+            try {
+                setRequiredBtcConfirmations(await window.polkaBTC.btcRelay.getStableBitcoinConfirmations());
 
-            const accountId = window.polkaBTC.api.createType("AccountId", address);
-            const issueRequestMap = await window.polkaBTC.issue.mapForUser(accountId);
-            let allRequests = [];
+                const accountId = window.polkaBTC.api.createType("AccountId", address);
+                const issueRequestMap = await window.polkaBTC.issue.mapForUser(accountId);
+                let allRequests = [];
 
-            for (const [key, value] of issueRequestMap) {
-                allRequests.push(parachainToUIIssueRequest(key, value));
-            }
-
-            dispatch(updateAllIssueRequestsAction(allRequests));
-            
-            if (!allRequests) return;
-            allRequests.forEach(async (request: IssueRequest) => {
-                // start watcher for new issue requests
-                if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
-                    // the tx watcher updates the storage cache every 10s
-                    startTransactionWatcherIssue(request, dispatch);
+                for (const [key, value] of issueRequestMap) {
+                    allRequests.push(parachainToUIIssueRequest(key, value));
                 }
-            });
+
+                dispatch(updateAllIssueRequestsAction(allRequests));
+                
+                if (!allRequests) return;
+                allRequests.forEach(async (request: IssueRequest) => {
+                    // start watcher for new issue requests
+                    if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
+                        // the tx watcher updates the storage cache every 10s
+                        startTransactionWatcherIssue(request, dispatch);
+                    }
+                });
+            } catch(error) {
+                toast.error(error.toString());
+            }
         };
         fetchData();
     }, [polkaBtcLoaded, address, dispatch, transactionListeners]);
