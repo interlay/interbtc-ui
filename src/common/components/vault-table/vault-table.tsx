@@ -5,6 +5,7 @@ import { Vault } from "../../types/util.types";
 import * as constants from "../../../constants";
 import * as bitcoin from "bitcoinjs-lib";
 import { planckToDOT, satToBTC } from "@interlay/polkabtc";
+import { getAddressFromH160 } from "../../utils/utils";
 
 export default function VaultTable(): ReactElement {
     const [vaults, setVaults] = useState<Array<Vault>>([]);
@@ -32,12 +33,10 @@ export default function VaultTable(): ReactElement {
 
                 let btcAddress: string | undefined;
                 try {
-                    // TODO: specify script format in parachain
-                    const payment = bitcoin.payments.p2wpkh({
-                        hash: Buffer.from(vault.wallet.address.buffer),
-                        network: bitcoin.networks.testnet,
-                    });
-                    btcAddress = payment.address;
+                    btcAddress = getAddressFromH160(vault.wallet.address);
+                    if (btcAddress === undefined) {
+                        throw new Error("Vault has invalid BTC address.");
+                    }
                 } catch (error) {
                     console.log(error);
                 }
