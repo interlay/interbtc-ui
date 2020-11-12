@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { startTransactionWatcherRedeem } from "../../../common/utils/transaction-watcher";
 import { updateAllRedeemRequestsAction } from "../../../common/actions/redeem.actions";
+import { toast } from "react-toastify";
 
 
 export default function RedeemRequests() {
@@ -21,24 +22,28 @@ export default function RedeemRequests() {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
-            const accountId = window.polkaBTC.api.createType("AccountId", address);
-            const redeemRequestMap = await window.polkaBTC.redeem.mapForUser(accountId);
-            let allRequests = [];
+            try {
+                const accountId = window.polkaBTC.api.createType("AccountId", address);
+                const redeemRequestMap = await window.polkaBTC.redeem.mapForUser(accountId);
+                let allRequests = [];
 
-            for (const [key, value] of redeemRequestMap) {
-                allRequests.push(parachainToUIRedeemRequest(key, value));
-            }
-
-            dispatch(updateAllRedeemRequestsAction(allRequests));
-            
-            if (!allRequests) return;
-            allRequests.forEach(async (request: RedeemRequest) => {
-                // start watcher for new redeem requests
-                if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
-                    // the tx watcher updates the storage cache every 10s
-                    startTransactionWatcherRedeem(request, dispatch);
+                for (const [key, value] of redeemRequestMap) {
+                    allRequests.push(parachainToUIRedeemRequest(key, value));
                 }
-            });
+
+                dispatch(updateAllRedeemRequestsAction(allRequests));
+                
+                if (!allRequests) return;
+                allRequests.forEach(async (request: RedeemRequest) => {
+                    // start watcher for new redeem requests
+                    if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
+                        // the tx watcher updates the storage cache every 10s
+                        startTransactionWatcherRedeem(request, dispatch);
+                    }
+                });
+            } catch(error) {
+                toast.error(error.toString());
+            }
         };
         fetchData();
     }, [polkaBtcLoaded, transactionListeners, dispatch, address]);
