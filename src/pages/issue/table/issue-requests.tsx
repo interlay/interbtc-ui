@@ -20,44 +20,10 @@ import {
     changeVaultBtcAddressOnIssueAction,
     updateAllIssueRequestsAction,
 } from "../../../common/actions/issue.actions";
-import { Dispatch } from "redux";
-import { IssueActions } from "../../../common/types/actions.types";
 
 type IssueRequestProps = {
     handleShow: () => void;
 };
-
-/**
- * This function adds new issue requests that are not in the currently stored in this browser's
- * local storage.
- *
- * @param address the current address of the account
- * @param currentIssueRequest the current issue requests locally stored
- */
-async function updateUserIssueRequests(
-    address: string,
-    cashedIssueRequests: IssueRequest[] = [],
-    dispatch: Dispatch<IssueActions>
-): Promise<IssueRequest[]> {
-    const accountId = window.polkaBTC.api.createType("AccountId", address);
-    let updatedIssueRequests = [...cashedIssueRequests];
-    const issueRequestMap = await window.polkaBTC.issue.mapForUser(accountId);
-    let storeNeedsUpdate = false;
-
-    for (const [key, value] of issueRequestMap) {
-        if (!updatedIssueRequests.find((request) => request.id === key.toString())) {
-            const issueRequest = parachainToUIIssueRequest(key, value);
-            updatedIssueRequests.push(issueRequest);
-            storeNeedsUpdate = true;
-        }
-    }
-
-    if(storeNeedsUpdate) {
-        dispatch(updateAllIssueRequestsAction(updatedIssueRequests));
-    }
-
-    return updatedIssueRequests;
-}
 
 export default function IssueRequests(props: IssueRequestProps) {
     const address = useSelector((state: StoreType) => state.general.address);
@@ -73,7 +39,16 @@ export default function IssueRequests(props: IssueRequestProps) {
             if (!polkaBtcLoaded) return;
 
             setRequiredBtcConfirmations(await window.polkaBTC.btcRelay.getStableBitcoinConfirmations());
-            const allRequests = await updateUserIssueRequests(address, issueRequests, dispatch);
+
+            const accountId = window.polkaBTC.api.createType("AccountId", address);
+            const issueRequestMap = await window.polkaBTC.issue.mapForUser(accountId);
+            let allRequests = [];
+
+            for (const [key, value] of issueRequestMap) {
+                allRequests.push(parachainToUIIssueRequest(key, value));
+            }
+
+            dispatch(updateAllIssueRequestsAction(allRequests));
             
             if (!allRequests) return;
             allRequests.forEach(async (request: IssueRequest) => {
@@ -85,7 +60,7 @@ export default function IssueRequests(props: IssueRequestProps) {
             });
         };
         fetchData();
-    }, [polkaBtcLoaded, issueRequests, address, dispatch, transactionListeners]);
+    }, [polkaBtcLoaded, address, dispatch, transactionListeners]);
 
     const execute = async (request: IssueRequest) => {
         if (!polkaBtcLoaded) return;

@@ -23,8 +23,9 @@ export async function updateTransactionStatusIssue(
 ): Promise<void> {
     if (request && request.btcTxId && window.polkaBTC) {
         try {
-            const txStatus = await window.polkaBTC.btcCore.getTransactionStatus(stripHexPrefix(request.btcTxId));
             const updatedRequest = request;
+            updatedRequest.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id);
+            const txStatus = await window.polkaBTC.btcCore.getTransactionStatus(stripHexPrefix(request.btcTxId));
             if (request.confirmations !== txStatus.confirmations) {
                 updatedRequest.confirmations = txStatus.confirmations;
                 dispatch(updateIssueRequestAction(updatedRequest));
