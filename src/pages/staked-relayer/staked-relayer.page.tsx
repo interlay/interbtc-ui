@@ -74,7 +74,7 @@ export default function StakedRelayerPage() {
                 if (!isRegistered) {
                     toast.warn(
                         "Local relayer client running, but relayer is not yet registered with the parachain." +
-                            "The client is already submitting blocks, but voting and reporting features are disabled until you register.",
+                            " The client is already submitting blocks, but voting and reporting features are disabled until registered.",
                         { autoClose: false, toastId: relayerNotRegisteredToastId }
                     );
                 }

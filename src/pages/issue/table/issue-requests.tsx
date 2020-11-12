@@ -71,7 +71,12 @@ export default function IssueRequests(props: IssueRequestProps) {
         setExecutePending([...executePending, request.id]);
         try {
             // get proof data from bitcoin
-            const txId = request.btcTxId;
+            let txId: string;
+            if (request.btcTxId === "") {
+                txId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id);
+            } else {
+                txId = request.btcTxId;
+            }
             const [transactionBlockHeight, merkleProof, rawTx] = await Promise.all([
                 window.polkaBTC.btcCore.getTransactionBlockHeight(txId),
                 window.polkaBTC.btcCore.getMerkleProof(txId),

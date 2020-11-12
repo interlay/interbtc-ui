@@ -34,12 +34,13 @@ export default function Confirmation() {
             const amount = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
 
             // FIXME: use AccountId type from @polkadot/types/interfaces
-            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultAddress) as any;
+            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultAddress);
             const requestResult = await window.polkaBTC.redeem.request(amount, btcAddress, vaultAccountId);
 
             // get the redeem id from the request redeem event
             const id = requestResult.hash.toString();
             const redeemRequest = await window.polkaBTC.redeem.getRequestById(id);
+            console.log(redeemRequest);
 
             // update the redeem status
             dispatch(changeRedeemIdAction(id));

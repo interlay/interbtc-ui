@@ -44,11 +44,12 @@ export function dateToShortString(date: Date): string {
  * @param parachainIssueRequest ParachainIssueRequest
  */
 export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: ParachainIssueRequest): IssueRequest {
+    const btcAddress = getAddressFromH160(parachainIssueRequest.btc_address);
     return {
         id: stripHexPrefix(id.toString()),
         amountBTC: satToBTC(parachainIssueRequest.amount.toString()),
         creation: parachainIssueRequest.opentime.toString(),
-        vaultBTCAddress: parachainIssueRequest.btc_address.toString(),
+        vaultBTCAddress: btcAddress ? btcAddress : "",
         btcTxId: "",
         confirmations: 0,
         completed: parachainIssueRequest.completed.isTrue,
@@ -62,11 +63,12 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
  * @param parachainIssueRequest ParachainIssueRequest
  */
 export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: ParachainRedeemRequest): RedeemRequest {
+    const btcAddress = getAddressFromH160(parachainRedeemRequest.btc_address);
     return {
         id: stripHexPrefix(id.toString()),
-        amountPolkaBTC: parachainRedeemRequest.amount_polka_btc.toString(),
+        amountPolkaBTC: satToBTC(parachainRedeemRequest.amount_polka_btc.toString()),
         creation: parachainRedeemRequest.opentime.toString(),
-        vaultBTCAddress: parachainRedeemRequest.btc_address.toString(),
+        vaultBTCAddress: btcAddress ? btcAddress : "",
         btcTxId: "",
         confirmations: 0,
         completed: false,
