@@ -81,7 +81,7 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
             </div>
             <div className="row">
                 <div className="col-12">
-                    {polkaBTCAmount > new BN(0) ? (
+                    {polkaBTCAmount.gt(new BN(0) ) ? (
                         <Button
                             variant="outline-danger"
                             className="vault-dashboard-button"

@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { requestReplacmentPendingAction } from "../../../common/actions/vault.actions";
+import { addReplaceRequestsAction } from "../../../common/actions/vault.actions";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { btcToSat } from "@interlay/polkabtc";
+import { requestsToVaultReplaceRequests } from "../../../common/utils/utils";
 
 type RequestReplacementForm = {
     amount: number;
@@ -20,21 +21,28 @@ type RequestReplacementProps = {
 export default function RequestReplacementModal(props: RequestReplacementProps) {
     const { register, handleSubmit, errors } = useForm<RequestReplacementForm>();
     const dispatch = useDispatch();
-    const isPending = useSelector((state: StoreType) => state.vault.isReplacmentPending);
     const lockedDot = useSelector((state: StoreType) => state.vault.collateral);
     const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
+    const [isRequestPending, setRequestPending] = useState(false);
 
     const onSubmit = handleSubmit(async ({ amount }) => {
         try {
-            dispatch(requestReplacmentPendingAction(true));
+            setRequestPending(true);
             const amountAsSatoshis = btcToSat(amount.toString());
             if (amountAsSatoshis === undefined) {
                 throw new Error("Amount to convert is less than 1 sat.");
             }
             await window.vaultClient.requestReplace(amountAsSatoshis, "100");
+
+            const accountId = await window.vaultClient.getAccountId();
+            const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
+            const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
+                if (!requests) return;
+
+            dispatch(addReplaceRequestsAction(requestsToVaultReplaceRequests(requests)));
             toast.success("Replacment request is submitted");
             props.onClose();
-            dispatch(requestReplacmentPendingAction(false));
+            setRequestPending(false);
         } catch (error) {
             toast.error(error.toString());
         }
@@ -87,7 +95,7 @@ export default function RequestReplacementModal(props: RequestReplacementProps) 
                     <Button variant="secondary" onClick={props.onClose}>
                         Cancel
                     </Button>
-                    <ButtonMaybePending variant="outline-danger" type="submit" isPending={isPending}>
+                    <ButtonMaybePending variant="outline-danger" type="submit" isPending={isRequestPending}>
                         Request
                     </ButtonMaybePending>
                 </Modal.Footer>

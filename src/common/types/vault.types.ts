@@ -11,7 +11,6 @@ export interface VaultReplaceRequest {
 
 export interface VaultState {
     requests: VaultReplaceRequest[];
-    isReplacmentPending: boolean;
     btcAddress: string;
     collateralization: number | undefined;
     collateral: string;

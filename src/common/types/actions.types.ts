@@ -268,8 +268,6 @@ export type IssueActions =
 // VAULT
 
 export const ADD_REPLACE_REQUESTS = "ADD_REPLACE_REQUESTS";
-export const ADD_REPLACE_REQUEST = "ADD_REPLACE_REQUEST";
-export const REQUEST_REPLACMENT_PENDING = "REQUEST_REPLACMENT_PENDING";
 export const UPDATE_BTC_ADDRESS = "UPDATE_BTC_ADDRESS";
 export const UPDATE_COLLATERALIZATION = "UPDATE_COLLATERALIZATION";
 export const UPDATE_COLLATERAL = "UPDATE_COLLATERAL";
@@ -278,16 +276,6 @@ export const UPDATE_LOCKED_BTC = "UPDATE_LOCKED_BTC";
 export interface AddReplaceRequests {
     type: typeof ADD_REPLACE_REQUESTS;
     requests: VaultReplaceRequest[];
-}
-
-export interface AddReplaceRequest {
-    type: typeof ADD_REPLACE_REQUEST;
-    request: VaultReplaceRequest;
-}
-
-export interface RequestReplacmentPending {
-    type: typeof REQUEST_REPLACMENT_PENDING;
-    isReplacmentPending: boolean;
 }
 
 export interface UpdateBTCAddress {
@@ -312,8 +300,6 @@ export interface UpdateLockedBTC {
 
 export type VaultActions =
     | AddReplaceRequests
-    | AddReplaceRequest
-    | RequestReplacmentPending
     | UpdateBTCAddress
     | UpdateCollateralization
     | UpdateCollateral

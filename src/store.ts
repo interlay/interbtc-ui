@@ -53,7 +53,6 @@ export const getInitialState = (): StoreType => {
         },
         vault: {
             requests: [],
-            isReplacmentPending: false,
             btcAddress: "",
             collateralization: undefined,
             collateral: "",
