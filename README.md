@@ -193,6 +193,19 @@ One the website is launched, you have three different options:
 - *Mint PolkaBTC*
 - *Return BTC*
 
+## Help
+
+### Docker
+
+You can hard-reset the docker dependency setup with the following commands:
+
+```shell
+docker kill $(docker ps -q)
+docker rm $(docker ps -a -q)
+docker rmi $(docker images -q)
+docker volume rm $(docker volume ls -q)
+```
+
 ## Roadmap
 
 - [ ] Integrate an atomic swap option to buy PolkaBTC.
