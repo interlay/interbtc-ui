@@ -9,7 +9,14 @@ import {
 import { VaultReplaceRequest } from "../types/vault.types";
 import { H160, H256 } from "@polkadot/types/interfaces";
 import { IssueRequest as ParachainIssueRequest } from "@interlay/polkabtc/build/interfaces/default";
-import { satToBTC, planckToDOT, getP2WPKHFromH160, bitcoin, stripHexPrefix } from "@interlay/polkabtc";
+import {
+    satToBTC,
+    planckToDOT,
+    getP2WPKHFromH160,
+    getH160FromP2WPKH,
+    bitcoin,
+    stripHexPrefix,
+} from "@interlay/polkabtc";
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from "../../constants";
 
 export function shortAddress(address: string): string {
@@ -107,14 +114,19 @@ interface ParsableParachainTypes {
     griefing_collateral?: DOT;
 }
 
+const btcNetwork =
+    BITCOIN_NETWORK === "mainnet"
+        ? bitcoin.networks.bitcoin
+        : BITCOIN_NETWORK === "testnet"
+        ? bitcoin.networks.testnet
+        : bitcoin.networks.regtest;
+
 export function getAddressFromH160(hash: H160): string | undefined {
-    const btcNetwork =
-        BITCOIN_NETWORK === "mainnet"
-            ? bitcoin.networks.bitcoin
-            : BITCOIN_NETWORK === "testnet"
-            ? bitcoin.networks.testnet
-            : bitcoin.networks.regtest;
     return getP2WPKHFromH160(hash, btcNetwork);
+}
+
+export function getH160FromAddress(address: string): string | undefined {
+    return getH160FromP2WPKH(address, btcNetwork);
 }
 
 /**
