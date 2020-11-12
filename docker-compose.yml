@@ -50,7 +50,7 @@ services:
       - "3002:3002"
   staked-relayer:
     # only start staked relayer after mining to prevent long catch-up
-    image: "registry.gitlab.com/interlay/polkabtc-clients:staked-relayer-dev"
+    image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:dev"
     command:
       - /bin/sh
       - -c
@@ -66,7 +66,7 @@ services:
     ports:
       - "3030:3030"
   oracle:
-    image: "registry.gitlab.com/interlay/polkabtc-clients:oracle-dev"
+    image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:dev"
     command:
       - /bin/sh
       - -c
@@ -77,7 +77,7 @@ services:
     environment:
       RUST_LOG: info
   vault:
-    image: "registry.gitlab.com/interlay/polkabtc-clients:vault-dev"
+    image: "registry.gitlab.com/interlay/polkabtc-clients/vault:dev"
     command:
       - /bin/sh
       - -c
