@@ -7,6 +7,7 @@ import { StoreType } from "../../../common/types/util.types";
 import { updateBTCAddressAction } from "../../../common/actions/vault.actions";
 import { BTC_ADDRESS_REGEX } from "../../../constants";
 import ButtonMaybePending from "../../../common/components/pending-button";
+import { getH160FromAddress } from "../../../common/utils/utils";
 
 type UpdateBTCAddressForm = {
     btcAddress: string;
@@ -26,7 +27,11 @@ export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps) {
     const onSubmit = handleSubmit(async ({ btcAddress }) => {
         setUpdatePending(true);
         try {
-            await window.vaultClient.updateBtcAddress(btcAddress);
+            const hash = getH160FromAddress(btcAddress);
+            if (!hash) {
+                throw new Error("Invalid address");
+            }
+            await window.vaultClient.updateBtcAddress(hash);
             dispatch(updateBTCAddressAction(btcAddress));
             toast.success("BTC address successfully updated");
             props.onClose();

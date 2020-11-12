@@ -9,6 +9,7 @@ import { updateBTCAddressAction, updateCollateralAction } from "../../../common/
 import { planckToDOT, dotToPlanck } from "@interlay/polkabtc";
 import { StoreType } from "../../../common/types/util.types";
 import BN from "bn.js";
+import { getH160FromAddress } from "../../../common/utils/utils";
 
 type RegisterVaultForm = {
     collateral: string;
@@ -35,7 +36,11 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
             if (collateralAsPlanck === undefined) {
                 throw new Error("Collateral is smaller than 1 planck");
             }
-            await window.vaultClient.registerVault(collateralAsPlanck, address);
+            const hash = getH160FromAddress(address);
+            if (!hash) {
+                throw new Error("Invalid address");
+            }
+            await window.vaultClient.registerVault(collateralAsPlanck, hash);
 
             const accountId = await window.vaultClient.getAccountId();
             const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
