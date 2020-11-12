@@ -5,6 +5,7 @@ import { addReplaceRequestsAction } from "../../../common/actions/vault.actions"
 import { Button } from "react-bootstrap";
 import { requestsToVaultReplaceRequests } from "../../../common/utils/utils";
 import BN from "bn.js";
+import { shortAddress } from "../../../common/utils/utils";
 
 type ReplaceTableProps = {
     openModal: (show: boolean) => void;
@@ -55,7 +56,7 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
                                     <th>New Vault</th>
                                     <th>BTC Address</th>
                                     <th>PolkaBTC</th>
-                                    <th>LockedDOT</th>
+                                    <th>Griefing Collateral</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -63,11 +64,11 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
                                 {replaceRequests.map((redeem, index) => {
                                     return (
                                         <tr key={index}>
-                                            <td>{redeem.id}</td>
+                                            <td>{shortAddress(redeem.id)}</td>
                                             <td>{redeem.timestamp}</td>
-                                            <td>{redeem.oldVault}</td>
-                                            <td>{redeem.newVault}</td>
-                                            <td>{redeem.btcAddress}</td>
+                                            <td>{shortAddress(redeem.oldVault)}</td>
+                                            <td>{shortAddress(redeem.newVault)}</td>
+                                            <td>{shortAddress(redeem.btcAddress)}</td>
                                             <td>{redeem.polkaBTC}</td>
                                             <td>{redeem.lockedDOT}</td>
                                             <td>{redeem.status}</td>
@@ -81,7 +82,7 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
             </div>
             <div className="row">
                 <div className="col-12">
-                    {polkaBTCAmount > new BN(0) ? (
+                    {polkaBTCAmount.gt(new BN(0) ) ? (
                         <Button
                             variant="outline-danger"
                             className="vault-dashboard-button"

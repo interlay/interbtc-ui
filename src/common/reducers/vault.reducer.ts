@@ -1,7 +1,5 @@
 import {
     ADD_REPLACE_REQUESTS,
-    ADD_REPLACE_REQUEST,
-    REQUEST_REPLACMENT_PENDING,
     UPDATE_COLLATERALIZATION,
     UPDATE_BTC_ADDRESS,
     UPDATE_COLLATERAL,
@@ -12,7 +10,6 @@ import { VaultState } from "../types/vault.types";
 
 const initialState = {
     requests: [],
-    isReplacmentPending: false,
     btcAddress: "",
     collateralization: 0,
     collateral: "",
@@ -23,10 +20,6 @@ export const vaultReducer = (state: VaultState = initialState, action: VaultActi
     switch (action.type) {
         case ADD_REPLACE_REQUESTS:
             return { ...state, requests: action.requests };
-        case ADD_REPLACE_REQUEST:
-            return { ...state, requests: [...state.requests, action.request] };
-        case REQUEST_REPLACMENT_PENDING:
-            return { ...state, isReplacmentPending: action.isReplacmentPending };
         case UPDATE_COLLATERALIZATION:
             return { ...state, collateralization: action.collateralization };
         case UPDATE_BTC_ADDRESS:
