@@ -7,40 +7,8 @@ import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { startTransactionWatcherRedeem } from "../../../common/utils/transaction-watcher";
-import { RedeemActions } from "../../../common/types/actions.types";
-import { Dispatch } from "redux";
 import { updateAllRedeemRequestsAction } from "../../../common/actions/redeem.actions";
-/**
- * This function adds new redeem requests that are not in the currently stored in this browser's
- * local storage.
- *
- * @param address the current address of the account
- * @param currentRedeemRequest the current redeem requests locally stored
- */
-async function updateUserRedeemRequests(
-    address: string,
-    currentRedeemRequests: RedeemRequest[] = [],
-    dispatch: Dispatch<RedeemActions>
-): Promise<RedeemRequest[]> {
-    const accountId = window.polkaBTC.api.createType("AccountId", address);
-    let updatedRedeemRequests = [...currentRedeemRequests]
-    const redeemRequestMap = await window.polkaBTC.redeem.mapForUser(accountId);
-    let storeNeedsUpdate = false;
 
-    for (const [key, value] of redeemRequestMap) {
-        if (!updatedRedeemRequests.find((request) => request.id === key.toString())) {
-            const redeemRequest = parachainToUIRedeemRequest(key, value);
-            updatedRedeemRequests.push(redeemRequest);
-            storeNeedsUpdate = true;
-        }
-    }
-
-    if(storeNeedsUpdate) {
-        dispatch(updateAllRedeemRequestsAction(updatedRedeemRequests));
-    }
-
-    return updatedRedeemRequests;
-}
 
 export default function RedeemRequests() {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -53,7 +21,15 @@ export default function RedeemRequests() {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
-            const allRequests = await updateUserRedeemRequests(address, redeemRequests, dispatch);
+            const accountId = window.polkaBTC.api.createType("AccountId", address);
+            const redeemRequestMap = await window.polkaBTC.redeem.mapForUser(accountId);
+            let allRequests = [];
+
+            for (const [key, value] of redeemRequestMap) {
+                allRequests.push(parachainToUIRedeemRequest(key, value));
+            }
+
+            dispatch(updateAllRedeemRequestsAction(allRequests));
             
             if (!allRequests) return;
             allRequests.forEach(async (request: RedeemRequest) => {
@@ -65,7 +41,7 @@ export default function RedeemRequests() {
             });
         };
         fetchData();
-    }, [polkaBtcLoaded, redeemRequests, transactionListeners, dispatch, address]);
+    }, [polkaBtcLoaded, transactionListeners, dispatch, address]);
 
     return (
         <div>
