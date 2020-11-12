@@ -13,7 +13,6 @@ import "./staked-relayer.page.scss";
 import { StoreType } from "../../common/types/util.types";
 import ButtonMaybePending from "../../common/components/pending-button";
 import { planckToDOT } from "@interlay/polkabtc";
-import BN from "bn.js";
 
 export default function StakedRelayerPage() {
     const [showReportModal, setShowReportModal] = useState(false);
@@ -29,6 +28,8 @@ export default function StakedRelayerPage() {
     const [dotLocked, setDotLocked] = useState("0");
     const [planckLocked, setPlanckLocked] = useState("0");
     const [stakedRelayerAddress, setStakedRelayerAddress] = useState("");
+    const [relayerRegistered, setRelayerRegistered] = useState(false);
+    const [relayerInactive, setRelayerInactive] = useState(false);
 
     const handleReportModalClose = () => setShowReportModal(false);
     const handleRegisterModalClose = () => setShowRegisterModal(false);
@@ -42,6 +43,8 @@ export default function StakedRelayerPage() {
         } catch (error) {
             toast.error(error.toString());
         }
+        setRelayerRegistered(false);
+        setRelayerInactive(false);
         setDeregisterPending(false);
     };
 
@@ -51,24 +54,29 @@ export default function StakedRelayerPage() {
 
             try {
                 const address = await window.relayer.getAccountId();
-                const activeStakedRelayerId = window.polkaBTC.api.createType("AccountId", address);
-                const feesEarned = await window.polkaBTC.stakedRelayer.getFeesEarned(activeStakedRelayerId);
+                const stakedRelayerId = window.polkaBTC.api.createType("AccountId", address);
+                const feesEarned = await window.polkaBTC.stakedRelayer.getFeesEarned(stakedRelayerId);
                 setFees(feesEarned.toString());
 
+                const isActive = await window.polkaBTC.stakedRelayer.isStakedRelayerActive(stakedRelayerId);
+                const isInactive = await window.polkaBTC.stakedRelayer.isStakedRelayerInactive(stakedRelayerId);
+                const isRegistered = isActive || isInactive;
+                setRelayerRegistered(isRegistered);
+                setRelayerInactive(isInactive);
                 setStakedRelayerAddress(address);
 
                 const lockedPlanck = (
-                    await window.polkaBTC.stakedRelayer.getStakedDOTAmount(activeStakedRelayerId)
+                    await window.polkaBTC.stakedRelayer.getStakedDOTAmount(stakedRelayerId)
                 ).toString();
                 const lockedDOT = planckToDOT(lockedPlanck);
 
                 // show warning if relayer is not registered with the parachain
-                if (new BN(lockedPlanck).isZero()) {
+                if (!isRegistered) {
                     toast.warn(
-                        "Local relayer client running, but relayer is not yet registered with the parachain."
-                        + "The client is already submitting blocks, but voting and reporting features are disabled until you register.",
+                        "Local relayer client running, but relayer is not yet registered with the parachain." +
+                            "The client is already submitting blocks, but voting and reporting features are disabled until you register.",
                         { autoClose: false, toastId: relayerNotRegisteredToastId }
-                    )
+                    );
                 }
 
                 setDotLocked(lockedDOT);
@@ -97,7 +105,7 @@ export default function StakedRelayerPage() {
                             <div className="stats">Fees earned: {feesEarned}</div>
                         </div>
                     </div>
-                    {new BN(planckLocked).isZero() && (
+                    {!relayerRegistered && polkaBtcLoaded && (
                         <Button
                             variant="outline-success"
                             className="staked-button"
@@ -107,17 +115,25 @@ export default function StakedRelayerPage() {
                         </Button>
                     )}
                     <BitcoinTable></BitcoinTable>
-                    {new BN(planckLocked).gt(new BN(0)) && (
+                    {relayerRegistered && (
                         <Button
                             variant="outline-danger"
                             className="staked-button"
+                            disabled={relayerInactive}
                             onClick={() => setShowReportModal(true)}
                         >
                             Report Invalid Block
                         </Button>
                     )}
                     <ReportModal onClose={handleReportModalClose} show={showReportModal}></ReportModal>
-                    <RegisterModal onClose={handleRegisterModalClose} show={showRegisterModal}></RegisterModal>
+                    <RegisterModal
+                        onClose={handleRegisterModalClose}
+                        onRegister={() => {
+                            setRelayerRegistered(true);
+                            setRelayerInactive(true);
+                        }}
+                        show={showRegisterModal}
+                    ></RegisterModal>
                     <StatusUpdateTable
                         dotLocked={dotLocked}
                         planckLocked={planckLocked}
@@ -125,12 +141,13 @@ export default function StakedRelayerPage() {
                     ></StatusUpdateTable>
                     <VaultTable></VaultTable>
                     <OracleTable planckLocked={planckLocked}></OracleTable>
-                    {new BN(planckLocked).gt(new BN(0)) && (
+                    {relayerRegistered && (
                         <React.Fragment>
                             <ButtonMaybePending
                                 className="staked-button"
                                 variant="outline-danger"
                                 isPending={isDeregisterPending}
+                                disabled={relayerInactive || isDeregisterPending}
                                 onClick={deregisterStakedRelayer}
                             >
                                 Deregister
