@@ -3,7 +3,6 @@ import { StoreType } from "../../types/util.types";
 import { useSelector } from "react-redux";
 import { Vault } from "../../types/util.types";
 import * as constants from "../../../constants";
-import * as bitcoin from "bitcoinjs-lib";
 import { planckToDOT, satToBTC } from "@interlay/polkabtc";
 import { getAddressFromH160 } from "../../utils/utils";
 
