@@ -60,7 +60,7 @@ export default class App extends Component<{}, AppState> {
         if (allAccounts.length === 0) {
             toast.warn(
                 "No account found, you will not be able to execute any transaction. " +
-                    "Please check that your wallet is configured correctly.",
+                "Please check that your wallet is configured correctly.",
                 {
                     autoClose: false,
                 }
@@ -98,7 +98,7 @@ export default class App extends Component<{}, AppState> {
                 if (!window.polkaBTC) {
                     toast.warn(
                         "Unable to connect to the BTC-Parachain. " +
-                            "Please check your internet connection or try again later."
+                        "Please check your internet connection or try again later."
                     );
                 }
             }, 5000);
@@ -111,7 +111,7 @@ export default class App extends Component<{}, AppState> {
             if (!window.polkaBTC)
                 toast.warn(
                     "Unable to connect to the BTC-Parachain. " +
-                        "Please check your internet connection or try again later."
+                    "Please check your internet connection or try again later."
                 );
         }
     }
@@ -208,7 +208,7 @@ export default class App extends Component<{}, AppState> {
                         <Footer />
                     </div>
                 </Router>
-                <Modal show={this.state.showSelectAccount} size={"lg"}>
+                <Modal show={this.state.showSelectAccount} onHide={() => { this.setState({ showSelectAccount: false })}} size={"lg"}>
                     <AccountSelector
                         selected={this.state.address}
                         accounts={this.state.accounts}
