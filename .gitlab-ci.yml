@@ -17,7 +17,6 @@ cache:
 variables:
   REACT_APP_STATIC_PAGE_ONLY: "false"
 
-
 # Test and build on PRs
 test:
   stage: test
@@ -27,21 +26,11 @@ test:
     - yarn test --passWithNoTests
   only:
     - merge_requests
+    - master
+    - prod
+    - dev
 
 build:
-  stage: test
-  script:
-    - yarn install
-    - yarn build
-  artifacts:
-    expire_in: 1 day
-    paths:
-      - build
-  only:
-    - merge_requests
-
-# Deployment
-build-app:
   stage: build
   variables:
     NODE_ENV: production
@@ -53,23 +42,9 @@ build-app:
     paths:
       - build
   only:
-    - merge_requests
     - master
     - prod
     - dev
-
-# deploy dapp
-pages:
-  stage: deploy
-  script:
-    - rm -rf public/
-    - mv build/ public/
-    - cp public/index.html public/404.html
-  artifacts:
-    paths:
-      - public
-  only:
-    - master
 
 build_container:
   stage: deploy
@@ -82,10 +57,9 @@ build_container:
     - |
       /kaniko/executor --context $CI_PROJECT_DIR \
         --dockerfile $CI_PROJECT_DIR/DockerfileProd \
-        --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_BRANCH-$CI_COMMIT_SHORT_SHA \
-        --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_BRANCH
+        --destination $CI_REGISTRY_IMAGE:${CI_COMMIT_BRANCH}-$CI_COMMIT_SHORT_SHA \
+        --destination $CI_REGISTRY_IMAGE:${CI_COMMIT_BRANCH}
   only:
-    - merge_requests
     - master
     - prod
     - dev
