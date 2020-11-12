@@ -16,10 +16,10 @@ export default function IssueTable(): ReactElement {
             try {
                 const accountId = await window.vaultClient.getAccountId();
                 const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
-                const issues = await window.polkaBTC.vaults.mapIssueRequests(vaultId);
+                const issueMap = await window.polkaBTC.vaults.mapIssueRequests(vaultId);
                 
-                if (!issues) return;
-                dispatch(addVaultIssuesAction(issueRequestToVaultIssue(issues)));
+                if (!issueMap) return;
+                dispatch(addVaultIssuesAction(issueRequestToVaultIssue(issueMap)));
             } catch(err) {
                 console.log(err);
             }
@@ -31,7 +31,7 @@ export default function IssueTable(): ReactElement {
         <div className="issue-table">
             <div className="row">
                 <div className="col-12">
-                    <div className="header">Issue</div>
+                    <div className="header">Issue Requests</div>
                 </div>
             </div>
             <div className="row justify-content-center">
@@ -45,7 +45,7 @@ export default function IssueTable(): ReactElement {
                                     <th>User</th>
                                     <th>BTC Address</th>
                                     <th>PolkaBTC</th>
-                                    <th>LockedDOT</th>
+                                    <th>Griefing Collateral</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
