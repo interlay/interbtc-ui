@@ -26,6 +26,9 @@ test:
     - yarn test --passWithNoTests
   only:
     - merge_requests
+    - master
+    - prod
+    - dev
 
 build:
   stage: build
