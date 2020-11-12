@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { ReactElement } from "react";
 import { Button, Container, Modal, Form } from "react-bootstrap";
 
@@ -13,7 +13,6 @@ export default function AccountSelector(props: AccountSelectorProps): ReactEleme
 
     return (
         <Container>
-            {" "}
             <Modal.Header>
                 <Modal.Title id="contained-modal-title-vcenter">Select account</Modal.Title>
             </Modal.Header>
@@ -27,8 +26,7 @@ export default function AccountSelector(props: AccountSelectorProps): ReactEleme
                         label={account}
                         value={account}
                         checked={accountValue === account}
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        onChange={(e: any) => setAccountValue(e.currentTarget.value)}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setAccountValue(e.currentTarget.value)}
                     />
                 ))}
             </Modal.Body>
