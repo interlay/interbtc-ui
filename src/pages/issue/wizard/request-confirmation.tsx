@@ -61,8 +61,9 @@ export default function RequestConfirmation() {
             dispatch(changeIssueStepAction("BTC_PAYMENT"));
         } catch (error) {
             toast.error(error.toString());
+        } finally {
+            setRequestPending(false);    
         }
-        setRequestPending(false);
     };
 
     const goToPreviousStep = () => {
