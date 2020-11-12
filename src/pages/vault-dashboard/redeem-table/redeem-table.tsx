@@ -45,7 +45,7 @@ export default function RedeemTable(): ReactElement {
                                     <th>User</th>
                                     <th>BTC Address</th>
                                     <th>PolkaBTC</th>
-                                    <th>Collateral Unlocked</th>
+                                    <th>DOT</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
