@@ -9,6 +9,7 @@ import { StoreType } from "../../../common/types/util.types";
 import BN from "bn.js";
 import { isPositiveNumeric } from "../../../common/utils/utils";
 import { DOT } from "@interlay/polkabtc/build/interfaces/default";
+import ButtonMaybePending from "../../../common/components/pending-button";
 
 type UpdateCollateralForm = {
     collateral: string;
@@ -40,6 +41,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     const totalCollateralString = useSelector((state: StoreType) => state.vault.collateral);
     const dispatch = useDispatch();
     const [isAWithdrawal, setIsAWithdrawal] = useState(false);
+    const [isUpdatePending, setUpdatePending] = useState(false);
     const [newCollaterlization, setNewCollaterlization] = useState("∞");
     const accountId = useRef("");
 
@@ -51,6 +53,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
 
     const onSubmit = handleSubmit(async ({ collateral }) => {
         if (!polkaBtcLoaded) return;
+        setUpdatePending(true);
         try {
             const [totalCollateralAsPlanck, newCollateralAsPlanck] = parseOldAndNewCollateral(
                 totalCollateralString,
@@ -77,6 +80,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
         } catch (error) {
             toast.error(error.toString());
         }
+        setUpdatePending(false);
     });
 
     const onChange = async (obj: SyntheticEvent) => {
@@ -160,9 +164,13 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                     <Button variant="secondary" onClick={props.onClose}>
                         Cancel
                     </Button>
-                    <Button variant={isAWithdrawal ? "outline-danger" : "outline-success"} type="submit">
+                    <ButtonMaybePending
+                        variant={isAWithdrawal ? "outline-danger" : "outline-success"}
+                        isPending={isUpdatePending}
+                        type="submit"
+                    >
                         {isAWithdrawal ? "Withdraw Collateral" : "Add Collateral"}
-                    </Button>
+                    </ButtonMaybePending>
                 </Modal.Footer>
             </form>
         </Modal>

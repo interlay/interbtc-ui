@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { updateBTCAddressAction } from "../../../common/actions/vault.actions";
 import { BTC_ADDRESS_REGEX } from "../../../constants";
+import ButtonMaybePending from "../../../common/components/pending-button";
 
 type UpdateBTCAddressForm = {
     btcAddress: string;
@@ -20,8 +21,10 @@ export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps) {
     const { register, handleSubmit, errors } = useForm<UpdateBTCAddressForm>();
     const btcAddress = useSelector((state: StoreType) => state.vault.btcAddress);
     const dispatch = useDispatch();
+    const [isUpdatePending, setUpdatePending] = useState(false);
 
     const onSubmit = handleSubmit(async ({ btcAddress }) => {
+        setUpdatePending(true);
         try {
             await window.vaultClient.updateBtcAddress(btcAddress);
             dispatch(updateBTCAddressAction(btcAddress));
@@ -30,6 +33,7 @@ export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps) {
         } catch (error) {
             toast.error(error.toString());
         }
+        setUpdatePending(false);
     });
 
     return (
@@ -70,9 +74,9 @@ export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps) {
                     <Button variant="secondary" onClick={props.onClose}>
                         Cancel
                     </Button>
-                    <Button variant="outline-success" type="submit">
+                    <ButtonMaybePending variant="outline-success" isPending={isUpdatePending} type="submit">
                         Update
-                    </Button>
+                    </ButtonMaybePending>
                 </Modal.Footer>
             </form>
         </Modal>
