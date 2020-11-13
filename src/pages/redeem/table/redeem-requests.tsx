@@ -56,7 +56,7 @@ export default function RedeemRequests() {
                         <th>Redeem ID</th>
                         <th>Amount</th>
                         <th>Block Number</th>
-                        <th>Vault BTC Address</th>
+                        <th>Output BTC Address</th>
                         <th>BTC Transaction</th>
                         <th>Confirmations</th>
                         <th>Completed</th>
@@ -71,7 +71,7 @@ export default function RedeemRequests() {
                                     <td>{request.amountPolkaBTC} BTC</td>
                                     <td>{request.creation}</td>
                                     <td>
-                                        <BitcoinAddress btcAddress={request.vaultBTCAddress} shorten />
+                                        <BitcoinAddress btcAddress={request.btcAddress} shorten />
                                     </td>
                                     <td>
                                         <BitcoinTransaction txId={request.btcTxId} shorten />
