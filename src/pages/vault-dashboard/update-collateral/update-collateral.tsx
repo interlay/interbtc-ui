@@ -43,6 +43,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     const dispatch = useDispatch();
     const [isAWithdrawal, setIsAWithdrawal] = useState(false);
     const [isUpdatePending, setUpdatePending] = useState(false);
+    const [isCollateralUpdateAllowed, setCollateralUpdateAllowed] = useState(false);
     const [newCollaterlization, setNewCollaterlization] = useState("∞");
 
     const onSubmit = handleSubmit(async ({ collateral }) => {
@@ -87,24 +88,28 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
         if (newCollateralString === "" || !polkaBtcLoaded) {
             return;
         }
-        const [totalCollateralAsPlanck, newCollateralAsPlanck] = parseOldAndNewCollateral(
+
+        const accountId = await window.vaultClient.getAccountId();
+        const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
+        const requiredCollateralAsDOT = await window.polkaBTC.vaults.getRequiredCollateralForVault(vaultId);
+        const newCollateralAsDOT = window.polkaBTC.api.createType("u128", newCollateralString) as DOT;
+        setCollateralUpdateAllowed(!newCollateralAsDOT.lt(requiredCollateralAsDOT));
+
+        const [totalCollateralAsPlanckBN, newCollateralAsPlanckBN] = parseOldAndNewCollateral(
             totalCollateralString,
             newCollateralString
         );
 
-        if (newCollateralAsPlanck.lt(totalCollateralAsPlanck)) {
+        if (newCollateralAsPlanckBN.lt(totalCollateralAsPlanckBN)) {
             setIsAWithdrawal(true);
         } else {
             setIsAWithdrawal(false);
         }
 
-        const accountId = await window.vaultClient.getAccountId();
-        const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
-
-        const newCollateralAsDOT = window.polkaBTC.api.createType("u128", newCollateralAsPlanck) as DOT;
+        const newCollateralAsPlanck = window.polkaBTC.api.createType("u128", newCollateralAsPlanckBN) as DOT;
         const newCollateralization = await window.polkaBTC.vaults.getVaultCollateralization(
             vaultId,
-            newCollateralAsDOT
+            newCollateralAsPlanck
         );
         if (newCollateralization !== undefined) {
             setNewCollaterlization(newCollateralization.toString());
@@ -154,7 +159,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                             )}
                         </div>
                         <div className="col-12">
-                            New Collateralization {newCollaterlization}
+                            New Collateralization: {newCollaterlization}
                             {newCollaterlization !== "∞" ? "%" : ""}
                         </div>
                     </div>
@@ -167,6 +172,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                         variant={isAWithdrawal ? "outline-danger" : "outline-success"}
                         isPending={isUpdatePending}
                         type="submit"
+                        disabled={!isCollateralUpdateAllowed}
                     >
                         {isAWithdrawal ? "Withdraw Collateral" : "Add Collateral"}
                     </ButtonMaybePending>
