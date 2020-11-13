@@ -27,11 +27,11 @@ export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps) {
     const onSubmit = handleSubmit(async ({ btcAddress }) => {
         setUpdatePending(true);
         try {
-            const hash = getH160FromAddress(btcAddress);
-            if (!hash) {
+            const btcHash = getH160FromAddress(btcAddress);
+            if (!btcHash) {
                 throw new Error("Invalid address");
             }
-            await window.vaultClient.updateBtcAddress(hash);
+            await window.vaultClient.updateBtcAddress(btcHash);
             dispatch(updateBTCAddressAction(btcAddress));
             toast.success("BTC address successfully updated");
             props.onClose();
