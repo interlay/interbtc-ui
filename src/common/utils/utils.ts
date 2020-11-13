@@ -14,8 +14,10 @@ import {
     planckToDOT,
     getP2WPKHFromH160,
     getH160FromP2WPKH,
+    uint8ArrayToString,
     bitcoin,
     stripHexPrefix,
+    reverseEndianness,
 } from "@interlay/polkabtc";
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from "../../constants";
 
@@ -129,6 +131,10 @@ export function getAddressFromH160(hash: H160): string | undefined {
 
 export function getH160FromAddress(address: string): string | undefined {
     return getH160FromP2WPKH(address, btcNetwork);
+}
+
+export function reverseHashEndianness(hash: Uint8Array): string {
+    return uint8ArrayToString(reverseEndianness(hash));
 }
 
 /**

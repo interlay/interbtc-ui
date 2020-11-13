@@ -3,6 +3,7 @@ import { StoreType } from "../../types/util.types";
 import { useSelector } from "react-redux";
 import { dateToShortString } from "../../utils/utils";
 import BN from "bn.js";
+import * as constants from "../../../constants";
 
 interface OracleInfo {
     source: string;
@@ -34,7 +35,12 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
                 },
             ]);
         };
+
         fetchData();
+        const interval = setInterval(() => {
+            fetchData();
+        }, constants.COMPONENT_UPDATE_MS);
+        return () => clearInterval(interval);
     }, [polkaBtcLoaded]);
 
     return (

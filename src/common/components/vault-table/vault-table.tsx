@@ -5,6 +5,7 @@ import { Vault } from "../../types/util.types";
 import * as constants from "../../../constants";
 import { planckToDOT, satToBTC } from "@interlay/polkabtc";
 import { getAddressFromH160 } from "../../utils/utils";
+import BitcoinAddress from "../bitcoin-links/address";
 
 export default function VaultTable(): ReactElement {
     const [vaults, setVaults] = useState<Array<Vault>>([]);
@@ -48,14 +49,19 @@ export default function VaultTable(): ReactElement {
                     // TODO: fetch collateral reserved
                     lockedBTC: satToBTC(vault.issued_tokens.toString()),
                     lockedDOT: balanceLockedDOT,
-                    btcAddress,
+                    btcAddress: btcAddress || "",
                     status: vault.status && checkVaultStatus(vault.status.toString(), Number(collateralization)),
                     collateralization: collateralization,
                 });
                 if (index + 1 === vaults.length) setVaults(vaultsList);
             });
         };
+
         fetchData();
+        const interval = setInterval(() => {
+            fetchData();
+        }, constants.COMPONENT_UPDATE_MS);
+        return () => clearInterval(interval);
     }, [polkaBtcLoaded]);
 
     const checkVaultStatus = (status: string, collateralization: number): string => {
@@ -134,7 +140,9 @@ export default function VaultTable(): ReactElement {
                                     return (
                                         <tr key={index}>
                                             <td>{vault.vaultId}</td>
-                                            <td className="break-words">{vault.btcAddress}</td>
+                                            <td className="break-words">
+                                                <BitcoinAddress btcAddress={vault.btcAddress} />
+                                            </td>
                                             <td>{vault.lockedDOT}</td>
                                             <td>{vault.lockedBTC}</td>
                                             <td className={getCollateralizationColor(vault.collateralization)}>

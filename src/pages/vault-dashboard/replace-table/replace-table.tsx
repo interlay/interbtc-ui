@@ -6,6 +6,7 @@ import { Button } from "react-bootstrap";
 import { requestsToVaultReplaceRequests } from "../../../common/utils/utils";
 import BN from "bn.js";
 import { shortAddress } from "../../../common/utils/utils";
+import * as constants from "../../../constants";
 
 type ReplaceTableProps = {
     openModal: (show: boolean) => void;
@@ -30,11 +31,16 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
                 if (!requests) return;
 
                 dispatch(addReplaceRequestsAction(requestsToVaultReplaceRequests(requests)));
-            } catch(err) {
+            } catch (err) {
                 console.log(err);
             }
         };
+
         fetchData();
+        const interval = setInterval(() => {
+            fetchData();
+        }, constants.COMPONENT_UPDATE_MS);
+        return () => clearInterval(interval);
     }, [polkaBtcLoaded, dispatch]);
 
     return (
@@ -82,7 +88,7 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
             </div>
             <div className="row">
                 <div className="col-12">
-                    {polkaBTCAmount.gt(new BN(0) ) ? (
+                    {polkaBTCAmount.gt(new BN(0)) ? (
                         <Button
                             variant="outline-danger"
                             className="vault-dashboard-button"
