@@ -53,6 +53,7 @@ export default function Confirmation() {
                 btcTxId: "",
                 confirmations: 0,
                 completed: false,
+                isExpired: false
             };
             dispatch(addRedeemRequestAction(request));
             dispatch(changeRedeemStepAction("VAULT_INFO"));

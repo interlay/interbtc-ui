@@ -6,6 +6,7 @@ export interface RedeemRequest {
     btcTxId: string;
     confirmations: number;
     completed: boolean;
+    isExpired: boolean;
 }
 
 export interface RedeemState {

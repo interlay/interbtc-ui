@@ -72,6 +72,7 @@ export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: Par
         btcTxId: "",
         confirmations: 0,
         completed: false,
+        isExpired: false,
     };
 }
 

@@ -12,6 +12,7 @@ import {
     ADD_REDEEM_REQUEST,
     UPDATE_REDEEM_REQUEST,
     UPDATE_ALL_REDEEM_REQUESTS,
+    CANCEL_REDEEM_REQUEST,
     UpdateAllRedeemRequests,
     ChangeRedeemStep,
     ChangeAmountPolkaBtc,
@@ -25,6 +26,7 @@ import {
     AddRedeemRequest,
     AddVaultRedeems,
     UpdateRedeemRequest,
+    CancelRedeemRequest,
 } from "../types/actions.types";
 import { RedeemRequest, VaultRedeem } from "../types/redeem.types";
 
@@ -90,4 +92,9 @@ export const updateRedeemRequestAction = (request: RedeemRequest): UpdateRedeemR
 export const updateAllRedeemRequestsAction = (redeemRequests: RedeemRequest[]): UpdateAllRedeemRequests => ({
     type: UPDATE_ALL_REDEEM_REQUESTS,
     redeemRequests,
+});
+
+export const cancelRedeemRequestAction = (id: string): CancelRedeemRequest => ({
+    type: CANCEL_REDEEM_REQUEST,
+    id,
 });
