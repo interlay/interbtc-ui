@@ -12,6 +12,9 @@ const getStaticPage = () => {
 
 export const STATIC_PAGE_ONLY = getStaticPage();
 
+export const FAUCET_AMOUNT = 1000;
+export const FAUCET_ADDRESS_SEED = "//Alice";
+
 // Set to true is on mainnet.
 export const BTC_MAINNET = false;
 
@@ -73,16 +76,6 @@ export const BTC_RELAY_DELAY_CRITICAL = 12;
 export const VAULT_IDEAL_COLLATERALIZATION = 200; // in %
 export const VAULT_AUCTION_COLLATERALIZATION = 150; // in %
 export const VAULT_LIQUIDATION_COLLATERALIZATION = 120; // in %
-
-// ####################################################
-// FOR TESTING PURPOSES ONLY
-// TODO: Remove or update before deployment
-// ####################################################
-
-export const ALICE = "//Alice";
-export const BOB = "5DTestUPts3kjeXSTMyerHihn1uwMfLj8vU8sqF7qYrFabHE";
-export const ALICE_BTC = "tb1qmwv7aqktv5l44x65qmsk6u4z9wh66nazv9rgv3"; //Alexei's testnet BTC address
-export const BOB_BTC = "tb1q4kspwcf42cqp66hrhw407djna4dgpw9lsnfx5e"; // Dom's testnet BTC address
 
 // Landing page
 export const MARKDOWN_PATH = "../assets/polkBTCInfo.md";

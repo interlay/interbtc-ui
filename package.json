@@ -3,7 +3,8 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
-        "@interlay/polkabtc": "^0.5.3",
+        "@interlay/polkabtc": "^0.5.4",
+        "@polkadot/ui-keyring": "^0.62.1",
         "@polkadot/api": "^2.6.1",
         "@polkadot/extension-dapp": "0.32.1",
         "@testing-library/jest-dom": "^4.2.4",
