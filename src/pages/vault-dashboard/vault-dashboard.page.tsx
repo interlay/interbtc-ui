@@ -17,9 +17,9 @@ import {
     updateLockedBTCAction,
 } from "../../common/actions/vault.actions";
 import "./vault-dashboard.page.scss";
-import * as constants from "../../constants";
 import { getAddressFromH160 } from "../../common/utils/utils";
 import { toast } from "react-toastify";
+import BitcoinAddress from "../../common/components/bitcoin-links/address";
 
 export default function VaultDashboardPage() {
     const [showRegisterVaultModal, setShowRegisterVaultModal] = useState(false);
@@ -76,10 +76,10 @@ export default function VaultDashboardPage() {
             } catch (err) {
                 console.log(err);
                 toast.warn(
-                    "Local vault client running, but vault is not yet registered with the parachain."
-                    + " Client needs to be registered and DOT locked to start backing PolkaBTC and earning fees.", 
+                    "Local vault client running, but vault is not yet registered with the parachain." +
+                        " Client needs to be registered and DOT locked to start backing PolkaBTC and earning fees.",
                     { autoClose: false, toastId: vaultNotRegisteredToastId }
-                )
+                );
             }
         };
         fetchData();
@@ -114,17 +114,7 @@ export default function VaultDashboardPage() {
                             <div className="col-12">
                                 <div className="stats btc-address-header">
                                     BTC Address: &nbsp;&nbsp;
-                                    <a
-                                        href={
-                                            (constants.BTC_MAINNET
-                                                ? constants.BTC_EXPLORER_ADDRESS_API
-                                                : constants.BTC_TEST_EXPLORER_ADDRESS_API) + btcAddress
-                                        }
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        {btcAddress}
-                                    </a>
+                                    <BitcoinAddress btcAddress={btcAddress} />
                                     &nbsp;&nbsp;&nbsp;
                                     <i className="fa fa-edit" onClick={() => setShowUpdateBTCAddressModal(true)}></i>
                                 </div>

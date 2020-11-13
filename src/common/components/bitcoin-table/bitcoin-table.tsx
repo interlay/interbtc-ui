@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../types/util.types";
 import * as constants from "../../../constants";
-import { reverseEndianness, uint8ArrayToString } from "@interlay/polkabtc";
+import { reverseHashEndianness } from "../../utils/utils";
 
 interface BlockInfo {
     source: string;
@@ -19,15 +19,31 @@ export default function BitcoinTable(): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
     useEffect(() => {
+        /**
+         * Checks for BTC-Relay status.
+         * TODO: check parachain for invalid state
+         * TODO: check parachain for ongoing fork
+         */
+        const getRelayStatus = (): string => {
+            let status = "Online";
+            if (noData) {
+                status = "Unknown header";
+            }
+            if (fork) {
+                status = "Fork";
+            }
+            if (heightDiff > constants.BTC_RELAY_DELAY_CRITICAL) {
+                status = "More than " + constants.BTC_RELAY_DELAY_CRITICAL + " blocks behind.";
+            }
+            return status;
+        };
+
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
             // Returns a little endian encoded block hash
             // Converting to big endian for display
-            const bestParachainBlock = uint8ArrayToString(
-                reverseEndianness(await window.polkaBTC.btcRelay.getLatestBlock())
-            );
-
+            const bestParachainBlock = reverseHashEndianness(await window.polkaBTC.btcRelay.getLatestBlock());
             const bestParachainHeight = Number(await window.polkaBTC.btcRelay.getLatestBlockHeight());
 
             let bestBitcoinBlock = "-";
@@ -48,7 +64,6 @@ export default function BitcoinTable(): ReactElement {
             setHeightDiff(bestBitcoinHeight - bestParachainHeight);
 
             setStatus(getRelayStatus());
-            // parseInt((bestParachainBlock).toString(16).replace(/^(.(..)*)$/, "0$1").match(/../g).reverse().join(""), 16)
             setBlocks([
                 {
                     source: "BTC Parachain",
@@ -62,26 +77,12 @@ export default function BitcoinTable(): ReactElement {
                 },
             ]);
         };
-        fetchData();
 
-        /**
-         * Checks for BTC-Relay status.
-         * TODO: check parachain for invalid state
-         * TODO: check parachain for ongoing fork
-         */
-        const getRelayStatus = (): string => {
-            let status = "Online";
-            if (noData) {
-                status = "Unknown header";
-            }
-            if (fork) {
-                status = "Fork";
-            }
-            if (heightDiff > constants.BTC_RELAY_DELAY_CRITICAL) {
-                status = "More than " + constants.BTC_RELAY_DELAY_CRITICAL + " blocks behind.";
-            }
-            return status;
-        };
+        fetchData();
+        const interval = setInterval(() => {
+            fetchData();
+        }, constants.COMPONENT_UPDATE_MS);
+        return () => clearInterval(interval);
     }, [polkaBtcLoaded, noData, fork, heightDiff]);
 
     const getCircle = (status: string): string => {

@@ -15,6 +15,9 @@ export const STATIC_PAGE_ONLY = getStaticPage();
 export const FAUCET_AMOUNT = 1000;
 export const FAUCET_ADDRESS_SEED = "//Alice";
 
+// timeout in milliseconds for setInterval
+export const COMPONENT_UPDATE_MS = 10000;
+
 // Set to true is on mainnet.
 export const BTC_MAINNET = false;
 
@@ -49,6 +52,9 @@ export const BTC_TEST_EXPLORER_BLOCK_API = "https://blockstream.info/testnet/blo
 
 export const BTC_EXPLORER_ADDRESS_API = "https://blockstream.info/address/";
 export const BTC_TEST_EXPLORER_ADDRESS_API = "https://blockstream.info/testnet/address/";
+
+export const BTC_EXPLORER_TRANSACTION_API = "https://blockstream.info/tx/";
+export const BTC_TEST_EXPLORER_TRANSACTION_API = "https://blockstream.info/testnet/tx/";
 
 //######################################
 // STAKED RELAYER
