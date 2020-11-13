@@ -10,6 +10,7 @@ import { updateAllRedeemRequestsAction, cancelRedeemRequestAction, updateRedeemR
 import { toast } from "react-toastify";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
 import BitcoinAddress from "../../../common/components/bitcoin-links/address";
+import { stripHexPrefix } from "@interlay/polkabtc";
 
 export default function RedeemRequests() {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -19,12 +20,6 @@ export default function RedeemRequests() {
     const [isRedeemExpirationSubscribed, setIsRedeemExpirationSubscribed] = useState(false);
     const dispatch = useDispatch();
 
-    const redeemExpired = (redeemId: string) => {
-        if (!redeemRequests || !redeemRequests.length) return;
-        const requestToBeUpdate = redeemRequests.filter(request => request.id === redeemId)[0];
-        dispatch(updateRedeemRequestAction({...requestToBeUpdate, isExpired: true}));
-    }
-
     const cancelRedeemRequest = async (redeemId: string): Promise<void> => {
         const id = window.polkaBTC.api.createType("H256", redeemId);
         await window.polkaBTC.redeem.cancel(id);
@@ -32,20 +27,38 @@ export default function RedeemRequests() {
         toast.success("Request is canceled");
     }
 
+    
+
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
+            const redeemExpired = (redeemId: string) => {
+                if (!redeemRequests || !redeemRequests.length) return;
+                const requestToBeUpdate = redeemRequests.filter(request => request.id === redeemId)[0];
+        
+                if (requestToBeUpdate && !requestToBeUpdate.isExpired) {
+                    debugger;
+                    dispatch(updateRedeemRequestAction({...requestToBeUpdate, isExpired: true}));
+                }
+            }
+
             try {
                 const accountId = window.polkaBTC.api.createType("AccountId", address);
                 const redeemRequestMap = await window.polkaBTC.redeem.mapForUser(accountId);
+                let updateStore = false;
                 let allRequests = [];
 
                 for (const [key, value] of redeemRequestMap) {
                     allRequests.push(parachainToUIRedeemRequest(key, value));
+                    if (redeemRequests && !redeemRequests.filter((req)=> req.id === stripHexPrefix(key.toString())).length) {
+                        updateStore = true;
+                    }
                 }
 
-                dispatch(updateAllRedeemRequestsAction(allRequests));
+                if (updateStore) {
+                    dispatch(updateAllRedeemRequestsAction(allRequests));
+                }
 
                 if (!allRequests) return;
                 allRequests.forEach(async (request: RedeemRequest) => {
@@ -57,7 +70,7 @@ export default function RedeemRequests() {
 
                 if(!isRedeemExpirationSubscribed) {
                     setIsRedeemExpirationSubscribed(true);
-                    // subscribeToRedeemExpiry(redeemExpired);
+                    await window.polkaBTC.redeem.subscribeToRedeemExpiry(redeemExpired);
                 }
                 });
             } catch (error) {
@@ -65,7 +78,7 @@ export default function RedeemRequests() {
             }
         };
         fetchData();
-    }, [polkaBtcLoaded, transactionListeners, isRedeemExpirationSubscribed, dispatch, address, redeemExpired]);
+    }, [polkaBtcLoaded, transactionListeners, isRedeemExpirationSubscribed, dispatch, address, redeemRequests]);
 
     return (
         <div>
@@ -101,7 +114,7 @@ export default function RedeemRequests() {
                                         request.completed ? <FaCheck></FaCheck> : <FaHourglass></FaHourglass>}
                                     </td>
                                     <td>
-                                        {!request.completed && !request.isExpired &&
+                                        {!request.completed && request.isExpired &&
                                             <Button 
                                                 variant="outline-dark"
                                                 onClick={() => {cancelRedeemRequest(request.id)}}
