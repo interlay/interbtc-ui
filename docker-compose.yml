@@ -1,94 +1,104 @@
 version: "3.8"
 services:
-  polkabtc:
-    image: "registry.gitlab.com/interlay/btc-parachain:dev"
-    command:
-      - btc-parachain
-      - --rpc-external
-      - --ws-external
-      - --dev
-    ports:
-      - "9933:9933"
-      - "9944:9944"
-  bitcoind:
-    image: "ruimarinho/bitcoin-core:0.20"
-    command:
-      - -regtest
-      - -server
-      - -rpcbind=0.0.0.0
-      - -rpcallowip=0.0.0.0/0
-      - -rpcuser=rpcuser
-      - -rpcpassword=rpcpassword
-    ports:
-      - "18443:18443"
-  bitcoin-cli:
-    image: "ruimarinho/bitcoin-core:0.20"
-    command:
-      - /bin/sh
-      - -c
-      - |
-        ADDRESS=$$(bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword getnewaddress)
-        # coins need 100 confirmations to be spendable
-        bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword generatetoaddress 101 $${ADDRESS}
-  electrs:
-    image: "interlayhq/electrs:latest"
-    command:
-      - electrs
-      - -vvvv
-      - --network
-      - regtest
-      - --jsonrpc-import
-      - --cors
-      - "*"
-      - --cookie
-      - "rpcuser:rpcpassword"
-      - --daemon-rpc-addr
-      - bitcoind:18443
-      - --http-addr
-      - "[::0]:3002"
-    ports:
-      - "3002:3002"
-  staked-relayer:
-    # only start staked relayer after mining to prevent long catch-up
-    image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:dev"
-    command:
-      - /bin/sh
-      - -c
-      - |
-        echo "Sleeping..."
-        sleep 5
-        staked-relayer --http-addr '[::0]:3030' --polka-btc-url 'ws://polkabtc:9944'
-    environment:
-      BITCOIN_RPC_URL: http://bitcoind:18443
-      BITCOIN_RPC_USER: rpcuser
-      BITCOIN_RPC_PASS: rpcpassword
-      RUST_LOG: info
-    ports:
-      - "3030:3030"
-  oracle:
-    image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:dev"
-    command:
-      - /bin/sh
-      - -c
-      - |
-        echo "Sleeping..."
-        sleep 5
-        oracle --polka-btc-url 'ws://polkabtc:9944'
-    environment:
-      RUST_LOG: info
-  vault:
-    image: "registry.gitlab.com/interlay/polkabtc-clients/vault:dev"
-    command:
-      - /bin/sh
-      - -c
-      - |
-        echo "Sleeping..."
-        sleep 5
-        vault --http-addr '[::0]:3031' --polka-btc-url 'ws://polkabtc:9944'
-    environment:
-      BITCOIN_RPC_URL: http://bitcoind:18443
-      BITCOIN_RPC_USER: rpcuser
-      BITCOIN_RPC_PASS: rpcpassword
-      RUST_LOG: info
-    ports:
-      - "3031:3031"
+    polkabtc:
+        image: "registry.gitlab.com/interlay/btc-parachain:dev"
+        command:
+            - btc-parachain
+            - --rpc-external
+            - --ws-external
+            - --dev
+        ports:
+            - "9933:9933"
+            - "9944:9944"
+    bitcoind:
+        image: "ruimarinho/bitcoin-core:0.20"
+        command:
+            - -regtest
+            - -server
+            - -rpcbind=0.0.0.0
+            - -rpcallowip=0.0.0.0/0
+            - -rpcuser=rpcuser
+            - -rpcpassword=rpcpassword
+        ports:
+            - "18443:18443"
+    bitcoin-cli:
+        image: "ruimarinho/bitcoin-core:0.20"
+        command:
+            - /bin/sh
+            - -c
+            - |
+                ADDRESS=$$(bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword getnewaddress)
+                # coins need 100 confirmations to be spendable
+                bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword generatetoaddress 101 $${ADDRESS}
+    electrs:
+        image: "interlayhq/electrs:latest"
+        command:
+            - electrs
+            - -vvvv
+            - --network
+            - regtest
+            - --jsonrpc-import
+            - --cors
+            - "*"
+            - --cookie
+            - "rpcuser:rpcpassword"
+            - --daemon-rpc-addr
+            - bitcoind:18443
+            - --http-addr
+            - "[::0]:3002"
+        ports:
+            - "3002:3002"
+    staked-relayer:
+        # only start staked relayer after mining to prevent long catch-up
+        image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:dev"
+        command:
+            - /bin/sh
+            - -c
+            - |
+                echo "Sleeping..."
+                sleep 5
+                staked-relayer --keyring=eve --http-addr '[::0]:3030' --polka-btc-url 'ws://polkabtc:9944'
+        environment: &client-env
+            BITCOIN_RPC_URL: http://bitcoind:18443
+            BITCOIN_RPC_USER: rpcuser
+            BITCOIN_RPC_PASS: rpcpassword
+            RUST_LOG: info
+        ports:
+            - "3030:3030"
+    oracle:
+        image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:dev"
+        command:
+            - /bin/sh
+            - -c
+            - |
+                echo "Sleeping..."
+                sleep 5
+                oracle --keyring=bob --polka-btc-url 'ws://polkabtc:9944'
+        environment:
+            RUST_LOG: info
+    vault_1:
+        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:dev"
+        command:
+            - /bin/sh
+            - -c
+            - |
+                echo "Sleeping..."
+                sleep 5
+                vault --keyring=charlie --http-addr '[::0]:3031' --polka-btc-url 'ws://polkabtc:9944'
+        environment:
+            <<: *client-env
+        ports:
+            - "3031:3031"
+    vault_2:
+        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:dev"
+        command:
+            - /bin/sh
+            - -c
+            - |
+                echo "Sleeping..."
+                sleep 5
+                vault --keyring=dave --http-addr '[::0]:3032' --polka-btc-url 'ws://polkabtc:9944'
+        environment:
+            <<: *client-env
+        ports:
+            - "3032:3032"
