@@ -3,11 +3,12 @@ import { planckToDOT, satToBTC } from "@interlay/polkabtc";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
-import { createPolkabtcAPI, StakedRelayerClient, VaultClient } from "@interlay/polkabtc";
+import { createPolkabtcAPI, PolkaBTCAPI, StakedRelayerClient, VaultClient } from "@interlay/polkabtc";
 import { Modal } from "react-bootstrap";
 import Big from "big.js";
 
 import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
+import keyring from "@polkadot/ui-keyring";
 
 import AccountSelector from "./pages/account-selector";
 import {
@@ -42,6 +43,13 @@ import { configureStore } from "./store";
 
 const store = configureStore();
 
+function connectToParachain(): Promise<PolkaBTCAPI> {
+    return createPolkabtcAPI(
+        constants.PARACHAIN_URL,
+        constants.BITCOIN_NETWORK === "regtest" ? constants.BITCOIN_REGTEST_URL : constants.BITCOIN_NETWORK
+    );
+}
+
 export default class App extends Component<{}, AppState> {
     state: AppState = {
         accounts: undefined,
@@ -49,6 +57,20 @@ export default class App extends Component<{}, AppState> {
         signer: undefined,
         showSelectAccount: false,
     };
+
+    async requestDotFromFaucet() {
+        let address = this.state.address;
+        if (!address) return;
+
+        try {
+            let api = await connectToParachain();
+            api.setAccount(keyring.createFromUri(constants.FAUCET_ADDRESS_SEED, undefined, "sr25519"));
+            await api.collateral.transferDOT(address, constants.FAUCET_AMOUNT);
+            toast.success("Successfully transferred collateral.");
+        } catch (error) {
+            toast.error(error);
+        }
+    }
 
     async getAccount(): Promise<void> {
         if (this.state.address) {
@@ -102,10 +124,7 @@ export default class App extends Component<{}, AppState> {
                     );
                 }
             }, 5000);
-            window.polkaBTC = await createPolkabtcAPI(
-                constants.PARACHAIN_URL,
-                constants.BITCOIN_NETWORK === "regtest" ? constants.BITCOIN_REGTEST_URL : constants.BITCOIN_NETWORK
-            );
+            window.polkaBTC = await connectToParachain();
             store.dispatch(isPolkaBtcLoaded(true));
         } catch (error) {
             if (!window.polkaBTC)
@@ -133,6 +152,7 @@ export default class App extends Component<{}, AppState> {
             try {
                 await this.createAPIInstance();
                 this.initDataOnAppBootstrap();
+                keyring.loadAll({});
             } catch (e) {
                 toast.warn("Could not connect to the Parachain, please try again in a few seconds", {
                     autoClose: false,
@@ -167,6 +187,7 @@ export default class App extends Component<{}, AppState> {
                             <Topbar
                                 address={this.state.address}
                                 onAccountClick={() => this.setState({ showSelectAccount: true })}
+                                requestDOT={this.requestDotFromFaucet.bind(this)}
                             />
                         )}
                         <Switch>

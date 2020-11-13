@@ -4,9 +4,11 @@ import { useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
 import VoteModal from "../../../pages/staked-relayer/vote-modal/vote-modal";
 import { StatusUpdate } from "../../types/util.types";
-import * as constants from "../../../constants";
 import MessageModal from "../../../pages/staked-relayer/message-modal/message-modal";
 import BN from "bn.js";
+import BitcoinBlockHash from "../bitcoin-links/block-hash";
+import { reverseHashEndianness } from "../../utils/utils";
+import * as constants from "../../../constants";
 
 const ADD_DATA_ERROR = "Add NO_DATA error";
 const REMOVE_DATA_ERROR = "Remove NO_DATA error";
@@ -16,16 +18,12 @@ interface Option<T> {
     unwrap(): T;
 }
 
-interface H256Le {
-    toString(): string;
-}
-
 interface ErrorCode {
     toString(): string;
 }
 
-function displayBlockHash(option: Option<H256Le>): string {
-    return option.isNone ? "None" : option.unwrap().toString();
+function displayBlockHash(option: Option<Uint8Array>): string {
+    return option.isNone ? "None" : reverseHashEndianness(option.unwrap());
 }
 
 function displayProposedChanges(addError: Option<ErrorCode>, removeError: Option<ErrorCode>): string {
@@ -105,6 +103,11 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
 
         fetchStatus();
         fetchUpdates();
+        const interval = setInterval(() => {
+            fetchStatus();
+            fetchUpdates();
+        }, constants.COMPONENT_UPDATE_MS);
+        return () => clearInterval(interval);
     }, [polkaBtcLoaded, props.stakedRelayerAddress]);
 
     const openVoteModal = (statusUpdate: StatusUpdate) => {
@@ -218,18 +221,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                                 {statusUpdate.proposedChanges}
                                             </td>
                                             <td className="break-words">
-                                                <a
-                                                    href={
-                                                        (constants.BTC_MAINNET
-                                                            ? constants.BTC_EXPLORER_BLOCK_API
-                                                            : constants.BTC_TEST_EXPLORER_BLOCK_API) +
-                                                        statusUpdate.blockHash
-                                                    }
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                >
-                                                    {statusUpdate.blockHash}
-                                                </a>
+                                                <BitcoinBlockHash blockHash={statusUpdate.blockHash} />
                                             </td>
                                             <td>
                                                 {" "}

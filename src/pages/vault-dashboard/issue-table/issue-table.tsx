@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { addVaultIssuesAction } from "../../../common/actions/issue.actions";
 import { issueRequestToVaultIssue, shortAddress } from "../../../common/utils/utils";
+import * as constants from "../../../constants";
+import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 
 export default function IssueTable(): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -17,14 +19,19 @@ export default function IssueTable(): ReactElement {
                 const accountId = await window.vaultClient.getAccountId();
                 const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
                 const issueMap = await window.polkaBTC.vaults.mapIssueRequests(vaultId);
-                
+
                 if (!issueMap) return;
                 dispatch(addVaultIssuesAction(issueRequestToVaultIssue(issueMap)));
-            } catch(err) {
+            } catch (err) {
                 console.log(err);
             }
         };
+
         fetchData();
+        const interval = setInterval(() => {
+            fetchData();
+        }, constants.COMPONENT_UPDATE_MS);
+        return () => clearInterval(interval);
     }, [polkaBtcLoaded, dispatch]);
 
     return (
@@ -56,7 +63,9 @@ export default function IssueTable(): ReactElement {
                                             <td>{shortAddress(issue.id)}</td>
                                             <td>{issue.timestamp}</td>
                                             <td>{shortAddress(issue.user)}</td>
-                                            <td>{shortAddress(issue.btcAddress)}</td>
+                                            <td>
+                                                <BitcoinAddress btcAddress={issue.btcAddress} shorten />
+                                            </td>
                                             <td>{issue.polkaBTC}</td>
                                             <td>{issue.lockedDOT}</td>
                                             <td>{issue.status}</td>

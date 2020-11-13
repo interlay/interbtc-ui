@@ -8,7 +8,7 @@ import { VaultState } from "./vault.types";
 
 export type Vault = {
     vaultId: string;
-    btcAddress?: string;
+    btcAddress: string;
     lockedDOT: string;
     lockedBTC: string;
     status: string;

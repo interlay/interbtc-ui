@@ -2,7 +2,7 @@ import React, { useState, MouseEvent } from "react";
 
 import { IssueRequest } from "../../../common/types/issue.types";
 import { Table } from "react-bootstrap";
-import { shortAddress, shortTxId, parachainToUIIssueRequest } from "../../../common/utils/utils";
+import { shortAddress, parachainToUIIssueRequest } from "../../../common/utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
@@ -20,6 +20,8 @@ import {
     changeVaultBtcAddressOnIssueAction,
     updateAllIssueRequestsAction,
 } from "../../../common/actions/issue.actions";
+import BitcoinAddress from "../../../common/components/bitcoin-links/address";
+import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
 
 type IssueRequestProps = {
     handleShow: () => void;
@@ -50,7 +52,7 @@ export default function IssueRequests(props: IssueRequestProps) {
                 }
 
                 dispatch(updateAllIssueRequestsAction(allRequests));
-                
+
                 if (!allRequests) return;
                 allRequests.forEach(async (request: IssueRequest) => {
                     // start watcher for new issue requests
@@ -59,7 +61,7 @@ export default function IssueRequests(props: IssueRequestProps) {
                         startTransactionWatcherIssue(request, dispatch);
                     }
                 });
-            } catch(error) {
+            } catch (error) {
                 toast.error(error.toString());
             }
         };
@@ -184,8 +186,12 @@ export default function IssueRequests(props: IssueRequestProps) {
                                     <td>{shortAddress(request.id)}</td>
                                     <td>{request.amountBTC} PolkaBTC</td>
                                     <td>{request.creation}</td>
-                                    <td>{shortAddress(request.vaultBTCAddress)}</td>
-                                    <td>{shortTxId(request.btcTxId)}</td>
+                                    <td>
+                                        <BitcoinAddress btcAddress={request.vaultBTCAddress} shorten />
+                                    </td>
+                                    <td>
+                                        <BitcoinTransaction txId={request.btcTxId} shorten />
+                                    </td>
                                     <td>{request.confirmations}</td>
                                     <td>{handleCompleted(request)}</td>
                                 </tr>

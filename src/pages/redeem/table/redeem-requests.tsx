@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 import { Table, Button } from "react-bootstrap";
-import { shortAddress, shortTxId, parachainToUIRedeemRequest } from "../../../common/utils/utils";
-import { stripHexPrefix } from "@interlay/polkabtc";
+import { shortAddress, parachainToUIRedeemRequest } from "../../../common/utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { startTransactionWatcherRedeem } from "../../../common/utils/transaction-watcher";
 import { updateAllRedeemRequestsAction, cancelRedeemRequestAction, updateRedeemRequestAction } from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
-
+import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
+import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 
 export default function RedeemRequests() {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -46,7 +46,7 @@ export default function RedeemRequests() {
                 }
 
                 dispatch(updateAllRedeemRequestsAction(allRequests));
-                
+
                 if (!allRequests) return;
                 allRequests.forEach(async (request: RedeemRequest) => {
                     // start watcher for new redeem requests
@@ -56,13 +56,11 @@ export default function RedeemRequests() {
                     }
 
                 if(!isRedeemExpirationSubscribed) {
-                    console.log("Upaooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
                     setIsRedeemExpirationSubscribed(true);
-                    redeemExpired("3");
                     // subscribeToRedeemExpiry(redeemExpired);
                 }
                 });
-            } catch(error) {
+            } catch (error) {
                 toast.error(error.toString());
             }
         };
@@ -85,14 +83,19 @@ export default function RedeemRequests() {
                     </tr>
                 </thead>
                 <tbody>
-                    {redeemRequests && redeemRequests.map((request) => {
+                    {redeemRequests &&
+                        redeemRequests.map((request) => {
                             return (
                                 <tr key={request.id}>
                                     <td>{shortAddress(request.id)}</td>
                                     <td>{request.amountPolkaBTC} BTC</td>
                                     <td>{request.creation}</td>
-                                    <td>{shortAddress(stripHexPrefix(request.vaultBTCAddress))}</td>
-                                    <td>{shortTxId(request.btcTxId)}</td>
+                                    <td>
+                                        <BitcoinAddress btcAddress={request.vaultBTCAddress} shorten />
+                                    </td>
+                                    <td>
+                                        <BitcoinTransaction txId={request.btcTxId} shorten />
+                                    </td>
                                     <td>{request.confirmations}</td>
                                     <td>{
                                         request.completed ? <FaCheck></FaCheck> : <FaHourglass></FaHourglass>}

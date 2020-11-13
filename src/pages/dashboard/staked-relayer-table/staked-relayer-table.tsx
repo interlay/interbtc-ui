@@ -6,10 +6,10 @@ import { StoreType } from "../../../common/types/util.types";
 import * as constants from "../../../constants";
 
 type StakedRelayer = {
-    AccountId: string,
-    lockedDOT: string,
-    status: string
-}
+    AccountId: string;
+    lockedDOT: string;
+    status: string;
+};
 
 export default function StakedRelayerTable(): ReactElement {
     const isPolkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -34,11 +34,16 @@ export default function StakedRelayerTable(): ReactElement {
                 setRelayers(relayersList);
                 // TODO: add status check for relayers on parachain
                 setRelayerStatus("Ok");
-            } catch(error){
+            } catch (error) {
                 toast.error(error.toString());
             }
         };
+
         fetchData();
+        const interval = setInterval(() => {
+            fetchData();
+        }, constants.COMPONENT_UPDATE_MS);
+        return () => clearInterval(interval);
     }, [isPolkaBtcLoaded]);
 
     const getCircle = (status: string): string => {
@@ -64,39 +69,41 @@ export default function StakedRelayerTable(): ReactElement {
         return "black-text";
     };
 
-    return <div className="staked-relayer-table">
-        <div className="row">
-            <div className="col-12">
-                <div className="header">
-                    Staked Relayer &nbsp; <div className={getCircle(relayerStatus)}></div> &nbsp; {relayerStatus}
+    return (
+        <div className="staked-relayer-table">
+            <div className="row">
+                <div className="col-12">
+                    <div className="header">
+                        Staked Relayer &nbsp; <div className={getCircle(relayerStatus)}></div> &nbsp; {relayerStatus}
+                    </div>
+                </div>
+            </div>
+            <div className="row justify-content-center">
+                <div className="col-12">
+                    <div className="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>AccountID</th>
+                                    <th>Locked DOT</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {relayers.map((relayer, index) => {
+                                    return (
+                                        <tr key={index}>
+                                            <td className="break-words">{relayer.AccountId}</td>
+                                            <td>{relayer.lockedDOT}</td>
+                                            <td className={getStatusColor(relayer.status)}>{relayer.status}</td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-        <div className="row justify-content-center">
-            <div className="col-12">
-                <div className="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>AccountID</th>
-                                <th>Locked DOT</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {relayers.map((relayer, index) => {
-                                return (
-                                    <tr key={index}>
-                                        <td className="break-words">{relayer.AccountId}</td>
-                                        <td>{relayer.lockedDOT}</td>
-                                        <td className={getStatusColor(relayer.status)}>{relayer.status}</td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+    );
 }

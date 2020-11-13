@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { addVaultRedeemsAction } from "../../../common/actions/redeem.actions";
 import { redeemRequestToVaultRedeem, shortAddress } from "../../../common/utils/utils";
+import * as constants from "../../../constants";
+import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 
 export default function RedeemTable(): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -17,14 +19,19 @@ export default function RedeemTable(): ReactElement {
                 const accountId = await window.vaultClient.getAccountId();
                 const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
                 const redeemMap = await window.polkaBTC.vaults.mapRedeemRequests(vaultId);
-                
+
                 if (!redeemMap) return;
                 dispatch(addVaultRedeemsAction(redeemRequestToVaultRedeem(redeemMap)));
             } catch (err) {
                 console.log(err);
             }
         };
+
         fetchData();
+        const interval = setInterval(() => {
+            fetchData();
+        }, constants.COMPONENT_UPDATE_MS);
+        return () => clearInterval(interval);
     }, [polkaBtcLoaded, dispatch]);
 
     return (
@@ -56,7 +63,9 @@ export default function RedeemTable(): ReactElement {
                                             <td>{shortAddress(redeem.id)}</td>
                                             <td>{redeem.timestamp}</td>
                                             <td>{shortAddress(redeem.user)}</td>
-                                            <td>{shortAddress(redeem.btcAddress)}</td>
+                                            <td>
+                                                <BitcoinAddress btcAddress={redeem.btcAddress} shorten />
+                                            </td>
                                             <td>{redeem.polkaBTC}</td>
                                             <td>{redeem.unlockedDOT}</td>
                                             <td>{redeem.status}</td>
