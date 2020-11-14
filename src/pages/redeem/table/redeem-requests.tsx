@@ -9,7 +9,7 @@ import { startTransactionWatcherRedeem } from "../../../common/utils/transaction
 import { 
     updateAllRedeemRequestsAction,
     cancelRedeemRequestAction,
-    updateRedeemRequestAction
+    redeemExpiredAction
 } from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
@@ -36,7 +36,7 @@ export default function RedeemRequests() {
         const requestToBeUpdate = redeemRequests.filter(request => request.id === redeemId)[0];
 
         if (requestToBeUpdate && !requestToBeUpdate.isExpired) {
-            dispatch(updateRedeemRequestAction({...requestToBeUpdate, isExpired: true}));
+            dispatch(redeemExpiredAction({...requestToBeUpdate, isExpired: true}));
         }
     },[redeemRequests, dispatch])
 

@@ -10,6 +10,7 @@ import {
     CANCEL_REDEEM_REQUEST,
     ADD_TRANSACTION_LISTENER_REDEEM,
     INIT_STATE,
+    REDEEM_EXPIRED,
     RedeemActions,
     ADD_REDEEM_REQUEST,
     UPDATE_REDEEM_REQUEST,
@@ -71,6 +72,21 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             });
             map.set(state.address, updateRequests);
             return { ...state, redeemRequests: map };
+        case REDEEM_EXPIRED: 
+            const redeemReqMap = new Map(state.redeemRequests);
+            const currentRequests = state.redeemRequests.get(state.address);
+            if (!currentRequests) return state;
+            let updateStore = false;
+            const requestsToUpdate = currentRequests.map((request) => {
+                if (action.request.id !== request.id) return request;
+                if (action.request.isExpired !== request.isExpired) {
+                    updateStore = true;
+                }
+                return action.request;
+            });
+            if (!updateStore) return state;
+            redeemReqMap.set(state.address, requestsToUpdate);
+            return { ...state, redeemRequests: redeemReqMap };
         case CANCEL_REDEEM_REQUEST:
             const requestsMap = new Map(state.redeemRequests);
             const allRequests = state.redeemRequests.get(state.address);
