@@ -72,7 +72,7 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             });
             map.set(state.address, updateRequests);
             return { ...state, redeemRequests: map };
-        case REDEEM_EXPIRED: 
+        case REDEEM_EXPIRED:
             const redeemReqMap = new Map(state.redeemRequests);
             const currentRequests = state.redeemRequests.get(state.address);
             if (!currentRequests) return state;

@@ -28,7 +28,7 @@ import {
     AddVaultRedeems,
     UpdateRedeemRequest,
     CancelRedeemRequest,
-    RedeemExpired
+    RedeemExpired,
 } from "../types/actions.types";
 import { RedeemRequest, VaultRedeem } from "../types/redeem.types";
 
