@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 import { Table, Button } from "react-bootstrap";
 import { shortAddress, parachainToUIRedeemRequest } from "../../../common/utils/utils";
@@ -6,7 +6,11 @@ import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { startTransactionWatcherRedeem } from "../../../common/utils/transaction-watcher";
-import { updateAllRedeemRequestsAction, cancelRedeemRequestAction, updateRedeemRequestAction } from "../../../common/actions/redeem.actions";
+import { 
+    updateAllRedeemRequestsAction,
+    cancelRedeemRequestAction,
+    updateRedeemRequestAction
+} from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
 import BitcoinAddress from "../../../common/components/bitcoin-links/address";
@@ -27,21 +31,18 @@ export default function RedeemRequests() {
         toast.success("Request is canceled");
     }
 
-    
+    const redeemExpired = useCallback((redeemId: string) => {
+        if (!redeemRequests || !redeemRequests.length) return;
+        const requestToBeUpdate = redeemRequests.filter(request => request.id === redeemId)[0];
+
+        if (requestToBeUpdate && !requestToBeUpdate.isExpired) {
+            dispatch(updateRedeemRequestAction({...requestToBeUpdate, isExpired: true}));
+        }
+    },[redeemRequests, dispatch])
 
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
-
-            const redeemExpired = (redeemId: string) => {
-                if (!redeemRequests || !redeemRequests.length) return;
-                const requestToBeUpdate = redeemRequests.filter(request => request.id === redeemId)[0];
-        
-                if (requestToBeUpdate && !requestToBeUpdate.isExpired) {
-                    debugger;
-                    dispatch(updateRedeemRequestAction({...requestToBeUpdate, isExpired: true}));
-                }
-            }
 
             try {
                 const accountId = window.polkaBTC.api.createType("AccountId", address);
@@ -51,7 +52,12 @@ export default function RedeemRequests() {
 
                 for (const [key, value] of redeemRequestMap) {
                     allRequests.push(parachainToUIRedeemRequest(key, value));
-                    if (redeemRequests && !redeemRequests.filter((req)=> req.id === stripHexPrefix(key.toString())).length) {
+                    if (!redeemRequests) {
+                        updateStore = true;
+                        continue;
+                    }
+                    const inStore = redeemRequests.filter((req)=> req.id === stripHexPrefix(key.toString())).length;
+                    if (!inStore) {
                         updateStore = true;
                     }
                 }
@@ -78,7 +84,8 @@ export default function RedeemRequests() {
             }
         };
         fetchData();
-    }, [polkaBtcLoaded, transactionListeners, isRedeemExpirationSubscribed, dispatch, address, redeemRequests]);
+    }, [polkaBtcLoaded, transactionListeners, isRedeemExpirationSubscribed,
+        dispatch, address, redeemExpired, redeemRequests]);
 
     return (
         <div>
