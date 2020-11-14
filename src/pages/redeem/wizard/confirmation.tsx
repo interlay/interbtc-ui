@@ -11,13 +11,13 @@ import { toast } from "react-toastify";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat } from "@interlay/polkabtc";
+import { getH160FromAddress } from "../../../common/utils/utils";
 
 export default function Confirmation() {
     const [isRequestPending, setRequestPending] = useState(false);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const amountPolkaBTC = useSelector((store: StoreType) => store.redeem.amountPolkaBTC);
     const vaultAddress = useSelector((store: StoreType) => store.redeem.vaultDotAddress);
-    const vaultBTCAddress = useSelector((store: StoreType) => store.redeem.vaultBtcAddress);
     const btcAddress = useSelector((store: StoreType) => store.redeem.btcAddress);
     const dispatch = useDispatch();
 
@@ -33,14 +33,17 @@ export default function Confirmation() {
             }
             const amount = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
 
-            // FIXME: use AccountId type from @polkadot/types/interfaces
+            const btcHash = getH160FromAddress(btcAddress);
+            if (!btcHash) {
+                throw new Error("Invalid address");
+            }
+
             const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultAddress);
-            const requestResult = await window.polkaBTC.redeem.request(amount, btcAddress, vaultAccountId);
+            const requestResult = await window.polkaBTC.redeem.request(amount, btcHash, vaultAccountId);
 
             // get the redeem id from the request redeem event
             const id = requestResult.hash.toString();
             const redeemRequest = await window.polkaBTC.redeem.getRequestById(id);
-            console.log(redeemRequest);
 
             // update the redeem status
             dispatch(changeRedeemIdAction(id));
@@ -49,7 +52,7 @@ export default function Confirmation() {
                 id,
                 amountPolkaBTC,
                 creation: redeemRequest.opentime.toString(),
-                vaultBTCAddress,
+                btcAddress,
                 btcTxId: "",
                 confirmations: 0,
                 completed: false,

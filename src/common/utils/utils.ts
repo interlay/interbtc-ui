@@ -70,7 +70,7 @@ export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: Par
         id: stripHexPrefix(id.toString()),
         amountPolkaBTC: satToBTC(parachainRedeemRequest.amount_polka_btc.toString()),
         creation: parachainRedeemRequest.opentime.toString(),
-        vaultBTCAddress: btcAddress ? btcAddress : "",
+        btcAddress: btcAddress ? btcAddress : "",
         btcTxId: "",
         confirmations: 0,
         completed: false,

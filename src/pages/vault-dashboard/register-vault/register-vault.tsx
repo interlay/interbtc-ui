@@ -36,11 +36,11 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
             if (collateralAsPlanck === undefined) {
                 throw new Error("Collateral is smaller than 1 planck");
             }
-            const hash = getH160FromAddress(address);
-            if (!hash) {
+            const btcHash = getH160FromAddress(address);
+            if (!btcHash) {
                 throw new Error("Invalid address");
             }
-            await window.vaultClient.registerVault(collateralAsPlanck, hash);
+            await window.vaultClient.registerVault(collateralAsPlanck, btcHash);
 
             const accountId = await window.vaultClient.getAccountId();
             const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
