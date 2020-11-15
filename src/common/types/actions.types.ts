@@ -67,6 +67,8 @@ export const ADD_VAULT_REDEEMS = "ADD_VAULT_REDEEMS";
 export const ADD_TRANSACTION_LISTENER_REDEEM = "ADD_TRANSACTION_LISTENER_REDEEM";
 export const UPDATE_REDEEM_REQUEST = "UPDATE_REDEEM_REQUEST";
 export const UPDATE_ALL_REDEEM_REQUESTS = "UPDATE_ALL_REDEEM_REQUESTS";
+export const CANCEL_REDEEM_REQUEST = "CANCEL_REDEEM_REQUEST";
+export const REDEEM_EXPIRED = "REDEEM_EXPIRED";
 
 export interface ChangeVaultBtcAddressOnRedeem {
     type: typeof CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM;
@@ -137,6 +139,16 @@ export interface UpdateAllRedeemRequests {
     redeemRequests: RedeemRequest[];
 }
 
+export interface CancelRedeemRequest {
+    type: typeof CANCEL_REDEEM_REQUEST;
+    id: string;
+}
+
+export interface RedeemExpired {
+    type: typeof REDEEM_EXPIRED;
+    request: RedeemRequest;
+}
+
 export type RedeemActions =
     | ChangeRedeemStep
     | ChangeAmountPolkaBtc
@@ -153,7 +165,9 @@ export type RedeemActions =
     | AddVaultRedeems
     | AddTransactionListenerRedeem
     | UpdateRedeemRequest
-    | UpdateAllRedeemRequests;
+    | UpdateAllRedeemRequests
+    | CancelRedeemRequest
+    | RedeemExpired;
 
 // ISSUE
 

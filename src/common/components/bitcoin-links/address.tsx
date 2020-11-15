@@ -17,7 +17,7 @@ export default class BitcoinAddress extends React.Component<{
                 target="_blank"
                 rel="noopener noreferrer"
             >
-                {this.props.shorten ? shortAddress(this.props.btcAddress) : this.props.btcAddress}
+                {this.props.shorten && this.props.btcAddress ? shortAddress(this.props.btcAddress) : this.props.btcAddress}
             </a>
         );
     }

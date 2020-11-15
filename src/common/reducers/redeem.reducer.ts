@@ -7,8 +7,10 @@ import {
     CHANGE_BTC_ADDRESS,
     CHANGE_REDEEM_ID,
     CHANGE_ADDRESS,
+    CANCEL_REDEEM_REQUEST,
     ADD_TRANSACTION_LISTENER_REDEEM,
     INIT_STATE,
+    REDEEM_EXPIRED,
     RedeemActions,
     ADD_REDEEM_REQUEST,
     UPDATE_REDEEM_REQUEST,
@@ -70,13 +72,42 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             });
             map.set(state.address, updateRequests);
             return { ...state, redeemRequests: map };
+        case REDEEM_EXPIRED:
+            const redeemReqMap = new Map(state.redeemRequests);
+            const currentRequests = state.redeemRequests.get(state.address);
+            if (!currentRequests) return state;
+            let updateStore = false;
+            const requestsToUpdate = currentRequests.map((request) => {
+                if (action.request.id !== request.id) return request;
+                if (action.request.isExpired !== request.isExpired) {
+                    updateStore = true;
+                }
+                return action.request;
+            });
+            if (!updateStore) return state;
+            redeemReqMap.set(state.address, requestsToUpdate);
+            return { ...state, redeemRequests: redeemReqMap };
+        case CANCEL_REDEEM_REQUEST:
+            const requestsMap = new Map(state.redeemRequests);
+            const allRequests = state.redeemRequests.get(state.address);
+            if (!allRequests) return state;
+            const updatedRequests = allRequests.filter((request) => request.id !== action.id);
+            requestsMap.set(state.address, updatedRequests);
+            return { ...state, redeemRequests: requestsMap };
         case INIT_STATE:
             return { ...state, transactionListeners: [] };
         case ADD_VAULT_REDEEMS:
             return { ...state, vaultRedeems: action.vaultRedeems };
         case UPDATE_ALL_REDEEM_REQUESTS:
             const newRequests = new Map(state.redeemRequests);
-            newRequests.set(state.address, action.redeemRequests);
+            const mappedRequests = action.redeemRequests.map((newRequest) => {
+                let foundRequest = undefined;
+                const requestsArray = state.redeemRequests.get(state.address);
+                if (requestsArray)
+                    foundRequest = requestsArray.filter((oldRequest) => oldRequest.id === newRequest.id)[0];
+                return { ...newRequest, isExpired: foundRequest ? foundRequest.isExpired : false };
+            });
+            newRequests.set(state.address, mappedRequests);
             return { ...state, redeemRequests: newRequests };
         default:
             return state;
