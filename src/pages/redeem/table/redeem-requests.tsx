@@ -6,7 +6,7 @@ import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { startTransactionWatcherRedeem } from "../../../common/utils/transaction-watcher";
-import { 
+import {
     updateAllRedeemRequestsAction,
     cancelRedeemRequestAction,
     redeemExpiredAction
@@ -22,23 +22,45 @@ export default function RedeemRequests() {
     const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
     const transactionListeners = useSelector((state: StoreType) => state.redeem.transactionListeners);
     const [isRedeemExpirationSubscribed, setIsRedeemExpirationSubscribed] = useState(false);
+    const [cancelPending, setCancelPending] = useState([""]);
     const dispatch = useDispatch();
 
     const cancelRedeemRequest = async (redeemId: string): Promise<void> => {
-        const id = window.polkaBTC.api.createType("H256", redeemId);
-        await window.polkaBTC.redeem.cancel(id);
-        dispatch(cancelRedeemRequestAction(redeemId));
-        toast.success("Request is canceled");
+        if (!polkaBtcLoaded) return;
+        setCancelPending([...cancelPending, redeemId]);
+        try {
+            const id = window.polkaBTC.api.createType("H256", redeemId);
+            await window.polkaBTC.redeem.cancel(id);
+            dispatch(cancelRedeemRequestAction(redeemId));
+            toast.success("Successfully canceled redeem request.");
+        } catch (err) {
+            console.log(err);
+            toast.error("Error canceling redeem request.");
+        }
+        setCancelPending(cancelPending.splice(cancelPending.indexOf(redeemId), 1));
     }
 
     const redeemExpired = useCallback((redeemId: string) => {
         if (!redeemRequests || !redeemRequests.length) return;
-        const requestToBeUpdate = redeemRequests.filter(request => request.id === redeemId)[0];
+        const requestToBeUpdated = redeemRequests.filter(request => request.id === redeemId)[0];
 
-        if (requestToBeUpdate && !requestToBeUpdate.isExpired) {
-            dispatch(redeemExpiredAction({...requestToBeUpdate, isExpired: true}));
+        if (requestToBeUpdated && !requestToBeUpdated.isExpired) {
+            dispatch(redeemExpiredAction({ ...requestToBeUpdated, isExpired: true }));
         }
-    },[redeemRequests, dispatch])
+    }, [redeemRequests, dispatch])
+
+    const handleCompleted = (request: RedeemRequest) => {
+        if (!request.completed && request.isExpired) {
+            return <Button
+                variant="outline-dark"
+                onClick={() => { cancelRedeemRequest(request.id) }}
+            >Cancel</Button>;
+        } else if (request.completed) {
+            return <FaCheck></FaCheck>;
+        } else {
+            return <FaHourglass></FaHourglass>;
+        }
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -56,7 +78,7 @@ export default function RedeemRequests() {
                         updateStore = true;
                         continue;
                     }
-                    const inStore = redeemRequests.filter((req)=> req.id === stripHexPrefix(key.toString())).length;
+                    const inStore = redeemRequests.filter((req) => req.id === stripHexPrefix(key.toString())).length;
                     if (!inStore) {
                         updateStore = true;
                     }
@@ -74,10 +96,10 @@ export default function RedeemRequests() {
                         startTransactionWatcherRedeem(request, dispatch);
                     }
 
-                if(!isRedeemExpirationSubscribed) {
-                    setIsRedeemExpirationSubscribed(true);
-                    await window.polkaBTC.redeem.subscribeToRedeemExpiry(redeemExpired);
-                }
+                    if (!isRedeemExpirationSubscribed) {
+                        setIsRedeemExpirationSubscribed(true);
+                        await window.polkaBTC.redeem.subscribeToRedeemExpiry(accountId, redeemExpired);
+                    }
                 });
             } catch (error) {
                 toast.error(error.toString());
@@ -99,7 +121,6 @@ export default function RedeemRequests() {
                         <th>BTC Transaction</th>
                         <th>Confirmations</th>
                         <th>Completed</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -117,17 +138,7 @@ export default function RedeemRequests() {
                                         <BitcoinTransaction txId={request.btcTxId} shorten />
                                     </td>
                                     <td>{request.confirmations}</td>
-                                    <td>{
-                                        request.completed ? <FaCheck></FaCheck> : <FaHourglass></FaHourglass>}
-                                    </td>
-                                    <td>
-                                        {!request.completed && request.isExpired &&
-                                            <Button 
-                                                variant="outline-dark"
-                                                onClick={() => {cancelRedeemRequest(request.id)}}
-                                            >Cancel</Button>
-                                        }   
-                                    </td>
+                                    <td>{handleCompleted(request)}</td>
                                 </tr>
                             );
                         })}
