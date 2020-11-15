@@ -9,7 +9,6 @@ import {
     updateIssueRequestAction,
 } from "../../../common/actions/issue.actions";
 import { StoreType } from "../../../common/types/util.types";
-import { stripHexPrefix } from "@interlay/polkabtc";
 import { BTC_TRANSACTION_ID_REGEX } from "../../../constants";
 
 type BTCPaymentConfirmationProps = {

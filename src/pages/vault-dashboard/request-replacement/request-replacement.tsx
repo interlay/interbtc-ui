@@ -26,11 +26,11 @@ export default function RequestReplacementModal(props: RequestReplacementProps) 
     const [isRequestPending, setRequestPending] = useState(false);
 
     const onSubmit = handleSubmit(async ({ amount }) => {
+        setRequestPending(true);
         try {
-            setRequestPending(true);
             const amountAsSatoshis = btcToSat(amount.toString());
             if (amountAsSatoshis === undefined) {
-                throw new Error("Amount to convert is less than 1 sat.");
+                throw new Error("Amount to convert is less than 1 satoshi.");
             }
             await window.vaultClient.requestReplace(amountAsSatoshis, "100");
 
@@ -42,10 +42,10 @@ export default function RequestReplacementModal(props: RequestReplacementProps) 
             dispatch(addReplaceRequestsAction(requestsToVaultReplaceRequests(requests)));
             toast.success("Replacment request is submitted");
             props.onClose();
-            setRequestPending(false);
         } catch (error) {
             toast.error(error.toString());
         }
+        setRequestPending(false);
     });
 
     return (
@@ -68,7 +68,7 @@ export default function RequestReplacementModal(props: RequestReplacementProps) 
                             <div className="input-group">
                                 <input
                                     name="amount"
-                                    type="number"
+                                    type="float"
                                     className={"form-control custom-input" + (errors.amount ? " error-borders" : "")}
                                     aria-describedby="basic-addon2"
                                     ref={register({
