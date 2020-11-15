@@ -7,8 +7,6 @@ import { updateCollateralAction, updateCollateralizationAction } from "../../../
 import { planckToDOT, dotToPlanck } from "@interlay/polkabtc";
 import { StoreType } from "../../../common/types/util.types";
 import Big from "big.js";
-import { isPositiveNumeric } from "../../../common/utils/utils";
-import { DOT } from "@interlay/polkabtc/build/interfaces/default";
 import ButtonMaybePending from "../../../common/components/pending-button";
 
 type UpdateCollateralForm = {
