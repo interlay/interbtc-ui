@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { StoreType } from "../../../common/types/util.types";
 import { changeIssueStepAction } from "../../../common/actions/issue.actions";
-import { btcToSat, satToMBTC, stripHexPrefix } from "@interlay/polkabtc";
+import { btcToSat, satToMBTC } from "@interlay/polkabtc";
 
 export default function BTCPayment() {
     const issueId = useSelector((state: StoreType) => state.issue.id);
