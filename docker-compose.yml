@@ -46,6 +46,7 @@ services:
             - bitcoind:18443
             - --http-addr
             - "[::0]:3002"
+            - --index-unspendables
         ports:
             - "3002:3002"
     staked-relayer:

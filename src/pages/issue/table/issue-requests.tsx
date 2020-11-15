@@ -51,6 +51,23 @@ export default function IssueRequests(props: IssueRequestProps) {
                     allRequests.push(parachainToUIIssueRequest(key, value));
                 }
 
+                await Promise.all(allRequests.map(async request => {
+                    try {
+                        request.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id); 
+                    } catch (err) {
+                        console.log("Issue Id: " + request.id + " " + err);
+                    }
+                }));
+                await Promise.all(allRequests.map(async request => {
+                    try {
+                        if (request.btcTxId){
+                            request.confirmations = (await window.polkaBTC.btcCore.getTransactionStatus(request.btcTxId)).confirmations;
+                        }
+                    } catch (err) {
+                        console.log(err);
+                    }
+                }));
+
                 dispatch(updateAllIssueRequestsAction(allRequests));
 
                 if (!allRequests) return;
@@ -98,7 +115,7 @@ export default function IssueRequests(props: IssueRequestProps) {
             const txIdBuffer = Buffer.from(txId, "hex").reverse();
 
             // prepare types for polkadot
-            const parsedIssuedId = window.polkaBTC.api.createType("H256", provenReq.id);
+            const parsedIssuedId = window.polkaBTC.api.createType("H256", "0x" + provenReq.id);
             const parsedTxId = window.polkaBTC.api.createType("H256", txIdBuffer);
             const parsedTxBlockHeight = window.polkaBTC.api.createType("u32", transactionBlockHeight);
             const parsedMerkleProof = window.polkaBTC.api.createType("Bytes", "0x" + merkleProof);

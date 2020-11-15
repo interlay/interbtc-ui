@@ -35,7 +35,7 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
     const onChange = async (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         if (name === "btcTxId" && issueRequests) {
-            const txId = stripHexPrefix(value);
+            const txId = value;
             dispatch(changeBtcTxIdAction(txId));
             let request = issueRequests.find((r) => r.id === issueId);
             if (request) {

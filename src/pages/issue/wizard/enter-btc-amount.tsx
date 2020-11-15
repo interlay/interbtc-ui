@@ -11,7 +11,7 @@ import {
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { btcToSat } from "@interlay/polkabtc";
+import { btcToSat, stripHexPrefix } from "@interlay/polkabtc";
 import { getAddressFromH160 } from "../../../common/utils/utils";
 
 type EnterBTCForm = {
@@ -50,7 +50,7 @@ export default function EnterBTCAmount() {
             if (vaultBTCAddress === undefined) {
                 throw new Error("Vault has invalid BTC address.");
             }
-            dispatch(changeVaultBtcAddressOnIssueAction(vaultBTCAddress));
+            dispatch(changeVaultBtcAddressOnIssueAction(stripHexPrefix(vaultBTCAddress)));
             dispatch(changeVaultDotAddressOnIssueAction(vaultId.toString()));
             dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
         } catch (error) {

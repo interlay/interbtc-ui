@@ -27,7 +27,7 @@ export default function BTCPayment() {
     const vaultBTCAddress = useSelector((state: StoreType) => state.issue.vaultBtcAddress);
     const dispatch = useDispatch();
 
-    const electrumPaytoField = stripHexPrefix(vaultBTCAddress) + ", " + amountMBTCwithFee + "\nOP_RETURN " + stripHexPrefix(issueId) + ", 0";
+    const electrumPaytoField = vaultBTCAddress + ", " + amountMBTCwithFee + "\nOP_RETURN " + issueId + ", 0";
 
     const goToPreviousStep = () => {
         dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
@@ -52,7 +52,7 @@ export default function BTCPayment() {
                         <ListGroup>
                             <ListGroupItem>Output 1</ListGroupItem>
                             <ListGroupItem>
-                                Recipient: <strong>{stripHexPrefix(vaultBTCAddress)}</strong>
+                                Recipient: <strong>{vaultBTCAddress}</strong>
                             </ListGroupItem>
                             <ListGroupItem>
                                 Amount:{" "}
@@ -64,7 +64,7 @@ export default function BTCPayment() {
                         <ListGroup>
                             <ListGroupItem>Output 2</ListGroupItem>
                             <ListGroupItem>
-                                OP_RETURN: <strong> {stripHexPrefix(issueId)} </strong>
+                                OP_RETURN: <strong> {issueId} </strong>
                             </ListGroupItem>
                             <ListGroupItem>
                                 Amount: <strong>0 BTC (0 mBTC)</strong>

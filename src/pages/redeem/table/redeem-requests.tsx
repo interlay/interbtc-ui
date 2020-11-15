@@ -68,10 +68,15 @@ export default function RedeemRequests() {
 
             try {
                 const accountId = window.polkaBTC.api.createType("AccountId", address);
+                // get all redeem request from parachain 
                 const redeemRequestMap = await window.polkaBTC.redeem.mapForUser(accountId);
                 let updateStore = false;
                 let allRequests = [];
 
+                if (redeemRequests?.length !== redeemRequestMap.size) {
+                    updateStore = true;
+                }
+                
                 for (const [key, value] of redeemRequestMap) {
                     allRequests.push(parachainToUIRedeemRequest(key, value));
                     if (!redeemRequests) {
@@ -84,11 +89,31 @@ export default function RedeemRequests() {
                     }
                 }
 
+                // get btc data for each redeem request
+                await Promise.all(allRequests.map(async request => {
+                    try {
+                        request.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id); 
+                    } catch (err) {
+                        console.log("Issue Id: " + request.id + " " + err);
+                    }
+                }));
+                await Promise.all(allRequests.map(async request => {
+                    try {
+                        if (request.btcTxId){
+                            request.confirmations = (await window.polkaBTC.btcCore.getTransactionStatus(request.btcTxId)).confirmations;
+                        }
+                    } catch (err) {
+                        console.log(err);
+                    }
+                }));
+
                 if (updateStore) {
                     dispatch(updateAllRedeemRequestsAction(allRequests));
                 }
 
                 if (!allRequests) return;
+
+                // if there are redeem requests, check their btc confirmations and if they are expired
                 allRequests.forEach(async (request: RedeemRequest) => {
                     // start watcher for new redeem requests
                     if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
@@ -98,7 +123,7 @@ export default function RedeemRequests() {
 
                     if (!isRedeemExpirationSubscribed) {
                         setIsRedeemExpirationSubscribed(true);
-                        await window.polkaBTC.redeem.subscribeToRedeemExpiry(accountId, redeemExpired);
+                        window.polkaBTC.redeem.subscribeToRedeemExpiry(accountId, redeemExpired);
                     }
                 });
             } catch (error) {
