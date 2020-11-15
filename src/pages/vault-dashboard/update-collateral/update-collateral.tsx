@@ -37,7 +37,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     const [isCollateralUpdateAllowed, setCollateralUpdateAllowed] = useState(false);
     const dispatch = useDispatch();
 
-    const onSubmit = handleSubmit(async ({ collateral }) => {
+    const onSubmit = handleSubmit(async () => {
         if (!polkaBtcLoaded) return;
         if (!vaultClientLoaded) return;
 
@@ -93,39 +93,40 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
         }
         setNewCollateral(newCollateral);
 
-        const accountId = await window.vaultClient.getAccountId();
-        const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
-        const requiredCollateral = (await window.polkaBTC.vaults.getRequiredCollateralForVault(vaultId)).toString();
-
-        // collateral update only allowed if above required collateral
-        const allowed = new Big(newCollateral).gte(new Big(requiredCollateral));
-        setCollateralUpdateAllowed(allowed);
-
-        // decide if we withdraw or add collateral
-        const currentCollateral = dotToPlanck(currentDOTCollateral);
-        if (!currentCollateral) {
-            throw new Error("Error with current vault collateral");
-        }
-        setCurrentCollateral(currentCollateral);
-        const withdraw = new Big(newCollateral).lt(currentCollateral);
-        withdraw ? setIsAWithdrawal(true) : setIsAWithdrawal(false);
-
-        // get the updated collateralization
-        const newCollateralAsU128 = window.polkaBTC.api.createType("u128", newCollateral);
-        let newCollateralization;
         try {
+            const accountId = await window.vaultClient.getAccountId();
+            const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
+            const requiredCollateral = (await window.polkaBTC.vaults.getRequiredCollateralForVault(vaultId)).toString();
+
+            // collateral update only allowed if above required collateral
+            const allowed = new Big(newCollateral).gte(new Big(requiredCollateral));
+            setCollateralUpdateAllowed(allowed);
+
+            // decide if we withdraw or add collateral
+            const currentCollateral = dotToPlanck(currentDOTCollateral);
+            if (!currentCollateral) {
+                throw new Error("Error with current vault collateral");
+            }
+            setCurrentCollateral(currentCollateral);
+            const withdraw = new Big(newCollateral).lt(currentCollateral);
+            withdraw ? setIsAWithdrawal(true) : setIsAWithdrawal(false);
+
+            // get the updated collateralization
+            const newCollateralAsU128 = window.polkaBTC.api.createType("u128", newCollateral);
+            let newCollateralization;
             newCollateralization = await window.polkaBTC.vaults.getVaultCollateralization(
                 vaultId,
                 newCollateralAsU128
             );
+            if (newCollateralization !== undefined) {
+                setNewCollaterlization((100 * newCollateralization).toString());
+            } else {
+                setNewCollaterlization("∞");
+            }
         } catch(err) {
             console.log(err);
         }
-        if (newCollateralization !== undefined) {
-            setNewCollaterlization((100 * newCollateralization).toString());
-        } else {
-            setNewCollaterlization("∞");
-        }
+
     };
 
     return (
@@ -144,7 +145,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                             <div className="input-group">
                                 <input
                                     name="collateral"
-                                    type="number"
+                                    type="float"
                                     className={
                                         "form-control custom-input" + (errors.collateral ? " error-borders" : "")
                                     }

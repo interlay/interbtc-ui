@@ -72,7 +72,7 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
                             <div className="input-group">
                                 <input
                                     name="collateral"
-                                    type="number"
+                                    type="float"
                                     className={
                                         "form-control custom-input" + (errors.collateral ? " error-borders" : "")
                                     }
