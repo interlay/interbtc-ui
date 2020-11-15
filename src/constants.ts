@@ -12,19 +12,56 @@ const getStaticPage = () => {
 
 export const STATIC_PAGE_ONLY = getStaticPage();
 
+export const FAUCET_AMOUNT = 1000;
+export const FAUCET_ADDRESS_SEED = "//Alice";
+
+// timeout in milliseconds for setInterval
+export const COMPONENT_UPDATE_MS = 10000;
+
 // Set to true is on mainnet.
 export const BTC_MAINNET = false;
 
+// regtest btc address validation regex
+export const BTC_REGTEST_REGEX = /\b([2mn][a-km-zA-HJ-NP-Z1-9]{25,34}|bcrt1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})\b/;
 // testnet btc address validation regex
-export const BTC_ADDRESS_TESTNET_REGEX = /\b([2mn][a-km-zA-HJ-NP-Z1-9]{25,34}|tb1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})\b/;
+export const BTC_TESTNET_REGEX = /\b([2mn][a-km-zA-HJ-NP-Z1-9]{25,34}|tb1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})\b/;
 // mainnet btc address validation regex
-export const BTC_ADDRESS_MAINNET_REGEX = /\b([13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})\b/;
+export const BTC_MAINNET_REGEX = /\b([13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})\b/;
+// btc transaction validation regex
+export const BTC_TRANSACTION_ID_REGEX = /[a-fA-F0-9]{64}/;
+
+// regex for validating input strings as numbers
+export const NUMERIC_STRING_REGEX = /^[0-9]+([.][0-9]+)?$/;
+
+export const BITCOIN_NETWORK = process.env.REACT_APP_BITCOIN_NETWORK || "regtest";
+export const BITCOIN_REGTEST_URL = process.env.REACT_APP_BITCOIN_REGTEST_URL || "http://localhost:3002";
+
+export const BTC_ADDRESS_REGEX =
+    BITCOIN_NETWORK === "mainnet"
+        ? BTC_MAINNET_REGEX
+        : BITCOIN_NETWORK === "testnet"
+        ? BTC_TESTNET_REGEX
+        : BTC_REGTEST_REGEX;
 
 export const PARACHAIN_URL = process.env.REACT_APP_PARACHAIN_URL || "ws://127.0.0.1:9944";
 export const STAKED_RELAYER_URL = process.env.REACT_APP_STAKED_RELAYER_URL || "http://localhost:3030";
+export const VAULT_CLIENT_URL = process.env.REACT_APP_VAULT_CLIENT_URL || "http://localhost:3031";
 
 export const BTC_EXPLORER_BLOCK_API = "https://blockstream.info/block/";
 export const BTC_TEST_EXPLORER_BLOCK_API = "https://blockstream.info/testnet/block/";
+
+export const BTC_EXPLORER_ADDRESS_API = "https://blockstream.info/address/";
+export const BTC_TEST_EXPLORER_ADDRESS_API = "https://blockstream.info/testnet/address/";
+
+export const BTC_EXPLORER_TRANSACTION_API = "https://blockstream.info/tx/";
+export const BTC_TEST_EXPLORER_TRANSACTION_API = "https://blockstream.info/testnet/tx/";
+
+//######################################
+// STAKED RELAYER
+//######################################
+export const STAKED_RELAYER_OK = "Ok";
+export const STAKED_RELAYER_OFFLINE = "Offline";
+export const STAKED_RELAYER_SLASHED = "Slashed";
 
 //######################################
 // VAULT
@@ -45,16 +82,6 @@ export const BTC_RELAY_DELAY_CRITICAL = 12;
 export const VAULT_IDEAL_COLLATERALIZATION = 200; // in %
 export const VAULT_AUCTION_COLLATERALIZATION = 150; // in %
 export const VAULT_LIQUIDATION_COLLATERALIZATION = 120; // in %
-
-// ####################################################
-// FOR TESTING PURPOSES ONLY
-// TODO: Remove or update before deployment
-// ####################################################
-
-export const ALICE = "//Alice";
-export const BOB = "5DTestUPts3kjeXSTMyerHihn1uwMfLj8vU8sqF7qYrFabHE";
-export const ALICE_BTC = "tb1qmwv7aqktv5l44x65qmsk6u4z9wh66nazv9rgv3"; //Alexei's testnet BTC address
-export const BOB_BTC = "tb1q4kspwcf42cqp66hrhw407djna4dgpw9lsnfx5e"; // Dom's testnet BTC address
 
 // Landing page
 export const MARKDOWN_PATH = "../assets/polkBTCInfo.md";

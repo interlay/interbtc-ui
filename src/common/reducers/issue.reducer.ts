@@ -11,11 +11,13 @@ import {
     UPDATE_ISSUE_REQUEST,
     CHANGE_ADDRESS,
     IssueActions,
-    ADD_TRANSACTION_LISTENER,
+    ADD_TRANSACTION_LISTENER_ISSUE,
     OPEN_WIZARD_IN_EDIT_MODE,
+    ADD_VAULT_ISSUES,
     INIT_STATE,
+    UPDATE_ALL_ISSUE_REQUESTS,
 } from "../types/actions.types";
-import { Issue } from "../types/issue.types";
+import { IssueState } from "../types/issue.types";
 
 const initialState = {
     address: "",
@@ -29,9 +31,10 @@ const initialState = {
     issueRequests: new Map(),
     transactionListeners: [],
     wizardInEditMode: false,
+    vaultIssues: [],
 };
 
-export const issueReducer = (state: Issue = initialState, action: IssueActions): Issue => {
+export const issueReducer = (state: IssueState = initialState, action: IssueActions): IssueState => {
     switch (action.type) {
         case CHANGE_ADDRESS:
             return { ...state, address: action.address };
@@ -76,13 +79,19 @@ export const issueReducer = (state: Issue = initialState, action: IssueActions):
             return { ...state, issueRequests: map };
         case CHANGE_BTC_TX_ID:
             return { ...state, btcTxId: action.btcTxId };
-        case ADD_TRANSACTION_LISTENER:
+        case ADD_TRANSACTION_LISTENER_ISSUE:
             if (state.transactionListeners.indexOf(action.id) !== -1) return state;
             return { ...state, transactionListeners: [...state.transactionListeners, action.id] };
         case OPEN_WIZARD_IN_EDIT_MODE:
             return { ...state, wizardInEditMode: true };
         case INIT_STATE:
             return { ...state, transactionListeners: [] };
+        case ADD_VAULT_ISSUES:
+            return { ...state, vaultIssues: action.vaultIssues };
+        case UPDATE_ALL_ISSUE_REQUESTS:
+            const newRequests = new Map(state.issueRequests);
+            newRequests.set(state.address, action.issueRequests);
+            return { ...state, issueRequests: newRequests };
         default:
             return state;
     }

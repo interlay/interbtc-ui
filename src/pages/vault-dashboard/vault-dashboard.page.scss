@@ -1,0 +1,111 @@
+@import "../../variables";
+@import "../../mixins";
+
+.vault-dashboard-page{
+    text-align: center;
+
+    .vault-container{
+        max-width: calc(100vw - 30px);
+        overflow-x: scroll;
+        padding: 0px 15px;
+    }
+
+    .register-vault-dashboard{
+        margin: 1rem;
+    }
+
+    .btc-address-header{
+        margin-top: 1rem;
+    }
+
+    .vault-dashboard-button{
+        margin: 2rem;
+    }
+
+    .title{
+        width: 100%;
+        text-align: center;
+        font-size: 2rem;
+        margin-top: 2rem; 
+        font-weight: 600;
+    }
+
+    .header {
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-align: center;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .stats{
+        width: 100%;
+        text-align: center;
+        font-size: 1.2rem;
+    }
+
+    .table-wrapper{
+        width: 100%;
+        table {
+            table-layout: auto;
+            width: 1200px;
+            margin: auto;
+            overflow: scroll;
+            text-align: center;
+        }
+
+        th, td{
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            
+            i{
+                color: rgba(0, 0, 0, 0.5);
+            }
+            p{
+                margin: 0px;
+            }
+        }
+
+        td.break-words {
+            word-break: break-all;
+        }
+
+        thead{
+            background-color: #eaeaea;
+        }    
+    }
+
+    .stats .fa-edit {
+        &:hover{
+            cursor: pointer;
+        }
+    }
+}
+
+.request-header{
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.vault-empty-space{
+    margin-bottom: 1rem;
+}
+
+.btc-address{
+    margin-bottom: 1rem;
+}
+
+.current-collateral{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.replace-table {
+    margin-bottom: 2rem;
+}
+
+.basic-addon {
+    .input-error {
+        margin-top: 0.1rem;
+    }
+}

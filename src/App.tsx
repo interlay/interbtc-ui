@@ -1,14 +1,23 @@
 import React, { Component } from "react";
+import { planckToDOT, satToBTC } from "@interlay/polkabtc";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
-import { createPolkabtcAPI, StakedRelayerClient } from "@interlay/polkabtc";
+import { createPolkabtcAPI, PolkaBTCAPI, StakedRelayerClient, VaultClient } from "@interlay/polkabtc";
 import { Modal } from "react-bootstrap";
+import Big from "big.js";
 
 import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
+import keyring from "@polkadot/ui-keyring";
 
 import AccountSelector from "./pages/account-selector";
-import { isPolkaBtcLoaded, isStakedRelayerLoaded, changeAddressAction } from "./common/actions/general.actions";
+import {
+    isPolkaBtcLoaded,
+    isStakedRelayerLoaded,
+    isVaultClientLoaded,
+    changeAddressAction,
+    setTotalIssuedAndTotalLockedAction,
+} from "./common/actions/general.actions";
 import * as constants from "./constants";
 
 // theme
@@ -24,13 +33,22 @@ import Topbar from "./common/components/topbar";
 import Footer from "./common/components/footer/footer";
 import LandingPage from "./pages/landing/landing.page";
 import IssuePage from "./pages/issue/issue.page";
-import VaultPage from "./pages/vault.page";
 import RedeemPage from "./pages/redeem/redeem.page";
 import AboutPage from "./pages/about.page";
+import UserGuidePage from "./pages/user-guide.page";
+import DashboardPage from "./pages/dashboard/dashboard.page";
+import VaultDashboardPage from "./pages/vault-dashboard/vault-dashboard.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
 import { configureStore } from "./store";
 
 const store = configureStore();
+
+function connectToParachain(): Promise<PolkaBTCAPI> {
+    return createPolkabtcAPI(
+        constants.PARACHAIN_URL,
+        constants.BITCOIN_NETWORK === "regtest" ? constants.BITCOIN_REGTEST_URL : constants.BITCOIN_NETWORK
+    );
+}
 
 export default class App extends Component<{}, AppState> {
     state: AppState = {
@@ -39,6 +57,20 @@ export default class App extends Component<{}, AppState> {
         signer: undefined,
         showSelectAccount: false,
     };
+
+    async requestDotFromFaucet() {
+        let address = this.state.address;
+        if (!address) return;
+
+        try {
+            let api = await connectToParachain();
+            api.setAccount(keyring.createFromUri(constants.FAUCET_ADDRESS_SEED, undefined, "sr25519"));
+            await api.collateral.transferDOT(address, constants.FAUCET_AMOUNT);
+            toast.success("Successfully transferred collateral.");
+        } catch (error) {
+            toast.error(error);
+        }
+    }
 
     async getAccount(): Promise<void> {
         if (this.state.address) {
@@ -76,19 +108,51 @@ export default class App extends Component<{}, AppState> {
         }
     }
 
-    async createAPIInstace(): Promise<void> {
-        window.relayer = new StakedRelayerClient(constants.STAKED_RELAYER_URL);
-        store.dispatch(isStakedRelayerLoaded(true));
-        
-        window.polkaBTC = await createPolkabtcAPI(constants.PARACHAIN_URL);
-        store.dispatch(isPolkaBtcLoaded(true));
+    async createAPIInstance(): Promise<void> {
+        try {
+            window.relayer = new StakedRelayerClient(constants.STAKED_RELAYER_URL);
+            store.dispatch(isStakedRelayerLoaded(true));
+
+            window.vaultClient = new VaultClient(constants.VAULT_CLIENT_URL);
+            store.dispatch(isVaultClientLoaded(true));
+
+            setTimeout(() => {
+                if (!window.polkaBTC) {
+                    toast.warn(
+                        "Unable to connect to the BTC-Parachain. " +
+                        "Please check your internet connection or try again later."
+                    );
+                }
+            }, 5000);
+            window.polkaBTC = await connectToParachain();
+            store.dispatch(isPolkaBtcLoaded(true));
+        } catch (error) {
+            if (!window.polkaBTC)
+                toast.warn(
+                    "Unable to connect to the BTC-Parachain. " +
+                    "Please check your internet connection or try again later."
+                );
+        }
+    }
+
+    async initDataOnAppBootstrap(): Promise<void> {
+        const polkaBtcLoaded = store.getState().general.polkaBtcLoaded;
+        if (!polkaBtcLoaded) return;
+
+        const totalPolkaSAT = await window.polkaBTC.treasury.totalPolkaBTC();
+        const totalLockedPLANCK = await window.polkaBTC.collateral.totalLockedDOT();
+        const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
+        const totalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
+        store.dispatch(setTotalIssuedAndTotalLockedAction(totalPolkaBTC, totalLockedDOT));
     }
 
     async componentDidMount(): Promise<void> {
         // Do not load data if showing static landing page only
         if (!constants.STATIC_PAGE_ONLY) {
             try {
-                await this.createAPIInstace();
+                await this.createAPIInstance();
+                this.initDataOnAppBootstrap();
+                keyring.loadAll({});
             } catch (e) {
                 toast.warn("Could not connect to the Parachain, please try again in a few seconds", {
                     autoClose: false,
@@ -113,17 +177,17 @@ export default class App extends Component<{}, AppState> {
         store.dispatch(changeAddressAction(address));
     }
 
-
     render() {
         return (
             <Provider store={store}>
                 <Router>
-                    <div className="main d-flex flex-column min-vh-100">
+                    <div className="main d-flex flex-column min-vh-100 polkabtc-background">
                         <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
                         {!constants.STATIC_PAGE_ONLY && (
                             <Topbar
                                 address={this.state.address}
                                 onAccountClick={() => this.setState({ showSelectAccount: true })}
+                                requestDOT={this.requestDotFromFaucet.bind(this)}
                             />
                         )}
                         <Switch>
@@ -143,21 +207,29 @@ export default class App extends Component<{}, AppState> {
                                 </Route>
                             )}
                             {!constants.STATIC_PAGE_ONLY && (
-                                <Route path="/vault">
-                                    <VaultPage {...this.state} />
+                                <Route path="/dashboard">
+                                    <DashboardPage />
                                 </Route>
                             )}
-                            <Route exact path="/">
-                                <LandingPage />
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/vault">
+                                    <VaultDashboardPage />
+                                </Route>
+                            )}
+                            <Route path="/user-guide">
+                                <UserGuidePage />
                             </Route>
                             <Route path="/about">
                                 <AboutPage />
+                            </Route>
+                            <Route exact path="/">
+                                <LandingPage />
                             </Route>
                         </Switch>
                         <Footer />
                     </div>
                 </Router>
-                <Modal show={this.state.showSelectAccount} size={"lg"}>
+                <Modal show={this.state.showSelectAccount} onHide={() => { this.setState({ showSelectAccount: false })}} size={"lg"}>
                     <AccountSelector
                         selected={this.state.address}
                         accounts={this.state.accounts}

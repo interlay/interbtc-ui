@@ -1,7 +1,9 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { StoreType } from "../../../common/types/util.types";
+import { StoreType } from "../../types/util.types";
 import { useSelector } from "react-redux";
-import { dateToShortString } from "../../../common/utils/utils";
+import { dateToShortString } from "../../utils/utils";
+import BN from "bn.js";
+import * as constants from "../../../constants";
 
 interface OracleInfo {
     source: string;
@@ -12,7 +14,7 @@ interface OracleInfo {
 
 type OracleTableProps = {
     planckLocked: string;
-}
+};
 
 export default function OracleTable(props: OracleTableProps): ReactElement {
     const [oracleStatus, setStatus] = useState("Online");
@@ -33,16 +35,22 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
                 },
             ]);
         };
+
         fetchData();
+        const interval = setInterval(() => {
+            fetchData();
+        }, constants.COMPONENT_UPDATE_MS);
+        return () => clearInterval(interval);
     }, [polkaBtcLoaded]);
 
     return (
-        <div className={"oracle-table " + (Number(props.planckLocked)<=0 ? "oracle-space" : "")}>
+        <div className={"oracle-table " + (new BN(props.planckLocked) <= new BN(0) ? "oracle-space" : "")}>
             <div className="row">
                 <div className="col-12">
                     <div className="header">
                         Oracle Status: &nbsp;
-                        <div className={oracleStatus === "Online" ? "green-circle" : "red-circle"}></div> &nbsp;{oracleStatus} 
+                        <div className={oracleStatus === "Online" ? "green-circle" : "red-circle"}></div> &nbsp;
+                        {oracleStatus}
                     </div>
                 </div>
             </div>

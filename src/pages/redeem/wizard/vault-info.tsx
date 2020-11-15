@@ -22,11 +22,11 @@ export default function VaultInfo(props: VaultInfoProps) {
                 <h5>Request being processed...</h5>
                 <p>
                     Your redeem request is being processed by Vault:
-                    <b>{shortAddress(vaultDotAddress)}</b>
+                    <b> {shortAddress(vaultDotAddress)}</b>
                 </p>
                 <p>
                     You will receive BTC from the following Bitcoin address:
-                    <b>{vaultBtcAddress}</b>
+                    <b> {vaultBtcAddress}</b>
                 </p>
                 <p>
                     We will inform you when your redeem request has been executed.
