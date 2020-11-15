@@ -1,4 +1,4 @@
-import { btcToSat } from "@interlay/polkabtc";
+import { btcToSat, stripHexPrefix } from "@interlay/polkabtc";
 import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 import React, { useState } from "react";
 import { FormGroup, ListGroup, ListGroupItem, Modal } from "react-bootstrap";
@@ -35,11 +35,11 @@ export default function RequestConfirmation() {
             }
             const amount = window.polkaBTC.api.createType("Balance", amountSAT) as PolkaBTC;
             // FIXME: use AccountId type from @polkadot/types/interfaces
-            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultAddress) as any;
+            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultAddress);
             const requestResult = await window.polkaBTC.issue.request(amount, vaultAccountId);
 
             // get the issue id from the request issue event
-            const id = requestResult.hash.toString();
+            const id = stripHexPrefix(requestResult.hash.toString());
             const issueRequest = await window.polkaBTC.issue.getRequestById(id);
 
             // update the issue status
