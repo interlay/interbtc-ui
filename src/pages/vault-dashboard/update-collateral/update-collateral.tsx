@@ -83,22 +83,19 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     }
 
     const onChange = async (obj: SyntheticEvent) => {
-        if (!vaultClientLoaded) return;
-
-        const targetObject = obj.target as HTMLInputElement;
-        const value = targetObject.value;
-        if (value === "" || !polkaBtcLoaded || Number(value) <=0 || isNaN(Number(value))) {
-            setCollateralUpdateAllowed(false); 
-            return;
-        }
-
-        const newCollateral = dotToPlanck(targetObject.value);
-        if (!newCollateral) {
-            throw new Error("Please enter an amount greater than 1 Planck");
-        }
-        setNewCollateral(newCollateral);
-
         try {
+            const value = (obj.target as HTMLInputElement).value;
+            if (value === "" || !polkaBtcLoaded || Number(value) <=0 || isNaN(Number(value)) || !vaultClientLoaded) {
+                setCollateralUpdateAllowed(false); 
+                return;
+            }
+
+            const newCollateral = dotToPlanck(value);
+            if (!newCollateral) {
+                throw new Error("Please enter an amount greater than 1 Planck");
+            }
+            setNewCollateral(newCollateral);
+            
             const accountId = await window.vaultClient.getAccountId();
             const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
             const requiredCollateral = (await window.polkaBTC.vaults.getRequiredCollateralForVault(vaultId)).toString();
