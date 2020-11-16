@@ -22,7 +22,12 @@ export default function IssuePage(): JSX.Element {
         dispatch(resetIssueWizardAction());
         setShowWizard(false);
     };
+
     const handleShow = () => setShowWizard(true);
+
+    const updateBalancePolkaBTC = (amountBTC: string) => {
+        setBalancePolkaBTC((Number(balancePolkaBTC) + Number(amountBTC)).toString());
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -65,7 +70,7 @@ export default function IssuePage(): JSX.Element {
                         </Col>
                     </Row>
 
-                    <IssueRequests handleShow={handleShow} />
+                    <IssueRequests handleShow={handleShow} updateBalancePolkaBTC={updateBalancePolkaBTC}/>
 
                     <Modal show={showWizard} onHide={handleClose} size={"lg"}>
                         <IssueWizard handleClose={handleClose} />

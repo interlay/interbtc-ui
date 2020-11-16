@@ -25,6 +25,7 @@ import BitcoinTransaction from "../../../common/components/bitcoin-links/transac
 
 type IssueRequestProps = {
     handleShow: () => void;
+    updateBalancePolkaBTC: (balance: string) => void;
 };
 
 export default function IssueRequests(props: IssueRequestProps) {
@@ -137,6 +138,7 @@ export default function IssueRequests(props: IssueRequestProps) {
 
             const completedReq = provenReq;
             completedReq.completed = true;
+            props.updateBalancePolkaBTC(provenReq.amountBTC);
             dispatch(updateIssueRequestAction(completedReq));
 
             toast.success("Succesfully executed issue request: " + request.id);
