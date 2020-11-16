@@ -1,11 +1,13 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import polkaBTCLogo from "../../assets/img/polkabtc/PolkaBTC_black.svg";
-import { Navbar, Nav, Image, Button } from "react-bootstrap";
+import { Navbar, Nav, Image, Button, DropdownButton, NavItem, NavDropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { StoreType } from "../types/util.types";
 import * as constants from "../../constants";
 import ButtonMaybePending from "./pending-button";
+import DropdownItem from "react-bootstrap/esm/DropdownItem";
+import { FaDiscord, FaGithub } from "react-icons/fa";
 // import { planckToDOT } from "@interlay/polkabtc";
 
 type TopbarProps = {
@@ -95,9 +97,15 @@ export default function Topbar(props: TopbarProps): ReactElement {
                     </Nav>
                 )}
 
+                <Nav>
+                    <DropdownButton as={NavItem} id="bug-report" title="Report Bug" variant="outline-polkabtc" size="sm" style={{ borderRadius: "1em"}}>
+                        <DropdownItem href="https://github.com/interlay/polkabtc-ui/issues" target="_blank"><FaGithub></FaGithub> GitHub</DropdownItem>
+                        <DropdownItem href="https://discord.gg/C8tjMbgVXh" target="_blank"><FaDiscord></FaDiscord> Discord</DropdownItem>
+                    </DropdownButton>
+                </Nav>
                 <Nav className="d-inline">
                     <ButtonMaybePending
-                        variant="outline-polkadot"
+                        variant="outline-dark"
                         className="mr-2"
                         size="sm"
                         style={{ borderRadius: "1em" }}
@@ -106,6 +114,8 @@ export default function Topbar(props: TopbarProps): ReactElement {
                     >
                         Request DOT
                     </ButtonMaybePending>
+                </Nav>
+                <Nav className="d-inline">
                     {props.address !== undefined && (
                         <Button
                             variant="outline-polkadot"
