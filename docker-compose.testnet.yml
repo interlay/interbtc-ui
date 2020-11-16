@@ -48,7 +48,7 @@ services:
             - |
                 echo "Sleeping..."
                 sleep 5
-                vault --keyring=charlie --http-addr '[::0]:3031' --polka-btc-url 'ws://0.0.0.0:9944'
+                vault --keyring=charlie --network testnet --auto_register_with_collateral 100000000 --http-addr '[::0]:3031' --polka-btc-url 'ws://0.0.0.0:9944'
         environment:
             <<: *client-env
         network_mode: "host"
