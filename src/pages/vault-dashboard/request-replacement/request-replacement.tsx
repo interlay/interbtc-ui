@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { addReplaceRequestsAction } from "../../../common/actions/vault.actions";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import { btcToSat } from "@interlay/polkabtc";
+import { btcToSat, satToBTC } from "@interlay/polkabtc";
 import { requestsToVaultReplaceRequests } from "../../../common/utils/utils";
 
 type RequestReplacementForm = {
@@ -28,16 +28,22 @@ export default function RequestReplacementModal(props: RequestReplacementProps) 
     const onSubmit = handleSubmit(async ({ amount }) => {
         setRequestPending(true);
         try {
-            const amountAsSatoshis = btcToSat(amount.toString());
-            if (amountAsSatoshis === undefined) {
+            const amountAsSatoshisString = btcToSat(amount.toString());
+            if (amountAsSatoshisString === undefined) {
                 throw new Error("Amount to convert is less than 1 satoshi.");
             }
-            await window.vaultClient.requestReplace(amountAsSatoshis, "100");
+            const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
+            const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountAsSatoshisString);
+            if (amountAsSatoshi.lte(dustValueAsSatoshi)) {
+                const dustValue = satToBTC(dustValueAsSatoshi.toString());
+                throw new Error(`Please enter an amount greater than Bitcoin dust (${dustValue} BTC)`);
+            }
+            await window.vaultClient.requestReplace(amountAsSatoshisString, "100");
 
             const accountId = await window.vaultClient.getAccountId();
             const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
             const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
-                if (!requests) return;
+            if (!requests) return;
 
             dispatch(addReplaceRequestsAction(requestsToVaultReplaceRequests(requests)));
             toast.success("Replacment request is submitted");
