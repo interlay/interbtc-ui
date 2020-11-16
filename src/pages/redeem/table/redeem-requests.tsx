@@ -76,7 +76,7 @@ export default function RedeemRequests() {
                 if (redeemRequests?.length !== redeemRequestMap.size) {
                     updateStore = true;
                 }
-                
+
                 for (const [key, value] of redeemRequestMap) {
                     allRequests.push(parachainToUIRedeemRequest(key, value));
                     if (!redeemRequests) {
@@ -92,14 +92,17 @@ export default function RedeemRequests() {
                 // get btc data for each redeem request
                 await Promise.all(allRequests.map(async request => {
                     try {
-                        request.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id); 
+                        request.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id);
+                        if (request.btcTxId !== "") {
+                            updateStore = true;
+                        }
                     } catch (err) {
-                        console.log("Issue Id: " + request.id + " " + err);
+                        console.log("Redeem Id: " + request.id + " " + err);
                     }
                 }));
                 await Promise.all(allRequests.map(async request => {
                     try {
-                        if (request.btcTxId){
+                        if (request.btcTxId) {
                             request.confirmations = (await window.polkaBTC.btcCore.getTransactionStatus(request.btcTxId)).confirmations;
                         }
                     } catch (err) {
