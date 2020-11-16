@@ -51,7 +51,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                 const depositAmount = newCollateralBN.sub(currentCollateralBN);
                 await window.vaultClient.lockAdditionalCollateral(depositAmount.toString());
             } else {
-                props.onClose();
+                closeModal();
                 return;
             }
 
@@ -70,28 +70,32 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
             dispatch(updateCollateralizationAction(collateralization));
 
             toast.success("Successfully updated collateral");
-            props.onClose();
+            closeModal();
         } catch (error) {
             toast.error(error.toString());
         }
         setUpdatePending(false);
     });
 
+    const closeModal = () => {
+        setNewCollaterlization("");
+        props.onClose();
+    }
+
     const onChange = async (obj: SyntheticEvent) => {
-        if (!vaultClientLoaded) return;
-
-        const targetObject = obj.target as HTMLInputElement;
-        if (targetObject.value === "" || !polkaBtcLoaded) {
-            return;
-        }
-
-        const newCollateral = dotToPlanck(targetObject.value);
-        if (!newCollateral) {
-            throw new Error("Please enter an amount greater than 1 Planck");
-        }
-        setNewCollateral(newCollateral);
-
         try {
+            const value = (obj.target as HTMLInputElement).value;
+            if (value === "" || !polkaBtcLoaded || Number(value) <=0 || isNaN(Number(value)) || !vaultClientLoaded) {
+                setCollateralUpdateAllowed(false); 
+                return;
+            }
+
+            const newCollateral = dotToPlanck(value);
+            if (!newCollateral) {
+                throw new Error("Please enter an amount greater than 1 Planck");
+            }
+            setNewCollateral(newCollateral);
+            
             const accountId = await window.vaultClient.getAccountId();
             const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
             const requiredCollateral = (await window.polkaBTC.vaults.getRequiredCollateralForVault(vaultId)).toString();
@@ -128,7 +132,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     };
 
     return (
-        <Modal show={props.show} onHide={props.onClose}>
+        <Modal show={props.show} onHide={closeModal}>
             <form onSubmit={onSubmit}>
                 <Modal.Header closeButton>
                     <Modal.Title>Update Collateral</Modal.Title>
@@ -150,6 +154,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                                     aria-describedby="basic-addon2"
                                     ref={register({
                                         required: true,
+                                        min: 0
                                     })}
                                     onChange={onChange}
                                 ></input>
@@ -164,17 +169,20 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                                     {errors.collateral.type === "required"
                                         ? "Collateral is required"
                                         : errors.collateral.message}
+                                    {errors.collateral.type === "min"
+                                        ? "Collateral must be higher than 0"
+                                        : errors.collateral.message}
                                 </div>
                             )}
                         </div>
                         <div className="col-12">
-                            New Collateralization: {newCollateralization}
+                            New Collateralization: {Number(newCollateralization) > 1000 ? "more than 1000" : newCollateralization}
                             {newCollateralization !== "∞" ? "%" : ""}
                         </div>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={props.onClose}>
+                    <Button variant="secondary" onClick={closeModal}>
                         Cancel
                     </Button>
                     <ButtonMaybePending
