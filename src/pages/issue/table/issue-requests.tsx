@@ -54,14 +54,14 @@ export default function IssueRequests(props: IssueRequestProps) {
 
                 await Promise.all(allRequests.map(async request => {
                     try {
-                        request.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id); 
+                        request.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id);
                     } catch (err) {
                         console.log("Issue Id: " + request.id + " " + err);
                     }
                 }));
                 await Promise.all(allRequests.map(async request => {
                     try {
-                        if (request.btcTxId){
+                        if (request.btcTxId) {
                             request.confirmations = (await window.polkaBTC.btcCore.getTransactionStatus(request.btcTxId)).confirmations;
                         }
                     } catch (err) {
@@ -89,23 +89,27 @@ export default function IssueRequests(props: IssueRequestProps) {
     const execute = async (request: IssueRequest) => {
         if (!polkaBtcLoaded) return;
         setExecutePending([...executePending, request.id]);
+
+        let [transactionBlockHeight, merkleProof, rawTx] = [request.transactionBlockHeight, request.merkleProof, request.rawTransaction];
+        let transactionData = false;
+        let txId = request.btcTxId;
         try {
             // get proof data from bitcoin
-            let txId: string;
-            if (request.btcTxId === "") {
+            if (txId === "") {
                 txId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id);
-            } else {
-                txId = request.btcTxId;
             }
-            const [transactionBlockHeight, merkleProof, rawTx] = await Promise.all([
+            [transactionBlockHeight, merkleProof, rawTx] = await Promise.all([
                 window.polkaBTC.btcCore.getTransactionBlockHeight(txId),
                 window.polkaBTC.btcCore.getMerkleProof(txId),
                 window.polkaBTC.btcCore.getRawTransaction(txId),
             ]);
+            transactionData = true;
+        } catch (err) {
+            toast.error("Transaction not yet included in Bitcoin.");
+        }
 
-            if (!transactionBlockHeight) {
-                throw new Error("Transaction not yet included in Bitcoin.");
-            }
+        if (!transactionData) return;
+        try {
             const provenReq = request;
             provenReq.transactionBlockHeight = transactionBlockHeight;
             provenReq.merkleProof = merkleProof;
