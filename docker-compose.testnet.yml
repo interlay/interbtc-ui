@@ -7,50 +7,46 @@ services:
             - --rpc-external
             - --ws-external
             - --dev
-        network_mode: "host"
         ports:
             - "9933:9933"
             - "9944:9944"
     staked-relayer:
-        image: "registry.gitlab.com/interlay/polkabtc-clients:staked-relayer-dev"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:dev"
         command:
             - /bin/sh
             - -c
             - |
                 echo "Sleeping..."
-                sleep 5
-                staked-relayer --keyring=eve --http-addr '[::0]:3030' --polka-btc-url 'ws://0.0.0.0:9944'
+                sleep 2
+                staked-relayer --keyring=eve --http-addr '[::0]:3030' --polka-btc-url 'ws://polkabtc:9944'
         environment: &client-env
-            BITCOIN_RPC_URL: http://0.0.0.0:18332
+            BITCOIN_RPC_URL: http://172.17.0.1:18332
             BITCOIN_RPC_USER: rpcuser
             BITCOIN_RPC_PASS: rpcpassword
             RUST_LOG: info
-        network_mode: "host"
         ports:
             - "3030:3030"
     oracle:
-        image: "registry.gitlab.com/interlay/polkabtc-clients:oracle-dev"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:dev"
         command:
             - /bin/sh
             - -c
             - |
                 echo "Sleeping..."
-                sleep 5
-                oracle --keyring=bob --polka-btc-url 'ws://0.0.0.0:9944'
+                sleep 2
+                oracle --keyring=bob --polka-btc-url 'ws://polkabtc:9944'
         environment:
             RUST_LOG: info
-        network_mode: "host"
     vault:
-        image: "registry.gitlab.com/interlay/polkabtc-clients:vault-dev"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:dev"
         command:
             - /bin/sh
             - -c
             - |
                 echo "Sleeping..."
-                sleep 5
-                vault --keyring=charlie --network testnet --auto-register-with-collateral 100000000 --http-addr '[::0]:3031' --polka-btc-url 'ws://0.0.0.0:9944'
+                sleep 2
+                vault --keyring=charlie --network=testnet --auto-register-with-collateral 100000000 --http-addr '[::0]:3031' --polka-btc-url 'ws://polkabtc:9944'
         environment:
             <<: *client-env
-        network_mode: "host"
         ports:
             - "3031:3031"
