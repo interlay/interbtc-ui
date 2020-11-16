@@ -86,7 +86,9 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
         if (!vaultClientLoaded) return;
 
         const targetObject = obj.target as HTMLInputElement;
-        if (targetObject.value === "" || !polkaBtcLoaded || Number(targetObject.value) <=0 ) {
+        const value = targetObject.value;
+        if (value === "" || !polkaBtcLoaded || Number(value) <=0 || isNaN(Number(value))) {
+            setCollateralUpdateAllowed(false); 
             return;
         }
 
@@ -148,7 +150,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                             <div className="input-group">
                                 <input
                                     name="collateral"
-                                    type="number"
+                                    type="float"
                                     className={
                                         "form-control custom-input" + (errors.collateral ? " error-borders" : "")
                                     }
