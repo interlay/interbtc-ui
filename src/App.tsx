@@ -66,7 +66,7 @@ export default class App extends Component<{}, AppState> {
             let api = await connectToParachain();
             api.setAccount(keyring.createFromUri(constants.FAUCET_ADDRESS_SEED, undefined, "sr25519"));
             await api.collateral.transferDOT(address, constants.FAUCET_AMOUNT);
-            toast.success("Successfully transferred collateral.");
+            toast.success("You have received " + planckToDOT(constants.FAUCET_AMOUNT) + " DOT.");
         } catch (error) {
             toast.error(error);
         }

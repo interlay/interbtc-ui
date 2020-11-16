@@ -12,7 +12,7 @@ const getStaticPage = () => {
 
 export const STATIC_PAGE_ONLY = getStaticPage();
 
-export const FAUCET_AMOUNT = 1000;
+export const FAUCET_AMOUNT = "100000000000"; // 10 DOT in planck
 export const FAUCET_ADDRESS_SEED = "//Alice";
 
 // timeout in milliseconds for setInterval
