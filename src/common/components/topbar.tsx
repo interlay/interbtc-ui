@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import polkaBTCLogo from "../../assets/img/polkabtc/PolkaBTC_black.svg";
-import { Navbar, Nav, Image, Button, DropdownButton, NavItem, NavDropdown } from "react-bootstrap";
+import { Navbar, Nav, Image, Button, DropdownButton, NavItem } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { StoreType } from "../types/util.types";
