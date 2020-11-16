@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../types/util.types";
 import * as constants from "../../constants";
 import ButtonMaybePending from "./pending-button";
+// import { planckToDOT } from "@interlay/polkabtc";
 
 type TopbarProps = {
     address?: string;
@@ -21,6 +22,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
     const [isLoading, setIsLoading] = useState(true);
     const [isRequestPending, setIsRequestPending] = useState(false);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+    // const dispatch = useDispatch();
 
     useEffect(() => {
         if (!relayerLoaded) return;
@@ -36,9 +38,15 @@ export default function Topbar(props: TopbarProps): ReactElement {
     }, [relayerLoaded, vaultClientLoaded]);
 
     const requestDOT = async () => {
+        if (!polkaBtcLoaded) return;
         setIsRequestPending(true);
         // this call should not throw
         await props.requestDOT();
+        // FIXME: add the users balance to the redux state and update here
+        // const accountId = window.polkaBTC.api.createType("AccountId", address);
+        // const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
+        // const balanceDOT = planckToDOT(balancePLANCK.toString());
+        // dispatch(...)
         setIsRequestPending(false);
     };
 
