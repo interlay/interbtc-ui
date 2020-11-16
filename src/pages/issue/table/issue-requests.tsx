@@ -189,6 +189,7 @@ export default function IssueRequests(props: IssueRequestProps) {
 
     return (
         <div>
+            <h5>Pending Issue Request</h5>
             <Table hover responsive size={"md"}>
                 <thead>
                     <tr>
