@@ -17,10 +17,10 @@ services:
             - -c
             - |
                 echo "Sleeping..."
-                sleep 5
+                sleep 2
                 staked-relayer --keyring=eve --http-addr '[::0]:3030' --polka-btc-url 'ws://polkabtc:9944'
         environment: &client-env
-            BITCOIN_RPC_URL: http://host.docker.internal:18332
+            BITCOIN_RPC_URL: http://172.17.0.1:18332
             BITCOIN_RPC_USER: rpcuser
             BITCOIN_RPC_PASS: rpcpassword
             RUST_LOG: info
@@ -33,7 +33,7 @@ services:
             - -c
             - |
                 echo "Sleeping..."
-                sleep 5
+                sleep 2
                 oracle --keyring=bob --polka-btc-url 'ws://polkabtc:9944'
         environment:
             RUST_LOG: info
@@ -44,7 +44,7 @@ services:
             - -c
             - |
                 echo "Sleeping..."
-                sleep 5
+                sleep 2
                 vault --keyring=charlie --network=testnet --auto-register-with-collateral 100000000 --http-addr '[::0]:3031' --polka-btc-url 'ws://polkabtc:9944'
         environment:
             <<: *client-env
