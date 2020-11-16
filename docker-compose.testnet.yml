@@ -38,14 +38,14 @@ services:
         environment:
             RUST_LOG: info
     vault:
-        image: "registry.gitlab.com/interlay/polkabtc-clients:vault-dev"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:dev"
         command:
             - /bin/sh
             - -c
             - |
                 echo "Sleeping..."
                 sleep 5
-                vault --keyring=charlie --auto-register-with-collateral 100000000 --http-addr '[::0]:3031' --polka-btc-url 'ws://polkabtc:9944'
+                vault --keyring=charlie --network=testnet --auto-register-with-collateral 100000000 --http-addr '[::0]:3031' --polka-btc-url 'ws://0.0.0.0:9944'
         environment:
             <<: *client-env
         ports:
