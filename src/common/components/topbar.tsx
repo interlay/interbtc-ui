@@ -118,8 +118,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                 )}
 
                 <Nav className="d-inline">
-                    
-                    <DropdownButton id="bug-report" title="Feedback" variant="outline-polkadot" size="sm" style={{ borderRadius: "1em" }} menuAlign="right">
+                    <DropdownButton  id="bug-report" title="Feedback" variant="outline-polkadot" size="sm" menuAlign="right" className="mr-2">
                         <DropdownItem href="https://docs.google.com/forms/d/1Y0kfABO8J_7917yPGK-cEByj_ixiRPCb1lVZ0GzUzW0/edit?ts=5fb29817&gxids=7757" target="_blank">
                             <FaEdit></FaEdit> Feedback
                         </DropdownItem>
@@ -136,7 +135,6 @@ export default function Topbar(props: TopbarProps): ReactElement {
                                 variant="outline-polkadot"
                                 className="mr-2"
                                 size="sm"
-                                style={{ borderRadius: "1em" }}
                                 isPending={isRequestPending}
                                 onClick={requestDOT}
                             >
