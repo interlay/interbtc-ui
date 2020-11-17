@@ -39,9 +39,14 @@ export default function EnterPolkaBTCAmount() {
                 throw new Error("Invalid PolkaBTC amount input");
             }
             dispatch(changeAmountPolkaBTCAction(amountPolkaBTC));
-            const amount = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
-            const vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amount);
+            const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
+            const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
+            if (amountAsSatoshi.lte(dustValueAsSatoshi)) {
+                const dustValue = satToBTC(dustValueAsSatoshi.toString());
+                throw new Error(`Please enter an amount greater than Bitcoin dust (${dustValue} BTC)`);
+            }
 
+            const vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountAsSatoshi);
             toast.success("Found vault: " + vaultId.toString());
 
             // get the vault's data
@@ -69,12 +74,13 @@ export default function EnterPolkaBTCAmount() {
                     name="amountPolkaBTC"
                     type="number"
                     className={"custom-input" + (errors.amountPolkaBTC ? " error-borders" : "")}
-                    ref={register(
-                        {
-                            required: true,
-                            validate: value => value < Number(balancePolkaBTC)
-                        }
-                    )}
+                    ref={register({
+                        required: true,
+                        max: {
+                            value: balancePolkaBTC,
+                            message: "Please enter an amount smaller than your current balance: " + balancePolkaBTC,
+                        },
+                    })}
                 />
                 {errors.amountPolkaBTC && (
                     <div className="input-error">

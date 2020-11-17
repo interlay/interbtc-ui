@@ -154,7 +154,7 @@ export default function IssueRequests(props: IssueRequestProps) {
     };
 
     const handleCompleted = (request: IssueRequest) => {
-        if (request.confirmations < requiredBtcConfirmations) {
+        if (request.confirmations < requiredBtcConfirmations || request.confirmations === 0) {
             return <FaHourglass></FaHourglass>;
         } else if (request.completed) {
             return <FaCheck></FaCheck>;
