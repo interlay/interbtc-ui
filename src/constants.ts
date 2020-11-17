@@ -57,6 +57,9 @@ export const BTC_TEST_EXPLORER_ADDRESS_API = "https://blockstream.info/testnet/a
 export const BTC_EXPLORER_TRANSACTION_API = "https://blockstream.info/tx/";
 export const BTC_TEST_EXPLORER_TRANSACTION_API = "https://blockstream.info/testnet/tx/";
 
+export const FEEDBACK_URL = "https://forms.gle/2eKFnq4j1fkBgejW7";
+export const FEEDBACK_MODAL_DISPLAY_DELAY_MS = 5000;
+
 //######################################
 // STAKED RELAYER
 //######################################
