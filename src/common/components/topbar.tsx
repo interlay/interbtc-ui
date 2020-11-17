@@ -1,14 +1,16 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import polkaBTCLogo from "../../assets/img/polkabtc/PolkaBTC_black.svg";
-import { Navbar, Nav, Image, Button, DropdownButton, NavItem } from "react-bootstrap";
+import { Navbar, Nav, Image, Button, DropdownButton, Dropdown, NavItem } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../types/util.types";
 import * as constants from "../../constants";
 import ButtonMaybePending from "./pending-button";
 import DropdownItem from "react-bootstrap/esm/DropdownItem";
-import { FaDiscord, FaGithub } from "react-icons/fa";
-// import { planckToDOT } from "@interlay/polkabtc";
+import { FaDiscord, FaGithub, FaEdit } from "react-icons/fa";
+import { planckToDOT, satToBTC } from "@interlay/polkabtc";
+import { updateBalancePolkaBTCAction, updateBalanceDOTAction } from "../actions/general.actions";
+
 
 type TopbarProps = {
     address?: string;
@@ -19,12 +21,13 @@ type TopbarProps = {
 export default function Topbar(props: TopbarProps): ReactElement {
     const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
     const vaultClientLoaded = useSelector((state: StoreType) => state.general.vaultClientLoaded);
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+    const address = useSelector((state: StoreType) => state.general.address);
     const [isRelayerConnected, setIsRelayerConnected] = useState(false);
     const [isVaultConnected, setIsVaultConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [isRequestPending, setIsRequestPending] = useState(false);
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (!relayerLoaded) return;
@@ -39,16 +42,33 @@ export default function Topbar(props: TopbarProps): ReactElement {
         checkIsConnected();
     }, [relayerLoaded, vaultClientLoaded]);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!polkaBtcLoaded || address === "") return;
+
+            const accountId = window.polkaBTC.api.createType("AccountId", address);
+            const balancePolkaSAT = await window.polkaBTC.treasury.balancePolkaBTC(accountId);
+            const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
+            const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
+            const balanceDOT = planckToDOT(balancePLANCK.toString());
+            dispatch(updateBalancePolkaBTCAction(balancePolkaBTC));
+            dispatch(updateBalanceDOTAction(balanceDOT));
+        };
+        fetchData();
+    }, [address, polkaBtcLoaded, dispatch]);
+
     const requestDOT = async () => {
         if (!polkaBtcLoaded) return;
         setIsRequestPending(true);
-        // this call should not throw
-        await props.requestDOT();
-        // FIXME: add the users balance to the redux state and update here
-        // const accountId = window.polkaBTC.api.createType("AccountId", address);
-        // const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
-        // const balanceDOT = planckToDOT(balancePLANCK.toString());
-        // dispatch(...)
+        try {
+            await props.requestDOT();
+            const accountId = window.polkaBTC.api.createType("AccountId", address);
+            const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
+            const balanceDOT = planckToDOT(balancePLANCK.toString());
+            dispatch(updateBalanceDOTAction(balanceDOT));
+        } catch(error) {
+            console.log(error);
+        }     
         setIsRequestPending(false);
     };
 
@@ -98,7 +118,12 @@ export default function Topbar(props: TopbarProps): ReactElement {
                 )}
 
                 <Nav>
-                    <DropdownButton as={NavItem} id="bug-report" title="Report Bug" variant="outline-polkabtc" size="sm" style={{ borderRadius: "1em"}}>
+                    <DropdownButton as={NavItem} id="bug-report" title="Feedback" variant="outline-polkabtc" size="sm" style={{ borderRadius: "1em"}}>
+                        <DropdownItem href="https://docs.google.com/forms/d/1Y0kfABO8J_7917yPGK-cEByj_ixiRPCb1lVZ0GzUzW0/edit?ts=5fb29817&gxids=7757" target="_blank">
+                            <FaEdit></FaEdit> Feedback
+                        </DropdownItem>    
+                        <Dropdown.Divider/>
+                        <div className="divider-text">Report bug:</div>
                         <DropdownItem href="https://github.com/interlay/polkabtc-ui/issues" target="_blank"><FaGithub></FaGithub> GitHub</DropdownItem>
                         <DropdownItem href="https://discord.gg/C8tjMbgVXh" target="_blank"><FaDiscord></FaDiscord> Discord</DropdownItem>
                     </DropdownButton>
