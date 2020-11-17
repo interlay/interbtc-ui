@@ -141,7 +141,7 @@ export default function RedeemRequests() {
                     <tr>
                         <th>Redeem ID</th>
                         <th>Amount</th>
-                        <th>Block Number</th>
+                        <th>Parachain Block</th>
                         <th>Output BTC Address</th>
                         <th>BTC Transaction</th>
                         <th>Confirmations</th>

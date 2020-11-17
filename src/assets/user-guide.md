@@ -38,6 +38,14 @@ python3 run_electrum --testnet
 
 Please note: manual transaction signing via hardware wallets is WIP and will be released before Beta testnet (Ledger). 
 
+##### Supported Bitcoin Address Formats
+We currently support the following **testnet** BTC address formats:
+- P2WPKH
+- P2WSH
+
+**in bech32 format**. 
+
+Support for legacy address formats will be added later. 
 
 ### Getting Testnet Bitcoin
 
@@ -52,7 +60,7 @@ Make sure you have at least some tBTC in your wallet. You can get them from a fa
 *   [https://tbtc.bitaps.com/](https://tbtc.bitaps.com/) 
 
 
-### Polkadot Tesnet Wallet (Polkadot-js Browser Extension)
+### Polkadot Testnet Wallet (Polkadot-js Browser Extension)
 
 You will need the Polkadot-js browser extension to test PolkaBTC. 
 
@@ -140,7 +148,7 @@ To redeem PolkaBTC, follow the “Redeem PolkaBTC” button on the Redeem page. 
     1. A Vault will be assigned to you for this request. 
     2. The maximum amount of PolkaBTC that you can redeem at in a single request depends on the maximum amount of BTC a Vault has locked (high-volume Redeem requests, executed with multiple Vaults simultaneously, will be added as a feature before mainnet launch).
 2. Enter your Bitcoin address.
-    3. Supported address formats: P2WPKH, P2WSH, P2PKH, P2SH. Segwit addresses can be entered in Bech32 format. 
+    3. Supported address formats: P2WPKH, P2WSH **currently in bech32 format only!**. 
 3. Review and confirm the Redeem request.
 4. The Redeem request is now being processed by the Vault. Updates will appear in the table on the Redeem page. 
 

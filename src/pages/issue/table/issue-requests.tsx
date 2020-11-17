@@ -198,7 +198,7 @@ export default function IssueRequests(props: IssueRequestProps) {
                     <tr>
                         <th>Issue ID</th>
                         <th>Amount</th>
-                        <th>Creation Block</th>
+                        <th>Parachain Block</th>
                         <th>Vault BTC Address</th>
                         <th>BTC Transaction</th>
                         <th>Confirmations</th>
