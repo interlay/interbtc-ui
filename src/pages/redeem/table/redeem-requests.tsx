@@ -14,7 +14,6 @@ import {
 import { toast } from "react-toastify";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
 import BitcoinAddress from "../../../common/components/bitcoin-links/address";
-import { stripHexPrefix } from "@interlay/polkabtc";
 
 export default function RedeemRequests() {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -134,41 +133,43 @@ export default function RedeemRequests() {
     }, [polkaBtcLoaded, transactionListeners, isRedeemExpirationSubscribed, dispatch, address, redeemExpired]);
 
     return (
-        <div>
-            <h5>Pending Redeem Request</h5>
-            <Table hover responsive size={"md"}>
-                <thead>
-                    <tr>
-                        <th>Redeem ID</th>
-                        <th>Amount</th>
-                        <th>Parachain Block</th>
-                        <th>Output BTC Address</th>
-                        <th>BTC Transaction</th>
-                        <th>Confirmations</th>
-                        <th>Completed</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {redeemRequests &&
-                        redeemRequests.map((request) => {
-                            return (
-                                <tr key={request.id}>
-                                    <td>{shortAddress(request.id)}</td>
-                                    <td>{request.amountPolkaBTC} BTC</td>
-                                    <td>{request.creation}</td>
-                                    <td>
-                                        <BitcoinAddress btcAddress={request.btcAddress} shorten />
-                                    </td>
-                                    <td>
-                                        <BitcoinTransaction txId={request.btcTxId} shorten />
-                                    </td>
-                                    <td>{request.confirmations}</td>
-                                    <td>{handleCompleted(request)}</td>
-                                </tr>
-                            );
-                        })}
-                </tbody>
-            </Table>
+        <div>{redeemRequests && redeemRequests.length > 0 &&
+            <React.Fragment>
+                <h5>Pending Redeem Request</h5>
+                <Table hover responsive size={"md"}>
+                    <thead>
+                        <tr>
+                            <th>Redeem ID</th>
+                            <th>Amount</th>
+                            <th>Parachain Block</th>
+                            <th>Output BTC Address</th>
+                            <th>BTC Transaction</th>
+                            <th>Confirmations</th>
+                            <th>Completed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {redeemRequests &&
+                            redeemRequests.map((request) => {
+                                return (
+                                    <tr key={request.id}>
+                                        <td>{shortAddress(request.id)}</td>
+                                        <td>{request.amountPolkaBTC} BTC</td>
+                                        <td>{request.creation}</td>
+                                        <td>
+                                            <BitcoinAddress btcAddress={request.btcAddress} shorten />
+                                        </td>
+                                        <td>
+                                            <BitcoinTransaction txId={request.btcTxId} shorten />
+                                        </td>
+                                        <td>{request.confirmations}</td>
+                                        <td>{handleCompleted(request)}</td>
+                                    </tr>
+                                );
+                            })}
+                    </tbody>
+                </Table>
+            </React.Fragment>}
         </div>
     );
 }
