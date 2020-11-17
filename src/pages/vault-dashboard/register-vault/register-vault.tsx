@@ -105,7 +105,7 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
                                     required: true,
                                     pattern: {
                                         value: BTC_ADDRESS_REGEX,
-                                        message: "Please enter valid BTC address",
+                                        message: "Please enter a valid BTC address (Supported formats: p2pkh, p2sh, p2wpkh, p2wsh. Bech32 currently NOT supported).",
                                     },
                                 })}
                             ></input>
