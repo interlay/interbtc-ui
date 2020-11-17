@@ -376,3 +376,18 @@ a:not([href]):not([tabindex]):focus {
   color: $yellow-color;
   font-weight: 600;
 }
+
+#basic-navbar-nav{
+  .navbar-nav{
+    .dropdown.nav-item {
+      border: 1px solid #343a40;
+      max-height: 31px;
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.divider-text{
+  width: 100%;
+  padding: 0.25rem 1.5rem
+}
