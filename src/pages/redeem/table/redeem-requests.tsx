@@ -70,32 +70,16 @@ export default function RedeemRequests() {
                 const accountId = window.polkaBTC.api.createType("AccountId", address);
                 // get all redeem request from parachain 
                 const redeemRequestMap = await window.polkaBTC.redeem.mapForUser(accountId);
-                let updateStore = false;
                 let allRequests = [];
-
-                if (redeemRequests?.length !== redeemRequestMap.size) {
-                    updateStore = true;
-                }
 
                 for (const [key, value] of redeemRequestMap) {
                     allRequests.push(parachainToUIRedeemRequest(key, value));
-                    if (!redeemRequests) {
-                        updateStore = true;
-                        continue;
-                    }
-                    const inStore = redeemRequests.filter((req) => req.id === stripHexPrefix(key.toString())).length;
-                    if (!inStore) {
-                        updateStore = true;
-                    }
                 }
 
                 // get btc data for each redeem request
                 await Promise.all(allRequests.map(async request => {
                     try {
                         request.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id);
-                        if (request.btcTxId !== "") {
-                            updateStore = true;
-                        }
                     } catch (err) {
                         console.log("Redeem Id: " + request.id + " " + err);
                     }
@@ -110,9 +94,7 @@ export default function RedeemRequests() {
                     }
                 }));
 
-                if (updateStore) {
-                    dispatch(updateAllRedeemRequestsAction(allRequests));
-                }
+                dispatch(updateAllRedeemRequestsAction(allRequests));
 
                 if (!allRequests) return;
 
@@ -135,7 +117,7 @@ export default function RedeemRequests() {
         };
         fetchData();
     }, [polkaBtcLoaded, transactionListeners, isRedeemExpirationSubscribed,
-        dispatch, address, redeemExpired, redeemRequests]);
+        dispatch, address]);
 
     return (
         <div>
