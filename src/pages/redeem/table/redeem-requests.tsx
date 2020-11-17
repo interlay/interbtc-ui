@@ -9,7 +9,7 @@ import { startTransactionWatcherRedeem } from "../../../common/utils/transaction
 import {
     updateAllRedeemRequestsAction,
     cancelRedeemRequestAction,
-    redeemExpiredAction
+    redeemExpiredAction,
 } from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
@@ -38,29 +38,38 @@ export default function RedeemRequests() {
             toast.error("Error canceling redeem request.");
         }
         setCancelPending(cancelPending.splice(cancelPending.indexOf(redeemId), 1));
-    }
+    };
 
-    const redeemExpired = useCallback((redeemId: string) => {
-        if (!redeemRequests || !redeemRequests.length) return;
-        const requestToBeUpdated = redeemRequests.filter(request => request.id === redeemId)[0];
+    const redeemExpired = useCallback(
+        (redeemId: string) => {
+            if (!redeemRequests || !redeemRequests.length) return;
+            const requestToBeUpdated = redeemRequests.filter((request) => request.id === redeemId)[0];
 
-        if (requestToBeUpdated && !requestToBeUpdated.isExpired) {
-            dispatch(redeemExpiredAction({ ...requestToBeUpdated, isExpired: true }));
-        }
-    }, [redeemRequests, dispatch])
+            if (requestToBeUpdated && !requestToBeUpdated.isExpired) {
+                dispatch(redeemExpiredAction({ ...requestToBeUpdated, isExpired: true }));
+            }
+        },
+        [redeemRequests, dispatch]
+    );
 
     const handleCompleted = (request: RedeemRequest) => {
         if (!request.completed && request.isExpired) {
-            return <Button
-                variant="outline-dark"
-                onClick={() => { cancelRedeemRequest(request.id) }}
-            >Cancel</Button>;
+            return (
+                <Button
+                    variant="outline-dark"
+                    onClick={() => {
+                        cancelRedeemRequest(request.id);
+                    }}
+                >
+                    Cancel
+                </Button>
+            );
         } else if (request.completed) {
             return <FaCheck></FaCheck>;
         } else {
             return <FaHourglass></FaHourglass>;
         }
-    }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -68,51 +77,39 @@ export default function RedeemRequests() {
 
             try {
                 const accountId = window.polkaBTC.api.createType("AccountId", address);
-                // get all redeem request from parachain 
+                // get all redeem request from parachain
                 const redeemRequestMap = await window.polkaBTC.redeem.mapForUser(accountId);
-                let updateStore = false;
-                let allRequests = [];
-
-                if (redeemRequests?.length !== redeemRequestMap.size) {
-                    updateStore = true;
-                }
+                const allRequests = [];
 
                 for (const [key, value] of redeemRequestMap) {
                     allRequests.push(parachainToUIRedeemRequest(key, value));
-                    if (!redeemRequests) {
-                        updateStore = true;
-                        continue;
-                    }
-                    const inStore = redeemRequests.filter((req) => req.id === stripHexPrefix(key.toString())).length;
-                    if (!inStore) {
-                        updateStore = true;
-                    }
                 }
 
                 // get btc data for each redeem request
-                await Promise.all(allRequests.map(async request => {
-                    try {
-                        request.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id);
-                        if (request.btcTxId !== "") {
-                            updateStore = true;
+                await Promise.all(
+                    allRequests.map(async (request) => {
+                        try {
+                            request.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id);
+                        } catch (err) {
+                            console.log("Redeem Id: " + request.id + " " + err);
                         }
-                    } catch (err) {
-                        console.log("Redeem Id: " + request.id + " " + err);
-                    }
-                }));
-                await Promise.all(allRequests.map(async request => {
-                    try {
-                        if (request.btcTxId) {
-                            request.confirmations = (await window.polkaBTC.btcCore.getTransactionStatus(request.btcTxId)).confirmations;
+                    })
+                );
+                await Promise.all(
+                    allRequests.map(async (request) => {
+                        try {
+                            if (request.btcTxId) {
+                                request.confirmations = (
+                                    await window.polkaBTC.btcCore.getTransactionStatus(request.btcTxId)
+                                ).confirmations;
+                            }
+                        } catch (err) {
+                            console.log(err);
                         }
-                    } catch (err) {
-                        console.log(err);
-                    }
-                }));
+                    })
+                );
 
-                if (updateStore) {
-                    dispatch(updateAllRedeemRequestsAction(allRequests));
-                }
+                dispatch(updateAllRedeemRequestsAction(allRequests));
 
                 if (!allRequests) return;
 
@@ -134,8 +131,7 @@ export default function RedeemRequests() {
             }
         };
         fetchData();
-    }, [polkaBtcLoaded, transactionListeners, isRedeemExpirationSubscribed,
-        dispatch, address, redeemExpired, redeemRequests]);
+    }, [polkaBtcLoaded, transactionListeners, isRedeemExpirationSubscribed, dispatch, address, redeemExpired]);
 
     return (
         <div>
