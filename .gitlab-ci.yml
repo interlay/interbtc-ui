@@ -21,6 +21,8 @@ variables:
 test:
   stage: test
   script:
+    - apt-get update && apt-get install -y libusb-1.0-0-dev libudev-dev
+    - ln -s .env.${CI_COMMIT_BRANCH:dev} .env
     - yarn install
     - yarn lint
     - yarn test --passWithNoTests
@@ -35,6 +37,8 @@ build:
   variables:
     NODE_ENV: production
   script:
+    - apt-get update && apt-get install -y libusb-1.0-0-dev libudev-dev
+    - ln -s .env.${CI_COMMIT_BRANCH:dev} .env
     - yarn install
     - yarn build
   artifacts:
