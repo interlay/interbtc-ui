@@ -20,7 +20,7 @@ services:
                 sleep 2
                 staked-relayer --keyring=eve --http-addr '[::0]:3030' --polka-btc-url 'ws://polkabtc:9944'
         environment: &client-env
-            BITCOIN_RPC_URL: http://172.17.0.1:18332
+            BITCOIN_RPC_URL: http://btc.do.polkabtc.io:18332
             BITCOIN_RPC_USER: rpcuser
             BITCOIN_RPC_PASS: rpcpassword
             RUST_LOG: info
