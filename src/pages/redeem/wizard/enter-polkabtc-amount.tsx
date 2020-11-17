@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
@@ -11,7 +11,7 @@ import {
 import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { btcToSat, satToBTC } from "@interlay/polkabtc";
+import { btcToSat } from "@interlay/polkabtc";
 import { getAddressFromH160 } from "../../../common/utils/utils";
 
 type EnterPolkaBTCForm = {
@@ -19,27 +19,13 @@ type EnterPolkaBTCForm = {
 };
 
 export default function EnterPolkaBTCAmount() {
-    const [isRequestPending, setRequestPending] = useState(false);
-    const [balancePolkaBTC, setBalancePolkaBTC] = useState("0");
+    const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
     const defaultValues = amount ? { defaultValues: { amountPolkaBTC: amount } } : undefined;
     const { register, handleSubmit, errors } = useForm<EnterPolkaBTCForm>(defaultValues);
+    const [isRequestPending, setRequestPending] = useState(false);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!polkaBtcLoaded) return;
-
-            const address = window.polkaBTC.account?.toString();
-            const accountId = window.polkaBTC.api.createType("AccountId", address) as any;
-            const balancePolkaSAT = await window.polkaBTC.treasury.balancePolkaBTC(accountId);
-            // TODO: write data to storage
-            const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
-            setBalancePolkaBTC(balancePolkaBTC);
-        };
-        fetchData();
-    }, [polkaBtcLoaded]);
 
     const onSubmit = handleSubmit(async ({ amountPolkaBTC }) => {
         if (!polkaBtcLoaded) return;

@@ -16,7 +16,7 @@ import {
     isStakedRelayerLoaded,
     isVaultClientLoaded,
     changeAddressAction,
-    setTotalIssuedAndTotalLockedAction,
+    setTotalIssuedAndTotalLockedAction
 } from "./common/actions/general.actions";
 import * as constants from "./constants";
 

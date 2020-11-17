@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Image, Button, Col, Row, Modal } from "react-bootstrap";
 
@@ -8,15 +8,12 @@ import { resetIssueWizardAction } from "../../common/actions/issue.actions";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../common/types/util.types";
 import IssueWizard from "./wizard/issue-wizard";
-import { satToBTC, planckToDOT } from "@interlay/polkabtc";
 
 export default function IssuePage(): JSX.Element {
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const address = useSelector((state: StoreType) => state.general.address);
     const dispatch = useDispatch();
     const [showWizard, setShowWizard] = useState(false);
-    const [balancePolkaBTC, setBalancePolkaBTC] = useState("...");
-    const [balanceDOT, setBalanceDOT] = useState("...");
+    const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
+    const balanceDOT = useSelector((state: StoreType) => state.general.balanceDOT);
 
     const handleClose = () => {
         dispatch(resetIssueWizardAction());
@@ -24,25 +21,6 @@ export default function IssuePage(): JSX.Element {
     };
 
     const handleShow = () => setShowWizard(true);
-
-    const updateBalancePolkaBTC = (amountBTC: string) => {
-        setBalancePolkaBTC((Number(balancePolkaBTC) + Number(amountBTC)).toString());
-    };
-
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!polkaBtcLoaded) return;
-
-            const accountId = window.polkaBTC.api.createType("AccountId", address);
-            const balancePolkaSAT = await window.polkaBTC.treasury.balancePolkaBTC(accountId);
-            const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
-            const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
-            const balanceDOT = planckToDOT(balancePLANCK.toString());
-            setBalancePolkaBTC(balancePolkaBTC);
-            setBalanceDOT(balanceDOT.toString());
-        };
-        fetchData();
-    }, [polkaBtcLoaded, address]);
 
     return (
         <div>
@@ -70,7 +48,7 @@ export default function IssuePage(): JSX.Element {
                         </Col>
                     </Row>
 
-                    <IssueRequests handleShow={handleShow} updateBalancePolkaBTC={updateBalancePolkaBTC}/>
+                    <IssueRequests handleShow={handleShow}/>
 
                     <Modal show={showWizard} onHide={handleClose} size={"lg"}>
                         <IssueWizard handleClose={handleClose} />
