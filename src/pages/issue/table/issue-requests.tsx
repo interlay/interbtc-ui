@@ -192,22 +192,23 @@ export default function IssueRequests(props: IssueRequestProps) {
 
     return (
         <div>
-            <h5>Pending Issue Request</h5>
-            <Table hover responsive size={"md"}>
-                <thead>
-                    <tr>
-                        <th>Issue ID</th>
-                        <th>Amount</th>
-                        <th>Creation Block</th>
-                        <th>Vault BTC Address</th>
-                        <th>BTC Transaction</th>
-                        <th>Confirmations</th>
-                        <th>Completed</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {issueRequests &&
-                        issueRequests.map((request: IssueRequest, index: number) => {
+            {issueRequests && issueRequests.length > 0 && 
+            <React.Fragment>
+                <h5>Pending Issue Request</h5>
+                <Table hover responsive size={"md"}>
+                    <thead>
+                        <tr>
+                            <th>Issue ID</th>
+                            <th>Amount</th>
+                            <th>Creation Block</th>
+                            <th>Vault BTC Address</th>
+                            <th>BTC Transaction</th>
+                            <th>Confirmations</th>
+                            <th>Completed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {issueRequests.map((request: IssueRequest, index: number) => {
                             return (
                                 <tr key={index} onClick={() => requestClicked(request)}>
                                     <td>{shortAddress(request.id)}</td>
@@ -224,8 +225,10 @@ export default function IssueRequests(props: IssueRequestProps) {
                                 </tr>
                             );
                         })}
-                </tbody>
-            </Table>
+                    </tbody>
+                </Table>
+            </React.Fragment>
+            }
         </div>
     );
 }

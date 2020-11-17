@@ -139,40 +139,44 @@ export default function RedeemRequests() {
 
     return (
         <div>
-            <h5>Pending Redeem Request</h5>
-            <Table hover responsive size={"md"}>
-                <thead>
-                    <tr>
-                        <th>Redeem ID</th>
-                        <th>Amount</th>
-                        <th>Block Number</th>
-                        <th>Output BTC Address</th>
-                        <th>BTC Transaction</th>
-                        <th>Confirmations</th>
-                        <th>Completed</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {redeemRequests &&
-                        redeemRequests.map((request) => {
-                            return (
-                                <tr key={request.id}>
-                                    <td>{shortAddress(request.id)}</td>
-                                    <td>{request.amountPolkaBTC} BTC</td>
-                                    <td>{request.creation}</td>
-                                    <td>
-                                        <BitcoinAddress btcAddress={request.btcAddress} shorten />
-                                    </td>
-                                    <td>
-                                        <BitcoinTransaction txId={request.btcTxId} shorten />
-                                    </td>
-                                    <td>{request.confirmations}</td>
-                                    <td>{handleCompleted(request)}</td>
-                                </tr>
-                            );
-                        })}
-                </tbody>
-            </Table>
+            {redeemRequests && redeemRequests.length > 0 &&
+            <React.Fragment>
+                <h5>Pending Redeem Request</h5>
+                <Table hover responsive size={"md"}>
+                    <thead>
+                        <tr>
+                            <th>Redeem ID</th>
+                            <th>Amount</th>
+                            <th>Block Number</th>
+                            <th>Output BTC Address</th>
+                            <th>BTC Transaction</th>
+                            <th>Confirmations</th>
+                            <th>Completed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {redeemRequests &&
+                            redeemRequests.map((request) => {
+                                return (
+                                    <tr key={request.id}>
+                                        <td>{shortAddress(request.id)}</td>
+                                        <td>{request.amountPolkaBTC} BTC</td>
+                                        <td>{request.creation}</td>
+                                        <td>
+                                            <BitcoinAddress btcAddress={request.btcAddress} shorten />
+                                        </td>
+                                        <td>
+                                            <BitcoinTransaction txId={request.btcTxId} shorten />
+                                        </td>
+                                        <td>{request.confirmations}</td>
+                                        <td>{handleCompleted(request)}</td>
+                                    </tr>
+                                );
+                            })}
+                    </tbody>
+                </Table>
+            </React.Fragment>
+            }
         </div>
     );
 }
