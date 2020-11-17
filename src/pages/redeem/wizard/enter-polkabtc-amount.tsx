@@ -11,7 +11,7 @@ import {
 import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { btcToSat } from "@interlay/polkabtc";
+import { btcToSat, satToBTC } from "@interlay/polkabtc";
 import { getAddressFromH160 } from "../../../common/utils/utils";
 
 type EnterPolkaBTCForm = {

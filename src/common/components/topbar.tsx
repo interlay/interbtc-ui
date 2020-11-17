@@ -60,8 +60,15 @@ export default function Topbar(props: TopbarProps): ReactElement {
     const requestDOT = async () => {
         if (!polkaBtcLoaded) return;
         setIsRequestPending(true);
-        // this call should not throw
-        await props.requestDOT();
+        try {
+            await props.requestDOT();
+            const accountId = window.polkaBTC.api.createType("AccountId", address);
+            const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
+            const balanceDOT = planckToDOT(balancePLANCK.toString());
+            dispatch(updateBalanceDOTAction(balanceDOT));
+        } catch(error) {
+            console.log(error);
+        }     
         setIsRequestPending(false);
     };
 

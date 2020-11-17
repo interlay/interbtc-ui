@@ -1,5 +1,6 @@
 import React, { useState, MouseEvent } from "react";
 
+import Big from "big.js";
 import { IssueRequest } from "../../../common/types/issue.types";
 import { Table } from "react-bootstrap";
 import { shortAddress, parachainToUIIssueRequest } from "../../../common/utils/utils";
@@ -143,7 +144,8 @@ export default function IssueRequests(props: IssueRequestProps) {
 
             const completedReq = provenReq;
             completedReq.completed = true;
-            dispatch(updateBalancePolkaBTCAction((Number(balancePolkaBTC) + Number(provenReq.amountBTC)).toString()));
+            
+            dispatch(updateBalancePolkaBTCAction((new Big(balancePolkaBTC).add(new Big(provenReq.amountBTC))).toString()));
             dispatch(updateIssueRequestAction(completedReq));
 
             toast.success("Succesfully executed issue request: " + request.id);
