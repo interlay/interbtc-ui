@@ -30,6 +30,8 @@ export default function EnterPolkaBTCAmount() {
     const onSubmit = handleSubmit(async ({ amountPolkaBTC }) => {
         if (!polkaBtcLoaded) return;
 
+        console.log(errors);
+
         setRequestPending(true);
         try {
             const amountPolkaSAT = btcToSat(amountPolkaBTC);
@@ -65,21 +67,22 @@ export default function EnterPolkaBTCAmount() {
                 <p>You have {balancePolkaBTC} PolkaBTC</p>
                 <input
                     name="amountPolkaBTC"
-                    type="string"
+                    type="number"
                     className={"custom-input" + (errors.amountPolkaBTC ? " error-borders" : "")}
-                    ref={register({
-                        required: true,
-                        max: {
-                            value: balancePolkaBTC,
-                            message: "Please enter amount less then " + balancePolkaBTC,
-                        },
-                    })}
+                    ref={register(
+                        {
+                            required: true,
+                            validate: value => value < Number(balancePolkaBTC)
+                        }
+                    )}
                 />
                 {errors.amountPolkaBTC && (
                     <div className="input-error">
                         {errors.amountPolkaBTC.type === "required"
                             ? "Please enter the amount"
                             : errors.amountPolkaBTC.message}
+                        {errors.amountPolkaBTC.type === "validate" &&
+                            "Please enter amount less then " + balancePolkaBTC}
                     </div>
                 )}
             </Modal.Body>
