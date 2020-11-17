@@ -15,6 +15,8 @@ import {
     IsVaultClientLoaded,
     UpdateBalancePolkaBTC,
     UpdateBalanceDOT,
+    HasFeedbackModalBeenDisplayed,
+    HAS_FEEDBACK_BEEN_DISPLAYED,
 } from "../types/actions.types";
 import { StoreType } from "../types/util.types";
 
@@ -31,6 +33,11 @@ export const isStakedRelayerLoaded = (isLoaded = false): IsStakedRelayerLoaded =
 export const isVaultClientLoaded = (isLoaded = false): IsVaultClientLoaded => ({
     type: IS_VAULT_CLIENT_LOADED,
     isLoaded,
+});
+
+export const hasFeedbackModalBeenDisplayedAction = (hasBeenDisplayed = false): HasFeedbackModalBeenDisplayed => ({
+    type: HAS_FEEDBACK_BEEN_DISPLAYED,
+    hasBeenDisplayed,
 });
 
 export const changeAddressAction = (address: string): ChangeAddress => ({

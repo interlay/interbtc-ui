@@ -7,20 +7,36 @@ import PolkaBTCImg from "../../assets/img/polkabtc/PolkaBTC_black.svg";
 import RedeemRequests from "./table/redeem-requests";
 import { StoreType } from "../../common/types/util.types";
 import { resetRedeemWizardAction } from "../../common/actions/redeem.actions";
-
+import { hasFeedbackModalBeenDisplayedAction } from "../../common/actions/general.actions";
+import Feedback from "./feedback/feedback";
 
 export default function RedeemPage(): JSX.Element {
     const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
     const balanceDOT = useSelector((state: StoreType) => state.general.balanceDOT);
+    const hasFeedbackModalBeenDisplayed = useSelector(
+        (state: StoreType) => state.general.hasFeedbackModalBeenDisplayed
+    );
     const dispatch = useDispatch();
     const [showWizard, setShowWizard] = useState(false);
+    const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
-    const handleClose = () => {
+    const handleCloseWizard = () => {
         dispatch(resetRedeemWizardAction());
         setShowWizard(false);
     };
-    
-    const handleShow = () => setShowWizard(true);
+
+    const handleShowWizard = () => setShowWizard(true);
+
+    const handleShowFeedbackModal = function () {
+        if (!hasFeedbackModalBeenDisplayed) {
+            setShowFeedbackModal(true);
+        }
+    };
+
+    const handleCloseFeedbackModal = () => {
+        dispatch(hasFeedbackModalBeenDisplayedAction(true));
+        setShowFeedbackModal(false);
+    };
 
     return (
         <div>
@@ -42,16 +58,24 @@ export default function RedeemPage(): JSX.Element {
                     </Row>
                     <Row className="mt-5 mb-5">
                         <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
-                            <Button variant="outline-dark" size="lg" block onClick={handleShow}>
+                            <Button variant="outline-dark" size="lg" block onClick={handleShowWizard}>
                                 Redeem PolkaBTC
                             </Button>
                         </Col>
                     </Row>
 
-                    <RedeemRequests />
+                    <RedeemRequests handleShowFeedbackModal={handleShowFeedbackModal} />
 
-                    <Modal show={showWizard} onHide={handleClose} size={"lg"}>
-                        <RedeemWizard handleClose={handleClose} />
+                    <Modal show={showWizard} onHide={handleCloseWizard} size={"lg"}>
+                        <RedeemWizard handleClose={handleCloseWizard} />
+                    </Modal>
+
+                    <Modal
+                        show={showFeedbackModal && !hasFeedbackModalBeenDisplayed}
+                        onHide={handleCloseFeedbackModal}
+                        size={"lg"}
+                    >
+                        <Feedback handleClose={handleCloseFeedbackModal} />
                     </Modal>
                 </div>
             </section>

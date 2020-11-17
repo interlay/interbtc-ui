@@ -33,6 +33,7 @@ export type GeneralState = {
     polkaBtcLoaded: boolean;
     relayerLoaded: boolean;
     vaultClientLoaded: boolean;
+    hasFeedbackModalBeenDisplayed: boolean;
     address: string;
     totalPolkaBTC: string;
     totalLockedDOT: string;
