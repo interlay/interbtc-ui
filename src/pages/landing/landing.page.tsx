@@ -22,7 +22,7 @@ export default function LandingPage(): JSX.Element {
                     </Link>
                     <h1 className="text-white mt-5">PolkaBTC</h1>
                     <h2 className="text-white">Bitcoin for Polkadot's DeFi Ecosystem</h2>
-                    
+
                     {!constants.STATIC_PAGE_ONLY ? (
                         <div>
                             <Row className="mt-4">
@@ -35,7 +35,7 @@ export default function LandingPage(): JSX.Element {
                                     <h5 className="text-white">Locked: {totalLockedDOT} DOT</h5>
                                 </Col>
                             </Row>
-                            {polkaBtcLoaded && 
+                            {polkaBtcLoaded &&
                                 <Row className="mt-5">
                                     <Col className="mt-2" xs="12" sm={{ span: 4, offset: 2 }}>
                                         <NavLink className="text-decoration-none" to="/issue">
@@ -55,24 +55,25 @@ export default function LandingPage(): JSX.Element {
                             }
                         </div>
                     ) : (
-                        ""
-                    )}
-                    <Row className="mt-5">
-                        <Col className="mt-2" xs="12" sm={{ span: 4, offset: 2 }}>
-                            <NavLink className="text-decoration-none" to="/about">
-                                <Button variant="outline-bitcoin" size="lg" block>
-                                    How it works
+                            <div>
+                                <Row className="mt-5">
+                                    <Col className="mt-2" xs="12" sm={{ span: 4, offset: 2 }}>
+                                        <NavLink className="text-decoration-none" to="/about">
+                                            <Button variant="outline-bitcoin" size="lg" block>
+                                                How it works
                                 </Button>
-                            </NavLink>
-                        </Col>
-                        <Col className="mt-2" xs="12" sm={{ span: 4 }}>
-                            <a className="text-decoration-none" href="https://forms.gle/c5mi1sz6QV7CJoee6">
-                                <Button variant="outline-polkadot" size="lg" block>
-                                    Sign up for testing
+                                        </NavLink>
+                                    </Col>
+                                    <Col className="mt-2" xs="12" sm={{ span: 4 }}>
+                                        <a className="text-decoration-none" href="https://alpha.polkabtc.io">
+                                            <Button variant="outline-polkadot" size="lg" block>
+                                                Alpha Testnet
                                 </Button>
-                            </a>
-                        </Col>
-                    </Row>
+                                        </a>
+                                    </Col>
+                                </Row>
+                            </div>
+                        )}
                 </div>
             </section>
         </div>
