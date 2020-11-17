@@ -11,7 +11,7 @@ import {
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { btcToSat, stripHexPrefix } from "@interlay/polkabtc";
+import { btcToSat, stripHexPrefix, satToBTC } from "@interlay/polkabtc";
 import { getAddressFromH160 } from "../../../common/utils/utils";
 
 type EnterBTCForm = {
@@ -39,11 +39,15 @@ export default function EnterBTCAmount() {
             // FIXME: hardcoded until we have a fee model
             // dispatch(changeFeeBTCAction(amountBTC * 0.005));
 
-            const amount = window.polkaBTC.api.createType("Balance", amountSAT);
-            const vaultId = await window.polkaBTC.vaults.selectRandomVaultIssue(amount);
+            const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountSAT);
+            const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
+            if (amountAsSatoshi.lte(dustValueAsSatoshi)) {
+                const dustValue = satToBTC(dustValueAsSatoshi.toString());
+                throw new Error(`Please enter an amount greater than Bitcoin dust (${dustValue} BTC)`);
+            }
 
+            const vaultId = await window.polkaBTC.vaults.selectRandomVaultIssue(amountAsSatoshi);
             toast.success("Found vault: " + vaultId.toString());
-
             // get the vault's data
             const vault = await window.polkaBTC.vaults.get(vaultId);
             const vaultBTCAddress = getAddressFromH160(vault.wallet.address);

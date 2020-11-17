@@ -65,7 +65,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
             try {
                 collateralization = parseFloat(newCollateralization) / 100;
             } catch {
-                collateralization = undefined; 
+                collateralization = undefined;
             }
             dispatch(updateCollateralizationAction(collateralization));
 
@@ -115,8 +115,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
 
             // get the updated collateralization
             const newCollateralAsU128 = window.polkaBTC.api.createType("u128", newCollateral);
-            let newCollateralization;
-            newCollateralization = await window.polkaBTC.vaults.getVaultCollateralization(
+            const newCollateralization = await window.polkaBTC.vaults.getVaultCollateralization(
                 vaultId,
                 newCollateralAsU128
             );
@@ -125,10 +124,9 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
             } else {
                 setNewCollaterlization("∞");
             }
-        } catch(err) {
+        } catch (err) {
             console.log(err);
         }
-
     };
 
     return (
