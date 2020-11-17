@@ -77,6 +77,27 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
     };
 
     useEffect(() => {
+        if (!redeemRequests || !polkaBtcLoaded) return;
+
+        const accountId = window.polkaBTC.api.createType("AccountId", address);
+
+        // if there are redeem requests, check their btc confirmations and if they are expired
+        redeemRequests.forEach(async (request: RedeemRequest) => {
+            // start watcher for new redeem requests
+            if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
+                // the tx watcher updates the storage cache every 10s
+                startTransactionWatcherRedeem(request, dispatch);
+            }
+
+            if (!isRedeemExpirationSubscribed) {
+                setIsRedeemExpirationSubscribed(true);
+                window.polkaBTC.redeem.subscribeToRedeemExpiry(accountId, redeemExpired);
+            }
+        });
+    },[redeemRequests, transactionListeners, address, dispatch,
+        isRedeemExpirationSubscribed, redeemExpired, polkaBtcLoaded]);
+
+    useEffect(() => {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
@@ -115,28 +136,12 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                 );
 
                 dispatch(updateAllRedeemRequestsAction(allRequests));
-
-                if (!allRequests) return;
-
-                // if there are redeem requests, check their btc confirmations and if they are expired
-                allRequests.forEach(async (request: RedeemRequest) => {
-                    // start watcher for new redeem requests
-                    if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
-                        // the tx watcher updates the storage cache every 10s
-                        startTransactionWatcherRedeem(request, dispatch);
-                    }
-
-                    if (!isRedeemExpirationSubscribed) {
-                        setIsRedeemExpirationSubscribed(true);
-                        window.polkaBTC.redeem.subscribeToRedeemExpiry(accountId, redeemExpired);
-                    }
-                });
             } catch (error) {
                 toast.error(error.toString());
             }
         };
         fetchData();
-    }, [polkaBtcLoaded, transactionListeners, isRedeemExpirationSubscribed, dispatch, address, redeemExpired]);
+    }, [polkaBtcLoaded, dispatch, address]);
 
     return (
         <div>
