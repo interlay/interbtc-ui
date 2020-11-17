@@ -1,5 +1,6 @@
 import React, { useState, MouseEvent } from "react";
 
+import Big from "big.js";
 import { IssueRequest } from "../../../common/types/issue.types";
 import { Table } from "react-bootstrap";
 import { shortAddress, parachainToUIIssueRequest } from "../../../common/utils/utils";
@@ -22,19 +23,20 @@ import {
 } from "../../../common/actions/issue.actions";
 import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
+import { updateBalancePolkaBTCAction } from "../../../common/actions/general.actions";
 
 type IssueRequestProps = {
     handleShow: () => void;
-    updateBalancePolkaBTC: (balance: string) => void;
 };
 
 export default function IssueRequests(props: IssueRequestProps) {
     const address = useSelector((state: StoreType) => state.general.address);
     const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
     const transactionListeners = useSelector((state: StoreType) => state.issue.transactionListeners);
+    const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const [executePending, setExecutePending] = useState([""]);
     const [requiredBtcConfirmations, setRequiredBtcConfirmations] = useState(0);
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -142,7 +144,8 @@ export default function IssueRequests(props: IssueRequestProps) {
 
             const completedReq = provenReq;
             completedReq.completed = true;
-            props.updateBalancePolkaBTC(provenReq.amountBTC);
+            
+            dispatch(updateBalancePolkaBTCAction((new Big(balancePolkaBTC).add(new Big(provenReq.amountBTC))).toString()));
             dispatch(updateIssueRequestAction(completedReq));
 
             toast.success("Succesfully executed issue request: " + request.id);
@@ -153,7 +156,7 @@ export default function IssueRequests(props: IssueRequestProps) {
     };
 
     const handleCompleted = (request: IssueRequest) => {
-        if (request.confirmations < requiredBtcConfirmations) {
+        if (request.confirmations < requiredBtcConfirmations || request.confirmations === 0) {
             return <FaHourglass></FaHourglass>;
         } else if (request.completed) {
             return <FaCheck></FaCheck>;
@@ -189,6 +192,7 @@ export default function IssueRequests(props: IssueRequestProps) {
 
     return (
         <div>
+            <h5>Pending Issue Request</h5>
             <Table hover responsive size={"md"}>
                 <thead>
                     <tr>

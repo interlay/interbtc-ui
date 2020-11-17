@@ -11,6 +11,8 @@ export const IS_VAULT_CLIENT_LOADED = "IS_VAULT_CLIENT_LOADED";
 export const INIT_STATE = "INIT_STATE";
 export const CHANGE_ADDRESS = "CHANGE_ADDRESS";
 export const SET_TOTAL_ISSUED_AND_TOTAL_LOCKED = "SET_TOTAL_ISSUED_AND_TOTAL_LOCKED";
+export const UPDATE_BALANCE_POLKA_BTC = "UPDATE_BALANCE_POLKA_BTC";
+export const UPDATE_BALANCE_DOT = "UPDATE_BALANCE_DOT";
 
 export interface IsPolkaBtcLoaded {
     type: typeof IS_POLKA_BTC_LOADED;
@@ -43,13 +45,25 @@ export interface SetTotalIssuedAndTotalLocked {
     totalLockedDOT: string;
 }
 
+export interface UpdateBalancePolkaBTC {
+    type: typeof UPDATE_BALANCE_POLKA_BTC;
+    balancePolkaBTC: string;
+}
+
+export interface UpdateBalanceDOT {
+    type: typeof UPDATE_BALANCE_DOT;
+    balanceDOT: string;
+}
+
 export type GeneralActions =
     | IsPolkaBtcLoaded
     | IsStakedRelayerLoaded
     | ChangeAddress
     | InitState
     | SetTotalIssuedAndTotalLocked
-    | IsVaultClientLoaded;
+    | IsVaultClientLoaded
+    | UpdateBalancePolkaBTC
+    | UpdateBalanceDOT;
 
 // REDEEM
 

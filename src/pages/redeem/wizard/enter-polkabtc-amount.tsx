@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
@@ -19,30 +19,18 @@ type EnterPolkaBTCForm = {
 };
 
 export default function EnterPolkaBTCAmount() {
-    const [isRequestPending, setRequestPending] = useState(false);
-    const [balancePolkaBTC, setBalancePolkaBTC] = useState("0");
+    const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
     const defaultValues = amount ? { defaultValues: { amountPolkaBTC: amount } } : undefined;
     const { register, handleSubmit, errors } = useForm<EnterPolkaBTCForm>(defaultValues);
+    const [isRequestPending, setRequestPending] = useState(false);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!polkaBtcLoaded) return;
-
-            const address = window.polkaBTC.account?.toString();
-            const accountId = window.polkaBTC.api.createType("AccountId", address) as any;
-            const balancePolkaSAT = await window.polkaBTC.treasury.balancePolkaBTC(accountId);
-            // TODO: write data to storage
-            const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
-            setBalancePolkaBTC(balancePolkaBTC);
-        };
-        fetchData();
-    }, [polkaBtcLoaded]);
 
     const onSubmit = handleSubmit(async ({ amountPolkaBTC }) => {
         if (!polkaBtcLoaded) return;
+
+        console.log(errors);
 
         setRequestPending(true);
         try {
@@ -51,9 +39,14 @@ export default function EnterPolkaBTCAmount() {
                 throw new Error("Invalid PolkaBTC amount input");
             }
             dispatch(changeAmountPolkaBTCAction(amountPolkaBTC));
-            const amount = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
-            const vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amount);
+            const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
+            const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
+            if (amountAsSatoshi.lte(dustValueAsSatoshi)) {
+                const dustValue = satToBTC(dustValueAsSatoshi.toString());
+                throw new Error(`Please enter an amount greater than Bitcoin dust (${dustValue} BTC)`);
+            }
 
+            const vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountAsSatoshi);
             toast.success("Found vault: " + vaultId.toString());
 
             // get the vault's data
@@ -79,13 +72,13 @@ export default function EnterPolkaBTCAmount() {
                 <p>You have {balancePolkaBTC} PolkaBTC</p>
                 <input
                     name="amountPolkaBTC"
-                    type="string"
+                    type="number"
                     className={"custom-input" + (errors.amountPolkaBTC ? " error-borders" : "")}
                     ref={register({
                         required: true,
                         max: {
                             value: balancePolkaBTC,
-                            message: "Please enter amount less then " + balancePolkaBTC,
+                            message: "Please enter an amount smaller than your current balance: " + balancePolkaBTC,
                         },
                     })}
                 />
@@ -94,6 +87,8 @@ export default function EnterPolkaBTCAmount() {
                         {errors.amountPolkaBTC.type === "required"
                             ? "Please enter the amount"
                             : errors.amountPolkaBTC.message}
+                        {errors.amountPolkaBTC.type === "validate" &&
+                            "Please enter amount less then " + balancePolkaBTC}
                     </div>
                 )}
             </Modal.Body>

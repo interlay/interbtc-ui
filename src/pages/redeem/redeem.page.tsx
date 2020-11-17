@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Image, Button, Col, Row, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,37 +7,20 @@ import PolkaBTCImg from "../../assets/img/polkabtc/PolkaBTC_black.svg";
 import RedeemRequests from "./table/redeem-requests";
 import { StoreType } from "../../common/types/util.types";
 import { resetRedeemWizardAction } from "../../common/actions/redeem.actions";
-import { planckToDOT, satToBTC } from "@interlay/polkabtc";
+
 
 export default function RedeemPage(): JSX.Element {
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const address = useSelector((state: StoreType) => state.general.address);
+    const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
+    const balanceDOT = useSelector((state: StoreType) => state.general.balanceDOT);
     const dispatch = useDispatch();
     const [showWizard, setShowWizard] = useState(false);
-    const [balancePolkaBTC, setBalancePolkaBTC] = useState("...");
-    const [balanceDOT, setBalanceDOT] = useState("...");
 
     const handleClose = () => {
         dispatch(resetRedeemWizardAction());
         setShowWizard(false);
     };
+    
     const handleShow = () => setShowWizard(true);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!polkaBtcLoaded) return;
-
-            const accountId = window.polkaBTC.api.createType("AccountId", address) as any;
-            const balancePolkaSAT = await window.polkaBTC.treasury.balancePolkaBTC(accountId);
-            const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
-            // TODO: write data to storage
-            const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
-            const balanceDOT = planckToDOT(balancePLANCK.toString());
-            setBalancePolkaBTC(balancePolkaBTC);
-            setBalanceDOT(balanceDOT);
-        };
-        fetchData();
-    }, [polkaBtcLoaded, address]);
 
     return (
         <div>

@@ -135,6 +135,7 @@ export default function RedeemRequests() {
 
     return (
         <div>
+            <h5>Pending Redeem Request</h5>
             <Table hover responsive size={"md"}>
                 <thead>
                     <tr>
