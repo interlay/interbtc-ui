@@ -152,6 +152,7 @@ export default class App extends Component<{}, AppState> {
         // Do not load data if showing static landing page only
         if (!constants.STATIC_PAGE_ONLY) {
             try {
+                setTimeout(()=> this.setState({isLoading: false}),3000);
                 await this.createAPIInstance();
                 this.initDataOnAppBootstrap();
                 keyring.loadAll({});
