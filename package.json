@@ -3,7 +3,7 @@
     "version": "0.2.6",
     "private": true,
     "dependencies": {
-        "@interlay/polkabtc": "^0.5.13",
+        "@interlay/polkabtc": "^0.5.14",
         "@polkadot/api": "^2.6.1",
         "@polkadot/extension-dapp": "0.32.1",
         "@polkadot/ui-keyring": "^0.62.2-12",
