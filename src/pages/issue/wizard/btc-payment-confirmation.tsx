@@ -36,9 +36,16 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
         if (name === "btcTxId" && issueRequests) {
             const txId = value;
             dispatch(changeBtcTxIdAction(txId));
-            let request = issueRequests.find((r) => r.id === issueId);
+            const request = issueRequests.find((r) => r.id === issueId);
             if (request) {
                 request.btcTxId = txId;
+
+                try {
+                    request.confirmations = (await window.polkaBTC.btcCore.getTransactionStatus(request.btcTxId)).confirmations;
+                } catch (err) {
+                    console.log("Transaction not yet included in Bitcoin.");
+                }
+
                 dispatch(updateIssueRequestAction(request));
             } else {
                 toast.error("Exception: Issue request not found.");
@@ -54,11 +61,26 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
         <form onSubmit={onSubmit}>
             <Modal.Body>
                 <FormGroup>
-                    <h5>Confirm BTC Payment</h5>
+                    <h5>Confirmation</h5>
                     <Row className="justify-content-md-center">
-                        <Col md="auto" className="text-left">
+                        <Col className="text-left">
                             <p>
-                                <b>Please enter the transaction id of your Bitcoin payment:</b>
+                                {" "}
+                                <b>Your request is now being processed.</b>
+                                <br />
+                                We will monitor your Bitcoin transaction and notify you when it has been confirmed.{" "}
+                                <br />
+                                You will then see a "Confirm" button next to your issue request on the issue page.
+                            </p>
+                            <p>
+                                <b>Note: Your Bitcoin payment can take up to an hour to confirm.</b>
+                            </p>
+                        </Col>
+                    </Row>
+                    <Row className="justify-content-md-center">
+                        <Col className="text-center">
+                            <p className="text-left">
+                                Optional: if you want, you can tell us your Bitcoin txid to speed things up
                             </p>
                             <input
                                 id="btcTxId"
@@ -68,7 +90,6 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
                                 onChange={onChange}
                                 className={"custom-input" + (errors.btcTxId ? " error-borders" : "")}
                                 ref={register({
-                                    required: true,
                                     pattern: {
                                         value: BTC_TRANSACTION_ID_REGEX,
                                         message: "Please enter valid transaction Id",
@@ -82,17 +103,10 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
                                         : errors.btcTxId.message}
                                 </div>
                             )}
-                            <p>
-                                We will monitor your Bitcoin transaction and notify you when it has been confirmed You
-                                will see a "Confirm" button next to your issue request on the issue page.
-                            </p>
-                            <p>
-                                <b>Note: Your Bitcoin payment can take up to an hour to confirm.</b>
-                            </p>
+                            <button className="btn btn-primary" type="submit">
+                                I have made the Bitcoin payment
+                            </button>
                         </Col>
-                        <button className="btn btn-primary float-right" type="submit">
-                            I have made the Bitcoin payment
-                        </button>
                     </Row>
                 </FormGroup>
             </Modal.Body>

@@ -5,7 +5,10 @@ import {
     SET_TOTAL_ISSUED_AND_TOTAL_LOCKED,
     CHANGE_ADDRESS,
     INIT_STATE,
+    UPDATE_BALANCE_DOT,
+    UPDATE_BALANCE_POLKA_BTC,
     GeneralActions,
+    HAS_FEEDBACK_BEEN_DISPLAYED,
 } from "../types/actions.types";
 import { GeneralState } from "../types/util.types";
 
@@ -13,9 +16,12 @@ const initialState = {
     polkaBtcLoaded: false,
     relayerLoaded: false,
     vaultClientLoaded: false,
+    hasFeedbackModalBeenDisplayed: false,
     address: "",
     totalPolkaBTC: "",
     totalLockedDOT: "",
+    balancePolkaBTC: "",
+    balanceDOT: "",
 };
 
 export const generalReducer = (state: GeneralState = initialState, action: GeneralActions): GeneralState => {
@@ -32,6 +38,12 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
             return { ...state, totalLockedDOT: action.totalLockedDOT, totalPolkaBTC: action.totalPolkaBTC };
         case IS_VAULT_CLIENT_LOADED:
             return { ...state, vaultClientLoaded: action.isLoaded };
+        case HAS_FEEDBACK_BEEN_DISPLAYED:
+            return { ...state, hasFeedbackModalBeenDisplayed: action.hasBeenDisplayed };
+        case UPDATE_BALANCE_DOT:
+            return { ...state, balanceDOT: action.balanceDOT };
+        case UPDATE_BALANCE_POLKA_BTC:
+            return { ...state, balancePolkaBTC: action.balancePolkaBTC };
         default:
             return state;
     }

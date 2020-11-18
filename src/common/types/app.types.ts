@@ -5,6 +5,7 @@ interface AppState {
     address?: string;
     signer?: Signer;
     showSelectAccount: boolean;
+    isLoading: boolean;
 }
 
 export default AppState;

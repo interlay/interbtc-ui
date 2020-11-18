@@ -11,8 +11,9 @@ import {
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { btcToSat, stripHexPrefix } from "@interlay/polkabtc";
+import { btcToSat, stripHexPrefix, satToBTC } from "@interlay/polkabtc";
 import { getAddressFromH160 } from "../../../common/utils/utils";
+import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
 
 type EnterBTCForm = {
     amountBTC: string;
@@ -35,15 +36,23 @@ export default function EnterBTCAmount() {
             if (amountSAT === undefined) {
                 throw new Error("Invalid BTC amount input.");
             }
+            const amountBTCInteger = amountBTC.split(".")[0];
+            if (amountBTCInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
+                throw new Error("Input value is too high");
+            }
             dispatch(changeAmountBTCAction(amountBTC));
             // FIXME: hardcoded until we have a fee model
             // dispatch(changeFeeBTCAction(amountBTC * 0.005));
 
-            const amount = window.polkaBTC.api.createType("Balance", amountSAT);
-            const vaultId = await window.polkaBTC.vaults.selectRandomVaultIssue(amount);
+            const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountSAT);
+            const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
+            if (amountAsSatoshi.lte(dustValueAsSatoshi)) {
+                const dustValue = satToBTC(dustValueAsSatoshi.toString());
+                throw new Error(`Please enter an amount greater than Bitcoin dust (${dustValue} BTC)`);
+            }
 
+            const vaultId = await window.polkaBTC.vaults.selectRandomVaultIssue(amountAsSatoshi);
             toast.success("Found vault: " + vaultId.toString());
-
             // get the vault's data
             const vault = await window.polkaBTC.vaults.get(vaultId);
             const vaultBTCAddress = getAddressFromH160(vault.wallet.address);
@@ -65,7 +74,7 @@ export default function EnterBTCAmount() {
                 <p>Please enter the amount of BTC you want to receive in PolkaBTC.</p>
                 <input
                     name="amountBTC"
-                    type="string"
+                    type="number"
                     className={"custom-input" + (errors.amountBTC ? " error-borders" : "")}
                     ref={register({ required: true })}
                 />

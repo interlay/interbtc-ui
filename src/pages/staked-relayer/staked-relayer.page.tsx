@@ -90,7 +90,7 @@ export default function StakedRelayerPage() {
 
     return (
         <div className="staked-relayer-page container-fluid white-background">
-            <div className="staked-container">
+            <div className="staked-container dashboard-fade-in-animation dahboard-min-height">
                 <div className="stacked-wrapper">
                     <div className="row">
                         <div className="title">Staked Relayer Dashboard</div>

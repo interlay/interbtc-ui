@@ -61,7 +61,7 @@ export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps) {
                                     required: true,
                                     pattern: {
                                         value: BTC_ADDRESS_REGEX,
-                                        message: "Please enter valid BTC address",
+                                        message: "Please enter a valid BTC address (Supported formats: p2wpkh, p2wsh in bech32 format).",
                                     },
                                 })}
                             ></input>

@@ -9,14 +9,18 @@ import { startTransactionWatcherRedeem } from "../../../common/utils/transaction
 import {
     updateAllRedeemRequestsAction,
     cancelRedeemRequestAction,
-    redeemExpiredAction
+    redeemExpiredAction,
 } from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
 import BitcoinAddress from "../../../common/components/bitcoin-links/address";
-import { stripHexPrefix } from "@interlay/polkabtc";
+import { FEEDBACK_MODAL_DISPLAY_DELAY_MS } from "../../../constants";
 
-export default function RedeemRequests() {
+export interface RedeemRequestsProps {
+    handleShowFeedbackModal: () => void;
+}
+
+export default function RedeemRequests(props: RedeemRequestsProps) {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const address = useSelector((state: StoreType) => state.general.address);
     const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
@@ -38,29 +42,60 @@ export default function RedeemRequests() {
             toast.error("Error canceling redeem request.");
         }
         setCancelPending(cancelPending.splice(cancelPending.indexOf(redeemId), 1));
-    }
+    };
 
-    const redeemExpired = useCallback((redeemId: string) => {
-        if (!redeemRequests || !redeemRequests.length) return;
-        const requestToBeUpdated = redeemRequests.filter(request => request.id === redeemId)[0];
+    const redeemExpired = useCallback(
+        (redeemId: string) => {
+            if (!redeemRequests || !redeemRequests.length) return;
+            const requestToBeUpdated = redeemRequests.filter((request) => request.id === redeemId)[0];
 
-        if (requestToBeUpdated && !requestToBeUpdated.isExpired) {
-            dispatch(redeemExpiredAction({ ...requestToBeUpdated, isExpired: true }));
-        }
-    }, [redeemRequests, dispatch])
+            if (requestToBeUpdated && !requestToBeUpdated.isExpired) {
+                dispatch(redeemExpiredAction({ ...requestToBeUpdated, isExpired: true }));
+            }
+        },
+        [redeemRequests, dispatch]
+    );
 
     const handleCompleted = (request: RedeemRequest) => {
         if (!request.completed && request.isExpired) {
-            return <Button
-                variant="outline-dark"
-                onClick={() => { cancelRedeemRequest(request.id) }}
-            >Cancel</Button>;
+            return (
+                <Button
+                    variant="outline-dark"
+                    onClick={() => {
+                        cancelRedeemRequest(request.id);
+                    }}
+                >
+                    Cancel
+                </Button>
+            );
         } else if (request.completed) {
+            setTimeout(props.handleShowFeedbackModal, FEEDBACK_MODAL_DISPLAY_DELAY_MS);
             return <FaCheck></FaCheck>;
         } else {
             return <FaHourglass></FaHourglass>;
         }
-    }
+    };
+
+    useEffect(() => {
+        if (!redeemRequests || !polkaBtcLoaded) return;
+
+        const accountId = window.polkaBTC.api.createType("AccountId", address);
+
+        // if there are redeem requests, check their btc confirmations and if they are expired
+        redeemRequests.forEach(async (request: RedeemRequest) => {
+            // start watcher for new redeem requests
+            if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
+                // the tx watcher updates the storage cache every 10s
+                startTransactionWatcherRedeem(request, dispatch);
+            }
+
+            if (!isRedeemExpirationSubscribed) {
+                setIsRedeemExpirationSubscribed(true);
+                window.polkaBTC.redeem.subscribeToRedeemExpiry(accountId, redeemExpired);
+            }
+        });
+    },[redeemRequests, transactionListeners, address, dispatch,
+        isRedeemExpirationSubscribed, redeemExpired, polkaBtcLoaded]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -68,107 +103,86 @@ export default function RedeemRequests() {
 
             try {
                 const accountId = window.polkaBTC.api.createType("AccountId", address);
-                // get all redeem request from parachain 
+                // get all redeem request from parachain
                 const redeemRequestMap = await window.polkaBTC.redeem.mapForUser(accountId);
-                let updateStore = false;
-                let allRequests = [];
+                const allRequests = [];
 
-                if (redeemRequests?.length !== redeemRequestMap.size) {
-                    updateStore = true;
-                }
-                
                 for (const [key, value] of redeemRequestMap) {
                     allRequests.push(parachainToUIRedeemRequest(key, value));
-                    if (!redeemRequests) {
-                        updateStore = true;
-                        continue;
-                    }
-                    const inStore = redeemRequests.filter((req) => req.id === stripHexPrefix(key.toString())).length;
-                    if (!inStore) {
-                        updateStore = true;
-                    }
                 }
 
                 // get btc data for each redeem request
-                await Promise.all(allRequests.map(async request => {
-                    try {
-                        request.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id); 
-                    } catch (err) {
-                        console.log("Issue Id: " + request.id + " " + err);
-                    }
-                }));
-                await Promise.all(allRequests.map(async request => {
-                    try {
-                        if (request.btcTxId){
-                            request.confirmations = (await window.polkaBTC.btcCore.getTransactionStatus(request.btcTxId)).confirmations;
+                await Promise.all(
+                    allRequests.map(async (request) => {
+                        try {
+                            request.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id);
+                        } catch (err) {
+                            console.log("Redeem Id: " + request.id + " " + err);
                         }
-                    } catch (err) {
-                        console.log(err);
-                    }
-                }));
+                    })
+                );
+                await Promise.all(
+                    allRequests.map(async (request) => {
+                        try {
+                            if (request.btcTxId) {
+                                request.confirmations = (
+                                    await window.polkaBTC.btcCore.getTransactionStatus(request.btcTxId)
+                                ).confirmations;
+                            }
+                        } catch (err) {
+                            console.log(err);
+                        }
+                    })
+                );
 
-                if (updateStore) {
-                    dispatch(updateAllRedeemRequestsAction(allRequests));
-                }
-
-                if (!allRequests) return;
-
-                // if there are redeem requests, check their btc confirmations and if they are expired
-                allRequests.forEach(async (request: RedeemRequest) => {
-                    // start watcher for new redeem requests
-                    if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
-                        // the tx watcher updates the storage cache every 10s
-                        startTransactionWatcherRedeem(request, dispatch);
-                    }
-
-                    if (!isRedeemExpirationSubscribed) {
-                        setIsRedeemExpirationSubscribed(true);
-                        window.polkaBTC.redeem.subscribeToRedeemExpiry(accountId, redeemExpired);
-                    }
-                });
+                dispatch(updateAllRedeemRequestsAction(allRequests));
             } catch (error) {
                 toast.error(error.toString());
             }
         };
         fetchData();
-    }, [polkaBtcLoaded, transactionListeners, isRedeemExpirationSubscribed,
-        dispatch, address, redeemExpired, redeemRequests]);
+    }, [polkaBtcLoaded, dispatch, address]);
 
     return (
         <div>
-            <Table hover responsive size={"md"}>
-                <thead>
-                    <tr>
-                        <th>Redeem ID</th>
-                        <th>Amount</th>
-                        <th>Block Number</th>
-                        <th>Output BTC Address</th>
-                        <th>BTC Transaction</th>
-                        <th>Confirmations</th>
-                        <th>Completed</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {redeemRequests &&
-                        redeemRequests.map((request) => {
-                            return (
-                                <tr key={request.id}>
-                                    <td>{shortAddress(request.id)}</td>
-                                    <td>{request.amountPolkaBTC} BTC</td>
-                                    <td>{request.creation}</td>
-                                    <td>
-                                        <BitcoinAddress btcAddress={request.btcAddress} shorten />
-                                    </td>
-                                    <td>
-                                        <BitcoinTransaction txId={request.btcTxId} shorten />
-                                    </td>
-                                    <td>{request.confirmations}</td>
-                                    <td>{handleCompleted(request)}</td>
-                                </tr>
-                            );
-                        })}
-                </tbody>
-            </Table>
+            {redeemRequests && redeemRequests.length > 0 && (
+                <React.Fragment>
+                    <h5>Pending Redeem Request</h5>
+                    <Table hover responsive size={"md"}>
+                        <thead>
+                            <tr>
+                                <th>Redeem ID</th>
+                                <th>Amount</th>
+                                <th>Parachain Block</th>
+                                <th>Output BTC Address</th>
+                                <th>BTC Transaction</th>
+                                <th>Confirmations</th>
+                                <th>Completed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {redeemRequests &&
+                                redeemRequests.map((request) => {
+                                    return (
+                                        <tr key={request.id}>
+                                            <td>{shortAddress(request.id)}</td>
+                                            <td>{request.amountPolkaBTC} BTC</td>
+                                            <td>{request.creation}</td>
+                                            <td>
+                                                <BitcoinAddress btcAddress={request.btcAddress} shorten />
+                                            </td>
+                                            <td>
+                                                <BitcoinTransaction txId={request.btcTxId} shorten />
+                                            </td>
+                                            <td>{request.confirmations}</td>
+                                            <td>{handleCompleted(request)}</td>
+                                        </tr>
+                                    );
+                                })}
+                        </tbody>
+                    </Table>
+                </React.Fragment>
+            )}
         </div>
     );
 }

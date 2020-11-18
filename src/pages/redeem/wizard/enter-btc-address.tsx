@@ -35,7 +35,7 @@ export default function EnterBTCAddress() {
                         pattern: {
                             // FIXME: regex need to depend on global mainnet | testnet parameter
                             value: BTC_ADDRESS_REGEX,
-                            message: "Please enter valid BTC address",
+                            message: "Please enter a valid BTC address (Supported formats: p2wpkh, p2wsh in bech32 format).",
                         },
                     })}
                 />

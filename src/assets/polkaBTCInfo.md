@@ -19,13 +19,15 @@ Funded by a [Web3 Foundation grant](https://web3.foundation/grants/), the BTC-Pa
 
 ##### Helpful Links
 
+- [Polkadot's blog post explaining PolkaBTC](https://polkadot.network/bitcoin-is-coming-to-polkadot/)
+
 - [BTC Parachain specification](https://interlay.gitlab.io/polkabtc-spec/)
 
 - [BTC Parachain open-source code](https://github.com/interlay/BTC-Parachain)
 
 - [XCLAIM peer-reviewed paper](https://eprint.iacr.org/2018/643.pdf)
 
-- [Interlay](https://www.interlay.io/)
+- [Interlay homepage](https://www.interlay.io/)
 
 <div id="roadmap"></div>
 
@@ -40,7 +42,7 @@ A first Alpha testnet is scheduled for November 2020 and a feature-ready Beta te
 
 Sign up to get early access to PolkaBTC and be the first to test the first truly decentralized cross-chain bridge: https://forms.gle/JrNBD6Pe1F5QAg4z8 
 
-![](https://gitlab.com/interlay/polkabtc-ui/-/raw/master/src/assets/img/polkabtc/PolkaBTC_roadmap.png)
+![PolkaBTC Roadmap](https://gitlab.com/interlay/images/-/raw/master/polkaBTC/user-guide/PolkaBTC%20roadmap.png)
 
 <div id="security"></div>
 

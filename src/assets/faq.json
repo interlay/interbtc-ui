@@ -1,0 +1,42 @@
+[
+    {
+        "id" : 1,
+        "question" : "How does PolkaBTC maintain its peg?",
+        "answer": "The BTC-Parachain ensures that for each minted PolkaBTC: (1) there is an equivalent amount of BTC physically locked on Bitcoin, and  (2) there is sufficient DOT collateral locked to economically back minted PolkaBTC in case Vaults attempt theft. As such, PolkaBTC is a hybrid peg, with supply determined by both locked BTC and DOT. "
+    },
+    {
+        "id" : 2,
+        "question" : "Who are the Vaults? Can anyone become a Vault?",
+        "answer": "Vaults maintain the physical backing of PolkaBTC: they ensure BTC remains locked while PolkaBTC exists. Anyone can become a Vault. You only need: (1) a Bitcoin wallet, (2) a Polkadot wallet, and (3) to register by lock DOT collateral (secures the BTC you get to hold in custody). "
+    },
+    {
+        "id" : 3,
+        "question" : "Can I always get my BTC back?",
+        "answer": "PolkaBTC guarantees that you will either (1) get you BTC back whenever you want, or (2) you will be reimbursed in DOT at a beneficial rate (better than BTC?DOT market price)."
+    },
+    {
+        "id" : 4,
+        "question" : "Why is the price of PolkaBTC different to BTC?",
+        "answer": "PolkaBTC might trade at a slight premium, driven by supply/demand for Bitcoin on Polkadot (e.g., to cover issue fees). This is similar to diverging prices across different exchanges."
+    },
+    {
+        "id" : 5,
+        "question" : "Does PolkaBTC require a price oracle?",
+        "answer": "PolkaBTC guarantees that users (1) can redeem PolkaBTC for BTC, or (2) are reimbursed in DOT at a beneficial rate in case of failure. A price oracle is needed to maintain a secure BTC/DOT collateralization rate."
+    },
+    {
+        "id" : 6,
+        "question" : "What is “OP_RETURN” and what does PolkaBTC use this for?",
+        "answer": "OP_RETURN is a Bitcoin opcode used to attach data to a Bitcoin transaction. PolkaBTC currently uses OP_RETURN to link Bitcoin payments to specific Issue or Redeem request (protection against replay attacks).         Note: a more UX-friendly measure has been developed and will replace OP_RETURN before mainnet launch."
+    },
+    {
+        "id" : 7,
+        "question" : "Has PolkaBTC been audited?",
+        "answer": "PolkaBTC will undergo an audit before launch."
+    },
+    {
+        "id" : 8,
+        "question" : "Why is PolkaBTC better than other BTC bridges?",
+        "answer": "PolkaBTC is based on XCLAIM - a top-tier, peer-reviewed research paper. PolkaBTC is fully permissionless and decentralized: anyone can become a Vault without asking for permission and you can run your own Vault. PolkaBTC uses collateralization and cross-chain SPV proofs to guarantee that users never face financial damage.  Some projects rely on centralized parties, making them vulnerable to theft, seizure, and censorship. Other projects use techniques similar to PolkaBTC, but are permissioned, rely on complex and non-battle-tested cryptographic protocols, or heavily rely on the price of their governance token for security of user funds."
+    }
+]

@@ -21,14 +21,14 @@ export default function UserGuidePage(): JSX.Element {
 
     return (
         <div>
-            <section className="jumbotron text-center transparent-background">
+            <section className="jumbotron text-center transparent-background static-fade-in-animation">
                 <div className="container mt-5">
                     <h3 style={{ fontSize: "2em" }} className="lead text-white mt-5">
-                        PolkaBTC User Guide (Alpha)
+                        PolkaBTC User Guide (Alpha Testnet)
                     </h3>
                 </div>
             </section>
-            <section className="markdown white-background">
+            <section className="markdown white-background dahboard-min-height static-fade-in-animation">
                 <div className="container mt-5 pb-5">
                     <Row className="mt-5">
                         <Col xs="12" lg={{ span: 8, offset: 2 }} className="text-left mt-5">

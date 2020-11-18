@@ -1,12 +1,12 @@
 {
     "name": "polkabtc-ui",
-    "version": "0.2.0",
+    "version": "0.2.6",
     "private": true,
     "dependencies": {
-        "@interlay/polkabtc": "^0.5.10",
+        "@interlay/polkabtc": "^0.5.14",
         "@polkadot/api": "^2.6.1",
         "@polkadot/extension-dapp": "0.32.1",
-        "@polkadot/ui-keyring": "^0.62.1",
+        "@polkadot/ui-keyring": "^0.62.2-12",
         "@testing-library/jest-dom": "^4.2.4",
         "@testing-library/react": "^9.3.2",
         "@testing-library/user-event": "^7.1.2",

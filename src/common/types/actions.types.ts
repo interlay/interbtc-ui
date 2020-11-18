@@ -8,9 +8,12 @@ import { StoreType } from "./util.types";
 export const IS_POLKA_BTC_LOADED = "IS_POLKA_BTC_LOADED";
 export const IS_STAKED_RELAYER_LOADED = "IS_STAKED_RELAYER_LOADED";
 export const IS_VAULT_CLIENT_LOADED = "IS_VAULT_CLIENT_LOADED";
+export const HAS_FEEDBACK_BEEN_DISPLAYED = "HAS_FEEDBACK_BEEN_DISPLAYED";
 export const INIT_STATE = "INIT_STATE";
 export const CHANGE_ADDRESS = "CHANGE_ADDRESS";
 export const SET_TOTAL_ISSUED_AND_TOTAL_LOCKED = "SET_TOTAL_ISSUED_AND_TOTAL_LOCKED";
+export const UPDATE_BALANCE_POLKA_BTC = "UPDATE_BALANCE_POLKA_BTC";
+export const UPDATE_BALANCE_DOT = "UPDATE_BALANCE_DOT";
 
 export interface IsPolkaBtcLoaded {
     type: typeof IS_POLKA_BTC_LOADED;
@@ -25,6 +28,11 @@ export interface IsStakedRelayerLoaded {
 export interface IsVaultClientLoaded {
     type: typeof IS_VAULT_CLIENT_LOADED;
     isLoaded: boolean;
+}
+
+export interface HasFeedbackModalBeenDisplayed {
+    type: typeof HAS_FEEDBACK_BEEN_DISPLAYED;
+    hasBeenDisplayed: boolean;
 }
 
 export interface ChangeAddress {
@@ -43,13 +51,26 @@ export interface SetTotalIssuedAndTotalLocked {
     totalLockedDOT: string;
 }
 
+export interface UpdateBalancePolkaBTC {
+    type: typeof UPDATE_BALANCE_POLKA_BTC;
+    balancePolkaBTC: string;
+}
+
+export interface UpdateBalanceDOT {
+    type: typeof UPDATE_BALANCE_DOT;
+    balanceDOT: string;
+}
+
 export type GeneralActions =
     | IsPolkaBtcLoaded
     | IsStakedRelayerLoaded
+    | HasFeedbackModalBeenDisplayed
     | ChangeAddress
     | InitState
     | SetTotalIssuedAndTotalLocked
-    | IsVaultClientLoaded;
+    | IsVaultClientLoaded
+    | UpdateBalancePolkaBTC
+    | UpdateBalanceDOT;
 
 // REDEEM
 
