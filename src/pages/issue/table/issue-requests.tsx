@@ -156,26 +156,28 @@ export default function IssueRequests(props: IssueRequestProps) {
     };
 
     const handleCompleted = (request: IssueRequest) => {
+        return <div className="expired-label">Expired</div>
         if (request.confirmations < requiredBtcConfirmations || request.confirmations === 0) {
             return <FaHourglass></FaHourglass>;
-        } else if (request.completed) {
-            return <FaCheck></FaCheck>;
-        } else {
-            return (
-                <ButtonMaybePending
-                    variant="outline-dark"
-                    isPending={executePending.indexOf(request.id) !== -1}
-                    size="lg"
-                    block
-                    onClick={(event: MouseEvent<HTMLElement>) => {
-                        event.stopPropagation();
-                        execute(request);
-                    }}
-                >
-                    Execute
-                </ButtonMaybePending>
-            );
         }
+        if (request.completed) {
+            return <FaCheck></FaCheck>;
+        }
+        
+        return (
+            <ButtonMaybePending
+                variant="outline-dark"
+                isPending={executePending.indexOf(request.id) !== -1}
+                size="lg"
+                block
+                onClick={(event: MouseEvent<HTMLElement>) => {
+                    event.stopPropagation();
+                    execute(request);
+                }}
+            >
+                Execute
+            </ButtonMaybePending>
+        );
     };
 
     const requestClicked = (request: IssueRequest): void => {
