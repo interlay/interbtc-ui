@@ -1,22 +1,22 @@
 [
     {
         "id" : 1,
-        "q" : "How does PolkaBTC maintain its peg?",
-        "a": "The BTC-Parachain ensures that for each minted PolkaBTC: (1) there is an equivalent amount of BTC physically locked on Bitcoin, and  (2) there is sufficient DOT collateral locked to economically back minted PolkaBTC in case Vaults attempt theft. As such, PolkaBTC is a hybrid peg, with supply determined by both locked BTC and DOT. "
+        "question" : "How does PolkaBTC maintain its peg?",
+        "answer": "The BTC-Parachain ensures that for each minted PolkaBTC: (1) there is an equivalent amount of BTC physically locked on Bitcoin, and  (2) there is sufficient DOT collateral locked to economically back minted PolkaBTC in case Vaults attempt theft. As such, PolkaBTC is a hybrid peg, with supply determined by both locked BTC and DOT. "
     },
     {
         "id" : 2,
-        "q" : "Who are the Vaults? Can anyone become a Vault?",
-        "a": "Vaults maintain the physical backing of PolkaBTC: they ensure BTC remains locked while PolkaBTC exists. Anyone can become a Vault. You only need: (1) a Bitcoin wallet, (2) a Polkadot wallet, and (3) to register by lock DOT collateral (secures the BTC you get to hold in custody). "
+        "question" : "Who are the Vaults? Can anyone become a Vault?",
+        "answer": "Vaults maintain the physical backing of PolkaBTC: they ensure BTC remains locked while PolkaBTC exists. Anyone can become a Vault. You only need: (1) a Bitcoin wallet, (2) a Polkadot wallet, and (3) to register by lock DOT collateral (secures the BTC you get to hold in custody). "
     },
     {
         "id" : 3,
-        "q" : "Can I always get my BTC back?",
-        "a": "PolkaBTC guarantees that you will either (1) get you BTC back whenever you want, or (2) you will be reimbursed in DOT at a beneficial rate (better than BTC?DOT market price)."
+        "question" : "Can I always get my BTC back?",
+        "answer": "PolkaBTC guarantees that you will either (1) get you BTC back whenever you want, or (2) you will be reimbursed in DOT at a beneficial rate (better than BTC?DOT market price)."
     },
     {
         "id" : 4,
-        "q" : "",
-        "a": ""
+        "question" : "",
+        "answer": ""
     }
 ]

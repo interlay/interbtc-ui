@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Col, Accordion, Row, Card } from "react-bootstrap";
-import ReactMarkdown from "react-markdown";
+import questions from "../assets/faq.json";
 
-// eslint-disable-next-line
-const faq = require("../assets/faq.json");
+type Question = {
+    id: number;
+    question: string;
+    answer: string;
+}
 
 export default function FaqPage(): JSX.Element {
 
@@ -20,15 +23,15 @@ export default function FaqPage(): JSX.Element {
                 <div className="container mt-5 pb-5">
                     <Row className="mt-5">
                         <Col xs="12" lg={{ span: 8, offset: 2 }} className="text-left mt-5">
-                            {faq.map(q => (
-                                <Accordion key={{ q.id }}>
+                            {questions.map((qes: Question) => (
+                                <Accordion key={qes.id}>
                                     <Card>
-                                        <Accordion.Toggle as={Card.Header} eventKey={{ q.id }}>
-                                            <Card.Title style={{ fontSize: "1.1em" }}>{{ q.q }}</Card.Title>
+                                        <Accordion.Toggle as={Card.Header} eventKey={qes.id.toString()}>
+                                            <Card.Title style={{ fontSize: "1.1em" }}>{qes.question}</Card.Title>
                                         </Accordion.Toggle>
                                         <Accordion.Collapse eventKey="0">
                                             <Card.Body>
-                                                {{ q.a }}
+                                                {qes.answer}
                                             </Card.Body>
                                         </Accordion.Collapse>
                                     </Card>
