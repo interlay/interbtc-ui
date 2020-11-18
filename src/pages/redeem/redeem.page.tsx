@@ -57,13 +57,23 @@ export default function RedeemPage(): JSX.Element {
                         </Col>
                     </Row>
                     <Row className="mt-5 mb-5">
-                        <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
-                            <Button variant="outline-dark" size="lg" block onClick={handleShowWizard}>
-                                Redeem PolkaBTC
+                        {balancePolkaBTC !== '0' ? (
+                            <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
+                                <Button variant="outline-bitcoin" size="lg" block onClick={handleShowWizard}>
+                                    Redeem PolkaBTC
                             </Button>
-                        </Col>
+                            </Col>
+                        ) : (
+                                <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
+                                    <p>You have no PolkaBTC yet.</p>
+                                    <Link to="/issue" className="text-decoration-none">
+                                        <Button variant="outline-polkadot" size="lg" block>
+                                            Get PolkaBTC
+                                        </Button>
+                                    </Link>
+                                </Col>
+                            )}
                     </Row>
-
                     <RedeemRequests handleShowFeedbackModal={handleShowFeedbackModal} />
 
                     <Modal show={showWizard} onHide={handleCloseWizard} size={"lg"}>
