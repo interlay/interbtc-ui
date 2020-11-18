@@ -393,11 +393,11 @@ a:not([href]):not([tabindex]):focus {
 }
 
 .fade-in-animation {
-  animation: fade 2s ease-in;
+  animation: fade 0.5s ease-in;
 }
 
 .static-fade-in-animation {
-  animation: fade 1s ease-in;
+  animation: fade 0.5s ease-in;
 }
 
 @keyframes fade {
