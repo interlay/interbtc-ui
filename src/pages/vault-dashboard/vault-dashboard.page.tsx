@@ -87,7 +87,7 @@ export default function VaultDashboardPage() {
 
     return (
         <div className="vault-dashboard-page container-fluid white-background">
-            <div className="vault-container">
+            <div className="vault-container dashboard-fade-in-animation">
                 <div className="stacked-wrapper">
                     <div className="row">
                         <div className="title">Vault Dashboard</div>

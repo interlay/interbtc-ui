@@ -391,3 +391,23 @@ a:not([href]):not([tabindex]):focus {
   width: 100%;
   padding: 0.25rem 1.5rem
 }
+
+.fade-in-animation {
+  animation: fade 2s ease-in;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.top-bar{
+  min-height: 80px;
+}

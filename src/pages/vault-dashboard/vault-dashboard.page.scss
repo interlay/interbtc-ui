@@ -109,3 +109,19 @@
         margin-top: 0.1rem;
     }
 }
+
+.dashboard-fade-in-animation {
+    animation: dashboard-fade 1s ease-in;
+}
+  
+@keyframes dashboard-fade {
+    0% {
+        opacity: 0;
+    }
+    20% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
