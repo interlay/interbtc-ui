@@ -37,7 +37,7 @@ export default function DashboardPage() {
 
     return (
         <div className="dashboard-page container-fluid white-background">
-            <div className="dashboard-container">
+            <div className="dashboard-container dashboard-fade-in-animation">
                 <div className="dashboard-wrapper">
                     <div className="row">
                         <div className="title">PolkaBTC Dashboard</div>

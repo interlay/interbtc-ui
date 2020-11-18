@@ -11,14 +11,14 @@ type Question = {
 export default function FaqPage(): JSX.Element {
     return (
         <div>
-            <section className="jumbotron text-center transparent-background">
+            <section className="jumbotron text-center transparent-background static-fade-in-animation">
                 <div className="container mt-5">
                     <h3 style={{ fontSize: "2em" }} className="lead text-white mt-5">
                         Frequently Asked Questions
                     </h3>
                 </div>
             </section>
-            <section className="markdown white-background">
+            <section className="markdown white-background static-fade-in-animation">
                 <p></p>
                 <div className="container mt-5 pb-5">
                     <Row className="mt-5">

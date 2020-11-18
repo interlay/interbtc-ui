@@ -30,7 +30,10 @@ export default function Topbar(props: TopbarProps): ReactElement {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (!relayerLoaded) return;
+        if (!relayerLoaded || !vaultClientLoaded || !polkaBtcLoaded) {
+            setTimeout(()=>setIsLoading(false),2500);
+            return;
+        }
 
         const checkIsConnected = async () => {
             const relayerConnected = await window.relayer.isConnected();
@@ -40,7 +43,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
             setIsLoading(false);
         };
         checkIsConnected();
-    }, [relayerLoaded, vaultClientLoaded]);
+    }, [relayerLoaded, vaultClientLoaded, polkaBtcLoaded]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -73,15 +76,16 @@ export default function Topbar(props: TopbarProps): ReactElement {
     };
 
     return (
-        <Navbar bg="light" expand="lg" className="border-bottom shadow-sm">
-            <Navbar.Brand>
-                <Link className="text-decoration-none" to="/">
-                    <Image src={polkaBTCLogo} width="90" className="d-inline-block align-top" height="30" fluid />
-                </Link>
-            </Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-                {!isLoading && (
+        <Navbar bg="light" expand="lg" className="border-bottom shadow-sm top-bar">
+            {!isLoading && 
+            <React.Fragment>
+                <Navbar.Brand>
+                    <Link className="text-decoration-none" to="/">
+                        <Image src={polkaBTCLogo} width="90" className="d-inline-block align-top" height="30" fluid />
+                    </Link>
+                </Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                         {!constants.STATIC_PAGE_ONLY && polkaBtcLoaded && (
                             <Link className="nav-link" to="/issue">
@@ -118,47 +122,43 @@ export default function Topbar(props: TopbarProps): ReactElement {
                             FAQ
                         </Link>
                     </Nav>
-                )}
 
-                <Nav className="d-inline">
-                    <DropdownButton  id="bug-report" title="Feedback" variant="outline-polkadot" size="sm" menuAlign="right" className="mr-2">
-                        <DropdownItem href="https://docs.google.com/forms/d/1Y0kfABO8J_7917yPGK-cEByj_ixiRPCb1lVZ0GzUzW0/edit?ts=5fb29817&gxids=7757" target="_blank">
-                            <FaEdit></FaEdit> Feedback
-                        </DropdownItem>
-                        <Dropdown.Divider />
-                        <Dropdown.Header>Report a bug:</Dropdown.Header>
-                        <DropdownItem href="https://github.com/interlay/polkabtc-ui/issues" target="_blank"><FaGithub></FaGithub> GitHub</DropdownItem>
-                        <DropdownItem href="https://discord.gg/C8tjMbgVXh" target="_blank"><FaDiscord></FaDiscord> Discord</DropdownItem>
-                    </DropdownButton>
-                </Nav>
-                {props.address !== undefined && (
-                    <div>
-                        <Nav className="d-inline">
-                            <ButtonMaybePending
-                                variant="outline-polkadot"
-                                className="mr-2"
-                                size="sm"
-                                isPending={isRequestPending}
-                                onClick={requestDOT}
-                            >
-                                Request DOT
-                    </ButtonMaybePending>
-                        </Nav>
-                        <Nav className="d-inline">
-
-                            <Button
-                                variant="outline-polkadot"
-                                size="sm"
-                                style={{ borderRadius: "1em" }}
-                                onClick={() => props.onAccountClick()}
-                            >
-                                Account: {props.address.substring(0, 10)}...{props.address.substring(38)}
-                            </Button>
-
-                        </Nav>
-                    </div>
-                )}
-            </Navbar.Collapse>
+                    <Nav className="d-inline">
+                        <DropdownButton  id="bug-report" title="Feedback" variant="outline-polkadot" size="sm" menuAlign="right" className="mr-2">
+                            <DropdownItem href="https://docs.google.com/forms/d/1Y0kfABO8J_7917yPGK-cEByj_ixiRPCb1lVZ0GzUzW0/edit?ts=5fb29817&gxids=7757" target="_blank">
+                                <FaEdit></FaEdit> Feedback
+                            </DropdownItem>
+                            <Dropdown.Divider />
+                            <Dropdown.Header>Report a bug:</Dropdown.Header>
+                            <DropdownItem href="https://github.com/interlay/polkabtc-ui/issues" target="_blank"><FaGithub></FaGithub> GitHub</DropdownItem>
+                            <DropdownItem href="https://discord.gg/C8tjMbgVXh" target="_blank"><FaDiscord></FaDiscord> Discord</DropdownItem>
+                        </DropdownButton>
+                    </Nav>
+                    {props.address !== undefined && (
+                        <React.Fragment>
+                            <Nav className="d-inline">
+                                <ButtonMaybePending
+                                    variant="outline-polkadot"
+                                    className="mr-2"
+                                    size="sm"
+                                    isPending={isRequestPending}
+                                    onClick={requestDOT}>
+                                    Request DOT
+                                </ButtonMaybePending>
+                            </Nav>
+                            <Nav className="d-inline">
+                                <Button
+                                    variant="outline-polkadot"
+                                    size="sm"
+                                    style={{ borderRadius: "1em" }}
+                                    onClick={() => props.onAccountClick()}>
+                                    Account: {props.address.substring(0, 10)}...{props.address.substring(38)}
+                                </Button>
+                            </Nav>
+                        </React.Fragment>
+                    )}
+                </Navbar.Collapse>
+            </React.Fragment>}
         </Navbar>
     );
 }
