@@ -102,6 +102,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
             if (!polkaBtcLoaded) return;
 
             try {
+                const issuePeriod = window.polkaBTC.api.query.
                 const accountId = window.polkaBTC.api.createType("AccountId", address);
                 // get all redeem request from parachain
                 const redeemRequestMap = await window.polkaBTC.redeem.mapForUser(accountId);

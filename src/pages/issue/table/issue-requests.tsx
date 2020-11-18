@@ -37,6 +37,8 @@ export default function IssueRequests(props: IssueRequestProps) {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const [executePending, setExecutePending] = useState([""]);
     const [requiredBtcConfirmations, setRequiredBtcConfirmations] = useState(0);
+    const [issuePeriod, setIssuePeriod] = useState(new Big(0));
+    const [parachainHeight, setParachainHeight] = useState(new Big(0));
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -44,6 +46,12 @@ export default function IssueRequests(props: IssueRequestProps) {
             if (!polkaBtcLoaded) return;
 
             try {
+
+                const issuePeriodBlock = await window.polkaBTC.issue.getIssuePeriod();
+                const parachainHeightBlock = await window.polkaBTC.btcRelay.getParachainBlockHeight();
+                setIssuePeriod(issuePeriodBlock.toBn());
+                setParachainHeight(parachainHeightBlock.toBn());
+
                 setRequiredBtcConfirmations(await window.polkaBTC.btcRelay.getStableBitcoinConfirmations());
 
                 const accountId = window.polkaBTC.api.createType("AccountId", address);
@@ -156,14 +164,15 @@ export default function IssueRequests(props: IssueRequestProps) {
     };
 
     const handleCompleted = (request: IssueRequest) => {
-        return <div className="expired-label">Expired</div>
         if (request.confirmations < requiredBtcConfirmations || request.confirmations === 0) {
             return <FaHourglass></FaHourglass>;
         }
         if (request.completed) {
             return <FaCheck></FaCheck>;
         }
-        
+        if(issuePeriod.add(new Big(request.creation)) > parachainHeight){
+            return <div className="expired-label">Expired</div>
+        }
         return (
             <ButtonMaybePending
                 variant="outline-dark"
