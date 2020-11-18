@@ -3,7 +3,7 @@ import { StoreType } from "../../types/util.types";
 import { useSelector } from "react-redux";
 import { Vault } from "../../types/util.types";
 import * as constants from "../../../constants";
-import { planckToDOT, satToBTC } from "@interlay/polkabtc";
+import { planckToDOT, satToBTC, roundTwoDecimals } from "@interlay/polkabtc";
 import { getAddressFromH160 } from "../../utils/utils";
 import BitcoinAddress from "../bitcoin-links/address";
 
@@ -147,7 +147,7 @@ export default function VaultTable(): ReactElement {
                                             <td>{vault.lockedBTC}</td>
                                             <td className={getCollateralizationColor(vault.collateralization)}>
                                                 {typeof vault.collateralization !== "undefined"
-                                                    ? vault.collateralization.toString() + "%"
+                                                    ? roundTwoDecimals(vault.collateralization.toString()) + "%"
                                                     : "∞"}
                                             </td>
                                             <td className={getStatusColor(vault.status)}>{vault.status}</td>
