@@ -153,7 +153,10 @@ export default class App extends Component<{}, AppState> {
         // Do not load data if showing static landing page only
         if (!constants.STATIC_PAGE_ONLY) {
             try {
-                setTimeout(()=> this.setState({isLoading: false}),3000);
+                setTimeout(()=> {
+                    if(this.state.isLoading)
+                        this.setState({isLoading: false});
+                },3000);
                 await this.createAPIInstance();
                 this.initDataOnAppBootstrap();
                 keyring.loadAll({});
@@ -186,6 +189,7 @@ export default class App extends Component<{}, AppState> {
 
         return !(state.general.polkaBtcLoaded && state.general.relayerLoaded && state.general.vaultClientLoaded);
     }
+
 
     render() {
         return (
@@ -243,7 +247,7 @@ export default class App extends Component<{}, AppState> {
                         <Footer />
                     </div> : 
                     <div className="main-loader">
-                        <img src={loadingImg}></img>
+                        <img src={loadingImg} alt="loading animation"></img>
                     </div>}   
                 </Router>
                 <Modal show={this.state.showSelectAccount} onHide={() => { this.setState({ showSelectAccount: false })}} size={"lg"}>
