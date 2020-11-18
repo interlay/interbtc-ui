@@ -73,7 +73,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
                                             <td>{oracle.source}</td>
                                             <td>{oracle.feed}</td>
                                             <td>{oracle.lastUpdate}</td>
-                                            <td> 1 DOT = {oracle.exchangeRate} BTC</td>
+                                            <td> 1 BTC = {oracle.exchangeRate} DOT</td>
                                         </tr>
                                     );
                                 })}
