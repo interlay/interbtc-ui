@@ -36,7 +36,7 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
         if (name === "btcTxId" && issueRequests) {
             const txId = value;
             dispatch(changeBtcTxIdAction(txId));
-            let request = issueRequests.find((r) => r.id === issueId);
+            const request = issueRequests.find((r) => r.id === issueId);
             if (request) {
                 request.btcTxId = txId;
                 dispatch(updateIssueRequestAction(request));
@@ -57,8 +57,12 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
                     <h5>Confirmation</h5>
                     <Row className="justify-content-md-center">
                         <Col className="text-left">
-                            <p> <b>Your request is now being processed.</b><br/>
-                                We will monitor your Bitcoin transaction and notify you when it has been confirmed. <br/>
+                            <p>
+                                {" "}
+                                <b>Your request is now being processed.</b>
+                                <br />
+                                We will monitor your Bitcoin transaction and notify you when it has been confirmed.{" "}
+                                <br />
                                 You will then see a "Confirm" button next to your issue request on the issue page.
                             </p>
                             <p>
