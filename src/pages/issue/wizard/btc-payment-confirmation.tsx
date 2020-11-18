@@ -39,6 +39,13 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
             let request = issueRequests.find((r) => r.id === issueId);
             if (request) {
                 request.btcTxId = txId;
+
+                try {
+                    request.confirmations = (await window.polkaBTC.btcCore.getTransactionStatus(request.btcTxId)).confirmations;
+                } catch (err) {
+                    console.log("Transaction not yet included in Bitcoin.");
+                }
+
                 dispatch(updateIssueRequestAction(request));
             } else {
                 toast.error("Exception: Issue request not found.");
