@@ -396,6 +396,10 @@ a:not([href]):not([tabindex]):focus {
   animation: fade 2s ease-in;
 }
 
+.static-fade-in-animation {
+  animation: fade 1s ease-in;
+}
+
 @keyframes fade {
   0% {
     opacity: 0;
@@ -410,4 +414,11 @@ a:not([href]):not([tabindex]):focus {
 
 .top-bar{
   min-height: 80px;
+}
+
+.main-loader {
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+  line-height: 100vh;
 }

@@ -24,7 +24,7 @@ export default function AboutPage(): JSX.Element {
 
     return (
         <div>
-            <section className="jumbotron text-center transparent-background">
+            <section className="jumbotron text-center transparent-background fade-in-animation">
                 <div className="container mt-5">
                     <h3 style={{ fontSize: "2em" }} className="lead text-white mt-5">
                         About PolkaBTC
@@ -68,7 +68,7 @@ export default function AboutPage(): JSX.Element {
                     </Row>
                 </Col>
             </section>
-            <section className="markdown white-background">
+            <section className="markdown white-background static-fade-in-animation dahboard-min-height">
                 <div className="container mt-5 pb-5">
                     <Row className="mt-5">
                         <Col xs="12" lg={{ span: 8, offset: 2 }} className="text-left mt-5">
