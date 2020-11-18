@@ -45,9 +45,8 @@ export default function BTCPayment() {
                     <p>
                         You have requested to mint {amountBTC} PolkaBTC, incurring a fee of {feeBTC} BTC.
                     </p>
-                    <p>Please make the following Bitcoin payment.</p>
-                    <h5>Bitcoin Payment Details</h5>
-                    <p>Create a Bitcoin transaction with two outputs.</p>
+                    <p>Please make the following Bitcoin payment with two outputs as shown below.</p>
+                    <p className="warning-color"><b>Please make exactly 1 payment for the exact specified amount. Otherwise, your request will not be processed and you will loose your funds.</b></p>
                     <FormGroup>
                         <ListGroup>
                             <ListGroupItem>Output 1</ListGroupItem>
