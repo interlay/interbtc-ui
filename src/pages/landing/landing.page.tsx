@@ -18,7 +18,7 @@ export default function LandingPage(): JSX.Element {
             <section className="jumbotron min-vh-90 text-center transparent-background">
                 <div className="container mt-5">
                     <Link to="/">
-                        <Image src={PolkaBTCImg} width="316"></Image>
+                        <Image src={PolkaBTCImg} width="256"></Image>
                     </Link>
                     <h1 className="text-white mt-5">PolkaBTC</h1>
                     <h2 className="text-white">Bitcoin for Polkadot's DeFi Ecosystem</h2>
