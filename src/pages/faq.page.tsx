@@ -20,16 +20,17 @@ export default function FaqPage(): JSX.Element {
                 </div>
             </section>
             <section className="markdown white-background">
+                <p></p>
                 <div className="container mt-5 pb-5">
                     <Row className="mt-5">
                         <Col xs="12" lg={{ span: 8, offset: 2 }} className="text-left mt-5">
                             {questions.map((qes: Question) => (
-                                <Accordion key={qes.id}>
+                                <Accordion key={qes.id.toString()} className="mt-2">
                                     <Card>
                                         <Accordion.Toggle as={Card.Header} eventKey={qes.id.toString()}>
                                             <Card.Title style={{ fontSize: "1.1em" }}>{qes.question}</Card.Title>
                                         </Accordion.Toggle>
-                                        <Accordion.Collapse eventKey="0">
+                                        <Accordion.Collapse eventKey={qes.id.toString()}>
                                             <Card.Body>
                                                 {qes.answer}
                                             </Card.Body>
@@ -37,6 +38,7 @@ export default function FaqPage(): JSX.Element {
                                     </Card>
                                 </Accordion>
                             ))}
+                            <p className="mt-2">Got more questions? <a href="https://discord.gg/C8tjMbgVXh">Join our Discord</a> and ask away!</p>
                         </Col>
                     </Row>
                 </div>
