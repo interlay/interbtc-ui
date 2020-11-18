@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat, stripHexPrefix, satToBTC } from "@interlay/polkabtc";
 import { getAddressFromH160 } from "../../../common/utils/utils";
+import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
 
 type EnterBTCForm = {
     amountBTC: string;
@@ -34,6 +35,10 @@ export default function EnterBTCAmount() {
             const amountSAT = btcToSat(amountBTC);
             if (amountSAT === undefined) {
                 throw new Error("Invalid BTC amount input.");
+            }
+            const amountBTCInteger = amountBTC.split(".")[0];
+            if (amountBTCInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
+                throw new Error("Input value is too high");
             }
             dispatch(changeAmountBTCAction(amountBTC));
             // FIXME: hardcoded until we have a fee model
@@ -69,7 +74,7 @@ export default function EnterBTCAmount() {
                 <p>Please enter the amount of BTC you want to receive in PolkaBTC.</p>
                 <input
                     name="amountBTC"
-                    type="string"
+                    type="number"
                     className={"custom-input" + (errors.amountBTC ? " error-borders" : "")}
                     ref={register({ required: true })}
                 />

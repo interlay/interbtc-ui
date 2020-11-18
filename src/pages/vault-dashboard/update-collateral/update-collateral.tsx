@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { updateCollateralAction, updateCollateralizationAction } from "../../../common/actions/vault.actions";
-import { planckToDOT, dotToPlanck } from "@interlay/polkabtc";
+import { planckToDOT, dotToPlanck, roundTwoDecimals } from "@interlay/polkabtc";
 import { StoreType } from "../../../common/types/util.types";
 import Big from "big.js";
 import ButtonMaybePending from "../../../common/components/pending-button";
@@ -80,13 +80,13 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     const closeModal = () => {
         setNewCollaterlization("");
         props.onClose();
-    }
+    };
 
     const onChange = async (obj: SyntheticEvent) => {
         try {
             const value = (obj.target as HTMLInputElement).value;
-            if (value === "" || !polkaBtcLoaded || Number(value) <=0 || isNaN(Number(value)) || !vaultClientLoaded) {
-                setCollateralUpdateAllowed(false); 
+            if (value === "" || !polkaBtcLoaded || Number(value) <= 0 || isNaN(Number(value)) || !vaultClientLoaded) {
+                setCollateralUpdateAllowed(false);
                 return;
             }
 
@@ -95,7 +95,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                 throw new Error("Please enter an amount greater than 1 Planck");
             }
             setNewCollateral(newCollateral);
-            
+
             const accountId = await window.vaultClient.getAccountId();
             const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
             const requiredCollateral = (await window.polkaBTC.vaults.getRequiredCollateralForVault(vaultId)).toString();
@@ -152,7 +152,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                                     aria-describedby="basic-addon2"
                                     ref={register({
                                         required: true,
-                                        min: 0
+                                        min: 0,
                                     })}
                                     onChange={onChange}
                                 ></input>
@@ -174,8 +174,10 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                             )}
                         </div>
                         <div className="col-12">
-                            New Collateralization: {Number(newCollateralization) > 1000 ? "more than 1000" : newCollateralization}
-                            {newCollateralization !== "∞" ? "%" : ""}
+                            New Collateralization: {Number(newCollateralization) > 1000 ? "more than 1000" : ""}
+                            {newCollateralization !== "∞"
+                                ? `${roundTwoDecimals(newCollateralization)}%`
+                                : newCollateralization}
                         </div>
                     </div>
                 </Modal.Body>

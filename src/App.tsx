@@ -35,6 +35,7 @@ import LandingPage from "./pages/landing/landing.page";
 import IssuePage from "./pages/issue/issue.page";
 import RedeemPage from "./pages/redeem/redeem.page";
 import AboutPage from "./pages/about.page";
+import FaqPage from "./pages/faq.page";
 import UserGuidePage from "./pages/user-guide.page";
 import DashboardPage from "./pages/dashboard/dashboard.page";
 import VaultDashboardPage from "./pages/vault-dashboard/vault-dashboard.page";
@@ -231,6 +232,9 @@ export default class App extends Component<{}, AppState> {
                             </Route>
                             <Route path="/about">
                                 <AboutPage />
+                            </Route>
+                            <Route path="/faq">
+                                <FaqPage />
                             </Route>
                             <Route exact path="/">
                                 <LandingPage />

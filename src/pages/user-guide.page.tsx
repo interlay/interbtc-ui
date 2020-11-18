@@ -24,7 +24,7 @@ export default function UserGuidePage(): JSX.Element {
             <section className="jumbotron text-center transparent-background static-fade-in-animation">
                 <div className="container mt-5">
                     <h3 style={{ fontSize: "2em" }} className="lead text-white mt-5">
-                        PolkaBTC User Guide (Alpha)
+                        PolkaBTC User Guide (Alpha Testnet)
                     </h3>
                 </div>
             </section>

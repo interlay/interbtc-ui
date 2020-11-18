@@ -15,6 +15,8 @@ export const STATIC_PAGE_ONLY = getStaticPage();
 export const FAUCET_AMOUNT = "100000000000"; // 10 DOT in planck
 export const FAUCET_ADDRESS_SEED = "//Alice";
 
+export const BALANCE_MAX_INTEGER_LENGTH = 13;
+
 // timeout in milliseconds for setInterval
 export const COMPONENT_UPDATE_MS = 10000;
 

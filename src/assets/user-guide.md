@@ -64,8 +64,11 @@ Make sure you have at least some tBTC in your wallet. You can get them from a fa
 
 You will need the Polkadot-js browser extension to test PolkaBTC. 
 
-*   Install the Polkadot.js extension in your browser: [https://github.com/polkadot-js/extension](https://github.com/polkadot-js/extension)  
-*   Create a new account. 
+1.   Install the Polkadot.js extension in your browser: [https://github.com/polkadot-js/extension](https://github.com/polkadot-js/extension)  
+2.   Create a new account. 
+3.   Connect account to polkaBTC.io via the Polkadot.js pop-up.
+
+**Please make sure to first create an account before connecting your wallet to polkaBTC.io!**. 
 
 ### Getting Testnet DOT
 
@@ -87,6 +90,8 @@ The Issue page displays your current PolkaBTC and DOT balances. In addition, a t
 
 
 ### Issue Process
+
+**Don't forget to get some testnet DOT via the faucet ("Request DOT" button, right side of top bar) before making an issue request. You will need this to pay for parachain transaction fees**. 
 
 To issue PolkaBTC, follow the “Issue PolkaBTC” button on the Issue page. In the shown pop-up dialogue:
 
