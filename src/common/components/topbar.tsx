@@ -114,6 +114,9 @@ export default function Topbar(props: TopbarProps): ReactElement {
                         <Link className="nav-link" to="/about">
                             About
                         </Link>
+                        <Link className="nav-link" to="/faq">
+                            FAQ
+                        </Link>
                     </Nav>
                 )}
 
