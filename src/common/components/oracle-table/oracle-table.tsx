@@ -66,18 +66,29 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
                                     <th>Exchange Rate</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {oracles.map((oracle, index) => {
-                                    return (
-                                        <tr key={index}>
-                                            <td>{oracle.source}</td>
-                                            <td>{oracle.feed}</td>
-                                            <td>{oracle.lastUpdate}</td>
-                                            <td> 1 BTC = {oracle.exchangeRate} DOT</td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
+                            {!oracles || !oracles.length
+                                ?
+                                <tbody>
+                                    <tr>
+                                        <td colSpan={4}>
+                                            No active oracles
+                                    </td>
+                                    </tr>
+                                </tbody>
+                                :
+                                <tbody>
+                                    {oracles.map((oracle, index) => {
+                                        return (
+                                            <tr key={index}>
+                                                <td>{oracle.source}</td>
+                                                <td>{oracle.feed}</td>
+                                                <td>{oracle.lastUpdate}</td>
+                                                <td> 1 BTC = {oracle.exchangeRate} DOT</td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            }
                         </table>
                     </div>
                 </div>

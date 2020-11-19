@@ -89,17 +89,28 @@ export default function StakedRelayerTable(): ReactElement {
                                     <th>Status</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {relayers.map((relayer, index) => {
-                                    return (
-                                        <tr key={index}>
-                                            <td className="break-words">{relayer.AccountId}</td>
-                                            <td>{relayer.lockedDOT}</td>
-                                            <td className={getStatusColor(relayer.status)}>{relayer.status}</td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
+                            {!relayers || !relayers.length
+                                ?
+                                <tbody>
+                                    <tr>
+                                        <td colSpan={3}>
+                                            No registered staked relayers 
+                                    </td>
+                                    </tr>
+                                </tbody>
+                                :
+                                <tbody>
+                                    {relayers.map((relayer, index) => {
+                                        return (
+                                            <tr key={index}>
+                                                <td className="break-words">{relayer.AccountId}</td>
+                                                <td>{relayer.lockedDOT}</td>
+                                                <td className={getStatusColor(relayer.status)}>{relayer.status}</td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            }
                         </table>
                     </div>
                 </div>
