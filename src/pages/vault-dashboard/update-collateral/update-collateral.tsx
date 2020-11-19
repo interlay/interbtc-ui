@@ -78,8 +78,8 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     });
 
     const closeModal = () => {
-        setNewCollaterlization("");
         props.onClose();
+        setNewCollaterlization("");
     };
 
     const onChange = async (obj: SyntheticEvent) => {
@@ -174,10 +174,12 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                             )}
                         </div>
                         <div className="col-12">
-                            New Collateralization: {Number(newCollateralization) > 1000 ? "more than 1000" : ""}
+                            New Collateralization:
                             {newCollateralization !== "∞"
-                                ? `${roundTwoDecimals(newCollateralization)}%`
-                                : newCollateralization}
+                                ? Number(newCollateralization) > 1000 ? 
+                                    " more than 1000" 
+                                    : " " + roundTwoDecimals(newCollateralization || "0") + "%"
+                                : " " + newCollateralization}
                         </div>
                     </div>
                 </Modal.Body>
