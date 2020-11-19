@@ -135,26 +135,37 @@ export default function VaultTable(): ReactElement {
                                     <th>Status</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {vaults.map((vault, index) => {
-                                    return (
-                                        <tr key={index}>
-                                            <td>{vault.vaultId}</td>
-                                            <td className="break-words">
-                                                <BitcoinAddress btcAddress={vault.btcAddress} />
-                                            </td>
-                                            <td>{vault.lockedDOT}</td>
-                                            <td>{vault.lockedBTC}</td>
-                                            <td className={getCollateralizationColor(vault.collateralization)}>
-                                                {typeof vault.collateralization !== "undefined"
-                                                    ? roundTwoDecimals(vault.collateralization.toString()) + "%"
-                                                    : "∞"}
-                                            </td>
-                                            <td className={getStatusColor(vault.status)}>{vault.status}</td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
+                            {vaults && vaults.length
+                                ?
+                                <tbody>
+                                    {vaults.map((vault, index) => {
+                                        return (
+                                            <tr key={index}>
+                                                <td>{vault.vaultId}</td>
+                                                <td className="break-words">
+                                                    <BitcoinAddress btcAddress={vault.btcAddress} />
+                                                </td>
+                                                <td>{vault.lockedDOT}</td>
+                                                <td>{vault.lockedBTC}</td>
+                                                <td className={getCollateralizationColor(vault.collateralization)}>
+                                                    {typeof vault.collateralization !== "undefined"
+                                                        ? roundTwoDecimals(vault.collateralization.toString()) + "%"
+                                                        : "∞"}
+                                                </td>
+                                                <td className={getStatusColor(vault.status)}>{vault.status}</td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                                : 
+                                <tbody>
+                                    <tr>
+                                        <td colSpan={6}>
+                                            No registered vaults
+                                    </td>
+                                    </tr>
+                                </tbody>
+                            }
                         </table>
                     </div>
                 </div>

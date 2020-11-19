@@ -60,7 +60,9 @@ export default function BitcoinTable(): ReactElement {
             // Check for NO_DATA, forks and height difference
             setNoData(bestBitcoinBlock !== bestParachainBlock && bestBitcoinHeight < bestParachainHeight);
 
-            setFork(bestBitcoinBlock !== bestParachainBlock && bestBitcoinHeight <= bestParachainHeight);
+            // TODO: get fork info from parachain. Not possible to check in UI.
+            setFork(false);
+
             setHeightDiff(bestBitcoinHeight - bestParachainHeight);
 
             setStatus(getRelayStatus());
