@@ -1,6 +1,6 @@
 import { Container, Image } from "react-bootstrap";
 import React, { Component } from "react";
-import { FaTelegramPlane, FaMediumM, FaGithub, FaTwitter } from 'react-icons/fa';
+import { FaGithub, FaTwitter, FaDiscord } from 'react-icons/fa';
 import interlayImg from "../../../assets/img/interlay.png";
 import web3FoundationImg from "../../../assets/img/polkabtc/web3 foundation_grants_badge_black.png"
 import "./footer.scss";
@@ -43,14 +43,9 @@ export default class Footer extends Component {
                                      </a>
                            
                                 <a className="nav-link d-inline" rel="noopener noreferrer" title="" data-placement="bottom"
-                                    href="https://t.me/interlay" target="_blank"
+                                    href="https://discord.gg/C8tjMbgVXh" target="_blank"
                                     data-original-title="Join our Telegram channel">
-                                    <FaTelegramPlane></FaTelegramPlane>
-                                </a>
-                            
-                                <a className="nav-link d-inline" rel="noopener noreferrer" title="" data-placement="bottom"
-                                    href="https://medium.com/Interlay" target="_blank" data-original-title="Follow us on Medium">
-                                    <FaMediumM></FaMediumM>
+                                    <FaDiscord></FaDiscord>
                                 </a>
                             
                                 <a className="nav-link d-inline" rel="noopener noreferrer" title="" data-placement="bottom"
