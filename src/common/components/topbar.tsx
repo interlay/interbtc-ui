@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import polkaBTCLogo from "../../assets/img/polkabtc/PolkaBTC_black.svg";
-import { Navbar, Nav, Image, Button, DropdownButton, Dropdown, NavItem } from "react-bootstrap";
+import { Navbar, Nav, Image, Button, DropdownButton, Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../types/util.types";
@@ -30,7 +30,10 @@ export default function Topbar(props: TopbarProps): ReactElement {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (!relayerLoaded) return;
+        if (!relayerLoaded || !vaultClientLoaded || !polkaBtcLoaded) {
+            setTimeout(()=>setIsLoading(false),2500);
+            return;
+        }
 
         const checkIsConnected = async () => {
             const relayerConnected = await window.relayer.isConnected();
@@ -40,7 +43,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
             setIsLoading(false);
         };
         checkIsConnected();
-    }, [relayerLoaded, vaultClientLoaded]);
+    }, [relayerLoaded, vaultClientLoaded, polkaBtcLoaded]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -66,22 +69,23 @@ export default function Topbar(props: TopbarProps): ReactElement {
             const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
             const balanceDOT = planckToDOT(balancePLANCK.toString());
             dispatch(updateBalanceDOTAction(balanceDOT));
-        } catch(error) {
+        } catch (error) {
             console.log(error);
-        }     
+        }
         setIsRequestPending(false);
     };
 
     return (
-        <Navbar bg="light" expand="lg" className="border-bottom shadow-sm">
-            <Navbar.Brand>
-                <Link className="text-decoration-none" to="/">
-                    <Image src={polkaBTCLogo} width="90" className="d-inline-block align-top" height="30" fluid />
-                </Link>
-            </Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-                {!isLoading && (
+        <Navbar bg="light" expand="lg" className="border-bottom shadow-sm top-bar">
+            {!isLoading && 
+            <React.Fragment>
+                <Navbar.Brand>
+                    <Link className="text-decoration-none" to="/">
+                        <Image src={polkaBTCLogo} width="90" className="d-inline-block align-top" height="30" fluid />
+                    </Link>
+                </Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                         {!constants.STATIC_PAGE_ONLY && polkaBtcLoaded && (
                             <Link className="nav-link" to="/issue">
@@ -114,45 +118,47 @@ export default function Topbar(props: TopbarProps): ReactElement {
                         <Link className="nav-link" to="/about">
                             About
                         </Link>
+                        <Link className="nav-link" to="/faq">
+                            FAQ
+                        </Link>
                     </Nav>
-                )}
 
-                <Nav>
-                    <DropdownButton as={NavItem} id="bug-report" title="Feedback" variant="outline-polkabtc" size="sm" style={{ borderRadius: "1em"}}>
-                        <DropdownItem href="https://docs.google.com/forms/d/1Y0kfABO8J_7917yPGK-cEByj_ixiRPCb1lVZ0GzUzW0/edit?ts=5fb29817&gxids=7757" target="_blank">
-                            <FaEdit></FaEdit> Feedback
-                        </DropdownItem>    
-                        <Dropdown.Divider/>
-                        <div className="divider-text">Report bug:</div>
-                        <DropdownItem href="https://github.com/interlay/polkabtc-ui/issues" target="_blank"><FaGithub></FaGithub> GitHub</DropdownItem>
-                        <DropdownItem href="https://discord.gg/C8tjMbgVXh" target="_blank"><FaDiscord></FaDiscord> Discord</DropdownItem>
-                    </DropdownButton>
-                </Nav>
-                <Nav className="d-inline">
-                    <ButtonMaybePending
-                        variant="outline-dark"
-                        className="mr-2"
-                        size="sm"
-                        style={{ borderRadius: "1em" }}
-                        isPending={isRequestPending}
-                        onClick={requestDOT}
-                    >
-                        Request DOT
-                    </ButtonMaybePending>
-                </Nav>
-                <Nav className="d-inline">
+                    <Nav className="d-inline">
+                        <DropdownButton  id="bug-report" title="Feedback" variant="outline-polkadot" size="sm" menuAlign="right" className="mr-2">
+                            <DropdownItem href="https://forms.gle/zzmzCrgTfmcXbNDd8" target="_blank">
+                                <FaEdit></FaEdit> Feedback
+                            </DropdownItem>
+                            <Dropdown.Divider />
+                            <Dropdown.Header>Report a bug:</Dropdown.Header>
+                            <DropdownItem href="https://github.com/interlay/polkabtc-ui/issues" target="_blank"><FaGithub></FaGithub> GitHub</DropdownItem>
+                            <DropdownItem href="https://discord.gg/C8tjMbgVXh" target="_blank"><FaDiscord></FaDiscord> Discord</DropdownItem>
+                        </DropdownButton>
+                    </Nav>
                     {props.address !== undefined && (
-                        <Button
-                            variant="outline-polkadot"
-                            size="sm"
-                            style={{ borderRadius: "1em" }}
-                            onClick={() => props.onAccountClick()}
-                        >
-                            Account: {props.address.substring(0, 10)}...{props.address.substring(38)}
-                        </Button>
+                        <React.Fragment>
+                            <Nav className="d-inline">
+                                <ButtonMaybePending
+                                    variant="outline-polkadot"
+                                    className="mr-2"
+                                    size="sm"
+                                    isPending={isRequestPending}
+                                    onClick={requestDOT}>
+                                    Request DOT
+                                </ButtonMaybePending>
+                            </Nav>
+                            <Nav className="d-inline">
+                                <Button
+                                    variant="outline-polkadot"
+                                    size="sm"
+                                    style={{ borderRadius: "1em" }}
+                                    onClick={() => props.onAccountClick()}>
+                                    Account: {props.address.substring(0, 10)}...{props.address.substring(38)}
+                                </Button>
+                            </Nav>
+                        </React.Fragment>
                     )}
-                </Nav>
-            </Navbar.Collapse>
+                </Navbar.Collapse>
+            </React.Fragment>}
         </Navbar>
     );
 }

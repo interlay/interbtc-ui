@@ -9,7 +9,7 @@ import Big from "big.js";
 
 import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
 import keyring from "@polkadot/ui-keyring";
-
+import loadingImg from "./assets/img/dual-ball-loading.gif";
 import AccountSelector from "./pages/account-selector";
 import {
     isPolkaBtcLoaded,
@@ -35,6 +35,7 @@ import LandingPage from "./pages/landing/landing.page";
 import IssuePage from "./pages/issue/issue.page";
 import RedeemPage from "./pages/redeem/redeem.page";
 import AboutPage from "./pages/about.page";
+import FaqPage from "./pages/faq.page";
 import UserGuidePage from "./pages/user-guide.page";
 import DashboardPage from "./pages/dashboard/dashboard.page";
 import VaultDashboardPage from "./pages/vault-dashboard/vault-dashboard.page";
@@ -56,6 +57,7 @@ export default class App extends Component<{}, AppState> {
         address: undefined,
         signer: undefined,
         showSelectAccount: false,
+        isLoading: true,
     };
 
     async requestDotFromFaucet() {
@@ -126,6 +128,7 @@ export default class App extends Component<{}, AppState> {
             }, 5000);
             window.polkaBTC = await connectToParachain();
             store.dispatch(isPolkaBtcLoaded(true));
+            this.setState({isLoading: false});
         } catch (error) {
             if (!window.polkaBTC)
                 toast.warn(
@@ -150,6 +153,10 @@ export default class App extends Component<{}, AppState> {
         // Do not load data if showing static landing page only
         if (!constants.STATIC_PAGE_ONLY) {
             try {
+                setTimeout(()=> {
+                    if(this.state.isLoading)
+                        this.setState({isLoading: false});
+                },3000);
                 await this.createAPIInstance();
                 this.initDataOnAppBootstrap();
                 keyring.loadAll({});
@@ -177,11 +184,19 @@ export default class App extends Component<{}, AppState> {
         store.dispatch(changeAddressAction(address));
     }
 
+    isLoading = () => {
+        const state = store.getState();
+
+        return !(state.general.polkaBtcLoaded && state.general.relayerLoaded && state.general.vaultClientLoaded);
+    }
+
+
     render() {
         return (
             <Provider store={store}>
                 <Router>
-                    <div className="main d-flex flex-column min-vh-100 polkabtc-background">
+                    {!this.state.isLoading ?
+                    <div className="main d-flex flex-column min-vh-100 polkabtc-background fade-in-animation">
                         <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
                         {!constants.STATIC_PAGE_ONLY && (
                             <Topbar
@@ -222,12 +237,18 @@ export default class App extends Component<{}, AppState> {
                             <Route path="/about">
                                 <AboutPage />
                             </Route>
+                            <Route path="/faq">
+                                <FaqPage />
+                            </Route>
                             <Route exact path="/">
                                 <LandingPage />
                             </Route>
                         </Switch>
                         <Footer />
-                    </div>
+                    </div> : 
+                    <div className="main-loader">
+                        <img src={loadingImg} alt="loading animation"></img>
+                    </div>}   
                 </Router>
                 <Modal show={this.state.showSelectAccount} onHide={() => { this.setState({ showSelectAccount: false })}} size={"lg"}>
                     <AccountSelector

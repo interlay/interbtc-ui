@@ -9,6 +9,7 @@ import "./dashboard.page.scss";
 import { StoreType } from "../../common/types/util.types";
 import StakedRelayerTable from "./staked-relayer-table/staked-relayer-table";
 import { toast } from "react-toastify";
+import { roundTwoDecimals } from "@interlay/polkabtc";
 
 export default function DashboardPage() {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -36,7 +37,7 @@ export default function DashboardPage() {
 
     return (
         <div className="dashboard-page container-fluid white-background">
-            <div className="dashboard-container">
+            <div className="dashboard-container dashboard-fade-in-animation">
                 <div className="dashboard-wrapper">
                     <div className="row">
                         <div className="title">PolkaBTC Dashboard</div>
@@ -53,7 +54,12 @@ export default function DashboardPage() {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <div className="stats">Collateralization rate: {collateralizationRate}</div>
+                            <div className="stats">
+                                Collateralization rate:{" "}
+                                {collateralizationRate === "∞"
+                                    ? collateralizationRate
+                                    : `${roundTwoDecimals(collateralizationRate)}%`}
+                            </div>
                         </div>
                     </div>
                     <BitcoinTable></BitcoinTable>

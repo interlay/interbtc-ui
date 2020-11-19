@@ -391,3 +391,38 @@ a:not([href]):not([tabindex]):focus {
   width: 100%;
   padding: 0.25rem 1.5rem
 }
+
+.fade-in-animation {
+  animation: fade 0.5s ease-in;
+}
+
+.static-fade-in-animation {
+  animation: fade 0.5s ease-in;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.top-bar{
+  min-height: 80px;
+}
+
+.main-loader {
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+  line-height: 100vh;
+}
+
+.warning-color {
+  color: #510101;
+}

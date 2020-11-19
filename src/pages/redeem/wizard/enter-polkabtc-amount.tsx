@@ -13,6 +13,7 @@ import { StoreType } from "../../../common/types/util.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat, satToBTC } from "@interlay/polkabtc";
 import { getAddressFromH160 } from "../../../common/utils/utils";
+import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
 
 type EnterPolkaBTCForm = {
     amountPolkaBTC: string;
@@ -37,6 +38,10 @@ export default function EnterPolkaBTCAmount() {
             const amountPolkaSAT = btcToSat(amountPolkaBTC);
             if (amountPolkaSAT === undefined) {
                 throw new Error("Invalid PolkaBTC amount input");
+            }
+            const amountPolkaBTCInteger = amountPolkaBTC.split(".")[0];
+            if (amountPolkaBTCInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
+                throw new Error("Input value is too high");
             }
             dispatch(changeAmountPolkaBTCAction(amountPolkaBTC));
             const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountPolkaSAT);

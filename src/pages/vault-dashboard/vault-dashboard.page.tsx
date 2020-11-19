@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import IssueTable from "./issue-table/issue-table";
 import RedeemTable from "./redeem-table/redeem-table";
 import ReplaceTable from "./replace-table/replace-table";
-import { satToBTC, planckToDOT } from "@interlay/polkabtc";
+import { satToBTC, planckToDOT, roundTwoDecimals } from "@interlay/polkabtc";
 import {
     updateBTCAddressAction,
     updateCollateralizationAction,
@@ -87,7 +87,7 @@ export default function VaultDashboardPage() {
 
     return (
         <div className="vault-dashboard-page container-fluid white-background">
-            <div className="vault-container">
+            <div className="vault-container dashboard-fade-in-animation dahboard-min-height">
                 <div className="stacked-wrapper">
                     <div className="row">
                         <div className="title">Vault Dashboard</div>
@@ -133,9 +133,9 @@ export default function VaultDashboardPage() {
                             <div className="col-12">
                                 <div className="stats">
                                     Collateralization: &nbsp;
-                                    {collateralization === undefined || isNaN(collateralization) ? 
-                                        "∞" : `${(collateralization * 100).toFixed(3)}%`
-                                    }
+                                    {collateralization === undefined || isNaN(collateralization)
+                                        ? "∞"
+                                        : `${roundTwoDecimals((collateralization * 100).toString())}%`}
                                 </div>
                             </div>
                         </div>
