@@ -135,16 +135,8 @@ export default function VaultTable(): ReactElement {
                                     <th>Status</th>
                                 </tr>
                             </thead>
-                            {!vaults || !vaults.length
+                            {vaults && vaults.length
                                 ?
-                                <tbody>
-                                    <tr>
-                                        <td colSpan={6}>
-                                            No registered vaults
-                                    </td>
-                                    </tr>
-                                </tbody>
-                                :
                                 <tbody>
                                     {vaults.map((vault, index) => {
                                         return (
@@ -164,6 +156,14 @@ export default function VaultTable(): ReactElement {
                                             </tr>
                                         );
                                     })}
+                                </tbody>
+                                : 
+                                <tbody>
+                                    <tr>
+                                        <td colSpan={6}>
+                                            No registered vaults
+                                    </td>
+                                    </tr>
                                 </tbody>
                             }
                         </table>

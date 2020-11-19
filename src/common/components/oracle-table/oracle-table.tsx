@@ -66,16 +66,8 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
                                     <th>Exchange Rate</th>
                                 </tr>
                             </thead>
-                            {!oracles || !oracles.length
+                            {oracles && oracles.length
                                 ?
-                                <tbody>
-                                    <tr>
-                                        <td colSpan={4}>
-                                            No active oracles
-                                    </td>
-                                    </tr>
-                                </tbody>
-                                :
                                 <tbody>
                                     {oracles.map((oracle, index) => {
                                         return (
@@ -87,6 +79,14 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
                                             </tr>
                                         );
                                     })}
+                                </tbody>
+                                :
+                                <tbody>
+                                    <tr>
+                                        <td colSpan={4}>
+                                            No active oracles
+                                        </td>
+                                    </tr>
                                 </tbody>
                             }
                         </table>

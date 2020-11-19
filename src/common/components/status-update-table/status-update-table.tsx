@@ -196,16 +196,8 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                     <th>Result</th>
                                 </tr>
                             </thead>
-                            {!statusUpdates || !statusUpdates.length
+                            {statusUpdates && statusUpdates.length
                                 ?
-                                <tbody>
-                                    <tr>
-                                        <td colSpan={8}>
-                                            No parachain status updates
-                                    </td>
-                                    </tr>
-                                </tbody>
-                                :
                                 <tbody>
                                     {statusUpdates.map((statusUpdate, index) => {
                                         return (
@@ -280,6 +272,14 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                             </tr>
                                         );
                                     })}
+                                </tbody>
+                                :
+                                <tbody>
+                                    <tr>
+                                        <td colSpan={8}>
+                                            No parachain status updates
+                                        </td>
+                                    </tr>
                                 </tbody>
                             }
                         </table>

@@ -89,16 +89,8 @@ export default function StakedRelayerTable(): ReactElement {
                                     <th>Status</th>
                                 </tr>
                             </thead>
-                            {!relayers || !relayers.length
+                            {relayers && relayers.length
                                 ?
-                                <tbody>
-                                    <tr>
-                                        <td colSpan={3}>
-                                            No registered staked relayers 
-                                    </td>
-                                    </tr>
-                                </tbody>
-                                :
                                 <tbody>
                                     {relayers.map((relayer, index) => {
                                         return (
@@ -109,6 +101,14 @@ export default function StakedRelayerTable(): ReactElement {
                                             </tr>
                                         );
                                     })}
+                                </tbody>
+                                :
+                                <tbody>
+                                    <tr>
+                                        <td colSpan={3}>
+                                            No registered staked relayers
+                                    </td>
+                                    </tr>
                                 </tbody>
                             }
                         </table>
