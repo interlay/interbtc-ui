@@ -2,7 +2,7 @@ import React, { useState, MouseEvent } from "react";
 
 import Big from "big.js";
 import { IssueRequest } from "../../../common/types/issue.types";
-import { Table } from "react-bootstrap";
+import { Table, Badge } from "react-bootstrap";
 import { shortAddress, parachainToUIIssueRequest } from "../../../common/utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
@@ -37,6 +37,8 @@ export default function IssueRequests(props: IssueRequestProps) {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const [executePending, setExecutePending] = useState([""]);
     const [requiredBtcConfirmations, setRequiredBtcConfirmations] = useState(0);
+    const [issuePeriod, setIssuePeriod] = useState(new Big(0));
+    const [parachainHeight, setParachainHeight] = useState(new Big(0));
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -44,6 +46,12 @@ export default function IssueRequests(props: IssueRequestProps) {
             if (!polkaBtcLoaded) return;
 
             try {
+
+                const issuePeriodBlock = await window.polkaBTC.issue.getIssuePeriod();
+                const parachainHeightBlock = await window.polkaBTC.system.getCurrentBlockNumber();
+                setIssuePeriod(new Big(issuePeriodBlock.toString()));
+                setParachainHeight(new Big(parachainHeightBlock.toString()));
+
                 setRequiredBtcConfirmations(await window.polkaBTC.btcRelay.getStableBitcoinConfirmations());
 
                 const accountId = window.polkaBTC.api.createType("AccountId", address);
@@ -156,26 +164,29 @@ export default function IssueRequests(props: IssueRequestProps) {
     };
 
     const handleCompleted = (request: IssueRequest) => {
+        if(issuePeriod.add(new Big(request.creation)).gte(parachainHeight)){
+            return <h5><Badge variant="secondary">Expired</Badge></h5>
+        }
         if (request.confirmations < requiredBtcConfirmations || request.confirmations === 0) {
             return <FaHourglass></FaHourglass>;
-        } else if (request.completed) {
-            return <FaCheck></FaCheck>;
-        } else {
-            return (
-                <ButtonMaybePending
-                    variant="outline-dark"
-                    isPending={executePending.indexOf(request.id) !== -1}
-                    size="lg"
-                    block
-                    onClick={(event: MouseEvent<HTMLElement>) => {
-                        event.stopPropagation();
-                        execute(request);
-                    }}
-                >
-                    Execute
-                </ButtonMaybePending>
-            );
         }
+        if (request.completed) {
+            return <FaCheck></FaCheck>;
+        }
+        return (
+            <ButtonMaybePending
+                variant="outline-dark"
+                isPending={executePending.indexOf(request.id) !== -1}
+                size="lg"
+                block
+                onClick={(event: MouseEvent<HTMLElement>) => {
+                    event.stopPropagation();
+                    execute(request);
+                }}
+            >
+                Execute
+            </ButtonMaybePending>
+        );
     };
 
     const requestClicked = (request: IssueRequest): void => {
