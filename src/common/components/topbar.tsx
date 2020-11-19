@@ -125,7 +125,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
 
                     <Nav className="d-inline">
                         <DropdownButton  id="bug-report" title="Feedback" variant="outline-polkadot" size="sm" menuAlign="right" className="mr-2">
-                            <DropdownItem href="https://docs.google.com/forms/d/1Y0kfABO8J_7917yPGK-cEByj_ixiRPCb1lVZ0GzUzW0/edit?ts=5fb29817&gxids=7757" target="_blank">
+                            <DropdownItem href="https://forms.gle/zzmzCrgTfmcXbNDd8" target="_blank">
                                 <FaEdit></FaEdit> Feedback
                             </DropdownItem>
                             <Dropdown.Divider />
