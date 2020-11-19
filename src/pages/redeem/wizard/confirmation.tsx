@@ -7,14 +7,17 @@ import {
     changeRedeemStepAction,
     addRedeemRequestAction,
 } from "../../../common/actions/redeem.actions";
+import { updateBalancePolkaBTCAction } from "../../../common/actions/general.actions";
 import { toast } from "react-toastify";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat } from "@interlay/polkabtc";
 import { getH160FromAddress } from "../../../common/utils/utils";
+import Big from "big.js";
 
 export default function Confirmation() {
     const [isRequestPending, setRequestPending] = useState(false);
+    const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const amountPolkaBTC = useSelector((store: StoreType) => store.redeem.amountPolkaBTC);
     const vaultAddress = useSelector((store: StoreType) => store.redeem.vaultDotAddress);
@@ -60,6 +63,7 @@ export default function Confirmation() {
             };
             dispatch(addRedeemRequestAction(request));
             dispatch(changeRedeemStepAction("VAULT_INFO"));
+            dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(amountPolkaBTC)).toString()));
         } catch (error) {
             toast.error(error.toString());
         }
