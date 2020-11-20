@@ -42,7 +42,6 @@ export default function VaultTable(): ReactElement {
 
                 const balanceLockedPlanck = await window.polkaBTC.collateral.balanceLockedDOT(accountId);
                 const balanceLockedDOT = planckToDOT(balanceLockedPlanck.toString());
-                debugger;
 
                 vaultsList.push({
                     vaultId: accountId.toString(),
