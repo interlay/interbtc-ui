@@ -24,11 +24,7 @@ export async function updateTransactionStatusIssue(
     if (request && request.btcTxId && window.polkaBTC) {
         try {
             const updatedRequest = request;
-            updatedRequest.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpReturn(
-                request.id,
-                request.vaultBTCAddress,
-                request.amountBTC
-            );
+            updatedRequest.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id);
             const txStatus = await window.polkaBTC.btcCore.getTransactionStatus(stripHexPrefix(request.btcTxId));
             if (request.confirmations !== txStatus.confirmations) {
                 updatedRequest.confirmations = txStatus.confirmations;
@@ -57,11 +53,7 @@ export async function updateTransactionStatusRedeem(
     if (request && request.btcTxId && window.polkaBTC) {
         try {
             const updatedRequest = request;
-            updatedRequest.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpReturn(
-                request.id,
-                request.btcAddress,
-                request.amountPolkaBTC
-            );
+            updatedRequest.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id);
             const txStatus = await window.polkaBTC.btcCore.getTransactionStatus(stripHexPrefix(updatedRequest.btcTxId));
             if (request.confirmations !== txStatus.confirmations) {
                 updatedRequest.confirmations = txStatus.confirmations;

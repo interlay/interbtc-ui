@@ -94,15 +94,8 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                 window.polkaBTC.redeem.subscribeToRedeemExpiry(accountId, redeemExpired);
             }
         });
-    }, [
-        redeemRequests,
-        transactionListeners,
-        address,
-        dispatch,
-        isRedeemExpirationSubscribed,
-        redeemExpired,
-        polkaBtcLoaded,
-    ]);
+    },[redeemRequests, transactionListeners, address, dispatch,
+        isRedeemExpirationSubscribed, redeemExpired, polkaBtcLoaded]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -122,11 +115,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                 await Promise.all(
                     allRequests.map(async (request) => {
                         try {
-                            request.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpReturn(
-                                request.id,
-                                request.btcAddress,
-                                request.amountPolkaBTC
-                            );
+                            request.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id);
                         } catch (err) {
                             console.log("Redeem Id: " + request.id + " " + err);
                         }
