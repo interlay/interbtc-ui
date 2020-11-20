@@ -11,6 +11,7 @@ export type Vault = {
     btcAddress: string;
     lockedDOT: string;
     lockedBTC: string;
+    pendingBTC: string;
     status: string;
     collateralization: number | undefined;
 };

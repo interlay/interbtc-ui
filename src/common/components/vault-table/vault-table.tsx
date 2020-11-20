@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Vault } from "../../types/util.types";
 import * as constants from "../../../constants";
 import { planckToDOT, satToBTC, roundTwoDecimals } from "@interlay/polkabtc";
-import { getAddressFromH160 } from "../../utils/utils";
+import { getAddressFromH160, shortAddress } from "../../utils/utils";
 import BitcoinAddress from "../bitcoin-links/address";
 
 export default function VaultTable(): ReactElement {
@@ -20,7 +20,6 @@ export default function VaultTable(): ReactElement {
             vaults.forEach(async (vault, index) => {
                 const accountId = window.polkaBTC.api.createType("AccountId", vault.id);
                 let collateralization: number | undefined = undefined;
-
                 try {
                     collateralization = await window.polkaBTC.vaults.getVaultCollateralization(vault.id);
                     if (collateralization !== undefined) {
@@ -43,12 +42,14 @@ export default function VaultTable(): ReactElement {
 
                 const balanceLockedPlanck = await window.polkaBTC.collateral.balanceLockedDOT(accountId);
                 const balanceLockedDOT = planckToDOT(balanceLockedPlanck.toString());
+                debugger;
 
                 vaultsList.push({
                     vaultId: accountId.toString(),
                     // TODO: fetch collateral reserved
                     lockedBTC: satToBTC(vault.issued_tokens.toString()),
                     lockedDOT: balanceLockedDOT,
+                    pendingBTC: satToBTC(vault.to_be_issued_tokens.toString()),
                     btcAddress: btcAddress || "",
                     status: vault.status && checkVaultStatus(vault.status.toString(), Number(collateralization)),
                     collateralization: collateralization,
@@ -131,7 +132,19 @@ export default function VaultTable(): ReactElement {
                                     <th>BTC Address</th>
                                     <th>Locked DOT</th>
                                     <th>Locked BTC</th>
-                                    <th>Collateralization</th>
+                                    <th>
+                                        Pending BTC &nbsp;
+                                        <i className="far fa-question-circle" 
+                                           data-tip="BTC volume of in-progress issue requests.">
+                                        </i> 
+                                    </th>
+                                    <th>
+                                        Collateralization  &nbsp;
+                                        <i className="far fa-question-circle" 
+                                           data-tip="Overall collateralization, including pending issue requests. 
+                                           'real' value shows collateralization for actually locked BTC">
+                                        </i> 
+                                    </th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -141,12 +154,13 @@ export default function VaultTable(): ReactElement {
                                     {vaults.map((vault, index) => {
                                         return (
                                             <tr key={index}>
-                                                <td>{vault.vaultId}</td>
+                                                <td>{shortAddress(vault.vaultId)}</td>
                                                 <td className="break-words">
                                                     <BitcoinAddress btcAddress={vault.btcAddress} />
                                                 </td>
                                                 <td>{vault.lockedDOT}</td>
                                                 <td>{vault.lockedBTC}</td>
+                                                <td>{vault.pendingBTC}</td>
                                                 <td className={getCollateralizationColor(vault.collateralization)}>
                                                     {typeof vault.collateralization !== "undefined"
                                                         ? roundTwoDecimals(vault.collateralization.toString()) + "%"
