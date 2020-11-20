@@ -141,7 +141,7 @@ export default function VaultTable(): ReactElement {
                                     <th>
                                         Collateralization  &nbsp;
                                         <i className="far fa-question-circle" 
-                                           data-tip="Overall collateralization, including pending issue requests. 
+                                           data-tip="Overall collateralization, including pending issue requests.
                                            'real' value shows collateralization for actually locked BTC">
                                         </i> 
                                     </th>
