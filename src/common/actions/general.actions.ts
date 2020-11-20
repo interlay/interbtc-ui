@@ -7,6 +7,8 @@ import {
     IS_VAULT_CLIENT_LOADED,
     UPDATE_BALANCE_POLKA_BTC,
     UPDATE_BALANCE_DOT,
+    HAS_FEEDBACK_BEEN_DISPLAYED,
+    SHOW_WALLET_MODAL,
     IsPolkaBtcLoaded,
     IsStakedRelayerLoaded,
     ChangeAddress,
@@ -16,7 +18,8 @@ import {
     UpdateBalancePolkaBTC,
     UpdateBalanceDOT,
     HasFeedbackModalBeenDisplayed,
-    HAS_FEEDBACK_BEEN_DISPLAYED,
+    ShowWalletModal
+    
 } from "../types/actions.types";
 import { StoreType } from "../types/util.types";
 
