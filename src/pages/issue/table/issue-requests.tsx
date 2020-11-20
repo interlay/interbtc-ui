@@ -164,7 +164,7 @@ export default function IssueRequests(props: IssueRequestProps) {
     };
 
     const handleCompleted = (request: IssueRequest) => {
-        if(issuePeriod.add(new Big(request.creation)).gte(parachainHeight)){
+        if(issuePeriod.add(new Big(request.creation)).lte(parachainHeight)){
             return <h5><Badge variant="secondary">Expired</Badge></h5>
         }
         if (request.confirmations < requiredBtcConfirmations || request.confirmations === 0) {
