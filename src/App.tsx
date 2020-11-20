@@ -6,6 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { createPolkabtcAPI, PolkaBTCAPI, StakedRelayerClient, VaultClient } from "@interlay/polkabtc";
 import { Modal } from "react-bootstrap";
 import Big from "big.js";
+import ReactTooltip from "react-tooltip";
 
 import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
 import keyring from "@polkadot/ui-keyring";
@@ -198,6 +199,7 @@ export default class App extends Component<{}, AppState> {
                     {!this.state.isLoading ?
                     <div className="main d-flex flex-column min-vh-100 polkabtc-background fade-in-animation">
                         <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
+                        <ReactTooltip place="top" type="dark" effect="solid"/>
                         {!constants.STATIC_PAGE_ONLY && (
                             <Topbar
                                 address={this.state.address}
