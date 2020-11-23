@@ -11,6 +11,7 @@ export type Vault = {
     btcAddress: string;
     lockedDOT: string;
     lockedBTC: string;
+    pendingBTC: string;
     status: string;
     collateralization: number | undefined;
 };
@@ -39,6 +40,7 @@ export type GeneralState = {
     totalLockedDOT: string;
     balancePolkaBTC: string;
     balanceDOT: string;
+    showWalletPickerModal: boolean;
 };
 
 export type AppState = ReturnType<typeof rootReducer>;

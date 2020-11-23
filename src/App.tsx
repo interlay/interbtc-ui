@@ -5,8 +5,9 @@ import { toast, ToastContainer } from "react-toastify";
 import { createPolkabtcAPI, PolkaBTCAPI, StakedRelayerClient, VaultClient } from "@interlay/polkabtc";
 import { Modal } from "react-bootstrap";
 import Big from "big.js";
+import ReactTooltip from "react-tooltip";
 
-import WalletModal from "./common/components/wallet-modal/wallet-modal";
+import WalletPickerModal from "./common/components/wallet-picker-modal/wallet-picker-modal";
 import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
 import keyring from "@polkadot/ui-keyring";
 import loadingImg from "./assets/img/dual-ball-loading.gif";
@@ -69,7 +70,7 @@ export default function App(): ReactElement {
         }
     }
 
-    const selectAccount = async (newAddress: string): Promise<void> => {
+    const selectAccount = useCallback(async (newAddress: string): Promise<void> => {
         if (!polkaBtcLoaded) {
             return;
         }
@@ -80,8 +81,8 @@ export default function App(): ReactElement {
         setShowSelectAccount(false);
 
         dispatch(isPolkaBtcLoaded(true));
-        dispatch(changeAddressAction(address));
-    }
+        dispatch(changeAddressAction(newAddress));
+    },[polkaBtcLoaded, dispatch]);
 
     const getAccount = useCallback(async (): Promise<void> => {
         if (address) return;
@@ -89,16 +90,7 @@ export default function App(): ReactElement {
         await web3Enable(constants.APP_NAME);
 
         const allAccounts = await web3Accounts();
-        if (allAccounts.length === 0) {
-            toast.warn(
-                "No account found, you will not be able to execute any transaction. " +
-                "Please check that your wallet is configured correctly.",
-                {
-                    autoClose: false,
-                }
-            );
-            return;
-        }
+        if (allAccounts.length === 0) return;
 
         const mappedAccounts = allAccounts.map(({ address }) => address);
 
@@ -115,10 +107,9 @@ export default function App(): ReactElement {
             setShowSelectAccount(true);
         }
         setAccounts(mappedAccounts);
-    },[]);
+    },[address, selectAccount]);
 
     const createAPIInstance = useCallback(async (): Promise<void> => {
-        console.log("createAPIInstance  111111111111");
         try {
             window.relayer = new StakedRelayerClient(constants.STAKED_RELAYER_URL);
             dispatch(isStakedRelayerLoaded(true));
@@ -134,11 +125,10 @@ export default function App(): ReactElement {
                     );
                 }
             }, 5000);
-            if(!polkaBtcLoaded) {
-                window.polkaBTC = await connectToParachain();
-                dispatch(isPolkaBtcLoaded(true));
-                setIsLoading(false);
-            }
+            window.polkaBTC = await connectToParachain();
+            dispatch(isPolkaBtcLoaded(true));
+            setIsLoading(false);
+            
         } catch (error) {
             if (!window.polkaBTC)
                 toast.warn(
@@ -146,29 +136,33 @@ export default function App(): ReactElement {
                     "Please check your internet connection or try again later."
                 );
         }
-    },[]);
+    },[dispatch]);
 
-    const initDataOnAppBootstrap = useCallback(async (): Promise<void> => {
-        if (!polkaBtcLoaded) return;
+    useEffect((): void => {
+        const initDataOnAppBootstrap = async () => {
+            if (!polkaBtcLoaded) return;
 
-        const totalPolkaSAT = await window.polkaBTC.treasury.totalPolkaBTC();
-        const totalLockedPLANCK = await window.polkaBTC.collateral.totalLockedDOT();
-        const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
-        const totalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
-        dispatch(setTotalIssuedAndTotalLockedAction(totalPolkaBTC, totalLockedDOT));
-    },[])
+            const totalPolkaSAT = await window.polkaBTC.treasury.totalPolkaBTC();
+            const totalLockedPLANCK = await window.polkaBTC.collateral.totalLockedDOT();
+            const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
+            const totalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
+            dispatch(setTotalIssuedAndTotalLockedAction(totalPolkaBTC, totalLockedDOT));
+        }
+        initDataOnAppBootstrap();
+    },[dispatch, polkaBtcLoaded]);
 
     useEffect(() => {
         // Do not load data if showing static landing page only
         if (!constants.STATIC_PAGE_ONLY) {
             const loadData = async () => {
                     try {
+                        if (polkaBtcLoaded) return;
+
                         setTimeout(()=> {
                             if(isLoading)
                                 setIsLoading(false);
                         },3000);
                         await createAPIInstance();
-                        initDataOnAppBootstrap();
                         keyring.loadAll({});
                     } catch (e) {
                         console.log("error =>>>>>>>>>>",e.toString());
@@ -181,16 +175,15 @@ export default function App(): ReactElement {
             }
             loadData();
         }
-    },[createAPIInstance, getAccount, initDataOnAppBootstrap, isLoading]);
-
-    console.log("Render app.tsx 0000000000000000000000000")
+    },[createAPIInstance, getAccount, isLoading, polkaBtcLoaded]);
 
     return <React.Fragment>
         <Router>
             {!isLoading ?
             <div className="main d-flex flex-column min-vh-100 polkabtc-background fade-in-animation">
                 <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
-                {/* <WalletModal show={showWalletModal} onClose={closeWalletModal}/> */}
+                <ReactTooltip place="top" type="dark" effect="solid"/>
+                <WalletPickerModal/>
                 {!constants.STATIC_PAGE_ONLY && (
                     <Topbar
                         address={address}

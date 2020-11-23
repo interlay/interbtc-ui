@@ -8,19 +8,27 @@ import { resetIssueWizardAction } from "../../common/actions/issue.actions";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../common/types/util.types";
 import IssueWizard from "./wizard/issue-wizard";
+import { showWalletPickerModalAction } from "../../common/actions/general.actions";
 
 export default function IssuePage(): JSX.Element {
     const dispatch = useDispatch();
     const [showWizard, setShowWizard] = useState(false);
     const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
     const balanceDOT = useSelector((state: StoreType) => state.general.balanceDOT);
+    const address = useSelector((state: StoreType) => state.general.address);
 
     const handleClose = () => {
         dispatch(resetIssueWizardAction());
         setShowWizard(false);
     };
 
-    const handleShow = () => setShowWizard(true);
+    const handleShow = () => { 
+        if(address) {
+            setShowWizard(true);
+        } else {
+            dispatch(showWalletPickerModalAction(true));
+        }
+    }
 
     return (
         <div>

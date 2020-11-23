@@ -1,0 +1,28 @@
+.wallet-picker-modal {
+    .description {
+        margin-bottom: 1rem;
+    }
+
+    a {
+        text-decoration: none !important;
+        color: #510101;
+        :hover{
+            text-decoration: none;
+        }
+        .name {
+            margin-left: 15px;
+        }
+    }
+    
+    .wallet {
+        width: 50%;
+        box-shadow: 0 0 5px #510101;
+        padding: 10px 15px;
+        border-radius: 5px;
+        
+        margin-bottom: 1rem;
+        :hover { 
+            cursor: pointer;
+        }
+    }
+}

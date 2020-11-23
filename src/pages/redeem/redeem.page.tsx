@@ -7,12 +7,16 @@ import PolkaBTCImg from "../../assets/img/polkabtc/PolkaBTC_black.svg";
 import RedeemRequests from "./table/redeem-requests";
 import { StoreType } from "../../common/types/util.types";
 import { resetRedeemWizardAction } from "../../common/actions/redeem.actions";
-import { hasFeedbackModalBeenDisplayedAction } from "../../common/actions/general.actions";
+import { 
+    hasFeedbackModalBeenDisplayedAction, 
+    showWalletPickerModalAction
+} from "../../common/actions/general.actions";
 import Feedback from "./feedback/feedback";
 
 export default function RedeemPage(): JSX.Element {
     const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
     const balanceDOT = useSelector((state: StoreType) => state.general.balanceDOT);
+    const address = useSelector((state: StoreType) => state.general.address);
     const hasFeedbackModalBeenDisplayed = useSelector(
         (state: StoreType) => state.general.hasFeedbackModalBeenDisplayed
     );
@@ -25,7 +29,13 @@ export default function RedeemPage(): JSX.Element {
         setShowWizard(false);
     };
 
-    const handleShowWizard = () => setShowWizard(true);
+    const handleShowWizard = () => {
+        if(address) {
+            setShowWizard(true);
+        } else {
+            dispatch(showWalletPickerModalAction(true));
+        }
+    }
 
     const handleShowFeedbackModal = function () {
         if (!hasFeedbackModalBeenDisplayed) {

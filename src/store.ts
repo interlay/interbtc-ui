@@ -22,6 +22,7 @@ export const getInitialState = (): StoreType => {
             relayerLoaded: false,
             vaultClientLoaded: false,
             hasFeedbackModalBeenDisplayed: false,
+            showWalletPickerModal: false,
             address: "",
             totalLockedDOT: "",
             totalPolkaBTC: "",
