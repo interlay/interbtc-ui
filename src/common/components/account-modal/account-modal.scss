@@ -1,4 +1,4 @@
-.wallet-picker-modal {
+.account-modal {
     .description {
         margin-bottom: 1rem;
     }
@@ -11,6 +11,19 @@
         }
         .name {
             margin-left: 15px;
+        }
+    }
+
+    .one-account {
+        width: 100%;
+        padding: 15px;
+        box-shadow: 0 0 5px #510101;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        &:hover { 
+            cursor: pointer;
+            background-color: #510101;
+            color: white;
         }
     }
     

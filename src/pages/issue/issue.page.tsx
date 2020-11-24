@@ -39,16 +39,20 @@ export default function IssuePage(): JSX.Element {
                         <Image src={PolkaBTCImg} width="256"></Image>
                     </Link>
 
-                    <Row className="mt-5">
-                        <Col xs="12" sm={{ span: 6, offset: 3 }}>
-                            <h5 className="text-muted">PolkaBTC balance: {balancePolkaBTC}</h5>
-                        </Col>
-                    </Row>
-                    <Row className="mt-1">
-                        <Col xs="12" sm={{ span: 6, offset: 3 }}>
-                            <h5 className="text-muted">DOT balance: {balanceDOT}</h5>
-                        </Col>
-                    </Row>
+                    {address && extensions.length &&
+                        <React.Fragment>
+                            <Row className="mt-5">
+                                <Col xs="12" sm={{ span: 6, offset: 3 }}>
+                                    <h5 className="text-muted">PolkaBTC balance: {balancePolkaBTC}</h5>
+                                </Col>
+                            </Row>
+                            <Row className="mt-1">
+                                <Col xs="12" sm={{ span: 6, offset: 3 }}>
+                                    <h5 className="text-muted">DOT balance: {balanceDOT}</h5>
+                                </Col>
+                            </Row>
+                        </React.Fragment>
+                    }
                     <Row className="mt-5 mb-5">
                         <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
                             <Button variant="outline-polkadot" size="lg" block onClick={handleShow}>

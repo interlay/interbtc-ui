@@ -46,7 +46,7 @@ export default function AccountModal(props: AccountModalProps): ReactElement {
                     {extensions.length ? "Select account" : "Pick a wallet"}
                 </Modal.Title>
             </Modal.Header>
-            <Modal.Body className="wallet-picker-modal">
+            <Modal.Body className="account-modal">
             {extensions.length ? 
                 <React.Fragment>
                     {!accounts.length ? <div>
@@ -58,15 +58,13 @@ export default function AccountModal(props: AccountModalProps): ReactElement {
                         </p>
                         </div> : <p>Please select an account:</p>}
                     {(accounts || []).map((account: string) => (
-                        <Form.Check
-                            type="radio"
-                            name="account"
-                            key={account}
-                            label={account}
-                            value={account}
-                            checked={accountValue === account}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => setAccountValue(e.currentTarget.value)}
-                        />
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="one-account" onClick={() => props.onSelected(account)}>
+                                    {account}
+                                </div>
+                            </div>
+                        </div>
                     ))}
                 </React.Fragment>
                 :
@@ -88,15 +86,9 @@ export default function AccountModal(props: AccountModalProps): ReactElement {
             }
             </Modal.Body>
             <Modal.Footer>
-                {extensions.length && accounts.length ?
-                    <Button className="btn btn-primary float-right" onClick={() => props.onSelected(accountValue)}>
-                        Select account
-                    </Button>
-                    :
-                    <Button variant="secondary" onClick={onClose}>
-                        Close
-                    </Button>
-                }
+                <Button variant="secondary" onClick={onClose}>
+                    Close
+                </Button>
             </Modal.Footer>
         </Modal>
     );
