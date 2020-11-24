@@ -46,7 +46,6 @@ export default function IssueRequests(props: IssueRequestProps) {
             if (!polkaBtcLoaded) return;
 
             try {
-
                 const issuePeriodBlock = await window.polkaBTC.issue.getIssuePeriod();
                 const parachainHeightBlock = await window.polkaBTC.system.getCurrentBlockNumber();
                 setIssuePeriod(new Big(issuePeriodBlock.toString()));
@@ -56,28 +55,38 @@ export default function IssueRequests(props: IssueRequestProps) {
 
                 const accountId = window.polkaBTC.api.createType("AccountId", address);
                 const issueRequestMap = await window.polkaBTC.issue.mapForUser(accountId);
-                let allRequests = [];
+                const allRequests = [];
 
                 for (const [key, value] of issueRequestMap) {
                     allRequests.push(parachainToUIIssueRequest(key, value));
                 }
 
-                await Promise.all(allRequests.map(async request => {
-                    try {
-                        request.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id);
-                    } catch (err) {
-                        console.log("Issue Id: " + request.id + " " + err);
-                    }
-                }));
-                await Promise.all(allRequests.map(async request => {
-                    try {
-                        if (request.btcTxId) {
-                            request.confirmations = (await window.polkaBTC.btcCore.getTransactionStatus(request.btcTxId)).confirmations;
+                await Promise.all(
+                    allRequests.map(async (request) => {
+                        try {
+                            request.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpReturn(
+                                request.id,
+                                request.vaultBTCAddress,
+                                request.amountBTC
+                            );
+                        } catch (err) {
+                            console.log("Issue Id: " + request.id + " " + err);
                         }
-                    } catch (err) {
-                        console.log(err);
-                    }
-                }));
+                    })
+                );
+                await Promise.all(
+                    allRequests.map(async (request) => {
+                        try {
+                            if (request.btcTxId) {
+                                request.confirmations = (
+                                    await window.polkaBTC.btcCore.getTransactionStatus(request.btcTxId)
+                                ).confirmations;
+                            }
+                        } catch (err) {
+                            console.log(err);
+                        }
+                    })
+                );
 
                 dispatch(updateAllIssueRequestsAction(allRequests));
 
@@ -100,13 +109,21 @@ export default function IssueRequests(props: IssueRequestProps) {
         if (!polkaBtcLoaded) return;
         setExecutePending([...executePending, request.id]);
 
-        let [transactionBlockHeight, merkleProof, rawTx] = [request.transactionBlockHeight, request.merkleProof, request.rawTransaction];
+        let [transactionBlockHeight, merkleProof, rawTx] = [
+            request.transactionBlockHeight,
+            request.merkleProof,
+            request.rawTransaction,
+        ];
         let transactionData = false;
         let txId = request.btcTxId;
         try {
             // get proof data from bitcoin
             if (txId === "") {
-                txId = await window.polkaBTC.btcCore.getTxIdByOpcode(request.id);
+                txId = await window.polkaBTC.btcCore.getTxIdByOpReturn(
+                    request.id,
+                    request.vaultBTCAddress,
+                    request.amountBTC
+                );
             }
             [transactionBlockHeight, merkleProof, rawTx] = await Promise.all([
                 window.polkaBTC.btcCore.getTransactionBlockHeight(txId),
@@ -152,8 +169,10 @@ export default function IssueRequests(props: IssueRequestProps) {
 
             const completedReq = provenReq;
             completedReq.completed = true;
-            
-            dispatch(updateBalancePolkaBTCAction((new Big(balancePolkaBTC).add(new Big(provenReq.amountBTC))).toString()));
+
+            dispatch(
+                updateBalancePolkaBTCAction(new Big(balancePolkaBTC).add(new Big(provenReq.amountBTC)).toString())
+            );
             dispatch(updateIssueRequestAction(completedReq));
 
             toast.success("Succesfully executed issue request: " + request.id);
@@ -164,8 +183,12 @@ export default function IssueRequests(props: IssueRequestProps) {
     };
 
     const handleCompleted = (request: IssueRequest) => {
-        if(issuePeriod.add(new Big(request.creation)).lte(parachainHeight)){
-            return <h5><Badge variant="secondary">Expired</Badge></h5>
+        if (issuePeriod.add(new Big(request.creation)).lte(parachainHeight)) {
+            return (
+                <h5>
+                    <Badge variant="secondary">Expired</Badge>
+                </h5>
+            );
         }
         if (request.confirmations < requiredBtcConfirmations || request.confirmations === 0) {
             return <FaHourglass></FaHourglass>;
@@ -203,44 +226,44 @@ export default function IssueRequests(props: IssueRequestProps) {
 
     return (
         <div>
-            {issueRequests && issueRequests.length > 0 && 
-            <React.Fragment>
-                <h5>Pending Issue Request</h5>
-                <p>Click on an Issue request to view details or update the BTC payment txid.</p>
-                <Table hover responsive size={"md"}>
-                    <thead>
-                        <tr>
-                            <th>Issue ID</th>
-                            <th>Amount</th>
-                            <th>Parachain Block</th>
-                            <th>Vault BTC Address</th>
-                            <th>BTC Transaction</th>
-                            <th>Confirmations</th>
-                            <th>Completed</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {issueRequests.map((request: IssueRequest, index: number) => {
-                            return (
-                                <tr key={index} onClick={() => requestClicked(request)}>
-                                    <td>{shortAddress(request.id)}</td>
-                                    <td>{request.amountBTC} PolkaBTC</td>
-                                    <td>{request.creation}</td>
-                                    <td>
-                                        <BitcoinAddress btcAddress={request.vaultBTCAddress} shorten />
-                                    </td>
-                                    <td>
-                                        <BitcoinTransaction txId={request.btcTxId} shorten />
-                                    </td>
-                                    <td>{request.confirmations}</td>
-                                    <td>{handleCompleted(request)}</td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </Table>
-            </React.Fragment>
-            }
+            {issueRequests && issueRequests.length > 0 && (
+                <React.Fragment>
+                    <h5>Pending Issue Request</h5>
+                    <p>Click on an Issue request to view details or update the BTC payment txid.</p>
+                    <Table hover responsive size={"md"}>
+                        <thead>
+                            <tr>
+                                <th>Issue ID</th>
+                                <th>Amount</th>
+                                <th>Parachain Block</th>
+                                <th>Vault BTC Address</th>
+                                <th>BTC Transaction</th>
+                                <th>Confirmations</th>
+                                <th>Completed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {issueRequests.map((request: IssueRequest, index: number) => {
+                                return (
+                                    <tr key={index} onClick={() => requestClicked(request)}>
+                                        <td>{shortAddress(request.id)}</td>
+                                        <td>{request.amountBTC} PolkaBTC</td>
+                                        <td>{request.creation}</td>
+                                        <td>
+                                            <BitcoinAddress btcAddress={request.vaultBTCAddress} shorten />
+                                        </td>
+                                        <td>
+                                            <BitcoinTransaction txId={request.btcTxId} shorten />
+                                        </td>
+                                        <td>{request.confirmations}</td>
+                                        <td>{handleCompleted(request)}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </Table>
+                </React.Fragment>
+            )}
         </div>
     );
 }
