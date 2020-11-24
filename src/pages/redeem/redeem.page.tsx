@@ -9,7 +9,7 @@ import { StoreType } from "../../common/types/util.types";
 import { resetRedeemWizardAction } from "../../common/actions/redeem.actions";
 import { 
     hasFeedbackModalBeenDisplayedAction, 
-    showWalletPickerModalAction
+    showAccountModalAction
 } from "../../common/actions/general.actions";
 import Feedback from "./feedback/feedback";
 
@@ -17,6 +17,7 @@ export default function RedeemPage(): JSX.Element {
     const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
     const balanceDOT = useSelector((state: StoreType) => state.general.balanceDOT);
     const address = useSelector((state: StoreType) => state.general.address);
+    const extensions = useSelector((state: StoreType) => state.general.extensions);
     const hasFeedbackModalBeenDisplayed = useSelector(
         (state: StoreType) => state.general.hasFeedbackModalBeenDisplayed
     );
@@ -30,10 +31,10 @@ export default function RedeemPage(): JSX.Element {
     };
 
     const handleShowWizard = () => {
-        if(address) {
+        if(address && extensions.length) {
             setShowWizard(true);
         } else {
-            dispatch(showWalletPickerModalAction(true));
+            dispatch(showAccountModalAction(true));
         }
     }
 

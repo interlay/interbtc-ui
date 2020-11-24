@@ -8,7 +8,8 @@ import {
     UPDATE_BALANCE_POLKA_BTC,
     UPDATE_BALANCE_DOT,
     HAS_FEEDBACK_BEEN_DISPLAYED,
-    SHOW_WALLET_PICKER_MODAL,
+    SET_INSTALLED_EXTENSION,
+    SHOW_ACCOUNT_MODAL,
     IsPolkaBtcLoaded,
     IsStakedRelayerLoaded,
     ChangeAddress,
@@ -18,7 +19,8 @@ import {
     UpdateBalancePolkaBTC,
     UpdateBalanceDOT,
     HasFeedbackModalBeenDisplayed,
-    ShowWalletPickerModal,
+    SetInstalledExtension,
+    ShowAccountModal,
 } from "../types/actions.types";
 import { StoreType } from "../types/util.types";
 
@@ -71,7 +73,12 @@ export const setTotalIssuedAndTotalLockedAction = (
     totalLockedDOT,
 });
 
-export const showWalletPickerModalAction = (showWalletPickerModal: boolean): ShowWalletPickerModal => ({
-    type: SHOW_WALLET_PICKER_MODAL,
-    showWalletPickerModal,
+export const showAccountModalAction = (showAccountModal: boolean): ShowAccountModal => ({
+    type: SHOW_ACCOUNT_MODAL,
+    showAccountModal,
+});
+
+export const setInstalledExtensionAction = (extensions: string[]): SetInstalledExtension => ({
+    type: SET_INSTALLED_EXTENSION,
+    extensions,
 });

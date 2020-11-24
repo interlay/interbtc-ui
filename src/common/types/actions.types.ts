@@ -14,8 +14,8 @@ export const CHANGE_ADDRESS = "CHANGE_ADDRESS";
 export const SET_TOTAL_ISSUED_AND_TOTAL_LOCKED = "SET_TOTAL_ISSUED_AND_TOTAL_LOCKED";
 export const UPDATE_BALANCE_POLKA_BTC = "UPDATE_BALANCE_POLKA_BTC";
 export const UPDATE_BALANCE_DOT = "UPDATE_BALANCE_DOT";
-export const SHOW_WALLET_PICKER_MODAL = "SHOW_WALLET_PICKER_MODAL";
-export const HAS_WALLET = "HAS_WALLET";
+export const SET_INSTALLED_EXTENSION = "SET_INSTALLED_EXTENSION";
+export const SHOW_ACCOUNT_MODAL = "SHOW_ACCOUNT_MODAL";
 
 export interface IsPolkaBtcLoaded {
     type: typeof IS_POLKA_BTC_LOADED;
@@ -63,9 +63,14 @@ export interface UpdateBalanceDOT {
     balanceDOT: string;
 }
 
-export interface ShowWalletPickerModal {
-    type: typeof SHOW_WALLET_PICKER_MODAL;
-    showWalletPickerModal: boolean;
+export interface SetInstalledExtension {
+    type: typeof SET_INSTALLED_EXTENSION;
+    extensions: string[];
+}
+
+export interface ShowAccountModal {
+    type: typeof SHOW_ACCOUNT_MODAL;
+    showAccountModal: boolean;
 }
 
 export type GeneralActions =
@@ -78,7 +83,8 @@ export type GeneralActions =
     | IsVaultClientLoaded
     | UpdateBalancePolkaBTC
     | UpdateBalanceDOT
-    | ShowWalletPickerModal;
+    | SetInstalledExtension
+    | ShowAccountModal;
 
 // REDEEM
 

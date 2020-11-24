@@ -12,13 +12,12 @@ import { planckToDOT, satToBTC } from "@interlay/polkabtc";
 import { 
     updateBalancePolkaBTCAction, 
     updateBalanceDOTAction,
-    showWalletPickerModalAction 
+    showAccountModalAction 
 } from "../actions/general.actions";
 
 
 type TopbarProps = {
     address?: string;
-    onAccountClick: () => void;
     requestDOT: () => Promise<void>;
 };
 
@@ -27,6 +26,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
     const vaultClientLoaded = useSelector((state: StoreType) => state.general.vaultClientLoaded);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const address = useSelector((state: StoreType) => state.general.address);
+    const extensions = useSelector((state: StoreType) => state.general.extensions);
     const [isRelayerConnected, setIsRelayerConnected] = useState(false);
     const [isVaultConnected, setIsVaultConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -80,7 +80,9 @@ export default function Topbar(props: TopbarProps): ReactElement {
     };
 
     const checkWallet = () => {
-        if (!address) dispatch(showWalletPickerModalAction(true));
+        if (!extensions.length || !address) {
+            dispatch(showAccountModalAction(true));
+        }
     }
 
     return (
@@ -159,7 +161,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                                     variant="outline-polkadot"
                                     size="sm"
                                     style={{ borderRadius: "1em" }}
-                                    onClick={() => props.onAccountClick()}>
+                                    onClick={() => dispatch(showAccountModalAction(true))}>
                                     Account: {props.address.substring(0, 10)}...{props.address.substring(38)}
                                 </Button>
                             </Nav>

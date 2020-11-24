@@ -8,7 +8,7 @@ import { resetIssueWizardAction } from "../../common/actions/issue.actions";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../common/types/util.types";
 import IssueWizard from "./wizard/issue-wizard";
-import { showWalletPickerModalAction } from "../../common/actions/general.actions";
+import { showAccountModalAction } from "../../common/actions/general.actions";
 
 export default function IssuePage(): JSX.Element {
     const dispatch = useDispatch();
@@ -16,17 +16,18 @@ export default function IssuePage(): JSX.Element {
     const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
     const balanceDOT = useSelector((state: StoreType) => state.general.balanceDOT);
     const address = useSelector((state: StoreType) => state.general.address);
+    const extensions = useSelector((state: StoreType) => state.general.extensions);
 
     const handleClose = () => {
         dispatch(resetIssueWizardAction());
         setShowWizard(false);
     };
 
-    const handleShow = () => { 
-        if(address) {
+    const handleShow = () => {
+        if(extensions.length && address) {
             setShowWizard(true);
         } else {
-            dispatch(showWalletPickerModalAction(true));
+            dispatch(showAccountModalAction(true));
         }
     }
 

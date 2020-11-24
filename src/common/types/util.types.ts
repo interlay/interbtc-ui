@@ -35,12 +35,13 @@ export type GeneralState = {
     relayerLoaded: boolean;
     vaultClientLoaded: boolean;
     hasFeedbackModalBeenDisplayed: boolean;
+    showAccountModal: boolean;
     address: string;
     totalPolkaBTC: string;
     totalLockedDOT: string;
     balancePolkaBTC: string;
     balanceDOT: string;
-    showWalletPickerModal: boolean;
+    extensions: string[];
 };
 
 export type AppState = ReturnType<typeof rootReducer>;

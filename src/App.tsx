@@ -3,21 +3,21 @@ import { planckToDOT, satToBTC } from "@interlay/polkabtc";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { createPolkabtcAPI, PolkaBTCAPI, StakedRelayerClient, VaultClient } from "@interlay/polkabtc";
-import { Modal } from "react-bootstrap";
 import Big from "big.js";
 import ReactTooltip from "react-tooltip";
 
-import WalletPickerModal from "./common/components/wallet-picker-modal/wallet-picker-modal";
+import AccountModal from "./common/components/account-modal/account-modal";
 import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
 import keyring from "@polkadot/ui-keyring";
 import loadingImg from "./assets/img/dual-ball-loading.gif";
-import AccountSelector from "./pages/account-selector";
 import {
     isPolkaBtcLoaded,
     isStakedRelayerLoaded,
     isVaultClientLoaded,
     changeAddressAction,
-    setTotalIssuedAndTotalLockedAction
+    setTotalIssuedAndTotalLockedAction,
+    setInstalledExtensionAction,
+    showAccountModalAction
 } from "./common/actions/general.actions";
 import * as constants from "./constants";
 
@@ -50,11 +50,9 @@ function connectToParachain(): Promise<PolkaBTCAPI> {
 }
 
 export default function App(): ReactElement {
-    const [accounts,setAccounts] = useState<string[]>([]);
-    const [address,setAddress] = useState("");
-    const [showSelectAccount,setShowSelectAccount] = useState(false);
-    const [isLoading,setIsLoading] = useState(true);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+    const [address,setAddress] = useState("");
+    const [isLoading,setIsLoading] = useState(true);
     const dispatch = useDispatch();
 
     const requestDotFromFaucet = async (): Promise<void> => {
@@ -71,23 +69,23 @@ export default function App(): ReactElement {
     }
 
     const selectAccount = useCallback(async (newAddress: string): Promise<void> => {
-        if (!polkaBtcLoaded) {
+        if (!polkaBtcLoaded || !newAddress) {
             return;
         }
 
         const { signer } = await web3FromAddress(newAddress);
         window.polkaBTC.setAccount(newAddress, signer);
         setAddress(newAddress);
-        setShowSelectAccount(false);
 
-        dispatch(isPolkaBtcLoaded(true));
+        dispatch(showAccountModalAction(false));
         dispatch(changeAddressAction(newAddress));
     },[polkaBtcLoaded, dispatch]);
 
     const getAccount = useCallback(async (): Promise<void> => {
         if (address) return;
 
-        await web3Enable(constants.APP_NAME);
+        const extensions = await web3Enable(constants.APP_NAME);
+        dispatch(setInstalledExtensionAction(extensions.map((ext) => ext.name)));
 
         const allAccounts = await web3Accounts();
         if (allAccounts.length === 0) return;
@@ -104,10 +102,9 @@ export default function App(): ReactElement {
         if (newAddress) {
             selectAccount(newAddress);
         } else {
-            setShowSelectAccount(true);
+            dispatch(showAccountModalAction(true));
         }
-        setAccounts(mappedAccounts);
-    },[address, selectAccount]);
+    },[address, selectAccount, dispatch]);
 
     const createAPIInstance = useCallback(async (): Promise<void> => {
         try {
@@ -165,7 +162,6 @@ export default function App(): ReactElement {
                         await createAPIInstance();
                         keyring.loadAll({});
                     } catch (e) {
-                        console.log("error =>>>>>>>>>>",e.toString());
                         toast.warn("Could not connect to the Parachain, please try again in a few seconds", {
                             autoClose: false,
                         });
@@ -183,11 +179,10 @@ export default function App(): ReactElement {
             <div className="main d-flex flex-column min-vh-100 polkabtc-background fade-in-animation">
                 <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
                 <ReactTooltip place="top" type="dark" effect="solid"/>
-                <WalletPickerModal/>
+                <AccountModal selected={address} onSelected={selectAccount}/>
                 {!constants.STATIC_PAGE_ONLY && (
                     <Topbar
                         address={address}
-                        onAccountClick={() => setShowSelectAccount(true)}
                         requestDOT={requestDotFromFaucet}
                     />
                 )}
@@ -236,12 +231,5 @@ export default function App(): ReactElement {
                 <img src={loadingImg} alt="loading animation"></img>
             </div>}   
         </Router>
-        <Modal show={showSelectAccount} onHide={() => setShowSelectAccount(false)} size={"lg"}>
-            <AccountSelector
-                selected={address}
-                accounts={accounts}
-                onSelected={selectAccount}
-            ></AccountSelector>
-        </Modal>
     </React.Fragment>;
 }

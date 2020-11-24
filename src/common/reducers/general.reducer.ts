@@ -3,13 +3,14 @@ import {
     IS_STAKED_RELAYER_LOADED,
     IS_VAULT_CLIENT_LOADED,
     SET_TOTAL_ISSUED_AND_TOTAL_LOCKED,
-    SHOW_WALLET_PICKER_MODAL,
     CHANGE_ADDRESS,
     INIT_STATE,
     UPDATE_BALANCE_DOT,
     UPDATE_BALANCE_POLKA_BTC,
     GeneralActions,
     HAS_FEEDBACK_BEEN_DISPLAYED,
+    SET_INSTALLED_EXTENSION,
+    SHOW_ACCOUNT_MODAL,
 } from "../types/actions.types";
 import { GeneralState } from "../types/util.types";
 
@@ -18,12 +19,13 @@ const initialState = {
     relayerLoaded: false,
     vaultClientLoaded: false,
     hasFeedbackModalBeenDisplayed: false,
-    showWalletPickerModal: false,
+    showAccountModal: false,
     address: "",
     totalPolkaBTC: "",
     totalLockedDOT: "",
     balancePolkaBTC: "",
     balanceDOT: "",
+    extensions: [],
 };
 
 export const generalReducer = (state: GeneralState = initialState, action: GeneralActions): GeneralState => {
@@ -41,7 +43,8 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
                 relayerLoaded: false,
                 vaultClientLoaded: false,
                 address: "",
-                showWalletPickerModal: false,
+                showAccountModal: false,
+                extensions: [],
             };
         case SET_TOTAL_ISSUED_AND_TOTAL_LOCKED:
             return { ...state, totalLockedDOT: action.totalLockedDOT, totalPolkaBTC: action.totalPolkaBTC };
@@ -53,8 +56,10 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
             return { ...state, balanceDOT: action.balanceDOT };
         case UPDATE_BALANCE_POLKA_BTC:
             return { ...state, balancePolkaBTC: action.balancePolkaBTC };
-        case SHOW_WALLET_PICKER_MODAL:
-            return { ...state, showWalletPickerModal: action.showWalletPickerModal };
+        case SHOW_ACCOUNT_MODAL:
+            return { ...state, showAccountModal: action.showAccountModal };
+        case SET_INSTALLED_EXTENSION:
+            return { ...state, extensions: action.extensions };
         default:
             return state;
     }
