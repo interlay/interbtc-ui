@@ -11,8 +11,10 @@ export type Vault = {
     btcAddress: string;
     lockedDOT: string;
     lockedBTC: string;
+    pendingBTC: string;
     status: string;
-    collateralization: number | undefined;
+    unsettledCollateralization: number | undefined;
+    settledCollateralization: number | undefined;
 };
 
 export interface StatusUpdate {
@@ -34,11 +36,13 @@ export type GeneralState = {
     relayerLoaded: boolean;
     vaultClientLoaded: boolean;
     hasFeedbackModalBeenDisplayed: boolean;
+    showAccountModal: boolean;
     address: string;
     totalPolkaBTC: string;
     totalLockedDOT: string;
     balancePolkaBTC: string;
     balanceDOT: string;
+    extensions: string[];
 };
 
 export type AppState = ReturnType<typeof rootReducer>;

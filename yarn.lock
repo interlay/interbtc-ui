@@ -1212,18 +1212,18 @@
     axios "^0.19.2"
     typescript "~3.5.2"
 
-"@interlay/polkabtc-types@^0.1.16":
-  version "0.1.16"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.1.16.tgz#1e45ba9d8601d78d5828388a6fc1e64d15a51b80"
-  integrity sha512-5GHxP9l42VfvCZi6v3GIZFa6izxMxuDXifcYR2xPEh1OQHsuYCjw8WxpINM6o3zseLOboelCyC6Fr0/uahwLXQ==
+"@interlay/polkabtc-types@^0.1.19":
+  version "0.1.19"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.1.19.tgz#5009ee8eba22bd3b3f79acd6bd6c9eb3dae29198"
+  integrity sha512-1LqgTjgRYXbvaFr/LoDrl73/s1RHW+4Q5BAyjdEaqbTWpt+64IjufTFsWLnXwIbRob/iS3jUvlsG+SXtc8Z3kA==
 
-"@interlay/polkabtc@^0.5.15":
-  version "0.5.15"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.5.15.tgz#6c391b028731ee4a59e0975cc3631f4282c43da5"
-  integrity sha512-BTvGApO44msahFu1sbp7KFEFOa/nOgsh/DvJCg8KlMRuosMxgfqoQfSnEVQXtK3ZHeH62DOIwV4wiVgGEkuYyQ==
+"@interlay/polkabtc@^0.5.17":
+  version "0.5.17"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.5.17.tgz#3e9ebacf35fa6f9c0ca9cb5b41855a0035f4c797"
+  integrity sha512-EJHuVjjVFrvxqFBjuJ6U0gPxhQ2tNGTW2tzXF8QPQEiQ6Au46SbBRv+5NMZZtEsb0JbBGxsUIfkhL5v8n59MhA==
   dependencies:
     "@interlay/esplora-btc-api" "^0.3.3"
-    "@interlay/polkabtc-types" "^0.1.16"
+    "@interlay/polkabtc-types" "^0.1.19"
     "@types/big.js" "^4.0.5"
     big.js "^6.0.1"
     bitcoinjs-lib "^5.2.0"
@@ -10787,6 +10787,14 @@ react-toastify@*, react-toastify@^6.0.5:
     prop-types "^15.7.2"
     react-transition-group "^4.4.1"
 
+react-tooltip@^4.2.10:
+  version "4.2.10"
+  resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-4.2.10.tgz#ed1a1acd388940c96f4b6309f4fd4dcce5e01bdc"
+  integrity sha512-D7ZLx6/QwpUl0SZRek3IZy/HWpsEEp0v3562tcT8IwZgu8IgV7hY5ZzniTkHyRcuL+IQnljpjj7A7zCgl2+T3w==
+  dependencies:
+    prop-types "^15.7.2"
+    uuid "^7.0.3"
+
 react-transition-group@^4.4.1:
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.4.1.tgz#63868f9325a38ea5ee9535d828327f85773345c9"
@@ -12886,6 +12894,11 @@ uuid@^3.0.1, uuid@^3.3.2:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
+
+uuid@^7.0.3:
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-7.0.3.tgz#c5c9f2c8cf25dc0a372c4df1441c41f5bd0c680b"
+  integrity sha512-DPSke0pXhTZgoF/d+WSt2QaKMCFSfx7QegxEWT+JOuHF5aWrKEn0G+ztjuJg/gG8/ItK+rbPCD/yNv8yyih6Cg==
 
 v8-compile-cache@^2.0.3:
   version "2.2.0"

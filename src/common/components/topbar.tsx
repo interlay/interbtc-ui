@@ -9,12 +9,15 @@ import ButtonMaybePending from "./pending-button";
 import DropdownItem from "react-bootstrap/esm/DropdownItem";
 import { FaDiscord, FaGithub, FaEdit } from "react-icons/fa";
 import { planckToDOT, satToBTC } from "@interlay/polkabtc";
-import { updateBalancePolkaBTCAction, updateBalanceDOTAction } from "../actions/general.actions";
+import { 
+    updateBalancePolkaBTCAction, 
+    updateBalanceDOTAction,
+    showAccountModalAction 
+} from "../actions/general.actions";
 
 
 type TopbarProps = {
     address?: string;
-    onAccountClick: () => void;
     requestDOT: () => Promise<void>;
 };
 
@@ -23,6 +26,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
     const vaultClientLoaded = useSelector((state: StoreType) => state.general.vaultClientLoaded);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const address = useSelector((state: StoreType) => state.general.address);
+    const extensions = useSelector((state: StoreType) => state.general.extensions);
     const [isRelayerConnected, setIsRelayerConnected] = useState(false);
     const [isVaultConnected, setIsVaultConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -75,6 +79,22 @@ export default function Topbar(props: TopbarProps): ReactElement {
         setIsRequestPending(false);
     };
 
+    const checkWallet = () => {
+        if (!extensions.length || !address) {
+            dispatch(showAccountModalAction(true));
+        }
+    }
+
+    const getLabel = ():string => {
+        if (!extensions.length)
+            return "Connect Wallet";
+
+        if (!address) 
+            return "Select Account";
+
+        return "Account:" + address.substring(0, 10) + "..." + address.substring(38);
+    }
+
     return (
         <Navbar bg="light" expand="lg" className="border-bottom shadow-sm top-bar">
             {!isLoading && 
@@ -88,12 +108,12 @@ export default function Topbar(props: TopbarProps): ReactElement {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                         {!constants.STATIC_PAGE_ONLY && polkaBtcLoaded && (
-                            <Link className="nav-link" to="/issue">
+                            <Link className="nav-link" to="/issue" onClick={checkWallet}>
                                 Issue
                             </Link>
                         )}
                         {!constants.STATIC_PAGE_ONLY && polkaBtcLoaded && (
-                            <Link className="nav-link" to="/redeem">
+                            <Link className="nav-link" to="/redeem" onClick={checkWallet}>
                                 Redeem
                             </Link>
                         )}
@@ -151,8 +171,8 @@ export default function Topbar(props: TopbarProps): ReactElement {
                                     variant="outline-polkadot"
                                     size="sm"
                                     style={{ borderRadius: "1em" }}
-                                    onClick={() => props.onAccountClick()}>
-                                    Account: {props.address.substring(0, 10)}...{props.address.substring(38)}
+                                    onClick={() => dispatch(showAccountModalAction(true))}>
+                                        {getLabel()}
                                 </Button>
                             </Nav>
                         </React.Fragment>

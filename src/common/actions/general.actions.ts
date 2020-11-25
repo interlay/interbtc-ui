@@ -7,6 +7,9 @@ import {
     IS_VAULT_CLIENT_LOADED,
     UPDATE_BALANCE_POLKA_BTC,
     UPDATE_BALANCE_DOT,
+    HAS_FEEDBACK_BEEN_DISPLAYED,
+    SET_INSTALLED_EXTENSION,
+    SHOW_ACCOUNT_MODAL,
     IsPolkaBtcLoaded,
     IsStakedRelayerLoaded,
     ChangeAddress,
@@ -16,7 +19,8 @@ import {
     UpdateBalancePolkaBTC,
     UpdateBalanceDOT,
     HasFeedbackModalBeenDisplayed,
-    HAS_FEEDBACK_BEEN_DISPLAYED,
+    SetInstalledExtension,
+    ShowAccountModal,
 } from "../types/actions.types";
 import { StoreType } from "../types/util.types";
 
@@ -67,4 +71,14 @@ export const setTotalIssuedAndTotalLockedAction = (
     type: SET_TOTAL_ISSUED_AND_TOTAL_LOCKED,
     totalPolkaBTC,
     totalLockedDOT,
+});
+
+export const showAccountModalAction = (showAccountModal: boolean): ShowAccountModal => ({
+    type: SHOW_ACCOUNT_MODAL,
+    showAccountModal,
+});
+
+export const setInstalledExtensionAction = (extensions: string[]): SetInstalledExtension => ({
+    type: SET_INSTALLED_EXTENSION,
+    extensions,
 });

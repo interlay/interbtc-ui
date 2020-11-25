@@ -74,16 +74,20 @@ export default function EnterBTCAmount() {
                 <p>Please enter the amount of BTC you want to receive in PolkaBTC.</p>
                 <input
                     name="amountBTC"
-                    type="number"
+                    type="float"
                     className={"custom-input" + (errors.amountBTC ? " error-borders" : "")}
-                    ref={register({ required: true })}
+                    ref={register({ 
+                        required: true,
+                        validate: (value) => value > 1 ? 
+                            "Maximum amount you can issue during the alpha testnet is 1.0 PolkaBTC."
+                            : undefined
+                     })}
                 />
                 {errors.amountBTC && (
                     <div className="input-error">
                         {errors.amountBTC.type === "required" ? "Please enter the amount" : errors.amountBTC.message}
                     </div>
                 )}
-                {/* <p>Fee: {feeBTC} BTC</p> */}
             </Modal.Body>
             <Modal.Footer>
                 <ButtonMaybePending

@@ -53,7 +53,7 @@ export default function ReportModal(props: RegisterModalType): ReactElement {
                             <div className="input-group">
                                 <input
                                     name="stake"
-                                    type="number"
+                                    type="float"
                                     className={"form-control custom-input" + (errors.stake ? " error-borders" : "")}
                                     defaultValue={0}
                                     aria-describedby="basic-addon2"

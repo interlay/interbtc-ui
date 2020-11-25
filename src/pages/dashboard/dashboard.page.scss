@@ -1,35 +1,39 @@
 @import "../../variables";
 @import "../../mixins";
 
-.dashboard-page{
+.dashboard-page {
     text-align: center;
     min-height: 100vh;
 
-    .dashboard-container{
+    .dashboard-container {
         max-width: calc(100vw - 30px);
         overflow-x: scroll;
         padding: 0px 15px;
     }
 
-    .dashboard-button{
+    .dashboard-button {
         margin-top: 20px;
     }
 
-    .title{
+    .title {
         width: 100%;
         text-align: center;
         font-size: 2rem;
-        margin-top: 2rem; 
+        margin-top: 2rem;
         font-weight: 600;
     }
 
-    .stats{
+    .stats {
         width: 100%;
         text-align: center;
         font-size: 1.2rem;
     }
 
-    .table-wrapper{
+    .small-text {
+        font-size: 0.8rem;
+    }
+
+    .table-wrapper {
         width: 100%;
         table {
             table-layout: auto;
@@ -39,14 +43,15 @@
             text-align: center;
         }
 
-        th, td{
+        th,
+        td {
             padding: 5px 10px;
             border: 1px solid #ddd;
-            
-            i{
+
+            i {
                 color: rgba(0, 0, 0, 0.5);
             }
-            p{
+            p {
                 margin: 0px;
             }
         }
@@ -55,60 +60,60 @@
             word-break: break-all;
         }
 
-        thead{
+        thead {
             background-color: #eaeaea;
-        }    
+        }
     }
 
-    .header{
+    .header {
         font-weight: 600;
         font-size: 1.2rem;
         margin-top: 2rem;
     }
 
-    .report-button-wrapper{
+    .report-button-wrapper {
         padding-top: 2rem;
         width: 100%;
         margin: auto;
         text-align: center;
     }
 
-    .staked-relayer-table{
+    .staked-relayer-table {
         margin-bottom: 80px;
     }
 
-    .de-note{
+    .de-note {
         margin-top: 20px;
         margin-bottom: 50px;
     }
 
-    @include mobile-range{
+    @include mobile-range {
         .de-note {
             margin-bottom: 100px;
         }
-        .staked-relayer-table{
+        .staked-relayer-table {
             margin-bottom: 150px;
         }
     }
 
-    @include tablet-range{
+    @include tablet-range {
         .de-note {
             margin-bottom: 100px;
         }
-        .staked-relayer-table{
+        .staked-relayer-table {
             margin-bottom: 150px;
         }
     }
 }
 
-.vote-label{
+.vote-label {
     font-weight: 600;
 }
 
 .dashboard-fade-in-animation {
     animation: dashboard-fade 0.5s ease-in;
 }
-  
+
 @keyframes dashboard-fade {
     0% {
         opacity: 0;

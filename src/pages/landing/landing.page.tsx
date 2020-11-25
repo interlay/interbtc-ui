@@ -1,10 +1,11 @@
 import React from "react";
 import { Button, Col, Image, Row } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import { StoreType } from "../../common/types/util.types";
 import * as constants from "../../constants";
 import PolkaBTCImg from "../../assets/img/polkabtc/PolkaBTC_white.svg";
+import { showAccountModalAction } from "../../common/actions/general.actions";
 
 import "./landing.page.scss";
 
@@ -12,6 +13,15 @@ export default function LandingPage(): JSX.Element {
     const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
     const totalLockedDOT = useSelector((state: StoreType) => state.general.totalLockedDOT);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+    const address = useSelector((state: StoreType) => state.general.address);
+    const extensions = useSelector((state: StoreType) => state.general.extensions);
+    const dispatch = useDispatch();
+
+    const checkWalletAndAccount = () => {
+        if(!extensions.length || !address) {
+            dispatch(showAccountModalAction(true));
+        }
+    }
 
     return (
         <div>
@@ -39,14 +49,16 @@ export default function LandingPage(): JSX.Element {
                                 <Row className="mt-5">
                                     <Col className="mt-2" xs="12" sm={{ span: 4, offset: 2 }}>
                                         <NavLink className="text-decoration-none" to="/issue">
-                                            <Button variant="outline-polkadot" size="lg" block>
+                                            <Button variant="outline-polkadot" size="lg" block 
+                                                onClick={checkWalletAndAccount}>
                                                 Issue PolkaBTC
                                             </Button>
                                         </NavLink>
                                     </Col>
                                     <Col className="mt-2" xs="12" sm={{ span: 4 }}>
                                         <NavLink className="text-decoration-none" to="/redeem">
-                                            <Button variant="outline-bitcoin" size="lg" block>
+                                            <Button variant="outline-bitcoin" size="lg" block
+                                                onClick={checkWalletAndAccount}>
                                                 Redeem PolkaBTC
                                             </Button>
                                         </NavLink>

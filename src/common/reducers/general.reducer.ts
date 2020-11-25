@@ -9,6 +9,8 @@ import {
     UPDATE_BALANCE_POLKA_BTC,
     GeneralActions,
     HAS_FEEDBACK_BEEN_DISPLAYED,
+    SET_INSTALLED_EXTENSION,
+    SHOW_ACCOUNT_MODAL,
 } from "../types/actions.types";
 import { GeneralState } from "../types/util.types";
 
@@ -17,11 +19,13 @@ const initialState = {
     relayerLoaded: false,
     vaultClientLoaded: false,
     hasFeedbackModalBeenDisplayed: false,
+    showAccountModal: false,
     address: "",
     totalPolkaBTC: "",
     totalLockedDOT: "",
     balancePolkaBTC: "",
     balanceDOT: "",
+    extensions: [],
 };
 
 export const generalReducer = (state: GeneralState = initialState, action: GeneralActions): GeneralState => {
@@ -33,7 +37,14 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
         case CHANGE_ADDRESS:
             return { ...state, address: action.address };
         case INIT_STATE:
-            return { ...state, polkaBtcLoaded: false, relayerLoaded: false, vaultClientLoaded: false };
+            return {
+                ...state,
+                polkaBtcLoaded: false,
+                relayerLoaded: false,
+                vaultClientLoaded: false,
+                showAccountModal: false,
+                extensions: [],
+            };
         case SET_TOTAL_ISSUED_AND_TOTAL_LOCKED:
             return { ...state, totalLockedDOT: action.totalLockedDOT, totalPolkaBTC: action.totalPolkaBTC };
         case IS_VAULT_CLIENT_LOADED:
@@ -44,6 +55,10 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
             return { ...state, balanceDOT: action.balanceDOT };
         case UPDATE_BALANCE_POLKA_BTC:
             return { ...state, balancePolkaBTC: action.balancePolkaBTC };
+        case SHOW_ACCOUNT_MODAL:
+            return { ...state, showAccountModal: action.showAccountModal };
+        case SET_INSTALLED_EXTENSION:
+            return { ...state, extensions: action.extensions };
         default:
             return state;
     }

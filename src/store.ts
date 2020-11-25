@@ -22,11 +22,13 @@ export const getInitialState = (): StoreType => {
             relayerLoaded: false,
             vaultClientLoaded: false,
             hasFeedbackModalBeenDisplayed: false,
+            showAccountModal: false,
             address: "",
             totalLockedDOT: "",
             totalPolkaBTC: "",
             balancePolkaBTC: "",
             balanceDOT: "",
+            extensions: [],
         },
         issue: {
             address: "",
