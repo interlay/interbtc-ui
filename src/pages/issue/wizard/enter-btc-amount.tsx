@@ -76,14 +76,16 @@ export default function EnterBTCAmount() {
                     name="amountBTC"
                     type="float"
                     className={"custom-input" + (errors.amountBTC ? " error-borders" : "")}
-                    ref={register({ required: true })}
+                    ref={register({ 
+                        required: true,
+                        validate: (value) => value > 1 ? "Maximal amount is 1" : undefined
+                     })}
                 />
                 {errors.amountBTC && (
                     <div className="input-error">
                         {errors.amountBTC.type === "required" ? "Please enter the amount" : errors.amountBTC.message}
                     </div>
                 )}
-                {/* <p>Fee: {feeBTC} BTC</p> */}
             </Modal.Body>
             <Modal.Footer>
                 <ButtonMaybePending

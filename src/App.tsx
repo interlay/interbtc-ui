@@ -51,7 +51,7 @@ function connectToParachain(): Promise<PolkaBTCAPI> {
 
 export default function App(): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const [address,setAddress] = useState("");
+    const address = useSelector((state: StoreType) => state.general.address);
     const [isLoading,setIsLoading] = useState(true);
     const dispatch = useDispatch();
 
@@ -75,15 +75,12 @@ export default function App(): ReactElement {
 
         const { signer } = await web3FromAddress(newAddress);
         window.polkaBTC.setAccount(newAddress, signer);
-        setAddress(newAddress);
 
         dispatch(showAccountModalAction(false));
         dispatch(changeAddressAction(newAddress));
     },[polkaBtcLoaded, dispatch]);
 
     const getAccount = useCallback(async (): Promise<void> => {
-        if (address) return;
-
         const extensions = await web3Enable(constants.APP_NAME);
         dispatch(setInstalledExtensionAction(extensions.map((ext) => ext.name)));
 

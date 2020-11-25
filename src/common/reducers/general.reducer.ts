@@ -42,7 +42,6 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
                 polkaBtcLoaded: false,
                 relayerLoaded: false,
                 vaultClientLoaded: false,
-                address: "",
                 showAccountModal: false,
                 extensions: [],
             };

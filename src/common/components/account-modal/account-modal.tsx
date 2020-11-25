@@ -56,8 +56,8 @@ export default function AccountModal(props: AccountModalProps): ReactElement {
                             </a>. Once you create a new account please refresh the page.
                         </p>
                         </div> : <p>Please select an account:</p>}
-                    {(accounts || []).map((account: string) => (
-                        <div className="row">
+                    {(accounts || []).map((account: string, index: number) => (
+                        <div className="row" key={index}>
                             <div className="col-12">
                                 <div className="one-account" onClick={() => props.onSelected(account)}>
                                     {account}

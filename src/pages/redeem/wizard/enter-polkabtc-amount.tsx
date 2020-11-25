@@ -81,10 +81,9 @@ export default function EnterPolkaBTCAmount() {
                     className={"custom-input" + (errors.amountPolkaBTC ? " error-borders" : "")}
                     ref={register({
                         required: true,
-                        max: {
-                            value: balancePolkaBTC,
-                            message: "Please enter an amount smaller than your current balance: " + balancePolkaBTC,
-                        },
+                        validate: (value) => value > balancePolkaBTC ?
+                            "Please enter an amount smaller than your current balance: " + balancePolkaBTC
+                            : undefined
                     })}
                 />
                 {errors.amountPolkaBTC && (
@@ -92,8 +91,6 @@ export default function EnterPolkaBTCAmount() {
                         {errors.amountPolkaBTC.type === "required"
                             ? "Please enter the amount"
                             : errors.amountPolkaBTC.message}
-                        {errors.amountPolkaBTC.type === "validate" &&
-                            "Please enter amount less then " + balancePolkaBTC}
                     </div>
                 )}
             </Modal.Body>
