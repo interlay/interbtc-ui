@@ -1217,7 +1217,7 @@
   resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.1.19.tgz#5009ee8eba22bd3b3f79acd6bd6c9eb3dae29198"
   integrity sha512-1LqgTjgRYXbvaFr/LoDrl73/s1RHW+4Q5BAyjdEaqbTWpt+64IjufTFsWLnXwIbRob/iS3jUvlsG+SXtc8Z3kA==
 
-"@interlay/polkabtc@^0.5.16":
+"@interlay/polkabtc@^0.5.17":
   version "0.5.17"
   resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.5.17.tgz#3e9ebacf35fa6f9c0ca9cb5b41855a0035f4c797"
   integrity sha512-EJHuVjjVFrvxqFBjuJ6U0gPxhQ2tNGTW2tzXF8QPQEiQ6Au46SbBRv+5NMZZtEsb0JbBGxsUIfkhL5v8n59MhA==
