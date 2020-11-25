@@ -77,7 +77,7 @@ export default function EnterPolkaBTCAmount() {
                 <p>You have {balancePolkaBTC} PolkaBTC</p>
                 <input
                     name="amountPolkaBTC"
-                    type="number"
+                    type="float"
                     className={"custom-input" + (errors.amountPolkaBTC ? " error-borders" : "")}
                     ref={register({
                         required: true,

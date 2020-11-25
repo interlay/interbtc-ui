@@ -74,7 +74,7 @@ export default function EnterBTCAmount() {
                 <p>Please enter the amount of BTC you want to receive in PolkaBTC.</p>
                 <input
                     name="amountBTC"
-                    type="number"
+                    type="float"
                     className={"custom-input" + (errors.amountBTC ? " error-borders" : "")}
                     ref={register({ required: true })}
                 />
