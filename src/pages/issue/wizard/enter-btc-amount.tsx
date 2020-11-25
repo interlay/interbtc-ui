@@ -78,7 +78,9 @@ export default function EnterBTCAmount() {
                     className={"custom-input" + (errors.amountBTC ? " error-borders" : "")}
                     ref={register({ 
                         required: true,
-                        validate: (value) => value > 1 ? "Maximal amount is 1" : undefined
+                        validate: (value) => value > 1 ? 
+                            "Maximum amount you can issue during the alpha testnet is 1.0 PolkaBTC."
+                            : undefined
                      })}
                 />
                 {errors.amountBTC && (
