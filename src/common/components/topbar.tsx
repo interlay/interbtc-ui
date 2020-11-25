@@ -85,6 +85,16 @@ export default function Topbar(props: TopbarProps): ReactElement {
         }
     }
 
+    const getLabel = ():string => {
+        if (!extensions.length)
+            return "Connect Wallet";
+
+        if (!address) 
+            return "Select Account";
+
+        return "Account:" + address.substring(0, 10) + "..." + address.substring(38);
+    }
+
     return (
         <Navbar bg="light" expand="lg" className="border-bottom shadow-sm top-bar">
             {!isLoading && 
@@ -162,7 +172,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                                     size="sm"
                                     style={{ borderRadius: "1em" }}
                                     onClick={() => dispatch(showAccountModalAction(true))}>
-                                    Account: {props.address.substring(0, 10)}...{props.address.substring(38)}
+                                        {getLabel()}
                                 </Button>
                             </Nav>
                         </React.Fragment>

@@ -158,7 +158,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
         <div>
             {redeemRequests && redeemRequests.length > 0 && (
                 <React.Fragment>
-                    <h5>Pending Redeem Request</h5>
+                    <h5>Redeem Request</h5>
                     <Table hover responsive size={"md"}>
                         <thead>
                             <tr>
