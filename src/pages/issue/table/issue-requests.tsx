@@ -228,7 +228,7 @@ export default function IssueRequests(props: IssueRequestProps) {
         <div>
             {issueRequests && issueRequests.length > 0 && (
                 <React.Fragment>
-                    <h5>Pending Issue Request</h5>
+                    <h5>Issue Request</h5>
                     <p>Click on an Issue request to view details or update the BTC payment txid.</p>
                     <Table hover responsive size={"md"}>
                         <thead>
