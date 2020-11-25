@@ -27,7 +27,8 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
     const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
     const dispatch = useDispatch();
 
-    const onSubmit = handleSubmit(async () => {
+    const onSubmit = handleSubmit(async ({btcTxId: string}) => {
+        console.log("btc tx id = ", btcTxId);
         props.closeModal();
     });
 
