@@ -93,13 +93,13 @@ export const issueReducer = (state: IssueState = initialState, action: IssueActi
             const currentRequests = state.issueRequests.get(state.address);
             const resultRequests = action.issueRequests.map((req) => {
                 if (currentRequests) {
-                    const currentRequest = currentRequests.find((r)=> r.id === req.id)
+                    const currentRequest = currentRequests.find((r) => r.id === req.id);
                     if (currentRequest) {
-                        return {...req, btcTxId: currentRequest.btcTxId}
+                        return { ...req, btcTxId: currentRequest.btcTxId };
                     }
                 }
                 return req;
-            })
+            });
             newRequests.set(state.address, resultRequests);
             return { ...state, issueRequests: newRequests };
         default:
