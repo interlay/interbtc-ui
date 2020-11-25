@@ -1,5 +1,5 @@
-import React, { ReactElement, ChangeEvent, useEffect, useState } from "react";
-import { Button, Modal, Form } from "react-bootstrap";
+import React, { ReactElement, useEffect, useState } from "react";
+import { Button, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../types/util.types";
 import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
@@ -14,7 +14,6 @@ type AccountModalProps = {
 }
 
 export default function AccountModal(props: AccountModalProps): ReactElement {
-    const [accountValue, setAccountValue] = useState(props.selected || "");
     const showAccountModal = useSelector((state: StoreType) => state.general.showAccountModal);
     const [accounts, setAccounts] = useState<string[]>([]);
     const extensions = useSelector((state: StoreType) => state.general.extensions);
