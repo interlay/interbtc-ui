@@ -11,7 +11,7 @@ import {
     HAS_FEEDBACK_BEEN_DISPLAYED,
     SET_INSTALLED_EXTENSION,
     SHOW_ACCOUNT_MODAL,
-    UPDATE_ACCOUNTS
+    UPDATE_ACCOUNTS,
 } from "../types/actions.types";
 import { GeneralState } from "../types/util.types";
 
@@ -27,7 +27,7 @@ const initialState = {
     balancePolkaBTC: "",
     balanceDOT: "",
     extensions: [],
-    accounts: []
+    accounts: [],
 };
 
 export const generalReducer = (state: GeneralState = initialState, action: GeneralActions): GeneralState => {
@@ -46,7 +46,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
                 vaultClientLoaded: false,
                 showAccountModal: false,
                 extensions: [],
-                accounts: []
+                accounts: [],
             };
         case SET_TOTAL_ISSUED_AND_TOTAL_LOCKED:
             return { ...state, totalLockedDOT: action.totalLockedDOT, totalPolkaBTC: action.totalPolkaBTC };
@@ -64,7 +64,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
             return {
                 ...state,
                 extensions: action.extensions,
-                address: action.extensions.length ? state.address: "" 
+                address: action.extensions.length ? state.address : "",
             };
         case UPDATE_ACCOUNTS:
             return { ...state, accounts: action.accounts };

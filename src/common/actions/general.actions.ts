@@ -22,7 +22,7 @@ import {
     HasFeedbackModalBeenDisplayed,
     SetInstalledExtension,
     ShowAccountModal,
-    UpdateAccounts
+    UpdateAccounts,
 } from "../types/actions.types";
 import { StoreType } from "../types/util.types";
 
@@ -87,5 +87,5 @@ export const setInstalledExtensionAction = (extensions: string[]): SetInstalledE
 
 export const updateAccountsAction = (accounts: string[]): UpdateAccounts => ({
     type: UPDATE_ACCOUNTS,
-    accounts
-})
+    accounts,
+});

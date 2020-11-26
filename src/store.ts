@@ -29,7 +29,7 @@ export const getInitialState = (): StoreType => {
             balancePolkaBTC: "",
             balanceDOT: "",
             extensions: [],
-            accounts: []
+            accounts: [],
         },
         issue: {
             address: "",
