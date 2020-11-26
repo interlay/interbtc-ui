@@ -83,29 +83,6 @@ export default function App(): ReactElement {
         dispatch(changeAddressAction(newAddress));
     },[polkaBtcLoaded, dispatch]);
 
-    // const getAccount = useCallback(async (): Promise<void> => {
-    //     const extensions = await web3Enable(constants.APP_NAME);
-    //     dispatch(setInstalledExtensionAction(extensions.map((ext) => ext.name)));
-
-    //     const allAccounts = await web3Accounts();
-    //     if (allAccounts.length === 0) return;
-
-    //     const mappedAccounts = allAccounts.map(({ address }) => address);
-
-    //     let newAddress : string | undefined = undefined;
-    //     if (mappedAccounts.includes(address)) {
-    //         newAddress = address;
-    //     } else if (allAccounts.length === 1) {
-    //         newAddress = allAccounts[0].address;
-    //     }
-
-    //     if (newAddress) {
-    //         selectAccount(newAddress);
-    //     } else {
-    //         dispatch(showAccountModalAction(true));
-    //     }
-    // },[address, selectAccount, dispatch]);
-
     const createAPIInstance = useCallback(async (): Promise<void> => {
         try {
             window.relayer = new StakedRelayerClient(constants.STAKED_RELAYER_URL);
@@ -199,8 +176,6 @@ export default function App(): ReactElement {
         }
         loadData();
     },[createAPIInstance, isLoading, polkaBtcLoaded]);
-
-    console.log("rendering");
 
     return <React.Fragment>
         <Router>
