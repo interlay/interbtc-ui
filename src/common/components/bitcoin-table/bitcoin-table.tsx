@@ -112,7 +112,7 @@ export default function BitcoinTable(): ReactElement {
             <div className="row">
                 <div className="col-12">
                     <div className="header">
-                        BTC-Relay Status: &nbsp; <div className={getCircle(relayStatus)}></div> &nbsp; {relayStatus}
+                        BTC Relay Status: &nbsp; <div className={getCircle(relayStatus)}></div> &nbsp; {relayStatus}
                     </div>
                 </div>
             </div>
