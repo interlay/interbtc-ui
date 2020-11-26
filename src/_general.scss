@@ -377,6 +377,15 @@ a:not([href]):not([tabindex]):focus {
   font-weight: 600;
 }
 
+
+// text types
+.heavy {
+  width: 100%;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
 #basic-navbar-nav{
   .navbar-nav{
     .dropdown.nav-item {

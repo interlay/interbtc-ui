@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../common/types/util.types";
 import IssueWizard from "./wizard/issue-wizard";
 import { showAccountModalAction } from "../../common/actions/general.actions";
+import Balances from "../../common/components/balances";
 
 export default function IssuePage(): JSX.Element {
     const dispatch = useDispatch();
@@ -41,6 +42,7 @@ export default function IssuePage(): JSX.Element {
 
                     {address && extensions.length &&
                         <React.Fragment>
+                            <Balances balancePolkaBTC={balancePolkaBTC} balanceDOT={balanceDOT}></Balances>
                             <Row className="mt-5">
                                 <Col xs="12" sm={{ span: 6, offset: 3 }}>
                                     <h5 className="text-muted">PolkaBTC balance: {balancePolkaBTC}</h5>
