@@ -10,6 +10,7 @@ import {
     HAS_FEEDBACK_BEEN_DISPLAYED,
     SET_INSTALLED_EXTENSION,
     SHOW_ACCOUNT_MODAL,
+    UPDATE_ACCOUNTS,
     IsPolkaBtcLoaded,
     IsStakedRelayerLoaded,
     ChangeAddress,
@@ -21,6 +22,7 @@ import {
     HasFeedbackModalBeenDisplayed,
     SetInstalledExtension,
     ShowAccountModal,
+    UpdateAccounts
 } from "../types/actions.types";
 import { StoreType } from "../types/util.types";
 
@@ -82,3 +84,8 @@ export const setInstalledExtensionAction = (extensions: string[]): SetInstalledE
     type: SET_INSTALLED_EXTENSION,
     extensions,
 });
+
+export const updateAccountsAction = (accounts: string[]): UpdateAccounts => ({
+    type: UPDATE_ACCOUNTS,
+    accounts
+})

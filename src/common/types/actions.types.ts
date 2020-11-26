@@ -16,6 +16,7 @@ export const UPDATE_BALANCE_POLKA_BTC = "UPDATE_BALANCE_POLKA_BTC";
 export const UPDATE_BALANCE_DOT = "UPDATE_BALANCE_DOT";
 export const SET_INSTALLED_EXTENSION = "SET_INSTALLED_EXTENSION";
 export const SHOW_ACCOUNT_MODAL = "SHOW_ACCOUNT_MODAL";
+export const UPDATE_ACCOUNTS = "UPDATE_ACCOUNTS";
 
 export interface IsPolkaBtcLoaded {
     type: typeof IS_POLKA_BTC_LOADED;
@@ -73,6 +74,11 @@ export interface ShowAccountModal {
     showAccountModal: boolean;
 }
 
+export interface UpdateAccounts {
+    type: typeof UPDATE_ACCOUNTS;
+    accounts: string[];
+}
+
 export type GeneralActions =
     | IsPolkaBtcLoaded
     | IsStakedRelayerLoaded
@@ -84,7 +90,8 @@ export type GeneralActions =
     | UpdateBalancePolkaBTC
     | UpdateBalanceDOT
     | SetInstalledExtension
-    | ShowAccountModal;
+    | ShowAccountModal
+    | UpdateAccounts;
 
 // REDEEM
 

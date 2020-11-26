@@ -43,6 +43,7 @@ export type GeneralState = {
     balancePolkaBTC: string;
     balanceDOT: string;
     extensions: string[];
+    accounts: string[];
 };
 
 export type AppState = ReturnType<typeof rootReducer>;
