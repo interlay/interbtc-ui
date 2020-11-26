@@ -133,7 +133,10 @@ export default function App(): ReactElement {
             dispatch(setInstalledExtensionAction(browserExtensions.map((ext) => ext.name)));
 
             const allAccounts = await web3Accounts();
-            if (allAccounts.length === 0) return;
+            if (allAccounts.length === 0) {
+                dispatch(changeAddressAction(""));
+                return;
+            }
 
             const accounts = allAccounts.map(({ address }) => address);
             dispatch(updateAccountsAction(accounts));
