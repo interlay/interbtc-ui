@@ -71,7 +71,8 @@ export default function BTCPayment() {
                         </ListGroup>
                     </FormGroup>
 
-                    If you are using the Electrum desktop wallet, copy+paste this into the "Pay to" field:
+                    If you are using the Electrum desktop wallet, copy+paste this into the "Pay to" field. 
+                    <br/> Note: copied values are in <strong>mBTC</strong> (1 mBTC = 0.001 BTC).
                     <FormGroup>
                     <ListGroup>
                     <ListGroupItem>

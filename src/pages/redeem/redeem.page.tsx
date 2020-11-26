@@ -80,12 +80,7 @@ export default function RedeemPage(): JSX.Element {
                             </Col>
                         ) : (
                                 <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
-                                    <p>You have no PolkaBTC yet.</p>
-                                    <Link to="/issue" className="text-decoration-none">
-                                        <Button variant="outline-polkadot" size="lg" block>
-                                            Get PolkaBTC
-                                        </Button>
-                                    </Link>
+                                    <p>There is nothing to redeem</p>
                                 </Col>
                             )}
                     </Row>

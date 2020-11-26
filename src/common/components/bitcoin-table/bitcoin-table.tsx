@@ -104,7 +104,7 @@ export default function BitcoinTable(): ReactElement {
         if (Math.abs(heightDiff) > constants.BTC_RELAY_DELAY_WARNING) {
             return "orange-text";
         }
-        return "";
+        return "green-text";
     };
 
     return (
@@ -112,7 +112,7 @@ export default function BitcoinTable(): ReactElement {
             <div className="row">
                 <div className="col-12">
                     <div className="header">
-                        Bitcoin Relay Status: &nbsp; <div className={getCircle(relayStatus)}></div> &nbsp; {relayStatus}
+                        BTC-Relay Status: &nbsp; <div className={getCircle(relayStatus)}></div> &nbsp; {relayStatus}
                     </div>
                 </div>
             </div>

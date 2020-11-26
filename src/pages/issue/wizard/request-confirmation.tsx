@@ -79,10 +79,10 @@ export default function RequestConfirmation() {
                     <FormGroup>
                         <ListGroup>
                             <ListGroupItem>
-                                Receiving: <strong>{amountBTC} PolkaBTC</strong>
+                                Issuing: <strong>{amountBTC} PolkaBTC</strong>
                             </ListGroupItem>
                             <ListGroupItem>
-                                Vault address: <strong>{vaultBTCAddress}</strong>
+                                Vault BTC address: <strong>{vaultBTCAddress}</strong>
                             </ListGroupItem>
                             <ListGroupItem>
                                 Fees: <strong>{feeBTC} BTC</strong>

@@ -68,9 +68,10 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
                                 {" "}
                                 <b>Your request is now being processed.</b>
                                 <br />
-                                We will monitor your Bitcoin transaction and notify you when it has been confirmed.{" "}
                                 <br />
-                                You will then see a "Confirm" button next to your issue request on the issue page.
+                                We will monitor Bitcoin for your transaction (via the Issue ID in the OP_RETURN output).
+                                <br />
+                                Once it has sufficient confirmations, an "Execute" button will appear for this issue request.
                             </p>
                             <p>
                                 <b>Note: Your Bitcoin payment can take up to an hour to confirm.</b>
@@ -80,7 +81,7 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
                     <Row className="justify-content-md-center">
                         <Col className="text-center">
                             <p className="text-left">
-                                Optional: if you want, you can tell us your Bitcoin txid to speed things up
+                                Optional: inform us of your Bitcoin txid to speed things up
                             </p>
                             <input
                                 id="btcTxId"
