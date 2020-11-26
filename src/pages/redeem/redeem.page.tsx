@@ -12,6 +12,7 @@ import {
     showAccountModalAction
 } from "../../common/actions/general.actions";
 import Feedback from "./feedback/feedback";
+import Balances from "../../common/components/balances";
 
 export default function RedeemPage(): JSX.Element {
     const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
@@ -59,30 +60,21 @@ export default function RedeemPage(): JSX.Element {
 
                     {address && extensions.length &&
                         <React.Fragment>
-                            <Row className="mt-5">
-                                <Col xs="12" sm={{ span: 6, offset: 3 }}>
-                                    <h5 className="text-muted">PolkaBTC balance: {balancePolkaBTC}</h5>
-                                </Col>
-                            </Row>
-                            <Row className="mt-1">
-                                <Col xs="12" sm={{ span: 6, offset: 3 }}>
-                                    <h5 className="text-muted">DOT balance: {balanceDOT}</h5>
-                                </Col>
-                            </Row>
+                            <Balances balancePolkaBTC={balancePolkaBTC} balanceDOT={balanceDOT}></Balances>
                         </React.Fragment>
                     }
                     <Row className="mt-5 mb-5">
-                        {balancePolkaBTC !== '0' ? (
+                        
                             <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
-                                <Button variant="outline-bitcoin" size="lg" block onClick={handleShowWizard}>
+                                <Button variant="outline-bitcoin" size="lg" block onClick={handleShowWizard} disabled={balancePolkaBTC === '0' }>
                                     Redeem PolkaBTC
                             </Button>
                             </Col>
-                        ) : (
-                                <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
-                                    <p>There is nothing to redeem</p>
+                            {balancePolkaBTC === '0' &&
+                                <Col className="mt-2" xs="12" sm={{ span: 6, offset: 3 }}>
+                                    <p>You don't have any PolkaBTC to redeem.</p>
                                 </Col>
-                            )}
+                            }
                     </Row>
                     <RedeemRequests handleShowFeedbackModal={handleShowFeedbackModal} />
 

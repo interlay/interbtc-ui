@@ -25,7 +25,7 @@ export default function IssuePage(): JSX.Element {
     };
 
     const handleShow = () => {
-        if(extensions.length && address) {
+        if (extensions.length && address) {
             setShowWizard(true);
         } else {
             dispatch(showAccountModalAction(true));
@@ -43,16 +43,6 @@ export default function IssuePage(): JSX.Element {
                     {address && extensions.length &&
                         <React.Fragment>
                             <Balances balancePolkaBTC={balancePolkaBTC} balanceDOT={balanceDOT}></Balances>
-                            <Row className="mt-5">
-                                <Col xs="12" sm={{ span: 6, offset: 3 }}>
-                                    <h5 className="text-muted">PolkaBTC balance: {balancePolkaBTC}</h5>
-                                </Col>
-                            </Row>
-                            <Row className="mt-1">
-                                <Col xs="12" sm={{ span: 6, offset: 3 }}>
-                                    <h5 className="text-muted">DOT balance: {balanceDOT}</h5>
-                                </Col>
-                            </Row>
                         </React.Fragment>
                     }
                     <Row className="mt-5 mb-5">
@@ -63,7 +53,7 @@ export default function IssuePage(): JSX.Element {
                         </Col>
                     </Row>
 
-                    <IssueRequests handleShow={handleShow}/>
+                    <IssueRequests handleShow={handleShow} />
 
                     <Modal show={showWizard} onHide={handleClose} size={"lg"}>
                         <IssueWizard handleClose={handleClose} />

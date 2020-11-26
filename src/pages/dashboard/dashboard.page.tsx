@@ -49,7 +49,7 @@ export default function DashboardPage() {
                         <div className="title">Dashboard</div>
                     </div>
                     <div className="row mt-5 mb-3">
-                        <div className="col-8 offset-2">
+                        <div className="col-lg-8 offset-2">
                             <div className="row">
                                 <div className="col-md-3">
                                     <div className="">Total locked</div>
