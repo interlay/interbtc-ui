@@ -73,6 +73,7 @@ export default function App(): ReactElement {
             return;
         }
 
+        await web3Enable(constants.APP_NAME);
         const { signer } = await web3FromAddress(newAddress);
         window.polkaBTC.setAccount(newAddress, signer);
 
@@ -144,6 +145,17 @@ export default function App(): ReactElement {
         }
         initDataOnAppBootstrap();
     },[dispatch, polkaBtcLoaded]);
+
+    useEffect((): void => {
+        const loadAccount = async () => {
+            if (!polkaBtcLoaded) return;
+
+            await web3Enable(constants.APP_NAME);
+            const { signer } = await web3FromAddress(address);
+            window.polkaBTC.setAccount(address, signer);
+        }
+        loadAccount();
+    },[address, polkaBtcLoaded]);
 
     useEffect(() => {
         // Do not load data if showing static landing page only
