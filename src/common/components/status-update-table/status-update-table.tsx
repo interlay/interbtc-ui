@@ -64,7 +64,15 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
         const fetchUpdates = async () => {
             if (!polkaBtcLoaded) return;
 
-            const statusUpdates = await window.polkaBTC.stakedRelayer.getAllStatusUpdates();
+            const statusUpdates = await (props.readOnly
+                ? window.polkaBTC.stakedRelayer.getAllActiveStatusUpdates()
+                : window.polkaBTC.stakedRelayer.getAllStatusUpdates());
+
+            // sort in descending order by id (newest shown first)
+            statusUpdates.sort((right, left) => {
+                return left.id.eq(right.id) ? 0 : left.id.gt(right.id) ? 1 : -1;
+            });
+
             setStatusUpdates(
                 statusUpdates.map((status) => {
                     const { id, statusUpdate } = status;
@@ -108,7 +116,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
             fetchUpdates();
         }, constants.COMPONENT_UPDATE_MS);
         return () => clearInterval(interval);
-    }, [polkaBtcLoaded, props.stakedRelayerAddress]);
+    }, [polkaBtcLoaded, props.stakedRelayerAddress, props.readOnly]);
 
     const openVoteModal = (statusUpdate: StatusUpdate) => {
         setShowVoteModal(true);
@@ -196,8 +204,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                     <th>Result</th>
                                 </tr>
                             </thead>
-                            {statusUpdates && statusUpdates.length
-                                ?
+                            {statusUpdates && statusUpdates.length ? (
                                 <tbody>
                                     {statusUpdates.map((statusUpdate, index) => {
                                         return (
@@ -232,11 +239,11 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                                             <p>
                                                                 <span className="green-text">
                                                                     {getPercentage(statusUpdate.votes, "yes")}%
-                                                            </span>
+                                                                </span>
                                                                 <span>&nbsp;:&nbsp;</span>
                                                                 <span className="red-text">
                                                                     {getPercentage(statusUpdate.votes, "no")}%
-                                                            </span>
+                                                                </span>
                                                             </p>
                                                             <p>
                                                                 <span className="green-text">
@@ -253,35 +260,33 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                                 <td className={getResultColor(statusUpdate.result)}>
                                                     {!props.readOnly ? (
                                                         props.planckLocked !== undefined &&
-                                                            new BN(props.planckLocked) > new BN(0) &&
-                                                            !statusUpdate.hasVoted &&
-                                                            statusUpdate.result === "Pending" ? (
-                                                                <Button
-                                                                    variant="outline-primary"
-                                                                    onClick={() => openVoteModal(statusUpdate)}
-                                                                >
-                                                                    Vote
-                                                                </Button>
-                                                            ) : (
-                                                                statusUpdate.result
-                                                            )
+                                                        new BN(props.planckLocked) > new BN(0) &&
+                                                        !statusUpdate.hasVoted &&
+                                                        statusUpdate.result === "Pending" ? (
+                                                            <Button
+                                                                variant="outline-primary"
+                                                                onClick={() => openVoteModal(statusUpdate)}
+                                                            >
+                                                                Vote
+                                                            </Button>
+                                                        ) : (
+                                                            statusUpdate.result
+                                                        )
                                                     ) : (
-                                                            "Pending"
-                                                        )}
+                                                        "Pending"
+                                                    )}
                                                 </td>
                                             </tr>
                                         );
                                     })}
                                 </tbody>
-                                :
+                            ) : (
                                 <tbody>
                                     <tr>
-                                        <td colSpan={8}>
-                                            No parachain status updates
-                                        </td>
+                                        <td colSpan={8}>No parachain status updates</td>
                                     </tr>
                                 </tbody>
-                            }
+                            )}
                         </table>
                     </div>
                 </div>
