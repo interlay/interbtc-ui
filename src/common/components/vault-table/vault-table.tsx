@@ -125,19 +125,21 @@ export default function VaultTable(): ReactElement {
     };
 
     const showCollateralizations = (vault: Vault) => {
-        if (vault.unsettledCollateralization === undefined) {
+        if (vault.unsettledCollateralization === undefined && vault.settledCollateralization === undefined) {
             return <td className={getCollateralizationColor(vault.unsettledCollateralization)}>∞</td>;
         }
         return (
             <td>
-                <p className={getCollateralizationColor(vault.unsettledCollateralization)}>
-                    {roundTwoDecimals(vault.unsettledCollateralization.toString()) + "%"}
+                <p className={getCollateralizationColor(vault.settledCollateralization)}>
+                    {vault.settledCollateralization !== undefined
+                        ? roundTwoDecimals(vault.settledCollateralization.toString()) + "%"
+                        : "∞"}
                 </p>
                 <p className="small-text">
-                    <span className="black-text">{"Confirmed: "}</span>
+                    <span className="black-text">{"Pending: "}</span>
                     <span className={getCollateralizationColor(vault.unsettledCollateralization)}>
-                        {vault.settledCollateralization !== undefined
-                            ? roundTwoDecimals(vault.settledCollateralization.toString()) + "%"
+                        {vault.unsettledCollateralization !== undefined
+                            ? roundTwoDecimals(vault.unsettledCollateralization.toString()) + "%"
                             : "∞"}
                     </span>
                 </p>
@@ -173,8 +175,8 @@ export default function VaultTable(): ReactElement {
                                         Collateralization &nbsp;
                                         <i
                                             className="far fa-question-circle"
-                                            data-tip="Overall collateralization, including pending issue requests.
-                                           'real' value shows collateralization for actually locked BTC"
+                                            data-tip="Collateralization rate for locked BTC.
+                                           'Pending' includes in-progress issue requests."
                                         ></i>
                                     </th>
                                     <th>Status</th>
@@ -199,12 +201,12 @@ export default function VaultTable(): ReactElement {
                                     })}
                                 </tbody>
                             ) : (
-                                <tbody>
-                                    <tr>
-                                        <td colSpan={7}>No registered vaults</td>
-                                    </tr>
-                                </tbody>
-                            )}
+                                    <tbody>
+                                        <tr>
+                                            <td colSpan={7}>No registered vaults</td>
+                                        </tr>
+                                    </tbody>
+                                )}
                         </table>
                     </div>
                 </div>
