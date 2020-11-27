@@ -1217,10 +1217,10 @@
   resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.1.20.tgz#acd52041e23b56c7ab2fac51852587e655d59f45"
   integrity sha512-vg5vQIUU4Z9U8VYfnOWueHfDKbSZ7nNLiDZOh8jYhd2QVAqByOrBe4nKNW3+2otaZDynd5y6RE5WV85ghmNmYQ==
 
-"@interlay/polkabtc@^0.5.21":
-  version "0.5.21"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.5.21.tgz#5f78f791d1acf08817df0a27b5c25ecb7f643ede"
-  integrity sha512-NTpjwMEc3bGhH0ySXQ4Igplss2Aeb6riEcpsLN+Dh0VUvN+ra7cjt3i4Cxn9t6g8EFyHrpjjzCnQ9wh6Ze2TIQ==
+"@interlay/polkabtc@^0.5.22":
+  version "0.5.22"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.5.22.tgz#ffcb8b479a513553ec79886c269c1a519e7e62d8"
+  integrity sha512-skucW1Zm2VKCr2HTunVeTgL3AuttoA2fJ9/maj0idIlV1P8W2qs4QrmsxFPjGVXMTGUE9mZkKbv0HeUllswcKw==
   dependencies:
     "@interlay/esplora-btc-api" "^0.3.3"
     "@interlay/polkabtc-types" "^0.1.20"
