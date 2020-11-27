@@ -17,7 +17,8 @@ import {
     changeAddressAction,
     setTotalIssuedAndTotalLockedAction,
     setInstalledExtensionAction,
-    showAccountModalAction
+    showAccountModalAction,
+    updateAccountsAction
 } from "./common/actions/general.actions";
 import * as constants from "./constants";
 
@@ -53,6 +54,7 @@ export default function App(): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const address = useSelector((state: StoreType) => state.general.address);
     const [isLoading,setIsLoading] = useState(true);
+    const extensions = useSelector((state: StoreType) => state.general.extensions);
     const dispatch = useDispatch();
 
     const requestDotFromFaucet = async (): Promise<void> => {
@@ -73,35 +75,13 @@ export default function App(): ReactElement {
             return;
         }
 
+        await web3Enable(constants.APP_NAME);
         const { signer } = await web3FromAddress(newAddress);
         window.polkaBTC.setAccount(newAddress, signer);
 
         dispatch(showAccountModalAction(false));
         dispatch(changeAddressAction(newAddress));
     },[polkaBtcLoaded, dispatch]);
-
-    const getAccount = useCallback(async (): Promise<void> => {
-        const extensions = await web3Enable(constants.APP_NAME);
-        dispatch(setInstalledExtensionAction(extensions.map((ext) => ext.name)));
-
-        const allAccounts = await web3Accounts();
-        if (allAccounts.length === 0) return;
-
-        const mappedAccounts = allAccounts.map(({ address }) => address);
-
-        let newAddress : string | undefined = undefined;
-        if (mappedAccounts.includes(address)) {
-            newAddress = address;
-        } else if (allAccounts.length === 1) {
-            newAddress = allAccounts[0].address;
-        }
-
-        if (newAddress) {
-            selectAccount(newAddress);
-        } else {
-            dispatch(showAccountModalAction(true));
-        }
-    },[address, selectAccount, dispatch]);
 
     const createAPIInstance = useCallback(async (): Promise<void> => {
         try {
@@ -145,30 +125,60 @@ export default function App(): ReactElement {
         initDataOnAppBootstrap();
     },[dispatch, polkaBtcLoaded]);
 
+    useEffect((): void => {
+        const loadAccountData = async () => {
+            if (!polkaBtcLoaded || extensions.length) return;
+
+            const browserExtensions = await web3Enable(constants.APP_NAME);
+            dispatch(setInstalledExtensionAction(browserExtensions.map((ext) => ext.name)));
+
+            const allAccounts = await web3Accounts();
+            if (allAccounts.length === 0) {
+                dispatch(changeAddressAction(""));
+                return;
+            }
+
+            const accounts = allAccounts.map(({ address }) => address);
+            dispatch(updateAccountsAction(accounts));
+
+            let newAddress : string | undefined = undefined;
+            if (accounts.includes(address)) {
+                newAddress = address;
+            } else if (accounts.length === 1) {
+                newAddress = accounts[0];
+            }
+
+            if (newAddress) {
+                const { signer } = await web3FromAddress(newAddress);
+                window.polkaBTC.setAccount(newAddress, signer);
+                dispatch(changeAddressAction(newAddress));
+            } else dispatch(changeAddressAction(""));
+        }
+        loadAccountData();
+    },[address, polkaBtcLoaded, dispatch, extensions.length]);
+
     useEffect(() => {
         // Do not load data if showing static landing page only
-        if (!constants.STATIC_PAGE_ONLY) {
-            const loadData = async () => {
-                    try {
-                        if (polkaBtcLoaded) return;
+        if (constants.STATIC_PAGE_ONLY) return;
 
-                        setTimeout(()=> {
-                            if(isLoading)
-                                setIsLoading(false);
-                        },3000);
-                        await createAPIInstance();
-                        keyring.loadAll({});
-                    } catch (e) {
-                        toast.warn("Could not connect to the Parachain, please try again in a few seconds", {
-                            autoClose: false,
-                        });
-                    }
+        const loadData = async () => {
+            try {
+                if (polkaBtcLoaded) return;
 
-                    await getAccount();
+                setTimeout(()=> {
+                    if(isLoading)
+                        setIsLoading(false);
+                },3000);
+                await createAPIInstance();
+                keyring.loadAll({});
+            } catch (e) {
+                toast.warn("Could not connect to the Parachain, please try again in a few seconds", {
+                    autoClose: false,
+                });
             }
-            loadData();
         }
-    },[createAPIInstance, getAccount, isLoading, polkaBtcLoaded]);
+        loadData();
+    },[createAPIInstance, isLoading, polkaBtcLoaded]);
 
     return <React.Fragment>
         <Router>

@@ -1,9 +1,7 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../types/util.types";
-import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
-import * as constants from "../../../constants";
 import { showAccountModalAction } from "../../actions/general.actions";
 
 import "./account-modal.scss";
@@ -15,28 +13,11 @@ type AccountModalProps = {
 
 export default function AccountModal(props: AccountModalProps): ReactElement {
     const showAccountModal = useSelector((state: StoreType) => state.general.showAccountModal);
-    const [accounts, setAccounts] = useState<string[]>([]);
+    const accounts = useSelector((state: StoreType) => state.general.accounts);
     const extensions = useSelector((state: StoreType) => state.general.extensions);
     const dispatch = useDispatch();
 
     const onClose = () => dispatch(showAccountModalAction(false));
-
-    useEffect(() => {
-        const fetchAccounts = async () => {
-            try {
-                await web3Enable(constants.APP_NAME);
-
-                const allAccounts = await web3Accounts();
-                if (allAccounts.length === 0) return;
-                setAccounts(allAccounts.map((acc) => acc.address));
-            }
-            catch (error) {
-                console.log(error);
-            }
-        };
-
-        fetchAccounts();
-    },[]);
 
     return (
         <Modal show={showAccountModal} onHide={onClose} size={"lg"}>
