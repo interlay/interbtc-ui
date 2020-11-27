@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../common/types/util.types";
 import IssueWizard from "./wizard/issue-wizard";
 import { showAccountModalAction } from "../../common/actions/general.actions";
+import Balances from "../../common/components/balances";
 
 export default function IssuePage(): JSX.Element {
     const dispatch = useDispatch();
@@ -24,7 +25,7 @@ export default function IssuePage(): JSX.Element {
     };
 
     const handleShow = () => {
-        if(extensions.length && address) {
+        if (extensions.length && address) {
             setShowWizard(true);
         } else {
             dispatch(showAccountModalAction(true));
@@ -41,16 +42,7 @@ export default function IssuePage(): JSX.Element {
 
                     {address && extensions.length &&
                         <React.Fragment>
-                            <Row className="mt-5">
-                                <Col xs="12" sm={{ span: 6, offset: 3 }}>
-                                    <h5 className="text-muted">PolkaBTC balance: {balancePolkaBTC}</h5>
-                                </Col>
-                            </Row>
-                            <Row className="mt-1">
-                                <Col xs="12" sm={{ span: 6, offset: 3 }}>
-                                    <h5 className="text-muted">DOT balance: {balanceDOT}</h5>
-                                </Col>
-                            </Row>
+                            <Balances balancePolkaBTC={balancePolkaBTC} balanceDOT={balanceDOT}></Balances>
                         </React.Fragment>
                     }
                     <Row className="mt-5 mb-5">
@@ -61,7 +53,7 @@ export default function IssuePage(): JSX.Element {
                         </Col>
                     </Row>
 
-                    <IssueRequests handleShow={handleShow}/>
+                    <IssueRequests handleShow={handleShow} />
 
                     <Modal show={showWizard} onHide={handleClose} size={"lg"}>
                         <IssueWizard handleClose={handleClose} />

@@ -32,6 +32,7 @@ export default function VaultDashboardPage() {
     const collateralization = useSelector((state: StoreType) => state.vault.collateralization);
     const collateral = useSelector((state: StoreType) => state.vault.collateral);
     const lockedBTC = useSelector((state: StoreType) => state.vault.lockedBTC);
+    const [capacity, setCapacity] = useState("0");
     const [feesEarned] = useState("0");
     const [vaultId, setVaultId] = useState("0");
     const [accountId, setAccountId] = useState("0");
@@ -73,11 +74,14 @@ export default function VaultDashboardPage() {
 
                 const collateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId);
                 dispatch(updateCollateralizationAction(collateralization));
+
+                const issuablePolkaBTC = await window.polkaBTC.vaults.getIssuablePolkaBTC();
+                setCapacity(issuablePolkaBTC);
             } catch (err) {
                 console.log(err);
                 toast.warn(
                     "Local vault client running, but vault is not yet registered with the parachain." +
-                        " Client needs to be registered and DOT locked to start backing PolkaBTC and earning fees.",
+                    " Client needs to be registered and DOT locked to start backing PolkaBTC and earning fees.",
                     { autoClose: false, toastId: vaultNotRegisteredToastId }
                 );
             }
@@ -87,32 +91,43 @@ export default function VaultDashboardPage() {
 
     return (
         <div className="vault-dashboard-page container-fluid white-background">
-            <div className="vault-container dashboard-fade-in-animation dahboard-min-height">
+            <div className="vault-container dashboard-fade-in-animation dashboard-min-height">
                 <div className="stacked-wrapper">
                     <div className="row">
                         <div className="title">Vault Dashboard</div>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-12">
-                        <div className="stats">Locked: {collateral} DOT</div>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-12">
-                        <div className="stats">Locked: {lockedBTC} BTC</div>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-12">
-                        <div className="stats">Fees earned: {feesEarned}</div>
-                    </div>
-                </div>
                 {vaultId === accountId && (
                     <React.Fragment>
+                        <div className="col-lg-10 offset-1">
+                            <div className="row">
+                                <div className="col-md-3">
+                                    <div className="">Locked collateral</div>
+                                    <span className="stats">{collateral}</span> DOT
+                                </div>
+                                <div className="col-md-2">
+                                    <div className="">Locked BTC</div>
+                                    <span className="stats">{lockedBTC}</span> BTC
+                                </div>
+                                <div className="col-md-2">
+                                    <div className="">Collateralization</div>
+                                    <span className="stats">{collateralization === undefined || isNaN(collateralization)
+                                        ? "∞"
+                                        : `${roundTwoDecimals((collateralization * 100).toString())}%`}</span>
+                                </div>
+                                <div className="col-md-2">
+                                    <div className="">Capacity</div>
+                                    <span className="stats">~{roundTwoDecimals(capacity)}</span> PolkaBTC
+                                </div>
+                                <div className="col-md-3">
+                                    <div className="">Earned fees</div>
+                                    <span className="stats">{feesEarned}</span> PolkaBTC
+                                </div>
+                            </div>
+                        </div>
                         <div className="row">
                             <div className="col-12">
-                                <div className="stats btc-address-header">
+                                <div className="btc-address-header">
                                     BTC Address: &nbsp;&nbsp;
                                     <BitcoinAddress btcAddress={btcAddress} />
                                     &nbsp;&nbsp;&nbsp;
@@ -122,20 +137,10 @@ export default function VaultDashboardPage() {
                         </div>
                         <div className="row">
                             <div className="col-12">
-                                <div className="stats">
+                                <div className="">
                                     Collateral: &nbsp; {collateral} DOT for {lockedBTC + " BTC"}
                                     &nbsp;&nbsp;&nbsp;
                                     <i className="fa fa-edit" onClick={() => setShowUpdateCollateralModal(true)}></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="stats">
-                                    Collateralization: &nbsp;
-                                    {collateralization === undefined || isNaN(collateralization)
-                                        ? "∞"
-                                        : `${roundTwoDecimals((collateralization * 100).toString())}%`}
                                 </div>
                             </div>
                         </div>
