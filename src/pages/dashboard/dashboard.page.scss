@@ -23,12 +23,6 @@
         font-weight: 600;
     }
 
-    .stats {
-        width: 100%;
-        text-align: center;
-        font-size: 1.2rem;
-    }
-
     .small-text {
         font-size: 0.8rem;
     }
@@ -124,4 +118,10 @@
     100% {
         opacity: 1;
     }
+}
+
+
+
+.main .jumbotron {
+    border-radius: 0px;
 }

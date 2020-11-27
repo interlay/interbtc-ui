@@ -283,7 +283,9 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                             ) : (
                                 <tbody>
                                     <tr>
-                                        <td colSpan={8}>No parachain status updates</td>
+                                        <td colSpan={8}>
+                                            No pending status updates
+                                        </td>
                                     </tr>
                                 </tbody>
                             )}

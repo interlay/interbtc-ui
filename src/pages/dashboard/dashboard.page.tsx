@@ -15,6 +15,7 @@ export default function DashboardPage() {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
     const totalLockedDOT = useSelector((state: StoreType) => state.general.totalLockedDOT);
+    const [capacity, setCapacity] = useState("0");
     const [collateralizationRate, setCollateralizationRate] = useState("∞");
 
     useEffect(() => {
@@ -28,37 +29,47 @@ export default function DashboardPage() {
                 } else {
                     setCollateralizationRate((collateralization * 100).toString());
                 }
+
+                const issuablePolkaBTC = await window.polkaBTC.vaults.getIssuablePolkaBTC();
+                setCapacity(issuablePolkaBTC);
             } catch (error) {
                 toast.error(error.toString());
             }
         };
         fetchData();
-    }, [polkaBtcLoaded]);
+    }, [polkaBtcLoaded, totalLockedDOT]);
 
     return (
         <div className="dashboard-page container-fluid white-background">
             <div className="dashboard-container dashboard-fade-in-animation">
                 <div className="dashboard-wrapper">
                     <div className="row">
-                        <div className="title">PolkaBTC Dashboard</div>
+                        <div className="title">Dashboard</div>
                     </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="stats">Total locked: {totalLockedDOT} DOT</div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="stats">Total issued: {totalPolkaBTC} PolkaBTC</div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="stats">
-                                Collateralization rate:{" "}
-                                {collateralizationRate === "∞"
-                                    ? collateralizationRate
-                                    : `${roundTwoDecimals(collateralizationRate)}%`}
+                    <div className="row mt-5 mb-3">
+                        <div className="col-lg-8 offset-2">
+                            <div className="row">
+                                <div className="col-md-3">
+                                    <div className="">Total locked</div>
+                                    <span className="stats">{totalLockedDOT} </span> DOT
+                                </div>
+                                <div className="col-md-3">
+                                    <div className="">Total issued</div>
+                                    <span className="stats">{totalPolkaBTC} </span> PolkaBTC
+                                </div>
+                                <div className="col-md-3">
+                                    <div className="">Capacity</div>
+                                    <span className="stats">~
+                                        {`${roundTwoDecimals(capacity)}`}
+                                    </span> PolkaBTC
+                                </div>
+                                <div className="col-md-3">
+                                    <div className="">Collateralization</div>
+                                    <div className="stats">
+                                        {collateralizationRate === "∞"
+                                            ? collateralizationRate
+                                            : `${roundTwoDecimals(collateralizationRate)}%`}</div>
+                                </div>
                             </div>
                         </div>
                     </div>

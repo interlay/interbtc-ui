@@ -377,6 +377,30 @@ a:not([href]):not([tabindex]):focus {
   font-weight: 600;
 }
 
+
+// text types
+.heavy {
+  width: 100%;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.stats {
+  width: 100%;
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 400;
+}
+
+.title {
+  width: 100%;
+  text-align: center;
+  font-size: 2rem;
+  margin-top: 2rem;
+  font-weight: 600;
+}
+
 #basic-navbar-nav{
   .navbar-nav{
     .dropdown.nav-item {

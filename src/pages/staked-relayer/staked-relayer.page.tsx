@@ -74,7 +74,7 @@ export default function StakedRelayerPage() {
                 if (!isRegistered) {
                     toast.warn(
                         "Local relayer client running, but relayer is not yet registered with the parachain." +
-                            " The client is already submitting blocks, but voting and reporting features are disabled until registered.",
+                        " The client is already submitting blocks, but voting and reporting features are disabled until registered.",
                         { autoClose: false, toastId: relayerNotRegisteredToastId }
                     );
                 }
@@ -95,17 +95,8 @@ export default function StakedRelayerPage() {
                     <div className="row">
                         <div className="title">Staked Relayer Dashboard</div>
                     </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="stats">Locked: {dotLocked} DOT</div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="stats">Fees earned: {feesEarned}</div>
-                        </div>
-                    </div>
-                    {!relayerRegistered && polkaBtcLoaded && (
+                    {!relayerRegistered && polkaBtcLoaded
+                        ?
                         <Button
                             variant="outline-success"
                             className="staked-button"
@@ -113,7 +104,20 @@ export default function StakedRelayerPage() {
                         >
                             Register (Lock DOT)
                         </Button>
-                    )}
+                        :
+                        <div className="col-lg-10 offset-1">
+                            <div className="row">
+                                <div className="col-md-3 offset-md-3">
+                                    <div>Stake locked</div>
+                                    <span className="stats">{dotLocked}</span> DOT
+                                </div>
+                                <div className="col-3">
+                                    <div>Fees earned</div>
+                                    <span className="stats">{feesEarned}</span> DOT
+                                </div>
+                            </div>
+                        </div>
+                    }
                     <BitcoinTable></BitcoinTable>
                     {relayerRegistered && (
                         <Button
