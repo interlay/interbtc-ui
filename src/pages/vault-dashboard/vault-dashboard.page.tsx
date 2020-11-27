@@ -75,13 +75,8 @@ export default function VaultDashboardPage() {
                 const collateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId);
                 dispatch(updateCollateralizationAction(collateralization));
 
-                // TODO: move this to the lib as a function
-                const oracle = await window.polkaBTC.oracle.getInfo();
-                const collateralBN = new Big(collateral);
-                const divisor = new Big(oracle.exchangeRate * 2);
-                setCapacity(
-                    (collateralBN.div(divisor)).toString()
-                );
+                const issuablePolkaBTC = await window.polkaBTC.vaults.getIssuablePolkaBTC();
+                setCapacity(issuablePolkaBTC);
             } catch (err) {
                 console.log(err);
                 toast.warn(

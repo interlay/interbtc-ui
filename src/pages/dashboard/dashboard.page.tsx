@@ -4,7 +4,6 @@ import VaultTable from "../../common/components/vault-table/vault-table";
 import OracleTable from "../../common/components/oracle-table/oracle-table";
 import BitcoinTable from "../../common/components/bitcoin-table/bitcoin-table";
 import { useSelector } from "react-redux";
-import Big from "big.js";
 
 import "./dashboard.page.scss";
 import { StoreType } from "../../common/types/util.types";
@@ -31,13 +30,8 @@ export default function DashboardPage() {
                     setCollateralizationRate((collateralization * 100).toString());
                 }
 
-                // TODO: move this to the lib as a function
-                const oracle = await window.polkaBTC.oracle.getInfo();
-                const totalLockedBN = new Big(totalLockedDOT);
-                const divisor = new Big(oracle.exchangeRate * 2);
-                setCapacity(
-                    (totalLockedBN.div(divisor)).toString()
-                );
+                const issuablePolkaBTC = await window.polkaBTC.vaults.getIssuablePolkaBTC();
+                setCapacity(issuablePolkaBTC);
             } catch (error) {
                 toast.error(error.toString());
             }
