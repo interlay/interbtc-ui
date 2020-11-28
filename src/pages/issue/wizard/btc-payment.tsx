@@ -1,7 +1,7 @@
 import React from "react";
 import { FormGroup, ListGroup, ListGroupItem, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import CopyToClipboard from 'react-copy-to-clipboard';
+import CopyToClipboard from "react-copy-to-clipboard";
 import { StoreType } from "../../../common/types/util.types";
 import { changeIssueStepAction } from "../../../common/actions/issue.actions";
 import { btcToSat, satToMBTC } from "@interlay/polkabtc";
@@ -21,7 +21,7 @@ export default function BTCPayment() {
         const amountSATwithFee = btcToSat(amountBTCwithFee);
         amountMBTCwithFee = satToMBTC(amountSATwithFee ? amountSATwithFee : "");
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
     // FIXME: returns an empty string when loaded again
     const vaultBTCAddress = useSelector((state: StoreType) => state.issue.vaultBtcAddress);
@@ -45,8 +45,16 @@ export default function BTCPayment() {
                     <p>
                         You have requested to mint {amountBTC} PolkaBTC, incurring a fee of {feeBTC} BTC.
                     </p>
-                    <p>Please make the following Bitcoin payment as shown below <b className="warning-color">within 24 hours</b>.</p>
-                    <p className="warning-color"><b>Please make exactly 1 payment for the exact specified amount. Otherwise, your request will not be processed and you will loose your funds.</b></p>
+                    <p>
+                        Please make the following Bitcoin payment as shown below{" "}
+                        <b className="warning-color">within 24 hours</b>.
+                    </p>
+                    <p className="warning-color">
+                        <b>
+                            Please make exactly 1 payment for the exact specified amount. Otherwise, your request will
+                            not be processed and you will lose your funds.
+                        </b>
+                    </p>
                     <FormGroup>
                         <ListGroup>
                             <ListGroupItem>Output 1</ListGroupItem>
@@ -70,20 +78,21 @@ export default function BTCPayment() {
                             </ListGroupItem>
                         </ListGroup>
                     </FormGroup>
-
-                    If you are using the Electrum desktop wallet, copy+paste this into the "Pay to" field. 
-                    <br/> Note: copied values are in <strong>mBTC</strong> (1 mBTC = 0.001 BTC).
+                    If you are using the Electrum desktop wallet, copy+paste this into the "Pay to" field.
+                    <br /> Note: copied values are in <strong>mBTC</strong> (1 mBTC = 0.001 BTC).
                     <FormGroup>
-                    <ListGroup>
-                    <ListGroupItem>
-                        <strong>{electrumPaytoField.split('\n').map(str => <div>{str}</div>)}</strong>
-                        <CopyToClipboard text={electrumPaytoField}>
-                        <button className="btn btn-outline-dark float-right">
-                            Copy
-                        </button>
-                        </CopyToClipboard>
-                    </ListGroupItem>
-                    </ListGroup>
+                        <ListGroup>
+                            <ListGroupItem>
+                                <strong>
+                                    {electrumPaytoField.split("\n").map((str) => (
+                                        <div>{str}</div>
+                                    ))}
+                                </strong>
+                                <CopyToClipboard text={electrumPaytoField}>
+                                    <button className="btn btn-outline-dark float-right">Copy</button>
+                                </CopyToClipboard>
+                            </ListGroupItem>
+                        </ListGroup>
                     </FormGroup>
                 </FormGroup>
             </Modal.Body>
