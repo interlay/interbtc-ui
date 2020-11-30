@@ -39,7 +39,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
             toast.success("Successfully canceled redeem request.");
         } catch (err) {
             console.log(err);
-            toast.error("Error canceling redeem request.");
+            toast.error("Error cancelling redeem request.");
         }
         setCancelPending(cancelPending.splice(cancelPending.indexOf(redeemId), 1));
     };
