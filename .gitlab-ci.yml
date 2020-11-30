@@ -47,10 +47,6 @@ build:
     - merge_requests
     - master
     - prod
-<<<<<<< HEAD
-=======
-    - dev
->>>>>>> master
 
 build_container:
   stage: deploy
@@ -63,17 +59,9 @@ build_container:
     - |
       /kaniko/executor --context $CI_PROJECT_DIR \
         --dockerfile $CI_PROJECT_DIR/DockerfileProd \
-<<<<<<< HEAD
-        --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_BRANCH-$CI_COMMIT_SHORT_SHA \
-        --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_BRANCH
-=======
         --destination $CI_REGISTRY_IMAGE:${CI_COMMIT_BRANCH}-$CI_COMMIT_SHORT_SHA \
         --destination $CI_REGISTRY_IMAGE:${CI_COMMIT_BRANCH}
->>>>>>> master
   only:
     - master
     - prod
-<<<<<<< HEAD
-=======
     - dev
->>>>>>> master
