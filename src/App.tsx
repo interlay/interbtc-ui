@@ -113,6 +113,9 @@ export default function App(): ReactElement {
     },[dispatch]);
 
     useEffect((): void => {
+        // Do not load data if showing static landing page only
+        if (constants.STATIC_PAGE_ONLY) return;
+
         const initDataOnAppBootstrap = async () => {
             if (!polkaBtcLoaded) return;
 
@@ -126,6 +129,9 @@ export default function App(): ReactElement {
     },[dispatch, polkaBtcLoaded]);
 
     useEffect((): void => {
+        // Do not load data if showing static landing page only
+        if (constants.STATIC_PAGE_ONLY) return;
+
         const loadAccountData = async () => {
             if (!polkaBtcLoaded || extensions.length) return;
 
@@ -183,6 +189,7 @@ export default function App(): ReactElement {
     return <React.Fragment>
         <Router>
             {!isLoading ?
+            {(!isLoading || constants.STATIC_PAGE_ONLY) ?
             <div className="main d-flex flex-column min-vh-100 polkabtc-background fade-in-animation">
                 <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
                 <ReactTooltip place="top" type="dark" effect="solid"/>
