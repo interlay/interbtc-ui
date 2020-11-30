@@ -77,7 +77,7 @@ export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: Par
         btcAddress: btcAddress ? btcAddress : "",
         btcTxId: "",
         confirmations: 0,
-        completed: false,
+        completed: parachainRedeemRequest.completed.isTrue,
         isExpired: false,
     };
 }
