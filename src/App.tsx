@@ -188,7 +188,6 @@ export default function App(): ReactElement {
 
     return <React.Fragment>
         <Router>
-            {!isLoading ?
             {(!isLoading || constants.STATIC_PAGE_ONLY) ?
             <div className="main d-flex flex-column min-vh-100 polkabtc-background fade-in-animation">
                 <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
