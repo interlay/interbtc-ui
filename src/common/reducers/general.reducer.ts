@@ -1,19 +1,36 @@
 import {
     IS_POLKA_BTC_LOADED,
     IS_STAKED_RELAYER_LOADED,
-    GeneralActions,
+    IS_VAULT_CLIENT_LOADED,
+    SET_TOTAL_ISSUED_AND_TOTAL_LOCKED,
     CHANGE_ADDRESS,
     INIT_STATE,
+    UPDATE_BALANCE_DOT,
+    UPDATE_BALANCE_POLKA_BTC,
+    GeneralActions,
+    HAS_FEEDBACK_BEEN_DISPLAYED,
+    SET_INSTALLED_EXTENSION,
+    SHOW_ACCOUNT_MODAL,
+    UPDATE_ACCOUNTS,
 } from "../types/actions.types";
-import { GeneralType } from "../types/util.types";
+import { GeneralState } from "../types/util.types";
 
 const initialState = {
     polkaBtcLoaded: false,
     relayerLoaded: false,
+    vaultClientLoaded: false,
+    hasFeedbackModalBeenDisplayed: false,
+    showAccountModal: false,
     address: "",
+    totalPolkaBTC: "",
+    totalLockedDOT: "",
+    balancePolkaBTC: "",
+    balanceDOT: "",
+    extensions: [],
+    accounts: [],
 };
 
-export const generalReducer = (state: GeneralType = initialState, action: GeneralActions): GeneralType => {
+export const generalReducer = (state: GeneralState = initialState, action: GeneralActions): GeneralState => {
     switch (action.type) {
         case IS_POLKA_BTC_LOADED:
             return { ...state, polkaBtcLoaded: action.isLoaded };
@@ -22,7 +39,35 @@ export const generalReducer = (state: GeneralType = initialState, action: Genera
         case CHANGE_ADDRESS:
             return { ...state, address: action.address };
         case INIT_STATE:
-            return { ...state, polkaBtcLoaded: false, relayerLoaded: false };
+            return {
+                ...state,
+                polkaBtcLoaded: false,
+                relayerLoaded: false,
+                vaultClientLoaded: false,
+                showAccountModal: false,
+                extensions: [],
+                accounts: [],
+            };
+        case SET_TOTAL_ISSUED_AND_TOTAL_LOCKED:
+            return { ...state, totalLockedDOT: action.totalLockedDOT, totalPolkaBTC: action.totalPolkaBTC };
+        case IS_VAULT_CLIENT_LOADED:
+            return { ...state, vaultClientLoaded: action.isLoaded };
+        case HAS_FEEDBACK_BEEN_DISPLAYED:
+            return { ...state, hasFeedbackModalBeenDisplayed: action.hasBeenDisplayed };
+        case UPDATE_BALANCE_DOT:
+            return { ...state, balanceDOT: action.balanceDOT };
+        case UPDATE_BALANCE_POLKA_BTC:
+            return { ...state, balancePolkaBTC: action.balancePolkaBTC };
+        case SHOW_ACCOUNT_MODAL:
+            return { ...state, showAccountModal: action.showAccountModal };
+        case SET_INSTALLED_EXTENSION:
+            return {
+                ...state,
+                extensions: action.extensions,
+                address: action.extensions.length ? state.address : "",
+            };
+        case UPDATE_ACCOUNTS:
+            return { ...state, accounts: action.accounts };
         default:
             return state;
     }

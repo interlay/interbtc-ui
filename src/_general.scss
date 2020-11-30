@@ -161,25 +161,6 @@ input[type=number] {
   box-shadow: 0 0 0 0.2rem rgba(199, 28, 34, 0.5);
 }
 
-
-body {
-	background: linear-gradient(-90deg, #ff9900e1, #f07353, #ef6b59, #e9436f);
-	background-size: 400% 400%;
-	animation: gradient 15s ease infinite;
-}
-
-@keyframes gradient {
-	0% {
-		background-position: 0% 25%;
-	}
-	50% {
-		background-position: 100% 25%;
-	}
-	100% {
-		background-position: 0% 25%;
-	}
-}
-
 .transparent-background {
   background-color: transparent;
 }
@@ -339,4 +320,133 @@ a:not([href]):not([tabindex]):focus {
   .form-check-label{
     word-break: break-all;
   }
+}
+
+// Circles 
+
+.circle {
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+}
+
+.green-circle{
+  @extend .circle;
+  border: 1px solid $green-color;
+  background-color: $green-color;
+}
+
+.yellow-circle{
+  @extend .circle;
+  border: 1px solid $yellow-color;
+  background-color: $yellow-color;
+}
+
+.orange-circle{
+  @extend .circle;
+  border: 1px solid $orange-color;
+  background-color: $orange-color;
+}
+
+.red-circle{
+  @extend .circle;
+  border: 1px solid $red-color;
+  background-color: $red-color;
+}
+
+// text colors
+
+.green-text{
+  color: $green-color;
+  font-weight: 600;
+}
+
+.orange-text{
+  color: $orange-color;
+  font-weight: 600;
+}
+
+.red-text{
+  color: $red-color;
+  font-weight: 600;
+}
+
+.yellow-text{
+  color: $yellow-color;
+  font-weight: 600;
+}
+
+
+// text types
+.heavy {
+  width: 100%;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.stats {
+  width: 100%;
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 400;
+}
+
+.title {
+  width: 100%;
+  text-align: center;
+  font-size: 2rem;
+  margin-top: 2rem;
+  font-weight: 600;
+}
+
+#basic-navbar-nav{
+  .navbar-nav{
+    .dropdown.nav-item {
+      border: 1px solid #343a40;
+      max-height: 31px;
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.divider-text{
+  width: 100%;
+  padding: 0.25rem 1.5rem
+}
+
+.fade-in-animation {
+  animation: fade 0.5s ease-in;
+}
+
+.static-fade-in-animation {
+  animation: fade 0.5s ease-in;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.top-bar{
+  min-height: 80px;
+}
+
+.main-loader {
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+  line-height: 100vh;
+}
+
+.warning-color {
+  color: #510101;
 }

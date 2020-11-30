@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Image, Button, Col, Row, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,37 +7,48 @@ import PolkaBTCImg from "../../assets/img/polkabtc/PolkaBTC_black.svg";
 import RedeemRequests from "./table/redeem-requests";
 import { StoreType } from "../../common/types/util.types";
 import { resetRedeemWizardAction } from "../../common/actions/redeem.actions";
-import { planckToDOT, satToBTC } from "@interlay/polkabtc";
+import { 
+    hasFeedbackModalBeenDisplayedAction, 
+    showAccountModalAction
+} from "../../common/actions/general.actions";
+import Feedback from "./feedback/feedback";
+import Balances from "../../common/components/balances";
 
 export default function RedeemPage(): JSX.Element {
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+    const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
+    const balanceDOT = useSelector((state: StoreType) => state.general.balanceDOT);
+    const address = useSelector((state: StoreType) => state.general.address);
+    const extensions = useSelector((state: StoreType) => state.general.extensions);
+    const hasFeedbackModalBeenDisplayed = useSelector(
+        (state: StoreType) => state.general.hasFeedbackModalBeenDisplayed
+    );
     const dispatch = useDispatch();
     const [showWizard, setShowWizard] = useState(false);
-    const [balancePolkaBTC, setBalancePolkaBTC] = useState("...");
-    const [balanceDOT, setBalanceDOT] = useState("...");
+    const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
-    const handleClose = () => {
+    const handleCloseWizard = () => {
         dispatch(resetRedeemWizardAction());
         setShowWizard(false);
     };
-    const handleShow = () => setShowWizard(true);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!polkaBtcLoaded) return;
+    const handleShowWizard = () => {
+        if(address && extensions.length) {
+            setShowWizard(true);
+        } else {
+            dispatch(showAccountModalAction(true));
+        }
+    }
 
-            const address = window.polkaBTC.account?.toString();
-            const accountId = window.polkaBTC.api.createType("AccountId", address) as any;
-            const balancePolkaSAT = await window.polkaBTC.treasury.balancePolkaBTC(accountId);
-            const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
-            // TODO: write data to storage
-            const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
-            const balanceDOT = planckToDOT(balancePLANCK.toString()); 
-            setBalancePolkaBTC(balancePolkaBTC);
-            setBalanceDOT(balanceDOT);
-        };
-        fetchData();
-    }, [polkaBtcLoaded]);
+    const handleShowFeedbackModal = function () {
+        if (!hasFeedbackModalBeenDisplayed) {
+            setShowFeedbackModal(true);
+        }
+    };
+
+    const handleCloseFeedbackModal = () => {
+        dispatch(hasFeedbackModalBeenDisplayedAction(true));
+        setShowFeedbackModal(false);
+    };
 
     return (
         <div>
@@ -47,28 +58,36 @@ export default function RedeemPage(): JSX.Element {
                         <Image src={PolkaBTCImg} width="256"></Image>
                     </Link>
 
-                    <Row className="mt-5">
-                        <Col xs="12" sm={{ span: 6, offset: 3 }}>
-                            <h5 className="text-muted">PolkaBTC balance: {balancePolkaBTC}</h5>
-                        </Col>
-                    </Row>
-                    <Row className="mt-1">
-                        <Col xs="12" sm={{ span: 6, offset: 3 }}>
-                            <h5 className="text-muted">DOT balance: {balanceDOT}</h5>
-                        </Col>
-                    </Row>
+                    {address && extensions.length &&
+                        <React.Fragment>
+                            <Balances balancePolkaBTC={balancePolkaBTC} balanceDOT={balanceDOT}></Balances>
+                        </React.Fragment>
+                    }
                     <Row className="mt-5 mb-5">
-                        <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
-                            <Button variant="outline-dark" size="lg" block onClick={handleShow}>
-                                Redeem PolkaBTC
+                        
+                            <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
+                                <Button variant="outline-bitcoin" size="lg" block onClick={handleShowWizard} disabled={balancePolkaBTC === '0' }>
+                                    Redeem PolkaBTC
                             </Button>
-                        </Col>
+                            </Col>
+                            {balancePolkaBTC === '0' &&
+                                <Col className="mt-2" xs="12" sm={{ span: 6, offset: 3 }}>
+                                    <p>You don't have any PolkaBTC to redeem.</p>
+                                </Col>
+                            }
                     </Row>
+                    <RedeemRequests handleShowFeedbackModal={handleShowFeedbackModal} />
 
-                    <RedeemRequests />
+                    <Modal show={showWizard} onHide={handleCloseWizard} size={"lg"}>
+                        <RedeemWizard handleClose={handleCloseWizard} />
+                    </Modal>
 
-                    <Modal show={showWizard} onHide={handleClose} size={"lg"}>
-                        <RedeemWizard handleClose={handleClose} />
+                    <Modal
+                        show={showFeedbackModal && !hasFeedbackModalBeenDisplayed}
+                        onHide={handleCloseFeedbackModal}
+                        size={"lg"}
+                    >
+                        <Feedback handleClose={handleCloseFeedbackModal} />
                     </Modal>
                 </div>
             </section>

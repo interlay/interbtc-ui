@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Col, Image, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
-import PolkaBTCImg from "../assets/img/polkabtc/PolkaBTC_white.svg";
 import paperImg from "../assets/img/icons/paper-white.png";
 import specImg from "../assets/img/icons/spec-white.png";
 import codeImg from "../assets/img/icons/github-white.png";
@@ -26,11 +24,8 @@ export default function AboutPage(): JSX.Element {
 
     return (
         <div>
-            <section className="jumbotron text-center transparent-background">
+            <section className="jumbotron text-center transparent-background fade-in-animation">
                 <div className="container mt-5">
-                    <Link to="/">
-                        <Image src={PolkaBTCImg} width="256"></Image>
-                    </Link>
                     <h3 style={{ fontSize: "2em" }} className="lead text-white mt-5">
                         About PolkaBTC
                     </h3>
@@ -73,7 +68,7 @@ export default function AboutPage(): JSX.Element {
                     </Row>
                 </Col>
             </section>
-            <section className="markdown white-background">
+            <section className="markdown white-background static-fade-in-animation dahboard-min-height">
                 <div className="container mt-5 pb-5">
                     <Row className="mt-5">
                         <Col xs="12" lg={{ span: 8, offset: 2 }} className="text-left mt-5">

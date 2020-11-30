@@ -4,13 +4,14 @@ import { AppState, StoreType, StoreState } from "./common/types/util.types";
 import { createLogger } from "redux-logger";
 import { applyMiddleware, createStore } from "redux";
 import { initializeState } from "./common/actions/general.actions";
-import { PolkaBTCAPI, StakedRelayerClient } from "@interlay/polkabtc";
+import { PolkaBTCAPI, StakedRelayerClient, VaultClient } from "@interlay/polkabtc";
 import { mapToArray, arrayToMap } from "./common/utils/utils";
 
 declare global {
     interface Window {
         polkaBTC: PolkaBTCAPI;
         relayer: StakedRelayerClient;
+        vaultClient: VaultClient;
     }
 }
 
@@ -19,9 +20,17 @@ export const getInitialState = (): StoreType => {
         general: {
             polkaBtcLoaded: false,
             relayerLoaded: false,
+            vaultClientLoaded: false,
+            hasFeedbackModalBeenDisplayed: false,
+            showAccountModal: false,
             address: "",
+            totalLockedDOT: "",
+            totalPolkaBTC: "",
+            balancePolkaBTC: "",
+            balanceDOT: "",
+            extensions: [],
+            accounts: [],
         },
-        prices: { dotBtc: 0, dotUsd: 0 },
         issue: {
             address: "",
             step: "ENTER_BTC_AMOUNT",
@@ -34,6 +43,7 @@ export const getInitialState = (): StoreType => {
             issueRequests: new Map(),
             transactionListeners: [],
             wizardInEditMode: false,
+            vaultIssues: [],
         },
         redeem: {
             address: "",
@@ -42,8 +52,17 @@ export const getInitialState = (): StoreType => {
             btcAddress: "",
             vaultBtcAddress: "",
             vaultDotAddress: "",
+            transactionListeners: [],
             id: "",
             redeemRequests: new Map(),
+            vaultRedeems: [],
+        },
+        vault: {
+            requests: [],
+            btcAddress: "",
+            collateralization: undefined,
+            collateral: "",
+            lockedBTC: "",
         },
     };
     return emptyStore;
@@ -51,7 +70,7 @@ export const getInitialState = (): StoreType => {
 
 export const loadState = (): StoreType => {
     try {
-        const serializedState = localStorage.getItem("pbtc-store");
+        const serializedState = localStorage.getItem("pbtc-store-1");
         if (serializedState === null) {
             const initialState = getInitialState();
             return initialState;
@@ -60,9 +79,9 @@ export const loadState = (): StoreType => {
         const deserializedState = {
             ...rawStore,
             general: {
+                ...rawStore.general,
                 polkaBtcLoaded: false,
                 relayerLoaded: false,
-                address: rawStore.general.address,
             },
         };
         return {
@@ -100,7 +119,7 @@ export const saveState = (store: AppState): void => {
             },
         };
         const serializedState = JSON.stringify(preperedState);
-        localStorage.setItem("pbtc-store", serializedState);
+        localStorage.setItem("pbtc-store-1", serializedState);
     } catch (error) {
         setTimeout(
             () => toast.error("Local storage is disabled. In order to use platform please enable local storage"),

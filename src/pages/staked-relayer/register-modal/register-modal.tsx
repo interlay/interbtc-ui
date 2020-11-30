@@ -8,6 +8,7 @@ import ButtonMaybePending from "../../../common/components/pending-button";
 
 type RegisterModalType = {
     onClose: () => void;
+    onRegister: () => void;
     show: boolean;
 };
 
@@ -26,6 +27,7 @@ export default function ReportModal(props: RegisterModalType): ReactElement {
         try {
             await window.relayer.registerStakedRelayer(stake);
             toast.success("Successfully Registered");
+            props.onRegister();
             props.onClose();
         } catch (error) {
             toast.error(error.toString());
@@ -47,17 +49,25 @@ export default function ReportModal(props: RegisterModalType): ReactElement {
                     </div>
                     <div className="row">
                         <div className="col-12">Stake</div>
-                        <div className="col-12">
-                            <input
-                                name="stake"
-                                type="number"
-                                className={"custom-input" + (errors.stake ? " error-borders" : "")}
-                                defaultValue={0}
-                                ref={register({
-                                    // TODO: validate minimum
-                                    required: true,
-                                })}
-                            ></input>
+                        <div className="col-12 basic-addon">
+                            <div className="input-group">
+                                <input
+                                    name="stake"
+                                    type="float"
+                                    className={"form-control custom-input" + (errors.stake ? " error-borders" : "")}
+                                    defaultValue={0}
+                                    aria-describedby="basic-addon2"
+                                    ref={register({
+                                        // TODO: validate minimum
+                                        required: true,
+                                    })}
+                                ></input>
+                                <div className="input-group-append">
+                                    <span className="input-group-text" id="basic-addon2">
+                                        Planck
+                                    </span>
+                                </div>
+                            </div>
                             {errors.stake && (
                                 <div className="input-error">
                                     {errors.stake.type === "required" ? "stake is required" : errors.stake.message}

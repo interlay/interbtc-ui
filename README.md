@@ -63,13 +63,75 @@ In order to automatically submit block headers, run the [staked-relayer](https:/
 staked-relayer --http-addr '[::0]:3030'
 ```
 
-### Docker-Compose
+### Docker-Compose (Regtest)
 
 To simplify testing, you may also run all of the required services with `docker-compose`:
 
 ```shell
 docker-compose up
 ```
+
+Docker will run all services: parachain, staked-relayer, vault, oracle and bitcoin. To kill all services and reset the parachain use:
+
+```shell
+docker-compose down -v
+```
+
+Start the app with:
+
+```shell
+REACT_APP_BITCOIN_NETWORK=regtest yarn start
+```
+
+### Docker-Compose (Testnet)
+
+To run against Bitcoin testnet first start your daemon:
+
+```shell
+bitcoind -testnet -server
+```
+
+Then start the remaining components with `docker-compose`:
+
+```shell
+docker-compose --file docker-compose.testnet.yml up
+```
+
+Start the app with:
+
+```shell
+REACT_APP_BITCOIN_NETWORK=testnet yarn start
+```
+
+> Note: This is only supported on Linux due to issues with `network_mode: "host"` on Mac.
+
+### Test Data (Regtest)
+
+To simplify testing, you may also use the `testdata-gen` toolkit:
+
+```shell
+git clone git@gitlab.com:interlay/polkabtc-clients.git
+cd polkabtc-clients
+cargo build -p testdata-gen
+# environment variables for bitcoind
+source .env
+```
+
+For example, to register `bob` as a vault we can use the following command:
+
+```shell
+testdata-gen --keyring bob register-vault --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --collateral 100000000
+```
+
+Then when `alice` wants to issue 0.001 PolkaBTC, we need to send the equivalent number of Satoshis to `bob`:
+
+```shell
+testdata-gen --keyring alice send-bitcoin --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --op-return ${OP_RETURN} --satoshis 100000
+```
+
+> Set `${OP_RETURN}` to the value presented on the confirmation page of the UI.
+
+Copy the `txid` printed by the `send-bitcoin` command and use this in the UI to execute the issue request.
 
 ### Local Installation
 
@@ -130,6 +192,19 @@ One the website is launched, you have three different options:
 - *Buy PolkaBTC*
 - *Mint PolkaBTC*
 - *Return BTC*
+
+## Help
+
+### Docker
+
+You can hard-reset the docker dependency setup with the following commands:
+
+```shell
+docker kill $(docker ps -q)
+docker rm $(docker ps -a -q)
+docker rmi $(docker images -q)
+docker volume rm $(docker volume ls -q)
+```
 
 ## Roadmap
 
