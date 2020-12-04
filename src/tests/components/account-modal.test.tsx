@@ -108,6 +108,7 @@ describe("Component: Testa Account Modal ", () => {
         const onSelected = (selected: string): Promise<void> => {
             expect(selected).equals("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQ1");
             return Promise.resolve();
+            done();
         };
 
         const wrapper = mount(
