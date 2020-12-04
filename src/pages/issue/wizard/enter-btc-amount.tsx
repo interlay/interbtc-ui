@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat, stripHexPrefix, satToBTC } from "@interlay/polkabtc";
-import { getAddressFromH160 } from "../../../common/utils/utils";
+import { encodeBitcoinAddress } from "../../../common/utils/utils";
 import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
 
 type EnterBTCForm = {
@@ -55,10 +55,7 @@ export default function EnterBTCAmount() {
             toast.success("Found vault: " + vaultId.toString());
             // get the vault's data
             const vault = await window.polkaBTC.vaults.get(vaultId);
-            const vaultBTCAddress = getAddressFromH160(vault.wallet.address);
-            if (vaultBTCAddress === undefined) {
-                throw new Error("Vault has invalid BTC address.");
-            }
+            const vaultBTCAddress = encodeBitcoinAddress(vault.wallet.address);
             dispatch(changeVaultBtcAddressOnIssueAction(stripHexPrefix(vaultBTCAddress)));
             dispatch(changeVaultDotAddressOnIssueAction(vaultId.toString()));
             dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
@@ -71,24 +68,28 @@ export default function EnterBTCAmount() {
     return (
         <form onSubmit={onSubmit}>
             <Modal.Body>
-                <p>Please enter the amount of PolkaBTC you would like to issue. 
-                    <br/> 
+                <p>
+                    Please enter the amount of PolkaBTC you would like to issue.
+                    <br />
                     This is the amount of BTC you will need to lock on Bitcoin.
                 </p>
                 <input
                     name="amountBTC"
                     type="float"
                     className={"custom-input" + (errors.amountBTC ? " error-borders" : "")}
-                    ref={register({ 
+                    ref={register({
                         required: true,
-                        validate: (value) => value > 1 ? 
-                            "The maximum amount you can issue (per request) during the alpha testnet is 1.0 PolkaBTC. Please enter a lower amount."
-                            : undefined
-                     })}
+                        validate: (value) =>
+                            value > 1
+                                ? "The maximum amount you can issue (per request) during the alpha testnet is 1.0 PolkaBTC. Please enter a lower amount."
+                                : undefined,
+                    })}
                 />
                 {errors.amountBTC && (
                     <div className="input-error">
-                        {errors.amountBTC.type === "required" ? "Please enter a valid amount" : errors.amountBTC.message}
+                        {errors.amountBTC.type === "required"
+                            ? "Please enter a valid amount"
+                            : errors.amountBTC.message}
                     </div>
                 )}
             </Modal.Body>

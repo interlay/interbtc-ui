@@ -3,8 +3,8 @@
     "version": "0.3.1",
     "private": true,
     "dependencies": {
-        "@interlay/polkabtc": "^0.5.22",
-        "@polkadot/api": "^2.6.1",
+        "@interlay/polkabtc": "0.6.0",
+        "@polkadot/api": "2.8.1",
         "@polkadot/extension-dapp": "0.32.1",
         "@polkadot/ui-keyring": "^0.62.2-12",
         "@testing-library/jest-dom": "^4.2.4",
@@ -46,7 +46,6 @@
         "typescript": "^3.9.0"
     },
     "devDependencies": {
-        "@polkadot/typegen": "^2.6.1",
         "@types/chai": "^4.2.14",
         "@types/enzyme": "^3.10.8",
         "@types/enzyme-adapter-react-16": "^1.0.6",
@@ -56,6 +55,7 @@
         "@types/mocha": "^8.0.4",
         "@types/redux-mock-store": "^1.0.2",
         "@types/sinon": "^9.0.9",
+        "@polkadot/typegen": "2.8.1",
         "@typescript-eslint/eslint-plugin": "^4.0.1",
         "@typescript-eslint/parser": "^4.0.1",
         "chai": "^4.2.0",

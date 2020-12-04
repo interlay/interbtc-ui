@@ -3,17 +3,15 @@ import { Modal, Button } from "react-bootstrap";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { BTC_ADDRESS_REGEX } from "../../../constants";
 import { useDispatch, useSelector } from "react-redux";
 import { updateBTCAddressAction, updateCollateralAction } from "../../../common/actions/vault.actions";
 import { planckToDOT, dotToPlanck } from "@interlay/polkabtc";
 import { StoreType } from "../../../common/types/util.types";
 import BN from "bn.js";
-import { getH160FromAddress } from "../../../common/utils/utils";
+import { BtcNetwork } from "../../../common/utils/utils";
 
 type RegisterVaultForm = {
     collateral: string;
-    address: string;
 };
 
 type RegisterVaultProps = {
@@ -28,20 +26,15 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
     const [isPending, setIsPending] = useState(false);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
-    const onSubmit = handleSubmit(async ({ collateral, address }) => {
+    const onSubmit = handleSubmit(async ({ collateral }) => {
         if (!polkaBtcLoaded) return;
+        setIsPending(true);
         try {
-            setIsPending(true);
             const collateralAsPlanck = dotToPlanck(collateral.toString());
             if (collateralAsPlanck === undefined) {
                 throw new Error("Collateral is smaller than 1 planck");
             }
-            const btcHash = getH160FromAddress(address);
-            if (!btcHash) {
-                throw new Error("Invalid address");
-            }
-            await window.vaultClient.registerVault(collateralAsPlanck, btcHash);
-
+            const address = await window.vaultClient.registerVault(collateralAsPlanck, BtcNetwork);
             const accountId = await window.vaultClient.getAccountId();
             const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
             const collateralPlanck = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
@@ -53,10 +46,11 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
 
             toast.success("Successfully registered");
             props.onClose();
-            setIsPending(false);
         } catch (error) {
             toast.error(error.toString());
         }
+        // reset after try-catch
+        setIsPending(false);
     });
 
     return (
@@ -92,28 +86,6 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
                                     {errors.collateral.type === "required"
                                         ? "Collateral is required"
                                         : errors.collateral.message}
-                                </div>
-                            )}
-                        </div>
-                        <div className="col-12">BTC Address</div>
-                        <div className="col-12">
-                            <input
-                                name="address"
-                                type="text"
-                                className={"custom-input" + (errors.address ? " error-borders" : "")}
-                                ref={register({
-                                    required: true,
-                                    pattern: {
-                                        value: BTC_ADDRESS_REGEX,
-                                        message: "Please enter a valid BTC address (Supported formats: p2wpkh, p2wsh in bech32 format).",
-                                    },
-                                })}
-                            ></input>
-                            {errors.address && (
-                                <div className="input-error">
-                                    {errors.address.type === "required"
-                                        ? "Address is required"
-                                        : errors.address.message}
                                 </div>
                             )}
                         </div>

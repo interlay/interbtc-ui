@@ -17,7 +17,7 @@ import {
     updateLockedBTCAction,
 } from "../../common/actions/vault.actions";
 import "./vault-dashboard.page.scss";
-import { getAddressFromH160 } from "../../common/utils/utils";
+import { encodeBitcoinAddress } from "../../common/utils/utils";
 import { toast } from "react-toastify";
 import BitcoinAddress from "../../common/components/bitcoin-links/address";
 
@@ -58,10 +58,7 @@ export default function VaultDashboardPage() {
                 const vault = await window.polkaBTC.vaults.get(vaultId);
                 setVaultId(vault.id.toString());
 
-                const vaultBTCAddress = getAddressFromH160(vault.wallet.address);
-                if (vaultBTCAddress === undefined) {
-                    throw new Error("Vault has invalid BTC address.");
-                }
+                const vaultBTCAddress = encodeBitcoinAddress(vault.wallet.address);
                 dispatch(updateBTCAddressAction(vaultBTCAddress));
 
                 const balanceLockedDOT = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
@@ -81,7 +78,7 @@ export default function VaultDashboardPage() {
                 console.log(err);
                 toast.warn(
                     "Local vault client running, but vault is not yet registered with the parachain." +
-                    " Client needs to be registered and DOT locked to start backing PolkaBTC and earning fees.",
+                        " Client needs to be registered and DOT locked to start backing PolkaBTC and earning fees.",
                     { autoClose: false, toastId: vaultNotRegisteredToastId }
                 );
             }
@@ -111,9 +108,11 @@ export default function VaultDashboardPage() {
                                 </div>
                                 <div className="col-md-2">
                                     <div className="">Collateralization</div>
-                                    <span className="stats">{collateralization === undefined || isNaN(collateralization)
-                                        ? "∞"
-                                        : `${roundTwoDecimals((collateralization * 100).toString())}%`}</span>
+                                    <span className="stats">
+                                        {collateralization === undefined || isNaN(collateralization)
+                                            ? "∞"
+                                            : `${roundTwoDecimals((collateralization * 100).toString())}%`}
+                                    </span>
                                 </div>
                                 <div className="col-md-2">
                                     <div className="">Capacity</div>

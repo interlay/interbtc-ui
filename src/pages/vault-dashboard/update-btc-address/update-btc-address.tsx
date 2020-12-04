@@ -5,13 +5,10 @@ import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { updateBTCAddressAction } from "../../../common/actions/vault.actions";
-import { BTC_ADDRESS_REGEX } from "../../../constants";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { getH160FromAddress } from "../../../common/utils/utils";
+import { BtcNetwork } from "../../../common/utils/utils";
 
-type UpdateBTCAddressForm = {
-    btcAddress: string;
-};
+type UpdateBTCAddressForm = {};
 
 type UpdateBTCAddressProps = {
     onClose: () => void;
@@ -19,19 +16,15 @@ type UpdateBTCAddressProps = {
 };
 
 export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps) {
-    const { register, handleSubmit, errors } = useForm<UpdateBTCAddressForm>();
+    const { handleSubmit } = useForm<UpdateBTCAddressForm>();
     const btcAddress = useSelector((state: StoreType) => state.vault.btcAddress);
     const dispatch = useDispatch();
     const [isUpdatePending, setUpdatePending] = useState(false);
 
-    const onSubmit = handleSubmit(async ({ btcAddress }) => {
+    const onSubmit = handleSubmit(async () => {
         setUpdatePending(true);
         try {
-            const btcHash = getH160FromAddress(btcAddress);
-            if (!btcHash) {
-                throw new Error("Invalid address");
-            }
-            await window.vaultClient.updateBtcAddress(btcHash);
+            let btcAddress = await window.vaultClient.updateBtcAddress(BtcNetwork);
             dispatch(updateBTCAddressAction(btcAddress));
             toast.success("BTC address successfully updated");
             props.onClose();
@@ -51,27 +44,9 @@ export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps) {
                     <div className="row">
                         <div className="col-12">Current BTC Address:</div>
                         <div className="col-12 btc-address">{btcAddress}</div>
-                        <div className="col-12">New BTC Address:</div>
                         <div className="col-12">
-                            <input
-                                name="btcAddress"
-                                type="text"
-                                className={"custom-input" + (errors.btcAddress ? " error-borders" : "")}
-                                ref={register({
-                                    required: true,
-                                    pattern: {
-                                        value: BTC_ADDRESS_REGEX,
-                                        message: "Please enter a valid BTC address (Supported formats: p2wpkh, p2wsh in bech32 format).",
-                                    },
-                                })}
-                            ></input>
-                            {errors.btcAddress && (
-                                <div className="input-error">
-                                    {errors.btcAddress.type === "required"
-                                        ? "BTC address is required"
-                                        : errors.btcAddress.message}
-                                </div>
-                            )}
+                            Your new BTC address will be automatically created from your BTC wallet connected to the
+                            vault client when you click update.
                         </div>
                     </div>
                 </Modal.Body>

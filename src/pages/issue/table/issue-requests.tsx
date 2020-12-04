@@ -109,11 +109,7 @@ export default function IssueRequests(props: IssueRequestProps) {
         if (!polkaBtcLoaded) return;
         setExecutePending([...executePending, request.id]);
 
-        let [transactionBlockHeight, merkleProof, rawTx] = [
-            request.transactionBlockHeight,
-            request.merkleProof,
-            request.rawTransaction,
-        ];
+        let [merkleProof, rawTx] = [request.merkleProof, request.rawTransaction];
         let transactionData = false;
         let txId = request.btcTxId;
         try {
@@ -125,8 +121,7 @@ export default function IssueRequests(props: IssueRequestProps) {
                     request.amountBTC
                 );
             }
-            [transactionBlockHeight, merkleProof, rawTx] = await Promise.all([
-                window.polkaBTC.btcCore.getTransactionBlockHeight(txId),
+            [merkleProof, rawTx] = await Promise.all([
                 window.polkaBTC.btcCore.getMerkleProof(txId),
                 window.polkaBTC.btcCore.getRawTransaction(txId),
             ]);
@@ -138,7 +133,6 @@ export default function IssueRequests(props: IssueRequestProps) {
         if (!transactionData) return;
         try {
             const provenReq = request;
-            provenReq.transactionBlockHeight = transactionBlockHeight;
             provenReq.merkleProof = merkleProof;
             provenReq.rawTransaction = rawTx;
             dispatch(updateIssueRequestAction(provenReq));
@@ -149,7 +143,6 @@ export default function IssueRequests(props: IssueRequestProps) {
             // prepare types for polkadot
             const parsedIssuedId = window.polkaBTC.api.createType("H256", "0x" + provenReq.id);
             const parsedTxId = window.polkaBTC.api.createType("H256", txIdBuffer);
-            const parsedTxBlockHeight = window.polkaBTC.api.createType("u32", transactionBlockHeight);
             const parsedMerkleProof = window.polkaBTC.api.createType("Bytes", "0x" + merkleProof);
             const parsedRawTx = window.polkaBTC.api.createType("Bytes", rawTx);
 
@@ -158,7 +151,6 @@ export default function IssueRequests(props: IssueRequestProps) {
             const success = await window.polkaBTC.issue.execute(
                 parsedIssuedId,
                 parsedTxId,
-                parsedTxBlockHeight,
                 parsedMerkleProof,
                 parsedRawTx
             );
@@ -248,7 +240,7 @@ export default function IssueRequests(props: IssueRequestProps) {
                                     <tr key={index} onClick={() => requestClicked(request)}>
                                         <td>{shortAddress(request.id)}</td>
                                         <td>{request.amountBTC} PolkaBTC</td>
-                                        <td>{request.creation}</td>
+                                        <td>{request.creation === "0" ? "Pending..." : request.creation}</td>
                                         <td>
                                             <BitcoinAddress btcAddress={request.vaultBTCAddress} shorten />
                                         </td>

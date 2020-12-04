@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Vault } from "../../types/util.types";
 import * as constants from "../../../constants";
 import { planckToDOT, satToBTC, roundTwoDecimals } from "@interlay/polkabtc";
-import { getAddressFromH160, shortAddress, convertToPercentage } from "../../utils/utils";
+import { encodeBitcoinAddress, shortAddress, convertToPercentage } from "../../utils/utils";
 import BitcoinAddress from "../bitcoin-links/address";
 
 export default function VaultTable(): ReactElement {
@@ -35,16 +35,15 @@ export default function VaultTable(): ReactElement {
                         settledCollateralization = convertToPercentage(settledCollateralization);
                     }
                 } catch (error) {
+                    // TODO: toast error?
                     console.log(error);
                 }
 
                 let btcAddress: string | undefined;
                 try {
-                    btcAddress = getAddressFromH160(vault.wallet.address);
-                    if (btcAddress === undefined) {
-                        throw new Error("Vault has invalid BTC address.");
-                    }
+                    btcAddress = encodeBitcoinAddress(vault.wallet.address);
                 } catch (error) {
+                    // TODO: toast error?
                     console.log(error);
                 }
 
@@ -201,12 +200,12 @@ export default function VaultTable(): ReactElement {
                                     })}
                                 </tbody>
                             ) : (
-                                    <tbody>
-                                        <tr>
-                                            <td colSpan={7}>No registered vaults</td>
-                                        </tr>
-                                    </tbody>
-                                )}
+                                <tbody>
+                                    <tr>
+                                        <td colSpan={7}>No registered vaults</td>
+                                    </tr>
+                                </tbody>
+                            )}
                         </table>
                     </div>
                 </div>
