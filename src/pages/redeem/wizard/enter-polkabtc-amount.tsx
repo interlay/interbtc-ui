@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat, satToBTC } from "@interlay/polkabtc";
-import { getAddressFromH160 } from "../../../common/utils/utils";
+import { encodeBitcoinAddress } from "../../../common/utils/utils";
 import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
 
 type EnterPolkaBTCForm = {
@@ -56,10 +56,7 @@ export default function EnterPolkaBTCAmount() {
 
             // get the vault's data
             const vault = await window.polkaBTC.vaults.get(vaultId);
-            const vaultBTCAddress = getAddressFromH160(vault.wallet.address);
-            if (vaultBTCAddress === undefined) {
-                throw new Error("Vault has invalid BTC address.");
-            }
+            const vaultBTCAddress = encodeBitcoinAddress(vault.wallet.address);
 
             dispatch(changeVaultBtcAddressOnRedeemAction(vaultBTCAddress));
             dispatch(changeVaultDotAddressOnRedeemAction(vaultId.toString()));
@@ -81,9 +78,10 @@ export default function EnterPolkaBTCAmount() {
                     className={"custom-input" + (errors.amountPolkaBTC ? " error-borders" : "")}
                     ref={register({
                         required: true,
-                        validate: (value) => value > balancePolkaBTC ?
-                            "Please enter an amount smaller than your current balance: " + balancePolkaBTC
-                            : undefined
+                        validate: (value) =>
+                            value > balancePolkaBTC
+                                ? "Please enter an amount smaller than your current balance: " + balancePolkaBTC
+                                : undefined,
                     })}
                 />
                 {errors.amountPolkaBTC && (

@@ -12,7 +12,6 @@ import { toast } from "react-toastify";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat } from "@interlay/polkabtc";
-import { getH160FromAddress } from "../../../common/utils/utils";
 import Big from "big.js";
 
 export default function Confirmation() {
@@ -36,13 +35,8 @@ export default function Confirmation() {
             }
             const amount = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
 
-            const btcHash = getH160FromAddress(btcAddress);
-            if (!btcHash) {
-                throw new Error("Invalid address");
-            }
-
             const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultAddress);
-            const requestResult = await window.polkaBTC.redeem.request(amount, btcHash, vaultAccountId);
+            const requestResult = await window.polkaBTC.redeem.request(amount, btcAddress, vaultAccountId);
 
             // get the redeem id from the request redeem event
             const id = requestResult.hash.toString();
@@ -59,7 +53,7 @@ export default function Confirmation() {
                 btcTxId: "",
                 confirmations: 0,
                 completed: false,
-                isExpired: false
+                isExpired: false,
             };
             dispatch(addRedeemRequestAction(request));
             dispatch(changeRedeemStepAction("VAULT_INFO"));
