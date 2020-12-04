@@ -62,7 +62,7 @@ export default function RequestConfirmation() {
         } catch (error) {
             toast.error(error.toString());
         } finally {
-            setRequestPending(false);    
+            setRequestPending(false);
         }
     };
 

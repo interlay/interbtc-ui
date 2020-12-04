@@ -28,7 +28,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
             setStatus(oracle.online ? "Online" : "Offline");
             setOracles([
                 {
-                    source: oracle.name,
+                    source: oracle.names.join(","),
                     feed: oracle.feed,
                     lastUpdate: dateToShortString(oracle.lastUpdate),
                     exchangeRate: oracle.exchangeRate,
@@ -66,8 +66,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
                                     <th>Exchange Rate</th>
                                 </tr>
                             </thead>
-                            {oracles && oracles.length
-                                ?
+                            {oracles && oracles.length ? (
                                 <tbody>
                                     {oracles.map((oracle, index) => {
                                         return (
@@ -80,15 +79,13 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
                                         );
                                     })}
                                 </tbody>
-                                :
+                            ) : (
                                 <tbody>
                                     <tr>
-                                        <td colSpan={4}>
-                                            No active oracles
-                                        </td>
+                                        <td colSpan={4}>No active oracles</td>
                                     </tr>
                                 </tbody>
-                            }
+                            )}
                         </table>
                     </div>
                 </div>

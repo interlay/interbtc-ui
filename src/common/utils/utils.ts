@@ -1,23 +1,19 @@
 import { RedeemRequest, VaultRedeem } from "../types/redeem.types";
 import { IssueRequest, VaultIssue } from "../types/issue.types";
-import {
-    DOT,
-    PolkaBTC,
-    RedeemRequest as ParachainRedeemRequest,
-    ReplaceRequest,
-} from "@interlay/polkabtc/build/interfaces/default";
+import { BtcAddress, DOT, PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 import { VaultReplaceRequest } from "../types/vault.types";
-import { H160, H256 } from "@polkadot/types/interfaces";
-import { IssueRequest as ParachainIssueRequest } from "@interlay/polkabtc/build/interfaces/default";
+import { H256 } from "@polkadot/types/interfaces";
 import {
     satToBTC,
     planckToDOT,
-    getP2WPKHFromH160,
-    getH160FromP2WPKH,
+    encodeBtcAddress,
     uint8ArrayToString,
     bitcoin,
     stripHexPrefix,
     reverseEndianness,
+    IssueRequestExt as ParachainIssueRequest,
+    RedeemRequestExt as ParachainRedeemRequest,
+    ReplaceRequestExt as ParachainReplaceRequest,
 } from "@interlay/polkabtc";
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from "../../constants";
 
@@ -50,12 +46,11 @@ export function convertToPercentage(x: number): number {
  * @param parachainIssueRequest ParachainIssueRequest
  */
 export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: ParachainIssueRequest): IssueRequest {
-    const btcAddress = getAddressFromH160(parachainIssueRequest.btc_address);
     return {
         id: stripHexPrefix(id.toString()),
         amountBTC: satToBTC(parachainIssueRequest.amount.toString()),
         creation: parachainIssueRequest.opentime.toString(),
-        vaultBTCAddress: btcAddress ? btcAddress : "",
+        vaultBTCAddress: parachainIssueRequest.btc_address,
         btcTxId: "",
         confirmations: 0,
         completed: parachainIssueRequest.completed.isTrue,
@@ -69,12 +64,11 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
  * @param parachainIssueRequest ParachainIssueRequest
  */
 export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: ParachainRedeemRequest): RedeemRequest {
-    const btcAddress = getAddressFromH160(parachainRedeemRequest.btc_address);
     return {
         id: stripHexPrefix(id.toString()),
         amountPolkaBTC: satToBTC(parachainRedeemRequest.amount_polka_btc.toString()),
         creation: parachainRedeemRequest.opentime.toString(),
-        btcAddress: btcAddress ? btcAddress : "",
+        btcAddress: parachainRedeemRequest.btc_address,
         btcTxId: "",
         confirmations: 0,
         completed: parachainRedeemRequest.completed.isTrue,
@@ -116,26 +110,22 @@ export const mapToArray = (map: Map<string, IssueRequest[] | RedeemRequest[]>): 
 };
 
 interface ParsableParachainTypes {
-    btc_address: H160;
+    btc_address: string;
     amount_polka_btc?: PolkaBTC;
     amount?: PolkaBTC;
     amount_dot?: DOT;
     griefing_collateral?: DOT;
 }
 
-const btcNetwork =
+export const BtcNetwork =
     BITCOIN_NETWORK === "mainnet"
         ? bitcoin.networks.bitcoin
         : BITCOIN_NETWORK === "testnet"
         ? bitcoin.networks.testnet
         : bitcoin.networks.regtest;
 
-export function getAddressFromH160(hash: H160): string | undefined {
-    return getP2WPKHFromH160(hash, btcNetwork);
-}
-
-export function getH160FromAddress(address: string): string | undefined {
-    return getH160FromP2WPKH(address, btcNetwork);
+export function encodeBitcoinAddress(address: BtcAddress): string {
+    return encodeBtcAddress(address, BtcNetwork);
 }
 
 export function reverseHashEndianness(hash: Uint8Array): string {
@@ -151,10 +141,6 @@ export function reverseHashEndianness(hash: Uint8Array): string {
 function convertParachainTypes(parachainObject: ParsableParachainTypes): [string, string, string] {
     let parsedPolkaBTC = "";
     let parsedDOT = "";
-    const parsedBtcAddress = getAddressFromH160(parachainObject.btc_address);
-    if (parsedBtcAddress === undefined) {
-        throw new Error("Invalid BTC address encountered during parsing");
-    }
 
     if (parachainObject.amount_polka_btc) {
         parsedPolkaBTC = satToBTC(parachainObject.amount_polka_btc.toString());
@@ -172,7 +158,7 @@ function convertParachainTypes(parachainObject: ParsableParachainTypes): [string
         throw new Error("No property found for DOT amount");
     }
 
-    return [parsedBtcAddress, parsedPolkaBTC, parsedDOT];
+    return [parachainObject.btc_address, parsedPolkaBTC, parsedDOT];
 }
 
 export const redeemRequestToVaultRedeem = (requests: Map<H256, ParachainRedeemRequest>): VaultRedeem[] => {
@@ -209,7 +195,7 @@ export const issueRequestToVaultIssue = (requests: Map<H256, ParachainIssueReque
     return issueRequests;
 };
 
-export const requestsToVaultReplaceRequests = (requests: Map<H256, ReplaceRequest>): VaultReplaceRequest[] => {
+export const requestsToVaultReplaceRequests = (requests: Map<H256, ParachainReplaceRequest>): VaultReplaceRequest[] => {
     const replaceRequests: VaultReplaceRequest[] = [];
     requests.forEach((request, requestId) => {
         const [btcAddress, polkaBTC, lockedDOT] = convertParachainTypes(request);
