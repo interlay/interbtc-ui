@@ -248,7 +248,7 @@ export default function IssueRequests(props: IssueRequestProps) {
                                     <tr key={index} onClick={() => requestClicked(request)}>
                                         <td>{shortAddress(request.id)}</td>
                                         <td>{request.amountBTC} PolkaBTC</td>
-                                        <td>{request.creation}</td>
+                                        <td>{request.creation === "0" ? "Pending..." : request.creation}</td>
                                         <td>
                                             <BitcoinAddress btcAddress={request.vaultBTCAddress} shorten />
                                         </td>
