@@ -3,7 +3,7 @@ import {
     IS_STAKED_RELAYER_LOADED,
     CHANGE_ADDRESS,
     INIT_STATE,
-    SET_TOTAL_ISSUED_AND_TOTAL_LOCKED,
+    INIT_GENERAL_DATA_ACTION,
     IS_VAULT_CLIENT_LOADED,
     UPDATE_BALANCE_POLKA_BTC,
     UPDATE_BALANCE_DOT,
@@ -15,7 +15,7 @@ import {
     IsStakedRelayerLoaded,
     ChangeAddress,
     InitState,
-    SetTotalIssuedAndTotalLocked,
+    InitGeneralDataAction,
     IsVaultClientLoaded,
     UpdateBalancePolkaBTC,
     UpdateBalanceDOT,
@@ -25,6 +25,7 @@ import {
     UpdateAccounts,
 } from "../types/actions.types";
 import { StoreType } from "../types/util.types";
+import { StatusCode } from "@interlay/polkabtc/build/interfaces/default";
 
 export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
     type: IS_POLKA_BTC_LOADED,
@@ -66,13 +67,14 @@ export const updateBalanceDOTAction = (balanceDOT: string): UpdateBalanceDOT => 
     balanceDOT,
 });
 
-export const setTotalIssuedAndTotalLockedAction = (
-    totalPolkaBTC: string,
-    totalLockedDOT: string
-): SetTotalIssuedAndTotalLocked => ({
-    type: SET_TOTAL_ISSUED_AND_TOTAL_LOCKED,
+export const initGeneralDataAction = (totalPolkaBTC: string, totalLockedDOT: string, parachainHeight: number, 
+    bitcoinHeight: number, stateOfBTCParachain: StatusCode): InitGeneralDataAction => ({
+    type: INIT_GENERAL_DATA_ACTION,
+    parachainHeight,
+    bitcoinHeight,
     totalPolkaBTC,
     totalLockedDOT,
+    stateOfBTCParachain
 });
 
 export const showAccountModalAction = (showAccountModal: boolean): ShowAccountModal => ({

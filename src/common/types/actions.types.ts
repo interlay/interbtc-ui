@@ -2,6 +2,7 @@ import { IssueRequest, VaultIssue } from "./issue.types";
 import { RedeemRequest, VaultRedeem } from "./redeem.types";
 import { VaultReplaceRequest } from "./vault.types";
 import { StoreType } from "./util.types";
+import { StatusCode } from "@interlay/polkabtc/build/interfaces/default";
 
 // GENERAL ACTIONS
 
@@ -11,7 +12,7 @@ export const IS_VAULT_CLIENT_LOADED = "IS_VAULT_CLIENT_LOADED";
 export const HAS_FEEDBACK_BEEN_DISPLAYED = "HAS_FEEDBACK_BEEN_DISPLAYED";
 export const INIT_STATE = "INIT_STATE";
 export const CHANGE_ADDRESS = "CHANGE_ADDRESS";
-export const SET_TOTAL_ISSUED_AND_TOTAL_LOCKED = "SET_TOTAL_ISSUED_AND_TOTAL_LOCKED";
+export const INIT_GENERAL_DATA_ACTION = "INIT_GENERAL_DATA_ACTION";
 export const UPDATE_BALANCE_POLKA_BTC = "UPDATE_BALANCE_POLKA_BTC";
 export const UPDATE_BALANCE_DOT = "UPDATE_BALANCE_DOT";
 export const SET_INSTALLED_EXTENSION = "SET_INSTALLED_EXTENSION";
@@ -48,10 +49,13 @@ export interface InitState {
     state: StoreType;
 }
 
-export interface SetTotalIssuedAndTotalLocked {
-    type: typeof SET_TOTAL_ISSUED_AND_TOTAL_LOCKED;
+export interface InitGeneralDataAction {
+    type: typeof INIT_GENERAL_DATA_ACTION;
     totalPolkaBTC: string;
     totalLockedDOT: string;
+    parachainHeight: number;
+    bitcoinHeight: number;
+    stateOfBTCParachain: StatusCode
 }
 
 export interface UpdateBalancePolkaBTC {
@@ -85,7 +89,7 @@ export type GeneralActions =
     | HasFeedbackModalBeenDisplayed
     | ChangeAddress
     | InitState
-    | SetTotalIssuedAndTotalLocked
+    | InitGeneralDataAction
     | IsVaultClientLoaded
     | UpdateBalancePolkaBTC
     | UpdateBalanceDOT
