@@ -85,7 +85,7 @@
         "format": "prettier --config .prettierrc --write ./src/**/*.{ts,tsx}",
         "setup": "yarn generate:defs && yarn generate:meta",
         "build": "react-scripts build",
-        "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register -r jsdom-global/register -r src/setupTests.ts src/tests/**/*.ts src/tests/**/*.tsx --recursive --timeout 5000",
+        "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register -r jsdom-global/register -r src/setupTests.ts src/tests/**/*.ts src/tests/**/*.tsx",
         "eject": "react-scripts eject"
     },
     "eslintConfig": {
