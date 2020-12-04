@@ -1,6 +1,6 @@
 {
     "name": "polkabtc-ui",
-    "version": "0.2.13",
+    "version": "0.3.1",
     "private": true,
     "dependencies": {
         "@interlay/polkabtc": "^0.5.22",
@@ -74,7 +74,10 @@
         "prettier": "^2.1.2",
         "react-addons-test-utils": "^15.6.2",
         "redux-mock-store": "^1.5.4",
-        "ts-node": "^8.6.2"
+        "ts-mocha": "^8.0.0",
+        "ts-node": "^8.6.2",
+        "tsconfig-paths": "^3.9.0",
+        "watch": "^1.0.2"
     },
     "scripts": {
         "start": "react-scripts start",
@@ -85,7 +88,8 @@
         "format": "prettier --config .prettierrc --write ./src/**/*.{ts,tsx}",
         "setup": "yarn generate:defs && yarn generate:meta",
         "build": "react-scripts build",
-        "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register -r jsdom-global/register -r src/setupTests.ts src/tests/**/*.ts src/tests/**/*.tsx",
+        "test": "ts-mocha --paths -p src/tests-tsconfig.json -r src/setupTests.ts src/**/*.test.tsx",
+        "test-watch": "watch 'ts-mocha --paths -p src/tests-tsconfig.json -r src/setupTests.ts src/**/*.test.tsx' src --interval=1",
         "eject": "react-scripts eject"
     },
     "eslintConfig": {
