@@ -12,7 +12,7 @@
 ## About
 
 The PolkaBTC UI connects the Polkadot ecosystem with Bitcoin. It allows the creation of PolkaBTC, a fungible token that represents Bitcoin in the Polkadot ecosystem. PolkaBTC is backed by Bitcoin 1:1 and allows redeeming of the equivalent amount of Bitcoins by relying on a collateralized third-party.
-In comparison to other bridge constructions (like tBTC, wBTC, or RenVM) *anyone* can become an intermediary by depositing collateral making PolkaBTC the only truly open system.
+In comparison to other bridge constructions (like tBTC, wBTC, or RenVM) _anyone_ can become an intermediary by depositing collateral making PolkaBTC the only truly open system.
 
 The bridge itself follows the detailed specification: <a href="https://interlay.gitlab.io/polkabtc-spec/" target="_blank"><strong>Explore the specification »</strong></a>
 
@@ -20,10 +20,10 @@ It is implemented as a collection of open-source Substrate modules using Rust: <
 
 ### Built with
 
-- [React](https://github.com/facebook/react)
-- [TypeScript](https://github.com/Microsoft/TypeScript)
-- [polkadot-js](https://polkadot.js.org/)
-- [Yarn](https://github.com/yarnpkg/yarn)
+-   [React](https://github.com/facebook/react)
+-   [TypeScript](https://github.com/Microsoft/TypeScript)
+-   [polkadot-js](https://polkadot.js.org/)
+-   [Yarn](https://github.com/yarnpkg/yarn)
 
 ## Getting Started
 
@@ -57,10 +57,34 @@ To mine blocks you may use a command such as the following.
 bitcoin-cli -regtest generatetoaddress 1 $(bitcoin-cli -regtest getnewaddress)
 ```
 
+**Clients**
+
 In order to automatically submit block headers, run the [staked-relayer](https://gitlab.com/interlay/polkabtc-clients/-/tree/dev/staked-relayer) client software.
 
 ```shell
-staked-relayer --http-addr '[::0]:3030'
+staked-relayer --keyring=eve --http-addr '[::0]:3030' --polka-btc-url 'ws://localhost:9944'
+```
+
+The architecture also relies upon collateralized vaults; use the [vault](https://gitlab.com/interlay/polkabtc-clients/-/tree/dev/vault) client to register automatically.
+
+```shell
+vault --keyring=charlie --network=testnet --auto-register-with-collateral 100000000 --http-addr '[::0]:3031' --polka-btc-url 'ws://localhost:9944'
+```
+
+Issue requests (BTC -> PolkaBTC) can be executed solely through the UI but a vault client is required to redeem (PolkaBTC -> BTC).
+
+Lastly, we require a price oracle to compute the exchange rate (BTC <> DOT), the [oracle](https://gitlab.com/interlay/polkabtc-clients/-/tree/dev/oracle) client can automatically feed this from an integrated data source (e.g. [CoinGecko](https://www.coingecko.com/en/coins/polkadot/btc)).
+
+```shell
+oracle --keyring=bob --polka-btc-url 'ws://localhost:9944' --coingecko
+```
+
+**Electrs**
+
+We make heavy use of the [Blockstream API](https://github.com/interlay/electrs) in the UI to watch for payments made on Bitcoin.
+
+```shell
+electrs -vvvv --network regtest --jsonrpc-import --cors "*" --cookie "rpcuser:rpcpassword" --daemon-rpc-addr localhost:18443 --http-addr "[::0]:3002" --index-unspendables
 ```
 
 ### Docker-Compose (Regtest)
@@ -168,7 +192,7 @@ cd polkabtc-ui
 Install the required dependencies.
 
 ```bash
-docker build -t polkabtc:ui . 
+docker build -t polkabtc:ui .
 ```
 
 Start the development server. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -189,9 +213,9 @@ yarn test
 
 One the website is launched, you have three different options:
 
-- *Buy PolkaBTC*
-- *Mint PolkaBTC*
-- *Return BTC*
+-   _Buy PolkaBTC_
+-   _Mint PolkaBTC_
+-   _Return BTC_
 
 ## Help
 
@@ -208,7 +232,7 @@ docker volume rm $(docker volume ls -q)
 
 ## Roadmap
 
-- [ ] Integrate an atomic swap option to buy PolkaBTC.
+-   [ ] Integrate an atomic swap option to buy PolkaBTC.
 
 ## Contributing
 
@@ -222,8 +246,8 @@ Contributions are what make the open source community such an amazing place to b
 
 If you are searching for a place to start or would like to discuss features, reach out to us:
 
-- [Telegram](t.me/interlay)
-- [Riot](https://matrix.to/#/!nZablWWaicZyVTWyZk:matrix.org?via=matrix.org)
+-   [Telegram](t.me/interlay)
+-   [Riot](https://matrix.to/#/!nZablWWaicZyVTWyZk:matrix.org?via=matrix.org)
 
 ## License
 
@@ -233,7 +257,6 @@ polkabtc-ui is licensed under the terms of the Apache License (Version 2.0). See
 
 ## Contact
 
-
 Website: [Interlay.io](https://www.interlay.io)
 
 Twitter: [@interlayHQ](https://twitter.com/InterlayHQ)
@@ -242,8 +265,7 @@ Email: contact@interlay.io
 
 ## Acknowledgements
 
-
 We would like to thank the following teams for their continuous support:
 
-* [Web3 Foundation](https://web3.foundation/)
-* [Parity Technologies](https://www.parity.io/)
+-   [Web3 Foundation](https://web3.foundation/)
+-   [Parity Technologies](https://www.parity.io/)
