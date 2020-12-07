@@ -88,7 +88,7 @@
         "format": "prettier --config .prettierrc --write ./src/**/*.{ts,tsx}",
         "setup": "yarn generate:defs && yarn generate:meta",
         "build": "react-scripts build",
-        "test": "ts-mocha --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx",
+        "test": "ts-mocha --exit --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx",
         "test-watch": "watch 'ts-mocha --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx --timeout 5000' src tests --interval=1",
         "eject": "react-scripts eject"
     },
