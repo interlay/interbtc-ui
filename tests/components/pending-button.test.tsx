@@ -1,5 +1,5 @@
 import React from "react";
-import ButtonMaybePending from "../../common/components/pending-button";
+import ButtonMaybePending from "../../src/common/components/pending-button";
 import { expect } from "chai";
 import { shallow } from "enzyme";
 

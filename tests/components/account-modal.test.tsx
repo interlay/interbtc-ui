@@ -2,7 +2,7 @@ import React from "react";
 import { mount } from "enzyme";
 import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
-import AccountModal from "../../common/components/account-modal/account-modal";
+import AccountModal from "../../src/common/components/account-modal/account-modal";
 import { expect } from "chai";
 
 const mockStore = configureMockStore([]);
@@ -108,7 +108,6 @@ describe("Component: Testa Account Modal ", () => {
         const onSelected = (selected: string): Promise<void> => {
             expect(selected).equals("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQ1");
             return Promise.resolve();
-            done();
         };
 
         const wrapper = mount(
