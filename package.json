@@ -1,6 +1,6 @@
 {
     "name": "polkabtc-ui",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "private": true,
     "dependencies": {
         "@interlay/polkabtc": "0.6.0",
@@ -13,6 +13,7 @@
         "@types/big.js": "^4.0.5",
         "@types/bn.js": "^4.11.6",
         "@types/jest": "^24.0.0",
+        "@types/jsdom": "^16.2.5",
         "@types/node": "^12.0.0",
         "@types/qrcode.react": "^1.0.1",
         "@types/react": "^16.9.36",
@@ -49,15 +50,38 @@
         "typescript": "^3.9.0"
     },
     "devDependencies": {
+        "@types/chai": "^4.2.14",
+        "@types/enzyme": "^3.10.8",
+        "@types/enzyme-adapter-react-16": "^1.0.6",
+        "@types/expect": "^24.3.0",
+        "@types/ignore-styles": "^5.0.0",
+        "@types/jsdom-global": "^3.0.2",
+        "@types/mocha": "^8.0.4",
+        "@types/redux-mock-store": "^1.0.2",
+        "@types/sinon": "^9.0.9",
         "@polkadot/typegen": "2.8.1",
         "@typescript-eslint/eslint-plugin": "^4.0.1",
         "@typescript-eslint/parser": "^4.0.1",
+        "chai": "^4.2.0",
+        "chai-enzyme": "^1.0.0-beta.1",
+        "cheerio": "^1.0.0-rc.3",
+        "enzyme": "^3.11.0",
+        "enzyme-adapter-react-16": "^1.15.5",
         "eslint": "^6.8.0",
         "eslint-config-prettier": "^6.12.0",
         "eslint-plugin-prettier": "^3.1.4",
-        "husky": "^4.2.5",
+        "husky": "^4.3.0",
+        "ignore-styles": "^5.0.1",
+        "jsdom": "^16.4.0",
+        "jsdom-global": "^3.0.2",
+        "mocha": "^8.2.1",
         "prettier": "^2.1.2",
-        "ts-node": "^8.6.2"
+        "react-addons-test-utils": "^15.6.2",
+        "redux-mock-store": "^1.5.4",
+        "ts-mocha": "^8.0.0",
+        "ts-node": "^8.6.2",
+        "tsconfig-paths": "^3.9.0",
+        "watch": "^1.0.2"
     },
     "scripts": {
         "start": "react-scripts start",
@@ -68,7 +92,8 @@
         "format": "prettier --config .prettierrc --write ./src/**/*.{ts,tsx}",
         "setup": "yarn generate:defs && yarn generate:meta",
         "build": "react-scripts build",
-        "test": "react-scripts test",
+        "test": "ts-mocha --exit --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx",
+        "test-watch": "watch 'ts-mocha --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx --timeout 5000' src tests --interval=1",
         "eject": "react-scripts eject"
     },
     "eslintConfig": {
@@ -86,5 +111,10 @@
             "last 1 firefox version",
             "last 1 safari version"
         ]
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "yarn lint & yarn test"
+        }
     }
 }

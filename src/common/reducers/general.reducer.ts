@@ -33,8 +33,8 @@ const initialState = {
     stateOfBTCParachain: {
         isError: false,
         isRunning: false,
-        isShutdown: true
-    }
+        isShutdown: true,
+    },
 };
 
 export const generalReducer = (state: GeneralState = initialState, action: GeneralActions): GeneralState => {
@@ -57,17 +57,17 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
                 stateOfBTCParachain: {
                     isError: false,
                     isRunning: false,
-                    isShutdown: true
-                }
+                    isShutdown: true,
+                },
             };
         case INIT_GENERAL_DATA_ACTION:
-            return { 
+            return {
                 ...state,
                 totalLockedDOT: action.totalLockedDOT,
                 totalPolkaBTC: action.totalPolkaBTC,
                 parachainHeight: action.parachainHeight,
                 bitcoinHeight: action.bitcoinHeight,
-                stateOfBTCParachain: action.stateOfBTCParachain
+                stateOfBTCParachain: action.stateOfBTCParachain,
             };
         case IS_VAULT_CLIENT_LOADED:
             return { ...state, vaultClientLoaded: action.isLoaded };

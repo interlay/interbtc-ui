@@ -66,14 +66,19 @@ export const updateBalanceDOTAction = (balanceDOT: string): UpdateBalanceDOT => 
     balanceDOT,
 });
 
-export const initGeneralDataAction = (totalPolkaBTC: string, totalLockedDOT: string, parachainHeight: number, 
-    bitcoinHeight: number, stateOfBTCParachain: ParachainStatus): InitGeneralDataAction => ({
+export const initGeneralDataAction = (
+    totalPolkaBTC: string,
+    totalLockedDOT: string,
+    parachainHeight: number,
+    bitcoinHeight: number,
+    stateOfBTCParachain: ParachainStatus
+): InitGeneralDataAction => ({
     type: INIT_GENERAL_DATA_ACTION,
     parachainHeight,
     bitcoinHeight,
     totalPolkaBTC,
     totalLockedDOT,
-    stateOfBTCParachain
+    stateOfBTCParachain,
 });
 
 export const showAccountModalAction = (showAccountModal: boolean): ShowAccountModal => ({

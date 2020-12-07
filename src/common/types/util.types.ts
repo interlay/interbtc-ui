@@ -35,7 +35,7 @@ export type ParachainStatus = {
     isError: boolean;
     isRunning: boolean;
     isShutdown: boolean;
-}
+};
 
 export type GeneralState = {
     polkaBtcLoaded: boolean;
@@ -52,7 +52,7 @@ export type GeneralState = {
     accounts: string[];
     parachainHeight: number;
     bitcoinHeight: number;
-    stateOfBTCParachain: ParachainStatus
+    stateOfBTCParachain: ParachainStatus;
 };
 
 export type AppState = ReturnType<typeof rootReducer>;

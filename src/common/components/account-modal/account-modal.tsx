@@ -23,13 +23,13 @@ export default function AccountModal(props: AccountModalProps): ReactElement {
         <Modal show={showAccountModal} onHide={onClose} size={"lg"}>
             <Modal.Header closeButton>
                 <Modal.Title>
-                    {extensions.length ? "Select account" : "Pick a wallet"}
+                    <p id="account-modal-title">{extensions.length ? "Select account" : "Pick a wallet"}</p>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className="account-modal">
             {extensions.length ? 
                 <React.Fragment>
-                    {!accounts.length ? <div>
+                    {!accounts.length ? <div id="account-modal-no-account">
                         <p>
                             You don't have an account. Create one
                             <a href="https://polkadot.js.org/extension/" target="_blank" rel="noopener noreferrer">

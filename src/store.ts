@@ -35,8 +35,8 @@ export const getInitialState = (): StoreType => {
             stateOfBTCParachain: {
                 isError: false,
                 isRunning: false,
-                isShutdown: true
-            }
+                isShutdown: true,
+            },
         },
         issue: {
             address: "",
