@@ -31,11 +31,11 @@ export default function RedeemPage(): JSX.Element {
 
     const openWizard = () => {
         if (stateOfBTCParachain.isError) {
-            toast.error(i18n.t("error_in_parachain"));
+            toast.error(i18n.t("error_in_parachain_redeem"));
             return;
         }
         if (bitcoinHeight-parachainHeight>6) {
-            toast.error(i18n.t("error_more_than_6_blocks_behind"));
+            toast.error(i18n.t("error_more_than_6_blocks_behind_redeem"));
             return;
         }
         if(address && extensions.length) {
