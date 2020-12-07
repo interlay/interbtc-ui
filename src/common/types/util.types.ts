@@ -5,7 +5,6 @@ import { u256 } from "@polkadot/types/primitive";
 import { IssueState } from "./issue.types";
 import { RedeemState } from "./redeem.types";
 import { VaultState } from "./vault.types";
-import { StatusCode } from "@interlay/polkabtc/build/interfaces/default";
 
 export type Vault = {
     vaultId: string;
@@ -32,6 +31,12 @@ export interface StatusUpdate {
     hasVoted: boolean;
 }
 
+export type ParachainStatus = {
+    isError: boolean;
+    isRunning: boolean;
+    isShutdown: boolean;
+}
+
 export type GeneralState = {
     polkaBtcLoaded: boolean;
     relayerLoaded: boolean;
@@ -47,7 +52,7 @@ export type GeneralState = {
     accounts: string[];
     parachainHeight: number;
     bitcoinHeight: number;
-    stateOfBTCParachain: StatusCode
+    stateOfBTCParachain: ParachainStatus
 };
 
 export type AppState = ReturnType<typeof rootReducer>;

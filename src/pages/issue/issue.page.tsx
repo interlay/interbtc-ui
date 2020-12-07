@@ -10,21 +10,30 @@ import { StoreType } from "../../common/types/util.types";
 import IssueWizard from "./wizard/issue-wizard";
 import { showAccountModalAction } from "../../common/actions/general.actions";
 import Balances from "../../common/components/balances";
+import { toast } from "react-toastify";
+import i18n from "i18next";
+
 
 export default function IssuePage(): JSX.Element {
     const dispatch = useDispatch();
     const [showWizard, setShowWizard] = useState(false);
-    const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
-    const balanceDOT = useSelector((state: StoreType) => state.general.balanceDOT);
-    const address = useSelector((state: StoreType) => state.general.address);
-    const extensions = useSelector((state: StoreType) => state.general.extensions);
+    const {extensions, address, balanceDOT, balancePolkaBTC, stateOfBTCParachain,
+        bitcoinHeight, parachainHeight } = useSelector((state: StoreType) => state.general);
 
     const handleClose = () => {
         dispatch(resetIssueWizardAction());
         setShowWizard(false);
     };
 
-    const handleShow = () => {
+    const openWizard = () => {
+        if (stateOfBTCParachain.isError) {
+            toast.error(i18n.t("error_in_parachain"));
+            return;
+        }
+        if (bitcoinHeight-parachainHeight>6) {
+            toast.error(i18n.t("error_more_than_6_blocks_behind"));
+            return;
+        }
         if (extensions.length && address) {
             setShowWizard(true);
         } else {
@@ -47,13 +56,13 @@ export default function IssuePage(): JSX.Element {
                     }
                     <Row className="mt-5 mb-5">
                         <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
-                            <Button variant="outline-polkadot" size="lg" block onClick={handleShow}>
+                            <Button variant="outline-polkadot" size="lg" block onClick={openWizard}>
                                 Issue PolkaBTC
                             </Button>
                         </Col>
                     </Row>
 
-                    <IssueRequests handleShow={handleShow} />
+                    <IssueRequests openWizard={openWizard} />
 
                     <Modal show={showWizard} onHide={handleClose} size={"lg"}>
                         <IssueWizard handleClose={handleClose} />

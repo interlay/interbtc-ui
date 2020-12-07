@@ -127,7 +127,8 @@ export default function App(): ReactElement {
                 const parachainHeight = Number(await window.polkaBTC.btcRelay.getLatestBlockHeight());                
                 const bitcoinHeight = await window.polkaBTC.btcCore.getLatestBlockHeight();
                 const state = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
-                dispatch(initGeneralDataAction(totalPolkaBTC, totalLockedDOT, parachainHeight, bitcoinHeight, state));
+                dispatch(initGeneralDataAction(totalPolkaBTC, totalLockedDOT, parachainHeight, bitcoinHeight,
+                    {isError: state.isError, isRunning: state.isRunning, isShutdown: state.isShutdown}));
             } catch(error) {
                 console.log(error);
             }

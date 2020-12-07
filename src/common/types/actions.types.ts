@@ -1,8 +1,7 @@
 import { IssueRequest, VaultIssue } from "./issue.types";
 import { RedeemRequest, VaultRedeem } from "./redeem.types";
 import { VaultReplaceRequest } from "./vault.types";
-import { StoreType } from "./util.types";
-import { StatusCode } from "@interlay/polkabtc/build/interfaces/default";
+import { StoreType, ParachainStatus } from "./util.types";
 
 // GENERAL ACTIONS
 
@@ -55,7 +54,7 @@ export interface InitGeneralDataAction {
     totalLockedDOT: string;
     parachainHeight: number;
     bitcoinHeight: number;
-    stateOfBTCParachain: StatusCode
+    stateOfBTCParachain: ParachainStatus;
 }
 
 export interface UpdateBalancePolkaBTC {

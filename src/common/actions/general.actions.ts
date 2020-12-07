@@ -24,8 +24,7 @@ import {
     ShowAccountModal,
     UpdateAccounts,
 } from "../types/actions.types";
-import { StoreType } from "../types/util.types";
-import { StatusCode } from "@interlay/polkabtc/build/interfaces/default";
+import { StoreType, ParachainStatus } from "../types/util.types";
 
 export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
     type: IS_POLKA_BTC_LOADED,
@@ -68,7 +67,7 @@ export const updateBalanceDOTAction = (balanceDOT: string): UpdateBalanceDOT => 
 });
 
 export const initGeneralDataAction = (totalPolkaBTC: string, totalLockedDOT: string, parachainHeight: number, 
-    bitcoinHeight: number, stateOfBTCParachain: StatusCode): InitGeneralDataAction => ({
+    bitcoinHeight: number, stateOfBTCParachain: ParachainStatus): InitGeneralDataAction => ({
     type: INIT_GENERAL_DATA_ACTION,
     parachainHeight,
     bitcoinHeight,

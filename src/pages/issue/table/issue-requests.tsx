@@ -26,15 +26,13 @@ import BitcoinTransaction from "../../../common/components/bitcoin-links/transac
 import { updateBalancePolkaBTCAction } from "../../../common/actions/general.actions";
 
 type IssueRequestProps = {
-    handleShow: () => void;
+    openWizard: () => void;
 };
 
 export default function IssueRequests(props: IssueRequestProps) {
-    const address = useSelector((state: StoreType) => state.general.address);
+    const { address, balancePolkaBTC, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
     const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
     const transactionListeners = useSelector((state: StoreType) => state.issue.transactionListeners);
-    const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const [executePending, setExecutePending] = useState([""]);
     const [requiredBtcConfirmations, setRequiredBtcConfirmations] = useState(0);
     const [issuePeriod, setIssuePeriod] = useState(new Big(0));
@@ -213,7 +211,7 @@ export default function IssueRequests(props: IssueRequestProps) {
         dispatch(changeBtcTxIdAction(request.btcTxId));
         dispatch(changeIssueIdAction(request.id));
         dispatch(changeIssueStepAction("BTC_PAYMENT_CONFIRMATION"));
-        props.handleShow();
+        props.openWizard();
     };
 
     return (
