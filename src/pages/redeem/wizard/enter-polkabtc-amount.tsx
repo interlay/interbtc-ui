@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
@@ -26,7 +26,17 @@ export default function EnterPolkaBTCAmount() {
     const defaultValues = amount ? { defaultValues: { amountPolkaBTC: amount } } : undefined;
     const { register, handleSubmit, errors } = useForm<EnterPolkaBTCForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
+    const [dustValue, setDustValue] = useState("0");
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        const fetchDustValue = async () => {
+            const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
+            const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
+            setDustValue(dustValueBtc);
+        };
+        fetchDustValue();
+    });
 
     const onSubmit = handleSubmit(async ({ amountPolkaBTC }) => {
         if (!polkaBtcLoaded) return;
@@ -45,11 +55,6 @@ export default function EnterPolkaBTCAmount() {
             }
             dispatch(changeAmountPolkaBTCAction(amountPolkaBTC));
             const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
-            const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
-            if (amountAsSatoshi.lte(dustValueAsSatoshi)) {
-                const dustValue = satToBTC(dustValueAsSatoshi.toString());
-                throw new Error(`Please enter an amount greater than Bitcoin dust (${dustValue} BTC)`);
-            }
 
             const vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountAsSatoshi);
             toast.success("Found vault: " + vaultId.toString());
@@ -72,25 +77,39 @@ export default function EnterPolkaBTCAmount() {
             <Modal.Body>
                 <p>Please enter the amount of PolkaBTC you want to receive in BTC.</p>
                 <p>You have {balancePolkaBTC} PolkaBTC</p>
-                <input
-                    name="amountPolkaBTC"
-                    type="float"
-                    className={"custom-input" + (errors.amountPolkaBTC ? " error-borders" : "")}
-                    ref={register({
-                        required: true,
-                        validate: (value) =>
-                            value > balancePolkaBTC
-                                ? "Please enter an amount smaller than your current balance: " + balancePolkaBTC
-                                : undefined,
-                    })}
-                />
-                {errors.amountPolkaBTC && (
-                    <div className="input-error">
-                        {errors.amountPolkaBTC.type === "required"
-                            ? "Please enter the amount"
-                            : errors.amountPolkaBTC.message}
+                <p>Please enter an amount greater than Bitcoin dust limit({dustValue} BTC).</p>
+                <div className="row">
+                    <div className="col-12 basic-addon">
+                        <div className="input-group">
+                            <input
+                                name="amountPolkaBTC"
+                                type="float"
+                                className={"form-control custom-input" + (errors.amountPolkaBTC ? " error-borders" : "")}
+                                ref={register({
+                                    required: true,
+                                    validate: (value) =>
+                                        value > balancePolkaBTC
+                                            ? "Please enter an amount smaller than your current balance: " + balancePolkaBTC
+                                            : value < Number(dustValue) ? 
+                                                "Please enter an amount greater than Bitcoin dust limit" + "(" + dustValue + "BTC)."
+                                                : undefined,
+                                })}
+                            />
+                            <div className="input-group-append">
+                                <span className="input-group-text" id="basic-addon2">
+                                    PolkaBTC
+                                </span>
+                            </div>
+                        </div>
+                        {errors.amountPolkaBTC && (
+                            <div className="input-error">
+                                {errors.amountPolkaBTC.type === "required"
+                                    ? "Please enter the amount"
+                                    : errors.amountPolkaBTC.message}
+                            </div>
+                        )}
                     </div>
-                )}
+                </div>
             </Modal.Body>
             <Modal.Footer>
                 <ButtonMaybePending
