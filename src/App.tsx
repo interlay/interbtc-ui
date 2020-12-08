@@ -21,6 +21,7 @@ import {
     updateAccountsAction
 } from "./common/actions/general.actions";
 import * as constants from "./constants";
+import "./i18n";
 
 // theme
 // FIXME: Clean-up and move to scss
