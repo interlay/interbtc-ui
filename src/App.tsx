@@ -15,7 +15,7 @@ import {
     isStakedRelayerLoaded,
     isVaultClientLoaded,
     changeAddressAction,
-    setTotalIssuedAndTotalLockedAction,
+    initGeneralDataAction,
     setInstalledExtensionAction,
     showAccountModalAction,
     updateAccountsAction
@@ -40,7 +40,7 @@ import DashboardPage from "./pages/dashboard/dashboard.page";
 import VaultDashboardPage from "./pages/vault-dashboard/vault-dashboard.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
 import { useSelector, useDispatch } from "react-redux";
-import { StoreType } from "./common/types/util.types";
+import { StoreType, ParachainStatus } from "./common/types/util.types";
 
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
@@ -119,11 +119,20 @@ export default function App(): ReactElement {
         const initDataOnAppBootstrap = async () => {
             if (!polkaBtcLoaded) return;
 
-            const totalPolkaSAT = await window.polkaBTC.treasury.totalPolkaBTC();
-            const totalLockedPLANCK = await window.polkaBTC.collateral.totalLockedDOT();
-            const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
-            const totalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
-            dispatch(setTotalIssuedAndTotalLockedAction(totalPolkaBTC, totalLockedDOT));
+            try {
+                const totalPolkaSAT = await window.polkaBTC.treasury.totalPolkaBTC();
+                const totalLockedPLANCK = await window.polkaBTC.collateral.totalLockedDOT();
+                const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
+                const totalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
+                const btcRelayHeight = Number(await window.polkaBTC.btcRelay.getLatestBlockHeight());                
+                const bitcoinHeight = await window.polkaBTC.btcCore.getLatestBlockHeight();
+                const state = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
+                dispatch(initGeneralDataAction(totalPolkaBTC, totalLockedDOT, btcRelayHeight, bitcoinHeight,
+                    state.isError ? ParachainStatus.Error : 
+                    state.isRunning ? ParachainStatus.Running : ParachainStatus.Shutdown));
+            } catch(error) {
+                console.log(error);
+            }
         }
         initDataOnAppBootstrap();
     },[dispatch, polkaBtcLoaded]);

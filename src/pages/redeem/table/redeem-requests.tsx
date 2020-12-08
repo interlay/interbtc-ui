@@ -21,8 +21,7 @@ export interface RedeemRequestsProps {
 }
 
 export default function RedeemRequests(props: RedeemRequestsProps) {
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const address = useSelector((state: StoreType) => state.general.address);
+    const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
     const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
     const transactionListeners = useSelector((state: StoreType) => state.redeem.transactionListeners);
     const [isRedeemExpirationSubscribed, setIsRedeemExpirationSubscribed] = useState(false);
