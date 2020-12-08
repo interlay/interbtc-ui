@@ -70,7 +70,6 @@ export default function EnterBTCAmount() {
         setRequestPending(false);
     });
 
-    console.log("rendam se !!!! ");
     return (
         <form onSubmit={onSubmit}>
             <Modal.Body>
