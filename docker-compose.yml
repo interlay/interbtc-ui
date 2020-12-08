@@ -19,7 +19,6 @@ services:
             - -rpcallowip=0.0.0.0/0
             - -rpcuser=rpcuser
             - -rpcpassword=rpcpassword
-            - -fallbackfee=0.0002
         ports:
             - "18443:18443"
     bitcoin-cli:
@@ -28,13 +27,9 @@ services:
             - /bin/sh
             - -c
             - |
-                bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword createwallet Alice
-                bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword createwallet Bob
-                bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword createwallet Dave
-                ALICE_ADDRESS=$$(bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword -rpcwallet=Alice getnewaddress)
-                # ALICE_ADDRESS=bcrt1qefxeckts7tkgz7uach9dnwer4qz5nyehl4sjcc
+                ADDRESS=$$(bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword getnewaddress)
                 # coins need 100 confirmations to be spendable
-                bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword generatetoaddress 101 $${ALICE_ADDRESS}
+                bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword generatetoaddress 101 $${ADDRESS}
     electrs:
         image: "interlayhq/electrs:latest"
         command:
@@ -89,29 +84,22 @@ services:
             - -c
             - |
                 echo "Sleeping..."
-                # sleep for 7s to wait for bitcoin to create the Dave wallet
-                sleep 7
-                vault --keyring=dave  --auto-register-with-collateral 100000000 --http-addr '[::0]:3032' --polka-btc-url 'ws://polkabtc:9944'
+                sleep 5
+                vault --keyring=charlie --http-addr '[::0]:3031' --polka-btc-url 'ws://polkabtc:9944'
         environment:
             <<: *client-env
         ports:
-            - "3032:3032"
-    testdata_gen:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/testdata-gen:dev"
+            - "3031:3031"
+    vault_2:
+        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:dev"
         command:
             - /bin/sh
             - -c
             - |
                 echo "Sleeping..."
-                # wait for the vault to register
-                sleep 12
-                ALICE_ADDRESS=bcrt1qefxeckts7tkgz7uach9dnwer4qz5nyehl4sjcc
-                testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=bob set-exchange-rate --exchange-rate=1 
-                testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice request-issue --issue-amount=100000 --vault=dave
-                REDEEM_ID=$$(testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice request-redeem --redeem-amount=10000 --btc-address=$${ALICE_ADDRESS} --vault=dave)
-                # testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice execute-redeem --redeem-id=$${REDEEM_ID}
-
+                sleep 5
+                vault --keyring=dave --http-addr '[::0]:3032' --polka-btc-url 'ws://polkabtc:9944'
         environment:
             <<: *client-env
         ports:
-            - "3033:3033"
+            - "3032:3032"
