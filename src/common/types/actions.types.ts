@@ -52,7 +52,7 @@ export interface InitGeneralDataAction {
     type: typeof INIT_GENERAL_DATA_ACTION;
     totalPolkaBTC: string;
     totalLockedDOT: string;
-    parachainHeight: number;
+    btcRelayHeight: number;
     bitcoinHeight: number;
     stateOfBTCParachain: ParachainStatus;
 }

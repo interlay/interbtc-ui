@@ -13,7 +13,7 @@ import {
     SHOW_ACCOUNT_MODAL,
     UPDATE_ACCOUNTS,
 } from "../types/actions.types";
-import { GeneralState } from "../types/util.types";
+import { GeneralState, ParachainStatus } from "../types/util.types";
 
 const initialState = {
     polkaBtcLoaded: false,
@@ -28,13 +28,9 @@ const initialState = {
     balanceDOT: "",
     extensions: [],
     accounts: [],
-    parachainHeight: 0,
+    btcRelayHeight: 0,
     bitcoinHeight: 0,
-    stateOfBTCParachain: {
-        isError: false,
-        isRunning: false,
-        isShutdown: true,
-    },
+    stateOfBTCParachain: ParachainStatus.Shutdown,
 };
 
 export const generalReducer = (state: GeneralState = initialState, action: GeneralActions): GeneralState => {
@@ -54,18 +50,14 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
                 showAccountModal: false,
                 extensions: [],
                 accounts: [],
-                stateOfBTCParachain: {
-                    isError: false,
-                    isRunning: false,
-                    isShutdown: true,
-                },
+                stateOfBTCParachain: ParachainStatus.Shutdown,
             };
         case INIT_GENERAL_DATA_ACTION:
             return {
                 ...state,
                 totalLockedDOT: action.totalLockedDOT,
                 totalPolkaBTC: action.totalPolkaBTC,
-                parachainHeight: action.parachainHeight,
+                btcRelayHeight: action.btcRelayHeight,
                 bitcoinHeight: action.bitcoinHeight,
                 stateOfBTCParachain: action.stateOfBTCParachain,
             };

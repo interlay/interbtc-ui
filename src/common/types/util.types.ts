@@ -31,11 +31,11 @@ export interface StatusUpdate {
     hasVoted: boolean;
 }
 
-export type ParachainStatus = {
-    isError: boolean;
-    isRunning: boolean;
-    isShutdown: boolean;
-};
+export enum ParachainStatus {
+    Error,
+    Running,
+    Shutdown,
+}
 
 export type GeneralState = {
     polkaBtcLoaded: boolean;
@@ -50,7 +50,7 @@ export type GeneralState = {
     balanceDOT: string;
     extensions: string[];
     accounts: string[];
-    parachainHeight: number;
+    btcRelayHeight: number;
     bitcoinHeight: number;
     stateOfBTCParachain: ParachainStatus;
 };

@@ -69,12 +69,12 @@ export const updateBalanceDOTAction = (balanceDOT: string): UpdateBalanceDOT => 
 export const initGeneralDataAction = (
     totalPolkaBTC: string,
     totalLockedDOT: string,
-    parachainHeight: number,
+    btcRelayHeight: number,
     bitcoinHeight: number,
     stateOfBTCParachain: ParachainStatus
 ): InitGeneralDataAction => ({
     type: INIT_GENERAL_DATA_ACTION,
-    parachainHeight,
+    btcRelayHeight,
     bitcoinHeight,
     totalPolkaBTC,
     totalLockedDOT,
