@@ -14,12 +14,14 @@ import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat, stripHexPrefix, satToBTC } from "@interlay/polkabtc";
 import { encodeBitcoinAddress } from "../../../common/utils/utils";
 import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
+import { useTranslation } from 'react-i18next';
 
 type EnterBTCForm = {
     amountBTC: string;
 };
 
 export default function EnterBTCAmount() {
+    const { t } = useTranslation();
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const amount = useSelector((state: StoreType) => state.issue.amountBTC);
     // const feeBTC = useSelector((state: StoreType) => state.issue.feeBTC);
@@ -74,11 +76,11 @@ export default function EnterBTCAmount() {
         <form onSubmit={onSubmit}>
             <Modal.Body>
                 <p>
-                    Please enter the amount of PolkaBTC you would like to issue.
+                    {t("issue_page.enter-polkabtc-amount-desc-1")}
                     <br />
-                    This is the amount of BTC you will need to lock on Bitcoin.
+                    {t("issue_page.enter-polkabtc-amount-desc-2")}
                     <br />
-                    Please enter an amount greater than Bitcoin dust limit({dustValue} BTC).
+                    {t("issue_page.enter-polkabtc-amount-desc-3")}({dustValue} BTC).
                 </p>
                 <div className="row">
                     <div className="col-12 basic-addon">
@@ -89,12 +91,14 @@ export default function EnterBTCAmount() {
                                 className={"form-control custom-input" + (errors.amountBTC ? " error-borders" : "")}
                                 ref={register({
                                     required: true,
-                                    validate: (value) =>
-                                        value > 1
-                                            ? "The maximum amount you can issue (per request) during the alpha testnet is 1.0 PolkaBTC. Please enter a lower amount."
-                                            : value < Number(dustValue) ? 
-                                                "Please enter an amount greater than Bitcoin dust limit" + "(" + dustValue + "BTC)."
-                                                : undefined,
+                                    validate: (value) => {
+                                        const message = value > 1
+                                        ? t("issue_page.validation_max_value")
+                                        : value < Number(dustValue) ? 
+                                            t("issue_page.validation_min_value") + dustValue + "BTC)."
+                                            : undefined;
+                                        return message;
+                                    }
                                 })}
                             />
                             <div className="input-group-append">
@@ -119,7 +123,7 @@ export default function EnterBTCAmount() {
                     isPending={isRequestPending}
                     onClick={onSubmit}
                 >
-                    Search Vault
+                    {t("search_vault")}
                 </ButtonMaybePending>
             </Modal.Footer>
         </form>

@@ -3,14 +3,15 @@ import { FormGroup, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { shortAddress } from "../../../common/utils/utils";
+import { useTranslation } from 'react-i18next';
 
 type VaultInfoProps = {
     closeModal: () => void
 }
 
 export default function VaultInfo(props: VaultInfoProps) {
-    const vaultDotAddress = useSelector((state: StoreType) => state.redeem.vaultDotAddress);
-    const vaultBtcAddress = useSelector((state: StoreType) => state.redeem.vaultBtcAddress);
+    const { t } = useTranslation();
+    const { vaultDotAddress, vaultBtcAddress } = useSelector((state: StoreType) => state.redeem);
 
     const onConfirm = () => {
         props.closeModal();
@@ -19,23 +20,23 @@ export default function VaultInfo(props: VaultInfoProps) {
     return <React.Fragment>
         <Modal.Body>
             <FormGroup>
-                <h5>Request being processed...</h5>
+                <h5>{t("redeem_page.request_processed")}</h5>
                 <p>
-                    Your redeem request is being processed by Vault:
+                    {t("redeem_page.processed_by_vault")}
                     <b> {shortAddress(vaultDotAddress)}</b>
                 </p>
                 <p>
-                    You will receive BTC from the following Bitcoin address:
+                    {t("redeem_page.will_receive_BTC")}
                     <b> {vaultBtcAddress}</b>
                 </p>
                 <p>
-                    We will inform you when your redeem request has been executed.
+                    {t("redeem_page.we_will_inform_you")}
                 </p>
             </FormGroup>
         </Modal.Body>
         <Modal.Footer>
             <button className="btn btn-primary float-right" onClick={onConfirm}>
-                Finish
+                {t("redeem_page.finish")}
             </button>
         </Modal.Footer>
     </React.Fragment>

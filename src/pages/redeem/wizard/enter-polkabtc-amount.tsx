@@ -14,12 +14,15 @@ import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat, satToBTC } from "@interlay/polkabtc";
 import { encodeBitcoinAddress } from "../../../common/utils/utils";
 import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
+import { useTranslation } from 'react-i18next';
+
 
 type EnterPolkaBTCForm = {
     amountPolkaBTC: string;
 };
 
 export default function EnterPolkaBTCAmount() {
+    const { t } = useTranslation();
     const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
@@ -75,9 +78,9 @@ export default function EnterPolkaBTCAmount() {
     return (
         <form onSubmit={onSubmit}>
             <Modal.Body>
-                <p>Please enter the amount of PolkaBTC you want to receive in BTC.</p>
-                <p>You have {balancePolkaBTC} PolkaBTC</p>
-                <p>Please enter an amount greater than Bitcoin dust limit({dustValue} BTC).</p>
+                <p>{t("redeem_page.enter_amount_polkabtc")}</p>
+                <p>{t("redeem_page.you_have")} {balancePolkaBTC} PolkaBTC</p>
+                <p>{t("redeem_page.bitcoin_dust_limit")}({dustValue} BTC).</p>
                 <div className="row">
                     <div className="col-12 basic-addon">
                         <div className="input-group">
@@ -89,9 +92,9 @@ export default function EnterPolkaBTCAmount() {
                                     required: true,
                                     validate: (value) =>
                                         value > balancePolkaBTC
-                                            ? "Please enter an amount smaller than your current balance: " + balancePolkaBTC
+                                            ? t("redeem_page.current_balance") + balancePolkaBTC
                                             : value < Number(dustValue) ? 
-                                                "Please enter an amount greater than Bitcoin dust limit" + "(" + dustValue + "BTC)."
+                                                t("redeem_page.amount_greater") + dustValue + "BTC)."
                                                 : undefined,
                                 })}
                             />
@@ -104,7 +107,7 @@ export default function EnterPolkaBTCAmount() {
                         {errors.amountPolkaBTC && (
                             <div className="input-error">
                                 {errors.amountPolkaBTC.type === "required"
-                                    ? "Please enter the amount"
+                                    ? t("redeem_page.please_enter_amount")
                                     : errors.amountPolkaBTC.message}
                             </div>
                         )}
@@ -117,7 +120,7 @@ export default function EnterPolkaBTCAmount() {
                     isPending={isRequestPending}
                     onClick={onSubmit}
                 >
-                    Search Vault
+                    {t("search_vault")}
                 </ButtonMaybePending>
             </Modal.Footer>
         </form>

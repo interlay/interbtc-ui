@@ -15,12 +15,15 @@ import { toast } from "react-toastify";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
 import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 import { FEEDBACK_MODAL_DISPLAY_DELAY_MS } from "../../../constants";
+import { useTranslation } from 'react-i18next';
+
 
 export interface RedeemRequestsProps {
     handleShowFeedbackModal: () => void;
 }
 
 export default function RedeemRequests(props: RedeemRequestsProps) {
+    const { t } = useTranslation();
     const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
     const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
     const transactionListeners = useSelector((state: StoreType) => state.redeem.transactionListeners);
@@ -35,10 +38,10 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
             const id = window.polkaBTC.api.createType("H256", redeemId);
             await window.polkaBTC.redeem.cancel(id);
             dispatch(cancelRedeemRequestAction(redeemId));
-            toast.success("Successfully canceled redeem request.");
+            toast.success(t("redeem_page.successfully_canceled_redeem"));
         } catch (err) {
             console.log(err);
-            toast.error("Error cancelling redeem request.");
+            toast.error(t("redeem_page.error_cancelling_redeem"));
         }
         setCancelPending(cancelPending.splice(cancelPending.indexOf(redeemId), 1));
     };
@@ -64,7 +67,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                         cancelRedeemRequest(request.id);
                     }}
                 >
-                    Cancel
+                    {t("cancel")}
                 </Button>
             );
         } else if (request.completed) {
@@ -157,17 +160,17 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
         <div>
             {redeemRequests && redeemRequests.length > 0 && (
                 <React.Fragment>
-                    <h5>Redeem Requests</h5>
+                    <h5>{t("redeem_page.redeem_requests")}</h5>
                     <Table hover responsive size={"md"}>
                         <thead>
                             <tr>
-                                <th>Redeem ID</th>
-                                <th>Amount</th>
-                                <th>Parachain Block</th>
-                                <th>Output BTC Address</th>
-                                <th>BTC Transaction</th>
-                                <th>Confirmations</th>
-                                <th>Completed</th>
+                                <th>{t("redeem_page.redeem_id")}</th>
+                                <th>{t("redeem_page.amount")}</th>
+                                <th>{t("redeem_page.parachainblock")}</th>
+                                <th>{t("redeem_page.output_BTC_address")}</th>
+                                <th>{t("redeem_page.BTC_transaction")}</th>
+                                <th>{t("redeem_page.confirmations")}</th>
+                                <th>{t("redeem_page.completed")}</th>
                             </tr>
                         </thead>
                         <tbody>
