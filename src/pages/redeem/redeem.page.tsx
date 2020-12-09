@@ -16,9 +16,11 @@ import Balances from "../../common/components/balances";
 import { toast } from "react-toastify";
 import * as constants from "../../constants";
 import i18n from "i18next";
+import { useTranslation } from 'react-i18next';
 
 
 export default function RedeemPage(): JSX.Element {
+    const { t } = useTranslation();
     const { balancePolkaBTC, balanceDOT, address, extensions, hasFeedbackModalBeenDisplayed, btcRelayHeight,
         bitcoinHeight, stateOfBTCParachain } = useSelector((state: StoreType) => state.general);
     const dispatch = useDispatch();
@@ -32,11 +34,11 @@ export default function RedeemPage(): JSX.Element {
 
     const openWizard = () => {
         if (stateOfBTCParachain === ParachainStatus.Error) {
-            toast.error(i18n.t("error_in_parachain_redeem"));
+            toast.error(i18n.t("redeem_page.error_in_parachain"));
             return;
         }
         if (bitcoinHeight-btcRelayHeight>constants.BLOCKS_BEHIND_LIMIT) {
-            toast.error(i18n.t("error_more_than_6_blocks_behind_redeem"));
+            toast.error(i18n.t("redeem_page.error_more_than_6_blocks_behind"));
             return;
         }
         if(address && extensions.length) {
@@ -74,12 +76,12 @@ export default function RedeemPage(): JSX.Element {
                         
                             <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
                                 <Button variant="outline-bitcoin" size="lg" block onClick={openWizard} disabled={balancePolkaBTC === '0' }>
-                                    Redeem PolkaBTC
+                                    {t("redeem_page.redeem_polkaBTC")}
                             </Button>
                             </Col>
                             {balancePolkaBTC === '0' &&
                                 <Col className="mt-2" xs="12" sm={{ span: 6, offset: 3 }}>
-                                    <p>You don't have any PolkaBTC to redeem.</p>
+                                    <p>{t("redeem_page.no_polkabtc_to_redeem")}</p>
                                 </Col>
                             }
                     </Row>

@@ -168,8 +168,9 @@ export default function IssueRequests(props: IssueRequestProps) {
             toast.success("Succesfully executed issue request: " + request.id);
         } catch (error) {
             toast.error(error.toString());
+        } finally {
+            setExecutePending(executePending.splice(executePending.indexOf(request.id), 1));
         }
-        setExecutePending(executePending.splice(executePending.indexOf(request.id), 1));
     };
 
     const handleCompleted = (request: IssueRequest) => {

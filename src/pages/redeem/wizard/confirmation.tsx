@@ -13,14 +13,14 @@ import { RedeemRequest } from "../../../common/types/redeem.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat } from "@interlay/polkabtc";
 import Big from "big.js";
+import { useTranslation } from 'react-i18next';
+
 
 export default function Confirmation() {
+    const { t } = useTranslation();
     const [isRequestPending, setRequestPending] = useState(false);
-    const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const amountPolkaBTC = useSelector((store: StoreType) => store.redeem.amountPolkaBTC);
-    const vaultAddress = useSelector((store: StoreType) => store.redeem.vaultDotAddress);
-    const btcAddress = useSelector((store: StoreType) => store.redeem.btcAddress);
+    const { balancePolkaBTC, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+    const { amountPolkaBTC, vaultDotAddress, btcAddress } = useSelector((store: StoreType) => store.redeem);
     const dispatch = useDispatch();
 
     const onConfirm = async () => {
@@ -35,7 +35,7 @@ export default function Confirmation() {
             }
             const amount = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
 
-            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultAddress);
+            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultDotAddress);
             const requestResult = await window.polkaBTC.redeem.request(amount, btcAddress, vaultAccountId);
 
             // get the redeem id from the request redeem event
@@ -72,20 +72,20 @@ export default function Confirmation() {
         <React.Fragment>
             <Modal.Body>
                 <FormGroup>
-                    <h5>Confirm Redeem Request</h5>
-                    <p>Please verify and confirm your redeem request.</p>
+                    <h5>{t("redeem_page.confirm_redeem")}</h5>
+                    <p>{t("redeem_page.verify_and_confirm")}</p>
                     <Row className="justify-content-md-center">
                         <Col md="auto" className="text-left">
                             <FormGroup>
                                 <ListGroup>
                                     <ListGroupItem>
-                                        Burning: <strong>{amountPolkaBTC} PolkaBTC</strong>
+                                        {t("redeem_page.burning")}: <strong>{amountPolkaBTC} PolkaBTC</strong>
                                     </ListGroupItem>
                                     <ListGroupItem>
-                                        Your Bitcoin address: <strong>{btcAddress}</strong>
+                                        {t("redeem_page.your_btc_address")}: <strong>{btcAddress}</strong>
                                     </ListGroupItem>
                                     <ListGroupItem>
-                                        Receiving: <strong>{amountPolkaBTC} BTC</strong>
+                                        {t("redeem_page.receiving")}: <strong>{amountPolkaBTC} BTC</strong>
                                     </ListGroupItem>
                                 </ListGroup>
                             </FormGroup>
@@ -95,14 +95,14 @@ export default function Confirmation() {
             </Modal.Body>
             <Modal.Footer>
                 <button className="btn btn-secondary float-left" onClick={goToPreviousStep}>
-                    Previous
+                    {t("previous")}
                 </button>
                 <ButtonMaybePending
                     className="btn btn-primary float-right"
                     isPending={isRequestPending}
                     onClick={onConfirm}
                 >
-                    Confirm
+                    {t("confirm")}
                 </ButtonMaybePending>
             </Modal.Footer>
         </React.Fragment>
