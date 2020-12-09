@@ -110,7 +110,7 @@ export default function EnterBTCAmount() {
                         {errors.amountBTC && (
                             <div className="input-error">
                                 {errors.amountBTC.type === "required"
-                                    ? "Please enter a valid amount"
+                                    ? t("issue_page.enter_valid_amount")
                                     : errors.amountBTC.message}
                             </div>
                         )}

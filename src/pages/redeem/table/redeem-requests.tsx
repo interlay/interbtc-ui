@@ -38,7 +38,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
             const id = window.polkaBTC.api.createType("H256", redeemId);
             await window.polkaBTC.redeem.cancel(id);
             dispatch(cancelRedeemRequestAction(redeemId));
-            toast.success(t("redeem_page.successfully_canceled_redeem"));
+            toast.success(t("redeem_page.successfully_cancelled_redeem"));
         } catch (err) {
             console.log(err);
             toast.error(t("redeem_page.error_cancelling_redeem"));

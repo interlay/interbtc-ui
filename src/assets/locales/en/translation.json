@@ -27,7 +27,7 @@
         "will_receive_BTC": "You will receive BTC from the following Bitcoin address:",
         "we_will_inform_you": "We will inform you when your redeem request has been executed.",
         "finish": "Finish",
-        "successfully_canceled_redeem": "Successfully canceled redeem request.",
+        "successfully_cancelled_redeem": "Successfully cancelled redeem request.",
         "error_cancelling_redeem": "Error cancelling redeem request.",
         "redeem_requests": "Redeem Requests",
         "redeem_id": "Redeem ID",
@@ -46,6 +46,7 @@
         "enter-polkabtc-amount-desc-2": "This is the amount of BTC you will need to lock on Bitcoin.",
         "enter-polkabtc-amount-desc-3": "Please enter an amount greater than Bitcoin dust limit",
         "validation_max_value": "The maximum amount you can issue (per request) during the alpha testnet is 1.0 PolkaBTC. Please enter a lower amount.",
-        "validation_min_value": "Please enter an amount greater than Bitcoin dust limit"
+        "validation_min_value": "Please enter an amount greater than Bitcoin dust limit",
+        "enter_valid_amount": "Please enter a valid amount"
     }
 }
