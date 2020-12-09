@@ -28,11 +28,11 @@ export default function IssuePage(): JSX.Element {
 
     const openWizard = () => {
         if (stateOfBTCParachain === ParachainStatus.Error) {
-            toast.error(i18n.t("error_in_parachain"));
+            toast.error(i18n.t("error_in_parachain_issue"));
             return;
         }
         if (bitcoinHeight-btcRelayHeight>constants.BLOCKS_BEHIND_LIMIT) {
-            toast.error(i18n.t("error_more_than_6_blocks_behind"));
+            toast.error(i18n.t("error_more_than_6_blocks_behind_issue"));
             return;
         }
         if (extensions.length && address) {
