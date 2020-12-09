@@ -2,7 +2,7 @@ import {
     IS_POLKA_BTC_LOADED,
     IS_STAKED_RELAYER_LOADED,
     IS_VAULT_CLIENT_LOADED,
-    SET_TOTAL_ISSUED_AND_TOTAL_LOCKED,
+    INIT_GENERAL_DATA_ACTION,
     CHANGE_ADDRESS,
     INIT_STATE,
     UPDATE_BALANCE_DOT,
@@ -13,7 +13,7 @@ import {
     SHOW_ACCOUNT_MODAL,
     UPDATE_ACCOUNTS,
 } from "../types/actions.types";
-import { GeneralState } from "../types/util.types";
+import { GeneralState, ParachainStatus } from "../types/util.types";
 
 const initialState = {
     polkaBtcLoaded: false,
@@ -28,6 +28,9 @@ const initialState = {
     balanceDOT: "",
     extensions: [],
     accounts: [],
+    btcRelayHeight: 0,
+    bitcoinHeight: 0,
+    stateOfBTCParachain: ParachainStatus.Shutdown,
 };
 
 export const generalReducer = (state: GeneralState = initialState, action: GeneralActions): GeneralState => {
@@ -47,9 +50,17 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
                 showAccountModal: false,
                 extensions: [],
                 accounts: [],
+                stateOfBTCParachain: ParachainStatus.Shutdown,
             };
-        case SET_TOTAL_ISSUED_AND_TOTAL_LOCKED:
-            return { ...state, totalLockedDOT: action.totalLockedDOT, totalPolkaBTC: action.totalPolkaBTC };
+        case INIT_GENERAL_DATA_ACTION:
+            return {
+                ...state,
+                totalLockedDOT: action.totalLockedDOT,
+                totalPolkaBTC: action.totalPolkaBTC,
+                btcRelayHeight: action.btcRelayHeight,
+                bitcoinHeight: action.bitcoinHeight,
+                stateOfBTCParachain: action.stateOfBTCParachain,
+            };
         case IS_VAULT_CLIENT_LOADED:
             return { ...state, vaultClientLoaded: action.isLoaded };
         case HAS_FEEDBACK_BEEN_DISPLAYED:

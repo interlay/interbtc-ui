@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import RedeemWizard from "./wizard/redeem-wizard";
 import PolkaBTCImg from "../../assets/img/polkabtc/PolkaBTC_black.svg";
 import RedeemRequests from "./table/redeem-requests";
-import { StoreType } from "../../common/types/util.types";
+import { StoreType, ParachainStatus } from "../../common/types/util.types";
 import { resetRedeemWizardAction } from "../../common/actions/redeem.actions";
 import { 
     hasFeedbackModalBeenDisplayedAction, 
@@ -13,15 +13,14 @@ import {
 } from "../../common/actions/general.actions";
 import Feedback from "./feedback/feedback";
 import Balances from "../../common/components/balances";
+import { toast } from "react-toastify";
+import * as constants from "../../constants";
+import i18n from "i18next";
+
 
 export default function RedeemPage(): JSX.Element {
-    const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
-    const balanceDOT = useSelector((state: StoreType) => state.general.balanceDOT);
-    const address = useSelector((state: StoreType) => state.general.address);
-    const extensions = useSelector((state: StoreType) => state.general.extensions);
-    const hasFeedbackModalBeenDisplayed = useSelector(
-        (state: StoreType) => state.general.hasFeedbackModalBeenDisplayed
-    );
+    const { balancePolkaBTC, balanceDOT, address, extensions, hasFeedbackModalBeenDisplayed, btcRelayHeight,
+        bitcoinHeight, stateOfBTCParachain } = useSelector((state: StoreType) => state.general);
     const dispatch = useDispatch();
     const [showWizard, setShowWizard] = useState(false);
     const [showFeedbackModal, setShowFeedbackModal] = useState(false);
@@ -31,7 +30,15 @@ export default function RedeemPage(): JSX.Element {
         setShowWizard(false);
     };
 
-    const handleShowWizard = () => {
+    const openWizard = () => {
+        if (stateOfBTCParachain === ParachainStatus.Error) {
+            toast.error(i18n.t("error_in_parachain_redeem"));
+            return;
+        }
+        if (bitcoinHeight-btcRelayHeight>constants.BLOCKS_BEHIND_LIMIT) {
+            toast.error(i18n.t("error_more_than_6_blocks_behind_redeem"));
+            return;
+        }
         if(address && extensions.length) {
             setShowWizard(true);
         } else {
@@ -66,7 +73,7 @@ export default function RedeemPage(): JSX.Element {
                     <Row className="mt-5 mb-5">
                         
                             <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
-                                <Button variant="outline-bitcoin" size="lg" block onClick={handleShowWizard} disabled={balancePolkaBTC === '0' }>
+                                <Button variant="outline-bitcoin" size="lg" block onClick={openWizard} disabled={balancePolkaBTC === '0' }>
                                     Redeem PolkaBTC
                             </Button>
                             </Col>

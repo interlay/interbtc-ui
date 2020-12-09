@@ -1,0 +1,6 @@
+{
+    "error_in_parachain_issue": "You can't issue PolkaBTC at the moment because the Parachain has encountered errors and recovering.",
+    "error_more_than_6_blocks_behind_issue": "You can't issue PolkaBTC at the moment because PolkaBTC parachain is more than 6 blocks behind.",
+    "error_in_parachain_redeem": "You can't redeem PolkaBTC at the moment because the Parachain has encountered errors and recovering.",
+    "error_more_than_6_blocks_behind_redeem": "You can't redeem PolkaBTC at the moment because PolkaBTC parachain is more than 6 blocks behind."
+}
