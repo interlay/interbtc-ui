@@ -26,7 +26,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
     const { t } = useTranslation();
     const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
     const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
-    const transactionListeners = useSelector((state: StoreType) => state.redeem.transactionListeners);
+    const { transactionListeners, fee }= useSelector((state: StoreType) => state.redeem);
     const [isRedeemExpirationSubscribed, setIsRedeemExpirationSubscribed] = useState(false);
     const [cancelPending, setCancelPending] = useState([""]);
     const dispatch = useDispatch();
@@ -182,7 +182,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                                         <tr key={request.id}>
                                             <td>{shortAddress(request.id)}</td>
                                             <td>{request.amountPolkaBTC} BTC</td>
-                                            <td>{0.01} PolkaBTC</td>
+                                            <td>{(Number(request.amountPolkaBTC)/100)*fee} PolkaBTC</td>
                                             <td>{request.creation}</td>
                                             <td>
                                                 <BitcoinAddress btcAddress={request.btcAddress} shorten />
