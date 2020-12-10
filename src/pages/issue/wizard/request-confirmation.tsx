@@ -16,12 +16,7 @@ import { StoreType } from "../../../common/types/util.types";
 export default function RequestConfirmation() {
     const [isRequestPending, setRequestPending] = useState(false);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const amountBTC = useSelector((state: StoreType) => state.issue.amountBTC);
-    const feeBTC = "0";
-    // TODO: fee model
-    // const feeBTC = useSelector((state: StoreType) => state.issue.feeBTC);
-    const vaultAddress = useSelector((store: StoreType) => store.issue.vaultDotAddress);
-    const vaultBTCAddress = useSelector((state: StoreType) => state.issue.vaultBtcAddress);
+    const { amountBTC, fee, vaultDotAddress, vaultBtcAddress } = useSelector((state: StoreType) => state.issue);
     const dispatch = useDispatch();
 
     const onConfirm = async () => {
@@ -35,7 +30,7 @@ export default function RequestConfirmation() {
             }
             const amount = window.polkaBTC.api.createType("Balance", amountSAT) as PolkaBTC;
             // FIXME: use AccountId type from @polkadot/types/interfaces
-            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultAddress);
+            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultDotAddress);
             const requestResult = await window.polkaBTC.issue.request(amount, vaultAccountId);
 
             // get the issue id from the request issue event
@@ -49,7 +44,7 @@ export default function RequestConfirmation() {
                 id,
                 amountBTC: amountBTC,
                 creation: issueRequest.opentime.toString(),
-                vaultBTCAddress,
+                vaultBTCAddress: vaultBtcAddress,
                 btcTxId: "",
                 confirmations: 0,
                 completed: false,
@@ -82,10 +77,13 @@ export default function RequestConfirmation() {
                                 Issuing: <strong>{amountBTC} PolkaBTC</strong>
                             </ListGroupItem>
                             <ListGroupItem>
-                                Vault BTC address: <strong>{vaultBTCAddress}</strong>
+                                Vault BTC address: <strong>{vaultBtcAddress}</strong>
                             </ListGroupItem>
                             <ListGroupItem>
-                                Fees: <strong>{feeBTC} BTC</strong>
+                                Fees: <strong>{Number(amountBTC)/100*fee} BTC</strong>
+                            </ListGroupItem>
+                            <ListGroupItem>
+                                Total: <strong>{Number(amountBTC)/100*fee + Number(amountBTC)} BTC</strong>
                             </ListGroupItem>
                         </ListGroup>
                     </FormGroup>

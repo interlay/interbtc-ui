@@ -4,6 +4,7 @@ import {
     UPDATE_BTC_ADDRESS,
     UPDATE_COLLATERAL,
     UPDATE_LOCKED_BTC,
+    UPDATE_SLA,
     VaultActions,
 } from "../types/actions.types";
 import { VaultState } from "../types/vault.types";
@@ -14,6 +15,7 @@ const initialState = {
     collateralization: 0,
     collateral: "",
     lockedBTC: "",
+    sla: 0,
 };
 
 export const vaultReducer = (state: VaultState = initialState, action: VaultActions): VaultState => {
@@ -28,6 +30,8 @@ export const vaultReducer = (state: VaultState = initialState, action: VaultActi
             return { ...state, collateral: action.collateral };
         case UPDATE_LOCKED_BTC:
             return { ...state, lockedBTC: action.lockedBTC };
+        case UPDATE_SLA:
+            return { ...state, sla: action.sla };
         default:
             return state;
     }

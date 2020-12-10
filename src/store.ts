@@ -38,7 +38,7 @@ export const getInitialState = (): StoreType => {
             address: "",
             step: "ENTER_BTC_AMOUNT",
             amountBTC: "",
-            feeBTC: "0",
+            fee: 0,
             vaultBtcAddress: "",
             vaultDotAddress: "",
             id: "",
@@ -49,6 +49,7 @@ export const getInitialState = (): StoreType => {
             vaultIssues: [],
         },
         redeem: {
+            fee: 0,
             address: "",
             step: "ENTER_POLKABTC",
             amountPolkaBTC: "",
@@ -66,6 +67,7 @@ export const getInitialState = (): StoreType => {
             collateralization: undefined,
             collateral: "",
             lockedBTC: "",
+            sla: 0,
         },
     };
     return emptyStore;

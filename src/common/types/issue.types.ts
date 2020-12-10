@@ -29,7 +29,7 @@ export interface IssueState {
     address: string;
     step: string;
     amountBTC: string;
-    feeBTC: string;
+    fee: number;
     vaultDotAddress: string;
     vaultBtcAddress: string;
     id: string;

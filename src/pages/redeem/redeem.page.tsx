@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Image, Button, Col, Row, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,7 +6,7 @@ import RedeemWizard from "./wizard/redeem-wizard";
 import PolkaBTCImg from "../../assets/img/polkabtc/PolkaBTC_black.svg";
 import RedeemRequests from "./table/redeem-requests";
 import { StoreType, ParachainStatus } from "../../common/types/util.types";
-import { resetRedeemWizardAction } from "../../common/actions/redeem.actions";
+import { resetRedeemWizardAction, updateRedeemFeeAction } from "../../common/actions/redeem.actions";
 import { 
     hasFeedbackModalBeenDisplayedAction, 
     showAccountModalAction
@@ -26,6 +26,11 @@ export default function RedeemPage(): JSX.Element {
     const dispatch = useDispatch();
     const [showWizard, setShowWizard] = useState(false);
     const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+
+    useEffect(() => {
+        // FILIP: ADD CALL TO FETCH REDEEM FEE IN PERCENTAGE
+        dispatch(updateRedeemFeeAction(0.5));
+    })
 
     const handleCloseWizard = () => {
         dispatch(resetRedeemWizardAction());

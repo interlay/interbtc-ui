@@ -7,7 +7,7 @@ import {
     CHANGE_ISSUE_ID,
     CHANGE_BTC_TX_ID,
     CHANGE_AMOUNT_BTC,
-    CHANGE_FEE_BTC,
+    UPDATE_ISSUE_FEE,
     ADD_ISSUE_REQUEST,
     UPDATE_ISSUE_REQUEST,
     ADD_TRANSACTION_LISTENER_ISSUE,
@@ -23,7 +23,7 @@ import {
     ChangeIssueId,
     ChangeAmountBtc,
     ChangeBtcTxId,
-    ChangeFeeBtc,
+    UpdateIssueFee,
     AddIssueRequest,
     UpdateIssueRequest,
     AddTransactionListenerIssue,
@@ -42,8 +42,8 @@ export const changeAmountBTCAction = (amount: string): ChangeAmountBtc => ({
     amount,
 });
 
-export const changeFeeBTCAction = (fee: string): ChangeFeeBtc => ({
-    type: CHANGE_FEE_BTC,
+export const updateIssueFeeAction = (fee: number): UpdateIssueFee => ({
+    type: UPDATE_ISSUE_FEE,
     fee,
 });
 

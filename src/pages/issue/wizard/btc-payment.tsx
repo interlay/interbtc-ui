@@ -7,18 +7,13 @@ import { changeIssueStepAction } from "../../../common/actions/issue.actions";
 import { btcToSat, satToMBTC } from "@interlay/polkabtc";
 
 export default function BTCPayment() {
-    const issueId = useSelector((state: StoreType) => state.issue.id);
-    // FIXME: returns an empty string when loaded again
-    const amountBTC = useSelector((state: StoreType) => state.issue.amountBTC);
-    const feeBTC = useSelector((state: StoreType) => state.issue.feeBTC);
-
-    const isEditMode = useSelector((state: StoreType) => state.issue.wizardInEditMode);
+    const { id, amountBTC, fee, wizardInEditMode } = useSelector((state: StoreType) => state.issue);
 
     // FIXME: add once fee model is there
-    const amountBTCwithFee = amountBTC;
+    const amountBTCwithFee = Number(amountBTC) + Number(amountBTC)/100*fee;
     let amountMBTCwithFee = "";
     try {
-        const amountSATwithFee = btcToSat(amountBTCwithFee);
+        const amountSATwithFee = btcToSat(amountBTCwithFee.toString());
         amountMBTCwithFee = satToMBTC(amountSATwithFee ? amountSATwithFee : "");
     } catch (err) {
         console.log(err);
@@ -27,7 +22,7 @@ export default function BTCPayment() {
     const vaultBTCAddress = useSelector((state: StoreType) => state.issue.vaultBtcAddress);
     const dispatch = useDispatch();
 
-    const electrumPaytoField = vaultBTCAddress + ", " + amountMBTCwithFee + "\nOP_RETURN " + issueId + ", 0";
+    const electrumPaytoField = vaultBTCAddress + ", " + amountMBTCwithFee + "\nOP_RETURN " + id + ", 0";
 
     const goToPreviousStep = () => {
         dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
@@ -43,7 +38,7 @@ export default function BTCPayment() {
                 <FormGroup>
                     <h5>Confirmation and Payment</h5>
                     <p>
-                        You have requested to mint {amountBTC} PolkaBTC, incurring a fee of {feeBTC} BTC.
+                        You have requested to mint {amountBTC} PolkaBTC, incurring a fee of {Number(amountBTC)/100*fee} BTC.
                     </p>
                     <p>
                         Please make the following Bitcoin payment as shown below{" "}
@@ -71,10 +66,10 @@ export default function BTCPayment() {
                         <ListGroup>
                             <ListGroupItem>Output 2</ListGroupItem>
                             <ListGroupItem>
-                                OP_RETURN: <strong> {issueId} </strong>
+                                OP_RETURN: <strong> {id} </strong>
                             </ListGroupItem>
                             <ListGroupItem>
-                                Amount: <strong>0 BTC (0 mBTC)</strong>
+                                Amount: <strong>{amountBTCwithFee} BTC ({amountMBTCwithFee} mBTC)</strong>
                             </ListGroupItem>
                         </ListGroup>
                     </FormGroup>
@@ -97,7 +92,7 @@ export default function BTCPayment() {
                 </FormGroup>
             </Modal.Body>
             <Modal.Footer>
-                {!isEditMode && (
+                {!wizardInEditMode && (
                     <button className="btn btn-secondary float-left" onClick={goToPreviousStep}>
                         Previous
                     </button>

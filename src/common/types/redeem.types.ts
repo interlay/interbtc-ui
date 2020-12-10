@@ -21,6 +21,7 @@ export interface RedeemState {
     redeemRequests: Map<string, RedeemRequest[]>;
     transactionListeners: string[];
     vaultRedeems: VaultRedeem[];
+    fee: number;
 }
 
 export interface VaultRedeem {

@@ -24,7 +24,6 @@ export default function EnterBTCAmount() {
     const { t } = useTranslation();
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const amount = useSelector((state: StoreType) => state.issue.amountBTC);
-    // const feeBTC = useSelector((state: StoreType) => state.issue.feeBTC);
     const defaultValues = amount ? { defaultValues: { amountBTC: amount } } : undefined;
     const { register, handleSubmit, errors } = useForm<EnterBTCForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
@@ -53,8 +52,6 @@ export default function EnterBTCAmount() {
                 throw new Error("Input value is too high");
             }
             dispatch(changeAmountBTCAction(amountBTC));
-            // FIXME: hardcoded until we have a fee model
-            // dispatch(changeFeeBTCAction(amountBTC * 0.005));
 
             const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountSAT);
 

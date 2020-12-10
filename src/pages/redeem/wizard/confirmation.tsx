@@ -20,7 +20,7 @@ export default function Confirmation() {
     const { t } = useTranslation();
     const [isRequestPending, setRequestPending] = useState(false);
     const { balancePolkaBTC, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
-    const { amountPolkaBTC, vaultDotAddress, btcAddress } = useSelector((store: StoreType) => store.redeem);
+    const { amountPolkaBTC, vaultDotAddress, btcAddress, fee } = useSelector((store: StoreType) => store.redeem);
     const dispatch = useDispatch();
 
     const onConfirm = async () => {
@@ -85,7 +85,10 @@ export default function Confirmation() {
                                         {t("redeem_page.your_btc_address")}: <strong>{btcAddress}</strong>
                                     </ListGroupItem>
                                     <ListGroupItem>
-                                        {t("redeem_page.receiving")}: <strong>{amountPolkaBTC} BTC</strong>
+                                        {t("fee")}: <strong>{fee}</strong>
+                                    </ListGroupItem>
+                                    <ListGroupItem>
+                                        {t("redeem_page.receiving")}: <strong>{Number(amountPolkaBTC)-fee} BTC</strong>
                                     </ListGroupItem>
                                 </ListGroup>
                             </FormGroup>

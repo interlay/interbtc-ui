@@ -15,6 +15,7 @@ import {
     updateCollateralizationAction,
     updateCollateralAction,
     updateLockedBTCAction,
+    updateSLAAction
 } from "../../common/actions/vault.actions";
 import "./vault-dashboard.page.scss";
 import { encodeBitcoinAddress } from "../../common/utils/utils";
@@ -26,12 +27,8 @@ export default function VaultDashboardPage() {
     const [showUpdateCollateralModal, setShowUpdateCollateralModal] = useState(false);
     const [showUpdateBTCAddressModal, setShowUpdateBTCAddressModal] = useState(false);
     const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const vaultClientLoaded = useSelector((state: StoreType) => state.general.vaultClientLoaded);
-    const btcAddress = useSelector((state: StoreType) => state.vault.btcAddress);
-    const collateralization = useSelector((state: StoreType) => state.vault.collateralization);
-    const collateral = useSelector((state: StoreType) => state.vault.collateral);
-    const lockedBTC = useSelector((state: StoreType) => state.vault.lockedBTC);
+    const { vaultClientLoaded, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+    const {btcAddress, collateralization, collateral, lockedBTC, sla} = useSelector((state: StoreType) => state.vault);
     const [capacity, setCapacity] = useState("0");
     const [feesEarned] = useState("0");
     const [vaultId, setVaultId] = useState("0");
@@ -72,6 +69,9 @@ export default function VaultDashboardPage() {
                 const collateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId);
                 dispatch(updateCollateralizationAction(collateralization));
 
+                // FILIP: ADD CALL TO FETCH VAULT SLA
+                dispatch(updateSLAAction(10));
+
                 const issuablePolkaBTC = await window.polkaBTC.vaults.getIssuablePolkaBTC();
                 setCapacity(issuablePolkaBTC);
             } catch (err) {
@@ -97,16 +97,16 @@ export default function VaultDashboardPage() {
                 {vaultId === accountId && (
                     <React.Fragment>
                         <div className="col-lg-10 offset-1">
-                            <div className="row">
-                                <div className="col-md-3">
+                            <div className="row mt-3">
+                                <div className="col-lg-3 col-md-6 col-6">
                                     <div className="">Locked collateral</div>
                                     <span className="stats">{collateral}</span> DOT
                                 </div>
-                                <div className="col-md-2">
+                                <div className="col-lg-3 col-md-6 col-6">
                                     <div className="">Locked BTC</div>
                                     <span className="stats">{lockedBTC}</span> BTC
                                 </div>
-                                <div className="col-md-2">
+                                <div className="col-lg-3 col-md-6 col-6">
                                     <div className="">Collateralization</div>
                                     <span className="stats">
                                         {collateralization === undefined || isNaN(collateralization)
@@ -114,13 +114,19 @@ export default function VaultDashboardPage() {
                                             : `${roundTwoDecimals((collateralization * 100).toString())}%`}
                                     </span>
                                 </div>
-                                <div className="col-md-2">
+                                <div className="col-lg-3 col-md-6 col-6">
                                     <div className="">Capacity</div>
                                     <span className="stats">~{roundTwoDecimals(capacity)}</span> PolkaBTC
                                 </div>
+                            </div>
+                            <div className="row justify-content-center mt-4">
                                 <div className="col-md-3">
                                     <div className="">Earned fees</div>
                                     <span className="stats">{feesEarned}</span> PolkaBTC
+                                </div>
+                                <div className="col-md-3">
+                                    <div className="">SLA score</div>
+                                    <span className="stats">{sla}</span>
                                 </div>
                             </div>
                         </div>
