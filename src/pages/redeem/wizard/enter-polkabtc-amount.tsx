@@ -7,6 +7,7 @@ import {
     changeAmountPolkaBTCAction,
     changeVaultBtcAddressOnRedeemAction,
     changeVaultDotAddressOnRedeemAction,
+    updateRedeemFeeAction
 } from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
@@ -23,8 +24,7 @@ type EnterPolkaBTCForm = {
 
 export default function EnterPolkaBTCAmount() {
     const { t } = useTranslation();
-    const balancePolkaBTC = useSelector((state: StoreType) => state.general.balancePolkaBTC);
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+    const { balancePolkaBTC, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
     const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
     const defaultValues = amount ? { defaultValues: { amountPolkaBTC: amount } } : undefined;
     const { register, handleSubmit, errors } = useForm<EnterPolkaBTCForm>(defaultValues);
@@ -66,6 +66,10 @@ export default function EnterPolkaBTCAmount() {
             const vault = await window.polkaBTC.vaults.get(vaultId);
             const vaultBTCAddress = encodeBitcoinAddress(vault.wallet.address);
 
+            // FILIP 
+            // window.polkaBTC.redeem.getFeesToPay(amountPolkaBTC)
+            dispatch(updateRedeemFeeAction("0.005"));
+            
             dispatch(changeVaultBtcAddressOnRedeemAction(vaultBTCAddress));
             dispatch(changeVaultDotAddressOnRedeemAction(vaultId.toString()));
             dispatch(changeRedeemStepAction("ENTER_BTC_ADDRESS"));

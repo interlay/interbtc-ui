@@ -1,4 +1,5 @@
 import {
+    UPDATE_REDEEM_FEE,
     CHANGE_AMOUNT_POLKA_BTC,
     CHANGE_REDEEM_STEP,
     CHANGE_BTC_ADDRESS,
@@ -14,6 +15,7 @@ import {
     UPDATE_ALL_REDEEM_REQUESTS,
     CANCEL_REDEEM_REQUEST,
     REDEEM_EXPIRED,
+    UpdateRedeemFee,
     UpdateAllRedeemRequests,
     ChangeRedeemStep,
     ChangeAmountPolkaBtc,
@@ -104,4 +106,9 @@ export const redeemExpiredAction = (request: RedeemRequest): RedeemExpired => ({
 export const cancelRedeemRequestAction = (id: string): CancelRedeemRequest => ({
     type: CANCEL_REDEEM_REQUEST,
     id,
+});
+
+export const updateRedeemFeeAction = (fee: string): UpdateRedeemFee => ({
+    type: UPDATE_REDEEM_FEE,
+    fee,
 });

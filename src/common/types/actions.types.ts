@@ -109,11 +109,17 @@ export const RESET_REDEEM_WIZARD = "RESET_REDEEM_WIZARD";
 export const STORE_REDEEM_REQUEST = "STORE_REDEEM_REQUEST";
 export const ADD_REDEEM_REQUEST = "ADD_REDEEM_REQUEST";
 export const ADD_VAULT_REDEEMS = "ADD_VAULT_REDEEMS";
+export const UPDATE_REDEEM_FEE = "UPDATE_REDEEM_FEE";
 export const ADD_TRANSACTION_LISTENER_REDEEM = "ADD_TRANSACTION_LISTENER_REDEEM";
 export const UPDATE_REDEEM_REQUEST = "UPDATE_REDEEM_REQUEST";
 export const UPDATE_ALL_REDEEM_REQUESTS = "UPDATE_ALL_REDEEM_REQUESTS";
 export const CANCEL_REDEEM_REQUEST = "CANCEL_REDEEM_REQUEST";
 export const REDEEM_EXPIRED = "REDEEM_EXPIRED";
+
+export interface UpdateRedeemFee {
+    type: typeof UPDATE_REDEEM_FEE;
+    fee: string;
+}
 
 export interface ChangeVaultBtcAddressOnRedeem {
     type: typeof CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM;
@@ -212,7 +218,8 @@ export type RedeemActions =
     | UpdateRedeemRequest
     | UpdateAllRedeemRequests
     | CancelRedeemRequest
-    | RedeemExpired;
+    | RedeemExpired
+    | UpdateRedeemFee;
 
 // ISSUE
 
@@ -220,7 +227,7 @@ export const CHANGE_VAULT_BTC_ADDRESS_ON_ISSUE = "CHANGE_VAULT_BTC_ADDRESS_ON_IS
 export const CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE = "CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE";
 export const CHANGE_ISSUE_STEP = "CHANGE_ISSUE_STEP";
 export const CHANGE_AMOUNT_BTC = "CHANGE_AMOUNT_BTC";
-export const CHANGE_FEE_BTC = "CHANGE_FEE_BTC";
+export const UPDATE_ISSUE_FEE = "UPDATE_ISSUE_FEE";
 export const CHANGE_ISSUE_ID = "CHANGE_ISSUE_ID";
 export const RESET_ISSUE_WIZARD = "RESET_ISSUE_WIZARD";
 export const STORE_ISSUE_REQUEST = "STORE_ISSUE_REQUEST";
@@ -257,8 +264,8 @@ export interface ChangeAmountBtc {
     amount: string;
 }
 
-export interface ChangeFeeBtc {
-    type: typeof CHANGE_FEE_BTC;
+export interface UpdateIssueFee {
+    type: typeof UPDATE_ISSUE_FEE;
     fee: string;
 }
 
@@ -308,7 +315,7 @@ export interface UpdateAllIssueRequests {
 export type IssueActions =
     | ChangeIssueStep
     | ChangeAmountBtc
-    | ChangeFeeBtc
+    | UpdateIssueFee
     | ChangeVaultBtcAddressOnIssue
     | ChangeVaultDotAddressOnIssue
     | ChangeIssueId
@@ -331,6 +338,7 @@ export const UPDATE_BTC_ADDRESS = "UPDATE_BTC_ADDRESS";
 export const UPDATE_COLLATERALIZATION = "UPDATE_COLLATERALIZATION";
 export const UPDATE_COLLATERAL = "UPDATE_COLLATERAL";
 export const UPDATE_LOCKED_BTC = "UPDATE_LOCKED_BTC";
+export const UPDATE_SLA = "UPDATE_SLA";
 
 export interface AddReplaceRequests {
     type: typeof ADD_REPLACE_REQUESTS;
@@ -357,9 +365,15 @@ export interface UpdateLockedBTC {
     lockedBTC: string;
 }
 
+export interface UpdateSLA {
+    type: typeof UPDATE_SLA;
+    sla: number;
+}
+
 export type VaultActions =
     | AddReplaceRequests
     | UpdateBTCAddress
     | UpdateCollateralization
     | UpdateCollateral
-    | UpdateLockedBTC;
+    | UpdateLockedBTC
+    | UpdateSLA;
