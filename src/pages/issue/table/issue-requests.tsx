@@ -32,7 +32,7 @@ type IssueRequestProps = {
 export default function IssueRequests(props: IssueRequestProps) {
     const { address, balancePolkaBTC, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
     const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
-    const transactionListeners = useSelector((state: StoreType) => state.issue.transactionListeners);
+    const { transactionListeners } = useSelector((state: StoreType) => state.issue);
     const [executePending, setExecutePending] = useState([""]);
     const [requiredBtcConfirmations, setRequiredBtcConfirmations] = useState(0);
     const [issuePeriod, setIssuePeriod] = useState(new Big(0));
@@ -226,6 +226,7 @@ export default function IssueRequests(props: IssueRequestProps) {
                             <tr>
                                 <th>Issue ID</th>
                                 <th>Amount</th>
+                                <th>Fee</th>
                                 <th>Parachain Block</th>
                                 <th>Vault BTC Address</th>
                                 <th>BTC Transaction</th>
@@ -239,6 +240,7 @@ export default function IssueRequests(props: IssueRequestProps) {
                                     <tr key={index} onClick={() => requestClicked(request)}>
                                         <td>{shortAddress(request.id)}</td>
                                         <td>{request.amountBTC} PolkaBTC</td>
+                                        <td>{request.fee} PolkaBTC</td>
                                         <td>{request.creation === "0" ? "Pending..." : request.creation}</td>
                                         <td>
                                             <BitcoinAddress btcAddress={request.vaultBTCAddress} shorten />

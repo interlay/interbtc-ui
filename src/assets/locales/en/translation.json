@@ -4,6 +4,7 @@
     "next": "Next",
     "search_vault": "Search Vault",
     "cancel": "Cancel",
+    "fee": "Fee",
     "redeem_page": {
         "error_in_parachain": "You can't redeem PolkaBTC at the moment because the Parachain has encountered errors and recovering.",
         "error_more_than_6_blocks_behind": "You can't redeem PolkaBTC at the moment because PolkaBTC parachain is more than 6 blocks behind.",

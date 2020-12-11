@@ -26,7 +26,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
     const { t } = useTranslation();
     const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
     const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
-    const transactionListeners = useSelector((state: StoreType) => state.redeem.transactionListeners);
+    const { transactionListeners }= useSelector((state: StoreType) => state.redeem);
     const [isRedeemExpirationSubscribed, setIsRedeemExpirationSubscribed] = useState(false);
     const [cancelPending, setCancelPending] = useState([""]);
     const dispatch = useDispatch();
@@ -120,6 +120,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                     allRequests.push(parachainToUIRedeemRequest(key, value));
                 }
 
+
                 // get btc data for each redeem request
                 await Promise.all(
                     allRequests.map(async (request) => {
@@ -166,6 +167,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                             <tr>
                                 <th>{t("redeem_page.redeem_id")}</th>
                                 <th>{t("redeem_page.amount")}</th>
+                                <th>{t("fee")}</th>
                                 <th>{t("redeem_page.parachainblock")}</th>
                                 <th>{t("redeem_page.output_BTC_address")}</th>
                                 <th>{t("redeem_page.BTC_transaction")}</th>
@@ -180,6 +182,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                                         <tr key={request.id}>
                                             <td>{shortAddress(request.id)}</td>
                                             <td>{request.amountPolkaBTC} BTC</td>
+                                            <td>{request.fee} PolkaBTC</td>
                                             <td>{request.creation}</td>
                                             <td>
                                                 <BitcoinAddress btcAddress={request.btcAddress} shorten />

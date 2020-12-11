@@ -18,20 +18,19 @@ export default function StakedRelayerPage() {
     const [showReportModal, setShowReportModal] = useState(false);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [isDeregisterPending, setDeregisterPending] = useState(false);
-    const relayerNotRegisteredToastId = "relayer-not-registered-id";
-
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
-
     const [feesEarned, setFees] = useState("0");
-    // store this in both DOT and Planck
     const [dotLocked, setDotLocked] = useState("0");
     const [planckLocked, setPlanckLocked] = useState("0");
     const [stakedRelayerAddress, setStakedRelayerAddress] = useState("");
     const [relayerRegistered, setRelayerRegistered] = useState(false);
     const [relayerInactive, setRelayerInactive] = useState(false);
+    const [sla, setSLA] = useState(0);
+    const relayerNotRegisteredToastId = "relayer-not-registered-id";
+    const { polkaBtcLoaded, relayerLoaded } = useSelector((state: StoreType) => state.general);
+
 
     const handleReportModalClose = () => setShowReportModal(false);
+    
     const handleRegisterModalClose = () => setShowRegisterModal(false);
 
     const deregisterStakedRelayer = async () => {
@@ -53,6 +52,10 @@ export default function StakedRelayerPage() {
             if (!polkaBtcLoaded || !relayerLoaded) return;
 
             try {
+                // FILIP: ADD CALL TO FETCH RELAYER SLA
+                // const slaT = await window.polkaBTC.vaults.getVaultCollateralization(vaultId);
+                setSLA(10);
+
                 const address = await window.relayer.getAccountId();
                 const stakedRelayerId = window.polkaBTC.api.createType("AccountId", address);
                 const feesEarned = await window.polkaBTC.stakedRelayer.getFeesEarned(stakedRelayerId);
@@ -106,14 +109,18 @@ export default function StakedRelayerPage() {
                         </Button>
                         :
                         <div className="col-lg-10 offset-1">
-                            <div className="row">
-                                <div className="col-md-3 offset-md-3">
+                            <div className="row justify-content-center">
+                                <div className="col-3">
                                     <div>Stake locked</div>
                                     <span className="stats">{dotLocked}</span> DOT
                                 </div>
                                 <div className="col-3">
                                     <div>Fees earned</div>
                                     <span className="stats">{feesEarned}</span> DOT
+                                </div>
+                                <div className="col-3">
+                                    <div>SLA score</div>
+                                    <span className="stats">{sla}</span>
                                 </div>
                             </div>
                         </div>

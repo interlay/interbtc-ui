@@ -7,6 +7,7 @@ import {
     changeIssueStepAction,
     changeVaultBtcAddressOnIssueAction,
     changeVaultDotAddressOnIssueAction,
+    updateIssueFeeAction,
 } from "../../../common/actions/issue.actions";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
@@ -24,7 +25,6 @@ export default function EnterBTCAmount() {
     const { t } = useTranslation();
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const amount = useSelector((state: StoreType) => state.issue.amountBTC);
-    // const feeBTC = useSelector((state: StoreType) => state.issue.feeBTC);
     const defaultValues = amount ? { defaultValues: { amountBTC: amount } } : undefined;
     const { register, handleSubmit, errors } = useForm<EnterBTCForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
@@ -53,8 +53,6 @@ export default function EnterBTCAmount() {
                 throw new Error("Input value is too high");
             }
             dispatch(changeAmountBTCAction(amountBTC));
-            // FIXME: hardcoded until we have a fee model
-            // dispatch(changeFeeBTCAction(amountBTC * 0.005));
 
             const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountSAT);
 
@@ -63,6 +61,11 @@ export default function EnterBTCAmount() {
             // get the vault's data
             const vault = await window.polkaBTC.vaults.get(vaultId);
             const vaultBTCAddress = encodeBitcoinAddress(vault.wallet.address);
+
+            // FILIP 
+            // window.polkaBTC.issue.getFeesToPay(amountBTC)
+            dispatch(updateIssueFeeAction("0.005"));
+
             dispatch(changeVaultBtcAddressOnIssueAction(stripHexPrefix(vaultBTCAddress)));
             dispatch(changeVaultDotAddressOnIssueAction(vaultId.toString()));
             dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
