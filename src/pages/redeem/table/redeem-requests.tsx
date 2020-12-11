@@ -16,6 +16,7 @@ import BitcoinTransaction from "../../../common/components/bitcoin-links/transac
 import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 import { FEEDBACK_MODAL_DISPLAY_DELAY_MS } from "../../../constants";
 import { useTranslation } from 'react-i18next';
+import ReimburseModal from "../reimburse-modal/reimburse-modal";
 
 
 export interface RedeemRequestsProps {
@@ -29,6 +30,8 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
     const transactionListeners = useSelector((state: StoreType) => state.redeem.transactionListeners);
     const [isRedeemExpirationSubscribed, setIsRedeemExpirationSubscribed] = useState(false);
     const [cancelPending, setCancelPending] = useState([""]);
+    const [showReimburseModal, setShowReimburseModal] = useState(false);
+    const [reimburseRequest, setReimburseRequest] = useState<RedeemRequest>();
     const dispatch = useDispatch();
 
     const cancelRedeemRequest = async (redeemId: string): Promise<void> => {
@@ -58,7 +61,31 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
         [redeemRequests, dispatch]
     );
 
+    const closeReimburseModal = () => {
+        setShowReimburseModal(false);
+    }
+
+    const openReimburseModal = (request: RedeemRequest) => {
+        setReimburseRequest(request);
+        setShowReimburseModal(true);
+    }
+
     const handleCompleted = (request: RedeemRequest) => {
+        if (true){//request.cancelled){
+            return <div>
+                <span>
+                {t("cancelled")}
+                </span>
+                <span>
+                    <Button 
+                        onClick={() => openReimburseModal(request)}
+                        className="ml-3" 
+                        variant="outline-dark">
+                            {t("redeem_page.reimburse")}
+                    </Button>
+                </span>
+            </div>
+        }
         if (!request.completed && request.isExpired) {
             return (
                 <Button
@@ -70,7 +97,8 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                     {t("cancel")}
                 </Button>
             );
-        } else if (request.completed) {
+        } else 
+        if (request.completed) {
             setTimeout(props.handleShowFeedbackModal, FEEDBACK_MODAL_DISPLAY_DELAY_MS);
             return <FaCheck></FaCheck>;
         } else {
@@ -196,6 +224,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                     </Table>
                 </React.Fragment>
             )}
+            <ReimburseModal show={showReimburseModal} request={reimburseRequest} onClose={closeReimburseModal}/>
         </div>
     );
 }
