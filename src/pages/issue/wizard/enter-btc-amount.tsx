@@ -7,6 +7,7 @@ import {
     changeIssueStepAction,
     changeVaultBtcAddressOnIssueAction,
     changeVaultDotAddressOnIssueAction,
+    updateIssueFeeAction,
 } from "../../../common/actions/issue.actions";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
@@ -60,6 +61,11 @@ export default function EnterBTCAmount() {
             // get the vault's data
             const vault = await window.polkaBTC.vaults.get(vaultId);
             const vaultBTCAddress = encodeBitcoinAddress(vault.wallet.address);
+
+            // FILIP 
+            // window.polkaBTC.issue.getFeesToPay(amountBTC)
+            dispatch(updateIssueFeeAction("0.005"));
+
             dispatch(changeVaultBtcAddressOnIssueAction(stripHexPrefix(vaultBTCAddress)));
             dispatch(changeVaultDotAddressOnIssueAction(vaultId.toString()));
             dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));

@@ -12,6 +12,8 @@ import {
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { IssueRequest } from "../../../common/types/issue.types";
 import { StoreType } from "../../../common/types/util.types";
+import Big from "big.js";
+
 
 export default function RequestConfirmation() {
     const [isRequestPending, setRequestPending] = useState(false);
@@ -46,6 +48,7 @@ export default function RequestConfirmation() {
                 creation: issueRequest.opentime.toString(),
                 vaultBTCAddress: vaultBtcAddress,
                 btcTxId: "",
+                fee: "0.001", // FILIP ADD FROM RESPONSE 
                 confirmations: 0,
                 completed: false,
                 merkleProof: "",
@@ -80,10 +83,10 @@ export default function RequestConfirmation() {
                                 Vault BTC address: <strong>{vaultBtcAddress}</strong>
                             </ListGroupItem>
                             <ListGroupItem>
-                                Fees: <strong>{Number(amountBTC)/100*fee} BTC</strong>
+                                Fees: <strong>{fee} PolkaBTC</strong>
                             </ListGroupItem>
                             <ListGroupItem>
-                                Total: <strong>{Number(amountBTC)/100*fee + Number(amountBTC)} BTC</strong>
+                                Total: <strong>{new Big(fee).add(new Big(amountBTC)).toString()} BTC</strong>
                             </ListGroupItem>
                         </ListGroup>
                     </FormGroup>

@@ -119,7 +119,7 @@ export default function StakedRelayerPage() {
                                     <span className="stats">{feesEarned}</span> DOT
                                 </div>
                                 <div className="col-3">
-                                    <div>SLA Score</div>
+                                    <div>SLA score</div>
                                     <span className="stats">{sla}</span>
                                 </div>
                             </div>

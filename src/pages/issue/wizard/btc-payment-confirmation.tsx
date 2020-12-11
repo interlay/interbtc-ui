@@ -20,11 +20,10 @@ type BTCTxIdForm = {
 };
 
 export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProps) {
-    const issueId = useSelector((state: StoreType) => state.issue.id);
-    const btcTxId = useSelector((state: StoreType) => state.issue.btcTxId);
-    const { register, handleSubmit, errors } = useForm<BTCTxIdForm>({ defaultValues: { btcTxId } });
+    const { id, btcTxId } = useSelector((state: StoreType) => state.issue);
     const address = useSelector((state: StoreType) => state.general.address);
     const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
+    const { register, handleSubmit, errors } = useForm<BTCTxIdForm>({ defaultValues: { btcTxId } });
     const dispatch = useDispatch();
 
     const onSubmit = handleSubmit(async () => {
@@ -36,7 +35,7 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
         if (name === "btcTxId" && issueRequests) {
             const txId = value;
             dispatch(changeBtcTxIdAction(txId));
-            const request = issueRequests.find((r) => r.id === issueId);
+            const request = issueRequests.find((r) => r.id === id);
             if (request) {
                 request.btcTxId = txId;
 

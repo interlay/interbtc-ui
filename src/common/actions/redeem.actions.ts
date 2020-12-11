@@ -1,5 +1,5 @@
 import {
-    UPDATE_FEE,
+    UPDATE_REDEEM_FEE,
     CHANGE_AMOUNT_POLKA_BTC,
     CHANGE_REDEEM_STEP,
     CHANGE_BTC_ADDRESS,
@@ -15,7 +15,7 @@ import {
     UPDATE_ALL_REDEEM_REQUESTS,
     CANCEL_REDEEM_REQUEST,
     REDEEM_EXPIRED,
-    UpdateFee,
+    UpdateRedeemFee,
     UpdateAllRedeemRequests,
     ChangeRedeemStep,
     ChangeAmountPolkaBtc,
@@ -108,7 +108,7 @@ export const cancelRedeemRequestAction = (id: string): CancelRedeemRequest => ({
     id,
 });
 
-export const updateRedeemFeeAction = (fee: number): UpdateFee => ({
-    type: UPDATE_FEE,
+export const updateRedeemFeeAction = (fee: string): UpdateRedeemFee => ({
+    type: UPDATE_REDEEM_FEE,
     fee,
 });

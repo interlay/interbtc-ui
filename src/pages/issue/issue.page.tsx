@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Image, Button, Col, Row, Modal } from "react-bootstrap";
 
 import PolkaBTCImg from "../../assets/img/polkabtc/PolkaBTC_black.svg";
 import IssueRequests from "./table/issue-requests";
-import { resetIssueWizardAction, updateIssueFeeAction } from "../../common/actions/issue.actions";
+import { resetIssueWizardAction } from "../../common/actions/issue.actions";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType, ParachainStatus } from "../../common/types/util.types";
 import IssueWizard from "./wizard/issue-wizard";
@@ -20,11 +20,6 @@ export default function IssuePage(): JSX.Element {
     const [showWizard, setShowWizard] = useState(false);
     const {extensions, address, balanceDOT, balancePolkaBTC, stateOfBTCParachain,
         bitcoinHeight, btcRelayHeight } = useSelector((state: StoreType) => state.general);
-
-    useEffect(() => {
-        // FILIP: ADD CALL TO FETCH ISSUE FEE IN PERCENTAGE
-        dispatch(updateIssueFeeAction(0.5));
-    })
 
     const handleClose = () => {
         dispatch(resetIssueWizardAction());

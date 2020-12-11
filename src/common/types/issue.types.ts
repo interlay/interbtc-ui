@@ -9,6 +9,7 @@ export interface IssueRequest {
     merkleProof?: string;
     transactionBlockHeight?: number;
     rawTransaction?: Uint8Array;
+    fee: string;
 }
 
 export interface IssueMap {
@@ -29,7 +30,7 @@ export interface IssueState {
     address: string;
     step: string;
     amountBTC: string;
-    fee: number;
+    fee: string;
     vaultDotAddress: string;
     vaultBtcAddress: string;
     id: string;

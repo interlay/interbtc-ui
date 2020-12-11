@@ -42,7 +42,7 @@ export const changeAmountBTCAction = (amount: string): ChangeAmountBtc => ({
     amount,
 });
 
-export const updateIssueFeeAction = (fee: number): UpdateIssueFee => ({
+export const updateIssueFeeAction = (fee: string): UpdateIssueFee => ({
     type: UPDATE_ISSUE_FEE,
     fee,
 });

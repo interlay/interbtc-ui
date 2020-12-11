@@ -23,7 +23,7 @@ const initialState = {
     address: "",
     step: "ENTER_BTC_AMOUNT",
     amountBTC: "",
-    fee: 0,
+    fee: "0",
     vaultBtcAddress: "",
     vaultDotAddress: "",
     id: "",

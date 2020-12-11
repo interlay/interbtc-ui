@@ -5,12 +5,13 @@ import CopyToClipboard from "react-copy-to-clipboard";
 import { StoreType } from "../../../common/types/util.types";
 import { changeIssueStepAction } from "../../../common/actions/issue.actions";
 import { btcToSat, satToMBTC } from "@interlay/polkabtc";
+import Big from "big.js";
+
 
 export default function BTCPayment() {
     const { id, amountBTC, fee, wizardInEditMode } = useSelector((state: StoreType) => state.issue);
 
-    // FIXME: add once fee model is there
-    const amountBTCwithFee = Number(amountBTC) + Number(amountBTC)/100*fee;
+    const amountBTCwithFee = new Big(fee).add(new Big(amountBTC));
     let amountMBTCwithFee = "";
     try {
         const amountSATwithFee = btcToSat(amountBTCwithFee.toString());
@@ -18,7 +19,7 @@ export default function BTCPayment() {
     } catch (err) {
         console.log(err);
     }
-    // FIXME: returns an empty string when loaded again
+
     const vaultBTCAddress = useSelector((state: StoreType) => state.issue.vaultBtcAddress);
     const dispatch = useDispatch();
 
@@ -38,7 +39,7 @@ export default function BTCPayment() {
                 <FormGroup>
                     <h5>Confirmation and Payment</h5>
                     <p>
-                        You have requested to mint {amountBTC} PolkaBTC, incurring a fee of {Number(amountBTC)/100*fee} BTC.
+                        You have requested to mint {amountBTC} PolkaBTC, incurring a fee of {fee} PolkaBTC.
                     </p>
                     <p>
                         Please make the following Bitcoin payment as shown below{" "}
@@ -59,7 +60,7 @@ export default function BTCPayment() {
                             <ListGroupItem>
                                 Amount:{" "}
                                 <strong>
-                                    {amountBTCwithFee} BTC ({amountMBTCwithFee} mBTC)
+                                    {amountBTCwithFee + "BTC (" + amountMBTCwithFee + "mBTC)"}
                                 </strong>
                             </ListGroupItem>
                         </ListGroup>
@@ -69,7 +70,7 @@ export default function BTCPayment() {
                                 OP_RETURN: <strong> {id} </strong>
                             </ListGroupItem>
                             <ListGroupItem>
-                                Amount: <strong>{amountBTCwithFee} BTC ({amountMBTCwithFee} mBTC)</strong>
+                                Amount: <strong>0 BTC (0 mBTC)</strong>
                             </ListGroupItem>
                         </ListGroup>
                     </FormGroup>
@@ -79,8 +80,8 @@ export default function BTCPayment() {
                         <ListGroup>
                             <ListGroupItem>
                                 <strong>
-                                    {electrumPaytoField.split("\n").map((str) => (
-                                        <div>{str}</div>
+                                    {electrumPaytoField.split("\n").map((str, index) => (
+                                        <div key={index}>{str}</div>
                                     ))}
                                 </strong>
                                 <CopyToClipboard text={electrumPaytoField}>

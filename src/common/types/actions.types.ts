@@ -109,16 +109,16 @@ export const RESET_REDEEM_WIZARD = "RESET_REDEEM_WIZARD";
 export const STORE_REDEEM_REQUEST = "STORE_REDEEM_REQUEST";
 export const ADD_REDEEM_REQUEST = "ADD_REDEEM_REQUEST";
 export const ADD_VAULT_REDEEMS = "ADD_VAULT_REDEEMS";
-export const UPDATE_FEE = "UPDATE_FEE";
+export const UPDATE_REDEEM_FEE = "UPDATE_REDEEM_FEE";
 export const ADD_TRANSACTION_LISTENER_REDEEM = "ADD_TRANSACTION_LISTENER_REDEEM";
 export const UPDATE_REDEEM_REQUEST = "UPDATE_REDEEM_REQUEST";
 export const UPDATE_ALL_REDEEM_REQUESTS = "UPDATE_ALL_REDEEM_REQUESTS";
 export const CANCEL_REDEEM_REQUEST = "CANCEL_REDEEM_REQUEST";
 export const REDEEM_EXPIRED = "REDEEM_EXPIRED";
 
-export interface UpdateFee {
-    type: typeof UPDATE_FEE;
-    fee: number;
+export interface UpdateRedeemFee {
+    type: typeof UPDATE_REDEEM_FEE;
+    fee: string;
 }
 
 export interface ChangeVaultBtcAddressOnRedeem {
@@ -219,7 +219,7 @@ export type RedeemActions =
     | UpdateAllRedeemRequests
     | CancelRedeemRequest
     | RedeemExpired
-    | UpdateFee;
+    | UpdateRedeemFee;
 
 // ISSUE
 
@@ -266,7 +266,7 @@ export interface ChangeAmountBtc {
 
 export interface UpdateIssueFee {
     type: typeof UPDATE_ISSUE_FEE;
-    fee: number;
+    fee: string;
 }
 
 export interface ChangeIssueId {

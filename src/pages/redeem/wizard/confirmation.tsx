@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FormGroup, ListGroup, Row, Col, ListGroupItem, Modal } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
@@ -22,6 +22,10 @@ export default function Confirmation() {
     const { balancePolkaBTC, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
     const { amountPolkaBTC, vaultDotAddress, btcAddress, fee } = useSelector((store: StoreType) => store.redeem);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+
+    })
 
     const onConfirm = async () => {
         if (!polkaBtcLoaded) return;
@@ -49,6 +53,7 @@ export default function Confirmation() {
                 id,
                 amountPolkaBTC,
                 creation: redeemRequest.opentime.toString(),
+                fee: "0.5", // FILIP TO CHANGE VALUE
                 btcAddress,
                 btcTxId: "",
                 confirmations: 0,
@@ -85,10 +90,13 @@ export default function Confirmation() {
                                         {t("redeem_page.your_btc_address")}: <strong>{btcAddress}</strong>
                                     </ListGroupItem>
                                     <ListGroupItem>
-                                        {t("fee")}: <strong>{fee}</strong>
+                                        {t("fee")}: <strong>{fee + " PolkaBTC"}</strong>
                                     </ListGroupItem>
                                     <ListGroupItem>
-                                        {t("redeem_page.receiving")}: <strong>{Number(amountPolkaBTC)-fee} BTC</strong>
+                                        {t("redeem_page.receiving")}: 
+                                        <strong>
+                                            {(new Big(amountPolkaBTC).sub(new Big(fee))).toString() + " BTC"}
+                                        </strong>
                                     </ListGroupItem>
                                 </ListGroup>
                             </FormGroup>

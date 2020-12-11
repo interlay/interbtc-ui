@@ -16,13 +16,13 @@ import {
     UPDATE_REDEEM_REQUEST,
     UPDATE_ALL_REDEEM_REQUESTS,
     ADD_VAULT_REDEEMS,
-    UPDATE_FEE,
+    UPDATE_REDEEM_FEE,
 } from "../types/actions.types";
 import { RedeemState } from "../types/redeem.types";
 
 const initialState = {
     address: "",
-    fee: 0,
+    fee: "0",
     step: "ENTER_POLKABTC",
     amountPolkaBTC: "",
     btcAddress: "",
@@ -50,7 +50,7 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             return { ...state, vaultDotAddress: action.vaultDotAddress };
         case CHANGE_REDEEM_ID:
             return { ...state, id: action.id };
-        case UPDATE_FEE:
+        case UPDATE_REDEEM_FEE:
             return { ...state, fee: action.fee };
         case RESET_REDEEM_WIZARD:
             return { ...initialState, address: state.address, redeemRequests: state.redeemRequests };
