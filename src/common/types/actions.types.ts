@@ -2,7 +2,6 @@ import { IssueRequest, VaultIssue } from "./issue.types";
 import { RedeemRequest, VaultRedeem } from "./redeem.types";
 import { VaultReplaceRequest } from "./vault.types";
 import { StoreType, ParachainStatus } from "./util.types";
-import { string } from "prop-types";
 
 // GENERAL ACTIONS
 
