@@ -446,7 +446,30 @@ a:not([href]):not([tabindex]):focus {
   text-align: center;
   line-height: 100vh;
 }
+.modal-footer-border {
+  border-top: 1px solid #dee2e6;
+}
 
 .warning-color {
   color: #510101;
+}
+
+.min-height-1 {
+  min-height: 1rem;
+}
+
+.min-height-2 {
+  min-height: 2rem;
+}
+
+.min-height-3 {
+  min-height: 3rem;
+}
+
+.min-height-4 {
+  min-height: 4rem;
+}
+
+.min-height-5 {
+  min-height: 5rem;
 }

@@ -1203,18 +1203,18 @@
     axios "^0.19.2"
     typescript "~3.5.2"
 
-"@interlay/polkabtc-types@0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.2.2.tgz#34a91f1c68b3d19e467bc1d37e20bf2e55c0be04"
-  integrity sha512-w1NlpU1OXhs/FBoSb/VoX4uV5w5uq1aL5ycCNUBnCJVajhNytVsnceIJAna5cMczfMpsHQRLzboK2wpr0xIfAA==
+"@interlay/polkabtc-types@0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.2.4.tgz#9dc87d6acf7c0cf4bd7044ff5272c75807abef62"
+  integrity sha512-uW1RiNlFDIZUZw/ouYZT8JLN1ksOXfibY7WOczruR6vdhSMBar3EWoIBskxkunMS0ckSmr+DwPTxL2OnmbQB4w==
 
-"@interlay/polkabtc@^0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.6.1.tgz#4a004e95ff1c609daadd61da6dcc8a4b39f7dfa9"
-  integrity sha512-VOKSFgdNuVuvpi78X5vGpGe2FNi6rHGxbAhz/codlF7mgLH/2r8YmjirRXZXi95I8R3v3xe/0ZWHZYZe+cSgkg==
+"@interlay/polkabtc@^0.6.3":
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.6.3.tgz#767269735d35fb30cdedaed715f97c9c4b6515e9"
+  integrity sha512-VP0wIlY2MCfXMs2ecOquaJPwRIEtujJKDpl1F8kqteOzhP1+vH1aB+USBxKu5t6xPMl2z74fR0GvwPlJ35o8eQ==
   dependencies:
     "@interlay/esplora-btc-api" "^0.3.3"
-    "@interlay/polkabtc-types" "0.2.2"
+    "@interlay/polkabtc-types" "0.2.4"
     "@types/big.js" "^4.0.5"
     big.js "^6.0.1"
     bitcoin-core "^3.0.0"

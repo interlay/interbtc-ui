@@ -2,6 +2,7 @@ import { IssueRequest, VaultIssue } from "./issue.types";
 import { RedeemRequest, VaultRedeem } from "./redeem.types";
 import { VaultReplaceRequest } from "./vault.types";
 import { StoreType, ParachainStatus } from "./util.types";
+import { string } from "prop-types";
 
 // GENERAL ACTIONS
 
@@ -113,8 +114,9 @@ export const UPDATE_REDEEM_FEE = "UPDATE_REDEEM_FEE";
 export const ADD_TRANSACTION_LISTENER_REDEEM = "ADD_TRANSACTION_LISTENER_REDEEM";
 export const UPDATE_REDEEM_REQUEST = "UPDATE_REDEEM_REQUEST";
 export const UPDATE_ALL_REDEEM_REQUESTS = "UPDATE_ALL_REDEEM_REQUESTS";
-export const CANCEL_REDEEM_REQUEST = "CANCEL_REDEEM_REQUEST";
+export const RETRY_REDEEM_REQUEST = "RETRY_REDEEM_REQUEST";
 export const REDEEM_EXPIRED = "REDEEM_EXPIRED";
+export const REIMBURSE_REDEEM_REQUEST = "REIMBURSE_REDEEM_REQUEST";
 
 export interface UpdateRedeemFee {
     type: typeof UPDATE_REDEEM_FEE;
@@ -190,14 +192,19 @@ export interface UpdateAllRedeemRequests {
     redeemRequests: RedeemRequest[];
 }
 
-export interface CancelRedeemRequest {
-    type: typeof CANCEL_REDEEM_REQUEST;
+export interface RetryRedeemRequest {
+    type: typeof RETRY_REDEEM_REQUEST;
     id: string;
 }
 
 export interface RedeemExpired {
     type: typeof REDEEM_EXPIRED;
     request: RedeemRequest;
+}
+
+export interface ReimburseRedeemRequest {
+    type: typeof REIMBURSE_REDEEM_REQUEST;
+    id: string;
 }
 
 export type RedeemActions =
@@ -217,9 +224,10 @@ export type RedeemActions =
     | AddTransactionListenerRedeem
     | UpdateRedeemRequest
     | UpdateAllRedeemRequests
-    | CancelRedeemRequest
+    | RetryRedeemRequest
     | RedeemExpired
-    | UpdateRedeemFee;
+    | UpdateRedeemFee
+    | ReimburseRedeemRequest;
 
 // ISSUE
 

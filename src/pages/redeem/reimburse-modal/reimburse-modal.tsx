@@ -1,12 +1,14 @@
 import React, { useState, ReactElement, useEffect } from "react";
-import { Modal, Button } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import { StoreType } from "../../../common/types/util.types";
 import { toast } from "react-toastify";
+import { Modal, Button } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
+import { StoreType } from "../../../common/types/util.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { useTranslation } from "react-i18next";
 import { RedeemRequest } from "../../../common/types/redeem.types";
+import { retryRedeemRequestAction, reimburseRedeemRequestAction } from "../../../common/actions/redeem.actions";
 import { PRICE_BASE_URL, PRICE_PARAMS, PRICE_API_KEY } from "../../../constants";
+import Big from "big.js";
 
 
 type ReimburseModalProps = {
@@ -16,17 +18,20 @@ type ReimburseModalProps = {
 };
 
 export default function ReimburseModal(props: ReimburseModalProps): ReactElement {
-    const [isRegisterPending, setReimbursePending] = useState(false);
+    const [isReimbursePending, setReimbursePending] = useState(false);
+    const [isRetryPending, setRetryPending] = useState(false);
     const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
-    const [punishmentFee, setPunishmentFee] = useState(0);
+    const [punishmentFee, setPunishmentFee] = useState("0");
     const [rate, setRate] = useState(0);
     const [amountDOT, setAmountDOT] = useState(0);
+    const dispatch = useDispatch();
     const { t } = useTranslation();
 
     useEffect(() => {
-        const fetchData = () => {
-            //FILIP const punishment = window.polkaBTC.redeem.fetchPunishmentFee();
-            setPunishmentFee(10);
+        const fetchData = async () => {
+            if (!polkaBtcLoaded) return;
+            const punishment = await window.polkaBTC.vaults.getPunishmentFee();
+            setPunishmentFee(punishment.toString());
             fetch(PRICE_BASE_URL + PRICE_PARAMS + PRICE_API_KEY)
                 .then(response => response.json())
                 .then(result => {
@@ -37,7 +42,24 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
         }
 
         fetchData();
-    })
+    },[props.request, polkaBtcLoaded])
+
+    const onRetry = async () => {
+        if (!polkaBtcLoaded) return;
+        setRetryPending(true);
+        try{
+            if (!props.request) return;
+            const redeemId = window.polkaBTC.api.createType("H256", props.request.id);
+            await window.polkaBTC.redeem.cancel(redeemId,false);
+            dispatch(retryRedeemRequestAction(props.request.id));
+            props.onClose();
+            toast.success(t("redeem_page.successfully_cancelled_redeem"));
+        }catch(error) {
+            console.log(error);
+            toast.error(t("redeem_page.error_cancelling_redeem"));
+        }
+        setRetryPending(false);
+    }
 
     const onReimburse = async () => {
         if (!polkaBtcLoaded) return;
@@ -46,51 +68,92 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
             if (!props.request) return;
             const redeemId = window.polkaBTC.api.createType("H256", props.request.id);
             await window.polkaBTC.redeem.cancel(redeemId,true);
+            dispatch(reimburseRedeemRequestAction(props.request.id));
+            props.onClose();
         }catch(error) {
             console.log(error);
+            toast.error(t("redeem_page.error_cancelling_redeem"));
         }
         setReimbursePending(false);
     };
 
     return (
-        <Modal show={props.show} onHide={props.onClose} size={"lg"}>
+        <Modal show={props.show} onHide={props.onClose} size={"xl"}>
             <Modal.Header closeButton>
-                <Modal.Title>{t("redeem_page.reimburse")}</Modal.Title>
+                <Modal.Title>{t("redeem_page.redeem_request_failed")}</Modal.Title>
             </Modal.Header>
-            <Modal.Body className="reimburse-modal">
-                <div className="row mb-2">
+            <Modal.Body className="reimburse-modal ml-2">
+                <div className="row mt-3">
                     <div className="col-12">
                         <p>
-                            {t("redeem_page.request_to_reimburse", {
-                                btc: props.request ? props.request.amountPolkaBTC : 0
-                            })}
+                            <b>{t("redeem_page.funds_safe")}</b>
                         </p>
                         <p>
-                            {t("redeem_page.you_will_receive", {
-                                dots: amountDOT.toString(), 
-                            })}
-                        </p>
-                        <p>
-                            {t("redeem_page.financial_value", {
-                                btc: props.request ? props.request.amountPolkaBTC : 0,
-                                rate: rate.toFixed(8),
-                                punishment: punishmentFee
-                            })}
-                        </p>
-                        <p>
-                            {t("redeem_page.please_note")}
+                            {t("redeem_page.not_send_on_time")}
                         </p>
                     </div>
                 </div>
+                <div className="row mt-4">
+                    <div className="col-9">
+                        <p><strong>{t("redeem_page.retry_again_and_get_compes",{amountDOT: amountDOT.toFixed(8)})}</strong></p>
+                        <p>{t("redeem_page.you_will_receive_dot",{amountDOT: amountDOT.toFixed(8)})}</p>
+                    </div>
+                    <div className="col-3 text-center m-auto">
+                        <ButtonMaybePending 
+                            disabled={isRetryPending || isReimbursePending} 
+                            isPending={isRetryPending} 
+                            onClick={onRetry} 
+                            variant="outline-success">
+                            {t("retry")}
+                        </ButtonMaybePending>
+                    </div>
+                </div>
+                <div className="row mt-4">
+                    <div className="col-9">
+                        <p>
+                            <strong>
+                                {t("redeem_page.reimburse_total",{total: new Big(amountDOT.toString()).add(new Big(punishmentFee))})}
+                            </strong>
+                        </p>
+                        <ul>
+                            <li>
+                                <p>
+                                <b>{t("redeem_page.num_reimbursment",{amountDOT: amountDOT.toFixed(8)})}</b>
+                                    {t("redeem_page.exchange_rate",{amountPolkaBTC: props.request ? props.request.amountPolkaBTC : 0, rate: rate.toFixed(8)})}
+                                </p>
+                            </li>
+                            <li>
+                                <p><b>{t("redeem_page.compensation",{punishment: punishmentFee})}</b>{t("redeem_page.inconvenience")}</p>
+                            </li>
+                        </ul>
+                        
+                    </div>
+                    <div className="col-3 text-center m-auto">
+                        <ButtonMaybePending 
+                            isPending={isReimbursePending} 
+                            onClick={onReimburse}
+                            disabled={isRetryPending || isReimbursePending}>
+                            {t("redeem_page.reimburse")}
+                        </ButtonMaybePending>
+                    </div>
+                </div>
+                <div className="row mt-4">
+                    <div className="col-12">
+                        <p><b>{t("redeem_page.please_note")}</b></p>
+                    </div>
+                </div>
             </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={props.onClose}>
-                    {t("cancel")}
-                </Button>
-                <ButtonMaybePending type="submit" isPending={isRegisterPending} onClick={onReimburse}>
-                    {t("redeem_page.reimburse")}
-                </ButtonMaybePending>
-            </Modal.Footer>
+            <div className="container-fluid modal-footer-border">
+                <div className="row min-height-5">
+                    <div className="col-9">
+                    </div>
+                    <div className="col-3 text-center m-auto">
+                        <Button variant="secondary" onClick={props.onClose}>
+                            {t("redeem_page.decide_later")}
+                        </Button>
+                    </div>
+                </div>
+            </div>
         </Modal>
     );
 }

@@ -8,7 +8,6 @@ import { StoreType } from "../../../common/types/util.types";
 import { startTransactionWatcherRedeem } from "../../../common/utils/transaction-watcher";
 import {
     updateAllRedeemRequestsAction,
-    cancelRedeemRequestAction,
     redeemExpiredAction,
 } from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
@@ -29,25 +28,9 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
     const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
     const { transactionListeners }= useSelector((state: StoreType) => state.redeem);
     const [isRedeemExpirationSubscribed, setIsRedeemExpirationSubscribed] = useState(false);
-    const [cancelPending, setCancelPending] = useState([""]);
     const [showReimburseModal, setShowReimburseModal] = useState(false);
     const [reimburseRequest, setReimburseRequest] = useState<RedeemRequest>();
     const dispatch = useDispatch();
-
-    const cancelRedeemRequest = async (redeemId: string): Promise<void> => {
-        if (!polkaBtcLoaded) return;
-        setCancelPending([...cancelPending, redeemId]);
-        try {
-            const id = window.polkaBTC.api.createType("H256", redeemId);
-            await window.polkaBTC.redeem.cancel(id);
-            dispatch(cancelRedeemRequestAction(redeemId));
-            toast.success(t("redeem_page.successfully_cancelled_redeem"));
-        } catch (err) {
-            console.log(err);
-            toast.error(t("redeem_page.error_cancelling_redeem"));
-        }
-        setCancelPending(cancelPending.splice(cancelPending.indexOf(redeemId), 1));
-    };
 
     const redeemExpired = useCallback(
         (redeemId: string) => {
@@ -71,33 +54,20 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
     }
 
     const handleCompleted = (request: RedeemRequest) => {
-        if (true){//request.cancelled){
-            return <div>
-                <span>
-                {t("cancelled")}
-                </span>
-                <span>
-                    <Button 
-                        onClick={() => openReimburseModal(request)}
-                        className="ml-3" 
-                        variant="outline-dark">
-                            {t("redeem_page.reimburse")}
-                    </Button>
-                </span>
-            </div>
-        }
         if (!request.completed && request.isExpired) {
-            return (
-                <Button
-                    variant="outline-dark"
-                    onClick={() => {
-                        cancelRedeemRequest(request.id);
-                    }}
-                >
-                    {t("cancel")}
+            if(request.reimbursed && request.cancelled) {
+                return <div>{t("redeem_page.reimbursed")}</div>
+            }
+            if(!request.cancelled) {
+                return <Button 
+                    onClick={() => openReimburseModal(request)}
+                    className="ml-3" 
+                    variant="outline-dark">
+                        {t("redeem_page.recover")}
                 </Button>
-            );
-        } else 
+            }
+            return <div>{t("redeem_page.retried")}</div>
+        }
         if (request.completed) {
             setTimeout(props.handleShowFeedbackModal, FEEDBACK_MODAL_DISPLAY_DELAY_MS);
             return <FaCheck></FaCheck>;
@@ -216,7 +186,8 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                                                 <BitcoinAddress btcAddress={request.btcAddress} shorten />
                                             </td>
                                             <td>
-                                                <BitcoinTransaction txId={request.btcTxId} shorten />
+                                            {!request.completed && request.isExpired || true ? <div>Failed</div> :
+                                                <BitcoinTransaction txId={request.btcTxId} shorten />}
                                             </td>
                                             <td>{request.confirmations}</td>
                                             <td>{handleCompleted(request)}</td>
