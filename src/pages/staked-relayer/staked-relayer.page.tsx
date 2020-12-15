@@ -52,12 +52,12 @@ export default function StakedRelayerPage() {
             if (!polkaBtcLoaded || !relayerLoaded) return;
 
             try {
-                // FILIP: ADD CALL TO FETCH RELAYER SLA
-                // const slaT = await window.polkaBTC.vaults.getVaultCollateralization(vaultId);
-                setSLA(10);
-
                 const address = await window.relayer.getAccountId();
                 const stakedRelayerId = window.polkaBTC.api.createType("AccountId", address);
+
+                const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId);
+                setSLA(slaScore);
+
                 const feesEarned = await window.polkaBTC.stakedRelayer.getFeesEarned(stakedRelayerId);
                 setFees(feesEarned.toString());
 

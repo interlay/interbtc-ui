@@ -53,7 +53,7 @@ export default function Confirmation() {
                 id,
                 amountPolkaBTC,
                 creation: redeemRequest.opentime.toString(),
-                fee: "0.5", // FILIP TO CHANGE VALUE
+                fee: redeemRequest.fee.toString(),
                 btcAddress,
                 btcTxId: "",
                 confirmations: 0,

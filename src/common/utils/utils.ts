@@ -52,7 +52,7 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
         creation: parachainIssueRequest.opentime.toString(),
         vaultBTCAddress: parachainIssueRequest.btc_address,
         btcTxId: "",
-        fee: "0.001", // FILIP parachainIssueRequest.fee
+        fee: parachainIssueRequest.fee.toString(),
         confirmations: 0,
         completed: parachainIssueRequest.completed.isTrue,
     };
@@ -71,7 +71,7 @@ export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: Par
         creation: parachainRedeemRequest.opentime.toString(),
         btcAddress: parachainRedeemRequest.btc_address,
         btcTxId: "",
-        fee: "0.5", // FILIP: parachainRedeemRequest.fee,
+        fee: parachainRedeemRequest.fee.toString(),
         confirmations: 0,
         completed: parachainRedeemRequest.completed.isTrue,
         isExpired: false,
