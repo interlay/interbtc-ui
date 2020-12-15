@@ -58,7 +58,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
             if(request.reimbursed && request.cancelled) {
                 return <div>{t("redeem_page.reimbursed")}</div>
             }
-            if(!request.cancelled) {
+            if(!request.cancelled && !request.reimbursed) {
                 return <Button 
                     onClick={() => openReimburseModal(request)}
                     className="ml-3" 
@@ -186,7 +186,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                                                 <BitcoinAddress btcAddress={request.btcAddress} shorten />
                                             </td>
                                             <td>
-                                            {!request.completed && request.isExpired || true ? <div>Failed</div> :
+                                            {!request.completed && request.isExpired ? <div>{t("redeem_page.failed")}</div> :
                                                 <BitcoinTransaction txId={request.btcTxId} shorten />}
                                             </td>
                                             <td>{request.confirmations}</td>

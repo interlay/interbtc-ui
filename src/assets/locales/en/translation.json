@@ -44,9 +44,6 @@
         "please_enter_amount": "Please enter the amount",
         "reimbursed": "Reimbursed",
         "reimburse": "Reimburse",
-        "request_to_reimburse": "You are requesting to reimburse {{btc}} BTC.",
-        "you_will_receive": "You will receive a reimbursement of {{dots}} DOT.",
-        "financial_value": "This is the financial value of {{btc}} BTC at the current exchange rate {{rate}} PLUS a 10% premium of {{punishment}} DOT",
         "redeem_request_failed": "Redeem Request Failed",
         "funds_safe": "Don't worry - your funds are safe!",
         "not_send_on_time": "The Vault did not send BTC to you on time. To redeem your PolkaBTC, you must now pick one of the two options:",
@@ -59,7 +56,8 @@
         "inconvenience": "for the inconvenience.",
         "please_note": "You will not receive any BTC if you remburse.",
         "decide_later": "Decide later",
-        "recover": "Recover"
+        "recover": "Recover",
+        "failed": "Failed"
     },
     "issue_page": {
         "error_in_parachain": "You can't issue PolkaBTC at the moment because the Parachain has encountered errors and recovering.",

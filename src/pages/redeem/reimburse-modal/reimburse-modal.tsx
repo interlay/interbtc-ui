@@ -7,7 +7,6 @@ import ButtonMaybePending from "../../../common/components/pending-button";
 import { useTranslation } from "react-i18next";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 import { retryRedeemRequestAction, reimburseRedeemRequestAction } from "../../../common/actions/redeem.actions";
-import { PRICE_BASE_URL, PRICE_PARAMS, PRICE_API_KEY } from "../../../constants";
 import Big from "big.js";
 
 
@@ -23,7 +22,7 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
     const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
     const [punishmentFee, setPunishmentFee] = useState("0");
     const [rate, setRate] = useState(0);
-    const [amountDOT, setAmountDOT] = useState(0);
+    const [amountDOT, setAmountDOT] = useState(new Big(0));
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
@@ -32,13 +31,10 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
             if (!polkaBtcLoaded) return;
             const punishment = await window.polkaBTC.vaults.getPunishmentFee();
             setPunishmentFee(punishment.toString());
-            fetch(PRICE_BASE_URL + PRICE_PARAMS + PRICE_API_KEY)
-                .then(response => response.json())
-                .then(result => {
-                    const amount = props.request ? Number(props.request.amountPolkaBTC) : 0;
-                    setAmountDOT(result.BTC.DOT*amount);
-                    setRate(1/result.BTC.DOT);
-            });
+            const BtcDotRate = await window.polkaBTC.oracle.getExchangeRate();
+            setRate(BtcDotRate);
+            const amountPolkaBTC = props.request ? new Big(props.request.amountPolkaBTC) : new Big(0);
+            setAmountDOT(amountPolkaBTC.div(BtcDotRate));
         }
 
         fetchData();
@@ -49,7 +45,7 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
         setRetryPending(true);
         try{
             if (!props.request) return;
-            const redeemId = window.polkaBTC.api.createType("H256", props.request.id);
+            const redeemId = window.polkaBTC.api.createType("H256", "0x" + props.request.id);
             await window.polkaBTC.redeem.cancel(redeemId,false);
             dispatch(retryRedeemRequestAction(props.request.id));
             props.onClose();
@@ -66,7 +62,7 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
         setReimbursePending(true);
         try{
             if (!props.request) return;
-            const redeemId = window.polkaBTC.api.createType("H256", props.request.id);
+            const redeemId = window.polkaBTC.api.createType("H256", "0x" + props.request.id);
             await window.polkaBTC.redeem.cancel(redeemId,true);
             dispatch(reimburseRedeemRequestAction(props.request.id));
             props.onClose();

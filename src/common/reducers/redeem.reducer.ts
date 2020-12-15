@@ -97,8 +97,8 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             const allRequests = state.redeemRequests.get(state.address);
             if (!allRequests) return state;
             const updatedRequests = allRequests.map((request) => {
-                if (request.id == action.id) {
-                    return { ...request, cancelled: true };
+                if (request.id === action.id) {
+                    return { ...request, cancelled: true, reimbursed: false };
                 }
                 return request;
             });
@@ -109,8 +109,8 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             const allCurrentRequests = state.redeemRequests.get(state.address);
             if (!allCurrentRequests) return state;
             const allUpdatedRequests = allCurrentRequests.map((request) => {
-                if (request.id == action.id) {
-                    return { ...request, cancelled: true };
+                if (request.id === action.id) {
+                    return { ...request, cancelled: true, reimbursed: true };
                 }
                 return request;
             });

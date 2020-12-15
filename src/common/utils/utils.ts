@@ -75,8 +75,8 @@ export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: Par
         confirmations: 0,
         completed: parachainRedeemRequest.completed.isTrue,
         isExpired: false,
-        cancelled: !!parachainRedeemRequest.cancelled,
-        reimbursed: !!parachainRedeemRequest.reimburse,
+        cancelled: parachainRedeemRequest.cancelled.valueOf(),
+        reimbursed: parachainRedeemRequest.reimburse.valueOf(),
     };
 }
 

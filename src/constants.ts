@@ -36,11 +36,6 @@ export const BTC_MAINNET_REGEX = /\b([13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[ac-hj-n
 // btc transaction validation regex
 export const BTC_TRANSACTION_ID_REGEX = /[a-fA-F0-9]{64}/;
 
-// api params for fetching the price rates
-export const PRICE_BASE_URL = "https://min-api.cryptocompare.com/data/pricemulti";
-export const PRICE_PARAMS = "?fsyms=BTC&tsyms=DOT,USD,ETH&";
-export const PRICE_API_KEY = "api_key=0fe74ac7dd16554406f7ec8d305807596571e13bd6b3c8ac496ac436c17c26e2";
-
 // regex for validating input strings as numbers
 export const NUMERIC_STRING_REGEX = /^[0-9]+([.][0-9]+)?$/;
 
