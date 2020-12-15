@@ -69,7 +69,7 @@ export default function VaultDashboardPage() {
                 const collateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId);
                 dispatch(updateCollateralizationAction(collateralization));
 
-                const slaScore = await window.polkaBTC.vaults.getSLA(vaultId);
+                const slaScore = await window.polkaBTC.vaults.getSLA(vaultId.toString());
                 dispatch(updateSLAAction(slaScore));
 
                 const issuablePolkaBTC = await window.polkaBTC.vaults.getIssuablePolkaBTC();

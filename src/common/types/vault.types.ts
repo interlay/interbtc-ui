@@ -15,5 +15,5 @@ export interface VaultState {
     collateralization: number | undefined;
     collateral: string;
     lockedBTC: string;
-    sla: number;
+    sla: string;
 }

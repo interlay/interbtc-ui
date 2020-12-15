@@ -24,7 +24,7 @@ export default function StakedRelayerPage() {
     const [stakedRelayerAddress, setStakedRelayerAddress] = useState("");
     const [relayerRegistered, setRelayerRegistered] = useState(false);
     const [relayerInactive, setRelayerInactive] = useState(false);
-    const [sla, setSLA] = useState(0);
+    const [sla, setSLA] = useState("0");
     const relayerNotRegisteredToastId = "relayer-not-registered-id";
     const { polkaBtcLoaded, relayerLoaded } = useSelector((state: StoreType) => state.general);
 
@@ -55,7 +55,7 @@ export default function StakedRelayerPage() {
                 const address = await window.relayer.getAccountId();
                 const stakedRelayerId = window.polkaBTC.api.createType("AccountId", address);
 
-                const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId);
+                const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId.toString());
                 setSLA(slaScore);
 
                 const feesEarned = await window.polkaBTC.stakedRelayer.getFeesEarned(stakedRelayerId);

@@ -66,9 +66,8 @@ export default function EnterPolkaBTCAmount() {
             const vault = await window.polkaBTC.vaults.get(vaultId);
             const vaultBTCAddress = encodeBitcoinAddress(vault.wallet.address);
 
-            const amount = window.polkaBTC.api.createType("Balance", amountPolkaBTC);
-            const fee = await window.polkaBTC.redeem.getFeesToPay(amount);
-            dispatch(updateRedeemFeeAction(fee.toString()));
+            const fee = await window.polkaBTC.redeem.getFeesToPay(amountPolkaBTC);
+            dispatch(updateRedeemFeeAction(fee));
             
             dispatch(changeVaultBtcAddressOnRedeemAction(vaultBTCAddress));
             dispatch(changeVaultDotAddressOnRedeemAction(vaultId.toString()));
