@@ -62,9 +62,8 @@ export default function EnterBTCAmount() {
             const vault = await window.polkaBTC.vaults.get(vaultId);
             const vaultBTCAddress = encodeBitcoinAddress(vault.wallet.address);
 
-            // FILIP 
-            // window.polkaBTC.issue.getFeesToPay(amountBTC)
-            dispatch(updateIssueFeeAction("0.005"));
+            const fee = await window.polkaBTC.issue.getFeesToPay(amountBTC);
+            dispatch(updateIssueFeeAction(fee));
 
             dispatch(changeVaultBtcAddressOnIssueAction(stripHexPrefix(vaultBTCAddress)));
             dispatch(changeVaultDotAddressOnIssueAction(vaultId.toString()));

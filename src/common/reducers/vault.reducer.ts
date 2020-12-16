@@ -15,7 +15,7 @@ const initialState = {
     collateralization: 0,
     collateral: "",
     lockedBTC: "",
-    sla: 0,
+    sla: "0",
 };
 
 export const vaultReducer = (state: VaultState = initialState, action: VaultActions): VaultState => {

@@ -69,8 +69,8 @@ export default function VaultDashboardPage() {
                 const collateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId);
                 dispatch(updateCollateralizationAction(collateralization));
 
-                // FILIP: ADD CALL TO FETCH VAULT SLA
-                dispatch(updateSLAAction(10));
+                const slaScore = await window.polkaBTC.vaults.getSLA(vaultId.toString());
+                dispatch(updateSLAAction(slaScore));
 
                 const issuablePolkaBTC = await window.polkaBTC.vaults.getIssuablePolkaBTC();
                 setCapacity(issuablePolkaBTC);

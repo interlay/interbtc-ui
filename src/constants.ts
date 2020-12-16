@@ -51,7 +51,7 @@ export const BTC_ADDRESS_REGEX =
 
 export const PARACHAIN_URL = process.env.REACT_APP_PARACHAIN_URL || "ws://127.0.0.1:9944";
 export const STAKED_RELAYER_URL = process.env.REACT_APP_STAKED_RELAYER_URL || "http://localhost:3030";
-export const VAULT_CLIENT_URL = process.env.REACT_APP_VAULT_CLIENT_URL || "http://localhost:3031";
+export const VAULT_CLIENT_URL = process.env.REACT_APP_VAULT_CLIENT_URL || "http://localhost:3032";
 
 export const BTC_EXPLORER_BLOCK_API = "https://blockstream.info/block/";
 export const BTC_TEST_EXPLORER_BLOCK_API = "https://blockstream.info/testnet/block/";

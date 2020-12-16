@@ -374,7 +374,7 @@ export interface UpdateLockedBTC {
 
 export interface UpdateSLA {
     type: typeof UPDATE_SLA;
-    sla: number;
+    sla: string;
 }
 
 export type VaultActions =

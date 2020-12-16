@@ -39,7 +39,7 @@ export const updateLockedBTCAction = (lockedBTC: string): UpdateLockedBTC => ({
     lockedBTC,
 });
 
-export const updateSLAAction = (sla: number): UpdateSLA => ({
+export const updateSLAAction = (sla: string): UpdateSLA => ({
     type: UPDATE_SLA,
     sla,
 });

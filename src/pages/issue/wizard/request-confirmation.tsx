@@ -48,7 +48,7 @@ export default function RequestConfirmation() {
                 creation: issueRequest.opentime.toString(),
                 vaultBTCAddress: vaultBtcAddress,
                 btcTxId: "",
-                fee: "0.001", // FILIP ADD FROM RESPONSE 
+                fee: issueRequest.fee.toString(), 
                 confirmations: 0,
                 completed: false,
                 merkleProof: "",
@@ -86,7 +86,7 @@ export default function RequestConfirmation() {
                                 Fees: <strong>{fee} PolkaBTC</strong>
                             </ListGroupItem>
                             <ListGroupItem>
-                                Total: <strong>{new Big(fee).add(new Big(amountBTC)).toString()} BTC</strong>
+                                Total: <strong>{((new Big(fee)).add(new Big(amountBTC))).toString()} </strong><strong>BTC</strong>
                             </ListGroupItem>
                         </ListGroup>
                     </FormGroup>

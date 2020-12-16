@@ -117,7 +117,7 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             newRequestsMap.set(state.address, allUpdatedRequests);
             return { ...state, redeemRequests: newRequestsMap };
         case INIT_STATE:
-            return { ...state, transactionListeners: [] };
+            return { ...state, fee: "0", transactionListeners: [] };
         case ADD_VAULT_REDEEMS:
             return { ...state, vaultRedeems: action.vaultRedeems };
         case UPDATE_ALL_REDEEM_REQUESTS:
