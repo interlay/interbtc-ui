@@ -31,6 +31,9 @@ services:
                 bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword createwallet Alice
                 bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword createwallet Bob
                 bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword createwallet Dave
+                bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword loadwallet Alice
+                bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword loadwallet Bob
+                bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword loadwallet Dave
                 ALICE_ADDRESS=$$(bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword -rpcwallet=Alice getnewaddress)
                 # coins need 100 confirmations to be spendable
                 bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword generatetoaddress 101 $${ALICE_ADDRESS}
@@ -91,7 +94,7 @@ services:
                 # sleep for 7s to wait for bitcoin to create the Dave wallet
                 # and also to ensure that the issue period and redeem period are set
                 sleep 7
-                vault --keyring=dave  --auto-register-with-collateral 100000000000 --http-addr '[::0]:3032' --polka-btc-url 'ws://polkabtc:9944'
+                vault --keyring=dave  --auto-register-with-collateral 100000000000000 --http-addr '[::0]:3032' --polka-btc-url 'ws://polkabtc:9944'
         environment:
             <<: *client-env
         ports:
@@ -104,15 +107,15 @@ services:
             - |
                 echo "Sleeping..."
                 sleep 3
-                testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice set-issue-period --period=50
-                testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice set-redeem-period --period=50
+                testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice set-issue-period --period=2000
+                testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice set-redeem-period --period=2000
 
                 # wait for the vault to register
                 sleep 9
-                ALICE_ADDRESS=bcrt1qefxeckts7tkgz7uach9dnwer4qz5nyehl4sjcc
-                testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=bob set-exchange-rate --exchange-rate=1 
-                testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice request-issue --issue-amount=100000 --vault=dave
-                REDEEM_ID=$$(testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice request-redeem --redeem-amount=10000 --btc-address=$${ALICE_ADDRESS} --vault=dave)
+                ALICE_ADDRESS=$$(bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword -rpcwallet=Alice getnewaddress)
+                testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=bob set-exchange-rate --exchange-rate=1
+                testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice request-issue --issue-amount=10000000 --vault=dave
+                REDEEM_ID=$$(testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice request-redeem --redeem-amount=1000000 --btc-address=$${ALICE_ADDRESS} --vault=dave)
                 # testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice execute-redeem --redeem-id=$${REDEEM_ID}
 
         environment:
