@@ -58,7 +58,7 @@ export default function StakedRelayerPage() {
                 const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId.toString());
                 setSLA(slaScore);
 
-                const feesEarned = await window.polkaBTC.stakedRelayer.getFeesEarned(stakedRelayerId);
+                const feesEarned = await window.polkaBTC.stakedRelayer.getFees(stakedRelayerId.toString());
                 setFees(feesEarned.toString());
 
                 const isActive = await window.polkaBTC.stakedRelayer.isStakedRelayerActive(stakedRelayerId);
