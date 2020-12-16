@@ -54,12 +54,6 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
     }
 
     const handleCompleted = (request: RedeemRequest) => {
-        return <Button 
-                    onClick={() => openReimburseModal(request)}
-                    className="ml-3" 
-                    variant="outline-dark">
-                        {t("redeem_page.recover")}
-                </Button>
         if (!request.completed && request.isExpired) {
             if(request.reimbursed && request.cancelled) {
                 return <div>{t("redeem_page.reimbursed")}</div>
