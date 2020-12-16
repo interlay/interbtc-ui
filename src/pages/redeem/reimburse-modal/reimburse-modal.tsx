@@ -20,7 +20,7 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
     const [isReimbursePending, setReimbursePending] = useState(false);
     const [isRetryPending, setRetryPending] = useState(false);
     const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
-    const [punishmentFee, setPunishmentFee] = useState("0");
+    const [punishmentDOT, setPunishmentDOT] = useState(new Big(0));
     const [rate, setRate] = useState(0);
     const [amountDOT, setAmountDOT] = useState(new Big(0));
     const dispatch = useDispatch();
@@ -31,11 +31,13 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
             if (!polkaBtcLoaded) return;
             try {
                 const punishment = await window.polkaBTC.vaults.getPunishmentFee();
-                setPunishmentFee(punishment.toString());
                 const BtcDotRate = await window.polkaBTC.oracle.getExchangeRate();
-                setRate(BtcDotRate);
+                debugger;
                 const amountPolkaBTC = props.request ? new Big(props.request.amountPolkaBTC) : new Big(0);
-                setAmountDOT(amountPolkaBTC.div(BtcDotRate));
+                setRate(BtcDotRate);
+                setAmountDOT(amountPolkaBTC.mul(BtcDotRate));
+                console.log("DOT",amountPolkaBTC.mul(BtcDotRate).mul(new Big(punishment)));
+                setPunishmentDOT(amountPolkaBTC.mul(BtcDotRate).mul(new Big(punishment)));
             } catch(error) {
                 console.log(error);
             }
@@ -95,15 +97,15 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
                 </div>
                 <div className="row mt-4">
                     <div className="col-9">
-                        <p><strong>{t("redeem_page.retry_again_and_get_compes",{amountDOT: amountDOT.toFixed(8)})}</strong></p>
-                        <p>{t("redeem_page.you_will_receive_dot",{amountDOT: amountDOT.toFixed(8)})}</p>
+                        <p><strong>{t("redeem_page.retry_again_and_get_compes",{amountDOT: punishmentDOT.toFixed(2)})}</strong></p>
+                        <p>{t("redeem_page.you_will_receive_dot",{amountDOT: amountDOT.toFixed(2)})}</p>
                     </div>
                     <div className="col-3 text-center m-auto">
                         <ButtonMaybePending 
+                            className={"retry-button"}
                             disabled={isRetryPending || isReimbursePending} 
                             isPending={isRetryPending} 
-                            onClick={onRetry} 
-                            variant="outline-success">
+                            onClick={onRetry}>
                             {t("retry")}
                         </ButtonMaybePending>
                     </div>
@@ -112,18 +114,18 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
                     <div className="col-9">
                         <p>
                             <strong>
-                                {t("redeem_page.reimburse_total",{total: new Big(amountDOT.toString()).add(new Big(punishmentFee))})}
+                                {t("redeem_page.reimburse_total",{total: amountDOT.add(punishmentDOT)})}
                             </strong>
                         </p>
                         <ul>
                             <li>
                                 <p>
-                                <b>{t("redeem_page.num_reimbursment",{amountDOT: amountDOT.toFixed(8)})}</b>
+                                <b>{t("redeem_page.num_reimbursment",{amountDOT: amountDOT.toFixed(2)})}</b>
                                     {t("redeem_page.exchange_rate",{amountPolkaBTC: props.request ? props.request.amountPolkaBTC : 0, rate: rate.toFixed(8)})}
                                 </p>
                             </li>
                             <li>
-                                <p><b>{t("redeem_page.compensation",{punishment: punishmentFee})}</b>{t("redeem_page.inconvenience")}</p>
+                                <p><b>{t("redeem_page.compensation",{punishment: punishmentDOT})}</b>{t("redeem_page.inconvenience")}</p>
                             </li>
                         </ul>
                         
