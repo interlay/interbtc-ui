@@ -5,8 +5,8 @@
     "dependencies": {
         "@interlay/polkabtc": "^0.6.7",
         "@polkadot/api": "2.8.1",
-        "@polkadot/extension-dapp": "0.32.1",
-        "@polkadot/ui-keyring": "0.62.2-22",
+        "@polkadot/extension-dapp": "0.35.1",
+        "@polkadot/ui-keyring": "0.63.1",
         "@types/big.js": "^4.0.5",
         "@types/bn.js": "^4.11.6",
         "@types/jsdom": "^16.2.5",
