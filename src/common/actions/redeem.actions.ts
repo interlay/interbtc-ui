@@ -13,8 +13,9 @@ import {
     ADD_REDEEM_REQUEST,
     UPDATE_REDEEM_REQUEST,
     UPDATE_ALL_REDEEM_REQUESTS,
-    CANCEL_REDEEM_REQUEST,
+    RETRY_REDEEM_REQUEST,
     REDEEM_EXPIRED,
+    REIMBURSE_REDEEM_REQUEST,
     UpdateRedeemFee,
     UpdateAllRedeemRequests,
     ChangeRedeemStep,
@@ -29,8 +30,9 @@ import {
     AddRedeemRequest,
     AddVaultRedeems,
     UpdateRedeemRequest,
-    CancelRedeemRequest,
+    RetryRedeemRequest,
     RedeemExpired,
+    ReimburseRedeemRequest,
 } from "../types/actions.types";
 import { RedeemRequest, VaultRedeem } from "../types/redeem.types";
 
@@ -103,8 +105,13 @@ export const redeemExpiredAction = (request: RedeemRequest): RedeemExpired => ({
     request,
 });
 
-export const cancelRedeemRequestAction = (id: string): CancelRedeemRequest => ({
-    type: CANCEL_REDEEM_REQUEST,
+export const retryRedeemRequestAction = (id: string): RetryRedeemRequest => ({
+    type: RETRY_REDEEM_REQUEST,
+    id,
+});
+
+export const reimburseRedeemRequestAction = (id: string): ReimburseRedeemRequest => ({
+    type: REIMBURSE_REDEEM_REQUEST,
     id,
 });
 

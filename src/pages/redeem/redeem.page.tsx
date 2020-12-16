@@ -18,6 +18,8 @@ import * as constants from "../../constants";
 import i18n from "i18next";
 import { useTranslation } from 'react-i18next';
 
+import "./redeem.page.scss";
+
 
 export default function RedeemPage(): JSX.Element {
     const { t } = useTranslation();

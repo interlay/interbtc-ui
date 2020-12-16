@@ -59,6 +59,8 @@ export default function Confirmation() {
                 confirmations: 0,
                 completed: false,
                 isExpired: false,
+                cancelled: false,
+                reimbursed: false
             };
             dispatch(addRedeemRequestAction(request));
             dispatch(changeRedeemStepAction("VAULT_INFO"));
