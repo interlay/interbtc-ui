@@ -29,12 +29,16 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
-            const punishment = await window.polkaBTC.vaults.getPunishmentFee();
-            setPunishmentFee(punishment.toString());
-            const BtcDotRate = await window.polkaBTC.oracle.getExchangeRate();
-            setRate(BtcDotRate);
-            const amountPolkaBTC = props.request ? new Big(props.request.amountPolkaBTC) : new Big(0);
-            setAmountDOT(amountPolkaBTC.div(BtcDotRate));
+            try {
+                const punishment = await window.polkaBTC.vaults.getPunishmentFee();
+                setPunishmentFee(punishment.toString());
+                const BtcDotRate = await window.polkaBTC.oracle.getExchangeRate();
+                setRate(BtcDotRate);
+                const amountPolkaBTC = props.request ? new Big(props.request.amountPolkaBTC) : new Big(0);
+                setAmountDOT(amountPolkaBTC.div(BtcDotRate));
+            } catch(error) {
+                console.log(error);
+            }
         }
 
         fetchData();

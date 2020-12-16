@@ -91,7 +91,7 @@ services:
                 # sleep for 7s to wait for bitcoin to create the Dave wallet
                 # and also to ensure that the issue period and redeem period are set
                 sleep 7
-                vault --keyring=dave  --auto-register-with-collateral 100000000000 --http-addr '[::0]:3032' --polka-btc-url 'ws://polkabtc:9944'
+                vault --keyring=dave  --auto-register-with-collateral 100000000000000 --http-addr '[::0]:3032' --polka-btc-url 'ws://polkabtc:9944'
         environment:
             <<: *client-env
         ports:
