@@ -1664,7 +1664,7 @@
     memoizee "^0.4.14"
     rxjs "^6.6.3"
 
-"@polkadot/ui-keyring@^0.62.2-12":
+"@polkadot/ui-keyring@0.62.2-22":
   version "0.62.2-22"
   resolved "https://registry.yarnpkg.com/@polkadot/ui-keyring/-/ui-keyring-0.62.2-22.tgz#cebe80992d20cf22e14739292f8de11773017c4a"
   integrity sha512-0uP45uys06XIhqVjiuyBJdVmKfBnZzt0+Fx3SVWEnzyPDrgR65rYpC0nw8ex70Zlg8Tc0LxYniuoA3tqWeiI2A==
