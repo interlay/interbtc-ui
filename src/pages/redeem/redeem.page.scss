@@ -1,0 +1,16 @@
+
+.modal-footer-border {
+    border-top: 1px solid #dee2e6;
+}
+
+.retry-button {
+    min-width: 103px;
+    color: white;
+    background-color: #28a745;
+    border-color: #28a745;
+    &:hover {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+}
+

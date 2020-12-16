@@ -6,7 +6,7 @@
         "@interlay/polkabtc": "^0.6.5",
         "@polkadot/api": "2.8.1",
         "@polkadot/extension-dapp": "0.32.1",
-        "@polkadot/ui-keyring": "^0.62.2-12",
+        "@polkadot/ui-keyring": "0.62.2-12",
         "@testing-library/jest-dom": "^4.2.4",
         "@testing-library/react": "^9.3.2",
         "@testing-library/user-event": "^7.1.2",

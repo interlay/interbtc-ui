@@ -8,6 +8,8 @@ export interface RedeemRequest {
     confirmations: number;
     completed: boolean;
     isExpired: boolean;
+    cancelled: boolean;
+    reimbursed: boolean;
 }
 
 export interface RedeemState {
