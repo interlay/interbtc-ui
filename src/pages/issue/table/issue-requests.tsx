@@ -24,6 +24,8 @@ import {
 import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
 import { updateBalancePolkaBTCAction } from "../../../common/actions/general.actions";
+import { satToBTC } from "@interlay/polkabtc";
+
 
 type IssueRequestProps = {
     openWizard: () => void;
@@ -38,6 +40,7 @@ export default function IssueRequests(props: IssueRequestProps) {
     const [issuePeriod, setIssuePeriod] = useState(new Big(0));
     const [parachainHeight, setParachainHeight] = useState(new Big(0));
     const dispatch = useDispatch();
+    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -240,7 +243,7 @@ export default function IssueRequests(props: IssueRequestProps) {
                                     <tr key={index} onClick={() => requestClicked(request)}>
                                         <td>{shortAddress(request.id)}</td>
                                         <td>{request.amountBTC} PolkaBTC</td>
-                                        <td>{request.fee} PolkaBTC</td>
+                                        <td>{satToBTC(request.fee)} PolkaBTC</td>
                                         <td>{request.creation === "0" ? "Pending..." : request.creation}</td>
                                         <td>
                                             <BitcoinAddress btcAddress={request.vaultBTCAddress} shorten />

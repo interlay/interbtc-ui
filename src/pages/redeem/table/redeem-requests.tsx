@@ -16,6 +16,7 @@ import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 import { FEEDBACK_MODAL_DISPLAY_DELAY_MS } from "../../../constants";
 import { useTranslation } from 'react-i18next';
 import ReimburseModal from "../reimburse-modal/reimburse-modal";
+import { satToBTC } from "@interlay/polkabtc";
 
 
 export interface RedeemRequestsProps {
@@ -180,7 +181,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                                         <tr key={request.id}>
                                             <td>{shortAddress(request.id)}</td>
                                             <td>{request.amountPolkaBTC} BTC</td>
-                                            <td>{request.fee} PolkaBTC</td>
+                                            <td>{satToBTC(request.fee)} PolkaBTC</td>
                                             <td>{request.creation}</td>
                                             <td>
                                                 <BitcoinAddress btcAddress={request.btcAddress} shorten />
