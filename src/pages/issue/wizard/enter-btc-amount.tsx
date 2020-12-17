@@ -82,7 +82,8 @@ export default function EnterBTCAmount() {
                     <br />
                     {t("issue_page.enter-polkabtc-amount-desc-2")}
                     <br />
-                    {t("issue_page.enter-polkabtc-amount-desc-3")}({dustValue} BTC).
+                    <br />
+                    {t("issue_page.enter-polkabtc-amount-desc-3")} ({dustValue} BTC).
                 </p>
                 <div className="row">
                     <div className="col-12 basic-addon">
