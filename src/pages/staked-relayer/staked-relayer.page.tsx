@@ -57,12 +57,6 @@ export default function StakedRelayerPage() {
                 const address = await window.relayer.getAccountId();
                 const stakedRelayerId = window.polkaBTC.api.createType("AccountId", address);
 
-                const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId.toString());
-                setSLA(slaScore);
-
-                const feesEarned = await window.polkaBTC.stakedRelayer.getFees(stakedRelayerId.toString());
-                setFees(new Big(feesEarned));
-
                 const BtcDotRate = await window.polkaBTC.oracle.getExchangeRate();
                 setRate(new Big(BtcDotRate));
 
@@ -93,7 +87,7 @@ export default function StakedRelayerPage() {
                     setAPY(apyScore);
 
                     const feesEarned = await window.polkaBTC.stakedRelayer.getFees(stakedRelayerId.toString());
-                    setFees(feesEarned.toString());
+                    setFees(new Big(feesEarned));
                 }
 
                 setDotLocked(lockedDOT);
