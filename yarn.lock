@@ -1205,10 +1205,10 @@
   resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.2.6.tgz#e55f92ca0e017c9481c82507c69822e5a2b360e4"
   integrity sha512-hkQh9ZsigGJwYIlqEDFmIItU4wxaJH+flgviQQurtpXAB0Ehbvy5p2Njpd75NMj3g6UE6d2l+phloQma6flkAQ==
 
-"@interlay/polkabtc@^0.6.5":
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.6.6.tgz#edb51a4ad9ea0fe1e3d5a1a9820f1756d5b4436e"
-  integrity sha512-eAE4hbZP6BucAj8c8WGWXqAalCDpO4sGwsr/MCfAjcQeq9vDCMEzB4ISERX2As0Uh00clvX79S/bFgPd910Usw==
+"@interlay/polkabtc@^0.6.7":
+  version "0.6.7"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.6.7.tgz#c623ea7f5ea730b9abc0cee0f02f79b829cd42ee"
+  integrity sha512-9aZuOsRRWqywodZ8RBcGrjqTYkLfoKqlY/haEgAU4Yd9icKmY3e+Bgm6/icthGDiSbN53wPlqkKvTqNE0ySfIg==
   dependencies:
     "@interlay/esplora-btc-api" "^0.3.3"
     "@interlay/polkabtc-types" "0.2.6"
@@ -9283,9 +9283,9 @@ node-abi@^2.7.0:
     semver "^5.4.1"
 
 node-addon-api@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-3.0.2.tgz#04bc7b83fd845ba785bb6eae25bc857e1ef75681"
-  integrity sha512-+D4s2HCnxPd5PjjI0STKwncjXTUKKqm74MDMz9OPXavjsGmjkvwgLtA5yoxJUdmpj52+2u+RrXgPipahKczMKg==
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-3.1.0.tgz#98b21931557466c6729e51cb77cd39c965f42239"
+  integrity sha512-flmrDNB06LIl5lywUz7YlNGZH/5p0M7W28k8hzd9Lshtdh1wshD2Y+U4h9LD6KObOy1f+fEVdgprPrEymjM5uw==
 
 node-fetch@2.6.1, node-fetch@^2.6.1:
   version "2.6.1"
