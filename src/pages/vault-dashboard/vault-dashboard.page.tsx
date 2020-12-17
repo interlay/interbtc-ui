@@ -15,7 +15,8 @@ import {
     updateCollateralizationAction,
     updateCollateralAction,
     updateLockedBTCAction,
-    updateSLAAction
+    updateSLAAction,
+    updateAPYAction,
 } from "../../common/actions/vault.actions";
 import "./vault-dashboard.page.scss";
 import { encodeBitcoinAddress } from "../../common/utils/utils";
@@ -30,7 +31,9 @@ export default function VaultDashboardPage() {
     const [showUpdateBTCAddressModal, setShowUpdateBTCAddressModal] = useState(false);
     const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
     const { vaultClientLoaded, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
-    const {btcAddress, collateralization, collateral, lockedBTC, sla} = useSelector((state: StoreType) => state.vault);
+    const { btcAddress, collateralization, collateral, lockedBTC, sla, apy } = useSelector(
+        (state: StoreType) => state.vault
+    );
     const [capacity, setCapacity] = useState("0");
     const [feesEarned, setfeesEarned] = useState(new Big(0));
     const [rate, setRate] = useState(new Big(0));
@@ -80,6 +83,9 @@ export default function VaultDashboardPage() {
 
                 const slaScore = await window.polkaBTC.vaults.getSLA(vaultId.toString());
                 dispatch(updateSLAAction(slaScore));
+
+                const apyScore = await window.polkaBTC.vaults.getAPY(vaultId.toString());
+                dispatch(updateAPYAction(apyScore));
 
                 const issuablePolkaBTC = await window.polkaBTC.vaults.getIssuablePolkaBTC();
                 setCapacity(issuablePolkaBTC);
@@ -140,6 +146,10 @@ export default function VaultDashboardPage() {
                                 <div className="col-md-3">
                                     <div className="">SLA score</div>
                                     <span className="stats">{sla}</span>
+                                </div>
+                                <div className="col-md-3">
+                                    <div className="">APY</div>
+                                    <span className="stats">{apy}%</span>
                                 </div>
                             </div>
                         </div>

@@ -68,6 +68,7 @@ export const getInitialState = (): StoreType => {
             collateral: "",
             lockedBTC: "",
             sla: "0",
+            apy: "0",
         },
     };
     return emptyStore;
