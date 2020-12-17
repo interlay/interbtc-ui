@@ -9,6 +9,7 @@ import {
     UpdateLockedBTC,
     UpdateSLA,
     UpdatePremiumVault,
+    UpdateAPY,
     ADD_REPLACE_REQUESTS,
     UPDATE_BTC_ADDRESS,
     UPDATE_COLLATERALIZATION,
@@ -16,6 +17,7 @@ import {
     UPDATE_LOCKED_BTC,
     UPDATE_SLA,
     UPDATE_PREMIUM_VAULT,
+    UPDATE_APY,
 } from "../types/actions.types";
 
 export const addReplaceRequestsAction = (requests: VaultReplaceRequest[]): AddReplaceRequests => ({
@@ -51,4 +53,9 @@ export const updateSLAAction = (sla: string): UpdateSLA => ({
 export const updatePremiumVaultAction = (vault: Vault): UpdatePremiumVault => ({
     type: UPDATE_PREMIUM_VAULT,
     vault,
+});
+
+export const updateAPYAction = (apy: string): UpdateAPY => ({
+    type: UPDATE_APY,
+    apy,
 });

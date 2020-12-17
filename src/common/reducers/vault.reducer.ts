@@ -6,6 +6,7 @@ import {
     UPDATE_LOCKED_BTC,
     UPDATE_SLA,
     UPDATE_PREMIUM_VAULT,
+    UPDATE_APY,
     VaultActions,
     RESET_REDEEM_WIZARD,
     INIT_STATE,
@@ -20,6 +21,7 @@ const initialState = {
     lockedBTC: "",
     sla: "0",
     premiumVault: undefined,
+    apy: "0",
 };
 
 export const vaultReducer = (state: VaultState = initialState, action: VaultActions): VaultState => {
@@ -42,6 +44,8 @@ export const vaultReducer = (state: VaultState = initialState, action: VaultActi
             return { ...state, premiumVault: undefined };
         case INIT_STATE:
             return { ...state, premiumVault: undefined };
+        case UPDATE_APY:
+            return { ...state, apy: action.apy };
         default:
             return state;
     }

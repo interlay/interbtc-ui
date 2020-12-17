@@ -28,4 +28,5 @@ export interface VaultState {
     lockedBTC: string;
     sla: string;
     premiumVault: Vault | undefined;
+    apy: string;
 }

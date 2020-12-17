@@ -69,6 +69,7 @@ export const getInitialState = (): StoreType => {
             lockedBTC: "",
             sla: "0",
             premiumVault: undefined,
+            apy: "0",
         },
     };
     return emptyStore;

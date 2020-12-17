@@ -25,12 +25,12 @@ export default function StakedRelayerPage() {
     const [relayerRegistered, setRelayerRegistered] = useState(false);
     const [relayerInactive, setRelayerInactive] = useState(false);
     const [sla, setSLA] = useState("0");
+    const [apy, setAPY] = useState("0");
     const relayerNotRegisteredToastId = "relayer-not-registered-id";
     const { polkaBtcLoaded, relayerLoaded } = useSelector((state: StoreType) => state.general);
 
-
     const handleReportModalClose = () => setShowReportModal(false);
-    
+
     const handleRegisterModalClose = () => setShowRegisterModal(false);
 
     const deregisterStakedRelayer = async () => {
@@ -55,12 +55,6 @@ export default function StakedRelayerPage() {
                 const address = await window.relayer.getAccountId();
                 const stakedRelayerId = window.polkaBTC.api.createType("AccountId", address);
 
-                const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId.toString());
-                setSLA(slaScore);
-
-                const feesEarned = await window.polkaBTC.stakedRelayer.getFees(stakedRelayerId.toString());
-                setFees(feesEarned.toString());
-
                 const isActive = await window.polkaBTC.stakedRelayer.isStakedRelayerActive(stakedRelayerId);
                 const isInactive = await window.polkaBTC.stakedRelayer.isStakedRelayerInactive(stakedRelayerId);
                 const isRegistered = isActive || isInactive;
@@ -77,9 +71,18 @@ export default function StakedRelayerPage() {
                 if (!isRegistered) {
                     toast.warn(
                         "Local relayer client running, but relayer is not yet registered with the parachain." +
-                        " The client is already submitting blocks, but voting and reporting features are disabled until registered.",
+                            " The client is already submitting blocks, but voting and reporting features are disabled until registered.",
                         { autoClose: false, toastId: relayerNotRegisteredToastId }
                     );
+                } else {
+                    const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId.toString());
+                    setSLA(slaScore);
+
+                    const apyScore = await window.polkaBTC.stakedRelayer.getAPY(stakedRelayerId.toString());
+                    setAPY(apyScore);
+
+                    const feesEarned = await window.polkaBTC.stakedRelayer.getFees(stakedRelayerId.toString());
+                    setFees(feesEarned.toString());
                 }
 
                 setDotLocked(lockedDOT);
@@ -98,8 +101,7 @@ export default function StakedRelayerPage() {
                     <div className="row">
                         <div className="title">Staked Relayer Dashboard</div>
                     </div>
-                    {!relayerRegistered && polkaBtcLoaded
-                        ?
+                    {!relayerRegistered && polkaBtcLoaded ? (
                         <Button
                             variant="outline-success"
                             className="staked-button"
@@ -107,7 +109,7 @@ export default function StakedRelayerPage() {
                         >
                             Register (Lock DOT)
                         </Button>
-                        :
+                    ) : (
                         <div className="col-lg-10 offset-1">
                             <div className="row justify-content-center">
                                 <div className="col-3">
@@ -122,9 +124,13 @@ export default function StakedRelayerPage() {
                                     <div>SLA score</div>
                                     <span className="stats">{sla}</span>
                                 </div>
+                                <div className="col-3">
+                                    <div>APY</div>
+                                    <span className="stats">{apy}%</span>
+                                </div>
                             </div>
                         </div>
-                    }
+                    )}
                     <BitcoinTable></BitcoinTable>
                     {relayerRegistered && (
                         <Button
