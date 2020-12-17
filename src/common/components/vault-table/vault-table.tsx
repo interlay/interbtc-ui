@@ -184,6 +184,17 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
         }
     }
 
+    const showPremiumButton = (vault: Vault): boolean => {
+        if (vault.unsettledCollateralization === undefined && vault.settledCollateralization === undefined) {
+            return false;
+        }
+        if (vault.settledCollateralization !== undefined && vault.settledCollateralization > constants.AUCTION_COLLATERAL_THRESHOLD && 
+            vault.settledCollateralization < constants.PREMIUM_REDEEM_THRESHOLD) {
+            return true;
+        }
+        return false;
+    }
+
     return (
         <div className="vault-table">
             <div className="row">
@@ -235,9 +246,10 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                                                 {showCollateralizations(vault)}
                                                 <td className={getStatusColor(vault.status)}>{vault.status}</td>
                                                 {!props.isRelayer && <td>
-                                                    <Button onClick={() => openRedeemWizard(vault)}>
+                                                    {showPremiumButton(vault) && <Button onClick={() => openRedeemWizard(vault)}>
                                                         {t("dashboard.premium_redeem")}
                                                     </Button>
+                                                    }
                                                 </td>}
                                             </tr>
                                         );

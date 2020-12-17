@@ -92,5 +92,8 @@ export const VAULT_IDEAL_COLLATERALIZATION = 200; // in %
 export const VAULT_AUCTION_COLLATERALIZATION = 150; // in %
 export const VAULT_LIQUIDATION_COLLATERALIZATION = 120; // in %
 
+export const PREMIUM_REDEEM_THRESHOLD = 130;
+export const AUCTION_COLLATERAL_THRESHOLD = 120;
+
 // Landing page
 export const MARKDOWN_PATH = "../assets/polkBTCInfo.md";
