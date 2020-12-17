@@ -16,4 +16,5 @@ export interface VaultState {
     collateral: string;
     lockedBTC: string;
     sla: string;
+    apy: string;
 }

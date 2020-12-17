@@ -346,6 +346,7 @@ export const UPDATE_COLLATERALIZATION = "UPDATE_COLLATERALIZATION";
 export const UPDATE_COLLATERAL = "UPDATE_COLLATERAL";
 export const UPDATE_LOCKED_BTC = "UPDATE_LOCKED_BTC";
 export const UPDATE_SLA = "UPDATE_SLA";
+export const UPDATE_APY = "UPDATE_APY";
 
 export interface AddReplaceRequests {
     type: typeof ADD_REPLACE_REQUESTS;
@@ -377,10 +378,16 @@ export interface UpdateSLA {
     sla: string;
 }
 
+export interface UpdateAPY {
+    type: typeof UPDATE_APY;
+    apy: string;
+}
+
 export type VaultActions =
     | AddReplaceRequests
     | UpdateBTCAddress
     | UpdateCollateralization
     | UpdateCollateral
     | UpdateLockedBTC
-    | UpdateSLA;
+    | UpdateSLA
+    | UpdateAPY;
