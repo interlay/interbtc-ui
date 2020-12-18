@@ -188,8 +188,8 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
         if (vault.unsettledCollateralization === undefined && vault.settledCollateralization === undefined) {
             return false;
         }
-        if (vault.settledCollateralization !== undefined && vault.settledCollateralization > constants.AUCTION_COLLATERAL_THRESHOLD && 
-            vault.settledCollateralization < constants.PREMIUM_REDEEM_THRESHOLD) {
+        if (vault.settledCollateralization !== undefined && vault.settledCollateralization > constants.VAULT_AUCTION_COLLATERALIZATION && 
+            vault.settledCollateralization < constants.VAULT_REDEEM_COLLATERALIZATION) {
             return true;
         }
         return false;
@@ -228,7 +228,6 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                                         ></i>
                                     </th>
                                     <th>Status</th>
-                                    {!props.isRelayer && <th>Premium</th>}
                                 </tr>
                             </thead>
                             {vaults && vaults.length ? (
@@ -244,13 +243,14 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                                                 <td>{vault.lockedBTC}</td>
                                                 <td>{vault.pendingBTC}</td>
                                                 {showCollateralizations(vault)}
-                                                <td className={getStatusColor(vault.status)}>{vault.status}</td>
-                                                {!props.isRelayer && <td>
-                                                    {showPremiumButton(vault) && <Button onClick={() => openRedeemWizard(vault)}>
-                                                        {t("dashboard.premium_redeem")}
-                                                    </Button>
+                                                <td className={getStatusColor(vault.status)}>
+                                                    {!props.isRelayer && showPremiumButton(vault) ? <Button onClick={() => openRedeemWizard(vault)}>
+                                                            {t("dashboard.premium_redeem")}
+                                                        </Button> : <span>{vault.status}</span>
+                                                        
                                                     }
-                                                </td>}
+                                                </td>
+                                                
                                             </tr>
                                         );
                                     })}

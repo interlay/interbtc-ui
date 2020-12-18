@@ -58,7 +58,8 @@
         "decide_later": "Decide later",
         "recover": "Recover",
         "failed": "Failed",
-        "redeem_against_selected_vault": "You are executing a redeem against the under-collateralized vault {{shortAccount}}. You will receive a premium of {{premiumDot}} DOT for this redeem request"
+        "redeem_against_selected_vault": "You are executing a redeem against the under-collateralized vault {{shortAccount}}. You will receive a premium of {{premiumDot}} DOT for this redeem request",
+        "less_than": " and less than {{maxValue}}."
     },
     "dashboard": {
         "premium_redeem": "Premium Redeem"

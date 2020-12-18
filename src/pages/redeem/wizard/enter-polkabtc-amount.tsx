@@ -105,7 +105,8 @@ export default function EnterPolkaBTCAmount() {
                         })}
                     </p>
                 }
-                <p>{t("redeem_page.bitcoin_dust_limit")}({dustValue} BTC).</p>
+                <p>{t("redeem_page.bitcoin_dust_limit")}({dustValue} BTC)
+                {premiumVault ? t("redeem_page.less_than",{maxValue : premiumVault.lockedBTC > balancePolkaBTC ? premiumVault.lockedBTC : balancePolkaBTC }) : "."}</p>
                 <div className="row">
                     <div className="col-12 basic-addon">
                         <div className="input-group">
