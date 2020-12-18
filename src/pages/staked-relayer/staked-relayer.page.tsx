@@ -12,15 +12,15 @@ import { toast } from "react-toastify";
 import "./staked-relayer.page.scss";
 import { StoreType } from "../../common/types/util.types";
 import ButtonMaybePending from "../../common/components/pending-button";
-import { planckToDOT } from "@interlay/polkabtc";
+import { satToBTC, planckToDOT } from "@interlay/polkabtc";
 import Big from "big.js";
 
 export default function StakedRelayerPage() {
     const [showReportModal, setShowReportModal] = useState(false);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [isDeregisterPending, setDeregisterPending] = useState(false);
-    const [feesEarned, setFees] = useState(new Big(0));
-    const [rate, setRate] = useState(new Big(0));
+    const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState("0");
+    const [feesEarnedDOT, setFeesEarnedDOT] = useState("0");
     const [dotLocked, setDotLocked] = useState("0");
     const [planckLocked, setPlanckLocked] = useState("0");
     const [stakedRelayerAddress, setStakedRelayerAddress] = useState("");
@@ -57,9 +57,6 @@ export default function StakedRelayerPage() {
                 const address = await window.relayer.getAccountId();
                 const stakedRelayerId = window.polkaBTC.api.createType("AccountId", address);
 
-                const BtcDotRate = await window.polkaBTC.oracle.getExchangeRate();
-                setRate(new Big(BtcDotRate));
-
                 const isActive = await window.polkaBTC.stakedRelayer.isStakedRelayerActive(stakedRelayerId);
                 const isInactive = await window.polkaBTC.stakedRelayer.isStakedRelayerInactive(stakedRelayerId);
                 const isRegistered = isActive || isInactive;
@@ -86,8 +83,11 @@ export default function StakedRelayerPage() {
                     const apyScore = await window.polkaBTC.stakedRelayer.getAPY(stakedRelayerId.toString());
                     setAPY(apyScore);
 
-                    const feesEarned = await window.polkaBTC.stakedRelayer.getFees(stakedRelayerId.toString());
-                    setFees(new Big(feesEarned));
+                    const feesSatoshi = await window.polkaBTC.stakedRelayer.getFeesPolkaBTC(stakedRelayerId.toString());
+                    setFeesEarnedPolkaBTC(satToBTC(feesSatoshi));
+
+                    const feesPlanck = await window.polkaBTC.stakedRelayer.getFeesDOT(stakedRelayerId.toString());
+                    setFeesEarnedDOT(planckToDOT(feesPlanck));
                 }
 
                 setDotLocked(lockedDOT);
@@ -123,11 +123,11 @@ export default function StakedRelayerPage() {
                                 </div>
                                 <div className="col-3">
                                     <div>Fees earned</div>
-                                    <span className="stats">{feesEarned.toString()}</span> PolkaBTC
+                                    <span className="stats">{feesEarnedPolkaBTC}</span> PolkaBTC
                                 </div>
                                 <div className="col-3">
                                     <div>Fees earned</div>
-                                    <span className="stats">{feesEarned.mul(rate).toString()}</span> DOT
+                                    <span className="stats">{feesEarnedDOT}</span> DOT
                                 </div>
                                 <div className="col-3">
                                     <div>SLA score</div>

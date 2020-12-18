@@ -35,8 +35,8 @@ export default function VaultDashboardPage() {
         (state: StoreType) => state.vault
     );
     const [capacity, setCapacity] = useState("0");
-    const [feesEarned, setfeesEarned] = useState(new Big(0));
-    const [rate, setRate] = useState(new Big(0));
+    const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState("0");
+    const [feesEarnedDOT, setFeesEarnedDOT] = useState("0");
     const [vaultId, setVaultId] = useState("0");
     const [accountId, setAccountId] = useState("0");
     const [vaultRegistered, setVaultRegistered] = useState(false);
@@ -68,11 +68,11 @@ export default function VaultDashboardPage() {
                 const collateralDot = planckToDOT(balanceLockedDOT.toString());
                 dispatch(updateCollateralAction(collateralDot));
 
-                const fees = await window.polkaBTC.vaults.getFees(vaultId.toString());
-                setfeesEarned(new Big(fees));
+                const feesPolkaBTC = await window.polkaBTC.vaults.getFeesPolkaBTC(vaultId.toString());
+                setFeesEarnedPolkaBTC(satToBTC(feesPolkaBTC));
 
-                const BtcDotRate = await window.polkaBTC.oracle.getExchangeRate();
-                setRate(new Big(BtcDotRate));
+                const feesDOT = await window.polkaBTC.vaults.getFeesDOT(vaultId.toString());
+                setFeesEarnedDOT(planckToDOT(feesDOT));
 
                 const totalPolkaSAT = await window.polkaBTC.vaults.getIssuedPolkaBTCAmount(vaultId);
                 const lockedAmountBTC = satToBTC(totalPolkaSAT.toString());
@@ -137,11 +137,11 @@ export default function VaultDashboardPage() {
                             <div className="row justify-content-center mt-4">
                                 <div className="col-md-3">
                                     <div className="">Earned fees</div>
-                                    <span className="stats">{feesEarned.toString()}</span> PolkaBTC
+                                    <span className="stats">{feesEarnedPolkaBTC.toString()}</span> PolkaBTC
                                 </div>
                                 <div className="col-md-3">
                                     <div className="">Earned fees</div>
-                                    <span className="stats">{feesEarned.mul(rate).toString()}</span> DOT
+                                    <span className="stats">{feesEarnedDOT.toString()}</span> DOT
                                 </div>
                                 <div className="col-md-3">
                                     <div className="">SLA score</div>
