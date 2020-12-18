@@ -88,7 +88,7 @@ export default function RequestConfirmation() {
                                 Fees: <strong>{fee} PolkaBTC</strong>
                             </ListGroupItem>
                             <ListGroupItem>
-                                Griefing Collateral: <strong>{griefingCollateral} DOT</strong>
+                                Griefing Collateral: <strong>{griefingCollateral} DOT</strong> (This will be returned to you after successful completion of the request.)
                             </ListGroupItem>
                             <ListGroupItem>
                                 Total: <strong>{new Big(fee).add(new Big(amountBTC)).toString()} </strong>

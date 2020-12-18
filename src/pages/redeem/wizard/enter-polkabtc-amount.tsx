@@ -35,9 +35,12 @@ export default function EnterPolkaBTCAmount() {
     const [dustValue, setDustValue] = useState("0");
     const dispatch = useDispatch();
     const [premiumPercentage, setPremiumPercentage] = useState(new Big(0));
+    const [redeemFee, setRedeemFee] = useState("0.5");
 
     useEffect(() => {
         const fetchData = async () => {
+            if (!polkaBtcLoaded) return;
+
             const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
             const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
             setDustValue(dustValueBtc);
@@ -45,6 +48,9 @@ export default function EnterPolkaBTCAmount() {
                 const premium = await window.polkaBTC.redeem.getPremiumRedeemFee();
                 setPremiumPercentage(new Big(premium));
             }
+
+            // TODO: fetch the redeem fee from the parachain
+            setRedeemFee("0.5");
         };
         fetchData();
     });
@@ -78,7 +84,7 @@ export default function EnterPolkaBTCAmount() {
                 const vault = await window.polkaBTC.vaults.get(vaultId);
                 vaultBTCAddress = encodeBitcoinAddress(vault.wallet.address);
             }
-            toast.success("Found vault: " + vaultId.toString());
+            // toast.success("Found vault: " + vaultId.toString());
 
             const fee = await window.polkaBTC.redeem.getFeesToPay(amountPolkaBTC);
             dispatch(updateRedeemFeeAction(fee));
@@ -95,8 +101,8 @@ export default function EnterPolkaBTCAmount() {
     return (
         <form onSubmit={onSubmit}>
             <Modal.Body>
-                <p>{t("redeem_page.enter_amount_polkabtc")}</p>
-                <p>{t("redeem_page.you_have")} {balancePolkaBTC} PolkaBTC</p>
+                <p>{t("redeem_page.enter_amount_polkabtc", {redeemFee: redeemFee})}</p>
+                <p>{t("redeem_page.you_have")} {balancePolkaBTC} PolkaBTC.</p>
                 {premiumVault &&
                     <p>
                         {t("redeem_page.redeem_against_selected_vault",{
