@@ -20,6 +20,7 @@ import {
     changeAmountBTCAction,
     changeVaultBtcAddressOnIssueAction,
     updateAllIssueRequestsAction,
+    updateIssueFeeAction,
 } from "../../../common/actions/issue.actions";
 import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
@@ -39,7 +40,7 @@ export default function IssueRequests(props: IssueRequestProps) {
     const [issuePeriod, setIssuePeriod] = useState(new Big(0));
     const [parachainHeight, setParachainHeight] = useState(new Big(0));
     const dispatch = useDispatch();
-    
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -213,6 +214,7 @@ export default function IssueRequests(props: IssueRequestProps) {
         dispatch(changeAmountBTCAction(request.amountBTC));
         dispatch(changeBtcTxIdAction(request.btcTxId));
         dispatch(changeIssueIdAction(request.id));
+        dispatch(updateIssueFeeAction(request.fee));
         dispatch(changeIssueStepAction("BTC_PAYMENT_CONFIRMATION"));
         props.openWizard();
     };

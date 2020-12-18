@@ -97,7 +97,7 @@ export default function Confirmation() {
                                     <ListGroupItem>
                                         {t("redeem_page.receiving")}:
                                         <strong>
-                                            {(new Big(amountPolkaBTC).sub(new Big(fee))).toString() + " BTC"}
+                                            {" " + (new Big(amountPolkaBTC).sub(new Big(fee))).toString() + " BTC"}
                                         </strong>
                                     </ListGroupItem>
                                 </ListGroup>

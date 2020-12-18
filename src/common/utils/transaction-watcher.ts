@@ -1,4 +1,3 @@
-import { toast } from "react-toastify";
 import { stripHexPrefix } from "@interlay/polkabtc";
 import { Dispatch } from "redux";
 import { IssueRequest } from "../types/issue.types";
@@ -35,7 +34,7 @@ export async function updateTransactionStatusIssue(
                 dispatch(updateIssueRequestAction(updatedRequest));
             }
         } catch (error) {
-            toast.error(error.toString());
+            console.log(error.toString());
         }
     }
 }
@@ -68,7 +67,7 @@ export async function updateTransactionStatusRedeem(
                 dispatch(updateRedeemRequestAction(updatedRequest));
             }
         } catch (error) {
-            toast.error(error.toString());
+            console.log(error.toString());
         }
     }
 }
