@@ -22,7 +22,6 @@ import "./vault-dashboard.page.scss";
 import { encodeBitcoinAddress } from "../../common/utils/utils";
 import { toast } from "react-toastify";
 import BitcoinAddress from "../../common/components/bitcoin-links/address";
-import Big from "big.js";
 
 
 export default function VaultDashboardPage() {
