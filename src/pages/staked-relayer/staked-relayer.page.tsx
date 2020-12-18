@@ -82,8 +82,8 @@ export default function StakedRelayerPage() {
                     const apyScore = await window.polkaBTC.stakedRelayer.getAPY(stakedRelayerId.toString());
                     setAPY(apyScore);
 
-                    const feesSatoshi = await window.polkaBTC.stakedRelayer.getFeesPolkaBTC(stakedRelayerId.toString());
-                    setFeesEarnedPolkaBTC(satToBTC(feesSatoshi));
+                    const feesPolkaSAT = await window.polkaBTC.stakedRelayer.getFeesPolkaBTC(stakedRelayerId.toString());
+                    setFeesEarnedPolkaBTC(satToBTC(feesPolkaSAT));
 
                     const feesPlanck = await window.polkaBTC.stakedRelayer.getFeesDOT(stakedRelayerId.toString());
                     setFeesEarnedDOT(planckToDOT(feesPlanck));

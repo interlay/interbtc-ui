@@ -68,11 +68,11 @@ export default function VaultDashboardPage() {
                 const collateralDot = planckToDOT(balanceLockedDOT.toString());
                 dispatch(updateCollateralAction(collateralDot));
 
-                const feesPolkaBTC = await window.polkaBTC.vaults.getFeesPolkaBTC(vaultId.toString());
-                setFeesEarnedPolkaBTC(satToBTC(feesPolkaBTC));
+                const feesPolkaSAT = await window.polkaBTC.vaults.getFeesPolkaBTC(vaultId.toString());
+                setFeesEarnedPolkaBTC(satToBTC(feesPolkaSAT));
 
-                const feesDOT = await window.polkaBTC.vaults.getFeesDOT(vaultId.toString());
-                setFeesEarnedDOT(planckToDOT(feesDOT));
+                const feesPlanck = await window.polkaBTC.vaults.getFeesDOT(vaultId.toString());
+                setFeesEarnedDOT(planckToDOT(feesPlanck));
 
                 const totalPolkaSAT = await window.polkaBTC.vaults.getIssuedPolkaBTCAmount(vaultId);
                 const lockedAmountBTC = satToBTC(totalPolkaSAT.toString());
@@ -136,11 +136,11 @@ export default function VaultDashboardPage() {
                             </div>
                             <div className="row justify-content-center mt-4">
                                 <div className="col-md-3">
-                                    <div className="">Earned fees</div>
+                                    <div className="">Fees earned</div>
                                     <span className="stats">{feesEarnedPolkaBTC.toString()}</span> PolkaBTC
                                 </div>
                                 <div className="col-md-3">
-                                    <div className="">Earned fees</div>
+                                    <div className="">Fees earned</div>
                                     <span className="stats">{feesEarnedDOT.toString()}</span> DOT
                                 </div>
                                 <div className="col-md-3">
