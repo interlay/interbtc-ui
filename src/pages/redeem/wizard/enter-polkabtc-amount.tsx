@@ -30,11 +30,11 @@ export default function EnterPolkaBTCAmount() {
     const { premiumVault } = useSelector((state: StoreType) => state.vault);
     const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
     const defaultValues = amount ? { defaultValues: { amountPolkaBTC: amount } } : undefined;
-    const { register, handleSubmit, errors } = useForm<EnterPolkaBTCForm>(defaultValues);
+    const { register, handleSubmit, errors, getValues } = useForm<EnterPolkaBTCForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
     const [dustValue, setDustValue] = useState("0");
     const dispatch = useDispatch();
-    const [premiumDot, setPremiumDot] = useState("0");
+    const [premiumPercentage, setPremiumPerentage] = useState(new Big(0));
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,8 +42,8 @@ export default function EnterPolkaBTCAmount() {
             const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
             setDustValue(dustValueBtc);
             if (premiumVault) {
-                const premiumPlanck = await window.polkaBTC.redeem.getPremiumRedeemFee();
-                setPremiumDot(planckToDOT(premiumPlanck));
+                const premium = await window.polkaBTC.redeem.getPremiumRedeemFee();
+                setPremiumPerentage(new Big(premium));
             }
         };
         fetchData();
@@ -101,7 +101,7 @@ export default function EnterPolkaBTCAmount() {
                     <p>
                         {t("redeem_page.redeem_against_selected_vault",{
                             shortAccount: shortAddress(premiumVault.vaultId),
-                            premiumDot 
+                            premiumDot: getValues("amountPolkaBTC") ? new Big(getValues("amountPolkaBTC")).mul(premiumPercentage.div(new Big(100))) : 0
                         })}
                     </p>
                 }
