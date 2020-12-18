@@ -12,7 +12,7 @@ import {
 import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { btcToSat, satToBTC } from "@interlay/polkabtc";
+import { btcToSat, satToBTC, planckToDOT } from "@interlay/polkabtc";
 import { encodeBitcoinAddress } from "../../../common/utils/utils";
 import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
 import { useTranslation } from 'react-i18next';
@@ -34,7 +34,7 @@ export default function EnterPolkaBTCAmount() {
     const [isRequestPending, setRequestPending] = useState(false);
     const [dustValue, setDustValue] = useState("0");
     const dispatch = useDispatch();
-    const [premiumDot, setPremiumDot] = useState(new Big(0));
+    const [premiumDot, setPremiumDot] = useState("0");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,8 +42,8 @@ export default function EnterPolkaBTCAmount() {
             const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
             setDustValue(dustValueBtc);
             if (premiumVault) {
-                //FILIP const premium = await window.polkaBTC.api.vault.getPremiumRedeemFee() 
-                setPremiumDot(new Big(10));
+                const premiumPlanck = await window.polkaBTC.redeem.getPremiumRedeemFee();
+                setPremiumDot(planckToDOT(premiumPlanck));
             }
         };
         fetchData();
