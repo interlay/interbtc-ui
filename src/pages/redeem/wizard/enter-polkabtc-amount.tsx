@@ -34,7 +34,7 @@ export default function EnterPolkaBTCAmount() {
     const [isRequestPending, setRequestPending] = useState(false);
     const [dustValue, setDustValue] = useState("0");
     const dispatch = useDispatch();
-    const [premiumPercentage, setPremiumPerentage] = useState(new Big(0));
+    const [premiumPercentage, setPremiumPercentage] = useState(new Big(0));
 
     useEffect(() => {
         const fetchData = async () => {
@@ -43,7 +43,7 @@ export default function EnterPolkaBTCAmount() {
             setDustValue(dustValueBtc);
             if (premiumVault) {
                 const premium = await window.polkaBTC.redeem.getPremiumRedeemFee();
-                setPremiumPerentage(new Big(premium));
+                setPremiumPercentage(new Big(premium));
             }
         };
         fetchData();
@@ -82,7 +82,7 @@ export default function EnterPolkaBTCAmount() {
 
             const fee = await window.polkaBTC.redeem.getFeesToPay(amountPolkaBTC);
             dispatch(updateRedeemFeeAction(fee));
-            
+
             dispatch(changeVaultBtcAddressOnRedeemAction(vaultBTCAddress));
             dispatch(changeVaultDotAddressOnRedeemAction(vaultId.toString()));
             dispatch(changeRedeemStepAction("ENTER_BTC_ADDRESS"));
@@ -97,7 +97,7 @@ export default function EnterPolkaBTCAmount() {
             <Modal.Body>
                 <p>{t("redeem_page.enter_amount_polkabtc")}</p>
                 <p>{t("redeem_page.you_have")} {balancePolkaBTC} PolkaBTC</p>
-                {premiumVault && 
+                {premiumVault &&
                     <p>
                         {t("redeem_page.redeem_against_selected_vault",{
                             shortAccount: shortAddress(premiumVault.vaultId),
@@ -119,7 +119,7 @@ export default function EnterPolkaBTCAmount() {
                                     validate: (value) =>
                                         value > balancePolkaBTC
                                             ? t("redeem_page.current_balance") + balancePolkaBTC
-                                            : value < Number(dustValue) ? 
+                                            : value < Number(dustValue) ?
                                                 t("redeem_page.amount_greater") + dustValue + "BTC)."
                                                 : undefined,
                                 })}
