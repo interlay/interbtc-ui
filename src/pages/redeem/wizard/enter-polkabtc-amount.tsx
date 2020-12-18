@@ -12,7 +12,7 @@ import {
 import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { btcToSat, satToBTC } from "@interlay/polkabtc";
+import { btcToSat, satToBTC, planckToDOT } from "@interlay/polkabtc";
 import { encodeBitcoinAddress } from "../../../common/utils/utils";
 import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
 import { useTranslation } from 'react-i18next';
@@ -30,11 +30,11 @@ export default function EnterPolkaBTCAmount() {
     const { premiumVault } = useSelector((state: StoreType) => state.vault);
     const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
     const defaultValues = amount ? { defaultValues: { amountPolkaBTC: amount } } : undefined;
-    const { register, handleSubmit, errors } = useForm<EnterPolkaBTCForm>(defaultValues);
+    const { register, handleSubmit, errors, getValues } = useForm<EnterPolkaBTCForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
     const [dustValue, setDustValue] = useState("0");
     const dispatch = useDispatch();
-    const [premiumDot, setPremiumDot] = useState(new Big(0));
+    const [premiumPercentage, setPremiumPercentage] = useState(new Big(0));
     const [redeemFee, setRedeemFee] = useState("0.5");
 
     useEffect(() => {
@@ -45,8 +45,8 @@ export default function EnterPolkaBTCAmount() {
             const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
             setDustValue(dustValueBtc);
             if (premiumVault) {
-                //FILIP const premium = await window.polkaBTC.api.vault.getPremiumRedeemFee()
-                setPremiumDot(new Big(10));
+                const premium = await window.polkaBTC.redeem.getPremiumRedeemFee();
+                setPremiumPercentage(new Big(premium));
             }
 
             // TODO: fetch the redeem fee from the parachain
@@ -107,7 +107,7 @@ export default function EnterPolkaBTCAmount() {
                     <p>
                         {t("redeem_page.redeem_against_selected_vault",{
                             shortAccount: shortAddress(premiumVault.vaultId),
-                            premiumDot
+                            premiumDot: getValues("amountPolkaBTC") ? new Big(getValues("amountPolkaBTC")).mul(premiumPercentage.div(new Big(100))) : 0
                         })}
                     </p>
                 }
