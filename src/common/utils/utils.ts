@@ -32,7 +32,7 @@ export function formatDateTime(date: Date): string {
 }
 
 export function dateToShortString(date: Date): string {
-    return date.toDateString().substring(3) + date.toTimeString().substring(0, date.toTimeString().length);
+    return date.toDateString().substring(3) + " " + date.toTimeString().substring(0, date.toTimeString().length);
 }
 
 export function convertToPercentage(x: number): number {
