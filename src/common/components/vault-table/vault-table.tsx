@@ -188,8 +188,8 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
         if (vault.unsettledCollateralization === undefined && vault.settledCollateralization === undefined) {
             return false;
         }
-        if (vault.settledCollateralization !== undefined && vault.settledCollateralization > constants.VAULT_AUCTION_COLLATERALIZATION && 
-            vault.settledCollateralization < constants.VAULT_REDEEM_COLLATERALIZATION) {
+        if (vault.settledCollateralization !== undefined && vault.settledCollateralization > constants.VAULT_AUCTION_COLLATERALIZATION &&
+            vault.settledCollateralization < constants.VAULT_PREMIUM_REDEEM_COLLATERALIZATION) {
             return true;
         }
         return false;
@@ -247,10 +247,10 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                                                     {!props.isRelayer && showPremiumButton(vault) ? <Button onClick={() => openRedeemWizard(vault)}>
                                                             {t("dashboard.premium_redeem")}
                                                         </Button> : <span>{vault.status}</span>
-                                                        
+
                                                     }
                                                 </td>
-                                                
+
                                             </tr>
                                         );
                                     })}
