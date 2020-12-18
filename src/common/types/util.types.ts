@@ -6,17 +6,6 @@ import { IssueState } from "./issue.types";
 import { RedeemState } from "./redeem.types";
 import { VaultState } from "./vault.types";
 
-export type Vault = {
-    vaultId: string;
-    btcAddress: string;
-    lockedDOT: string;
-    lockedBTC: string;
-    pendingBTC: string;
-    status: string;
-    unsettledCollateralization: number | undefined;
-    settledCollateralization: number | undefined;
-};
-
 export interface StatusUpdate {
     id: u256;
     timestamp: string;
