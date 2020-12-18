@@ -10,6 +10,7 @@ export interface IssueRequest {
     transactionBlockHeight?: number;
     rawTransaction?: Uint8Array;
     fee: string;
+    griefingCollateral: string;
 }
 
 export interface IssueMap {
@@ -31,6 +32,7 @@ export interface IssueState {
     step: string;
     amountBTC: string;
     fee: string;
+    griefingCollateral: string;
     vaultDotAddress: string;
     vaultBtcAddress: string;
     id: string;

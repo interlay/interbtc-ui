@@ -14,11 +14,12 @@ import { IssueRequest } from "../../../common/types/issue.types";
 import { StoreType } from "../../../common/types/util.types";
 import Big from "big.js";
 
-
 export default function RequestConfirmation() {
     const [isRequestPending, setRequestPending] = useState(false);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const { amountBTC, fee, vaultDotAddress, vaultBtcAddress } = useSelector((state: StoreType) => state.issue);
+    const { amountBTC, vaultDotAddress, vaultBtcAddress, fee, griefingCollateral } = useSelector(
+        (state: StoreType) => state.issue
+    );
     const dispatch = useDispatch();
 
     const onConfirm = async () => {
@@ -49,6 +50,7 @@ export default function RequestConfirmation() {
                 vaultBTCAddress: vaultBtcAddress,
                 btcTxId: "",
                 fee: fee,
+                griefingCollateral,
                 confirmations: 0,
                 completed: false,
                 merkleProof: "",
@@ -86,7 +88,11 @@ export default function RequestConfirmation() {
                                 Fees: <strong>{fee} PolkaBTC</strong>
                             </ListGroupItem>
                             <ListGroupItem>
-                                Total: <strong>{((new Big(fee)).add(new Big(amountBTC))).toString()} </strong><strong>BTC</strong>
+                                Griefing Collateral: <strong>{griefingCollateral} DOT</strong>
+                            </ListGroupItem>
+                            <ListGroupItem>
+                                Total: <strong>{new Big(fee).add(new Big(amountBTC)).toString()} </strong>
+                                <strong>BTC</strong>
                             </ListGroupItem>
                         </ListGroup>
                     </FormGroup>
