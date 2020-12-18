@@ -79,7 +79,7 @@ export default function RedeemPage(): JSX.Element {
                             <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
                                 <Button variant="outline-bitcoin" size="lg" block onClick={openWizard} disabled={balancePolkaBTC === '0' }>
                                     {t("redeem_page.redeem_polkaBTC")}
-                            </Button>
+                                </Button>
                             </Col>
                             {balancePolkaBTC === '0' &&
                                 <Col className="mt-2" xs="12" sm={{ span: 6, offset: 3 }}>

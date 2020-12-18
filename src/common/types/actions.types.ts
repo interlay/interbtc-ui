@@ -1,6 +1,6 @@
 import { IssueRequest, VaultIssue } from "./issue.types";
 import { RedeemRequest, VaultRedeem } from "./redeem.types";
-import { VaultReplaceRequest } from "./vault.types";
+import { VaultReplaceRequest, Vault } from "./vault.types";
 import { StoreType, ParachainStatus } from "./util.types";
 
 // GENERAL ACTIONS
@@ -346,6 +346,7 @@ export const UPDATE_COLLATERALIZATION = "UPDATE_COLLATERALIZATION";
 export const UPDATE_COLLATERAL = "UPDATE_COLLATERAL";
 export const UPDATE_LOCKED_BTC = "UPDATE_LOCKED_BTC";
 export const UPDATE_SLA = "UPDATE_SLA";
+export const UPDATE_PREMIUM_VAULT = "UPDATE_PREMIUM_VAULT";
 export const UPDATE_APY = "UPDATE_APY";
 
 export interface AddReplaceRequests {
@@ -378,6 +379,11 @@ export interface UpdateSLA {
     sla: string;
 }
 
+export interface UpdatePremiumVault {
+    type: typeof UPDATE_PREMIUM_VAULT;
+    vault: Vault;
+}
+
 export interface UpdateAPY {
     type: typeof UPDATE_APY;
     apy: string;
@@ -390,4 +396,7 @@ export type VaultActions =
     | UpdateCollateral
     | UpdateLockedBTC
     | UpdateSLA
+    | UpdatePremiumVault
+    | ResetRedeemWizard
+    | InitState
     | UpdateAPY;

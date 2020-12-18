@@ -88,9 +88,10 @@ export const VAULT_STATUS_AUCTION = "Auction";
 export const BTC_RELAY_DELAY_WARNING = 6;
 export const BTC_RELAY_DELAY_CRITICAL = 12;
 
-export const VAULT_IDEAL_COLLATERALIZATION = 200; // in %
-export const VAULT_AUCTION_COLLATERALIZATION = 150; // in %
-export const VAULT_LIQUIDATION_COLLATERALIZATION = 120; // in %
+export const VAULT_IDEAL_COLLATERALIZATION = 150; // in %
+export const VAULT_PREMIUM_REDEEM_COLLATERALIZATION = 130;
+export const VAULT_AUCTION_COLLATERALIZATION = 120; // in %
+export const VAULT_LIQUIDATION_COLLATERALIZATION = 110; // in %
 
 // Landing page
 export const MARKDOWN_PATH = "../assets/polkBTCInfo.md";

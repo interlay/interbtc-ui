@@ -57,7 +57,12 @@
         "please_note": "You will not receive any BTC if you remburse.",
         "decide_later": "Decide later",
         "recover": "Recover",
-        "failed": "Failed"
+        "failed": "Failed",
+        "redeem_against_selected_vault": "You are executing a redeem against the under-collateralized vault {{shortAccount}}. You will receive a premium of {{premiumDot}} DOT for this redeem request",
+        "less_than": " and less than {{maxValue}}."
+    },
+    "dashboard": {
+        "premium_redeem": "Premium Redeem"
     },
     "issue_page": {
         "error_in_parachain": "You can't issue PolkaBTC at the moment because the Parachain has encountered errors and recovering.",

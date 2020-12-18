@@ -75,7 +75,7 @@ export default function DashboardPage() {
                     </div>
                     <BitcoinTable></BitcoinTable>
                     <StatusUpdateTable dotLocked={totalLockedDOT} readOnly={true}></StatusUpdateTable>
-                    <VaultTable></VaultTable>
+                    <VaultTable isRelayer={false}></VaultTable>
                     <OracleTable planckLocked={"1"}></OracleTable>
                     <StakedRelayerTable></StakedRelayerTable>
                 </div>
