@@ -8,14 +8,15 @@ import {
     changeVaultBtcAddressOnIssueAction,
     changeVaultDotAddressOnIssueAction,
     updateIssueFeeAction,
+    updateIssueGriefingCollateralAction,
 } from "../../../common/actions/issue.actions";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { btcToSat, stripHexPrefix, satToBTC } from "@interlay/polkabtc";
+import { btcToSat, stripHexPrefix, satToBTC, planckToDOT } from "@interlay/polkabtc";
 import { encodeBitcoinAddress } from "../../../common/utils/utils";
 import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 type EnterBTCForm = {
     amountBTC: string;
@@ -65,6 +66,9 @@ export default function EnterBTCAmount() {
             const fee = await window.polkaBTC.issue.getFeesToPay(amountBTC);
             dispatch(updateIssueFeeAction(fee));
 
+            const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateral(amountSAT);
+            dispatch(updateIssueGriefingCollateralAction(planckToDOT(griefingCollateral)));
+
             dispatch(changeVaultBtcAddressOnIssueAction(stripHexPrefix(vaultBTCAddress)));
             dispatch(changeVaultDotAddressOnIssueAction(vaultId.toString()));
             dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
@@ -95,13 +99,14 @@ export default function EnterBTCAmount() {
                                 ref={register({
                                     required: true,
                                     validate: (value) => {
-                                        const message = value > 1
-                                        ? t("issue_page.validation_max_value")
-                                        : value < Number(dustValue) ? 
-                                            t("issue_page.validation_min_value") + dustValue + "BTC)."
-                                            : undefined;
+                                        const message =
+                                            value > 1
+                                                ? t("issue_page.validation_max_value")
+                                                : value < Number(dustValue)
+                                                ? t("issue_page.validation_min_value") + dustValue + "BTC)."
+                                                : undefined;
                                         return message;
-                                    }
+                                    },
                                 })}
                             />
                             <div className="input-group-append">

@@ -235,6 +235,7 @@ export const CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE = "CHANGE_VAULT_DOT_ADDRESS_ON_IS
 export const CHANGE_ISSUE_STEP = "CHANGE_ISSUE_STEP";
 export const CHANGE_AMOUNT_BTC = "CHANGE_AMOUNT_BTC";
 export const UPDATE_ISSUE_FEE = "UPDATE_ISSUE_FEE";
+export const UPDATE_ISSUE_GRIEFING_COLLATERAL = "UPDATE_ISSUE_GRIEFING_COLLATERAL";
 export const CHANGE_ISSUE_ID = "CHANGE_ISSUE_ID";
 export const RESET_ISSUE_WIZARD = "RESET_ISSUE_WIZARD";
 export const STORE_ISSUE_REQUEST = "STORE_ISSUE_REQUEST";
@@ -274,6 +275,11 @@ export interface ChangeAmountBtc {
 export interface UpdateIssueFee {
     type: typeof UPDATE_ISSUE_FEE;
     fee: string;
+}
+
+export interface UpdateIssueGriefingCollateral {
+    type: typeof UPDATE_ISSUE_GRIEFING_COLLATERAL;
+    griefingCollateral: string;
 }
 
 export interface ChangeIssueId {
@@ -323,6 +329,7 @@ export type IssueActions =
     | ChangeIssueStep
     | ChangeAmountBtc
     | UpdateIssueFee
+    | UpdateIssueGriefingCollateral
     | ChangeVaultBtcAddressOnIssue
     | ChangeVaultDotAddressOnIssue
     | ChangeIssueId
