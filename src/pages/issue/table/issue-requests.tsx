@@ -25,6 +25,7 @@ import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
 import { updateBalancePolkaBTCAction } from "../../../common/actions/general.actions";
 
+
 type IssueRequestProps = {
     openWizard: () => void;
 };
@@ -38,6 +39,7 @@ export default function IssueRequests(props: IssueRequestProps) {
     const [issuePeriod, setIssuePeriod] = useState(new Big(0));
     const [parachainHeight, setParachainHeight] = useState(new Big(0));
     const dispatch = useDispatch();
+    
 
     useEffect(() => {
         const fetchData = async () => {

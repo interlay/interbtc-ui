@@ -48,7 +48,7 @@ export default function RequestConfirmation() {
                 creation: issueRequest.opentime.toString(),
                 vaultBTCAddress: vaultBtcAddress,
                 btcTxId: "",
-                fee: issueRequest.fee.toString(), 
+                fee: fee,
                 confirmations: 0,
                 completed: false,
                 merkleProof: "",

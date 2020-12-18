@@ -53,7 +53,7 @@ export default function Confirmation() {
                 id,
                 amountPolkaBTC,
                 creation: redeemRequest.opentime.toString(),
-                fee: redeemRequest.fee.toString(),
+                fee: fee,
                 btcAddress,
                 btcTxId: "",
                 confirmations: 0,
@@ -95,7 +95,7 @@ export default function Confirmation() {
                                         {t("fee")}: <strong>{fee + " PolkaBTC"}</strong>
                                     </ListGroupItem>
                                     <ListGroupItem>
-                                        {t("redeem_page.receiving")}: 
+                                        {t("redeem_page.receiving")}:
                                         <strong>
                                             {(new Big(amountPolkaBTC).sub(new Big(fee))).toString() + " BTC"}
                                         </strong>

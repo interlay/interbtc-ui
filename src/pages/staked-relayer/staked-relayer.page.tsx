@@ -12,8 +12,7 @@ import { toast } from "react-toastify";
 import "./staked-relayer.page.scss";
 import { StoreType } from "../../common/types/util.types";
 import ButtonMaybePending from "../../common/components/pending-button";
-import { satToBTC, planckToDOT } from "@interlay/polkabtc";
-import Big from "big.js";
+import { satToBTC, planckToDOT, roundTwoDecimals } from "@interlay/polkabtc";
 
 export default function StakedRelayerPage() {
     const [showReportModal, setShowReportModal] = useState(false);
@@ -135,7 +134,7 @@ export default function StakedRelayerPage() {
                                 </div>
                                 <div className="col-3">
                                     <div>APY</div>
-                                    <span className="stats">{apy}%</span>
+                                    <span className="stats">~{roundTwoDecimals(apy)}</span> %
                                 </div>
                             </div>
                         </div>

@@ -32,7 +32,7 @@ export function formatDateTime(date: Date): string {
 }
 
 export function dateToShortString(date: Date): string {
-    return date.toDateString().substring(3) + date.toTimeString().substring(0, date.toTimeString().length);
+    return date.toDateString().substring(3) + " " + date.toTimeString().substring(0, date.toTimeString().length);
 }
 
 export function convertToPercentage(x: number): number {
@@ -52,7 +52,7 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
         creation: parachainIssueRequest.opentime.toString(),
         vaultBTCAddress: parachainIssueRequest.btc_address,
         btcTxId: "",
-        fee: parachainIssueRequest.fee.toString(),
+        fee: satToBTC(parachainIssueRequest.fee.toString()),
         confirmations: 0,
         completed: parachainIssueRequest.completed.isTrue,
     };
@@ -71,7 +71,7 @@ export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: Par
         creation: parachainRedeemRequest.opentime.toString(),
         btcAddress: parachainRedeemRequest.btc_address,
         btcTxId: "",
-        fee: parachainRedeemRequest.fee.toString(),
+        fee: satToBTC(parachainRedeemRequest.fee.toString()),
         confirmations: 0,
         completed: parachainRedeemRequest.completed.isTrue,
         isExpired: false,
