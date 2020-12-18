@@ -136,7 +136,7 @@ export default function VaultDashboardPage() {
                                 </div>
                                 <div className="col-md-3">
                                     <div className="">APY</div>
-                                    <span className="stats">{apy}%</span>
+                                    <span className="stats">~{roundTwoDecimals(apy)}</span> %
                                 </div>
                             </div>
                         </div>
