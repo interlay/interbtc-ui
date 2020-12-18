@@ -35,16 +35,22 @@ export default function EnterPolkaBTCAmount() {
     const [dustValue, setDustValue] = useState("0");
     const dispatch = useDispatch();
     const [premiumDot, setPremiumDot] = useState(new Big(0));
+    const [redeemFee, setRedeemFee] = useState("0.5");
 
     useEffect(() => {
         const fetchData = async () => {
+            if (!polkaBtcLoaded) return;
+
             const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
             const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
             setDustValue(dustValueBtc);
             if (premiumVault) {
-                //FILIP const premium = await window.polkaBTC.api.vault.getPremiumRedeemFee() 
+                //FILIP const premium = await window.polkaBTC.api.vault.getPremiumRedeemFee()
                 setPremiumDot(new Big(10));
             }
+
+            // TODO: fetch the redeem fee from the parachain
+            setRedeemFee("0.5");
         };
         fetchData();
     });
@@ -78,11 +84,11 @@ export default function EnterPolkaBTCAmount() {
                 const vault = await window.polkaBTC.vaults.get(vaultId);
                 vaultBTCAddress = encodeBitcoinAddress(vault.wallet.address);
             }
-            toast.success("Found vault: " + vaultId.toString());
+            // toast.success("Found vault: " + vaultId.toString());
 
             const fee = await window.polkaBTC.redeem.getFeesToPay(amountPolkaBTC);
             dispatch(updateRedeemFeeAction(fee));
-            
+
             dispatch(changeVaultBtcAddressOnRedeemAction(vaultBTCAddress));
             dispatch(changeVaultDotAddressOnRedeemAction(vaultId.toString()));
             dispatch(changeRedeemStepAction("ENTER_BTC_ADDRESS"));
@@ -95,13 +101,13 @@ export default function EnterPolkaBTCAmount() {
     return (
         <form onSubmit={onSubmit}>
             <Modal.Body>
-                <p>{t("redeem_page.enter_amount_polkabtc")}</p>
-                <p>{t("redeem_page.you_have")} {balancePolkaBTC} PolkaBTC</p>
-                {premiumVault && 
+                <p>{t("redeem_page.enter_amount_polkabtc", {redeemFee: redeemFee})}</p>
+                <p>{t("redeem_page.you_have")} {balancePolkaBTC} PolkaBTC.</p>
+                {premiumVault &&
                     <p>
                         {t("redeem_page.redeem_against_selected_vault",{
                             shortAccount: shortAddress(premiumVault.vaultId),
-                            premiumDot 
+                            premiumDot
                         })}
                     </p>
                 }
@@ -119,7 +125,7 @@ export default function EnterPolkaBTCAmount() {
                                     validate: (value) =>
                                         value > balancePolkaBTC
                                             ? t("redeem_page.current_balance") + balancePolkaBTC
-                                            : value < Number(dustValue) ? 
+                                            : value < Number(dustValue) ?
                                                 t("redeem_page.amount_greater") + dustValue + "BTC)."
                                                 : undefined,
                                 })}
