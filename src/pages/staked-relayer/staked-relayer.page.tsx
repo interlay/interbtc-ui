@@ -12,13 +12,14 @@ import { toast } from "react-toastify";
 import "./staked-relayer.page.scss";
 import { StoreType } from "../../common/types/util.types";
 import ButtonMaybePending from "../../common/components/pending-button";
-import { planckToDOT, roundTwoDecimals } from "@interlay/polkabtc";
+import { satToBTC, planckToDOT, roundTwoDecimals } from "@interlay/polkabtc";
 
 export default function StakedRelayerPage() {
     const [showReportModal, setShowReportModal] = useState(false);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [isDeregisterPending, setDeregisterPending] = useState(false);
-    const [feesEarned, setFees] = useState("0");
+    const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState("0");
+    const [feesEarnedDOT, setFeesEarnedDOT] = useState("0");
     const [dotLocked, setDotLocked] = useState("0");
     const [planckLocked, setPlanckLocked] = useState("0");
     const [stakedRelayerAddress, setStakedRelayerAddress] = useState("");
@@ -81,8 +82,11 @@ export default function StakedRelayerPage() {
                     const apyScore = await window.polkaBTC.stakedRelayer.getAPY(stakedRelayerId.toString());
                     setAPY(apyScore);
 
-                    const feesEarned = await window.polkaBTC.stakedRelayer.getFees(stakedRelayerId.toString());
-                    setFees(feesEarned.toString());
+                    const feesPolkaSAT = await window.polkaBTC.stakedRelayer.getFeesPolkaBTC(stakedRelayerId.toString());
+                    setFeesEarnedPolkaBTC(satToBTC(feesPolkaSAT));
+
+                    const feesPlanck = await window.polkaBTC.stakedRelayer.getFeesDOT(stakedRelayerId.toString());
+                    setFeesEarnedDOT(planckToDOT(feesPlanck));
                 }
 
                 setDotLocked(lockedDOT);
@@ -114,11 +118,15 @@ export default function StakedRelayerPage() {
                             <div className="row justify-content-center">
                                 <div className="col-3">
                                     <div>Stake locked</div>
-                                    <span className="stats">{dotLocked}</span> DOT
+                                    <span className="stats">{dotLocked.toString()}</span> DOT
                                 </div>
                                 <div className="col-3">
                                     <div>Fees earned</div>
-                                    <span className="stats">{feesEarned}</span> DOT
+                                    <span className="stats">{feesEarnedPolkaBTC}</span> PolkaBTC
+                                </div>
+                                <div className="col-3">
+                                    <div>Fees earned</div>
+                                    <span className="stats">{feesEarnedDOT}</span> DOT
                                 </div>
                                 <div className="col-3">
                                     <div>SLA score</div>
