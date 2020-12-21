@@ -59,6 +59,15 @@ export default function VaultDashboardPage() {
                 const vault = await window.polkaBTC.vaults.get(vaultId);
                 setVaultId(vault.id.toString());
 
+                // show warning if vault is not registered with the parachain
+                if (accountId !== vault.id.toString()) {
+                    toast.warn(
+                        "Local vault client running, but vault is not yet registered with the parachain." +
+                            " Client needs to be registered and DOT locked to start backing PolkaBTC and earning fees.",
+                        { autoClose: false, toastId: vaultNotRegisteredToastId }
+                    );
+                }
+
                 const vaultBTCAddress = encodeBitcoinAddress(vault.wallet.address);
                 dispatch(updateBTCAddressAction(vaultBTCAddress));
 
@@ -88,12 +97,7 @@ export default function VaultDashboardPage() {
                 const issuablePolkaBTC = await window.polkaBTC.vaults.getIssuablePolkaBTC();
                 setCapacity(issuablePolkaBTC);
             } catch (err) {
-                console.log(err);
-                toast.warn(
-                    "Local vault client running, but vault is not yet registered with the parachain." +
-                        " Client needs to be registered and DOT locked to start backing PolkaBTC and earning fees.",
-                    { autoClose: false, toastId: vaultNotRegisteredToastId }
-                );
+                toast.error(err);
             }
         };
         fetchData();
