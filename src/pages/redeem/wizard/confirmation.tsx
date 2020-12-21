@@ -14,6 +14,7 @@ import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat } from "@interlay/polkabtc";
 import Big from "big.js";
 import { useTranslation } from 'react-i18next';
+import { startTransactionWatcherRedeem } from "../../../common/utils/redeem-transaction.watcher";
 
 
 export default function Confirmation() {
@@ -63,6 +64,7 @@ export default function Confirmation() {
                 reimbursed: false
             };
             dispatch(addRedeemRequestAction(request));
+            startTransactionWatcherRedeem(request,dispatch);
             dispatch(changeRedeemStepAction("VAULT_INFO"));
             dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(amountPolkaBTC)).toString()));
         } catch (error) {

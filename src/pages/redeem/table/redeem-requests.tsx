@@ -5,7 +5,7 @@ import { shortAddress, parachainToUIRedeemRequest } from "../../../common/utils/
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import { startTransactionWatcherRedeem } from "../../../common/utils/transaction-watcher";
+import { startTransactionWatcherRedeem } from "../../../common/utils/redeem-transaction.watcher";
 import {
     updateAllRedeemRequestsAction,
     redeemExpiredAction,

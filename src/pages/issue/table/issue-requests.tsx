@@ -10,7 +10,7 @@ import { StoreType } from "../../../common/types/util.types";
 import { useEffect } from "react";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { toast } from "react-toastify";
-import { startTransactionWatcherIssue } from "../../../common/utils/transaction-watcher";
+import { startTransactionWatcherIssue } from "../../../common/utils/issue-transaction.watcher";
 import {
     updateIssueRequestAction,
     changeIssueStepAction,
@@ -184,11 +184,11 @@ export default function IssueRequests(props: IssueRequestProps) {
                 </h5>
             );
         }
-        if (request.confirmations < requiredBtcConfirmations || request.confirmations === 0) {
-            return <FaHourglass></FaHourglass>;
-        }
         if (request.completed) {
             return <FaCheck></FaCheck>;
+        }
+        if (request.confirmations < requiredBtcConfirmations || request.confirmations === 0) {
+            return <FaHourglass></FaHourglass>;
         }
         return (
             <ButtonMaybePending

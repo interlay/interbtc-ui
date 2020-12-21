@@ -16,6 +16,9 @@ import {
     ReplaceRequestExt as ParachainReplaceRequest,
 } from "@interlay/polkabtc";
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from "../../constants";
+import { Dispatch } from "redux";
+import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from "../actions/general.actions";
+
 
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;
@@ -212,4 +215,25 @@ export const requestsToVaultReplaceRequests = (requests: Map<H256, ParachainRepl
         });
     });
     return replaceRequests;
+};
+
+export const updateBalances = async (
+    dispatch: Dispatch,
+    address: string,
+    currentBalanceDOT: string,
+    currentBalancePolkaBTC: string
+) => {
+    const accountId = window.polkaBTC.api.createType("AccountId", address);
+    const balancePolkaSAT = await window.polkaBTC.treasury.balancePolkaBTC(accountId);
+    const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
+    const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
+    const balanceDOT = planckToDOT(balancePLANCK.toString());
+
+    if (currentBalanceDOT !== balanceDOT) {
+        dispatch(updateBalanceDOTAction(balanceDOT));
+    }
+
+    if (currentBalancePolkaBTC !== balancePolkaBTC) {
+        dispatch(updateBalancePolkaBTCAction(balancePolkaBTC));
+    }
 };
