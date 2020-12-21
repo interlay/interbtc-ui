@@ -8,12 +8,9 @@ import * as constants from "../../constants";
 import ButtonMaybePending from "./pending-button";
 import DropdownItem from "react-bootstrap/esm/DropdownItem";
 import { FaDiscord, FaGithub, FaEdit } from "react-icons/fa";
-import { planckToDOT, satToBTC } from "@interlay/polkabtc";
-import { 
-    updateBalancePolkaBTCAction, 
-    updateBalanceDOTAction,
-    showAccountModalAction 
-} from "../actions/general.actions";
+import { planckToDOT } from "@interlay/polkabtc";
+import { updateBalanceDOTAction, showAccountModalAction } from "../actions/general.actions";
+import { updateBalances } from "../utils/utils";
 
 
 type TopbarProps = {
@@ -22,11 +19,8 @@ type TopbarProps = {
 };
 
 export default function Topbar(props: TopbarProps): ReactElement {
-    const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
-    const vaultClientLoaded = useSelector((state: StoreType) => state.general.vaultClientLoaded);
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const address = useSelector((state: StoreType) => state.general.address);
-    const extensions = useSelector((state: StoreType) => state.general.extensions);
+    const { extensions, address, relayerLoaded, vaultClientLoaded, polkaBtcLoaded, balanceDOT, balancePolkaBTC } = 
+        useSelector((state: StoreType) => state.general);
     const [isRelayerConnected, setIsRelayerConnected] = useState(false);
     const [isVaultConnected, setIsVaultConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -53,13 +47,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
         const fetchData = async () => {
             if (!polkaBtcLoaded || address === "") return;
 
-            const accountId = window.polkaBTC.api.createType("AccountId", address);
-            const balancePolkaSAT = await window.polkaBTC.treasury.balancePolkaBTC(accountId);
-            const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
-            const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
-            const balanceDOT = planckToDOT(balancePLANCK.toString());
-            dispatch(updateBalancePolkaBTCAction(balancePolkaBTC));
-            dispatch(updateBalanceDOTAction(balanceDOT));
+            updateBalances(dispatch,address,balanceDOT,balancePolkaBTC);
         };
         fetchData();
     }, [address, polkaBtcLoaded, dispatch]);

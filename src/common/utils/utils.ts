@@ -221,7 +221,7 @@ export const updateBalances = async (
     address: string,
     currentBalanceDOT: string,
     currentBalancePolkaBTC: string
-) => {
+): Promise<void> => {
     const accountId = window.polkaBTC.api.createType("AccountId", address);
     const balancePolkaSAT = await window.polkaBTC.treasury.balancePolkaBTC(accountId);
     const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
