@@ -5,7 +5,6 @@ import { IssueActions } from "../types/actions.types";
 import { updateIssueRequestAction, addTransactionListenerIssue } from "../actions/issue.actions";
 import { updateBalances } from "./utils";
 
-
 export async function startTransactionWatcherIssue(
     request: IssueRequest,
     dispatch: Dispatch<IssueActions>
@@ -22,20 +21,21 @@ export async function updateTransactionStatusIssue(
 ): Promise<void> {
     const { address, balanceDOT, balancePolkaBTC } = window.store.getState().general;
     const allRequests = window.store.getState().issue.issueRequests.get(address);
-    
+
     if (!allRequests) return;
 
-    let storeRequest = allRequests.filter((r) => request.id === r.id)[0];
+    const storeRequest = allRequests.filter((r) => request.id === r.id)[0];
     if (storeRequest && !storeRequest.completed && window.polkaBTC) {
         const fetchedRequest = await window.polkaBTC.issue.getRequestById(storeRequest.id);
         if (fetchedRequest.completed.valueOf()) {
-            dispatch(updateIssueRequestAction({
+            dispatch(
+                updateIssueRequestAction({
                     ...storeRequest,
-                    completed: true
-                }));
-            updateBalances(dispatch,address,balanceDOT,balancePolkaBTC);
-        };
-        
+                    completed: true,
+                })
+            );
+            updateBalances(dispatch, address, balanceDOT, balancePolkaBTC);
+        }
     }
     if (storeRequest && storeRequest.btcTxId && window.polkaBTC) {
         try {
@@ -55,5 +55,3 @@ export async function updateTransactionStatusIssue(
         }
     }
 }
-
-

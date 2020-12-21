@@ -19,7 +19,6 @@ import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from "../../constants";
 import { Dispatch } from "redux";
 import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from "../actions/general.actions";
 
-
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;
     return address.substr(0, 6) + "..." + address.substr(address.length - 7, address.length - 1);

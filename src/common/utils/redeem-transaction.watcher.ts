@@ -24,16 +24,17 @@ export async function updateTransactionStatusRedeem(
 
     if (!allRequests) return;
 
-    let storeRequest = allRequests.filter((r) => request.id === r.id)[0];
+    const storeRequest = allRequests.filter((r) => request.id === r.id)[0];
     if (storeRequest && !storeRequest.completed && window.polkaBTC) {
         const fetchedRequest = await window.polkaBTC.redeem.getRequestById(storeRequest.id);
         if (fetchedRequest.completed.valueOf()) {
-            dispatch(updateRedeemRequestAction(
-                {
+            dispatch(
+                updateRedeemRequestAction({
                     ...storeRequest,
-                    completed: true
-                }));
-            updateBalances(dispatch,address,balanceDOT,balancePolkaBTC);
+                    completed: true,
+                })
+            );
+            updateBalances(dispatch, address, balanceDOT, balancePolkaBTC);
         }
     }
     if (storeRequest && storeRequest.btcTxId && window.polkaBTC) {
