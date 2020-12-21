@@ -23,7 +23,6 @@ import { encodeBitcoinAddress } from "../../common/utils/utils";
 import { toast } from "react-toastify";
 import BitcoinAddress from "../../common/components/bitcoin-links/address";
 
-
 export default function VaultDashboardPage() {
     const [showRegisterVaultModal, setShowRegisterVaultModal] = useState(false);
     const [showUpdateCollateralModal, setShowUpdateCollateralModal] = useState(false);
@@ -78,7 +77,7 @@ export default function VaultDashboardPage() {
                 dispatch(updateLockedBTCAction(lockedAmountBTC));
 
                 const collateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId);
-                dispatch(updateCollateralizationAction(collateralization));
+                dispatch(updateCollateralizationAction(collateralization?.mul(100).toString()));
 
                 const slaScore = await window.polkaBTC.vaults.getSLA(vaultId.toString());
                 dispatch(updateSLAAction(slaScore));
@@ -123,9 +122,9 @@ export default function VaultDashboardPage() {
                                 <div className="col-lg-3 col-md-6 col-6">
                                     <div className="">Collateralization</div>
                                     <span className="stats">
-                                        {collateralization === undefined || isNaN(collateralization)
+                                        {collateralization === undefined
                                             ? "∞"
-                                            : `${roundTwoDecimals((collateralization * 100).toString())}%`}
+                                            : `${roundTwoDecimals(collateralization.toString())}%`}
                                     </span>
                                 </div>
                                 <div className="col-lg-3 col-md-6 col-6">

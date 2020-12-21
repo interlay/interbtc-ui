@@ -30,7 +30,7 @@ export const updateBTCAddressAction = (btcAddress: string): UpdateBTCAddress => 
     btcAddress,
 });
 
-export const updateCollateralizationAction = (collateralization: number | undefined): UpdateCollateralization => ({
+export const updateCollateralizationAction = (collateralization: string | undefined): UpdateCollateralization => ({
     type: UPDATE_COLLATERALIZATION,
     collateralization,
 });

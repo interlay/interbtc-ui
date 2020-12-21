@@ -368,7 +368,7 @@ export interface UpdateBTCAddress {
 
 export interface UpdateCollateralization {
     type: typeof UPDATE_COLLATERALIZATION;
-    collateralization: number | undefined;
+    collateralization: string | undefined;
 }
 
 export interface UpdateCollateral {

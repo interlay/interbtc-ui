@@ -63,11 +63,11 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
             dispatch(updateCollateralAction(collateralDotString));
             let collateralization;
             try {
-                collateralization = parseFloat(newCollateralization) / 100;
+                collateralization = new Big(parseFloat(newCollateralization) / 100);
             } catch {
                 collateralization = undefined;
             }
-            dispatch(updateCollateralizationAction(collateralization));
+            dispatch(updateCollateralizationAction(collateralization?.mul(100).toString()));
 
             toast.success("Successfully updated collateral");
             closeModal();
@@ -120,7 +120,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                 newCollateralAsU128
             );
             if (newCollateralization !== undefined) {
-                setNewCollaterlization((100 * newCollateralization).toString());
+                setNewCollaterlization(newCollateralization.toString());
             } else {
                 setNewCollaterlization("∞");
             }
@@ -176,8 +176,8 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                         <div className="col-12">
                             New Collateralization:
                             {newCollateralization !== "∞"
-                                ? Number(newCollateralization) > 1000 ? 
-                                    " more than 1000" 
+                                ? Number(newCollateralization) > 1000
+                                    ? " more than 1000%"
                                     : " " + roundTwoDecimals(newCollateralization || "0") + "%"
                                 : " " + newCollateralization}
                         </div>

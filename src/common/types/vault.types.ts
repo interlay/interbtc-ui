@@ -5,8 +5,8 @@ export type Vault = {
     lockedBTC: string;
     pendingBTC: string;
     status: string;
-    unsettledCollateralization: number | undefined;
-    settledCollateralization: number | undefined;
+    unsettledCollateralization: string | undefined;
+    settledCollateralization: string | undefined;
 };
 
 export interface VaultReplaceRequest {
@@ -23,7 +23,7 @@ export interface VaultReplaceRequest {
 export interface VaultState {
     requests: VaultReplaceRequest[];
     btcAddress: string;
-    collateralization: number | undefined;
+    collateralization: string | undefined;
     collateral: string;
     lockedBTC: string;
     sla: string;
