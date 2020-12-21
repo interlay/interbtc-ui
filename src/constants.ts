@@ -76,10 +76,11 @@ export const STAKED_RELAYER_SLASHED = "Slashed";
 // VAULT
 //######################################
 export const VAULT_STATUS_ACTIVE = "Active";
-export const VAULT_STATUS_THEFT = "CommittedTheft";
+export const VAULT_STATUS_THEFT = "Committed Theft";
 export const VAULT_STATUS_LIQUIDATED = "Liquidated";
 export const VAULT_STATUS_UNDER_COLLATERALIZED = "Undercollateralized";
 export const VAULT_STATUS_AUCTION = "Auction";
+export const VAULT_STATUS_LIQUIDATION = "Being liquidated";
 
 // ####################################################
 // TODO: make sure the constants below are the same as in the BTC-Parachain

@@ -24,6 +24,7 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const { t } = useTranslation();
     const [showWizard, setShowWizard] = useState(false);
+    const [liquidationThreshold, setLiquidationThreshold] = useState(new Big(0));
     const [auctionCollateralThreshold, setAuctionCollateralThreshold] = useState(new Big(0));
     const [premiumRedeemThreshold, setPremiumRedeemThreshold] = useState(new Big(0));
     const [secureCollateralThreshold, setSecureCollateralThreshold] = useState(new Big(0));
@@ -33,12 +34,34 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
     );
 
     useEffect(() => {
+        const fetchData = async () => {
+            if (!polkaBtcLoaded) return;
+
+            const [auction, premium, secure, liquidation] = await Promise.all([
+                window.polkaBTC.vaults.getAuctionCollateralThreshold(),
+                window.polkaBTC.vaults.getPremiumRedeemThreshold(),
+                window.polkaBTC.vaults.getSecureCollateralThreshold(),
+                window.polkaBTC.vaults.getLiquidationCollateralThreshold(),
+            ]);
+
+            setAuctionCollateralThreshold(auction);
+            setPremiumRedeemThreshold(premium);
+            setSecureCollateralThreshold(secure);
+            setLiquidationThreshold(liquidation);
+        };
+        fetchData();
+    }, [polkaBtcLoaded]);
+
+    useEffect(() => {
         const checkVaultStatus = (status: string, collateralization: Big): string => {
             if (status === constants.VAULT_STATUS_THEFT) {
                 return constants.VAULT_STATUS_THEFT;
             }
             if (status === constants.VAULT_STATUS_LIQUIDATED) {
                 return constants.VAULT_STATUS_LIQUIDATED;
+            }
+            if (collateralization.lt(liquidationThreshold)) {
+                return constants.VAULT_STATUS_LIQUIDATION;
             }
             if (collateralization.lt(auctionCollateralThreshold)) {
                 return constants.VAULT_STATUS_AUCTION;
@@ -51,16 +74,7 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
 
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
-
-            const [auction, premium, secure] = await Promise.all([
-                window.polkaBTC.vaults.getAuctionCollateralThreshold(),
-                window.polkaBTC.vaults.getPremiumRedeemThreshold(),
-                window.polkaBTC.vaults.getSecureCollateralThreshold(),
-            ]);
-
-            setAuctionCollateralThreshold(auction);
-            setPremiumRedeemThreshold(premium);
-            setSecureCollateralThreshold(secure);
+            if (secureCollateralThreshold.eq(0)) return;
 
             const vaults = await window.polkaBTC.vaults.list();
             const vaultsList: Vault[] = [];
@@ -74,7 +88,6 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                         window.polkaBTC.vaults.getVaultCollateralization(vault.id, undefined, true),
                     ]);
                 } catch (error) {
-                    // TODO: toast error?
                     console.log(error);
                 }
 
@@ -82,7 +95,6 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                 try {
                     btcAddress = encodeBitcoinAddress(vault.wallet.address);
                 } catch (error) {
-                    // TODO: toast error?
                     console.log(error);
                 }
 
@@ -111,7 +123,7 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
             fetchData();
         }, constants.COMPONENT_UPDATE_MS);
         return () => clearInterval(interval);
-    }, [polkaBtcLoaded, auctionCollateralThreshold, secureCollateralThreshold]);
+    });
 
     const getStatusColor = (status: string): string => {
         if (status === constants.VAULT_STATUS_ACTIVE) {
@@ -257,20 +269,20 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                                                             {t("dashboard.premium_redeem")}
                                                         </Button>
                                                     ) : (
-                                                        <span>{vault.status}</span>
-                                                    )}
+                                                            <span>{vault.status}</span>
+                                                        )}
                                                 </td>
                                             </tr>
                                         );
                                     })}
                                 </tbody>
                             ) : (
-                                <tbody>
-                                    <tr>
-                                        <td colSpan={7}>No registered vaults</td>
-                                    </tr>
-                                </tbody>
-                            )}
+                                    <tbody>
+                                        <tr>
+                                            <td colSpan={7}>No registered vaults</td>
+                                        </tr>
+                                    </tbody>
+                                )}
                         </table>
                     </div>
                 </div>
