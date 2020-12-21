@@ -27,7 +27,7 @@ export default function DashboardPage() {
                 if (collateralization === undefined) {
                     setCollateralizationRate("∞");
                 } else {
-                    setCollateralizationRate((collateralization * 100).toString());
+                    setCollateralizationRate(collateralization.mul(100).toString());
                 }
 
                 const issuablePolkaBTC = await window.polkaBTC.vaults.getIssuablePolkaBTC();
@@ -59,16 +59,15 @@ export default function DashboardPage() {
                                 </div>
                                 <div className="col-md-3">
                                     <div className="">Capacity</div>
-                                    <span className="stats">~
-                                        {`${roundTwoDecimals(capacity)}`}
-                                    </span> PolkaBTC
+                                    <span className="stats">~{`${roundTwoDecimals(capacity)}`}</span> PolkaBTC
                                 </div>
                                 <div className="col-md-3">
                                     <div className="">Collateralization</div>
                                     <div className="stats">
                                         {collateralizationRate === "∞"
                                             ? collateralizationRate
-                                            : `${roundTwoDecimals(collateralizationRate)}%`}</div>
+                                            : `${roundTwoDecimals(collateralizationRate)}%`}
+                                    </div>
                                 </div>
                             </div>
                         </div>

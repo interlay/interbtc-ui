@@ -16,7 +16,7 @@ import { VaultState } from "../types/vault.types";
 const initialState = {
     requests: [],
     btcAddress: "",
-    collateralization: 0,
+    collateralization: "0",
     collateral: "",
     lockedBTC: "",
     sla: "0",

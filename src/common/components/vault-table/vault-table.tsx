@@ -4,15 +4,16 @@ import { Vault } from "../../types/vault.types";
 import { updatePremiumVaultAction } from "../../actions/vault.actions";
 import * as constants from "../../../constants";
 import { planckToDOT, satToBTC, roundTwoDecimals } from "@interlay/polkabtc";
-import { encodeBitcoinAddress, shortAddress, convertToPercentage } from "../../utils/utils";
+import { encodeBitcoinAddress, shortAddress } from "../../utils/utils";
 import BitcoinAddress from "../bitcoin-links/address";
 import { Button, Modal } from "react-bootstrap";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import RedeemWizard from "../../../pages/redeem/wizard/redeem-wizard";
 import { resetRedeemWizardAction } from "../../actions/redeem.actions";
 import { toast } from "react-toastify";
 import { StoreType, ParachainStatus } from "../../types/util.types";
 import { showAccountModalAction } from "../../actions/general.actions";
+import Big from "big.js";
 
 type VaultTableProps = {
     isRelayer: boolean | undefined;
@@ -23,35 +24,70 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const { t } = useTranslation();
     const [showWizard, setShowWizard] = useState(false);
+    const [liquidationThreshold, setLiquidationThreshold] = useState(new Big(0));
+    const [auctionCollateralThreshold, setAuctionCollateralThreshold] = useState(new Big(0));
+    const [premiumRedeemThreshold, setPremiumRedeemThreshold] = useState(new Big(0));
+    const [secureCollateralThreshold, setSecureCollateralThreshold] = useState(new Big(0));
     const dispatch = useDispatch();
-    const { address, extensions, btcRelayHeight,
-        bitcoinHeight, stateOfBTCParachain } = useSelector((state: StoreType) => state.general);
+    const { address, extensions, btcRelayHeight, bitcoinHeight, stateOfBTCParachain } = useSelector(
+        (state: StoreType) => state.general
+    );
 
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
+            const [auction, premium, secure, liquidation] = await Promise.all([
+                window.polkaBTC.vaults.getAuctionCollateralThreshold(),
+                window.polkaBTC.vaults.getPremiumRedeemThreshold(),
+                window.polkaBTC.vaults.getSecureCollateralThreshold(),
+                window.polkaBTC.vaults.getLiquidationCollateralThreshold(),
+            ]);
+
+            setAuctionCollateralThreshold(auction);
+            setPremiumRedeemThreshold(premium);
+            setSecureCollateralThreshold(secure);
+            setLiquidationThreshold(liquidation);
+        };
+        fetchData();
+    }, [polkaBtcLoaded]);
+
+    useEffect(() => {
+        const checkVaultStatus = (status: string, collateralization: Big): string => {
+            if (status === constants.VAULT_STATUS_THEFT) {
+                return constants.VAULT_STATUS_THEFT;
+            }
+            if (status === constants.VAULT_STATUS_LIQUIDATED) {
+                return constants.VAULT_STATUS_LIQUIDATED;
+            }
+            if (collateralization.lt(liquidationThreshold)) {
+                return constants.VAULT_STATUS_LIQUIDATION;
+            }
+            if (collateralization.lt(auctionCollateralThreshold)) {
+                return constants.VAULT_STATUS_AUCTION;
+            }
+            if (collateralization.lt(secureCollateralThreshold)) {
+                return constants.VAULT_STATUS_UNDER_COLLATERALIZED;
+            }
+            return constants.VAULT_STATUS_ACTIVE;
+        };
+
+        const fetchData = async () => {
+            if (!polkaBtcLoaded) return;
+            if (secureCollateralThreshold.eq(0)) return;
+
             const vaults = await window.polkaBTC.vaults.list();
             const vaultsList: Vault[] = [];
             vaults.forEach(async (vault, index) => {
                 const accountId = window.polkaBTC.api.createType("AccountId", vault.id);
-                let unsettledCollateralization: number | undefined = undefined;
-                let settledCollateralization: number | undefined = undefined;
+                let unsettledCollateralization: Big | undefined = undefined;
+                let settledCollateralization: Big | undefined = undefined;
                 try {
-                    unsettledCollateralization = await window.polkaBTC.vaults.getVaultCollateralization(vault.id);
-                    if (unsettledCollateralization !== undefined) {
-                        unsettledCollateralization = convertToPercentage(unsettledCollateralization);
-                    }
-                    settledCollateralization = await window.polkaBTC.vaults.getVaultCollateralization(
-                        vault.id,
-                        undefined,
-                        true
-                    );
-                    if (settledCollateralization !== undefined) {
-                        settledCollateralization = convertToPercentage(settledCollateralization);
-                    }
+                    [unsettledCollateralization, settledCollateralization] = await Promise.all([
+                        window.polkaBTC.vaults.getVaultCollateralization(vault.id),
+                        window.polkaBTC.vaults.getVaultCollateralization(vault.id, undefined, true),
+                    ]);
                 } catch (error) {
-                    // TODO: toast error?
                     console.log(error);
                 }
 
@@ -59,7 +95,6 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                 try {
                     btcAddress = encodeBitcoinAddress(vault.wallet.address);
                 } catch (error) {
-                    // TODO: toast error?
                     console.log(error);
                 }
 
@@ -74,9 +109,10 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                     pendingBTC: satToBTC(vault.to_be_issued_tokens.toString()),
                     btcAddress: btcAddress || "",
                     status:
-                        vault.status && checkVaultStatus(vault.status.toString(), Number(unsettledCollateralization)),
-                    unsettledCollateralization: unsettledCollateralization,
-                    settledCollateralization: settledCollateralization,
+                        vault.status &&
+                        checkVaultStatus(vault.status.toString(), unsettledCollateralization || new Big(0)),
+                    unsettledCollateralization: unsettledCollateralization?.mul(100).toString(),
+                    settledCollateralization: settledCollateralization?.mul(100).toString(),
                 });
                 if (index + 1 === vaults.length) setVaults(vaultsList);
             });
@@ -87,29 +123,13 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
             fetchData();
         }, constants.COMPONENT_UPDATE_MS);
         return () => clearInterval(interval);
-    }, [polkaBtcLoaded]);
-
-    const checkVaultStatus = (status: string, collateralization: number): string => {
-        if (status === constants.VAULT_STATUS_THEFT) {
-            return constants.VAULT_STATUS_THEFT;
-        }
-        if (status === constants.VAULT_STATUS_LIQUIDATED) {
-            return constants.VAULT_STATUS_LIQUIDATED;
-        }
-        if (collateralization < constants.VAULT_AUCTION_COLLATERALIZATION) {
-            return constants.VAULT_STATUS_AUCTION;
-        }
-        if (collateralization < constants.VAULT_IDEAL_COLLATERALIZATION) {
-            return constants.VAULT_STATUS_UNDECOLLATERALIZED;
-        }
-        return constants.VAULT_STATUS_ACTIVE;
-    };
+    });
 
     const getStatusColor = (status: string): string => {
         if (status === constants.VAULT_STATUS_ACTIVE) {
             return "green-text";
         }
-        if (status === constants.VAULT_STATUS_UNDECOLLATERALIZED) {
+        if (status === constants.VAULT_STATUS_UNDER_COLLATERALIZED) {
             return "orange-text";
         }
         if (
@@ -122,15 +142,12 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
         return "black-text";
     };
 
-    const getCollateralizationColor = (collateralization: number | undefined): string => {
+    const getCollateralizationColor = (collateralization: string | undefined): string => {
         if (typeof collateralization !== "undefined") {
-            if (collateralization >= constants.VAULT_IDEAL_COLLATERALIZATION) {
+            if (new Big(collateralization).gte(secureCollateralThreshold)) {
                 return "green-text";
             }
-            if (collateralization >= constants.VAULT_AUCTION_COLLATERALIZATION) {
-                return "yellow-text";
-            }
-            if (collateralization >= constants.VAULT_AUCTION_COLLATERALIZATION) {
+            if (new Big(collateralization).gte(auctionCollateralThreshold)) {
                 return "orange-text";
             }
             // Liquidation
@@ -172,28 +189,31 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
             toast.error(t("redeem_page.error_in_parachain"));
             return;
         }
-        if (bitcoinHeight-btcRelayHeight>constants.BLOCKS_BEHIND_LIMIT) {
+        if (bitcoinHeight - btcRelayHeight > constants.BLOCKS_BEHIND_LIMIT) {
             toast.error(t("redeem_page.error_more_than_6_blocks_behind"));
             return;
         }
-        if(address && extensions.length) {
+        if (address && extensions.length) {
             dispatch(updatePremiumVaultAction(vault));
             setShowWizard(true);
         } else {
             dispatch(showAccountModalAction(true));
         }
-    }
+    };
 
     const showPremiumButton = (vault: Vault): boolean => {
         if (vault.unsettledCollateralization === undefined && vault.settledCollateralization === undefined) {
             return false;
         }
-        if (vault.settledCollateralization !== undefined && vault.settledCollateralization > constants.VAULT_AUCTION_COLLATERALIZATION &&
-            vault.settledCollateralization < constants.VAULT_PREMIUM_REDEEM_COLLATERALIZATION) {
+        if (
+            vault.settledCollateralization !== undefined &&
+            new Big(vault.settledCollateralization).gt(auctionCollateralThreshold) &&
+            new Big(vault.settledCollateralization).lt(premiumRedeemThreshold)
+        ) {
             return true;
         }
         return false;
-    }
+    };
 
     return (
         <div className="vault-table">
@@ -244,24 +264,25 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                                                 <td>{vault.pendingBTC}</td>
                                                 {showCollateralizations(vault)}
                                                 <td className={getStatusColor(vault.status)}>
-                                                    {!props.isRelayer && showPremiumButton(vault) ? <Button onClick={() => openRedeemWizard(vault)}>
+                                                    {!props.isRelayer && showPremiumButton(vault) ? (
+                                                        <Button onClick={() => openRedeemWizard(vault)}>
                                                             {t("dashboard.premium_redeem")}
-                                                        </Button> : <span>{vault.status}</span>
-
-                                                    }
+                                                        </Button>
+                                                    ) : (
+                                                            <span>{vault.status}</span>
+                                                        )}
                                                 </td>
-
                                             </tr>
                                         );
                                     })}
                                 </tbody>
                             ) : (
-                                <tbody>
-                                    <tr>
-                                        <td colSpan={7}>No registered vaults</td>
-                                    </tr>
-                                </tbody>
-                            )}
+                                    <tbody>
+                                        <tr>
+                                            <td colSpan={7}>No registered vaults</td>
+                                        </tr>
+                                    </tbody>
+                                )}
                         </table>
                     </div>
                 </div>

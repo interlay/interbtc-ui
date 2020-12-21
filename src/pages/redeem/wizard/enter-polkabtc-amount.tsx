@@ -7,18 +7,17 @@ import {
     changeAmountPolkaBTCAction,
     changeVaultBtcAddressOnRedeemAction,
     changeVaultDotAddressOnRedeemAction,
-    updateRedeemFeeAction
+    updateRedeemFeeAction,
 } from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { btcToSat, satToBTC, planckToDOT } from "@interlay/polkabtc";
+import { btcToSat, satToBTC } from "@interlay/polkabtc";
 import { encodeBitcoinAddress } from "../../../common/utils/utils";
 import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import { shortAddress } from "../../../common/utils/utils";
 import Big from "big.js";
-
 
 type EnterPolkaBTCForm = {
     amountPolkaBTC: string;
@@ -75,7 +74,7 @@ export default function EnterPolkaBTCAmount() {
 
             let vaultId;
             let vaultBTCAddress;
-            if(premiumVault) {
+            if (premiumVault) {
                 vaultId = premiumVault.vaultId;
                 vaultBTCAddress = premiumVault.btcAddress;
             } else {
@@ -101,33 +100,46 @@ export default function EnterPolkaBTCAmount() {
     return (
         <form onSubmit={onSubmit}>
             <Modal.Body>
-                <p>{t("redeem_page.enter_amount_polkabtc", {redeemFee: redeemFee})}</p>
-                <p>{t("redeem_page.you_have")} {balancePolkaBTC} PolkaBTC.</p>
-                {premiumVault &&
+                <p>{t("redeem_page.enter_amount_polkabtc", { redeemFee: redeemFee })}</p>
+                <p>
+                    {t("redeem_page.you_have")} {balancePolkaBTC} PolkaBTC.
+                </p>
+                {premiumVault && (
                     <p>
-                        {t("redeem_page.redeem_against_selected_vault",{
+                        {t("redeem_page.redeem_against_selected_vault", {
                             shortAccount: shortAddress(premiumVault.vaultId),
-                            premiumDot: getValues("amountPolkaBTC") ? new Big(getValues("amountPolkaBTC")).mul(premiumPercentage.div(new Big(100))) : 0
+                            premiumDot: getValues("amountPolkaBTC")
+                                ? new Big(getValues("amountPolkaBTC")).mul(premiumPercentage.div(new Big(100)))
+                                : 0,
                         })}
                     </p>
-                }
-                <p>{t("redeem_page.bitcoin_dust_limit")}({dustValue} BTC)
-                {premiumVault ? t("redeem_page.less_than",{maxValue : premiumVault.lockedBTC > balancePolkaBTC ? premiumVault.lockedBTC : balancePolkaBTC }) : "."}</p>
+                )}
+                <p>
+                    {t("redeem_page.bitcoin_dust_limit")}({dustValue} BTC)
+                    {premiumVault
+                        ? t("redeem_page.less_than", {
+                              maxValue:
+                                  premiumVault.lockedBTC > balancePolkaBTC ? premiumVault.lockedBTC : balancePolkaBTC,
+                          })
+                        : "."}
+                </p>
                 <div className="row">
                     <div className="col-12 basic-addon">
                         <div className="input-group">
                             <input
                                 name="amountPolkaBTC"
                                 type="float"
-                                className={"form-control custom-input" + (errors.amountPolkaBTC ? " error-borders" : "")}
+                                className={
+                                    "form-control custom-input" + (errors.amountPolkaBTC ? " error-borders" : "")
+                                }
                                 ref={register({
                                     required: true,
                                     validate: (value) =>
                                         value > balancePolkaBTC
                                             ? t("redeem_page.current_balance") + balancePolkaBTC
-                                            : value < Number(dustValue) ?
-                                                t("redeem_page.amount_greater") + dustValue + "BTC)."
-                                                : undefined,
+                                            : value < Number(dustValue)
+                                            ? t("redeem_page.amount_greater") + dustValue + "BTC)."
+                                            : undefined,
                                 })}
                             />
                             <div className="input-group-append">
