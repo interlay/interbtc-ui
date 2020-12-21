@@ -43,7 +43,7 @@ export default function Confirmation() {
             const requestResult = await window.polkaBTC.redeem.request(amount, btcAddress, vaultAccountId);
 
             // get the redeem id from the request redeem event
-            const id = requestResult.hash.toString();
+            const id = requestResult.id.toString();
             const redeemRequest = await window.polkaBTC.redeem.getRequestById(id);
 
             // update the redeem status
