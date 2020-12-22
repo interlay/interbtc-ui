@@ -19,7 +19,6 @@ import {
     updateAPYAction,
 } from "../../common/actions/vault.actions";
 import "./vault-dashboard.page.scss";
-import { encodeBitcoinAddress } from "../../common/utils/utils";
 import { toast } from "react-toastify";
 import BitcoinAddress from "../../common/components/bitcoin-links/address";
 
@@ -68,7 +67,7 @@ export default function VaultDashboardPage() {
                     );
                 }
 
-                const vaultBTCAddress = encodeBitcoinAddress(vault.wallet.address);
+                const vaultBTCAddress = vault.wallet.address;
                 dispatch(updateBTCAddressAction(vaultBTCAddress));
 
                 const balanceLockedDOT = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
