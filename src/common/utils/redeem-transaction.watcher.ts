@@ -3,7 +3,7 @@ import { Dispatch } from "redux";
 import { RedeemRequest } from "../types/redeem.types";
 import { RedeemActions } from "../types/actions.types";
 import { updateRedeemRequestAction, addTransactionListenerRedeem } from "../actions/redeem.actions";
-import { updateBalances } from "./utils";
+import { updateBalances, parachainToUIRedeemRequest } from "./utils";
 
 export async function startTransactionWatcherRedeem(
     request: RedeemRequest,
@@ -21,37 +21,50 @@ export async function updateTransactionStatusRedeem(
 ): Promise<void> {
     const { address, balanceDOT, balancePolkaBTC } = window.store.getState().general;
     const allRequests = window.store.getState().redeem.redeemRequests.get(address);
+    let shouldRequestBeUpdate = false;
 
     if (!allRequests) return;
 
-    const storeRequest = allRequests.filter((r) => request.id === r.id)[0];
-    if (storeRequest && !storeRequest.completed && window.polkaBTC) {
-        const fetchedRequest = await window.polkaBTC.redeem.getRequestById(storeRequest.id);
-        if (fetchedRequest.completed.valueOf()) {
-            dispatch(
-                updateRedeemRequestAction({
-                    ...storeRequest,
-                    completed: true,
-                })
-            );
-            updateBalances(dispatch, address, balanceDOT, balancePolkaBTC);
-        }
-    }
-    if (storeRequest && storeRequest.btcTxId && window.polkaBTC) {
-        try {
-            const updatedRequest = storeRequest;
-            updatedRequest.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpReturn(
-                storeRequest.id,
-                storeRequest.btcAddress,
-                storeRequest.amountPolkaBTC
-            );
-            const txStatus = await window.polkaBTC.btcCore.getTransactionStatus(stripHexPrefix(updatedRequest.btcTxId));
-            if (storeRequest.confirmations !== txStatus.confirmations) {
-                updatedRequest.confirmations = txStatus.confirmations;
-                dispatch(updateRedeemRequestAction(updatedRequest));
+    let requestForUpdate = allRequests.filter((r) => request.id === r.id)[0];
+    try {
+        if (requestForUpdate && !requestForUpdate.completed && !requestForUpdate.cancelled && window.polkaBTC) {
+            const parachainRequest = await window.polkaBTC.redeem.getRequestById("0x" + requestForUpdate.id);
+            const requestId = window.polkaBTC.api.createType("H256", requestForUpdate.id);
+            const fetchedRequest = parachainToUIRedeemRequest(requestId, parachainRequest);
+
+            if (!requestForUpdate.btcTxId && fetchedRequest.completed) {
+                const btcTxId = await window.polkaBTC.btcCore.getTxIdByOpReturn(
+                    request.id,
+                    request.btcAddress,
+                    request.amountPolkaBTC
+                );
+                requestForUpdate.btcTxId = btcTxId;
+                shouldRequestBeUpdate = true;
             }
-        } catch (error) {
-            console.log(error.toString());
+
+            if (fetchedRequest.completed || fetchedRequest.cancelled) {
+                requestForUpdate = {
+                    ...requestForUpdate,
+                    completed: fetchedRequest.completed,
+                    cancelled: fetchedRequest.cancelled,
+                };
+                updateBalances(dispatch, address, balanceDOT, balancePolkaBTC);
+                shouldRequestBeUpdate = true;
+            }
         }
+        if (requestForUpdate && requestForUpdate.btcTxId && window.polkaBTC) {
+            const txStatus = await window.polkaBTC.btcCore.getTransactionStatus(
+                stripHexPrefix(requestForUpdate.btcTxId)
+            );
+            if (requestForUpdate.confirmations !== txStatus.confirmations) {
+                requestForUpdate.confirmations = txStatus.confirmations;
+                shouldRequestBeUpdate = true;
+            }
+            if (shouldRequestBeUpdate) {
+                dispatch(updateRedeemRequestAction(requestForUpdate));
+            }
+        }
+    } catch (error) {
+        console.log(error.toString());
     }
 }

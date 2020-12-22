@@ -54,6 +54,7 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
         griefingCollateral: parachainIssueRequest.griefing_collateral.toString(),
         confirmations: 0,
         completed: parachainIssueRequest.completed.isTrue,
+        cancelled: parachainIssueRequest.cancelled.isTrue,
     };
 }
 

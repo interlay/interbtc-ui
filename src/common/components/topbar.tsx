@@ -50,7 +50,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
             updateBalances(dispatch,address,balanceDOT,balancePolkaBTC);
         };
         fetchData();
-    }, [address, polkaBtcLoaded, dispatch]);
+    }, [address, polkaBtcLoaded, dispatch, balanceDOT, balancePolkaBTC]);
 
     const requestDOT = async () => {
         if (!polkaBtcLoaded) return;

@@ -55,6 +55,7 @@ export default function RequestConfirmation() {
                 griefingCollateral,
                 confirmations: 0,
                 completed: false,
+                cancelled: false,
                 merkleProof: "",
                 transactionBlockHeight: 0,
                 rawTransaction: new Uint8Array(),
