@@ -11,7 +11,7 @@ import { updateBalancePolkaBTCAction } from "../../../common/actions/general.act
 import { toast } from "react-toastify";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { btcToSat } from "@interlay/polkabtc";
+import { btcToSat, satToBTC, stripHexPrefix } from "@interlay/polkabtc";
 import Big from "big.js";
 import { useTranslation } from 'react-i18next';
 import { startTransactionWatcherRedeem } from "../../../common/utils/redeem-transaction.watcher";
@@ -39,12 +39,13 @@ export default function Confirmation() {
                 throw new Error("Invalid PolkaBTC amount input");
             }
             const amount = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
+            const amountBTC = ((new Big(amountPolkaBTC)).sub(new Big(fee))).toString();
 
             const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultDotAddress);
             const requestResult = await window.polkaBTC.redeem.request(amount, btcAddress, vaultAccountId);
 
             // get the redeem id from the request redeem event
-            const id = requestResult.id.toString();
+            const id = stripHexPrefix(requestResult.id.toString());
             const redeemRequest = await window.polkaBTC.redeem.getRequestById(id);
 
             // update the redeem status
@@ -52,7 +53,7 @@ export default function Confirmation() {
 
             const request: RedeemRequest = {
                 id,
-                amountPolkaBTC,
+                amountPolkaBTC: amountBTC,
                 creation: redeemRequest.opentime.toString(),
                 fee: fee,
                 btcAddress,

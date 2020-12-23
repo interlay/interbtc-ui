@@ -32,6 +32,10 @@ export async function updateTransactionStatusRedeem(
             const requestId = window.polkaBTC.api.createType("H256", requestToUpdate.id);
             const fetchedRequest = parachainToUIRedeemRequest(requestId, parachainRequest);
 
+            if (requestToUpdate.creation === "0") {
+                requestToUpdate.creation = fetchedRequest.creation;
+                shouldRequestBeUpdate = true;
+            }
             if (!requestToUpdate.btcTxId) {
                 const btcTxId = await window.polkaBTC.btcCore.getTxIdByOpReturn(
                     request.id,

@@ -64,9 +64,9 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                 return <div>{t("redeem_page.reimbursed")}</div>
             }
             if(!request.cancelled && !request.reimbursed) {
-                return <Button 
+                return <Button
                     onClick={() => openReimburseModal(request)}
-                    className="ml-3" 
+                    className="ml-3"
                     variant="outline-dark">
                         {t("redeem_page.recover")}
                 </Button>
@@ -186,7 +186,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                                             <td>{shortAddress(request.id)}</td>
                                             <td>{request.amountPolkaBTC} BTC</td>
                                             <td>{request.fee} PolkaBTC</td>
-                                            <td>{request.creation}</td>
+                                            <td>{request.creation === "0" ? "Pending..." : request.creation}</td>
                                             <td>
                                                 <BitcoinAddress btcAddress={request.btcAddress} shorten />
                                             </td>
