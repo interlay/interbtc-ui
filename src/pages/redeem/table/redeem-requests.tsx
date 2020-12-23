@@ -55,9 +55,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
 
     const handleCompleted = (request: RedeemRequest) => {
         if (request.cancelled) {
-            return <h5>
-                    <Badge variant="secondary">{t("cancelled")}</Badge>
-                </h5>;
+            return <Badge className="badge-style" variant="secondary">{t("cancelled")}</Badge>;
         }
         if (!request.completed && request.isExpired) {
             if(request.reimbursed && request.cancelled) {

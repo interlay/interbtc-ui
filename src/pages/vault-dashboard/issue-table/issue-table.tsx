@@ -46,7 +46,7 @@ export default function IssueTable(): ReactElement {
             return <FaCheck></FaCheck>;
         }
         if (request.cancelled) {
-            return <Badge variant="secondary">{t("cancelled")}</Badge>;
+            return <Badge className="badge-style" variant="secondary">{t("cancelled")}</Badge>;
         }
         return <FaHourglass></FaHourglass>;
     };

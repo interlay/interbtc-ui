@@ -189,13 +189,11 @@ export default function IssueRequests(props: IssueRequestProps) {
         if (request.completed) {
             return <FaCheck></FaCheck>;
         }
+        if (request.cancelled) {
+            return <Badge className="badge-style" variant="secondary">{t("cancelled")}</Badge>;
+        }
         if (request.confirmations < requiredBtcConfirmations || request.confirmations === 0) {
             return <FaHourglass></FaHourglass>;
-        }
-        if (request.cancelled) {
-            return <h5>
-                    <Badge variant="secondary">{t("cancelled")}</Badge>
-                </h5>;
         }
         return (
             <ButtonMaybePending
