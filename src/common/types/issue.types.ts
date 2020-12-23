@@ -6,6 +6,7 @@ export interface IssueRequest {
     btcTxId: string;
     confirmations: number;
     completed: boolean;
+    cancelled: boolean;
     merkleProof?: string;
     transactionBlockHeight?: number;
     rawTransaction?: Uint8Array;

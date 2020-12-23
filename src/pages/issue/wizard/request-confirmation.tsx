@@ -13,6 +13,8 @@ import ButtonMaybePending from "../../../common/components/pending-button";
 import { IssueRequest } from "../../../common/types/issue.types";
 import { StoreType } from "../../../common/types/util.types";
 import Big from "big.js";
+import { startTransactionWatcherIssue } from "../../../common/utils/issue-transaction.watcher";
+
 
 export default function RequestConfirmation() {
     const [isRequestPending, setRequestPending] = useState(false);
@@ -53,11 +55,13 @@ export default function RequestConfirmation() {
                 griefingCollateral,
                 confirmations: 0,
                 completed: false,
+                cancelled: false,
                 merkleProof: "",
                 transactionBlockHeight: 0,
                 rawTransaction: new Uint8Array(),
             };
             dispatch(addIssueRequestAction(request));
+            startTransactionWatcherIssue(request, dispatch);
             dispatch(changeIssueStepAction("BTC_PAYMENT"));
         } catch (error) {
             toast.error(error.toString());

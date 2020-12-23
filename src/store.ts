@@ -12,6 +12,7 @@ declare global {
         polkaBTC: PolkaBTCAPI;
         relayer: StakedRelayerClient;
         vaultClient: VaultClient;
+        store: StoreState;
     }
 }
 

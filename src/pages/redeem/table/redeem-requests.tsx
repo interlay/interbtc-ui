@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { RedeemRequest } from "../../../common/types/redeem.types";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, Badge } from "react-bootstrap";
 import { shortAddress, parachainToUIRedeemRequest } from "../../../common/utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import { startTransactionWatcherRedeem } from "../../../common/utils/transaction-watcher";
+import { startTransactionWatcherRedeem } from "../../../common/utils/redeem-transaction.watcher";
 import {
     updateAllRedeemRequestsAction,
     redeemExpiredAction,
@@ -54,14 +54,19 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
     }
 
     const handleCompleted = (request: RedeemRequest) => {
+        if (request.cancelled) {
+            return <h5>
+                    <Badge variant="secondary">{t("cancelled")}</Badge>
+                </h5>;
+        }
         if (!request.completed && request.isExpired) {
             if(request.reimbursed && request.cancelled) {
                 return <div>{t("redeem_page.reimbursed")}</div>
             }
             if(!request.cancelled && !request.reimbursed) {
-                return <Button 
+                return <Button
                     onClick={() => openReimburseModal(request)}
-                    className="ml-3" 
+                    className="ml-3"
                     variant="outline-dark">
                         {t("redeem_page.recover")}
                 </Button>
@@ -181,7 +186,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                                             <td>{shortAddress(request.id)}</td>
                                             <td>{request.amountPolkaBTC} BTC</td>
                                             <td>{request.fee} PolkaBTC</td>
-                                            <td>{request.creation}</td>
+                                            <td>{request.creation === "0" ? "Pending..." : request.creation}</td>
                                             <td>
                                                 <BitcoinAddress btcAddress={request.btcAddress} shorten />
                                             </td>

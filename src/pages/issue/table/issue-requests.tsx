@@ -10,7 +10,7 @@ import { StoreType } from "../../../common/types/util.types";
 import { useEffect } from "react";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { toast } from "react-toastify";
-import { startTransactionWatcherIssue } from "../../../common/utils/transaction-watcher";
+import { startTransactionWatcherIssue } from "../../../common/utils/issue-transaction.watcher";
 import {
     updateIssueRequestAction,
     changeIssueStepAction,
@@ -25,6 +25,7 @@ import {
 import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
 import { updateBalancePolkaBTCAction } from "../../../common/actions/general.actions";
+import { useTranslation } from 'react-i18next';
 
 
 type IssueRequestProps = {
@@ -40,6 +41,7 @@ export default function IssueRequests(props: IssueRequestProps) {
     const [issuePeriod, setIssuePeriod] = useState(new Big(0));
     const [parachainHeight, setParachainHeight] = useState(new Big(0));
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
 
     useEffect(() => {
@@ -184,11 +186,16 @@ export default function IssueRequests(props: IssueRequestProps) {
                 </h5>
             );
         }
+        if (request.completed) {
+            return <FaCheck></FaCheck>;
+        }
         if (request.confirmations < requiredBtcConfirmations || request.confirmations === 0) {
             return <FaHourglass></FaHourglass>;
         }
-        if (request.completed) {
-            return <FaCheck></FaCheck>;
+        if (request.cancelled) {
+            return <h5>
+                    <Badge variant="secondary">{t("cancelled")}</Badge>
+                </h5>;
         }
         return (
             <ButtonMaybePending
