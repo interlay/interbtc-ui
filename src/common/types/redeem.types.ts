@@ -34,4 +34,6 @@ export interface VaultRedeem {
     polkaBTC: string;
     unlockedDOT: string;
     status: string;
+    completed: boolean;
+    cancelled: boolean;
 }

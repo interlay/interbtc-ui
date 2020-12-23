@@ -177,6 +177,8 @@ export const redeemRequestToVaultRedeem = (requests: Map<H256, ParachainRedeemRe
             polkaBTC: polkaBTC,
             unlockedDOT: unlockedDOT,
             status: "Pending",
+            cancelled: request.cancelled.isTrue,
+            completed: request.completed.isTrue,
         });
     });
     return redeemRequests;
@@ -194,6 +196,8 @@ export const issueRequestToVaultIssue = (requests: Map<H256, ParachainIssueReque
             polkaBTC: polkaBTC,
             lockedDOT: lockedDOT,
             status: "Pending",
+            cancelled: request.cancelled.isTrue,
+            completed: request.completed.isTrue,
         });
     });
     return issueRequests;

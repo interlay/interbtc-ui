@@ -5,11 +5,17 @@ import { addVaultRedeemsAction } from "../../../common/actions/redeem.actions";
 import { redeemRequestToVaultRedeem, shortAddress } from "../../../common/utils/utils";
 import * as constants from "../../../constants";
 import BitcoinAddress from "../../../common/components/bitcoin-links/address";
+import { VaultRedeem } from "../../../common/types/redeem.types";
+import { FaCheck, FaHourglass } from "react-icons/fa";
+import { Badge } from "react-bootstrap";
+import { useTranslation } from 'react-i18next';
+
 
 export default function RedeemTable(): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const redeems = useSelector((state: StoreType) => state.redeem.vaultRedeems);
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,6 +39,16 @@ export default function RedeemTable(): ReactElement {
         }, constants.COMPONENT_UPDATE_MS);
         return () => clearInterval(interval);
     }, [polkaBtcLoaded, dispatch]);
+
+    const showStatus = (request: VaultRedeem) => {
+        if (request.completed) {
+            return <FaCheck></FaCheck>;
+        }
+        if (request.cancelled) {
+            return <Badge variant="secondary">{t("cancelled")}</Badge>;
+        }
+        return <FaHourglass></FaHourglass>;
+    };
 
     return (
         <div className="redeem-table">
@@ -68,7 +84,7 @@ export default function RedeemTable(): ReactElement {
                                             </td>
                                             <td>{redeem.polkaBTC}</td>
                                             <td>{redeem.unlockedDOT}</td>
-                                            <td>{redeem.status}</td>
+                                            <td>{showStatus(redeem)}</td>
                                         </tr>
                                     );
                                 })}
