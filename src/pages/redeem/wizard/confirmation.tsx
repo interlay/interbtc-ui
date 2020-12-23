@@ -11,7 +11,7 @@ import { updateBalancePolkaBTCAction } from "../../../common/actions/general.act
 import { toast } from "react-toastify";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { btcToSat, satToBTC, stripHexPrefix } from "@interlay/polkabtc";
+import { btcToSat, stripHexPrefix } from "@interlay/polkabtc";
 import Big from "big.js";
 import { useTranslation } from 'react-i18next';
 import { startTransactionWatcherRedeem } from "../../../common/utils/redeem-transaction.watcher";
