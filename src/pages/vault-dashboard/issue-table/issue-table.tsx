@@ -27,8 +27,8 @@ export default function IssueTable(): ReactElement {
                 const issueMap = await window.polkaBTC.vaults.mapIssueRequests(vaultId);
 
                 if (!issueMap) return;
-                const re = issueRequestToVaultIssue(issueMap);
-                dispatch(addVaultIssuesAction(re));
+                
+                dispatch(addVaultIssuesAction(issueRequestToVaultIssue(issueMap)));
             } catch (err) {
                 console.log(err);
             }
