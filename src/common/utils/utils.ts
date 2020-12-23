@@ -1,12 +1,11 @@
 import { RedeemRequest, VaultRedeem } from "../types/redeem.types";
 import { IssueRequest, VaultIssue } from "../types/issue.types";
-import { BtcAddress, DOT, PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
+import { DOT, PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 import { VaultReplaceRequest } from "../types/vault.types";
 import { H256 } from "@polkadot/types/interfaces";
 import {
     satToBTC,
     planckToDOT,
-    encodeBtcAddress,
     uint8ArrayToString,
     bitcoin,
     stripHexPrefix,
@@ -127,10 +126,6 @@ export const BtcNetwork =
         : BITCOIN_NETWORK === "testnet"
         ? bitcoin.networks.testnet
         : bitcoin.networks.regtest;
-
-export function encodeBitcoinAddress(address: BtcAddress): string {
-    return encodeBtcAddress(address, BtcNetwork);
-}
 
 export function reverseHashEndianness(hash: Uint8Array): string {
     return uint8ArrayToString(reverseEndianness(hash));

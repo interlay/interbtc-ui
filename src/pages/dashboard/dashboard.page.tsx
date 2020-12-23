@@ -4,6 +4,7 @@ import VaultTable from "../../common/components/vault-table/vault-table";
 import OracleTable from "../../common/components/oracle-table/oracle-table";
 import BitcoinTable from "../../common/components/bitcoin-table/bitcoin-table";
 import { useSelector } from "react-redux";
+import i18n from "i18next";
 
 import "./dashboard.page.scss";
 import { StoreType } from "../../common/types/util.types";
@@ -32,8 +33,8 @@ export default function DashboardPage() {
 
                 const issuablePolkaBTC = await window.polkaBTC.vaults.getIssuablePolkaBTC();
                 setCapacity(issuablePolkaBTC);
-            } catch (error) {
-                toast.error(error.toString());
+            } catch (_) {
+                console.log(i18n.t("dashboard.error_unable_to_compute_collateral"));
             }
         };
         fetchData();

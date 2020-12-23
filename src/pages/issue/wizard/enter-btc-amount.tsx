@@ -14,7 +14,6 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat, stripHexPrefix, satToBTC, planckToDOT } from "@interlay/polkabtc";
-import { encodeBitcoinAddress } from "../../../common/utils/utils";
 import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
 import { useTranslation } from "react-i18next";
 
@@ -61,12 +60,12 @@ export default function EnterBTCAmount() {
             toast.success("Found vault: " + vaultId.toString());
             // get the vault's data
             const vault = await window.polkaBTC.vaults.get(vaultId);
-            const vaultBTCAddress = encodeBitcoinAddress(vault.wallet.address);
+            const vaultBTCAddress = vault.wallet.address;
 
             const fee = await window.polkaBTC.issue.getFeesToPay(amountBTC);
             dispatch(updateIssueFeeAction(fee));
 
-            const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateral(amountSAT);
+            const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSAT);
             dispatch(updateIssueGriefingCollateralAction(planckToDOT(griefingCollateral)));
 
             dispatch(changeVaultBtcAddressOnIssueAction(stripHexPrefix(vaultBTCAddress)));

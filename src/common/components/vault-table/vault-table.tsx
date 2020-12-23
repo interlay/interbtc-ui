@@ -4,7 +4,7 @@ import { Vault } from "../../types/vault.types";
 import { updatePremiumVaultAction } from "../../actions/vault.actions";
 import * as constants from "../../../constants";
 import { planckToDOT, satToBTC, roundTwoDecimals } from "@interlay/polkabtc";
-import { encodeBitcoinAddress, shortAddress } from "../../utils/utils";
+import { shortAddress } from "../../utils/utils";
 import BitcoinAddress from "../bitcoin-links/address";
 import { Button, Modal } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
@@ -78,7 +78,8 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
 
             const vaults = await window.polkaBTC.vaults.list();
             const vaultsList: Vault[] = [];
-            vaults.forEach(async (vault, index) => {
+
+            for (let vault of vaults) {
                 const accountId = window.polkaBTC.api.createType("AccountId", vault.id);
                 let unsettledCollateralization: Big | undefined = undefined;
                 let settledCollateralization: Big | undefined = undefined;
@@ -91,12 +92,7 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                     console.log(error);
                 }
 
-                let btcAddress: string | undefined;
-                try {
-                    btcAddress = encodeBitcoinAddress(vault.wallet.address);
-                } catch (error) {
-                    console.log(error);
-                }
+                let btcAddress = vault.wallet.address;
 
                 const balanceLockedPlanck = await window.polkaBTC.collateral.balanceLockedDOT(accountId);
                 const balanceLockedDOT = planckToDOT(balanceLockedPlanck.toString());
@@ -114,8 +110,9 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                     unsettledCollateralization: unsettledCollateralization?.mul(100).toString(),
                     settledCollateralization: settledCollateralization?.mul(100).toString(),
                 });
-                if (index + 1 === vaults.length) setVaults(vaultsList);
-            });
+            }
+
+            setVaults(vaultsList);
         };
 
         fetchData();
@@ -123,7 +120,13 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
             fetchData();
         }, constants.COMPONENT_UPDATE_MS);
         return () => clearInterval(interval);
-    });
+    }, [
+        polkaBtcLoaded,
+        liquidationThreshold,
+        auctionCollateralThreshold,
+        premiumRedeemThreshold,
+        secureCollateralThreshold,
+    ]);
 
     const getStatusColor = (status: string): string => {
         if (status === constants.VAULT_STATUS_ACTIVE) {
@@ -269,20 +272,20 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                                                             {t("dashboard.premium_redeem")}
                                                         </Button>
                                                     ) : (
-                                                            <span>{vault.status}</span>
-                                                        )}
+                                                        <span>{vault.status}</span>
+                                                    )}
                                                 </td>
                                             </tr>
                                         );
                                     })}
                                 </tbody>
                             ) : (
-                                    <tbody>
-                                        <tr>
-                                            <td colSpan={7}>No registered vaults</td>
-                                        </tr>
-                                    </tbody>
-                                )}
+                                <tbody>
+                                    <tr>
+                                        <td colSpan={7}>No registered vaults</td>
+                                    </tr>
+                                </tbody>
+                            )}
                         </table>
                     </div>
                 </div>

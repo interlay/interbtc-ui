@@ -62,7 +62,8 @@
         "less_than": " and less than {{maxValue}}."
     },
     "dashboard": {
-        "premium_redeem": "Premium Redeem"
+        "premium_redeem": "Premium Redeem",
+        "error_unable_to_compute_collateral": "Unable to compute collateralization rate."
     },
     "issue_page": {
         "error_in_parachain": "You can't issue PolkaBTC at the moment because the Parachain has encountered errors and recovering.",

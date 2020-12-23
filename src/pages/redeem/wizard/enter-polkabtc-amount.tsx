@@ -13,7 +13,6 @@ import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat, satToBTC } from "@interlay/polkabtc";
-import { encodeBitcoinAddress } from "../../../common/utils/utils";
 import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
 import { useTranslation } from "react-i18next";
 import { shortAddress } from "../../../common/utils/utils";
@@ -81,7 +80,7 @@ export default function EnterPolkaBTCAmount() {
                 vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountAsSatoshi);
                 // get the vault's data
                 const vault = await window.polkaBTC.vaults.get(vaultId);
-                vaultBTCAddress = encodeBitcoinAddress(vault.wallet.address);
+                vaultBTCAddress = vault.wallet.address;
             }
             // toast.success("Found vault: " + vaultId.toString());
 
