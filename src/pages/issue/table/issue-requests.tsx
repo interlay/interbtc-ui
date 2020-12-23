@@ -25,6 +25,7 @@ import {
 import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
 import { updateBalancePolkaBTCAction } from "../../../common/actions/general.actions";
+import { useTranslation } from 'react-i18next';
 
 
 type IssueRequestProps = {
@@ -40,6 +41,7 @@ export default function IssueRequests(props: IssueRequestProps) {
     const [issuePeriod, setIssuePeriod] = useState(new Big(0));
     const [parachainHeight, setParachainHeight] = useState(new Big(0));
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
 
     useEffect(() => {
@@ -189,6 +191,11 @@ export default function IssueRequests(props: IssueRequestProps) {
         }
         if (request.confirmations < requiredBtcConfirmations || request.confirmations === 0) {
             return <FaHourglass></FaHourglass>;
+        }
+        if (request.cancelled) {
+            return <h5>
+                    <Badge variant="secondary">{t("cancelled")}</Badge>
+                </h5>;
         }
         return (
             <ButtonMaybePending
