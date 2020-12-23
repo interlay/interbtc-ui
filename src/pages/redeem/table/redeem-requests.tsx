@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { RedeemRequest } from "../../../common/types/redeem.types";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, Badge } from "react-bootstrap";
 import { shortAddress, parachainToUIRedeemRequest } from "../../../common/utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
@@ -54,6 +54,11 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
     }
 
     const handleCompleted = (request: RedeemRequest) => {
+        if (request.cancelled) {
+            return <h5>
+                    <Badge variant="secondary">{t("cancelled")}</Badge>
+                </h5>;
+        }
         if (!request.completed && request.isExpired) {
             if(request.reimbursed && request.cancelled) {
                 return <div>{t("redeem_page.reimbursed")}</div>
