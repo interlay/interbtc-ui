@@ -5,11 +5,17 @@ import { addVaultIssuesAction } from "../../../common/actions/issue.actions";
 import { issueRequestToVaultIssue, shortAddress } from "../../../common/utils/utils";
 import * as constants from "../../../constants";
 import BitcoinAddress from "../../../common/components/bitcoin-links/address";
+import { VaultIssue } from "../../../common/types/issue.types";
+import { FaCheck, FaHourglass } from "react-icons/fa";
+import { Badge } from "react-bootstrap";
+import { useTranslation } from 'react-i18next';
+
 
 export default function IssueTable(): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const issues = useSelector((state: StoreType) => state.issue.vaultIssues);
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -21,7 +27,8 @@ export default function IssueTable(): ReactElement {
                 const issueMap = await window.polkaBTC.vaults.mapIssueRequests(vaultId);
 
                 if (!issueMap) return;
-                dispatch(addVaultIssuesAction(issueRequestToVaultIssue(issueMap)));
+                const re = issueRequestToVaultIssue(issueMap);
+                dispatch(addVaultIssuesAction(re));
             } catch (err) {
                 console.log(err);
             }
@@ -33,6 +40,16 @@ export default function IssueTable(): ReactElement {
         }, constants.COMPONENT_UPDATE_MS);
         return () => clearInterval(interval);
     }, [polkaBtcLoaded, dispatch]);
+
+    const showStatus = (request: VaultIssue) => {
+        if (request.completed) {
+            return <FaCheck></FaCheck>;
+        }
+        if (request.cancelled) {
+            return <Badge variant="secondary">{t("cancelled")}</Badge>;
+        }
+        return <FaHourglass></FaHourglass>;
+    };
 
     return (
         <div className="issue-table">
@@ -68,7 +85,7 @@ export default function IssueTable(): ReactElement {
                                             </td>
                                             <td>{issue.polkaBTC}</td>
                                             <td>{issue.lockedDOT}</td>
-                                            <td>{issue.status}</td>
+                                            <td>{showStatus(issue)}</td>
                                         </tr>
                                     );
                                 })}

@@ -23,7 +23,6 @@ export interface RedeemRequestsProps {
 }
 
 export default function RedeemRequests(props: RedeemRequestsProps) {
-    const { t } = useTranslation();
     const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
     const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
     const { transactionListeners }= useSelector((state: StoreType) => state.redeem);
@@ -31,6 +30,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
     const [showReimburseModal, setShowReimburseModal] = useState(false);
     const [reimburseRequest, setReimburseRequest] = useState<RedeemRequest>();
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     const redeemExpired = useCallback(
         (redeemId: string) => {

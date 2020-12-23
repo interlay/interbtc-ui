@@ -26,6 +26,8 @@ export interface VaultIssue {
     polkaBTC: string;
     lockedDOT: string;
     status: string;
+    completed: boolean;
+    cancelled: boolean;
 }
 
 export interface IssueState {
