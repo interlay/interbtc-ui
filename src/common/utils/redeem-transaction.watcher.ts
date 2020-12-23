@@ -25,26 +25,26 @@ export async function updateTransactionStatusRedeem(
 
     if (!allRequests) return;
 
-    let requestForUpdate = allRequests.filter((r) => request.id === r.id)[0];
+    let requestToUpdate = allRequests.filter((r) => request.id === r.id)[0];
     try {
-        if (requestForUpdate && !requestForUpdate.completed && !requestForUpdate.cancelled && window.polkaBTC) {
-            const parachainRequest = await window.polkaBTC.redeem.getRequestById("0x" + requestForUpdate.id);
-            const requestId = window.polkaBTC.api.createType("H256", requestForUpdate.id);
+        if (requestToUpdate && !requestToUpdate.completed && !requestToUpdate.cancelled && window.polkaBTC) {
+            const parachainRequest = await window.polkaBTC.redeem.getRequestById("0x" + requestToUpdate.id);
+            const requestId = window.polkaBTC.api.createType("H256", requestToUpdate.id);
             const fetchedRequest = parachainToUIRedeemRequest(requestId, parachainRequest);
 
-            if (!requestForUpdate.btcTxId && fetchedRequest.completed) {
+            if (!requestToUpdate.btcTxId) {
                 const btcTxId = await window.polkaBTC.btcCore.getTxIdByOpReturn(
                     request.id,
                     request.btcAddress,
                     request.amountPolkaBTC
                 );
-                requestForUpdate.btcTxId = btcTxId;
+                requestToUpdate.btcTxId = btcTxId;
                 shouldRequestBeUpdate = true;
             }
 
             if (fetchedRequest.completed || fetchedRequest.cancelled) {
-                requestForUpdate = {
-                    ...requestForUpdate,
+                requestToUpdate = {
+                    ...requestToUpdate,
                     completed: fetchedRequest.completed,
                     cancelled: fetchedRequest.cancelled,
                 };
@@ -52,16 +52,16 @@ export async function updateTransactionStatusRedeem(
                 shouldRequestBeUpdate = true;
             }
         }
-        if (requestForUpdate && requestForUpdate.btcTxId && window.polkaBTC) {
+        if (requestToUpdate && requestToUpdate.btcTxId) {
             const txStatus = await window.polkaBTC.btcCore.getTransactionStatus(
-                stripHexPrefix(requestForUpdate.btcTxId)
+                stripHexPrefix(requestToUpdate.btcTxId)
             );
-            if (requestForUpdate.confirmations !== txStatus.confirmations) {
-                requestForUpdate.confirmations = txStatus.confirmations;
+            if (requestToUpdate.confirmations !== txStatus.confirmations) {
+                requestToUpdate.confirmations = txStatus.confirmations;
                 shouldRequestBeUpdate = true;
             }
             if (shouldRequestBeUpdate) {
-                dispatch(updateRedeemRequestAction(requestForUpdate));
+                dispatch(updateRedeemRequestAction(requestToUpdate));
             }
         }
     } catch (error) {
