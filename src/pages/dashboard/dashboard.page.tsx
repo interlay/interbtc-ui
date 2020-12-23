@@ -34,7 +34,7 @@ export default function DashboardPage() {
                 const issuablePolkaBTC = await window.polkaBTC.vaults.getIssuablePolkaBTC();
                 setCapacity(issuablePolkaBTC);
             } catch (_) {
-                toast.error(i18n.t("dashboard.error_unable_to_compute_collateral"));
+                console.log(i18n.t("dashboard.error_unable_to_compute_collateral"));
             }
         };
         fetchData();
