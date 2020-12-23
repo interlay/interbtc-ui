@@ -9,7 +9,6 @@ import i18n from "i18next";
 import "./dashboard.page.scss";
 import { StoreType } from "../../common/types/util.types";
 import StakedRelayerTable from "./staked-relayer-table/staked-relayer-table";
-import { toast } from "react-toastify";
 import { roundTwoDecimals } from "@interlay/polkabtc";
 
 export default function DashboardPage() {
