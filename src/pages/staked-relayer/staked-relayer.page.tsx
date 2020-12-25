@@ -13,6 +13,8 @@ import "./staked-relayer.page.scss";
 import { StoreType } from "../../common/types/util.types";
 import ButtonMaybePending from "../../common/components/pending-button";
 import { satToBTC, planckToDOT, roundTwoDecimals } from "@interlay/polkabtc";
+import { useTranslation } from 'react-i18next';
+
 
 export default function StakedRelayerPage() {
     const [showReportModal, setShowReportModal] = useState(false);
@@ -29,6 +31,8 @@ export default function StakedRelayerPage() {
     const [apy, setAPY] = useState("0");
     const relayerNotRegisteredToastId = "relayer-not-registered-id";
     const { polkaBtcLoaded, relayerLoaded } = useSelector((state: StoreType) => state.general);
+    const { t } = useTranslation();
+
 
     const handleReportModalClose = () => setShowReportModal(false);
 
@@ -71,8 +75,7 @@ export default function StakedRelayerPage() {
                 // show warning if relayer is not registered with the parachain
                 if (!isRegistered) {
                     toast.warn(
-                        "Local relayer client running, but relayer is not yet registered with the parachain." +
-                            " The client is already submitting blocks, but voting and reporting features are disabled until registered.",
+                        t("relayer.warning_relayer_not_registered"),
                         { autoClose: false, toastId: relayerNotRegisteredToastId }
                     );
                 } else {
@@ -96,14 +99,14 @@ export default function StakedRelayerPage() {
             }
         };
         fetchData();
-    }, [polkaBtcLoaded, relayerLoaded]);
+    }, [polkaBtcLoaded, relayerLoaded, t]);
 
     return (
         <div className="staked-relayer-page container-fluid white-background">
             <div className="staked-container dashboard-fade-in-animation dahboard-min-height">
                 <div className="stacked-wrapper">
                     <div className="row">
-                        <div className="title">Staked Relayer Dashboard</div>
+                        <div className="title">{t("relayer.staked_relayer_dashboard")}</div>
                     </div>
                     {!relayerRegistered && polkaBtcLoaded ? (
                         <Button
@@ -111,29 +114,29 @@ export default function StakedRelayerPage() {
                             className="staked-button"
                             onClick={() => setShowRegisterModal(true)}
                         >
-                            Register (Lock DOT)
+                            {t("relayer.register_dot")}
                         </Button>
                     ) : (
                         <div className="col-lg-10 offset-1">
                             <div className="row justify-content-center">
                                 <div className="col-3">
-                                    <div>Stake locked</div>
+                                    <div>{t("relayer.stake_locked")}</div>
                                     <span className="stats">{dotLocked.toString()}</span> DOT
                                 </div>
                                 <div className="col-3">
-                                    <div>Fees earned</div>
+                                    <div>{t("fees_earned")}</div>
                                     <span className="stats">{feesEarnedPolkaBTC}</span> PolkaBTC
                                 </div>
                                 <div className="col-3">
-                                    <div>Fees earned</div>
+                                    <div>{t("fees_earned")}</div>
                                     <span className="stats">{feesEarnedDOT}</span> DOT
                                 </div>
                                 <div className="col-3">
-                                    <div>SLA score</div>
+                                    <div>{t("sla_score")}</div>
                                     <span className="stats">{sla}</span>
                                 </div>
                                 <div className="col-3">
-                                    <div>APY</div>
+                                    <div>{t("apy")}</div>
                                     <span className="stats">~{roundTwoDecimals(apy)}</span> %
                                 </div>
                             </div>
@@ -147,7 +150,7 @@ export default function StakedRelayerPage() {
                             disabled={relayerInactive}
                             onClick={() => setShowReportModal(true)}
                         >
-                            Report Invalid Block
+                            {t("relayer.report_invalid_block")}
                         </Button>
                     )}
                     <ReportModal onClose={handleReportModalClose} show={showReportModal}></ReportModal>
@@ -175,11 +178,11 @@ export default function StakedRelayerPage() {
                                 disabled={relayerInactive || isDeregisterPending}
                                 onClick={deregisterStakedRelayer}
                             >
-                                Deregister
+                                {t("relayer.deregister")}
                             </ButtonMaybePending>
                             <div className="row">
                                 <div className="col-12 de-note">
-                                    Note: You can only deregister if you are not participating in a vote.
+                                    {t("relayer.note_you_can_deregister")}
                                 </div>
                             </div>
                         </React.Fragment>

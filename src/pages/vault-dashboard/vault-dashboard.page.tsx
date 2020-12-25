@@ -21,6 +21,8 @@ import {
 import "./vault-dashboard.page.scss";
 import { toast } from "react-toastify";
 import BitcoinAddress from "../../common/components/bitcoin-links/address";
+import { useTranslation } from 'react-i18next';
+
 
 export default function VaultDashboardPage() {
     const [showRegisterVaultModal, setShowRegisterVaultModal] = useState(false);
@@ -40,6 +42,7 @@ export default function VaultDashboardPage() {
     const vaultNotRegisteredToastId = "vault-not-registered-id";
 
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     const closeRegisterVaultModal = () => setShowRegisterVaultModal(false);
     const closeUpdateCollateralModal = () => setShowUpdateCollateralModal(false);
@@ -107,7 +110,7 @@ export default function VaultDashboardPage() {
             <div className="vault-container dashboard-fade-in-animation dashboard-min-height">
                 <div className="stacked-wrapper">
                     <div className="row">
-                        <div className="title">Vault Dashboard</div>
+                        <div className="title">{t("vault.vault_dashboard")}</div>
                     </div>
                 </div>
                 {vaultId === accountId && (
@@ -115,15 +118,15 @@ export default function VaultDashboardPage() {
                         <div className="col-lg-10 offset-1">
                             <div className="row mt-3">
                                 <div className="col-lg-3 col-md-6 col-6">
-                                    <div className="">Locked collateral</div>
+                                    <div className="">{t("vault.locked_collateral")}</div>
                                     <span className="stats">{collateral}</span> DOT
                                 </div>
                                 <div className="col-lg-3 col-md-6 col-6">
-                                    <div className="">Locked BTC</div>
+                                    <div className="">{t("locked_btc")}</div>
                                     <span className="stats">{lockedBTC}</span> BTC
                                 </div>
                                 <div className="col-lg-3 col-md-6 col-6">
-                                    <div className="">Collateralization</div>
+                                    <div className="">{t("collateralization")}</div>
                                     <span className="stats">
                                         {collateralization === undefined
                                             ? "∞"
@@ -131,25 +134,25 @@ export default function VaultDashboardPage() {
                                     </span>
                                 </div>
                                 <div className="col-lg-3 col-md-6 col-6">
-                                    <div className="">Capacity</div>
+                                    <div className="">{t("vault.capacity")}</div>
                                     <span className="stats">~{roundTwoDecimals(capacity)}</span> PolkaBTC
                                 </div>
                             </div>
                             <div className="row justify-content-center mt-4">
                                 <div className="col-md-3">
-                                    <div className="">Fees earned</div>
+                                    <div className="">{t("fees_earned")}</div>
                                     <span className="stats">{feesEarnedPolkaBTC.toString()}</span> PolkaBTC
                                 </div>
                                 <div className="col-md-3">
-                                    <div className="">Fees earned</div>
+                                    <div className="">{t("fees_earned")}</div>
                                     <span className="stats">{feesEarnedDOT.toString()}</span> DOT
                                 </div>
                                 <div className="col-md-3">
-                                    <div className="">SLA score</div>
+                                    <div className="">{t("sla_score")}</div>
                                     <span className="stats">{sla}</span>
                                 </div>
                                 <div className="col-md-3">
-                                    <div className="">APY</div>
+                                    <div className="">{t("apy")}</div>
                                     <span className="stats">~{roundTwoDecimals(apy)}</span> %
                                 </div>
                             </div>
@@ -157,7 +160,7 @@ export default function VaultDashboardPage() {
                         <div className="row">
                             <div className="col-12">
                                 <div className="btc-address-header">
-                                    BTC Address: &nbsp;&nbsp;
+                                    {t("btc_address")}: &nbsp;&nbsp;
                                     <BitcoinAddress btcAddress={btcAddress} />
                                     &nbsp;&nbsp;&nbsp;
                                     <i className="fa fa-edit" onClick={() => setShowUpdateBTCAddressModal(true)}></i>
@@ -167,7 +170,7 @@ export default function VaultDashboardPage() {
                         <div className="row">
                             <div className="col-12">
                                 <div className="">
-                                    Collateral: &nbsp; {collateral} DOT for {lockedBTC + " BTC"}
+                                    {t("vault.collateral")}: &nbsp; {collateral} DOT for {lockedBTC + " BTC"}
                                     &nbsp;&nbsp;&nbsp;
                                     <i className="fa fa-edit" onClick={() => setShowUpdateCollateralModal(true)}></i>
                                 </div>
@@ -181,7 +184,7 @@ export default function VaultDashboardPage() {
                         className="register-vault-dashboard"
                         onClick={() => setShowRegisterVaultModal(true)}
                     >
-                        Register
+                        {t("register")}
                     </Button>
                 )}
                 <IssueTable></IssueTable>

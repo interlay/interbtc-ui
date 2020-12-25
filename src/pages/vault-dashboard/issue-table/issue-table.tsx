@@ -55,7 +55,7 @@ export default function IssueTable(): ReactElement {
         <div className="issue-table">
             <div className="row">
                 <div className="col-12">
-                    <div className="header">Issue Requests</div>
+                    <div className="header">{t("issue_requests")}</div>
                 </div>
             </div>
             <div className="row justify-content-center">
@@ -64,13 +64,13 @@ export default function IssueTable(): ReactElement {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Id</th>
-                                    <th>Creation Block</th>
-                                    <th>User</th>
-                                    <th>BTC Address</th>
+                                    <th>{t("id")}</th>
+                                    <th>{t("vault.creation_block")}</th>
+                                    <th>{t("user")}</th>
+                                    <th>{t("btc_address")}</th>
                                     <th>PolkaBTC</th>
-                                    <th>Griefing Collateral</th>
-                                    <th>Status</th>
+                                    <th>{t("griefing_collateral")}</th>
+                                    <th>{t("status")}</th>
                                 </tr>
                             </thead>
                             <tbody>

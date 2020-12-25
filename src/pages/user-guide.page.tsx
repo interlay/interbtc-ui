@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
+import { useTranslation } from "react-i18next";
 
 // eslint-disable-next-line
 const userGuide = require("../assets/user-guide.md");
 
 export default function UserGuidePage(): JSX.Element {
     const [markdown, setMarkdown] = useState("");
+    const { t } = useTranslation();
 
     useEffect(() => {
         fetch(userGuide)
@@ -24,7 +26,7 @@ export default function UserGuidePage(): JSX.Element {
             <section className="jumbotron text-center transparent-background static-fade-in-animation">
                 <div className="container mt-5">
                     <h3 style={{ fontSize: "2em" }} className="lead text-white mt-5">
-                        PolkaBTC User Guide (Alpha Testnet)
+                        {t("guide.alpha_testnet")}
                     </h3>
                 </div>
             </section>

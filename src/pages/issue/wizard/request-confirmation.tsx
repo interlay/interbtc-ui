@@ -14,6 +14,7 @@ import { IssueRequest } from "../../../common/types/issue.types";
 import { StoreType } from "../../../common/types/util.types";
 import Big from "big.js";
 import { startTransactionWatcherIssue } from "../../../common/utils/issue-transaction.watcher";
+import { useTranslation } from "react-i18next";
 
 
 export default function RequestConfirmation() {
@@ -23,6 +24,8 @@ export default function RequestConfirmation() {
         (state: StoreType) => state.issue
     );
     const dispatch = useDispatch();
+    const { t } = useTranslation();
+
 
     const onConfirm = async () => {
         if (!polkaBtcLoaded) return;
@@ -78,24 +81,24 @@ export default function RequestConfirmation() {
         <React.Fragment>
             <Modal.Body>
                 <FormGroup>
-                    <h5>Confirm Issue Request</h5>
-                    <p>Please verify and confirm your issue request.</p>
+                    <h5>{t("issue_page.confirm_issue_request")}</h5>
+                    <p>{t("issue_page.verify_and_confirm")}</p>
                     <FormGroup>
                         <ListGroup>
                             <ListGroupItem>
-                                Issuing: <strong>{amountBTC} PolkaBTC</strong>
+                                {t("issue_page.issuing")} <strong>{amountBTC} PolkaBTC</strong>
                             </ListGroupItem>
                             <ListGroupItem>
-                                Vault BTC address: <strong>{vaultBtcAddress}</strong>
+                                {t("issue_page.vault_btc_address")}: <strong>{vaultBtcAddress}</strong>
                             </ListGroupItem>
                             <ListGroupItem>
-                                Fees: <strong>{fee} PolkaBTC</strong>
+                                {t("issue_page.fees")} <strong>{fee} PolkaBTC</strong>
                             </ListGroupItem>
                             <ListGroupItem>
-                                Griefing Collateral: <strong>{griefingCollateral} DOT</strong> (This will be returned to you after successful completion of the request.)
+                                {t("griefing_collateral")}: <strong>{griefingCollateral} DOT</strong> {t("issue_page.successful_completion")}
                             </ListGroupItem>
                             <ListGroupItem>
-                                Total: <strong>{new Big(fee).add(new Big(amountBTC)).toString()} </strong>
+                                {t("issue_page.total")} <strong>{new Big(fee).add(new Big(amountBTC)).toString()} </strong>
                                 <strong>BTC</strong>
                             </ListGroupItem>
                         </ListGroup>
@@ -104,14 +107,14 @@ export default function RequestConfirmation() {
             </Modal.Body>
             <Modal.Footer>
                 <button className="btn btn-secondary float-left" onClick={goToPreviousStep}>
-                    Previous
+                    {t("previous")}
                 </button>
                 <ButtonMaybePending
                     className="btn btn-primary float-right"
                     isPending={isRequestPending}
                     onClick={onConfirm}
                 >
-                    Confirm
+                    {t("confirm")}
                 </ButtonMaybePending>
             </Modal.Footer>
         </React.Fragment>

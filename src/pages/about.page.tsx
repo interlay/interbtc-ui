@@ -4,12 +4,14 @@ import ReactMarkdown from "react-markdown";
 import paperImg from "../assets/img/icons/paper-white.png";
 import specImg from "../assets/img/icons/spec-white.png";
 import codeImg from "../assets/img/icons/github-white.png";
+import { useTranslation } from "react-i18next";
 
 // eslint-disable-next-line
 const polkaBTCInfo = require("../assets/polkaBTCInfo.md");
 
 export default function AboutPage(): JSX.Element {
     const [markdown, setMarkdown] = useState("");
+    const { t } = useTranslation();
 
     useEffect(() => {
         fetch(polkaBTCInfo)
@@ -27,7 +29,7 @@ export default function AboutPage(): JSX.Element {
             <section className="jumbotron text-center transparent-background fade-in-animation">
                 <div className="container mt-5">
                     <h3 style={{ fontSize: "2em" }} className="lead text-white mt-5">
-                        About PolkaBTC
+                        {t("about.about_polkabtc")}
                     </h3>
                 </div>
                 <Col xs="12" lg={{ span: 6, offset: 3 }}>
@@ -40,7 +42,7 @@ export default function AboutPage(): JSX.Element {
                                 rel="noopener noreferrer"
                             >
                                 <Image src={paperImg} width="64" />
-                                <h4 className="text-white">Research Paper</h4>
+                                <h4 className="text-white">{t("about.research_paper")}</h4>
                             </a>
                         </Col>
                         <Col className="mt-2" xs="12" sm={{ span: 4 }}>
@@ -51,7 +53,7 @@ export default function AboutPage(): JSX.Element {
                                 rel="noopener noreferrer"
                             >
                                 <Image src={specImg} width="64" />
-                                <h4 className="text-white">Specification</h4>
+                                <h4 className="text-white">{t("about.specification")}</h4>
                             </a>
                         </Col>
                         <Col className="mt-2" xs="12" sm={{ span: 4 }}>
@@ -62,7 +64,7 @@ export default function AboutPage(): JSX.Element {
                                 rel="noopener noreferrer"
                             >
                                 <Image src={codeImg} width="64" />
-                                <h4 className="text-white">Source Code</h4>
+                                <h4 className="text-white">{t("source_code")}</h4>
                             </a>
                         </Col>
                     </Row>

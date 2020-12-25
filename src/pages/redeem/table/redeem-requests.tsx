@@ -162,14 +162,14 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
         <div>
             {redeemRequests && redeemRequests.length > 0 && (
                 <React.Fragment>
-                    <h5>{t("redeem_page.redeem_requests")}</h5>
+                    <h5>{t("redeem_requests")}</h5>
                     <Table hover responsive size={"md"}>
                         <thead>
                             <tr>
                                 <th>{t("redeem_page.redeem_id")}</th>
                                 <th>{t("redeem_page.amount")}</th>
                                 <th>{t("fee")}</th>
-                                <th>{t("redeem_page.parachainblock")}</th>
+                                <th>{t("parachainblock")}</th>
                                 <th>{t("redeem_page.output_BTC_address")}</th>
                                 <th>{t("redeem_page.BTC_transaction")}</th>
                                 <th>{t("redeem_page.confirmations")}</th>

@@ -1,6 +1,7 @@
 import React from "react";
 import { Col, Accordion, Row, Card } from "react-bootstrap";
 import questions from "../assets/faq.json";
+import { useTranslation } from "react-i18next";
 
 type Question = {
     id: number;
@@ -9,12 +10,14 @@ type Question = {
 };
 
 export default function FaqPage(): JSX.Element {
+    const { t } = useTranslation();
+
     return (
         <div>
             <section className="jumbotron text-center transparent-background static-fade-in-animation">
                 <div className="container mt-5">
                     <h3 style={{ fontSize: "2em" }} className="lead text-white mt-5">
-                        Frequently Asked Questions
+                        {t("faq.faq")}
                     </h3>
                 </div>
             </section>
@@ -36,8 +39,8 @@ export default function FaqPage(): JSX.Element {
                                 </Accordion>
                             ))}
                             <p className="mt-2">
-                                Got more questions? <a href="https://discord.gg/C8tjMbgVXh">Join our Discord</a> and ask
-                                away!
+                                {t("faq.more_questions")}{" "}
+                                <a href="https://discord.gg/C8tjMbgVXh">{t("faq.join_discord")}</a> {t("faq.ask_away")}
                             </p>
                         </Col>
                     </Row>

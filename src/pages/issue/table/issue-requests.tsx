@@ -130,7 +130,7 @@ export default function IssueRequests(props: IssueRequestProps) {
             ]);
             transactionData = true;
         } catch (err) {
-            toast.error("Transaction not yet included in Bitcoin.");
+            toast.error(t("issue_page.transaction_not_included"));
         }
 
         if (!transactionData) return;
@@ -140,7 +140,7 @@ export default function IssueRequests(props: IssueRequestProps) {
             provenReq.rawTransaction = rawTx;
             dispatch(updateIssueRequestAction(provenReq));
 
-            toast.success("Fetching proof data for Bitcoin transaction: " + txId);
+            toast.success(t("issue_page.proof_data",{txId}));
             const txIdBuffer = Buffer.from(txId, "hex").reverse();
 
             // prepare types for polkadot
@@ -149,7 +149,7 @@ export default function IssueRequests(props: IssueRequestProps) {
             const parsedMerkleProof = window.polkaBTC.api.createType("Bytes", "0x" + merkleProof);
             const parsedRawTx = window.polkaBTC.api.createType("Bytes", rawTx);
 
-            toast.success("Executing issue request: " + request.id);
+            toast.success(t("issue_page.executing",{id: request.id}));
             // execute issue
             const success = await window.polkaBTC.issue.execute(
                 parsedIssuedId,
@@ -159,7 +159,7 @@ export default function IssueRequests(props: IssueRequestProps) {
             );
 
             if (!success) {
-                throw new Error("Execute failed.");
+                throw new Error(t("issue_page.execute_failed"));
             }
 
             const completedReq = provenReq;
@@ -170,7 +170,7 @@ export default function IssueRequests(props: IssueRequestProps) {
             );
             dispatch(updateIssueRequestAction(completedReq));
 
-            toast.success("Succesfully executed issue request: " + request.id);
+            toast.success(t("issue_page.succesfully_executed",{id: request.id}));
         } catch (error) {
             toast.error(error.toString());
         } finally {
@@ -182,7 +182,7 @@ export default function IssueRequests(props: IssueRequestProps) {
         if (issuePeriod.add(new Big(request.creation)).lte(parachainHeight)) {
             return (
                 <h5>
-                    <Badge variant="secondary">Expired</Badge>
+                    <Badge variant="secondary">{t("issue_page.expired")}</Badge>
                 </h5>
             );
         }
@@ -206,7 +206,7 @@ export default function IssueRequests(props: IssueRequestProps) {
                     execute(request);
                 }}
             >
-                Execute
+                {t("issue_page.execute")}
             </ButtonMaybePending>
         );
     };
@@ -228,19 +228,19 @@ export default function IssueRequests(props: IssueRequestProps) {
         <div>
             {issueRequests && issueRequests.length > 0 && (
                 <React.Fragment>
-                    <h5>Issue Requests</h5>
-                    <p>Click on an Issue request to view details or update the BTC payment txid.</p>
+                    <h5>{t("issue_requests")}</h5>
+                        <p>{t("issue_page.click_on_issue_request")}</p>
                     <Table hover responsive size={"md"}>
                         <thead>
                             <tr>
-                                <th>Issue ID</th>
-                                <th>Amount</th>
-                                <th>Fee</th>
-                                <th>Parachain Block</th>
-                                <th>Vault BTC Address</th>
-                                <th>BTC Transaction</th>
-                                <th>Confirmations</th>
-                                <th>Status</th>
+                                <th>{t("issue_page.issue_id")}</th>
+                                <th>{t("issue_page.amount")}</th>
+                                <th>{t("fee")}</th>
+                                <th>{t("parachain_block")}</th>
+                                <th>{t("issue_page.vault_btc_address")}</th>
+                                <th>{t("issue_page.btc_transaction")}</th>
+                                <th>{t("issue_page.confirmations")}</th>
+                                <th>{t("status")}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -250,7 +250,7 @@ export default function IssueRequests(props: IssueRequestProps) {
                                         <td>{shortAddress(request.id)}</td>
                                         <td>{request.amountBTC} PolkaBTC</td>
                                         <td>{request.fee} PolkaBTC</td>
-                                        <td>{request.creation === "0" ? "Pending..." : request.creation}</td>
+                                        <td>{request.creation === "0" ? t("issue_page.pending") : request.creation}</td>
                                         <td>
                                             <BitcoinAddress btcAddress={request.vaultBTCAddress} shorten />
                                         </td>

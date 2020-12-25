@@ -12,7 +12,7 @@ import { showAccountModalAction } from "../../common/actions/general.actions";
 import Balances from "../../common/components/balances";
 import { toast } from "react-toastify";
 import * as constants from "../../constants";
-import i18n from "i18next";
+import { useTranslation } from "react-i18next";
 
 
 export default function IssuePage(): JSX.Element {
@@ -20,6 +20,7 @@ export default function IssuePage(): JSX.Element {
     const [showWizard, setShowWizard] = useState(false);
     const {extensions, address, balanceDOT, balancePolkaBTC, stateOfBTCParachain,
         bitcoinHeight, btcRelayHeight } = useSelector((state: StoreType) => state.general);
+    const { t } = useTranslation();
 
     const handleClose = () => {
         dispatch(resetIssueWizardAction());
@@ -28,11 +29,11 @@ export default function IssuePage(): JSX.Element {
 
     const openWizard = () => {
         if (stateOfBTCParachain === ParachainStatus.Error) {
-            toast.error(i18n.t("issue_page.error_in_parachain"));
+            toast.error(t("issue_page.error_in_parachain"));
             return;
         }
         if (bitcoinHeight-btcRelayHeight>constants.BLOCKS_BEHIND_LIMIT) {
-            toast.error(i18n.t("issue_page.error_more_than_6_blocks_behind"));
+            toast.error(t("issue_page.error_more_than_6_blocks_behind"));
             return;
         }
         if (extensions.length && address) {
@@ -58,7 +59,7 @@ export default function IssuePage(): JSX.Element {
                     <Row className="mt-5 mb-5">
                         <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
                             <Button variant="outline-polkadot" size="lg" block onClick={openWizard}>
-                                Issue PolkaBTC
+                                {t("issue_page.issue_polkabtc")}
                             </Button>
                         </Col>
                     </Row>

@@ -22,12 +22,13 @@ import "./redeem.page.scss";
 
 
 export default function RedeemPage(): JSX.Element {
-    const { t } = useTranslation();
     const { balancePolkaBTC, balanceDOT, address, extensions, hasFeedbackModalBeenDisplayed, btcRelayHeight,
         bitcoinHeight, stateOfBTCParachain } = useSelector((state: StoreType) => state.general);
-    const dispatch = useDispatch();
     const [showWizard, setShowWizard] = useState(false);
     const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+    const dispatch = useDispatch();
+    const { t } = useTranslation();
+
 
     const handleCloseWizard = () => {
         dispatch(resetRedeemWizardAction());

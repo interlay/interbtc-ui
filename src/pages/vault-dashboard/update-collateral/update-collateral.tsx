@@ -8,6 +8,8 @@ import { planckToDOT, dotToPlanck, roundTwoDecimals } from "@interlay/polkabtc";
 import { StoreType } from "../../../common/types/util.types";
 import Big from "big.js";
 import ButtonMaybePending from "../../../common/components/pending-button";
+import { useTranslation } from 'react-i18next';
+
 
 type UpdateCollateralForm = {
     collateral: string;
@@ -19,8 +21,7 @@ type UpdateCollateralProps = {
 };
 
 export default function UpdateCollateralModal(props: UpdateCollateralProps) {
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const vaultClientLoaded = useSelector((state: StoreType) => state.general.vaultClientLoaded);
+    const { polkaBtcLoaded, vaultClientLoaded } = useSelector((state: StoreType) => state.general);
     const { register, handleSubmit, errors } = useForm<UpdateCollateralForm>();
     // denoted in DOT
     const currentDOTCollateral = useSelector((state: StoreType) => state.vault.collateral);
@@ -34,6 +35,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     const [isUpdatePending, setUpdatePending] = useState(false);
     const [isCollateralUpdateAllowed, setCollateralUpdateAllowed] = useState(false);
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     const onSubmit = handleSubmit(async () => {
         if (!polkaBtcLoaded) return;
@@ -69,7 +71,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
             }
             dispatch(updateCollateralizationAction(collateralization?.mul(100).toString()));
 
-            toast.success("Successfully updated collateral");
+            toast.success(t("vault.successfully_updated_collateral"));
             closeModal();
         } catch (error) {
             toast.error(error.toString());
@@ -133,14 +135,14 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
         <Modal show={props.show} onHide={closeModal}>
             <form onSubmit={onSubmit}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Update Collateral</Modal.Title>
+                    <Modal.Title>{t("vault.update_collateral")}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="row">
                         <div className="col-12 current-collateral">
-                            Current Total Collateral {currentDOTCollateral} DOT{" "}
+                            {t("vault.current_total_collateral",{currentDOTCollateral})}
                         </div>
-                        <div className="col-12">New Total Collateral</div>
+                        <div className="col-12">{t("vault.new_total_collateral")}</div>
                         <div className="col-12 basic-addon">
                             <div className="input-group">
                                 <input
@@ -165,16 +167,16 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                             {errors.collateral && (
                                 <div className="input-error">
                                     {errors.collateral.type === "required"
-                                        ? "Collateral is required"
+                                        ? t("vault.collateral_is_required")
                                         : errors.collateral.message}
                                     {errors.collateral.type === "min"
-                                        ? "Collateral must be higher than 0"
+                                        ? t("vault.collateral_higher_than_0")
                                         : errors.collateral.message}
                                 </div>
                             )}
                         </div>
                         <div className="col-12">
-                            New Collateralization:
+                            {t("vault.new_collateralization")}
                             {newCollateralization !== "∞"
                                 ? Number(newCollateralization) > 1000
                                     ? " more than 1000%"
@@ -185,7 +187,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={closeModal}>
-                        Cancel
+                        {t("cancel")}
                     </Button>
                     <ButtonMaybePending
                         variant={isAWithdrawal ? "outline-danger" : "outline-success"}
@@ -193,7 +195,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                         type="submit"
                         disabled={!isCollateralUpdateAllowed}
                     >
-                        {isAWithdrawal ? "Withdraw Collateral" : "Add Collateral"}
+                        {isAWithdrawal ? t("vault.withdraw_collateral") : t("vault.add_collateral")}
                     </ButtonMaybePending>
                 </Modal.Footer>
             </form>

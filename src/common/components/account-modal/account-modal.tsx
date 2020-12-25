@@ -3,6 +3,7 @@ import { Button, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../types/util.types";
 import { showAccountModalAction } from "../../actions/general.actions";
+import { useTranslation } from 'react-i18next';
 
 import "./account-modal.scss";
 
@@ -12,9 +13,8 @@ type AccountModalProps = {
 }
 
 export default function AccountModal(props: AccountModalProps): ReactElement {
-    const showAccountModal = useSelector((state: StoreType) => state.general.showAccountModal);
-    const accounts = useSelector((state: StoreType) => state.general.accounts);
-    const extensions = useSelector((state: StoreType) => state.general.extensions);
+    const { showAccountModal, accounts, extensions } = useSelector((state: StoreType) => state.general);
+    const { t } = useTranslation();
     const dispatch = useDispatch();
 
     const onClose = () => dispatch(showAccountModalAction(false));
@@ -31,12 +31,12 @@ export default function AccountModal(props: AccountModalProps): ReactElement {
                 <React.Fragment>
                     {!accounts.length ? <div id="account-modal-no-account">
                         <p>
-                            You don't have an account. Create one
+                            {t("no_account")}
                             <a href="https://polkadot.js.org/extension/" target="_blank" rel="noopener noreferrer">
-                                &nbsp;here
-                            </a>. Once you create a new account please refresh the page.
+                                &nbsp;{t("here")}
+                            </a>. {t("refresh_page")}
                         </p>
-                        </div> : <p>Please select an account:</p>}
+                        </div> : <p>{t("select_an_account")}:</p>}
                     {(accounts || []).map((account: string, index: number) => (
                         <div className="row" key={index}>
                             <div className="col-12">
@@ -50,7 +50,7 @@ export default function AccountModal(props: AccountModalProps): ReactElement {
                 :
                 <React.Fragment>
                     <div className="row description">
-                        <div className="col-12">Please install one of the currently supported wallets</div>
+                        <div className="col-12">{t("install_supported_wallets")}</div>
                     </div>
                     <div className="row">
                         <div className="col-12">
