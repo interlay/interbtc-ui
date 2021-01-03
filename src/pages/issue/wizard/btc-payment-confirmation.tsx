@@ -10,6 +10,8 @@ import {
 } from "../../../common/actions/issue.actions";
 import { StoreType } from "../../../common/types/util.types";
 import { BTC_TRANSACTION_ID_REGEX } from "../../../constants";
+import { useTranslation } from 'react-i18next';
+
 
 type BTCPaymentConfirmationProps = {
     closeModal: () => void;
@@ -25,6 +27,8 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
     const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
     const { register, handleSubmit, errors } = useForm<BTCTxIdForm>({ defaultValues: { btcTxId } });
     const dispatch = useDispatch();
+    const { t } = useTranslation();
+
 
     const onSubmit = handleSubmit(async () => {
         props.closeModal();
@@ -47,7 +51,7 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
 
                 dispatch(updateIssueRequestAction(request));
             } else {
-                toast.error("Exception: Issue request not found.");
+                toast.error(t("issue_page.issue_request_not_found"));
             }
         }
     };
@@ -60,27 +64,28 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
         <form onSubmit={onSubmit}>
             <Modal.Body>
                 <FormGroup>
-                    <h5>Confirmation</h5>
+                    <h5>{t("issue_page.confirmation")}</h5>
                     <Row className="justify-content-md-center">
                         <Col className="text-left">
                             <p>
                                 {" "}
-                                <b>Your request is now being processed.</b>
+                                <b>{t("issue_page.your_request_processed")}</b>
                                 <br />
                                 <br />
-                                We will monitor Bitcoin for your transaction (via the Issue ID in the OP_RETURN output).
+                                {t("issue_page.monitor_bitcoin")}
+                                
                                 <br />
-                                Once it has sufficient confirmations, an "Execute" button will appear for this issue request.
+                                {t("issue_page.sufficient_confirmations")}                                
                             </p>
                             <p>
-                                <b>Note: Your Bitcoin payment can take up to an hour to confirm.</b>
+                                <b>{t("issue_page.note_hour_to_confirm")}</b>
                             </p>
                         </Col>
                     </Row>
                     <Row className="justify-content-md-center">
                         <Col className="text-center">
                             <p className="text-left">
-                                Optional: inform us of your Bitcoin txid to speed things up
+                                {t("issue_page.speed_things_up")}
                             </p>
                             <input
                                 id="btcTxId"
@@ -92,19 +97,19 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
                                 ref={register({
                                     pattern: {
                                         value: BTC_TRANSACTION_ID_REGEX,
-                                        message: "Please enter valid transaction Id",
+                                        message: t("issue_page.valid_transaction_id"),
                                     },
                                 })}
                             />
                             {errors.btcTxId && (
                                 <div className="input-error">
                                     {errors.btcTxId.type === "required"
-                                        ? "Please enter the your btc transaction id"
+                                        ? t("issue_page.required_message")
                                         : errors.btcTxId.message}
                                 </div>
                             )}
                             <button className="btn btn-primary" type="submit">
-                                I have made the Bitcoin payment
+                                {t("issue_page.made_payment")}
                             </button>
                         </Col>
                     </Row>
@@ -112,7 +117,7 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
             </Modal.Body>
             <Modal.Footer>
                 <button className="btn btn-secondary float-left" onClick={goToPreviousStep}>
-                    Previous
+                    {t("previous")}
                 </button>
             </Modal.Footer>
         </form>

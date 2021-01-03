@@ -9,6 +9,8 @@ import { planckToDOT, dotToPlanck } from "@interlay/polkabtc";
 import { StoreType } from "../../../common/types/util.types";
 import BN from "bn.js";
 import { BtcNetwork } from "../../../common/utils/utils";
+import { useTranslation } from 'react-i18next';
+
 
 type RegisterVaultForm = {
     collateral: string;
@@ -22,9 +24,11 @@ type RegisterVaultProps = {
 
 export default function RegisterVaultModal(props: RegisterVaultProps) {
     const { register, handleSubmit, errors } = useForm<RegisterVaultForm>();
-    const dispatch = useDispatch();
     const [isPending, setIsPending] = useState(false);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+    const dispatch = useDispatch();
+    const { t } = useTranslation();
+
 
     const onSubmit = handleSubmit(async ({ collateral }) => {
         if (!polkaBtcLoaded) return;
@@ -57,11 +61,11 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
         <Modal show={props.show} onHide={props.onClose}>
             <form onSubmit={onSubmit}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Register Vault</Modal.Title>
+                    <Modal.Title>{t("vault.register_vault")}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="row">
-                        <div className="col-12">Collateral</div>
+                        <div className="col-12">{t("vault.collateral")}</div>
                         <div className="col-12 basic-addon">
                             <div className="input-group">
                                 <input
@@ -84,7 +88,7 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
                             {errors.collateral && (
                                 <div className="input-error">
                                     {errors.collateral.type === "required"
-                                        ? "Collateral is required"
+                                        ? t("vault.collateral_is_required")
                                         : errors.collateral.message}
                                 </div>
                             )}
@@ -93,10 +97,10 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={props.onClose}>
-                        Cancel
+                        {t("cancel")}
                     </Button>
                     <ButtonMaybePending variant="outline-success" type="submit" isPending={isPending}>
-                        Register
+                        {t("register")}
                     </ButtonMaybePending>
                 </Modal.Footer>
             </form>

@@ -22,7 +22,6 @@ type EnterBTCForm = {
 };
 
 export default function EnterBTCAmount() {
-    const { t } = useTranslation();
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const amount = useSelector((state: StoreType) => state.issue.amountBTC);
     const defaultValues = amount ? { defaultValues: { amountBTC: amount } } : undefined;
@@ -30,6 +29,8 @@ export default function EnterBTCAmount() {
     const [isRequestPending, setRequestPending] = useState(false);
     const [dustValue, setDustValue] = useState("0");
     const dispatch = useDispatch();
+    const { t } = useTranslation();
+
 
     useEffect(() => {
         const fetchDustValue = async () => {

@@ -54,7 +54,7 @@ export default function RedeemTable(): ReactElement {
         <div className="redeem-table">
             <div className="row">
                 <div className="col-12">
-                    <div className="header">Redeem Requests</div>
+                    <div className="header">{t("redeem_requests")}</div>
                 </div>
             </div>
             <div className="row justify-content-center">
@@ -63,13 +63,13 @@ export default function RedeemTable(): ReactElement {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Id</th>
-                                    <th>Parachain Block</th>
-                                    <th>User</th>
-                                    <th>BTC Address</th>
+                                    <th>{t("id")}</th>
+                                    <th>{t("parachainblock")}</th>
+                                    <th>{t("user")}</th>
+                                    <th>{t("btc_address")}</th>
                                     <th>PolkaBTC</th>
                                     <th>DOT</th>
-                                    <th>Status</th>
+                                    <th>{t("status")}</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -6,6 +6,8 @@ import { StoreType } from "../../../common/types/util.types";
 import { toast } from "react-toastify";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { reverseEndiannessHex } from "@interlay/polkabtc";
+import { useTranslation } from 'react-i18next';
+
 
 const STATUS_UPDATE_DEPOSIT = 100;
 
@@ -23,6 +25,7 @@ export default function ReportModal(props: ReportModalType): ReactElement {
     const { register, handleSubmit, errors } = useForm<ReportForm>();
     const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
     const [isReportPending, setReportPending] = useState(false);
+    const { t } = useTranslation();
 
     const onSubmit = handleSubmit(async ({ btcBlock, message }) => {
         if (!relayerLoaded) return;
@@ -42,11 +45,11 @@ export default function ReportModal(props: ReportModalType): ReactElement {
         <Modal show={props.show} onHide={props.onClose} size={"lg"}>
             <form onSubmit={onSubmit}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Report Invalid BTC Block in BTC-Relay</Modal.Title>
+                    <Modal.Title>{t("relayer.report_invalid")}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="row">
-                        <div className="col-12">Bitcoin Block Hash (Big Endian)</div>
+                        <div className="col-12">{t("relayer.block_hash")}</div>
                         <div className="col-12">
                             <input
                                 name="btcBlock"
@@ -56,21 +59,21 @@ export default function ReportModal(props: ReportModalType): ReactElement {
                                     required: true,
                                     pattern: {
                                         value: /^[0-9a-zA-Z]{64,64}$/,
-                                        message: "Please enter valid BTC block hash",
+                                        message: t("relayer.enter_valid_block"),
                                     },
                                 })}
                             ></input>
                             {errors.btcBlock && (
                                 <div className="input-error">
                                     {errors.btcBlock.type === "required"
-                                        ? "Bitcoin block hash is required"
+                                        ? t("relayer.hash_is_required")
                                         : errors.btcBlock.message}
                                 </div>
                             )}
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-12">Message</div>
+                        <div className="col-12">{t("message")}</div>
                         <div className="col-12">
                             <textarea
                                 className={"custom-textarea" + (errors.message ? " error-borders" : "")}
@@ -78,16 +81,16 @@ export default function ReportModal(props: ReportModalType): ReactElement {
                                 ref={register({ required: false })}
                                 rows={6}
                             ></textarea>
-                            {errors.message && <div className="input-error">Message is required</div>}
+                            {errors.message && <div className="input-error">{t("relayer.requeried_message")}</div>}
                         </div>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={props.onClose}>
-                        Cancel
+                        {t("cancel")}
                     </Button>
                     <ButtonMaybePending variant="primary" type="submit" isPending={isReportPending}>
-                        Report
+                        {t("report")}
                     </ButtonMaybePending>
                 </Modal.Footer>
             </form>

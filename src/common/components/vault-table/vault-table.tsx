@@ -15,21 +15,21 @@ import { StoreType, ParachainStatus } from "../../types/util.types";
 import { showAccountModalAction } from "../../actions/general.actions";
 import Big from "big.js";
 
+
 type VaultTableProps = {
     isRelayer: boolean | undefined;
 };
 
 export default function VaultTable(props: VaultTableProps): ReactElement {
     const [vaults, setVaults] = useState<Array<Vault>>([]);
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const { t } = useTranslation();
     const [showWizard, setShowWizard] = useState(false);
     const [liquidationThreshold, setLiquidationThreshold] = useState(new Big(0));
     const [auctionCollateralThreshold, setAuctionCollateralThreshold] = useState(new Big(0));
     const [premiumRedeemThreshold, setPremiumRedeemThreshold] = useState(new Big(0));
     const [secureCollateralThreshold, setSecureCollateralThreshold] = useState(new Big(0));
     const dispatch = useDispatch();
-    const { address, extensions, btcRelayHeight, bitcoinHeight, stateOfBTCParachain } = useSelector(
+    const { t } = useTranslation();
+    const { address, extensions, btcRelayHeight, bitcoinHeight, stateOfBTCParachain, polkaBtcLoaded } = useSelector(
         (state: StoreType) => state.general
     );
 
@@ -231,26 +231,26 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>AccountID</th>
-                                    <th>BTC Address</th>
-                                    <th>Locked DOT</th>
-                                    <th>Locked BTC</th>
+                                    <th>{t("account_id")}</th>
+                                    <th>{t("btc_address")}</th>
+                                    <th>{t("locked_dot")}</th>
+                                    <th>{t("locked_btc")}</th>
                                     <th>
-                                        Pending BTC &nbsp;
+                                        {t("pending_btc")} &nbsp; 
                                         <i
                                             className="far fa-question-circle"
                                             data-tip="BTC volume of in-progress issue requests."
                                         ></i>
                                     </th>
                                     <th>
-                                        Collateralization &nbsp;
+                                        {t("collateralization")} &nbsp;
                                         <i
                                             className="far fa-question-circle"
                                             data-tip="Collateralization rate for locked BTC.
                                            'Pending' includes in-progress issue requests."
                                         ></i>
                                     </th>
-                                    <th>Status</th>
+                                    <th>{t("status")}</th>
                                 </tr>
                             </thead>
                             {vaults && vaults.length ? (
@@ -282,7 +282,7 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                             ) : (
                                 <tbody>
                                     <tr>
-                                        <td colSpan={7}>No registered vaults</td>
+                                        <td colSpan={7}>{t("no_registered_vaults")}</td>
                                     </tr>
                                 </tbody>
                             )}

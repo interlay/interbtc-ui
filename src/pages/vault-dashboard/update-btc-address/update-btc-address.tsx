@@ -7,6 +7,8 @@ import { StoreType } from "../../../common/types/util.types";
 import { updateBTCAddressAction } from "../../../common/actions/vault.actions";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { BtcNetwork } from "../../../common/utils/utils";
+import { useTranslation } from 'react-i18next';
+
 
 type UpdateBTCAddressForm = {};
 
@@ -18,8 +20,9 @@ type UpdateBTCAddressProps = {
 export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps) {
     const { handleSubmit } = useForm<UpdateBTCAddressForm>();
     const btcAddress = useSelector((state: StoreType) => state.vault.btcAddress);
-    const dispatch = useDispatch();
     const [isUpdatePending, setUpdatePending] = useState(false);
+    const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     const onSubmit = handleSubmit(async () => {
         setUpdatePending(true);
@@ -38,24 +41,23 @@ export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps) {
         <Modal show={props.show} onHide={props.onClose}>
             <form onSubmit={onSubmit}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Update BTC Address</Modal.Title>
+                    <Modal.Title>{t("update_btc_address")}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="row">
-                        <div className="col-12">Current BTC Address:</div>
+                        <div className="col-12">{t("vault.current_btc_address")}</div>
                         <div className="col-12 btc-address">{btcAddress}</div>
                         <div className="col-12">
-                            Your new BTC address will be automatically created from your BTC wallet connected to the
-                            vault client when you click update.
+                            {t("vault.automatically_created")}
                         </div>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={props.onClose}>
-                        Cancel
+                        {t("cancel")}
                     </Button>
                     <ButtonMaybePending variant="outline-success" isPending={isUpdatePending} type="submit">
-                        Update
+                        {t("update")}
                     </ButtonMaybePending>
                 </Modal.Footer>
             </form>

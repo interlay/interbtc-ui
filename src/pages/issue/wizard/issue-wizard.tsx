@@ -6,6 +6,8 @@ import BTCPayment from "./btc-payment";
 import BTCPaymentConfirmation from "./btc-payment-confirmation";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
+import { useTranslation } from "react-i18next";
+
 
 export interface IssueWizardProps {
     handleClose: () => void,
@@ -13,6 +15,7 @@ export interface IssueWizardProps {
 
 export default function IssueWizard(props: IssueWizardProps) {
     const step = useSelector((state: StoreType) => state.issue.step);
+    const { t } = useTranslation();
 
     const handleClose = () => {
         props.handleClose();
@@ -21,7 +24,7 @@ export default function IssueWizard(props: IssueWizardProps) {
     return <Container>
         <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title-vcenter">
-                Issue PolkaBTC
+                {t("issue_page.issue_polkabtc")}
              </Modal.Title>
         </Modal.Header>
         {step === "ENTER_BTC_AMOUNT" && <EnterBTCAmount />}

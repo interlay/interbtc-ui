@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
 import * as constants from "../../../constants";
+import { useTranslation } from 'react-i18next';
+
 
 type StakedRelayer = {
     AccountId: string;
@@ -15,6 +17,7 @@ export default function StakedRelayerTable(): ReactElement {
     const isPolkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const [relayers, setRelayers] = useState<Array<StakedRelayer>>([]);
     const [relayerStatus, setRelayerStatus] = useState("Ok");
+    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -84,9 +87,9 @@ export default function StakedRelayerTable(): ReactElement {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>AccountID</th>
-                                    <th>Locked DOT</th>
-                                    <th>Status</th>
+                                    <th>{t("account_id")}</th>
+                                    <th>{t("locked_dot")}</th>
+                                    <th>{t("status")}</th>
                                 </tr>
                             </thead>
                             {relayers && relayers.length
@@ -106,8 +109,8 @@ export default function StakedRelayerTable(): ReactElement {
                                 <tbody>
                                     <tr>
                                         <td colSpan={3}>
-                                            No registered staked relayers
-                                    </td>
+                                            {t("dashboard.no-registered")}
+                                        </td>
                                     </tr>
                                 </tbody>
                             }
