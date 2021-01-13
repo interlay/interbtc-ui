@@ -236,7 +236,7 @@ export default function IssueRequests(props: IssueRequestProps) {
                                 <th>{t("issue_page.issue_id")}</th>
                                 <th>{t("issue_page.amount")}</th>
                                 <th>{t("fee")}</th>
-                                <th>{t("parachain_block")}</th>
+                                <th>{t("issue_page.parachain_block")}</th>
                                 <th>{t("issue_page.vault_btc_address")}</th>
                                 <th>{t("issue_page.btc_transaction")}</th>
                                 <th>{t("issue_page.confirmations")}</th>

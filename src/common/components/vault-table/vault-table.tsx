@@ -53,21 +53,23 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
     }, [polkaBtcLoaded]);
 
     useEffect(() => {
-        const checkVaultStatus = (status: string, collateralization: Big): string => {
+        const checkVaultStatus = (status: string, collateralization: Big | undefined): string => {
             if (status === constants.VAULT_STATUS_THEFT) {
                 return constants.VAULT_STATUS_THEFT;
             }
             if (status === constants.VAULT_STATUS_LIQUIDATED) {
                 return constants.VAULT_STATUS_LIQUIDATED;
             }
-            if (collateralization.lt(liquidationThreshold)) {
-                return constants.VAULT_STATUS_LIQUIDATION;
-            }
-            if (collateralization.lt(auctionCollateralThreshold)) {
-                return constants.VAULT_STATUS_AUCTION;
-            }
-            if (collateralization.lt(secureCollateralThreshold)) {
-                return constants.VAULT_STATUS_UNDER_COLLATERALIZED;
+            if (collateralization) {
+                if (collateralization.lt(liquidationThreshold)) {
+                    return constants.VAULT_STATUS_LIQUIDATION;
+                }
+                if (collateralization.lt(auctionCollateralThreshold)) {
+                    return constants.VAULT_STATUS_AUCTION;
+                }
+                if (collateralization.lt(secureCollateralThreshold)) {
+                    return constants.VAULT_STATUS_UNDER_COLLATERALIZED;
+                }
             }
             return constants.VAULT_STATUS_ACTIVE;
         };
@@ -106,7 +108,7 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                     btcAddress: btcAddress || "",
                     status:
                         vault.status &&
-                        checkVaultStatus(vault.status.toString(), unsettledCollateralization || new Big(0)),
+                        checkVaultStatus(vault.status.toString(), unsettledCollateralization),
                     unsettledCollateralization: unsettledCollateralization?.mul(100).toString(),
                     settledCollateralization: settledCollateralization?.mul(100).toString(),
                 });
@@ -236,7 +238,7 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                                     <th>{t("locked_dot")}</th>
                                     <th>{t("locked_btc")}</th>
                                     <th>
-                                        {t("pending_btc")} &nbsp; 
+                                        {t("pending_btc")} &nbsp;
                                         <i
                                             className="far fa-question-circle"
                                             data-tip="BTC volume of in-progress issue requests."
