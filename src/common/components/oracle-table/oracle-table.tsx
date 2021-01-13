@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import { dateToShortString } from "../../utils/utils";
 import BN from "bn.js";
 import * as constants from "../../../constants";
+import { useTranslation } from 'react-i18next';
+
 
 interface OracleInfo {
     source: string;
@@ -20,6 +22,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
     const [oracleStatus, setStatus] = useState("Online");
     const [oracles, setOracles] = useState<Array<OracleInfo>>([]);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -28,7 +31,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
             setStatus(oracle.online ? "Online" : "Offline");
             setOracles([
                 {
-                    source: oracle.name,
+                    source: oracle.names.join(","),
                     feed: oracle.feed,
                     lastUpdate: dateToShortString(oracle.lastUpdate),
                     exchangeRate: oracle.exchangeRate,
@@ -48,7 +51,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
             <div className="row">
                 <div className="col-12">
                     <div className="header">
-                        Oracle Status: &nbsp;
+                        {t("oracle_status")} &nbsp;
                         <div className={oracleStatus === "Online" ? "green-circle" : "red-circle"}></div> &nbsp;
                         {oracleStatus}
                     </div>
@@ -60,14 +63,13 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Source</th>
-                                    <th>Feed</th>
-                                    <th>Last Update</th>
-                                    <th>Exchange Rate</th>
+                                    <th>{t("source")}</th>
+                                    <th>{t("feed")}</th>
+                                    <th>{t("last_update")}</th>
+                                    <th>{t("exchange_rate")}</th>
                                 </tr>
                             </thead>
-                            {oracles && oracles.length
-                                ?
+                            {oracles && oracles.length ? (
                                 <tbody>
                                     {oracles.map((oracle, index) => {
                                         return (
@@ -80,15 +82,13 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
                                         );
                                     })}
                                 </tbody>
-                                :
+                            ) : (
                                 <tbody>
                                     <tr>
-                                        <td colSpan={4}>
-                                            No active oracles
-                                        </td>
+                                        <td colSpan={4}>{t("no_oracles")}</td>
                                     </tr>
                                 </tbody>
-                            }
+                            )}
                         </table>
                     </div>
                 </div>

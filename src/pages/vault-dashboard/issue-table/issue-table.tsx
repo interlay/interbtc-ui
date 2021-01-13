@@ -5,11 +5,17 @@ import { addVaultIssuesAction } from "../../../common/actions/issue.actions";
 import { issueRequestToVaultIssue, shortAddress } from "../../../common/utils/utils";
 import * as constants from "../../../constants";
 import BitcoinAddress from "../../../common/components/bitcoin-links/address";
+import { VaultIssue } from "../../../common/types/issue.types";
+import { FaCheck, FaHourglass } from "react-icons/fa";
+import { Badge } from "react-bootstrap";
+import { useTranslation } from 'react-i18next';
+
 
 export default function IssueTable(): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const issues = useSelector((state: StoreType) => state.issue.vaultIssues);
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -21,6 +27,7 @@ export default function IssueTable(): ReactElement {
                 const issueMap = await window.polkaBTC.vaults.mapIssueRequests(vaultId);
 
                 if (!issueMap) return;
+                
                 dispatch(addVaultIssuesAction(issueRequestToVaultIssue(issueMap)));
             } catch (err) {
                 console.log(err);
@@ -34,11 +41,21 @@ export default function IssueTable(): ReactElement {
         return () => clearInterval(interval);
     }, [polkaBtcLoaded, dispatch]);
 
+    const showStatus = (request: VaultIssue) => {
+        if (request.completed) {
+            return <FaCheck></FaCheck>;
+        }
+        if (request.cancelled) {
+            return <Badge className="badge-style" variant="secondary">{t("cancelled")}</Badge>;
+        }
+        return <FaHourglass></FaHourglass>;
+    };
+
     return (
         <div className="issue-table">
             <div className="row">
                 <div className="col-12">
-                    <div className="header">Issue Requests</div>
+                    <div className="header">{t("issue_requests")}</div>
                 </div>
             </div>
             <div className="row justify-content-center">
@@ -47,13 +64,13 @@ export default function IssueTable(): ReactElement {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Id</th>
-                                    <th>Creation Block</th>
-                                    <th>User</th>
-                                    <th>BTC Address</th>
+                                    <th>{t("id")}</th>
+                                    <th>{t("vault.creation_block")}</th>
+                                    <th>{t("user")}</th>
+                                    <th>{t("btc_address")}</th>
                                     <th>PolkaBTC</th>
-                                    <th>Griefing Collateral</th>
-                                    <th>Status</th>
+                                    <th>{t("griefing_collateral")}</th>
+                                    <th>{t("status")}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -68,7 +85,7 @@ export default function IssueTable(): ReactElement {
                                             </td>
                                             <td>{issue.polkaBTC}</td>
                                             <td>{issue.lockedDOT}</td>
-                                            <td>{issue.status}</td>
+                                            <td>{showStatus(issue)}</td>
                                         </tr>
                                     );
                                 })}

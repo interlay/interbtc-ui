@@ -8,12 +8,10 @@ import * as constants from "../../constants";
 import ButtonMaybePending from "./pending-button";
 import DropdownItem from "react-bootstrap/esm/DropdownItem";
 import { FaDiscord, FaGithub, FaEdit } from "react-icons/fa";
-import { planckToDOT, satToBTC } from "@interlay/polkabtc";
-import { 
-    updateBalancePolkaBTCAction, 
-    updateBalanceDOTAction,
-    showAccountModalAction 
-} from "../actions/general.actions";
+import { planckToDOT } from "@interlay/polkabtc";
+import { updateBalanceDOTAction, showAccountModalAction } from "../actions/general.actions";
+import { updateBalances } from "../utils/utils";
+import { useTranslation } from 'react-i18next';
 
 
 type TopbarProps = {
@@ -22,16 +20,15 @@ type TopbarProps = {
 };
 
 export default function Topbar(props: TopbarProps): ReactElement {
-    const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
-    const vaultClientLoaded = useSelector((state: StoreType) => state.general.vaultClientLoaded);
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const address = useSelector((state: StoreType) => state.general.address);
-    const extensions = useSelector((state: StoreType) => state.general.extensions);
+    const { extensions, address, relayerLoaded, vaultClientLoaded, polkaBtcLoaded, balanceDOT, balancePolkaBTC } = 
+        useSelector((state: StoreType) => state.general);
     const [isRelayerConnected, setIsRelayerConnected] = useState(false);
     const [isVaultConnected, setIsVaultConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [isRequestPending, setIsRequestPending] = useState(false);
     const dispatch = useDispatch();
+    const { t } = useTranslation();
+
 
     useEffect(() => {
         if (!relayerLoaded || !vaultClientLoaded || !polkaBtcLoaded) {
@@ -53,16 +50,10 @@ export default function Topbar(props: TopbarProps): ReactElement {
         const fetchData = async () => {
             if (!polkaBtcLoaded || address === "") return;
 
-            const accountId = window.polkaBTC.api.createType("AccountId", address);
-            const balancePolkaSAT = await window.polkaBTC.treasury.balancePolkaBTC(accountId);
-            const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
-            const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
-            const balanceDOT = planckToDOT(balancePLANCK.toString());
-            dispatch(updateBalancePolkaBTCAction(balancePolkaBTC));
-            dispatch(updateBalanceDOTAction(balanceDOT));
+            updateBalances(dispatch,address,balanceDOT,balancePolkaBTC);
         };
         fetchData();
-    }, [address, polkaBtcLoaded, dispatch]);
+    }, [address, polkaBtcLoaded, dispatch, balanceDOT, balancePolkaBTC]);
 
     const requestDOT = async () => {
         if (!polkaBtcLoaded) return;
@@ -109,47 +100,47 @@ export default function Topbar(props: TopbarProps): ReactElement {
                     <Nav className="mr-auto">
                         {!constants.STATIC_PAGE_ONLY && polkaBtcLoaded && (
                             <Link className="nav-link" to="/issue" onClick={checkWallet}>
-                                Issue
+                                {t("issue")}
                             </Link>
                         )}
                         {!constants.STATIC_PAGE_ONLY && polkaBtcLoaded && (
                             <Link className="nav-link" to="/redeem" onClick={checkWallet}>
-                                Redeem
+                                {t("redeem")}
                             </Link>
                         )}
                         {polkaBtcLoaded && (
                             <Link className="nav-link" to="/dashboard">
-                                Dashboard
+                                {t("nav_dashboard")}
                             </Link>
                         )}
                         {isVaultConnected && (
                             <Link className="nav-link" to="/vault">
-                                Vault
+                                {t("nav_vault")}
                             </Link>
                         )}
                         {isRelayerConnected && (
                             <Link className="nav-link" to="/staked-relayer">
-                                Relayer
+                                {t("nav_relayer")}
                             </Link>
                         )}
                         <Link className="nav-link" to="/user-guide">
-                            User Guide
+                            {t("user_guide")}
                         </Link>
                         <Link className="nav-link" to="/about">
-                            About
+                            {t("nav_about")}
                         </Link>
                         <Link className="nav-link" to="/faq">
-                            FAQ
+                            {t("nav_faq")}
                         </Link>
                     </Nav>
 
                     <Nav className="d-inline">
                         <DropdownButton  id="bug-report" title="Feedback" variant="outline-polkadot" size="sm" menuAlign="right" className="mr-2">
                             <DropdownItem href="https://forms.gle/zzmzCrgTfmcXbNDd8" target="_blank">
-                                <FaEdit></FaEdit> Feedback
+                                <FaEdit></FaEdit> {t("feedback.feedback")}
                             </DropdownItem>
                             <Dropdown.Divider />
-                            <Dropdown.Header>Report a bug:</Dropdown.Header>
+                            <Dropdown.Header>{t("report_bug")}</Dropdown.Header>
                             <DropdownItem href="https://github.com/interlay/polkabtc-ui/issues" target="_blank"><FaGithub></FaGithub> GitHub</DropdownItem>
                             <DropdownItem href="https://discord.gg/C8tjMbgVXh" target="_blank"><FaDiscord></FaDiscord> Discord</DropdownItem>
                         </DropdownButton>
@@ -163,7 +154,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                                     size="sm"
                                     isPending={isRequestPending}
                                     onClick={requestDOT}>
-                                    Request DOT
+                                    {t("request_dot")}
                                 </ButtonMaybePending>
                             </Nav>
                             <Nav className="d-inline">

@@ -1,7 +1,7 @@
 import { IssueRequest, VaultIssue } from "./issue.types";
 import { RedeemRequest, VaultRedeem } from "./redeem.types";
-import { VaultReplaceRequest } from "./vault.types";
-import { StoreType } from "./util.types";
+import { VaultReplaceRequest, Vault } from "./vault.types";
+import { StoreType, ParachainStatus } from "./util.types";
 
 // GENERAL ACTIONS
 
@@ -11,7 +11,7 @@ export const IS_VAULT_CLIENT_LOADED = "IS_VAULT_CLIENT_LOADED";
 export const HAS_FEEDBACK_BEEN_DISPLAYED = "HAS_FEEDBACK_BEEN_DISPLAYED";
 export const INIT_STATE = "INIT_STATE";
 export const CHANGE_ADDRESS = "CHANGE_ADDRESS";
-export const SET_TOTAL_ISSUED_AND_TOTAL_LOCKED = "SET_TOTAL_ISSUED_AND_TOTAL_LOCKED";
+export const INIT_GENERAL_DATA_ACTION = "INIT_GENERAL_DATA_ACTION";
 export const UPDATE_BALANCE_POLKA_BTC = "UPDATE_BALANCE_POLKA_BTC";
 export const UPDATE_BALANCE_DOT = "UPDATE_BALANCE_DOT";
 export const SET_INSTALLED_EXTENSION = "SET_INSTALLED_EXTENSION";
@@ -48,10 +48,13 @@ export interface InitState {
     state: StoreType;
 }
 
-export interface SetTotalIssuedAndTotalLocked {
-    type: typeof SET_TOTAL_ISSUED_AND_TOTAL_LOCKED;
+export interface InitGeneralDataAction {
+    type: typeof INIT_GENERAL_DATA_ACTION;
     totalPolkaBTC: string;
     totalLockedDOT: string;
+    btcRelayHeight: number;
+    bitcoinHeight: number;
+    stateOfBTCParachain: ParachainStatus;
 }
 
 export interface UpdateBalancePolkaBTC {
@@ -85,7 +88,7 @@ export type GeneralActions =
     | HasFeedbackModalBeenDisplayed
     | ChangeAddress
     | InitState
-    | SetTotalIssuedAndTotalLocked
+    | InitGeneralDataAction
     | IsVaultClientLoaded
     | UpdateBalancePolkaBTC
     | UpdateBalanceDOT
@@ -106,11 +109,18 @@ export const RESET_REDEEM_WIZARD = "RESET_REDEEM_WIZARD";
 export const STORE_REDEEM_REQUEST = "STORE_REDEEM_REQUEST";
 export const ADD_REDEEM_REQUEST = "ADD_REDEEM_REQUEST";
 export const ADD_VAULT_REDEEMS = "ADD_VAULT_REDEEMS";
+export const UPDATE_REDEEM_FEE = "UPDATE_REDEEM_FEE";
 export const ADD_TRANSACTION_LISTENER_REDEEM = "ADD_TRANSACTION_LISTENER_REDEEM";
 export const UPDATE_REDEEM_REQUEST = "UPDATE_REDEEM_REQUEST";
 export const UPDATE_ALL_REDEEM_REQUESTS = "UPDATE_ALL_REDEEM_REQUESTS";
-export const CANCEL_REDEEM_REQUEST = "CANCEL_REDEEM_REQUEST";
+export const RETRY_REDEEM_REQUEST = "RETRY_REDEEM_REQUEST";
 export const REDEEM_EXPIRED = "REDEEM_EXPIRED";
+export const REIMBURSE_REDEEM_REQUEST = "REIMBURSE_REDEEM_REQUEST";
+
+export interface UpdateRedeemFee {
+    type: typeof UPDATE_REDEEM_FEE;
+    fee: string;
+}
 
 export interface ChangeVaultBtcAddressOnRedeem {
     type: typeof CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM;
@@ -181,14 +191,19 @@ export interface UpdateAllRedeemRequests {
     redeemRequests: RedeemRequest[];
 }
 
-export interface CancelRedeemRequest {
-    type: typeof CANCEL_REDEEM_REQUEST;
+export interface RetryRedeemRequest {
+    type: typeof RETRY_REDEEM_REQUEST;
     id: string;
 }
 
 export interface RedeemExpired {
     type: typeof REDEEM_EXPIRED;
     request: RedeemRequest;
+}
+
+export interface ReimburseRedeemRequest {
+    type: typeof REIMBURSE_REDEEM_REQUEST;
+    id: string;
 }
 
 export type RedeemActions =
@@ -208,8 +223,10 @@ export type RedeemActions =
     | AddTransactionListenerRedeem
     | UpdateRedeemRequest
     | UpdateAllRedeemRequests
-    | CancelRedeemRequest
-    | RedeemExpired;
+    | RetryRedeemRequest
+    | RedeemExpired
+    | UpdateRedeemFee
+    | ReimburseRedeemRequest;
 
 // ISSUE
 
@@ -217,7 +234,8 @@ export const CHANGE_VAULT_BTC_ADDRESS_ON_ISSUE = "CHANGE_VAULT_BTC_ADDRESS_ON_IS
 export const CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE = "CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE";
 export const CHANGE_ISSUE_STEP = "CHANGE_ISSUE_STEP";
 export const CHANGE_AMOUNT_BTC = "CHANGE_AMOUNT_BTC";
-export const CHANGE_FEE_BTC = "CHANGE_FEE_BTC";
+export const UPDATE_ISSUE_FEE = "UPDATE_ISSUE_FEE";
+export const UPDATE_ISSUE_GRIEFING_COLLATERAL = "UPDATE_ISSUE_GRIEFING_COLLATERAL";
 export const CHANGE_ISSUE_ID = "CHANGE_ISSUE_ID";
 export const RESET_ISSUE_WIZARD = "RESET_ISSUE_WIZARD";
 export const STORE_ISSUE_REQUEST = "STORE_ISSUE_REQUEST";
@@ -254,9 +272,14 @@ export interface ChangeAmountBtc {
     amount: string;
 }
 
-export interface ChangeFeeBtc {
-    type: typeof CHANGE_FEE_BTC;
+export interface UpdateIssueFee {
+    type: typeof UPDATE_ISSUE_FEE;
     fee: string;
+}
+
+export interface UpdateIssueGriefingCollateral {
+    type: typeof UPDATE_ISSUE_GRIEFING_COLLATERAL;
+    griefingCollateral: string;
 }
 
 export interface ChangeIssueId {
@@ -305,7 +328,8 @@ export interface UpdateAllIssueRequests {
 export type IssueActions =
     | ChangeIssueStep
     | ChangeAmountBtc
-    | ChangeFeeBtc
+    | UpdateIssueFee
+    | UpdateIssueGriefingCollateral
     | ChangeVaultBtcAddressOnIssue
     | ChangeVaultDotAddressOnIssue
     | ChangeIssueId
@@ -328,6 +352,9 @@ export const UPDATE_BTC_ADDRESS = "UPDATE_BTC_ADDRESS";
 export const UPDATE_COLLATERALIZATION = "UPDATE_COLLATERALIZATION";
 export const UPDATE_COLLATERAL = "UPDATE_COLLATERAL";
 export const UPDATE_LOCKED_BTC = "UPDATE_LOCKED_BTC";
+export const UPDATE_SLA = "UPDATE_SLA";
+export const UPDATE_PREMIUM_VAULT = "UPDATE_PREMIUM_VAULT";
+export const UPDATE_APY = "UPDATE_APY";
 
 export interface AddReplaceRequests {
     type: typeof ADD_REPLACE_REQUESTS;
@@ -341,7 +368,7 @@ export interface UpdateBTCAddress {
 
 export interface UpdateCollateralization {
     type: typeof UPDATE_COLLATERALIZATION;
-    collateralization: number | undefined;
+    collateralization: string | undefined;
 }
 
 export interface UpdateCollateral {
@@ -354,9 +381,29 @@ export interface UpdateLockedBTC {
     lockedBTC: string;
 }
 
+export interface UpdateSLA {
+    type: typeof UPDATE_SLA;
+    sla: string;
+}
+
+export interface UpdatePremiumVault {
+    type: typeof UPDATE_PREMIUM_VAULT;
+    vault: Vault;
+}
+
+export interface UpdateAPY {
+    type: typeof UPDATE_APY;
+    apy: string;
+}
+
 export type VaultActions =
     | AddReplaceRequests
     | UpdateBTCAddress
     | UpdateCollateralization
     | UpdateCollateral
-    | UpdateLockedBTC;
+    | UpdateLockedBTC
+    | UpdateSLA
+    | UpdatePremiumVault
+    | ResetRedeemWizard
+    | InitState
+    | UpdateAPY;

@@ -5,13 +5,12 @@ import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { updateBTCAddressAction } from "../../../common/actions/vault.actions";
-import { BTC_ADDRESS_REGEX } from "../../../constants";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { getH160FromAddress } from "../../../common/utils/utils";
+import { BtcNetwork } from "../../../common/utils/utils";
+import { useTranslation } from 'react-i18next';
 
-type UpdateBTCAddressForm = {
-    btcAddress: string;
-};
+
+type UpdateBTCAddressForm = {};
 
 type UpdateBTCAddressProps = {
     onClose: () => void;
@@ -19,19 +18,16 @@ type UpdateBTCAddressProps = {
 };
 
 export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps) {
-    const { register, handleSubmit, errors } = useForm<UpdateBTCAddressForm>();
+    const { handleSubmit } = useForm<UpdateBTCAddressForm>();
     const btcAddress = useSelector((state: StoreType) => state.vault.btcAddress);
-    const dispatch = useDispatch();
     const [isUpdatePending, setUpdatePending] = useState(false);
+    const dispatch = useDispatch();
+    const { t } = useTranslation();
 
-    const onSubmit = handleSubmit(async ({ btcAddress }) => {
+    const onSubmit = handleSubmit(async () => {
         setUpdatePending(true);
         try {
-            const btcHash = getH160FromAddress(btcAddress);
-            if (!btcHash) {
-                throw new Error("Invalid address");
-            }
-            await window.vaultClient.updateBtcAddress(btcHash);
+            let btcAddress = await window.vaultClient.updateBtcAddress(BtcNetwork);
             dispatch(updateBTCAddressAction(btcAddress));
             toast.success("BTC address successfully updated");
             props.onClose();
@@ -45,42 +41,23 @@ export default function UpdateBTCAddressModal(props: UpdateBTCAddressProps) {
         <Modal show={props.show} onHide={props.onClose}>
             <form onSubmit={onSubmit}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Update BTC Address</Modal.Title>
+                    <Modal.Title>{t("update_btc_address")}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="row">
-                        <div className="col-12">Current BTC Address:</div>
+                        <div className="col-12">{t("vault.current_btc_address")}</div>
                         <div className="col-12 btc-address">{btcAddress}</div>
-                        <div className="col-12">New BTC Address:</div>
                         <div className="col-12">
-                            <input
-                                name="btcAddress"
-                                type="text"
-                                className={"custom-input" + (errors.btcAddress ? " error-borders" : "")}
-                                ref={register({
-                                    required: true,
-                                    pattern: {
-                                        value: BTC_ADDRESS_REGEX,
-                                        message: "Please enter a valid BTC address (Supported formats: p2wpkh, p2wsh in bech32 format).",
-                                    },
-                                })}
-                            ></input>
-                            {errors.btcAddress && (
-                                <div className="input-error">
-                                    {errors.btcAddress.type === "required"
-                                        ? "BTC address is required"
-                                        : errors.btcAddress.message}
-                                </div>
-                            )}
+                            {t("vault.automatically_created")}
                         </div>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={props.onClose}>
-                        Cancel
+                        {t("cancel")}
                     </Button>
                     <ButtonMaybePending variant="outline-success" isPending={isUpdatePending} type="submit">
-                        Update
+                        {t("update")}
                     </ButtonMaybePending>
                 </Modal.Footer>
             </form>

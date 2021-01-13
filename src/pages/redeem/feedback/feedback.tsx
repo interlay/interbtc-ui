@@ -1,12 +1,17 @@
 import React from "react";
 import { Container, Modal } from "react-bootstrap";
 import { FEEDBACK_URL } from "../../../constants";
+import { useTranslation } from 'react-i18next';
+
 
 export interface FeedbackProps {
     handleClose: () => void;
 }
 
 export default function Feedback(props: FeedbackProps) {
+    const { t } = useTranslation();
+
+
     const handleClose = () => {
         props.handleClose();
     };
@@ -19,20 +24,20 @@ export default function Feedback(props: FeedbackProps) {
     return (
         <Container>
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">Feedback</Modal.Title>
+                <Modal.Title id="contained-modal-title-vcenter">{t("feedback.feedback")}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <p>Thanks for testing PolkaBTC! </p>
-                <p> We want to build the best-possible solution and would like to hear your feedback!</p>
-                <p>It only takes 2 minutes of your time.</p>
+                <p>{t("feedback.thanks_for_testing")} </p>
+                <p>{t("feedback.would_like_to_hear")}</p>
+                <p>{t("feedback.two_mins")}</p>
             </Modal.Body>
             <Modal.Footer>
                 <button className="btn btn-secondary float-left" onClick={handleClose}>
-                    Don't give feedback
+                    {t("feedback.no_feedback")}
                 </button>
 
                 <button className="btn btn-primary float-right" onClick={openFeedback}>
-                    Give feedback
+                    {t("feedback.give_feedback")}
                 </button>
             </Modal.Footer>
         </Container>

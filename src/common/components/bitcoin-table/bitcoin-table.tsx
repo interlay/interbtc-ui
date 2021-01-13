@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../types/util.types";
 import * as constants from "../../../constants";
 import { reverseHashEndianness } from "../../utils/utils";
+import { useTranslation } from 'react-i18next';
+
 
 interface BlockInfo {
     source: string;
@@ -17,7 +19,9 @@ export default function BitcoinTable(): ReactElement {
     const [heightDiff, setHeightDiff] = useState(0);
     const [btcBlocks, setBlocks] = useState<Array<BlockInfo>>([]);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+    const { t } = useTranslation();
 
+    
     useEffect(() => {
         /**
          * Checks for BTC-Relay status.
@@ -112,7 +116,7 @@ export default function BitcoinTable(): ReactElement {
             <div className="row">
                 <div className="col-12">
                     <div className="header">
-                        BTC Relay Status: &nbsp; <div className={getCircle(relayStatus)}></div> &nbsp; {relayStatus}
+                        {t("btc_relay_status")} &nbsp; <div className={getCircle(relayStatus)}></div> &nbsp; {relayStatus}
                     </div>
                 </div>
             </div>
@@ -122,9 +126,9 @@ export default function BitcoinTable(): ReactElement {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Source</th>
-                                    <th>Best Block Hash</th>
-                                    <th>Best Block Height</th>
+                                    <th>{t("source")}</th>
+                                    <th>{t("best_block_hash")}</th>
+                                    <th>{t("best_block_height")}</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -6,6 +6,8 @@ import VaultInfo from "./vault-info";
 import { Container, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
+import { useTranslation } from 'react-i18next';
+
 
 export interface RedeemWizardProps {
     handleClose: () => void,
@@ -13,6 +15,7 @@ export interface RedeemWizardProps {
 
 export default function RedeemWizard (props: RedeemWizardProps) {
     const step = useSelector((state: StoreType)=> state.redeem.step);
+    const { t } = useTranslation();
 
     const handleClose = () => {
         props.handleClose();
@@ -21,7 +24,7 @@ export default function RedeemWizard (props: RedeemWizardProps) {
     return <Container>
         <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title-vcenter">
-                Redeem PolkaBTC
+                {t("redeem_page.redeem_polkaBTC")}
             </Modal.Title>
         </Modal.Header>
         {step === "ENTER_POLKABTC" && <EnterPolkaBTCAmount/>}

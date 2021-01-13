@@ -15,31 +15,34 @@ import {
     updateCollateralizationAction,
     updateCollateralAction,
     updateLockedBTCAction,
+    updateSLAAction,
+    updateAPYAction,
 } from "../../common/actions/vault.actions";
 import "./vault-dashboard.page.scss";
-import { getAddressFromH160 } from "../../common/utils/utils";
 import { toast } from "react-toastify";
 import BitcoinAddress from "../../common/components/bitcoin-links/address";
+import { useTranslation } from 'react-i18next';
+
 
 export default function VaultDashboardPage() {
     const [showRegisterVaultModal, setShowRegisterVaultModal] = useState(false);
     const [showUpdateCollateralModal, setShowUpdateCollateralModal] = useState(false);
     const [showUpdateBTCAddressModal, setShowUpdateBTCAddressModal] = useState(false);
     const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const vaultClientLoaded = useSelector((state: StoreType) => state.general.vaultClientLoaded);
-    const btcAddress = useSelector((state: StoreType) => state.vault.btcAddress);
-    const collateralization = useSelector((state: StoreType) => state.vault.collateralization);
-    const collateral = useSelector((state: StoreType) => state.vault.collateral);
-    const lockedBTC = useSelector((state: StoreType) => state.vault.lockedBTC);
+    const { vaultClientLoaded, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+    const { btcAddress, collateralization, collateral, lockedBTC, sla, apy } = useSelector(
+        (state: StoreType) => state.vault
+    );
     const [capacity, setCapacity] = useState("0");
-    const [feesEarned] = useState("0");
+    const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState("0");
+    const [feesEarnedDOT, setFeesEarnedDOT] = useState("0");
     const [vaultId, setVaultId] = useState("0");
     const [accountId, setAccountId] = useState("0");
     const [vaultRegistered, setVaultRegistered] = useState(false);
     const vaultNotRegisteredToastId = "vault-not-registered-id";
 
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     const closeRegisterVaultModal = () => setShowRegisterVaultModal(false);
     const closeUpdateCollateralModal = () => setShowUpdateCollateralModal(false);
@@ -58,32 +61,45 @@ export default function VaultDashboardPage() {
                 const vault = await window.polkaBTC.vaults.get(vaultId);
                 setVaultId(vault.id.toString());
 
-                const vaultBTCAddress = getAddressFromH160(vault.wallet.address);
-                if (vaultBTCAddress === undefined) {
-                    throw new Error("Vault has invalid BTC address.");
+                // show warning if vault is not registered with the parachain
+                if (accountId !== vault.id.toString()) {
+                    toast.warn(
+                        "Local vault client running, but vault is not yet registered with the parachain." +
+                            " Client needs to be registered and DOT locked to start backing PolkaBTC and earning fees.",
+                        { autoClose: false, toastId: vaultNotRegisteredToastId }
+                    );
                 }
+
+                const vaultBTCAddress = vault.wallet.address;
                 dispatch(updateBTCAddressAction(vaultBTCAddress));
 
                 const balanceLockedDOT = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
                 const collateralDot = planckToDOT(balanceLockedDOT.toString());
                 dispatch(updateCollateralAction(collateralDot));
 
+                const feesPolkaSAT = await window.polkaBTC.vaults.getFeesPolkaBTC(vaultId.toString());
+                setFeesEarnedPolkaBTC(satToBTC(feesPolkaSAT));
+
+                const feesPlanck = await window.polkaBTC.vaults.getFeesDOT(vaultId.toString());
+                setFeesEarnedDOT(planckToDOT(feesPlanck));
+
                 const totalPolkaSAT = await window.polkaBTC.vaults.getIssuedPolkaBTCAmount(vaultId);
                 const lockedAmountBTC = satToBTC(totalPolkaSAT.toString());
                 dispatch(updateLockedBTCAction(lockedAmountBTC));
 
                 const collateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId);
-                dispatch(updateCollateralizationAction(collateralization));
+                dispatch(updateCollateralizationAction(collateralization?.mul(100).toString()));
+
+                const slaScore = await window.polkaBTC.vaults.getSLA(vaultId.toString());
+                dispatch(updateSLAAction(slaScore));
+
+                const apyScore = await window.polkaBTC.vaults.getAPY(vaultId.toString());
+                dispatch(updateAPYAction(apyScore));
 
                 const issuablePolkaBTC = await window.polkaBTC.vaults.getIssuablePolkaBTC();
                 setCapacity(issuablePolkaBTC);
             } catch (err) {
-                console.log(err);
-                toast.warn(
-                    "Local vault client running, but vault is not yet registered with the parachain." +
-                    " Client needs to be registered and DOT locked to start backing PolkaBTC and earning fees.",
-                    { autoClose: false, toastId: vaultNotRegisteredToastId }
-                );
+                toast.error(err);
             }
         };
         fetchData();
@@ -94,41 +110,57 @@ export default function VaultDashboardPage() {
             <div className="vault-container dashboard-fade-in-animation dashboard-min-height">
                 <div className="stacked-wrapper">
                     <div className="row">
-                        <div className="title">Vault Dashboard</div>
+                        <div className="title">{t("vault.vault_dashboard")}</div>
                     </div>
                 </div>
                 {vaultId === accountId && (
                     <React.Fragment>
                         <div className="col-lg-10 offset-1">
-                            <div className="row">
-                                <div className="col-md-3">
-                                    <div className="">Locked collateral</div>
+                            <div className="row mt-3">
+                                <div className="col-lg-3 col-md-6 col-6">
+                                    <div className="">{t("vault.locked_collateral")}</div>
                                     <span className="stats">{collateral}</span> DOT
                                 </div>
-                                <div className="col-md-2">
-                                    <div className="">Locked BTC</div>
+                                <div className="col-lg-3 col-md-6 col-6">
+                                    <div className="">{t("locked_btc")}</div>
                                     <span className="stats">{lockedBTC}</span> BTC
                                 </div>
-                                <div className="col-md-2">
-                                    <div className="">Collateralization</div>
-                                    <span className="stats">{collateralization === undefined || isNaN(collateralization)
-                                        ? "∞"
-                                        : `${roundTwoDecimals((collateralization * 100).toString())}%`}</span>
+                                <div className="col-lg-3 col-md-6 col-6">
+                                    <div className="">{t("collateralization")}</div>
+                                    <span className="stats">
+                                        {collateralization === undefined
+                                            ? "∞"
+                                            : `${roundTwoDecimals(collateralization.toString())}%`}
+                                    </span>
                                 </div>
-                                <div className="col-md-2">
-                                    <div className="">Capacity</div>
+                                <div className="col-lg-3 col-md-6 col-6">
+                                    <div className="">{t("vault.capacity")}</div>
                                     <span className="stats">~{roundTwoDecimals(capacity)}</span> PolkaBTC
                                 </div>
+                            </div>
+                            <div className="row justify-content-center mt-4">
                                 <div className="col-md-3">
-                                    <div className="">Earned fees</div>
-                                    <span className="stats">{feesEarned}</span> PolkaBTC
+                                    <div className="">{t("fees_earned")}</div>
+                                    <span className="stats">{feesEarnedPolkaBTC.toString()}</span> PolkaBTC
+                                </div>
+                                <div className="col-md-3">
+                                    <div className="">{t("fees_earned")}</div>
+                                    <span className="stats">{feesEarnedDOT.toString()}</span> DOT
+                                </div>
+                                <div className="col-md-3">
+                                    <div className="">{t("sla_score")}</div>
+                                    <span className="stats">{sla}</span>
+                                </div>
+                                <div className="col-md-3">
+                                    <div className="">{t("apy")}</div>
+                                    <span className="stats">~{roundTwoDecimals(apy)}</span> %
                                 </div>
                             </div>
                         </div>
                         <div className="row">
                             <div className="col-12">
                                 <div className="btc-address-header">
-                                    BTC Address: &nbsp;&nbsp;
+                                    {t("btc_address")}: &nbsp;&nbsp;
                                     <BitcoinAddress btcAddress={btcAddress} />
                                     &nbsp;&nbsp;&nbsp;
                                     <i className="fa fa-edit" onClick={() => setShowUpdateBTCAddressModal(true)}></i>
@@ -138,7 +170,7 @@ export default function VaultDashboardPage() {
                         <div className="row">
                             <div className="col-12">
                                 <div className="">
-                                    Collateral: &nbsp; {collateral} DOT for {lockedBTC + " BTC"}
+                                    {t("vault.collateral")}: &nbsp; {collateral} DOT for {lockedBTC + " BTC"}
                                     &nbsp;&nbsp;&nbsp;
                                     <i className="fa fa-edit" onClick={() => setShowUpdateCollateralModal(true)}></i>
                                 </div>
@@ -152,7 +184,7 @@ export default function VaultDashboardPage() {
                         className="register-vault-dashboard"
                         onClick={() => setShowRegisterVaultModal(true)}
                     >
-                        Register
+                        {t("register")}
                     </Button>
                 )}
                 <IssueTable></IssueTable>

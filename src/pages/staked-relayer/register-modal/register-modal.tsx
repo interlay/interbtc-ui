@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { toast } from "react-toastify";
 import ButtonMaybePending from "../../../common/components/pending-button";
+import { useTranslation } from 'react-i18next';
+
 
 type RegisterModalType = {
     onClose: () => void;
@@ -20,6 +22,8 @@ export default function ReportModal(props: RegisterModalType): ReactElement {
     const { register, handleSubmit, errors } = useForm<RegisterForm>();
     const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
     const [isRegisterPending, setRegisterPending] = useState(false);
+    const { t } = useTranslation();
+
 
     const onSubmit = handleSubmit(async ({ stake }) => {
         if (!relayerLoaded) return;
@@ -39,16 +43,16 @@ export default function ReportModal(props: RegisterModalType): ReactElement {
         <Modal show={props.show} onHide={props.onClose}>
             <form onSubmit={onSubmit}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Registration</Modal.Title>
+                    <Modal.Title>{t("relayer.registration")}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="row mb-2">
                         <div className="col-12 de-note">
-                            Please note there is a default waiting period before bonding.
+                            {t("relayer.please_note")}
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-12">Stake</div>
+                        <div className="col-12">{t("relayer.stake")}</div>
                         <div className="col-12 basic-addon">
                             <div className="input-group">
                                 <input
@@ -78,10 +82,10 @@ export default function ReportModal(props: RegisterModalType): ReactElement {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={props.onClose}>
-                        Cancel
+                        {t("cancel")}
                     </Button>
                     <ButtonMaybePending type="submit" isPending={isRegisterPending}>
-                        Register
+                        {t("register")}
                     </ButtonMaybePending>
                 </Modal.Footer>
             </form>

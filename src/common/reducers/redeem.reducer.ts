@@ -7,7 +7,8 @@ import {
     CHANGE_BTC_ADDRESS,
     CHANGE_REDEEM_ID,
     CHANGE_ADDRESS,
-    CANCEL_REDEEM_REQUEST,
+    RETRY_REDEEM_REQUEST,
+    REIMBURSE_REDEEM_REQUEST,
     ADD_TRANSACTION_LISTENER_REDEEM,
     INIT_STATE,
     REDEEM_EXPIRED,
@@ -16,11 +17,13 @@ import {
     UPDATE_REDEEM_REQUEST,
     UPDATE_ALL_REDEEM_REQUESTS,
     ADD_VAULT_REDEEMS,
+    UPDATE_REDEEM_FEE,
 } from "../types/actions.types";
 import { RedeemState } from "../types/redeem.types";
 
 const initialState = {
     address: "",
+    fee: "0",
     step: "ENTER_POLKABTC",
     amountPolkaBTC: "",
     btcAddress: "",
@@ -48,6 +51,8 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             return { ...state, vaultDotAddress: action.vaultDotAddress };
         case CHANGE_REDEEM_ID:
             return { ...state, id: action.id };
+        case UPDATE_REDEEM_FEE:
+            return { ...state, fee: action.fee };
         case RESET_REDEEM_WIZARD:
             return { ...initialState, address: state.address, redeemRequests: state.redeemRequests };
         case ADD_REDEEM_REQUEST:
@@ -87,15 +92,32 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             if (!updateStore) return state;
             redeemReqMap.set(state.address, requestsToUpdate);
             return { ...state, redeemRequests: redeemReqMap };
-        case CANCEL_REDEEM_REQUEST:
+        case RETRY_REDEEM_REQUEST:
             const requestsMap = new Map(state.redeemRequests);
             const allRequests = state.redeemRequests.get(state.address);
             if (!allRequests) return state;
-            const updatedRequests = allRequests.filter((request) => request.id !== action.id);
+            const updatedRequests = allRequests.map((request) => {
+                if (request.id === action.id) {
+                    return { ...request, cancelled: true, reimbursed: false };
+                }
+                return request;
+            });
             requestsMap.set(state.address, updatedRequests);
             return { ...state, redeemRequests: requestsMap };
+        case REIMBURSE_REDEEM_REQUEST:
+            const newRequestsMap = new Map(state.redeemRequests);
+            const allCurrentRequests = state.redeemRequests.get(state.address);
+            if (!allCurrentRequests) return state;
+            const allUpdatedRequests = allCurrentRequests.map((request) => {
+                if (request.id === action.id) {
+                    return { ...request, cancelled: true, reimbursed: true };
+                }
+                return request;
+            });
+            newRequestsMap.set(state.address, allUpdatedRequests);
+            return { ...state, redeemRequests: newRequestsMap };
         case INIT_STATE:
-            return { ...state, transactionListeners: [] };
+            return { ...state, fee: "0", transactionListeners: [] };
         case ADD_VAULT_REDEEMS:
             return { ...state, vaultRedeems: action.vaultRedeems };
         case UPDATE_ALL_REDEEM_REQUESTS:

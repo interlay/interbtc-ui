@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
@@ -7,26 +7,39 @@ import {
     changeIssueStepAction,
     changeVaultBtcAddressOnIssueAction,
     changeVaultDotAddressOnIssueAction,
+    updateIssueFeeAction,
+    updateIssueGriefingCollateralAction,
 } from "../../../common/actions/issue.actions";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { btcToSat, stripHexPrefix, satToBTC } from "@interlay/polkabtc";
-import { getAddressFromH160 } from "../../../common/utils/utils";
+import { btcToSat, stripHexPrefix, satToBTC, planckToDOT } from "@interlay/polkabtc";
 import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
+import { useTranslation } from "react-i18next";
 
 type EnterBTCForm = {
     amountBTC: string;
 };
 
 export default function EnterBTCAmount() {
-    const [isRequestPending, setRequestPending] = useState(false);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const amount = useSelector((state: StoreType) => state.issue.amountBTC);
-    // const feeBTC = useSelector((state: StoreType) => state.issue.feeBTC);
     const defaultValues = amount ? { defaultValues: { amountBTC: amount } } : undefined;
     const { register, handleSubmit, errors } = useForm<EnterBTCForm>(defaultValues);
+    const [isRequestPending, setRequestPending] = useState(false);
+    const [dustValue, setDustValue] = useState("0");
     const dispatch = useDispatch();
+    const { t } = useTranslation();
+
+
+    useEffect(() => {
+        const fetchDustValue = async () => {
+            const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
+            const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
+            setDustValue(dustValueBtc);
+        };
+        fetchDustValue();
+    });
 
     const onSubmit = handleSubmit(async ({ amountBTC }) => {
         if (!polkaBtcLoaded) return;
@@ -41,24 +54,21 @@ export default function EnterBTCAmount() {
                 throw new Error("Input value is too high");
             }
             dispatch(changeAmountBTCAction(amountBTC));
-            // FIXME: hardcoded until we have a fee model
-            // dispatch(changeFeeBTCAction(amountBTC * 0.005));
 
             const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountSAT);
-            const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
-            if (amountAsSatoshi.lte(dustValueAsSatoshi)) {
-                const dustValue = satToBTC(dustValueAsSatoshi.toString());
-                throw new Error(`Please enter an amount greater than Bitcoin dust (${dustValue} BTC)`);
-            }
 
             const vaultId = await window.polkaBTC.vaults.selectRandomVaultIssue(amountAsSatoshi);
             toast.success("Found vault: " + vaultId.toString());
             // get the vault's data
             const vault = await window.polkaBTC.vaults.get(vaultId);
-            const vaultBTCAddress = getAddressFromH160(vault.wallet.address);
-            if (vaultBTCAddress === undefined) {
-                throw new Error("Vault has invalid BTC address.");
-            }
+            const vaultBTCAddress = vault.wallet.address;
+
+            const fee = await window.polkaBTC.issue.getFeesToPay(amountBTC);
+            dispatch(updateIssueFeeAction(fee));
+
+            const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSAT);
+            dispatch(updateIssueGriefingCollateralAction(planckToDOT(griefingCollateral)));
+
             dispatch(changeVaultBtcAddressOnIssueAction(stripHexPrefix(vaultBTCAddress)));
             dispatch(changeVaultDotAddressOnIssueAction(vaultId.toString()));
             dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
@@ -71,26 +81,49 @@ export default function EnterBTCAmount() {
     return (
         <form onSubmit={onSubmit}>
             <Modal.Body>
-                <p>Please enter the amount of PolkaBTC you would like to issue. 
-                    <br/> 
-                    This is the amount of BTC you will need to lock on Bitcoin.
+                <p>
+                    {t("issue_page.enter-polkabtc-amount-desc-1")}
+                    <br />
+                    {t("issue_page.enter-polkabtc-amount-desc-2")}
+                    <br />
+                    <br />
+                    {t("issue_page.enter-polkabtc-amount-desc-3")} ({dustValue} BTC).
                 </p>
-                <input
-                    name="amountBTC"
-                    type="float"
-                    className={"custom-input" + (errors.amountBTC ? " error-borders" : "")}
-                    ref={register({ 
-                        required: true,
-                        validate: (value) => value > 1 ? 
-                            "The maximum amount you can issue (per request) during the alpha testnet is 1.0 PolkaBTC. Please enter a lower amount."
-                            : undefined
-                     })}
-                />
-                {errors.amountBTC && (
-                    <div className="input-error">
-                        {errors.amountBTC.type === "required" ? "Please enter a valid amount" : errors.amountBTC.message}
+                <div className="row">
+                    <div className="col-12 basic-addon">
+                        <div className="input-group">
+                            <input
+                                name="amountBTC"
+                                type="float"
+                                className={"form-control custom-input" + (errors.amountBTC ? " error-borders" : "")}
+                                ref={register({
+                                    required: true,
+                                    validate: (value) => {
+                                        const message =
+                                            value > 1
+                                                ? t("issue_page.validation_max_value")
+                                                : value < Number(dustValue)
+                                                ? t("issue_page.validation_min_value") + dustValue + "BTC)."
+                                                : undefined;
+                                        return message;
+                                    },
+                                })}
+                            />
+                            <div className="input-group-append">
+                                <span className="input-group-text" id="basic-addon2">
+                                    PolkaBTC
+                                </span>
+                            </div>
+                        </div>
+                        {errors.amountBTC && (
+                            <div className="input-error">
+                                {errors.amountBTC.type === "required"
+                                    ? t("issue_page.enter_valid_amount")
+                                    : errors.amountBTC.message}
+                            </div>
+                        )}
                     </div>
-                )}
+                </div>
             </Modal.Body>
             <Modal.Footer>
                 <ButtonMaybePending
@@ -98,7 +131,7 @@ export default function EnterBTCAmount() {
                     isPending={isRequestPending}
                     onClick={onSubmit}
                 >
-                    Search Vault
+                    {t("search_vault")}
                 </ButtonMaybePending>
             </Modal.Footer>
         </form>

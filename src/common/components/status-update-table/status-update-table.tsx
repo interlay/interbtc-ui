@@ -9,6 +9,8 @@ import BN from "bn.js";
 import BitcoinBlockHash from "../bitcoin-links/block-hash";
 import { reverseHashEndianness } from "../../utils/utils";
 import * as constants from "../../../constants";
+import { useTranslation } from 'react-i18next';
+
 
 const ADD_DATA_ERROR = "Add NO_DATA error";
 const REMOVE_DATA_ERROR = "Remove NO_DATA error";
@@ -52,6 +54,8 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
         setShowMessageModal(false);
     };
     const [statusUpdate, setStatusUpdate] = useState<StatusUpdate>();
+    const { t } = useTranslation();
+
 
     useEffect(() => {
         const fetchStatus = async () => {
@@ -183,7 +187,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
             <div className="row">
                 <div className="col-12">
                     <div className="header">
-                        BTC Parachain Status: &nbsp; <div className={getCircle(parachainStatus)}></div> &nbsp;{" "}
+                        {t("btc_parachain_status")}: &nbsp; <div className={getCircle(parachainStatus)}></div> &nbsp;{" "}
                         {parachainStatus}
                     </div>
                 </div>
@@ -194,14 +198,14 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Id</th>
-                                    <th>Expiration</th>
-                                    <th>Proposed Status</th>
-                                    <th>Current Status</th>
-                                    <th>Proposed Changes</th>
-                                    <th>BTC Block Hash</th>
-                                    <th>Votes (Yes : No)</th>
-                                    <th>Result</th>
+                                    <th>{t("id")}</th>
+                                    <th>{t("expiration")}</th>
+                                    <th>{t("proposed_status")}</th>
+                                    <th>{t("current_status")}</th>
+                                    <th>{t("proposed_changes")}</th>
+                                    <th>{t("btc_block_hash")}</th>
+                                    <th>{t("votes_yes_no")}</th>
+                                    <th>{t("result")}</th>
                                 </tr>
                             </thead>
                             {statusUpdates && statusUpdates.length ? (
@@ -267,7 +271,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                                                 variant="outline-primary"
                                                                 onClick={() => openVoteModal(statusUpdate)}
                                                             >
-                                                                Vote
+                                                                {t("vote")}
                                                             </Button>
                                                         ) : (
                                                             statusUpdate.result
@@ -284,7 +288,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                 <tbody>
                                     <tr>
                                         <td colSpan={8}>
-                                            No pending status updates
+                                            {t("no_pending_status")}
                                         </td>
                                     </tr>
                                 </tbody>

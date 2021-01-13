@@ -4,19 +4,20 @@ import VaultTable from "../../common/components/vault-table/vault-table";
 import OracleTable from "../../common/components/oracle-table/oracle-table";
 import BitcoinTable from "../../common/components/bitcoin-table/bitcoin-table";
 import { useSelector } from "react-redux";
+import { useTranslation } from 'react-i18next';
+
 
 import "./dashboard.page.scss";
 import { StoreType } from "../../common/types/util.types";
 import StakedRelayerTable from "./staked-relayer-table/staked-relayer-table";
-import { toast } from "react-toastify";
 import { roundTwoDecimals } from "@interlay/polkabtc";
 
 export default function DashboardPage() {
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
-    const totalLockedDOT = useSelector((state: StoreType) => state.general.totalLockedDOT);
+    const { polkaBtcLoaded, totalPolkaBTC, totalLockedDOT } = useSelector((state: StoreType) => state.general);
     const [capacity, setCapacity] = useState("0");
     const [collateralizationRate, setCollateralizationRate] = useState("∞");
+    const { t } = useTranslation();
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,55 +28,54 @@ export default function DashboardPage() {
                 if (collateralization === undefined) {
                     setCollateralizationRate("∞");
                 } else {
-                    setCollateralizationRate((collateralization * 100).toString());
+                    setCollateralizationRate(collateralization.mul(100).toString());
                 }
 
                 const issuablePolkaBTC = await window.polkaBTC.vaults.getIssuablePolkaBTC();
                 setCapacity(issuablePolkaBTC);
-            } catch (error) {
-                toast.error(error.toString());
+            } catch (_) {
+                console.log(t("dashboard.error_unable_to_compute_collateral"));
             }
         };
         fetchData();
-    }, [polkaBtcLoaded, totalLockedDOT]);
+    }, [polkaBtcLoaded, totalLockedDOT, t]);
 
     return (
         <div className="dashboard-page container-fluid white-background">
             <div className="dashboard-container dashboard-fade-in-animation">
                 <div className="dashboard-wrapper">
                     <div className="row">
-                        <div className="title">Dashboard</div>
+                        <div className="title">{t("dashboard.dashboard")}</div>
                     </div>
                     <div className="row mt-5 mb-3">
                         <div className="col-lg-8 offset-2">
                             <div className="row">
                                 <div className="col-md-3">
-                                    <div className="">Total locked</div>
+                                    <div className="">{t("dashboard.total_locked")}</div>
                                     <span className="stats">{totalLockedDOT} </span> DOT
                                 </div>
                                 <div className="col-md-3">
-                                    <div className="">Total issued</div>
+                                    <div className="">{t("dashboard.total_issued")}</div>
                                     <span className="stats">{totalPolkaBTC} </span> PolkaBTC
                                 </div>
                                 <div className="col-md-3">
-                                    <div className="">Capacity</div>
-                                    <span className="stats">~
-                                        {`${roundTwoDecimals(capacity)}`}
-                                    </span> PolkaBTC
+                                    <div className="">{t("dashboard.capacity")}</div>
+                                    <span className="stats">~{`${roundTwoDecimals(capacity)}`}</span> PolkaBTC
                                 </div>
                                 <div className="col-md-3">
-                                    <div className="">Collateralization</div>
+                                    <div className="">{t("collateralization")}</div>
                                     <div className="stats">
                                         {collateralizationRate === "∞"
                                             ? collateralizationRate
-                                            : `${roundTwoDecimals(collateralizationRate)}%`}</div>
+                                            : `${roundTwoDecimals(collateralizationRate)}%`}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <BitcoinTable></BitcoinTable>
                     <StatusUpdateTable dotLocked={totalLockedDOT} readOnly={true}></StatusUpdateTable>
-                    <VaultTable></VaultTable>
+                    <VaultTable isRelayer={false}></VaultTable>
                     <OracleTable planckLocked={"1"}></OracleTable>
                     <StakedRelayerTable></StakedRelayerTable>
                 </div>

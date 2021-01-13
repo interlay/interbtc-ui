@@ -5,29 +5,27 @@ import CopyToClipboard from "react-copy-to-clipboard";
 import { StoreType } from "../../../common/types/util.types";
 import { changeIssueStepAction } from "../../../common/actions/issue.actions";
 import { btcToSat, satToMBTC } from "@interlay/polkabtc";
+import Big from "big.js";
+import { useTranslation } from "react-i18next";
+
 
 export default function BTCPayment() {
-    const issueId = useSelector((state: StoreType) => state.issue.id);
-    // FIXME: returns an empty string when loaded again
-    const amountBTC = useSelector((state: StoreType) => state.issue.amountBTC);
-    const feeBTC = useSelector((state: StoreType) => state.issue.feeBTC);
+    const { id, amountBTC, fee, wizardInEditMode } = useSelector((state: StoreType) => state.issue);
+    const { t } = useTranslation();
 
-    const isEditMode = useSelector((state: StoreType) => state.issue.wizardInEditMode);
-
-    // FIXME: add once fee model is there
-    const amountBTCwithFee = amountBTC;
+    const amountBTCwithFee = new Big(fee).add(new Big(amountBTC));
     let amountMBTCwithFee = "";
     try {
-        const amountSATwithFee = btcToSat(amountBTCwithFee);
+        const amountSATwithFee = btcToSat(amountBTCwithFee.toString());
         amountMBTCwithFee = satToMBTC(amountSATwithFee ? amountSATwithFee : "");
     } catch (err) {
         console.log(err);
     }
-    // FIXME: returns an empty string when loaded again
+
     const vaultBTCAddress = useSelector((state: StoreType) => state.issue.vaultBtcAddress);
     const dispatch = useDispatch();
 
-    const electrumPaytoField = vaultBTCAddress + ", " + amountMBTCwithFee + "\nOP_RETURN " + issueId + ", 0";
+    const electrumPaytoField = vaultBTCAddress + ", " + amountMBTCwithFee + "\nOP_RETURN " + id + ", 0";
 
     const goToPreviousStep = () => {
         dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
@@ -41,51 +39,50 @@ export default function BTCPayment() {
         <React.Fragment>
             <Modal.Body>
                 <FormGroup>
-                    <h5>Confirmation and Payment</h5>
+                    <h5>{t("issue_page.confirmation_and_payment")}</h5>
                     <p>
-                        You have requested to mint {amountBTC} PolkaBTC, incurring a fee of {feeBTC} BTC.
+                        {t("issue_page.requested_to_mint",{amountBTC, fee})}
                     </p>
                     <p>
-                        Please make the following Bitcoin payment as shown below{" "}
-                        <b className="warning-color">within 24 hours</b>.
+                        {t("issue_page.following_payment")}
+                        <b className="warning-color">{t("issue_page.within_24_hours")}</b>.
                     </p>
                     <p className="warning-color">
                         <b>
-                            Please make exactly 1 payment for the exact specified amount. Otherwise, your request will
-                            not be processed and you will lose your funds.
+                            {t("issue_page.exactly_one_payment")}
                         </b>
                     </p>
                     <FormGroup>
                         <ListGroup>
-                            <ListGroupItem>Output 1</ListGroupItem>
+                            <ListGroupItem>{t("issue_page.output_1")}</ListGroupItem>
                             <ListGroupItem>
-                                Recipient: <strong>{vaultBTCAddress}</strong>
+                                {t("issue_page.recipient")} <strong>{vaultBTCAddress}</strong>
                             </ListGroupItem>
                             <ListGroupItem>
-                                Amount:{" "}
+                                {t("issue_page.amont_with_fee")}
                                 <strong>
-                                    {amountBTCwithFee} BTC ({amountMBTCwithFee} mBTC)
+                                    {amountBTCwithFee + "BTC (" + amountMBTCwithFee + "mBTC)"}
                                 </strong>
                             </ListGroupItem>
                         </ListGroup>
                         <ListGroup>
-                            <ListGroupItem>Output 2</ListGroupItem>
+                            <ListGroupItem>{t("issue_page.output_2")}</ListGroupItem>
                             <ListGroupItem>
-                                OP_RETURN: <strong> {issueId} </strong>
+                                OP_RETURN: <strong> {id} </strong>
                             </ListGroupItem>
                             <ListGroupItem>
-                                Amount: <strong>0 BTC (0 mBTC)</strong>
+                                {t("issue_page.amont_with_fee")} <strong>0 BTC (0 mBTC)</strong>
                             </ListGroupItem>
                         </ListGroup>
                     </FormGroup>
-                    If you are using the Electrum desktop wallet, copy+paste this into the "Pay to" field.
-                    <br /> Note: copied values are in <strong>mBTC</strong> (1 mBTC = 0.001 BTC).
+                    {t("issue_page.using_electrum")}
+                    <br /> {t("issue_page.copied_values_are")} <strong>mBTC</strong> (1 mBTC = 0.001 BTC).
                     <FormGroup>
                         <ListGroup>
                             <ListGroupItem>
                                 <strong>
-                                    {electrumPaytoField.split("\n").map((str) => (
-                                        <div>{str}</div>
+                                    {electrumPaytoField.split("\n").map((str, index) => (
+                                        <div key={index}>{str}</div>
                                     ))}
                                 </strong>
                                 <CopyToClipboard text={electrumPaytoField}>
@@ -97,13 +94,13 @@ export default function BTCPayment() {
                 </FormGroup>
             </Modal.Body>
             <Modal.Footer>
-                {!isEditMode && (
+                {!wizardInEditMode && (
                     <button className="btn btn-secondary float-left" onClick={goToPreviousStep}>
-                        Previous
+                        {t("previous")}
                     </button>
                 )}
                 <button className="btn btn-primary float-right" onClick={goToNextStep}>
-                    Next
+                    {t("next")}
                 </button>
             </Modal.Footer>
         </React.Fragment>

@@ -17,6 +17,9 @@ export const FAUCET_ADDRESS_SEED = "//Alice";
 
 export const BALANCE_MAX_INTEGER_LENGTH = 13;
 
+// number of blocks before we prevent issue and redeem requests
+export const BLOCKS_BEHIND_LIMIT = 6;
+
 // timeout in milliseconds for setInterval
 export const COMPONENT_UPDATE_MS = 10000;
 
@@ -48,7 +51,7 @@ export const BTC_ADDRESS_REGEX =
 
 export const PARACHAIN_URL = process.env.REACT_APP_PARACHAIN_URL || "ws://127.0.0.1:9944";
 export const STAKED_RELAYER_URL = process.env.REACT_APP_STAKED_RELAYER_URL || "http://localhost:3030";
-export const VAULT_CLIENT_URL = process.env.REACT_APP_VAULT_CLIENT_URL || "http://localhost:3031";
+export const VAULT_CLIENT_URL = process.env.REACT_APP_VAULT_CLIENT_URL || "http://localhost:3032";
 
 export const BTC_EXPLORER_BLOCK_API = "https://blockstream.info/block/";
 export const BTC_TEST_EXPLORER_BLOCK_API = "https://blockstream.info/testnet/block/";
@@ -73,10 +76,11 @@ export const STAKED_RELAYER_SLASHED = "Slashed";
 // VAULT
 //######################################
 export const VAULT_STATUS_ACTIVE = "Active";
-export const VAULT_STATUS_THEFT = "CommittedTheft";
+export const VAULT_STATUS_THEFT = "Committed Theft";
 export const VAULT_STATUS_LIQUIDATED = "Liquidated";
-export const VAULT_STATUS_UNDECOLLATERALIZED = "Undercollateralized";
+export const VAULT_STATUS_UNDER_COLLATERALIZED = "Undercollateralized";
 export const VAULT_STATUS_AUCTION = "Auction";
+export const VAULT_STATUS_LIQUIDATION = "Being liquidated";
 
 // ####################################################
 // TODO: make sure the constants below are the same as in the BTC-Parachain
@@ -84,10 +88,6 @@ export const VAULT_STATUS_AUCTION = "Auction";
 // ####################################################
 export const BTC_RELAY_DELAY_WARNING = 6;
 export const BTC_RELAY_DELAY_CRITICAL = 12;
-
-export const VAULT_IDEAL_COLLATERALIZATION = 200; // in %
-export const VAULT_AUCTION_COLLATERALIZATION = 150; // in %
-export const VAULT_LIQUIDATION_COLLATERALIZATION = 120; // in %
 
 // Landing page
 export const MARKDOWN_PATH = "../assets/polkBTCInfo.md";

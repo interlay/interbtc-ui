@@ -1,6 +1,6 @@
 import { rootReducer } from "./common/reducers/index";
 import { toast } from "react-toastify";
-import { AppState, StoreType, StoreState } from "./common/types/util.types";
+import { AppState, StoreType, StoreState, ParachainStatus } from "./common/types/util.types";
 import { createLogger } from "redux-logger";
 import { applyMiddleware, createStore } from "redux";
 import { initializeState } from "./common/actions/general.actions";
@@ -12,6 +12,7 @@ declare global {
         polkaBTC: PolkaBTCAPI;
         relayer: StakedRelayerClient;
         vaultClient: VaultClient;
+        store: StoreState;
     }
 }
 
@@ -30,12 +31,16 @@ export const getInitialState = (): StoreType => {
             balanceDOT: "",
             extensions: [],
             accounts: [],
+            btcRelayHeight: 0,
+            bitcoinHeight: 0,
+            stateOfBTCParachain: ParachainStatus.Shutdown,
         },
         issue: {
             address: "",
             step: "ENTER_BTC_AMOUNT",
             amountBTC: "",
-            feeBTC: "0",
+            fee: "0",
+            griefingCollateral: "0",
             vaultBtcAddress: "",
             vaultDotAddress: "",
             id: "",
@@ -46,6 +51,7 @@ export const getInitialState = (): StoreType => {
             vaultIssues: [],
         },
         redeem: {
+            fee: "0",
             address: "",
             step: "ENTER_POLKABTC",
             amountPolkaBTC: "",
@@ -63,6 +69,9 @@ export const getInitialState = (): StoreType => {
             collateralization: undefined,
             collateral: "",
             lockedBTC: "",
+            sla: "0",
+            premiumVault: undefined,
+            apy: "0",
         },
     };
     return emptyStore;

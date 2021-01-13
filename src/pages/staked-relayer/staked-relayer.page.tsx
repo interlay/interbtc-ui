@@ -12,26 +12,30 @@ import { toast } from "react-toastify";
 import "./staked-relayer.page.scss";
 import { StoreType } from "../../common/types/util.types";
 import ButtonMaybePending from "../../common/components/pending-button";
-import { planckToDOT } from "@interlay/polkabtc";
+import { satToBTC, planckToDOT, roundTwoDecimals } from "@interlay/polkabtc";
+import { useTranslation } from 'react-i18next';
+
 
 export default function StakedRelayerPage() {
     const [showReportModal, setShowReportModal] = useState(false);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [isDeregisterPending, setDeregisterPending] = useState(false);
-    const relayerNotRegisteredToastId = "relayer-not-registered-id";
-
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
-
-    const [feesEarned, setFees] = useState("0");
-    // store this in both DOT and Planck
+    const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState("0");
+    const [feesEarnedDOT, setFeesEarnedDOT] = useState("0");
     const [dotLocked, setDotLocked] = useState("0");
     const [planckLocked, setPlanckLocked] = useState("0");
     const [stakedRelayerAddress, setStakedRelayerAddress] = useState("");
     const [relayerRegistered, setRelayerRegistered] = useState(false);
     const [relayerInactive, setRelayerInactive] = useState(false);
+    const [sla, setSLA] = useState("0");
+    const [apy, setAPY] = useState("0");
+    const relayerNotRegisteredToastId = "relayer-not-registered-id";
+    const { polkaBtcLoaded, relayerLoaded } = useSelector((state: StoreType) => state.general);
+    const { t } = useTranslation();
+
 
     const handleReportModalClose = () => setShowReportModal(false);
+
     const handleRegisterModalClose = () => setShowRegisterModal(false);
 
     const deregisterStakedRelayer = async () => {
@@ -55,8 +59,6 @@ export default function StakedRelayerPage() {
             try {
                 const address = await window.relayer.getAccountId();
                 const stakedRelayerId = window.polkaBTC.api.createType("AccountId", address);
-                const feesEarned = await window.polkaBTC.stakedRelayer.getFeesEarned(stakedRelayerId);
-                setFees(feesEarned.toString());
 
                 const isActive = await window.polkaBTC.stakedRelayer.isStakedRelayerActive(stakedRelayerId);
                 const isInactive = await window.polkaBTC.stakedRelayer.isStakedRelayerInactive(stakedRelayerId);
@@ -73,10 +75,21 @@ export default function StakedRelayerPage() {
                 // show warning if relayer is not registered with the parachain
                 if (!isRegistered) {
                     toast.warn(
-                        "Local relayer client running, but relayer is not yet registered with the parachain." +
-                        " The client is already submitting blocks, but voting and reporting features are disabled until registered.",
+                        t("relayer.warning_relayer_not_registered"),
                         { autoClose: false, toastId: relayerNotRegisteredToastId }
                     );
+                } else {
+                    const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId.toString());
+                    setSLA(slaScore);
+
+                    const apyScore = await window.polkaBTC.stakedRelayer.getAPY(stakedRelayerId.toString());
+                    setAPY(apyScore);
+
+                    const feesPolkaSAT = await window.polkaBTC.stakedRelayer.getFeesPolkaBTC(stakedRelayerId.toString());
+                    setFeesEarnedPolkaBTC(satToBTC(feesPolkaSAT));
+
+                    const feesPlanck = await window.polkaBTC.stakedRelayer.getFeesDOT(stakedRelayerId.toString());
+                    setFeesEarnedDOT(planckToDOT(feesPlanck));
                 }
 
                 setDotLocked(lockedDOT);
@@ -86,38 +99,49 @@ export default function StakedRelayerPage() {
             }
         };
         fetchData();
-    }, [polkaBtcLoaded, relayerLoaded]);
+    }, [polkaBtcLoaded, relayerLoaded, t]);
 
     return (
         <div className="staked-relayer-page container-fluid white-background">
             <div className="staked-container dashboard-fade-in-animation dahboard-min-height">
                 <div className="stacked-wrapper">
                     <div className="row">
-                        <div className="title">Staked Relayer Dashboard</div>
+                        <div className="title">{t("relayer.staked_relayer_dashboard")}</div>
                     </div>
-                    {!relayerRegistered && polkaBtcLoaded
-                        ?
+                    {!relayerRegistered && polkaBtcLoaded ? (
                         <Button
                             variant="outline-success"
                             className="staked-button"
                             onClick={() => setShowRegisterModal(true)}
                         >
-                            Register (Lock DOT)
+                            {t("relayer.register_dot")}
                         </Button>
-                        :
+                    ) : (
                         <div className="col-lg-10 offset-1">
-                            <div className="row">
-                                <div className="col-md-3 offset-md-3">
-                                    <div>Stake locked</div>
-                                    <span className="stats">{dotLocked}</span> DOT
+                            <div className="row justify-content-center">
+                                <div className="col-3">
+                                    <div>{t("relayer.stake_locked")}</div>
+                                    <span className="stats">{dotLocked.toString()}</span> DOT
                                 </div>
                                 <div className="col-3">
-                                    <div>Fees earned</div>
-                                    <span className="stats">{feesEarned}</span> DOT
+                                    <div>{t("fees_earned")}</div>
+                                    <span className="stats">{feesEarnedPolkaBTC}</span> PolkaBTC
+                                </div>
+                                <div className="col-3">
+                                    <div>{t("fees_earned")}</div>
+                                    <span className="stats">{feesEarnedDOT}</span> DOT
+                                </div>
+                                <div className="col-3">
+                                    <div>{t("sla_score")}</div>
+                                    <span className="stats">{sla}</span>
+                                </div>
+                                <div className="col-3">
+                                    <div>{t("apy")}</div>
+                                    <span className="stats">~{roundTwoDecimals(apy)}</span> %
                                 </div>
                             </div>
                         </div>
-                    }
+                    )}
                     <BitcoinTable></BitcoinTable>
                     {relayerRegistered && (
                         <Button
@@ -126,7 +150,7 @@ export default function StakedRelayerPage() {
                             disabled={relayerInactive}
                             onClick={() => setShowReportModal(true)}
                         >
-                            Report Invalid Block
+                            {t("relayer.report_invalid_block")}
                         </Button>
                     )}
                     <ReportModal onClose={handleReportModalClose} show={showReportModal}></ReportModal>
@@ -143,7 +167,7 @@ export default function StakedRelayerPage() {
                         planckLocked={planckLocked}
                         stakedRelayerAddress={stakedRelayerAddress}
                     ></StatusUpdateTable>
-                    <VaultTable></VaultTable>
+                    <VaultTable isRelayer={true}></VaultTable>
                     <OracleTable planckLocked={planckLocked}></OracleTable>
                     {relayerRegistered && (
                         <React.Fragment>
@@ -154,11 +178,11 @@ export default function StakedRelayerPage() {
                                 disabled={relayerInactive || isDeregisterPending}
                                 onClick={deregisterStakedRelayer}
                             >
-                                Deregister
+                                {t("relayer.deregister")}
                             </ButtonMaybePending>
                             <div className="row">
                                 <div className="col-12 de-note">
-                                    Note: You can only deregister if you are not participating in a vote.
+                                    {t("relayer.note_you_can_deregister")}
                                 </div>
                             </div>
                         </React.Fragment>

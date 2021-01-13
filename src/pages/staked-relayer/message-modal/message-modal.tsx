@@ -1,6 +1,8 @@
 import React, { ReactElement } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { StatusUpdate } from "../../../common/types/util.types";
+import { useTranslation } from 'react-i18next';
+
 
 type MessageModalProps = {
     onClose: () => void;
@@ -9,10 +11,12 @@ type MessageModalProps = {
 };
 
 export default function MessageModal(props: MessageModalProps): ReactElement {
+    const { t } = useTranslation();
+
     return (
         <Modal show={props.show} onHide={props.onClose} size="lg">
             <Modal.Header closeButton>
-                <Modal.Title>Message</Modal.Title>
+                <Modal.Title>{t("message")}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 {props.statusUpdate && (
@@ -27,7 +31,7 @@ export default function MessageModal(props: MessageModalProps): ReactElement {
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={props.onClose}>
-                    Cancel
+                    {t("cancel")}
                 </Button>
             </Modal.Footer>
         </Modal>

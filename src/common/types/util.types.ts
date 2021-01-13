@@ -6,17 +6,6 @@ import { IssueState } from "./issue.types";
 import { RedeemState } from "./redeem.types";
 import { VaultState } from "./vault.types";
 
-export type Vault = {
-    vaultId: string;
-    btcAddress: string;
-    lockedDOT: string;
-    lockedBTC: string;
-    pendingBTC: string;
-    status: string;
-    unsettledCollateralization: number | undefined;
-    settledCollateralization: number | undefined;
-};
-
 export interface StatusUpdate {
     id: u256;
     timestamp: string;
@@ -29,6 +18,12 @@ export interface StatusUpdate {
     proposer: string;
     message: string;
     hasVoted: boolean;
+}
+
+export enum ParachainStatus {
+    Error,
+    Running,
+    Shutdown,
 }
 
 export type GeneralState = {
@@ -44,6 +39,9 @@ export type GeneralState = {
     balanceDOT: string;
     extensions: string[];
     accounts: string[];
+    btcRelayHeight: number;
+    bitcoinHeight: number;
+    stateOfBTCParachain: ParachainStatus;
 };
 
 export type AppState = ReturnType<typeof rootReducer>;

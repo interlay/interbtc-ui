@@ -6,9 +6,12 @@ export interface IssueRequest {
     btcTxId: string;
     confirmations: number;
     completed: boolean;
+    cancelled: boolean;
     merkleProof?: string;
     transactionBlockHeight?: number;
     rawTransaction?: Uint8Array;
+    fee: string;
+    griefingCollateral: string;
 }
 
 export interface IssueMap {
@@ -23,13 +26,16 @@ export interface VaultIssue {
     polkaBTC: string;
     lockedDOT: string;
     status: string;
+    completed: boolean;
+    cancelled: boolean;
 }
 
 export interface IssueState {
     address: string;
     step: string;
     amountBTC: string;
-    feeBTC: string;
+    fee: string;
+    griefingCollateral: string;
     vaultDotAddress: string;
     vaultBtcAddress: string;
     id: string;

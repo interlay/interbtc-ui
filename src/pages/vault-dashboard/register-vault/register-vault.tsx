@@ -3,17 +3,17 @@ import { Modal, Button } from "react-bootstrap";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { BTC_ADDRESS_REGEX } from "../../../constants";
 import { useDispatch, useSelector } from "react-redux";
 import { updateBTCAddressAction, updateCollateralAction } from "../../../common/actions/vault.actions";
 import { planckToDOT, dotToPlanck } from "@interlay/polkabtc";
 import { StoreType } from "../../../common/types/util.types";
 import BN from "bn.js";
-import { getH160FromAddress } from "../../../common/utils/utils";
+import { BtcNetwork } from "../../../common/utils/utils";
+import { useTranslation } from 'react-i18next';
+
 
 type RegisterVaultForm = {
     collateral: string;
-    address: string;
 };
 
 type RegisterVaultProps = {
@@ -24,24 +24,21 @@ type RegisterVaultProps = {
 
 export default function RegisterVaultModal(props: RegisterVaultProps) {
     const { register, handleSubmit, errors } = useForm<RegisterVaultForm>();
-    const dispatch = useDispatch();
     const [isPending, setIsPending] = useState(false);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+    const dispatch = useDispatch();
+    const { t } = useTranslation();
 
-    const onSubmit = handleSubmit(async ({ collateral, address }) => {
+
+    const onSubmit = handleSubmit(async ({ collateral }) => {
         if (!polkaBtcLoaded) return;
+        setIsPending(true);
         try {
-            setIsPending(true);
             const collateralAsPlanck = dotToPlanck(collateral.toString());
             if (collateralAsPlanck === undefined) {
                 throw new Error("Collateral is smaller than 1 planck");
             }
-            const btcHash = getH160FromAddress(address);
-            if (!btcHash) {
-                throw new Error("Invalid address");
-            }
-            await window.vaultClient.registerVault(collateralAsPlanck, btcHash);
-
+            const address = await window.vaultClient.registerVault(collateralAsPlanck, BtcNetwork);
             const accountId = await window.vaultClient.getAccountId();
             const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
             const collateralPlanck = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
@@ -53,21 +50,22 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
 
             toast.success("Successfully registered");
             props.onClose();
-            setIsPending(false);
         } catch (error) {
             toast.error(error.toString());
         }
+        // reset after try-catch
+        setIsPending(false);
     });
 
     return (
         <Modal show={props.show} onHide={props.onClose}>
             <form onSubmit={onSubmit}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Register Vault</Modal.Title>
+                    <Modal.Title>{t("vault.register_vault")}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="row">
-                        <div className="col-12">Collateral</div>
+                        <div className="col-12">{t("vault.collateral")}</div>
                         <div className="col-12 basic-addon">
                             <div className="input-group">
                                 <input
@@ -90,30 +88,8 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
                             {errors.collateral && (
                                 <div className="input-error">
                                     {errors.collateral.type === "required"
-                                        ? "Collateral is required"
+                                        ? t("vault.collateral_is_required")
                                         : errors.collateral.message}
-                                </div>
-                            )}
-                        </div>
-                        <div className="col-12">BTC Address</div>
-                        <div className="col-12">
-                            <input
-                                name="address"
-                                type="text"
-                                className={"custom-input" + (errors.address ? " error-borders" : "")}
-                                ref={register({
-                                    required: true,
-                                    pattern: {
-                                        value: BTC_ADDRESS_REGEX,
-                                        message: "Please enter a valid BTC address (Supported formats: p2wpkh, p2wsh in bech32 format).",
-                                    },
-                                })}
-                            ></input>
-                            {errors.address && (
-                                <div className="input-error">
-                                    {errors.address.type === "required"
-                                        ? "Address is required"
-                                        : errors.address.message}
                                 </div>
                             )}
                         </div>
@@ -121,10 +97,10 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={props.onClose}>
-                        Cancel
+                        {t("cancel")}
                     </Button>
                     <ButtonMaybePending variant="outline-success" type="submit" isPending={isPending}>
-                        Register
+                        {t("register")}
                     </ButtonMaybePending>
                 </Modal.Footer>
             </form>

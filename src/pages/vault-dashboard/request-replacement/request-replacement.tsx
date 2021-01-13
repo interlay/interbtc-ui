@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { btcToSat, satToBTC } from "@interlay/polkabtc";
 import { requestsToVaultReplaceRequests } from "../../../common/utils/utils";
+import { useTranslation } from 'react-i18next';
+
 
 type RequestReplacementForm = {
     amount: number;
@@ -24,6 +26,8 @@ export default function RequestReplacementModal(props: RequestReplacementProps) 
     const lockedDot = useSelector((state: StoreType) => state.vault.collateral);
     const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
     const [isRequestPending, setRequestPending] = useState(false);
+    const { t } = useTranslation();
+
 
     const onSubmit = handleSubmit(async ({ amount }) => {
         setRequestPending(true);
@@ -58,18 +62,17 @@ export default function RequestReplacementModal(props: RequestReplacementProps) 
         <Modal show={props.show} onHide={props.onClose}>
             <form onSubmit={onSubmit}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Request Replacement</Modal.Title>
+                    <Modal.Title>{t("vault.request_replacement")}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="row">
                         <div className="col-12 request-header">
-                            You are requesting that your vault is replaced by other vaults in the system. If this is
-                            successful, you can withdraw your collateral.
+                            {t("vault.withdraw_your_collateral")}
                         </div>
-                        <div className="col-12">Your currently have:</div>
-                        <div className="col-12">Locked: {lockedDot} DOT</div>
-                        <div className="col-12 vault-empty-space">Locked: {lockedBtc} BTC</div>
-                        <div className="col-12 vault-empty-space">Replace amount</div>
+                        <div className="col-12">{t("vault.your_have")}</div>
+                        <div className="col-12"> {lockedDot} DOT</div>
+                        <div className="col-12 vault-empty-space">{t("locked")} {lockedBtc} BTC</div>
+                        <div className="col-12 vault-empty-space">{t("vault.replace_amount")}</div>
                         <div className="col-12">
                             <div className="input-group">
                                 <input
@@ -99,10 +102,10 @@ export default function RequestReplacementModal(props: RequestReplacementProps) 
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={props.onClose}>
-                        Cancel
+                        {t("cancel")}
                     </Button>
                     <ButtonMaybePending variant="outline-danger" type="submit" isPending={isRequestPending}>
-                        Request
+                        {t("request")}
                     </ButtonMaybePending>
                 </Modal.Footer>
             </form>

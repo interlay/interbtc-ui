@@ -2,12 +2,14 @@ export interface RedeemRequest {
     id: string;
     amountPolkaBTC: string;
     creation: string;
-    // recipient btc address
+    fee: string;
     btcAddress: string;
     btcTxId: string;
     confirmations: number;
     completed: boolean;
     isExpired: boolean;
+    cancelled: boolean;
+    reimbursed: boolean;
 }
 
 export interface RedeemState {
@@ -21,6 +23,7 @@ export interface RedeemState {
     redeemRequests: Map<string, RedeemRequest[]>;
     transactionListeners: string[];
     vaultRedeems: VaultRedeem[];
+    fee: string;
 }
 
 export interface VaultRedeem {
@@ -31,4 +34,6 @@ export interface VaultRedeem {
     polkaBTC: string;
     unlockedDOT: string;
     status: string;
+    completed: boolean;
+    cancelled: boolean;
 }
