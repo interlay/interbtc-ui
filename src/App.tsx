@@ -40,6 +40,7 @@ import UserGuidePage from "./pages/user-guide.page";
 import DashboardPage from "./pages/dashboard/dashboard.page";
 import VaultDashboardPage from "./pages/vault-dashboard/vault-dashboard.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
+import VaultsDashboard from "./pages/dashboard/vaults/vaults.dashboard.page";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType, ParachainStatus } from "./common/types/util.types";
 
@@ -103,7 +104,7 @@ export default function App(): ReactElement {
             window.polkaBTC = await connectToParachain();
             dispatch(isPolkaBtcLoaded(true));
             setIsLoading(false);
-            
+
         } catch (error) {
             if (!window.polkaBTC)
                 toast.warn(
@@ -125,11 +126,11 @@ export default function App(): ReactElement {
                 const totalLockedPLANCK = await window.polkaBTC.collateral.totalLockedDOT();
                 const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
                 const totalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
-                const btcRelayHeight = Number(await window.polkaBTC.btcRelay.getLatestBlockHeight());                
+                const btcRelayHeight = Number(await window.polkaBTC.btcRelay.getLatestBlockHeight());
                 const bitcoinHeight = await window.polkaBTC.btcCore.getLatestBlockHeight();
                 const state = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
                 dispatch(initGeneralDataAction(totalPolkaBTC, totalLockedDOT, btcRelayHeight, bitcoinHeight,
-                    state.isError ? ParachainStatus.Error : 
+                    state.isError ? ParachainStatus.Error :
                     state.isRunning ? ParachainStatus.Running : ParachainStatus.Shutdown));
             } catch(error) {
                 console.log(error);
@@ -226,6 +227,11 @@ export default function App(): ReactElement {
                         </Route>
                     )}
                     {!constants.STATIC_PAGE_ONLY && (
+                        <Route path="/dashboard/vaults">
+                            <VaultsDashboard />
+                        </Route>
+                    )}
+                    {!constants.STATIC_PAGE_ONLY && (
                         <Route path="/dashboard">
                             <DashboardPage />
                         </Route>
@@ -249,10 +255,10 @@ export default function App(): ReactElement {
                     </Route>
                 </Switch>
                 <Footer />
-            </div> : 
+            </div> :
             <div className="main-loader">
                 <img src={loadingImg} alt="loading animation"></img>
-            </div>}   
+            </div>}
         </Router>
     </React.Fragment>;
 }
