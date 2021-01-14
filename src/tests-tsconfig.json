@@ -18,7 +18,8 @@
       "isolatedModules": true,
       "noEmit": true,
       "jsx": "react",
-      "baseUrl": "."
+      "baseUrl": ".",
+      "types": [ "node", "mocha", "chai" ]
     },
     "include": [
       "src"

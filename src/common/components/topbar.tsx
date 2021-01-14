@@ -1,12 +1,11 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import polkaBTCLogo from "../../assets/img/polkabtc/PolkaBTC_black.svg";
+import polkaBTCLogo from "../../assets/img/polkabtc/PolkaBTC_black.png";
 import { Navbar, Nav, Image, Button, DropdownButton, Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../types/util.types";
 import * as constants from "../../constants";
 import ButtonMaybePending from "./pending-button";
-import DropdownItem from "react-bootstrap/esm/DropdownItem";
 import { FaDiscord, FaGithub, FaEdit } from "react-icons/fa";
 import { planckToDOT } from "@interlay/polkabtc";
 import { updateBalanceDOTAction, showAccountModalAction } from "../actions/general.actions";
@@ -28,7 +27,6 @@ export default function Topbar(props: TopbarProps): ReactElement {
     const [isRequestPending, setIsRequestPending] = useState(false);
     const dispatch = useDispatch();
     const { t } = useTranslation();
-
 
     useEffect(() => {
         if (!relayerLoaded || !vaultClientLoaded || !polkaBtcLoaded) {
@@ -87,11 +85,11 @@ export default function Topbar(props: TopbarProps): ReactElement {
     }
 
     return (
-        <Navbar bg="light" expand="lg" className="border-bottom shadow-sm top-bar">
+        <Navbar id="pbtc-topbar" bg="light" expand="lg" className="border-bottom shadow-sm top-bar">
             {!isLoading && 
             <React.Fragment>
                 <Navbar.Brand>
-                    <Link className="text-decoration-none" to="/">
+                    <Link id="main-logo" className="text-decoration-none" to="/">
                         <Image src={polkaBTCLogo} width="90" className="d-inline-block align-top" height="30" fluid />
                     </Link>
                 </Navbar.Brand>
@@ -114,12 +112,12 @@ export default function Topbar(props: TopbarProps): ReactElement {
                             </Link>
                         )}
                         {isVaultConnected && (
-                            <Link className="nav-link" to="/vault">
+                            <Link id="vault-nav-item" className="nav-link" to="/vault">
                                 {t("nav_vault")}
                             </Link>
                         )}
                         {isRelayerConnected && (
-                            <Link className="nav-link" to="/staked-relayer">
+                            <Link id="relayer-nav-item" className="nav-link" to="/staked-relayer">
                                 {t("nav_relayer")}
                             </Link>
                         )}
@@ -136,13 +134,13 @@ export default function Topbar(props: TopbarProps): ReactElement {
 
                     <Nav className="d-inline">
                         <DropdownButton  id="bug-report" title="Feedback" variant="outline-polkadot" size="sm" menuAlign="right" className="mr-2">
-                            <DropdownItem href="https://forms.gle/zzmzCrgTfmcXbNDd8" target="_blank">
+                            <a href="https://forms.gle/zzmzCrgTfmcXbNDd8" target="_blank" rel="noopener noreferrer">
                                 <FaEdit></FaEdit> {t("feedback.feedback")}
-                            </DropdownItem>
+                            </a>
                             <Dropdown.Divider />
                             <Dropdown.Header>{t("report_bug")}</Dropdown.Header>
-                            <DropdownItem href="https://github.com/interlay/polkabtc-ui/issues" target="_blank"><FaGithub></FaGithub> GitHub</DropdownItem>
-                            <DropdownItem href="https://discord.gg/C8tjMbgVXh" target="_blank"><FaDiscord></FaDiscord> Discord</DropdownItem>
+                            <a href="https://github.com/interlay/polkabtc-ui/issues" target="_blank" rel="noopener noreferrer"><FaGithub></FaGithub> GitHub</a>
+                            <a href="https://discord.gg/C8tjMbgVXh" target="_blank" rel="noopener noreferrer"><FaDiscord></FaDiscord> Discord</a>
                         </DropdownButton>
                     </Nav>
                     {props.address !== undefined && (
@@ -157,7 +155,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                                     {t("request_dot")}
                                 </ButtonMaybePending>
                             </Nav>
-                            <Nav className="d-inline">
+                            <Nav id="account-button" className="d-inline">
                                 <Button
                                     variant="outline-polkadot"
                                     size="sm"
