@@ -212,7 +212,7 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
         }
         if (
             vault.settledCollateralization !== undefined &&
-            // new Big(vault.settledCollateralization).div(100).gt(auctionCollateralThreshold) &&
+            new Big(vault.settledCollateralization).div(100).gt(auctionCollateralThreshold) &&
             new Big(vault.settledCollateralization).div(100).lt(premiumRedeemThreshold)
         ) {
             return true;
