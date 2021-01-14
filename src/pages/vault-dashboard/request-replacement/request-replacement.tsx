@@ -42,7 +42,7 @@ export default function RequestReplacementModal(props: RequestReplacementProps) 
                 const dustValue = satToBTC(dustValueAsSatoshi.toString());
                 throw new Error(`Please enter an amount greater than Bitcoin dust (${dustValue} BTC)`);
             }
-            await window.vaultClient.requestReplace(amountAsSatoshisString, "100");
+            await window.vaultClient.requestReplace(amountAsSatoshisString);
 
             const accountId = await window.vaultClient.getAccountId();
             const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
