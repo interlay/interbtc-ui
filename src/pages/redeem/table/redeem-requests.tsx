@@ -25,7 +25,7 @@ export interface RedeemRequestsProps {
 export default function RedeemRequests(props: RedeemRequestsProps) {
     const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
     const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
-    const { transactionListeners }= useSelector((state: StoreType) => state.redeem);
+    const { transactionListeners } = useSelector((state: StoreType) => state.redeem);
     const [isRedeemExpirationSubscribed, setIsRedeemExpirationSubscribed] = useState(false);
     const [showReimburseModal, setShowReimburseModal] = useState(false);
     const [reimburseRequest, setReimburseRequest] = useState<RedeemRequest>();
@@ -54,22 +54,23 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
     }
 
     const handleCompleted = (request: RedeemRequest) => {
-        if (request.cancelled) {
-            return <Badge className="badge-style" variant="secondary">{t("cancelled")}</Badge>;
-        }
         if (!request.completed && request.isExpired) {
-            if(request.reimbursed && request.cancelled) {
+            if (request.reimbursed && request.cancelled) {
                 return <div>{t("redeem_page.reimbursed")}</div>
             }
-            if(!request.cancelled && !request.reimbursed) {
+            if (!request.cancelled && !request.reimbursed) {
                 return <Button
                     onClick={() => openReimburseModal(request)}
                     className="ml-3"
                     variant="outline-dark">
-                        {t("redeem_page.recover")}
+                    {t("redeem_page.recover")}
                 </Button>
             }
             return <div>{t("redeem_page.retried")}</div>
+            // TODO: do we need the cancelled state?
+            // if (request.cancelled) {
+            //     return <Badge className="badge-style" variant="secondary">{t("cancelled")}</Badge>;
+            // }
         }
         if (request.completed) {
             setTimeout(props.handleShowFeedbackModal, FEEDBACK_MODAL_DISPLAY_DELAY_MS);
@@ -189,8 +190,8 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                                                 <BitcoinAddress btcAddress={request.btcAddress} shorten />
                                             </td>
                                             <td>
-                                            {!request.completed && request.isExpired ? <div>{t("redeem_page.failed")}</div> :
-                                                <BitcoinTransaction txId={request.btcTxId} shorten />}
+                                                {!request.completed && request.isExpired ? <div>{t("redeem_page.failed")}</div> :
+                                                    <BitcoinTransaction txId={request.btcTxId} shorten />}
                                             </td>
                                             <td>{request.confirmations}</td>
                                             <td>{handleCompleted(request)}</td>
@@ -201,7 +202,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                     </Table>
                 </React.Fragment>
             )}
-            <ReimburseModal show={showReimburseModal} request={reimburseRequest} onClose={closeReimburseModal}/>
+            <ReimburseModal show={showReimburseModal} request={reimburseRequest} onClose={closeReimburseModal} />
         </div>
     );
 }
