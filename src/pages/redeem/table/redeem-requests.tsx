@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { RedeemRequest } from "../../../common/types/redeem.types";
-import { Table, Button, Badge } from "react-bootstrap";
+import { Table, Button } from "react-bootstrap";
 import { shortAddress, parachainToUIRedeemRequest } from "../../../common/utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
