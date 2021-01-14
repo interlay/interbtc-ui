@@ -54,7 +54,7 @@ export default function EnterPolkaBTCAmount() {
             setRedeemFee("0.5");
         };
         fetchData();
-    }, [polkaBtcLoaded]);
+    }, [polkaBtcLoaded, premiumVault]);
 
     const onSubmit = handleSubmit(async ({ amountPolkaBTC }) => {
         if (!polkaBtcLoaded) return;
