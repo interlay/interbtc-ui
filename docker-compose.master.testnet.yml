@@ -45,7 +45,7 @@ services:
             - |
                 echo "Sleeping..."
                 sleep 2
-                vault --keyring=charlie --network=testnet --auto-register-with-collateral 100000000 --http-addr '[::0]:3032' --polka-btc-url 'ws://polkabtc:9944'
+                vault --keyring=charlie --network=testnet --auto-register-with-collateral 100000000000000 --http-addr '[::0]:3032' --polka-btc-url 'ws://polkabtc:9944'
         environment:
             <<: *client-env
         ports:
