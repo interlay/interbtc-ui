@@ -18,6 +18,7 @@
         "@types/react-redux": "^7.1.9",
         "@types/react-router-dom": "^5.1.5",
         "@types/redux-logger": "^3.0.8",
+        "babel-register": "^6.26.0",
         "big.js": "^6.0.1",
         "bitcoinjs-lib": "^5.2.0",
         "bootstrap": "^4.5.0",
@@ -87,7 +88,7 @@
         "format": "prettier --config .prettierrc --write ./src/**/*.{ts,tsx}",
         "setup": "yarn generate:defs && yarn generate:meta",
         "build": "react-app-rewired build",
-        "test": "ts-mocha --exit --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx",
+        "test": "ts-mocha --exit --require babel-register --require ignore-styles --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx",
         "test-watch": "watch 'ts-mocha --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx --timeout 5000' src tests --interval=1",
         "eject": "react-app-rewired eject"
     },
