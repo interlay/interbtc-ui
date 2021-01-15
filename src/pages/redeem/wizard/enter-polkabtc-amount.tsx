@@ -33,6 +33,7 @@ export default function EnterPolkaBTCAmount() {
     const [dustValue, setDustValue] = useState("0");
     const dispatch = useDispatch();
     const [premiumPercentage, setPremiumPercentage] = useState(new Big(0));
+    const [exchangeRate, setExchangeRate] = useState(new Big(0));
     const [redeemFee, setRedeemFee] = useState("0.5");
 
     useEffect(() => {
@@ -45,13 +46,15 @@ export default function EnterPolkaBTCAmount() {
             if (premiumVault) {
                 const premium = await window.polkaBTC.redeem.getPremiumRedeemFee();
                 setPremiumPercentage(new Big(premium));
+                const exchangeRate = await window.polkaBTC.oracle.getExchangeRate();
+                setExchangeRate(new Big(exchangeRate));
             }
 
             // TODO: fetch the redeem fee from the parachain
             setRedeemFee("0.5");
         };
         fetchData();
-    });
+    }, [polkaBtcLoaded, premiumVault]);
 
     const onSubmit = handleSubmit(async ({ amountPolkaBTC }) => {
         if (!polkaBtcLoaded) return;
@@ -99,7 +102,9 @@ export default function EnterPolkaBTCAmount() {
     return (
         <form onSubmit={onSubmit}>
             <Modal.Body>
-                <p>{t("redeem_page.enter_amount_polkabtc", { redeemFee: redeemFee })}</p>
+                {!premiumVault && (
+                    <p>{t("redeem_page.enter_amount_polkabtc", { redeemFee: redeemFee })}</p>
+                )}
                 <p>
                     {t("redeem_page.you_have")} {balancePolkaBTC} PolkaBTC.
                 </p>
@@ -108,7 +113,7 @@ export default function EnterPolkaBTCAmount() {
                         {t("redeem_page.redeem_against_selected_vault", {
                             shortAccount: shortAddress(premiumVault.vaultId),
                             premiumDot: getValues("amountPolkaBTC")
-                                ? new Big(getValues("amountPolkaBTC")).mul(premiumPercentage.div(new Big(100)))
+                                ? new Big(getValues("amountPolkaBTC")).mul(premiumPercentage).mul(exchangeRate)
                                 : 0,
                         })}
                     </p>
@@ -117,9 +122,9 @@ export default function EnterPolkaBTCAmount() {
                     {t("redeem_page.bitcoin_dust_limit")}({dustValue} BTC)
                     {premiumVault
                         ? t("redeem_page.less_than", {
-                              maxValue:
-                                  premiumVault.lockedBTC > balancePolkaBTC ? premiumVault.lockedBTC : balancePolkaBTC,
-                          })
+                            maxValue:
+                                premiumVault.lockedBTC > balancePolkaBTC ? premiumVault.lockedBTC : balancePolkaBTC,
+                        })
                         : "."}
                 </p>
                 <div className="row">
@@ -137,8 +142,8 @@ export default function EnterPolkaBTCAmount() {
                                         value > balancePolkaBTC
                                             ? t("redeem_page.current_balance") + balancePolkaBTC
                                             : value < Number(dustValue)
-                                            ? t("redeem_page.amount_greater") + dustValue + "BTC)."
-                                            : undefined,
+                                                ? t("redeem_page.amount_greater") + dustValue + "BTC)."
+                                                : undefined,
                                 })}
                             />
                             <div className="input-group-append">

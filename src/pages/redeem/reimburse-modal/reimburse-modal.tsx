@@ -96,13 +96,13 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
                 <div className="row mt-4">
                     <div className="col-9">
                         <p><strong>{t("redeem_page.retry_again_and_get_compes",{amountDOT: punishmentDOT.toFixed(2)})}</strong></p>
-                        <p>{t("redeem_page.you_will_receive_dot",{amountDOT: amountDOT.toFixed(2)})}</p>
+                        <p>{t("redeem_page.you_will_receive_dot",{amountDOT: punishmentDOT.toFixed(2)})}</p>
                     </div>
                     <div className="col-3 text-center m-auto">
-                        <ButtonMaybePending 
+                        <ButtonMaybePending
                             className={"retry-button"}
-                            disabled={isRetryPending || isReimbursePending} 
-                            isPending={isRetryPending} 
+                            disabled={isRetryPending || isReimbursePending}
+                            isPending={isRetryPending}
                             onClick={onRetry}>
                             {t("retry")}
                         </ButtonMaybePending>
@@ -119,18 +119,18 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
                             <li>
                                 <p>
                                 <b>{t("redeem_page.num_reimbursment",{amountDOT: amountDOT.toFixed(2)})}</b>
-                                    {t("redeem_page.exchange_rate",{amountPolkaBTC: props.request ? props.request.amountPolkaBTC : 0, rate: rate.toFixed(8)})}
+                                    {t("redeem_page.exchange_rate",{amountPolkaBTC: props.request ? props.request.amountPolkaBTC : 0, rate: rate.toFixed(5)})}
                                 </p>
                             </li>
                             <li>
-                                <p><b>{t("redeem_page.compensation",{punishment: punishmentDOT})}</b>{t("redeem_page.inconvenience")}</p>
+                                <p><b>{t("redeem_page.compensation",{punishment: punishmentDOT.toFixed(2)})}</b>{t("redeem_page.inconvenience")}</p>
                             </li>
                         </ul>
-                        
+
                     </div>
                     <div className="col-3 text-center m-auto">
-                        <ButtonMaybePending 
-                            isPending={isReimbursePending} 
+                        <ButtonMaybePending
+                            isPending={isReimbursePending}
                             onClick={onReimburse}
                             disabled={isRetryPending || isReimbursePending}>
                             {t("redeem_page.reimburse")}

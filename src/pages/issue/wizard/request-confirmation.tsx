@@ -42,7 +42,7 @@ export default function RequestConfirmation() {
             const requestResult = await window.polkaBTC.issue.request(amount, vaultAccountId);
 
             // get the issue id from the request issue event
-            const id = stripHexPrefix(requestResult.hash.toString());
+            const id = stripHexPrefix(requestResult.id.toString());
             const issueRequest = await window.polkaBTC.issue.getRequestById(id);
 
             // update the issue status

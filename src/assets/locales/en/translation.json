@@ -79,7 +79,7 @@
         "enter_btc": "Please enter the your btc address",
         "enter_amount_polkabtc": "Please enter the amount of PolkaBTC you want to redeem. A fee of {{redeemFee}}% will be subtracted.",
         "you_have": "You have",
-        "bitcoin_dust_limit": "Please enter an amount greater than Bitcoin dust limit",
+        "bitcoin_dust_limit": "Please enter an amount greater than Bitcoin dust limit ",
         "current_balance": "Please enter an amount smaller than your current balance: ",
         "amount_greater": "Please enter an amount greater than Bitcoin dust limit(",
         "request_processed": "Request being processed...",
