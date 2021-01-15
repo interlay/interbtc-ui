@@ -26,6 +26,7 @@ test:
     - yarn install
     - yarn lint
     - yarn test --passWithNoTests
+    - yarn build
   only:
     - merge_requests
     - master
