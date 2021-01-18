@@ -48,6 +48,7 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
         amountBTC: satToBTC(parachainIssueRequest.amount.toString()),
         creation: parachainIssueRequest.opentime.toString(),
         vaultBTCAddress: parachainIssueRequest.btc_address,
+        vaultDOTAddress: parachainIssueRequest.vault.toString(),
         btcTxId: "",
         fee: satToBTC(parachainIssueRequest.fee.toString()),
         griefingCollateral: parachainIssueRequest.griefing_collateral.toString(),
