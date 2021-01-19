@@ -2,97 +2,11 @@ import React, { useState, useEffect, ReactElement } from "react";
 import VaultTable from "../../../common/components/vault-table/vault-table";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { Line, Doughnut } from "react-chartjs-2";
-
-import "./vaults.dashboard.page.scss";
 import { StoreType } from "../../../common/types/util.types";
+import { TimeDataPoint } from "../../../common/types/util.types";
 
-type TimeDataPoint = {
-    x: Date;
-    y: number;
-};
-
-type CapacityProps = {
-    totalPolkaBTC: number;
-    capacity: number;
-    collateralizationRate?: string;
-};
-
-function CapacityDoughnut({ totalPolkaBTC, capacity, collateralizationRate }: CapacityProps): ReactElement {
-    const chartProps = {
-        data: {
-            datasets: [
-                {
-                    data: [totalPolkaBTC, capacity],
-                    backgroundColor: ["blue", "lightblue"],
-                },
-            ],
-            labels: ["Existing PolkaBTC", "Capacity"],
-        },
-        options: {
-            legend: {
-                display: false,
-            },
-        },
-    };
-    return (
-        <div className="row">
-            <div className="col-md-8">
-                <Doughnut {...chartProps} />
-            </div>
-            <div className="col-md-4">Collateralisation: {collateralizationRate} (target: 150%)</div>
-        </div>
-    );
-}
-
-type TimeChartProps = {
-    title: string[];
-    data: TimeDataPoint[];
-};
-
-function TimeChart(props: TimeChartProps): ReactElement {
-    const chartProps = {
-        data: {
-            datasets: [
-                {
-                    label: "Total",
-                    data: props.data,
-                    fill: false,
-                },
-            ],
-        },
-        options: {
-            title: {
-                display: true,
-                position: "top",
-                text: props.title,
-                fontSize: 24,
-            },
-            legend: {
-                display: false,
-            },
-            scales: {
-                yAxes: [
-                    {
-                        ticks: {
-                            beginAtZero: true,
-                        },
-                    },
-                ],
-                xAxes: [
-                    {
-                        type: "time",
-                        time: {
-                            round: "day",
-                            unit: "day",
-                        },
-                    },
-                ],
-            },
-        },
-    };
-    return <Line {...chartProps} />;
-}
+import TimeChart from "../../../common/components/charts/time-chart";
+import CapacityDoughnut from "./charts/capacity-doughnut";
 
 export default function VaultsDashboard(): ReactElement {
     const { polkaBtcLoaded, totalPolkaBTC, totalLockedDOT } = useSelector((state: StoreType) => state.general);

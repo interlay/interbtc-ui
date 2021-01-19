@@ -2,7 +2,6 @@ import React, { useState, useEffect, ReactElement, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
-import "./redeems.dashboard.page.scss";
 import RedeemTable from "./redeem-table/redeem-table";
 import { StoreType } from "../../../common/types/util.types";
 import { RedeemRequest } from "../../../common/types/redeem.types";
@@ -41,10 +40,9 @@ export default function RedeemsDashboard(): ReactElement {
             {
                 id: "0xtestmock",
                 amountPolkaBTC: "1.5",
-                creation: "",
+                creation: "18743",
                 btcAddress: "tb1qhz...dknu33d",
                 vaultDotAddress: "5DAAnr...m3PTXFy",
-                transactionBlockHeight: 18674,
                 btcTxId: "d218f5...3f29af",
                 confirmations: 0,
                 completed: false,

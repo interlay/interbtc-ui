@@ -2,7 +2,6 @@ import React, { useState, useEffect, ReactElement, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
-import "./issues.dashboard.page.scss";
 import IssueTable from "./issue-table/issue-table";
 import { StoreType } from "../../../common/types/util.types";
 import { IssueRequest } from "../../../common/types/issue.types";

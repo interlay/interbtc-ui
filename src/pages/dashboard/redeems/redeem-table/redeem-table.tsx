@@ -27,7 +27,7 @@ export default function RedeemTable({ redeemRequests }: { redeemRequests: Redeem
                         <>
                             <td>{rreq.id}</td>
                             <td>{rreq.amountPolkaBTC}</td>
-                            <td>{rreq.transactionBlockHeight}</td>
+                            <td>{rreq.creation}</td>
                             <td>{rreq.vaultDotAddress}</td>
                             <td>{rreq.btcAddress}</td>
                             <td>{rreq.btcTxId}</td>
