@@ -4,7 +4,11 @@ import { Table } from "react-bootstrap";
 import { RedeemRequest } from "../../../../common/types/redeem.types";
 import React from "react";
 
-export default function RedeemTable({ redeemRequests }: { redeemRequests: RedeemRequest[] }): ReactElement {
+type RedeemTableProps = {
+    redeemRequests: RedeemRequest[];
+};
+
+export default function RedeemTable({ redeemRequests }: RedeemTableProps): ReactElement {
     const { t } = useTranslation();
 
     return (

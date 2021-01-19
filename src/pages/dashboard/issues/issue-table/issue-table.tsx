@@ -4,7 +4,11 @@ import { Table } from "react-bootstrap";
 import { IssueRequest } from "../../../../common/types/issue.types";
 import React from "react";
 
-export default function IssueTable({ issueRequests }: { issueRequests: IssueRequest[] }): ReactElement {
+type IssueTableProps = {
+    issueRequests: IssueRequest[];
+};
+
+export default function IssueTable({ issueRequests }: IssueTableProps): ReactElement {
     const { t } = useTranslation();
 
     return (
