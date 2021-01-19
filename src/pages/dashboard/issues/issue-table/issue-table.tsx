@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { Table } from "react-bootstrap";
-import { IssueRequest } from "../../../common/types/issue.types";
+import { IssueRequest } from "../../../../common/types/issue.types";
 import React from "react";
 
 export default function IssueTable({ issueRequests }: { issueRequests: IssueRequest[] }): ReactElement {

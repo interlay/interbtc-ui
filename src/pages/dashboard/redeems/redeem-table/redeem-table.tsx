@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { Table } from "react-bootstrap";
-import { RedeemRequest } from "../../../common/types/redeem.types";
+import { RedeemRequest } from "../../../../common/types/redeem.types";
 import React from "react";
 
 export default function RedeemTable({ redeemRequests }: { redeemRequests: RedeemRequest[] }): ReactElement {

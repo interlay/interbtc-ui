@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 import "./redeems.dashboard.page.scss";
-import RedeemTable from "../../../common/components/redeem-table/redeem-table";
+import RedeemTable from "./redeem-table/redeem-table";
 import { StoreType } from "../../../common/types/util.types";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 

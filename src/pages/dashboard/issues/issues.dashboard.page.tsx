@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 import "./issues.dashboard.page.scss";
-import IssueTable from "../../../common/components/issue-table/issue-table";
+import IssueTable from "./issue-table/issue-table";
 import { StoreType } from "../../../common/types/util.types";
 import { IssueRequest } from "../../../common/types/issue.types";
 
