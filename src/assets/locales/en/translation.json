@@ -161,7 +161,7 @@
         "issue_polkabtc": "Issue PolkaBTC",
         "confirm_issue_request": "Confirm Issue Request",
         "verify_and_confirm": "Please verify and confirm your issue request.",
-        "issuing": "Issuing:",
+        "issuing": "You have requested to issue {{amountBTC}} PolkaBTC, incurring a fee of 0 BTC. Please make the following Bitcoin payment as shown below within 24 hours.",
         "fees": "Fees:",
         "successful_completion": "(This will be returned to you after successful completion of the request.)",
         "total": "Total:",
