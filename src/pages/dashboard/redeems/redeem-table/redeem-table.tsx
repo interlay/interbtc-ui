@@ -28,7 +28,7 @@ export default function RedeemTable({ redeemRequests }: RedeemTableProps): React
             <tbody>
                 {redeemRequests.map((rreq) => {
                     return (
-                        <>
+                        <tr key={rreq.id}>
                             <td>{rreq.id}</td>
                             <td>{rreq.amountPolkaBTC}</td>
                             <td>{rreq.creation}</td>
@@ -47,7 +47,7 @@ export default function RedeemTable({ redeemRequests }: RedeemTableProps): React
                                     ? t("reimbursed")
                                     : t("pending")}
                             </td>
-                        </>
+                        </tr>
                     );
                 })}
             </tbody>

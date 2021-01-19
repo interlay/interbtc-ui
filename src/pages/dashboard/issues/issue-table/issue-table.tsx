@@ -28,7 +28,7 @@ export default function IssueTable({ issueRequests }: IssueTableProps): ReactEle
             <tbody>
                 {issueRequests.map((ireq) => {
                     return (
-                        <>
+                        <tr key={ireq.id}>
                             <td>{ireq.id}</td>
                             <td>{ireq.amountBTC}</td>
                             <td>{ireq.transactionBlockHeight}</td>
@@ -37,7 +37,7 @@ export default function IssueTable({ issueRequests }: IssueTableProps): ReactEle
                             <td>{ireq.btcTxId}</td>
                             <td>{ireq.confirmations}</td>
                             <td>{ireq.completed ? t("completed") : ireq.cancelled ? t("cancelled") : t("pending")}</td>
-                        </>
+                        </tr>
                     );
                 })}
             </tbody>
