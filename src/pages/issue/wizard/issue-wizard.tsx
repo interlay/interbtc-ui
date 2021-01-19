@@ -3,7 +3,6 @@ import { Container, Modal } from "react-bootstrap";
 import RequestConfirmation from "./request-confirmation";
 import EnterBTCAmount from "./enter-btc-amount";
 import BTCPayment from "./btc-payment";
-import BTCPaymentConfirmation from "./btc-payment-confirmation";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { useTranslation } from "react-i18next";
@@ -29,7 +28,6 @@ export default function IssueWizard(props: IssueWizardProps) {
         </Modal.Header>
         {step === "ENTER_BTC_AMOUNT" && <EnterBTCAmount />}
         {step === "REQUEST_CONFIRMATION" && <RequestConfirmation />}
-        {step === "BTC_PAYMENT" && <BTCPayment />}
-        {step === "BTC_PAYMENT_CONFIRMATION" && <BTCPaymentConfirmation closeModal={handleClose}/>}
+        {step === "BTC_PAYMENT" && <BTCPayment closeModal={handleClose}/>}
     </Container>
 }

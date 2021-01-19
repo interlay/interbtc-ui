@@ -27,7 +27,7 @@
         "i18next-browser-languagedetector": "^6.0.1",
         "i18next-http-backend": "^1.0.21",
         "node-sass": "^4.14.1",
-        "qrcode.react": "^1.0.0",
+        "qrcode.react": "^1.0.1",
         "react": "^16.13.1",
         "react-app-rewired": "^2.1.8",
         "react-bootstrap": "^1.0.1",
