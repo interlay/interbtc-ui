@@ -21,7 +21,7 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
     const [isRetryPending, setRetryPending] = useState(false);
     const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
     const [punishmentDOT, setPunishmentDOT] = useState(new Big(0));
-    const [rate, setRate] = useState(0);
+    const [rate, setRate] = useState(new Big(0));
     const [amountDOT, setAmountDOT] = useState(new Big(0));
     const dispatch = useDispatch();
     const { t } = useTranslation();
