@@ -6,62 +6,62 @@ import RedeemTable from "./redeem-table/redeem-table";
 import { StoreType } from "../../../common/types/util.types";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 
-export default function RedeemsDashboard(): ReactElement {
+export default function RedeemDashboard(): ReactElement {
     const { polkaBtcLoaded, totalPolkaBTC } = useSelector((state: StoreType) => state.general);
     const { t } = useTranslation();
 
     const [totalSuccessfulRedeems, setTotalSuccessfulRedeems] = useState(0);
     const [totalFailedRedeems, setTotalFailedRedeems] = useState(0);
     const [redeemRequests, setRedeemRequests] = useState(new Array<RedeemRequest>());
-    const [redeemsLastDays, setRedeemsLastDays] = useState(new Array<{ date: Date; amount: number }>());
-    const redeemsPerDay = useMemo(
+    const [cumulativeRedeemsPerDay, setCumulativeRedeemsPerDay] = useState(new Array<{ date: Date; amount: number }>());
+    const pointRedeemsPerDay = useMemo(
         () =>
-            redeemsLastDays.map((dataPoint, i) => {
+            cumulativeRedeemsPerDay.map((dataPoint, i) => {
                 if (i === 0) return 0;
-                return dataPoint.amount - redeemsLastDays[i - 1].amount;
+                return dataPoint.amount - cumulativeRedeemsPerDay[i - 1].amount;
             }),
-        [redeemsLastDays]
+        [cumulativeRedeemsPerDay]
     );
     const redeemSuccessRate = useMemo(
         () => (totalSuccessfulRedeems / (totalSuccessfulRedeems + totalFailedRedeems)).toFixed(2),
         [totalSuccessfulRedeems, totalFailedRedeems]
     );
 
-    const fetchTotalSuccessfulRedeems = async () => {
-        setTotalSuccessfulRedeems(443);
-    };
-
-    const fetchTotalFailedRedeems = async () => {
-        setTotalFailedRedeems(12);
-    };
-
-    const fetchRedeemRequests = async () => {
-        setRedeemRequests([
-            {
-                id: "0xtestmock",
-                amountPolkaBTC: "1.5",
-                creation: "18743",
-                btcAddress: "tb1qhz...dknu33d",
-                vaultDotAddress: "5DAAnr...m3PTXFy",
-                btcTxId: "d218f5...3f29af",
-                confirmations: 0,
-                completed: false,
-                cancelled: false,
-                isExpired: false,
-                reimbursed: false,
-                fee: "15",
-            },
-        ]);
-    };
-
-    const fetchRedeemsLastDays = async () => {
-        setRedeemsLastDays(
-            [0, 1, 2, 3, 4, 5, 6].map((d) => ({ date: new Date(Date.now() - d * 86400000), amount: 50 - d }))
-        );
-    };
-
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchTotalSuccessfulRedeems = async () => {
+            setTotalSuccessfulRedeems(443);
+        };
+
+        const fetchTotalFailedRedeems = async () => {
+            setTotalFailedRedeems(12);
+        };
+
+        const fetchRedeemRequests = async () => {
+            setRedeemRequests([
+                {
+                    id: "0xtestmock",
+                    amountPolkaBTC: "1.5",
+                    creation: "18743",
+                    btcAddress: "tb1qhz...dknu33d",
+                    vaultDotAddress: "5DAAnr...m3PTXFy",
+                    btcTxId: "d218f5...3f29af",
+                    confirmations: 0,
+                    completed: false,
+                    cancelled: false,
+                    isExpired: false,
+                    reimbursed: false,
+                    fee: "15",
+                },
+            ]);
+        };
+
+        const fetchRedeemsLastDays = async () => {
+            setCumulativeRedeemsPerDay(
+                [0, 1, 2, 3, 4, 5, 6].map((d) => ({ date: new Date(Date.now() - d * 86400000), amount: 50 - d }))
+            );
+        };
+
+        (async () => {
             if (!polkaBtcLoaded) return;
             await Promise.all([
                 fetchTotalSuccessfulRedeems(),
@@ -69,9 +69,8 @@ export default function RedeemsDashboard(): ReactElement {
                 fetchRedeemRequests(),
                 fetchRedeemsLastDays(),
             ]);
-        };
-        fetchData();
-    }, [polkaBtcLoaded, redeemRequests, t]);
+        })();
+    }, [polkaBtcLoaded]);
 
     return (
         <div className="dashboard-page container-fluid white-background">
@@ -96,7 +95,10 @@ export default function RedeemsDashboard(): ReactElement {
                                     <p>Placeholder - redeem success rate (currently {redeemSuccessRate}</p>
                                 </div>
                                 <div className="col-md-4">
-                                    <p>Placeholder: double line chart, total and per day redeem requests</p>
+                                    <p>
+                                        Placeholder: double line chart, total and per day redeem requests. Currently{" "}
+                                        {cumulativeRedeemsPerDay.toString()} and {pointRedeemsPerDay.toString()}.
+                                    </p>
                                 </div>
                             </div>
                         </div>

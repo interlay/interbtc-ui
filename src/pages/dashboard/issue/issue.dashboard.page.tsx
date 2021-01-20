@@ -6,58 +6,56 @@ import IssueTable from "./issue-table/issue-table";
 import { StoreType } from "../../../common/types/util.types";
 import { IssueRequest } from "../../../common/types/issue.types";
 
-export default function IssuesDashboard(): ReactElement {
+export default function IssueDashboard(): ReactElement {
     const { polkaBtcLoaded, totalPolkaBTC } = useSelector((state: StoreType) => state.general);
     const { t } = useTranslation();
 
     const [totalSuccessfulIssues, setTotalSuccessfulIssues] = useState("0");
     const [issueRequests, setIssueRequests] = useState(new Array<IssueRequest>());
-    const [issuesLastDays, setIssuesLastDays] = useState(new Array<{ date: Date; amount: number }>());
-    const issuesPerDay = useMemo(
+    const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: Date; amount: number }>());
+    const pointIssuesPerDay = useMemo(
         () =>
-            issuesLastDays.map((dataPoint, i) => {
+            cumulativeIssuesPerDay.map((dataPoint, i) => {
                 if (i === 0) return 0;
-                return dataPoint.amount - issuesLastDays[i - 1].amount;
+                return dataPoint.amount - cumulativeIssuesPerDay[i - 1].amount;
             }),
-        [issuesLastDays]
+        [cumulativeIssuesPerDay]
     );
 
-    const fetchTotalSuccessfulIssues = async () => {
-        setTotalSuccessfulIssues("443");
-    };
-
-    const fetchIssueRequests = async () => {
-        setIssueRequests([
-            {
-                id: "0xtestmock",
-                amountBTC: "1.5",
-                creation: "",
-                vaultBTCAddress: "tb1qhz...dknu33d",
-                vaultDOTAddress: "5DAAnr...m3PTXFy",
-                transactionBlockHeight: 18674,
-                btcTxId: "d218f5...3f29af",
-                confirmations: 0,
-                completed: false,
-                cancelled: false,
-                fee: "15",
-                griefingCollateral: "0.5",
-            },
-        ]);
-    };
-
-    const fetchIssuesLastDays = async () => {
-        setIssuesLastDays(
-            [0, 1, 2, 3, 4, 5, 6].map((d) => ({ date: new Date(Date.now() - d * 86400000), amount: 50 - d }))
-        );
-    };
-
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchTotalSuccessfulIssues = async () => {
+            setTotalSuccessfulIssues("443");
+        };
+
+        const fetchIssueRequests = async () => {
+            setIssueRequests([
+                {
+                    id: "0xtestmock",
+                    amountBTC: "1.5",
+                    creation: "",
+                    vaultBTCAddress: "tb1qhz...dknu33d",
+                    vaultDOTAddress: "5DAAnr...m3PTXFy",
+                    transactionBlockHeight: 18674,
+                    btcTxId: "d218f5...3f29af",
+                    confirmations: 0,
+                    completed: false,
+                    cancelled: false,
+                    fee: "15",
+                    griefingCollateral: "0.5",
+                },
+            ]);
+        };
+
+        const fetchIssuesLastDays = async () => {
+            setCumulativeIssuesPerDay(
+                [0, 1, 2, 3, 4, 5, 6].map((d) => ({ date: new Date(Date.now() - d * 86400000), amount: 50 - d }))
+            );
+        };
+        (async () => {
             if (!polkaBtcLoaded) return;
             await Promise.all([fetchTotalSuccessfulIssues(), fetchIssueRequests(), fetchIssuesLastDays()]);
-        };
-        fetchData();
-    }, [polkaBtcLoaded, issueRequests, t]);
+        })();
+    }, [polkaBtcLoaded]);
 
     return (
         <div className="dashboard-page container-fluid white-background">
@@ -79,7 +77,10 @@ export default function IssuesDashboard(): ReactElement {
                                     </p>
                                 </div>
                                 <div className="col-md-4">
-                                    <p>Placeholder: double line chart, total and per day issue requests</p>
+                                    <p>
+                                        Placeholder: double line chart, total and per day issue requests. Currently{" "}
+                                        {cumulativeIssuesPerDay.toString()} and {pointIssuesPerDay.toString()}.
+                                    </p>
                                 </div>
                             </div>
                         </div>

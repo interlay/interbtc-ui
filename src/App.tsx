@@ -43,8 +43,8 @@ import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
 import VaultsDashboard from "./pages/dashboard/vaults/vaults.dashboard.page";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType, ParachainStatus } from "./common/types/util.types";
-import IssuesDashboard from "./pages/dashboard/issues/issues.dashboard.page";
-import RedeemsDashboard from "./pages/dashboard/redeems/redeems.dashboard.page";
+import IssueDashboard from "./pages/dashboard/issue/issue.dashboard.page";
+import RedeemDashboard from "./pages/dashboard/redeem/redeem.dashboard.page";
 
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
@@ -234,13 +234,13 @@ export default function App(): ReactElement {
                         </Route>
                     )}
                     {!constants.STATIC_PAGE_ONLY && (
-                        <Route path="/dashboard/issues">
-                            <IssuesDashboard />
+                        <Route path="/dashboard/issue">
+                            <IssueDashboard />
                         </Route>
                     )}
                     {!constants.STATIC_PAGE_ONLY && (
-                        <Route path="/dashboard/redeems">
-                            <RedeemsDashboard />
+                        <Route path="/dashboard/redeem">
+                            <RedeemDashboard />
                         </Route>
                     )}
                     {!constants.STATIC_PAGE_ONLY && (
