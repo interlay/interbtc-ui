@@ -150,12 +150,9 @@ testdata-gen --keyring bob register-vault --btc-address "bcrt1qu0a2tc422uurm39g4
 Then when `alice` wants to issue 0.001 PolkaBTC, we need to send the equivalent number of Satoshis to `bob`:
 
 ```shell
-testdata-gen --keyring alice send-bitcoin --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --op-return ${OP_RETURN} --satoshis 100000
+testdata-gen --keyring alice send-bitcoin --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --satoshis 100000
 ```
 
-> Set `${OP_RETURN}` to the value presented on the confirmation page of the UI.
-
-Copy the `txid` printed by the `send-bitcoin` command and use this in the UI to execute the issue request.
 
 ### Local Installation
 

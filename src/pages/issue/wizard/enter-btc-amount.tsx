@@ -61,7 +61,9 @@ export default function EnterBTCAmount() {
             toast.success("Found vault: " + vaultId.toString());
             // get the vault's data
             const vault = await window.polkaBTC.vaults.get(vaultId);
-            const vaultBTCAddress = vault.wallet.address;
+            let vaultBTCAddress = vault.wallet.btcAddress;
+            vaultBTCAddress = vaultBTCAddress ? vaultBTCAddress : "";
+
 
             const fee = await window.polkaBTC.issue.getFeesToPay(amountBTC);
             dispatch(updateIssueFeeAction(fee));

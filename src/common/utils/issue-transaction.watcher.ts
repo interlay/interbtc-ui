@@ -33,8 +33,7 @@ export async function updateTransactionStatusIssue(
             const fetchedRequest = parachainToUIIssueRequest(requestId, parachainRequest);
 
             if (!requestToUpdate.btcTxId) {
-                const btcTxId = await window.polkaBTC.btcCore.getTxIdByOpReturn(
-                    request.id,
+                const btcTxId = await window.polkaBTC.btcCore.getTxIdByRecipientAddress(
                     request.vaultBTCAddress,
                     request.amountBTC
                 );

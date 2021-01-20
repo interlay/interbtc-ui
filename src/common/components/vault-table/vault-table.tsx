@@ -94,7 +94,7 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                     console.log(error);
                 }
 
-                let btcAddress = vault.wallet.address;
+                let btcAddress = vault.wallet.btcAddress;
 
                 const balanceLockedPlanck = await window.polkaBTC.collateral.balanceLockedDOT(accountId);
                 const balanceLockedDOT = planckToDOT(balanceLockedPlanck.toString());
