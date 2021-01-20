@@ -1,5 +1,5 @@
 import React from "react";
-import { FormGroup, Modal } from "react-bootstrap";
+import { FormGroup, ListGroup, ListGroupItem, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import  QRCode from "qrcode.react";
 import { StoreType } from "../../../common/types/util.types";
@@ -46,6 +46,20 @@ export default function BTCPayment(props: BTCPaymentProps) {
                     <p>
                         {t("issue_page.exactly_one_payment")}
                     </p>
+                    <FormGroup>
+                        <ListGroup>
+                            <ListGroupItem>
+                                {t("issue_page.recipient")} <strong>{vaultBtcAddress}</strong>
+                            </ListGroupItem>
+                            <ListGroupItem>
+                                {t("issue_page.amont_with_fee")}
+                                <strong>
+                                    {amountBTCwithFee + "BTC (" + amountMBTCwithFee + "mBTC)"}
+                                </strong>
+                            </ListGroupItem>
+                        </ListGroup>
+                    </FormGroup>
+
                     <div className="row justify-content-center">
                         <div className="col-3">
                             <QRCode value={'bitcoin:' + vaultBtcAddress + '?amount=' + amountMBTCwithFee} />,

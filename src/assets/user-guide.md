@@ -19,11 +19,9 @@ You will need a Bitcoin testnet wallet to test PolkaBTC.
 Please note: manual transaction signing via hardware wallets is WIP and will be released before Beta testnet (Ledger). 
 
 ##### Supported Bitcoin Address Formats
-We currently support the following **testnet** BTC address formats:
+We currently support the following **testnet** BTC address types (**in bech32 format**):
 - P2WPKH
 - P2WSH
-
-**in bech32 format**. 
 
 Support for legacy address formats will be added later. 
 
@@ -49,6 +47,7 @@ You will need the Polkadot-js browser extension to test PolkaBTC.
 3.   Connect account to polkaBTC.io via the Polkadot.js pop-up.
 
 **Please make sure to first create an account before connecting your wallet to polkaBTC.io!**. 
+
 
 ### Getting Testnet DOT
 
@@ -83,7 +82,7 @@ To issue PolkaBTC, follow the “Issue PolkaBTC” button on the Issue page. In 
 3. Once you have made the BTC payment, continue to the next page.
 4. Enter the TXID of your Bitcoin transaction and close the dialogue. 
 5. Wait. Once your transaction is included in Bitcoin and has gained sufficient confirmations, a button to finalize the issue process in the table. 
-6. Click on this “Execute” button to finalize the Issue process and claim your PolkaBTC. 
+6. Click on the “Execute” button to finalize the Issue process and claim your PolkaBTC. 
 
 
 <div id="redeem"></div>
@@ -110,7 +109,7 @@ To redeem PolkaBTC, follow the “Redeem PolkaBTC” button on the Redeem page. 
 1. Enter the amount of PolkaBTC that you want to redeem.
     1. A Vault will be assigned to you for this request. 
     2. The maximum amount of PolkaBTC that you can redeem at in a single request depends on the maximum amount of BTC a Vault has locked (high-volume Redeem requests, executed with multiple Vaults simultaneously, will be added as a feature before mainnet launch).
-2. Enter your Bitcoin address. Supported address formats: P2WPKH, P2WSH **currently in bech32 format only!**. 
+2. Enter your Bitcoin address. Supported address types: P2WPKH, P2WSH **currently in bech32 format only!**. 
 3. Review and confirm the Redeem request.
 4. The Redeem request is now being processed by the Vault. Updates will appear in the table on the Redeem page. 
 
