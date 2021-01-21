@@ -1,45 +1,50 @@
 @import "./variables";
 
- @mixin mobile-range {
+@mixin mobile-range {
     @media (max-width: $mobile-large-size) {
-       @content;
+        @content;
     }
- }
- 
- @mixin tablet-range {
-    @media (max-width: $tablet-size) {
-       @content;
-    }
- }
- 
- @mixin small-desktop-range {
-    @media (max-width: $desktop-size) {
-       @content;
-    }
- }
+}
 
- @mixin large-desktop-range {
-    @media (min-width: $desktop-size +1) {
-       @content;
+@mixin tablet-range {
+    @media (max-width: $tablet-size) {
+        @content;
     }
- }
+}
+
+@mixin small-desktop-range {
+    @media (max-width: $desktop-size) {
+        @content;
+    }
+}
+
+@mixin large-desktop-range {
+    @media (min-width: $desktop-size +1) {
+        @content;
+    }
+}
 
 @mixin font-fam($font-family, $font-file) {
-   @font-face {
-      font-family: $font-family;
-     src:url($font-file+'.ttf') format('truetype');
-     //  url($font-file+'.woff') format('woff'),
-     //  url($font-file+'.svg#'+$font-family) format('svg');
-     font-weight: normal;
-     font-style: normal;
-   }
- }
+    @font-face {
+        font-family: $font-family;
+        src: url($font-file + ".ttf") format("truetype");
+        //  url($font-file+'.woff') format('woff'),
+        //  url($font-file+'.svg#'+$font-family) format('svg');
+        font-weight: normal;
+        font-style: normal;
+    }
+}
 
- @mixin button-variant(
-  $background,
-  $border,
-  $hover-background,
-  $hover-border,
-  $active-background,
-  $active-border
-){}
+@mixin button-variant($background, $border, $hover-background, $hover-border, $active-background, $active-border) {
+}
+
+//Dashboard
+@mixin justifyCenter {
+    display: flex;
+    justify-content: center;
+}
+
+@mixin flexCenter {
+    @include justifyCenter();
+    align-items: center;
+}

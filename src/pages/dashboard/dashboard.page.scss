@@ -4,124 +4,54 @@
 .dashboard-page {
     text-align: center;
     min-height: 100vh;
-
-    .dashboard-container {
-        max-width: calc(100vw - 30px);
-        overflow-x: scroll;
-        padding: 0px 15px;
-    }
-
-    .dashboard-button {
-        margin-top: 20px;
-    }
-
-    .title {
-        width: 100%;
-        text-align: center;
-        font-size: 2rem;
-        margin-top: 2rem;
-        font-weight: 600;
-    }
-
-    .small-text {
-        font-size: 0.8rem;
-    }
-
-    .table-wrapper {
-        width: 100%;
-        table {
-            table-layout: auto;
-            width: 1200px;
-            margin: auto;
-            overflow: scroll;
-            text-align: center;
-        }
-
-        th,
-        td {
-            padding: 5px 10px;
-            border: 1px solid #ddd;
-
-            i {
-                color: rgba(0, 0, 0, 0.5);
-            }
-            p {
-                margin: 0px;
-            }
-        }
-
-        td.break-words {
-            word-break: break-all;
-        }
-
-        thead {
-            background-color: #eaeaea;
-        }
-    }
-
-    .header {
-        font-weight: 600;
-        font-size: 1.2rem;
-        margin-top: 2rem;
-    }
-
-    .report-button-wrapper {
-        padding-top: 2rem;
-        width: 100%;
-        margin: auto;
-        text-align: center;
-    }
-
-    .staked-relayer-table {
-        margin-bottom: 80px;
-    }
-
-    .de-note {
-        margin-top: 20px;
-        margin-bottom: 50px;
-    }
-
-    @include mobile-range {
-        .de-note {
-            margin-bottom: 100px;
-        }
-        .staked-relayer-table {
-            margin-bottom: 150px;
-        }
-    }
-
-    @include tablet-range {
-        .de-note {
-            margin-bottom: 100px;
-        }
-        .staked-relayer-table {
-            margin-bottom: 150px;
-        }
-    }
+    background-color: #fafafa;
+    @include justifyCenter();
 }
-
-.vote-label {
-    font-weight: 600;
-}
-
-.dashboard-fade-in-animation {
-    animation: dashboard-fade 0.5s ease-in;
-}
-
-@keyframes dashboard-fade {
-    0% {
-        opacity: 0;
+.card {
+    width: 330px;
+    height: 300px;
+    background-color: white;
+    border: none;
+    border-radius: 10;
+    padding: 15px 20px;
+    h1 {
+        color: $d-yellow;
+        font-family: airbnb-cereal-bold;
+        font-size: 16px;
     }
-    20% {
-        opacity: 0;
+    h2 {
+        color: black;
+        opacity: 0.5;
+        font-size: 16px;
+        font-family: airbnb-cereal-bold;
     }
-    100% {
-        opacity: 1;
+    h3 {
+        font-size: 8px;
+        font-family: airbnb-cereal-bold;
+        text-transform: uppercase;
+        margin-bottom: 0rem;
     }
-}
-
-
-
-.main .jumbotron {
-    border-radius: 0px;
+    .values-container {
+        text-align: left;
+    }
+    button {
+        background-color: white;
+        border-radius: 8px;
+        width: 130px;
+        padding: 10px 24px;
+    }
+    .button-assets-container {
+        display: flex;
+        align-items: flex-start;
+        vertical-align: middle;
+    }
+    .external-link {
+        margin-left: 3px;
+        filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%);
+    }
+    .card-top-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 }
