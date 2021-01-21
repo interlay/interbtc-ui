@@ -1205,10 +1205,10 @@
   resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.2.9.tgz#4ab078bf57822f6a3245b223caed95f5316165bf"
   integrity sha512-UqtyQ2N+SPXCGdW8/uu3L6TFY3dS2ACJSUGxixxsmwSMtKS0Gnmc0+GE2F1IinUKIP0g17ZS7RA3LN1J0NxLAw==
 
-"@interlay/polkabtc@^0.6.18":
-  version "0.6.18"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.6.18.tgz#4829117f4336327b69556a6a3845ac19938f8503"
-  integrity sha512-cHHrgic/ST0ksyzxnq7s+6wyZt4GyXqXwObwf1J2yxo7inYhm7EURgZyb3N78FTHnatwcmcnstDeJmN+8WvtMA==
+"@interlay/polkabtc@0.6.19":
+  version "0.6.19"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.6.19.tgz#d32b203d9d66b3fed435225ff894cdb0ac89a94a"
+  integrity sha512-sdIr8N57BKe0kIYopB+BT56u72Fg7qbJsZNJMN5R5K1l3IQl2GA2nobgbJtD4xZNyM5zNh5u/j7UW5LGvrFeaA==
   dependencies:
     "@interlay/esplora-btc-api" "^0.3.3"
     "@interlay/polkabtc-types" "0.2.9"
@@ -3302,7 +3302,7 @@ babel-register@^6.26.0:
     mkdirp "^0.5.1"
     source-map-support "^0.4.15"
 
-babel-runtime@^6.22.0, babel-runtime@^6.26.0, babel-runtime@^6.6.1:
+babel-runtime@^6.22.0, babel-runtime@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
   integrity sha1-llxwWGaOgrVde/4E/yM3vItWR/4=
@@ -4259,11 +4259,6 @@ colorette@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/colorette/-/colorette-1.2.1.tgz#4d0b921325c14faf92633086a536db6e89564b1b"
   integrity sha512-puCDz0CzydiSYOrnXpz/PKd69zRrribezjtE9yd4zvytoRc8+RY/KJPvtPFKZS3E3wP6neGyMe0vOTlHO5L3Pw==
-
-colors@^1.1.2:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/colors/-/colors-1.4.0.tgz#c50491479d4c1bdaed2c9ced32cf7c7dc2360f78"
-  integrity sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==
 
 combined-stream@^1.0.6, combined-stream@^1.0.8, combined-stream@~1.0.6:
   version "1.0.8"
@@ -11908,14 +11903,6 @@ require-directory@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/require-directory/-/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
   integrity sha1-jGStX9MNqxyXbiNE/+f3kqam30I=
-
-require-hacker@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/require-hacker/-/require-hacker-3.0.1.tgz#0879be067fcf067530665bcce4c89ac81a870477"
-  integrity sha1-CHm+Bn/PBnUwZlvM5MiayBqHBHc=
-  dependencies:
-    babel-runtime "^6.6.1"
-    colors "^1.1.2"
 
 require-main-filename@^1.0.1:
   version "1.0.1"
