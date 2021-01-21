@@ -4,11 +4,10 @@ import ButtonMaybePending from "../../../common/components/pending-button";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { updateBTCAddressAction, updateCollateralAction } from "../../../common/actions/vault.actions";
+import { updateCollateralAction } from "../../../common/actions/vault.actions";
 import { planckToDOT, dotToPlanck } from "@interlay/polkabtc";
 import { StoreType } from "../../../common/types/util.types";
 import BN from "bn.js";
-import { BtcNetwork } from "../../../common/utils/utils";
 import { useTranslation } from 'react-i18next';
 
 
@@ -38,14 +37,13 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
             if (collateralAsPlanck === undefined) {
                 throw new Error("Collateral is smaller than 1 planck");
             }
-            const address = await window.vaultClient.registerVault(collateralAsPlanck, BtcNetwork);
+            await window.vaultClient.registerVault(collateralAsPlanck);
             const accountId = await window.vaultClient.getAccountId();
             const vaultId = window.polkaBTC.api.createType("AccountId", accountId);
             const collateralPlanck = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
             const collateralDot = new BN(planckToDOT(collateralPlanck.toString()));
             props.onRegister();
 
-            dispatch(updateBTCAddressAction(address));
             dispatch(updateCollateralAction(collateralDot + collateral));
 
             toast.success("Successfully registered");

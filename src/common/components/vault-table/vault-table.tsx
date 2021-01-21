@@ -5,7 +5,6 @@ import { updatePremiumVaultAction } from "../../actions/vault.actions";
 import * as constants from "../../../constants";
 import { planckToDOT, satToBTC, roundTwoDecimals } from "@interlay/polkabtc";
 import { shortAddress } from "../../utils/utils";
-import BitcoinAddress from "../bitcoin-links/address";
 import { Button, Modal } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import RedeemWizard from "../../../pages/redeem/wizard/redeem-wizard";
@@ -94,7 +93,7 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                     console.log(error);
                 }
 
-                let btcAddress = vault.wallet.address;
+                let btcAddress = vault.wallet.btcAddress;
 
                 const balanceLockedPlanck = await window.polkaBTC.collateral.balanceLockedDOT(accountId);
                 const balanceLockedDOT = planckToDOT(balanceLockedPlanck.toString());
@@ -234,7 +233,6 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                             <thead>
                                 <tr>
                                     <th>{t("account_id")}</th>
-                                    <th>{t("btc_address")}</th>
                                     <th>{t("locked_dot")}</th>
                                     <th>{t("locked_btc")}</th>
                                     <th>
@@ -261,9 +259,6 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                                         return (
                                             <tr key={index}>
                                                 <td>{shortAddress(vault.vaultId)}</td>
-                                                <td className="break-words">
-                                                    <BitcoinAddress shorten={true} btcAddress={vault.btcAddress} />
-                                                </td>
                                                 <td>{vault.lockedDOT}</td>
                                                 <td>{vault.lockedBTC}</td>
                                                 <td>{vault.pendingBTC}</td>
@@ -284,7 +279,7 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                             ) : (
                                 <tbody>
                                     <tr>
-                                        <td colSpan={7}>{t("no_registered_vaults")}</td>
+                                        <td colSpan={6}>{t("no_registered_vaults")}</td>
                                     </tr>
                                 </tbody>
                             )}

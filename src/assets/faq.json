@@ -26,16 +26,11 @@
     },
     {
         "id" : 6,
-        "question" : "What is “OP_RETURN” and what does PolkaBTC use this for?",
-        "answer": "OP_RETURN is a Bitcoin opcode used to attach data to a Bitcoin transaction. PolkaBTC currently uses OP_RETURN to link Bitcoin payments to specific Issue or Redeem request (protection against replay attacks).         Note: a more UX-friendly measure has been developed and will replace OP_RETURN before mainnet launch."
-    },
-    {
-        "id" : 7,
         "question" : "Has PolkaBTC been audited?",
         "answer": "PolkaBTC will undergo an audit before launch."
     },
     {
-        "id" : 8,
+        "id" : 7,
         "question" : "Why is PolkaBTC better than other BTC bridges?",
         "answer": "PolkaBTC is based on XCLAIM - a top-tier, peer-reviewed research paper. PolkaBTC is fully permissionless and decentralized: anyone can become a Vault without asking for permission and you can run your own Vault. PolkaBTC uses collateralization and cross-chain SPV proofs to guarantee that users never face financial damage.  Some projects rely on centralized parties, making them vulnerable to theft, seizure, and censorship. Other projects use techniques similar to PolkaBTC, but are permissioned, rely on complex and non-battle-tested cryptographic protocols, or heavily rely on the price of their governance token for security of user funds."
     }
