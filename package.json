@@ -1,9 +1,9 @@
 {
     "name": "polkabtc-ui",
-    "version": "0.3.7",
+    "version": "0.3.8",
     "private": true,
     "dependencies": {
-        "@interlay/polkabtc": "^0.7.0",
+        "@interlay/polkabtc": "0.7.1",
         "@polkadot/api": "2.8.1",
         "@polkadot/extension-dapp": "0.35.1",
         "@polkadot/ui-keyring": "0.63.1",
@@ -22,6 +22,7 @@
         "big.js": "^6.0.1",
         "bitcoinjs-lib": "^5.2.0",
         "bootstrap": "^4.5.0",
+        "chart.js": "^2.9.4",
         "i18next": "^19.8.4",
         "i18next-browser-languagedetector": "^6.0.1",
         "i18next-http-backend": "^1.0.21",
@@ -30,6 +31,7 @@
         "react": "^16.13.1",
         "react-app-rewired": "^2.1.8",
         "react-bootstrap": "^1.0.1",
+        "react-chartjs-2": "^2.11.1",
         "react-copy-to-clipboard": "^5.0.2",
         "react-dom": "^16.13.1",
         "react-hook-form": "^6.8.4",

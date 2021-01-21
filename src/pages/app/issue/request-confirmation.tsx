@@ -53,7 +53,7 @@ export default function RequestConfirmation() {
                 amountBTC: amountBTC,
                 creation: issueRequest.opentime.toString(),
                 vaultBTCAddress: vaultBtcAddress,
-                vaultDOTAddress: vaultDotAddress,
+                vaultDOTAddress: "",
                 btcTxId: "",
                 fee: fee,
                 griefingCollateral,

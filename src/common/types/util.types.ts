@@ -66,3 +66,8 @@ export type dispatcher = {
 
 export type StoreState = Store<CombinedState<StoreType>, GeneralActions | RedeemActions | IssueActions | VaultActions> &
     dispatcher;
+
+export type TimeDataPoint = {
+    x: Date;
+    y: number;
+};

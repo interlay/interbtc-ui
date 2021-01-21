@@ -78,8 +78,7 @@ export default function IssueRequests() {
                 await Promise.all(
                     allRequests.map(async (request) => {
                         try {
-                            request.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpReturn(
-                                request.id,
+                            request.btcTxId = await window.polkaBTC.btcCore.getTxIdByRecipientAddress(
                                 request.vaultBTCAddress,
                                 request.amountBTC
                             );
@@ -129,8 +128,7 @@ export default function IssueRequests() {
         try {
             // get proof data from bitcoin
             if (txId === "") {
-                txId = await window.polkaBTC.btcCore.getTxIdByOpReturn(
-                    request.id,
+                txId = await window.polkaBTC.btcCore.getTxIdByRecipientAddress(
                     request.vaultBTCAddress,
                     request.amountBTC
                 );

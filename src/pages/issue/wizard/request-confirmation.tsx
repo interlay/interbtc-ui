@@ -8,6 +8,7 @@ import {
     changeIssueIdAction,
     changeIssueStepAction,
     addIssueRequestAction,
+    changeVaultBtcAddressOnIssueAction,
 } from "../../../common/actions/issue.actions";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { IssueRequest } from "../../../common/types/issue.types";
@@ -41,6 +42,10 @@ export default function RequestConfirmation() {
             const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultDotAddress);
             const requestResult = await window.polkaBTC.issue.request(amount, vaultAccountId);
 
+            let vaultBTCAddress = requestResult.vault.wallet.btcAddress;
+            vaultBTCAddress = vaultBTCAddress ? vaultBTCAddress : "";
+            dispatch(changeVaultBtcAddressOnIssueAction(stripHexPrefix(vaultBTCAddress)));
+
             // get the issue id from the request issue event
             const id = stripHexPrefix(requestResult.id.toString());
             const issueRequest = await window.polkaBTC.issue.getRequestById(id);
@@ -53,7 +58,7 @@ export default function RequestConfirmation() {
                 amountBTC: amountBTC,
                 creation: issueRequest.opentime.toString(),
                 vaultBTCAddress: vaultBtcAddress,
-                vaultDOTAddress: vaultDotAddress,
+                vaultDOTAddress: "",
                 btcTxId: "",
                 fee: fee,
                 griefingCollateral,
@@ -88,9 +93,6 @@ export default function RequestConfirmation() {
                         <ListGroup>
                             <ListGroupItem>
                                 {t("issue_page.issuing")} <strong>{amountBTC} PolkaBTC</strong>
-                            </ListGroupItem>
-                            <ListGroupItem>
-                                {t("issue_page.vault_btc_address")}: <strong>{vaultBtcAddress}</strong>
                             </ListGroupItem>
                             <ListGroupItem>
                                 {t("issue_page.fees")} <strong>{fee} PolkaBTC</strong>
