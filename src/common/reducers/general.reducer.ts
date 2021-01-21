@@ -54,6 +54,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
                 extensions: [],
                 accounts: [],
                 stateOfBTCParachain: ParachainStatus.Shutdown,
+                activeTab: ActiveTab.Issue,
             };
         case INIT_GENERAL_DATA_ACTION:
             return {

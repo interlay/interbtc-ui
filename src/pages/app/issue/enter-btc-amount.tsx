@@ -60,7 +60,7 @@ export default function EnterBTCAmount() {
             toast.success("Found vault: " + vaultId.toString());
             // get the vault's data
             const vault = await window.polkaBTC.vaults.get(vaultId);
-            const vaultBTCAddress = vault.wallet.address;
+            const vaultBTCAddress = vault.wallet.addresses[0];
 
             const fee = await window.polkaBTC.issue.getFeesToPay(amountBTC);
             dispatch(updateIssueFeeAction(fee));
@@ -79,40 +79,27 @@ export default function EnterBTCAmount() {
 
     return (
         <form onSubmit={onSubmit}>
-            <p>
-                {t("issue_page.enter-polkabtc-amount-desc-1")}
-                <br />
-                {t("issue_page.enter-polkabtc-amount-desc-2")}
-                <br />
-                <br />
-                {t("issue_page.enter-polkabtc-amount-desc-3")} ({dustValue} BTC).
-            </p>
             <div className="row">
-                <div className="col-12 basic-addon">
-                    <div className="input-group">
-                        <input
-                            name="amountBTC"
-                            type="float"
-                            className={"form-control custom-input" + (errors.amountBTC ? " error-borders" : "")}
-                            ref={register({
-                                required: true,
-                                validate: (value) => {
-                                    const message =
-                                        value > 1
-                                            ? t("issue_page.validation_max_value")
-                                            : value < Number(dustValue)
-                                            ? t("issue_page.validation_min_value") + dustValue + "BTC)."
-                                            : undefined;
-                                    return message;
-                                },
-                            })}
-                        />
-                        <div className="input-group-append">
-                            <span className="input-group-text" id="basic-addon2">
-                                PolkaBTC
-                            </span>
-                        </div>
-                    </div>
+                <div className="col-6">
+                    <input
+                        id="amount-btc-input"
+                        name="amountBTC"
+                        type="float"
+                        placeholder="0.00"
+                        className={"" + (errors.amountBTC ? " error-borders" : "")}
+                        ref={register({
+                            required: true,
+                            validate: (value) => {
+                                const message =
+                                    value > 1
+                                        ? t("issue_page.validation_max_value")
+                                        : value < Number(dustValue)
+                                        ? t("issue_page.validation_min_value") + dustValue + "BTC)."
+                                        : undefined;
+                                return message;
+                            },
+                        })}
+                    />
                     {errors.amountBTC && (
                         <div className="input-error">
                             {errors.amountBTC.type === "required"
@@ -121,13 +108,24 @@ export default function EnterBTCAmount() {
                         </div>
                     )}
                 </div>
+                <div className="col-6">
+                    PolkaBTC
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-6">
+                    {t("issue_page.by_locking")}
+                </div>
+                <div className="col-6">
+                    BTC
+                </div>
             </div>
             <ButtonMaybePending
-                className="btn btn-primary float-right"
+                className="btn btn-primary app-btn"
                 isPending={isRequestPending}
                 onClick={onSubmit}
             >
-                {t("search_vault")}
+                {t("next")}
             </ButtonMaybePending>
         </form>
     );

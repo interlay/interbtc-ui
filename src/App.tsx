@@ -32,7 +32,6 @@ import "react-toastify/dist/ReactToastify.css";
 import Topbar from "./common/components/topbar";
 import Footer from "./common/components/footer/footer";
 import AppPage from "./pages/app/app.page";
-import IssuePage from "./pages/issue/issue.page";
 import RedeemPage from "./pages/redeem/redeem.page";
 import AboutPage from "./pages/about.page";
 import FaqPage from "./pages/faq.page";
@@ -212,17 +211,7 @@ export default function App(): ReactElement {
                         requestDOT={requestDotFromFaucet}
                     />
                 )}
-                <Switch>
-                    {!constants.STATIC_PAGE_ONLY && (
-                        <Route path="/main">
-                            <AppPage />
-                        </Route>
-                    )}
-                    {!constants.STATIC_PAGE_ONLY && (
-                        <Route path="/issue">
-                            <IssuePage />
-                        </Route>
-                    )}
+                <Switch>                    
                     {!constants.STATIC_PAGE_ONLY && (
                         <Route path="/redeem">
                             <RedeemPage />

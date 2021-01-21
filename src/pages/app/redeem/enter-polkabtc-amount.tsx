@@ -83,7 +83,7 @@ export default function EnterPolkaBTCAmount() {
                 vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountAsSatoshi);
                 // get the vault's data
                 const vault = await window.polkaBTC.vaults.get(vaultId);
-                vaultBTCAddress = vault.wallet.address;
+                vaultBTCAddress = vault.wallet.addresses[0];
             }
             // toast.success("Found vault: " + vaultId.toString());
 

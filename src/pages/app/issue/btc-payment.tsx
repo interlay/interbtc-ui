@@ -9,7 +9,7 @@ import Big from "big.js";
 import { useTranslation } from "react-i18next";
 
 export default function BTCPayment() {
-    const { amountBTC, fee, wizardInEditMode, vaultBtcAddress } = useSelector((state: StoreType) => state.issue);
+    const { amountBTC, fee, vaultBtcAddress } = useSelector((state: StoreType) => state.issue);
     const { t } = useTranslation();
 
     const amountBTCwithFee = new Big(fee).add(new Big(amountBTC));
@@ -23,34 +23,53 @@ export default function BTCPayment() {
 
     const dispatch = useDispatch();
 
-    const goToPreviousStep = () => {
-        dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
-    };
-
     const submit = () => {
-        dispatch(changeIssueStepAction("BTC_PAYMENT_CONFIRMATION"));
+        dispatch(changeIssueStepAction("ENTER_BTC_AMOUNT"));
     };
 
     return <React.Fragment>
         <FormGroup>
-            <p>
-                {t("issue_page.issuing",{amountBTC})}
-            </p>
-            <p>
-                {t("issue_page.exactly_one_payment")}
-            </p>
-            <div className="row justify-content-center">
-                <div className="col-3">
-                    <QRCode value={'bitcoin:' + vaultBtcAddress + '?amount=' + amountMBTCwithFee} />,
+            <div className="row payment-title">
+                <div className="col">
+                    {t("deposit")} &nbsp; {amountBTC} &nbsp; BTC 
                 </div>
             </div>
+            <div className="row payment-description">
+                <div className="col">
+                    {t("issue_page.single_transaction")}
+                </div>
+            </div>
+            <div className="row ">
+                <div className="col payment-address">
+                    <span>{vaultBtcAddress}</span>
+                </div>
+            </div>
+            <div className="row payment-timer-with">
+                <div className="col">{t("issue_page.within")}</div>
+            </div>
+            <div className="row payment-timer">
+                <div className="col">24h</div>
+            </div>
+            <div className="row justify-content-center">
+                <div className="col-3">
+                    <QRCode value={'bitcoin:' + vaultBtcAddress + '?amount=' + amountMBTCwithFee} />
+                </div>
+            </div>
+            <div className="row ledger-wrapper">
+                <div className="col">{t("issue_page.pay_with")}</div>
+            </div>
+
+            <div className="row justify-content-center">
+            <div className="col ledger-wrapper">
+                <div className="ledger-logo-wrapper">
+                    <div className="ledger-logo">
+                    </div>
+                </div>
+            </div>
+        </div>
         </FormGroup>
-        {!wizardInEditMode && (
-            <button className="btn btn-secondary float-left" onClick={goToPreviousStep}>
-                {t("previous")}
-            </button>
-        )}
-        <button className="btn btn-primary float-right" onClick={submit}>
+
+        <button className="btn btn-primary app-btn" onClick={submit}>
             {t("issue_page.made_payment")}
         </button>
     </React.Fragment>;

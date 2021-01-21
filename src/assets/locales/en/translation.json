@@ -69,6 +69,8 @@
     "no_pending_status": "No pending status updates",
     "bridge_fee": "Bridge fee",
     "total_deposit": "Total Deposit",
+    "deposit": "Deposit",
+    "received": "Received",
     "redeem_page": {
         "retried": "Retried",
         "error_in_parachain": "You can't redeem PolkaBTC at the moment because the Parachain has encountered errors and recovering.",
@@ -132,6 +134,13 @@
         "capacity": "Capacity"
     },
     "issue_page": {
+        "issuing_title": "Issuing",
+        "by_locking": "By locking",
+        "deposit_transaction": "BTC deposit transaction",
+        "waiting_for": "Waiting for",
+        "pay_with": "pay with",
+        "within": "within",
+        "single_transaction": "in a single transaction to",
         "issue_request_for": "Issue Request for",
         "updated": "Updated",
         "error_in_parachain": "You can't issue PolkaBTC at the moment because the Parachain has encountered errors and recovering.",
@@ -156,6 +165,7 @@
         "vault_btc_address": "Vault BTC Address",
         "vault_dot_address": "Vault Account",
         "btc_transaction": "BTC Transaction",
+        "in_parachain_block": "in parachain block",
         "confirmations": "Confirmations",
         "pending": "Pending...",
         "issue_request_not_found": "Exception: Issue request not found.",

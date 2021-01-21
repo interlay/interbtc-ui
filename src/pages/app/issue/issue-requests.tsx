@@ -21,7 +21,7 @@ import { updateBalancePolkaBTCAction, showAccountModalAction } from "../../../co
 import { useTranslation } from 'react-i18next';
 import * as constants from "../../../constants";
 import { ParachainStatus } from "../../../common/types/util.types";
-import IssueWizard from "./wizard/issue-wizard";
+import IssueModal from "./modal/issue-modal";
 
 
 export default function IssueRequests() {
@@ -30,14 +30,14 @@ export default function IssueRequests() {
     const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
     const { transactionListeners } = useSelector((state: StoreType) => state.issue);
     const [executePending, setExecutePending] = useState([""]);
-    const [showWizard, setShowWizard] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const [requiredBtcConfirmations, setRequiredBtcConfirmations] = useState(0);
     const [issuePeriod, setIssuePeriod] = useState(new Big(0));
     const [parachainHeight, setParachainHeight] = useState(new Big(0));
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
-    const closeWizard = () => setShowWizard(false);
+    const closeModal = () => setShowModal(false);
 
     const openWizard = () => {
         if (stateOfBTCParachain === ParachainStatus.Error) {
@@ -49,7 +49,7 @@ export default function IssueRequests() {
             return;
         }
         if (extensions.length && address) {
-            setShowWizard(true);
+            setShowModal(true);
         } else {
             dispatch(showAccountModalAction(true));
         }
@@ -226,7 +226,7 @@ export default function IssueRequests() {
     };
 
     return (
-        <div>
+        <div className="container mt-5">
             {issueRequests && issueRequests.length > 0 && (
                 <React.Fragment>
                     <h5>{t("issue_requests")}</h5>
@@ -257,7 +257,7 @@ export default function IssueRequests() {
                             })}
                         </tbody>
                     </Table>
-                    <IssueWizard show={showWizard} onClose={closeWizard}/>
+                    <IssueModal show={showModal} onClose={closeModal}/>
                 </React.Fragment>
             )}
         </div>

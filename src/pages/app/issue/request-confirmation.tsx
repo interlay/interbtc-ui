@@ -1,7 +1,7 @@
 import { btcToSat, stripHexPrefix } from "@interlay/polkabtc";
 import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 import React, { useState } from "react";
-import { FormGroup, ListGroup, ListGroupItem } from "react-bootstrap";
+import { shortAddress } from "../../../common/utils/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import {
@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next";
 
 export default function RequestConfirmation() {
     const [isRequestPending, setRequestPending] = useState(false);
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+    const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
     const { amountBTC, vaultDotAddress, vaultBtcAddress, fee, griefingCollateral } = useSelector(
         (state: StoreType) => state.issue
     );
@@ -74,40 +74,25 @@ export default function RequestConfirmation() {
         }
     };
 
-    const goToPreviousStep = () => {
-        dispatch(changeIssueStepAction("ENTER_BTC_AMOUNT"));
-    };
-
     return <React.Fragment>
-        <FormGroup>
-            <h5>{t("issue_page.confirm_issue_request")}</h5>
-            <p>{t("issue_page.verify_and_confirm")}</p>
-            <FormGroup>
-                <ListGroup>
-                    <ListGroupItem>
-                        {t("issue_page.issuing")} <strong>{amountBTC} PolkaBTC</strong>
-                    </ListGroupItem>
-                    <ListGroupItem>
-                        {t("issue_page.vault_btc_address")}: <strong>{vaultBtcAddress}</strong>
-                    </ListGroupItem>
-                    <ListGroupItem>
-                        {t("issue_page.fees")} <strong>{fee} PolkaBTC</strong>
-                    </ListGroupItem>
-                    <ListGroupItem>
-                        {t("griefing_collateral")}: <strong>{griefingCollateral} DOT</strong> {t("issue_page.successful_completion")}
-                    </ListGroupItem>
-                    <ListGroupItem>
-                        {t("issue_page.total")} <strong>{new Big(fee).add(new Big(amountBTC)).toString()} </strong>
-                        <strong>BTC</strong>
-                    </ListGroupItem>
-                </ListGroup>
-            </FormGroup>
-        </FormGroup>
-        <button className="btn btn-secondary float-left" onClick={goToPreviousStep}>
-            {t("previous")}
-        </button>
+       <div className="request-confirmation">
+       <div className="modal-amount"><span className="wizzard-number">{amountBTC}</span>&nbsp;polkaBTC</div>
+            <div className="modal-item row">
+                <div className="col-6">{t("issue_page.vault_btc_address")}</div>
+                <div className="col-6">{shortAddress(address)}</div>
+            </div>
+            <div className="modal-item row">
+                <div className="col-6">{t("bridge_fee")}</div>
+                <div className="col-6">{fee} BTC</div>
+            </div>
+            <hr className="total-divider"></hr>
+            <div className="modal-item row">
+                    <div className="col-6 total-amount">{t("total_deposit")}</div>
+                    <div className="col-6 total-amount">{((new Big(fee)).add(new Big(amountBTC))).toString()} BTC</div>
+            </div>
+       </div>
         <ButtonMaybePending
-            className="btn btn-primary float-right"
+            className="btn btn-primary app-btn"
             isPending={isRequestPending}
             onClick={onConfirm}
         >
