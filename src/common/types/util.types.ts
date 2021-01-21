@@ -26,6 +26,11 @@ export enum ParachainStatus {
     Shutdown,
 }
 
+export enum ActiveTab {
+    Issue,
+    Redeem,
+}
+
 export type GeneralState = {
     polkaBtcLoaded: boolean;
     relayerLoaded: boolean;
@@ -42,6 +47,7 @@ export type GeneralState = {
     btcRelayHeight: number;
     bitcoinHeight: number;
     stateOfBTCParachain: ParachainStatus;
+    activeTab: ActiveTab;
 };
 
 export type AppState = ReturnType<typeof rootReducer>;

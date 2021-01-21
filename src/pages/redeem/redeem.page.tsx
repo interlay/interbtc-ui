@@ -8,10 +8,8 @@ import RedeemRequests from "./table/redeem-requests";
 import { StoreType, ParachainStatus } from "../../common/types/util.types";
 import { resetRedeemWizardAction } from "../../common/actions/redeem.actions";
 import { 
-    hasFeedbackModalBeenDisplayedAction, 
     showAccountModalAction
 } from "../../common/actions/general.actions";
-import Feedback from "./feedback/feedback";
 import Balances from "../../common/components/balances";
 import { toast } from "react-toastify";
 import * as constants from "../../constants";
@@ -22,10 +20,9 @@ import "./redeem.page.scss";
 
 
 export default function RedeemPage(): JSX.Element {
-    const { balancePolkaBTC, balanceDOT, address, extensions, hasFeedbackModalBeenDisplayed, btcRelayHeight,
+    const { balancePolkaBTC, balanceDOT, address, extensions, btcRelayHeight,
         bitcoinHeight, stateOfBTCParachain } = useSelector((state: StoreType) => state.general);
     const [showWizard, setShowWizard] = useState(false);
-    const [showFeedbackModal, setShowFeedbackModal] = useState(false);
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
@@ -50,17 +47,6 @@ export default function RedeemPage(): JSX.Element {
             dispatch(showAccountModalAction(true));
         }
     }
-
-    const handleShowFeedbackModal = function () {
-        if (!hasFeedbackModalBeenDisplayed) {
-            setShowFeedbackModal(true);
-        }
-    };
-
-    const handleCloseFeedbackModal = () => {
-        dispatch(hasFeedbackModalBeenDisplayedAction(true));
-        setShowFeedbackModal(false);
-    };
 
     return (
         <div>
@@ -88,18 +74,10 @@ export default function RedeemPage(): JSX.Element {
                                 </Col>
                             }
                     </Row>
-                    <RedeemRequests handleShowFeedbackModal={handleShowFeedbackModal} />
+                    <RedeemRequests />
 
                     <Modal show={showWizard} onHide={handleCloseWizard} size={"lg"}>
                         <RedeemWizard handleClose={handleCloseWizard} />
-                    </Modal>
-
-                    <Modal
-                        show={showFeedbackModal && !hasFeedbackModalBeenDisplayed}
-                        onHide={handleCloseFeedbackModal}
-                        size={"lg"}
-                    >
-                        <Feedback handleClose={handleCloseFeedbackModal} />
                     </Modal>
                 </div>
             </section>

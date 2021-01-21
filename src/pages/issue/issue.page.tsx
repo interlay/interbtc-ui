@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Image, Button, Col, Row, Modal } from "react-bootstrap";
 
 import PolkaBTCImg from "../../assets/img/polkabtc/PolkaBTC_black.svg";
-import IssueRequests from "./table/issue-requests";
+import IssueRequests from "../app/issue/issue-requests";
 import { resetIssueWizardAction } from "../../common/actions/issue.actions";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType, ParachainStatus } from "../../common/types/util.types";
@@ -64,7 +64,7 @@ export default function IssuePage(): JSX.Element {
                         </Col>
                     </Row>
 
-                    <IssueRequests openWizard={openWizard} />
+                    <IssueRequests />
 
                     <Modal show={showWizard} onHide={handleClose} size={"lg"}>
                         <IssueWizard handleClose={handleClose} />

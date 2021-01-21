@@ -31,7 +31,7 @@ import "react-toastify/dist/ReactToastify.css";
 // app imports
 import Topbar from "./common/components/topbar";
 import Footer from "./common/components/footer/footer";
-import LandingPage from "./pages/landing/landing.page";
+import AppPage from "./pages/app/app.page";
 import IssuePage from "./pages/issue/issue.page";
 import RedeemPage from "./pages/redeem/redeem.page";
 import AboutPage from "./pages/about.page";
@@ -211,6 +211,11 @@ export default function App(): ReactElement {
                 )}
                 <Switch>
                     {!constants.STATIC_PAGE_ONLY && (
+                        <Route path="/main">
+                            <AppPage />
+                        </Route>
+                    )}
+                    {!constants.STATIC_PAGE_ONLY && (
                         <Route path="/issue">
                             <IssuePage />
                         </Route>
@@ -245,7 +250,7 @@ export default function App(): ReactElement {
                         <FaqPage />
                     </Route>
                     <Route exact path="/">
-                        <LandingPage />
+                        <AppPage />
                     </Route>
                 </Switch>
                 <Footer />

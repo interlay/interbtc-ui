@@ -1,0 +1,25 @@
+.app-page{
+
+    .app-tabs{
+        .app-tab {
+            padding: 0.5rem;
+            &:hover{
+                cursor: pointer;
+            }
+        }
+
+        .active-tab{
+            border-top: 1px solid black;
+            border-left: 1px solid black;
+            border-right: 1px solid black;
+        }
+
+        .not-active{
+            border-bottom: 1px solid black;
+        }
+    }
+
+    .grey-text{
+        color: #ced4da;
+    }
+}

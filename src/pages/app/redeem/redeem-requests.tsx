@@ -14,8 +14,7 @@ import { toast } from "react-toastify";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
 import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 import { useTranslation } from 'react-i18next';
-import ReimburseModal from "../reimburse-modal/reimburse-modal";
-
+import ReimburseModal from "./reimburse-modal";
 
 export default function RedeemRequests() {
     const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);

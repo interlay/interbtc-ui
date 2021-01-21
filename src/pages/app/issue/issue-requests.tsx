@@ -3,7 +3,7 @@ import React, { useState, MouseEvent } from "react";
 import Big from "big.js";
 import { IssueRequest } from "../../../common/types/issue.types";
 import { Table, Badge } from "react-bootstrap";
-import { shortAddress, parachainToUIIssueRequest } from "../../../common/utils/utils";
+import { parachainToUIIssueRequest } from "../../../common/utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
@@ -13,36 +13,47 @@ import { toast } from "react-toastify";
 import { startTransactionWatcherIssue } from "../../../common/utils/issue-transaction.watcher";
 import {
     updateIssueRequestAction,
-    changeIssueStepAction,
-    changeBtcTxIdAction,
     changeIssueIdAction,
-    openWizardInEditModeAction,
-    changeAmountBTCAction,
-    changeVaultBtcAddressOnIssueAction,
-    updateAllIssueRequestsAction,
-    updateIssueFeeAction,
+    updateAllIssueRequestsAction
 } from "../../../common/actions/issue.actions";
-import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
-import { updateBalancePolkaBTCAction } from "../../../common/actions/general.actions";
+import { updateBalancePolkaBTCAction, showAccountModalAction } from "../../../common/actions/general.actions";
 import { useTranslation } from 'react-i18next';
+import * as constants from "../../../constants";
+import { ParachainStatus } from "../../../common/types/util.types";
+import IssueWizard from "./wizard/issue-wizard";
 
 
-type IssueRequestProps = {
-    openWizard: () => void;
-};
-
-export default function IssueRequests(props: IssueRequestProps) {
-    const { address, balancePolkaBTC, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+export default function IssueRequests() {
+    const { address, balancePolkaBTC, polkaBtcLoaded, extensions, stateOfBTCParachain,
+        bitcoinHeight, btcRelayHeight } = useSelector((state: StoreType) => state.general);
     const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
     const { transactionListeners } = useSelector((state: StoreType) => state.issue);
     const [executePending, setExecutePending] = useState([""]);
+    const [showWizard, setShowWizard] = useState(false);
     const [requiredBtcConfirmations, setRequiredBtcConfirmations] = useState(0);
     const [issuePeriod, setIssuePeriod] = useState(new Big(0));
     const [parachainHeight, setParachainHeight] = useState(new Big(0));
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
+    const closeWizard = () => setShowWizard(false);
+
+    const openWizard = () => {
+        if (stateOfBTCParachain === ParachainStatus.Error) {
+            toast.error(t("issue_page.error_in_parachain"));
+            return;
+        }
+        if (bitcoinHeight-btcRelayHeight>constants.BLOCKS_BEHIND_LIMIT) {
+            toast.error(t("issue_page.error_more_than_6_blocks_behind"));
+            return;
+        }
+        if (extensions.length && address) {
+            setShowWizard(true);
+        } else {
+            dispatch(showAccountModalAction(true));
+        }
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -212,16 +223,8 @@ export default function IssueRequests(props: IssueRequestProps) {
     };
 
     const requestClicked = (request: IssueRequest): void => {
-        if (request.completed) return;
-
-        dispatch(openWizardInEditModeAction());
-        dispatch(changeVaultBtcAddressOnIssueAction(request.vaultBTCAddress));
-        dispatch(changeAmountBTCAction(request.amountBTC));
-        dispatch(changeBtcTxIdAction(request.btcTxId));
         dispatch(changeIssueIdAction(request.id));
-        dispatch(updateIssueFeeAction(request.fee));
-        dispatch(changeIssueStepAction("BTC_PAYMENT_CONFIRMATION"));
-        props.openWizard();
+        openWizard();
     };
 
     return (
@@ -233,11 +236,8 @@ export default function IssueRequests(props: IssueRequestProps) {
                     <Table hover responsive size={"md"}>
                         <thead>
                             <tr>
-                                <th>{t("issue_page.issue_id")}</th>
+                                <th>{t("issue_page.updated")}</th>
                                 <th>{t("issue_page.amount")}</th>
-                                <th>{t("fee")}</th>
-                                <th>{t("issue_page.parachain_block")}</th>
-                                <th>{t("issue_page.vault_btc_address")}</th>
                                 <th>{t("issue_page.btc_transaction")}</th>
                                 <th>{t("issue_page.confirmations")}</th>
                                 <th>{t("status")}</th>
@@ -247,13 +247,8 @@ export default function IssueRequests(props: IssueRequestProps) {
                             {issueRequests.map((request: IssueRequest, index: number) => {
                                 return (
                                     <tr key={index} onClick={() => requestClicked(request)}>
-                                        <td>{shortAddress(request.id)}</td>
-                                        <td>{request.amountBTC} PolkaBTC</td>
-                                        <td>{request.fee} PolkaBTC</td>
                                         <td>{request.creation === "0" ? t("issue_page.pending") : request.creation}</td>
-                                        <td>
-                                            <BitcoinAddress btcAddress={request.vaultBTCAddress} shorten />
-                                        </td>
+                                        <td>{request.amountBTC} <span className="grey-text">PolkaBTC</span></td>
                                         <td>
                                             <BitcoinTransaction txId={request.btcTxId} shorten />
                                         </td>
@@ -264,6 +259,7 @@ export default function IssueRequests(props: IssueRequestProps) {
                             })}
                         </tbody>
                     </Table>
+                    <IssueWizard show={showWizard} onClose={closeWizard}/>
                 </React.Fragment>
             )}
         </div>

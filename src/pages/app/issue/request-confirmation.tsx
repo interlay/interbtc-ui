@@ -1,7 +1,7 @@
 import { btcToSat, stripHexPrefix } from "@interlay/polkabtc";
 import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 import React, { useState } from "react";
-import { FormGroup, ListGroup, ListGroupItem, Modal } from "react-bootstrap";
+import { FormGroup, ListGroup, ListGroupItem } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import {
@@ -78,46 +78,40 @@ export default function RequestConfirmation() {
         dispatch(changeIssueStepAction("ENTER_BTC_AMOUNT"));
     };
 
-    return (
-        <React.Fragment>
-            <Modal.Body>
-                <FormGroup>
-                    <h5>{t("issue_page.confirm_issue_request")}</h5>
-                    <p>{t("issue_page.verify_and_confirm")}</p>
-                    <FormGroup>
-                        <ListGroup>
-                            <ListGroupItem>
-                                {t("issue_page.issuing")} <strong>{amountBTC} PolkaBTC</strong>
-                            </ListGroupItem>
-                            <ListGroupItem>
-                                {t("issue_page.vault_btc_address")}: <strong>{vaultBtcAddress}</strong>
-                            </ListGroupItem>
-                            <ListGroupItem>
-                                {t("issue_page.fees")} <strong>{fee} PolkaBTC</strong>
-                            </ListGroupItem>
-                            <ListGroupItem>
-                                {t("griefing_collateral")}: <strong>{griefingCollateral} DOT</strong> {t("issue_page.successful_completion")}
-                            </ListGroupItem>
-                            <ListGroupItem>
-                                {t("issue_page.total")} <strong>{new Big(fee).add(new Big(amountBTC)).toString()} </strong>
-                                <strong>BTC</strong>
-                            </ListGroupItem>
-                        </ListGroup>
-                    </FormGroup>
-                </FormGroup>
-            </Modal.Body>
-            <Modal.Footer>
-                <button className="btn btn-secondary float-left" onClick={goToPreviousStep}>
-                    {t("previous")}
-                </button>
-                <ButtonMaybePending
-                    className="btn btn-primary float-right"
-                    isPending={isRequestPending}
-                    onClick={onConfirm}
-                >
-                    {t("confirm")}
-                </ButtonMaybePending>
-            </Modal.Footer>
-        </React.Fragment>
-    );
+    return <React.Fragment>
+        <FormGroup>
+            <h5>{t("issue_page.confirm_issue_request")}</h5>
+            <p>{t("issue_page.verify_and_confirm")}</p>
+            <FormGroup>
+                <ListGroup>
+                    <ListGroupItem>
+                        {t("issue_page.issuing")} <strong>{amountBTC} PolkaBTC</strong>
+                    </ListGroupItem>
+                    <ListGroupItem>
+                        {t("issue_page.vault_btc_address")}: <strong>{vaultBtcAddress}</strong>
+                    </ListGroupItem>
+                    <ListGroupItem>
+                        {t("issue_page.fees")} <strong>{fee} PolkaBTC</strong>
+                    </ListGroupItem>
+                    <ListGroupItem>
+                        {t("griefing_collateral")}: <strong>{griefingCollateral} DOT</strong> {t("issue_page.successful_completion")}
+                    </ListGroupItem>
+                    <ListGroupItem>
+                        {t("issue_page.total")} <strong>{new Big(fee).add(new Big(amountBTC)).toString()} </strong>
+                        <strong>BTC</strong>
+                    </ListGroupItem>
+                </ListGroup>
+            </FormGroup>
+        </FormGroup>
+        <button className="btn btn-secondary float-left" onClick={goToPreviousStep}>
+            {t("previous")}
+        </button>
+        <ButtonMaybePending
+            className="btn btn-primary float-right"
+            isPending={isRequestPending}
+            onClick={onConfirm}
+        >
+            {t("confirm")}
+        </ButtonMaybePending>
+    </React.Fragment>;
 }
