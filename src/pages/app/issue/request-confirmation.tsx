@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 export default function RequestConfirmation() {
     const [isRequestPending, setRequestPending] = useState(false);
     const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
-    const { amountBTC, vaultDotAddress, vaultBtcAddress, fee, griefingCollateral } = useSelector(
+    const { amountBTC, vaultDotAddress, fee, griefingCollateral } = useSelector(
         (state: StoreType) => state.issue
     );
     const dispatch = useDispatch();
@@ -41,6 +41,7 @@ export default function RequestConfirmation() {
             const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultDotAddress);
             const requestResult = await window.polkaBTC.issue.request(amount, vaultAccountId);
 
+            let vaultBTCAddress = requestResult.vault.wallet.btcAddress;
             // get the issue id from the request issue event
             const id = stripHexPrefix(requestResult.id.toString());
             const issueRequest = await window.polkaBTC.issue.getRequestById(id);
@@ -52,10 +53,11 @@ export default function RequestConfirmation() {
                 id,
                 amountBTC: amountBTC,
                 creation: issueRequest.opentime.toString(),
-                vaultBTCAddress: vaultBtcAddress,
+                vaultBTCAddress: vaultBTCAddress || "",
                 vaultDOTAddress: "",
                 btcTxId: "",
                 fee: fee,
+                totalAmount: ((new Big(fee)).add(new Big(amountBTC))).toString(),
                 griefingCollateral,
                 confirmations: 0,
                 completed: false,
@@ -76,17 +78,17 @@ export default function RequestConfirmation() {
 
     return <React.Fragment>
        <div className="request-confirmation">
-       <div className="modal-amount"><span className="wizzard-number">{amountBTC}</span>&nbsp;polkaBTC</div>
-            <div className="modal-item row">
-                <div className="col-6">{t("issue_page.vault_btc_address")}</div>
+       <div className="issue-amount"><span className="wizzard-number">{amountBTC}</span>&nbsp;PolkaBTC</div>
+            <div className="issue-step-item row">
+                <div className="col-6">{t("destination")}</div>
                 <div className="col-6">{shortAddress(address)}</div>
             </div>
-            <div className="modal-item row">
+            <div className="issue-step-item row">
                 <div className="col-6">{t("bridge_fee")}</div>
                 <div className="col-6">{fee} BTC</div>
             </div>
             <hr className="total-divider"></hr>
-            <div className="modal-item row">
+            <div className="issue-step-item row">
                     <div className="col-6 total-amount">{t("total_deposit")}</div>
                     <div className="col-6 total-amount">{((new Big(fee)).add(new Big(amountBTC))).toString()} BTC</div>
             </div>

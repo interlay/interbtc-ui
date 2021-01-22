@@ -1,10 +1,10 @@
 import React, { ReactElement } from "react";
 import { IssueRequest } from "../../../../common/types/issue.types";
 
-type WhopsViewProps = {
+type WhoopsViewProps = {
     request: IssueRequest;
 }
 
-export default function WhopsView(props: WhopsViewProps): ReactElement {
+export default function WhoopsView(props: WhoopsViewProps): ReactElement {
     return <div></div>
 } 

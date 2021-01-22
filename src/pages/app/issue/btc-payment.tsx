@@ -31,7 +31,7 @@ export default function BTCPayment() {
         <FormGroup>
             <div className="row payment-title">
                 <div className="col">
-                    {t("deposit")} &nbsp; {amountBTC} &nbsp; BTC 
+                    {t("deposit")} &nbsp; {amountBTCwithFee.toString()} &nbsp; BTC 
                 </div>
             </div>
             <div className="row payment-description">
@@ -55,14 +55,12 @@ export default function BTCPayment() {
                     <QRCode value={'bitcoin:' + vaultBtcAddress + '?amount=' + amountMBTCwithFee} />
                 </div>
             </div>
-            <div className="row ledger-wrapper">
-                <div className="col">{t("issue_page.pay_with")}</div>
-            </div>
 
             <div className="row justify-content-center">
             <div className="col ledger-wrapper">
                 <div className="ledger-logo-wrapper">
                     <div className="ledger-logo">
+                        <div className="col">{t("issue_page.pay_with")}</div>
                     </div>
                 </div>
             </div>

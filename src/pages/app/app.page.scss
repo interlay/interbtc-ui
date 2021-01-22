@@ -32,7 +32,8 @@
         border: none;
         font-size: 3rem;
         width: 100%;
-        margin: 2rem 0rem;
+        margin-top: 2rem;
+        text-align: right;
     }
 
     .app-btn{
@@ -43,13 +44,52 @@
     }
 }
 
+.mark-currency{
+    font-size: 1.5rem;
+    text-align: left;
+    margin-top: 3.7rem;
+    margin-left: -1rem;
+}
+
+.locking-by{
+    border: 2px solid #998;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 3rem;
+
+    img {
+        margin-bottom: 3px;
+    }
+}
+
+.balances-title{
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.usd-price{
+    color: #998;
+    font-size: 1rem;
+    margin-bottom: 4rem;
+}
+
+.btc-balance-wrapper{
+    margin-right: 2rem;
+    text-align: right;
+}
+
+.dot-balance-wrapper{
+    margin-left: 2rem;
+    text-align: left;
+}
+
 .wizard-title{
     text-align: center;
     font-weight: 600;
     font-size: 1.3rem;
 }
 
-.modal-amount{
+.issue-amount{
     text-align: center;
     font-size: 1.7rem;
     color: #998;
@@ -63,7 +103,7 @@
     font-weight: 600;
 }
 
-.modal-item{
+.issue-step-item{
     padding: 0.7rem;
 }
 
@@ -122,6 +162,10 @@
     border: 1px solid black;
     width: fit-content;
     border-radius: 5px;
+
+    &:hover{
+        cursor: pointer;
+    }
 
     .ledger-logo{
         width: 150px;

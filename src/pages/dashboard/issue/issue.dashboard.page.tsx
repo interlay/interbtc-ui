@@ -41,6 +41,7 @@ export default function IssueDashboard(): ReactElement {
                     completed: false,
                     cancelled: false,
                     fee: "15",
+                    totalAmount: "16.5",
                     griefingCollateral: "0.5",
                 },
             ]);

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
+import BitcoinLogo from "../../../assets/img/Bitcoin-Logo.png";
+
 import {
     changeAmountBTCAction,
     changeIssueStepAction,
-    changeVaultBtcAddressOnIssueAction,
     changeVaultDotAddressOnIssueAction,
     updateIssueFeeAction,
     updateIssueGriefingCollateralAction,
@@ -12,13 +13,19 @@ import {
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { btcToSat, stripHexPrefix, satToBTC, planckToDOT } from "@interlay/polkabtc";
+import { btcToSat, satToBTC, planckToDOT } from "@interlay/polkabtc";
 import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
 import { useTranslation } from "react-i18next";
 
 type EnterBTCForm = {
     amountBTC: string;
 };
+
+type Prices = {
+    bitcoin: {
+        usd: number;
+    }
+}
 
 export default function EnterBTCAmount() {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -27,17 +34,23 @@ export default function EnterBTCAmount() {
     const { register, handleSubmit, errors } = useForm<EnterBTCForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
     const [dustValue, setDustValue] = useState("0");
+    const [usdPrice, setUsdPrice] = useState(0);
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
 
     useEffect(() => {
-        const fetchDustValue = async () => {
+        const fetchData = async () => {
             const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
             const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
             setDustValue(dustValueBtc);
+            fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd").then((response) => {
+                return response.json() as Promise<Prices>;
+            }).then((prices) => {
+                setUsdPrice(prices.bitcoin.usd);   
+            });
         };
-        fetchDustValue();
+        fetchData();
     });
 
     const onSubmit = handleSubmit(async ({ amountBTC }) => {
@@ -58,9 +71,6 @@ export default function EnterBTCAmount() {
 
             const vaultId = await window.polkaBTC.vaults.selectRandomVaultIssue(amountAsSatoshi);
             toast.success("Found vault: " + vaultId.toString());
-            // get the vault's data
-            const vault = await window.polkaBTC.vaults.get(vaultId);
-            const vaultBTCAddress = vault.wallet.addresses[0];
 
             const fee = await window.polkaBTC.issue.getFeesToPay(amountBTC);
             dispatch(updateIssueFeeAction(fee));
@@ -68,7 +78,6 @@ export default function EnterBTCAmount() {
             const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSAT);
             dispatch(updateIssueGriefingCollateralAction(planckToDOT(griefingCollateral)));
 
-            dispatch(changeVaultBtcAddressOnIssueAction(stripHexPrefix(vaultBTCAddress)));
             dispatch(changeVaultDotAddressOnIssueAction(vaultId.toString()));
             dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
         } catch (error) {
@@ -108,16 +117,28 @@ export default function EnterBTCAmount() {
                         </div>
                     )}
                 </div>
-                <div className="col-6">
+                <div className="col-6 mark-currency">
                     PolkaBTC
                 </div>
             </div>
-            <div className="row">
-                <div className="col-6">
-                    {t("issue_page.by_locking")}
+            <div className="row usd-price">
+                <div className="col">
+                    {"= $"+ usdPrice}
+
                 </div>
-                <div className="col-6">
-                    BTC
+            </div>
+            <div className="row">
+                <div className="col-12">
+                    <div className="locking-by">
+                        <div className="row">
+                            <div className="col-6">
+                                {t("issue_page.by_locking")}
+                            </div>
+                            <div className="col-6">
+                                <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>BTC
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <ButtonMaybePending

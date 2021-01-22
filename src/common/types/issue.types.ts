@@ -1,6 +1,7 @@
 export interface IssueRequest {
     id: string;
     amountBTC: string;
+    totalAmount: string;
     creation: string;
     vaultBTCAddress: string;
     vaultDOTAddress: string;

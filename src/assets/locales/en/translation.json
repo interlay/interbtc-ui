@@ -71,6 +71,8 @@
     "total_deposit": "Total Deposit",
     "deposit": "Deposit",
     "received": "Received",
+    "balances": "Balances",
+    "destination": "Destination",
     "redeem_page": {
         "retried": "Retried",
         "error_in_parachain": "You can't redeem PolkaBTC at the moment because the Parachain has encountered errors and recovering.",

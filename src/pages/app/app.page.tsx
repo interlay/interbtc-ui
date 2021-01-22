@@ -16,7 +16,7 @@ import { changeRedeemStepAction } from "../../common/actions/redeem.actions";
 
 export default function AppPage(): ReactElement {
     const dispatch = useDispatch();
-    const activeTab = useSelector((state: StoreType) => state.general.activeTab);
+    const { activeTab, balancePolkaBTC, balanceDOT } = useSelector((state: StoreType) => state.general);
     const issueStep = useSelector((state: StoreType) => state.issue.step);
     const redeemStep = useSelector((state: StoreType) => state.redeem.step);
     const { t } = useTranslation();
@@ -52,6 +52,19 @@ export default function AppPage(): ReactElement {
     }
 
     return <section className="jumbotron text-center white-background min-vh-100 app-page">
+        <div className="row balances-title">
+            <div className="col">
+                {t("balances")}
+            </div>
+        </div>
+        <div className="row mt-2 justify-content-center">
+            <div className="col-xl-3 btc-balance-wrapper">
+                <span className="heavy">{balancePolkaBTC}</span> PolkaBTC
+            </div>
+            <div className="col-xl-3 dot-balance-wrapper">
+                <span className="heavy">{balanceDOT}</span> DOT
+            </div>
+        </div>
         <div className="container mt-5">
             <div className="row justify-content-center">
                 <div className="col-xl-6 col-lg-6 col-md-8 col-sm-12 col-xs-12 tab-content-wrapper">

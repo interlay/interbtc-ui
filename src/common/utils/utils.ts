@@ -17,6 +17,7 @@ import {
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from "../../constants";
 import { Dispatch } from "redux";
 import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from "../actions/general.actions";
+import Big from "big.js";
 
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;
@@ -43,14 +44,17 @@ export function dateToShortString(date: Date): string {
  * @param parachainIssueRequest ParachainIssueRequest
  */
 export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: ParachainIssueRequest): IssueRequest {
+    const amountBTC = satToBTC(parachainIssueRequest.amount.toString());
+    const fee = satToBTC(parachainIssueRequest.fee.toString());
     return {
         id: stripHexPrefix(id.toString()),
-        amountBTC: satToBTC(parachainIssueRequest.amount.toString()),
+        amountBTC,
         creation: parachainIssueRequest.opentime.toString(),
         vaultBTCAddress: parachainIssueRequest.btc_address,
         vaultDOTAddress: parachainIssueRequest.vault.toString(),
         btcTxId: "",
-        fee: satToBTC(parachainIssueRequest.fee.toString()),
+        fee,
+        totalAmount: new Big(amountBTC).add(fee).toString(),
         griefingCollateral: parachainIssueRequest.griefing_collateral.toString(),
         confirmations: 0,
         completed: parachainIssueRequest.completed.isTrue,

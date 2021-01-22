@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { shortAddress } from "../../../../common/utils/utils";
 import PaymentView from "./payment-view";
 import StatusView from "./status-view";
-import WhopsView from "./whops-view";
+import WhopsView from "./whoops-view";
 import Big from "big.js";
 
 type IssueModalProps = {
@@ -31,29 +31,29 @@ export default function IssueModal(props: IssueModalProps) {
                         <div className="wizard-title">
                             {t("issue_page.issue_request_for")}
                         </div>
-                        <div className="modal-amount"><span className="wizzard-number">{request.amountBTC}</span>&nbsp;polkaBTC</div>
-                        <div className="modal-item row">
+                        <div className="issue-amount"><span className="wizzard-number">{request.amountBTC}</span>&nbsp;polkaBTC</div>
+                        <div className="issue-step-item row">
                             <div className="col-6">{t("issue_page.issue_id")}</div>
                             <div className="col-6">{shortAddress(request.id)}</div>
                         </div>
-                        <div className="modal-item row">
+                        <div className="issue-step-item row">
                             <div className="col-6">{t("issue_page.parachain_block")}</div>
                             <div className="col-6">{shortAddress(request.creation)}</div>
                         </div>
-                        <div className="modal-item row">
+                        <div className="issue-step-item row">
                             <div className="col-6">{t("nav_vault")}</div>
                             <div className="col-6">{shortAddress(request.vaultDOTAddress)}</div>
                         </div>
-                        <div className="modal-item row">
+                        <div className="issue-step-item row">
                             <div className="col-6">{t("issue_page.vault_btc_address")}</div>
                             <div className="col-6">{shortAddress(request.vaultBTCAddress)}</div>
                         </div>
-                        <div className="modal-item row">
+                        <div className="issue-step-item row">
                             <div className="col-6">{t("bridge_fee")}</div>
                             <div className="col-6">{request.fee} BTC</div>
                         </div>
                         <hr className="total-divider"></hr>
-                        <div className="modal-item row">
+                        <div className="issue-step-item row">
                                 <div className="col-6 total-amount">{t("total_deposit")}</div>
                                 <div className="col-6 total-amount">{((new Big(request.fee)).add(new Big(request.amountBTC))).toString()} BTC</div>
                         </div>
