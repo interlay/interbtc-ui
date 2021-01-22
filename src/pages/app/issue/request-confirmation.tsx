@@ -37,7 +37,6 @@ export default function RequestConfirmation() {
                 throw new Error("Invalid BTC amount input.");
             }
             const amount = window.polkaBTC.api.createType("Balance", amountSAT) as PolkaBTC;
-            // FIXME: use AccountId type from @polkadot/types/interfaces
             const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultDotAddress);
             const requestResult = await window.polkaBTC.issue.request(amount, vaultAccountId);
 
