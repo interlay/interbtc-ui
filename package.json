@@ -1,10 +1,10 @@
 {
     "name": "polkabtc-ui",
-    "version": "0.3.7",
+    "version": "0.3.8",
     "private": true,
     "dependencies": {
-        "@interlay/polkabtc": "0.7.0",
         "@interlay/polkabtc-stats": "link:/home/void/interlay/polkabtc-stats",
+        "@interlay/polkabtc": "0.7.1",
         "@polkadot/api": "2.8.1",
         "@polkadot/extension-dapp": "0.35.1",
         "@polkadot/ui-keyring": "0.63.1",
@@ -28,7 +28,7 @@
         "i18next-browser-languagedetector": "^6.0.1",
         "i18next-http-backend": "^1.0.21",
         "node-sass": "^4.14.1",
-        "qrcode.react": "^1.0.0",
+        "qrcode.react": "^1.0.1",
         "react": "^16.13.1",
         "react-app-rewired": "^2.1.8",
         "react-bootstrap": "^1.0.1",

@@ -64,7 +64,7 @@ export default function AboutPage(): JSX.Element {
                                 rel="noopener noreferrer"
                             >
                                 <Image src={codeImg} width="64" />
-                                <h4 className="text-white">{t("source_code")}</h4>
+                                <h4 className="text-white">{t("about.source_code")}</h4>
                             </a>
                         </Col>
                     </Row>

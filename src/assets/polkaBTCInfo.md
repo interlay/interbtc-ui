@@ -3,6 +3,7 @@
 - ##### [Roadmap](#roadmap)
 - ##### [Security Guarantees](#security)
 - ##### [Design](#design)
+- ##### [Step-by-Step Guide](#step-by-step)
 
 <br/>
 <br/>
@@ -12,7 +13,7 @@
 In 2016, the [Polkadot whitepaper](https://polkadot.network/PolkaDotPaper.pdf) identified secure interoperability with Bitcoin as a critical and also challenging feature. In January 2020, with the launch of Polkadot on the horizon, the [Web3 Foundation](https://web3.foundation/in) commissioned [Interlay](https://www.interlay.io/) to design a trustless bridge from Bitcoin to Polkadot based on [XCLAIM](https://www.xclaim.io/) — a carefully designed, open and trustless system that guarantees the security of user’s funds.
 
 
-The BTC-Parachain allows users to mint 1:1 Bitcoin-backed assets onto Polkadot - PolkaBTC - and use these across a wide range of applications, including decentralized exchanges, stablecoins, and lending protocols. 
+The BTC-Parachain allows users to mint 1:1 Bitcoin-backed assets onto Polkadot - PolkaBTC - and use these across a wide range of applications, including decentralized exchanges, stablecoins, and lending protocols.
 
 Funded by a [Web3 Foundation grant](https://web3.foundation/grants/), the BTC-Parachain is implemented in [Rust](https://www.rust-lang.org/) using [Parity](https://www.parity.io/)'s [Substrate framework](https://substrate.dev/).
 
@@ -35,12 +36,12 @@ Funded by a [Web3 Foundation grant](https://web3.foundation/grants/), the BTC-Pa
 <br/>
 
 ## Roadmap
-The Interlay team is building a customized Substrate environment for PolkaBTC, optimized to verify Bitcoin payments. The BTC Parachain includes a Bitcoin cross-chain SPV client (BTC-Relay), integrations with secure price oracles and XCMP, as well as support for hardware wallets. In addition, Interlay is also building client software for Vaults, Staked Relayers (who make sure BTC-Relay is up to date), as well as an easy-to-use web interface. 
+The Interlay team is building a customized Substrate environment for PolkaBTC, optimized to verify Bitcoin payments. The BTC Parachain includes a Bitcoin cross-chain SPV client (BTC-Relay), integrations with secure price oracles and XCMP, as well as support for hardware wallets. In addition, Interlay is also building client software for Vaults, Staked Relayers (who make sure BTC-Relay is up to date), as well as an easy-to-use web interface.
 
-A first Alpha testnet is scheduled for November 2020 and a feature-ready Beta testnet will be launched in January 2021 . Once the audit of the code base is completed in February 2021 and parachains are enabled on Polkadot and Kusama, the BTC Parachain will go live: first on Kusama, then on Polkadot mainnet. 
+A first Alpha testnet is scheduled for November 2020 and a feature-ready Beta testnet will be launched in January 2021 . Once the audit of the code base is completed in February 2021 and parachains are enabled on Polkadot and Kusama, the BTC Parachain will go live: first on Kusama, then on Polkadot mainnet.
 
 
-Sign up to get early access to PolkaBTC and be the first to test the first truly decentralized cross-chain bridge: https://forms.gle/JrNBD6Pe1F5QAg4z8 
+Sign up to get early access to PolkaBTC and be the first to test the first truly decentralized cross-chain bridge: https://forms.gle/JrNBD6Pe1F5QAg4z8
 
 ![PolkaBTC Roadmap](https://gitlab.com/interlay/images/-/raw/master/polkaBTC/user-guide/PolkaBTC%20roadmap.png)
 
@@ -52,23 +53,23 @@ Sign up to get early access to PolkaBTC and be the first to test the first truly
 ## Security Guarantees: Trustless and Fully Decentralized
 
 What makes the BTC-Parachain unique is the strict dedication to being trustless and decentralized:
- 
-- **Trustless**. The bridge has no central authority. Right from the start, the BTC-Parachain will be run by a decentralized network of individuals, community members, and companies. 
+
+- **Trustless**. The bridge has no central authority. Right from the start, the BTC-Parachain will be run by a decentralized network of individuals, community members, and companies.
 - **Decentralized**. In the spirit of permissionless systems like Bitcoin, anyone can participate in operating the bridge: contrary to other approaches, you do not need permission or any additional token to become a maintainer and start earning fees.
 
 
-As a holder of PolkaBTC, you have the following guarantee: 
-###### You can always redeem PolkaBTC for BTC, or be reimbursed in the collateral currency at a beneficial rate. 
+As a holder of PolkaBTC, you have the following guarantee:
+###### You can always redeem PolkaBTC for BTC, or be reimbursed in the collateral currency at a beneficial rate.
 
 In the case that a vault misbehaves, you will be reimbursed from the Vault’s collateral and will make a very profitable trade between BTC and DOT. At launch, collateral will be put down in DOT. In the mid/long run, this may be extended to stablecoins or token-sets to improve stability.
 
 Summarizing, to trust the bridge, you only need to:
 
--  Trust that Bitcoin is secure. Meaning: trust that Bitcoin blocks are final after X confirmations. The bridge will recommend a minimum of 6 confirmations, though users and apps are encouraged to set higher thresholds.  
-- Trust that Polkadot is secure. This assumption is made by all applications running on top of Polkadot. 
+-  Trust that Bitcoin is secure. Meaning: trust that Bitcoin blocks are final after X confirmations. The bridge will recommend a minimum of 6 confirmations, though users and apps are encouraged to set higher thresholds.
+- Trust that Polkadot is secure. This assumption is made by all applications running on top of Polkadot.
 
 
-Read on to get a better understanding of the BTC-Parachain design and security guarantees. 
+Read on to get a better understanding of the BTC-Parachain design and security guarantees.
 
 
 
@@ -77,7 +78,7 @@ Read on to get a better understanding of the BTC-Parachain design and security g
 
 <div id="design"></div>
 
-## Design: The XCLAIM Framework 
+## Design: The XCLAIM Framework
 
 <div id="cba"></div>
 
@@ -87,7 +88,7 @@ At the core, XCLAIM - the framework underlying the BTC-Parachain - introduces th
 
 ![](https://cdn-images-1.medium.com/max/3200/0*7K1rmj7j0Cya0eB_)
 
-#### Issue, Trade, Redeem 
+#### Issue, Trade, Redeem
 
 [XCLAIM](https://xclaim.io) consists of three main protocols, which also resemble the life-cycle of PolkaBTC:
 
@@ -136,11 +137,13 @@ All roles are coordinated through the **Parachain Execution Environment**, which
 
 ![The BTC-Parachain is Polkadot’s trustless gateway for Bitcoin.](https://cdn-images-1.medium.com/max/3200/0*v1lfJ1ZK75luh16s)*The BTC-Parachain is Polkadot’s trustless gateway for Bitcoin.*
 
-#### From BTC to PolkaBTC, Step by Step.
+<div id="step-by-step"></div>
+
+## From BTC to PolkaBTC, Step by Step.
 
 XCLAIM exhibits two core protocols, Issue and Redeem, outlined below.
 
-##### Issue/Mint PolkaBTC
+#### Issue/Mint PolkaBTC
  A user (liquidity provider) mints new PolkaBTC.
 
 1. A user registers an *issue request *with a collateralized Vault of his choosing. This reserves the Vault’s DOT collateral (to prevent race conditions).
@@ -155,7 +158,7 @@ XCLAIM exhibits two core protocols, Issue and Redeem, outlined below.
 
 ![High-level PolkaBTC Issue process](https://cdn-images-1.medium.com/max/3200/0*3OIDfIffZskXZmi7)*High-level PolkaBTC Issue process*
 
-##### Redeem PolkaBTC for BTC
+#### Redeem PolkaBTC for BTC
  A user redeems PolkaBTC for the equivalent amount of BTC or receives DOT as reimbursement.
 
 1. To request a redeem, a user locks PolkaBTC with the BTC Parachain.

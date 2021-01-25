@@ -17,6 +17,7 @@ import {
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from "../../constants";
 import { Dispatch } from "redux";
 import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from "../actions/general.actions";
+import { TableDisplayParams } from "../types/util.types";
 
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;
@@ -92,6 +93,10 @@ export function isPositiveNumeric(s: string): boolean {
     return reg.test(s);
 }
 
+export function range(start: number, end: number): number[] {
+    return Array.from({ length: end - start }, (_, k) => k + start);
+}
+
 export const arrayToMap = (
     arr: IssueRequest[][] | RedeemRequest[][]
 ): Map<string, IssueRequest[] | RedeemRequest[]> => {
@@ -131,6 +136,16 @@ export const BtcNetwork =
 
 export function reverseHashEndianness(hash: Uint8Array): string {
     return uint8ArrayToString(reverseEndianness(hash));
+}
+
+export function defaultTableDisplayParams(): TableDisplayParams {
+    return {
+        page: 0,
+        perPage: 20,
+        sortBy: "",
+        sortAsc: true,
+        searchFilter: "",
+    };
 }
 
 /**

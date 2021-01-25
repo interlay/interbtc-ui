@@ -1,7 +1,7 @@
 version: "3.8"
 services:
     polkabtc:
-        image: "registry.gitlab.com/interlay/btc-parachain:dev-353fff7e"
+        image: "registry.gitlab.com/interlay/btc-parachain:dev-4e5d71bd"
         command:
             - btc-parachain
             - --rpc-external

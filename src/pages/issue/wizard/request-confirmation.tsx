@@ -8,6 +8,7 @@ import {
     changeIssueIdAction,
     changeIssueStepAction,
     addIssueRequestAction,
+    changeVaultBtcAddressOnIssueAction,
 } from "../../../common/actions/issue.actions";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { IssueRequest } from "../../../common/types/issue.types";
@@ -37,9 +38,14 @@ export default function RequestConfirmation() {
                 throw new Error("Invalid BTC amount input.");
             }
             const amount = window.polkaBTC.api.createType("Balance", amountSAT) as PolkaBTC;
-            // FIXME: use AccountId type from @polkadot/types/interfaces
             const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultDotAddress);
             const requestResult = await window.polkaBTC.issue.request(amount, vaultAccountId);
+
+            let vaultBTCAddress = requestResult.vault.wallet.btcAddress;
+            if (vaultBTCAddress === undefined) {
+                throw new Error("Could not generate unique vault address.");
+            }
+            dispatch(changeVaultBtcAddressOnIssueAction(stripHexPrefix(vaultBTCAddress)));
 
             // get the issue id from the request issue event
             const id = stripHexPrefix(requestResult.id.toString());
@@ -88,9 +94,6 @@ export default function RequestConfirmation() {
                         <ListGroup>
                             <ListGroupItem>
                                 {t("issue_page.issuing")} <strong>{amountBTC} PolkaBTC</strong>
-                            </ListGroupItem>
-                            <ListGroupItem>
-                                {t("issue_page.vault_btc_address")}: <strong>{vaultBtcAddress}</strong>
                             </ListGroupItem>
                             <ListGroupItem>
                                 {t("issue_page.fees")} <strong>{fee} PolkaBTC</strong>
