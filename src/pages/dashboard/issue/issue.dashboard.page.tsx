@@ -11,7 +11,7 @@ import { IssueRequest } from "../../../common/types/issue.types";
 import { defaultTableDisplayParams } from "../../../common/utils/utils";
 
 export default function IssueDashboard(): ReactElement {
-    const { polkaBtcLoaded, totalPolkaBTC } = useSelector((state: StoreType) => state.general);
+    const { totalPolkaBTC } = useSelector((state: StoreType) => state.general);
     const { t } = useTranslation();
     const statsApi = usePolkabtcStats();
 

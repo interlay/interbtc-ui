@@ -1,12 +1,7 @@
 import React, { useState, useEffect, ReactElement, useMemo } from "react";
-import { useSelector } from "react-redux";
-import { useTranslation } from "react-i18next";
-
 import usePolkabtcStats from "../../../hooks/use-polkabtc-stats";
-import { StoreType } from "../../../types/util.types";
 
 export default function IssuesPerDayChart(): ReactElement {
-    const { t } = useTranslation();
     const statsApi = usePolkabtcStats();
 
     const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number }>());
