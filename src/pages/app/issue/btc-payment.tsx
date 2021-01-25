@@ -56,13 +56,17 @@ export default function BTCPayment() {
                 </div>
             </div>
 
+            <a href={"ledgerhq:?address=" + vaultBtcAddress + "&currency=bitcoin&amount=" + btcToSat(amountBTCwithFee.toString())}>nesto da se klikne</a>
+
             <div className="row justify-content-center">
             <div className="col ledger-wrapper">
-                <div className="ledger-logo-wrapper">
-                    <div className="ledger-logo">
-                        <div className="col">{t("issue_page.pay_with")}</div>
+                <a href={"ledgerhq:?address=" + vaultBtcAddress + "&currency=bitcoin&amount=" + btcToSat(amountBTCwithFee.toString())}>
+                    <div className="ledger-logo-wrapper">
+                        <div className="ledger-logo">
+                            <div className="col">{t("issue_page.pay_with")}</div>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
         </FormGroup>

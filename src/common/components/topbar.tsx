@@ -97,11 +97,6 @@ export default function Topbar(props: TopbarProps): ReactElement {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                         {!constants.STATIC_PAGE_ONLY && polkaBtcLoaded && (
-                            <Link className="nav-link" to="/issue" onClick={checkWallet}>
-                                {t("issue")}
-                            </Link>
-                        )}
-                        {!constants.STATIC_PAGE_ONLY && polkaBtcLoaded && (
                             <Link className="nav-link" to="/redeem" onClick={checkWallet}>
                                 {t("redeem")}
                             </Link>

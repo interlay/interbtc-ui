@@ -154,6 +154,10 @@
 .ledger-wrapper{
     text-align: center;
     padding: 15px;
+
+    a{
+        text-decoration: none!important;
+    }
 }
 
 .ledger-logo-wrapper{
@@ -176,6 +180,8 @@
         margin: auto;
     }
 }
+
+
 
 .confirmation-circle{
     border-radius: 50%;

@@ -29,6 +29,7 @@ export enum ParachainStatus {
 export enum ActiveTab {
     Issue,
     Redeem,
+    Transfer,
 }
 
 export type GeneralState = {

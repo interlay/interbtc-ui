@@ -9,11 +9,11 @@ type StatusViewProps = {
 
 export default function StatusView(props: StatusViewProps): ReactElement {
     const { t } = useTranslation();
-    const [requiredBtcConfirmations, setRequiredBtcConfirmations] = useState(0);
+    const [stableBitcoinConfirmations, setStableBitcoinConfirmations] = useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
-            setRequiredBtcConfirmations(await window.polkaBTC.btcRelay.getStableBitcoinConfirmations());
+            setStableBitcoinConfirmations(await window.polkaBTC.btcRelay.getStableBitcoinConfirmations());
         }
         fetchData();
     });
@@ -32,7 +32,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                             {t("confirmations")}
                         </div>
                         <div className="number-of-confirmations">   
-                            1/{props.request.confirmations}
+                            {props.request.confirmations + "/" + stableBitcoinConfirmations}
                         </div>
                     </div>
                     :
@@ -50,8 +50,8 @@ export default function StatusView(props: StatusViewProps): ReactElement {
         <div className="row btc-transaction-wrapper">
             <div className="col">
                 <div className="btc-transaction-view">
-            {props.request.confirmations<requiredBtcConfirmations ? t("issue_page.btc_transaction") : t("issue_page.deposit_transaction")}
-                    {}
+                    {props.request.confirmations<stableBitcoinConfirmations ? 
+                        t("issue_page.btc_transaction") : t("issue_page.deposit_transaction")}
                 </div>
             </div>
         </div>

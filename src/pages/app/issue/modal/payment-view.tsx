@@ -12,6 +12,9 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
     const { t } = useTranslation();
     const amount = ((new Big(props.request.amountBTC)).add(new Big(props.request.fee))).toString();
 
+    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Timestamp >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    console.log(props.request.creation)
+
     return <div className="payment-view">
         <div className="row payment-title">
             <div className="col">
@@ -32,7 +35,7 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
             <div className="col">{t("issue_page.within")}</div>
         </div>
         <div className="row payment-timer">
-            <div className="col">24h</div>
+            <div className="col">{props.request.creation}</div>
         </div>
         <div className="row">
             <div className="col qr-code-item">

@@ -7,6 +7,7 @@ import IssueSteps from "./issue/issue-steps";
 import IssueRequests from "./issue/issue-requests";
 import RedeemSteps from "./redeem/redeem-steps";
 import RedeemRequests from "./redeem/redeem-requests";
+import Transfer from "./transfer/transfer";
 import { setActiveTabAction } from "../../common/actions/general.actions";
 import { FaArrowLeft } from "react-icons/fa";
 import "./app.page.scss";
@@ -38,7 +39,8 @@ export default function AppPage(): ReactElement {
             if (issueStep === "BTC_PAYMENT") {
                 dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
             }
-        } else {
+        }
+        if (activeTab === ActiveTab.Redeem) {
             if (redeemStep === "ENTER_BTC_ADDRESS") {
                 dispatch(changeRedeemStepAction("ENTER_POLKABTC"))
             }
@@ -70,13 +72,17 @@ export default function AppPage(): ReactElement {
                 <div className="col-xl-6 col-lg-6 col-md-8 col-sm-12 col-xs-12 tab-content-wrapper">
                     {showTabs() ? 
                     <div id="main-tabs" className="row app-tabs">
-                        <div className={"col-6 app-tab" + (activeTab === ActiveTab.Issue ? " active-tab" : " not-active")}
+                        <div className={"col-4 app-tab" + (activeTab === ActiveTab.Issue ? " active-tab" : " not-active")}
                             onClick={() => changeTab(ActiveTab.Issue)}>
                             {t("issue")}
                         </div>
-                        <div className={"col-6 app-tab" + (activeTab === ActiveTab.Redeem ? " active-tab" : " not-active")}
+                        <div className={"col-4 app-tab" + (activeTab === ActiveTab.Redeem ? " active-tab" : " not-active")}
                             onClick={() => changeTab(ActiveTab.Redeem)}>
                             {t("redeem")}
+                        </div>
+                        <div className={"col-4 app-tab" + (activeTab === ActiveTab.Transfer ? " active-tab" : " not-active")}
+                            onClick={() => changeTab(ActiveTab.Transfer)}>
+                            {t("transfer")}
                         </div>
                     </div> :
                     <React.Fragment>
@@ -89,7 +95,9 @@ export default function AppPage(): ReactElement {
                     </React.Fragment>
                     }
                     <div className="content">
-                        {activeTab === ActiveTab.Issue ? <IssueSteps/> : <RedeemSteps/>}
+                        {activeTab === ActiveTab.Issue && <IssueSteps/>}
+                        {activeTab === ActiveTab.Redeem &&<RedeemSteps/>}
+                        {activeTab === ActiveTab.Transfer &&<Transfer/>}
                     </div>
                 </div>
             </div>
