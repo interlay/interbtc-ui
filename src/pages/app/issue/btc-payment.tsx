@@ -55,9 +55,6 @@ export default function BTCPayment() {
                     <QRCode value={'bitcoin:' + vaultBtcAddress + '?amount=' + amountMBTCwithFee} />
                 </div>
             </div>
-
-            <a href={"ledgerhq:?address=" + vaultBtcAddress + "&currency=bitcoin&amount=" + btcToSat(amountBTCwithFee.toString())}>nesto da se klikne</a>
-
             <div className="row justify-content-center">
             <div className="col ledger-wrapper">
                 <a href={"ledgerhq:?address=" + vaultBtcAddress + "&currency=bitcoin&amount=" + btcToSat(amountBTCwithFee.toString())}>
