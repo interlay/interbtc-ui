@@ -34,7 +34,6 @@ export default function IssueTable({ issueRequests, tableParams, setTableParams 
                         <th>{t("issue_page.parachain_block")}</th>
                         <th>{t("issue_page.vault_dot_address")}</th>
                         <th>{t("issue_page.vault_btc_address")}</th>
-                        // <th>{t("issue_page.btc_transaction")}</th>
                         <th>{t("issue_page.confirmations")}</th>
                         <th>{t("status")}</th>
                     </tr>
@@ -48,7 +47,6 @@ export default function IssueTable({ issueRequests, tableParams, setTableParams 
                                 <td>{ireq.creation}</td>
                                 <td>{ireq.vaultDOTAddress}</td>
                                 <td>{ireq.vaultBTCAddress}</td>
-                                // <td>{ireq.btcTxId}</td>
                                 <td>{ireq.confirmations}</td>
                                 <td>
                                     {ireq.completed ? t("completed") : ireq.cancelled ? t("cancelled") : t("pending")}
