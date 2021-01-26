@@ -16,6 +16,11 @@ export interface IssueRequest {
     griefingCollateral: string;
 }
 
+export type DashboardIssueInfo = Pick<
+    IssueRequest,
+    "id" | "amountBTC" | "creation" | "vaultBTCAddress" | "vaultDOTAddress" | "btcTxId" | "completed" | "cancelled"
+>;
+
 export interface IssueMap {
     [key: string]: IssueRequest[];
 }
