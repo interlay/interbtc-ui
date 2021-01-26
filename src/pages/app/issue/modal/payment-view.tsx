@@ -12,9 +12,6 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
     const { t } = useTranslation();
     const amount = ((new Big(props.request.amountBTC)).add(new Big(props.request.fee))).toString();
 
-    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Timestamp >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-    console.log(props.request.creation)
-
     return <div className="payment-view">
         <div className="row payment-title">
             <div className="col">
