@@ -17,7 +17,7 @@ export const FAUCET_ADDRESS_SEED = "//Alice";
 
 export const BALANCE_MAX_INTEGER_LENGTH = 13;
 
-export const SATOSHI_BTC_DECIMALS_DIFFERENCE = 8;
+export const BTC_DECIMALS = 8;
 
 // number of blocks before we prevent issue and redeem requests
 export const BLOCKS_BEHIND_LIMIT = 6;
