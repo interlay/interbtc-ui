@@ -65,3 +65,11 @@ export type TimeDataPoint = {
     x: Date;
     y: number;
 };
+
+export type TableDisplayParams = {
+    page: number;
+    perPage: number;
+    sortBy: string;
+    sortAsc: boolean;
+    searchFilter: string;
+};
