@@ -22,6 +22,7 @@
         "big.js": "^6.0.1",
         "bitcoinjs-lib": "^5.2.0",
         "bootstrap": "^4.5.0",
+        "chart.js": "^2.9.4",
         "i18next": "^19.8.4",
         "i18next-browser-languagedetector": "^6.0.1",
         "i18next-http-backend": "^1.0.21",

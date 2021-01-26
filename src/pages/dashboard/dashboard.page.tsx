@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 import "./dashboard.page.scss";
-import Row1Controller from "./rowContainers/row1Container/row1Controller";
+import Row1Controller from "./rows/row1controller";
 
 export default function DashboardPage() {
     return (
