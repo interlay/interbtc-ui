@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 
-import IssueTable from "./issue-table/issue-table";
 import IssuesPerDayChart from "../../../common/components/charts/issue/issues-per-day-chart";
 import { StoreType } from "../../../common/types/util.types";
 import { IssueRequest } from "../../../common/types/issue.types";
 import { defaultTableDisplayParams } from "../../../common/utils/utils";
+import DashboardTable from "../../../common/components/dashboard-table/dashboard-table";
 
 export default function IssueDashboard(): ReactElement {
     const { totalPolkaBTC } = useSelector((state: StoreType) => state.general);
@@ -39,6 +39,29 @@ export default function IssueDashboard(): ReactElement {
             setTotalSuccessfulIssues(res.data);
         },
         [statsApi] // to silence the compiler
+    );
+
+    const tableHeadings = [
+        t("id"),
+        t("issue_page.amount"),
+        t("issue_page.parachain_block"),
+        t("issue_page.vault_dot_address"),
+        t("issue_page.vault_btc_address"),
+        t("issue_page.confirmations"),
+        t("status"),
+    ];
+
+    const tableIssueRequestRow = useMemo(
+        () => (ireq: IssueRequest): string[] => [
+            ireq.id,
+            ireq.amountBTC,
+            ireq.creation,
+            ireq.vaultDOTAddress,
+            ireq.vaultBTCAddress,
+            ireq.confirmations.toString(),
+            ireq.completed ? t("completed") : ireq.cancelled ? t("cancelled") : t("pending"),
+        ],
+        [t]
     );
 
     useEffect(() => {
@@ -72,10 +95,12 @@ export default function IssueDashboard(): ReactElement {
                             </div>
                         </div>
                     </div>
-                    <IssueTable
-                        issueRequests={issueRequests}
+                    <DashboardTable
+                        data={issueRequests}
                         tableParams={tableParams}
                         setTableParams={setTableParams}
+                        headings={tableHeadings}
+                        dataPointDisplayer={tableIssueRequestRow}
                     />
                 </div>
             </div>

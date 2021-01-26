@@ -1182,9 +1182,19 @@
     axios "^0.19.2"
     typescript "~3.5.2"
 
-"@interlay/polkabtc-stats@link:../polkabtc-stats":
-  version "0.0.0"
-  uid ""
+"@interlay/polkabtc-stats@0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-stats/-/polkabtc-stats-0.0.2.tgz#7d7c01d7301ca0c9f91ce5ea5a630ce7905e8608"
+  integrity sha512-q8ipdYaFg9xHh5QrFVQXy/pPO7NFaZtJCSMtYRC7PcaL2NL2rm7vMMWTN8rnTUOtFim7mworMpa/LPT8tbCmbg==
+  dependencies:
+    "@types/pg-format" "^1.0.1"
+    body-parser "^1.19.0"
+    dotenv "^8.2.0"
+    express "^4.17.1"
+    pg "^8.5.1"
+    pg-format "^1.0.4"
+    swagger-ui-express "^4.1.6"
+    tsoa "^3.4.0"
 
 "@interlay/polkabtc-types@0.3.1":
   version "0.3.1"
@@ -2202,6 +2212,11 @@
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/@types/parse5/-/parse5-6.0.0.tgz#38590dc2c3cf5717154064e3ee9b6947ee21b299"
   integrity sha512-oPwPSj4a1wu9rsXTEGIJz91ISU725t0BmSnUhb57sI+M8XEmvUop84lzuiYdq0Y5M6xLY8DBPg0C2xEQKLyvBA==
+
+"@types/pg-format@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/pg-format/-/pg-format-1.0.1.tgz#a197fe7a228d53f6ab00bf52b7999d74ce618074"
+  integrity sha512-TC073gk+fvWGenuE7sDEjmt33HJkNhKJ9uLRgP9O9KQGSUaN1hA7Snbr63EU9/aE1X4Zz0+1BXhSBdZCYFWXog==
 
 "@types/prop-types@*", "@types/prop-types@^15.7.3":
   version "15.7.3"
@@ -5329,7 +5344,7 @@ dotenv-expand@5.1.0:
   resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-5.1.0.tgz#3fbaf020bfd794884072ea26b1e9791d45a629f0"
   integrity sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==
 
-dotenv@8.2.0:
+dotenv@8.2.0, dotenv@^8.2.0:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
   integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
@@ -10195,6 +10210,11 @@ pg-connection-string@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-2.4.0.tgz#c979922eb47832999a204da5dbe1ebf2341b6a10"
   integrity sha512-3iBXuv7XKvxeMrIgym7njT+HlZkwZqqGX4Bu9cci8xHZNT+Um1gWKqCsAzcC0d95rcKMU5WBg6YRUcHyV0HZKQ==
+
+pg-format@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/pg-format/-/pg-format-1.0.4.tgz#27734236c2ad3f4e5064915a59334e20040a828e"
+  integrity sha1-J3NCNsKtP05QZJFaWTNOIAQKgo4=
 
 pg-int8@1.0.1:
   version "1.0.1"

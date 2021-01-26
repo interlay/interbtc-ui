@@ -40,7 +40,7 @@ export default function TablePageSelector({ totalPages, currentPage, setPage }: 
                     ""
                 )}
                 {pages.map((page) => (
-                    <PageLink {...{ page, setPage }} />
+                    <PageLink key={page} {...{ page, setPage }} />
                 ))}
                 {pages[pages.length - 1] !== totalPages ? (
                     <>
