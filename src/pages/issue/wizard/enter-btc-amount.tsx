@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat, satToBTC, planckToDOT } from "@interlay/polkabtc";
-import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
+import { BALANCE_MAX_INTEGER_LENGTH, SATOSHI_BTC_DECIMALS_DIFFERENCE } from "../../../constants";
 import { useTranslation } from "react-i18next";
 
 type EnterBTCForm = {
@@ -48,9 +48,13 @@ export default function EnterBTCAmount() {
             if (amountSAT === undefined) {
                 throw new Error("Invalid BTC amount input.");
             }
-            const amountBTCInteger = amountBTC.split(".")[0];
+            const [amountBTCInteger, amountBTCDecimals] = amountBTC.split(".");
             if (amountBTCInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
                 throw new Error("Input value is too high");
+            }
+
+            if (amountBTCDecimals.length > SATOSHI_BTC_DECIMALS_DIFFERENCE) {
+                throw new Error("Input has too many decimals. The smallest amount representable in Bitcoin is 1 Satoshi.");
             }
             dispatch(changeAmountBTCAction(amountBTC));
 
