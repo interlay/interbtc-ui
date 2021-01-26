@@ -16,16 +16,12 @@ import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat, satToBTC, planckToDOT } from "@interlay/polkabtc";
 import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
 import { useTranslation } from "react-i18next";
+import { Prices } from "../../../common/types/util.types";
+
 
 type EnterBTCForm = {
     amountBTC: string;
 };
-
-type Prices = {
-    bitcoin: {
-        usd: number;
-    }
-}
 
 export default function EnterBTCAmount() {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -109,13 +105,6 @@ export default function EnterBTCAmount() {
                             },
                         })}
                     />
-                    {errors.amountBTC && (
-                        <div className="input-error">
-                            {errors.amountBTC.type === "required"
-                                ? t("issue_page.enter_valid_amount")
-                                : errors.amountBTC.message}
-                        </div>
-                    )}
                 </div>
                 <div className="col-6 mark-currency">
                     PolkaBTC
@@ -124,9 +113,15 @@ export default function EnterBTCAmount() {
             <div className="row usd-price">
                 <div className="col">
                     {"= $"+ usdPrice}
-
                 </div>
             </div>
+            {errors.amountBTC && (
+                <div className="wizard-input-error">
+                    {errors.amountBTC.type === "required"
+                        ? t("issue_page.enter_valid_amount")
+                        : errors.amountBTC.message}
+                </div>
+            )}
             <div className="row">
                 <div className="col-12">
                     <div className="locking-by">

@@ -101,7 +101,7 @@ export default function VaultsDashboard(): ReactElement {
                             </div>
                         </div>
                     </div>
-                    <VaultTable isRelayer={false}></VaultTable>
+                    <VaultTable></VaultTable>
                 </div>
             </div>
         </div>

@@ -41,6 +41,9 @@ export default function RequestConfirmation() {
             const requestResult = await window.polkaBTC.issue.request(amount, vaultAccountId);
 
             let vaultBTCAddress = requestResult.vault.wallet.btcAddress;
+            if (vaultBTCAddress === undefined) {
+                throw new Error("Could not generate unique vault address.");
+            }
             // get the issue id from the request issue event
             const id = stripHexPrefix(requestResult.id.toString());
             const issueRequest = await window.polkaBTC.issue.getRequestById(id);
@@ -52,7 +55,7 @@ export default function RequestConfirmation() {
                 id,
                 amountBTC: amountBTC,
                 creation: issueRequest.opentime.toString(),
-                vaultBTCAddress: vaultBTCAddress || "",
+                vaultBTCAddress: vaultBTCAddress,
                 vaultDOTAddress: "",
                 btcTxId: "",
                 fee: fee,
@@ -78,16 +81,16 @@ export default function RequestConfirmation() {
     return <React.Fragment>
        <div className="request-confirmation">
        <div className="issue-amount"><span className="wizzard-number">{amountBTC}</span>&nbsp;PolkaBTC</div>
-            <div className="issue-step-item row">
+            <div className="step-item row">
                 <div className="col-6">{t("destination")}</div>
                 <div className="col-6">{shortAddress(address)}</div>
             </div>
-            <div className="issue-step-item row">
+            <div className="step-item row">
                 <div className="col-6">{t("bridge_fee")}</div>
                 <div className="col-6">{fee} BTC</div>
             </div>
             <hr className="total-divider"></hr>
-            <div className="issue-step-item row">
+            <div className="step-item row">
                     <div className="col-6 total-amount">{t("total_deposit")}</div>
                     <div className="col-6 total-amount">{((new Big(fee)).add(new Big(amountBTC))).toString()} BTC</div>
             </div>

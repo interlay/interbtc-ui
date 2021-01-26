@@ -1,34 +1,22 @@
 import React, { ReactElement, useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Vault } from "../../types/vault.types";
-import { updatePremiumVaultAction } from "../../actions/vault.actions";
 import * as constants from "../../../constants";
 import { planckToDOT, satToBTC, roundTwoDecimals } from "@interlay/polkabtc";
 import { shortAddress } from "../../utils/utils";
-import { Button, Modal } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import RedeemWizard from "../../../pages/redeem/wizard/redeem-wizard";
-import { resetRedeemWizardAction } from "../../actions/redeem.actions";
-import { toast } from "react-toastify";
-import { StoreType, ParachainStatus } from "../../types/util.types";
-import { showAccountModalAction } from "../../actions/general.actions";
 import Big from "big.js";
+import { StoreType } from "../../../common/types/util.types";
 
 
-type VaultTableProps = {
-    isRelayer: boolean | undefined;
-};
-
-export default function VaultTable(props: VaultTableProps): ReactElement {
+export default function VaultTable(): ReactElement {
     const [vaults, setVaults] = useState<Array<Vault>>([]);
-    const [showWizard, setShowWizard] = useState(false);
     const [liquidationThreshold, setLiquidationThreshold] = useState(new Big(0));
     const [auctionCollateralThreshold, setAuctionCollateralThreshold] = useState(new Big(0));
     const [premiumRedeemThreshold, setPremiumRedeemThreshold] = useState(new Big(0));
     const [secureCollateralThreshold, setSecureCollateralThreshold] = useState(new Big(0));
-    const dispatch = useDispatch();
     const { t } = useTranslation();
-    const { address, extensions, btcRelayHeight, bitcoinHeight, stateOfBTCParachain, polkaBtcLoaded } = useSelector(
+    const { polkaBtcLoaded } = useSelector(
         (state: StoreType) => state.general
     );
 
@@ -183,42 +171,6 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
         );
     };
 
-    const handleCloseWizard = () => {
-        dispatch(resetRedeemWizardAction());
-        setShowWizard(false);
-    };
-
-    const openRedeemWizard = (vault: Vault) => {
-        if (stateOfBTCParachain === ParachainStatus.Error) {
-            toast.error(t("redeem_page.error_in_parachain"));
-            return;
-        }
-        if (bitcoinHeight - btcRelayHeight > constants.BLOCKS_BEHIND_LIMIT) {
-            toast.error(t("redeem_page.error_more_than_6_blocks_behind"));
-            return;
-        }
-        if (address && extensions.length) {
-            dispatch(updatePremiumVaultAction(vault));
-            setShowWizard(true);
-        } else {
-            dispatch(showAccountModalAction(true));
-        }
-    };
-
-    const showPremiumButton = (vault: Vault): boolean => {
-        if (vault.unsettledCollateralization === undefined && vault.settledCollateralization === undefined) {
-            return false;
-        }
-        if (
-            vault.settledCollateralization !== undefined &&
-            new Big(vault.settledCollateralization).div(100).gt(auctionCollateralThreshold) &&
-            new Big(vault.settledCollateralization).div(100).lt(premiumRedeemThreshold)
-        ) {
-            return true;
-        }
-        return false;
-    };
-
     return (
         <div className="vault-table">
             <div className="row">
@@ -264,13 +216,7 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                                                 <td>{vault.pendingBTC}</td>
                                                 {showCollateralizations(vault)}
                                                 <td className={getStatusColor(vault.status)}>
-                                                    {!props.isRelayer && showPremiumButton(vault) ? (
-                                                        <Button onClick={() => openRedeemWizard(vault)}>
-                                                            {t("dashboard.premium_redeem")}
-                                                        </Button>
-                                                    ) : (
-                                                        <span>{vault.status}</span>
-                                                    )}
+                                                    <span>{vault.status}</span>
                                                 </td>
                                             </tr>
                                         );
@@ -287,9 +233,6 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                     </div>
                 </div>
             </div>
-            <Modal show={showWizard} onHide={handleCloseWizard} size={"lg"}>
-                <RedeemWizard handleClose={handleCloseWizard} />
-            </Modal>
         </div>
     );
 }

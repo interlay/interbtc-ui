@@ -12,23 +12,20 @@ import { setActiveTabAction } from "../../common/actions/general.actions";
 import { FaArrowLeft } from "react-icons/fa";
 import "./app.page.scss";
 import { changeIssueStepAction } from "../../common/actions/issue.actions";
-import { changeRedeemStepAction } from "../../common/actions/redeem.actions";
 
 
 export default function AppPage(): ReactElement {
     const dispatch = useDispatch();
     const { activeTab, balancePolkaBTC, balanceDOT } = useSelector((state: StoreType) => state.general);
     const issueStep = useSelector((state: StoreType) => state.issue.step);
-    const redeemStep = useSelector((state: StoreType) => state.redeem.step);
     const { t } = useTranslation();
 
     const changeTab = (tab: ActiveTab) => {
         dispatch(setActiveTabAction(tab));
     }
 
-    const showTabs = () => {
-        return (issueStep === "ENTER_BTC_AMOUNT" && activeTab === ActiveTab.Issue) || 
-            (redeemStep === "ENTER_POLKABTC" && activeTab === ActiveTab.Redeem);
+    const hideTabs = () => {
+        return (issueStep !== "ENTER_BTC_AMOUNT" && activeTab === ActiveTab.Issue);
     }
 
     const goBack = () => {
@@ -38,17 +35,6 @@ export default function AppPage(): ReactElement {
             }
             if (issueStep === "BTC_PAYMENT") {
                 dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
-            }
-        }
-        if (activeTab === ActiveTab.Redeem) {
-            if (redeemStep === "ENTER_BTC_ADDRESS") {
-                dispatch(changeRedeemStepAction("ENTER_POLKABTC"))
-            }
-            if (redeemStep === "CONFIRMATION") {
-                dispatch(changeRedeemStepAction("ENTER_BTC_ADDRESS"))
-            }
-            if (redeemStep === "VAULT_INFO") {
-                dispatch(changeRedeemStepAction("CONFIRMATION"))
             }
         }
     }
@@ -70,19 +56,25 @@ export default function AppPage(): ReactElement {
         <div className="container mt-5">
             <div className="row justify-content-center">
                 <div className="col-xl-6 col-lg-6 col-md-8 col-sm-12 col-xs-12 tab-content-wrapper">
-                    {showTabs() ? 
+                    {!hideTabs() ? 
                     <div id="main-tabs" className="row app-tabs">
-                        <div className={"col-4 app-tab" + (activeTab === ActiveTab.Issue ? " active-tab" : " not-active")}
+                        <div className={"col-4 app-tab"}
                             onClick={() => changeTab(ActiveTab.Issue)}>
-                            {t("issue")}
+                            <div className={activeTab === ActiveTab.Issue ? " active-tab" : " not-active"}>
+                                {t("issue")}
+                            </div>
                         </div>
-                        <div className={"col-4 app-tab" + (activeTab === ActiveTab.Redeem ? " active-tab" : " not-active")}
+                        <div className={"col-4 app-tab"}
                             onClick={() => changeTab(ActiveTab.Redeem)}>
-                            {t("redeem")}
+                            <div className={activeTab === ActiveTab.Redeem ? " active-tab" : " not-active"}>
+                                {t("redeem")}
+                            </div>
                         </div>
-                        <div className={"col-4 app-tab" + (activeTab === ActiveTab.Transfer ? " active-tab" : " not-active")}
+                        <div className={"col-4 app-tab"}
                             onClick={() => changeTab(ActiveTab.Transfer)}>
-                            {t("transfer")}
+                            <div className={activeTab === ActiveTab.Transfer ? " active-tab" : " not-active"}>
+                                {t("transfer")}
+                            </div>
                         </div>
                     </div> :
                     <React.Fragment>

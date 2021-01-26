@@ -54,7 +54,7 @@ export const getInitialState = (): StoreType => {
         redeem: {
             fee: "0",
             address: "",
-            step: "ENTER_POLKABTC",
+            step: "AMOUNT_AND_ADDRESS",
             amountPolkaBTC: "",
             btcAddress: "",
             vaultBtcAddress: "",

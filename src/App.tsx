@@ -32,7 +32,6 @@ import "react-toastify/dist/ReactToastify.css";
 import Topbar from "./common/components/topbar";
 import Footer from "./common/components/footer/footer";
 import AppPage from "./pages/app/app.page";
-import RedeemPage from "./pages/redeem/redeem.page";
 import AboutPage from "./pages/about.page";
 import FaqPage from "./pages/faq.page";
 import UserGuidePage from "./pages/user-guide.page";
@@ -212,11 +211,6 @@ export default function App(): ReactElement {
                     />
                 )}
                 <Switch>                    
-                    {!constants.STATIC_PAGE_ONLY && (
-                        <Route path="/redeem">
-                            <RedeemPage />
-                        </Route>
-                    )}
                     {!constants.STATIC_PAGE_ONLY && (
                         <Route path="/staked-relayer">
                             <StakedRelayerPage />

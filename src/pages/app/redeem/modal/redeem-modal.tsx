@@ -4,21 +4,21 @@ import { StoreType } from "../../../../common/types/util.types";
 import { Modal } from "react-bootstrap";
 import { useTranslation } from 'react-i18next';
 import { shortAddress } from "../../../../common/utils/utils";
-import PaymentView from "./payment-view";
 import StatusView from "./status-view";
-import WhopsView from "./whoops-view";
 import Big from "big.js";
+import BitcoinLogo from "../../../../assets/img/Bitcoin-Logo.png";
 
-type IssueModalProps = {
+
+type RedeemModalProps = {
     show: boolean;
     onClose: () => void;
 }
 
-export default function IssueModal(props: IssueModalProps) {
+export default function RedeemModal(props: RedeemModalProps) {
     const { address } = useSelector((state: StoreType) => state.general);
-    const selectedIdRequest = useSelector((state: StoreType) => state.issue.id);
-    const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address) || [];
-    const request = issueRequests.filter((request) => request.id === selectedIdRequest)[0];
+    const selectedIdRequest = useSelector((state: StoreType) => state.redeem.id);
+    const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address) || [];
+    const request = redeemRequests.filter((request) => request.id === selectedIdRequest)[0];
     const { t } = useTranslation();
 
     return <Modal show={props.show} onHide={props.onClose} size={"xl"}>
@@ -29,11 +29,11 @@ export default function IssueModal(props: IssueModalProps) {
                 <div className="row">
                     <div className="col-6 justify-content-center">
                         <div className="wizard-title">
-                            {t("issue_page.issue_request_for")}
+                            {t("redeem_page.redeem_request_for")}
                         </div>
-                        <div className="issue-amount"><span className="wizzard-number">{request.amountBTC}</span>&nbsp;polkaBTC</div>
+                        <div className="issue-amount"><span className="wizzard-number">{request.amountPolkaBTC}</span>&nbsp;polkaBTC</div>
                         <div className="step-item row">
-                            <div className="col-6">{t("issue_page.issue_id")}</div>
+                            <div className="col-6">{t("redeem_page.redeem_id")}</div>
                             <div className="col-6">{shortAddress(request.id)}</div>
                         </div>
                         <div className="step-item row">
@@ -42,27 +42,26 @@ export default function IssueModal(props: IssueModalProps) {
                         </div>
                         <div className="step-item row">
                             <div className="col-6">{t("nav_vault")}</div>
-                            <div className="col-6">{shortAddress(request.vaultDOTAddress)}</div>
-                        </div>
-                        <div className="step-item row">
-                            <div className="col-6">{t("issue_page.vault_btc_address")}</div>
-                            <div className="col-6">{shortAddress(request.vaultBTCAddress)}</div>
+                            <div className="col-6">{shortAddress(request.vaultDotAddress || "")}</div>
                         </div>
                         <div className="step-item row">
                             <div className="col-6">{t("bridge_fee")}</div>
-                            <div className="col-6">{request.fee} BTC</div>
+                            <div className="col-6">
+                                <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
+                                {request.fee} BTC
+                            </div>
                         </div>
                         <hr className="total-divider"></hr>
                         <div className="step-item row">
-                                <div className="col-6 total-amount">{t("total_deposit")}</div>
-                                <div className="col-6 total-amount">{((new Big(request.fee)).add(new Big(request.amountBTC))).toString()} BTC</div>
+                            <div className="col-6 total-amount">{t("redeem_page.amount_received")}</div>
+                            <div className="col-6 total-amount">
+                                <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
+                                {((new Big(request.amountPolkaBTC)).sub(new Big(request.fee))).toString()} BTC
+                            </div>
                         </div>
                     </div>
                     <div className="col-6">
-                        {!request.btcTxId && <PaymentView request={request}/>}
-                        {request.btcTxId && <StatusView request={request}/>}
-                        {!request.btcTxId && <WhopsView request={request}/>}
-
+                        <StatusView request={request}/>
                     </div>
                 </div>
             }

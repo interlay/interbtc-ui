@@ -24,7 +24,7 @@ import { RedeemState } from "../types/redeem.types";
 const initialState = {
     address: "",
     fee: "0",
-    step: "ENTER_POLKABTC",
+    step: "AMOUNT_AND_ADDRESS",
     amountPolkaBTC: "",
     btcAddress: "",
     vaultBtcAddress: "",
@@ -117,7 +117,7 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             newRequestsMap.set(state.address, allUpdatedRequests);
             return { ...state, redeemRequests: newRequestsMap };
         case INIT_STATE:
-            return { ...state, fee: "0", transactionListeners: [] };
+            return { ...state, fee: "0", transactionListeners: [], step: "AMOUNT_AND_ADDRESS" };
         case ADD_VAULT_REDEEMS:
             return { ...state, vaultRedeems: action.vaultRedeems };
         case UPDATE_ALL_REDEEM_REQUESTS:

@@ -32,6 +32,12 @@ export enum ActiveTab {
     Transfer,
 }
 
+export type Prices = {
+    bitcoin: {
+        usd: number;
+    };
+};
+
 export type GeneralState = {
     polkaBtcLoaded: boolean;
     relayerLoaded: boolean;
