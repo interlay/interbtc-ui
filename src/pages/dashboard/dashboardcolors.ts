@@ -1,6 +1,6 @@
 export interface Style {
     colour: string;
-    filter: string;
+    filter?: string;
 }
 
 export function getAccents(colour: string): Style {
@@ -30,6 +30,9 @@ export function getAccents(colour: string): Style {
             accent.colour = "#4ac948";
             accent.filter =
                 "brightness(0) saturate(100%) invert(68%) sepia(64%) saturate(530%) hue-rotate(66deg) brightness(89%) contrast(85%)";
+            break;
+        case "d_red":
+            accent.colour = "#f32013";
             break;
         default:
             accent.colour = "#a9a9a9";
