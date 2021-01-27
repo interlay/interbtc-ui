@@ -31,7 +31,7 @@ export default function EnterBTCAmount() {
     const [isRequestPending, setRequestPending] = useState(false);
     const [dustValue, setDustValue] = useState("0");
     const [usdPrice, setUsdPrice] = useState("0");
-    const [usdAmount, setUsdAmount] = useState(calculateAmount(amount,usdPrice));
+    const [usdAmount, setUsdAmount] = useState(calculateAmount(amount || "0",usdPrice));
     const dispatch = useDispatch();
     const { t } = useTranslation();
 

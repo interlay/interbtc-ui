@@ -29,7 +29,8 @@ export default function IssueModal(props: IssueModalProps) {
         fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd").then((response) => {
             return response.json() as Promise<Prices>;
         }).then((prices) => {
-            const amount = calculateAmount(request.amountBTC,prices.bitcoin.usd.toString());
+            if (!request) return;
+            const amount = calculateAmount(request.amountBTC || "0",prices.bitcoin.usd.toString());
             setUsdAmount(amount); 
         });
     });

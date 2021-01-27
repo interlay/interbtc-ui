@@ -28,7 +28,8 @@ export default function RedeemModal(props: RedeemModalProps) {
         fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd").then((response) => {
             return response.json() as Promise<Prices>;
         }).then((prices) => {
-            const amount = calculateAmount(request.amountPolkaBTC,prices.bitcoin.usd.toString());
+            if (!request) return;
+            const amount = calculateAmount(request.amountPolkaBTC || "0",prices.bitcoin.usd.toString());
             setUsdAmount(amount); 
         });
     });

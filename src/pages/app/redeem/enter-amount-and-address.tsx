@@ -42,7 +42,7 @@ export default function EnterAmountAndAddress() {
     const [dustValue, setDustValue] = useState("0");
     const dispatch = useDispatch();
     const [usdPrice, setUsdPrice] = useState("0");
-    const [usdAmount, setUsdAmount] = useState(calculateAmount(amount,usdPrice));
+    const [usdAmount, setUsdAmount] = useState(calculateAmount(amount || "0",usdPrice));
     const [redeemFee, setRedeemFee] = useState("0.5");
 
     useEffect(() => {

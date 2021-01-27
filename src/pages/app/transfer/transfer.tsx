@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Prices } from "../../../common/types/util.types";
+import { Prices, StoreType } from "../../../common/types/util.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { calculateAmount } from "../../../common/utils/utils";
+import { btcToSat } from "@interlay/polkabtc";
 
 
 type TransferForm = {
@@ -13,6 +15,7 @@ type TransferForm = {
 
 export default function Transfer() {
     const { t } = useTranslation();
+    const senderAddress = useSelector((state: StoreType) => state.general.address);
     const defaultValues = { defaultValues: { amountPolkaBTC: "", btcAddress: "" } };
     const { register, handleSubmit, errors, getValues } = useForm<TransferForm>(defaultValues);
     const [usdPrice, setUsdPrice] = useState("0");
@@ -36,7 +39,8 @@ export default function Transfer() {
     const onSubmit = handleSubmit(async ({ amountPolkaBTC, address }) => {
         setRequestPending(true);
         try {
-            // TO DO add lib call for transfer
+            window.polkaBTC.treasury.setAccount(senderAddress);
+            await window.polkaBTC.treasury.transferPolkaBTC(address,btcToSat(amountPolkaBTC));
         } catch(error) {
             console.log(error);
         }
