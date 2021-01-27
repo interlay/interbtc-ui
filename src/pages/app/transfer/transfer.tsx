@@ -40,7 +40,7 @@ export default function Transfer() {
         setRequestPending(true);
         try {
             window.polkaBTC.treasury.setAccount(senderAddress);
-            await window.polkaBTC.treasury.transferPolkaBTC(address,btcToSat(amountPolkaBTC));
+            await window.polkaBTC.treasury.transfer(address,btcToSat(amountPolkaBTC));
         } catch(error) {
             console.log(error);
         }
