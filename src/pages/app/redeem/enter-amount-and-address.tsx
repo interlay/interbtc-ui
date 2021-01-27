@@ -23,6 +23,7 @@ import Big from "big.js";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 import { startTransactionWatcherRedeem } from "../../../common/utils/redeem-transaction.watcher";
 import { updateBalancePolkaBTCAction } from "../../../common/actions/general.actions";
+import { calculateAmount } from "../../../common/utils/utils";
 
 
 type AmountAndAddressForm = {
@@ -33,7 +34,6 @@ type AmountAndAddressForm = {
 export default function EnterAmountAndAddress() {
     const { t } = useTranslation();
     const { balancePolkaBTC, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
-    const { premiumVault } = useSelector((state: StoreType) => state.vault);
     const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
     const vaultDotAddress = useSelector((state: StoreType) => state.redeem.vaultDotAddress);
     const defaultValues = amount ? { defaultValues: { amountPolkaBTC: amount, btcAddress: "" } } : undefined;
@@ -41,7 +41,8 @@ export default function EnterAmountAndAddress() {
     const [isRequestPending, setRequestPending] = useState(false);
     const [dustValue, setDustValue] = useState("0");
     const dispatch = useDispatch();
-    const [usdPrice, setUsdPrice] = useState(0);
+    const [usdPrice, setUsdPrice] = useState("0");
+    const [usdAmount, setUsdAmount] = useState(calculateAmount(amount,usdPrice));
     const [redeemFee, setRedeemFee] = useState("0.5");
 
     useEffect(() => {
@@ -55,13 +56,15 @@ export default function EnterAmountAndAddress() {
             fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd").then((response) => {
                 return response.json() as Promise<Prices>;
             }).then((prices) => {
-                setUsdPrice(prices.bitcoin.usd);   
+                setUsdPrice(prices.bitcoin.usd.toString());
+                const amount = calculateAmount(getValues("amountPolkaBTC") || "0",prices.bitcoin.usd.toString());
+                setUsdAmount(amount);
             });
             // TODO: fetch the redeem fee from the parachain
             setRedeemFee("0.5");
         };
         fetchData();
-    }, [polkaBtcLoaded, premiumVault]);
+    }, [polkaBtcLoaded, getValues]);
 
     const onSubmit = handleSubmit(async ({ amountPolkaBTC, btcAddress }) => {
         if (!polkaBtcLoaded) return;
@@ -81,15 +84,12 @@ export default function EnterAmountAndAddress() {
 
             let vaultId;
             let vaultBTCAddress;
-            if (premiumVault) {
-                vaultId = premiumVault.vaultId;
-                vaultBTCAddress = premiumVault.btcAddress;
-            } else {
-                vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountAsSatoshi);
-                // get the vault's data
-                const vault = await window.polkaBTC.vaults.get(vaultId);
-                vaultBTCAddress = vault.wallet.addresses[0];
-            }
+            
+            vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountAsSatoshi);
+            // get the vault's data
+            const vault = await window.polkaBTC.vaults.get(vaultId);
+            vaultBTCAddress = vault.wallet.addresses[0];
+        
             // toast.success("Found vault: " + vaultId.toString());
 
             const fee = await window.polkaBTC.redeem.getFeesToPay(amountPolkaBTC);
@@ -152,6 +152,9 @@ export default function EnterAmountAndAddress() {
                         type="float"
                         placeholder="0.00"
                         className={"" + (errors.amountPolkaBTC ? " error-borders" : "")}
+                        onChange={() => {
+                            setUsdAmount(calculateAmount(getValues("amountPolkaBTC") || "0",usdPrice));
+                        }}
                         ref={register({
                             required: true,
                             validate: (value) =>
@@ -169,7 +172,7 @@ export default function EnterAmountAndAddress() {
             </div>
             <div className="row usd-price">
                 <div className="col">
-                    {"= $"+ usdPrice}
+                    {"= $" + usdAmount}
                 </div>
             </div>
             {errors.amountPolkaBTC && (
@@ -183,7 +186,7 @@ export default function EnterAmountAndAddress() {
                 <div className="col-12">
                     <div className="input-address-wrapper">
                         <div className="address-label">
-                            Destination
+                            {t("destination")}
                         </div>
                         <input
                             id="btc-address-input"

@@ -17,7 +17,7 @@ import { btcToSat, satToBTC, planckToDOT } from "@interlay/polkabtc";
 import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
 import { useTranslation } from "react-i18next";
 import { Prices } from "../../../common/types/util.types";
-
+import { calculateAmount } from "../../../common/utils/utils";
 
 type EnterBTCForm = {
     amountBTC: string;
@@ -27,10 +27,11 @@ export default function EnterBTCAmount() {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const amount = useSelector((state: StoreType) => state.issue.amountBTC);
     const defaultValues = amount ? { defaultValues: { amountBTC: amount } } : undefined;
-    const { register, handleSubmit, errors } = useForm<EnterBTCForm>(defaultValues);
+    const { register, handleSubmit, errors, getValues } = useForm<EnterBTCForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
     const [dustValue, setDustValue] = useState("0");
-    const [usdPrice, setUsdPrice] = useState(0);
+    const [usdPrice, setUsdPrice] = useState("0");
+    const [usdAmount, setUsdAmount] = useState(calculateAmount(amount,usdPrice));
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
@@ -43,7 +44,9 @@ export default function EnterBTCAmount() {
             fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd").then((response) => {
                 return response.json() as Promise<Prices>;
             }).then((prices) => {
-                setUsdPrice(prices.bitcoin.usd);   
+                setUsdPrice(prices.bitcoin.usd.toString());  
+                const amount = calculateAmount(getValues("amountBTC") || "0",prices.bitcoin.usd.toString());
+                setUsdAmount(amount); 
             });
         };
         fetchData();
@@ -92,6 +95,9 @@ export default function EnterBTCAmount() {
                         type="float"
                         placeholder="0.00"
                         className={"" + (errors.amountBTC ? " error-borders" : "")}
+                        onChange={() => {
+                            setUsdAmount(calculateAmount(getValues("amountBTC") || "0",usdPrice));
+                        }}
                         ref={register({
                             required: true,
                             validate: (value) => {
@@ -112,7 +118,7 @@ export default function EnterBTCAmount() {
             </div>
             <div className="row usd-price">
                 <div className="col">
-                    {"= $"+ usdPrice}
+                    {"= $" + usdAmount}
                 </div>
             </div>
             {errors.amountBTC && (

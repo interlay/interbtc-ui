@@ -77,6 +77,10 @@
     "balances": "Balances",
     "destination": "Destination",
     "transfer": "Transfer",
+    "recipient": "Recipient",
+    "confirmed": "Confirmed",
+    "address": "Address",
+    "enter_recipient_address": "Please enter the recipient address",
     "redeem_page": {
         "waiting_for": "Waiting for",
         "typically_takes": "This typically takes only a few minutes but may sometimes take up to 6 hours.",
@@ -147,6 +151,8 @@
         "capacity": "Capacity"
     },
     "issue_page": {
+        "transaction_not_set": "Transaction not set in",
+        "time": "time",
         "issuing_title": "Issuing",
         "by_locking": "By locking",
         "deposit_transaction": "BTC deposit transaction",

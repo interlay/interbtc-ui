@@ -38,6 +38,10 @@ export function dateToShortString(date: Date): string {
     return date.toDateString().substring(3) + " " + date.toTimeString().substring(0, date.toTimeString().length);
 }
 
+export function calculateAmount(amount: string, currencyPrice: string): string {
+    return new Big(amount).mul(new Big(currencyPrice)).toString();
+}
+
 /**
  * Converts an IssueRequest object retrieved from the parachain
  * to a UI IssueRequest object
