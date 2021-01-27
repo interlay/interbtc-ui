@@ -1,8 +1,31 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ButtonComponent from "./buttoncomponent";
 import { getAccents } from "../dashboardcolors";
+import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
+
 const PolkaBTC = (): React.ReactElement => {
+    const statsApi = usePolkabtcStats();
+
+    const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number }>());
+    const pointIssuesPerDay = useMemo(
+        () =>
+            cumulativeIssuesPerDay.map((dataPoint, i) => {
+                if (i === 0) return 0;
+                return dataPoint.sat - cumulativeIssuesPerDay[i - 1].sat;
+            }),
+        [cumulativeIssuesPerDay]
+    );
+
+    const fetchIssuesLastDays = useMemo(
+        () => async () => {
+            const res = await statsApi.getRecentDailyIssues(6);
+            setCumulativeIssuesPerDay(res.data);
+        },
+        [statsApi] // to silence the compiler
+    );
+
     useEffect(() => {
+        fetchIssuesLastDays();
         var Chart = require("chart.js");
         let daysElement = document.getElementById("polkaBTCChart") as HTMLCanvasElement;
         var ctx = daysElement.getContext("2d");
@@ -21,7 +44,7 @@ const PolkaBTC = (): React.ReactElement => {
             pointHoverRadius: 4,
             pointHoverBorderWidth: 15,
             pointRadius: 4,
-            data: [7, 6, 5, 4, 3, 2, 1],
+            data: cumulativeIssuesPerDay,
         };
         var IssuedPerDayData = {
             label: "PolkaBTC issued today",
@@ -38,7 +61,7 @@ const PolkaBTC = (): React.ReactElement => {
             pointHoverRadius: 4,
             pointHoverBorderWidth: 15,
             pointRadius: 4,
-            data: [1, 2, 2, 2, 2, 2, 2],
+            data: pointIssuesPerDay,
         };
         var data = {
             labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
@@ -66,7 +89,7 @@ const PolkaBTC = (): React.ReactElement => {
                 },
             },
         });
-    }, []);
+    }, [fetchIssuesLastDays]);
     return (
         <div className="card">
             <div className="card-top-content">

@@ -1,24 +1,31 @@
 import React, { useState, useEffect } from "react";
 import ButtonComponent from "./buttoncomponent";
 import { getAccents } from "../dashboardcolors";
+import { useSelector } from "react-redux";
+import { StoreType } from "../../../common/types/util.types";
 const ParachainSecurity = (): React.ReactElement => {
-    const [status, setStatus] = useState("online");
     const [textColour, setTextColour] = useState("d_grey");
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
     useEffect(() => {
-        let parachainTextElement = document.getElementById("parachain-text") as HTMLElement;
+        const fetchOracleData = async () => {
+            if (!polkaBtcLoaded) return;
+            const parachainStatus = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
+            let parachainTextElement = document.getElementById("parachain-text") as HTMLElement;
 
-        if (status === "online") {
-            parachainTextElement.innerHTML = "completely secure";
-            setTextColour("d_green");
-        } else if (status === "offline") {
-            parachainTextElement.innerHTML = "not secure";
-            setTextColour("d_red");
-        } else {
-            parachainTextElement.innerHTML = "is unavailable";
-            setTextColour("d_grey");
-        }
-    }, [status]);
+            if (parachainStatus.isRunning) {
+                parachainTextElement.innerHTML = "secure";
+                setTextColour("d_green");
+            } else if (parachainStatus.isError) {
+                parachainTextElement.innerHTML = "not secure";
+                setTextColour("d_red");
+            } else {
+                parachainTextElement.innerHTML = "unavailable";
+                setTextColour("d_grey");
+            }
+        };
+        fetchOracleData();
+    }, [textColour]);
     return (
         <div className="card">
             <div className="parachain-content-container">
