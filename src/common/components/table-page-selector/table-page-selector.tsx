@@ -22,13 +22,15 @@ type TablePageSelectorProps = {
 };
 
 export default function TablePageSelector({ totalPages, currentPage, setPage }: TablePageSelectorProps): ReactElement {
+    if (totalPages <= 1) totalPages = 1;
+
     const pagesToDisplay = 5;
     const displayedPages = Math.min(totalPages, pagesToDisplay);
     const first = Math.max(currentPage - Math.ceil(displayedPages / 2 - 1), 1);
     const pages = range(first, first + displayedPages);
 
     return (
-        <Row>
+        <Row className="justify-content-between">
             <Button>Prev</Button>
             <Col sm={4}>
                 {pages[0] !== 1 ? (

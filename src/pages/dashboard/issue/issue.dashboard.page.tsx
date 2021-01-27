@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
+import { satToBTC } from "@interlay/polkabtc";
 
 import IssuesPerDayChart from "../../../common/components/charts/issue/issues-per-day-chart";
 import { StoreType } from "../../../common/types/util.types";
@@ -54,7 +55,7 @@ export default function IssueDashboard(): ReactElement {
     const tableIssueRequestRow = useMemo(
         () => (ireq: IssueRequest): string[] => [
             ireq.id,
-            ireq.amountBTC,
+            satToBTC(ireq.amountBTC),
             ireq.creation,
             ireq.vaultDOTAddress,
             ireq.vaultBTCAddress,
