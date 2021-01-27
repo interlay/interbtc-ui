@@ -5,28 +5,30 @@
     text-align: center;
     min-height: 100vh;
     background-color: #fafafa;
-    @include justifyCenter();
+    display: grid;
+    padding: 30px 0px;
 }
 .card {
-    width: 330px;
-    height: max-content;
+    width: 90%;
+    min-height: 300px;
     background-color: white;
     border: none;
     border-radius: 10;
-    padding: 15px 10px;
+    padding: 15px 20px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     h1 {
-        color: $d-yellow;
-        font-family: airbnb-cereal-bold;
-        font-size: 16px;
-        margin-bottom: 0.4rem;
+        color: black;
+        font-family: airbnb-cereal-book;
+        font-size: 13px;
+        margin-bottom: 0.3rem;
     }
+
     h2 {
         color: black;
         opacity: 0.5;
         font-size: 16px;
         font-family: airbnb-cereal-bold;
-        margin-bottom: 0rem;
+        margin-bottom: 0.2rem;
     }
     h3 {
         font-size: 8px;
@@ -39,13 +41,31 @@
         text-align: left;
     }
     .card-top-content {
-        padding: 0px 10px;
+        padding: 0px 5px;
+    }
+    .h1-xl-text {
+        color: black;
+        font-size: 34px;
+        text-align: left;
+        font-family: airbnb-cereal-bold;
+    }
+    .parachain-content-container {
+        height: 250px;
+        padding-left: 20px;
+        @include flexCenter();
+        flex-direction: column;
+    }
+    .parachain-button-container {
+        width: 100%;
+        text-align: left;
+        margin-top: 10px;
     }
     button {
         background-color: white;
         border-radius: 8px;
         width: 130px;
-        padding: 10px 20px;
+        padding: 10px 15px;
+        @include flexCenter();
     }
     .button-assets-container {
         display: flex;
@@ -62,10 +82,26 @@
         justify-content: space-between;
         align-items: center;
     }
+    .circle-container {
+        @include flexCenter();
+        margin-top: 25px;
+    }
+    .status-circle {
+        background: none;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        border: 3px solid grey;
+        @include flexCenter();
+        flex-direction: column;
+    }
 }
+
 .row-grid {
     display: grid;
-    margin-top: 20px;
+    justify-items: center;
+    width: 100%;
+    row-gap: 30px;
 }
 .chart-container {
     position: relative;
@@ -73,4 +109,59 @@
 }
 canvas {
     height: 250px !important;
+}
+.section-gap {
+    margin-top: 60px;
+}
+.latest-block-text {
+    font-size: 10px;
+    font-family: airbnb-cereal-bold;
+}
+.title-text {
+    font-size: 20px;
+    font-family: airbnb-cereal-bold;
+}
+
+@media only screen and (min-width: $desktop-size) {
+    .dashboard-page {
+        display: flex;
+        justify-content: center;
+        padding: 50px 0px;
+    }
+    .row-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+        column-gap: 40px;
+    }
+
+    .card {
+        width: 100%;
+        min-height: 340px;
+        padding: 30px 20px;
+        h1 {
+            font-size: 16px;
+            margin-bottom: 0.5rem;
+        }
+        h3 {
+            font-size: 10px;
+            letter-spacing: 0.6px;
+        }
+        .parachain-content-container {
+            width: 70%;
+            padding-left: 30px;
+        }
+        button {
+            width: 160px;
+            padding: 12px 12px;
+        }
+    }
+    .chart-container {
+        margin-top: 20px;
+    }
+    .canvas {
+        height: 400px !important;
+    }
+    .rows-container {
+        max-width: 1700px;
+        width: 90%;
+    }
 }

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import ButtonComponent from "./buttoncomponent";
 import { getAccents } from "../dashboardcolors";
 
-const collateralLocked = () => {
+const CollateralLocked = () => {
     useEffect(() => {
         var Chart = require("chart.js");
         let daysElement = document.getElementById("collateralLockedChart") as HTMLCanvasElement;
@@ -29,13 +29,13 @@ const collateralLocked = () => {
             label: "Collateral issued today",
             fill: false,
             backgroundColor: "rgba(255, 255, 255, 0.3)",
-            borderColor: `${getAccents("d_blue").colour}`,
+            borderColor: `${getAccents("d_grey").colour}`,
             borderWidth: 2,
             borderDash: [],
             borderDashOffset: 0.0,
-            pointBackgroundColor: `${getAccents("d_blue").colour}`,
+            pointBackgroundColor: `${getAccents("d_grey").colour}`,
             pointBorderColor: "rgba(255,255,255,0)",
-            pointHoverBackgroundColor: `${getAccents("d_blue").colour}`,
+            pointHoverBackgroundColor: `${getAccents("d_grey").colour}`,
             pointBorderWidth: 20,
             pointHoverRadius: 4,
             pointHoverBorderWidth: 15,
@@ -73,12 +73,12 @@ const collateralLocked = () => {
         <div className="card">
             <div className="card-top-content">
                 <div className="values-container">
-                    <h1>Issued</h1>
-                    <h2>232.4 PolkaBTC</h2>
+                    <h1 style={{ color: `${getAccents("d_pink").colour}` }}>Collateral Locked</h1>
+                    <h2>12,500 DOT</h2>
                     <h2>$17,0030</h2>
                 </div>
                 <div className="button-container">
-                    <ButtonComponent buttonName="view all issued" propsButtonColor="d_yellow" />
+                    <ButtonComponent buttonName="view all vaults" propsButtonColor="d_pink" />
                 </div>
             </div>
             <div className="chart-container">
@@ -88,4 +88,4 @@ const collateralLocked = () => {
     );
 };
 
-export default collateralLocked;
+export default CollateralLocked;

@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import ButtonComponent from "./buttoncomponent";
 import { getAccents } from "../dashboardcolors";
-const polkaBTC = (): React.ReactElement => {
+const PolkaBTC = (): React.ReactElement => {
     useEffect(() => {
         var Chart = require("chart.js");
-        let daysElement = document.getElementById("PolkaBTCChart") as HTMLCanvasElement;
+        let daysElement = document.getElementById("polkaBTCChart") as HTMLCanvasElement;
         var ctx = daysElement.getContext("2d");
         var totalIssuedData = {
             label: "Total PolkaBTC issued",
@@ -27,13 +27,13 @@ const polkaBTC = (): React.ReactElement => {
             label: "PolkaBTC issued today",
             fill: false,
             backgroundColor: "rgba(255, 255, 255, 0.3)",
-            borderColor: `${getAccents("d_blue").colour}`,
+            borderColor: `${getAccents("d_grey").colour}`,
             borderWidth: 2,
             borderDash: [],
             borderDashOffset: 0.0,
-            pointBackgroundColor: `${getAccents("d_blue").colour}`,
+            pointBackgroundColor: `${getAccents("d_grey").colour}`,
             pointBorderColor: "rgba(255,255,255,0)",
-            pointHoverBackgroundColor: `${getAccents("d_blue").colour}`,
+            pointHoverBackgroundColor: `${getAccents("d_grey").colour}`,
             pointBorderWidth: 20,
             pointHoverRadius: 4,
             pointHoverBorderWidth: 15,
@@ -71,7 +71,7 @@ const polkaBTC = (): React.ReactElement => {
         <div className="card">
             <div className="card-top-content">
                 <div className="values-container">
-                    <h1>Issued</h1>
+                    <h1 style={{ color: `${getAccents("d_yellow").colour}` }}>Issued</h1>
                     <h2>232.4 PolkaBTC</h2>
                     <h2>$17,0030</h2>
                 </div>
@@ -80,10 +80,10 @@ const polkaBTC = (): React.ReactElement => {
                 </div>
             </div>
             <div className="chart-container">
-                <canvas id="PolkaBTCChart"></canvas>
+                <canvas id="polkaBTCChart"></canvas>
             </div>
         </div>
     );
 };
 
-export default polkaBTC;
+export default PolkaBTC;
