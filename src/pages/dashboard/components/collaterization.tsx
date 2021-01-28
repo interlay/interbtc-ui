@@ -44,11 +44,7 @@ const Collaterization = (): ReactElement => {
                     style={{ borderColor: `${getAccents("d_blue").colour}` }}
                     id="relay-circle"
                 >
-                    <h1
-                        className="h1-xl-text"
-                        style={{ color: `${getAccents("d_blue").colour}` }}
-                        id="relay-circle-text"
-                    >
+                    <h1 className="h1-l-text" style={{ color: `${getAccents("d_blue").colour}` }}>
                         {roundTwoDecimals(issuablePolkaBTC)} <br />
                         PolkaBTC Capacity
                     </h1>
