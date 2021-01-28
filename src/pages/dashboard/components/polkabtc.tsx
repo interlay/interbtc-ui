@@ -5,9 +5,13 @@ import { Line, LinearComponentProps } from "react-chartjs-2";
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import {satToBTC} from "@interlay/polkabtc";
+import { satToBTC } from "@interlay/polkabtc";
 
-const PolkaBTC = (): React.ReactElement => {
+type PolkaBTCProps = {
+    chartOnly?: boolean;
+};
+
+const PolkaBTC = ({ chartOnly }: PolkaBTCProps): React.ReactElement => {
     const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
 
     const statsApi = usePolkabtcStats();
@@ -119,17 +123,21 @@ const PolkaBTC = (): React.ReactElement => {
 
     return (
         <div className="card">
-            <div className="card-top-content">
-                <div className="values-container">
-                    <h1 style={{ color: `${getAccents("d_yellow").colour}` }}>Issued</h1>
-                    <h2>{totalPolkaBTC} PolkaBTC</h2>
-                    {/* TODO: add the price API */}
-                    <h2>$17,0030</h2>
+            {!chartOnly ? (
+                <div className="card-top-content">
+                    <div className="values-container">
+                        <h1 style={{ color: `${getAccents("d_yellow").colour}` }}>Issued</h1>
+                        <h2>{totalPolkaBTC} PolkaBTC</h2>
+                        {/* TODO: add the price API */}
+                        <h2>$17,0030</h2>
+                    </div>
+                    <div className="button-container">
+                        <ButtonComponent buttonName="view all issued" propsButtonColor="d_yellow" />
+                    </div>
                 </div>
-                <div className="button-container">
-                    <ButtonComponent buttonName="view all issued" propsButtonColor="d_yellow" />
-                </div>
-            </div>
+            ) : (
+                ""
+            )}
             <div className="chart-container">
                 <Line {...chartProps} />
             </div>
