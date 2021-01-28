@@ -5,8 +5,13 @@ import { Line, LinearComponentProps } from "react-chartjs-2";
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
+import { satToBTC } from "@interlay/polkabtc";
 
-const PolkaBTC = (): React.ReactElement => {
+type PolkaBTCProps = {
+    chartOnly?: boolean;
+};
+
+const PolkaBTC = ({ chartOnly }: PolkaBTCProps): React.ReactElement => {
     const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
 
     const statsApi = usePolkabtcStats();
@@ -25,7 +30,6 @@ const PolkaBTC = (): React.ReactElement => {
 
     const fetchIssuesLastDays = useMemo(
         () => async () => {
-            console.log("Fetching issues");
             const res = await statsApi.getRecentDailyIssues(6);
             setCumulativeIssuesPerDay(res.data);
         },
@@ -53,7 +57,7 @@ const PolkaBTC = (): React.ReactElement => {
             pointHoverRadius: 4,
             pointHoverBorderWidth: 15,
             pointRadius: 4,
-            data: cumulativeIssuesPerDay.map((dataPoint) => Number(dataPoint.sat)),
+            data: cumulativeIssuesPerDay.map((dataPoint) => satToBTC(dataPoint.sat.toString())),
         };
         const perDayIssuedData = {
             label: "PolkaBTC issued today",
@@ -71,13 +75,12 @@ const PolkaBTC = (): React.ReactElement => {
             pointHoverRadius: 4,
             pointHoverBorderWidth: 15,
             pointRadius: 4,
-            data: pointIssuesPerDay,
+            data: pointIssuesPerDay.map((sat) => satToBTC(sat.toString())),
         };
         const data = {
             labels: cumulativeIssuesPerDay.map((dataPoint) => new Date(dataPoint.date).toLocaleDateString()),
             datasets: [totalIssuedData, perDayIssuedData],
         };
-        console.log(data);
         setChartProps({
             data,
             options: {
@@ -98,6 +101,9 @@ const PolkaBTC = (): React.ReactElement => {
                     ],
                     yAxes: [
                         {
+                            ticks: {
+                                beginAtZero: true,
+                            },
                             type: "linear",
                             display: true,
                             position: "left",
@@ -117,17 +123,21 @@ const PolkaBTC = (): React.ReactElement => {
 
     return (
         <div className="card">
-            <div className="card-top-content">
-                <div className="values-container">
-                    <h1 style={{ color: `${getAccents("d_yellow").colour}` }}>Issued</h1>
-                    <h2>{totalPolkaBTC} PolkaBTC</h2>
-                    {/* TODO: add the price API */}
-                    <h2>$17,0030</h2>
+            {!chartOnly ? (
+                <div className="card-top-content">
+                    <div className="values-container">
+                        <h1 style={{ color: `${getAccents("d_yellow").colour}` }}>Issued</h1>
+                        <h2>{totalPolkaBTC} PolkaBTC</h2>
+                        {/* TODO: add the price API */}
+                        <h2>$17,0030</h2>
+                    </div>
+                    <div className="button-container">
+                        <ButtonComponent buttonName="view all issued" propsButtonColor="d_yellow" />
+                    </div>
                 </div>
-                <div className="button-container">
-                    <ButtonComponent buttonName="view all issued" propsButtonColor="d_yellow" />
-                </div>
-            </div>
+            ) : (
+                ""
+            )}
             <div className="chart-container">
                 <Line {...chartProps} />
             </div>

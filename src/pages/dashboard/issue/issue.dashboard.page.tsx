@@ -5,11 +5,11 @@ import { useTranslation } from "react-i18next";
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 import { satToBTC } from "@interlay/polkabtc";
 
-import IssuesPerDayChart from "../../../common/components/charts/issue/issues-per-day-chart";
 import { StoreType } from "../../../common/types/util.types";
 import { DashboardIssueInfo } from "../../../common/types/issue.types";
 import { defaultTableDisplayParams } from "../../../common/utils/utils";
 import DashboardTable from "../../../common/components/dashboard-table/dashboard-table";
+import PolkaBTC from "../components/polkabtc";
 
 export default function IssueDashboard(): ReactElement {
     const { totalPolkaBTC } = useSelector((state: StoreType) => state.general);
@@ -90,15 +90,14 @@ export default function IssueDashboard(): ReactElement {
                         <div className="col-lg-8 offset-2">
                             <div className="row">
                                 <div className="col-md-4">
-                                    <p>Placeholder - total issued (currently {totalPolkaBTC})</p>
+                                    <p>{totalPolkaBTC} PolkaBTC issued</p>
                                 </div>
                                 <div className="col-md-4">
-                                    <p>
-                                        Placeholder - total successful Issue requests (currently {totalSuccessfulIssues}
-                                        )
-                                    </p>
+                                    <p>{totalSuccessfulIssues} successful issue requests</p>
                                 </div>
-                                <IssuesPerDayChart />
+                                <div className="col-md-4">
+                                    <PolkaBTC chartOnly={true} />
+                                </div>
                             </div>
                         </div>
                     </div>
