@@ -7,28 +7,31 @@ import PolkaBTCImg from "../../assets/img/polkabtc/PolkaBTC_black.svg";
 import RedeemRequests from "./table/redeem-requests";
 import { StoreType, ParachainStatus } from "../../common/types/util.types";
 import { resetRedeemWizardAction } from "../../common/actions/redeem.actions";
-import { 
-    hasFeedbackModalBeenDisplayedAction, 
-    showAccountModalAction
-} from "../../common/actions/general.actions";
+import { hasFeedbackModalBeenDisplayedAction, showAccountModalAction } from "../../common/actions/general.actions";
 import Feedback from "./feedback/feedback";
 import Balances from "../../common/components/balances";
 import { toast } from "react-toastify";
 import * as constants from "../../constants";
 import i18n from "i18next";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 import "./redeem.page.scss";
 
-
 export default function RedeemPage(): JSX.Element {
-    const { balancePolkaBTC, balanceDOT, address, extensions, hasFeedbackModalBeenDisplayed, btcRelayHeight,
-        bitcoinHeight, stateOfBTCParachain } = useSelector((state: StoreType) => state.general);
+    const {
+        balancePolkaBTC,
+        balanceDOT,
+        address,
+        extensions,
+        hasFeedbackModalBeenDisplayed,
+        btcRelayHeight,
+        bitcoinHeight,
+        stateOfBTCParachain,
+    } = useSelector((state: StoreType) => state.general);
     const [showWizard, setShowWizard] = useState(false);
     const [showFeedbackModal, setShowFeedbackModal] = useState(false);
     const dispatch = useDispatch();
     const { t } = useTranslation();
-
 
     const handleCloseWizard = () => {
         dispatch(resetRedeemWizardAction());
@@ -40,16 +43,16 @@ export default function RedeemPage(): JSX.Element {
             toast.error(i18n.t("redeem_page.error_in_parachain"));
             return;
         }
-        if (bitcoinHeight-btcRelayHeight>constants.BLOCKS_BEHIND_LIMIT) {
+        if (bitcoinHeight - btcRelayHeight > constants.BLOCKS_BEHIND_LIMIT) {
             toast.error(i18n.t("redeem_page.error_more_than_6_blocks_behind"));
             return;
         }
-        if(address && extensions.length) {
+        if (address && extensions.length) {
             setShowWizard(true);
         } else {
             dispatch(showAccountModalAction(true));
         }
-    }
+    };
 
     const handleShowFeedbackModal = function () {
         if (!hasFeedbackModalBeenDisplayed) {
@@ -70,23 +73,28 @@ export default function RedeemPage(): JSX.Element {
                         <Image src={PolkaBTCImg} width="256"></Image>
                     </Link>
 
-                    {address && extensions.length &&
+                    {address && extensions.length && (
                         <React.Fragment>
                             <Balances balancePolkaBTC={balancePolkaBTC} balanceDOT={balanceDOT}></Balances>
                         </React.Fragment>
-                    }
+                    )}
                     <Row className="mt-5 mb-5">
-                        
-                            <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
-                                <Button variant="outline-bitcoin" size="lg" block onClick={openWizard} disabled={balancePolkaBTC === '0' }>
-                                    {t("redeem_page.redeem_polkaBTC")}
-                                </Button>
+                        <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
+                            <Button
+                                variant="outline-bitcoin"
+                                size="lg"
+                                block
+                                onClick={openWizard}
+                                disabled={balancePolkaBTC === "0"}
+                            >
+                                {t("redeem_page.redeem_polkaBTC")}
+                            </Button>
+                        </Col>
+                        {balancePolkaBTC === "0" && (
+                            <Col className="mt-2" xs="12" sm={{ span: 6, offset: 3 }}>
+                                <p>{t("redeem_page.no_polkabtc_to_redeem")}</p>
                             </Col>
-                            {balancePolkaBTC === '0' &&
-                                <Col className="mt-2" xs="12" sm={{ span: 6, offset: 3 }}>
-                                    <p>{t("redeem_page.no_polkabtc_to_redeem")}</p>
-                                </Col>
-                            }
+                        )}
                     </Row>
                     <RedeemRequests handleShowFeedbackModal={handleShowFeedbackModal} />
 

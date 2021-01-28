@@ -13,8 +13,7 @@ import "./staked-relayer.page.scss";
 import { StoreType } from "../../common/types/util.types";
 import ButtonMaybePending from "../../common/components/pending-button";
 import { satToBTC, planckToDOT, roundTwoDecimals } from "@interlay/polkabtc";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 export default function StakedRelayerPage() {
     const [showReportModal, setShowReportModal] = useState(false);
@@ -32,7 +31,6 @@ export default function StakedRelayerPage() {
     const relayerNotRegisteredToastId = "relayer-not-registered-id";
     const { polkaBtcLoaded, relayerLoaded } = useSelector((state: StoreType) => state.general);
     const { t } = useTranslation();
-
 
     const handleReportModalClose = () => setShowReportModal(false);
 
@@ -74,10 +72,10 @@ export default function StakedRelayerPage() {
 
                 // show warning if relayer is not registered with the parachain
                 if (!isRegistered) {
-                    toast.warn(
-                        t("relayer.warning_relayer_not_registered"),
-                        { autoClose: false, toastId: relayerNotRegisteredToastId }
-                    );
+                    toast.warn(t("relayer.warning_relayer_not_registered"), {
+                        autoClose: false,
+                        toastId: relayerNotRegisteredToastId,
+                    });
                 } else {
                     const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId.toString());
                     setSLA(slaScore);
@@ -85,7 +83,9 @@ export default function StakedRelayerPage() {
                     const apyScore = await window.polkaBTC.stakedRelayer.getAPY(stakedRelayerId.toString());
                     setAPY(apyScore);
 
-                    const feesPolkaSAT = await window.polkaBTC.stakedRelayer.getFeesPolkaBTC(stakedRelayerId.toString());
+                    const feesPolkaSAT = await window.polkaBTC.stakedRelayer.getFeesPolkaBTC(
+                        stakedRelayerId.toString()
+                    );
                     setFeesEarnedPolkaBTC(satToBTC(feesPolkaSAT));
 
                     const feesPlanck = await window.polkaBTC.stakedRelayer.getFeesDOT(stakedRelayerId.toString());
@@ -181,9 +181,7 @@ export default function StakedRelayerPage() {
                                 {t("relayer.deregister")}
                             </ButtonMaybePending>
                             <div className="row">
-                                <div className="col-12 de-note">
-                                    {t("relayer.note_you_can_deregister")}
-                                </div>
+                                <div className="col-12 de-note">{t("relayer.note_you_can_deregister")}</div>
                             </div>
                         </React.Fragment>
                     )}

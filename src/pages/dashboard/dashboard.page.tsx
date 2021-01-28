@@ -1,7 +1,4 @@
-import React, { useState, useEffect } from "react";
-
-import { useSelector } from "react-redux";
-import { useTranslation } from "react-i18next";
+import React from "react";
 
 import "./dashboard.page.scss";
 import Row1 from "./rows/row1";

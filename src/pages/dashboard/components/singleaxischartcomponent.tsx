@@ -9,11 +9,12 @@ export interface ChartProps {
 }
 const SingleAxisChartComponent = (props: ChartProps): React.ReactElement => {
     useEffect(() => {
-        var Chart = require("chart.js");
-        let daysElement = document.getElementById(`${props.chartId}`) as HTMLCanvasElement;
-        var ctx = daysElement.getContext("2d");
+        // eslint-disable-next-line
+        const Chart = require("chart.js");
+        const daysElement = document.getElementById(`${props.chartId}`) as HTMLCanvasElement;
+        const ctx = daysElement.getContext("2d");
 
-        var data = {
+        const data = {
             labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
             datasets: [
                 {
@@ -34,7 +35,7 @@ const SingleAxisChartComponent = (props: ChartProps): React.ReactElement => {
                 },
             ],
         };
-        var myChart = new Chart(ctx, {
+        new Chart(ctx, {
             type: "line",
             data: data,
             options: {

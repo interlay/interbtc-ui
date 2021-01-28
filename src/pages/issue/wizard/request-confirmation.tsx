@@ -17,7 +17,6 @@ import Big from "big.js";
 import { startTransactionWatcherIssue } from "../../../common/utils/issue-transaction.watcher";
 import { useTranslation } from "react-i18next";
 
-
 export default function RequestConfirmation() {
     const [isRequestPending, setRequestPending] = useState(false);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -26,7 +25,6 @@ export default function RequestConfirmation() {
     );
     const dispatch = useDispatch();
     const { t } = useTranslation();
-
 
     const onConfirm = async () => {
         if (!polkaBtcLoaded) return;
@@ -41,7 +39,7 @@ export default function RequestConfirmation() {
             const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultDotAddress);
             const requestResult = await window.polkaBTC.issue.request(amount, vaultAccountId);
 
-            let vaultBTCAddress = requestResult.vault.wallet.btcAddress;
+            const vaultBTCAddress = requestResult.vault.wallet.btcAddress;
             if (vaultBTCAddress === undefined) {
                 throw new Error("Could not generate unique vault address.");
             }
@@ -99,10 +97,12 @@ export default function RequestConfirmation() {
                                 {t("issue_page.fees")} <strong>{fee} PolkaBTC</strong>
                             </ListGroupItem>
                             <ListGroupItem>
-                                {t("griefing_collateral")}: <strong>{griefingCollateral} DOT</strong> {t("issue_page.successful_completion")}
+                                {t("griefing_collateral")}: <strong>{griefingCollateral} DOT</strong>{" "}
+                                {t("issue_page.successful_completion")}
                             </ListGroupItem>
                             <ListGroupItem>
-                                {t("issue_page.total")} <strong>{new Big(fee).add(new Big(amountBTC)).toString()} </strong>
+                                {t("issue_page.total")}{" "}
+                                <strong>{new Big(fee).add(new Big(amountBTC)).toString()} </strong>
                                 <strong>BTC</strong>
                             </ListGroupItem>
                         </ListGroup>

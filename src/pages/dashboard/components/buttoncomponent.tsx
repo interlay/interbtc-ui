@@ -3,8 +3,8 @@ import "../dashboard.page.scss";
 import Icon_external_link from "../../../assets/img/icons/Icon-external-link.svg";
 import { getAccents } from "../dashboardcolors";
 type buttonProps = {
-    buttonName: String;
-    propsButtonColor: String;
+    buttonName: string;
+    propsButtonColor: string;
     // buttonLink: String;
 };
 

@@ -26,6 +26,7 @@ const PolkaBTC = (): React.ReactElement => {
 
     useEffect(() => {
         fetchIssuesLastDays();
+        // eslint-disable-next-line
         const Chart = require("chart.js");
         const daysElement = document.getElementById("polkaBTCChart") as HTMLCanvasElement;
         const ctx = daysElement.getContext("2d");
@@ -63,11 +64,33 @@ const PolkaBTC = (): React.ReactElement => {
             pointRadius: 4,
             data: pointIssuesPerDay,
         };
-        var data = {
+        const data = {
             labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
             datasets: [totalIssuedData, IssuedPerDayData],
         };
-    }, [fetchIssuesLastDays]);
+        new Chart(ctx, {
+            type: "line",
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    labels: {
+                        fontSize: 9,
+                    },
+                },
+                scales: {
+                    xAxes: [
+                        {
+                            gridLines: {
+                                display: false,
+                            },
+                        },
+                    ],
+                },
+            },
+        });
+    }, [fetchIssuesLastDays, cumulativeIssuesPerDay, pointIssuesPerDay]);
     return (
         <div className="card">
             <div className="card-top-content">

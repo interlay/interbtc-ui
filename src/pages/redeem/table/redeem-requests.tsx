@@ -6,17 +6,13 @@ import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { startTransactionWatcherRedeem } from "../../../common/utils/redeem-transaction.watcher";
-import {
-    updateAllRedeemRequestsAction,
-    redeemExpiredAction,
-} from "../../../common/actions/redeem.actions";
+import { updateAllRedeemRequestsAction, redeemExpiredAction } from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
 import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 import { FEEDBACK_MODAL_DISPLAY_DELAY_MS } from "../../../constants";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import ReimburseModal from "../reimburse-modal/reimburse-modal";
-
 
 export interface RedeemRequestsProps {
     handleShowFeedbackModal: () => void;
@@ -46,27 +42,26 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
 
     const closeReimburseModal = () => {
         setShowReimburseModal(false);
-    }
+    };
 
     const openReimburseModal = (request: RedeemRequest) => {
         setReimburseRequest(request);
         setShowReimburseModal(true);
-    }
+    };
 
     const handleCompleted = (request: RedeemRequest) => {
         if (!request.completed && request.isExpired) {
             if (request.reimbursed && request.cancelled) {
-                return <div>{t("redeem_page.reimbursed")}</div>
+                return <div>{t("redeem_page.reimbursed")}</div>;
             }
             if (!request.cancelled && !request.reimbursed) {
-                return <Button
-                    onClick={() => openReimburseModal(request)}
-                    className="ml-3"
-                    variant="outline-dark">
-                    {t("redeem_page.recover")}
-                </Button>
+                return (
+                    <Button onClick={() => openReimburseModal(request)} className="ml-3" variant="outline-dark">
+                        {t("redeem_page.recover")}
+                    </Button>
+                );
             }
-            return <div>{t("redeem_page.retried")}</div>
+            return <div>{t("redeem_page.retried")}</div>;
             // TODO: do we need the cancelled state?
             // if (request.cancelled) {
             //     return <Badge className="badge-style" variant="secondary">{t("cancelled")}</Badge>;
@@ -121,7 +116,6 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                 for (const [key, value] of redeemRequestMap) {
                     allRequests.push(parachainToUIRedeemRequest(key, value));
                 }
-
 
                 // get btc data for each redeem request
                 await Promise.all(
@@ -190,8 +184,11 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                                                 <BitcoinAddress btcAddress={request.btcAddress} shorten />
                                             </td>
                                             <td>
-                                                {!request.completed && request.isExpired ? <div>{t("redeem_page.failed")}</div> :
-                                                    <BitcoinTransaction txId={request.btcTxId} shorten />}
+                                                {!request.completed && request.isExpired ? (
+                                                    <div>{t("redeem_page.failed")}</div>
+                                                ) : (
+                                                    <BitcoinTransaction txId={request.btcTxId} shorten />
+                                                )}
                                             </td>
                                             <td>{request.confirmations}</td>
                                             <td>{handleCompleted(request)}</td>

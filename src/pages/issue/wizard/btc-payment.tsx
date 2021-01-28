@@ -1,7 +1,7 @@
 import React from "react";
 import { FormGroup, ListGroup, ListGroupItem, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import  QRCode from "qrcode.react";
+import QRCode from "qrcode.react";
 import { StoreType } from "../../../common/types/util.types";
 import { changeIssueStepAction } from "../../../common/actions/issue.actions";
 import { btcToSat, satToMBTC } from "@interlay/polkabtc";
@@ -40,12 +40,8 @@ export default function BTCPayment(props: BTCPaymentProps) {
         <React.Fragment>
             <Modal.Body>
                 <FormGroup>
-                    <p>
-                        {t("issue_page.issuing",{amountBTC})}
-                    </p>
-                    <p>
-                        {t("issue_page.exactly_one_payment")}
-                    </p>
+                    <p>{t("issue_page.issuing", { amountBTC })}</p>
+                    <p>{t("issue_page.exactly_one_payment")}</p>
                     <FormGroup>
                         <ListGroup>
                             <ListGroupItem>
@@ -53,16 +49,14 @@ export default function BTCPayment(props: BTCPaymentProps) {
                             </ListGroupItem>
                             <ListGroupItem>
                                 {t("issue_page.amont_with_fee")}
-                                <strong>
-                                    {amountBTCwithFee + "BTC (" + amountMBTCwithFee + "mBTC)"}
-                                </strong>
+                                <strong>{amountBTCwithFee + "BTC (" + amountMBTCwithFee + "mBTC)"}</strong>
                             </ListGroupItem>
                         </ListGroup>
                     </FormGroup>
 
                     <div className="row justify-content-center">
                         <div className="col-3">
-                            <QRCode value={'bitcoin:' + vaultBtcAddress + '?amount=' + amountMBTCwithFee} />,
+                            <QRCode value={"bitcoin:" + vaultBtcAddress + "?amount=" + amountMBTCwithFee} />,
                         </div>
                     </div>
                 </FormGroup>
