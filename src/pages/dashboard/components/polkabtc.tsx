@@ -3,8 +3,12 @@ import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboard-colors";
 import { Line, LinearComponentProps } from "react-chartjs-2";
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
+import { useSelector } from "react-redux";
+import { StoreType } from "../../../common/types/util.types";
 
 const PolkaBTC = (): React.ReactElement => {
+    const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
+
     const statsApi = usePolkabtcStats();
 
     const [chartProps, setChartProps] = useState({} as LinearComponentProps);
@@ -29,7 +33,6 @@ const PolkaBTC = (): React.ReactElement => {
     );
 
     useEffect(() => {
-        console.log("Calling fetch issues");
         fetchIssuesLastDays();
     }, [fetchIssuesLastDays]);
 
@@ -111,12 +114,14 @@ const PolkaBTC = (): React.ReactElement => {
             },
         });
     }, [cumulativeIssuesPerDay, pointIssuesPerDay]);
+
     return (
         <div className="card">
             <div className="card-top-content">
                 <div className="values-container">
                     <h1 style={{ color: `${getAccents("d_yellow").colour}` }}>Issued</h1>
-                    <h2>232.4 PolkaBTC</h2>
+                    <h2>{totalPolkaBTC} PolkaBTC</h2>
+                    {/* TODO: add the price API */}
                     <h2>$17,0030</h2>
                 </div>
                 <div className="button-container">
