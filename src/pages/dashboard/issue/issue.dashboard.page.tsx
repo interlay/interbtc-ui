@@ -20,6 +20,7 @@ export default function IssueDashboard(): ReactElement {
     const [tableParams, setTableParams] = useState(defaultTableDisplayParams());
 
     const [totalSuccessfulIssues, setTotalSuccessfulIssues] = useState("0");
+    const [totalIssues, setTotalIssues] = useState(0);
 
     const fetchIssueRequests = useMemo(
         () => async () => {
@@ -34,11 +35,17 @@ export default function IssueDashboard(): ReactElement {
         [tableParams, statsApi]
     );
 
-    const fetchTotalSuccessfulIssues = useMemo(
-        () => async () => {
-            const res = await statsApi.getTotalSuccessfulIssues();
-            setTotalSuccessfulIssues(res.data);
-        },
+    const [fetchTotalSuccessfulIssues, fetchTotalIssues] = useMemo(
+        () => [
+            async () => {
+                const res = await statsApi.getTotalSuccessfulIssues();
+                setTotalSuccessfulIssues(res.data);
+            },
+            async () => {
+                const res = await statsApi.getTotalIssues();
+                setTotalIssues(Number(res.data));
+            },
+        ],
         [statsApi] // to silence the compiler
     );
 
@@ -71,7 +78,8 @@ export default function IssueDashboard(): ReactElement {
 
     useEffect(() => {
         fetchTotalSuccessfulIssues();
-    }, [fetchTotalSuccessfulIssues]);
+        fetchTotalIssues();
+    }, [fetchTotalSuccessfulIssues, fetchTotalIssues]);
 
     return (
         <div className="dashboard-page container-fluid white-background">
@@ -97,7 +105,8 @@ export default function IssueDashboard(): ReactElement {
                         </div>
                     </div>
                     <DashboardTable
-                        data={issueRequests}
+                        pageData={issueRequests}
+                        totalPages={Math.ceil(totalIssues / tableParams.perPage)}
                         tableParams={tableParams}
                         setTableParams={setTableParams}
                         headings={tableHeadings}

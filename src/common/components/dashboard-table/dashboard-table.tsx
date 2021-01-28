@@ -7,7 +7,8 @@ import TablePageSelector from "../table-page-selector/table-page-selector";
 type DataWithID = { id: string };
 
 type DashboardTableProps<D extends DataWithID> = {
-    data: D[];
+    pageData: D[];
+    totalPages: number;
     tableParams: TableDisplayParams;
     setTableParams: (params: TableDisplayParams) => void;
     headings: string[];
@@ -15,13 +16,13 @@ type DashboardTableProps<D extends DataWithID> = {
 };
 
 export default function DashboardTable<D extends DataWithID>({
-    data,
+    pageData,
+    totalPages,
     tableParams,
     setTableParams,
     headings,
     dataPointDisplayer,
 }: DashboardTableProps<D>): ReactElement {
-    const totalPages = useMemo(() => Math.ceil(data.length / tableParams.perPage), [data, tableParams]);
     const setPage = useMemo(() => (page: number) => setTableParams({ ...tableParams, page }), [
         setTableParams,
         tableParams,
@@ -38,7 +39,7 @@ export default function DashboardTable<D extends DataWithID>({
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((dataPoint) => (
+                    {pageData.map((dataPoint) => (
                         <tr key={dataPoint.id}>
                             {dataPointDisplayer(dataPoint).map((data, i) => (
                                 <td key={i}>{data}</td>

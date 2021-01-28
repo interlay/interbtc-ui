@@ -13,17 +13,17 @@ export default function RelayDashboard(): ReactElement {
     const { t } = useTranslation();
 
     const [blocks, setBlocks] = useState(new Array<RelayedBlock>());
+    const [totalRelayedBlocks, setTotalRelayedBlocks] = useState(0);
     const [tableParams, setTableParams] = useState(defaultTableDisplayParams());
 
     const fetchBlocks = useMemo(
         () => async () => {
-            const res = await statsApi.getBlocks(
-                tableParams.page,
-                tableParams.perPage,
-                tableParams.sortBy,
-                tableParams.sortAsc
-            );
-            setBlocks(res.data);
+            const [blocks, totalRelayedBlocks] = await Promise.all([
+                statsApi.getBlocks(tableParams.page, tableParams.perPage, tableParams.sortBy, tableParams.sortAsc),
+                statsApi.getTotalRelayedBlocksCount(),
+            ]);
+            setBlocks(blocks.data);
+            setTotalRelayedBlocks(Number(totalRelayedBlocks.data));
         },
         [tableParams, statsApi]
     );
@@ -45,7 +45,7 @@ export default function RelayDashboard(): ReactElement {
             <div className="dashboard-container dashboard-fade-in-animation">
                 <div className="dashboard-wrapper">
                     <div className="row">
-                        <div className="title">{t("dashboard.issues")}</div>
+                        <div className="title">{t("dashboard.relay.btcrelay")}</div>
                     </div>
                     <div className="row mt-5 mb-3">
                         <div className="col-lg-8 offset-2">
@@ -55,7 +55,8 @@ export default function RelayDashboard(): ReactElement {
                         </div>
                     </div>
                     <DashboardTable
-                        data={blocks.map((b) => ({ ...b, id: b.hash }))}
+                        pageData={blocks.map((b) => ({ ...b, id: b.hash }))}
+                        totalPages={Math.ceil(totalRelayedBlocks / tableParams.perPage)}
                         tableParams={tableParams}
                         setTableParams={setTableParams}
                         headings={tableHeadings}

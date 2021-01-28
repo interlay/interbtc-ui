@@ -10,7 +10,7 @@ type PageLinkProps = {
 function PageLink({ page, setPage }: PageLinkProps): ReactElement {
     return (
         <span key={page} onClick={() => setPage(page)}>
-            {page}&nbsp;
+            {page + 1}&nbsp;
         </span>
     );
 }
@@ -24,18 +24,19 @@ type TablePageSelectorProps = {
 export default function TablePageSelector({ totalPages, currentPage, setPage }: TablePageSelectorProps): ReactElement {
     if (totalPages <= 1) totalPages = 1;
 
-    const pagesToDisplay = 5;
-    const displayedPages = Math.min(totalPages, pagesToDisplay);
-    const first = Math.max(currentPage - Math.ceil(displayedPages / 2 - 1), 1);
-    const pages = range(first, first + displayedPages);
+    const displayedPages = 5;
+    //    const displayedPages = Math.min(totalPages, pagesToDisplay);
+    const first = Math.max(currentPage - Math.ceil(displayedPages / 2 - 1), 0);
+    const last = Math.min(first + displayedPages, totalPages);
+    const pages = range(first, last);
 
     return (
         <Row className="justify-content-between">
-            <Button>Prev</Button>
+            <Button onClick={() => setPage(Math.max(currentPage - 1, 0))}>Prev</Button>
             <Col sm={4}>
-                {pages[0] !== 1 ? (
+                {pages[0] !== 0 ? (
                     <>
-                        <PageLink {...{ page: 1, setPage }} />
+                        <PageLink {...{ page: 0, setPage }} />
                         {"\u2026"}&nbsp;
                     </>
                 ) : (
@@ -44,16 +45,16 @@ export default function TablePageSelector({ totalPages, currentPage, setPage }: 
                 {pages.map((page) => (
                     <PageLink key={page} {...{ page, setPage }} />
                 ))}
-                {pages[pages.length - 1] !== totalPages ? (
+                {pages[pages.length - 1] !== totalPages - 1 ? (
                     <>
-                        <PageLink {...{ page: totalPages, setPage }} />
                         {"\u2026"}
+                        <PageLink {...{ page: totalPages - 1, setPage }} />
                     </>
                 ) : (
                     ""
                 )}
             </Col>
-            <Button>Next</Button>
+            <Button onClick={() => setPage(Math.min(currentPage + 1, totalPages - 1))}>Next</Button>
         </Row>
     );
 }
