@@ -27,11 +27,12 @@ const BtcRelay = () => {
         const btcRelayOffset = Number(latestBitcoinBlock) - Number(latestBitcoinBlock);
 
         if (btcRelayOffset <= outdatedRelayThreshold) {
-            relayTextElement.innerHTML = " Synced";
+            relayTextElement.innerHTML = " synchronized";
             relayCircleTextElement.innerHTML = "Synced";
             setTextColour("d_green");
         } else {
-            relayTextElement.innerHTML = " Out of Sync";
+            // TODO: add how many blocks behind
+            relayTextElement.innerHTML = " not synchronized";
             relayCircleTextElement.innerHTML = "Out of Sync";
             setTextColour("d_red");
         }

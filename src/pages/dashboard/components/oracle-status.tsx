@@ -18,11 +18,11 @@ const OracleStatus = () => {
             const oracleCircleTextElement = document.getElementById("oracle-circle-text") as HTMLElement;
 
             if (oracle) {
-                oracleTextElement.innerHTML = " Online";
+                oracleTextElement.innerHTML = " online";
                 oracleCircleTextElement.innerHTML = "Online";
                 setTextColour("d_green");
             } else {
-                oracleTextElement.innerHTML = " Offline";
+                oracleTextElement.innerHTML = " offline";
                 oracleCircleTextElement.innerHTML = "Offline";
                 setTextColour("d_red");
             }
