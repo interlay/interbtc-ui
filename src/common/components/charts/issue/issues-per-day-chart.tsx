@@ -16,7 +16,8 @@ export default function IssuesPerDayChart(): ReactElement {
 
     const fetchIssuesLastDays = useMemo(
         () => async () => {
-            const res = await statsApi.getRecentDailyIssues(6);
+            const res = await statsApi.getRecentDailyIssues(6); // for 5 days
+            // one extra, to be able to compute the per - day value from the difference
             setCumulativeIssuesPerDay(res.data);
         },
         [statsApi] // to silence the compiler

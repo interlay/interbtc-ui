@@ -150,7 +150,14 @@
         "issues": "Issue Requests",
         "total_locked": "Total locked",
         "total_issued": "Total issued",
-        "capacity": "Capacity"
+        "capacity": "Capacity",
+        "relay": {
+            "btcrelay": "BTC Relay",
+            "blocks": "Blocks",
+            "block_height": "Block height",
+            "block_hash": "Block hash",
+            "timestamp": "Timestamp"
+        }
     },
     "issue_page": {
         "transaction_not_set": "Transaction not set in",
