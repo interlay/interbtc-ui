@@ -40,8 +40,11 @@ import UserGuidePage from "./pages/user-guide.page";
 import DashboardPage from "./pages/dashboard/dashboard.page";
 import VaultDashboardPage from "./pages/vault-dashboard/vault-dashboard.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
+import VaultsDashboard from "./pages/dashboard/vaults/vaults.dashboard.page";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType, ParachainStatus } from "./common/types/util.types";
+import IssueDashboard from "./pages/dashboard/issue/issue.dashboard.page";
+import RedeemDashboard from "./pages/dashboard/redeem/redeem.dashboard.page";
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
     return createPolkabtcAPI(
@@ -129,20 +132,10 @@ export default function App(): ReactElement {
                 const btcRelayHeight = Number(await window.polkaBTC.btcRelay.getLatestBlockHeight());
                 const bitcoinHeight = await window.polkaBTC.btcCore.getLatestBlockHeight();
                 const state = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
-                dispatch(
-                    initGeneralDataAction(
-                        totalPolkaBTC,
-                        totalLockedDOT,
-                        btcRelayHeight,
-                        bitcoinHeight,
-                        state.isError
-                            ? ParachainStatus.Error
-                            : state.isRunning
-                            ? ParachainStatus.Running
-                            : ParachainStatus.Shutdown
-                    )
-                );
-            } catch (error) {
+                dispatch(initGeneralDataAction(totalPolkaBTC, totalLockedDOT, btcRelayHeight, bitcoinHeight,
+                    state.isError ? ParachainStatus.Error :
+                    state.isRunning ? ParachainStatus.Running : ParachainStatus.Shutdown));
+            } catch(error) {
                 console.log(error);
             }
         };
@@ -209,7 +202,7 @@ export default function App(): ReactElement {
     return (
         <React.Fragment>
             <Router>
-                {/* {!isLoading || constants.STATIC_PAGE_ONLY ? ( */}
+                {!isLoading || constants.STATIC_PAGE_ONLY ? (
                 <div className="main d-flex flex-column min-vh-100 polkabtc-background fade-in-animation">
                     <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
                     <ReactTooltip place="top" type="dark" effect="solid" />
@@ -247,22 +240,46 @@ export default function App(): ReactElement {
                         <Route path="/about">
                             <AboutPage />
                         </Route>
-                        <Route path="/faq">
-                            <FaqPage />
+                    )}
+                    {!constants.STATIC_PAGE_ONLY && (
+                        <Route path="/dashboard/vaults">
+                            <VaultsDashboard />
                         </Route>
-                        <Route exact path="/">
-                            <LandingPage />
+                    )}
+                    {!constants.STATIC_PAGE_ONLY && (
+                        <Route path="/dashboard/issue">
+                            <IssueDashboard />
                         </Route>
-                    </Switch>
-                    <Footer />
-                </div>
-                )
-                {/* : (
-                    <div className="main-loader">
-                        <img src={loadingImg} alt="loading animation"></img>
-                    </div>
-                )} */}
-            </Router>
-        </React.Fragment>
-    );
+                    )}
+                    {!constants.STATIC_PAGE_ONLY && (
+                        <Route path="/dashboard/redeem">
+                            <RedeemDashboard />
+                        </Route>
+                    )}
+                    {!constants.STATIC_PAGE_ONLY && (
+                        <Route path="/dashboard">
+                            <DashboardPage />
+                        </Route>
+                       
+                    )}
+                    <Route path="/user-guide">
+                        <UserGuidePage />
+                    </Route>
+                    <Route path="/about">
+                        <AboutPage />
+                    </Route>
+                    <Route path="/faq">
+                        <FaqPage />
+                    </Route>
+                    <Route exact path="/">
+                        <LandingPage />
+                    </Route>
+                </Switch>
+                <Footer />
+            </div> :
+            <div className="main-loader">
+                <img src={loadingImg} alt="loading animation"></img>
+            </div>}
+        </Router>
+    </React.Fragment>;
 }

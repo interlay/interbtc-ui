@@ -5,7 +5,6 @@ import { StoreType } from "../../../common/types/util.types";
 import {
     changeAmountBTCAction,
     changeIssueStepAction,
-    changeVaultBtcAddressOnIssueAction,
     changeVaultDotAddressOnIssueAction,
     updateIssueFeeAction,
     updateIssueGriefingCollateralAction,
@@ -13,7 +12,7 @@ import {
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { btcToSat, stripHexPrefix, satToBTC, planckToDOT } from "@interlay/polkabtc";
+import { btcToSat, satToBTC, planckToDOT } from "@interlay/polkabtc";
 import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
 import { useTranslation } from "react-i18next";
 
@@ -59,9 +58,6 @@ export default function EnterBTCAmount() {
 
             const vaultId = await window.polkaBTC.vaults.selectRandomVaultIssue(amountAsSatoshi);
             toast.success("Found vault: " + vaultId.toString());
-            // get the vault's data
-            const vault = await window.polkaBTC.vaults.get(vaultId);
-            const vaultBTCAddress = vault.wallet.address;
 
             const fee = await window.polkaBTC.issue.getFeesToPay(amountBTC);
             dispatch(updateIssueFeeAction(fee));
@@ -69,7 +65,6 @@ export default function EnterBTCAmount() {
             const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSAT);
             dispatch(updateIssueGriefingCollateralAction(planckToDOT(griefingCollateral)));
 
-            dispatch(changeVaultBtcAddressOnIssueAction(stripHexPrefix(vaultBTCAddress)));
             dispatch(changeVaultDotAddressOnIssueAction(vaultId.toString()));
             dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
         } catch (error) {

@@ -3,6 +3,7 @@ import { StoreType } from "../../types/util.types";
 import { useSelector } from "react-redux";
 import { dateToShortString } from "../../utils/utils";
 import BN from "bn.js";
+import Big from "big.js";
 import * as constants from "../../../constants";
 import { useTranslation } from 'react-i18next';
 
@@ -11,7 +12,7 @@ interface OracleInfo {
     source: string;
     feed: string;
     lastUpdate: string;
-    exchangeRate: number;
+    exchangeRate: Big;
 }
 
 type OracleTableProps = {
@@ -77,7 +78,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
                                                 <td>{oracle.source}</td>
                                                 <td>{oracle.feed}</td>
                                                 <td>{oracle.lastUpdate}</td>
-                                                <td> 1 BTC = {oracle.exchangeRate} DOT</td>
+                                                <td> 1 BTC = {oracle.exchangeRate.toFixed(5)} DOT</td>
                                             </tr>
                                         );
                                     })}

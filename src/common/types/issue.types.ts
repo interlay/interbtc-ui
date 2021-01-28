@@ -3,6 +3,7 @@ export interface IssueRequest {
     amountBTC: string;
     creation: string;
     vaultBTCAddress: string;
+    vaultDOTAddress: string;
     btcTxId: string;
     confirmations: number;
     completed: boolean;

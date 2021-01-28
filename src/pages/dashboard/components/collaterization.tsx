@@ -1,6 +1,6 @@
 import React from "react";
-import ButtonComponent from "./buttoncomponent";
-import { getAccents } from "../dashboardcolors";
+import ButtonComponent from "./button-component";
+import { getAccents } from "../dashboard-colors";
 
 const Collaterization = () => {
     return (

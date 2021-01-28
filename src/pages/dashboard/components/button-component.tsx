@@ -1,7 +1,7 @@
 import React from "react";
 import "../dashboard.page.scss";
 import Icon_external_link from "../../../assets/img/icons/Icon-external-link.svg";
-import { getAccents } from "../dashboardcolors";
+import { getAccents } from "../dashboard-colors";
 type buttonProps = {
     buttonName: String;
     propsButtonColor: String;

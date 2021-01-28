@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import RegisterVaultModal from "./register-vault/register-vault";
 import UpdateCollateralModal from "./update-collateral/update-collateral";
-import UpdateBTCAddressModal from "./update-btc-address/update-btc-address";
 import RequestReplacementModal from "./request-replacement/request-replacement";
 import { Button } from "react-bootstrap";
 import { StoreType } from "../../common/types/util.types";
@@ -20,17 +19,14 @@ import {
 } from "../../common/actions/vault.actions";
 import "./vault-dashboard.page.scss";
 import { toast } from "react-toastify";
-import BitcoinAddress from "../../common/components/bitcoin-links/address";
 import { useTranslation } from 'react-i18next';
-
 
 export default function VaultDashboardPage() {
     const [showRegisterVaultModal, setShowRegisterVaultModal] = useState(false);
     const [showUpdateCollateralModal, setShowUpdateCollateralModal] = useState(false);
-    const [showUpdateBTCAddressModal, setShowUpdateBTCAddressModal] = useState(false);
     const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
     const { vaultClientLoaded, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
-    const { btcAddress, collateralization, collateral, lockedBTC, sla, apy } = useSelector(
+    const { collateralization, collateral, lockedBTC, sla, apy } = useSelector(
         (state: StoreType) => state.vault
     );
     const [capacity, setCapacity] = useState("0");
@@ -46,7 +42,6 @@ export default function VaultDashboardPage() {
 
     const closeRegisterVaultModal = () => setShowRegisterVaultModal(false);
     const closeUpdateCollateralModal = () => setShowUpdateCollateralModal(false);
-    const closeUpdateBTCAddressModal = () => setShowUpdateBTCAddressModal(false);
     const closeRequestReplacementModal = () => setShowRequestReplacementModal(false);
 
     useEffect(() => {
@@ -70,7 +65,8 @@ export default function VaultDashboardPage() {
                     );
                 }
 
-                const vaultBTCAddress = vault.wallet.address;
+                let vaultBTCAddress = vault.wallet.btcAddress;
+                vaultBTCAddress = vaultBTCAddress ? vaultBTCAddress : "";
                 dispatch(updateBTCAddressAction(vaultBTCAddress));
 
                 const balanceLockedDOT = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
@@ -159,16 +155,6 @@ export default function VaultDashboardPage() {
                         </div>
                         <div className="row">
                             <div className="col-12">
-                                <div className="btc-address-header">
-                                    {t("btc_address")}: &nbsp;&nbsp;
-                                    <BitcoinAddress btcAddress={btcAddress} />
-                                    &nbsp;&nbsp;&nbsp;
-                                    <i className="fa fa-edit" onClick={() => setShowUpdateBTCAddressModal(true)}></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-12">
                                 <div className="">
                                     {t("vault.collateral")}: &nbsp; {collateral} DOT for {lockedBTC + " BTC"}
                                     &nbsp;&nbsp;&nbsp;
@@ -199,10 +185,6 @@ export default function VaultDashboardPage() {
                     onClose={closeUpdateCollateralModal}
                     show={showUpdateCollateralModal}
                 ></UpdateCollateralModal>
-                <UpdateBTCAddressModal
-                    onClose={closeUpdateBTCAddressModal}
-                    show={showUpdateBTCAddressModal}
-                ></UpdateBTCAddressModal>
                 <RequestReplacementModal
                     onClose={closeRequestReplacementModal}
                     show={showRequestReplacementModal}

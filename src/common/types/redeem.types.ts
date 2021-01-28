@@ -4,6 +4,7 @@ export interface RedeemRequest {
     creation: string;
     fee: string;
     btcAddress: string;
+    vaultDotAddress?: string;
     btcTxId: string;
     confirmations: number;
     completed: boolean;

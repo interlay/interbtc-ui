@@ -1,7 +1,7 @@
 import React from "react";
-import ParachainSecurity from "../components/parachainsecurity";
-import BtcRelay from "../components/btcrelay";
-import OracleStatus from "../components/oraclestatus";
+import ParachainSecurity from "../components/parachain-security";
+import BtcRelay from "../components/btc-relay";
+import OracleStatus from "../components/oracle-status";
 const Row2 = (): React.ReactElement => {
     return (
         <div className="row-grid section-gap">

@@ -1,7 +1,7 @@
 import React from "react";
-import ButtonComponent from "./buttoncomponent";
-import { getAccents } from "../dashboardcolors";
-import SingleAxisChartComponent from "./singleaxischartcomponent";
+import ButtonComponent from "./button-component";
+import { getAccents } from "../dashboard-colors";
+import SingleAxisChartComponent from "./singleaxis-chart-component";
 const ActiveStakedRelayers = () => {
     let data = [7, 8, 9, 123, 234, 400, 235];
     return (

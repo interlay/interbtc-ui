@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { getAccents } from "../dashboardcolors";
+import { getAccents } from "../dashboard-colors";
 
 export interface ChartProps {
     chartId: string;

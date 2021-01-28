@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import ButtonComponent from "./buttoncomponent";
-import { getAccents } from "../dashboardcolors";
+import ButtonComponent from "./button-component";
+import { getAccents } from "../dashboard-colors";
 const ParachainSecurity = (): React.ReactElement => {
     const [status, setStatus] = useState("online");
     const [textColour, setTextColour] = useState("d_grey");

@@ -17,6 +17,7 @@ import {
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from "../../constants";
 import { Dispatch } from "redux";
 import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from "../actions/general.actions";
+import { TableDisplayParams } from "../types/util.types";
 
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;
@@ -48,6 +49,7 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
         amountBTC: satToBTC(parachainIssueRequest.amount.toString()),
         creation: parachainIssueRequest.opentime.toString(),
         vaultBTCAddress: parachainIssueRequest.btc_address,
+        vaultDOTAddress: parachainIssueRequest.vault.toString(),
         btcTxId: "",
         fee: satToBTC(parachainIssueRequest.fee.toString()),
         griefingCollateral: parachainIssueRequest.griefing_collateral.toString(),
@@ -69,6 +71,7 @@ export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: Par
         amountPolkaBTC: satToBTC(parachainRedeemRequest.amount_polka_btc.toString()),
         creation: parachainRedeemRequest.opentime.toString(),
         btcAddress: parachainRedeemRequest.btc_address,
+        vaultDotAddress: parachainRedeemRequest.vault.toString(),
         btcTxId: "",
         fee: satToBTC(parachainRedeemRequest.fee.toString()),
         confirmations: 0,
@@ -88,6 +91,10 @@ export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: Par
 export function isPositiveNumeric(s: string): boolean {
     const reg = new RegExp(NUMERIC_STRING_REGEX);
     return reg.test(s);
+}
+
+export function range(start: number, end: number): number[] {
+    return Array.from({ length: end - start }, (_, k) => k + start);
 }
 
 export const arrayToMap = (
@@ -129,6 +136,16 @@ export const BtcNetwork =
 
 export function reverseHashEndianness(hash: Uint8Array): string {
     return uint8ArrayToString(reverseEndianness(hash));
+}
+
+export function defaultTableDisplayParams(): TableDisplayParams {
+    return {
+        page: 0,
+        perPage: 20,
+        sortBy: "",
+        sortAsc: true,
+        searchFilter: "",
+    };
 }
 
 /**
