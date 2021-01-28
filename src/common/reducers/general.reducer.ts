@@ -8,12 +8,12 @@ import {
     UPDATE_BALANCE_DOT,
     UPDATE_BALANCE_POLKA_BTC,
     GeneralActions,
-    HAS_FEEDBACK_BEEN_DISPLAYED,
     SET_INSTALLED_EXTENSION,
     SHOW_ACCOUNT_MODAL,
     UPDATE_ACCOUNTS,
+    SET_ACTIVE_TAB,
 } from "../types/actions.types";
-import { GeneralState, ParachainStatus } from "../types/util.types";
+import { GeneralState, ParachainStatus, ActiveTab } from "../types/util.types";
 
 const initialState = {
     polkaBtcLoaded: false,
@@ -31,10 +31,13 @@ const initialState = {
     btcRelayHeight: 0,
     bitcoinHeight: 0,
     stateOfBTCParachain: ParachainStatus.Shutdown,
+    activeTab: ActiveTab.Issue,
 };
 
 export const generalReducer = (state: GeneralState = initialState, action: GeneralActions): GeneralState => {
     switch (action.type) {
+        case SET_ACTIVE_TAB:
+            return { ...state, activeTab: action.activeTab };
         case IS_POLKA_BTC_LOADED:
             return { ...state, polkaBtcLoaded: action.isLoaded };
         case IS_STAKED_RELAYER_LOADED:
@@ -51,6 +54,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
                 extensions: [],
                 accounts: [],
                 stateOfBTCParachain: ParachainStatus.Shutdown,
+                activeTab: ActiveTab.Issue,
             };
         case INIT_GENERAL_DATA_ACTION:
             return {
@@ -63,8 +67,6 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
             };
         case IS_VAULT_CLIENT_LOADED:
             return { ...state, vaultClientLoaded: action.isLoaded };
-        case HAS_FEEDBACK_BEEN_DISPLAYED:
-            return { ...state, hasFeedbackModalBeenDisplayed: action.hasBeenDisplayed };
         case UPDATE_BALANCE_DOT:
             return { ...state, balanceDOT: action.balanceDOT };
         case UPDATE_BALANCE_POLKA_BTC:

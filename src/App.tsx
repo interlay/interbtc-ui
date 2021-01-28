@@ -32,9 +32,7 @@ import "react-toastify/dist/ReactToastify.css";
 // app imports
 import Topbar from "./common/components/topbar";
 import Footer from "./common/components/footer/footer";
-import LandingPage from "./pages/landing/landing.page";
-import IssuePage from "./pages/issue/issue.page";
-import RedeemPage from "./pages/redeem/redeem.page";
+import AppPage from "./pages/app/app.page";
 import AboutPage from "./pages/about.page";
 import FaqPage from "./pages/faq.page";
 import UserGuidePage from "./pages/user-guide.page";
@@ -46,6 +44,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { StoreType, ParachainStatus } from "./common/types/util.types";
 import IssueDashboard from "./pages/dashboard/issue/issue.dashboard.page";
 import RedeemDashboard from "./pages/dashboard/redeem/redeem.dashboard.page";
+import LandingPage from "./pages/landing/landing.page";
 
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
@@ -215,17 +214,7 @@ export default function App(): ReactElement {
                         requestDOT={requestDotFromFaucet}
                     />
                 )}
-                <Switch>
-                    {!constants.STATIC_PAGE_ONLY && (
-                        <Route path="/issue">
-                            <IssuePage />
-                        </Route>
-                    )}
-                    {!constants.STATIC_PAGE_ONLY && (
-                        <Route path="/redeem">
-                            <RedeemPage />
-                        </Route>
-                    )}
+                <Switch>                    
                     {!constants.STATIC_PAGE_ONLY && (
                         <Route path="/staked-relayer">
                             <StakedRelayerPage />
@@ -256,6 +245,9 @@ export default function App(): ReactElement {
                             <VaultDashboardPage />
                         </Route>
                     )}
+                    <Route path="/" exact>
+                            <LandingPage />
+                    </Route>
                     <Route path="/user-guide">
                         <UserGuidePage />
                     </Route>
@@ -265,9 +257,11 @@ export default function App(): ReactElement {
                     <Route path="/faq">
                         <FaqPage />
                     </Route>
-                    <Route exact path="/">
-                        <LandingPage />
+                    {!constants.STATIC_PAGE_ONLY && (
+                    <Route exact path="/app">
+                        <AppPage />
                     </Route>
+                    )}
                 </Switch>
                 <Footer />
             </div> :

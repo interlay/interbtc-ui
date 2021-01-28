@@ -7,10 +7,10 @@ import {
     IS_VAULT_CLIENT_LOADED,
     UPDATE_BALANCE_POLKA_BTC,
     UPDATE_BALANCE_DOT,
-    HAS_FEEDBACK_BEEN_DISPLAYED,
     SET_INSTALLED_EXTENSION,
     SHOW_ACCOUNT_MODAL,
     UPDATE_ACCOUNTS,
+    SET_ACTIVE_TAB,
     IsPolkaBtcLoaded,
     IsStakedRelayerLoaded,
     ChangeAddress,
@@ -19,18 +19,23 @@ import {
     IsVaultClientLoaded,
     UpdateBalancePolkaBTC,
     UpdateBalanceDOT,
-    HasFeedbackModalBeenDisplayed,
     SetInstalledExtension,
     ShowAccountModal,
     UpdateAccounts,
+    SetActiveTab,
     IsFaucetLoaded,
     IS_FAUCET_LOADED,
 } from "../types/actions.types";
-import { StoreType, ParachainStatus } from "../types/util.types";
+import { StoreType, ParachainStatus, ActiveTab } from "../types/util.types";
 
 export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
     type: IS_POLKA_BTC_LOADED,
     isLoaded,
+});
+
+export const setActiveTabAction = (activeTab: ActiveTab): SetActiveTab => ({
+    type: SET_ACTIVE_TAB,
+    activeTab,
 });
 
 export const isStakedRelayerLoaded = (isLoaded = false): IsStakedRelayerLoaded => ({
@@ -46,11 +51,6 @@ export const isFaucetLoaded = (isLoaded = false): IsFaucetLoaded => ({
 export const isVaultClientLoaded = (isLoaded = false): IsVaultClientLoaded => ({
     type: IS_VAULT_CLIENT_LOADED,
     isLoaded,
-});
-
-export const hasFeedbackModalBeenDisplayedAction = (hasBeenDisplayed = false): HasFeedbackModalBeenDisplayed => ({
-    type: HAS_FEEDBACK_BEEN_DISPLAYED,
-    hasBeenDisplayed,
 });
 
 export const changeAddressAction = (address: string): ChangeAddress => ({

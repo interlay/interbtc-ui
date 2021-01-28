@@ -1,6 +1,6 @@
 import { rootReducer } from "./common/reducers/index";
 import { toast } from "react-toastify";
-import { AppState, StoreType, StoreState, ParachainStatus } from "./common/types/util.types";
+import { AppState, StoreType, StoreState, ParachainStatus, ActiveTab } from "./common/types/util.types";
 import { createLogger } from "redux-logger";
 import { applyMiddleware, createStore } from "redux";
 import { initializeState } from "./common/actions/general.actions";
@@ -35,6 +35,7 @@ export const getInitialState = (): StoreType => {
             btcRelayHeight: 0,
             bitcoinHeight: 0,
             stateOfBTCParachain: ParachainStatus.Shutdown,
+            activeTab: ActiveTab.Issue,
         },
         issue: {
             address: "",
@@ -54,7 +55,7 @@ export const getInitialState = (): StoreType => {
         redeem: {
             fee: "0",
             address: "",
-            step: "ENTER_POLKABTC",
+            step: "AMOUNT_AND_ADDRESS",
             amountPolkaBTC: "",
             btcAddress: "",
             vaultBtcAddress: "",

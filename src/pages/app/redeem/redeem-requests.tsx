@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 import { Table, Button } from "react-bootstrap";
-import { shortAddress, parachainToUIRedeemRequest } from "../../../common/utils/utils";
+import { parachainToUIRedeemRequest } from "../../../common/utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
@@ -9,26 +9,23 @@ import { startTransactionWatcherRedeem } from "../../../common/utils/redeem-tran
 import {
     updateAllRedeemRequestsAction,
     redeemExpiredAction,
+    changeRedeemIdAction
 } from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
-import BitcoinAddress from "../../../common/components/bitcoin-links/address";
-import { FEEDBACK_MODAL_DISPLAY_DELAY_MS } from "../../../constants";
 import { useTranslation } from 'react-i18next';
-import ReimburseModal from "../reimburse-modal/reimburse-modal";
+import ReimburseModal from "./reimburse-modal";
+import RedeemModal from "./modal/redeem-modal";
 
 
-export interface RedeemRequestsProps {
-    handleShowFeedbackModal: () => void;
-}
-
-export default function RedeemRequests(props: RedeemRequestsProps) {
+export default function RedeemRequests() {
     const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
     const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
     const { transactionListeners } = useSelector((state: StoreType) => state.redeem);
     const [isRedeemExpirationSubscribed, setIsRedeemExpirationSubscribed] = useState(false);
     const [showReimburseModal, setShowReimburseModal] = useState(false);
     const [reimburseRequest, setReimburseRequest] = useState<RedeemRequest>();
+    const [showModal, setShowModal] = useState(false);
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
@@ -53,6 +50,8 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
         setShowReimburseModal(true);
     }
 
+    const closeModal = () => setShowModal(false);
+
     const handleCompleted = (request: RedeemRequest) => {
         if (!request.completed && request.isExpired) {
             if (request.reimbursed && request.cancelled) {
@@ -60,7 +59,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
             }
             if (!request.cancelled && !request.reimbursed) {
                 return <Button
-                    onClick={() => openReimburseModal(request)}
+                    onClick={(event) => {event.stopPropagation(); openReimburseModal(request);}}
                     className="ml-3"
                     variant="outline-dark">
                     {t("redeem_page.recover")}
@@ -73,7 +72,6 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
             // }
         }
         if (request.completed) {
-            setTimeout(props.handleShowFeedbackModal, FEEDBACK_MODAL_DISPLAY_DELAY_MS);
             return <FaCheck></FaCheck>;
         } else {
             return <FaHourglass></FaHourglass>;
@@ -159,36 +157,33 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
         fetchData();
     }, [polkaBtcLoaded, dispatch, address]);
 
+    const requestClicked = (request: RedeemRequest): void => {
+        dispatch(changeRedeemIdAction(request.id));
+        setShowModal(true);
+    };
+
     return (
-        <div>
+        <div className="container mt-5">
             {redeemRequests && redeemRequests.length > 0 && (
                 <React.Fragment>
                     <h5>{t("redeem_requests")}</h5>
                     <Table hover responsive size={"md"}>
                         <thead>
                             <tr>
-                                <th>{t("redeem_page.redeem_id")}</th>
-                                <th>{t("redeem_page.amount")}</th>
-                                <th>{t("fee")}</th>
-                                <th>{t("parachainblock")}</th>
-                                <th>{t("redeem_page.output_BTC_address")}</th>
-                                <th>{t("redeem_page.BTC_transaction")}</th>
-                                <th>{t("redeem_page.confirmations")}</th>
-                                <th>{t("redeem_page.completed")}</th>
+                                <th>{t("issue_page.updated")}</th>
+                                <th>{t("issue_page.amount")}</th>
+                                <th>{t("issue_page.btc_transaction")}</th>
+                                <th>{t("issue_page.confirmations")}</th>
+                                <th>{t("status")}</th>
                             </tr>
                         </thead>
                         <tbody>
                             {redeemRequests &&
                                 redeemRequests.map((request) => {
                                     return (
-                                        <tr key={request.id}>
-                                            <td>{shortAddress(request.id)}</td>
-                                            <td>{request.amountPolkaBTC} BTC</td>
-                                            <td>{request.fee} PolkaBTC</td>
+                                        <tr key={request.id} onClick={() => requestClicked(request)}>
                                             <td>{request.creation === "0" ? "Pending..." : request.creation}</td>
-                                            <td>
-                                                <BitcoinAddress btcAddress={request.btcAddress} shorten />
-                                            </td>
+                                            <td>{request.amountPolkaBTC} BTC</td>
                                             <td>
                                                 {!request.completed && request.isExpired ? <div>{t("redeem_page.failed")}</div> :
                                                     <BitcoinTransaction txId={request.btcTxId} shorten />}
@@ -202,6 +197,7 @@ export default function RedeemRequests(props: RedeemRequestsProps) {
                     </Table>
                 </React.Fragment>
             )}
+            <RedeemModal show={showModal} onClose={closeModal}/>
             <ReimburseModal show={showReimburseModal} request={reimburseRequest} onClose={closeReimburseModal} />
         </div>
     );

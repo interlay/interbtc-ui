@@ -7,7 +7,7 @@ import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 import IssueTable from "./issue-table/issue-table";
 import IssuesPerDayChart from "../../../common/components/charts/issue/issues-per-day-chart";
 import { StoreType } from "../../../common/types/util.types";
-import { IssueRequest } from "../../../common/types/issue.types";
+import { DashboardIssueInfo } from "../../../common/types/issue.types";
 import { defaultTableDisplayParams } from "../../../common/utils/utils";
 
 export default function IssueDashboard(): ReactElement {
@@ -15,7 +15,7 @@ export default function IssueDashboard(): ReactElement {
     const { t } = useTranslation();
     const statsApi = usePolkabtcStats();
 
-    const [issueRequests, setIssueRequests] = useState(new Array<IssueRequest>());
+    const [issueRequests, setIssueRequests] = useState(new Array<DashboardIssueInfo>());
     const [tableParams, setTableParams] = useState(defaultTableDisplayParams());
 
     const [totalSuccessfulIssues, setTotalSuccessfulIssues] = useState("0");
