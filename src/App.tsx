@@ -1,5 +1,5 @@
 import React, { useState, ReactElement, useEffect, useCallback } from "react";
-import { planckToDOT, satToBTC } from "@interlay/polkabtc";
+import { FaucetClient, planckToDOT, satToBTC } from "@interlay/polkabtc";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { createPolkabtcAPI, PolkaBTCAPI, StakedRelayerClient, VaultClient } from "@interlay/polkabtc";
@@ -18,7 +18,8 @@ import {
     initGeneralDataAction,
     setInstalledExtensionAction,
     showAccountModalAction,
-    updateAccountsAction
+    updateAccountsAction,
+    isFaucetLoaded
 } from "./common/actions/general.actions";
 import * as constants from "./constants";
 import "./i18n";
@@ -64,12 +65,11 @@ export default function App(): ReactElement {
         if (!address) return;
 
         try {
-            let api = await connectToParachain();
-            api.setAccount(keyring.createFromUri(constants.FAUCET_ADDRESS_SEED, undefined, "sr25519"));
-            await api.collateral.transferDOT(address, constants.FAUCET_AMOUNT);
-            toast.success("You have received " + planckToDOT(constants.FAUCET_AMOUNT) + " DOT.");
+            const receiverId = window.polkaBTC.api.createType("AccountId", address);
+            await window.faucet.fundAccount(receiverId);
+            toast.success("Your account has been funded.");
         } catch (error) {
-            toast.error(error);
+            toast.error(`Funding failed. You can only use the faucet once every 6 hours. ${error}`);
         }
     }
 
@@ -93,6 +93,9 @@ export default function App(): ReactElement {
 
             window.vaultClient = new VaultClient(constants.VAULT_CLIENT_URL);
             dispatch(isVaultClientLoaded(true));
+
+            window.faucet = new FaucetClient(constants.FAUCET_URL);
+            dispatch(isFaucetLoaded(true));
 
             setTimeout(() => {
                 if (!window.polkaBTC) {

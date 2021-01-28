@@ -1,7 +1,7 @@
 version: "3.8"
 services:
     polkabtc:
-        image: "registry.gitlab.com/interlay/btc-parachain:dev-4e5d71bd"
+        image: "registry.gitlab.com/interlay/btc-parachain:dev-8bd1f032"
         command:
             - btc-parachain
             - --rpc-external
@@ -84,6 +84,19 @@ services:
                 oracle --keyring=bob --polka-btc-url 'ws://polkabtc:9944'
         environment:
             RUST_LOG: info
+    faucet:
+        image: "registry.gitlab.com/interlay/polkabtc-clients/faucet:dev"
+        command:
+            - /bin/sh
+            - -c
+            - |
+                echo "Sleeping..."
+                sleep 5
+                faucet --keyring=alice --polka-btc-url 'ws://polkabtc:9944' --user-allowance 1 --vault-allowance 500 --http-addr '[::0]:3035'
+        environment:
+            RUST_LOG: info
+        ports:
+            - "3035:3035"
     vault_1:
         image: "registry.gitlab.com/interlay/polkabtc-clients/vault:dev"
         command:
