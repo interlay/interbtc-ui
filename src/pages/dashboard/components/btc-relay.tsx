@@ -1,29 +1,41 @@
 import React, { useState, useEffect } from "react";
-import ButtonComponent from "./button-component";
-import { getAccents } from "../dashboard-colors";
+import ButtonComponent from "./buttoncomponent";
+import { getAccents } from "../dashboardcolors";
+import { useSelector } from "react-redux";
+import { StoreType } from "../../../common/types/util.types";
 
 const BtcRelay = () => {
-    const [status, setStatus] = useState("offline");
+    // TODO: Compute status using blockstream data
+    const [latestRelayBlock, setLatestRelayBlock] = useState("0");
+    const [latestBitcoinBlock, setLatestBitcoinBlock] = useState("0");
     const [textColour, setTextColour] = useState("d_grey");
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+    const outdatedRelayThreshold = 12;
 
     useEffect(() => {
-        let relayTextElement = document.getElementById("relay-text") as HTMLElement;
-        let relayCircleTextElement = document.getElementById("relay-circle-text") as HTMLElement;
+        const fetchOracleData = async () => {
+            if (!polkaBtcLoaded) return;
+            const latestRelayBlock = await window.polkaBTC.btcRelay.getLatestBlockHeight();
+            const latestBitcoinBlock = await window.polkaBTC.btcCore.getLatestBlockHeight();
+            setLatestRelayBlock(latestRelayBlock.toString());
+            setLatestBitcoinBlock(latestBitcoinBlock.toString());
+        };
+        fetchOracleData();
+        const relayTextElement = document.getElementById("relay-text") as HTMLElement;
+        const relayCircleTextElement = document.getElementById("relay-circle-text") as HTMLElement;
 
-        if (status === "online") {
-            relayTextElement.innerHTML = " Online";
-            relayCircleTextElement.innerHTML = "Online";
+        const btcRelayOffset = Number(latestBitcoinBlock) - Number(latestBitcoinBlock);
+
+        if (btcRelayOffset <= outdatedRelayThreshold) {
+            relayTextElement.innerHTML = " Synced";
+            relayCircleTextElement.innerHTML = "Synced";
             setTextColour("d_green");
-        } else if (status === "offline") {
-            relayTextElement.innerHTML = " Offline";
-            relayCircleTextElement.innerHTML = "Offline";
-            setTextColour("d_red");
         } else {
-            relayTextElement.innerHTML = " Unavailable";
-            relayCircleTextElement.innerHTML = "Unavailable";
-            setTextColour("d_grey");
+            relayTextElement.innerHTML = " Out of Sync";
+            relayCircleTextElement.innerHTML = "Out of Sync";
+            setTextColour("d_red");
         }
-    }, [status]);
+    }, [latestBitcoinBlock, polkaBtcLoaded]);
     return (
         <div className="card">
             <div className="card-top-content">
@@ -55,7 +67,7 @@ const BtcRelay = () => {
                     >
                         Loading
                     </h1>
-                    <p className="latest-block-text">Block</p>
+                    <p className="latest-block-text">Block {latestRelayBlock}</p>
                 </div>
             </div>
         </div>

@@ -1,29 +1,35 @@
 import React, { useState, useEffect } from "react";
-import ButtonComponent from "./button-component";
-import { getAccents } from "../dashboard-colors";
+import ButtonComponent from "./buttoncomponent";
+import { getAccents } from "../dashboardcolors";
+import { useSelector } from "react-redux";
+import { StoreType } from "../../../common/types/util.types";
 
 const OracleStatus = () => {
-    const [status, setStatus] = useState("online");
     const [textColour, setTextColour] = useState("d_grey");
+    const [exchangeRate, setExchangeRate] = useState("0");
+    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
     useEffect(() => {
-        let oracleTextElement = document.getElementById("oracle-text") as HTMLElement;
-        let oracleCircleTextElement = document.getElementById("oracle-circle-text") as HTMLElement;
+        const fetchOracleData = async () => {
+            if (!polkaBtcLoaded) return;
+            const oracle = await window.polkaBTC.oracle.getInfo();
+            setExchangeRate(oracle.exchangeRate.toFixed(2));
+            const oracleTextElement = document.getElementById("oracle-text") as HTMLElement;
+            const oracleCircleTextElement = document.getElementById("oracle-circle-text") as HTMLElement;
 
-        if (status === "online") {
-            oracleTextElement.innerHTML = " Online";
-            oracleCircleTextElement.innerHTML = "Online";
-            setTextColour("d_green");
-        } else if (status === "offline") {
-            oracleTextElement.innerHTML = " Offline";
-            oracleCircleTextElement.innerHTML = "Offline";
-            setTextColour("d_red");
-        } else {
-            oracleTextElement.innerHTML = " Unavailable";
-            oracleCircleTextElement.innerHTML = "Unavailable";
-            setTextColour("d_grey");
-        }
-    }, [status]);
+            if (oracle) {
+                oracleTextElement.innerHTML = " Online";
+                oracleCircleTextElement.innerHTML = "Online";
+                setTextColour("d_green");
+            } else {
+                oracleTextElement.innerHTML = " Offline";
+                oracleCircleTextElement.innerHTML = "Offline";
+                setTextColour("d_red");
+            }
+        };
+        fetchOracleData();
+    }, [textColour, polkaBtcLoaded]);
+
     return (
         <div className="card">
             <div className="card-top-content">
@@ -55,7 +61,7 @@ const OracleStatus = () => {
                     >
                         Loading
                     </h1>
-                    <h2>32,000 DOT/BTC</h2>
+                    <h2>{exchangeRate} DOT/BTC</h2>
                 </div>
             </div>
         </div>

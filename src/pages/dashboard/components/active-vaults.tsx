@@ -3,7 +3,7 @@ import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboard-colors";
 import SingleAxisChartComponent from "./singleaxis-chart-component";
 const ActiveVaults = () => {
-    let data = [7, 8, 9, 2, 3, 4, 5];
+    const data = [7, 8, 9, 2, 3, 4, 5];
     return (
         <div className="card">
             <div className="card-top-content">

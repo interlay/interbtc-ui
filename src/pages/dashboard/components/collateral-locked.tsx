@@ -1,14 +1,15 @@
 import React, { useEffect } from "react";
-import ButtonComponent from "./button-component";
-import { getAccents } from "../dashboard-colors";
+import ButtonComponent from "./buttoncomponent";
+import { getAccents } from "../dashboardcolors";
 
 const CollateralLocked = () => {
     useEffect(() => {
-        var Chart = require("chart.js");
-        let daysElement = document.getElementById("collateralLockedChart") as HTMLCanvasElement;
-        var ctx = daysElement.getContext("2d");
+        // eslint-disable-next-line
+        const Chart = require("chart.js");
+        const daysElement = document.getElementById("collateralLockedChart") as HTMLCanvasElement;
+        const ctx = daysElement.getContext("2d");
 
-        var totalIssuedData = {
+        const totalIssuedData = {
             label: "Total Collateral issued",
             fill: false,
             backgroundColor: "rgba(255,255,255,0)",
@@ -25,7 +26,7 @@ const CollateralLocked = () => {
             pointRadius: 4,
             data: [7, 6, 5, 4, 3, 2, 1],
         };
-        var IssuedPerDayData = {
+        const IssuedPerDayData = {
             label: "Collateral issued today",
             fill: false,
             backgroundColor: "rgba(255, 255, 255, 0.3)",
@@ -42,11 +43,11 @@ const CollateralLocked = () => {
             pointRadius: 4,
             data: [1, 2, 2, 2, 2, 2, 2],
         };
-        var data = {
+        const data = {
             labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
             datasets: [totalIssuedData, IssuedPerDayData],
         };
-        var myChart = new Chart(ctx, {
+        new Chart(ctx, {
             type: "line",
             data: data,
             options: {
