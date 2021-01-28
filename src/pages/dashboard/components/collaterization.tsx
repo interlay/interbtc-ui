@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import ButtonComponent from "./buttoncomponent";
-import { getAccents } from "../dashboardcolors";
+import React, { useEffect, useState, ReactElement } from "react";
+import ButtonComponent from "./button-component";
+import { getAccents } from "../dashboard-colors";
 import { roundTwoDecimals } from "@interlay/polkabtc";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 
-const Collaterization = () => {
+const Collaterization = (): ReactElement => {
     const [systemCollateralization, setSystemCollateralization] = useState("0");
     const [issuablePolkaBTC, setIssuablePolkaBTC] = useState("0");
     const [secureCollateralThreshold, setSecureCollateralThreshold] = useState("0");
@@ -44,7 +44,11 @@ const Collaterization = () => {
                     style={{ borderColor: `${getAccents("d_blue").colour}` }}
                     id="relay-circle"
                 >
-                    <h1 className="h1-l-text" style={{ color: `${getAccents("d_blue").colour}` }}>
+                    <h1
+                        className="h1-xl-text"
+                        style={{ color: `${getAccents("d_blue").colour}` }}
+                        id="relay-circle-text"
+                    >
                         {roundTwoDecimals(issuablePolkaBTC)} <br />
                         PolkaBTC Capacity
                     </h1>

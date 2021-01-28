@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
-import ButtonComponent from "./buttoncomponent";
-import { getAccents } from "../dashboardcolors";
+import ButtonComponent from "./button-component";
+import { getAccents } from "../dashboard-colors";
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 
 const PolkaBTC = (): React.ReactElement => {
@@ -26,10 +26,10 @@ const PolkaBTC = (): React.ReactElement => {
 
     useEffect(() => {
         fetchIssuesLastDays();
-        var Chart = require("chart.js");
-        let daysElement = document.getElementById("polkaBTCChart") as HTMLCanvasElement;
-        var ctx = daysElement.getContext("2d");
-        var totalIssuedData = {
+        const Chart = require("chart.js");
+        const daysElement = document.getElementById("polkaBTCChart") as HTMLCanvasElement;
+        const ctx = daysElement.getContext("2d");
+        const totalIssuedData = {
             label: "Total PolkaBTC issued",
             fill: false,
             backgroundColor: "rgba(255,255,255,0)",
@@ -46,7 +46,7 @@ const PolkaBTC = (): React.ReactElement => {
             pointRadius: 4,
             data: cumulativeIssuesPerDay,
         };
-        var IssuedPerDayData = {
+        const IssuedPerDayData = {
             label: "PolkaBTC issued today",
             fill: false,
             backgroundColor: "rgba(255, 255, 255, 0.3)",
@@ -67,28 +67,6 @@ const PolkaBTC = (): React.ReactElement => {
             labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
             datasets: [totalIssuedData, IssuedPerDayData],
         };
-        var myChart = new Chart(ctx, {
-            type: "line",
-            data: data,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                    labels: {
-                        fontSize: 9,
-                    },
-                },
-                scales: {
-                    xAxes: [
-                        {
-                            gridLines: {
-                                display: false,
-                            },
-                        },
-                    ],
-                },
-            },
-        });
     }, [fetchIssuesLastDays]);
     return (
         <div className="card">

@@ -64,7 +64,7 @@ export default function App(): ReactElement {
         if (!address) return;
 
         try {
-            let api = await connectToParachain();
+            const api = await connectToParachain();
             api.setAccount(keyring.createFromUri(constants.FAUCET_ADDRESS_SEED, undefined, "sr25519"));
             await api.collateral.transferDOT(address, constants.FAUCET_AMOUNT);
             toast.success("You have received " + planckToDOT(constants.FAUCET_AMOUNT) + " DOT.");
@@ -212,85 +212,73 @@ export default function App(): ReactElement {
     return (
         <React.Fragment>
             <Router>
-                {/* {!isLoading || constants.STATIC_PAGE_ONLY ? ( */}
-                <div className="main d-flex flex-column min-vh-100 polkabtc-background fade-in-animation">
-                    <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
-                    <ReactTooltip place="top" type="dark" effect="solid" />
-                    <AccountModal selected={address} onSelected={selectAccount} />
-                    {!constants.STATIC_PAGE_ONLY && <Topbar address={address} requestDOT={requestDotFromFaucet} />}
-                    <Switch>
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/issue">
-                                <IssuePage />
+                {!isLoading || constants.STATIC_PAGE_ONLY ? (
+                    <div className="main d-flex flex-column min-vh-100 polkabtc-background fade-in-animation">
+                        <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
+                        <ReactTooltip place="top" type="dark" effect="solid" />
+                        <AccountModal selected={address} onSelected={selectAccount} />
+                        {!constants.STATIC_PAGE_ONLY && <Topbar address={address} requestDOT={requestDotFromFaucet} />}
+                        <Switch>
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/issue">
+                                    <IssuePage />
+                                </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/redeem">
+                                    <RedeemPage />
+                                </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/staked-relayer">
+                                    <StakedRelayerPage />
+                                </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/dashboard/vaults">
+                                    <VaultsDashboard />
+                                </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/dashboard/issue">
+                                    <IssueDashboard />
+                                </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/dashboard/redeem">
+                                    <RedeemDashboard />
+                                </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/dashboard">
+                                    <DashboardPage />
+                                </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/vault">
+                                    <VaultDashboardPage />
+                                </Route>
+                            )}
+                            <Route path="/user-guide">
+                                <UserGuidePage />
                             </Route>
-                        )}
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/redeem">
-                                <RedeemPage />
+                            <Route path="/about">
+                                <AboutPage />
                             </Route>
-                        )}
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/staked-relayer">
-                                <StakedRelayerPage />
+                            <Route path="/faq">
+                                <FaqPage />
                             </Route>
-                        )}
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/dashboard">
-                                <DashboardPage />
+                            <Route exact path="/">
+                                <LandingPage />
                             </Route>
-                        )}
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/vault">
-                                <VaultDashboardPage />
-                            </Route>
-                        )}
-                        <Route path="/user-guide">
-                            <UserGuidePage />
-                        </Route>
-                        <Route path="/about">
-                            <AboutPage />
-                        </Route>
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/dashboard/vaults">
-                                <VaultsDashboard />
-                            </Route>
-                        )}
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/dashboard/issue">
-                                <IssueDashboard />
-                            </Route>
-                        )}
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/dashboard/redeem">
-                                <RedeemDashboard />
-                            </Route>
-                        )}
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/dashboard">
-                                <DashboardPage />
-                            </Route>
-                        )}
-                        <Route path="/user-guide">
-                            <UserGuidePage />
-                        </Route>
-                        <Route path="/about">
-                            <AboutPage />
-                        </Route>
-                        <Route path="/faq">
-                            <FaqPage />
-                        </Route>
-                        <Route exact path="/">
-                            <LandingPage />
-                        </Route>
-                    </Switch>
-                    <Footer />
-                </div>{" "}
-                :
-                {/* : (
+                        </Switch>
+                        <Footer />
+                    </div>
+                ) : (
                     <div className="main-loader">
                         <img src={loadingImg} alt="loading animation"></img>
                     </div>
-                )} */}
+                )}
             </Router>
         </React.Fragment>
     );
