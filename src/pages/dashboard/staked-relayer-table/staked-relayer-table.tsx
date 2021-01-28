@@ -4,8 +4,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
 import * as constants from "../../../constants";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 type StakedRelayer = {
     AccountId: string;
@@ -25,7 +24,7 @@ export default function StakedRelayerTable(): ReactElement {
 
             try {
                 const relayers = await window.polkaBTC.stakedRelayer.map();
-                let relayersList: StakedRelayer[] = [];
+                const relayersList: StakedRelayer[] = [];
                 relayers.forEach((stake, id) => {
                     relayersList.push({
                         AccountId: id.toString(),
@@ -92,8 +91,7 @@ export default function StakedRelayerTable(): ReactElement {
                                     <th>{t("status")}</th>
                                 </tr>
                             </thead>
-                            {relayers && relayers.length
-                                ?
+                            {relayers && relayers.length ? (
                                 <tbody>
                                     {relayers.map((relayer, index) => {
                                         return (
@@ -105,15 +103,13 @@ export default function StakedRelayerTable(): ReactElement {
                                         );
                                     })}
                                 </tbody>
-                                :
+                            ) : (
                                 <tbody>
                                     <tr>
-                                        <td colSpan={3}>
-                                            {t("dashboard.no-registered")}
-                                        </td>
+                                        <td colSpan={3}>{t("dashboard.no-registered")}</td>
                                     </tr>
                                 </tbody>
-                            }
+                            )}
                         </table>
                     </div>
                 </div>

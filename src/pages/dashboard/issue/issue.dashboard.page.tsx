@@ -55,18 +55,16 @@ export default function IssueDashboard(): ReactElement {
         t("issue_page.parachain_block"),
         t("issue_page.vault_dot_address"),
         t("issue_page.vault_btc_address"),
-        t("issue_page.confirmations"),
         t("status"),
     ];
 
     const tableIssueRequestRow = useMemo(
-        () => (ireq: IssueRequest): string[] => [
+        () => (ireq: DashboardIssueInfo): string[] => [
             ireq.id,
             satToBTC(ireq.amountBTC),
             ireq.creation,
             ireq.vaultDOTAddress,
             ireq.vaultBTCAddress,
-            ireq.confirmations.toString(),
             ireq.completed ? t("completed") : ireq.cancelled ? t("cancelled") : t("pending"),
         ],
         [t]

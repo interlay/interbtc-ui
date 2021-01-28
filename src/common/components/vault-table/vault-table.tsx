@@ -8,7 +8,6 @@ import { useTranslation } from "react-i18next";
 import Big from "big.js";
 import { StoreType } from "../../../common/types/util.types";
 
-
 export default function VaultTable(): ReactElement {
     const [vaults, setVaults] = useState<Array<Vault>>([]);
     const [liquidationThreshold, setLiquidationThreshold] = useState(new Big(0));
@@ -68,7 +67,7 @@ export default function VaultTable(): ReactElement {
             const vaults = await window.polkaBTC.vaults.list();
             const vaultsList: Vault[] = [];
 
-            for (let vault of vaults) {
+            for (const vault of vaults) {
                 const accountId = window.polkaBTC.api.createType("AccountId", vault.id);
                 let unsettledCollateralization: Big | undefined = undefined;
                 let settledCollateralization: Big | undefined = undefined;
@@ -81,7 +80,7 @@ export default function VaultTable(): ReactElement {
                     console.log(error);
                 }
 
-                let btcAddress = vault.wallet.btcAddress;
+                const btcAddress = vault.wallet.btcAddress;
 
                 const balanceLockedPlanck = await window.polkaBTC.collateral.balanceLockedDOT(accountId);
                 const balanceLockedDOT = planckToDOT(balanceLockedPlanck.toString());
@@ -93,9 +92,7 @@ export default function VaultTable(): ReactElement {
                     lockedDOT: balanceLockedDOT,
                     pendingBTC: satToBTC(vault.to_be_issued_tokens.toString()),
                     btcAddress: btcAddress || "",
-                    status:
-                        vault.status &&
-                        checkVaultStatus(vault.status.toString(), unsettledCollateralization),
+                    status: vault.status && checkVaultStatus(vault.status.toString(), unsettledCollateralization),
                     unsettledCollateralization: unsettledCollateralization?.mul(100).toString(),
                     settledCollateralization: settledCollateralization?.mul(100).toString(),
                 });

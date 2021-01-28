@@ -18,7 +18,6 @@ import { startTransactionWatcherIssue } from "../../../common/utils/issue-transa
 import { useTranslation } from "react-i18next";
 import BitcoinLogo from "../../../assets/img/Bitcoin-Logo.png";
 
-
 export default function RequestConfirmation() {
     const [isRequestPending, setRequestPending] = useState(false);
     const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
@@ -27,7 +26,6 @@ export default function RequestConfirmation() {
     );
     const dispatch = useDispatch();
     const { t } = useTranslation();
-
 
     const onConfirm = async () => {
         if (!polkaBtcLoaded) return;
@@ -42,7 +40,7 @@ export default function RequestConfirmation() {
             const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultDotAddress);
             const requestResult = await window.polkaBTC.issue.request(amount, vaultAccountId);
 
-            let vaultBTCAddress = requestResult.vault.wallet.btcAddress;
+            const vaultBTCAddress = requestResult.vault.wallet.btcAddress;
             if (vaultBTCAddress === undefined) {
                 throw new Error("Could not generate unique vault address.");
             }

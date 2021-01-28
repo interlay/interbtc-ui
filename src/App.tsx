@@ -19,7 +19,7 @@ import {
     setInstalledExtensionAction,
     showAccountModalAction,
     updateAccountsAction,
-    isFaucetLoaded
+    isFaucetLoaded,
 } from "./common/actions/general.actions";
 import * as constants from "./constants";
 import "./i18n";
@@ -47,7 +47,6 @@ import RedeemDashboard from "./pages/dashboard/redeem/redeem.dashboard.page";
 import LandingPage from "./pages/landing/landing.page";
 import RelayDashboard from "./pages/dashboard/relay/relay.dashboard.page";
 
-
 function connectToParachain(): Promise<PolkaBTCAPI> {
     return createPolkabtcAPI(
         constants.PARACHAIN_URL,
@@ -58,7 +57,7 @@ function connectToParachain(): Promise<PolkaBTCAPI> {
 export default function App(): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const address = useSelector((state: StoreType) => state.general.address);
-    const [isLoading,setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
     const extensions = useSelector((state: StoreType) => state.general.extensions);
     const dispatch = useDispatch();
 
@@ -72,20 +71,23 @@ export default function App(): ReactElement {
         } catch (error) {
             toast.error(`Funding failed. You can only use the faucet once every 6 hours. ${error}`);
         }
-    }
+    };
 
-    const selectAccount = useCallback(async (newAddress: string): Promise<void> => {
-        if (!polkaBtcLoaded || !newAddress) {
-            return;
-        }
+    const selectAccount = useCallback(
+        async (newAddress: string): Promise<void> => {
+            if (!polkaBtcLoaded || !newAddress) {
+                return;
+            }
 
-        await web3Enable(constants.APP_NAME);
-        const { signer } = await web3FromAddress(newAddress);
-        window.polkaBTC.setAccount(newAddress, signer);
+            await web3Enable(constants.APP_NAME);
+            const { signer } = await web3FromAddress(newAddress);
+            window.polkaBTC.setAccount(newAddress, signer);
 
-        dispatch(showAccountModalAction(false));
-        dispatch(changeAddressAction(newAddress));
-    },[polkaBtcLoaded, dispatch]);
+            dispatch(showAccountModalAction(false));
+            dispatch(changeAddressAction(newAddress));
+        },
+        [polkaBtcLoaded, dispatch]
+    );
 
     const createAPIInstance = useCallback(async (): Promise<void> => {
         try {
@@ -102,22 +104,21 @@ export default function App(): ReactElement {
                 if (!window.polkaBTC) {
                     toast.warn(
                         "Unable to connect to the BTC-Parachain. " +
-                        "Please check your internet connection or try again later."
+                            "Please check your internet connection or try again later."
                     );
                 }
             }, 5000);
             window.polkaBTC = await connectToParachain();
             dispatch(isPolkaBtcLoaded(true));
             setIsLoading(false);
-
         } catch (error) {
             if (!window.polkaBTC)
                 toast.warn(
                     "Unable to connect to the BTC-Parachain. " +
-                    "Please check your internet connection or try again later."
+                        "Please check your internet connection or try again later."
                 );
         }
-    },[dispatch]);
+    }, [dispatch]);
 
     useEffect((): void => {
         // Do not load data if showing static landing page only
@@ -134,15 +135,25 @@ export default function App(): ReactElement {
                 const btcRelayHeight = Number(await window.polkaBTC.btcRelay.getLatestBlockHeight());
                 const bitcoinHeight = await window.polkaBTC.btcCore.getLatestBlockHeight();
                 const state = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
-                dispatch(initGeneralDataAction(totalPolkaBTC, totalLockedDOT, btcRelayHeight, bitcoinHeight,
-                    state.isError ? ParachainStatus.Error :
-                    state.isRunning ? ParachainStatus.Running : ParachainStatus.Shutdown));
-            } catch(error) {
+                dispatch(
+                    initGeneralDataAction(
+                        totalPolkaBTC,
+                        totalLockedDOT,
+                        btcRelayHeight,
+                        bitcoinHeight,
+                        state.isError
+                            ? ParachainStatus.Error
+                            : state.isRunning
+                            ? ParachainStatus.Running
+                            : ParachainStatus.Shutdown
+                    )
+                );
+            } catch (error) {
                 console.log(error);
             }
-        }
+        };
         initDataOnAppBootstrap();
-    },[dispatch, polkaBtcLoaded]);
+    }, [dispatch, polkaBtcLoaded]);
 
     useEffect((): void => {
         // Do not load data if showing static landing page only
@@ -163,7 +174,7 @@ export default function App(): ReactElement {
             const accounts = allAccounts.map(({ address }) => address);
             dispatch(updateAccountsAction(accounts));
 
-            let newAddress : string | undefined = undefined;
+            let newAddress: string | undefined = undefined;
             if (accounts.includes(address)) {
                 newAddress = address;
             } else if (accounts.length === 1) {
@@ -175,9 +186,9 @@ export default function App(): ReactElement {
                 window.polkaBTC.setAccount(newAddress, signer);
                 dispatch(changeAddressAction(newAddress));
             } else dispatch(changeAddressAction(""));
-        }
+        };
         loadAccountData();
-    },[address, polkaBtcLoaded, dispatch, extensions.length]);
+    }, [address, polkaBtcLoaded, dispatch, extensions.length]);
 
     useEffect(() => {
         // Do not load data if showing static landing page only
@@ -187,10 +198,9 @@ export default function App(): ReactElement {
             try {
                 if (polkaBtcLoaded) return;
 
-                setTimeout(()=> {
-                    if(isLoading)
-                        setIsLoading(false);
-                },3000);
+                setTimeout(() => {
+                    if (isLoading) setIsLoading(false);
+                }, 3000);
                 await createAPIInstance();
                 keyring.loadAll({});
             } catch (e) {
@@ -198,82 +208,81 @@ export default function App(): ReactElement {
                     autoClose: false,
                 });
             }
-        }
+        };
         loadData();
-    },[createAPIInstance, isLoading, polkaBtcLoaded]);
+    }, [createAPIInstance, isLoading, polkaBtcLoaded]);
 
-    return <React.Fragment>
-        <Router>
-            {(!isLoading || constants.STATIC_PAGE_ONLY) ?
-            <div className="main d-flex flex-column min-vh-100 polkabtc-background fade-in-animation">
-                <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
-                <ReactTooltip place="top" type="dark" effect="solid"/>
-                <AccountModal selected={address} onSelected={selectAccount}/>
-                {!constants.STATIC_PAGE_ONLY && (
-                    <Topbar
-                        address={address}
-                        requestDOT={requestDotFromFaucet}
-                    />
+    return (
+        <React.Fragment>
+            <Router>
+                {!isLoading || constants.STATIC_PAGE_ONLY ? (
+                    <div className="main d-flex flex-column min-vh-100 polkabtc-background fade-in-animation">
+                        <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
+                        <ReactTooltip place="top" type="dark" effect="solid" />
+                        <AccountModal selected={address} onSelected={selectAccount} />
+                        {!constants.STATIC_PAGE_ONLY && <Topbar address={address} requestDOT={requestDotFromFaucet} />}
+                        <Switch>
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/staked-relayer">
+                                    <StakedRelayerPage />
+                                </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/dashboard/vaults">
+                                    <VaultsDashboard />
+                                </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/dashboard/issue">
+                                    <IssueDashboard />
+                                </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/dashboard/redeem">
+                                    <RedeemDashboard />
+                                </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/dashboard/relay">
+                                    <RelayDashboard />
+                                </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/dashboard">
+                                    <DashboardPage />
+                                </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/vault">
+                                    <VaultDashboardPage />
+                                </Route>
+                            )}
+                            <Route path="/" exact>
+                                <LandingPage />
+                            </Route>
+                            <Route path="/user-guide">
+                                <UserGuidePage />
+                            </Route>
+                            <Route path="/about">
+                                <AboutPage />
+                            </Route>
+                            <Route path="/faq">
+                                <FaqPage />
+                            </Route>
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route exact path="/app">
+                                    <AppPage />
+                                </Route>
+                            )}
+                        </Switch>
+                        <Footer />
+                    </div>
+                ) : (
+                    <div className="main-loader">
+                        <img src={loadingImg} alt="loading animation"></img>
+                    </div>
                 )}
-                <Switch>
-                    {!constants.STATIC_PAGE_ONLY && (
-                        <Route path="/staked-relayer">
-                            <StakedRelayerPage />
-                        </Route>
-                    )}
-                    {!constants.STATIC_PAGE_ONLY && (
-                        <Route path="/dashboard/vaults">
-                            <VaultsDashboard />
-                        </Route>
-                    )}
-                    {!constants.STATIC_PAGE_ONLY && (
-                        <Route path="/dashboard/issue">
-                            <IssueDashboard />
-                        </Route>
-                    )}
-                    {!constants.STATIC_PAGE_ONLY && (
-                        <Route path="/dashboard/redeem">
-                            <RedeemDashboard />
-                        </Route>
-                    )}
-                    {!constants.STATIC_PAGE_ONLY && (
-                        <Route path="/dashboard/relay">
-                            <RelayDashboard />
-                        </Route>
-                    )}
-                    {!constants.STATIC_PAGE_ONLY && (
-                        <Route path="/dashboard">
-                            <DashboardPage />
-                        </Route>
-                    )}
-                    {!constants.STATIC_PAGE_ONLY && (
-                        <Route path="/vault">
-                            <VaultDashboardPage />
-                        </Route>
-                    )}
-                    <Route path="/" exact>
-                            <LandingPage />
-                    </Route>
-                    <Route path="/user-guide">
-                        <UserGuidePage />
-                    </Route>
-                    <Route path="/about">
-                        <AboutPage />
-                    </Route>
-                    <Route path="/faq">
-                        <FaqPage />
-                    </Route>
-                    {!constants.STATIC_PAGE_ONLY && (
-                    <Route exact path="/app">
-                        <AppPage />
-                    </Route>
-                    )}
-                </Switch>
-                <Footer />
-            </div> :
-            <div className="main-loader">
-                <img src={loadingImg} alt="loading animation"></img>
-            </div>}
-        </Router>
-    </React.Fragment>;
+            </Router>
+        </React.Fragment>
+    );
 }

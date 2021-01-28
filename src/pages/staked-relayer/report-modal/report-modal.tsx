@@ -6,8 +6,7 @@ import { StoreType } from "../../../common/types/util.types";
 import { toast } from "react-toastify";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { reverseEndiannessHex } from "@interlay/polkabtc";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 const STATUS_UPDATE_DEPOSIT = 100;
 

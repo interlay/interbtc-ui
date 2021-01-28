@@ -5,8 +5,7 @@ import { dateToShortString } from "../../utils/utils";
 import BN from "bn.js";
 import Big from "big.js";
 import * as constants from "../../../constants";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 interface OracleInfo {
     source: string;

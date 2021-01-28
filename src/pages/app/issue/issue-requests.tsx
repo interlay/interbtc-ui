@@ -23,7 +23,6 @@ import * as constants from "../../../constants";
 import { ParachainStatus } from "../../../common/types/util.types";
 import IssueModal from "./modal/issue-modal";
 
-
 export default function IssueRequests() {
     const { address, balancePolkaBTC, polkaBtcLoaded, extensions, stateOfBTCParachain,
         bitcoinHeight, btcRelayHeight } = useSelector((state: StoreType) => state.general);
@@ -149,7 +148,7 @@ export default function IssueRequests() {
             provenReq.rawTransaction = rawTx;
             dispatch(updateIssueRequestAction(provenReq));
 
-            toast.success(t("issue_page.proof_data",{txId}));
+            toast.success(t("issue_page.proof_data", { txId }));
             const txIdBuffer = Buffer.from(txId, "hex").reverse();
 
             // prepare types for polkadot
@@ -158,7 +157,7 @@ export default function IssueRequests() {
             const parsedMerkleProof = window.polkaBTC.api.createType("Bytes", "0x" + merkleProof);
             const parsedRawTx = window.polkaBTC.api.createType("Bytes", rawTx);
 
-            toast.success(t("issue_page.executing",{id: request.id}));
+            toast.success(t("issue_page.executing", { id: request.id }));
             // execute issue
             const success = await window.polkaBTC.issue.execute(
                 parsedIssuedId,
@@ -179,7 +178,7 @@ export default function IssueRequests() {
             );
             dispatch(updateIssueRequestAction(completedReq));
 
-            toast.success(t("issue_page.succesfully_executed",{id: request.id}));
+            toast.success(t("issue_page.succesfully_executed", { id: request.id }));
         } catch (error) {
             toast.error(error.toString());
         } finally {
@@ -199,7 +198,11 @@ export default function IssueRequests() {
             return <FaCheck></FaCheck>;
         }
         if (request.cancelled) {
-            return <Badge className="badge-style" variant="secondary">{t("cancelled")}</Badge>;
+            return (
+                <Badge className="badge-style" variant="secondary">
+                    {t("cancelled")}
+                </Badge>
+            );
         }
         if (request.confirmations < requiredBtcConfirmations || request.confirmations === 0) {
             return <FaHourglass></FaHourglass>;
@@ -230,7 +233,7 @@ export default function IssueRequests() {
             {issueRequests && issueRequests.length > 0 && (
                 <React.Fragment>
                     <h5>{t("issue_requests")}</h5>
-                        <p>{t("issue_page.click_on_issue_request")}</p>
+                    <p>{t("issue_page.click_on_issue_request")}</p>
                     <Table hover responsive size={"md"}>
                         <thead>
                             <tr>

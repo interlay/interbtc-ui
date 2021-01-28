@@ -9,7 +9,6 @@ import { RedeemRequest } from "../../../common/types/redeem.types";
 import { retryRedeemRequestAction, reimburseRedeemRequestAction } from "../../../common/actions/redeem.actions";
 import Big from "big.js";
 
-
 type ReimburseModalProps = {
     onClose: () => void;
     request: RedeemRequest | undefined;
@@ -36,41 +35,41 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
                 setRate(BtcDotRate);
                 setAmountDOT(amountPolkaBTC.mul(BtcDotRate));
                 setPunishmentDOT(amountPolkaBTC.mul(BtcDotRate).mul(new Big(punishment)));
-            } catch(error) {
+            } catch (error) {
                 console.log(error);
             }
-        }
+        };
 
         fetchData();
-    },[props.request, polkaBtcLoaded])
+    }, [props.request, polkaBtcLoaded]);
 
     const onRetry = async () => {
         if (!polkaBtcLoaded) return;
         setRetryPending(true);
-        try{
+        try {
             if (!props.request) return;
             const redeemId = window.polkaBTC.api.createType("H256", "0x" + props.request.id);
-            await window.polkaBTC.redeem.cancel(redeemId,false);
+            await window.polkaBTC.redeem.cancel(redeemId, false);
             dispatch(retryRedeemRequestAction(props.request.id));
             props.onClose();
             toast.success(t("redeem_page.successfully_cancelled_redeem"));
-        }catch(error) {
+        } catch (error) {
             console.log(error);
             toast.error(t("redeem_page.error_cancelling_redeem"));
         }
         setRetryPending(false);
-    }
+    };
 
     const onReimburse = async () => {
         if (!polkaBtcLoaded) return;
         setReimbursePending(true);
-        try{
+        try {
             if (!props.request) return;
             const redeemId = window.polkaBTC.api.createType("H256", "0x" + props.request.id);
-            await window.polkaBTC.redeem.cancel(redeemId,true);
+            await window.polkaBTC.redeem.cancel(redeemId, true);
             dispatch(reimburseRedeemRequestAction(props.request.id));
             props.onClose();
-        }catch(error) {
+        } catch (error) {
             console.log(error);
             toast.error(t("redeem_page.error_cancelling_redeem"));
         }
@@ -88,22 +87,25 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
                         <p>
                             <b>{t("redeem_page.funds_safe")}</b>
                         </p>
-                        <p>
-                            {t("redeem_page.not_send_on_time")}
-                        </p>
+                        <p>{t("redeem_page.not_send_on_time")}</p>
                     </div>
                 </div>
                 <div className="row mt-4">
                     <div className="col-9">
-                        <p><strong>{t("redeem_page.retry_again_and_get_compes",{amountDOT: punishmentDOT.toFixed(2)})}</strong></p>
-                        <p>{t("redeem_page.you_will_receive_dot",{amountDOT: punishmentDOT.toFixed(2)})}</p>
+                        <p>
+                            <strong>
+                                {t("redeem_page.retry_again_and_get_compes", { amountDOT: punishmentDOT.toFixed(2) })}
+                            </strong>
+                        </p>
+                        <p>{t("redeem_page.you_will_receive_dot", { amountDOT: punishmentDOT.toFixed(2) })}</p>
                     </div>
                     <div className="col-3 text-center m-auto">
                         <ButtonMaybePending
                             className={"retry-button"}
                             disabled={isRetryPending || isReimbursePending}
                             isPending={isRetryPending}
-                            onClick={onRetry}>
+                            onClick={onRetry}
+                        >
                             {t("retry")}
                         </ButtonMaybePending>
                     </div>
@@ -111,42 +113,47 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
                 <div className="row mt-4">
                     <div className="col-9">
                         <p>
-                            <strong>
-                                {t("redeem_page.reimburse_total",{total: amountDOT.add(punishmentDOT)})}
-                            </strong>
+                            <strong>{t("redeem_page.reimburse_total", { total: amountDOT.add(punishmentDOT) })}</strong>
                         </p>
                         <ul>
                             <li>
                                 <p>
-                                <b>{t("redeem_page.num_reimbursment",{amountDOT: amountDOT.toFixed(2)})}</b>
-                                    {t("redeem_page.exchange_rate",{amountPolkaBTC: props.request ? props.request.amountPolkaBTC : 0, rate: rate.toFixed(5)})}
+                                    <b>{t("redeem_page.num_reimbursment", { amountDOT: amountDOT.toFixed(2) })}</b>
+                                    {t("redeem_page.exchange_rate", {
+                                        amountPolkaBTC: props.request ? props.request.amountPolkaBTC : 0,
+                                        rate: rate.toFixed(5),
+                                    })}
                                 </p>
                             </li>
                             <li>
-                                <p><b>{t("redeem_page.compensation",{punishment: punishmentDOT.toFixed(2)})}</b>{t("redeem_page.inconvenience")}</p>
+                                <p>
+                                    <b>{t("redeem_page.compensation", { punishment: punishmentDOT.toFixed(2) })}</b>
+                                    {t("redeem_page.inconvenience")}
+                                </p>
                             </li>
                         </ul>
-
                     </div>
                     <div className="col-3 text-center m-auto">
                         <ButtonMaybePending
                             isPending={isReimbursePending}
                             onClick={onReimburse}
-                            disabled={isRetryPending || isReimbursePending}>
+                            disabled={isRetryPending || isReimbursePending}
+                        >
                             {t("redeem_page.reimburse")}
                         </ButtonMaybePending>
                     </div>
                 </div>
                 <div className="row mt-4">
                     <div className="col-12">
-                        <p><b>{t("redeem_page.please_note")}</b></p>
+                        <p>
+                            <b>{t("redeem_page.please_note")}</b>
+                        </p>
                     </div>
                 </div>
             </Modal.Body>
             <div className="container-fluid modal-footer-border">
                 <div className="row min-height-5">
-                    <div className="col-9">
-                    </div>
+                    <div className="col-9"></div>
                     <div className="col-3 text-center m-auto">
                         <Button variant="secondary" onClick={props.onClose}>
                             {t("redeem_page.decide_later")}

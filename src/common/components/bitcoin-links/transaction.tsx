@@ -9,8 +9,7 @@ export default class BitcoinTransaction extends React.Component<{
     render() {
         return (
             <div>
-                {this.props.txId
-                    ?
+                {this.props.txId ? (
                     <a
                         href={
                             (constants.BTC_MAINNET
@@ -22,8 +21,9 @@ export default class BitcoinTransaction extends React.Component<{
                     >
                         {this.props.shorten ? shortTxId(this.props.txId) : this.props.txId}
                     </a>
-                    : "Pending..."
-                }
+                ) : (
+                    "Pending..."
+                )}
             </div>
         );
     }
