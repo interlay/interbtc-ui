@@ -1,9 +1,8 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboard-colors";
-import SingleAxisChartComponent from "./singleaxis-chart-component";
-const ActiveStakedRelayers = () => {
-    const data = [7, 8, 9, 123, 234, 400, 235];
+//import SingleAxisChartComponent from "./singleaxis-chart-component";
+const ActiveStakedRelayers = (): ReactElement => {
     return (
         <div className="card">
             <div className="card-top-content">
@@ -15,14 +14,14 @@ const ActiveStakedRelayers = () => {
                     <ButtonComponent buttonName="view relayers" propsButtonColor="d_orange" />
                 </div>
             </div>
-            <SingleAxisChartComponent
-                chartId="active-relayers"
-                colour="d_orange"
-                label="Total active relayers"
-                chartData={data}
-            />
         </div>
     );
+    // <SingleAxisChartComponent
+    //     chartId="active-relayers"
+    //     colour="d_orange"
+    //     label="Total active relayers"
+    //     chartData={data}
+    // />
 };
 
 export default ActiveStakedRelayers;
