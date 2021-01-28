@@ -45,6 +45,7 @@ import { StoreType, ParachainStatus } from "./common/types/util.types";
 import IssueDashboard from "./pages/dashboard/issue/issue.dashboard.page";
 import RedeemDashboard from "./pages/dashboard/redeem/redeem.dashboard.page";
 import LandingPage from "./pages/landing/landing.page";
+import RelayDashboard from "./pages/dashboard/relay/relay.dashboard.page";
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
     return createPolkabtcAPI(
@@ -239,6 +240,11 @@ export default function App(): ReactElement {
                             {!constants.STATIC_PAGE_ONLY && (
                                 <Route path="/dashboard/redeem">
                                     <RedeemDashboard />
+                                </Route>
+                            )}
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route path="/dashboard/relay">
+                                    <RelayDashboard />
                                 </Route>
                             )}
                             {!constants.STATIC_PAGE_ONLY && (
