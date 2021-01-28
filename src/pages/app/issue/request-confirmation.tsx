@@ -8,6 +8,7 @@ import {
     changeIssueIdAction,
     changeIssueStepAction,
     addIssueRequestAction,
+    changeVaultBtcAddressOnIssueAction
 } from "../../../common/actions/issue.actions";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { IssueRequest } from "../../../common/types/issue.types";
@@ -15,6 +16,7 @@ import { StoreType } from "../../../common/types/util.types";
 import Big from "big.js";
 import { startTransactionWatcherIssue } from "../../../common/utils/issue-transaction.watcher";
 import { useTranslation } from "react-i18next";
+import BitcoinLogo from "../../../assets/img/Bitcoin-Logo.png";
 
 
 export default function RequestConfirmation() {
@@ -44,6 +46,7 @@ export default function RequestConfirmation() {
             if (vaultBTCAddress === undefined) {
                 throw new Error("Could not generate unique vault address.");
             }
+            dispatch(changeVaultBtcAddressOnIssueAction(stripHexPrefix(vaultBTCAddress)));
             // get the issue id from the request issue event
             const id = stripHexPrefix(requestResult.id.toString());
             const issueRequest = await window.polkaBTC.issue.getRequestById(id);
@@ -87,12 +90,18 @@ export default function RequestConfirmation() {
             </div>
             <div className="step-item row">
                 <div className="col-6">{t("bridge_fee")}</div>
-                <div className="col-6">{fee} BTC</div>
+                <div className="col-6">
+                    <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
+                    {fee} BTC
+                </div>
             </div>
             <hr className="total-divider"></hr>
             <div className="step-item row">
                     <div className="col-6 total-amount">{t("total_deposit")}</div>
-                    <div className="col-6 total-amount">{((new Big(fee)).add(new Big(amountBTC))).toString()} BTC</div>
+                    <div className="col-6 total-amount">
+                        <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
+                        {((new Big(fee)).add(new Big(amountBTC))).toString()} BTC
+                    </div>
             </div>
        </div>
         <ButtonMaybePending

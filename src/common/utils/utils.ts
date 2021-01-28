@@ -74,14 +74,17 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
  * @param parachainIssueRequest ParachainIssueRequest
  */
 export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: ParachainRedeemRequest): RedeemRequest {
+    const amountPolkaBTC = satToBTC(parachainRedeemRequest.amount_polka_btc.toString());
+    const fee = satToBTC(parachainRedeemRequest.fee.toString());
     return {
         id: stripHexPrefix(id.toString()),
-        amountPolkaBTC: satToBTC(parachainRedeemRequest.amount_polka_btc.toString()),
+        amountPolkaBTC,
         creation: parachainRedeemRequest.opentime.toString(),
         btcAddress: parachainRedeemRequest.btc_address,
         vaultDotAddress: parachainRedeemRequest.vault.toString(),
         btcTxId: "",
-        fee: satToBTC(parachainRedeemRequest.fee.toString()),
+        fee,
+        totalAmount: new Big(amountPolkaBTC).sub(new Big(fee)).toString(),
         confirmations: 0,
         completed: parachainRedeemRequest.completed.isTrue,
         isExpired: false,

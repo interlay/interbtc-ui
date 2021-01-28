@@ -5,7 +5,6 @@ import { Modal } from "react-bootstrap";
 import { useTranslation } from 'react-i18next';
 import { shortAddress } from "../../../../common/utils/utils";
 import StatusView from "./status-view";
-import Big from "big.js";
 import BitcoinLogo from "../../../../assets/img/Bitcoin-Logo.png";
 import { Prices } from "../../../../common/types/util.types";
 import { calculateAmount } from "../../../../common/utils/utils";
@@ -45,7 +44,7 @@ export default function RedeemModal(props: RedeemModalProps) {
                             {t("redeem_page.redeem_request_for")}
                         </div>
                         <div className="issue-amount">
-                            <span className="wizzard-number">{request.amountPolkaBTC}</span>&nbsp;polkaBTC
+                            <span className="wizzard-number">{request.amountPolkaBTC}</span>&nbsp;PolkaBTC
                         </div>
                         <div className="row usd-price-modal">
                             <div className="col">
@@ -76,7 +75,7 @@ export default function RedeemModal(props: RedeemModalProps) {
                             <div className="col-6 total-amount">{t("redeem_page.amount_received")}</div>
                             <div className="col-6 total-amount">
                                 <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
-                                {((new Big(request.amountPolkaBTC)).sub(new Big(request.fee))).toString()} BTC
+                                {request.totalAmount} BTC
                             </div>
                         </div>
                     </div>

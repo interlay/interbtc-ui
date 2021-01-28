@@ -46,7 +46,7 @@ export default function IssueModal(props: IssueModalProps) {
                             {t("issue_page.issue_request_for")}
                         </div>
                         <div className="issue-amount">
-                            <span className="wizzard-number">{request.amountBTC}</span>&nbsp;polkaBTC
+                            <span className="wizzard-number">{request.amountBTC}</span>&nbsp;PolkaBTC
                         </div>
                         <div className="row usd-price-modal">
                             <div className="col">

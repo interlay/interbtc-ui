@@ -31,7 +31,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                                 {t("issue_page.in_parachain_block")}
                             </div>
                             <div className="number-of-confirmations">   
-                                {props.request.confirmations}
+                                {props.request.creation}
                             </div>
                         </div> 
                     </div>

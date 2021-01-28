@@ -15,7 +15,7 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
     return <div className="payment-view">
         <div className="row payment-title">
             <div className="col">
-                {t("deposit")} &nbsp; {props.request.amountBTC} &nbsp; BTC 
+                {t("deposit")} &nbsp; {props.request.totalAmount} &nbsp; BTC 
             </div>
         </div>
         <div className="row payment-description">

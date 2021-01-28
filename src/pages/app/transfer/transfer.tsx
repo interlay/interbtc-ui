@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Prices, StoreType } from "../../../common/types/util.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { calculateAmount } from "../../../common/utils/utils";
+import { calculateAmount, updateBalances } from "../../../common/utils/utils";
 import { btcToSat } from "@interlay/polkabtc";
+import { updateBalancePolkaBTCAction } from "../../../common/actions/general.actions";
+import Big from "big.js";
+import { toast } from "react-toastify";
 
 
 type TransferForm = {
@@ -16,11 +19,13 @@ type TransferForm = {
 export default function Transfer() {
     const { t } = useTranslation();
     const senderAddress = useSelector((state: StoreType) => state.general.address);
+    const { balancePolkaBTC, balanceDOT } = useSelector((state: StoreType) => state.general);
     const defaultValues = { defaultValues: { amountPolkaBTC: "", btcAddress: "" } };
     const { register, handleSubmit, errors, getValues } = useForm<TransferForm>(defaultValues);
     const [usdPrice, setUsdPrice] = useState("0");
     const [isRequestPending, setRequestPending] = useState(false);
     const [usdAmount, setUsdAmount] = useState(calculateAmount("0",usdPrice));
+    const dispatch = useDispatch();
 
 
     useEffect(() => {
@@ -30,7 +35,7 @@ export default function Transfer() {
             }).then((prices) => {
                 setUsdPrice(prices.bitcoin.usd.toString());   
                 const amount = calculateAmount(getValues("amountPolkaBTC") || "0",prices.bitcoin.usd.toString());
-                setUsdAmount(amount); 
+                setUsdAmount(amount);
             });
         };
         fetchData();
@@ -41,6 +46,9 @@ export default function Transfer() {
         try {
             window.polkaBTC.treasury.setAccount(senderAddress);
             await window.polkaBTC.treasury.transfer(address,btcToSat(amountPolkaBTC));
+            dispatch(updateBalancePolkaBTCAction((new Big(balancePolkaBTC).sub(new Big(amountPolkaBTC))).toString()));
+            updateBalances(dispatch,address,balanceDOT,balancePolkaBTC);
+            toast.success(t("successful_transfer"));
         } catch(error) {
             console.log(error);
         }

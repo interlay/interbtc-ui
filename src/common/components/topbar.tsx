@@ -90,6 +90,11 @@ export default function Topbar(props: TopbarProps): ReactElement {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                         {polkaBtcLoaded && (
+                            <Link className="nav-link" to="/app">
+                                {t("app")}
+                            </Link>
+                        )}
+                        {polkaBtcLoaded && (
                             <Link className="nav-link" to="/dashboard">
                                 {t("nav_dashboard")}
                             </Link>

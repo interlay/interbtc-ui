@@ -43,6 +43,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { StoreType, ParachainStatus } from "./common/types/util.types";
 import IssueDashboard from "./pages/dashboard/issue/issue.dashboard.page";
 import RedeemDashboard from "./pages/dashboard/redeem/redeem.dashboard.page";
+import LandingPage from "./pages/landing/landing.page";
 
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
@@ -241,6 +242,9 @@ export default function App(): ReactElement {
                             <VaultDashboardPage />
                         </Route>
                     )}
+                    <Route path="/" exact>
+                            <LandingPage />
+                    </Route>
                     <Route path="/user-guide">
                         <UserGuidePage />
                     </Route>
@@ -250,9 +254,11 @@ export default function App(): ReactElement {
                     <Route path="/faq">
                         <FaqPage />
                     </Route>
-                    <Route exact path="/">
+                    {!constants.STATIC_PAGE_ONLY && (
+                    <Route exact path="/app">
                         <AppPage />
                     </Route>
+                    )}
                 </Switch>
                 <Footer />
             </div> :

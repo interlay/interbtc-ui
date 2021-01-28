@@ -10,7 +10,7 @@ export default function RedeemInfo() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const address = useSelector((state: StoreType) => state.general.address);
-    const { id, vaultBtcAddress } = useSelector((state: StoreType) => state.redeem);
+    const { id, vaultDotAddress } = useSelector((state: StoreType) => state.redeem);
     const requests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
     let request; 
     if (requests) request = requests.filter((request) => request.id === id)[0];
@@ -39,7 +39,7 @@ export default function RedeemInfo() {
             </div>
             <div className="row ">
                 <div className="col payment-address">
-                    <span>{vaultBtcAddress}</span>
+                    <span>{vaultDotAddress}</span>
                 </div>
             </div>
             <div className="row">

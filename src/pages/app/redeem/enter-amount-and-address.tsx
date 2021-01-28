@@ -43,7 +43,7 @@ export default function EnterAmountAndAddress() {
     const dispatch = useDispatch();
     const [usdPrice, setUsdPrice] = useState("0");
     const [usdAmount, setUsdAmount] = useState(calculateAmount(amount || "0",usdPrice));
-    const [redeemFee, setRedeemFee] = useState("0.5");
+    const [redeemFee, setRedeemFee] = useState("0");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -60,8 +60,6 @@ export default function EnterAmountAndAddress() {
                 const amount = calculateAmount(getValues("amountPolkaBTC") || "0",prices.bitcoin.usd.toString());
                 setUsdAmount(amount);
             });
-            // TODO: fetch the redeem fee from the parachain
-            setRedeemFee("0.5");
         };
         fetchData();
     }, [polkaBtcLoaded, getValues]);
@@ -115,9 +113,10 @@ export default function EnterAmountAndAddress() {
 
             const request: RedeemRequest = {
                 id,
-                amountPolkaBTC: totalAmountBTC,
+                amountPolkaBTC,
                 creation: redeemRequest.opentime.toString(),
                 fee: fee,
+                totalAmount: totalAmountBTC,
                 btcAddress,
                 btcTxId: "",
                 confirmations: 0,
@@ -139,8 +138,15 @@ export default function EnterAmountAndAddress() {
     const calculateTotal = (): string => {
         const amount = getValues("amountPolkaBTC") || "0";
         if (amount === "0") return "0";
-        return new Big(redeemFee).sub(new Big(amount)).toString();
-    } 
+        return new Big(amount).sub(new Big(redeemFee)).toString();
+    }
+
+    const onAmountChange = async () => {
+        const amount = getValues("amountPolkaBTC") || "0";
+        setUsdAmount(calculateAmount(amount,usdPrice));
+        const fee = await window.polkaBTC.redeem.getFeesToPay(amount);
+        setRedeemFee(fee);
+    }
 
     return (
         <form onSubmit={onSubmit}>
@@ -152,9 +158,7 @@ export default function EnterAmountAndAddress() {
                         type="float"
                         placeholder="0.00"
                         className={"" + (errors.amountPolkaBTC ? " error-borders" : "")}
-                        onChange={() => {
-                            setUsdAmount(calculateAmount(getValues("amountPolkaBTC") || "0",usdPrice));
-                        }}
+                        onChange={onAmountChange}
                         ref={register({
                             required: true,
                             validate: (value) =>
