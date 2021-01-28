@@ -2,17 +2,19 @@ import React, { useState, useEffect, ReactElement, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
-import RedeemTable from "./redeem-table/redeem-table";
 import { StoreType } from "../../../common/types/util.types";
-import { RedeemRequest } from "../../../common/types/redeem.types";
+import { DashboardRequestInfo } from "../../../common/types/redeem.types";
+import DashboardTable from "../../../common/components/dashboard-table/dashboard-table";
+import { defaultTableDisplayParams } from "../../../common/utils/utils";
 
 export default function RedeemDashboard(): ReactElement {
     const { polkaBtcLoaded, totalPolkaBTC } = useSelector((state: StoreType) => state.general);
     const { t } = useTranslation();
 
+    const [tableParams, setTableParams] = useState(defaultTableDisplayParams());
     const [totalSuccessfulRedeems, setTotalSuccessfulRedeems] = useState(0);
     const [totalFailedRedeems, setTotalFailedRedeems] = useState(0);
-    const [redeemRequests, setRedeemRequests] = useState(new Array<RedeemRequest>());
+    const [redeemRequests, setRedeemRequests] = useState(new Array<DashboardRequestInfo>());
     const [cumulativeRedeemsPerDay, setCumulativeRedeemsPerDay] = useState(new Array<{ date: Date; amount: number }>());
     const pointRedeemsPerDay = useMemo(
         () =>
@@ -27,16 +29,38 @@ export default function RedeemDashboard(): ReactElement {
         [totalSuccessfulRedeems, totalFailedRedeems]
     );
 
+    const tableHeadings = [
+        t("id"),
+        t("redeem_page.amount"),
+        t("parachainblock"),
+        t("issue_page.vault_dot_address"),
+        t("redeem_page.output_BTC_address"),
+        t("status"),
+    ];
+
+    const tableRedeemRequestRow = useMemo(
+        () => (rreq: DashboardRequestInfo): string[] => [
+            rreq.id,
+            rreq.amountPolkaBTC,
+            rreq.creation,
+            rreq.vaultDotAddress || "",
+            rreq.btcAddress,
+            rreq.completed
+                ? t("completed")
+                : rreq.cancelled
+                ? t("cancelled")
+                : rreq.isExpired
+                ? t("expired")
+                : rreq.reimbursed
+                ? t("reimbursed")
+                : t("pending"),
+        ],
+        [t]
+    );
+
     useEffect(() => {
-        const fetchTotalSuccessfulRedeems = async () => {
-            setTotalSuccessfulRedeems(443);
-        };
-
-        const fetchTotalFailedRedeems = async () => {
-            setTotalFailedRedeems(12);
-        };
-
-        const fetchRedeemRequests = async () => {
+        (async () => {
+            //await stats call
             setRedeemRequests([
                 {
                     id: "0xtestmock",
@@ -44,16 +68,22 @@ export default function RedeemDashboard(): ReactElement {
                     creation: "18743",
                     btcAddress: "tb1qhz...dknu33d",
                     vaultDotAddress: "5DAAnr...m3PTXFy",
-                    btcTxId: "d218f5...3f29af",
-                    totalAmount: "",
-                    confirmations: 0,
                     completed: false,
                     cancelled: false,
                     isExpired: false,
                     reimbursed: false,
-                    fee: "15",
                 },
             ]);
+        })();
+    }, [tableParams]);
+
+    useEffect(() => {
+        const fetchTotalSuccessfulRedeems = async () => {
+            setTotalSuccessfulRedeems(443);
+        };
+
+        const fetchTotalFailedRedeems = async () => {
+            setTotalFailedRedeems(12);
         };
 
         const fetchRedeemsLastDays = async () => {
@@ -64,12 +94,7 @@ export default function RedeemDashboard(): ReactElement {
 
         (async () => {
             if (!polkaBtcLoaded) return;
-            await Promise.all([
-                fetchTotalSuccessfulRedeems(),
-                fetchTotalFailedRedeems(),
-                fetchRedeemRequests(),
-                fetchRedeemsLastDays(),
-            ]);
+            await Promise.all([fetchTotalSuccessfulRedeems(), fetchTotalFailedRedeems(), fetchRedeemsLastDays()]);
         })();
     }, [polkaBtcLoaded]);
 
@@ -104,7 +129,14 @@ export default function RedeemDashboard(): ReactElement {
                             </div>
                         </div>
                     </div>
-                    <RedeemTable redeemRequests={redeemRequests} />
+                    <DashboardTable
+                        pageData={redeemRequests}
+                        totalPages={2}
+                        tableParams={tableParams}
+                        setTableParams={setTableParams}
+                        headings={tableHeadings}
+                        dataPointDisplayer={tableRedeemRequestRow}
+                    />
                 </div>
             </div>
         </div>
