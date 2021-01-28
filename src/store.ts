@@ -4,13 +4,14 @@ import { AppState, StoreType, StoreState, ParachainStatus } from "./common/types
 import { createLogger } from "redux-logger";
 import { applyMiddleware, createStore } from "redux";
 import { initializeState } from "./common/actions/general.actions";
-import { PolkaBTCAPI, StakedRelayerClient, VaultClient } from "@interlay/polkabtc";
+import { FaucetClient, PolkaBTCAPI, StakedRelayerClient, VaultClient } from "@interlay/polkabtc";
 import { mapToArray, arrayToMap } from "./common/utils/utils";
 
 declare global {
     interface Window {
         polkaBTC: PolkaBTCAPI;
         relayer: StakedRelayerClient;
+        faucet: FaucetClient;
         vaultClient: VaultClient;
         store: StoreState;
     }

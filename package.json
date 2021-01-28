@@ -1,9 +1,9 @@
 {
     "name": "polkabtc-ui",
-    "version": "0.3.8",
+    "version": "0.3.9",
     "private": true,
     "dependencies": {
-        "@interlay/polkabtc": "0.7.1",
+        "@interlay/polkabtc": "0.7.2",
         "@interlay/polkabtc-stats": "0.0.2",
         "@polkadot/api": "2.8.1",
         "@polkadot/extension-dapp": "0.35.1",

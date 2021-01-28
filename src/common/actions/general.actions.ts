@@ -23,6 +23,8 @@ import {
     SetInstalledExtension,
     ShowAccountModal,
     UpdateAccounts,
+    IsFaucetLoaded,
+    IS_FAUCET_LOADED,
 } from "../types/actions.types";
 import { StoreType, ParachainStatus } from "../types/util.types";
 
@@ -33,6 +35,11 @@ export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
 
 export const isStakedRelayerLoaded = (isLoaded = false): IsStakedRelayerLoaded => ({
     type: IS_STAKED_RELAYER_LOADED,
+    isLoaded,
+});
+
+export const isFaucetLoaded = (isLoaded = false): IsFaucetLoaded => ({
+    type: IS_FAUCET_LOADED,
     isLoaded,
 });
 
