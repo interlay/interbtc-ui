@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboard-colors";
+import IssuesPerDayChart from "../../../common/components/charts/issue/issues-per-day-chart";
 const PolkaBTC = (): React.ReactElement => {
     useEffect(() => {
         var Chart = require("chart.js");
@@ -67,6 +68,7 @@ const PolkaBTC = (): React.ReactElement => {
             },
         });
     }, []);
+    console.log("checking", IssuesPerDayChart());
     return (
         <div className="card">
             <div className="card-top-content">
