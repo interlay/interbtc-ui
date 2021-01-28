@@ -1,14 +1,14 @@
 import { IssueRequest, VaultIssue } from "./issue.types";
 import { RedeemRequest, VaultRedeem } from "./redeem.types";
 import { VaultReplaceRequest, Vault } from "./vault.types";
-import { StoreType, ParachainStatus } from "./util.types";
+import { StoreType, ParachainStatus, ActiveTab } from "./util.types";
 
 // GENERAL ACTIONS
 
 export const IS_POLKA_BTC_LOADED = "IS_POLKA_BTC_LOADED";
 export const IS_STAKED_RELAYER_LOADED = "IS_STAKED_RELAYER_LOADED";
+export const IS_FAUCET_LOADED = "IS_FAUCET_LOADED";
 export const IS_VAULT_CLIENT_LOADED = "IS_VAULT_CLIENT_LOADED";
-export const HAS_FEEDBACK_BEEN_DISPLAYED = "HAS_FEEDBACK_BEEN_DISPLAYED";
 export const INIT_STATE = "INIT_STATE";
 export const CHANGE_ADDRESS = "CHANGE_ADDRESS";
 export const INIT_GENERAL_DATA_ACTION = "INIT_GENERAL_DATA_ACTION";
@@ -17,10 +17,16 @@ export const UPDATE_BALANCE_DOT = "UPDATE_BALANCE_DOT";
 export const SET_INSTALLED_EXTENSION = "SET_INSTALLED_EXTENSION";
 export const SHOW_ACCOUNT_MODAL = "SHOW_ACCOUNT_MODAL";
 export const UPDATE_ACCOUNTS = "UPDATE_ACCOUNTS";
+export const SET_ACTIVE_TAB = "SET_ACTIVE_TAB";
 
 export interface IsPolkaBtcLoaded {
     type: typeof IS_POLKA_BTC_LOADED;
     isLoaded: boolean;
+}
+
+export interface SetActiveTab {
+    type: typeof SET_ACTIVE_TAB;
+    activeTab: ActiveTab;
 }
 
 export interface IsStakedRelayerLoaded {
@@ -28,14 +34,14 @@ export interface IsStakedRelayerLoaded {
     isLoaded: boolean;
 }
 
-export interface IsVaultClientLoaded {
-    type: typeof IS_VAULT_CLIENT_LOADED;
+export interface IsFaucetLoaded {
+    type: typeof IS_FAUCET_LOADED;
     isLoaded: boolean;
 }
 
-export interface HasFeedbackModalBeenDisplayed {
-    type: typeof HAS_FEEDBACK_BEEN_DISPLAYED;
-    hasBeenDisplayed: boolean;
+export interface IsVaultClientLoaded {
+    type: typeof IS_VAULT_CLIENT_LOADED;
+    isLoaded: boolean;
 }
 
 export interface ChangeAddress {
@@ -85,7 +91,6 @@ export interface UpdateAccounts {
 export type GeneralActions =
     | IsPolkaBtcLoaded
     | IsStakedRelayerLoaded
-    | HasFeedbackModalBeenDisplayed
     | ChangeAddress
     | InitState
     | InitGeneralDataAction
@@ -94,7 +99,8 @@ export type GeneralActions =
     | UpdateBalanceDOT
     | SetInstalledExtension
     | ShowAccountModal
-    | UpdateAccounts;
+    | UpdateAccounts
+    | SetActiveTab;
 
 // REDEEM
 

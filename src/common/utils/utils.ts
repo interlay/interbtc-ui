@@ -17,6 +17,7 @@ import {
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from "../../constants";
 import { Dispatch } from "redux";
 import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from "../actions/general.actions";
+import Big from "big.js";
 import { TableDisplayParams } from "../types/util.types";
 
 export function shortAddress(address: string): string {
@@ -37,6 +38,10 @@ export function dateToShortString(date: Date): string {
     return date.toDateString().substring(3) + " " + date.toTimeString().substring(0, date.toTimeString().length);
 }
 
+export function calculateAmount(amount: string, currencyPrice: string): string {
+    return new Big(amount).mul(new Big(currencyPrice)).toString();
+}
+
 /**
  * Converts an IssueRequest object retrieved from the parachain
  * to a UI IssueRequest object
@@ -44,14 +49,17 @@ export function dateToShortString(date: Date): string {
  * @param parachainIssueRequest ParachainIssueRequest
  */
 export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: ParachainIssueRequest): IssueRequest {
+    const amountBTC = satToBTC(parachainIssueRequest.amount.toString());
+    const fee = satToBTC(parachainIssueRequest.fee.toString());
     return {
         id: stripHexPrefix(id.toString()),
-        amountBTC: satToBTC(parachainIssueRequest.amount.toString()),
+        amountBTC,
         creation: parachainIssueRequest.opentime.toString(),
         vaultBTCAddress: parachainIssueRequest.btc_address,
         vaultDOTAddress: parachainIssueRequest.vault.toString(),
         btcTxId: "",
-        fee: satToBTC(parachainIssueRequest.fee.toString()),
+        fee,
+        totalAmount: new Big(amountBTC).add(fee).toString(),
         griefingCollateral: parachainIssueRequest.griefing_collateral.toString(),
         confirmations: 0,
         completed: parachainIssueRequest.completed.isTrue,
@@ -66,14 +74,17 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
  * @param parachainIssueRequest ParachainIssueRequest
  */
 export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: ParachainRedeemRequest): RedeemRequest {
+    const amountPolkaBTC = satToBTC(parachainRedeemRequest.amount_polka_btc.toString());
+    const fee = satToBTC(parachainRedeemRequest.fee.toString());
     return {
         id: stripHexPrefix(id.toString()),
-        amountPolkaBTC: satToBTC(parachainRedeemRequest.amount_polka_btc.toString()),
+        amountPolkaBTC,
         creation: parachainRedeemRequest.opentime.toString(),
         btcAddress: parachainRedeemRequest.btc_address,
         vaultDotAddress: parachainRedeemRequest.vault.toString(),
         btcTxId: "",
-        fee: satToBTC(parachainRedeemRequest.fee.toString()),
+        fee,
+        totalAmount: new Big(amountPolkaBTC).sub(new Big(fee)).toString(),
         confirmations: 0,
         completed: parachainRedeemRequest.completed.isTrue,
         isExpired: false,

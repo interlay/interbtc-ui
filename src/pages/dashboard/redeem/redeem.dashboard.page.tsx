@@ -45,6 +45,7 @@ export default function RedeemDashboard(): ReactElement {
                     btcAddress: "tb1qhz...dknu33d",
                     vaultDotAddress: "5DAAnr...m3PTXFy",
                     btcTxId: "d218f5...3f29af",
+                    totalAmount: "",
                     confirmations: 0,
                     completed: false,
                     cancelled: false,

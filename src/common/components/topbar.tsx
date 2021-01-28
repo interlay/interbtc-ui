@@ -4,7 +4,6 @@ import { Navbar, Nav, Image, Button, DropdownButton, Dropdown } from "react-boot
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../types/util.types";
-import * as constants from "../../constants";
 import ButtonMaybePending from "./pending-button";
 import { FaDiscord, FaGithub, FaEdit } from "react-icons/fa";
 import { planckToDOT } from "@interlay/polkabtc";
@@ -74,12 +73,6 @@ export default function Topbar(props: TopbarProps): ReactElement {
         setIsRequestPending(false);
     };
 
-    const checkWallet = () => {
-        if (!extensions.length || !address) {
-            dispatch(showAccountModalAction(true));
-        }
-    };
-
     const getLabel = (): string => {
         if (!extensions.length) return "Connect Wallet";
 
@@ -106,14 +99,9 @@ export default function Topbar(props: TopbarProps): ReactElement {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">
-                            {!constants.STATIC_PAGE_ONLY && polkaBtcLoaded && (
-                                <Link className="nav-link" to="/issue" onClick={checkWallet}>
-                                    {t("issue")}
-                                </Link>
-                            )}
-                            {!constants.STATIC_PAGE_ONLY && polkaBtcLoaded && (
-                                <Link className="nav-link" to="/redeem" onClick={checkWallet}>
-                                    {t("redeem")}
+                            {polkaBtcLoaded && (
+                                <Link className="nav-link" to="/app">
+                                    {t("app")}
                                 </Link>
                             )}
                             {polkaBtcLoaded && (
@@ -141,7 +129,6 @@ export default function Topbar(props: TopbarProps): ReactElement {
                                 {t("nav_faq")}
                             </Link>
                         </Nav>
-
                         <Nav className="d-inline">
                             <DropdownButton
                                 id="bug-report"

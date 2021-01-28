@@ -167,7 +167,7 @@ export default function StakedRelayerPage() {
                         planckLocked={planckLocked}
                         stakedRelayerAddress={stakedRelayerAddress}
                     ></StatusUpdateTable>
-                    <VaultTable isRelayer={true}></VaultTable>
+                    <VaultTable></VaultTable>
                     <OracleTable planckLocked={planckLocked}></OracleTable>
                     {relayerRegistered && (
                         <React.Fragment>

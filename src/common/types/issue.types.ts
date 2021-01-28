@@ -1,6 +1,7 @@
 export interface IssueRequest {
     id: string;
     amountBTC: string;
+    totalAmount: string;
     creation: string;
     vaultBTCAddress: string;
     vaultDOTAddress: string;
@@ -14,6 +15,11 @@ export interface IssueRequest {
     fee: string;
     griefingCollateral: string;
 }
+
+export type DashboardIssueInfo = Pick<
+    IssueRequest,
+    "id" | "amountBTC" | "creation" | "vaultBTCAddress" | "vaultDOTAddress" | "btcTxId" | "completed" | "cancelled"
+>;
 
 export interface IssueMap {
     [key: string]: IssueRequest[];

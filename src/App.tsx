@@ -1,5 +1,5 @@
 import React, { useState, ReactElement, useEffect, useCallback } from "react";
-import { planckToDOT, satToBTC } from "@interlay/polkabtc";
+import { FaucetClient, planckToDOT, satToBTC } from "@interlay/polkabtc";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { createPolkabtcAPI, PolkaBTCAPI, StakedRelayerClient, VaultClient } from "@interlay/polkabtc";
@@ -19,6 +19,7 @@ import {
     setInstalledExtensionAction,
     showAccountModalAction,
     updateAccountsAction,
+    isFaucetLoaded,
 } from "./common/actions/general.actions";
 import * as constants from "./constants";
 import "./i18n";
@@ -31,9 +32,7 @@ import "react-toastify/dist/ReactToastify.css";
 // app imports
 import Topbar from "./common/components/topbar";
 import Footer from "./common/components/footer/footer";
-import LandingPage from "./pages/landing/landing.page";
-import IssuePage from "./pages/issue/issue.page";
-import RedeemPage from "./pages/redeem/redeem.page";
+import AppPage from "./pages/app/app.page";
 import AboutPage from "./pages/about.page";
 import FaqPage from "./pages/faq.page";
 import UserGuidePage from "./pages/user-guide.page";
@@ -45,6 +44,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { StoreType, ParachainStatus } from "./common/types/util.types";
 import IssueDashboard from "./pages/dashboard/issue/issue.dashboard.page";
 import RedeemDashboard from "./pages/dashboard/redeem/redeem.dashboard.page";
+import LandingPage from "./pages/landing/landing.page";
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
     return createPolkabtcAPI(
@@ -64,12 +64,11 @@ export default function App(): ReactElement {
         if (!address) return;
 
         try {
-            const api = await connectToParachain();
-            api.setAccount(keyring.createFromUri(constants.FAUCET_ADDRESS_SEED, undefined, "sr25519"));
-            await api.collateral.transferDOT(address, constants.FAUCET_AMOUNT);
-            toast.success("You have received " + planckToDOT(constants.FAUCET_AMOUNT) + " DOT.");
+            const receiverId = window.polkaBTC.api.createType("AccountId", address);
+            await window.faucet.fundAccount(receiverId);
+            toast.success("Your account has been funded.");
         } catch (error) {
-            toast.error(error);
+            toast.error(`Funding failed. You can only use the faucet once every 6 hours. ${error}`);
         }
     };
 
@@ -96,6 +95,9 @@ export default function App(): ReactElement {
 
             window.vaultClient = new VaultClient(constants.VAULT_CLIENT_URL);
             dispatch(isVaultClientLoaded(true));
+
+            window.faucet = new FaucetClient(constants.FAUCET_URL);
+            dispatch(isFaucetLoaded(true));
 
             setTimeout(() => {
                 if (!window.polkaBTC) {
@@ -220,16 +222,6 @@ export default function App(): ReactElement {
                         {!constants.STATIC_PAGE_ONLY && <Topbar address={address} requestDOT={requestDotFromFaucet} />}
                         <Switch>
                             {!constants.STATIC_PAGE_ONLY && (
-                                <Route path="/issue">
-                                    <IssuePage />
-                                </Route>
-                            )}
-                            {!constants.STATIC_PAGE_ONLY && (
-                                <Route path="/redeem">
-                                    <RedeemPage />
-                                </Route>
-                            )}
-                            {!constants.STATIC_PAGE_ONLY && (
                                 <Route path="/staked-relayer">
                                     <StakedRelayerPage />
                                 </Route>
@@ -259,6 +251,9 @@ export default function App(): ReactElement {
                                     <VaultDashboardPage />
                                 </Route>
                             )}
+                            <Route path="/" exact>
+                                <LandingPage />
+                            </Route>
                             <Route path="/user-guide">
                                 <UserGuidePage />
                             </Route>
@@ -268,9 +263,11 @@ export default function App(): ReactElement {
                             <Route path="/faq">
                                 <FaqPage />
                             </Route>
-                            <Route exact path="/">
-                                <LandingPage />
-                            </Route>
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route exact path="/app">
+                                    <AppPage />
+                                </Route>
+                            )}
                         </Switch>
                         <Footer />
                     </div>
