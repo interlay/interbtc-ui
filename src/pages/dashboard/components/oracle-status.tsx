@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ButtonComponent from "./buttoncomponent";
+import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboardcolors";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";

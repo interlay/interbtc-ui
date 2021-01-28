@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import ButtonComponent from "./buttoncomponent";
+import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboardcolors";
 
 const CollateralLocked = () => {
