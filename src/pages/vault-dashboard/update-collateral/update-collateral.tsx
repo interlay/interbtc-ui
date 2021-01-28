@@ -8,8 +8,7 @@ import { planckToDOT, dotToPlanck, roundTwoDecimals } from "@interlay/polkabtc";
 import { StoreType } from "../../../common/types/util.types";
 import Big from "big.js";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 type UpdateCollateralForm = {
     collateral: string;
@@ -140,7 +139,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                 <Modal.Body>
                     <div className="row">
                         <div className="col-12 current-collateral">
-                            {t("vault.current_total_collateral",{currentDOTCollateral})}
+                            {t("vault.current_total_collateral", { currentDOTCollateral })}
                         </div>
                         <div className="col-12">{t("vault.new_total_collateral")}</div>
                         <div className="col-12 basic-addon">

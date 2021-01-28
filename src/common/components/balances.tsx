@@ -12,12 +12,12 @@ export default function Balances(props: BalancesProps): ReactElement {
             <Row className="mt-5">
                 <Col xs="12" sm={{ span: 6, offset: 3 }}>
                     <span className="heavy">{props.balancePolkaBTC}</span> PolkaBTC
-                    </Col>
+                </Col>
             </Row>
             <Row className="mt-1">
                 <Col xs="12" sm={{ span: 6, offset: 3 }}>
                     <span className="heavy">{props.balanceDOT}</span> DOT
-                    </Col>
+                </Col>
             </Row>
         </div>
     );

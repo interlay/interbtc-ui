@@ -18,7 +18,7 @@ import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from "../../constants";
 import { Dispatch } from "redux";
 import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from "../actions/general.actions";
 import Big from "big.js";
-import { TableDisplayParams } from "../types/util.types";
+import { TableDisplayParams, RelayedBlock } from "../types/util.types";
 
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;
@@ -149,13 +149,18 @@ export function reverseHashEndianness(hash: Uint8Array): string {
     return uint8ArrayToString(reverseEndianness(hash));
 }
 
+export function defaultBlockData(): RelayedBlock {
+    return {
+        height: "0",
+        hash: "",
+        relay_ts: "0",
+    };
+}
+
 export function defaultTableDisplayParams(): TableDisplayParams {
     return {
         page: 0,
         perPage: 20,
-        sortBy: "",
-        sortAsc: true,
-        searchFilter: "",
     };
 }
 

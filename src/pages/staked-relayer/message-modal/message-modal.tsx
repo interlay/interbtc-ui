@@ -1,8 +1,7 @@
 import React, { ReactElement } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { StatusUpdate } from "../../../common/types/util.types";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 type MessageModalProps = {
     onClose: () => void;

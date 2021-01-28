@@ -14,6 +14,19 @@ export interface RedeemRequest {
     reimbursed: boolean;
 }
 
+export type DashboardRequestInfo = Pick<
+    RedeemRequest,
+    | "id"
+    | "amountPolkaBTC"
+    | "creation"
+    | "vaultDotAddress"
+    | "btcAddress"
+    | "completed"
+    | "cancelled"
+    | "isExpired"
+    | "reimbursed"
+>;
+
 export interface RedeemState {
     address: string;
     step: string;

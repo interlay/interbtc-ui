@@ -43,19 +43,19 @@ export default function RedeemRequests() {
 
     const closeReimburseModal = () => {
         setShowReimburseModal(false);
-    }
+    };
 
     const openReimburseModal = (request: RedeemRequest) => {
         setReimburseRequest(request);
         setShowReimburseModal(true);
-    }
+    };
 
     const closeModal = () => setShowModal(false);
 
     const handleCompleted = (request: RedeemRequest) => {
         if (!request.completed && request.isExpired) {
             if (request.reimbursed && request.cancelled) {
-                return <div>{t("redeem_page.reimbursed")}</div>
+                return <div>{t("redeem_page.reimbursed")}</div>;
             }
             if (!request.cancelled && !request.reimbursed) {
                 return <Button
@@ -65,7 +65,7 @@ export default function RedeemRequests() {
                     {t("redeem_page.recover")}
                 </Button>
             }
-            return <div>{t("redeem_page.retried")}</div>
+            return <div>{t("redeem_page.retried")}</div>;
             // TODO: do we need the cancelled state?
             // if (request.cancelled) {
             //     return <Badge className="badge-style" variant="secondary">{t("cancelled")}</Badge>;
@@ -119,7 +119,6 @@ export default function RedeemRequests() {
                 for (const [key, value] of redeemRequestMap) {
                     allRequests.push(parachainToUIRedeemRequest(key, value));
                 }
-
 
                 // get btc data for each redeem request
                 await Promise.all(
@@ -185,8 +184,11 @@ export default function RedeemRequests() {
                                             <td>{request.creation === "0" ? "Pending..." : request.creation}</td>
                                             <td>{request.amountPolkaBTC} BTC</td>
                                             <td>
-                                                {!request.completed && request.isExpired ? <div>{t("redeem_page.failed")}</div> :
-                                                    <BitcoinTransaction txId={request.btcTxId} shorten />}
+                                                {!request.completed && request.isExpired ? (
+                                                    <div>{t("redeem_page.failed")}</div>
+                                                ) : (
+                                                    <BitcoinTransaction txId={request.btcTxId} shorten />
+                                                )}
                                             </td>
                                             <td>{request.confirmations}</td>
                                             <td>{handleCompleted(request)}</td>

@@ -86,7 +86,13 @@ export type TimeDataPoint = {
 export type TableDisplayParams = {
     page: number;
     perPage: number;
-    sortBy: string;
-    sortAsc: boolean;
-    searchFilter: string;
+    sortBy?: string;
+    sortAsc?: boolean;
+    searchFilter?: string;
+};
+
+export type RelayedBlock = {
+    height: string;
+    hash: string;
+    relay_ts: string;
 };

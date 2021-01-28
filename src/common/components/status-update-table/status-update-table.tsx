@@ -9,8 +9,7 @@ import BN from "bn.js";
 import BitcoinBlockHash from "../bitcoin-links/block-hash";
 import { reverseHashEndianness } from "../../utils/utils";
 import * as constants from "../../../constants";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 const ADD_DATA_ERROR = "Add NO_DATA error";
 const REMOVE_DATA_ERROR = "Remove NO_DATA error";
@@ -55,7 +54,6 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
     };
     const [statusUpdate, setStatusUpdate] = useState<StatusUpdate>();
     const { t } = useTranslation();
-
 
     useEffect(() => {
         const fetchStatus = async () => {
@@ -187,8 +185,8 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
             <div className="row">
                 <div className="col-12">
                     <div className="header">
-                        {t("btc_parachain_status")}: &nbsp; <div className={getCircle(parachainStatus)}></div> &nbsp;{" "}
-                        {parachainStatus}
+                        {t("btc_parachain_status")}: &nbsp; <div className={getCircle(parachainStatus)}></div>
+                        &nbsp; {parachainStatus}
                     </div>
                 </div>
             </div>
@@ -287,9 +285,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                             ) : (
                                 <tbody>
                                     <tr>
-                                        <td colSpan={8}>
-                                            {t("no_pending_status")}
-                                        </td>
+                                        <td colSpan={8}>{t("no_pending_status")}</td>
                                     </tr>
                                 </tbody>
                             )}

@@ -8,7 +8,7 @@ export default class ButtonMaybePending extends React.Component<
     }
 > {
     render() {
-        let attributes = {...this.props};
+        const attributes = { ...this.props };
         delete attributes.isPending;
         return (
             <Button disabled={this.props.isPending || this.props.disabled} {...attributes}>
