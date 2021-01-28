@@ -28,6 +28,11 @@ const ParachainSecurity = (): React.ReactElement => {
     }, [textColour, polkaBtcLoaded]);
     return (
         <div className="card">
+            <div className="values-container"></div>
+            {/* TODO: move this to the right */}
+            <div className="button-container">
+                <ButtonComponent buttonName="Status Updates" propsButtonColor="d_green" />
+            </div>
             <div className="parachain-content-container">
                 <div>
                     <h1 className="h1-xl-text">The BTC parachain is</h1>
@@ -38,9 +43,6 @@ const ParachainSecurity = (): React.ReactElement => {
                     >
                         Loading
                     </h1>
-                </div>
-                <div className="parachain-button-container">
-                    <ButtonComponent buttonName="Status Updates" propsButtonColor="d_green" />
                 </div>
             </div>
         </div>

@@ -1,8 +1,12 @@
 import React, { useEffect } from "react";
 import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboardcolors";
+import { useSelector } from "react-redux";
+import { StoreType } from "../../../common/types/util.types";
 
 const CollateralLocked = () => {
+    const totalLockedDOT = useSelector((state: StoreType) => state.general.totalLockedDOT);
+
     useEffect(() => {
         // eslint-disable-next-line
         const Chart = require("chart.js");
@@ -75,7 +79,7 @@ const CollateralLocked = () => {
             <div className="card-top-content">
                 <div className="values-container">
                     <h1 style={{ color: `${getAccents("d_pink").colour}` }}>Collateral Locked</h1>
-                    <h2>12,500 DOT</h2>
+                    <h2>{totalLockedDOT} DOT</h2>
                     <h2>$17,0030</h2>
                 </div>
                 <div className="button-container">

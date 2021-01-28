@@ -18,7 +18,7 @@ const SingleAxisChartComponent = (props: ChartProps): React.ReactElement => {
             labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
             datasets: [
                 {
-                    label: "Active Vaults",
+                    label: props.label,
                     fill: false,
                     borderColor: `${getAccents(`${props.colour}`).colour}`,
                     borderWidth: 2,
