@@ -60,7 +60,6 @@ export default function EnterBTCAmount() {
             const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountSAT);
 
             const vaultId = await window.polkaBTC.vaults.selectRandomVaultIssue(amountAsSatoshi);
-            toast.success("Found vault: " + vaultId.toString());
 
             const fee = await window.polkaBTC.issue.getFeesToPay(amountBTC);
             dispatch(updateIssueFeeAction(fee));

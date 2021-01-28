@@ -3,7 +3,7 @@ services:
     polkabtc:
         image: "registry.gitlab.com/interlay/btc-parachain:master"
         command:
-            - btc-parachain
+            - btc-parachain-standalone
             - --rpc-external
             - --ws-external
             - --dev
