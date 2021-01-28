@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../../common/types/util.types";
 import { Modal } from "react-bootstrap";
@@ -9,7 +9,6 @@ import StatusView from "./status-view";
 import WhopsView from "./whoops-view";
 import Big from "big.js";
 import BitcoinLogo from "../../../../assets/img/Bitcoin-Logo.png";
-import { Prices } from "../../../../common/types/util.types";
 import { calculateAmount } from "../../../../common/utils/utils";
 
 type IssueModalProps = {
@@ -18,22 +17,11 @@ type IssueModalProps = {
 }
 
 export default function IssueModal(props: IssueModalProps) {
-    const { address } = useSelector((state: StoreType) => state.general);
+    const { address, prices } = useSelector((state: StoreType) => state.general);
     const selectedIdRequest = useSelector((state: StoreType) => state.issue.id);
     const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address) || [];
     const request = issueRequests.filter((request) => request.id === selectedIdRequest)[0];
-    const [usdAmount, setUsdAmount] = useState("0");
     const { t } = useTranslation();
-
-    useEffect(() => {
-        fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd").then((response) => {
-            return response.json() as Promise<Prices>;
-        }).then((prices) => {
-            if (!request) return;
-            const amount = calculateAmount(request.amountBTC || "0",prices.bitcoin.usd.toString());
-            setUsdAmount(amount); 
-        });
-    });
 
     return <Modal show={props.show} onHide={props.onClose} size={"xl"}>
             <Modal.Header closeButton>
@@ -50,7 +38,7 @@ export default function IssueModal(props: IssueModalProps) {
                         </div>
                         <div className="row usd-price-modal">
                             <div className="col">
-                                {"= $"+ usdAmount}
+                                {"= $"+ calculateAmount(request.amountBTC || "0",prices.bitcoin.usd.toString())}
                             </div>
                         </div>
                         <div className="step-item row">

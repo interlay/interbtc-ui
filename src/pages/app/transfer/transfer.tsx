@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Prices, StoreType } from "../../../common/types/util.types";
+import { StoreType } from "../../../common/types/util.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { calculateAmount, updateBalances } from "../../../common/utils/utils";
 import { btcToSat } from "@interlay/polkabtc";
@@ -19,27 +19,12 @@ type TransferForm = {
 export default function Transfer() {
     const { t } = useTranslation();
     const senderAddress = useSelector((state: StoreType) => state.general.address);
-    const { balancePolkaBTC, balanceDOT } = useSelector((state: StoreType) => state.general);
+    const { balancePolkaBTC, balanceDOT, prices } = useSelector((state: StoreType) => state.general);
     const defaultValues = { defaultValues: { amountPolkaBTC: "", btcAddress: "" } };
     const { register, handleSubmit, errors, getValues } = useForm<TransferForm>(defaultValues);
-    const [usdPrice, setUsdPrice] = useState("0");
     const [isRequestPending, setRequestPending] = useState(false);
-    const [usdAmount, setUsdAmount] = useState(calculateAmount("0",usdPrice));
+    const [usdAmount, setUsdAmount] = useState(calculateAmount("0",prices.bitcoin.usd.toString()));
     const dispatch = useDispatch();
-
-
-    useEffect(() => {
-        const fetchData = async () => {
-            fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd").then((response) => {
-                return response.json() as Promise<Prices>;
-            }).then((prices) => {
-                setUsdPrice(prices.bitcoin.usd.toString());   
-                const amount = calculateAmount(getValues("amountPolkaBTC") || "0",prices.bitcoin.usd.toString());
-                setUsdAmount(amount);
-            });
-        };
-        fetchData();
-    });
 
     const onSubmit = handleSubmit(async ({ amountPolkaBTC, address }) => {
         setRequestPending(true);
@@ -66,7 +51,7 @@ export default function Transfer() {
                         placeholder="0.00"
                         className={"" + (errors.amountPolkaBTC ? " error-borders" : "")}
                         onChange={() => {
-                            setUsdAmount(calculateAmount(getValues("amountPolkaBTC") || "0",usdPrice));
+                            setUsdAmount(calculateAmount(getValues("amountPolkaBTC") || "0",prices.bitcoin.usd.toString()));
                         }}
                         ref={register({
                             required: true

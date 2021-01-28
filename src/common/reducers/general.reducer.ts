@@ -12,6 +12,7 @@ import {
     SHOW_ACCOUNT_MODAL,
     UPDATE_ACCOUNTS,
     SET_ACTIVE_TAB,
+    UPDATE_OF_PRICES,
 } from "../types/actions.types";
 import { GeneralState, ParachainStatus, ActiveTab } from "../types/util.types";
 
@@ -32,10 +33,13 @@ const initialState = {
     bitcoinHeight: 0,
     stateOfBTCParachain: ParachainStatus.Shutdown,
     activeTab: ActiveTab.Issue,
+    prices: { bitcoin: { usd: 0 }, polkadot: { usd: 0 } },
 };
 
 export const generalReducer = (state: GeneralState = initialState, action: GeneralActions): GeneralState => {
     switch (action.type) {
+        case UPDATE_OF_PRICES:
+            return { ...state, prices: action.prices };
         case SET_ACTIVE_TAB:
             return { ...state, activeTab: action.activeTab };
         case IS_POLKA_BTC_LOADED:

@@ -1,7 +1,7 @@
 import { IssueRequest, VaultIssue } from "./issue.types";
 import { RedeemRequest, VaultRedeem } from "./redeem.types";
 import { VaultReplaceRequest, Vault } from "./vault.types";
-import { StoreType, ParachainStatus, ActiveTab } from "./util.types";
+import { StoreType, ParachainStatus, ActiveTab, Prices } from "./util.types";
 
 // GENERAL ACTIONS
 
@@ -18,7 +18,12 @@ export const SET_INSTALLED_EXTENSION = "SET_INSTALLED_EXTENSION";
 export const SHOW_ACCOUNT_MODAL = "SHOW_ACCOUNT_MODAL";
 export const UPDATE_ACCOUNTS = "UPDATE_ACCOUNTS";
 export const SET_ACTIVE_TAB = "SET_ACTIVE_TAB";
+export const UPDATE_OF_PRICES = "UPDATE_OF_PRICES";
 
+export interface UpdateOfPrices {
+    type: typeof UPDATE_OF_PRICES;
+    prices: Prices;
+}
 export interface IsPolkaBtcLoaded {
     type: typeof IS_POLKA_BTC_LOADED;
     isLoaded: boolean;
@@ -100,7 +105,8 @@ export type GeneralActions =
     | SetInstalledExtension
     | ShowAccountModal
     | UpdateAccounts
-    | SetActiveTab;
+    | SetActiveTab
+    | UpdateOfPrices;
 
 // REDEEM
 

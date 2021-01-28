@@ -14,6 +14,7 @@ declare global {
         faucet: FaucetClient;
         vaultClient: VaultClient;
         store: StoreState;
+        isFetchingActive: boolean;
     }
 }
 
@@ -36,6 +37,7 @@ export const getInitialState = (): StoreType => {
             bitcoinHeight: 0,
             stateOfBTCParachain: ParachainStatus.Shutdown,
             activeTab: ActiveTab.Issue,
+            prices: { bitcoin: { usd: 0 }, polkadot: { usd: 0 } },
         },
         issue: {
             address: "",
