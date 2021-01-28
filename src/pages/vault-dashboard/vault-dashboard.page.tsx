@@ -19,16 +19,14 @@ import {
 } from "../../common/actions/vault.actions";
 import "./vault-dashboard.page.scss";
 import { toast } from "react-toastify";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 export default function VaultDashboardPage() {
     const [showRegisterVaultModal, setShowRegisterVaultModal] = useState(false);
     const [showUpdateCollateralModal, setShowUpdateCollateralModal] = useState(false);
     const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
     const { vaultClientLoaded, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
-    const { collateralization, collateral, lockedBTC, sla, apy } = useSelector(
-        (state: StoreType) => state.vault
-    );
+    const { collateralization, collateral, lockedBTC, sla, apy } = useSelector((state: StoreType) => state.vault);
     const [capacity, setCapacity] = useState("0");
     const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState("0");
     const [feesEarnedDOT, setFeesEarnedDOT] = useState("0");

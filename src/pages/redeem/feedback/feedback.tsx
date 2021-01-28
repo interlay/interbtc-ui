@@ -1,8 +1,7 @@
 import React from "react";
 import { Container, Modal } from "react-bootstrap";
 import { FEEDBACK_URL } from "../../../constants";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 export interface FeedbackProps {
     handleClose: () => void;
@@ -10,7 +9,6 @@ export interface FeedbackProps {
 
 export default function Feedback(props: FeedbackProps) {
     const { t } = useTranslation();
-
 
     const handleClose = () => {
         props.handleClose();

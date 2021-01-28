@@ -7,8 +7,7 @@ import { requestsToVaultReplaceRequests } from "../../../common/utils/utils";
 import BN from "bn.js";
 import { shortAddress } from "../../../common/utils/utils";
 import * as constants from "../../../constants";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 type ReplaceTableProps = {
     openModal: (show: boolean) => void;

@@ -11,7 +11,7 @@ const ParachainSecurity = (): React.ReactElement => {
         const fetchOracleData = async () => {
             if (!polkaBtcLoaded) return;
             const parachainStatus = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
-            let parachainTextElement = document.getElementById("parachain-text") as HTMLElement;
+            const parachainTextElement = document.getElementById("parachain-text") as HTMLElement;
 
             if (parachainStatus.isRunning) {
                 parachainTextElement.innerHTML = "secure";
@@ -25,7 +25,7 @@ const ParachainSecurity = (): React.ReactElement => {
             }
         };
         fetchOracleData();
-    }, [textColour]);
+    }, [textColour, polkaBtcLoaded]);
     return (
         <div className="card">
             <div className="parachain-content-container">

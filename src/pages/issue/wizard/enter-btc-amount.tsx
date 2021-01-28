@@ -30,7 +30,6 @@ export default function EnterBTCAmount() {
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
-
     useEffect(() => {
         const fetchDustValue = async () => {
             const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();

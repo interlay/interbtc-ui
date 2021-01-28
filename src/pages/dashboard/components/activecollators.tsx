@@ -3,7 +3,7 @@ import ButtonComponent from "./buttoncomponent";
 import { getAccents } from "../dashboardcolors";
 import SingleAxisChartComponent from "./singleaxischartcomponent";
 const ActiveCollators = () => {
-    let data = [7, 8, 9, 123, 234, 400, 235];
+    const data = [7, 8, 9, 123, 234, 400, 235];
     return (
         <div className="card">
             <div className="card-top-content">

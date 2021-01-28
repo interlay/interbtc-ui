@@ -4,8 +4,7 @@ import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { changeRedeemStepAction, changeBTCAddressAction } from "../../../common/actions/redeem.actions";
 import { BTC_ADDRESS_REGEX } from "../../../constants";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 type BTCaddressForm = {
     btcAddress: string;
@@ -44,9 +43,7 @@ export default function EnterBTCAddress() {
                 />
                 {errors.btcAddress && (
                     <div className="input-error">
-                        {errors.btcAddress.type === "required"
-                            ? t("redeem_page.enter_btc")
-                            : errors.btcAddress.message}
+                        {errors.btcAddress.type === "required" ? t("redeem_page.enter_btc") : errors.btcAddress.message}
                     </div>
                 )}
             </Modal.Body>

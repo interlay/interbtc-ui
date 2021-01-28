@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FormGroup, ListGroup, Row, Col, ListGroupItem, Modal } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
@@ -13,9 +13,8 @@ import { RedeemRequest } from "../../../common/types/redeem.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat, stripHexPrefix } from "@interlay/polkabtc";
 import Big from "big.js";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import { startTransactionWatcherRedeem } from "../../../common/utils/redeem-transaction.watcher";
-
 
 export default function Confirmation() {
     const { t } = useTranslation();
@@ -23,10 +22,6 @@ export default function Confirmation() {
     const { balancePolkaBTC, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
     const { amountPolkaBTC, vaultDotAddress, btcAddress, fee } = useSelector((store: StoreType) => store.redeem);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-
-    })
 
     const onConfirm = async () => {
         if (!polkaBtcLoaded) return;
@@ -39,7 +34,7 @@ export default function Confirmation() {
                 throw new Error("Invalid PolkaBTC amount input");
             }
             const amount = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
-            const amountBTC = ((new Big(amountPolkaBTC)).sub(new Big(fee))).toString();
+            const amountBTC = new Big(amountPolkaBTC).sub(new Big(fee)).toString();
 
             const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultDotAddress);
             const requestResult = await window.polkaBTC.redeem.request(amount, btcAddress, vaultAccountId);
@@ -62,10 +57,10 @@ export default function Confirmation() {
                 completed: false,
                 isExpired: false,
                 cancelled: false,
-                reimbursed: false
+                reimbursed: false,
             };
             dispatch(addRedeemRequestAction(request));
-            startTransactionWatcherRedeem(request,dispatch);
+            startTransactionWatcherRedeem(request, dispatch);
             dispatch(changeRedeemStepAction("VAULT_INFO"));
             dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(amountPolkaBTC)).toString()));
         } catch (error) {
@@ -100,7 +95,7 @@ export default function Confirmation() {
                                     <ListGroupItem>
                                         {t("redeem_page.receiving")}:
                                         <strong>
-                                            {" " + (new Big(amountPolkaBTC).sub(new Big(fee))).toString() + " BTC"}
+                                            {" " + new Big(amountPolkaBTC).sub(new Big(fee)).toString() + " BTC"}
                                         </strong>
                                     </ListGroupItem>
                                 </ListGroup>

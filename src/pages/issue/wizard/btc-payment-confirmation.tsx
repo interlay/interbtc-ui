@@ -10,8 +10,7 @@ import {
 } from "../../../common/actions/issue.actions";
 import { StoreType } from "../../../common/types/util.types";
 import { BTC_TRANSACTION_ID_REGEX } from "../../../constants";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 type BTCPaymentConfirmationProps = {
     closeModal: () => void;
@@ -29,7 +28,6 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
-
     const onSubmit = handleSubmit(async () => {
         props.closeModal();
     });
@@ -44,7 +42,9 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
                 request.btcTxId = txId;
 
                 try {
-                    request.confirmations = (await window.polkaBTC.btcCore.getTransactionStatus(request.btcTxId)).confirmations;
+                    request.confirmations = (
+                        await window.polkaBTC.btcCore.getTransactionStatus(request.btcTxId)
+                    ).confirmations;
                 } catch (err) {
                     console.log("Transaction not yet included in Bitcoin.");
                 }
@@ -73,9 +73,8 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
                                 <br />
                                 <br />
                                 {t("issue_page.monitor_bitcoin")}
-                                
                                 <br />
-                                {t("issue_page.sufficient_confirmations")}                                
+                                {t("issue_page.sufficient_confirmations")}
                             </p>
                             <p>
                                 <b>{t("issue_page.note_hour_to_confirm")}</b>
@@ -84,9 +83,7 @@ export default function BTCPaymentConfirmation(props: BTCPaymentConfirmationProp
                     </Row>
                     <Row className="justify-content-md-center">
                         <Col className="text-center">
-                            <p className="text-left">
-                                {t("issue_page.speed_things_up")}
-                            </p>
+                            <p className="text-left">{t("issue_page.speed_things_up")}</p>
                             <input
                                 id="btcTxId"
                                 name="btcTxId"

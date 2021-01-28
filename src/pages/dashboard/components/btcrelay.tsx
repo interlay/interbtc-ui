@@ -6,7 +6,6 @@ import { StoreType } from "../../../common/types/util.types";
 
 const BtcRelay = () => {
     // TODO: Compute status using blockstream data
-    const [status, setStatus] = useState("online");
     const [latestRelayBlock, setLatestRelayBlock] = useState("0");
     const [latestBitcoinBlock, setLatestBitcoinBlock] = useState("0");
     const [textColour, setTextColour] = useState("d_grey");
@@ -22,8 +21,8 @@ const BtcRelay = () => {
             setLatestBitcoinBlock(latestBitcoinBlock.toString());
         };
         fetchOracleData();
-        let relayTextElement = document.getElementById("relay-text") as HTMLElement;
-        let relayCircleTextElement = document.getElementById("relay-circle-text") as HTMLElement;
+        const relayTextElement = document.getElementById("relay-text") as HTMLElement;
+        const relayCircleTextElement = document.getElementById("relay-circle-text") as HTMLElement;
 
         const btcRelayOffset = Number(latestBitcoinBlock) - Number(latestBitcoinBlock);
 
@@ -36,7 +35,7 @@ const BtcRelay = () => {
             relayCircleTextElement.innerHTML = "Out of Sync";
             setTextColour("d_red");
         }
-    }, [status]);
+    }, [latestBitcoinBlock, polkaBtcLoaded]);
     return (
         <div className="card">
             <div className="card-top-content">

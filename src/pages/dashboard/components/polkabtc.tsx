@@ -26,10 +26,11 @@ const PolkaBTC = (): React.ReactElement => {
 
     useEffect(() => {
         fetchIssuesLastDays();
-        var Chart = require("chart.js");
-        let daysElement = document.getElementById("polkaBTCChart") as HTMLCanvasElement;
-        var ctx = daysElement.getContext("2d");
-        var totalIssuedData = {
+        // eslint-disable-next-line
+        const Chart = require("chart.js");
+        const daysElement = document.getElementById("polkaBTCChart") as HTMLCanvasElement;
+        const ctx = daysElement.getContext("2d");
+        const totalIssuedData = {
             label: "Total PolkaBTC issued",
             fill: false,
             backgroundColor: "rgba(255,255,255,0)",
@@ -46,7 +47,7 @@ const PolkaBTC = (): React.ReactElement => {
             pointRadius: 4,
             data: cumulativeIssuesPerDay,
         };
-        var IssuedPerDayData = {
+        const IssuedPerDayData = {
             label: "PolkaBTC issued today",
             fill: false,
             backgroundColor: "rgba(255, 255, 255, 0.3)",
@@ -63,11 +64,11 @@ const PolkaBTC = (): React.ReactElement => {
             pointRadius: 4,
             data: pointIssuesPerDay,
         };
-        var data = {
+        const data = {
             labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
             datasets: [totalIssuedData, IssuedPerDayData],
         };
-        var myChart = new Chart(ctx, {
+        new Chart(ctx, {
             type: "line",
             data: data,
             options: {
@@ -89,7 +90,7 @@ const PolkaBTC = (): React.ReactElement => {
                 },
             },
         });
-    }, [fetchIssuesLastDays]);
+    }, [fetchIssuesLastDays, cumulativeIssuesPerDay, pointIssuesPerDay]);
     return (
         <div className="card">
             <div className="card-top-content">

@@ -96,7 +96,7 @@ export default function RedeemDashboard(): ReactElement {
                                 </div>
                                 <div className="col-md-4">
                                     <p>
-                                        Placeholder: double line chart, total and per day redeem requests. Currently{" "}
+                                        Placeholder: double line chart, total + per day redeem requests. Currently{" "}
                                         {cumulativeRedeemsPerDay.toString()} and {pointRedeemsPerDay.toString()}.
                                     </p>
                                 </div>

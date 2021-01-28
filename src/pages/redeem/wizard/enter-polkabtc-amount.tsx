@@ -103,9 +103,7 @@ export default function EnterPolkaBTCAmount() {
     return (
         <form onSubmit={onSubmit}>
             <Modal.Body>
-                {!premiumVault && (
-                    <p>{t("redeem_page.enter_amount_polkabtc", { redeemFee: redeemFee })}</p>
-                )}
+                {!premiumVault && <p>{t("redeem_page.enter_amount_polkabtc", { redeemFee: redeemFee })}</p>}
                 <p>
                     {t("redeem_page.you_have")} {balancePolkaBTC} PolkaBTC.
                 </p>
@@ -123,9 +121,9 @@ export default function EnterPolkaBTCAmount() {
                     {t("redeem_page.bitcoin_dust_limit")}({dustValue} BTC)
                     {premiumVault
                         ? t("redeem_page.less_than", {
-                            maxValue:
-                                premiumVault.lockedBTC > balancePolkaBTC ? premiumVault.lockedBTC : balancePolkaBTC,
-                        })
+                              maxValue:
+                                  premiumVault.lockedBTC > balancePolkaBTC ? premiumVault.lockedBTC : balancePolkaBTC,
+                          })
                         : "."}
                 </p>
                 <div className="row">
@@ -143,8 +141,8 @@ export default function EnterPolkaBTCAmount() {
                                         value > balancePolkaBTC
                                             ? t("redeem_page.current_balance") + balancePolkaBTC
                                             : value < Number(dustValue)
-                                                ? t("redeem_page.amount_greater") + dustValue + "BTC)."
-                                                : undefined,
+                                            ? t("redeem_page.amount_greater") + dustValue + "BTC)."
+                                            : undefined,
                                 })}
                             />
                             <div className="input-group-append">

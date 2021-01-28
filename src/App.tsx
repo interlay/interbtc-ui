@@ -9,7 +9,7 @@ import ReactTooltip from "react-tooltip";
 import AccountModal from "./common/components/account-modal/account-modal";
 import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
 import keyring from "@polkadot/ui-keyring";
-import loadingImg from "./assets/img/dual-ball-loading.gif";
+// import loadingImg from "./assets/img/dual-ball-loading.gif";
 import {
     isPolkaBtcLoaded,
     isStakedRelayerLoaded,
@@ -64,7 +64,7 @@ export default function App(): ReactElement {
         if (!address) return;
 
         try {
-            let api = await connectToParachain();
+            const api = await connectToParachain();
             api.setAccount(keyring.createFromUri(constants.FAUCET_ADDRESS_SEED, undefined, "sr25519"));
             await api.collateral.transferDOT(address, constants.FAUCET_AMOUNT);
             toast.success("You have received " + planckToDOT(constants.FAUCET_AMOUNT) + " DOT.");

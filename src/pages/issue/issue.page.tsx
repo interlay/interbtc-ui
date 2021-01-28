@@ -14,12 +14,18 @@ import { toast } from "react-toastify";
 import * as constants from "../../constants";
 import { useTranslation } from "react-i18next";
 
-
 export default function IssuePage(): JSX.Element {
     const dispatch = useDispatch();
     const [showWizard, setShowWizard] = useState(false);
-    const {extensions, address, balanceDOT, balancePolkaBTC, stateOfBTCParachain,
-        bitcoinHeight, btcRelayHeight } = useSelector((state: StoreType) => state.general);
+    const {
+        extensions,
+        address,
+        balanceDOT,
+        balancePolkaBTC,
+        stateOfBTCParachain,
+        bitcoinHeight,
+        btcRelayHeight,
+    } = useSelector((state: StoreType) => state.general);
     const { t } = useTranslation();
 
     const handleClose = () => {
@@ -32,7 +38,7 @@ export default function IssuePage(): JSX.Element {
             toast.error(t("issue_page.error_in_parachain"));
             return;
         }
-        if (bitcoinHeight-btcRelayHeight>constants.BLOCKS_BEHIND_LIMIT) {
+        if (bitcoinHeight - btcRelayHeight > constants.BLOCKS_BEHIND_LIMIT) {
             toast.error(t("issue_page.error_more_than_6_blocks_behind"));
             return;
         }
@@ -41,7 +47,7 @@ export default function IssuePage(): JSX.Element {
         } else {
             dispatch(showAccountModalAction(true));
         }
-    }
+    };
 
     return (
         <div>
@@ -51,11 +57,11 @@ export default function IssuePage(): JSX.Element {
                         <Image src={PolkaBTCImg} width="256"></Image>
                     </Link>
 
-                    {address && extensions.length &&
+                    {address && extensions.length && (
                         <React.Fragment>
                             <Balances balancePolkaBTC={balancePolkaBTC} balanceDOT={balanceDOT}></Balances>
                         </React.Fragment>
-                    }
+                    )}
                     <Row className="mt-5 mb-5">
                         <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
                             <Button variant="outline-polkadot" size="lg" block onClick={openWizard}>

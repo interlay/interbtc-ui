@@ -14,8 +14,8 @@ const OracleStatus = () => {
             if (!polkaBtcLoaded) return;
             const oracle = await window.polkaBTC.oracle.getInfo();
             setExchangeRate(oracle.exchangeRate.toFixed(2));
-            let oracleTextElement = document.getElementById("oracle-text") as HTMLElement;
-            let oracleCircleTextElement = document.getElementById("oracle-circle-text") as HTMLElement;
+            const oracleTextElement = document.getElementById("oracle-text") as HTMLElement;
+            const oracleCircleTextElement = document.getElementById("oracle-circle-text") as HTMLElement;
 
             if (oracle) {
                 oracleTextElement.innerHTML = " Online";
@@ -28,7 +28,7 @@ const OracleStatus = () => {
             }
         };
         fetchOracleData();
-    }, [textColour]);
+    }, [textColour, polkaBtcLoaded]);
 
     return (
         <div className="card">

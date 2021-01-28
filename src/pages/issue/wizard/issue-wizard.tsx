@@ -7,9 +7,8 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { useTranslation } from "react-i18next";
 
-
 export interface IssueWizardProps {
-    handleClose: () => void,
+    handleClose: () => void;
 }
 
 export default function IssueWizard(props: IssueWizardProps) {
@@ -18,16 +17,16 @@ export default function IssueWizard(props: IssueWizardProps) {
 
     const handleClose = () => {
         props.handleClose();
-    }
+    };
 
-    return <Container>
-        <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title-vcenter">
-                {t("issue_page.issue_polkabtc")}
-             </Modal.Title>
-        </Modal.Header>
-        {step === "ENTER_BTC_AMOUNT" && <EnterBTCAmount />}
-        {step === "REQUEST_CONFIRMATION" && <RequestConfirmation />}
-        {step === "BTC_PAYMENT" && <BTCPayment closeModal={handleClose}/>}
-    </Container>
+    return (
+        <Container>
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">{t("issue_page.issue_polkabtc")}</Modal.Title>
+            </Modal.Header>
+            {step === "ENTER_BTC_AMOUNT" && <EnterBTCAmount />}
+            {step === "REQUEST_CONFIRMATION" && <RequestConfirmation />}
+            {step === "BTC_PAYMENT" && <BTCPayment closeModal={handleClose} />}
+        </Container>
+    );
 }

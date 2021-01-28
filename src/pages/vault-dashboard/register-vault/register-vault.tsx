@@ -8,8 +8,7 @@ import { updateCollateralAction } from "../../../common/actions/vault.actions";
 import { planckToDOT, dotToPlanck } from "@interlay/polkabtc";
 import { StoreType } from "../../../common/types/util.types";
 import BN from "bn.js";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 type RegisterVaultForm = {
     collateral: string;
@@ -27,7 +26,6 @@ export default function RegisterVaultModal(props: RegisterVaultProps) {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const dispatch = useDispatch();
     const { t } = useTranslation();
-
 
     const onSubmit = handleSubmit(async ({ collateral }) => {
         if (!polkaBtcLoaded) return;

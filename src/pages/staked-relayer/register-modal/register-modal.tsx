@@ -5,8 +5,7 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { toast } from "react-toastify";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 type RegisterModalType = {
     onClose: () => void;
@@ -23,7 +22,6 @@ export default function ReportModal(props: RegisterModalType): ReactElement {
     const relayerLoaded = useSelector((state: StoreType) => state.general.relayerLoaded);
     const [isRegisterPending, setRegisterPending] = useState(false);
     const { t } = useTranslation();
-
 
     const onSubmit = handleSubmit(async ({ stake }) => {
         if (!relayerLoaded) return;
@@ -47,9 +45,7 @@ export default function ReportModal(props: RegisterModalType): ReactElement {
                 </Modal.Header>
                 <Modal.Body>
                     <div className="row mb-2">
-                        <div className="col-12 de-note">
-                            {t("relayer.please_note")}
-                        </div>
+                        <div className="col-12 de-note">{t("relayer.please_note")}</div>
                     </div>
                     <div className="row">
                         <div className="col-12">{t("relayer.stake")}</div>
