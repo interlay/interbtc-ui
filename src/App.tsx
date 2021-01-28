@@ -45,6 +45,7 @@ import { StoreType, ParachainStatus } from "./common/types/util.types";
 import IssueDashboard from "./pages/dashboard/issue/issue.dashboard.page";
 import RedeemDashboard from "./pages/dashboard/redeem/redeem.dashboard.page";
 import LandingPage from "./pages/landing/landing.page";
+import startFetchingLiveData from "./common/utils/live-data";
 
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
@@ -199,7 +200,9 @@ export default function App(): ReactElement {
             }
         }
         loadData();
-    },[createAPIInstance, isLoading, polkaBtcLoaded]);
+        startFetchingLiveData(dispatch);
+    },[createAPIInstance, isLoading, polkaBtcLoaded, dispatch]);
+
 
     return <React.Fragment>
         <Router>

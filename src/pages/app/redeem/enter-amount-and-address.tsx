@@ -17,7 +17,6 @@ import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat, satToBTC, stripHexPrefix } from "@interlay/polkabtc";
 import { BALANCE_MAX_INTEGER_LENGTH, BTC_ADDRESS_REGEX } from "../../../constants";
 import { useTranslation } from "react-i18next";
-import { Prices } from "../../../common/types/util.types";
 import BitcoinLogo from "../../../assets/img/Bitcoin-Logo.png";
 import Big from "big.js";
 import { RedeemRequest } from "../../../common/types/redeem.types";
@@ -33,7 +32,7 @@ type AmountAndAddressForm = {
 
 export default function EnterAmountAndAddress() {
     const { t } = useTranslation();
-    const { balancePolkaBTC, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+    const { balancePolkaBTC, polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
     const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
     const vaultDotAddress = useSelector((state: StoreType) => state.redeem.vaultDotAddress);
     const defaultValues = amount ? { defaultValues: { amountPolkaBTC: amount, btcAddress: "" } } : undefined;
@@ -41,8 +40,7 @@ export default function EnterAmountAndAddress() {
     const [isRequestPending, setRequestPending] = useState(false);
     const [dustValue, setDustValue] = useState("0");
     const dispatch = useDispatch();
-    const [usdPrice, setUsdPrice] = useState("0");
-    const [usdAmount, setUsdAmount] = useState(calculateAmount(amount || "0",usdPrice));
+    const [usdAmount, setUsdAmount] = useState(calculateAmount(amount || "0",prices.bitcoin.usd.toString()));
     const [redeemFee, setRedeemFee] = useState("0");
 
     useEffect(() => {
@@ -52,14 +50,6 @@ export default function EnterAmountAndAddress() {
             const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
             const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
             setDustValue(dustValueBtc);
-
-            fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd").then((response) => {
-                return response.json() as Promise<Prices>;
-            }).then((prices) => {
-                setUsdPrice(prices.bitcoin.usd.toString());
-                const amount = calculateAmount(getValues("amountPolkaBTC") || "0",prices.bitcoin.usd.toString());
-                setUsdAmount(amount);
-            });
         };
         fetchData();
     }, [polkaBtcLoaded, getValues]);
@@ -143,7 +133,7 @@ export default function EnterAmountAndAddress() {
 
     const onAmountChange = async () => {
         const amount = getValues("amountPolkaBTC") || "0";
-        setUsdAmount(calculateAmount(amount,usdPrice));
+        setUsdAmount(calculateAmount(amount,prices.bitcoin.usd.toString()));
         const fee = await window.polkaBTC.redeem.getFeesToPay(amount);
         setRedeemFee(fee);
     }

@@ -36,6 +36,9 @@ export type Prices = {
     bitcoin: {
         usd: number;
     };
+    polkadot: {
+        usd: number;
+    };
 };
 
 export type GeneralState = {
@@ -55,6 +58,7 @@ export type GeneralState = {
     bitcoinHeight: number;
     stateOfBTCParachain: ParachainStatus;
     activeTab: ActiveTab;
+    prices: Prices;
 };
 
 export type AppState = ReturnType<typeof rootReducer>;

@@ -11,6 +11,8 @@ import {
     SHOW_ACCOUNT_MODAL,
     UPDATE_ACCOUNTS,
     SET_ACTIVE_TAB,
+    UPDATE_OF_PRICES,
+    IS_FAUCET_LOADED,
     IsPolkaBtcLoaded,
     IsStakedRelayerLoaded,
     ChangeAddress,
@@ -24,9 +26,9 @@ import {
     UpdateAccounts,
     SetActiveTab,
     IsFaucetLoaded,
-    IS_FAUCET_LOADED,
+    UpdateOfPrices,
 } from "../types/actions.types";
-import { StoreType, ParachainStatus, ActiveTab } from "../types/util.types";
+import { StoreType, ParachainStatus, ActiveTab, Prices } from "../types/util.types";
 
 export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
     type: IS_POLKA_BTC_LOADED,
@@ -71,6 +73,11 @@ export const updateBalancePolkaBTCAction = (balancePolkaBTC: string): UpdateBala
 export const updateBalanceDOTAction = (balanceDOT: string): UpdateBalanceDOT => ({
     type: UPDATE_BALANCE_DOT,
     balanceDOT,
+});
+
+export const updateOfPricesAction = (prices: Prices): UpdateOfPrices => ({
+    type: UPDATE_OF_PRICES,
+    prices,
 });
 
 export const initGeneralDataAction = (
