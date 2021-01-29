@@ -1,24 +1,21 @@
 import React, { ReactElement } from "react";
 import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboard-colors";
-import SingleAxisChartComponent from "./singleaxis-chart-component";
+import LineChartComponent from "./line-chart-component";
+import { range } from "../../../common/utils/utils";
 const ActiveCollators = (): ReactElement => {
     // this function should be removed once real data is pulled in
-    const dateToMidnightTemp = (date: Date): number => {
+    const dateToMidnightTemp = (date: Date): Date => {
         date.setMilliseconds(0);
         date.setSeconds(0);
         date.setMinutes(0);
         date.setHours(0);
-        return date.getTime();
+        return date;
     };
-    const CONSTANT_COLLATOR_COUNT = 1;
-    const data = [
-        { date: dateToMidnightTemp(new Date(Date.now() - 84600 * 1000 * 0)), amount: CONSTANT_COLLATOR_COUNT },
-        { date: dateToMidnightTemp(new Date(Date.now() - 84600 * 1000 * 1)), amount: CONSTANT_COLLATOR_COUNT },
-        { date: dateToMidnightTemp(new Date(Date.now() - 84600 * 1000 * 2)), amount: CONSTANT_COLLATOR_COUNT },
-        { date: dateToMidnightTemp(new Date(Date.now() - 84600 * 1000 * 3)), amount: CONSTANT_COLLATOR_COUNT },
-        { date: dateToMidnightTemp(new Date(Date.now() - 84600 * 1000 * 4)), amount: CONSTANT_COLLATOR_COUNT },
-    ];
+    const data = [1, 1, 1, 1, 1];
+    const dates = range(0, 5).map((i) =>
+        dateToMidnightTemp(new Date(Date.now() - 86400 * 1000 * i)).toLocaleDateString()
+    );
     return (
         <div className="card">
             <div className="card-top-content">
@@ -30,11 +27,12 @@ const ActiveCollators = (): ReactElement => {
                     <ButtonComponent buttonName="view collators" propsButtonColor="d_blue" />
                 </div>
             </div>
-            <SingleAxisChartComponent
-                chartId="active-collators"
+            <LineChartComponent
                 colour="d_blue"
                 label="Total active collators"
-                chartData={data}
+                yLabels={dates}
+                yAxisProps={{ beginAtZero: true }}
+                data={data}
             />
         </div>
     );
