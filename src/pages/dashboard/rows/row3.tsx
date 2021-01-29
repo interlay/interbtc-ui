@@ -4,7 +4,7 @@ import ActiveStakedRelayers from "../components/active-staked-relayers";
 import ActiveCollators from "../components/active-collators";
 const Row3 = (): React.ReactElement => {
     return (
-        <div className="row-grid section-gap">
+        <div className="row-grid section-top-gap">
             <ActiveVaults />
             <ActiveStakedRelayers />
             <ActiveCollators />

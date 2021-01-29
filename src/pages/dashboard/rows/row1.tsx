@@ -5,7 +5,7 @@ import Collaterization from "../components/collaterization";
 
 const Row1 = (): React.ReactElement => {
     return (
-        <div className="row-grid">
+        <div className="row-grid section-bottom-gap">
             <PolkaBTC />
             <CollateralLocked />
             <Collaterization />

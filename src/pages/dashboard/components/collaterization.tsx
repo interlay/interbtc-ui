@@ -35,7 +35,7 @@ const Collaterization = (): ReactElement => {
                     <h2>Secure Threshold: {roundTwoDecimals(secureCollateralThreshold)}%</h2>
                 </div>
                 <div className="button-container">
-                    <ButtonComponent buttonName="view vaults" propsButtonColor="d_blue" />
+                    <ButtonComponent buttonName="view vaults" propsButtonColor="d_blue" buttonId="collaterization" />
                 </div>
             </div>
             <div className="circle-container">

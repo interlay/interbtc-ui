@@ -27,7 +27,7 @@ const ActiveVaults = (): ReactElement => {
                     <h2>{totalVaultsPerDay[totalVaultsPerDay.length - 1]?.count}</h2>
                 </div>
                 <div className="button-container">
-                    <ButtonComponent buttonName="view all vaults" propsButtonColor="d_pink" />
+                    <ButtonComponent buttonName="view all vaults" propsButtonColor="d_pink" buttonId="active-vaults" />
                 </div>
             </div>
             <SingleAxisChartComponent

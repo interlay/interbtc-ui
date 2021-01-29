@@ -30,19 +30,26 @@ const ParachainSecurity = (): React.ReactElement => {
         <div className="card">
             <div className="values-container"></div>
             {/* TODO: move this to the right */}
-            <div className="button-container">
-                <ButtonComponent buttonName="Status Updates" propsButtonColor="d_green" />
-            </div>
+
             <div className="parachain-content-container">
                 <div>
-                    <h1 className="h1-xl-text">The BTC parachain is</h1>
-                    <h1
-                        className="h1-xl-text"
-                        style={{ color: `${getAccents(`${textColour}`).colour}` }}
-                        id="parachain-text"
-                    >
-                        Loading
+                    <h1 className="h1-xl-text">
+                        The BTC parachain is{" "}
+                        <span
+                            className="h1-xl-text"
+                            style={{ color: `${getAccents(`${textColour}`).colour}` }}
+                            id="parachain-text"
+                        >
+                            Loading
+                        </span>
                     </h1>
+                    <div className="button-container" style={{ marginTop: "20px" }}>
+                        <ButtonComponent
+                            buttonName="Status Updates"
+                            propsButtonColor="d_green"
+                            buttonId="parachain-security"
+                        />
+                    </div>
                 </div>
             </div>
         </div>

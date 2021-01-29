@@ -45,7 +45,7 @@ const OracleStatus = () => {
                     </h1>
                 </div>
                 <div className="button-container">
-                    <ButtonComponent buttonName="view oracles" propsButtonColor="d_green" />
+                    <ButtonComponent buttonName="view oracles" propsButtonColor="d_green" buttonId="oracle-status" />
                 </div>
             </div>
             <div className="circle-container">

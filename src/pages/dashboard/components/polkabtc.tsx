@@ -12,6 +12,7 @@ type PolkaBTCProps = {
 };
 
 const PolkaBTC = ({ chartOnly }: PolkaBTCProps): React.ReactElement => {
+    const { prices } = useSelector((state: StoreType) => state.general);
     const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
 
     const statsApi = usePolkabtcStats();
@@ -129,10 +130,10 @@ const PolkaBTC = ({ chartOnly }: PolkaBTCProps): React.ReactElement => {
                         <h1 style={{ color: `${getAccents("d_yellow").colour}` }}>Issued</h1>
                         <h2>{totalPolkaBTC} PolkaBTC</h2>
                         {/* TODO: add the price API */}
-                        <h2>$17,0030</h2>
+                        <h2>${(prices.bitcoin.usd * parseInt(totalPolkaBTC)).toLocaleString()}</h2>
                     </div>
                     <div className="button-container">
-                        <ButtonComponent buttonName="view all issued" propsButtonColor="d_yellow" />
+                        <ButtonComponent buttonName="view all issued" propsButtonColor="d_yellow" buttonId="polkabtc" />
                     </div>
                 </div>
             ) : (

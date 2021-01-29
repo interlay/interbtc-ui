@@ -27,7 +27,11 @@ const ActiveCollators = (): ReactElement => {
                     <h2>1</h2>
                 </div>
                 <div className="button-container">
-                    <ButtonComponent buttonName="view collators" propsButtonColor="d_blue" />
+                    <ButtonComponent
+                        buttonName="view collators"
+                        propsButtonColor="d_blue"
+                        buttonId="active-collators"
+                    />
                 </div>
             </div>
             <SingleAxisChartComponent

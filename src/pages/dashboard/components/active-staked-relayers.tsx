@@ -11,7 +11,7 @@ const ActiveStakedRelayers = (): ReactElement => {
                     <h2>12</h2>
                 </div>
                 <div className="button-container">
-                    <ButtonComponent buttonName="view relayers" propsButtonColor="d_orange" />
+                    <ButtonComponent buttonName="view relayers" propsButtonColor="d_orange" buttonId="active-staked" />
                 </div>
             </div>
         </div>
