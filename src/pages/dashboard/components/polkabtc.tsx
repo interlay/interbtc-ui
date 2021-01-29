@@ -58,7 +58,7 @@ const PolkaBTC = ({ chartOnly }: PolkaBTCProps): React.ReactElement => {
             <div className="chart-container">
                 <LineChartComponent
                     colour={["d_yellow", "d_grey"]}
-                    label={["Total PolkaBTC issued", "PolkaBTC issued today"]}
+                    label={["Total PolkaBTC issued", "PolkaBTC issued per day"]}
                     yLabels={cumulativeIssuesPerDay.map((dataPoint) => new Date(dataPoint.date).toLocaleDateString())}
                     yAxisProps={[{ beginAtZero: true, position: "left" }, { position: "right" }]}
                     data={[

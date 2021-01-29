@@ -8,6 +8,7 @@ import DashboardTable from "../../../common/components/dashboard-table/dashboard
 import { defaultTableDisplayParams } from "../../../common/utils/utils";
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 import { satToBTC } from "@interlay/polkabtc";
+import LineChartComponent from "../components/line-chart-component";
 
 export default function RedeemDashboard(): ReactElement {
     const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
@@ -19,12 +20,12 @@ export default function RedeemDashboard(): ReactElement {
     const [totalRedeems, setTotalRedeems] = useState("0");
     const [totalRedeemedAmount, setTotalRedeemedAmount] = useState("0");
     const [redeemRequests, setRedeemRequests] = useState(new Array<DashboardRequestInfo>());
-    const [cumulativeRedeemsPerDay, setCumulativeRedeemsPerDay] = useState(new Array<{ date: Date; amount: number }>());
+    const [cumulativeRedeemsPerDay, setCumulativeRedeemsPerDay] = useState(new Array<{ date: number; sat: number }>());
     const pointRedeemsPerDay = useMemo(
         () =>
             cumulativeRedeemsPerDay.map((dataPoint, i) => {
                 if (i === 0) return 0;
-                return dataPoint.amount - cumulativeRedeemsPerDay[i - 1].amount;
+                return dataPoint.sat - cumulativeRedeemsPerDay[i - 1].sat;
             }),
         [cumulativeRedeemsPerDay]
     );
@@ -96,9 +97,8 @@ export default function RedeemDashboard(): ReactElement {
         };
 
         const fetchRedeemsLastDays = async () => {
-            setCumulativeRedeemsPerDay(
-                [0, 1, 2, 3, 4, 5, 6].map((d) => ({ date: new Date(Date.now() - d * 86400000), amount: 50 - d }))
-            );
+            const res = await statsApi.getRecentDailyRedeems(6);
+            setCumulativeRedeemsPerDay(res.data);
         };
 
         (async () => {
@@ -132,10 +132,20 @@ export default function RedeemDashboard(): ReactElement {
                                     <p>{(redeemSuccessRate * 100).toFixed(2)}% success rate</p>
                                 </div>
                                 <div className="col-md-4">
-                                    <p>
-                                        Placeholder: double line chart, total + per day redeem requests. Currently{" "}
-                                        {cumulativeRedeemsPerDay.toString()} and {pointRedeemsPerDay.toString()}.
-                                    </p>
+                                    <LineChartComponent
+                                        colour={["d_pink", "d_grey"]}
+                                        label={["Total BTC redeemed", "BTC redeemed per day"]}
+                                        yLabels={cumulativeRedeemsPerDay.map((dataPoint) =>
+                                            new Date(dataPoint.date).toLocaleDateString()
+                                        )}
+                                        yAxisProps={[{ beginAtZero: true, position: "left" }, { position: "right" }]}
+                                        data={[
+                                            cumulativeRedeemsPerDay.map((dataPoint) =>
+                                                Number(satToBTC(dataPoint.sat.toString()))
+                                            ),
+                                            pointRedeemsPerDay.map((amount) => Number(satToBTC(amount.toString()))),
+                                        ]}
+                                    />
                                 </div>
                             </div>
                         </div>

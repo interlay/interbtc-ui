@@ -51,7 +51,7 @@ const CollateralLocked = (): ReactElement => {
             <div className="chart-container">
                 <LineChartComponent
                     colour={["d_pink", "d_grey"]}
-                    label={["Total Collateral issued", "Collateral issued today"]}
+                    label={["Total collateral locked", "Collateral locked per day"]}
                     yLabels={cumulativeCollateralPerDay.map((dataPoint) =>
                         new Date(dataPoint.date).toLocaleDateString()
                     )}
