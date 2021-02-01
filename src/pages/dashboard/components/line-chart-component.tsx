@@ -5,6 +5,8 @@ import { getAccents } from "../dashboardcolors";
 interface YAxisConfig {
     beginAtZero?: boolean;
     position?: string;
+    precision?: number;
+    max?: number;
 }
 
 interface SingleAxisProps {
@@ -79,7 +81,11 @@ export default function LineChartComponent(propsArg: ChartProps): React.ReactEle
                     id: i.toString(),
                     type: "linear",
                     display: true,
-                    ...(yArgs.beginAtZero ? { ticks: { beginAtZero: true } } : {}),
+                    ticks: {
+                        ...(yArgs.beginAtZero ? { beginAtZero: true } : {}),
+                        ...(yArgs.precision !== undefined ? { precision: yArgs.precision } : {}),
+                        ...(yArgs.max !== undefined ? { precision: yArgs.max } : {}),
+                    },
                     ...(yArgs.position !== undefined ? { position: yArgs.position } : {}),
                 })),
             },

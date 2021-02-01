@@ -34,7 +34,7 @@ const ActiveVaults = (): ReactElement => {
                 colour="d_pink"
                 label="Total active vaults"
                 yLabels={totalVaultsPerDay.map((dataPoint) => new Date(dataPoint.date).toLocaleDateString())}
-                yAxisProps={{ beginAtZero: true }}
+                yAxisProps={{ beginAtZero: true, precision: 0 }}
                 data={totalVaultsPerDay.map((dataPoint) => dataPoint.count)}
             />
         </div>

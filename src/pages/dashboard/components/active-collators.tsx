@@ -31,7 +31,7 @@ const ActiveCollators = (): ReactElement => {
                 colour="d_blue"
                 label="Total active collators"
                 yLabels={dates}
-                yAxisProps={{ beginAtZero: true }}
+                yAxisProps={{ beginAtZero: true, precision: 0 }}
                 data={data}
             />
         </div>
