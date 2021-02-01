@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "../dashboard.page.scss";
 import Icon_external_link from "../../../assets/img/icons/Icon-external-link.svg";
 import { getAccents } from "../dashboard-colors";
@@ -6,7 +7,7 @@ type buttonProps = {
     buttonName: string;
     propsButtonColor: string;
     buttonId: string;
-    // buttonLink: String;
+    buttonLink: string;
 };
 
 const ButtonComponent = (props: buttonProps): React.ReactElement => {
@@ -38,7 +39,7 @@ const ButtonComponent = (props: buttonProps): React.ReactElement => {
             }}
             id={`${props.buttonId}-button-id`}
         >
-            <div className="button-assets-container">
+            <Link className="button-assets-container" to={props.buttonLink}>
                 <h3 id={`${props.buttonId}-button-text`}>{props.buttonName}</h3>
                 <img
                     style={{
@@ -49,7 +50,7 @@ const ButtonComponent = (props: buttonProps): React.ReactElement => {
                     alt=""
                     id={`${props.buttonId}-arrow`}
                 />
-            </div>
+            </Link>
         </button>
     );
 };

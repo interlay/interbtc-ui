@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactElement } from "react";
 import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboardcolors";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 
-const OracleStatus = () => {
+const OracleStatus = (): ReactElement => {
     const [textColour, setTextColour] = useState("d_grey");
     const [exchangeRate, setExchangeRate] = useState("0");
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -45,7 +45,12 @@ const OracleStatus = () => {
                     </h1>
                 </div>
                 <div className="button-container">
-                    <ButtonComponent buttonName="view oracles" propsButtonColor="d_green" buttonId="oracle-status" />
+                    <ButtonComponent
+                        buttonName="view oracles"
+                        propsButtonColor="d_green"
+                        buttonId="oracle-status"
+                        buttonLink="/dashboard/oracles"
+                    />
                 </div>
             </div>
             <div className="circle-container">

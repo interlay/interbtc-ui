@@ -48,6 +48,7 @@ const ParachainSecurity = (): React.ReactElement => {
                             buttonName="Status Updates"
                             propsButtonColor="d_green"
                             buttonId="parachain-security"
+                            buttonLink="/dashboard/parachain"
                         />
                     </div>
                 </div>

@@ -133,7 +133,12 @@ const PolkaBTC = ({ chartOnly }: PolkaBTCProps): React.ReactElement => {
                         <h2>${(prices.bitcoin.usd * parseInt(totalPolkaBTC)).toLocaleString()}</h2>
                     </div>
                     <div className="button-container">
-                        <ButtonComponent buttonName="view all issued" propsButtonColor="d_yellow" buttonId="polkabtc" />
+                        <ButtonComponent
+                            buttonName="view all issued"
+                            propsButtonColor="d_yellow"
+                            buttonId="polkabtc"
+                            buttonLink="/dashboard/issue"
+                        />
                     </div>
                 </div>
             ) : (

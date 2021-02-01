@@ -19,6 +19,9 @@ const ActiveCollators = (): ReactElement => {
         { date: dateToMidnightTemp(new Date(Date.now() - 84600 * 1000 * 3)), amount: CONSTANT_COLLATOR_COUNT },
         { date: dateToMidnightTemp(new Date(Date.now() - 84600 * 1000 * 4)), amount: CONSTANT_COLLATOR_COUNT },
     ];
+
+    const displayLinkBtn = false;
+
     return (
         <div className="card">
             <div className="card-top-content">
@@ -26,13 +29,18 @@ const ActiveCollators = (): ReactElement => {
                     <h1 style={{ color: `${getAccents("d_blue").colour}` }}>Active Collators</h1>
                     <h2>1</h2>
                 </div>
-                <div className="button-container">
-                    <ButtonComponent
-                        buttonName="view collators"
-                        propsButtonColor="d_blue"
-                        buttonId="active-collators"
-                    />
-                </div>
+                {displayLinkBtn ? (
+                    <div className="button-container">
+                        <ButtonComponent
+                            buttonName="view collators"
+                            propsButtonColor="d_blue"
+                            buttonId="active-collators"
+                            buttonLink="/"
+                        />
+                    </div>
+                ) : (
+                    ""
+                )}
             </div>
             <SingleAxisChartComponent
                 chartId="active-collators"
