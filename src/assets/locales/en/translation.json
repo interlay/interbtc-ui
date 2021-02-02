@@ -160,6 +160,7 @@
         }
     },
     "issue_page": {
+        "must_select_account_warning": "You can't issue until you select your account",
         "transaction_not_set": "Transaction not set in",
         "time": "time",
         "issuing_title": "Issuing",

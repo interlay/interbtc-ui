@@ -23,7 +23,7 @@ type EnterBTCForm = {
 };
 
 export default function EnterBTCAmount() {
-    const { polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
+    const { polkaBtcLoaded, prices, address } = useSelector((state: StoreType) => state.general);
     const amount = useSelector((state: StoreType) => state.issue.amountBTC);
     const defaultValues = amount ? { defaultValues: { amountBTC: amount } } : undefined;
     const { register, handleSubmit, errors, getValues } = useForm<EnterBTCForm>(defaultValues);
@@ -36,15 +36,21 @@ export default function EnterBTCAmount() {
 
     useEffect(() => {
         const fetchData = async () => {
+            if (!polkaBtcLoaded) return;
+
             const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
             const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
             setDustValue(dustValueBtc);
         };
         fetchData();
-    });
+    },[polkaBtcLoaded]);
 
     const onSubmit = handleSubmit(async ({ amountBTC }) => {
         if (!polkaBtcLoaded) return;
+        if (!address) {
+            toast.warning(t("issue_page.must_select_account_warning"));
+            return;
+        }
         setRequestPending(true);
         try {
             const amountSAT = btcToSat(amountBTC);

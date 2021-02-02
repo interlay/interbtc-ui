@@ -34,7 +34,6 @@ export default function EnterAmountAndAddress() {
     const { t } = useTranslation();
     const { balancePolkaBTC, polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
     const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
-    const vaultDotAddress = useSelector((state: StoreType) => state.redeem.vaultDotAddress);
     const defaultValues = amount ? { defaultValues: { amountPolkaBTC: amount, btcAddress: "" } } : undefined;
     const { register, handleSubmit, errors, getValues } = useForm<AmountAndAddressForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
@@ -91,7 +90,7 @@ export default function EnterAmountAndAddress() {
             const amount = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
             const totalAmountBTC = ((new Big(amountPolkaBTC)).sub(new Big(fee))).toString();
 
-            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultDotAddress);
+            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultId.toString());
             const requestResult = await window.polkaBTC.redeem.request(amount, btcAddress, vaultAccountId);
 
             // get the redeem id from the request redeem event
