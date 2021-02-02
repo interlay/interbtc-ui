@@ -16,9 +16,9 @@ export default function RedeemDashboard(): ReactElement {
     const statsApi = usePolkabtcStats();
 
     const [tableParams, setTableParams] = useState(defaultTableDisplayParams());
-    const [totalSuccessfulRedeems, setTotalSuccessfulRedeems] = useState("0");
-    const [totalRedeems, setTotalRedeems] = useState("0");
-    const [totalRedeemedAmount, setTotalRedeemedAmount] = useState("0");
+    const [totalSuccessfulRedeems, setTotalSuccessfulRedeems] = useState("-");
+    const [totalRedeems, setTotalRedeems] = useState("-");
+    const [totalRedeemedAmount, setTotalRedeemedAmount] = useState("-");
     const [redeemRequests, setRedeemRequests] = useState(new Array<DashboardRequestInfo>());
     const [cumulativeRedeemsPerDay, setCumulativeRedeemsPerDay] = useState(new Array<{ date: number; sat: number }>());
     const pointRedeemsPerDay = useMemo(
@@ -77,7 +77,11 @@ export default function RedeemDashboard(): ReactElement {
     );
 
     useEffect(() => {
-        fetchRedeemRequests();
+        try {
+            fetchRedeemRequests();
+        } catch (e) {
+            console.error(e);
+        }
     }, [fetchRedeemRequests, tableParams]);
 
     useEffect(() => {
@@ -103,12 +107,16 @@ export default function RedeemDashboard(): ReactElement {
 
         (async () => {
             if (!polkaBtcLoaded) return;
-            await Promise.all([
-                fetchTotalSuccessfulRedeems(),
-                fetchTotalFailedRedeems(),
-                fetchTotalRedeemedAmount(),
-                fetchRedeemsLastDays(),
-            ]);
+            try {
+                await Promise.all([
+                    fetchTotalSuccessfulRedeems(),
+                    fetchTotalFailedRedeems(),
+                    fetchTotalRedeemedAmount(),
+                    fetchRedeemsLastDays(),
+                ]);
+            } catch (e) {
+                console.error(e);
+            }
         })();
     }, [polkaBtcLoaded, statsApi]);
 
@@ -123,13 +131,25 @@ export default function RedeemDashboard(): ReactElement {
                         <div className="col-lg-8 offset-2">
                             <div className="row">
                                 <div className="col-md-3">
-                                    <p>{satToBTC(totalRedeemedAmount)} redeemed</p>
+                                    <p>
+                                        {totalRedeemedAmount === "-"
+                                            ? t("no_data")
+                                            : `${satToBTC(totalRedeemedAmount)} redeemed`}
+                                    </p>
                                 </div>
                                 <div className="col-md-3">
-                                    <p>{totalSuccessfulRedeems} executed redeems</p>
+                                    <p>
+                                        {totalSuccessfulRedeems === "-"
+                                            ? t("no_data")
+                                            : `${totalSuccessfulRedeems} executed redeems`}
+                                    </p>
                                 </div>
                                 <div className="col-md-2">
-                                    <p>{(redeemSuccessRate * 100).toFixed(2)}% success rate</p>
+                                    <p>
+                                        {totalRedeems === "-"
+                                            ? t("no_data")
+                                            : `${(redeemSuccessRate * 100).toFixed(2)}% success rate`}
+                                    </p>
                                 </div>
                                 <div className="col-md-4">
                                     <LineChartComponent

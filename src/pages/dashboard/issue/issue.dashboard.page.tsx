@@ -19,8 +19,8 @@ export default function IssueDashboard(): ReactElement {
     const [issueRequests, setIssueRequests] = useState(new Array<DashboardIssueInfo>());
     const [tableParams, setTableParams] = useState(defaultTableDisplayParams());
 
-    const [totalSuccessfulIssues, setTotalSuccessfulIssues] = useState("0");
-    const [totalIssues, setTotalIssues] = useState("0");
+    const [totalSuccessfulIssues, setTotalSuccessfulIssues] = useState("-");
+    const [totalIssues, setTotalIssues] = useState("-");
 
     const fetchIssueRequests = useMemo(
         () => async () => {
@@ -71,12 +71,20 @@ export default function IssueDashboard(): ReactElement {
     );
 
     useEffect(() => {
-        fetchIssueRequests();
+        try {
+            fetchIssueRequests();
+        } catch (e) {
+            console.error(e);
+        }
     }, [fetchIssueRequests, tableParams]);
 
     useEffect(() => {
-        fetchTotalSuccessfulIssues();
-        fetchTotalIssues();
+        try {
+            fetchTotalSuccessfulIssues();
+            fetchTotalIssues();
+        } catch (e) {
+            console.error(e);
+        }
     }, [fetchTotalSuccessfulIssues, fetchTotalIssues]);
 
     return (
@@ -93,7 +101,11 @@ export default function IssueDashboard(): ReactElement {
                                     <p>{totalPolkaBTC} PolkaBTC issued</p>
                                 </div>
                                 <div className="col-md-4">
-                                    <p>{totalSuccessfulIssues} successful issue requests</p>
+                                    <p>
+                                        {totalSuccessfulIssues === "-"
+                                            ? t("no_data")
+                                            : `${totalSuccessfulIssues} successful issue requests`}
+                                    </p>
                                 </div>
                                 <div className="col-md-4">
                                     <PolkaBTC />
