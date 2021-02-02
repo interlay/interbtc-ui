@@ -29,7 +29,7 @@ export default function RedeemDashboard(): ReactElement {
             }),
         [cumulativeRedeemsPerDay]
     );
-    const redeemSuccessRate = useMemo(() => Number(totalSuccessfulRedeems) / Number(totalRedeems), [
+    const redeemSuccessRate = useMemo(() => Number(totalSuccessfulRedeems) / Number(totalRedeems) || 0, [
         totalSuccessfulRedeems,
         totalRedeems,
     ]);
@@ -134,27 +134,34 @@ export default function RedeemDashboard(): ReactElement {
                                     <p>
                                         {totalRedeemedAmount === "-"
                                             ? t("no_data")
-                                            : `${satToBTC(totalRedeemedAmount)} redeemed`}
+                                            : t("dashboard.redeem.total_redeemed", {
+                                                  amount: satToBTC(totalRedeemedAmount),
+                                              })}
                                     </p>
                                 </div>
                                 <div className="col-md-3">
                                     <p>
                                         {totalSuccessfulRedeems === "-"
                                             ? t("no_data")
-                                            : `${totalSuccessfulRedeems} executed redeems`}
+                                            : t("dashboard.redeem.total_redeems", { amount: totalSuccessfulRedeems })}
                                     </p>
                                 </div>
                                 <div className="col-md-2">
                                     <p>
                                         {totalRedeems === "-"
                                             ? t("no_data")
-                                            : `${(redeemSuccessRate * 100).toFixed(2)}% success rate`}
+                                            : t("dashboard.redeem.success_rate", {
+                                                  rate: (redeemSuccessRate * 100).toFixed(2),
+                                              })}
                                     </p>
                                 </div>
                                 <div className="col-md-4">
                                     <LineChartComponent
                                         colour={["d_pink", "d_grey"]}
-                                        label={["Total BTC redeemed", "BTC redeemed per day"]}
+                                        label={[
+                                            t("dashboard.redeem.total_redeemed_chart"),
+                                            t("dashboard.redeem.perday_redeemed_chart"),
+                                        ]}
                                         yLabels={cumulativeRedeemsPerDay.map((dataPoint) =>
                                             new Date(dataPoint.date).toLocaleDateString()
                                         )}

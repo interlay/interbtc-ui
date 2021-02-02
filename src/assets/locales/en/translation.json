@@ -1,5 +1,6 @@
 {
     "previous": "Previous",
+    "prev": "Prev",
     "confirm": "Confirm",
     "next": "Next",
     "close": "Close",
@@ -42,6 +43,7 @@
     "install_supported_wallets": "Please install one of the currently supported wallets",
     "btc_relay_status": "BTC Relay Status:",
     "no_data": "Unable to fetch data.",
+    "empty_data": "No data available.",
     "source": "Source",
     "feed": "Feed",
     "app": "App",
@@ -152,6 +154,19 @@
         "total_locked": "Total locked",
         "total_issued": "Total issued",
         "capacity": "Capacity",
+        "issue": {
+            "issue": "Issue Requests",
+            "total_issued": "{{amount}} PolkaBTC issued",
+            "total_issues": "{{amount}} successful issues"
+        },
+        "redeem": {
+            "redeem": "Redeem Requests",
+            "total_redeemed": "{{amount}} BTC redeemed",
+            "total_redeems": "{{amount}} executed redeems",
+            "success_rate": "{{rate}}% success rate",
+            "total_redeemed_chart": "Total BTC Redeemed",
+            "perday_redeemed_chart": "BTC Redeemed Per Day"
+        },
         "relay": {
             "btcrelay": "BTC Relay",
             "blocks": "Blocks",

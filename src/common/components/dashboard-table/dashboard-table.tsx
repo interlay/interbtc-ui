@@ -54,6 +54,6 @@ export default function DashboardTable<D extends DataWithID>({
             <TablePageSelector totalPages={totalPages} currentPage={tableParams.page} setPage={setPage} />
         </>
     ) : (
-        <div>{t("no_data")}</div>
+        <div>{t("empty_data")}</div>
     );
 }

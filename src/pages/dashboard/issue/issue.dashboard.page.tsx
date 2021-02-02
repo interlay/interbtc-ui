@@ -98,13 +98,13 @@ export default function IssueDashboard(): ReactElement {
                         <div className="col-lg-8 offset-2">
                             <div className="row">
                                 <div className="col-md-4">
-                                    <p>{totalPolkaBTC} PolkaBTC issued</p>
+                                    <p>{t("dashboard.issue.total_issued", { amount: totalPolkaBTC })}</p>
                                 </div>
                                 <div className="col-md-4">
                                     <p>
                                         {totalSuccessfulIssues === "-"
                                             ? t("no_data")
-                                            : `${totalSuccessfulIssues} successful issue requests`}
+                                            : t("dashboard.issue.total_issues", { amount: totalSuccessfulIssues })}
                                     </p>
                                 </div>
                                 <div className="col-md-4">
