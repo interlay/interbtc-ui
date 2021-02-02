@@ -96,7 +96,7 @@ export default function IssueDashboard(): ReactElement {
                                     <p>{totalSuccessfulIssues} successful issue requests</p>
                                 </div>
                                 <div className="col-md-4">
-                                    <PolkaBTC chartOnly={true} />
+                                    <PolkaBTC />
                                 </div>
                             </div>
                         </div>

@@ -1,11 +1,11 @@
-import React from "react";
+import React, { ReactElement } from "react";
 
 import "./dashboard.page.scss";
 import Row1 from "./rows/row1";
 import Row2 from "./rows/row2";
 import Row3 from "./rows/row3";
 
-export default function DashboardPage() {
+export default function DashboardPage(): ReactElement {
     return (
         <div className="dashboard-page">
             {/* <h1 className="title-text">Dashboard</h1> */}

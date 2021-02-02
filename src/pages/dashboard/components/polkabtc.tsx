@@ -8,10 +8,10 @@ import { satToBTC } from "@interlay/polkabtc";
 import LineChartComponent from "./line-chart-component";
 
 type PolkaBTCProps = {
-    chartOnly?: boolean;
+    linkButton?: boolean;
 };
 
-const PolkaBTC = ({ chartOnly }: PolkaBTCProps): React.ReactElement => {
+const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
     const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
 
     const statsApi = usePolkabtcStats();
@@ -40,7 +40,7 @@ const PolkaBTC = ({ chartOnly }: PolkaBTCProps): React.ReactElement => {
 
     return (
         <div className="card">
-            {!chartOnly ? (
+            {linkButton ? (
                 <div className="card-top-content">
                     <div className="values-container">
                         <h1 style={{ color: `${getAccents("d_yellow").colour}` }}>Issued</h1>

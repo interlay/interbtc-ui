@@ -157,6 +157,9 @@
             "block_height": "Block height",
             "block_hash": "Block hash",
             "timestamp": "Timestamp"
+        },
+        "vaults": {
+            "vaults": "Vaults"
         }
     },
     "issue_page": {

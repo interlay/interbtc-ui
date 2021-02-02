@@ -7,7 +7,11 @@ import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 import { planckToDOT } from "@interlay/polkabtc";
 import LineChartComponent from "./line-chart-component";
 
-const CollateralLocked = (): ReactElement => {
+type CollateralLockedProps = {
+    linkButton?: boolean;
+};
+
+const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement => {
     const totalLockedDOT = useSelector((state: StoreType) => state.general.totalLockedDOT);
 
     const statsApi = usePolkabtcStats();
@@ -38,16 +42,20 @@ const CollateralLocked = (): ReactElement => {
 
     return (
         <div className="card">
-            <div className="card-top-content">
-                <div className="values-container">
-                    <h1 style={{ color: `${getAccents("d_pink").colour}` }}>Collateral Locked</h1>
-                    <h2>{totalLockedDOT} DOT</h2>
-                    <h2>$17,0030</h2>
+            {linkButton ? (
+                <div className="card-top-content">
+                    <div className="values-container">
+                        <h1 style={{ color: `${getAccents("d_pink").colour}` }}>Collateral Locked</h1>
+                        <h2>{totalLockedDOT} DOT</h2>
+                        <h2>$17,0030</h2>
+                    </div>
+                    <div className="button-container">
+                        <ButtonComponent buttonName="view all vaults" propsButtonColor="d_pink" />
+                    </div>
                 </div>
-                <div className="button-container">
-                    <ButtonComponent buttonName="view all vaults" propsButtonColor="d_pink" />
-                </div>
-            </div>
+            ) : (
+                ""
+            )}
             <div className="chart-container">
                 <LineChartComponent
                     colour={["d_pink", "d_grey"]}
