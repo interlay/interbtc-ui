@@ -6,7 +6,7 @@ const Row3 = (): React.ReactElement => {
     return (
         <div className="row-grid section-gap">
             <ActiveVaults linkButton={true} />
-            <ActiveStakedRelayers />
+            <ActiveStakedRelayers linkButton={true} />
             <ActiveCollators />
         </div>
     );

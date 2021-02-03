@@ -3,7 +3,12 @@ import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboardcolors";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-const ParachainSecurity = (): React.ReactElement => {
+
+type ParachainSecurityProps = {
+    linkButton?: boolean;
+};
+
+const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactElement => {
     const [textColour, setTextColour] = useState("d_grey");
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
@@ -30,9 +35,13 @@ const ParachainSecurity = (): React.ReactElement => {
         <div className="card">
             <div className="values-container"></div>
             {/* TODO: move this to the right */}
-            <div className="button-container">
-                <ButtonComponent buttonName="Status Updates" propsButtonColor="d_green" />
-            </div>
+            {linkButton ? (
+                <div className="button-container">
+                    <ButtonComponent buttonName="Status Updates" propsButtonColor="d_green" />
+                </div>
+            ) : (
+                ""
+            )}
             <div className="parachain-content-container">
                 <div>
                     <h1 className="h1-xl-text">The BTC parachain is</h1>

@@ -5,9 +5,9 @@ import OracleStatus from "../components/oracle-status";
 const Row2 = (): React.ReactElement => {
     return (
         <div className="row-grid section-gap">
-            <ParachainSecurity />
+            <ParachainSecurity linkButton={true} />
             <BtcRelay />
-            <OracleStatus />
+            <OracleStatus linkButton={true} />
         </div>
     );
 };
