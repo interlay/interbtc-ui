@@ -19,6 +19,13 @@ export const SHOW_ACCOUNT_MODAL = "SHOW_ACCOUNT_MODAL";
 export const UPDATE_ACCOUNTS = "UPDATE_ACCOUNTS";
 export const SET_ACTIVE_TAB = "SET_ACTIVE_TAB";
 export const UPDATE_OF_PRICES = "UPDATE_OF_PRICES";
+export const UPDATE_HEIGHTS = "UPDATE_HEIGHTS";
+
+export interface UpdateHeights {
+    type: typeof UPDATE_HEIGHTS;
+    btcRelayHeight: number;
+    bitcoinHeight: number;
+}
 
 export interface UpdateOfPrices {
     type: typeof UPDATE_OF_PRICES;
@@ -106,7 +113,8 @@ export type GeneralActions =
     | ShowAccountModal
     | UpdateAccounts
     | SetActiveTab
-    | UpdateOfPrices;
+    | UpdateOfPrices
+    | UpdateHeights;
 
 // REDEEM
 

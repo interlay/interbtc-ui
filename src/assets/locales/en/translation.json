@@ -150,6 +150,10 @@
         "issues": "Issue Requests",
         "total_locked": "Total locked",
         "total_issued": "Total issued",
+        "synchronized": " synchronized",
+        "not_synchronized": " not synchronized",
+        "synced": "Synced",
+        "out_of_sync": "Out of Sync",
         "capacity": "Capacity",
         "relay": {
             "btcrelay": "BTC Relay",

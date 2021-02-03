@@ -36,7 +36,7 @@ export default function RedeemModal(props: RedeemModalProps) {
                         </div>
                         <div className="row usd-price-modal">
                             <div className="col">
-                                {"= $"+ calculateAmount(request.amountPolkaBTC || "0",prices.bitcoin.usd.toString())}
+                                {"= $"+ calculateAmount(request.amountPolkaBTC || "0",prices.bitcoin.usd)}
                             </div>
                         </div>
                         <div className="step-item row">

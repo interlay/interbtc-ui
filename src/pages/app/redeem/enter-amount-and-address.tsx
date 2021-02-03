@@ -32,14 +32,15 @@ type AmountAndAddressForm = {
 
 export default function EnterAmountAndAddress() {
     const { t } = useTranslation();
-    const { balancePolkaBTC, polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
+    const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
+    const { balancePolkaBTC, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
     const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
     const defaultValues = amount ? { defaultValues: { amountPolkaBTC: amount, btcAddress: "" } } : undefined;
     const { register, handleSubmit, errors, getValues } = useForm<AmountAndAddressForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
     const [dustValue, setDustValue] = useState("0");
     const dispatch = useDispatch();
-    const [usdAmount, setUsdAmount] = useState(calculateAmount(amount || "0",prices.bitcoin.usd.toString()));
+    const [usdAmount, setUsdAmount] = useState("");
     const [redeemFee, setRedeemFee] = useState("0");
 
     useEffect(() => {
@@ -50,8 +51,9 @@ export default function EnterAmountAndAddress() {
             const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
             setDustValue(dustValueBtc);
         };
+        setUsdAmount(calculateAmount(amount || getValues("amountPolkaBTC") || "0",usdPrice));
         fetchData();
-    }, [polkaBtcLoaded, getValues]);
+    }, [polkaBtcLoaded, getValues, usdPrice, amount]);
 
     const onSubmit = handleSubmit(async ({ amountPolkaBTC, btcAddress }) => {
         if (!polkaBtcLoaded) return;
@@ -132,7 +134,7 @@ export default function EnterAmountAndAddress() {
 
     const onAmountChange = async () => {
         const amount = getValues("amountPolkaBTC") || "0";
-        setUsdAmount(calculateAmount(amount,prices.bitcoin.usd.toString()));
+        setUsdAmount(calculateAmount(amount,usdPrice));
         const fee = await window.polkaBTC.redeem.getFeesToPay(amount);
         setRedeemFee(fee);
     }

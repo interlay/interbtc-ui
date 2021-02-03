@@ -40,12 +40,12 @@ import DashboardPage from "./pages/dashboard/dashboard.page";
 import VaultDashboardPage from "./pages/vault-dashboard/vault-dashboard.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
 import VaultsDashboard from "./pages/dashboard/vaults/vaults.dashboard.page";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, useStore } from "react-redux";
 import { StoreType, ParachainStatus } from "./common/types/util.types";
 import IssueDashboard from "./pages/dashboard/issue/issue.dashboard.page";
 import RedeemDashboard from "./pages/dashboard/redeem/redeem.dashboard.page";
 import LandingPage from "./pages/landing/landing.page";
-import startFetchingLiveData from "./common/utils/live-data";
+import startFetchingLiveData from "./common/live-data/live-data";
 import RelayDashboard from "./pages/dashboard/relay/relay.dashboard.page";
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
@@ -61,6 +61,7 @@ export default function App(): ReactElement {
     const [isLoading, setIsLoading] = useState(true);
     const extensions = useSelector((state: StoreType) => state.general.extensions);
     const dispatch = useDispatch();
+    const store = useStore();
 
     const requestDotFromFaucet = async (): Promise<void> => {
         if (!address) return;
@@ -211,8 +212,8 @@ export default function App(): ReactElement {
             }
         };
         loadData();
-        startFetchingLiveData(dispatch);
-    },[createAPIInstance, isLoading, polkaBtcLoaded, dispatch]);
+        startFetchingLiveData(dispatch, store);
+    },[createAPIInstance, isLoading, polkaBtcLoaded, dispatch, store]);
 
 
     return (

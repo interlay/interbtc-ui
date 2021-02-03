@@ -13,6 +13,7 @@ import {
     SET_ACTIVE_TAB,
     UPDATE_OF_PRICES,
     IS_FAUCET_LOADED,
+    UPDATE_HEIGHTS,
     IsPolkaBtcLoaded,
     IsStakedRelayerLoaded,
     ChangeAddress,
@@ -27,6 +28,7 @@ import {
     SetActiveTab,
     IsFaucetLoaded,
     UpdateOfPrices,
+    UpdateHeights,
 } from "../types/actions.types";
 import { StoreType, ParachainStatus, ActiveTab, Prices } from "../types/util.types";
 
@@ -108,4 +110,10 @@ export const setInstalledExtensionAction = (extensions: string[]): SetInstalledE
 export const updateAccountsAction = (accounts: string[]): UpdateAccounts => ({
     type: UPDATE_ACCOUNTS,
     accounts,
+});
+
+export const updateHeightsAction = (btcRelayHeight: number, bitcoinHeight: number): UpdateHeights => ({
+    type: UPDATE_HEIGHTS,
+    btcRelayHeight,
+    bitcoinHeight,
 });
