@@ -4,8 +4,15 @@ import { getAccents } from "../dashboard-colors";
 import { roundTwoDecimals } from "@interlay/polkabtc";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
+import { useTranslation } from "react-i18next";
 
-const Collaterization = (): ReactElement => {
+type CollaterizationProps = {
+    linkButton?: boolean;
+};
+
+const Collaterization = ({ linkButton }: CollaterizationProps): ReactElement => {
+    const { t } = useTranslation();
+
     const [systemCollateralization, setSystemCollateralization] = useState("0");
     const [issuablePolkaBTC, setIssuablePolkaBTC] = useState("0");
     const [secureCollateralThreshold, setSecureCollateralThreshold] = useState("0");
@@ -28,16 +35,26 @@ const Collaterization = (): ReactElement => {
 
     return (
         <div className="card">
-            <div className="card-top-content">
-                <div className="values-container">
-                    <h1 style={{ color: `${getAccents("d_blue").colour}` }}>Collaterization</h1>
-                    <h2>{roundTwoDecimals(systemCollateralization)}%</h2>
-                    <h2>Secure Threshold: {roundTwoDecimals(secureCollateralThreshold)}%</h2>
+            {linkButton ? (
+                <div className="card-top-content">
+                    <div className="values-container">
+                        <h1 style={{ color: `${getAccents("d_blue").colour}` }}>
+                            {t("dashboard.vaults.collaterization")}
+                        </h1>
+                        <h2>{roundTwoDecimals(systemCollateralization)}%</h2>
+                        <h2>
+                            {t("dashboard.vaults.secure_threshold", {
+                                amount: roundTwoDecimals(secureCollateralThreshold),
+                            })}
+                        </h2>
+                    </div>
+                    <div className="button-container">
+                        <ButtonComponent buttonName="view vaults" propsButtonColor="d_blue" />
+                    </div>
                 </div>
-                <div className="button-container">
-                    <ButtonComponent buttonName="view vaults" propsButtonColor="d_blue" />
-                </div>
-            </div>
+            ) : (
+                ""
+            )}
             <div className="circle-container">
                 <div
                     className="status-circle"
@@ -46,7 +63,7 @@ const Collaterization = (): ReactElement => {
                 >
                     <h1 className="h1-l-text" style={{ color: `${getAccents("d_blue").colour}` }}>
                         {roundTwoDecimals(issuablePolkaBTC)} <br />
-                        PolkaBTC Capacity
+                        {t("dashboard.vaults.polkabtc_capacity")}
                     </h1>
                 </div>
             </div>

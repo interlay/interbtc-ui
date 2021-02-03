@@ -1,11 +1,11 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboardcolors";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { useTranslation } from "react-i18next";
 
-const BtcRelay = () => {
+const BtcRelay = (): ReactElement => {
     // TODO: Compute status using blockstream data
     const { btcRelayHeight, bitcoinHeight } = useSelector((state: StoreType) => state.general);
     const outdatedRelayThreshold = 12;

@@ -3,6 +3,7 @@ import { Table } from "react-bootstrap";
 import React from "react";
 import { TableDisplayParams } from "../../types/util.types";
 import TablePageSelector from "../table-page-selector/table-page-selector";
+import { useTranslation } from "react-i18next";
 
 type DataWithID = { id: string };
 
@@ -23,12 +24,14 @@ export default function DashboardTable<D extends DataWithID>({
     headings,
     dataPointDisplayer,
 }: DashboardTableProps<D>): ReactElement {
+    const { t } = useTranslation();
+
     const setPage = useMemo(() => (page: number) => setTableParams({ ...tableParams, page }), [
         setTableParams,
         tableParams,
     ]);
 
-    return (
+    return pageData.length > 0 ? (
         <>
             <Table>
                 <thead>
@@ -50,5 +53,7 @@ export default function DashboardTable<D extends DataWithID>({
             </Table>
             <TablePageSelector totalPages={totalPages} currentPage={tableParams.page} setPage={setPage} />
         </>
+    ) : (
+        <div>{t("empty_data")}</div>
     );
 }

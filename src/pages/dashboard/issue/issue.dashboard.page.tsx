@@ -19,8 +19,8 @@ export default function IssueDashboard(): ReactElement {
     const [issueRequests, setIssueRequests] = useState(new Array<DashboardIssueInfo>());
     const [tableParams, setTableParams] = useState(defaultTableDisplayParams());
 
-    const [totalSuccessfulIssues, setTotalSuccessfulIssues] = useState("0");
-    const [totalIssues, setTotalIssues] = useState(0);
+    const [totalSuccessfulIssues, setTotalSuccessfulIssues] = useState("-");
+    const [totalIssues, setTotalIssues] = useState("-");
 
     const fetchIssueRequests = useMemo(
         () => async () => {
@@ -43,7 +43,7 @@ export default function IssueDashboard(): ReactElement {
             },
             async () => {
                 const res = await statsApi.getTotalIssues();
-                setTotalIssues(Number(res.data));
+                setTotalIssues(res.data);
             },
         ],
         [statsApi] // to silence the compiler
@@ -71,12 +71,20 @@ export default function IssueDashboard(): ReactElement {
     );
 
     useEffect(() => {
-        fetchIssueRequests();
+        try {
+            fetchIssueRequests();
+        } catch (e) {
+            console.error(e);
+        }
     }, [fetchIssueRequests, tableParams]);
 
     useEffect(() => {
-        fetchTotalSuccessfulIssues();
-        fetchTotalIssues();
+        try {
+            fetchTotalSuccessfulIssues();
+            fetchTotalIssues();
+        } catch (e) {
+            console.error(e);
+        }
     }, [fetchTotalSuccessfulIssues, fetchTotalIssues]);
 
     return (
@@ -90,20 +98,24 @@ export default function IssueDashboard(): ReactElement {
                         <div className="col-lg-8 offset-2">
                             <div className="row">
                                 <div className="col-md-4">
-                                    <p>{totalPolkaBTC} PolkaBTC issued</p>
+                                    <p>{t("dashboard.issue.total_issued", { amount: totalPolkaBTC })}</p>
                                 </div>
                                 <div className="col-md-4">
-                                    <p>{totalSuccessfulIssues} successful issue requests</p>
+                                    <p>
+                                        {totalSuccessfulIssues === "-"
+                                            ? t("no_data")
+                                            : t("dashboard.issue.total_issues", { amount: totalSuccessfulIssues })}
+                                    </p>
                                 </div>
                                 <div className="col-md-4">
-                                    <PolkaBTC chartOnly={true} />
+                                    <PolkaBTC />
                                 </div>
                             </div>
                         </div>
                     </div>
                     <DashboardTable
                         pageData={issueRequests}
-                        totalPages={Math.ceil(totalIssues / tableParams.perPage)}
+                        totalPages={Math.ceil(Number(totalIssues) / tableParams.perPage)}
                         tableParams={tableParams}
                         setTableParams={setTableParams}
                         headings={tableHeadings}
