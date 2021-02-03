@@ -6,28 +6,33 @@ import { StoreType } from "../../../common/types/util.types";
 import { DashboardRequestInfo } from "../../../common/types/redeem.types";
 import DashboardTable from "../../../common/components/dashboard-table/dashboard-table";
 import { defaultTableDisplayParams } from "../../../common/utils/utils";
+import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
+import { satToBTC } from "@interlay/polkabtc";
+import LineChartComponent from "../components/line-chart-component";
 
 export default function RedeemDashboard(): ReactElement {
-    const { polkaBtcLoaded, totalPolkaBTC } = useSelector((state: StoreType) => state.general);
+    const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
     const { t } = useTranslation();
+    const statsApi = usePolkabtcStats();
 
     const [tableParams, setTableParams] = useState(defaultTableDisplayParams());
-    const [totalSuccessfulRedeems, setTotalSuccessfulRedeems] = useState(0);
-    const [totalFailedRedeems, setTotalFailedRedeems] = useState(0);
+    const [totalSuccessfulRedeems, setTotalSuccessfulRedeems] = useState("-");
+    const [totalRedeems, setTotalRedeems] = useState("-");
+    const [totalRedeemedAmount, setTotalRedeemedAmount] = useState("-");
     const [redeemRequests, setRedeemRequests] = useState(new Array<DashboardRequestInfo>());
-    const [cumulativeRedeemsPerDay, setCumulativeRedeemsPerDay] = useState(new Array<{ date: Date; amount: number }>());
+    const [cumulativeRedeemsPerDay, setCumulativeRedeemsPerDay] = useState(new Array<{ date: number; sat: number }>());
     const pointRedeemsPerDay = useMemo(
         () =>
             cumulativeRedeemsPerDay.map((dataPoint, i) => {
                 if (i === 0) return 0;
-                return dataPoint.amount - cumulativeRedeemsPerDay[i - 1].amount;
+                return dataPoint.sat - cumulativeRedeemsPerDay[i - 1].sat;
             }),
         [cumulativeRedeemsPerDay]
     );
-    const redeemSuccessRate = useMemo(
-        () => (totalSuccessfulRedeems / (totalSuccessfulRedeems + totalFailedRedeems)).toFixed(2),
-        [totalSuccessfulRedeems, totalFailedRedeems]
-    );
+    const redeemSuccessRate = useMemo(() => Number(totalSuccessfulRedeems) / Number(totalRedeems) || 0, [
+        totalSuccessfulRedeems,
+        totalRedeems,
+    ]);
 
     const tableHeadings = [
         t("id"),
@@ -41,7 +46,7 @@ export default function RedeemDashboard(): ReactElement {
     const tableRedeemRequestRow = useMemo(
         () => (rreq: DashboardRequestInfo): string[] => [
             rreq.id,
-            rreq.amountPolkaBTC,
+            satToBTC(rreq.amountPolkaBTC),
             rreq.creation,
             rreq.vaultDotAddress || "",
             rreq.btcAddress,
@@ -58,45 +63,62 @@ export default function RedeemDashboard(): ReactElement {
         [t]
     );
 
+    const fetchRedeemRequests = useMemo(
+        () => async () => {
+            const res = await statsApi.getRedeems(
+                tableParams.page,
+                tableParams.perPage,
+                tableParams.sortBy,
+                tableParams.sortAsc
+            );
+            setRedeemRequests(res.data);
+        },
+        [tableParams, statsApi]
+    );
+
     useEffect(() => {
-        (async () => {
-            //await stats call
-            setRedeemRequests([
-                {
-                    id: "0xtestmock",
-                    amountPolkaBTC: "1.5",
-                    creation: "18743",
-                    btcAddress: "tb1qhz...dknu33d",
-                    vaultDotAddress: "5DAAnr...m3PTXFy",
-                    completed: false,
-                    cancelled: false,
-                    isExpired: false,
-                    reimbursed: false,
-                },
-            ]);
-        })();
-    }, [tableParams]);
+        try {
+            fetchRedeemRequests();
+        } catch (e) {
+            console.error(e);
+        }
+    }, [fetchRedeemRequests, tableParams]);
 
     useEffect(() => {
         const fetchTotalSuccessfulRedeems = async () => {
-            setTotalSuccessfulRedeems(443);
+            const res = await statsApi.getTotalSuccessfulRedeems();
+            setTotalSuccessfulRedeems(res.data);
         };
 
         const fetchTotalFailedRedeems = async () => {
-            setTotalFailedRedeems(12);
+            const res = await statsApi.getTotalRedeems();
+            setTotalRedeems(res.data);
+        };
+
+        const fetchTotalRedeemedAmount = async () => {
+            const res = await statsApi.getTotalRedeemedAmount();
+            setTotalRedeemedAmount(res.data);
         };
 
         const fetchRedeemsLastDays = async () => {
-            setCumulativeRedeemsPerDay(
-                [0, 1, 2, 3, 4, 5, 6].map((d) => ({ date: new Date(Date.now() - d * 86400000), amount: 50 - d }))
-            );
+            const res = await statsApi.getRecentDailyRedeems(6);
+            setCumulativeRedeemsPerDay(res.data);
         };
 
         (async () => {
             if (!polkaBtcLoaded) return;
-            await Promise.all([fetchTotalSuccessfulRedeems(), fetchTotalFailedRedeems(), fetchRedeemsLastDays()]);
+            try {
+                await Promise.all([
+                    fetchTotalSuccessfulRedeems(),
+                    fetchTotalFailedRedeems(),
+                    fetchTotalRedeemedAmount(),
+                    fetchRedeemsLastDays(),
+                ]);
+            } catch (e) {
+                console.error(e);
+            }
         })();
-    }, [polkaBtcLoaded]);
+    }, [polkaBtcLoaded, statsApi]);
 
     return (
         <div className="dashboard-page container-fluid white-background">
@@ -109,29 +131,55 @@ export default function RedeemDashboard(): ReactElement {
                         <div className="col-lg-8 offset-2">
                             <div className="row">
                                 <div className="col-md-3">
-                                    <p>Placeholder - total redeemed (currently {totalPolkaBTC})</p>
+                                    <p>
+                                        {totalRedeemedAmount === "-"
+                                            ? t("no_data")
+                                            : t("dashboard.redeem.total_redeemed", {
+                                                  amount: satToBTC(totalRedeemedAmount),
+                                              })}
+                                    </p>
                                 </div>
                                 <div className="col-md-3">
                                     <p>
-                                        Placeholder - total successful Redeem requests (currently{" "}
-                                        {totalSuccessfulRedeems})
+                                        {totalSuccessfulRedeems === "-"
+                                            ? t("no_data")
+                                            : t("dashboard.redeem.total_redeems", { amount: totalSuccessfulRedeems })}
                                     </p>
                                 </div>
                                 <div className="col-md-2">
-                                    <p>Placeholder - redeem success rate (currently {redeemSuccessRate}</p>
+                                    <p>
+                                        {totalRedeems === "-"
+                                            ? t("no_data")
+                                            : t("dashboard.redeem.success_rate", {
+                                                  rate: (redeemSuccessRate * 100).toFixed(2),
+                                              })}
+                                    </p>
                                 </div>
                                 <div className="col-md-4">
-                                    <p>
-                                        Placeholder: double line chart, total + per day redeem requests. Currently{" "}
-                                        {cumulativeRedeemsPerDay.toString()} and {pointRedeemsPerDay.toString()}.
-                                    </p>
+                                    <LineChartComponent
+                                        colour={["d_pink", "d_grey"]}
+                                        label={[
+                                            t("dashboard.redeem.total_redeemed_chart"),
+                                            t("dashboard.redeem.perday_redeemed_chart"),
+                                        ]}
+                                        yLabels={cumulativeRedeemsPerDay.map((dataPoint) =>
+                                            new Date(dataPoint.date).toLocaleDateString()
+                                        )}
+                                        yAxisProps={[{ beginAtZero: true, position: "left" }, { position: "right" }]}
+                                        data={[
+                                            cumulativeRedeemsPerDay.map((dataPoint) =>
+                                                Number(satToBTC(dataPoint.sat.toString()))
+                                            ),
+                                            pointRedeemsPerDay.map((amount) => Number(satToBTC(amount.toString()))),
+                                        ]}
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
                     <DashboardTable
                         pageData={redeemRequests}
-                        totalPages={2}
+                        totalPages={Math.ceil(Number(totalRedeems) / tableParams.perPage)}
                         tableParams={tableParams}
                         setTableParams={setTableParams}
                         headings={tableHeadings}

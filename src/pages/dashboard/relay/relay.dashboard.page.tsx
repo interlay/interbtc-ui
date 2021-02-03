@@ -18,12 +18,16 @@ export default function RelayDashboard(): ReactElement {
 
     const fetchBlocks = useMemo(
         () => async () => {
-            const [blocks, totalRelayedBlocks] = await Promise.all([
-                statsApi.getBlocks(tableParams.page, tableParams.perPage, tableParams.sortBy, tableParams.sortAsc),
-                statsApi.getTotalRelayedBlocksCount(),
-            ]);
-            setBlocks(blocks.data);
-            setTotalRelayedBlocks(Number(totalRelayedBlocks.data));
+            try {
+                const [blocks, totalRelayedBlocks] = await Promise.all([
+                    statsApi.getBlocks(tableParams.page, tableParams.perPage, tableParams.sortBy, tableParams.sortAsc),
+                    statsApi.getTotalRelayedBlocksCount(),
+                ]);
+                setBlocks(blocks.data);
+                setTotalRelayedBlocks(Number(totalRelayedBlocks.data));
+            } catch (e) {
+                console.error(e);
+            }
         },
         [tableParams, statsApi]
     );

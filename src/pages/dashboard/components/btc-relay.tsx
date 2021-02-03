@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactElement } from "react";
 import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboardcolors";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 
-const BtcRelay = () => {
+const BtcRelay = (): ReactElement => {
     // TODO: Compute status using blockstream data
     const [latestRelayBlock, setLatestRelayBlock] = useState("0");
     const [latestBitcoinBlock, setLatestBitcoinBlock] = useState("0");
