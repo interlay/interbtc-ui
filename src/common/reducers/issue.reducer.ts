@@ -89,7 +89,7 @@ export const issueReducer = (state: IssueState = initialState, action: IssueActi
         case OPEN_WIZARD_IN_EDIT_MODE:
             return { ...state, wizardInEditMode: true };
         case INIT_STATE:
-            return { ...state, fee: "0", transactionListeners: [] };
+            return { ...state, step: "ENTER_BTC_AMOUNT", amountBTC: "", fee: "0", transactionListeners: [] };
         case ADD_VAULT_ISSUES:
             return { ...state, vaultIssues: action.vaultIssues };
         case UPDATE_ALL_ISSUE_REQUESTS:

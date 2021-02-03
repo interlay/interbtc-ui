@@ -112,9 +112,12 @@
     position: relative;
     margin-top: 10px;
 }
-canvas {
-    height: 250px !important;
+.dashboard-page{
+    canvas {
+        height: 250px !important;
+    }
 }
+
 .section-gap {
     margin-top: 60px;
 }

@@ -147,6 +147,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                                     href="https://github.com/interlay/polkabtc-ui/issues"
                                     target="_blank"
                                     rel="noopener noreferrer"
+                                    className="mb-1"
                                 >
                                     <FaGithub></FaGithub> GitHub
                                 </a>

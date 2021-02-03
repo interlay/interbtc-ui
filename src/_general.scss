@@ -209,6 +209,13 @@ input[type="number"] {
     color: white;
 }
 
+.dropdown-menu {
+    a {
+        display: block;
+        padding-left: 15px;
+    }
+}
+
 @media (max-width: 576px) {
     .float-xs-left {
         float: left !important;
