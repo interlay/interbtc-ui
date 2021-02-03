@@ -3,6 +3,7 @@ import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboard-colors";
 import LineChartComponent from "./line-chart-component";
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
+import { useTranslation } from "react-i18next";
 
 type ActiveVaultsProps = {
     linkButton?: boolean;
@@ -10,6 +11,7 @@ type ActiveVaultsProps = {
 
 const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
     const statsApi = usePolkabtcStats();
+    const { t } = useTranslation();
 
     const [totalVaultsPerDay, setTotalVaultsPerDay] = useState(new Array<{ date: number; count: number }>());
     const fetchVaultsPerDay = useMemo(
@@ -28,7 +30,9 @@ const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
             {linkButton ? (
                 <div className="card-top-content">
                     <div className="values-container">
-                        <h1 style={{ color: `${getAccents("d_pink").colour}` }}>Active Vaults</h1>
+                        <h1 style={{ color: `${getAccents("d_pink").colour}` }}>
+                            {t("dashboard.vaults.active_vaults")}
+                        </h1>
                         <h2>{totalVaultsPerDay[totalVaultsPerDay.length - 1]?.count}</h2>
                     </div>
                     <div className="button-container">
@@ -40,7 +44,7 @@ const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
             )}
             <LineChartComponent
                 colour="d_pink"
-                label="Total active vaults"
+                label={t("dashboard.vaults.total_vaults_chart") as string}
                 yLabels={totalVaultsPerDay.map((dataPoint) => new Date(dataPoint.date).toLocaleDateString())}
                 yAxisProps={{ beginAtZero: true, precision: 0 }}
                 data={totalVaultsPerDay.map((dataPoint) => dataPoint.count)}

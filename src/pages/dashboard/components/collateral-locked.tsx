@@ -6,6 +6,7 @@ import { StoreType } from "../../../common/types/util.types";
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 import { planckToDOT } from "@interlay/polkabtc";
 import LineChartComponent from "./line-chart-component";
+import { useTranslation } from "react-i18next";
 
 type CollateralLockedProps = {
     linkButton?: boolean;
@@ -14,6 +15,7 @@ type CollateralLockedProps = {
 const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement => {
     const totalLockedDOT = useSelector((state: StoreType) => state.general.totalLockedDOT);
 
+    const { t } = useTranslation();
     const statsApi = usePolkabtcStats();
 
     const [cumulativeCollateralPerDay, setCumulativeCollateralPerDay] = useState(
@@ -45,7 +47,9 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
             {linkButton ? (
                 <div className="card-top-content">
                     <div className="values-container">
-                        <h1 style={{ color: `${getAccents("d_pink").colour}` }}>Collateral Locked</h1>
+                        <h1 style={{ color: `${getAccents("d_pink").colour}` }}>
+                            {t("dashboard.vaults.collateral_locked")}
+                        </h1>
                         <h2>{totalLockedDOT} DOT</h2>
                         <h2>$17,0030</h2>
                     </div>
@@ -59,7 +63,10 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
             <div className="chart-container">
                 <LineChartComponent
                     colour={["d_pink", "d_grey"]}
-                    label={["Total collateral locked", "Collateral locked per day"]}
+                    label={[
+                        t("dashboard.vaults.total_collators_chart"),
+                        t("dashboard.vaults.perday_collateral_locked"),
+                    ]}
                     yLabels={cumulativeCollateralPerDay.map((dataPoint) =>
                         new Date(dataPoint.date).toLocaleDateString()
                     )}

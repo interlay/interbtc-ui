@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { satToBTC } from "@interlay/polkabtc";
 import LineChartComponent from "./line-chart-component";
+import { useTranslation } from "react-i18next";
 
 type PolkaBTCProps = {
     linkButton?: boolean;
@@ -14,6 +15,7 @@ type PolkaBTCProps = {
 const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
     const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
 
+    const { t } = useTranslation();
     const statsApi = usePolkabtcStats();
 
     const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number }>());
@@ -43,8 +45,8 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
             {linkButton ? (
                 <div className="card-top-content">
                     <div className="values-container">
-                        <h1 style={{ color: `${getAccents("d_yellow").colour}` }}>Issued</h1>
-                        <h2>{totalPolkaBTC} PolkaBTC</h2>
+                        <h1 style={{ color: `${getAccents("d_yellow").colour}` }}>{t("dashboard.issue.issued")}</h1>
+                        <h2>{t("dashboard.issue.total_polkabtc", { amount: totalPolkaBTC })}</h2>
                         {/* TODO: add the price API */}
                         <h2>$17,0030</h2>
                     </div>
@@ -58,7 +60,7 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
             <div className="chart-container">
                 <LineChartComponent
                     colour={["d_yellow", "d_grey"]}
-                    label={["Total PolkaBTC issued", "PolkaBTC issued per day"]}
+                    label={[t("dashboard.issue.total_issued_chart"), t("dashboard.issue.perday_issued_chart")]}
                     yLabels={cumulativeIssuesPerDay.map((dataPoint) => new Date(dataPoint.date).toLocaleDateString())}
                     yAxisProps={[{ beginAtZero: true, position: "left" }, { position: "right" }]}
                     data={[

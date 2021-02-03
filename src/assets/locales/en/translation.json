@@ -154,18 +154,26 @@
         "total_locked": "Total locked",
         "total_issued": "Total issued",
         "capacity": "Capacity",
+        "collators": {
+          "total_collators_chart": "Total active collators",
+          "active_collators": "Active Collators"
+        },
         "issue": {
             "issue": "Issue Requests",
+            "issued": "Issued",
+            "total_polkabtc": "{{amount}} PolkaBTC",
             "total_issued": "{{amount}} PolkaBTC issued",
-            "total_issues": "{{amount}} successful issues"
+            "total_issues": "{{amount}} successful issues",
+            "total_issued_chart": "Total PolkaBTC issued",
+            "perday_issued_chart": "PolkaBTC issued per day"
         },
         "redeem": {
             "redeem": "Redeem Requests",
             "total_redeemed": "{{amount}} BTC redeemed",
             "total_redeems": "{{amount}} executed redeems",
             "success_rate": "{{rate}}% success rate",
-            "total_redeemed_chart": "Total BTC Redeemed",
-            "perday_redeemed_chart": "BTC Redeemed Per Day"
+            "total_redeemed_chart": "Total BTC redeemed",
+            "perday_redeemed_chart": "BTC redeemed per day"
         },
         "relay": {
             "btcrelay": "BTC Relay",
@@ -175,7 +183,19 @@
             "timestamp": "Timestamp"
         },
         "vaults": {
-            "vaults": "Vaults"
+            "vaults": "Vaults",
+            "total_vaults_chart": "Total active vaults",
+            "active_vaults": "Active Vaults",
+            "total_collateral_locked": "Total collateral locked",
+            "perday_collateral_locked": "Collateral locked per day",
+            "collateral_locked": "Collateral Locked",
+            "collateralization": "Collateralization",
+            "secure_threshold": "Secure Threshold: {{amount}}%",
+            "polkabtc_capacity": "PolkaBTC Capacity"
+        },
+        "parachain": {
+            "total_relayers_chart": "Total active relayers",
+            "active_relayers": "Active Staked Relayers"
         }
     },
     "issue_page": {

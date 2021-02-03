@@ -3,7 +3,10 @@ import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboard-colors";
 import LineChartComponent from "./line-chart-component";
 import { range } from "../../../common/utils/utils";
+import { useTranslation } from "react-i18next";
+
 const ActiveCollators = (): ReactElement => {
+    const { t } = useTranslation();
     // this function should be removed once real data is pulled in
     const dateToMidnightTemp = (date: Date): Date => {
         date.setMilliseconds(0);
@@ -20,7 +23,9 @@ const ActiveCollators = (): ReactElement => {
         <div className="card">
             <div className="card-top-content">
                 <div className="values-container">
-                    <h1 style={{ color: `${getAccents("d_blue").colour}` }}>Active Collators</h1>
+                    <h1 style={{ color: `${getAccents("d_blue").colour}` }}>
+                        {t("dashboard.collators.active_collators")}
+                    </h1>
                     <h2>1</h2>
                 </div>
                 <div className="button-container">
@@ -29,7 +34,7 @@ const ActiveCollators = (): ReactElement => {
             </div>
             <LineChartComponent
                 colour="d_blue"
-                label="Total active collators"
+                label={t("dashboard.collators.total_collators_chart") as string}
                 yLabels={dates}
                 yAxisProps={{ beginAtZero: true, precision: 0 }}
                 data={data}
