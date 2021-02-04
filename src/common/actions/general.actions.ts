@@ -14,6 +14,7 @@ import {
     UPDATE_OF_PRICES,
     IS_FAUCET_LOADED,
     UPDATE_HEIGHTS,
+    UPDATE_TOTALS,
     IsPolkaBtcLoaded,
     IsStakedRelayerLoaded,
     ChangeAddress,
@@ -29,6 +30,7 @@ import {
     IsFaucetLoaded,
     UpdateOfPrices,
     UpdateHeights,
+    UpdateTotals,
 } from "../types/actions.types";
 import { StoreType, ParachainStatus, ActiveTab, Prices } from "../types/util.types";
 
@@ -116,4 +118,10 @@ export const updateHeightsAction = (btcRelayHeight: number, bitcoinHeight: numbe
     type: UPDATE_HEIGHTS,
     btcRelayHeight,
     bitcoinHeight,
+});
+
+export const updateTotalsAction = (totalLockedDOT: string, totalPolkaBTC: string): UpdateTotals => ({
+    type: UPDATE_TOTALS,
+    totalLockedDOT,
+    totalPolkaBTC,
 });

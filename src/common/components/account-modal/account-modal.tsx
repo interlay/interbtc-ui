@@ -1,9 +1,10 @@
 import React, { ReactElement } from "react";
 import { Button, Modal } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, useStore } from "react-redux";
 import { StoreType } from "../../types/util.types";
 import { showAccountModalAction } from "../../actions/general.actions";
 import { useTranslation } from "react-i18next";
+import fetchIssueTransactions from "../../live-data/issue-transaction.watcher";
 
 import "./account-modal.scss";
 
@@ -14,6 +15,7 @@ type AccountModalProps = {
 
 export default function AccountModal(props: AccountModalProps): ReactElement {
     const { showAccountModal, accounts, extensions } = useSelector((state: StoreType) => state.general);
+    const store = useStore();
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
@@ -49,7 +51,7 @@ export default function AccountModal(props: AccountModalProps): ReactElement {
                         {(accounts || []).map((account: string, index: number) => (
                             <div className="row" key={index}>
                                 <div className="col-12">
-                                    <div className="one-account" onClick={() => props.onSelected(account)}>
+                                    <div className="one-account" onClick={() => {props.onSelected(account); fetchIssueTransactions(dispatch,store)}}>
                                         {account}
                                     </div>
                                 </div>

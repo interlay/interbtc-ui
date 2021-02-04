@@ -3,7 +3,7 @@ import { Dispatch } from "redux";
 import { updateOfPricesAction } from "../actions/general.actions";
 import { StoreState } from "../types/util.types";
 
-export default function fetchPrices(dispatch: Dispatch, store: StoreState) {
+export default function fetchPrices(dispatch: Dispatch, store: StoreState): void {
     const state = store.getState();
     const storePrices = state.general.prices;
 

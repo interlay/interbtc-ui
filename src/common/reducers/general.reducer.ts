@@ -14,6 +14,7 @@ import {
     SET_ACTIVE_TAB,
     UPDATE_OF_PRICES,
     UPDATE_HEIGHTS,
+    UPDATE_TOTALS,
 } from "../types/actions.types";
 import { GeneralState, ParachainStatus, ActiveTab } from "../types/util.types";
 
@@ -39,6 +40,8 @@ const initialState = {
 
 export const generalReducer = (state: GeneralState = initialState, action: GeneralActions): GeneralState => {
     switch (action.type) {
+        case UPDATE_TOTALS:
+            return { ...state, totalPolkaBTC: action.totalPolkaBTC, totalLockedDOT: action.totalLockedDOT };
         case UPDATE_HEIGHTS:
             return { ...state, btcRelayHeight: action.btcRelayHeight, bitcoinHeight: action.bitcoinHeight };
         case UPDATE_OF_PRICES:

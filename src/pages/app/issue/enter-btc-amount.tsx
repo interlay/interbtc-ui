@@ -90,7 +90,8 @@ export default function EnterBTCAmount() {
                     <input
                         id="amount-btc-input"
                         name="amountBTC"
-                        type="float"
+                        type="number"
+                        step="any"
                         placeholder="0.00"
                         className={"" + (errors.amountBTC ? " error-borders" : "")}
                         onChange={() => {

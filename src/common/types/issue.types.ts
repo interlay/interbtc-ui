@@ -48,7 +48,6 @@ export interface IssueState {
     id: string;
     btcTxId: string;
     issueRequests: Map<string, IssueRequest[]>;
-    transactionListeners: string[];
     wizardInEditMode: boolean;
     vaultIssues: VaultIssue[];
 }

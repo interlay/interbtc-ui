@@ -1,6 +1,10 @@
 import { Dispatch } from "redux";
-import fetchPrices from "./price-data";
-import fetchBtcRelayAndBitcoinHeight from "./block-height-data";
+import fetchPrices from "./price-watcher";
+import fetchBtcRelayAndBitcoinHeight from "./block-height-watcher";
+import fetchTotals from "./totals-watcher";
+import fetchBalances from "./balances-watcher";
+import fetchIssueTransactions from "./issue-transaction.watcher";
+import fetchRedeemTransactions from "./redeem-transaction.watcher";
 import { StoreState } from "../types/util.types";
 
 export default function startFetchingLiveData(dispatch: Dispatch, store: StoreState): void {
@@ -13,5 +17,21 @@ export default function startFetchingLiveData(dispatch: Dispatch, store: StoreSt
 
     // FETCH BTC-RELAY HEIGHT AND BITCOIN HEIGHT
     fetchBtcRelayAndBitcoinHeight(dispatch, store);
-    window.setInterval(() => fetchBtcRelayAndBitcoinHeight(dispatch, store), 10000);
+    window.setInterval(() => fetchBtcRelayAndBitcoinHeight(dispatch, store), 20000);
+
+    // FETCH TOTALS
+    fetchTotals(dispatch, store);
+    window.setInterval(() => fetchTotals(dispatch, store), 60000);
+
+    // FETCH BALANCES
+    fetchBalances(dispatch, store);
+    window.setInterval(() => fetchBalances(dispatch, store), 5000);
+
+    // FETCH ISSUE TRANSACTIONS
+    fetchIssueTransactions(dispatch, store);
+    window.setInterval(() => fetchIssueTransactions(dispatch, store), 5000);
+
+    // FETCH REDEEM TRANSACTIONS
+    fetchRedeemTransactions(dispatch, store);
+    window.setInterval(() => fetchRedeemTransactions(dispatch, store), 5000);
 }

@@ -2,7 +2,7 @@ import { Dispatch } from "redux";
 import { updateHeightsAction } from "../actions/general.actions";
 import { StoreState } from "../types/util.types";
 
-export default async function fetchBtcRelayAndBitcoinHeight(dispatch: Dispatch, store: StoreState) {
+export default async function fetchBtcRelayAndBitcoinHeight(dispatch: Dispatch, store: StoreState): Promise<void> {
     const state = store.getState();
     const { btcRelayHeight, bitcoinHeight, polkaBtcLoaded } = state.general;
     if (!polkaBtcLoaded) return;

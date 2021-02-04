@@ -269,3 +269,24 @@ export const updateBalances = async (
         dispatch(updateBalancePolkaBTCAction(balancePolkaBTC));
     }
 };
+
+export const requestsInStore = (
+    storeRequests: IssueRequest[] | RedeemRequest[],
+    parachainRequests: IssueRequest[] | RedeemRequest[]
+): boolean => {
+    if (storeRequests.length !== parachainRequests.length) return false;
+    let inStore = true;
+
+    storeRequests.forEach((storeRequest: IssueRequest | RedeemRequest) => {
+        let found = false;
+        parachainRequests.forEach((parachainRequest: IssueRequest | RedeemRequest) => {
+            if (storeRequest.id === parachainRequest.id) {
+                found = true;
+            }
+        });
+        if (!found) {
+            inStore = false;
+        }
+    });
+    return inStore;
+};
