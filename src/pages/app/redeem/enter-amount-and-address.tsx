@@ -30,7 +30,7 @@ type AmountAndAddressForm = {
 export default function EnterAmountAndAddress() {
     const { t } = useTranslation();
     const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
-    const { balancePolkaBTC, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+    const { balancePolkaBTC, polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
     const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
     const defaultValues = amount ? { defaultValues: { amountPolkaBTC: amount, btcAddress: "" } } : undefined;
     const { register, handleSubmit, errors, getValues } = useForm<AmountAndAddressForm>(defaultValues);
@@ -114,6 +114,13 @@ export default function EnterAmountAndAddress() {
         setUsdAmount(calculateAmount(amount,usdPrice));
         const fee = await window.polkaBTC.redeem.getFeesToPay(amount);
         setRedeemFee(fee);
+    }
+
+    const checkAddress = () => {
+        if (!address) {
+            toast.warning(t("redeem_page.must_select_account_warning"));
+            return;
+        }
     }
 
     return (
@@ -230,9 +237,10 @@ export default function EnterAmountAndAddress() {
                 </div>
             </div>
             <ButtonMaybePending
+                type="submit"
                 className="btn btn-primary app-btn"
                 isPending={isRequestPending}
-                onClick={onSubmit}
+                onClick={checkAddress}
             >
                 {t("confirm")}
             </ButtonMaybePending>

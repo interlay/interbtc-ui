@@ -87,6 +87,7 @@
     "enter_recipient_address": "Please enter the recipient address",
     "successful_transfer": "Successful transfer",
     "redeem_page": {
+        "must_select_account_warning": "No account selected. Please select an account to redeem.",
         "waiting_for": "Waiting for",
         "typically_takes": "This typically takes only a few minutes but may sometimes take up to 6 hours.",
         "from_vault": "from Vault",
@@ -203,7 +204,7 @@
         }
     },
     "issue_page": {
-        "must_select_account_warning": "You can't issue until you select your account",
+        "must_select_account_warning": "No account selected. Please select an account to proceed to issue PolkaBTC.",
         "transaction_not_set": "Transaction not set in",
         "time": "time",
         "issuing_title": "Issuing",
