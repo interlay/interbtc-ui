@@ -1,5 +1,6 @@
 {
     "previous": "Previous",
+    "prev": "Prev",
     "confirm": "Confirm",
     "next": "Next",
     "close": "Close",
@@ -41,6 +42,8 @@
     "select_an_account": "Please select an account",
     "install_supported_wallets": "Please install one of the currently supported wallets",
     "btc_relay_status": "BTC Relay Status:",
+    "no_data": "Unable to fetch data.",
+    "empty_data": "No data available.",
     "source": "Source",
     "feed": "Feed",
     "app": "App",
@@ -84,6 +87,7 @@
     "enter_recipient_address": "Please enter the recipient address",
     "successful_transfer": "Successful transfer",
     "redeem_page": {
+        "must_select_account_warning": "No account selected. Please select an account to redeem.",
         "waiting_for": "Waiting for",
         "typically_takes": "This typically takes only a few minutes but may sometimes take up to 6 hours.",
         "from_vault": "from Vault",
@@ -151,15 +155,52 @@
         "total_locked": "Total locked",
         "total_issued": "Total issued",
         "capacity": "Capacity",
+        "collators": {
+          "total_collators_chart": "Total active collators",
+          "active_collators": "Active Collators"
+        },
+        "issue": {
+            "issue": "Issue Requests",
+            "issued": "Issued",
+            "total_polkabtc": "{{amount}} PolkaBTC",
+            "total_issued": "{{amount}} PolkaBTC issued",
+            "total_issues": "{{amount}} successful issues",
+            "total_issued_chart": "Total PolkaBTC issued",
+            "perday_issued_chart": "PolkaBTC issued per day"
+        },
+        "redeem": {
+            "redeem": "Redeem Requests",
+            "total_redeemed": "{{amount}} BTC redeemed",
+            "total_redeems": "{{amount}} executed redeems",
+            "success_rate": "{{rate}}% success rate",
+            "total_redeemed_chart": "Total BTC redeemed",
+            "perday_redeemed_chart": "BTC redeemed per day"
+        },
         "relay": {
             "btcrelay": "BTC Relay",
             "blocks": "Blocks",
             "block_height": "Block height",
             "block_hash": "Block hash",
             "timestamp": "Timestamp"
+        },
+        "vaults": {
+            "vaults": "Vaults",
+            "total_vaults_chart": "Total active vaults",
+            "active_vaults": "Active Vaults",
+            "total_collateral_locked": "Total collateral locked",
+            "perday_collateral_locked": "Collateral locked per day",
+            "collateral_locked": "Collateral Locked",
+            "collateralization": "Collateralization",
+            "secure_threshold": "Secure Threshold: {{amount}}%",
+            "polkabtc_capacity": "PolkaBTC Capacity"
+        },
+        "parachain": {
+            "total_relayers_chart": "Total active relayers",
+            "active_relayers": "Active Staked Relayers"
         }
     },
     "issue_page": {
+        "must_select_account_warning": "No account selected. Please select an account to proceed to issue PolkaBTC.",
         "transaction_not_set": "Transaction not set in",
         "time": "time",
         "issuing_title": "Issuing",

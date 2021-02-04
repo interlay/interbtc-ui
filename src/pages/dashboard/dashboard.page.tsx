@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ReactElement } from "react";
 
 import "./dashboard.page.scss";
 import Row1 from "./rows/row1";
 import Row2 from "./rows/row2";
 import Row3 from "./rows/row3";
 
-export default function DashboardPage() {
+export default function DashboardPage(): ReactElement {
     const [timer, setTimer] = useState(0);
 
     useEffect(() => {

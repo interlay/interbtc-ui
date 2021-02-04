@@ -32,9 +32,8 @@ type AmountAndAddressForm = {
 
 export default function EnterAmountAndAddress() {
     const { t } = useTranslation();
-    const { balancePolkaBTC, polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
+    const { balancePolkaBTC, polkaBtcLoaded, prices, address } = useSelector((state: StoreType) => state.general);
     const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
-    const vaultDotAddress = useSelector((state: StoreType) => state.redeem.vaultDotAddress);
     const defaultValues = amount ? { defaultValues: { amountPolkaBTC: amount, btcAddress: "" } } : undefined;
     const { register, handleSubmit, errors, getValues } = useForm<AmountAndAddressForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
@@ -91,7 +90,7 @@ export default function EnterAmountAndAddress() {
             const amount = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
             const totalAmountBTC = ((new Big(amountPolkaBTC)).sub(new Big(fee))).toString();
 
-            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultDotAddress);
+            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultId.toString());
             const requestResult = await window.polkaBTC.redeem.request(amount, btcAddress, vaultAccountId);
 
             // get the redeem id from the request redeem event
@@ -136,6 +135,13 @@ export default function EnterAmountAndAddress() {
         setUsdAmount(calculateAmount(amount,prices.bitcoin.usd.toString()));
         const fee = await window.polkaBTC.redeem.getFeesToPay(amount);
         setRedeemFee(fee);
+    }
+
+    const checkAddress = () => {
+        if (!address) {
+            toast.warning(t("redeem_page.must_select_account_warning"));
+            return;
+        }
     }
 
     return (
@@ -251,9 +257,10 @@ export default function EnterAmountAndAddress() {
                 </div>
             </div>
             <ButtonMaybePending
+                type="submit"
                 className="btn btn-primary app-btn"
                 isPending={isRequestPending}
-                onClick={onSubmit}
+                onClick={checkAddress}
             >
                 {t("confirm")}
             </ButtonMaybePending>
