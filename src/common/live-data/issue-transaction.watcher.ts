@@ -31,6 +31,15 @@ export default async function fetchIssueTransactions(dispatch: Dispatch, store: 
             let shouldRequestBeUpdate = false;
             const parachainRequest = parachainRequests.filter((request) => request.id === storeRequest.id)[0];
 
+            if (parachainRequest.amountBTC !== storeRequest.amountBTC) {
+                storeRequest.amountBTC = parachainRequest.amountBTC;
+                storeRequest.fee = parachainRequest.fee;
+                (storeRequest.totalAmount = new Big(parachainRequest.amountBTC)
+                    .add(new Big(parachainRequest.fee))
+                    .toString()),
+                    (shouldRequestBeUpdate = true);
+            }
+
             if (!storeRequest.completed && !storeRequest.cancelled) {
                 if (!storeRequest.btcTxId) {
                     const btcTxId = await window.polkaBTC.btcCore.getTxIdByRecipientAddress(
