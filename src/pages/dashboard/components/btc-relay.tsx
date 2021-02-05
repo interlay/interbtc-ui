@@ -27,7 +27,12 @@ const BtcRelay = (): ReactElement => {
                     </h1>
                 </div>
                 <div className="button-container">
-                    <ButtonComponent buttonName="view BTC Relay" propsButtonColor="d_green" />
+                    <ButtonComponent
+                        buttonName="view BTC Relay"
+                        propsButtonColor="d_green"
+                        buttonId="btc-relay"
+                        buttonLink="/dashboard/relay"
+                    />
                 </div>
             </div>
             <div className="circle-container">

@@ -27,21 +27,24 @@ const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
     }, [fetchVaultsPerDay]);
     return (
         <div className="card">
-            {linkButton ? (
-                <div className="card-top-content">
-                    <div className="values-container">
-                        <h1 style={{ color: `${getAccents("d_pink").colour}` }}>
-                            {t("dashboard.vaults.active_vaults")}
-                        </h1>
-                        <h2>{totalVaultsPerDay[totalVaultsPerDay.length - 1]?.count}</h2>
-                    </div>
-                    <div className="button-container">
-                        <ButtonComponent buttonName="view all vaults" propsButtonColor="d_pink" />
-                    </div>
+            <div className="card-top-content">
+                <div className="values-container">
+                    <h1 style={{ color: `${getAccents("d_pink").colour}` }}>{t("dashboard.vaults.active_vaults")}</h1>
+                    <h2>{totalVaultsPerDay[totalVaultsPerDay.length - 1]?.count}</h2>
                 </div>
-            ) : (
-                ""
-            )}
+                {linkButton ? (
+                    <div className="button-container">
+                        <ButtonComponent
+                            buttonName="view all vaults"
+                            propsButtonColor="d_pink"
+                            buttonId="active-vaults"
+                            buttonLink="/dashboard/vaults"
+                        />
+                    </div>
+                ) : (
+                    ""
+                )}
+            </div>
             <LineChartComponent
                 colour="d_pink"
                 label={t("dashboard.vaults.total_vaults_chart") as string}

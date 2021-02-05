@@ -1,7 +1,7 @@
 version: "3.8"
 services:
     polkabtc:
-        image: "registry.gitlab.com/interlay/btc-parachain:dev-a2fda3a7"
+        image: "registry.gitlab.com/interlay/btc-parachain:dev-ab676f94"
         command:
             - btc-parachain-standalone
             - --unsafe-rpc-external
@@ -146,7 +146,7 @@ services:
         ports:
             - "5432:5432"
     polkabtc_stats:
-        image: "registry.gitlab.com/interlay/polkabtc-stats:master-d665f8"
+        image: "registry.gitlab.com/interlay/polkabtc-stats:master-71b899"
         restart: always
         depends_on:
             - postgres
