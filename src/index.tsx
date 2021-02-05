@@ -5,7 +5,6 @@ import { configureStore } from "./store";
 import { Provider } from "react-redux";
 // import * as serviceWorker from './serviceWorker';
 const store = configureStore();
-window.store = store;
 window.isFetchingActive = false;
 
 ReactDOM.render(

@@ -1,17 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 import { Table, Button } from "react-bootstrap";
-import { parachainToUIRedeemRequest } from "../../../common/utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import { startTransactionWatcherRedeem } from "../../../common/utils/redeem-transaction.watcher";
 import {
-    updateAllRedeemRequestsAction,
     redeemExpiredAction,
     changeRedeemIdAction
 } from "../../../common/actions/redeem.actions";
-import { toast } from "react-toastify";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
 import { useTranslation } from 'react-i18next';
 import ReimburseModal from "./reimburse-modal";
@@ -21,7 +17,6 @@ import RedeemModal from "./modal/redeem-modal";
 export default function RedeemRequests() {
     const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
     const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
-    const { transactionListeners } = useSelector((state: StoreType) => state.redeem);
     const [isRedeemExpirationSubscribed, setIsRedeemExpirationSubscribed] = useState(false);
     const [showReimburseModal, setShowReimburseModal] = useState(false);
     const [reimburseRequest, setReimburseRequest] = useState<RedeemRequest>();
@@ -85,12 +80,6 @@ export default function RedeemRequests() {
 
         // if there are redeem requests, check their btc confirmations and if they are expired
         redeemRequests.forEach(async (request: RedeemRequest) => {
-            // start watcher for new redeem requests
-            if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
-                // the tx watcher updates the storage cache every 10s
-                startTransactionWatcherRedeem(request, dispatch);
-            }
-
             if (!isRedeemExpirationSubscribed) {
                 setIsRedeemExpirationSubscribed(true);
                 window.polkaBTC.redeem.subscribeToRedeemExpiry(accountId, redeemExpired);
@@ -98,63 +87,12 @@ export default function RedeemRequests() {
         });
     }, [
         redeemRequests,
-        transactionListeners,
         address,
         dispatch,
         isRedeemExpirationSubscribed,
         redeemExpired,
         polkaBtcLoaded,
     ]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!polkaBtcLoaded) return;
-
-            try {
-                const accountId = window.polkaBTC.api.createType("AccountId", address);
-                // get all redeem request from parachain
-                const redeemRequestMap = await window.polkaBTC.redeem.mapForUser(accountId);
-                const allRequests = [];
-
-                for (const [key, value] of redeemRequestMap) {
-                    allRequests.push(parachainToUIRedeemRequest(key, value));
-                }
-
-                // get btc data for each redeem request
-                await Promise.all(
-                    allRequests.map(async (request) => {
-                        try {
-                            request.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpReturn(
-                                request.id,
-                                request.btcAddress,
-                                request.amountPolkaBTC
-                            );
-                        } catch (err) {
-                            console.log("Redeem Id: " + request.id + " " + err);
-                        }
-                    })
-                );
-                await Promise.all(
-                    allRequests.map(async (request) => {
-                        try {
-                            if (request.btcTxId) {
-                                request.confirmations = (
-                                    await window.polkaBTC.btcCore.getTransactionStatus(request.btcTxId)
-                                ).confirmations;
-                            }
-                        } catch (err) {
-                            console.log(err);
-                        }
-                    })
-                );
-
-                dispatch(updateAllRedeemRequestsAction(allRequests));
-            } catch (error) {
-                toast.error(error.toString());
-            }
-        };
-        fetchData();
-    }, [polkaBtcLoaded, dispatch, address]);
 
     const requestClicked = (request: RedeemRequest): void => {
         dispatch(changeRedeemIdAction(request.id));

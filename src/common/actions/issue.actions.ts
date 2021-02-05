@@ -11,7 +11,6 @@ import {
     UPDATE_ISSUE_GRIEFING_COLLATERAL,
     ADD_ISSUE_REQUEST,
     UPDATE_ISSUE_REQUEST,
-    ADD_TRANSACTION_LISTENER_ISSUE,
     ADD_VAULT_ISSUES,
     OPEN_WIZARD_IN_EDIT_MODE,
     UPDATE_ALL_ISSUE_REQUESTS,
@@ -28,7 +27,6 @@ import {
     UpdateIssueGriefingCollateral,
     AddIssueRequest,
     UpdateIssueRequest,
-    AddTransactionListenerIssue,
     OpenWizardInEditMode,
     AddVaultIssues,
 } from "../types/actions.types";
@@ -95,11 +93,6 @@ export const addIssueRequestAction = (request: IssueRequest): AddIssueRequest =>
 export const updateIssueRequestAction = (request: IssueRequest): UpdateIssueRequest => ({
     type: UPDATE_ISSUE_REQUEST,
     request,
-});
-
-export const addTransactionListenerIssue = (id: string): AddTransactionListenerIssue => ({
-    type: ADD_TRANSACTION_LISTENER_ISSUE,
-    id,
 });
 
 export const addVaultIssuesAction = (vaultIssues: VaultIssue[]): AddVaultIssues => ({
