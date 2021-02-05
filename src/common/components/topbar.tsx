@@ -119,7 +119,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                                     {t("nav_relayer")}
                                 </Link>
                             )}
-                            <a className="nav-link" href="https://docs.polkabtc.io/#/" target="_blank">
+                            <a className="nav-link" href="https://docs.polkabtc.io/#/" target="_blank" rel="noopener noreferrer">
                                 {t("nav_docs")}
                             </a>
                         </Nav>
