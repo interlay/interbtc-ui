@@ -29,6 +29,10 @@ export function getAccents(colour: string): Style {
         case "d_red":
             accent.colour = "#f32013";
             break;
+        case "d_white":
+            accent.colour = "#ffffff";
+            accent.filter = "invert(100%) sepia(3%) saturate(3%) hue-rotate(71deg) brightness(106%) contrast(100%)";
+            break;
         default:
             accent.colour = "#a9a9a9";
             accent.filter = "invert(82%) sepia(7%) saturate(9%) hue-rotate(142deg) brightness(83%) contrast(85%)";

@@ -36,7 +36,12 @@ const ActiveStakedRelayers = ({ linkButton }: ActiveStakedRelayers): ReactElemen
                 </div>
                 {linkButton ? (
                     <div className="button-container">
-                        <ButtonComponent buttonName="view relayers" propsButtonColor="d_orange" />
+                        <ButtonComponent
+                            buttonName="view relayers"
+                            propsButtonColor="d_orange"
+                            buttonId="active-staked"
+                            buttonLink="/dashboard/parachain"
+                        />
                     </div>
                 ) : (
                     ""

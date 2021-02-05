@@ -1,11 +1,15 @@
 @import "../../variables";
 @import "../../mixins";
 
-.dashboard-page {
+.dashboard-items-container {
     text-align: center;
     min-height: 100vh;
-    background-color: #fafafa;
+
     display: grid;
+    padding: 8px 0px;
+}
+.main-container {
+    background-color: #fafafa;
     padding: 30px 0px;
 }
 .card {
@@ -93,8 +97,8 @@
     }
     .status-circle {
         background: none;
-        width: 200px;
-        height: 200px;
+        width: 250px;
+        height: 250px;
         border-radius: 50%;
         border: 3px solid grey;
         @include flexCenter();
@@ -117,34 +121,63 @@
         height: 250px !important;
     }
 }
-
-.section-gap {
-    margin-top: 60px;
+.section-top-gap {
+    margin-top: 40px;
+}
+.section-bottom-gap {
+    margin-bottom: 40px;
 }
 .latest-block-text {
-    font-size: 10px;
+    font-size: 11px;
     font-family: airbnb-cereal-bold;
 }
 .title-text {
-    font-size: 20px;
+    font-size: 25px;
     font-family: airbnb-cereal-bold;
+}
+.title-container {
+    background-color: #fafafa;
+
+    @include flexCenter();
+    p,
+    span {
+        font-family: airbnb-cereal-book;
+    }
+    h1 {
+        margin-bottom: 0.2rem;
+    }
+}
+.title-text-container {
+    text-align: center;
+}
+.section-div-line {
+    width: 80%;
+    height: 1px;
+    margin: auto;
+    background-color: black;
+    opacity: 0.1;
 }
 
 @media only screen and (min-width: $desktop-size) {
-    .dashboard-page {
-        display: flex;
-        justify-content: center;
-        padding: 50px 0px;
+    .dashboard-items-container {
+        @include justifyCenter();
+    }
+    .main-container {
+        padding: 40px 0px;
     }
     .row-grid {
         grid-template-columns: 1fr 1fr 1fr;
         column-gap: 40px;
+    }
+    .title-text {
+        font-size: 30px;
     }
 
     .card {
         width: 100%;
         min-height: 340px;
         padding: 30px 20px;
+        // box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0);
         h1 {
             font-size: 16px;
             margin-bottom: 0.5rem;
@@ -162,6 +195,10 @@
             padding: 12px 12px;
         }
     }
+    // .card:hover {
+    //     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    //     -webkit-transition: box-shadow 0.2s ease-in;
+    // }
     .chart-container {
         margin-top: 20px;
     }
@@ -171,5 +208,18 @@
     .rows-container {
         max-width: 1700px;
         width: 90%;
+    }
+    .latest-block-text {
+        font-size: 12px;
+        font-family: airbnb-cereal-bold;
+    }
+    .section-top-gap {
+        margin-top: 40px;
+    }
+    .section-bottom-gap {
+        margin-bottom: 40px;
+    }
+    .section-div-line {
+        width: 40%;
     }
 }

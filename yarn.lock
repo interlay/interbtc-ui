@@ -1182,12 +1182,12 @@
     axios "^0.19.2"
     typescript "~3.5.2"
 
-"@interlay/polkabtc-stats@0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-stats/-/polkabtc-stats-0.0.8.tgz#75fc81501012f65ff1e0f98384cde65f4e2dc01f"
-  integrity sha512-AuVZf5vQ4Z+mdLC9YQbhsX/TtvdgldcHTpzPIdDwtUdcSpVb2UkIMTkdKyH4fzuwEpyTFCgDC+MMD42ur6cGSA==
+"@interlay/polkabtc-stats@0.0.10":
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-stats/-/polkabtc-stats-0.0.10.tgz#8bab027f55ee1f2fe50158696b691a40323f062d"
+  integrity sha512-4gLej+6miBLBpQxF5OSERjwyiJiQcuyWIfUH2U7GqhJwkZrt2b0Iu+SYypqyhW0d+j3vm9qfPhK5njeUz2paxg==
   dependencies:
-    "@interlay/polkabtc" "0.8.0"
+    "@interlay/polkabtc" "0.8.2"
     "@interlay/polkabtc-types" "0.4.0"
     "@polkadot/api" "3.6.1"
     "@polkadot/rpc-core" "3.6.1"
@@ -1209,7 +1209,22 @@
   resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.4.0.tgz#05329cefe512b95678990539b71f3a25f891dcae"
   integrity sha512-o52W4PKioZARyAA+Pnptpwu56E60LTXhmeEBR+TXCV4gRNUpWfQ6FAy9eJkWsAQ5E+YRv7eiAZhfFKJvft91pA==
 
-"@interlay/polkabtc@0.8.0", "@interlay/polkabtc@^0.8.0":
+"@interlay/polkabtc@0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.8.2.tgz#43fa6274820503c615fa60c177e7c69e5641fba0"
+  integrity sha512-RamWU65QZKS3Io3QCFhkzTZn2DdKFnTNWn0SZ9t85rsz7mzlT5NvUuV398rEc2lkRRj9tP1ScjC3uSwLhk9zgw==
+  dependencies:
+    "@interlay/esplora-btc-api" "^0.3.3"
+    "@interlay/polkabtc-types" "0.4.0"
+    "@types/big.js" "^4.0.5"
+    big.js "^6.0.1"
+    bitcoinjs-lib "^5.2.0"
+    cross-fetch "^3.0.6"
+    regtest-client "^0.2.0"
+    sinon "^9.0.3"
+    ts-mock-imports "^1.3.0"
+
+"@interlay/polkabtc@^0.8.0":
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.8.0.tgz#1bb30bef3725f4dbb4273a4f46a0dc9cd571d5bd"
   integrity sha512-GQpzgWgjb473rxN7X3LhP/XrdGHZfsQcNYwCS+zM7C26j1ak683Q5XLQgsDb4f6oSQnE60NLEBTIJn4f0ez0/A==

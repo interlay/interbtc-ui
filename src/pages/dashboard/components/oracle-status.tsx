@@ -50,7 +50,12 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
                 </div>
                 {linkButton ? (
                     <div className="button-container">
-                        <ButtonComponent buttonName="view oracles" propsButtonColor="d_green" />
+                        <ButtonComponent
+                            buttonName="view oracles"
+                            propsButtonColor="d_green"
+                            buttonId="oracle-status"
+                            buttonLink="/dashboard/oracles"
+                        />
                     </div>
                 ) : (
                     ""
