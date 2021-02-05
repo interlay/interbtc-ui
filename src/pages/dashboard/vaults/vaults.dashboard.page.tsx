@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import ActiveVaults from "../components/active-vaults";
 import CollateralLocked from "../components/collateral-locked";
-import Collaterization from "../components/collaterization";
+import Collateralization from "../components/collateralization";
 
 export default function VaultsDashboard(): ReactElement {
     const { t } = useTranslation();
@@ -26,7 +26,7 @@ export default function VaultsDashboard(): ReactElement {
                                     <CollateralLocked />
                                 </div>
                                 <div className="col-md-4">
-                                    <Collaterization />
+                                    <Collateralization />
                                 </div>
                             </div>
                         </div>

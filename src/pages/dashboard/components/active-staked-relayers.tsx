@@ -6,6 +6,7 @@ import LineChartComponent from "./line-chart-component";
 import { useTranslation } from "react-i18next";
 
 const ActiveStakedRelayers = (): ReactElement => {
+    const displayLinkBtn = false;
     const statsApi = usePolkabtcStats();
     const { t } = useTranslation();
 
@@ -30,9 +31,18 @@ const ActiveStakedRelayers = (): ReactElement => {
                     </h1>
                     <h2>{totalRelayersPerDay[totalRelayersPerDay.length - 1]?.count}</h2>
                 </div>
-                <div className="button-container">
-                    <ButtonComponent buttonName="view relayers" propsButtonColor="d_orange" />
-                </div>
+                {displayLinkBtn ? (
+                    <div className="button-container">
+                        <ButtonComponent
+                            buttonName="view relayers"
+                            propsButtonColor="d_orange"
+                            buttonId="active-staked"
+                            buttonLink="/"
+                        />
+                    </div>
+                ) : (
+                    ""
+                )}
             </div>
             <LineChartComponent
                 colour="d_orange"

@@ -45,7 +45,12 @@ const OracleStatus = (): ReactElement => {
                     </h1>
                 </div>
                 <div className="button-container">
-                    <ButtonComponent buttonName="view oracles" propsButtonColor="d_green" />
+                    <ButtonComponent
+                        buttonName="view oracles"
+                        propsButtonColor="d_green"
+                        buttonId="oracle-status"
+                        buttonLink="/dashboard/oracles"
+                    />
                 </div>
             </div>
             <div className="circle-container">

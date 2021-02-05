@@ -14,6 +14,7 @@ type CollateralLockedProps = {
 
 const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement => {
     const totalLockedDOT = useSelector((state: StoreType) => state.general.totalLockedDOT);
+    const { prices } = useSelector((state: StoreType) => state.general);
 
     const { t } = useTranslation();
     const statsApi = usePolkabtcStats();
@@ -51,10 +52,15 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
                             {t("dashboard.vaults.collateral_locked")}
                         </h1>
                         <h2>{totalLockedDOT} DOT</h2>
-                        <h2>$17,0030</h2>
+                        <h2>${(prices.polkadot.usd * parseInt(totalLockedDOT)).toLocaleString()}</h2>
                     </div>
                     <div className="button-container">
-                        <ButtonComponent buttonName="view all vaults" propsButtonColor="d_pink" />
+                        <ButtonComponent
+                            buttonName="view all vaults"
+                            propsButtonColor="d_pink"
+                            buttonId="collateral-locked"
+                            buttonLink="/dashboard/vaults"
+                        />
                     </div>
                 </div>
             ) : (
@@ -64,7 +70,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
                 <LineChartComponent
                     colour={["d_pink", "d_grey"]}
                     label={[
-                        t("dashboard.vaults.total_collators_chart"),
+                        t("dashboard.vaults.total_collateral_locked"),
                         t("dashboard.vaults.perday_collateral_locked"),
                     ]}
                     yLabels={cumulativeCollateralPerDay.map((dataPoint) =>
