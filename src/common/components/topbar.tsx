@@ -119,15 +119,9 @@ export default function Topbar(props: TopbarProps): ReactElement {
                                     {t("nav_relayer")}
                                 </Link>
                             )}
-                            <Link className="nav-link" to="/user-guide">
-                                {t("user_guide")}
-                            </Link>
-                            <Link className="nav-link" to="/about">
-                                {t("nav_about")}
-                            </Link>
-                            <Link className="nav-link" to="/faq">
-                                {t("nav_faq")}
-                            </Link>
+                            <a className="nav-link" href="https://docs.polkabtc.io/#/" target="_blank">
+                                {t("nav_docs")}
+                            </a>
                         </Nav>
                         <Nav className="d-inline">
                             <DropdownButton
