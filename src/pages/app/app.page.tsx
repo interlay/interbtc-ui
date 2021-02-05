@@ -47,10 +47,10 @@ export default function AppPage(): ReactElement {
         </div>
         <div className="row mt-2 justify-content-center">
             <div className="col-xl-3 btc-balance-wrapper">
-                <span className="heavy">{balancePolkaBTC}</span> PolkaBTC
+                <span className="heavy">{balancePolkaBTC || "0"}</span> PolkaBTC
             </div>
             <div className="col-xl-3 dot-balance-wrapper">
-                <span className="heavy">{balanceDOT}</span> DOT
+                <span className="heavy">{balanceDOT || "0"}</span> DOT
             </div>
         </div>
         <div className="container mt-5">
@@ -94,6 +94,7 @@ export default function AppPage(): ReactElement {
                 </div>
             </div>
         </div>
-        {activeTab === ActiveTab.Issue ? <IssueRequests /> : <RedeemRequests />}
+        {activeTab === ActiveTab.Issue && <IssueRequests />} 
+        {activeTab === ActiveTab.Redeem && <RedeemRequests />}
     </section>;
 }
