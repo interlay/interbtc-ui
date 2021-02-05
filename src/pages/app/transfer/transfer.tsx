@@ -48,7 +48,8 @@ export default function Transfer() {
                     <input
                         id="amount-btc-input"
                         name="amountPolkaBTC"
-                        type="float"
+                        type="number"
+                        step="any"
                         placeholder="0.00"
                         className={"" + (errors.amountPolkaBTC ? " error-borders" : "")}
                         onChange={() => {
