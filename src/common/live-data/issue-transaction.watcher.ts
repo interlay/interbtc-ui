@@ -34,10 +34,9 @@ export default async function fetchIssueTransactions(dispatch: Dispatch, store: 
             if (parachainRequest.amountBTC !== storeRequest.amountBTC) {
                 storeRequest.amountBTC = parachainRequest.amountBTC;
                 storeRequest.fee = parachainRequest.fee;
-                (storeRequest.totalAmount = new Big(parachainRequest.amountBTC)
-                    .add(new Big(parachainRequest.fee))
-                    .toString()),
-                    (shouldRequestBeUpdate = true);
+                const amount = new Big(parachainRequest.amountBTC).add(new Big(parachainRequest.fee));
+                storeRequest.totalAmount = amount.toString();
+                shouldRequestBeUpdate = true;
             }
 
             if (!storeRequest.completed && !storeRequest.cancelled) {
