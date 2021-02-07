@@ -1,5 +1,6 @@
 {
     "previous": "Previous",
+    "prev": "Prev",
     "confirm": "Confirm",
     "next": "Next",
     "close": "Close",
@@ -13,6 +14,7 @@
     "fee": "Fee",
     "retry": "Retry",
     "message": "Message",
+    "timestamp": "Timestamp",
     "issue_requests": "Issue Requests",
     "griefing_collateral": "Griefing Collateral",
     "status": "Status",
@@ -41,6 +43,8 @@
     "select_an_account": "Please select an account",
     "install_supported_wallets": "Please install one of the currently supported wallets",
     "btc_relay_status": "BTC Relay Status:",
+    "no_data": "Unable to fetch data.",
+    "empty_data": "No data available.",
     "source": "Source",
     "feed": "Feed",
     "app": "App",
@@ -81,6 +85,7 @@
     "recipient": "Recipient",
     "confirmed": "Confirmed",
     "address": "Address",
+    "date": "Date",
     "enter_recipient_address": "Please enter the recipient address",
     "successful_transfer": "Successful transfer",
     "redeem_page": {
@@ -118,7 +123,7 @@
         "amount": "Amount",
         "output_BTC_address": "Output BTC Address",
         "BTC_transaction": "BTC Transaction",
-        "confirmations": "Confirmations",
+        "btc_confirmations": "BTC Confirmations",
         "completed": "Completed",
         "please_enter_amount": "Please enter the amount",
         "reimbursed": "Reimbursed",
@@ -151,15 +156,54 @@
         "total_locked": "Total locked",
         "total_issued": "Total issued",
         "capacity": "Capacity",
+        "collators": {
+            "total_collators_chart": "Total active collators",
+            "active_collators": "Active Collators"
+        },
+        "issue": {
+            "issue": "Issue Requests",
+            "issued": "Issued",
+            "total_polkabtc": "PolkaBTC",
+            "total_issued": "PolkaBTC issued",
+            "total_issues": "successful issues",
+            "total_issued_chart": "Total PolkaBTC issued",
+            "perday_issued_chart": "PolkaBTC issued per day",
+            "issue_requests": "Succesful Issue Requests"
+        },
+        "redeem": {
+            "redeem": "Redeem Requests",
+            "total_redeemed": "BTC redeemed",
+            "total_redeems": "Executed redeems",
+            "success_rate": "Success rate",
+            "total_redeemed_chart": "Total BTC redeemed",
+            "perday_redeemed_chart": "BTC redeemed per day"
+        },
         "relay": {
             "btcrelay": "BTC Relay",
             "blocks": "Blocks",
             "block_height": "Block height",
             "block_hash": "Block hash",
             "timestamp": "Timestamp"
+        },
+        "vaults": {
+            "vaults": "Vaults",
+            "total_vaults_chart": "Total active vaults",
+            "active_vaults": "Active Vaults",
+            "total_collateral_locked": "Total collateral locked",
+            "perday_collateral_locked": "Collateral locked per day",
+            "collateral_locked": "Collateral Locked",
+            "collateralization": "Collateralization",
+            "secure_threshold": "Secure Threshold: {{amount}}%",
+            "polkabtc_capacity": "PolkaBTC Capacity"
+        },
+        "parachain": {
+            "total_relayers_chart": "Total active relayers",
+            "active_relayers": "Active Staked Relayers"
         }
     },
     "issue_page": {
+        "issue_requests": "Issue Requests",
+        "recent_requests": "Recent Requests",
         "transaction_not_set": "Transaction not set in",
         "time": "time",
         "issuing_title": "Issuing",
@@ -195,7 +239,6 @@
         "btc_transaction": "BTC Transaction",
         "in_parachain_block": "in parachain block",
         "confirmations": "Confirmations",
-        "pending": "Pending...",
         "issue_request_not_found": "Exception: Issue request not found.",
         "confirmation": "Confirmation",
         "your_request_processed": "Your request is now being processed.",
@@ -223,7 +266,10 @@
         "recipient": "Recipient:",
         "amont_with_fee": "Amount: ",
         "using_electrum": "If you are using the Electrum desktop wallet, copy+paste this into the \"Pay to\" field.",
-        "copied_values_are": "Note: copied values are in"
+        "copied_values_are": "Note: copied values are in",
+        "executed": "Executed",
+        "pending": "Pending",
+        "cancelled": "Cancelled"
     },
     "landing": {
         "defi_ecosystem": "Bitcoin for Polkadot's DeFi Ecosystem",

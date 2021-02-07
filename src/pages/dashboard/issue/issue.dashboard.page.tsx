@@ -1,26 +1,25 @@
 import React, { useState, useEffect, ReactElement, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 import { satToBTC } from "@interlay/polkabtc";
-
+import { getAccents } from "../../../pages/dashboard/dashboard-colors";
 import { StoreType } from "../../../common/types/util.types";
 import { DashboardIssueInfo } from "../../../common/types/issue.types";
 import { defaultTableDisplayParams } from "../../../common/utils/utils";
 import DashboardTable from "../../../common/components/dashboard-table/dashboard-table";
 import PolkaBTC from "../components/polkabtc";
+import "../dashboard-subpage.scss";
 
 export default function IssueDashboard(): ReactElement {
-    const { totalPolkaBTC } = useSelector((state: StoreType) => state.general);
+    const { totalPolkaBTC, prices } = useSelector((state: StoreType) => state.general);
     const { t } = useTranslation();
     const statsApi = usePolkabtcStats();
-
     const [issueRequests, setIssueRequests] = useState(new Array<DashboardIssueInfo>());
     const [tableParams, setTableParams] = useState(defaultTableDisplayParams());
 
-    const [totalSuccessfulIssues, setTotalSuccessfulIssues] = useState("0");
-    const [totalIssues, setTotalIssues] = useState(0);
+    const [totalSuccessfulIssues, setTotalSuccessfulIssues] = useState("-");
+    const [totalIssues, setTotalIssues] = useState("-");
 
     const fetchIssueRequests = useMemo(
         () => async () => {
@@ -43,7 +42,7 @@ export default function IssueDashboard(): ReactElement {
             },
             async () => {
                 const res = await statsApi.getTotalIssues();
-                setTotalIssues(Number(res.data));
+                setTotalIssues(res.data);
             },
         ],
         [statsApi] // to silence the compiler
@@ -51,6 +50,7 @@ export default function IssueDashboard(): ReactElement {
 
     const tableHeadings = [
         t("id"),
+        t("timestamp"),
         t("issue_page.amount"),
         t("issue_page.parachain_block"),
         t("issue_page.vault_dot_address"),
@@ -61,6 +61,7 @@ export default function IssueDashboard(): ReactElement {
     const tableIssueRequestRow = useMemo(
         () => (ireq: DashboardIssueInfo): string[] => [
             ireq.id,
+            ireq.timestamp,
             satToBTC(ireq.amountBTC),
             ireq.creation,
             ireq.vaultDOTAddress,
@@ -71,44 +72,72 @@ export default function IssueDashboard(): ReactElement {
     );
 
     useEffect(() => {
-        fetchIssueRequests();
+        try {
+            fetchIssueRequests();
+        } catch (e) {
+            console.error(e);
+        }
     }, [fetchIssueRequests, tableParams]);
 
     useEffect(() => {
-        fetchTotalSuccessfulIssues();
-        fetchTotalIssues();
+        try {
+            fetchTotalSuccessfulIssues();
+            fetchTotalIssues();
+        } catch (e) {
+            console.error(e);
+        }
     }, [fetchTotalSuccessfulIssues, fetchTotalIssues]);
 
     return (
-        <div className="dashboard-page container-fluid white-background">
+        <div className="dashboard-page">
             <div className="dashboard-container dashboard-fade-in-animation">
                 <div className="dashboard-wrapper">
-                    <div className="row">
-                        <div className="title">{t("dashboard.issues")}</div>
-                    </div>
-                    <div className="row mt-5 mb-3">
-                        <div className="col-lg-8 offset-2">
-                            <div className="row">
-                                <div className="col-md-4">
-                                    <p>{totalPolkaBTC} PolkaBTC issued</p>
+                    <div>
+                        <div className="title-container">
+                            <div
+                                style={{ backgroundColor: getAccents("d_yellow").color }}
+                                className="issue-page-text-container"
+                            >
+                                <h1>{t("issue_page.issue_requests")}</h1>
+                            </div>
+                            <div style={{ backgroundColor: getAccents("d_yellow").color }} className="title-line"></div>
+                        </div>
+                        <div className="table-top-data-container">
+                            <div className="values-container">
+                                <div>
+                                    <h2 style={{ color: `${getAccents("d_yellow").color}` }}>
+                                        {t("dashboard.issue.issued")}
+                                    </h2>
+                                    <h1>{t("dashboard.issue.total_polkabtc", { amount: totalPolkaBTC })}</h1>
+                                    <h1 className="h1-price-opacity">
+                                        ${(prices.bitcoin.usd * parseFloat(totalPolkaBTC)).toLocaleString()}
+                                    </h1>
                                 </div>
-                                <div className="col-md-4">
-                                    <p>{totalSuccessfulIssues} successful issue requests</p>
-                                </div>
-                                <div className="col-md-4">
-                                    <PolkaBTC chartOnly={true} />
+                                <div>
+                                    <h2 style={{ color: `${getAccents("d_green").color}` }}>
+                                        {t("dashboard.issue.issue_requests")}
+                                    </h2>
+                                    <h1>{totalSuccessfulIssues === "-" ? t("no_data") : totalSuccessfulIssues}</h1>
                                 </div>
                             </div>
+                            <div>
+                                <PolkaBTC />
+                            </div>
+                        </div>
+                        <div className="dashboard-table-container">
+                            <div>
+                                <p className="table-heading">{t("issue_page.recent_requests")}</p>
+                            </div>
+                            <DashboardTable
+                                pageData={issueRequests}
+                                totalPages={Math.ceil(Number(totalIssues) / tableParams.perPage)}
+                                tableParams={tableParams}
+                                setTableParams={setTableParams}
+                                headings={tableHeadings}
+                                dataPointDisplayer={tableIssueRequestRow}
+                            />
                         </div>
                     </div>
-                    <DashboardTable
-                        pageData={issueRequests}
-                        totalPages={Math.ceil(totalIssues / tableParams.perPage)}
-                        tableParams={tableParams}
-                        setTableParams={setTableParams}
-                        headings={tableHeadings}
-                        dataPointDisplayer={tableIssueRequestRow}
-                    />
                 </div>
             </div>
         </div>

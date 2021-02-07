@@ -54,6 +54,7 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
     return {
         id: stripHexPrefix(id.toString()),
         amountBTC,
+        timestamp: "0000-00-00",
         creation: parachainIssueRequest.opentime.toString(),
         vaultBTCAddress: parachainIssueRequest.btc_address,
         vaultDOTAddress: parachainIssueRequest.vault.toString(),
@@ -199,7 +200,7 @@ export const redeemRequestToVaultRedeem = (requests: Map<H256, ParachainRedeemRe
         const [btcAddress, polkaBTC, unlockedDOT] = convertParachainTypes(request);
         redeemRequests.push({
             id: stripHexPrefix(requestId.toString()),
-            timestamp: request.opentime.toString(),
+            // timestamp: request.opentime.toString(),
             user: request.redeemer.toString(),
             btcAddress: btcAddress,
             polkaBTC: polkaBTC,

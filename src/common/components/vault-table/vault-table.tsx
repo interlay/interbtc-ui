@@ -15,9 +15,7 @@ export default function VaultTable(): ReactElement {
     const [premiumRedeemThreshold, setPremiumRedeemThreshold] = useState(new Big(0));
     const [secureCollateralThreshold, setSecureCollateralThreshold] = useState(new Big(0));
     const { t } = useTranslation();
-    const { polkaBtcLoaded } = useSelector(
-        (state: StoreType) => state.general
-    );
+    const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -170,9 +168,110 @@ export default function VaultTable(): ReactElement {
 
     return (
         <div className="vault-table">
-            <div className="row">
-                <div className="col-12">
-                    <div className="header">Vaults</div>
+            <div>
+                <p className="table-heading">{t("dashboard.vaults.active_vaults")}</p>
+            </div>
+            <div className="table">
+                <div className="vault-table-grid">
+                    <div id="date">
+                        <div className="line"></div>
+                        <div className="data-container">
+                            <h1>{t("account_id")}</h1>
+                        </div>
+                        <div className="line"></div>
+                        {vaults.map((vault) => (
+                            <div>
+                                <div className="data-container">
+                                    <p>{shortAddress(vault.vaultId)}</p>
+                                </div>
+                                <div className="line"></div>
+                            </div>
+                        ))}
+                    </div>
+                    <div id="locked-dot">
+                        <div className="line"></div>
+                        <div className="data-container">
+                            <h1>{t("locked_dot")}</h1>
+                        </div>
+                        <div className="line"></div>
+                        {vaults.map((vault) => (
+                            <div>
+                                <div className="data-container">
+                                    <p>{vault.lockedDOT}</p>
+                                </div>
+                                <div className="line"></div>
+                            </div>
+                        ))}
+                    </div>
+                    <div id="pending-btc">
+                        <div className="line"></div>
+                        <div className="data-container">
+                            <h1>{t("lockedBTC")}</h1>
+                        </div>
+                        <div className="line"></div>
+                        {vaults.map((vault) => (
+                            <div>
+                                <div className="data-container">
+                                    <p>{vault.lockedBTC}</p>
+                                </div>
+                                <div className="line"></div>
+                            </div>
+                        ))}
+                    </div>
+                    <div id="locked-btc">
+                        <div className="line"></div>
+                        <div className="data-container">
+                            <h1>{t("lockedBTC")}</h1> &nbsp;
+                            <i
+                                className="far fa-question-circle"
+                                data-tip="BTC volume of in-progress issue requests."
+                            ></i>
+                        </div>
+                        <div className="line"></div>
+                        {vaults.map((vault) => (
+                            <div>
+                                <div className="data-container">
+                                    <p>{vault.pendingBTC}</p>
+                                </div>
+                                <div className="line"></div>
+                            </div>
+                        ))}
+                    </div>
+                    <div id="collateralization">
+                        <div className="line"></div>
+                        <div className="data-container">
+                            <h1>{t("collateralization")}</h1> &nbsp;
+                            <i
+                                className="far fa-question-circle"
+                                data-tip="Collateralization rate for locked BTC.
+                                           'Pending' includes in-progress issue requests."
+                            ></i>
+                        </div>
+                        <div className="line"></div>
+                        {vaults.map((vault) => (
+                            <div>
+                                <div className="data-container">
+                                    <p>{showCollateralizations(vault)}</p>
+                                </div>
+                                <div className="line"></div>
+                            </div>
+                        ))}
+                    </div>
+                    <div id="vault-status">
+                        <div className="line"></div>
+                        <div className="data-container">
+                            <h1>{t("status")}</h1>
+                        </div>
+                        <div className="line"></div>
+                        {vaults.map((vault) => (
+                            <div>
+                                <div className="data-container">
+                                    <p className={getStatusColor(vault.status)}>{vault.status}</p>
+                                </div>
+                                <div className="line"></div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
             <div className="row justify-content-center">

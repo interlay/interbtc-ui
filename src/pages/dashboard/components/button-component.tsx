@@ -13,21 +13,21 @@ type buttonProps = {
 const ButtonComponent = (props: buttonProps): React.ReactElement => {
     const accent = getAccents(`${props.propsButtonColor}`);
     const buttonColor = {
-        border: `1.7px solid ${accent.colour}`,
-        color: `${accent.colour}`,
+        border: `1.7px solid ${accent.color}`,
+        color: `${accent.color}`,
     };
     const buttonId = document.getElementById(`${props.buttonId}-button-id`) as HTMLElement;
     const buttonTextId = document.getElementById(`${props.buttonId}-button-text`) as HTMLElement;
     const linkId = document.getElementById(`${props.buttonId}-arrow`) as HTMLElement;
     const handleHoverOn = () => {
-        buttonId.style.backgroundColor = `${accent.colour}`;
+        buttonId.style.backgroundColor = `${accent.color}`;
         buttonTextId.style.color = "#ffffff";
         linkId.style.filter = "invert(100%) sepia(3%) saturate(3%) hue-rotate(71deg) brightness(106%) contrast(100%)";
     };
 
     const handleHoverOut = () => {
         buttonId.style.backgroundColor = "#ffffff";
-        buttonTextId.style.color = `${accent.colour}`;
+        buttonTextId.style.color = `${accent.color}`;
         linkId.style.filter = `${accent.filter}`;
     };
     return (

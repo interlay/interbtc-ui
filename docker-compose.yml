@@ -1,11 +1,13 @@
 version: "3.8"
 services:
     polkabtc:
-        image: "registry.gitlab.com/interlay/btc-parachain:dev"
+        image: "registry.gitlab.com/interlay/btc-parachain:dev-a2fda3a7"
         command:
             - btc-parachain-standalone
-            - --rpc-external
-            - --ws-external
+            - --unsafe-rpc-external
+            - --unsafe-ws-external
+            - --rpc-methods
+            - Unsafe
             - --dev
         ports:
             - "9933:9933"
@@ -22,7 +24,7 @@ services:
             - -fallbackfee=0.0002
         ports:
             - "18443:18443"
-    bitcoin-cli:
+    bitcoin_cli:
         image: "ruimarinho/bitcoin-core:0.20"
         command:
             - /bin/sh
@@ -56,9 +58,9 @@ services:
             - --index-unspendables
         ports:
             - "3002:3002"
-    staked-relayer:
+    staked_relayer:
         # only start staked relayer after mining to prevent long catch-up
-        image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:dev"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:dev-445c256d"
         command:
             - /bin/sh
             - -c
@@ -74,7 +76,7 @@ services:
         ports:
             - "3030:3030"
     oracle:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:dev"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:dev-445c256d"
         command:
             - /bin/sh
             - -c
@@ -85,7 +87,7 @@ services:
         environment:
             RUST_LOG: info
     faucet:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/faucet:dev"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/faucet:dev-445c256d"
         command:
             - /bin/sh
             - -c
@@ -98,7 +100,7 @@ services:
         ports:
             - "3035:3035"
     vault_1:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:dev"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:dev-445c256d"
         command:
             - /bin/sh
             - -c
@@ -113,7 +115,7 @@ services:
         ports:
             - "3032:3032"
     testdata_gen:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/testdata-gen:dev"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/testdata-gen:dev-445c256d"
         command:
             - /bin/sh
             - -c
@@ -125,7 +127,8 @@ services:
 
                 # wait for the vault to register
                 sleep 9
-                ALICE_ADDRESS=$$(bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword -rpcwallet=Alice getnewaddress)
+                # NOTE: bitcoin-cli not installed on image
+                ALICE_ADDRESS="bcrt1q56l7a4g3hluklqmxs89wj8dkpazemfykwfkz4x"
                 testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=bob set-exchange-rate --exchange-rate=385523187
                 testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice request-issue --issue-amount=10000000 --vault=dave
                 REDEEM_ID=$$(testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice request-redeem --redeem-amount=1000000 --btc-address=$${ALICE_ADDRESS} --vault=dave)
@@ -135,3 +138,26 @@ services:
             <<: *client-env
         ports:
             - "3033:3033"
+    postgres:
+        image: "postgres:11"
+        environment:
+            POSTGRES_USER: "user"
+            POSTGRES_PASSWORD: "password"
+        ports:
+            - "5432:5432"
+    polkabtc_stats:
+        image: "registry.gitlab.com/interlay/polkabtc-stats:0.0.12"
+        restart: always
+        depends_on:
+            - postgres
+        command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 1; done; yarn start'
+        environment:
+            MONITOR: "1"
+            ENDPOINT_URL: "ws://polkabtc:9944"
+            PGHOST: "postgres"
+            PGPORT: "5432"
+            PGDATABASE: "postgres"
+            PGUSER: "user"
+            PGPASSWORD: "password"
+        ports:
+            - "3007:3007"

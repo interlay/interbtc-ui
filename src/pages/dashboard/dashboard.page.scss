@@ -129,33 +129,16 @@ canvas {
     font-size: 11px;
     font-family: airbnb-cereal-bold;
 }
-.title-text {
-    font-size: 25px;
-    font-family: airbnb-cereal-bold;
-}
-.title-container {
-    background-color: #fafafa;
 
-    @include flexCenter();
-    p,
-    span {
-        font-family: airbnb-cereal-book;
+@media only screen and (min-width: $mobile-large-size) {
+    .card {
+        min-height: 340px;
     }
-    h1 {
-        margin-bottom: 0.2rem;
+    .row-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
     }
 }
-.title-text-container {
-    text-align: center;
-}
-.section-div-line {
-    width: 80%;
-    height: 1px;
-    margin: auto;
-    background-color: black;
-    opacity: 0.1;
-}
-
 @media only screen and (min-width: $desktop-size) {
     .dashboard-items-container {
         @include justifyCenter();

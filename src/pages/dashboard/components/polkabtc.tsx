@@ -1,23 +1,22 @@
 import React, { useEffect, useMemo, useState } from "react";
 import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboard-colors";
-import { Line, LinearComponentProps } from "react-chartjs-2";
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { satToBTC } from "@interlay/polkabtc";
+import LineChartComponent from "./line-chart-component";
+import { useTranslation } from "react-i18next";
 
 type PolkaBTCProps = {
-    chartOnly?: boolean;
+    linkButton?: boolean;
 };
 
-const PolkaBTC = ({ chartOnly }: PolkaBTCProps): React.ReactElement => {
-    const { prices } = useSelector((state: StoreType) => state.general);
+const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
     const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
 
+    const { t } = useTranslation();
     const statsApi = usePolkabtcStats();
-
-    const [chartProps, setChartProps] = useState({} as LinearComponentProps);
 
     const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number }>());
     const pointIssuesPerDay = useMemo(
@@ -41,96 +40,15 @@ const PolkaBTC = ({ chartOnly }: PolkaBTCProps): React.ReactElement => {
         fetchIssuesLastDays();
     }, [fetchIssuesLastDays]);
 
-    useEffect(() => {
-        const totalIssuedData = {
-            label: "Total PolkaBTC issued",
-            yAxisID: "left-y-axis",
-            fill: false,
-            backgroundColor: "rgba(255,255,255,0)",
-            borderColor: getAccents("d_yellow").colour,
-            borderWidth: 2,
-            borderDash: [],
-            borderDashOffset: 0.0,
-            pointBackgroundColor: getAccents("d_yellow").colour,
-            pointBorderColor: "rgba(255,255,255,0)",
-            pointHoverBackgroundColor: getAccents("d_yellow").colour,
-            pointBorderWidth: 20,
-            pointHoverRadius: 4,
-            pointHoverBorderWidth: 15,
-            pointRadius: 4,
-            data: cumulativeIssuesPerDay.map((dataPoint) => satToBTC(dataPoint.sat.toString())),
-        };
-        const perDayIssuedData = {
-            label: "PolkaBTC issued today",
-            yAxisID: "right-y-axis",
-            fill: false,
-            backgroundColor: "rgba(255, 255, 255, 0.3)",
-            borderColor: getAccents("d_grey").colour,
-            borderWidth: 2,
-            borderDash: [],
-            borderDashOffset: 0.0,
-            pointBackgroundColor: getAccents("d_grey").colour,
-            pointBorderColor: "rgba(255,255,255,0)",
-            pointHoverBackgroundColor: getAccents("d_grey").colour,
-            pointBorderWidth: 20,
-            pointHoverRadius: 4,
-            pointHoverBorderWidth: 15,
-            pointRadius: 4,
-            data: pointIssuesPerDay.map((sat) => satToBTC(sat.toString())),
-        };
-        const data = {
-            labels: cumulativeIssuesPerDay.map((dataPoint) => new Date(dataPoint.date).toLocaleDateString()),
-            datasets: [totalIssuedData, perDayIssuedData],
-        };
-        setChartProps({
-            data,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                    labels: {
-                        fontSize: 9,
-                    },
-                },
-                scales: {
-                    xAxes: [
-                        {
-                            gridLines: {
-                                display: false,
-                            },
-                        },
-                    ],
-                    yAxes: [
-                        {
-                            ticks: {
-                                beginAtZero: true,
-                            },
-                            type: "linear",
-                            display: true,
-                            position: "left",
-                            id: "left-y-axis",
-                        },
-                        {
-                            type: "linear",
-                            display: true,
-                            position: "right",
-                            id: "right-y-axis",
-                        },
-                    ],
-                },
-            },
-        });
-    }, [cumulativeIssuesPerDay, pointIssuesPerDay]);
-
     return (
         <div className="card">
-            {!chartOnly ? (
+            {linkButton ? (
                 <div className="card-top-content">
                     <div className="values-container">
-                        <h1 style={{ color: `${getAccents("d_yellow").colour}` }}>Issued</h1>
-                        <h2>{totalPolkaBTC} PolkaBTC</h2>
+                        <h1 style={{ color: `${getAccents("d_yellow").color}` }}>{t("dashboard.issue.issued")}</h1>
+                        <h2>{t("dashboard.issue.total_polkabtc", { amount: totalPolkaBTC })}</h2>
                         {/* TODO: add the price API */}
-                        <h2>${(prices.bitcoin.usd * parseInt(totalPolkaBTC)).toLocaleString()}</h2>
+                        {/* <h2>${(prices.bitcoin.usd * parseInt(totalPolkaBTC)).toLocaleString()}</h2> */}
                     </div>
                     <div className="button-container">
                         <ButtonComponent
@@ -145,7 +63,16 @@ const PolkaBTC = ({ chartOnly }: PolkaBTCProps): React.ReactElement => {
                 ""
             )}
             <div className="chart-container">
-                <Line {...chartProps} />
+                <LineChartComponent
+                    color={["d_yellow", "d_grey"]}
+                    label={[t("dashboard.issue.total_issued_chart"), t("dashboard.issue.perday_issued_chart")]}
+                    yLabels={cumulativeIssuesPerDay.map((dataPoint) => new Date(dataPoint.date).toLocaleDateString())}
+                    yAxisProps={[{ beginAtZero: true, position: "left" }, { position: "right" }]}
+                    data={[
+                        cumulativeIssuesPerDay.map((dataPoint) => Number(satToBTC(dataPoint.sat.toString()))),
+                        pointIssuesPerDay.map((sat) => Number(satToBTC(sat.toString()))),
+                    ]}
+                />
             </div>
         </div>
     );

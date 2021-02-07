@@ -4,7 +4,7 @@ import { getAccents } from "../dashboardcolors";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 const ParachainSecurity = (): React.ReactElement => {
-    const [textColour, setTextColour] = useState("d_grey");
+    const [textcolor, setTextcolor] = useState("d_grey");
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
     useEffect(() => {
@@ -15,17 +15,17 @@ const ParachainSecurity = (): React.ReactElement => {
 
             if (parachainStatus.isRunning) {
                 parachainTextElement.innerHTML = "secure";
-                setTextColour("d_green");
+                setTextcolor("d_green");
             } else if (parachainStatus.isError) {
                 parachainTextElement.innerHTML = "not secure";
-                setTextColour("d_red");
+                setTextcolor("d_red");
             } else {
                 parachainTextElement.innerHTML = "unavailable";
-                setTextColour("d_grey");
+                setTextcolor("d_grey");
             }
         };
         fetchOracleData();
-    }, [textColour, polkaBtcLoaded]);
+    }, [textcolor, polkaBtcLoaded]);
     return (
         <div className="card">
             <div className="values-container"></div>
@@ -37,7 +37,7 @@ const ParachainSecurity = (): React.ReactElement => {
                         The BTC parachain is{" "}
                         <span
                             className="h1-xl-text"
-                            style={{ color: `${getAccents(`${textColour}`).colour}` }}
+                            style={{ color: `${getAccents(`${textcolor}`).color}` }}
                             id="parachain-text"
                         >
                             Loading

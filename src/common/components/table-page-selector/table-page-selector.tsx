@@ -1,6 +1,7 @@
 import React, { ReactElement } from "react";
 import { Row, Button, Col } from "react-bootstrap";
 import { range } from "../../utils/utils";
+import { useTranslation } from "react-i18next";
 
 type PageLinkProps = {
     page: number;
@@ -22,6 +23,8 @@ type TablePageSelectorProps = {
 };
 
 export default function TablePageSelector({ totalPages, currentPage, setPage }: TablePageSelectorProps): ReactElement {
+    const { t } = useTranslation();
+
     if (totalPages <= 1) totalPages = 1;
 
     const displayedPages = 5;
@@ -32,7 +35,7 @@ export default function TablePageSelector({ totalPages, currentPage, setPage }: 
 
     return (
         <Row className="justify-content-between">
-            <Button onClick={() => setPage(Math.max(currentPage - 1, 0))}>Prev</Button>
+            <Button onClick={() => setPage(Math.max(currentPage - 1, 0))}>{t("prev")}</Button>
             <Col sm={4}>
                 {pages[0] !== 0 ? (
                     <>
@@ -54,7 +57,7 @@ export default function TablePageSelector({ totalPages, currentPage, setPage }: 
                     ""
                 )}
             </Col>
-            <Button onClick={() => setPage(Math.min(currentPage + 1, totalPages - 1))}>Next</Button>
+            <Button onClick={() => setPage(Math.min(currentPage + 1, totalPages - 1))}>{t("next")}</Button>
         </Row>
     );
 }

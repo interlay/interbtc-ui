@@ -8,7 +8,7 @@ const BtcRelay = (): ReactElement => {
     // TODO: Compute status using blockstream data
     const [latestRelayBlock, setLatestRelayBlock] = useState("0");
     const [latestBitcoinBlock, setLatestBitcoinBlock] = useState("0");
-    const [textColour, setTextColour] = useState("d_grey");
+    const [textcolor, setTextcolor] = useState("d_grey");
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const outdatedRelayThreshold = 12;
 
@@ -29,12 +29,12 @@ const BtcRelay = (): ReactElement => {
         if (btcRelayOffset <= outdatedRelayThreshold) {
             relayTextElement.innerHTML = " synchronized";
             relayCircleTextElement.innerHTML = "Synced";
-            setTextColour("d_green");
+            setTextcolor("d_green");
         } else {
             // TODO: add how many blocks behind
             relayTextElement.innerHTML = " not synchronized";
             relayCircleTextElement.innerHTML = "Out of Sync";
-            setTextColour("d_red");
+            setTextcolor("d_red");
         }
     }, [latestBitcoinBlock, polkaBtcLoaded]);
     return (
@@ -44,7 +44,7 @@ const BtcRelay = (): ReactElement => {
                     <h1 style={{ fontFamily: "airbnb-cereal-bold" }}>
                         BTC Relay is
                         <span
-                            style={{ color: `${getAccents(`${textColour}`).colour}`, fontFamily: "airbnb-cereal-bold" }}
+                            style={{ color: `${getAccents(`${textcolor}`).color}`, fontFamily: "airbnb-cereal-bold" }}
                             id="relay-text"
                         >
                             Loading
@@ -63,12 +63,12 @@ const BtcRelay = (): ReactElement => {
             <div className="circle-container">
                 <div
                     className="status-circle"
-                    style={{ borderColor: `${getAccents(`${textColour}`).colour}` }}
+                    style={{ borderColor: `${getAccents(`${textcolor}`).color}` }}
                     id="relay-circle"
                 >
                     <h1
                         className="h1-xl-text"
-                        style={{ color: `${getAccents(`${textColour}`).colour}` }}
+                        style={{ color: `${getAccents(`${textcolor}`).color}` }}
                         id="relay-circle-text"
                     >
                         Loading

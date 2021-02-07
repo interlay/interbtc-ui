@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 
 const OracleStatus = (): ReactElement => {
-    const [textColour, setTextColour] = useState("d_grey");
+    const [textcolor, setTextcolor] = useState("d_grey");
     const [exchangeRate, setExchangeRate] = useState("0");
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
@@ -20,15 +20,15 @@ const OracleStatus = (): ReactElement => {
             if (oracle) {
                 oracleTextElement.innerHTML = " online";
                 oracleCircleTextElement.innerHTML = "Online";
-                setTextColour("d_green");
+                setTextcolor("d_green");
             } else {
                 oracleTextElement.innerHTML = " offline";
                 oracleCircleTextElement.innerHTML = "Offline";
-                setTextColour("d_red");
+                setTextcolor("d_red");
             }
         };
         fetchOracleData();
-    }, [textColour, polkaBtcLoaded]);
+    }, [textcolor, polkaBtcLoaded]);
 
     return (
         <div className="card">
@@ -37,7 +37,7 @@ const OracleStatus = (): ReactElement => {
                     <h1 style={{ fontFamily: "airbnb-cereal-bold" }}>
                         Oracles are
                         <span
-                            style={{ color: `${getAccents(`${textColour}`).colour}`, fontFamily: "airbnb-cereal-bold" }}
+                            style={{ color: `${getAccents(`${textcolor}`).color}`, fontFamily: "airbnb-cereal-bold" }}
                             id="oracle-text"
                         >
                             Loading
@@ -56,12 +56,12 @@ const OracleStatus = (): ReactElement => {
             <div className="circle-container">
                 <div
                     className="status-circle"
-                    style={{ borderColor: `${getAccents(`${textColour}`).colour}` }}
+                    style={{ borderColor: `${getAccents(`${textcolor}`).color}` }}
                     id="oracle-circle"
                 >
                     <h1
                         className="h1-xl-text"
-                        style={{ color: `${getAccents(`${textColour}`).colour}` }}
+                        style={{ color: `${getAccents(`${textcolor}`).color}` }}
                         id="oracle-circle-text"
                     >
                         Loading

@@ -1,6 +1,7 @@
 export interface IssueRequest {
     id: string;
     amountBTC: string;
+    timestamp: string;
     totalAmount: string;
     creation: string;
     vaultBTCAddress: string;
@@ -18,7 +19,15 @@ export interface IssueRequest {
 
 export type DashboardIssueInfo = Pick<
     IssueRequest,
-    "id" | "amountBTC" | "creation" | "vaultBTCAddress" | "vaultDOTAddress" | "btcTxId" | "completed" | "cancelled"
+    | "id"
+    | "timestamp"
+    | "amountBTC"
+    | "creation"
+    | "vaultBTCAddress"
+    | "vaultDOTAddress"
+    | "btcTxId"
+    | "completed"
+    | "cancelled"
 >;
 
 export interface IssueMap {
@@ -27,8 +36,8 @@ export interface IssueMap {
 
 export interface VaultIssue {
     id: string;
-    timestamp: string;
     user: string;
+    timestamp: string;
     btcAddress: string;
     polkaBTC: string;
     lockedDOT: string;

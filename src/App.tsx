@@ -217,73 +217,67 @@ export default function App(): ReactElement {
     return (
         <React.Fragment>
             <Router>
-                {!isLoading || constants.STATIC_PAGE_ONLY ? (
-                    <div className="main d-flex flex-column min-vh-100 polkabtc-background fade-in-animation">
-                        <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
-                        <ReactTooltip place="top" type="dark" effect="solid" />
-                        <AccountModal selected={address} onSelected={selectAccount} />
-                        {!constants.STATIC_PAGE_ONLY && <Topbar address={address} requestDOT={requestDotFromFaucet} />}
-                        <Switch>
-                            {!constants.STATIC_PAGE_ONLY && (
-                                <Route path="/staked-relayer">
-                                    <StakedRelayerPage />
-                                </Route>
-                            )}
-                            {!constants.STATIC_PAGE_ONLY && (
-                                <Route path="/dashboard/vaults">
-                                    <VaultsDashboard />
-                                </Route>
-                            )}
-                            {!constants.STATIC_PAGE_ONLY && (
-                                <Route path="/dashboard/issue">
-                                    <IssueDashboard />
-                                </Route>
-                            )}
-                            {!constants.STATIC_PAGE_ONLY && (
-                                <Route path="/dashboard/redeem">
-                                    <RedeemDashboard />
-                                </Route>
-                            )}
-                            {!constants.STATIC_PAGE_ONLY && (
-                                <Route path="/dashboard/relay">
-                                    <RelayDashboard />
-                                </Route>
-                            )}
-                            {!constants.STATIC_PAGE_ONLY && (
-                                <Route path="/dashboard">
-                                    <DashboardPage />
-                                </Route>
-                            )}
-                            {!constants.STATIC_PAGE_ONLY && (
-                                <Route path="/vault">
-                                    <VaultDashboardPage />
-                                </Route>
-                            )}
-                            <Route path="/" exact>
-                                <LandingPage />
+                <div className="main d-flex flex-column min-vh-100 polkabtc-background fade-in-animation">
+                    <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
+                    <ReactTooltip place="top" type="dark" effect="solid" />
+                    <AccountModal selected={address} onSelected={selectAccount} />
+                    {!constants.STATIC_PAGE_ONLY && <Topbar address={address} requestDOT={requestDotFromFaucet} />}
+                    <Switch>
+                        {!constants.STATIC_PAGE_ONLY && (
+                            <Route path="/staked-relayer">
+                                <StakedRelayerPage />
                             </Route>
-                            <Route path="/user-guide">
-                                <UserGuidePage />
+                        )}
+                        {!constants.STATIC_PAGE_ONLY && (
+                            <Route path="/dashboard/vaults">
+                                <VaultsDashboard />
                             </Route>
-                            <Route path="/about">
-                                <AboutPage />
+                        )}
+                        {!constants.STATIC_PAGE_ONLY && (
+                            <Route path="/dashboard/issue">
+                                <IssueDashboard />
                             </Route>
-                            <Route path="/faq">
-                                <FaqPage />
+                        )}
+                        {!constants.STATIC_PAGE_ONLY && (
+                            <Route path="/dashboard/redeem">
+                                <RedeemDashboard />
                             </Route>
-                            {!constants.STATIC_PAGE_ONLY && (
-                                <Route exact path="/app">
-                                    <AppPage />
-                                </Route>
-                            )}
-                        </Switch>
-                        <Footer />
-                    </div>
-                ) : (
-                    <div className="main-loader">
-                        <img src={loadingImg} alt="loading animation"></img>
-                    </div>
-                )}
+                        )}
+                        {!constants.STATIC_PAGE_ONLY && (
+                            <Route path="/dashboard/relay">
+                                <RelayDashboard />
+                            </Route>
+                        )}
+                        {!constants.STATIC_PAGE_ONLY && (
+                            <Route path="/dashboard">
+                                <DashboardPage />
+                            </Route>
+                        )}
+                        {!constants.STATIC_PAGE_ONLY && (
+                            <Route path="/vault">
+                                <VaultDashboardPage />
+                            </Route>
+                        )}
+                        <Route path="/" exact>
+                            <LandingPage />
+                        </Route>
+                        <Route path="/user-guide">
+                            <UserGuidePage />
+                        </Route>
+                        <Route path="/about">
+                            <AboutPage />
+                        </Route>
+                        <Route path="/faq">
+                            <FaqPage />
+                        </Route>
+                        {!constants.STATIC_PAGE_ONLY && (
+                            <Route exact path="/app">
+                                <AppPage />
+                            </Route>
+                        )}
+                    </Switch>
+                    <Footer />
+                </div>
             </Router>
         </React.Fragment>
     );

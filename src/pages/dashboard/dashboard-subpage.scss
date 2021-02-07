@@ -1,0 +1,146 @@
+@import "../../variables";
+@import "../../mixins";
+.title-text {
+    font-size: 25px;
+    font-family: airbnb-cereal-bold;
+}
+.title-container {
+    background-color: #fafafa;
+
+    @include flexCenter();
+    p,
+    span {
+        font-family: airbnb-cereal-book;
+    }
+    h1 {
+        margin-bottom: 0.2rem;
+    }
+}
+.title-text-container {
+    text-align: center;
+}
+.section-div-line {
+    width: 50%;
+    height: 1px;
+    margin: auto;
+    background-color: black;
+    opacity: 0.2;
+}
+.table {
+    .issue-redeem-table-grid {
+        display: grid;
+        grid-template-columns: 0.6fr 0.6fr repeat(5, 1fr) 0.6fr;
+    }
+    .vault-table-grid {
+        display: grid;
+        grid-template-columns: 0.6fr repeat(5, 1fr);
+    }
+    .line {
+        width: 100%;
+        height: 2px;
+        background-color: #e6e6e6;
+    }
+    .data-container {
+        padding: 15px 0px;
+        height: 50px;
+        @include flexCenter();
+    }
+    h1 {
+        color: black;
+        font-family: airbnb-cereal-book;
+        font-size: 15px;
+        margin-bottom: 0rem;
+        opacity: 0.3;
+    }
+    p {
+        color: black;
+        font-family: airbnb-cereal-book;
+        font-size: 15px;
+        margin-bottom: 0rem;
+    }
+    .external-link {
+        height: 14px;
+        width: 14px;
+        padding-left: 2px;
+    }
+    .status-container {
+        @include flexCenter();
+    }
+    .status {
+        padding-left: 5px;
+        font-family: airbnb-cereal-bold;
+    }
+}
+.dashboard-container {
+    background-color: #fafafa;
+    @include justifyCenter();
+}
+.dashboard-wrapper {
+    width: 70%;
+}
+.title-container {
+    margin-top: 30px;
+    @include justifyCenter();
+    flex-direction: column;
+}
+.title-line {
+    height: 1px;
+    margin-top: 20px;
+    width: 100%;
+}
+.issue-page-text-container {
+    width: 155px;
+    height: 39px;
+    border-radius: 8px;
+    @include flexCenter();
+
+    h1 {
+        font-family: airbnb-cereal-book;
+        font-size: 13px;
+        color: white;
+        text-transform: uppercase;
+    }
+}
+.table-top-data-container {
+    display: grid;
+    grid-template-columns: 0.8fr 1fr;
+    column-gap: 50px;
+    margin-top: 40px;
+    padding: 0px 10%;
+    h1 {
+        font-family: airbnb-cereal-bold;
+        font-size: 21px;
+    }
+    h2 {
+        font-family: airbnb-cereal-book;
+        font-size: 16px;
+    }
+    .h1-price-opacity {
+        opacity: 0.5;
+    }
+    .values-container {
+        padding: 10% 0px;
+        display: grid;
+        grid-template-rows: 0.5fr 0.5fr;
+        justify-items: start;
+        align-items: center;
+    }
+    .values-container.redeem-page {
+        grid-template-rows: repeat(3, 0.3fr);
+        row-gap: 20px;
+    }
+}
+.vaults-graphs-container {
+    display: grid;
+    margin-top: 40px;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 30px;
+}
+
+.dashboard-table-container {
+    margin: 40px 0px;
+    .table-heading {
+        font-family: airbnb-cereal-bold;
+        font-size: 26px;
+    }
+}
