@@ -67,15 +67,10 @@ export default function EnterAmountAndAddress() {
             dispatch(changeAmountPolkaBTCAction(amountPolkaBTC));
             const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
 
-            let vaultId;
-            let vaultBTCAddress;
-
-            vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountAsSatoshi);
+            const vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountAsSatoshi);
             // get the vault's data
             const vault = await window.polkaBTC.vaults.get(vaultId);
-            vaultBTCAddress = vault.wallet.addresses[0];
-
-            // toast.success("Found vault: " + vaultId.toString());
+            const vaultBTCAddress = vault.wallet.addresses[0];
 
             const fee = await window.polkaBTC.redeem.getFeesToPay(amountPolkaBTC);
             dispatch(updateRedeemFeeAction(fee));
