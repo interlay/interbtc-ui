@@ -160,8 +160,8 @@
         "out_of_sync": "Out of Sync",
         "capacity": "Capacity",
         "collators": {
-          "total_collators_chart": "Total active collators",
-          "active_collators": "Active Collators"
+            "total_collators_chart": "Total active collators",
+            "active_collators": "Active Collators"
         },
         "issue": {
             "issue": "Issue Requests",

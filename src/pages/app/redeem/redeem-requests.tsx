@@ -4,15 +4,11 @@ import { Table, Button } from "react-bootstrap";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import {
-    redeemExpiredAction,
-    changeRedeemIdAction
-} from "../../../common/actions/redeem.actions";
+import { redeemExpiredAction, changeRedeemIdAction } from "../../../common/actions/redeem.actions";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import ReimburseModal from "./reimburse-modal";
 import RedeemModal from "./modal/redeem-modal";
-
 
 export default function RedeemRequests() {
     const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
@@ -53,12 +49,18 @@ export default function RedeemRequests() {
                 return <div>{t("redeem_page.reimbursed")}</div>;
             }
             if (!request.cancelled && !request.reimbursed) {
-                return <Button
-                    onClick={(event) => {event.stopPropagation(); openReimburseModal(request);}}
-                    className="ml-3"
-                    variant="outline-dark">
-                    {t("redeem_page.recover")}
-                </Button>
+                return (
+                    <Button
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            openReimburseModal(request);
+                        }}
+                        className="ml-3"
+                        variant="outline-dark"
+                    >
+                        {t("redeem_page.recover")}
+                    </Button>
+                );
             }
             return <div>{t("redeem_page.retried")}</div>;
             // TODO: do we need the cancelled state?
@@ -85,14 +87,7 @@ export default function RedeemRequests() {
                 window.polkaBTC.redeem.subscribeToRedeemExpiry(accountId, redeemExpired);
             }
         });
-    }, [
-        redeemRequests,
-        address,
-        dispatch,
-        isRedeemExpirationSubscribed,
-        redeemExpired,
-        polkaBtcLoaded,
-    ]);
+    }, [redeemRequests, address, dispatch, isRedeemExpirationSubscribed, redeemExpired, polkaBtcLoaded]);
 
     const requestClicked = (request: RedeemRequest): void => {
         dispatch(changeRedeemIdAction(request.id));
@@ -137,7 +132,7 @@ export default function RedeemRequests() {
                     </Table>
                 </React.Fragment>
             )}
-            <RedeemModal show={showModal} onClose={closeModal}/>
+            <RedeemModal show={showModal} onClose={closeModal} />
             <ReimburseModal show={showReimburseModal} request={reimburseRequest} onClose={closeReimburseModal} />
         </div>
     );

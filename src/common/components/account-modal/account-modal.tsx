@@ -51,7 +51,13 @@ export default function AccountModal(props: AccountModalProps): ReactElement {
                         {(accounts || []).map((account: string, index: number) => (
                             <div className="row" key={index}>
                                 <div className="col-12">
-                                    <div className="one-account" onClick={() => {props.onSelected(account); fetchIssueTransactions(dispatch,store)}}>
+                                    <div
+                                        className="one-account"
+                                        onClick={() => {
+                                            props.onSelected(account);
+                                            fetchIssueTransactions(dispatch, store);
+                                        }}
+                                    >
                                         {account}
                                     </div>
                                 </div>
