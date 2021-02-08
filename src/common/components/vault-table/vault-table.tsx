@@ -15,9 +15,7 @@ export default function VaultTable(): ReactElement {
     const [premiumRedeemThreshold, setPremiumRedeemThreshold] = useState(new Big(0));
     const [secureCollateralThreshold, setSecureCollateralThreshold] = useState(new Big(0));
     const { t } = useTranslation();
-    const { polkaBtcLoaded } = useSelector(
-        (state: StoreType) => state.general
-    );
+    const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
 
     useEffect(() => {
         const fetchData = async () => {

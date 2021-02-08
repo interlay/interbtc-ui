@@ -1,36 +1,35 @@
 @import "../../variables";
 
-.app-page{
-
-    .app-tabs{
+.app-page {
+    .app-tabs {
         .app-tab {
             padding: 0.5rem;
-            &:hover{
+            &:hover {
                 cursor: pointer;
             }
         }
 
-        .active-tab{
+        .active-tab {
             padding-bottom: 5px;
             border-bottom: 3px solid $brand-color;
             color: $brand-color;
         }
 
-        .not-active{
+        .not-active {
             border-bottom: none;
         }
     }
 
-    .grey-text{
+    .grey-text {
         color: #998;
     }
 
-    .tab-content-wrapper{
+    .tab-content-wrapper {
         box-shadow: 0px 0px 20px darkgrey;
         border-radius: 5px;
     }
 
-    #amount-btc-input{
+    #amount-btc-input {
         border: none;
         font-size: 3rem;
         width: 100%;
@@ -38,7 +37,7 @@
         text-align: right;
     }
 
-    .app-btn{
+    .app-btn {
         width: 100%;
         padding: 15px;
         margin-bottom: 15px;
@@ -46,14 +45,14 @@
     }
 }
 
-.mark-currency{
+.mark-currency {
     font-size: 1.5rem;
     text-align: left;
     margin-top: 3.7rem;
     margin-left: -1rem;
 }
 
-.locking-by{
+.locking-by {
     border: 2px solid #998;
     border-radius: 5px;
     padding: 10px;
@@ -64,7 +63,7 @@
     }
 }
 
-.wizard-item{
+.wizard-item {
     border: 1px solid #998;
     border-radius: 5px;
     padding: 10px;
@@ -75,118 +74,118 @@
     }
 }
 
-.balances-title{
+.balances-title {
     font-size: 2rem;
     font-weight: 600;
 }
 
-.usd-price{
+.usd-price {
     color: #998;
     font-size: 1rem;
     margin-bottom: 4rem;
 }
 
-.usd-price-modal{
+.usd-price-modal {
     text-align: center;
     color: #998;
     font-size: 1rem;
     margin-bottom: 2rem;
 }
 
-.btc-balance-wrapper{
+.btc-balance-wrapper {
     margin-right: 2rem;
     text-align: right;
 }
 
-.dot-balance-wrapper{
+.dot-balance-wrapper {
     margin-left: 2rem;
     text-align: left;
 }
 
-.wizard-title{
+.wizard-title {
     text-align: center;
     font-weight: 600;
     font-size: 1.3rem;
 }
 
-.issue-amount{
+.issue-amount {
     text-align: center;
     font-size: 1.7rem;
     color: #998;
-    .wizzard-number{
+    .wizzard-number {
         color: black;
         font-size: 3rem;
     }
 }
 
-.total-amount{
+.total-amount {
     font-weight: 600;
 }
 
-.step-item{
+.step-item {
     padding: 0.7rem;
 }
 
-.total-divider{
+.total-divider {
     margin: 10px;
-    border-top: 2px solid rgba(0,0,0,0.1);
+    border-top: 2px solid rgba(0, 0, 0, 0.1);
 }
 
-.payment-title{
+.payment-title {
     text-align: center;
     font-size: 1.5rem;
     font-weight: 600;
 }
 
-.payment-description{
+.payment-description {
     text-align: center;
     padding: 15px;
 }
 
-.payment-address{
+.payment-address {
     text-align: center;
     padding: 15px;
     font-size: 1rem;
     font-weight: 600;
-    span{
+    span {
         border-radius: 5px;
         border: 1px solid black;
         padding: 10px;
     }
 }
 
-.payment-timer-with{
+.payment-timer-with {
     text-align: center;
     font-weight: 600;
     padding-top: 15px;
 }
 
-.payment-timer{
+.payment-timer {
     text-align: center;
     font-weight: 600;
 }
 
-.qr-code-item{
+.qr-code-item {
     text-align: center;
     padding: 3rem;
 }
 
-.ledger-wrapper{
+.ledger-wrapper {
     text-align: center;
     padding: 15px;
 
-    a{
-        text-decoration: none!important;
+    a {
+        text-decoration: none !important;
     }
 }
-.input-address-wrapper{
+.input-address-wrapper {
     color: #998;
     border: 1px solid;
     height: fit-content;
     border-radius: 5px;
 }
 
-#btc-address-input{
+#btc-address-input {
     color: #998;
     font-size: 1.3rem;
     padding: 1rem;
@@ -197,24 +196,24 @@
     border: none;
 }
 
-.address-label{
+.address-label {
     text-align: left;
     margin-left: 15px;
     margin-top: 1rem;
 }
 
-.ledger-logo-wrapper{
+.ledger-logo-wrapper {
     margin: auto;
     padding: 15px;
     border: 1px solid black;
     width: fit-content;
     border-radius: 5px;
 
-    &:hover{
+    &:hover {
         cursor: pointer;
     }
 
-    .ledger-logo{
+    .ledger-logo {
         width: 150px;
         height: 100px;
         background-image: url("../../assets/img/ledger.svg");
@@ -224,9 +223,7 @@
     }
 }
 
-
-
-.confirmation-circle{
+.confirmation-circle {
     border-radius: 50%;
     padding-top: 54px;
     width: 200px;
@@ -235,13 +232,13 @@
     margin: auto;
 }
 
-.completed-confirmations-circle{
+.completed-confirmations-circle {
     @extend .confirmation-circle;
     border: 5px solid green;
     padding-top: 72px;
 }
 
-.pending-circle{
+.pending-circle {
     @extend .confirmation-circle;
     border: 5px solid #998;
     padding-top: 64px;
@@ -249,7 +246,7 @@
     font-weight: 600;
 }
 
-.cancelled-confirmations-circle{
+.cancelled-confirmations-circle {
     @extend .confirmation-circle;
     border: 5px solid $error-color;
     padding-top: 75px;
@@ -257,73 +254,73 @@
     font-weight: 600;
 }
 
-.waiting-confirmations-circle{
+.waiting-confirmations-circle {
     @extend .confirmation-circle;
     border: 5px solid orange;
 }
 
-.number-of-confirmations{
+.number-of-confirmations {
     font-size: 1.5rem;
 }
 
-.status-title{
+.status-title {
     font-size: 2rem;
     font-weight: 600;
     text-align: center;
     margin: 3rem;
 }
 
-.btc-transaction-view{
+.btc-transaction-view {
     font-size: 1.3rem;
     width: fit-content;
     text-align: center;
     margin: auto;
 }
 
-.btc-transaction-wrapper{
+.btc-transaction-wrapper {
     margin-top: 2rem;
 }
 
-.step-title{
+.step-title {
     display: inline;
     text-align: center;
     left: calc(50% - 20px);
     top: 15px;
 }
 
-.step-back{
+.step-back {
     text-align: left;
 
-    .custom-icon-size{
+    .custom-icon-size {
         font-size: 2rem;
         color: #998;
         margin-top: 15px;
         // float: left;
-        &:hover{
+        &:hover {
             cursor: pointer;
         }
     }
 }
 
-.wizard-input-error{
+.wizard-input-error {
     color: $error-color;
     margin-top: -3rem;
     margin-bottom: 2rem;
 }
 
-.address-input-error{
+.address-input-error {
     color: $error-color;
     margin-top: 1rem;
     margin-bottom: 0rem;
 }
 
-.wizard-redeem-title{
+.wizard-redeem-title {
     margin-top: 2rem;
     font-weight: 600;
     font-size: 1.8rem;
 }
 
-.inform-you{
+.inform-you {
     font-weight: 600;
     margin-top: 1rem;
     margin-bottom: 2rem;

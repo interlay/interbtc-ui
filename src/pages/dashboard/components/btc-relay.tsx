@@ -1,42 +1,18 @@
-import React, { useState, useEffect, ReactElement } from "react";
+import React, { ReactElement } from "react";
 import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboardcolors";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
+import { useTranslation } from "react-i18next";
 
 const BtcRelay = (): ReactElement => {
     // TODO: Compute status using blockstream data
-    const [latestRelayBlock, setLatestRelayBlock] = useState("0");
-    const [latestBitcoinBlock, setLatestBitcoinBlock] = useState("0");
-    const [textColour, setTextColour] = useState("d_grey");
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+    const { btcRelayHeight, bitcoinHeight } = useSelector((state: StoreType) => state.general);
     const outdatedRelayThreshold = 12;
+    const isSynced = bitcoinHeight - btcRelayHeight <= outdatedRelayThreshold;
+    const textColour = isSynced ? "d_green" : "d_red";
+    const { t } = useTranslation();
 
-    useEffect(() => {
-        const fetchOracleData = async () => {
-            if (!polkaBtcLoaded) return;
-            const latestRelayBlock = await window.polkaBTC.btcRelay.getLatestBlockHeight();
-            const latestBitcoinBlock = await window.polkaBTC.btcCore.getLatestBlockHeight();
-            setLatestRelayBlock(latestRelayBlock.toString());
-            setLatestBitcoinBlock(latestBitcoinBlock.toString());
-        };
-        fetchOracleData();
-        const relayTextElement = document.getElementById("relay-text") as HTMLElement;
-        const relayCircleTextElement = document.getElementById("relay-circle-text") as HTMLElement;
-
-        const btcRelayOffset = Number(latestBitcoinBlock) - Number(latestBitcoinBlock);
-
-        if (btcRelayOffset <= outdatedRelayThreshold) {
-            relayTextElement.innerHTML = " synchronized";
-            relayCircleTextElement.innerHTML = "Synced";
-            setTextColour("d_green");
-        } else {
-            // TODO: add how many blocks behind
-            relayTextElement.innerHTML = " not synchronized";
-            relayCircleTextElement.innerHTML = "Out of Sync";
-            setTextColour("d_red");
-        }
-    }, [latestBitcoinBlock, polkaBtcLoaded]);
     return (
         <div className="card">
             <div className="card-top-content">
@@ -45,9 +21,8 @@ const BtcRelay = (): ReactElement => {
                         BTC Relay is
                         <span
                             style={{ color: `${getAccents(`${textColour}`).colour}`, fontFamily: "airbnb-cereal-bold" }}
-                            id="relay-text"
                         >
-                            Loading
+                            {isSynced ? t("dashboard.synchronized") : t("dashboard.not_synchronized")}
                         </span>
                     </h1>
                 </div>
@@ -66,14 +41,10 @@ const BtcRelay = (): ReactElement => {
                     style={{ borderColor: `${getAccents(`${textColour}`).colour}` }}
                     id="relay-circle"
                 >
-                    <h1
-                        className="h1-xl-text"
-                        style={{ color: `${getAccents(`${textColour}`).colour}` }}
-                        id="relay-circle-text"
-                    >
-                        Loading
+                    <h1 className="h1-xl-text" style={{ color: `${getAccents(`${textColour}`).colour}` }}>
+                        {isSynced ? t("dashboard.synced") : t("dashboard.out_of_sync")}
                     </h1>
-                    <p className="latest-block-text">Block {latestRelayBlock}</p>
+                    <p className="latest-block-text">Block {btcRelayHeight}</p>
                 </div>
             </div>
         </div>

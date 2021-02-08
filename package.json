@@ -74,7 +74,7 @@
         "jsdom": "^16.4.0",
         "jsdom-global": "^3.0.2",
         "mocha": "^8.2.1",
-        "prettier": "^2.1.2",
+        "prettier": "2.2.1",
         "react-addons-test-utils": "^15.6.2",
         "redux-mock-store": "^1.5.4",
         "ts-mocha": "^8.0.0",
@@ -88,7 +88,7 @@
         "generate:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package sample-polkadotjs-typegen/interfaces --endpoint btc-parachain.json --output ./src/interfaces",
         "lint": "npx eslint ./src/**/*.ts ./src/**/*.tsx",
         "lint-fix": "eslint ./src/**/*.{ts,tsx} --quiet --fix",
-        "format": "prettier --config .prettierrc --write ./src/**/*.{ts,tsx}",
+        "format": "prettier --config .prettierrc --write .",
         "setup": "yarn generate:defs && yarn generate:meta",
         "build": "react-app-rewired build",
         "test": "ts-mocha --exit --require babel-register --require ignore-styles --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx",
@@ -113,7 +113,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "yarn lint & yarn test"
+            "pre-commit": "yarn lint & yarn format & yarn test"
         }
     }
 }

@@ -23,16 +23,16 @@ type EnterBTCForm = {
 };
 
 export default function EnterBTCAmount() {
-    const { polkaBtcLoaded, prices, address } = useSelector((state: StoreType) => state.general);
+    const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
+    const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
     const amount = useSelector((state: StoreType) => state.issue.amountBTC);
     const defaultValues = amount ? { defaultValues: { amountBTC: amount } } : undefined;
     const { register, handleSubmit, errors, getValues } = useForm<EnterBTCForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
     const [dustValue, setDustValue] = useState("0");
-    const [usdAmount, setUsdAmount] = useState(calculateAmount(amount || "0",prices.bitcoin.usd.toString()));
+    const [usdAmount, setUsdAmount] = useState("");
     const dispatch = useDispatch();
     const { t } = useTranslation();
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,8 +42,9 @@ export default function EnterBTCAmount() {
             const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
             setDustValue(dustValueBtc);
         };
+        setUsdAmount(calculateAmount(amount || getValues("amountBTC") || "0", usdPrice));
         fetchData();
-    },[polkaBtcLoaded]);
+    }, [polkaBtcLoaded, setUsdAmount, amount, usdPrice, getValues]);
 
     const onSubmit = handleSubmit(async ({ amountBTC }) => {
         if (!polkaBtcLoaded) return;
@@ -88,11 +89,12 @@ export default function EnterBTCAmount() {
                     <input
                         id="amount-btc-input"
                         name="amountBTC"
-                        type="float"
+                        type="number"
+                        step="any"
                         placeholder="0.00"
                         className={"" + (errors.amountBTC ? " error-borders" : "")}
                         onChange={() => {
-                            setUsdAmount(calculateAmount(getValues("amountBTC") || "0",prices.bitcoin.usd.toString()));
+                            setUsdAmount(calculateAmount(getValues("amountBTC") || "0", usdPrice));
                         }}
                         ref={register({
                             required: true,
@@ -108,14 +110,10 @@ export default function EnterBTCAmount() {
                         })}
                     />
                 </div>
-                <div className="col-6 mark-currency">
-                    PolkaBTC
-                </div>
+                <div className="col-6 mark-currency">PolkaBTC</div>
             </div>
             <div className="row usd-price">
-                <div className="col">
-                    {"= $" + usdAmount}
-                </div>
+                <div className="col">{"= $" + usdAmount}</div>
             </div>
             {errors.amountBTC && (
                 <div className="wizard-input-error">
@@ -128,9 +126,7 @@ export default function EnterBTCAmount() {
                 <div className="col-12">
                     <div className="locking-by">
                         <div className="row">
-                            <div className="col-6">
-                                {t("issue_page.by_locking")}
-                            </div>
+                            <div className="col-6">{t("issue_page.by_locking")}</div>
                             <div className="col-6">
                                 <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>BTC
                             </div>
@@ -138,11 +134,7 @@ export default function EnterBTCAmount() {
                     </div>
                 </div>
             </div>
-            <ButtonMaybePending
-                className="btn btn-primary app-btn"
-                isPending={isRequestPending}
-                onClick={onSubmit}
-            >
+            <ButtonMaybePending className="btn btn-primary app-btn" isPending={isRequestPending} onClick={onSubmit}>
                 {t("next")}
             </ButtonMaybePending>
         </form>

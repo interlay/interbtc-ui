@@ -19,6 +19,20 @@ export const SHOW_ACCOUNT_MODAL = "SHOW_ACCOUNT_MODAL";
 export const UPDATE_ACCOUNTS = "UPDATE_ACCOUNTS";
 export const SET_ACTIVE_TAB = "SET_ACTIVE_TAB";
 export const UPDATE_OF_PRICES = "UPDATE_OF_PRICES";
+export const UPDATE_HEIGHTS = "UPDATE_HEIGHTS";
+export const UPDATE_TOTALS = "UPDATE_TOTALS";
+
+export interface UpdateTotals {
+    type: typeof UPDATE_TOTALS;
+    totalLockedDOT: string;
+    totalPolkaBTC: string;
+}
+
+export interface UpdateHeights {
+    type: typeof UPDATE_HEIGHTS;
+    btcRelayHeight: number;
+    bitcoinHeight: number;
+}
 
 export interface UpdateOfPrices {
     type: typeof UPDATE_OF_PRICES;
@@ -106,7 +120,9 @@ export type GeneralActions =
     | ShowAccountModal
     | UpdateAccounts
     | SetActiveTab
-    | UpdateOfPrices;
+    | UpdateOfPrices
+    | UpdateHeights
+    | UpdateTotals;
 
 // REDEEM
 
@@ -122,7 +138,6 @@ export const STORE_REDEEM_REQUEST = "STORE_REDEEM_REQUEST";
 export const ADD_REDEEM_REQUEST = "ADD_REDEEM_REQUEST";
 export const ADD_VAULT_REDEEMS = "ADD_VAULT_REDEEMS";
 export const UPDATE_REDEEM_FEE = "UPDATE_REDEEM_FEE";
-export const ADD_TRANSACTION_LISTENER_REDEEM = "ADD_TRANSACTION_LISTENER_REDEEM";
 export const UPDATE_REDEEM_REQUEST = "UPDATE_REDEEM_REQUEST";
 export const UPDATE_ALL_REDEEM_REQUESTS = "UPDATE_ALL_REDEEM_REQUESTS";
 export const RETRY_REDEEM_REQUEST = "RETRY_REDEEM_REQUEST";
@@ -188,11 +203,6 @@ export interface AddVaultRedeems {
     vaultRedeems: VaultRedeem[];
 }
 
-export interface AddTransactionListenerRedeem {
-    type: typeof ADD_TRANSACTION_LISTENER_REDEEM;
-    id: string;
-}
-
 export interface UpdateRedeemRequest {
     type: typeof UPDATE_REDEEM_REQUEST;
     request: RedeemRequest;
@@ -232,7 +242,6 @@ export type RedeemActions =
     | ChangeAddress
     | InitState
     | AddVaultRedeems
-    | AddTransactionListenerRedeem
     | UpdateRedeemRequest
     | UpdateAllRedeemRequests
     | RetryRedeemRequest
@@ -254,7 +263,6 @@ export const STORE_ISSUE_REQUEST = "STORE_ISSUE_REQUEST";
 export const CHANGE_BTC_TX_ID = "CHANGE_BTC_TX_ID";
 export const ADD_ISSUE_REQUEST = "ADD_ISSUE_REQUEST";
 export const UPDATE_ISSUE_REQUEST = "UPDATE_ISSUE_REQUEST";
-export const ADD_TRANSACTION_LISTENER_ISSUE = "ADD_TRANSACTION_LISTENER_ISSUE";
 export const OPEN_WIZARD_IN_EDIT_MODE = "OPEN_WIZARD_IN_EDIT_MODE";
 export const ADD_VAULT_ISSUES = "ADD_VAULT_ISSUES";
 export const UPDATE_ALL_ISSUE_REQUESTS = "UPDATE_ALL_ISSUE_REQUESTS";
@@ -323,11 +331,6 @@ export interface UpdateIssueRequest {
     request: IssueRequest;
 }
 
-export interface AddTransactionListenerIssue {
-    type: typeof ADD_TRANSACTION_LISTENER_ISSUE;
-    id: string;
-}
-
 export interface OpenWizardInEditMode {
     type: typeof OPEN_WIZARD_IN_EDIT_MODE;
 }
@@ -350,7 +353,6 @@ export type IssueActions =
     | StoreIssueRequest
     | AddIssueRequest
     | UpdateIssueRequest
-    | AddTransactionListenerIssue
     | OpenWizardInEditMode
     | ChangeAddress
     | InitState

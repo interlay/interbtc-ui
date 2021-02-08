@@ -3,31 +3,31 @@ import React, { useState, MouseEvent } from "react";
 import Big from "big.js";
 import { IssueRequest } from "../../../common/types/issue.types";
 import { Table, Badge } from "react-bootstrap";
-import { parachainToUIIssueRequest } from "../../../common/utils/utils";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { useEffect } from "react";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { toast } from "react-toastify";
-import { startTransactionWatcherIssue } from "../../../common/utils/issue-transaction.watcher";
-import {
-    updateIssueRequestAction,
-    changeIssueIdAction,
-    updateAllIssueRequestsAction
-} from "../../../common/actions/issue.actions";
+import { updateIssueRequestAction, changeIssueIdAction } from "../../../common/actions/issue.actions";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
 import { updateBalancePolkaBTCAction, showAccountModalAction } from "../../../common/actions/general.actions";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import * as constants from "../../../constants";
 import { ParachainStatus } from "../../../common/types/util.types";
 import IssueModal from "./modal/issue-modal";
 
 export default function IssueRequests() {
-    const { address, balancePolkaBTC, polkaBtcLoaded, extensions, stateOfBTCParachain,
-        bitcoinHeight, btcRelayHeight } = useSelector((state: StoreType) => state.general);
+    const {
+        address,
+        balancePolkaBTC,
+        polkaBtcLoaded,
+        extensions,
+        stateOfBTCParachain,
+        bitcoinHeight,
+        btcRelayHeight,
+    } = useSelector((state: StoreType) => state.general);
     const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
-    const { transactionListeners } = useSelector((state: StoreType) => state.issue);
     const [executePending, setExecutePending] = useState([""]);
     const [showModal, setShowModal] = useState(false);
     const [requiredBtcConfirmations, setRequiredBtcConfirmations] = useState(0);
@@ -43,7 +43,7 @@ export default function IssueRequests() {
             toast.error(t("issue_page.error_in_parachain"));
             return;
         }
-        if (bitcoinHeight-btcRelayHeight>constants.BLOCKS_BEHIND_LIMIT) {
+        if (bitcoinHeight - btcRelayHeight > constants.BLOCKS_BEHIND_LIMIT) {
             toast.error(t("issue_page.error_more_than_6_blocks_behind"));
             return;
         }
@@ -52,7 +52,7 @@ export default function IssueRequests() {
         } else {
             dispatch(showAccountModalAction(true));
         }
-    }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -65,57 +65,12 @@ export default function IssueRequests() {
                 setParachainHeight(new Big(parachainHeightBlock.toString()));
 
                 setRequiredBtcConfirmations(await window.polkaBTC.btcRelay.getStableBitcoinConfirmations());
-
-                const accountId = window.polkaBTC.api.createType("AccountId", address);
-                const issueRequestMap = await window.polkaBTC.issue.mapForUser(accountId);
-                const allRequests = [];
-
-                for (const [key, value] of issueRequestMap) {
-                    allRequests.push(parachainToUIIssueRequest(key, value));
-                }
-
-                await Promise.all(
-                    allRequests.map(async (request) => {
-                        try {
-                            request.btcTxId = await window.polkaBTC.btcCore.getTxIdByRecipientAddress(
-                                request.vaultBTCAddress,
-                                request.amountBTC
-                            );
-                        } catch (err) {
-                            console.log("Issue Id: " + request.id + " " + err);
-                        }
-                    })
-                );
-                await Promise.all(
-                    allRequests.map(async (request) => {
-                        try {
-                            if (request.btcTxId) {
-                                request.confirmations = (
-                                    await window.polkaBTC.btcCore.getTransactionStatus(request.btcTxId)
-                                ).confirmations;
-                            }
-                        } catch (err) {
-                            console.log(err);
-                        }
-                    })
-                );
-
-                dispatch(updateAllIssueRequestsAction(allRequests));
-
-                if (!allRequests) return;
-                allRequests.forEach(async (request: IssueRequest) => {
-                    // start watcher for new issue requests
-                    if (transactionListeners.indexOf(request.id) === -1 && polkaBtcLoaded) {
-                        // the tx watcher updates the storage cache every 10s
-                        startTransactionWatcherIssue(request, dispatch);
-                    }
-                });
             } catch (error) {
                 toast.error(error.toString());
             }
         };
         fetchData();
-    }, [polkaBtcLoaded, address, dispatch, transactionListeners]);
+    }, [polkaBtcLoaded, address, dispatch]);
 
     const execute = async (request: IssueRequest) => {
         if (!polkaBtcLoaded) return;
@@ -249,7 +204,9 @@ export default function IssueRequests() {
                                 return (
                                     <tr key={index} onClick={() => requestClicked(request)}>
                                         <td>{request.creation === "0" ? t("issue_page.pending") : request.creation}</td>
-                                        <td>{request.amountBTC} <span className="grey-text">PolkaBTC</span></td>
+                                        <td>
+                                            {request.amountBTC} <span className="grey-text">PolkaBTC</span>
+                                        </td>
                                         <td>
                                             <BitcoinTransaction txId={request.btcTxId} shorten />
                                         </td>
@@ -260,7 +217,7 @@ export default function IssueRequests() {
                             })}
                         </tbody>
                     </Table>
-                    <IssueModal show={showModal} onClose={closeModal}/>
+                    <IssueModal show={showModal} onClose={closeModal} />
                 </React.Fragment>
             )}
         </div>
