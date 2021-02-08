@@ -80,6 +80,7 @@
         display: flex;
         align-items: flex-start;
         vertical-align: middle;
+        text-decoration: none;
     }
     .external-link {
         margin-left: 3px;
@@ -128,6 +129,9 @@ canvas {
 .latest-block-text {
     font-size: 11px;
     font-family: airbnb-cereal-bold;
+}
+.bold-font {
+    font-family: "airbnb-cereal-bold";
 }
 
 @media only screen and (min-width: $mobile-large-size) {

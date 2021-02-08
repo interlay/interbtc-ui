@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 
 const OracleStatus = (): ReactElement => {
-    const [textcolor, setTextcolor] = useState("d_grey");
+    const [oracleStatus, setOracleStatus] = useState("Loading");
     const [exchangeRate, setExchangeRate] = useState("0");
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
@@ -14,34 +14,35 @@ const OracleStatus = (): ReactElement => {
             if (!polkaBtcLoaded) return;
             const oracle = await window.polkaBTC.oracle.getInfo();
             setExchangeRate(oracle.exchangeRate.toFixed(2));
-            const oracleTextElement = document.getElementById("oracle-text") as HTMLElement;
-            const oracleCircleTextElement = document.getElementById("oracle-circle-text") as HTMLElement;
 
             if (oracle) {
-                oracleTextElement.innerHTML = " online";
-                oracleCircleTextElement.innerHTML = "Online";
-                setTextcolor("d_green");
+                setOracleStatus("Online");
             } else {
-                oracleTextElement.innerHTML = " offline";
-                oracleCircleTextElement.innerHTML = "Offline";
-                setTextcolor("d_red");
+                setOracleStatus("Offline");
             }
         };
         fetchOracleData();
-    }, [textcolor, polkaBtcLoaded]);
+    }, [polkaBtcLoaded]);
 
     return (
         <div className="card">
             <div className="card-top-content">
                 <div className="values-container">
-                    <h1 style={{ fontFamily: "airbnb-cereal-bold" }}>
-                        Oracles are
-                        <span
-                            style={{ color: `${getAccents(`${textcolor}`).color}`, fontFamily: "airbnb-cereal-bold" }}
-                            id="oracle-text"
-                        >
-                            Loading
-                        </span>
+                    <h1 className="bold-font">
+                        Oracles are &nbsp;
+                        {oracleStatus === "Online" ? (
+                            <span style={{ color: getAccents("d_green").color }} id="oracle-text" className="bold-font">
+                                Online
+                            </span>
+                        ) : oracleStatus === "Offline" ? (
+                            <span style={{ color: getAccents("d_red").color }} id="oracle-text" className="bold-font">
+                                Offline
+                            </span>
+                        ) : (
+                            <span style={{ color: getAccents("d_grey").color }} id="oracle-text" className="bold-font">
+                                Loading
+                            </span>
+                        )}
                     </h1>
                 </div>
                 <div className="button-container">
@@ -54,20 +55,48 @@ const OracleStatus = (): ReactElement => {
                 </div>
             </div>
             <div className="circle-container">
-                <div
-                    className="status-circle"
-                    style={{ borderColor: `${getAccents(`${textcolor}`).color}` }}
-                    id="oracle-circle"
-                >
-                    <h1
-                        className="h1-xl-text"
-                        style={{ color: `${getAccents(`${textcolor}`).color}` }}
-                        id="oracle-circle-text"
+                {oracleStatus === "Online" ? (
+                    <div
+                        className="status-circle"
+                        style={{ borderColor: getAccents("d_green").color }}
+                        id="oracle-circle"
                     >
-                        Loading
-                    </h1>
-                    <h2>{exchangeRate} DOT/BTC</h2>
-                </div>
+                        <h1
+                            className="h1-xl-text"
+                            style={{ color: getAccents("d_green").color }}
+                            id="oracle-circle-text"
+                        >
+                            {oracleStatus}
+                        </h1>
+                        <h2>{exchangeRate} DOT/BTC</h2>
+                    </div>
+                ) : oracleStatus === "Offline" ? (
+                    <div
+                        className="status-circle"
+                        style={{ borderColor: getAccents("d_red").color }}
+                        id="oracle-circle"
+                    >
+                        <h1 className="h1-xl-text" style={{ color: getAccents("d_red").color }} id="oracle-circle-text">
+                            {oracleStatus}
+                        </h1>
+                        <h2>{exchangeRate} DOT/BTC</h2>
+                    </div>
+                ) : (
+                    <div
+                        className="status-circle"
+                        style={{ borderColor: getAccents("d_grey").color }}
+                        id="oracle-circle"
+                    >
+                        <h1
+                            className="h1-xl-text"
+                            style={{ color: getAccents("d_grey").color }}
+                            id="oracle-circle-text"
+                        >
+                            {oracleStatus}
+                        </h1>
+                        <h2>{exchangeRate} DOT/BTC</h2>
+                    </div>
+                )}
             </div>
         </div>
     );

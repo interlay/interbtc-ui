@@ -45,7 +45,7 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
             {linkButton ? (
                 <div className="card-top-content">
                     <div className="values-container">
-                        <h1 style={{ color: `${getAccents("d_yellow").color}` }}>{t("dashboard.issue.issued")}</h1>
+                        <h1 style={{ color: getAccents("d_yellow").color }}>{t("dashboard.issue.issued")}</h1>
                         <h2>{t("dashboard.issue.total_polkabtc", { amount: totalPolkaBTC })}</h2>
                         {/* TODO: add the price API */}
                         {/* <h2>${(prices.bitcoin.usd * parseInt(totalPolkaBTC)).toLocaleString()}</h2> */}

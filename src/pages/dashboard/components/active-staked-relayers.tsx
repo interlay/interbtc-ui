@@ -25,7 +25,7 @@ const ActiveStakedRelayers = (): ReactElement => {
         <div className="card">
             <div className="card-top-content">
                 <div className="values-container">
-                    <h1 style={{ color: `${getAccents("d_orange").color}` }}>
+                    <h1 style={{ color: getAccents("d_orange").color }}>
                         {t("dashboard.parachain.active_relayers")}
                     </h1>
                     <h2>{totalRelayersPerDay[totalRelayersPerDay.length - 1]?.count}</h2>

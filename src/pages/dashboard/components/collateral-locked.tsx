@@ -47,7 +47,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
         <div className="card">
             <div className="card-top-content">
                 <div className="values-container">
-                    <h1 style={{ color: `${getAccents("d_pink").color}` }}>Collateral Locked</h1>
+                    <h1 style={{ color: getAccents("d_pink").color }}>Collateral Locked</h1>
                     <h2>{totalLockedDOT} DOT</h2>
                     <h2>${(prices.polkadot.usd * parseInt(totalLockedDOT)).toLocaleString()}</h2>
                 </div>

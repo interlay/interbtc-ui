@@ -4,28 +4,24 @@ import { getAccents } from "../dashboardcolors";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 const ParachainSecurity = (): React.ReactElement => {
-    const [textcolor, setTextcolor] = useState("d_grey");
+    const [parachainStatus, setParachainStatus] = useState("Loading");
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
     useEffect(() => {
         const fetchOracleData = async () => {
             if (!polkaBtcLoaded) return;
             const parachainStatus = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
-            const parachainTextElement = document.getElementById("parachain-text") as HTMLElement;
 
             if (parachainStatus.isRunning) {
-                parachainTextElement.innerHTML = "secure";
-                setTextcolor("d_green");
+                setParachainStatus("secure");
             } else if (parachainStatus.isError) {
-                parachainTextElement.innerHTML = "not secure";
-                setTextcolor("d_red");
+                setParachainStatus("not secure");
             } else {
-                parachainTextElement.innerHTML = "unavailable";
-                setTextcolor("d_grey");
+                setParachainStatus("unavailable");
             }
         };
         fetchOracleData();
-    }, [textcolor, polkaBtcLoaded]);
+    }, [polkaBtcLoaded]);
     return (
         <div className="card">
             <div className="values-container"></div>
@@ -34,14 +30,32 @@ const ParachainSecurity = (): React.ReactElement => {
             <div className="parachain-content-container">
                 <div>
                     <h1 className="h1-xl-text">
-                        The BTC parachain is{" "}
-                        <span
-                            className="h1-xl-text"
-                            style={{ color: `${getAccents(`${textcolor}`).color}` }}
-                            id="parachain-text"
-                        >
-                            Loading
-                        </span>
+                        The BTC parachain is &nbsp;
+                        {parachainStatus === "secure" ? (
+                            <span
+                                style={{ color: getAccents("d_green").color }}
+                                id="parachain-text"
+                                className="bold-font"
+                            >
+                                secure
+                            </span>
+                        ) : parachainStatus === "not secure" ? (
+                            <span
+                                style={{ color: getAccents("d_red").color }}
+                                id="parachain-text"
+                                className="bold-font"
+                            >
+                                not secure
+                            </span>
+                        ) : (
+                            <span
+                                style={{ color: getAccents("d_grey").color }}
+                                id="parachain-text"
+                                className="bold-font"
+                            >
+                                Loading
+                            </span>
+                        )}
                     </h1>
                     <div className="button-container" style={{ marginTop: "20px" }}>
                         <ButtonComponent

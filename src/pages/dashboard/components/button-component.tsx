@@ -11,7 +11,7 @@ type buttonProps = {
 };
 
 const ButtonComponent = (props: buttonProps): React.ReactElement => {
-    const accent = getAccents(`${props.propsButtonColor}`);
+    const accent = getAccents(props.propsButtonColor);
     const buttonColor = {
         border: `1.7px solid ${accent.color}`,
         color: `${accent.color}`,
@@ -40,7 +40,9 @@ const ButtonComponent = (props: buttonProps): React.ReactElement => {
             id={`${props.buttonId}-button-id`}
         >
             <Link className="button-assets-container" to={props.buttonLink}>
-                <h3 id={`${props.buttonId}-button-text`}>{props.buttonName}</h3>
+                <h3 id={`${props.buttonId}-button-text`} style={{ color: buttonColor.color }}>
+                    {props.buttonName}
+                </h3>
                 <img
                     style={{
                         filter: `${accent.filter}`,

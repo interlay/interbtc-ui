@@ -1,7 +1,7 @@
 export interface RedeemRequest {
     id: string;
     amountPolkaBTC: string;
-    timestamp: string;
+    // timestamp: string;
     creation: string;
     fee: string;
     btcAddress: string;
@@ -18,7 +18,7 @@ export interface RedeemRequest {
 export type DashboardRequestInfo = Pick<
     RedeemRequest,
     | "id"
-    | "timestamp"
+    // | "timestamp"
     | "amountPolkaBTC"
     | "creation"
     | "vaultDotAddress"
@@ -45,7 +45,7 @@ export interface RedeemState {
 
 export interface VaultRedeem {
     id: string;
-    timestamp: string;
+    // timestamp: string;
     user: string;
     btcAddress: string;
     polkaBTC: string;

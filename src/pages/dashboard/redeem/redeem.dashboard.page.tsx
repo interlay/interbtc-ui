@@ -36,7 +36,7 @@ export default function RedeemDashboard(): ReactElement {
 
     const tableHeadings = [
         t("id"),
-        t("timestamp"),
+        // t("timestamp"),
         t("redeem_page.amount"),
         t("parachainblock"),
         t("issue_page.vault_dot_address"),
@@ -47,7 +47,7 @@ export default function RedeemDashboard(): ReactElement {
     const tableRedeemRequestRow = useMemo(
         () => (rreq: DashboardRequestInfo): string[] => [
             rreq.id,
-            rreq.timestamp,
+            // rreq.timestamp,
             satToBTC(rreq.amountPolkaBTC),
             rreq.creation,
             rreq.vaultDotAddress || "",

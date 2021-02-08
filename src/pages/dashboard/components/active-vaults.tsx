@@ -29,7 +29,7 @@ const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
         <div className="card">
             <div className="card-top-content">
                 <div className="values-container">
-                    <h1 style={{ color: `${getAccents("d_pink").color}` }}>Active Vaults</h1>
+                    <h1 style={{ color: getAccents("d_pink").color }}>Active Vaults</h1>
                     <h2>{totalVaultsPerDay[totalVaultsPerDay.length - 1]?.count}</h2>
                 </div>
                 <div className="button-container">
