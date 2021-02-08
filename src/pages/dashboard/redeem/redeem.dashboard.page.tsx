@@ -147,9 +147,16 @@ export default function RedeemDashboard(): ReactElement {
                                             ? t("no_data")
                                             : satToBTC(totalRedeemedAmount) + "BTC"}
                                     </h1>
-                                    <h1 className="h1-price-opacity">
-                                        ${(prices.bitcoin.usd * parseFloat(totalRedeemedAmount)).toLocaleString()}
-                                    </h1>
+                                    {totalRedeemedAmount === "-" ? (
+                                        ""
+                                    ) : (
+                                        <h1 className="h1-price-opacity">
+                                            $
+                                            {(
+                                                prices.bitcoin.usd * parseFloat(satToBTC(totalRedeemedAmount))
+                                            ).toLocaleString()}
+                                        </h1>
+                                    )}
                                 </div>
                                 <div>
                                     <h2 style={{ color: `${getAccents("d_green").color}` }}>
@@ -166,25 +173,6 @@ export default function RedeemDashboard(): ReactElement {
                                             ? t("no_data")
                                             : (redeemSuccessRate * 100).toFixed(2) + "%"}
                                     </h1>
-                                </div>
-                                <div className="col-md-4">
-                                    <LineChartComponent
-                                        color={["d_pink", "d_grey"]}
-                                        label={[
-                                            t("dashboard.redeem.total_redeemed_chart"),
-                                            t("dashboard.redeem.perday_redeemed_chart"),
-                                        ]}
-                                        yLabels={cumulativeRedeemsPerDay.map((dataPoint) =>
-                                            new Date(dataPoint.date).toLocaleDateString()
-                                        )}
-                                        yAxisProps={[{ beginAtZero: true, position: "left" }, { position: "right" }]}
-                                        data={[
-                                            cumulativeRedeemsPerDay.map((dataPoint) =>
-                                                Number(satToBTC(dataPoint.sat.toString()))
-                                            ),
-                                            pointRedeemsPerDay.map((amount) => Number(satToBTC(amount.toString()))),
-                                        ]}
-                                    />
                                 </div>
                             </div>
                             <div>
@@ -211,14 +199,16 @@ export default function RedeemDashboard(): ReactElement {
                             <div>
                                 <p className="table-heading">{t("issue_page.recent_requests")}</p>
                             </div>
-                            <DashboardTable
-                                pageData={redeemRequests}
-                                totalPages={Math.ceil(Number(totalRedeems) / tableParams.perPage)}
-                                tableParams={tableParams}
-                                setTableParams={setTableParams}
-                                headings={tableHeadings}
-                                dataPointDisplayer={tableRedeemRequestRow}
-                            />
+                            {
+                                // <DashboardTable
+                                // pageData={redeemRequests}
+                                // totalPages={Math.ceil(Number(totalRedeems) / tableParams.perPage)}
+                                // tableParams={tableParams}
+                                // setTableParams={setTableParams}
+                                // headings={tableHeadings}
+                                // dataPointDisplayer={() => (<></> as ReactElement)}
+                                // />
+                            }
                         </div>
                     </div>
                 </div>

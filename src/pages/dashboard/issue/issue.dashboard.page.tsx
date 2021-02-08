@@ -6,8 +6,8 @@ import { satToBTC } from "@interlay/polkabtc";
 import { getAccents } from "../../../pages/dashboard/dashboard-colors";
 import { StoreType } from "../../../common/types/util.types";
 import { DashboardIssueInfo } from "../../../common/types/issue.types";
-import { defaultTableDisplayParams } from "../../../common/utils/utils";
-import DashboardTable from "../../../common/components/dashboard-table/dashboard-table";
+import { defaultTableDisplayParams, shortAddress } from "../../../common/utils/utils";
+import DashboardTable, {StyledLinkData, StatusComponent} from "../../../common/components/dashboard-table/dashboard-table";
 import PolkaBTC from "../components/polkabtc";
 import "../dashboard-subpage.scss";
 
@@ -49,26 +49,28 @@ export default function IssueDashboard(): ReactElement {
     );
 
     const tableHeadings = [
-        t("id"),
-        t("timestamp"),
+        // t("id"),
+        t("date"),
         t("issue_page.amount"),
         t("issue_page.parachain_block"),
         t("issue_page.vault_dot_address"),
         t("issue_page.vault_btc_address"),
-        t("status"),
+        // "BTC Transaction",
+        // "BTC Confirmations",
+        t("status")
     ];
 
     const tableIssueRequestRow = useMemo(
-        () => (ireq: DashboardIssueInfo): string[] => [
-            ireq.id,
-            ireq.timestamp,
-            satToBTC(ireq.amountBTC),
-            ireq.creation,
-            ireq.vaultDOTAddress,
-            ireq.vaultBTCAddress,
-            ireq.completed ? t("completed") : ireq.cancelled ? t("cancelled") : t("pending"),
+        () => (ireq: DashboardIssueInfo): ReactElement[] => [
+            // <p>{shortAddress(ireq.id)}</p>,
+            <p>{ireq.timestamp}</p>,
+            <p>{satToBTC(ireq.amountBTC)}</p>,
+            <p>{ireq.creation}</p>,
+            <StyledLinkData data={shortAddress(ireq.vaultDOTAddress)} />,
+            <StyledLinkData data={shortAddress(ireq.vaultBTCAddress)} />,
+            <StatusComponent status={ireq.completed ? "completed" : ireq.cancelled ? "cancelled" : "pending"} />,
         ],
-        [t]
+        []
     );
 
     useEffect(() => {

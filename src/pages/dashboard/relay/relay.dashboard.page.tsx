@@ -58,14 +58,16 @@ export default function RelayDashboard(): ReactElement {
                             </div>
                         </div>
                     </div>
-                    <DashboardTable
-                        pageData={blocks.map((b) => ({ ...b, id: b.hash }))}
-                        totalPages={Math.ceil(totalRelayedBlocks / tableParams.perPage)}
-                        tableParams={tableParams}
-                        setTableParams={setTableParams}
-                        headings={tableHeadings}
-                        dataPointDisplayer={tableBlockRow}
-                    />
+                    {
+                        // <DashboardTable
+                        //     pageData={blocks.map((b) => ({...b, id: b.hash}))}
+                        //     totalPages={Math.ceil(totalRelayedBlocks / tableParams.perPage)}
+                        //     tableParams={tableParams}
+                        //     setTableParams={setTableParams}
+                        //     headings={tableHeadings}
+                        //     dataPointDisplayer={tableBlockRow}
+                        // />
+                    }
                 </div>
             </div>
         </div>
