@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactElement } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import {
@@ -26,7 +26,7 @@ type AmountAndAddressForm = {
     btcAddress: string;
 };
 
-export default function EnterAmountAndAddress() {
+export default function EnterAmountAndAddress(): ReactElement {
     const { t } = useTranslation();
     const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
     const { balancePolkaBTC, polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
@@ -67,15 +67,10 @@ export default function EnterAmountAndAddress() {
             dispatch(changeAmountPolkaBTCAction(amountPolkaBTC));
             const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
 
-            let vaultId;
-            let vaultBTCAddress;
-
-            vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountAsSatoshi);
+            const vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountAsSatoshi);
             // get the vault's data
             const vault = await window.polkaBTC.vaults.get(vaultId);
-            vaultBTCAddress = vault.wallet.addresses[0];
-
-            // toast.success("Found vault: " + vaultId.toString());
+            const vaultBTCAddress = vault.wallet.addresses[0];
 
             const fee = await window.polkaBTC.redeem.getFeesToPay(amountPolkaBTC);
             dispatch(updateRedeemFeeAction(fee));
