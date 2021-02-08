@@ -34,7 +34,6 @@ export default function EnterBTCAmount() {
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
-
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
@@ -43,9 +42,9 @@ export default function EnterBTCAmount() {
             const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
             setDustValue(dustValueBtc);
         };
-        setUsdAmount(calculateAmount(amount || getValues("amountBTC") || "0",usdPrice));
+        setUsdAmount(calculateAmount(amount || getValues("amountBTC") || "0", usdPrice));
         fetchData();
-    },[polkaBtcLoaded, setUsdAmount, amount, usdPrice, getValues]);
+    }, [polkaBtcLoaded, setUsdAmount, amount, usdPrice, getValues]);
 
     const onSubmit = handleSubmit(async ({ amountBTC }) => {
         if (!polkaBtcLoaded) return;
@@ -95,7 +94,7 @@ export default function EnterBTCAmount() {
                         placeholder="0.00"
                         className={"" + (errors.amountBTC ? " error-borders" : "")}
                         onChange={() => {
-                            setUsdAmount(calculateAmount(getValues("amountBTC") || "0",usdPrice));
+                            setUsdAmount(calculateAmount(getValues("amountBTC") || "0", usdPrice));
                         }}
                         ref={register({
                             required: true,
@@ -111,14 +110,10 @@ export default function EnterBTCAmount() {
                         })}
                     />
                 </div>
-                <div className="col-6 mark-currency">
-                    PolkaBTC
-                </div>
+                <div className="col-6 mark-currency">PolkaBTC</div>
             </div>
             <div className="row usd-price">
-                <div className="col">
-                    {"= $" + usdAmount}
-                </div>
+                <div className="col">{"= $" + usdAmount}</div>
             </div>
             {errors.amountBTC && (
                 <div className="wizard-input-error">
@@ -131,9 +126,7 @@ export default function EnterBTCAmount() {
                 <div className="col-12">
                     <div className="locking-by">
                         <div className="row">
-                            <div className="col-6">
-                                {t("issue_page.by_locking")}
-                            </div>
+                            <div className="col-6">{t("issue_page.by_locking")}</div>
                             <div className="col-6">
                                 <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>BTC
                             </div>
@@ -141,11 +134,7 @@ export default function EnterBTCAmount() {
                     </div>
                 </div>
             </div>
-            <ButtonMaybePending
-                className="btn btn-primary app-btn"
-                isPending={isRequestPending}
-                onClick={onSubmit}
-            >
+            <ButtonMaybePending className="btn btn-primary app-btn" isPending={isRequestPending} onClick={onSubmit}>
                 {t("next")}
             </ButtonMaybePending>
         </form>

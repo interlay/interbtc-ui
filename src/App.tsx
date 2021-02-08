@@ -215,8 +215,7 @@ export default function App(): ReactElement {
         };
         loadData();
         startFetchingLiveData(dispatch, store);
-    },[createAPIInstance, isLoading, polkaBtcLoaded, dispatch, store]);
-
+    }, [createAPIInstance, isLoading, polkaBtcLoaded, dispatch, store]);
 
     return (
         <React.Fragment>
