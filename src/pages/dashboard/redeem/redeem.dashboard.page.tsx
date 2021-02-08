@@ -4,8 +4,11 @@ import { useTranslation } from "react-i18next";
 import { getAccents } from "../../../pages/dashboard/dashboard-colors";
 import { StoreType } from "../../../common/types/util.types";
 import { DashboardRequestInfo } from "../../../common/types/redeem.types";
-import DashboardTable from "../../../common/components/dashboard-table/dashboard-table";
-import { defaultTableDisplayParams } from "../../../common/utils/utils";
+import DashboardTable, {
+    StyledLinkData,
+    StatusComponent,
+} from "../../../common/components/dashboard-table/dashboard-table";
+import { defaultTableDisplayParams, shortAddress, formatDateTimePrecise } from "../../../common/utils/utils";
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 import { satToBTC } from "@interlay/polkabtc";
 import LineChartComponent from "../components/line-chart-component";
@@ -35,34 +38,40 @@ export default function RedeemDashboard(): ReactElement {
     ]);
 
     const tableHeadings = [
-        t("id"),
-        // t("timestamp"),
+        // t("id"),
+        t("date"),
         t("redeem_page.amount"),
         t("parachainblock"),
         t("issue_page.vault_dot_address"),
         t("redeem_page.output_BTC_address"),
+        // "BTC Transaction",
+        // "BTC Confirmations",
         t("status"),
     ];
 
     const tableRedeemRequestRow = useMemo(
-        () => (rreq: DashboardRequestInfo): string[] => [
-            rreq.id,
-            // rreq.timestamp,
-            satToBTC(rreq.amountPolkaBTC),
-            rreq.creation,
-            rreq.vaultDotAddress || "",
-            rreq.btcAddress,
-            rreq.completed
-                ? t("completed")
-                : rreq.cancelled
-                ? t("cancelled")
-                : rreq.isExpired
-                ? t("expired")
-                : rreq.reimbursed
-                ? t("reimbursed")
-                : t("pending"),
+        () => (rreq: DashboardRequestInfo): ReactElement[] => [
+            // <p>{shortAddress(ireq.id)}</p>,
+            <p>{formatDateTimePrecise(new Date(rreq.timestamp))}</p>,
+            <p>{satToBTC(rreq.amountPolkaBTC)}</p>,
+            <p>{rreq.creation}</p>,
+            <StyledLinkData data={shortAddress(rreq.vaultDotAddress)} />,
+            <StyledLinkData data={shortAddress(rreq.btcAddress)} />,
+            <StatusComponent
+                status={
+                    rreq.completed
+                        ? "completed"
+                        : rreq.cancelled
+                        ? "cancelled"
+                        : rreq.isExpired
+                        ? "expired"
+                        : rreq.reimbursed
+                        ? "reimbursed"
+                        : "pending"
+                }
+            />,
         ],
-        [t]
+        []
     );
 
     const fetchRedeemRequests = useMemo(
@@ -199,16 +208,14 @@ export default function RedeemDashboard(): ReactElement {
                             <div>
                                 <p className="table-heading">{t("issue_page.recent_requests")}</p>
                             </div>
-                            {
-                                // <DashboardTable
-                                // pageData={redeemRequests}
-                                // totalPages={Math.ceil(Number(totalRedeems) / tableParams.perPage)}
-                                // tableParams={tableParams}
-                                // setTableParams={setTableParams}
-                                // headings={tableHeadings}
-                                // dataPointDisplayer={() => (<></> as ReactElement)}
-                                // />
-                            }
+                            <DashboardTable
+                                pageData={redeemRequests}
+                                totalPages={Math.ceil(Number(totalRedeems) / tableParams.perPage)}
+                                tableParams={tableParams}
+                                setTableParams={setTableParams}
+                                headings={tableHeadings}
+                                dataPointDisplayer={tableRedeemRequestRow}
+                            />
                         </div>
                     </div>
                 </div>

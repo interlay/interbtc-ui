@@ -26,10 +26,10 @@
     background-color: black;
     opacity: 0.2;
 }
-.table {
+.dashboard-table {
     .dashboard-table-grid {
         display: grid;
-        grid-template-columns: 0.6fr 0.6fr repeat(5, 1fr) 0.6fr;
+        grid-auto-columns: auto;
     }
     .vault-table-grid {
         display: grid;
@@ -41,7 +41,7 @@
         background-color: #e6e6e6;
     }
     .data-container {
-        padding: 15px 0px;
+        padding: 15px 20px;
         height: 50px;
         @include flexCenter();
     }

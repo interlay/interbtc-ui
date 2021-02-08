@@ -15,19 +15,18 @@ export interface RedeemRequest {
     reimbursed: boolean;
 }
 
-export type DashboardRequestInfo = Pick<
-    RedeemRequest,
-    | "id"
-    // | "timestamp"
-    | "amountPolkaBTC"
-    | "creation"
-    | "vaultDotAddress"
-    | "btcAddress"
-    | "completed"
-    | "cancelled"
-    | "isExpired"
-    | "reimbursed"
->;
+export type DashboardRequestInfo = {
+    id: string;
+    timestamp: string;
+    amountPolkaBTC: string;
+    creation: string;
+    vaultDotAddress: string;
+    btcAddress: string;
+    completed: boolean;
+    cancelled: boolean;
+    isExpired: boolean;
+    reimbursed: boolean;
+};
 
 export interface RedeemState {
     address: string;

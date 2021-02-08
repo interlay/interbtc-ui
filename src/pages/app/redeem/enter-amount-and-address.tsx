@@ -8,7 +8,7 @@ import {
     changeVaultDotAddressOnRedeemAction,
     updateRedeemFeeAction,
     changeBTCAddressAction,
-    changeRedeemIdAction
+    changeRedeemIdAction,
 } from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
@@ -20,7 +20,6 @@ import BitcoinLogo from "../../../assets/img/Bitcoin-Logo.png";
 import Big from "big.js";
 import { updateBalancePolkaBTCAction } from "../../../common/actions/general.actions";
 import { calculateAmount } from "../../../common/utils/utils";
-
 
 type AmountAndAddressForm = {
     amountPolkaBTC: string;
@@ -48,7 +47,7 @@ export default function EnterAmountAndAddress() {
             const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
             setDustValue(dustValueBtc);
         };
-        setUsdAmount(calculateAmount(amount || getValues("amountPolkaBTC") || "0",usdPrice));
+        setUsdAmount(calculateAmount(amount || getValues("amountPolkaBTC") || "0", usdPrice));
         fetchData();
     }, [polkaBtcLoaded, getValues, usdPrice, amount]);
 
@@ -70,12 +69,12 @@ export default function EnterAmountAndAddress() {
 
             let vaultId;
             let vaultBTCAddress;
-            
+
             vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountAsSatoshi);
             // get the vault's data
             const vault = await window.polkaBTC.vaults.get(vaultId);
             vaultBTCAddress = vault.wallet.addresses[0];
-        
+
             // toast.success("Found vault: " + vaultId.toString());
 
             const fee = await window.polkaBTC.redeem.getFeesToPay(amountPolkaBTC);
@@ -84,7 +83,6 @@ export default function EnterAmountAndAddress() {
             dispatch(changeVaultBtcAddressOnRedeemAction(vaultBTCAddress));
             dispatch(changeVaultDotAddressOnRedeemAction(vaultId.toString()));
             dispatch(changeBTCAddressAction(btcAddress));
-
 
             const amount = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
             const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultId.toString());
@@ -107,21 +105,21 @@ export default function EnterAmountAndAddress() {
         const amount = getValues("amountPolkaBTC") || "0";
         if (amount === "0") return "0";
         return new Big(amount).sub(new Big(redeemFee)).toString();
-    }
+    };
 
     const onAmountChange = async () => {
         const amount = getValues("amountPolkaBTC") || "0";
-        setUsdAmount(calculateAmount(amount,usdPrice));
+        setUsdAmount(calculateAmount(amount, usdPrice));
         const fee = await window.polkaBTC.redeem.getFeesToPay(amount);
         setRedeemFee(fee);
-    }
+    };
 
     const checkAddress = () => {
         if (!address) {
             toast.warning(t("redeem_page.must_select_account_warning"));
             return;
         }
-    }
+    };
 
     return (
         <form onSubmit={onSubmit}>
@@ -141,19 +139,15 @@ export default function EnterAmountAndAddress() {
                                 value > balancePolkaBTC
                                     ? t("redeem_page.current_balance") + balancePolkaBTC
                                     : value < Number(dustValue)
-                                        ? t("redeem_page.amount_greater") + dustValue + "BTC)."
-                                        : undefined,
+                                    ? t("redeem_page.amount_greater") + dustValue + "BTC)."
+                                    : undefined,
                         })}
                     />
                 </div>
-                <div className="col-6 mark-currency">
-                    PolkaBTC
-                </div>
+                <div className="col-6 mark-currency">PolkaBTC</div>
             </div>
             <div className="row usd-price">
-                <div className="col">
-                    {"= $" + usdAmount}
-                </div>
+                <div className="col">{"= $" + usdAmount}</div>
             </div>
             {errors.amountPolkaBTC && (
                 <div className="wizard-input-error">
@@ -165,9 +159,7 @@ export default function EnterAmountAndAddress() {
             <div className="row">
                 <div className="col-12">
                     <div className="input-address-wrapper">
-                        <div className="address-label">
-                            {t("destination")}
-                        </div>
+                        <div className="address-label">{t("destination")}</div>
                         <input
                             id="btc-address-input"
                             name="btcAddress"
@@ -188,20 +180,17 @@ export default function EnterAmountAndAddress() {
             </div>
             {errors.btcAddress && (
                 <div className="address-input-error">
-                    {errors.btcAddress.type === "required"
-                        ? t("redeem_page.enter_btc")
-                        : errors.btcAddress.message}
+                    {errors.btcAddress.type === "required" ? t("redeem_page.enter_btc") : errors.btcAddress.message}
                 </div>
             )}
             <div className="row">
                 <div className="col-12">
                     <div className="wizard-item mt-5">
                         <div className="row">
-                            <div className="col-6 text-left">
-                                {t("bridge_fee")}
-                            </div>
+                            <div className="col-6 text-left">{t("bridge_fee")}</div>
                             <div className="col-6">
-                                <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>{redeemFee} BTC
+                                <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
+                                {redeemFee} BTC
                             </div>
                         </div>
                     </div>
@@ -225,9 +214,7 @@ export default function EnterAmountAndAddress() {
                 <div className="col-12">
                     <div className="wizard-item">
                         <div className="row">
-                            <div className="col-6 text-left font-weight-bold">
-                                {t("you_will_receive")}
-                            </div>
+                            <div className="col-6 text-left font-weight-bold">{t("you_will_receive")}</div>
                             <div className="col-6">
                                 <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
                                 {calculateTotal()} BTC

@@ -45,27 +45,25 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
 
     return (
         <div className="card">
-                <div className="card-top-content">
-                    <div className="values-container">
-                        <h1 style={{ color: getAccents("d_pink").color }}>
-                            {t("dashboard.vaults.collateral_locked")}
-                        </h1>
-                        <h2>{totalLockedDOT} DOT</h2>
-                        <h2>${(prices.polkadot.usd * parseInt(totalLockedDOT)).toLocaleString()}</h2>
-                    </div>
-                    {linkButton ? (
-                        <div className="button-container">
-                            <ButtonComponent
-                                buttonName="view all vaults"
-                                propsButtonColor="d_pink"
-                                buttonId="collateral-locked"
-                                buttonLink="/dashboard/vaults"
-                            />
-                        </div>
-                    ) : (
-                        ""
-                    )}
+            <div className="card-top-content">
+                <div className="values-container">
+                    <h1 style={{ color: getAccents("d_pink").color }}>{t("dashboard.vaults.collateral_locked")}</h1>
+                    <h2>{totalLockedDOT} DOT</h2>
+                    <h2>${(prices.polkadot.usd * parseInt(totalLockedDOT)).toLocaleString()}</h2>
                 </div>
+                {linkButton ? (
+                    <div className="button-container">
+                        <ButtonComponent
+                            buttonName="view all vaults"
+                            propsButtonColor="d_pink"
+                            buttonId="collateral-locked"
+                            buttonLink="/dashboard/vaults"
+                        />
+                    </div>
+                ) : (
+                    ""
+                )}
+            </div>
             <div className="chart-container">
                 <LineChartComponent
                     color={["d_pink", "d_grey"]}

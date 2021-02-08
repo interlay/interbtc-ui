@@ -1,7 +1,7 @@
 export interface IssueRequest {
     id: string;
     amountBTC: string;
-    timestamp: string;
+    timestamp?: string;
     totalAmount: string;
     creation: string;
     vaultBTCAddress: string;
@@ -17,18 +17,17 @@ export interface IssueRequest {
     griefingCollateral: string;
 }
 
-export type DashboardIssueInfo = Pick<
-    IssueRequest,
-    | "id"
-    | "timestamp"
-    | "amountBTC"
-    | "creation"
-    | "vaultBTCAddress"
-    | "vaultDOTAddress"
-    | "btcTxId"
-    | "completed"
-    | "cancelled"
->;
+export type DashboardIssueInfo = {
+    id: string;
+    timestamp: string;
+    amountBTC: string;
+    creation: string;
+    vaultBTCAddress: string;
+    vaultDOTAddress: string;
+    btcTxId: string;
+    completed: boolean;
+    cancelled: boolean;
+};
 
 export interface IssueMap {
     [key: string]: IssueRequest[];

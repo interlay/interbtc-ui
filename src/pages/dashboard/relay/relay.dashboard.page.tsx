@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 
 import RelayStatusChart from "../../../common/components/charts/relay-blocks/relay-status-chart";
-import { defaultTableDisplayParams } from "../../../common/utils/utils";
+import { defaultTableDisplayParams, shortAddress, formatDateTimePrecise } from "../../../common/utils/utils";
 import { RelayedBlock } from "../../../common/types/util.types";
 import DashboardTable from "../../../common/components/dashboard-table/dashboard-table";
 
@@ -38,7 +38,14 @@ export default function RelayDashboard(): ReactElement {
         t("dashboard.relay.timestamp"),
     ];
 
-    const tableBlockRow = useMemo(() => (block: RelayedBlock) => [block.height, block.hash, block.relay_ts], []);
+    const tableBlockRow = useMemo(
+        () => (block: RelayedBlock): ReactElement[] => [
+            <p>{block.height}</p>,
+            <p>{shortAddress(block.hash)}</p>,
+            <p>{formatDateTimePrecise(new Date(block.relay_ts))}</p>,
+        ],
+        []
+    );
 
     useEffect(() => {
         fetchBlocks();
@@ -58,16 +65,14 @@ export default function RelayDashboard(): ReactElement {
                             </div>
                         </div>
                     </div>
-                    {
-                        // <DashboardTable
-                        //     pageData={blocks.map((b) => ({...b, id: b.hash}))}
-                        //     totalPages={Math.ceil(totalRelayedBlocks / tableParams.perPage)}
-                        //     tableParams={tableParams}
-                        //     setTableParams={setTableParams}
-                        //     headings={tableHeadings}
-                        //     dataPointDisplayer={tableBlockRow}
-                        // />
-                    }
+                    <DashboardTable
+                        pageData={blocks.map((b) => ({ ...b, id: b.hash }))}
+                        totalPages={Math.ceil(totalRelayedBlocks / tableParams.perPage)}
+                        tableParams={tableParams}
+                        setTableParams={setTableParams}
+                        headings={tableHeadings}
+                        dataPointDisplayer={tableBlockRow}
+                    />
                 </div>
             </div>
         </div>

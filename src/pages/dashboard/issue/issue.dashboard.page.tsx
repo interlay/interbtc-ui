@@ -6,8 +6,11 @@ import { satToBTC } from "@interlay/polkabtc";
 import { getAccents } from "../../../pages/dashboard/dashboard-colors";
 import { StoreType } from "../../../common/types/util.types";
 import { DashboardIssueInfo } from "../../../common/types/issue.types";
-import { defaultTableDisplayParams, shortAddress } from "../../../common/utils/utils";
-import DashboardTable, {StyledLinkData, StatusComponent} from "../../../common/components/dashboard-table/dashboard-table";
+import { defaultTableDisplayParams, shortAddress, formatDateTimePrecise } from "../../../common/utils/utils";
+import DashboardTable, {
+    StyledLinkData,
+    StatusComponent,
+} from "../../../common/components/dashboard-table/dashboard-table";
 import PolkaBTC from "../components/polkabtc";
 import "../dashboard-subpage.scss";
 
@@ -57,13 +60,13 @@ export default function IssueDashboard(): ReactElement {
         t("issue_page.vault_btc_address"),
         // "BTC Transaction",
         // "BTC Confirmations",
-        t("status")
+        t("status"),
     ];
 
     const tableIssueRequestRow = useMemo(
         () => (ireq: DashboardIssueInfo): ReactElement[] => [
             // <p>{shortAddress(ireq.id)}</p>,
-            <p>{ireq.timestamp}</p>,
+            <p>{formatDateTimePrecise(new Date(ireq.timestamp))}</p>,
             <p>{satToBTC(ireq.amountBTC)}</p>,
             <p>{ireq.creation}</p>,
             <StyledLinkData data={shortAddress(ireq.vaultDOTAddress)} />,

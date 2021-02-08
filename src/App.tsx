@@ -215,8 +215,7 @@ export default function App(): ReactElement {
         };
         loadData();
         startFetchingLiveData(dispatch, store);
-    },[createAPIInstance, isLoading, polkaBtcLoaded, dispatch, store]);
-
+    }, [createAPIInstance, isLoading, polkaBtcLoaded, dispatch, store]);
 
     return (
         <React.Fragment>
@@ -276,23 +275,23 @@ export default function App(): ReactElement {
                             <Route path="/" exact>
                                 <LandingPage />
                             </Route>
-                        <Route path="/user-guide">
-                            <UserGuidePage />
-                        </Route>
-                        <Route path="/about">
-                            <AboutPage />
-                        </Route>
-                        <Route path="/faq">
-                            <FaqPage />
-                        </Route>
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route exact path="/app">
-                                <AppPage />
+                            <Route path="/user-guide">
+                                <UserGuidePage />
                             </Route>
-                        )}
-                    </Switch>
-                    <Footer />
-                </div>
+                            <Route path="/about">
+                                <AboutPage />
+                            </Route>
+                            <Route path="/faq">
+                                <FaqPage />
+                            </Route>
+                            {!constants.STATIC_PAGE_ONLY && (
+                                <Route exact path="/app">
+                                    <AppPage />
+                                </Route>
+                            )}
+                        </Switch>
+                        <Footer />
+                    </div>
                 ) : (
                     <div className="main-loader">
                         <img src={loadingImg} alt="loading animation"></img>

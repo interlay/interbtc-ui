@@ -87,10 +87,10 @@ export default function DashboardTable<D extends DataWithID>({
     ]);
 
     return pageData.length > 0 ? (
-        <div className="table">
+        <div className="dashboard-table">
             <div className="dashboard-table-grid">
                 {headings.map((heading, i) => (
-                    <div>
+                    <div style={{ gridColumn: i + 1 }}>
                         <div className="line"></div>
                         <div className="data-container">
                             <h1>{heading}</h1>
