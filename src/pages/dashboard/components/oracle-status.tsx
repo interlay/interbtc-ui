@@ -4,7 +4,11 @@ import { getAccents } from "../dashboardcolors";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 
-const OracleStatus = (): ReactElement => {
+type OracleStatusProps = {
+    linkButton?: boolean;
+};
+
+const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
     const [oracleStatus, setOracleStatus] = useState("Loading");
     const [exchangeRate, setExchangeRate] = useState("0");
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -45,14 +49,18 @@ const OracleStatus = (): ReactElement => {
                         )}
                     </h1>
                 </div>
-                <div className="button-container">
-                    <ButtonComponent
-                        buttonName="view oracles"
-                        propsButtonColor="d_green"
-                        buttonId="oracle-status"
-                        buttonLink="/dashboard/oracles"
-                    />
-                </div>
+                {linkButton ? (
+                    <div className="button-container">
+                        <ButtonComponent
+                            buttonName="view oracles"
+                            propsButtonColor="d_green"
+                            buttonId="oracle-status"
+                            buttonLink="/dashboard/oracles"
+                        />
+                    </div>
+                ) : (
+                    ""
+                )}
             </div>
             <div className="circle-container">
                 {oracleStatus === "Online" ? (

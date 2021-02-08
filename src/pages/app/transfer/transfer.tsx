@@ -19,11 +19,12 @@ type TransferForm = {
 export default function Transfer() {
     const { t } = useTranslation();
     const senderAddress = useSelector((state: StoreType) => state.general.address);
-    const { balancePolkaBTC, balanceDOT, prices } = useSelector((state: StoreType) => state.general);
+    const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
+    const { balancePolkaBTC, balanceDOT } = useSelector((state: StoreType) => state.general);
     const defaultValues = { defaultValues: { amountPolkaBTC: "", btcAddress: "" } };
     const { register, handleSubmit, errors, getValues } = useForm<TransferForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
-    const [usdAmount, setUsdAmount] = useState(calculateAmount("0",prices.bitcoin.usd.toString()));
+    const [usdAmount, setUsdAmount] = useState("0");
     const dispatch = useDispatch();
 
     const onSubmit = handleSubmit(async ({ amountPolkaBTC, address }) => {
@@ -47,11 +48,12 @@ export default function Transfer() {
                     <input
                         id="amount-btc-input"
                         name="amountPolkaBTC"
-                        type="float"
+                        type="number"
+                        step="any"
                         placeholder="0.00"
                         className={"" + (errors.amountPolkaBTC ? " error-borders" : "")}
                         onChange={() => {
-                            setUsdAmount(calculateAmount(getValues("amountPolkaBTC") || "0",prices.bitcoin.usd.toString()));
+                            setUsdAmount(calculateAmount(getValues("amountPolkaBTC") || "0",usdPrice));
                         }}
                         ref={register({
                             required: true

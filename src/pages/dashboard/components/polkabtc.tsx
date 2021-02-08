@@ -13,6 +13,7 @@ type PolkaBTCProps = {
 };
 
 const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
+    const { prices } = useSelector((state: StoreType) => state.general);
     const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
 
     const { t } = useTranslation();
@@ -42,14 +43,14 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
 
     return (
         <div className="card">
-            {linkButton ? (
-                <div className="card-top-content">
-                    <div className="values-container">
-                        <h1 style={{ color: getAccents("d_yellow").color }}>{t("dashboard.issue.issued")}</h1>
-                        <h2>{t("dashboard.issue.total_polkabtc", { amount: totalPolkaBTC })}</h2>
-                        {/* TODO: add the price API */}
-                        {/* <h2>${(prices.bitcoin.usd * parseInt(totalPolkaBTC)).toLocaleString()}</h2> */}
-                    </div>
+            <div className="card-top-content">
+                <div className="values-container">
+                    <h1 style={{ color: getAccents("d_yellow").color }}>{t("dashboard.issue.issued")}</h1>
+                    <h2>{t("dashboard.issue.total_polkabtc", { amount: totalPolkaBTC })}</h2>
+                    {/* TODO: add the price API */}
+                    <h2>${(prices.bitcoin.usd * parseInt(totalPolkaBTC)).toLocaleString()}</h2>
+                </div>
+                {linkButton ? (
                     <div className="button-container">
                         <ButtonComponent
                             buttonName="view all issued"
@@ -58,10 +59,10 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
                             buttonLink="/dashboard/issue"
                         />
                     </div>
-                </div>
-            ) : (
-                ""
-            )}
+                ) : (
+                    ""
+                )}
+            </div>
             <div className="chart-container">
                 <LineChartComponent
                     color={["d_yellow", "d_grey"]}

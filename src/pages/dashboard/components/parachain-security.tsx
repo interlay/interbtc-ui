@@ -3,7 +3,12 @@ import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboardcolors";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-const ParachainSecurity = (): React.ReactElement => {
+
+type ParachainSecurityProps = {
+    linkButton?: boolean;
+};
+
+const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactElement => {
     const [parachainStatus, setParachainStatus] = useState("Loading");
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
@@ -26,7 +31,6 @@ const ParachainSecurity = (): React.ReactElement => {
         <div className="card">
             <div className="values-container"></div>
             {/* TODO: move this to the right */}
-
             <div className="parachain-content-container">
                 <div>
                     <h1 className="h1-xl-text">
@@ -57,14 +61,18 @@ const ParachainSecurity = (): React.ReactElement => {
                             </span>
                         )}
                     </h1>
-                    <div className="button-container" style={{ marginTop: "20px" }}>
-                        <ButtonComponent
-                            buttonName="Status Updates"
-                            propsButtonColor="d_green"
-                            buttonId="parachain-security"
-                            buttonLink="/dashboard/parachain"
-                        />
-                    </div>
+                    {linkButton ? (
+                        <div className="button-container" style={{ marginTop: "20px" }}>
+                            <ButtonComponent
+                                buttonName="Status Updates"
+                                propsButtonColor="d_green"
+                                buttonId="parachain-security"
+                                buttonLink="/dashboard/parachain"
+                            />
+                        </div>
+                    ) : (
+                        ""
+                    )}
                 </div>
             </div>
         </div>

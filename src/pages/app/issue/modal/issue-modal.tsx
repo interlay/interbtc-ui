@@ -38,7 +38,7 @@ export default function IssueModal(props: IssueModalProps) {
                         </div>
                         <div className="row usd-price-modal">
                             <div className="col">
-                                {"= $"+ calculateAmount(request.amountBTC || "0",prices.bitcoin.usd.toString())}
+                                {"= $"+ calculateAmount(request.amountBTC || "0",prices.bitcoin.usd)}
                             </div>
                         </div>
                         <div className="step-item row">

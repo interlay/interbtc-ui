@@ -2,9 +2,10 @@ import React, { ReactElement } from "react";
 import VaultTable from "../../../common/components/vault-table/vault-table";
 import { useTranslation } from "react-i18next";
 import { getAccents } from "../../../pages/dashboard/dashboard-colors";
+
 import ActiveVaults from "../components/active-vaults";
 import CollateralLocked from "../components/collateral-locked";
-import Collaterization from "../components/collaterization";
+import Collateralization from "../components/collateralization";
 
 export default function VaultsDashboard(): ReactElement {
     const { t } = useTranslation();
@@ -27,7 +28,7 @@ export default function VaultsDashboard(): ReactElement {
                         <div className="vaults-graphs-container">
                             <ActiveVaults />
                             <CollateralLocked />
-                            <Collaterization />
+                            <Collateralization />
                         </div>
                         <div className="dashboard-table-container">
                             <VaultTable></VaultTable>

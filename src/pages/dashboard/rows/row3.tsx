@@ -5,8 +5,8 @@ import ActiveCollators from "../components/active-collators";
 const Row3 = (): React.ReactElement => {
     return (
         <div className="row-grid section-top-gap">
-            <ActiveVaults />
-            <ActiveStakedRelayers />
+            <ActiveVaults linkButton={true} />
+            <ActiveStakedRelayers linkButton={true} />
             <ActiveCollators />
         </div>
     );

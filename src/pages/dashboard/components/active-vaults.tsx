@@ -29,17 +29,21 @@ const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
         <div className="card">
             <div className="card-top-content">
                 <div className="values-container">
-                    <h1 style={{ color: getAccents("d_pink").color }}>Active Vaults</h1>
+                    <h1 style={{ color: getAccents("d_pink").color }}>{t("dashboard.vaults.active_vaults")}</h1>
                     <h2>{totalVaultsPerDay[totalVaultsPerDay.length - 1]?.count}</h2>
                 </div>
-                <div className="button-container">
-                    <ButtonComponent
-                        buttonName="view all vaults"
-                        propsButtonColor="d_pink"
-                        buttonId="active-vaults"
-                        buttonLink="/dashboard/vaults"
-                    />
-                </div>
+                {linkButton ? (
+                    <div className="button-container">
+                        <ButtonComponent
+                            buttonName="view all vaults"
+                            propsButtonColor="d_pink"
+                            buttonId="active-vaults"
+                            buttonLink="/dashboard/vaults"
+                        />
+                    </div>
+                ) : (
+                    ""
+                )}
             </div>
             <LineChartComponent
                 color="d_pink"

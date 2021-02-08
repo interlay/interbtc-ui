@@ -4,6 +4,7 @@
     "confirm": "Confirm",
     "next": "Next",
     "close": "Close",
+    "loading": "Loading",
     "search_vault": "Search Vault",
     "cancel": "Cancel",
     "cancelled": "Cancelled",
@@ -89,6 +90,7 @@
     "enter_recipient_address": "Please enter the recipient address",
     "successful_transfer": "Successful transfer",
     "redeem_page": {
+        "must_select_account_warning": "No account selected. Please select an account to redeem.",
         "waiting_for": "Waiting for",
         "typically_takes": "This typically takes only a few minutes but may sometimes take up to 6 hours.",
         "from_vault": "from Vault",
@@ -155,6 +157,10 @@
         "issues": "Issue Requests",
         "total_locked": "Total locked",
         "total_issued": "Total issued",
+        "synchronized": " synchronized",
+        "not_synchronized": " not synchronized",
+        "synced": "Synced",
+        "out_of_sync": "Out of Sync",
         "capacity": "Capacity",
         "collators": {
             "total_collators_chart": "Total active collators",
@@ -163,18 +169,18 @@
         "issue": {
             "issue": "Issue Requests",
             "issued": "Issued",
-            "total_polkabtc": "PolkaBTC",
-            "total_issued": "PolkaBTC issued",
-            "total_issues": "successful issues",
+            "issue_requests": "Succesful Issue Requests",
+            "total_polkabtc": "{{amount}} PolkaBTC",
+            "total_issued": "{{amount}} PolkaBTC issued",
+            "total_issues": "{{amount}} successful issues",
             "total_issued_chart": "Total PolkaBTC issued",
-            "perday_issued_chart": "PolkaBTC issued per day",
-            "issue_requests": "Succesful Issue Requests"
+            "perday_issued_chart": "PolkaBTC issued per day"
         },
         "redeem": {
             "redeem": "Redeem Requests",
-            "total_redeemed": "BTC redeemed",
-            "total_redeems": "Executed redeems",
-            "success_rate": "Success rate",
+            "total_redeemed": "{{amount}} BTC redeemed",
+            "total_redeems": "{{amount}} executed redeems",
+            "success_rate": "{{rate}}% success rate",
             "total_redeemed_chart": "Total BTC redeemed",
             "perday_redeemed_chart": "BTC redeemed per day"
         },
@@ -204,6 +210,7 @@
     "issue_page": {
         "issue_requests": "Issue Requests",
         "recent_requests": "Recent Requests",
+        "must_select_account_warning": "No account selected. Please select an account to proceed to issue PolkaBTC.",
         "transaction_not_set": "Transaction not set in",
         "time": "time",
         "issuing_title": "Issuing",

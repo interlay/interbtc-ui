@@ -45,26 +45,32 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
 
     return (
         <div className="card">
-            <div className="card-top-content">
-                <div className="values-container">
-                    <h1 style={{ color: getAccents("d_pink").color }}>Collateral Locked</h1>
-                    <h2>{totalLockedDOT} DOT</h2>
-                    <h2>${(prices.polkadot.usd * parseInt(totalLockedDOT)).toLocaleString()}</h2>
+                <div className="card-top-content">
+                    <div className="values-container">
+                        <h1 style={{ color: getAccents("d_pink").color }}>
+                            {t("dashboard.vaults.collateral_locked")}
+                        </h1>
+                        <h2>{totalLockedDOT} DOT</h2>
+                        <h2>${(prices.polkadot.usd * parseInt(totalLockedDOT)).toLocaleString()}</h2>
+                    </div>
+                    {linkButton ? (
+                        <div className="button-container">
+                            <ButtonComponent
+                                buttonName="view all vaults"
+                                propsButtonColor="d_pink"
+                                buttonId="collateral-locked"
+                                buttonLink="/dashboard/vaults"
+                            />
+                        </div>
+                    ) : (
+                        ""
+                    )}
                 </div>
-                <div className="button-container">
-                    <ButtonComponent
-                        buttonName="view all vaults"
-                        propsButtonColor="d_pink"
-                        buttonId="collateral-locked"
-                        buttonLink="/dashboard/vaults"
-                    />
-                </div>
-            </div>
             <div className="chart-container">
                 <LineChartComponent
                     color={["d_pink", "d_grey"]}
                     label={[
-                        t("dashboard.vaults.total_collators_chart"),
+                        t("dashboard.vaults.total_collateral_locked"),
                         t("dashboard.vaults.perday_collateral_locked"),
                     ]}
                     yLabels={cumulativeCollateralPerDay.map((dataPoint) =>

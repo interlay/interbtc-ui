@@ -3,7 +3,7 @@ import { FormGroup } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import  QRCode from "qrcode.react";
 import { StoreType } from "../../../common/types/util.types";
-import { changeIssueStepAction } from "../../../common/actions/issue.actions";
+import { resetIssueWizardAction, changeIssueStepAction } from "../../../common/actions/issue.actions";
 import { btcToSat, satToMBTC } from "@interlay/polkabtc";
 import Big from "big.js";
 import { useTranslation } from "react-i18next";
@@ -12,7 +12,7 @@ export default function BTCPayment() {
     const { amountBTC, fee, vaultBtcAddress } = useSelector((state: StoreType) => state.issue);
     const { t } = useTranslation();
 
-    const amountBTCwithFee = new Big(fee).add(new Big(amountBTC));
+    const amountBTCwithFee = new Big(fee).add(new Big(amountBTC || "0"));
     let amountMBTCwithFee = "";
     try {
         const amountSATwithFee = btcToSat(amountBTCwithFee.toString());
@@ -25,6 +25,7 @@ export default function BTCPayment() {
 
     const submit = () => {
         dispatch(changeIssueStepAction("ENTER_BTC_AMOUNT"));
+        dispatch(resetIssueWizardAction());
     };
 
     return <React.Fragment>
@@ -51,7 +52,7 @@ export default function BTCPayment() {
                 <div className="col">24h</div>
             </div>
             <div className="row justify-content-center">
-                <div className="col-3">
+                <div className="col-6">
                     <QRCode value={'bitcoin:' + vaultBtcAddress + '?amount=' + amountMBTCwithFee} />
                 </div>
             </div>

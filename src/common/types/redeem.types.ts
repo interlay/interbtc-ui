@@ -38,7 +38,6 @@ export interface RedeemState {
     vaultBtcAddress: string;
     id: string;
     redeemRequests: Map<string, RedeemRequest[]>;
-    transactionListeners: string[];
     vaultRedeems: VaultRedeem[];
     fee: string;
 }

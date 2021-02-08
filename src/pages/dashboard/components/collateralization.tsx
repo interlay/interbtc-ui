@@ -6,11 +6,11 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { useTranslation } from "react-i18next";
 
-type CollaterizationProps = {
+type CollateralizationProps = {
     linkButton?: boolean;
 };
 
-const Collaterization = ({ linkButton }: CollaterizationProps): ReactElement => {
+export default function Collateralization({ linkButton }: CollateralizationProps): ReactElement {
     const { t } = useTranslation();
 
     const [systemCollateralization, setSystemCollateralization] = useState("0");
@@ -45,14 +45,18 @@ const Collaterization = ({ linkButton }: CollaterizationProps): ReactElement => 
                         })}
                     </h2>
                 </div>
-                <div className="button-container">
-                    <ButtonComponent
-                        buttonName="view vaults"
-                        propsButtonColor="d_blue"
-                        buttonId="collaterization"
-                        buttonLink="/dashboard/vaults"
-                    />
-                </div>
+                {linkButton ? (
+                    <div className="button-container">
+                        <ButtonComponent
+                            buttonName="view vaults"
+                            propsButtonColor="d_blue"
+                            buttonId="collateralization"
+                            buttonLink="/dashboard/vaults"
+                        />
+                    </div>
+                ) : (
+                    ""
+                )}
             </div>
 
             <div className="circle-container">
@@ -65,6 +69,4 @@ const Collaterization = ({ linkButton }: CollaterizationProps): ReactElement => 
             </div>
         </div>
     );
-};
-
-export default Collaterization;
+}

@@ -9,7 +9,6 @@ import {
     CHANGE_ADDRESS,
     RETRY_REDEEM_REQUEST,
     REIMBURSE_REDEEM_REQUEST,
-    ADD_TRANSACTION_LISTENER_REDEEM,
     INIT_STATE,
     REDEEM_EXPIRED,
     RedeemActions,
@@ -31,7 +30,6 @@ const initialState = {
     vaultDotAddress: "",
     id: "",
     redeemRequests: new Map(),
-    transactionListeners: [],
     vaultRedeems: [],
 };
 
@@ -64,9 +62,6 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
                 newMap.set(state.address, [action.request]);
             }
             return { ...state, redeemRequests: newMap };
-        case ADD_TRANSACTION_LISTENER_REDEEM:
-            if (state.transactionListeners.indexOf(action.id) !== -1) return state;
-            return { ...state, transactionListeners: [...state.transactionListeners, action.id] };
         case UPDATE_REDEEM_REQUEST:
             const map = new Map(state.redeemRequests);
             const reqs = state.redeemRequests.get(state.address);
@@ -117,7 +112,12 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             newRequestsMap.set(state.address, allUpdatedRequests);
             return { ...state, redeemRequests: newRequestsMap };
         case INIT_STATE:
-            return { ...state, fee: "0", transactionListeners: [], step: "AMOUNT_AND_ADDRESS" };
+            return {
+                ...state,
+                fee: "0",
+                amountPolkaBTC: "",
+                step: "AMOUNT_AND_ADDRESS",
+            };
         case ADD_VAULT_REDEEMS:
             return { ...state, vaultRedeems: action.vaultRedeems };
         case UPDATE_ALL_REDEEM_REQUESTS:

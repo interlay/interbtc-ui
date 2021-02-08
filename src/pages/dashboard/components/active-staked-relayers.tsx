@@ -5,7 +5,11 @@ import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 import LineChartComponent from "./line-chart-component";
 import { useTranslation } from "react-i18next";
 
-const ActiveStakedRelayers = (): ReactElement => {
+type ActiveStakedRelayers = {
+    linkButton?: boolean;
+};
+
+const ActiveStakedRelayers = ({ linkButton }: ActiveStakedRelayers): ReactElement => {
     const statsApi = usePolkabtcStats();
     const { t } = useTranslation();
 
@@ -31,14 +35,18 @@ const ActiveStakedRelayers = (): ReactElement => {
                     <h2>{totalRelayersPerDay[totalRelayersPerDay.length - 1]?.count}</h2>
                 </div>
 
-                <div className="button-container">
-                    <ButtonComponent
-                        buttonName="view relayers"
-                        propsButtonColor="d_orange"
-                        buttonId="active-staked"
-                        buttonLink="/"
-                    />
-                </div>
+                {linkButton ? (
+                    <div className="button-container">
+                        <ButtonComponent
+                            buttonName="view relayers"
+                            propsButtonColor="d_orange"
+                            buttonId="active-staked"
+                            buttonLink="/dashboard/parachain"
+                        />
+                    </div>
+                ) : (
+                    ""
+                )}
             </div>
             <LineChartComponent
                 color="d_orange"

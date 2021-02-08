@@ -38,7 +38,7 @@ export function dateToShortString(date: Date): string {
     return date.toDateString().substring(3) + " " + date.toTimeString().substring(0, date.toTimeString().length);
 }
 
-export function calculateAmount(amount: string, currencyPrice: string): string {
+export function calculateAmount(amount: string, currencyPrice: number): string {
     return new Big(amount).mul(new Big(currencyPrice)).toString();
 }
 
@@ -269,4 +269,25 @@ export const updateBalances = async (
     if (currentBalancePolkaBTC !== balancePolkaBTC) {
         dispatch(updateBalancePolkaBTCAction(balancePolkaBTC));
     }
+};
+
+export const requestsInStore = (
+    storeRequests: IssueRequest[] | RedeemRequest[],
+    parachainRequests: IssueRequest[] | RedeemRequest[]
+): boolean => {
+    if (storeRequests.length !== parachainRequests.length) return false;
+    let inStore = true;
+
+    storeRequests.forEach((storeRequest: IssueRequest | RedeemRequest) => {
+        let found = false;
+        parachainRequests.forEach((parachainRequest: IssueRequest | RedeemRequest) => {
+            if (storeRequest.id === parachainRequest.id) {
+                found = true;
+            }
+        });
+        if (!found) {
+            inStore = false;
+        }
+    });
+    return inStore;
 };

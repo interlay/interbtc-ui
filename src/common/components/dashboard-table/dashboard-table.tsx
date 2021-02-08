@@ -8,6 +8,8 @@ import Icon_confirm from "../../../assets/img/icons/Icon_confirm.svg";
 import Icon_cancel from "../../../assets/img/icons/Icon_cancel.svg";
 import Icon_pending from "../../../assets/img/icons/Icon_pending.svg";
 import { shortAddress } from "../../utils/utils";
+import TablePageSelector from "../table-page-selector/table-page-selector";
+
 type DataWithID = { id: string };
 const blue_accent = getAccents("d_blue");
 type DashboardTableProps<D extends DataWithID> = {
@@ -33,7 +35,6 @@ export default function DashboardTable<D extends DataWithID>({
         setTableParams,
         tableParams,
     ]);
-    console.log("data is", pageData);
     return pageData.length > 0 ? (
         <div className="table">
             <div className="issue-redeem-table-grid">
@@ -207,9 +208,31 @@ export default function DashboardTable<D extends DataWithID>({
                     ))}
                 </div>
             </div>
-            {/* <TablePageSelector totalPages={totalPages} currentPage={tableParams.page} setPage={setPage} /> */}
+            <TablePageSelector totalPages={totalPages} currentPage={tableParams.page} setPage={setPage} />
         </div>
     ) : (
+        // return pageData.length > 0 ? (
+        //     <>
+        //         <Table>
+        //             <thead>
+        //                 <tr>
+        //                     {headings.map((h) => (
+        //                         <th key={h}>{h}</th>
+        //                     ))}
+        //                 </tr>
+        //             </thead>
+        //             <tbody>
+        //                 {pageData.map((dataPoint) => (
+        //                     <tr key={dataPoint.id}>
+        //                         {dataPointDisplayer(dataPoint).map((data, i) => (
+        //                             <td key={i}>{data}</td>
+        //                         ))}
+        //                     </tr>
+        //                 ))}
+        //             </tbody>
+        //         </Table>
+        //         <TablePageSelector totalPages={totalPages} currentPage={tableParams.page} setPage={setPage} />
+        //     </>
         <div>{t("empty_data")}</div>
     );
 }

@@ -23,28 +23,36 @@ type EnterBTCForm = {
 };
 
 export default function EnterBTCAmount() {
-    const { polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
+    const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
+    const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
     const amount = useSelector((state: StoreType) => state.issue.amountBTC);
     const defaultValues = amount ? { defaultValues: { amountBTC: amount } } : undefined;
     const { register, handleSubmit, errors, getValues } = useForm<EnterBTCForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
     const [dustValue, setDustValue] = useState("0");
-    const [usdAmount, setUsdAmount] = useState(calculateAmount(amount || "0",prices.bitcoin.usd.toString()));
+    const [usdAmount, setUsdAmount] = useState("");
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
 
     useEffect(() => {
         const fetchData = async () => {
+            if (!polkaBtcLoaded) return;
+
             const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
             const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
             setDustValue(dustValueBtc);
         };
+        setUsdAmount(calculateAmount(amount || getValues("amountBTC") || "0",usdPrice));
         fetchData();
-    });
+    },[polkaBtcLoaded, setUsdAmount, amount, usdPrice, getValues]);
 
     const onSubmit = handleSubmit(async ({ amountBTC }) => {
         if (!polkaBtcLoaded) return;
+        if (!address) {
+            toast.warning(t("issue_page.must_select_account_warning"));
+            return;
+        }
         setRequestPending(true);
         try {
             const amountSAT = btcToSat(amountBTC);
@@ -82,11 +90,12 @@ export default function EnterBTCAmount() {
                     <input
                         id="amount-btc-input"
                         name="amountBTC"
-                        type="float"
+                        type="number"
+                        step="any"
                         placeholder="0.00"
                         className={"" + (errors.amountBTC ? " error-borders" : "")}
                         onChange={() => {
-                            setUsdAmount(calculateAmount(getValues("amountBTC") || "0",prices.bitcoin.usd.toString()));
+                            setUsdAmount(calculateAmount(getValues("amountBTC") || "0",usdPrice));
                         }}
                         ref={register({
                             required: true,
