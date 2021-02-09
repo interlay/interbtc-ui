@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import {
     changeIssueIdAction,
     changeIssueStepAction,
-    changeVaultBtcAddressOnIssueAction
+    changeVaultBtcAddressOnIssueAction,
 } from "../../../common/actions/issue.actions";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { StoreType } from "../../../common/types/util.types";
@@ -18,9 +18,7 @@ import BitcoinLogo from "../../../assets/img/Bitcoin-Logo.png";
 export default function RequestConfirmation() {
     const [isRequestPending, setRequestPending] = useState(false);
     const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
-    const { amountBTC, vaultDotAddress, fee } = useSelector(
-        (state: StoreType) => state.issue
-    );
+    const { amountBTC, vaultDotAddress, fee } = useSelector((state: StoreType) => state.issue);
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
@@ -55,35 +53,35 @@ export default function RequestConfirmation() {
         }
     };
 
-    return <React.Fragment>
-       <div className="request-confirmation">
-       <div className="issue-amount"><span className="wizzard-number">{amountBTC}</span>&nbsp;PolkaBTC</div>
-            <div className="step-item row">
-                <div className="col-6">{t("destination")}</div>
-                <div className="col-6">{shortAddress(address)}</div>
-            </div>
-            <div className="step-item row">
-                <div className="col-6">{t("bridge_fee")}</div>
-                <div className="col-6">
-                    <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
-                    {fee} BTC
+    return (
+        <React.Fragment>
+            <div className="request-confirmation">
+                <div className="issue-amount">
+                    <span className="wizzard-number">{amountBTC}</span>&nbsp;PolkaBTC
                 </div>
-            </div>
-            <hr className="total-divider"></hr>
-            <div className="step-item row">
+                <div className="step-item row">
+                    <div className="col-6">{t("destination")}</div>
+                    <div className="col-6">{shortAddress(address)}</div>
+                </div>
+                <div className="step-item row">
+                    <div className="col-6">{t("bridge_fee")}</div>
+                    <div className="col-6">
+                        <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
+                        {fee} BTC
+                    </div>
+                </div>
+                <hr className="total-divider"></hr>
+                <div className="step-item row">
                     <div className="col-6 total-amount">{t("total_deposit")}</div>
                     <div className="col-6 total-amount">
                         <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
-                        {((new Big(fee)).add(new Big(amountBTC))).toString()} BTC
+                        {new Big(fee).add(new Big(amountBTC)).toString()} BTC
                     </div>
+                </div>
             </div>
-       </div>
-        <ButtonMaybePending
-            className="btn btn-primary app-btn"
-            isPending={isRequestPending}
-            onClick={onConfirm}
-        >
-            {t("confirm")}
-        </ButtonMaybePending>
-    </React.Fragment>;
+            <ButtonMaybePending className="btn btn-primary app-btn" isPending={isRequestPending} onClick={onConfirm}>
+                {t("confirm")}
+            </ButtonMaybePending>
+        </React.Fragment>
+    );
 }

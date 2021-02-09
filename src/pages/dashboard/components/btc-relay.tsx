@@ -18,11 +18,11 @@ const BtcRelay = (): ReactElement => {
             <div className="card-top-content">
                 <div className="values-container">
                     <h1 style={{ fontFamily: "airbnb-cereal-bold" }}>
-                        BTC Relay is 
+                        BTC Relay is
                         <span
                             style={{ color: `${getAccents(`${textColour}`).colour}`, fontFamily: "airbnb-cereal-bold" }}
-                            >
-                            {isSynced ? t("dashboard.synchronized") : t("dashboard.not_synchronized")} 
+                        >
+                            {isSynced ? t("dashboard.synchronized") : t("dashboard.not_synchronized")}
                         </span>
                     </h1>
                 </div>
@@ -41,8 +41,7 @@ const BtcRelay = (): ReactElement => {
                     style={{ borderColor: `${getAccents(`${textColour}`).colour}` }}
                     id="relay-circle"
                 >
-                    <h1 className="h1-xl-text"
-                        style={{ color: `${getAccents(`${textColour}`).colour}` }}>
+                    <h1 className="h1-xl-text" style={{ color: `${getAccents(`${textColour}`).colour}` }}>
                         {isSynced ? t("dashboard.synced") : t("dashboard.out_of_sync")}
                     </h1>
                     <p className="latest-block-text">Block {btcRelayHeight}</p>

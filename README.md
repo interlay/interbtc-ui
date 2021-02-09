@@ -153,7 +153,6 @@ Then when `alice` wants to issue 0.001 PolkaBTC, we need to send the equivalent 
 testdata-gen --keyring alice send-bitcoin --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --satoshis 100000
 ```
 
-
 ### Local Installation
 
 Clone this repository and enter into the root folder.

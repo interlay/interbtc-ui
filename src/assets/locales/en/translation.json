@@ -66,9 +66,7 @@
     "nav_dashboard": "Dashboard",
     "nav_vault": "Vault",
     "nav_relayer": "Relayer",
-    "user_guide": "User Guide",
-    "nav_about": "About",
-    "nav_faq": "FAQ",
+    "nav_docs": "Docs",
     "report_bug": "Report a bug:",
     "request_dot": "Request DOT",
     "no_pending_status": "No pending status updates",
@@ -160,8 +158,8 @@
         "out_of_sync": "Out of Sync",
         "capacity": "Capacity",
         "collators": {
-          "total_collators_chart": "Total active collators",
-          "active_collators": "Active Collators"
+            "total_collators_chart": "Total active collators",
+            "active_collators": "Active Collators"
         },
         "issue": {
             "issue": "Issue Requests",

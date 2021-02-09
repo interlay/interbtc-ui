@@ -6,7 +6,7 @@
     a {
         text-decoration: none !important;
         color: #510101;
-        :hover{
+        :hover {
             text-decoration: none;
         }
         .name {
@@ -20,21 +20,21 @@
         box-shadow: 0 0 5px #510101;
         border-radius: 5px;
         margin-bottom: 1rem;
-        &:hover { 
+        &:hover {
             cursor: pointer;
             background-color: #510101;
             color: white;
         }
     }
-    
+
     .wallet {
         width: 50%;
         box-shadow: 0 0 5px #510101;
         padding: 10px 15px;
         border-radius: 5px;
-        
+
         margin-bottom: 1rem;
-        :hover { 
+        :hover {
             cursor: pointer;
         }
     }

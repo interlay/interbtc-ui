@@ -1,7 +1,7 @@
 import React from "react";
 import { FormGroup } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import  QRCode from "qrcode.react";
+import QRCode from "qrcode.react";
 import { StoreType } from "../../../common/types/util.types";
 import { resetIssueWizardAction, changeIssueStepAction } from "../../../common/actions/issue.actions";
 import { btcToSat, satToMBTC } from "@interlay/polkabtc";
@@ -28,49 +28,56 @@ export default function BTCPayment() {
         dispatch(resetIssueWizardAction());
     };
 
-    return <React.Fragment>
-        <FormGroup>
-            <div className="row payment-title">
-                <div className="col">
-                    {t("deposit")} &nbsp; {amountBTCwithFee.toString()} &nbsp; BTC 
-                </div>
-            </div>
-            <div className="row payment-description">
-                <div className="col">
-                    {t("issue_page.single_transaction")}
-                </div>
-            </div>
-            <div className="row ">
-                <div className="col payment-address">
-                    <span>{vaultBtcAddress}</span>
-                </div>
-            </div>
-            <div className="row payment-timer-with">
-                <div className="col">{t("issue_page.within")}</div>
-            </div>
-            <div className="row payment-timer">
-                <div className="col">24h</div>
-            </div>
-            <div className="row justify-content-center">
-                <div className="col-6">
-                    <QRCode value={'bitcoin:' + vaultBtcAddress + '?amount=' + amountMBTCwithFee} />
-                </div>
-            </div>
-            <div className="row justify-content-center">
-            <div className="col ledger-wrapper">
-                <a href={"ledgerhq:?address=" + vaultBtcAddress + "&currency=bitcoin&amount=" + btcToSat(amountBTCwithFee.toString())}>
-                    <div className="ledger-logo-wrapper">
-                        <div className="ledger-logo">
-                            <div className="col">{t("issue_page.pay_with")}</div>
-                        </div>
+    return (
+        <React.Fragment>
+            <FormGroup>
+                <div className="row payment-title">
+                    <div className="col">
+                        {t("deposit")} &nbsp; {amountBTCwithFee.toString()} &nbsp; BTC
                     </div>
-                </a>
-            </div>
-        </div>
-        </FormGroup>
+                </div>
+                <div className="row payment-description">
+                    <div className="col">{t("issue_page.single_transaction")}</div>
+                </div>
+                <div className="row ">
+                    <div className="col payment-address">
+                        <span>{vaultBtcAddress}</span>
+                    </div>
+                </div>
+                <div className="row payment-timer-with">
+                    <div className="col">{t("issue_page.within")}</div>
+                </div>
+                <div className="row payment-timer">
+                    <div className="col">24h</div>
+                </div>
+                <div className="row justify-content-center">
+                    <div className="col-6">
+                        <QRCode value={"bitcoin:" + vaultBtcAddress + "?amount=" + amountMBTCwithFee} />
+                    </div>
+                </div>
+                <div className="row justify-content-center">
+                    <div className="col ledger-wrapper">
+                        <a
+                            href={
+                                "ledgerhq:?address=" +
+                                vaultBtcAddress +
+                                "&currency=bitcoin&amount=" +
+                                btcToSat(amountBTCwithFee.toString())
+                            }
+                        >
+                            <div className="ledger-logo-wrapper">
+                                <div className="ledger-logo">
+                                    <div className="col">{t("issue_page.pay_with")}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </FormGroup>
 
-        <button className="btn btn-primary app-btn" onClick={submit}>
-            {t("issue_page.made_payment")}
-        </button>
-    </React.Fragment>;
+            <button className="btn btn-primary app-btn" onClick={submit}>
+                {t("issue_page.made_payment")}
+            </button>
+        </React.Fragment>
+    );
 }

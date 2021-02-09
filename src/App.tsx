@@ -33,9 +33,6 @@ import "react-toastify/dist/ReactToastify.css";
 import Topbar from "./common/components/topbar";
 import Footer from "./common/components/footer/footer";
 import AppPage from "./pages/app/app.page";
-import AboutPage from "./pages/about.page";
-import FaqPage from "./pages/faq.page";
-import UserGuidePage from "./pages/user-guide.page";
 import DashboardPage from "./pages/dashboard/dashboard.page";
 import VaultDashboardPage from "./pages/vault-dashboard/vault-dashboard.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
@@ -215,8 +212,7 @@ export default function App(): ReactElement {
         };
         loadData();
         startFetchingLiveData(dispatch, store);
-    },[createAPIInstance, isLoading, polkaBtcLoaded, dispatch, store]);
-
+    }, [createAPIInstance, isLoading, polkaBtcLoaded, dispatch, store]);
 
     return (
         <React.Fragment>
@@ -275,15 +271,6 @@ export default function App(): ReactElement {
                             )}
                             <Route path="/" exact>
                                 <LandingPage />
-                            </Route>
-                            <Route path="/user-guide">
-                                <UserGuidePage />
-                            </Route>
-                            <Route path="/about">
-                                <AboutPage />
-                            </Route>
-                            <Route path="/faq">
-                                <FaqPage />
                             </Route>
                             {!constants.STATIC_PAGE_ONLY && (
                                 <Route exact path="/app">

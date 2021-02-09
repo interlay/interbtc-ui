@@ -9,20 +9,24 @@ import { StoreType } from "../../../common/types/util.types";
 import { useEffect } from "react";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { toast } from "react-toastify";
-import {
-    updateIssueRequestAction,
-    changeIssueIdAction
-} from "../../../common/actions/issue.actions";
+import { updateIssueRequestAction, changeIssueIdAction } from "../../../common/actions/issue.actions";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
 import { updateBalancePolkaBTCAction, showAccountModalAction } from "../../../common/actions/general.actions";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import * as constants from "../../../constants";
 import { ParachainStatus } from "../../../common/types/util.types";
 import IssueModal from "./modal/issue-modal";
 
 export default function IssueRequests() {
-    const { address, balancePolkaBTC, polkaBtcLoaded, extensions, stateOfBTCParachain,
-        bitcoinHeight, btcRelayHeight } = useSelector((state: StoreType) => state.general);
+    const {
+        address,
+        balancePolkaBTC,
+        polkaBtcLoaded,
+        extensions,
+        stateOfBTCParachain,
+        bitcoinHeight,
+        btcRelayHeight,
+    } = useSelector((state: StoreType) => state.general);
     const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
     const [executePending, setExecutePending] = useState([""]);
     const [showModal, setShowModal] = useState(false);
@@ -39,7 +43,7 @@ export default function IssueRequests() {
             toast.error(t("issue_page.error_in_parachain"));
             return;
         }
-        if (bitcoinHeight-btcRelayHeight>constants.BLOCKS_BEHIND_LIMIT) {
+        if (bitcoinHeight - btcRelayHeight > constants.BLOCKS_BEHIND_LIMIT) {
             toast.error(t("issue_page.error_more_than_6_blocks_behind"));
             return;
         }
@@ -48,7 +52,7 @@ export default function IssueRequests() {
         } else {
             dispatch(showAccountModalAction(true));
         }
-    }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -200,7 +204,9 @@ export default function IssueRequests() {
                                 return (
                                     <tr key={index} onClick={() => requestClicked(request)}>
                                         <td>{request.creation === "0" ? t("issue_page.pending") : request.creation}</td>
-                                        <td>{request.amountBTC} <span className="grey-text">PolkaBTC</span></td>
+                                        <td>
+                                            {request.amountBTC} <span className="grey-text">PolkaBTC</span>
+                                        </td>
                                         <td>
                                             <BitcoinTransaction txId={request.btcTxId} shorten />
                                         </td>
@@ -211,7 +217,7 @@ export default function IssueRequests() {
                             })}
                         </tbody>
                     </Table>
-                    <IssueModal show={showModal} onClose={closeModal}/>
+                    <IssueModal show={showModal} onClose={closeModal} />
                 </React.Fragment>
             )}
         </div>
