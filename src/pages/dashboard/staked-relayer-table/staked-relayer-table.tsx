@@ -5,9 +5,10 @@ import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
 import * as constants from "../../../constants";
 import { useTranslation } from "react-i18next";
+import DashboardTable from "../../../common/components/dashboard-table/dashboard-table";
 
 type StakedRelayer = {
-    AccountId: string;
+    id: string;
     lockedDOT: string;
     status: string;
 };
@@ -15,7 +16,6 @@ type StakedRelayer = {
 export default function StakedRelayerTable(): ReactElement {
     const isPolkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const [relayers, setRelayers] = useState<Array<StakedRelayer>>([]);
-    const [relayerStatus, setRelayerStatus] = useState("Ok");
     const { t } = useTranslation();
 
     useEffect(() => {
@@ -27,7 +27,7 @@ export default function StakedRelayerTable(): ReactElement {
                 const relayersList: StakedRelayer[] = [];
                 relayers.forEach((stake, id) => {
                     relayersList.push({
-                        AccountId: id.toString(),
+                        id: id.toString(),
                         lockedDOT: planckToDOT(stake.stake.toString()),
                         // TODO: add a status check for relayers in the parachain
                         status: constants.STAKED_RELAYER_OK,
@@ -35,7 +35,6 @@ export default function StakedRelayerTable(): ReactElement {
                 });
                 setRelayers(relayersList);
                 // TODO: add status check for relayers on parachain
-                setRelayerStatus("Ok");
             } catch (error) {
                 toast.error(error.toString());
             }
@@ -47,16 +46,6 @@ export default function StakedRelayerTable(): ReactElement {
         }, constants.COMPONENT_UPDATE_MS);
         return () => clearInterval(interval);
     }, [isPolkaBtcLoaded]);
-
-    const getCircle = (status: string): string => {
-        if (status === "Ok") {
-            return "green-circle";
-        }
-        if (status === "Offline") {
-            return "orange-circle";
-        }
-        return "red-circle";
-    };
 
     const getStatusColor = (status: string): string => {
         if (status === constants.STAKED_RELAYER_OK) {
@@ -71,49 +60,25 @@ export default function StakedRelayerTable(): ReactElement {
         return "black-text";
     };
 
+    const tableHeadings = [<h1>{t("account_id")}</h1>, <h1>{t("locked_dot")}</h1>, <h1>{t("status")}</h1>];
+
+    const relayersTableRow = (relayer: StakedRelayer): ReactElement[] => [
+        <p className="break-words">{relayer.id}</p>,
+        <p>{relayer.lockedDOT}</p>,
+        <p className={getStatusColor(relayer.status)}>{relayer.status}</p>,
+    ];
+
     return (
-        <div className="staked-relayer-table">
-            <div className="row">
-                <div className="col-12">
-                    <div className="header">
-                        Staked Relayer &nbsp; <div className={getCircle(relayerStatus)}></div> &nbsp; {relayerStatus}
-                    </div>
-                </div>
+        <div className="dashboard-table-container">
+            <div>
+                <p className="table-heading">{t("dashboard.parachain.relayers")}</p>
             </div>
-            <div className="row justify-content-center">
-                <div className="col-12">
-                    <div className="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>{t("account_id")}</th>
-                                    <th>{t("locked_dot")}</th>
-                                    <th>{t("status")}</th>
-                                </tr>
-                            </thead>
-                            {relayers && relayers.length ? (
-                                <tbody>
-                                    {relayers.map((relayer, index) => {
-                                        return (
-                                            <tr key={index}>
-                                                <td className="break-words">{relayer.AccountId}</td>
-                                                <td>{relayer.lockedDOT}</td>
-                                                <td className={getStatusColor(relayer.status)}>{relayer.status}</td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            ) : (
-                                <tbody>
-                                    <tr>
-                                        <td colSpan={3}>{t("dashboard.no-registered")}</td>
-                                    </tr>
-                                </tbody>
-                            )}
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <DashboardTable
+                pageData={relayers}
+                headings={tableHeadings}
+                dataPointDisplayer={relayersTableRow}
+                noDataEl={<td colSpan={3}>{t("dashboard.no-registered")}</td>}
+            />
         </div>
     );
 }

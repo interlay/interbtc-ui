@@ -11,7 +11,12 @@ enum Status {
     Failure,
 }
 
-const BtcRelay = (): ReactElement => {
+type BtcRelayProps = {
+    linkButton?: boolean;
+    displayBlockstreamData?: boolean;
+};
+
+const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactElement => {
     const { t } = useTranslation();
     // TODO: Compute status using blockstream data
     const { btcRelayHeight, bitcoinHeight } = useSelector((state: StoreType) => state.general);
@@ -19,7 +24,7 @@ const BtcRelay = (): ReactElement => {
     const state =
         bitcoinHeight === 0
             ? Status.Loading
-            : bitcoinHeight - btcRelayHeight <= outdatedRelayThreshold
+            : bitcoinHeight - btcRelayHeight >= outdatedRelayThreshold
             ? Status.Failure
             : Status.Ok;
     const statusText =
@@ -37,34 +42,78 @@ const BtcRelay = (): ReactElement => {
     const statusColor = state === Status.Loading ? "d_grey" : state === Status.Ok ? "d_green" : "d_red";
 
     return (
-        <div className="card">
-            <div className="card-top-content">
-                <div className="values-container">
-                    <h1 className="bold-font">
-                        BTC Relay is &nbsp;
-                        <span style={{ color: getAccents(statusColor).color }} id="relay-text" className="bold-font">
-                            {statusText}
-                        </span>
-                    </h1>
+        <>
+            <div className="card">
+                <div className="card-top-content">
+                    <div className="values-container">
+                        <h1 className="bold-font">
+                            BTC Relay is &nbsp;
+                            <span
+                                style={{ color: getAccents(statusColor).color }}
+                                id="relay-text"
+                                className="bold-font"
+                            >
+                                {statusText}
+                            </span>
+                        </h1>
+                    </div>
+                    {linkButton ? (
+                        <div className="button-container">
+                            <ButtonComponent
+                                buttonName="view BTC Relay"
+                                propsButtonColor="d_green"
+                                buttonId="btc-relay"
+                                buttonLink="/dashboard/relay"
+                            />
+                        </div>
+                    ) : (
+                        ""
+                    )}
                 </div>
-                <div className="button-container">
-                    <ButtonComponent
-                        buttonName="view BTC Relay"
-                        propsButtonColor="d_green"
-                        buttonId="btc-relay"
-                        buttonLink="/dashboard/relay"
-                    />
+                <div className="circle-container">
+                    <div
+                        className="status-circle"
+                        style={{ borderColor: getAccents(statusColor).color }}
+                        id="relay-circle"
+                    >
+                        <h1
+                            className="h1-xl-text"
+                            style={{ color: getAccents(statusColor).color }}
+                            id="relay-circle-text"
+                        >
+                            {graphText}
+                        </h1>
+                        <p className="latest-block-text">
+                            {t("dashboard.relay.block_number", { number: btcRelayHeight })}
+                        </p>
+                    </div>
                 </div>
             </div>
-            <div className="circle-container">
-                <div className="status-circle" style={{ borderColor: getAccents(statusColor).color }} id="relay-circle">
-                    <h1 className="h1-xl-text" style={{ color: getAccents(statusColor).color }} id="relay-circle-text">
-                        {graphText}
-                    </h1>
-                    <p className="latest-block-text">Block {btcRelayHeight}</p>
+            {displayBlockstreamData ? (
+                <div className="card">
+                    <div className="circle-container">
+                        <div
+                            className="status-circle"
+                            style={{ borderColor: getAccents("d_blue").color }}
+                            id="relay-circle"
+                        >
+                            <h1
+                                className="h1-xl-text"
+                                style={{ color: getAccents("d_blue").color }}
+                                id="relay-circle-text"
+                            >
+                                {t("blockstream")}
+                            </h1>
+                            <p className="latest-block-text">
+                                {t("dashboard.relay.block_number", { number: bitcoinHeight })}
+                            </p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            ) : (
+                ""
+            )}
+        </>
     );
 };
 

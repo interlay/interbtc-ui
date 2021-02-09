@@ -143,6 +143,12 @@
     column-gap: 30px;
 }
 
+.relay-grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 30px;
+}
+
 .dashboard-table-container {
     margin: 40px 0px;
     .table-heading {

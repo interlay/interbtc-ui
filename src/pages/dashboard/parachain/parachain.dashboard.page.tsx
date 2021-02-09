@@ -15,7 +15,7 @@ export default function ParachainDashboard(): ReactElement {
     const { totalLockedDOT } = useSelector((state: StoreType) => state.general);
 
     return (
-        <div className="dashboard-page container-fluid white-background">
+        <div className="dashboard-page">
             <div className="dashboard-container dashboard-fade-in-animation">
                 <div className="dashboard-wrapper">
                     <div>

@@ -87,6 +87,7 @@
     "date": "Date",
     "enter_recipient_address": "Please enter the recipient address",
     "successful_transfer": "Successful transfer",
+    "blockstream": "Blockstream",
     "redeem_page": {
         "must_select_account_warning": "No account selected. Please select an account to redeem.",
         "waiting_for": "Waiting for",
@@ -187,7 +188,8 @@
             "blocks": "Blocks",
             "block_height": "Block height",
             "block_hash": "Block hash",
-            "timestamp": "Timestamp"
+            "timestamp": "Timestamp",
+            "block_number": "Block {{number}}"
         },
         "oracles": {
             "oracles": "Oracles",
@@ -207,7 +209,8 @@
         "parachain": {
             "parachain": "Parachain",
             "total_relayers_chart": "Total active relayers",
-            "active_relayers": "Active Staked Relayers"
+            "active_relayers": "Active Staked Relayers",
+            "relayers": "Staked Relayers"
         }
     },
     "issue_page": {
