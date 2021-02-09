@@ -7,7 +7,6 @@ import Row3 from "./rows/row3";
 
 export default function DashboardPage(): ReactElement {
     const [timer, setTimer] = useState(0);
-
     useEffect(() => {
         setInterval(() => {
             setTimer((timer) => timer + 1);
