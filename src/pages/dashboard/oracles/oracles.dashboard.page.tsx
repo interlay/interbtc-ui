@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import OracleStatus from "../components/oracle-status";
 import OracleTable from "../../../common/components/oracle-table/oracle-table";
+import { getAccents } from "../dashboard-colors";
 
 export default function OraclesDashboard(): ReactElement {
     const { t } = useTranslation();
@@ -11,17 +12,22 @@ export default function OraclesDashboard(): ReactElement {
         <div className="dashboard-page container-fluid white-background">
             <div className="dashboard-container dashboard-fade-in-animation">
                 <div className="dashboard-wrapper">
-                    <div className="row">
-                        <div className="title">{t("dashboard.relay.btcrelay")}</div>
-                    </div>
-                    <div className="row mt-5 mb-3">
-                        <div className="col-lg-8 offset-2">
-                            <div className="row">
-                                <OracleStatus />
+                    <div>
+                        <div className="title-container">
+                            <div
+                                style={{ backgroundColor: getAccents("d_blue").color }}
+                                className="issue-page-text-container"
+                            >
+                                <h1>{t("dashboard.oracles.oracles")}</h1>
                             </div>
+                            <div style={{ backgroundColor: getAccents("d_blue").color }} className="title-line"></div>
                         </div>
+
+                        <div className="dashboard-graphs-container">
+                            <OracleStatus />
+                        </div>
+                        <OracleTable planckLocked={"1"} />
                     </div>
-                    <OracleTable planckLocked={"1"} />
                 </div>
             </div>
         </div>

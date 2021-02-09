@@ -71,9 +71,15 @@ export default function IssueDashboard(): ReactElement {
             <p>{ireq.creation}</p>,
             <StyledLinkData data={shortAddress(ireq.vaultDOTAddress)} />,
             <StyledLinkData data={shortAddress(ireq.vaultBTCAddress)} />,
-            <StatusComponent status={ireq.completed ? "completed" : ireq.cancelled ? "cancelled" : "pending"} />,
+            <StatusComponent
+                {...(ireq.completed
+                    ? { text: t("completed"), category: "ok" }
+                    : ireq.cancelled
+                    ? { text: t("cancelled"), category: "bad" }
+                    : { text: t("pending"), category: "warning" })}
+            />,
         ],
-        []
+        [t]
     );
 
     useEffect(() => {
@@ -110,7 +116,7 @@ export default function IssueDashboard(): ReactElement {
                         <div className="table-top-data-container">
                             <div className="values-container">
                                 <div>
-                                    <h2 style={{ color: `${getAccents("d_yellow").color}` }}>
+                                    <h2 style={{ color: getAccents("d_yellow").color }}>
                                         {t("dashboard.issue.issued")}
                                     </h2>
                                     <h1>{t("dashboard.issue.total_polkabtc", { amount: totalPolkaBTC })}</h1>
@@ -119,7 +125,7 @@ export default function IssueDashboard(): ReactElement {
                                     </h1>
                                 </div>
                                 <div>
-                                    <h2 style={{ color: `${getAccents("d_green").color}` }}>
+                                    <h2 style={{ color: getAccents("d_green").color }}>
                                         {t("dashboard.issue.issue_requests")}
                                     </h2>
                                     <h1>{totalSuccessfulIssues === "-" ? t("no_data") : totalSuccessfulIssues}</h1>

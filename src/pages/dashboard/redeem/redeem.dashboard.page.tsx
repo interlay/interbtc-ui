@@ -58,20 +58,18 @@ export default function RedeemDashboard(): ReactElement {
             <StyledLinkData data={shortAddress(rreq.vaultDotAddress)} />,
             <StyledLinkData data={shortAddress(rreq.btcAddress)} />,
             <StatusComponent
-                status={
-                    rreq.completed
-                        ? "completed"
-                        : rreq.cancelled
-                        ? "cancelled"
-                        : rreq.isExpired
-                        ? "expired"
-                        : rreq.reimbursed
-                        ? "reimbursed"
-                        : "pending"
-                }
+                {...(rreq.completed
+                    ? { text: t("completed"), category: "ok" }
+                    : rreq.cancelled
+                    ? { text: t("cancelled"), category: "bad" }
+                    : rreq.isExpired
+                    ? { text: t("expired"), category: "bad" }
+                    : rreq.reimbursed
+                    ? { text: t("reimbursed"), category: "ok" }
+                    : { text: t("pending"), category: "warning" })}
             />,
         ],
-        []
+        [t]
     );
 
     const fetchRedeemRequests = useMemo(
@@ -168,13 +166,13 @@ export default function RedeemDashboard(): ReactElement {
                                     )}
                                 </div>
                                 <div>
-                                    <h2 style={{ color: `${getAccents("d_green").color}` }}>
+                                    <h2 style={{ color: getAccents("d_green").color }}>
                                         {t("dashboard.redeem.total_redeems")}
                                     </h2>
                                     <h1>{totalSuccessfulRedeems === "-" ? t("no_data") : totalSuccessfulRedeems}</h1>
                                 </div>
                                 <div>
-                                    <h2 style={{ color: `${getAccents("d_green").color}` }}>
+                                    <h2 style={{ color: getAccents("d_green").color }}>
                                         {t("dashboard.redeem.success_rate")}
                                     </h2>
                                     <h1>

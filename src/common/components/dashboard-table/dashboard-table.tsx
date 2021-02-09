@@ -35,22 +35,16 @@ export function StyledLinkData(props: StyledLinkDataProps): ReactElement {
     );
 }
 
+/**
+ * Helper component to display status text, with appropriate colour and status icon
+ **/
 type StatusComponentProps = {
-    status: "pending" | "completed" | "cancelled" | "expired" | "reimbursed";
+    text: string;
+    category: "bad" | "warning" | "ok";
 };
-export function StatusComponent({ status }: StatusComponentProps): ReactElement {
-    const { t } = useTranslation();
-    const icon = ["completed", "reimbursed"].includes(status)
-        ? Icon_confirm
-        : ["cancelled", "expired"].includes(status)
-        ? Icon_cancel
-        : Icon_pending;
-    const color = ["completed", "reimbursed"].includes(status)
-        ? "d_green"
-        : ["cancelled", "expired"].includes(status)
-        ? "d_red"
-        : "d_yellow";
-    const text = t(status);
+export function StatusComponent({ text, category }: StatusComponentProps): ReactElement {
+    const icon = category === "ok" ? Icon_confirm : category === "bad" ? Icon_cancel : Icon_pending;
+    const color = category === "ok" ? "d_green" : category === "bad" ? "d_red" : "d_yellow";
     return (
         <div className="status-container">
             <img className="external-link" src={icon} alt="" />

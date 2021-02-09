@@ -190,6 +190,7 @@
             "timestamp": "Timestamp"
         },
         "oracles": {
+            "oracles": "Oracles",
             "active_oracles": "Active Oracles"
         },
         "vaults": {
@@ -204,6 +205,7 @@
             "polkabtc_capacity": "PolkaBTC Capacity"
         },
         "parachain": {
+            "parachain": "Parachain",
             "total_relayers_chart": "Total active relayers",
             "active_relayers": "Active Staked Relayers"
         }

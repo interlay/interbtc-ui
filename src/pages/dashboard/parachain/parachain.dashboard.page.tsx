@@ -8,6 +8,7 @@ import StakedRelayerTable from "../staked-relayer-table/staked-relayer-table";
 import StatusUpdateTable from "../../../common/components/status-update-table/status-update-table";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
+import { getAccents } from "../dashboard-colors";
 
 export default function ParachainDashboard(): ReactElement {
     const { t } = useTranslation();
@@ -17,23 +18,24 @@ export default function ParachainDashboard(): ReactElement {
         <div className="dashboard-page container-fluid white-background">
             <div className="dashboard-container dashboard-fade-in-animation">
                 <div className="dashboard-wrapper">
-                    <div className="row">
-                        <div className="title">{t("dashboard.relay.btcrelay")}</div>
-                    </div>
-                    <div className="row mt-5 mb-3">
-                        <div className="col-lg-8 offset-2">
-                            <div className="row">
-                                <div className="col-md-4">
-                                    <ParachainSecurity />
-                                </div>
-                                <div className="col-md-4">
-                                    <ActiveStakedRelayers />
-                                </div>
+                    <div>
+                        <div className="title-container">
+                            <div
+                                style={{ backgroundColor: getAccents("d_blue").color }}
+                                className="issue-page-text-container"
+                            >
+                                <h1>{t("dashboard.parachain.parachain")}</h1>
                             </div>
+                            <div style={{ backgroundColor: getAccents("d_blue").color }} className="title-line"></div>
                         </div>
+
+                        <div className="parachain-graphs-container dashboard-graphs-container">
+                            <ParachainSecurity />
+                            <ActiveStakedRelayers />
+                        </div>
+                        <StatusUpdateTable dotLocked={totalLockedDOT} readOnly={true} />
+                        <StakedRelayerTable />
                     </div>
-                    <StatusUpdateTable dotLocked={totalLockedDOT} readOnly={true} />
-                    <StakedRelayerTable />
                 </div>
             </div>
         </div>

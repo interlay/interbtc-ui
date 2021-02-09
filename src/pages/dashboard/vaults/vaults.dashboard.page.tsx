@@ -25,7 +25,7 @@ export default function VaultsDashboard(): ReactElement {
                             <div style={{ backgroundColor: getAccents("d_blue").color }} className="title-line"></div>
                         </div>
 
-                        <div className="vaults-graphs-container">
+                        <div className="vaults-graphs-container dashboard-graphs-container">
                             <ActiveVaults />
                             <CollateralLocked />
                             <Collateralization />

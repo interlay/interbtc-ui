@@ -126,10 +126,20 @@
         row-gap: 20px;
     }
 }
+
+.dashboard-graphs-container {
+    margin-top: 40px;
+}
+
 .vaults-graphs-container {
     display: grid;
-    margin-top: 40px;
     grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 30px;
+}
+
+.parachain-graphs-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     column-gap: 30px;
 }
 
