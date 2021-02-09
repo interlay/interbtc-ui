@@ -40,15 +40,15 @@ export function StyledLinkData(props: StyledLinkDataProps): ReactElement {
  **/
 type StatusComponentProps = {
     text: string;
-    category: "bad" | "warning" | "ok";
+    category: "bad" | "warning" | "ok" | "neutral";
 };
 export function StatusComponent({ text, category }: StatusComponentProps): ReactElement {
     const icon = category === "ok" ? Icon_confirm : category === "bad" ? Icon_cancel : Icon_pending;
     const color = category === "ok" ? "d_green" : category === "bad" ? "d_red" : "d_yellow";
     return (
         <div className="status-container">
-            <img className="external-link" src={icon} alt="" />
-            <p style={{ color: getAccents(color).color }} className="status">
+            {category !== "neutral" ? <img className="external-link" src={icon} alt="" /> : ""}
+            <p style={category !== "neutral" ? { color: getAccents(color).color } : {}} className="status">
                 {text}
             </p>
         </div>

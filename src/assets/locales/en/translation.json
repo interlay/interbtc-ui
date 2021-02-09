@@ -210,7 +210,15 @@
             "parachain": "Parachain",
             "total_relayers_chart": "Total active relayers",
             "active_relayers": "Active Staked Relayers",
-            "relayers": "Staked Relayers"
+            "status_updates": "Parachain status updates",
+            "relayers": "Staked Relayers",
+            "add_error": "Add {{error}}",
+            "remove_error": "Remove {{error}}",
+            "no_change": "No change",
+            "votes": "{{yeas}} : {{nays}}",
+            "executed": "Executed",
+            "forced": "Forced",
+            "rejected": "Rejected"
         }
     },
     "issue_page": {
