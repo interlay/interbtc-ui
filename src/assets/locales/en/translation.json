@@ -189,6 +189,9 @@
             "block_hash": "Block hash",
             "timestamp": "Timestamp"
         },
+        "oracles": {
+            "active_oracles": "Active Oracles"
+        },
         "vaults": {
             "vaults": "Vaults",
             "total_vaults_chart": "Total active vaults",

@@ -62,55 +62,63 @@ export function StatusComponent({ status }: StatusComponentProps): ReactElement 
 }
 
 type DataWithID = { id: string };
-type DashboardTableProps<D extends DataWithID> = {
+type SimpleDashboardTableProps<D extends DataWithID> = {
+    richTable?: false;
+    pageData: D[];
+    headings: ReactElement[];
+    dataPointDisplayer: (dataPoint: D) => ReactElement[];
+    noDataEl?: ReactElement;
+};
+type RichDashboardTableProps<D extends DataWithID> = {
+    richTable: true;
     pageData: D[];
     totalPages: number;
     tableParams: TableDisplayParams;
     setTableParams: (params: TableDisplayParams) => void;
-    headings: string[];
+    headings: ReactElement[];
     dataPointDisplayer: (dataPoint: D) => ReactElement[];
+    noDataEl?: ReactElement;
 };
 
-export default function DashboardTable<D extends DataWithID>({
-    pageData,
-    totalPages,
-    tableParams,
-    setTableParams,
-    headings,
-    dataPointDisplayer,
-}: DashboardTableProps<D>): ReactElement {
+type DashboardTableProps<D extends DataWithID> = SimpleDashboardTableProps<D> | RichDashboardTableProps<D>;
+
+export default function DashboardTable<D extends DataWithID>(props: DashboardTableProps<D>): ReactElement {
     const { t } = useTranslation();
 
-    const setPage = useMemo(() => (page: number) => setTableParams({ ...tableParams, page }), [
-        setTableParams,
-        tableParams,
-    ]);
+    const setPage = useMemo(
+        () => (page: number) => (props.richTable ? props.setTableParams({ ...props.tableParams, page }) : undefined),
+        [props]
+    );
 
-    return pageData.length > 0 ? (
+    return props.pageData.length > 0 ? (
         <div className="dashboard-table">
             <div className="dashboard-table-grid">
-                {headings.map((heading, i) => (
+                {props.headings.map((heading, i) => (
                     <div style={{ gridColumn: i + 1 }}>
                         <div className="line"></div>
-                        <div className="data-container">
-                            <h1>{heading}</h1>
-                        </div>
+                        <div className="data-container">{heading}</div>
                         <div className="line"></div>
-                        {pageData.map((point) => (
+                        {props.pageData.map((point) => (
                             <div>
-                                <div className="data-container">{dataPointDisplayer(point)[i]}</div>
+                                <div className="data-container">{props.dataPointDisplayer(point)[i]}</div>
                                 <div className="line"></div>
                             </div>
                         ))}
                     </div>
                 ))}
             </div>
-            {totalPages > 1 ? (
-                <TablePageSelector totalPages={totalPages} currentPage={tableParams.page} setPage={setPage} />
+            {props.richTable ? (
+                <TablePageSelector
+                    totalPages={props.totalPages}
+                    currentPage={props.tableParams.page}
+                    setPage={setPage}
+                />
             ) : (
                 ""
             )}
         </div>
+    ) : props.noDataEl !== undefined ? (
+        props.noDataEl
     ) : (
         <div>{t("empty_data")}</div>
     );

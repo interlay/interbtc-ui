@@ -52,15 +52,15 @@ export default function IssueDashboard(): ReactElement {
     );
 
     const tableHeadings = [
-        // t("id"),
-        t("date"),
-        t("issue_page.amount"),
-        t("issue_page.parachain_block"),
-        t("issue_page.vault_dot_address"),
-        t("issue_page.vault_btc_address"),
+        // <h1>{t("id")}</h1>,
+        <h1>{t("date")}</h1>,
+        <h1>{t("issue_page.amount")}</h1>,
+        <h1>{t("issue_page.parachain_block")}</h1>,
+        <h1>{t("issue_page.vault_dot_address")}</h1>,
+        <h1>{t("issue_page.vault_btc_address")}</h1>,
         // "BTC Transaction",
         // "BTC Confirmations",
-        t("status"),
+        <h1>{t("status")}</h1>,
     ];
 
     const tableIssueRequestRow = useMemo(
@@ -134,6 +134,7 @@ export default function IssueDashboard(): ReactElement {
                                 <p className="table-heading">{t("issue_page.recent_requests")}</p>
                             </div>
                             <DashboardTable
+                                richTable={true}
                                 pageData={issueRequests}
                                 totalPages={Math.ceil(Number(totalIssues) / tableParams.perPage)}
                                 tableParams={tableParams}

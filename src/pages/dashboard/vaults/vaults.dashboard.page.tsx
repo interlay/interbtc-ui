@@ -30,9 +30,7 @@ export default function VaultsDashboard(): ReactElement {
                             <CollateralLocked />
                             <Collateralization />
                         </div>
-                        <div className="dashboard-table-container">
-                            <VaultTable></VaultTable>
-                        </div>
+                        <VaultTable></VaultTable>
                     </div>
                 </div>
             </div>
