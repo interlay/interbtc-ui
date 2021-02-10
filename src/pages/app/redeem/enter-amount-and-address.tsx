@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactElement } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import {
@@ -17,16 +17,22 @@ import { btcToSat, satToBTC, stripHexPrefix } from "@interlay/polkabtc";
 import { BALANCE_MAX_INTEGER_LENGTH, BTC_ADDRESS_REGEX } from "../../../constants";
 import { useTranslation } from "react-i18next";
 import BitcoinLogo from "../../../assets/img/Bitcoin-Logo.png";
+import PolkadotLogo from "../../../assets/img/Polkadot-Logo.png";
 import Big from "big.js";
 import { updateBalancePolkaBTCAction } from "../../../common/actions/general.actions";
 import { calculateAmount } from "../../../common/utils/utils";
+import { PolkaBTC } from "@interlay/polkabtc/build/interfaces";
+import { AccountId } from "@polkadot/types/interfaces/runtime";
+import BN from "bn.js";
 
 type AmountAndAddressForm = {
     amountPolkaBTC: string;
     btcAddress: string;
 };
 
-export default function EnterAmountAndAddress() {
+type PremiumRedeemVault = Map<AccountId, PolkaBTC>;
+
+export default function EnterAmountAndAddress(): ReactElement {
     const { t } = useTranslation();
     const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
     const { balancePolkaBTC, polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
@@ -38,14 +44,35 @@ export default function EnterAmountAndAddress() {
     const dispatch = useDispatch();
     const [usdAmount, setUsdAmount] = useState("");
     const [redeemFee, setRedeemFee] = useState("0");
+    const [btcToDotRate, setBtcToDotRate] = useState(new Big(0));
+    const [premiumRedeem, setPremiumRedeem] = useState(false);
+    const [maxPremiumRedeem, setMaxPremiumRedeem] = useState(new Big(0));
+    const [premiumRedeemVaults, setPremiumRedeemVaults] = useState(new Map() as PremiumRedeemVault);
+    const [premiumRedeemFee, setPremiumRedeemFee] = useState(new Big(0));
 
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
+            // redeems can only be made above the BTC dust limit
             const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
             const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
             setDustValue(dustValueBtc);
+
+            // check if vaults below the premium redeem limit are in the system
+            try {
+                const premiumRedeemVaults = await window.polkaBTC.vaults.getPremiumRedeemVaults();
+                setPremiumRedeemVaults(premiumRedeemVaults);
+
+                const [premiumRedeemFee, btcToDot] = await Promise.all([
+                    window.polkaBTC.redeem.getPremiumRedeemFee(),
+                    window.polkaBTC.oracle.getExchangeRate(),
+                ]);
+                setPremiumRedeemFee(new Big(premiumRedeemFee));
+                setBtcToDotRate(btcToDot);
+            } catch (e) {
+                console.log(e);
+            }
         };
         setUsdAmount(calculateAmount(amount || getValues("amountPolkaBTC") || "0", usdPrice));
         fetchData();
@@ -67,11 +94,33 @@ export default function EnterAmountAndAddress() {
             dispatch(changeAmountPolkaBTCAction(amountPolkaBTC));
             const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
 
-            const vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountAsSatoshi);
+            // differentiate between premium and regular redeem
+            let vaultId;
+            if (!premiumRedeem) {
+                // select a random vault
+                vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountAsSatoshi);
+            } else {
+                // select a vault from the premium redeem vault list
+                for (const [id, redeemableTokens] of premiumRedeemVaults) {
+                    const redeemable = redeemableTokens.toBn();
+                    if (redeemable.gte(new BN(amountPolkaSAT))) {
+                        vaultId = id;
+                        break;
+                    }
+                }
+                if (vaultId === undefined) {
+                    // TODO: add to translation
+                    const msg =
+                        "Could not find Vault below premium redeem threshold with sufficient locked PolkaBTC." +
+                        "Please try a different Vault. The maximum amount for premium redeem " +
+                        `is ${maxPremiumRedeem.toString()} PolkaBTC.`;
+
+                    throw new Error(msg);
+                }
+            }
             // get the vault's data
             const vault = await window.polkaBTC.vaults.get(vaultId);
             const vaultBTCAddress = vault.wallet.addresses[0];
-
             const fee = await window.polkaBTC.redeem.getFeesToPay(amountPolkaBTC);
             dispatch(updateRedeemFeeAction(fee));
 
@@ -96,10 +145,16 @@ export default function EnterAmountAndAddress() {
         setRequestPending(false);
     });
 
-    const calculateTotal = (): string => {
+    const calculateTotalBTC = (): string => {
         const amount = getValues("amountPolkaBTC") || "0";
         if (amount === "0") return "0";
         return new Big(amount).sub(new Big(redeemFee)).toString();
+    };
+
+    const calculateTotalDOT = (): string => {
+        const amount = getValues("amountPolkaBTC") || "0";
+        if (amount === "0") return "0";
+        return new Big(amount).mul(btcToDotRate).mul(premiumRedeemFee).toString();
     };
 
     const onAmountChange = async () => {
@@ -114,6 +169,22 @@ export default function EnterAmountAndAddress() {
             toast.warning(t("redeem_page.must_select_account_warning"));
             return;
         }
+    };
+
+    const togglePremium = () => {
+        if (!premiumRedeem) {
+            let maxAmount = new BN(0);
+            for (const redeemableTokens of premiumRedeemVaults.values()) {
+                const redeemable = redeemableTokens.toBn();
+                if (maxAmount.lt(redeemable)) {
+                    maxAmount = redeemable;
+                }
+            }
+            const maxBtc = satToBTC(maxAmount.toString());
+            setMaxPremiumRedeem(new Big(maxBtc));
+            console.log(maxPremiumRedeem.toString());
+        }
+        setPremiumRedeem(!premiumRedeem);
     };
 
     return (
@@ -178,6 +249,28 @@ export default function EnterAmountAndAddress() {
                     {errors.btcAddress.type === "required" ? t("redeem_page.enter_btc") : errors.btcAddress.message}
                 </div>
             )}
+            {premiumRedeemVaults.size > 0 && (
+                <div className="row">
+                    <div className="col-12">
+                        <div className="wizard-item mt-5">
+                            <div className="row">
+                                <div className="col-10 text-left">{t("redeem_page.premium_redeem")}</div>
+                                <div className="col-2">
+                                    <input type="checkbox" id="premiumRedeem" onChange={togglePremium}></input>
+                                </div>
+                            </div>
+                            {premiumRedeem && (
+                                <div className="row">
+                                    <div className="col-2"></div>
+                                    <div className="col-10 text-right font-weight-light">
+                                        {t("redeem_page.max_premium_redeem")}: {maxPremiumRedeem.toString()} PolkaBTC
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className="row">
                 <div className="col-12">
                     <div className="wizard-item mt-5">
@@ -212,9 +305,18 @@ export default function EnterAmountAndAddress() {
                             <div className="col-6 text-left font-weight-bold">{t("you_will_receive")}</div>
                             <div className="col-6">
                                 <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
-                                {calculateTotal()} BTC
+                                {calculateTotalBTC()} BTC
                             </div>
                         </div>
+                        {premiumRedeem && (
+                            <div className="row">
+                                <div className="col-6 text-left">{t("redeem_page.earned_premium")}</div>
+                                <div className="col-6">
+                                    <img src={PolkadotLogo} width="23px" height="23px" alt="polkadot logo"></img>
+                                    {calculateTotalDOT()} DOT
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
