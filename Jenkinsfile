@@ -39,6 +39,9 @@ pipeline {
         CI = 'true'
         DISCORD_WEBHOOK_URL = credentials('discord_webhook_url')
     }
+    options {
+        ansiColor('xterm')
+    }
     stages {
         stage('Prepare') {
             steps {
