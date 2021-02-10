@@ -74,9 +74,10 @@ pipeline {
                     dir('unstash') {
                         unstash("yarn_build")
                         sh '''#!/busybox/sh
+                        GIT_BRANCH_SLUG=$(echo $BRANCH_NAME | sed -e 's/\\//-/g')
                         /kaniko/executor -f `pwd`/DockerfileProd -c `pwd` \
-                            --destination=${REGISTRY}/${REPOSITORY}/${IMAGE}:${BRANCH} \
-                            --destination=${REGISTRY}/${REPOSITORY}/${IMAGE}:${BRANCH}-${GIT_COMMIT:0:6}
+                            --destination=${REGISTRY}/${REPOSITORY}/${IMAGE}:${GIT_BRANCH_SLUG} \
+                            --destination=${REGISTRY}/${REPOSITORY}/${IMAGE}:${GIT_BRANCH_SLUG}-${GIT_COMMIT:0:6}
                         '''
                     }
                 }
