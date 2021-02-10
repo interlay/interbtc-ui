@@ -52,6 +52,7 @@ export const getInitialState = (): StoreType => {
             issueRequests: new Map(),
             wizardInEditMode: false,
             vaultIssues: [],
+            selectedRequest: undefined,
         },
         redeem: {
             fee: "0",

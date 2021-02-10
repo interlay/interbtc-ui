@@ -138,6 +138,7 @@
 }
 
 .payment-description {
+    font-size: 1rem;
     text-align: center;
     padding: 15px;
 }
@@ -156,11 +157,13 @@
 
 .payment-timer-with {
     text-align: center;
+    font-size: 1rem;
     font-weight: 600;
     padding-top: 15px;
 }
 
 .payment-timer {
+    font-size: 1rem;
     text-align: center;
     font-weight: 600;
 }
@@ -214,6 +217,7 @@
     }
 
     .ledger-logo {
+        font-size: 1rem;
         width: 150px;
         height: 100px;
         background-image: url("../../assets/img/ledger.svg");

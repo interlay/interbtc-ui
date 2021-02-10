@@ -38,6 +38,7 @@ export interface VaultIssue {
 }
 
 export interface IssueState {
+    selectedRequest?: IssueRequest;
     address: string;
     step: string;
     amountBTC: string;

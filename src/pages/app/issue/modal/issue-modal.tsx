@@ -17,11 +17,10 @@ type IssueModalProps = {
 };
 
 export default function IssueModal(props: IssueModalProps) {
-    const { address, prices } = useSelector((state: StoreType) => state.general);
-    const selectedIdRequest = useSelector((state: StoreType) => state.issue.id);
-    const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address) || [];
-    const request = issueRequests.filter((request) => request.id === selectedIdRequest)[0];
+    const { prices } = useSelector((state: StoreType) => state.general);
+    const { selectedRequest } = useSelector((state: StoreType) => state.issue);
     const { t } = useTranslation();
+    const request = selectedRequest;
 
     return (
         <Modal show={props.show} onHide={props.onClose} size={"xl"}>
@@ -72,12 +71,12 @@ export default function IssueModal(props: IssueModalProps) {
                             </div>
                         </div>
                         <div className="col-6">
-                            {!request.btcTxId && !request.cancelled && !request.completed ? (
+                            {!request.btcTxId && !request.cancelled && !request.completed && request ? (
                                 <PaymentView request={request} />
                             ) : (
                                 <StatusView request={request} />
                             )}
-                            {false && <WhopsView request={request} />}
+                            {false && request && <WhopsView request={request} />}
                         </div>
                     </div>
                 )}
