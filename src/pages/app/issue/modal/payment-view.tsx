@@ -62,16 +62,6 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
                         <QRCode value={"bitcoin:" + props.request.vaultBTCAddress + "?amount=" + amount} />
                     </div>
                 </div>
-
-                <div className="row justify-content-center">
-                    <div className="col ledger-wrapper">
-                        <div className="ledger-logo-wrapper">
-                            <div className="ledger-logo">
-                                <div className="col">{t("issue_page.pay_with")}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     );

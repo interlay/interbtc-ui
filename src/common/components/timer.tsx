@@ -11,7 +11,7 @@ const formatTime = (leftSeconds: number): string => {
     const h = hours < 10 ? "0" + hours : hours;
     const m = minutes < 10 ? "0" + minutes : minutes;
     const s = seconds < 10 ? "0" + seconds : seconds;
-    return h + ":" + m + ":" + s;
+    return h + "h " + m + "min " + s + "sec";
 };
 
 export default function Timer(props: TimerProps): ReactElement {
@@ -20,7 +20,8 @@ export default function Timer(props: TimerProps): ReactElement {
 
     useEffect(() => {
         setSeconds(props.seconds);
-        setInterval(() => setSeconds(--counter), 1000);
+        const interval = setInterval(() => setSeconds(--counter), 1000);
+        return () => clearInterval(interval);
     }, [counter, props.seconds]);
 
     return <div>{formatTime(leftSeconds)}</div>;

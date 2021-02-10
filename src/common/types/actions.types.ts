@@ -266,6 +266,12 @@ export const UPDATE_ISSUE_REQUEST = "UPDATE_ISSUE_REQUEST";
 export const OPEN_WIZARD_IN_EDIT_MODE = "OPEN_WIZARD_IN_EDIT_MODE";
 export const ADD_VAULT_ISSUES = "ADD_VAULT_ISSUES";
 export const UPDATE_ALL_ISSUE_REQUESTS = "UPDATE_ALL_ISSUE_REQUESTS";
+export const CHANGE_SELECTED_ISSUE = "CHANGE_SELECTED_ISSUE";
+
+export interface ChangeSelectedIssue {
+    type: typeof CHANGE_SELECTED_ISSUE;
+    request: IssueRequest;
+}
 
 export interface AddVaultIssues {
     type: typeof ADD_VAULT_ISSUES;
@@ -357,7 +363,8 @@ export type IssueActions =
     | ChangeAddress
     | InitState
     | AddVaultIssues
-    | UpdateAllIssueRequests;
+    | UpdateAllIssueRequests
+    | ChangeSelectedIssue;
 
 // VAULT
 

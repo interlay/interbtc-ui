@@ -14,6 +14,7 @@ import {
     ADD_VAULT_ISSUES,
     OPEN_WIZARD_IN_EDIT_MODE,
     UPDATE_ALL_ISSUE_REQUESTS,
+    CHANGE_SELECTED_ISSUE,
     UpdateAllIssueRequests,
     ChangeIssueStep,
     ChangeBtcAddress,
@@ -29,6 +30,7 @@ import {
     UpdateIssueRequest,
     OpenWizardInEditMode,
     AddVaultIssues,
+    ChangeSelectedIssue,
 } from "../types/actions.types";
 import { IssueRequest, VaultIssue } from "../types/issue.types";
 
@@ -74,6 +76,11 @@ export const changeVaultDotAddressOnIssueAction = (vaultDotAddress: string): Cha
 export const changeIssueIdAction = (id: string): ChangeIssueId => ({
     type: CHANGE_ISSUE_ID,
     id,
+});
+
+export const changeSelectedIssueAction = (request: IssueRequest): ChangeSelectedIssue => ({
+    type: CHANGE_SELECTED_ISSUE,
+    request,
 });
 
 export const openWizardInEditModeAction = (): OpenWizardInEditMode => ({
