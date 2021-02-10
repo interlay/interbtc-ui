@@ -11,6 +11,7 @@
     "expired": "Expired",
     "completed": "Completed",
     "reimbursed": "Reimbursed",
+    "ok": "OK",
     "pending": "Pending",
     "fee": "Fee",
     "retry": "Retry",
@@ -227,7 +228,9 @@
             "rejected": "Rejected",
             "parachain_is": "The BTC Parachain is",
             "secure": "secure",
-            "not_secure": "not secure"
+            "not_secure": "not secure",
+            "slashed": "Slashed",
+            "bonding": "In bonding period"
         }
     },
     "issue_page": {

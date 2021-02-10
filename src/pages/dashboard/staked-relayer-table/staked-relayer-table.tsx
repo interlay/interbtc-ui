@@ -3,69 +3,48 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
-import * as constants from "../../../constants";
 import { useTranslation } from "react-i18next";
-import DashboardTable from "../../../common/components/dashboard-table/dashboard-table";
+import DashboardTable, {
+    StatusComponent,
+    StatusCategories,
+} from "../../../common/components/dashboard-table/dashboard-table";
+import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 
 type StakedRelayer = {
     id: string;
-    lockedDOT: string;
-    status: string;
+    stake: string;
+    bonded: boolean;
+    slashed: boolean;
 };
 
 export default function StakedRelayerTable(): ReactElement {
-    const isPolkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const [relayers, setRelayers] = useState<Array<StakedRelayer>>([]);
     const { t } = useTranslation();
+    const statsApi = usePolkabtcStats();
+    const [relayers, setRelayers] = useState<Array<StakedRelayer>>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            if (!isPolkaBtcLoaded) return;
-
+        (async () => {
             try {
-                const relayers = await window.polkaBTC.stakedRelayer.map();
-                const relayersList: StakedRelayer[] = [];
-                relayers.forEach((stake, id) => {
-                    relayersList.push({
-                        id: id.toString(),
-                        lockedDOT: planckToDOT(stake.stake.toString()),
-                        // TODO: add a status check for relayers in the parachain
-                        status: constants.STAKED_RELAYER_OK,
-                    });
-                });
-                setRelayers(relayersList);
-                // TODO: add status check for relayers on parachain
+                const res = await statsApi.getRelayers();
+                setRelayers(res.data);
             } catch (error) {
                 toast.error(error.toString());
             }
-        };
-
-        fetchData();
-        const interval = setInterval(() => {
-            fetchData();
-        }, constants.COMPONENT_UPDATE_MS);
-        return () => clearInterval(interval);
-    }, [isPolkaBtcLoaded]);
-
-    const getStatusColor = (status: string): string => {
-        if (status === constants.STAKED_RELAYER_OK) {
-            return "green-text";
-        }
-        if (status === constants.STAKED_RELAYER_OFFLINE) {
-            return "orange-text";
-        }
-        if (status === constants.STAKED_RELAYER_SLASHED) {
-            return "red-text";
-        }
-        return "black-text";
-    };
+        })();
+    }, []);
 
     const tableHeadings = [<h1>{t("account_id")}</h1>, <h1>{t("locked_dot")}</h1>, <h1>{t("status")}</h1>];
 
     const relayersTableRow = (relayer: StakedRelayer): ReactElement[] => [
         <p className="break-words">{relayer.id}</p>,
-        <p>{relayer.lockedDOT}</p>,
-        <p className={getStatusColor(relayer.status)}>{relayer.status}</p>,
+        <p>{relayer.stake}</p>,
+        <StatusComponent
+            {...(relayer.slashed
+                ? { text: t("dashboard.parachain.slashed"), category: StatusCategories.Bad }
+                : !relayer.bonded
+                ? { text: t("dashboard.parachain.bonding"), category: StatusCategories.Neutral }
+                : { text: t("ok"), category: StatusCategories.Ok })}
+        />,
     ];
 
     return (
@@ -77,7 +56,7 @@ export default function StakedRelayerTable(): ReactElement {
                 pageData={relayers}
                 headings={tableHeadings}
                 dataPointDisplayer={relayersTableRow}
-                noDataEl={<td colSpan={3}>{t("dashboard.no-registered")}</td>}
+                noDataEl={<div>{t("dashboard.no-registered")}</div>}
             />
         </div>
     );

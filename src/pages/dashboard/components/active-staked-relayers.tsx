@@ -16,7 +16,7 @@ const ActiveStakedRelayers = ({ linkButton }: ActiveStakedRelayers): ReactElemen
     const [totalRelayersPerDay, setTotalRelayersPerDay] = useState(new Array<{ date: number; count: number }>());
     const fetchRelayersPerDay = useMemo(
         () => async () => {
-            const res = await statsApi.getRecentDailyVaultCounts();
+            const res = await statsApi.getRecentDailyRelayerCounts();
             setTotalRelayersPerDay(res.data);
         },
         [statsApi] // to silence the compiler
