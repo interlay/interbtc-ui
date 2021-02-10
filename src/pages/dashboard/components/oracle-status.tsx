@@ -49,7 +49,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
                         )}
                     </h1>
                 </div>
-                {linkButton ? (
+                {linkButton && (
                     <div className="button-container">
                         <ButtonComponent
                             buttonName="view oracles"
@@ -58,8 +58,6 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
                             buttonLink="/dashboard/oracles"
                         />
                     </div>
-                ) : (
-                    ""
                 )}
             </div>
             <div className="circle-container">

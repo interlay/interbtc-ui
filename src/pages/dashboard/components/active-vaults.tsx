@@ -32,7 +32,7 @@ const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
                     <h1 style={{ color: getAccents("d_pink").color }}>{t("dashboard.vaults.active_vaults")}</h1>
                     <h2>{totalVaultsPerDay[totalVaultsPerDay.length - 1]?.count}</h2>
                 </div>
-                {linkButton ? (
+                {linkButton && (
                     <div className="button-container">
                         <ButtonComponent
                             buttonName="view all vaults"
@@ -41,8 +41,6 @@ const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
                             buttonLink="/dashboard/vaults"
                         />
                     </div>
-                ) : (
-                    ""
                 )}
             </div>
             <LineChartComponent

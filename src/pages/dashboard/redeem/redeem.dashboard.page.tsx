@@ -7,6 +7,7 @@ import { DashboardRequestInfo } from "../../../common/types/redeem.types";
 import DashboardTable, {
     StyledLinkData,
     StatusComponent,
+    StatusCategories,
 } from "../../../common/components/dashboard-table/dashboard-table";
 import { defaultTableDisplayParams, shortAddress, formatDateTimePrecise } from "../../../common/utils/utils";
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
@@ -59,14 +60,14 @@ export default function RedeemDashboard(): ReactElement {
             <StyledLinkData data={shortAddress(rreq.btcAddress)} />,
             <StatusComponent
                 {...(rreq.completed
-                    ? { text: t("completed"), category: "ok" }
+                    ? { text: t("completed"), category: StatusCategories.Ok }
                     : rreq.cancelled
-                    ? { text: t("cancelled"), category: "bad" }
+                    ? { text: t("cancelled"), category: StatusCategories.Bad }
                     : rreq.isExpired
-                    ? { text: t("expired"), category: "bad" }
+                    ? { text: t("expired"), category: StatusCategories.Bad }
                     : rreq.reimbursed
-                    ? { text: t("reimbursed"), category: "ok" }
-                    : { text: t("pending"), category: "warning" })}
+                    ? { text: t("reimbursed"), category: StatusCategories.Ok }
+                    : { text: t("pending"), category: StatusCategories.Warning })}
             />,
         ],
         [t]

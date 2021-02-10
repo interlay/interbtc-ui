@@ -119,15 +119,11 @@ export default function VaultTable(): ReactElement {
         <h1>{t("locked_btc")}</h1>,
         <>
             <h1>{t("pending_btc")}</h1> &nbsp;
-            <i className="far fa-question-circle" data-tip="BTC volume of in-progress issue requests."></i>
+            <i className="far fa-question-circle" data-tip={t("vault.tip_pending_btc")}></i>
         </>,
         <>
             <h1>{t("collateralization")}</h1> &nbsp;
-            <i
-                className="far fa-question-circle"
-                data-tip="Collateralization rate for locked BTC.
-                'Pending' includes in-progress issue requests."
-            ></i>
+            <i className="far fa-question-circle" data-tip={t("vault.tip_collateralization")}></i>
         </>,
         <h1>{t("status")}</h1>,
     ];
@@ -176,7 +172,7 @@ export default function VaultTable(): ReactElement {
                             : "∞"}
                     </p>
                     <p className="small-text">
-                        <span className="black-text">{"Pending: "}</span>
+                        <span className="black-text">{t("vault.pending_table_subcell")}</span>
                         <span className={getCollateralizationColor(vault.unsettledCollateralization)}>
                             {vault.unsettledCollateralization !== undefined
                                 ? roundTwoDecimals(vault.unsettledCollateralization.toString()) + "%"
@@ -195,7 +191,7 @@ export default function VaultTable(): ReactElement {
             <p>{showCollateralizations(vault)}</p>,
             <p className={getStatusColor(vault.status)}>{vault.status}</p>,
         ];
-    }, [auctionCollateralThreshold, secureCollateralThreshold]);
+    }, [auctionCollateralThreshold, secureCollateralThreshold, t]);
 
     return (
         <div className="dashboard-table-container">

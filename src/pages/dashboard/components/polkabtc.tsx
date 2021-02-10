@@ -50,7 +50,7 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
                     {/* TODO: add the price API */}
                     <h2>${(prices.bitcoin.usd * parseInt(totalPolkaBTC)).toLocaleString()}</h2>
                 </div>
-                {linkButton ? (
+                {linkButton && (
                     <div className="button-container">
                         <ButtonComponent
                             buttonName="view all issued"
@@ -59,8 +59,6 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
                             buttonLink="/dashboard/issue"
                         />
                     </div>
-                ) : (
-                    ""
                 )}
             </div>
             <div className="chart-container">

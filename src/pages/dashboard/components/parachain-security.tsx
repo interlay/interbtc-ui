@@ -3,12 +3,14 @@ import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboardcolors";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
+import { useTranslation } from "react-i18next";
 
 type ParachainSecurityProps = {
     linkButton?: boolean;
 };
 
 const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactElement => {
+    const { t } = useTranslation();
     const [parachainStatus, setParachainStatus] = useState("Loading");
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
@@ -34,14 +36,14 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
             <div className="parachain-content-container">
                 <div>
                     <h1 className="h1-xl-text">
-                        The BTC parachain is &nbsp;
+                        {t("dashboard.parachain.parachain_is")}&nbsp;
                         {parachainStatus === "secure" ? (
                             <span
                                 style={{ color: getAccents("d_green").color }}
                                 id="parachain-text"
                                 className="bold-font"
                             >
-                                secure
+                                {t("dashboard.parachain.secure")}
                             </span>
                         ) : parachainStatus === "not secure" ? (
                             <span
@@ -49,7 +51,7 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
                                 id="parachain-text"
                                 className="bold-font"
                             >
-                                not secure
+                                {t("dashboard.parachain.not_secure")}
                             </span>
                         ) : (
                             <span
@@ -57,11 +59,11 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
                                 id="parachain-text"
                                 className="bold-font"
                             >
-                                Loading
+                                {t("loading")}
                             </span>
                         )}
                     </h1>
-                    {linkButton ? (
+                    {linkButton && (
                         <div className="button-container" style={{ marginTop: "20px" }}>
                             <ButtonComponent
                                 buttonName="Status Updates"
@@ -70,8 +72,6 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
                                 buttonLink="/dashboard/parachain"
                             />
                         </div>
-                    ) : (
-                        ""
                     )}
                 </div>
             </div>

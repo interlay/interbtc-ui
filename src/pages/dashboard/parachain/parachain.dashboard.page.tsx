@@ -9,7 +9,10 @@ import { DashboardStatusUpdateInfo } from "../../../common/types/util.types";
 import { getAccents } from "../dashboard-colors";
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 import { defaultTableDisplayParams, formatDateTimePrecise } from "../../../common/utils/utils";
-import DashboardTable, { StatusComponent } from "../../../common/components/dashboard-table/dashboard-table";
+import DashboardTable, {
+    StatusComponent,
+    StatusCategories,
+} from "../../../common/components/dashboard-table/dashboard-table";
 
 export default function ParachainDashboard(): ReactElement {
     const { t } = useTranslation();
@@ -80,12 +83,12 @@ export default function ParachainDashboard(): ReactElement {
             <p>{t("dashboard.parachain.votes", { yeas: updt.yeas, nays: updt.nays })}</p>,
             <StatusComponent
                 {...(updt.executed
-                    ? { text: t("dashboard.parachain.executed"), category: "ok" }
+                    ? { text: t("dashboard.parachain.executed"), category: StatusCategories.Ok }
                     : updt.forced
-                    ? { text: t("dashboard.parachain.forced"), category: "ok" }
+                    ? { text: t("dashboard.parachain.forced"), category: StatusCategories.Ok }
                     : updt.rejected
-                    ? { text: t("dashboard.parachain.rejected"), category: "bad" }
-                    : { text: t("pending"), category: "neutral" })}
+                    ? { text: t("dashboard.parachain.rejected"), category: StatusCategories.Bad }
+                    : { text: t("pending"), category: StatusCategories.Neutral })}
             />,
         ],
         [t]

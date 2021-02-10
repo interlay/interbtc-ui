@@ -20,12 +20,14 @@ const ButtonComponent = (props: buttonProps): React.ReactElement => {
     const buttonTextId = document.getElementById(`${props.buttonId}-button-text`) as HTMLElement;
     const linkId = document.getElementById(`${props.buttonId}-arrow`) as HTMLElement;
     const handleHoverOn = () => {
+        if (!buttonId) return;
         buttonId.style.backgroundColor = `${accent.color}`;
         buttonTextId.style.color = "#ffffff";
         linkId.style.filter = "invert(100%) sepia(3%) saturate(3%) hue-rotate(71deg) brightness(106%) contrast(100%)";
     };
 
     const handleHoverOut = () => {
+        if (!buttonId) return;
         buttonId.style.backgroundColor = "#ffffff";
         buttonTextId.style.color = `${accent.color}`;
         linkId.style.filter = `${accent.filter}`;

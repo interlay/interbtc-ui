@@ -33,7 +33,7 @@ const ActiveStakedRelayers = ({ linkButton }: ActiveStakedRelayers): ReactElemen
                     <h2>{totalRelayersPerDay[totalRelayersPerDay.length - 1]?.count}</h2>
                 </div>
 
-                {linkButton ? (
+                {linkButton && (
                     <div className="button-container">
                         <ButtonComponent
                             buttonName="view relayers"
@@ -42,8 +42,6 @@ const ActiveStakedRelayers = ({ linkButton }: ActiveStakedRelayers): ReactElemen
                             buttonLink="/dashboard/parachain"
                         />
                     </div>
-                ) : (
-                    ""
                 )}
             </div>
             <LineChartComponent

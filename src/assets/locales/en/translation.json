@@ -189,7 +189,8 @@
             "block_height": "Block height",
             "block_hash": "Block hash",
             "timestamp": "Timestamp",
-            "block_number": "Block {{number}}"
+            "block_number": "Block {{number}}",
+            "relay_is": "BTC Relay is"
         },
         "oracles": {
             "oracles": "Oracles",
@@ -218,7 +219,10 @@
             "votes": "{{yeas}} : {{nays}}",
             "executed": "Executed",
             "forced": "Forced",
-            "rejected": "Rejected"
+            "rejected": "Rejected",
+            "parachain_is": "The BTC Parachain is",
+            "secure": "secure",
+            "not_secure": "not secure"
         }
     },
     "issue_page": {
@@ -350,7 +354,10 @@
         "add_collateral": "Add Collateral",
         "vault_dashboard": "Vault Dashboard",
         "locked_collateral": "Locked collateral",
-        "capacity": "Capacity"
+        "capacity": "Capacity",
+        "tip_pending_btc": "BTC volume of in-progress issue requests.",
+        "tip_collateralization": "Collateralization rate for locked BTC. 'Pending' includes in-progress issue requests.",
+        "pending_table_subcell": "Pending: "
     },
     "about": {
         "about_polkabtc": "About PolkaBTC",

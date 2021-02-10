@@ -45,7 +45,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
                         })}
                     </h2>
                 </div>
-                {linkButton ? (
+                {linkButton && (
                     <div className="button-container">
                         <ButtonComponent
                             buttonName="view vaults"
@@ -54,8 +54,6 @@ export default function Collateralization({ linkButton }: CollateralizationProps
                             buttonLink="/dashboard/vaults"
                         />
                     </div>
-                ) : (
-                    ""
                 )}
             </div>
 

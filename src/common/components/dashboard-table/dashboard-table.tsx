@@ -38,17 +38,32 @@ export function StyledLinkData(props: StyledLinkDataProps): ReactElement {
 /**
  * Helper component to display status text, with appropriate colour and status icon
  **/
+export enum StatusCategories {
+    Bad,
+    Warning,
+    Ok,
+    Neutral,
+}
 type StatusComponentProps = {
     text: string;
-    category: "bad" | "warning" | "ok" | "neutral";
+    category: StatusCategories;
 };
 export function StatusComponent({ text, category }: StatusComponentProps): ReactElement {
-    const icon = category === "ok" ? Icon_confirm : category === "bad" ? Icon_cancel : Icon_pending;
-    const color = category === "ok" ? "d_green" : category === "bad" ? "d_red" : "d_yellow";
+    const icon =
+        category === StatusCategories.Ok
+            ? Icon_confirm
+            : category === StatusCategories.Bad
+            ? Icon_cancel
+            : Icon_pending;
+    const color =
+        category === StatusCategories.Ok ? "d_green" : category === StatusCategories.Bad ? "d_red" : "d_yellow";
     return (
         <div className="status-container">
-            {category !== "neutral" ? <img className="external-link" src={icon} alt="" /> : ""}
-            <p style={category !== "neutral" ? { color: getAccents(color).color } : {}} className="status">
+            {category !== StatusCategories.Neutral ? <img className="external-link" src={icon} alt="" /> : ""}
+            <p
+                style={category !== StatusCategories.Neutral ? { color: getAccents(color).color } : {}}
+                className="status"
+            >
                 {text}
             </p>
         </div>

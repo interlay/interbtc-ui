@@ -47,7 +47,7 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
                 <div className="card-top-content">
                     <div className="values-container">
                         <h1 className="bold-font">
-                            BTC Relay is &nbsp;
+                            {t("dashboard.relay.relay_is")}&nbsp;
                             <span
                                 style={{ color: getAccents(statusColor).color }}
                                 id="relay-text"
@@ -57,7 +57,7 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
                             </span>
                         </h1>
                     </div>
-                    {linkButton ? (
+                    {linkButton && (
                         <div className="button-container">
                             <ButtonComponent
                                 buttonName="view BTC Relay"
@@ -66,8 +66,6 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
                                 buttonLink="/dashboard/relay"
                             />
                         </div>
-                    ) : (
-                        ""
                     )}
                 </div>
                 <div className="circle-container">
@@ -89,7 +87,7 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
                     </div>
                 </div>
             </div>
-            {displayBlockstreamData ? (
+            {displayBlockstreamData && (
                 <div className="card">
                     <div className="circle-container">
                         <div
@@ -110,8 +108,6 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
                         </div>
                     </div>
                 </div>
-            ) : (
-                ""
             )}
         </>
     );

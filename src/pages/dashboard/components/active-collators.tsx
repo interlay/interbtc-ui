@@ -27,7 +27,7 @@ const ActiveCollators = (): ReactElement => {
                     <h1 style={{ color: getAccents("d_blue").color }}>{t("dashboard.collators.active_collators")}</h1>
                     <h2>1</h2>
                 </div>
-                {displayLinkBtn ? (
+                {displayLinkBtn && (
                     <div className="button-container">
                         <ButtonComponent
                             buttonName="view collators"
@@ -36,8 +36,6 @@ const ActiveCollators = (): ReactElement => {
                             buttonLink="/"
                         />
                     </div>
-                ) : (
-                    ""
                 )}
             </div>
             <LineChartComponent

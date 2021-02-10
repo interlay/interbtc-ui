@@ -10,6 +10,7 @@ import { defaultTableDisplayParams, shortAddress, formatDateTimePrecise } from "
 import DashboardTable, {
     StyledLinkData,
     StatusComponent,
+    StatusCategories,
 } from "../../../common/components/dashboard-table/dashboard-table";
 import PolkaBTC from "../components/polkabtc";
 import "../dashboard-subpage.scss";
@@ -73,10 +74,10 @@ export default function IssueDashboard(): ReactElement {
             <StyledLinkData data={shortAddress(ireq.vaultBTCAddress)} />,
             <StatusComponent
                 {...(ireq.completed
-                    ? { text: t("completed"), category: "ok" }
+                    ? { text: t("completed"), category: StatusCategories.Ok }
                     : ireq.cancelled
-                    ? { text: t("cancelled"), category: "bad" }
-                    : { text: t("pending"), category: "warning" })}
+                    ? { text: t("cancelled"), category: StatusCategories.Bad }
+                    : { text: t("pending"), category: StatusCategories.Warning })}
             />,
         ],
         [t]

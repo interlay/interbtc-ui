@@ -51,7 +51,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
                     <h2>{totalLockedDOT} DOT</h2>
                     <h2>${(prices.polkadot.usd * parseInt(totalLockedDOT)).toLocaleString()}</h2>
                 </div>
-                {linkButton ? (
+                {linkButton && (
                     <div className="button-container">
                         <ButtonComponent
                             buttonName="view all vaults"
@@ -60,8 +60,6 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
                             buttonLink="/dashboard/vaults"
                         />
                     </div>
-                ) : (
-                    ""
                 )}
             </div>
             <div className="chart-container">
