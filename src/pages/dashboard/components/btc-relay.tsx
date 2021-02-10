@@ -1,9 +1,11 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState, useEffect } from "react";
 import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboardcolors";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { useTranslation } from "react-i18next";
+import { StyledLinkData } from "../../../common/components/dashboard-table/dashboard-table";
+import * as constants from "../../../constants";
 
 enum Status {
     Loading,
@@ -20,6 +22,7 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
     const { t } = useTranslation();
     // TODO: Compute status using blockstream data
     const { btcRelayHeight, bitcoinHeight } = useSelector((state: StoreType) => state.general);
+    const [blockstreamTip, setBlockstreamTip] = useState("-");
     const outdatedRelayThreshold = 12;
     const state =
         bitcoinHeight === 0
@@ -40,6 +43,13 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
             ? t("dashboard.synced")
             : t("dashboard.out_of_sync");
     const statusColor = state === Status.Loading ? "d_grey" : state === Status.Ok ? "d_green" : "d_red";
+
+    useEffect(() => {
+        (async () => {
+            const hash = await window.polkaBTC.btcCore.getLatestBlock();
+            setBlockstreamTip(hash);
+        })();
+    });
 
     return (
         <>
@@ -105,6 +115,17 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
                             <p className="latest-block-text">
                                 {t("dashboard.relay.block_number", { number: bitcoinHeight })}
                             </p>
+                            {blockstreamTip !== "-" && (
+                                <StyledLinkData
+                                    data={t("dashboard.relay.blockstream_verify_link")}
+                                    target={
+                                        (constants.BTC_MAINNET
+                                            ? constants.BTC_EXPLORER_BLOCK_API
+                                            : constants.BTC_TEST_EXPLORER_BLOCK_API) + blockstreamTip
+                                    }
+                                    newTab={true}
+                                />
+                            )}
                         </div>
                     </div>
                 </div>

@@ -47,7 +47,9 @@ const ActiveStakedRelayers = ({ linkButton }: ActiveStakedRelayers): ReactElemen
             <LineChartComponent
                 color="d_orange"
                 label={t("dashboard.parachain.total_relayers_chart") as string}
-                yLabels={totalRelayersPerDay.map((dataPoint) => new Date(dataPoint.date).toLocaleDateString())}
+                yLabels={totalRelayersPerDay.map((dataPoint) =>
+                    new Date(dataPoint.date).toISOString().substring(0, 10)
+                )}
                 yAxisProps={{ beginAtZero: true, precision: 0 }}
                 data={totalRelayersPerDay.map((dataPoint) => dataPoint.count)}
             />

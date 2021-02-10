@@ -33,15 +33,15 @@ const ButtonComponent = (props: buttonProps): React.ReactElement => {
         linkId.style.filter = `${accent.filter}`;
     };
     return (
-        <button
-            style={buttonColor}
-            onMouseOver={() => handleHoverOn()}
-            onMouseOut={() => {
-                handleHoverOut();
-            }}
-            id={`${props.buttonId}-button-id`}
-        >
-            <Link className="button-assets-container" to={props.buttonLink}>
+        <Link className="button-assets-container" to={props.buttonLink}>
+            <button
+                style={buttonColor}
+                onMouseOver={() => handleHoverOn()}
+                onMouseOut={() => {
+                    handleHoverOut();
+                }}
+                id={`${props.buttonId}-button-id`}
+            >
                 <h3 id={`${props.buttonId}-button-text`} style={{ color: buttonColor.color }}>
                     {props.buttonName}
                 </h3>
@@ -54,8 +54,8 @@ const ButtonComponent = (props: buttonProps): React.ReactElement => {
                     alt=""
                     id={`${props.buttonId}-arrow`}
                 />
-            </Link>
-        </button>
+            </button>
+        </Link>
     );
 };
 

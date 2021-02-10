@@ -178,8 +178,8 @@
         "redeem": {
             "redeem": "Redeem Requests",
             "total_redeemed": "{{amount}} BTC redeemed",
-            "total_redeems": "{{amount}} executed redeems",
-            "success_rate": "{{rate}}% success rate",
+            "total_redeems": "Executed redeems",
+            "success_rate": "Success rate",
             "total_redeemed_chart": "Total BTC redeemed",
             "perday_redeemed_chart": "BTC redeemed per day"
         },
@@ -188,13 +188,18 @@
             "blocks": "Blocks",
             "block_height": "Block height",
             "block_hash": "Block hash",
-            "timestamp": "Timestamp",
+            "timestamp": "Added to parachain",
             "block_number": "Block {{number}}",
-            "relay_is": "BTC Relay is"
+            "relay_is": "BTC Relay is",
+            "blockstream_verify_link": "Verify on blockstream.info"
         },
         "oracles": {
             "oracles": "Oracles",
-            "active_oracles": "Active Oracles"
+            "active_oracles": "Active Oracles",
+            "oracles_are": "Oracles are",
+            "online": "online",
+            "offline": "offline",
+            "loading": "loading..."
         },
         "vaults": {
             "vaults": "Vaults",

@@ -3,12 +3,14 @@ import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboardcolors";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
+import { useTranslation } from "react-i18next";
 
 type OracleStatusProps = {
     linkButton?: boolean;
 };
 
 const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
+    const { t } = useTranslation();
     const [oracleStatus, setOracleStatus] = useState("Loading");
     const [exchangeRate, setExchangeRate] = useState("0");
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -33,18 +35,18 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
             <div className="card-top-content">
                 <div className="values-container">
                     <h1 className="bold-font">
-                        Oracles are &nbsp;
+                        {t("dashboard.oracles.oracles_are")}&nbsp;
                         {oracleStatus === "Online" ? (
                             <span style={{ color: getAccents("d_green").color }} id="oracle-text" className="bold-font">
-                                Online
+                                {t("dashboard.oracles.online")}
                             </span>
                         ) : oracleStatus === "Offline" ? (
                             <span style={{ color: getAccents("d_red").color }} id="oracle-text" className="bold-font">
-                                Offline
+                                {t("dashboard.oracles.offline")}
                             </span>
                         ) : (
                             <span style={{ color: getAccents("d_grey").color }} id="oracle-text" className="bold-font">
-                                Loading
+                                {t("dashboard.oracles.loading")}
                             </span>
                         )}
                     </h1>

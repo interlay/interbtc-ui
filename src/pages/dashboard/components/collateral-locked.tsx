@@ -49,7 +49,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
                 <div className="values-container">
                     <h1 style={{ color: getAccents("d_pink").color }}>{t("dashboard.vaults.collateral_locked")}</h1>
                     <h2>{totalLockedDOT} DOT</h2>
-                    <h2>${(prices.polkadot.usd * parseInt(totalLockedDOT)).toLocaleString()}</h2>
+                    <h2>${(prices.polkadot.usd * Number(totalLockedDOT)).toFixed(2)}</h2>
                 </div>
                 {linkButton && (
                     <div className="button-container">
@@ -69,13 +69,18 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
                         t("dashboard.vaults.total_collateral_locked"),
                         t("dashboard.vaults.perday_collateral_locked"),
                     ]}
-                    yLabels={cumulativeCollateralPerDay.map((dataPoint) =>
-                        new Date(dataPoint.date).toLocaleDateString()
-                    )}
-                    yAxisProps={[{ beginAtZero: true, position: "left" }, { position: "right" }]}
+                    yLabels={cumulativeCollateralPerDay
+                        .slice(1)
+                        .map((dataPoint) => new Date(dataPoint.date).toISOString().substring(0, 10))}
+                    yAxisProps={[
+                        { beginAtZero: true, position: "left", maxTicksLimit: 6 },
+                        { position: "right", maxTicksLimit: 5 },
+                    ]}
                     data={[
-                        cumulativeCollateralPerDay.map((dataPoint) => Number(planckToDOT(dataPoint.amount.toString()))),
-                        pointCollateralPerDay.map((amount) => Number(planckToDOT(amount.toString()))),
+                        cumulativeCollateralPerDay
+                            .slice(1)
+                            .map((dataPoint) => Number(planckToDOT(dataPoint.amount.toString()))),
+                        pointCollateralPerDay.slice(1).map((amount) => Number(planckToDOT(amount.toString()))),
                     ]}
                 />
             </div>

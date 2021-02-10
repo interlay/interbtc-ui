@@ -3,9 +3,10 @@ import { useTranslation } from "react-i18next";
 
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 
-import { defaultTableDisplayParams, shortAddress, formatDateTimePrecise } from "../../../common/utils/utils";
+import { defaultTableDisplayParams, formatDateTimePrecise } from "../../../common/utils/utils";
 import { RelayedBlock } from "../../../common/types/util.types";
-import DashboardTable from "../../../common/components/dashboard-table/dashboard-table";
+import DashboardTable, { StyledLinkData } from "../../../common/components/dashboard-table/dashboard-table";
+import * as constants from "../../../constants";
 import { getAccents } from "../dashboard-colors";
 import BtcRelay from "../components/btc-relay";
 
@@ -42,7 +43,14 @@ export default function RelayDashboard(): ReactElement {
     const tableBlockRow = useMemo(
         () => (block: RelayedBlock): ReactElement[] => [
             <p>{block.height}</p>,
-            <p>{shortAddress(block.hash)}</p>,
+            <StyledLinkData
+                data={block.hash.substring(2)}
+                target={
+                    (constants.BTC_MAINNET ? constants.BTC_EXPLORER_BLOCK_API : constants.BTC_TEST_EXPLORER_BLOCK_API) +
+                    block.hash.substring(2)
+                }
+                newTab={true}
+            />,
             <p>{formatDateTimePrecise(new Date(block.relay_ts))}</p>,
         ],
         []
@@ -53,7 +61,7 @@ export default function RelayDashboard(): ReactElement {
     }, [fetchBlocks, tableParams]);
 
     return (
-        <div className="dashboard-page">
+        <div className="main-container dashboard-page">
             <div className="dashboard-container dashboard-fade-in-animation">
                 <div className="dashboard-wrapper">
                     <div>

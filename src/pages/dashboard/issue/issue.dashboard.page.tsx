@@ -12,6 +12,7 @@ import DashboardTable, {
     StatusComponent,
     StatusCategories,
 } from "../../../common/components/dashboard-table/dashboard-table";
+import * as constants from "../../../constants";
 import PolkaBTC from "../components/polkabtc";
 import "../dashboard-subpage.scss";
 
@@ -70,8 +71,16 @@ export default function IssueDashboard(): ReactElement {
             <p>{formatDateTimePrecise(new Date(ireq.timestamp))}</p>,
             <p>{satToBTC(ireq.amountBTC)}</p>,
             <p>{ireq.creation}</p>,
-            <StyledLinkData data={shortAddress(ireq.vaultDOTAddress)} />,
-            <StyledLinkData data={shortAddress(ireq.vaultBTCAddress)} />,
+            <p>{shortAddress(ireq.vaultDOTAddress)}</p>,
+            <StyledLinkData
+                data={shortAddress(ireq.vaultBTCAddress)}
+                target={
+                    (constants.BTC_MAINNET
+                        ? constants.BTC_EXPLORER_ADDRESS_API
+                        : constants.BTC_TEST_EXPLORER_ADDRESS_API) + ireq.vaultBTCAddress
+                }
+                newTab={true}
+            />,
             <StatusComponent
                 {...(ireq.completed
                     ? { text: t("completed"), category: StatusCategories.Ok }
@@ -101,7 +110,7 @@ export default function IssueDashboard(): ReactElement {
     }, [fetchTotalSuccessfulIssues, fetchTotalIssues]);
 
     return (
-        <div className="dashboard-page">
+        <div className="main-container dashboard-page">
             <div className="dashboard-container dashboard-fade-in-animation">
                 <div className="dashboard-wrapper">
                     <div>

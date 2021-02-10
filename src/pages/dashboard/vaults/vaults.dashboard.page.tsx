@@ -11,7 +11,7 @@ export default function VaultsDashboard(): ReactElement {
     const { t } = useTranslation();
 
     return (
-        <div className="dashboard-page">
+        <div className="main-container dashboard-page">
             <div className="dashboard-container dashboard-fade-in-animation">
                 <div className="dashboard-wrapper">
                     <div>

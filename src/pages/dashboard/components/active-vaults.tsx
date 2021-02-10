@@ -46,7 +46,7 @@ const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
             <LineChartComponent
                 color="d_pink"
                 label={t("dashboard.vaults.total_vaults_chart") as string}
-                yLabels={totalVaultsPerDay.map((dataPoint) => new Date(dataPoint.date).toLocaleDateString())}
+                yLabels={totalVaultsPerDay.map((dataPoint) => new Date(dataPoint.date).toISOString().substring(0, 10))}
                 yAxisProps={{ beginAtZero: true, precision: 0 }}
                 data={totalVaultsPerDay.map((dataPoint) => dataPoint.count)}
             />

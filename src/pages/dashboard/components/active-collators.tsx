@@ -18,7 +18,9 @@ const ActiveCollators = (): ReactElement => {
     const displayLinkBtn = false;
     const data = [1, 1, 1, 1, 1];
     const dates = range(0, 5).map((i) =>
-        dateToMidnightTemp(new Date(Date.now() - 86400 * 1000 * i)).toLocaleDateString()
+        dateToMidnightTemp(new Date(Date.now() - 86400 * 1000 * i))
+            .toISOString()
+            .substring(0, 10)
     );
     return (
         <div className="card">

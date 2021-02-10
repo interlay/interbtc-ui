@@ -7,6 +7,7 @@ interface YAxisConfig {
     position?: string;
     precision?: number;
     max?: number;
+    maxTicksLimit?: number;
 }
 
 interface SingleAxisProps {
@@ -84,7 +85,8 @@ export default function LineChartComponent(propsArg: ChartProps): React.ReactEle
                     ticks: {
                         ...(yArgs.beginAtZero ? { beginAtZero: true } : {}),
                         ...(yArgs.precision !== undefined ? { precision: yArgs.precision } : {}),
-                        ...(yArgs.max !== undefined ? { precision: yArgs.max } : {}),
+                        ...(yArgs.max !== undefined ? { max: yArgs.max } : {}),
+                        ...(yArgs.maxTicksLimit !== undefined ? { maxTicksLimit: yArgs.maxTicksLimit } : {}),
                     },
                     ...(yArgs.position !== undefined ? { position: yArgs.position } : {}),
                 })),

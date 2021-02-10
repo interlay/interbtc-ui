@@ -17,21 +17,24 @@ const blue_accent = getAccents("d_blue");
 type StyledLinkDataProps = {
     data: string;
     target?: string;
+    newTab?: boolean;
 };
 export function StyledLinkData(props: StyledLinkDataProps): ReactElement {
     //TODO: make into actual hyperlink
     return (
-        <>
-            <p style={{ color: blue_accent.color }}>{props.data}</p>
-            <img
-                style={{
-                    filter: blue_accent.filter,
-                }}
-                className="external-link"
-                src={Icon_external_link}
-                alt=""
-            />
-        </>
+        <a href={props.target} target={props.newTab ? "_blank" : ""}>
+            <p style={{ color: blue_accent.color }}>
+                {props.data}
+                <img
+                    style={{
+                        filter: blue_accent.filter,
+                    }}
+                    className="external-link"
+                    src={Icon_external_link}
+                    alt=""
+                />
+            </p>
+        </a>
     );
 }
 

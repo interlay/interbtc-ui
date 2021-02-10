@@ -3,7 +3,6 @@
 
 .dashboard-items-container {
     text-align: center;
-    min-height: 100vh;
 
     display: grid;
     padding: 8px 0px;
@@ -11,6 +10,7 @@
 .main-container {
     background-color: #fafafa;
     padding: 30px 0px;
+    min-height: 100vh;
 }
 .card {
     width: 90%;

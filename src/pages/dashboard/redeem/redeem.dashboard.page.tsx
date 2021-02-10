@@ -9,6 +9,7 @@ import DashboardTable, {
     StatusComponent,
     StatusCategories,
 } from "../../../common/components/dashboard-table/dashboard-table";
+import * as constants from "../../../constants";
 import { defaultTableDisplayParams, shortAddress, formatDateTimePrecise } from "../../../common/utils/utils";
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 import { satToBTC } from "@interlay/polkabtc";
@@ -56,8 +57,16 @@ export default function RedeemDashboard(): ReactElement {
             <p>{formatDateTimePrecise(new Date(rreq.timestamp))}</p>,
             <p>{satToBTC(rreq.amountPolkaBTC)}</p>,
             <p>{rreq.creation}</p>,
-            <StyledLinkData data={shortAddress(rreq.vaultDotAddress)} />,
-            <StyledLinkData data={shortAddress(rreq.btcAddress)} />,
+            <p>{shortAddress(rreq.vaultDotAddress)}</p>,
+            <StyledLinkData
+                data={shortAddress(rreq.btcAddress)}
+                target={
+                    (constants.BTC_MAINNET
+                        ? constants.BTC_EXPLORER_ADDRESS_API
+                        : constants.BTC_TEST_EXPLORER_ADDRESS_API) + rreq.btcAddress
+                }
+                newTab={true}
+            />,
             <StatusComponent
                 {...(rreq.completed
                     ? { text: t("completed"), category: StatusCategories.Ok }
@@ -131,7 +140,7 @@ export default function RedeemDashboard(): ReactElement {
     }, [polkaBtcLoaded, statsApi]);
 
     return (
-        <div className="dashboard-page ">
+        <div className="main-container dashboard-page ">
             <div className="dashboard-container dashboard-fade-in-animation">
                 <div className="dashboard-wrapper">
                     <div>
@@ -151,9 +160,8 @@ export default function RedeemDashboard(): ReactElement {
                                         {t("dashboard.redeem.total_redeemed")}
                                     </h2>
                                     <h1>
-                                        {totalRedeemedAmount === "-"
-                                            ? t("no_data")
-                                            : satToBTC(totalRedeemedAmount) + "BTC"}
+                                        {totalRedeemedAmount === "-" ? t("no_data") : satToBTC(totalRedeemedAmount)}
+                                        &nbsp;BTC
                                     </h1>
                                     {totalRedeemedAmount === "-" ? (
                                         ""
