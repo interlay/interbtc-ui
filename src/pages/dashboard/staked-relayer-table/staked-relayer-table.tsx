@@ -1,8 +1,5 @@
-import { planckToDOT } from "@interlay/polkabtc";
 import React, { ReactElement, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { StoreType } from "../../../common/types/util.types";
 import { useTranslation } from "react-i18next";
 import DashboardTable, {
     StatusComponent,
@@ -31,7 +28,7 @@ export default function StakedRelayerTable(): ReactElement {
                 toast.error(error.toString());
             }
         })();
-    }, []);
+    }, [statsApi]);
 
     const tableHeadings = [<h1>{t("account_id")}</h1>, <h1>{t("locked_dot")}</h1>, <h1>{t("status")}</h1>];
 
