@@ -42,10 +42,13 @@ export default function EnterAmountAndAddress() {
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
-
-            const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
-            const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
-            setDustValue(dustValueBtc);
+            try {
+                const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
+                const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
+                setDustValue(dustValueBtc);
+            } catch (error) {
+                console.log(error);
+            }
         };
         setUsdAmount(calculateAmount(amount || getValues("amountPolkaBTC") || "0", usdPrice));
         fetchData();

@@ -21,7 +21,7 @@ export default function Transfer() {
     const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
     const { balancePolkaBTC, balanceDOT } = useSelector((state: StoreType) => state.general);
     const defaultValues = { defaultValues: { amountPolkaBTC: "", btcAddress: "" } };
-    const { register, handleSubmit, errors, getValues } = useForm<TransferForm>(defaultValues);
+    const { register, handleSubmit, errors, getValues, reset } = useForm<TransferForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
     const [usdAmount, setUsdAmount] = useState("0");
     const dispatch = useDispatch();
@@ -34,6 +34,7 @@ export default function Transfer() {
             dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(amountPolkaBTC)).toString()));
             updateBalances(dispatch, address, balanceDOT, balancePolkaBTC);
             toast.success(t("successful_transfer"));
+            reset({ amountPolkaBTC: "", address: "" });
         } catch (error) {
             console.log(error);
         }

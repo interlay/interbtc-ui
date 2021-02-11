@@ -38,9 +38,13 @@ export default function EnterBTCAmount() {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
-            const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
-            const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
-            setDustValue(dustValueBtc);
+            try {
+                const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
+                const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
+                setDustValue(dustValueBtc);
+            } catch (error) {
+                console.log(error);
+            }
         };
         setUsdAmount(calculateAmount(amount || getValues("amountBTC") || "0", usdPrice));
         fetchData();

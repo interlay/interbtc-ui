@@ -9,13 +9,17 @@ export default async function fetchTotals(dispatch: Dispatch, store: StoreState)
     const { totalLockedDOT, totalPolkaBTC, polkaBtcLoaded } = state.general;
     if (!polkaBtcLoaded) return;
 
-    const totalPolkaSAT = await window.polkaBTC.treasury.totalPolkaBTC();
-    const totalLockedPLANCK = await window.polkaBTC.collateral.totalLockedDOT();
-    const latestTotalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
-    const latestTotalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
+    try {
+        const totalPolkaSAT = await window.polkaBTC.treasury.totalPolkaBTC();
+        const totalLockedPLANCK = await window.polkaBTC.collateral.totalLockedDOT();
+        const latestTotalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
+        const latestTotalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
 
-    // update store only if there is a difference between the latest totals and current totals
-    if (totalPolkaBTC !== latestTotalPolkaBTC || totalLockedDOT !== latestTotalLockedDOT) {
-        dispatch(updateTotalsAction(latestTotalLockedDOT, latestTotalPolkaBTC));
+        // update store only if there is a difference between the latest totals and current totals
+        if (totalPolkaBTC !== latestTotalPolkaBTC || totalLockedDOT !== latestTotalLockedDOT) {
+            dispatch(updateTotalsAction(latestTotalLockedDOT, latestTotalPolkaBTC));
+        }
+    } catch (error) {
+        console.log(error);
     }
 }

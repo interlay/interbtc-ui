@@ -78,15 +78,19 @@ export default function RedeemRequests() {
     useEffect(() => {
         if (!redeemRequests || !polkaBtcLoaded) return;
 
-        const accountId = window.polkaBTC.api.createType("AccountId", address);
+        try {
+            const accountId = window.polkaBTC.api.createType("AccountId", address);
 
-        // if there are redeem requests, check their btc confirmations and if they are expired
-        redeemRequests.forEach(async (request: RedeemRequest) => {
-            if (!isRedeemExpirationSubscribed) {
-                setIsRedeemExpirationSubscribed(true);
-                window.polkaBTC.redeem.subscribeToRedeemExpiry(accountId, redeemExpired);
-            }
-        });
+            // if there are redeem requests, check their btc confirmations and if they are expired
+            redeemRequests.forEach(async (request: RedeemRequest) => {
+                if (!isRedeemExpirationSubscribed) {
+                    setIsRedeemExpirationSubscribed(true);
+                    window.polkaBTC.redeem.subscribeToRedeemExpiry(accountId, redeemExpired);
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }, [redeemRequests, address, dispatch, isRedeemExpirationSubscribed, redeemExpired, polkaBtcLoaded]);
 
     const requestClicked = (request: RedeemRequest): void => {
