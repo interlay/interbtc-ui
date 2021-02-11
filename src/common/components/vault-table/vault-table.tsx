@@ -22,17 +22,21 @@ export default function VaultTable(): ReactElement {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
-            const [auction, premium, secure, liquidation] = await Promise.all([
-                window.polkaBTC.vaults.getAuctionCollateralThreshold(),
-                window.polkaBTC.vaults.getPremiumRedeemThreshold(),
-                window.polkaBTC.vaults.getSecureCollateralThreshold(),
-                window.polkaBTC.vaults.getLiquidationCollateralThreshold(),
-            ]);
+            try {
+                const [auction, premium, secure, liquidation] = await Promise.all([
+                    window.polkaBTC.vaults.getAuctionCollateralThreshold(),
+                    window.polkaBTC.vaults.getPremiumRedeemThreshold(),
+                    window.polkaBTC.vaults.getSecureCollateralThreshold(),
+                    window.polkaBTC.vaults.getLiquidationCollateralThreshold(),
+                ]);
 
-            setAuctionCollateralThreshold(auction);
-            setPremiumRedeemThreshold(premium);
-            setSecureCollateralThreshold(secure);
-            setLiquidationThreshold(liquidation);
+                setAuctionCollateralThreshold(auction);
+                setPremiumRedeemThreshold(premium);
+                setSecureCollateralThreshold(secure);
+                setLiquidationThreshold(liquidation);
+            } catch (e) {
+                console.log(e);
+            }
         };
         fetchData();
     }, [polkaBtcLoaded]);

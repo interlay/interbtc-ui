@@ -46,8 +46,12 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
 
     useEffect(() => {
         (async () => {
-            const hash = await window.polkaBTC.btcCore.getLatestBlock();
-            setBlockstreamTip(hash);
+            try {
+                const hash = await window.polkaBTC.btcCore.getLatestBlock();
+                setBlockstreamTip(hash);
+            } catch (e) {
+                console.log(e);
+            }
         })();
     });
 

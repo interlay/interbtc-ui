@@ -11,6 +11,8 @@
     "expired": "Expired",
     "completed": "Completed",
     "reimbursed": "Reimbursed",
+    "online": "Online",
+    "offline": "Offline",
     "ok": "OK",
     "pending": "Pending",
     "fee": "Fee",
