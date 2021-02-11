@@ -6,7 +6,7 @@ const Row2 = (): React.ReactElement => {
     return (
         <div className="row-grid section-top-gap section-bottom-gap">
             <ParachainSecurity linkButton={true} />
-            <BtcRelay />
+            <BtcRelay linkButton={true} />
             <OracleStatus linkButton={true} />
         </div>
     );

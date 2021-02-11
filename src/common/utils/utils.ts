@@ -34,6 +34,10 @@ export function formatDateTime(date: Date): string {
     return date.toDateString().substring(3) + " " + date.toTimeString().substring(0, 5);
 }
 
+export function formatDateTimePrecise(date: Date): string {
+    return date.toDateString().substring(4) + " " + date.toTimeString().substring(0, 8);
+}
+
 export function dateToShortString(date: Date): string {
     return date.toDateString().substring(3) + " " + date.toTimeString().substring(0, date.toTimeString().length);
 }
@@ -54,6 +58,7 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
     return {
         id: stripHexPrefix(id.toString()),
         amountBTC,
+        timestamp: "0000-00-00",
         creation: parachainIssueRequest.opentime.toString(),
         vaultBTCAddress: parachainIssueRequest.btc_address,
         vaultDOTAddress: parachainIssueRequest.vault.toString(),
@@ -199,7 +204,7 @@ export const redeemRequestToVaultRedeem = (requests: Map<H256, ParachainRedeemRe
         const [btcAddress, polkaBTC, unlockedDOT] = convertParachainTypes(request);
         redeemRequests.push({
             id: stripHexPrefix(requestId.toString()),
-            timestamp: request.opentime.toString(),
+            // timestamp: request.opentime.toString(),
             user: request.redeemer.toString(),
             btcAddress: btcAddress,
             polkaBTC: polkaBTC,

@@ -43,35 +43,50 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
 
     return (
         <div className="card">
-            {linkButton ? (
-                <div className="card-top-content">
-                    <div className="values-container">
-                        <h1 style={{ color: `${getAccents("d_yellow").colour}` }}>{t("dashboard.issue.issued")}</h1>
-                        <h2>{t("dashboard.issue.total_polkabtc", { amount: totalPolkaBTC })}</h2>
-                        {/* TODO: add the price API */}
-                        <h2>${(prices.bitcoin.usd * parseInt(totalPolkaBTC)).toLocaleString()}</h2>
-                    </div>
-                    <div className="button-container">
-                        <ButtonComponent
-                            buttonName="view all issued"
-                            propsButtonColor="d_yellow"
-                            buttonId="polkabtc"
-                            buttonLink="/dashboard/issue"
-                        />
-                    </div>
+            <div className="card-top-content">
+                <div className="values-container">
+                    <h1 style={{ color: getAccents("d_yellow").color }}>{t("dashboard.issue.issued")}</h1>
+                    <h2>{t("dashboard.issue.total_polkabtc", { amount: totalPolkaBTC })}</h2>
+                    {/* TODO: add the price API */}
+                    <h2>${(prices.bitcoin.usd * Number(totalPolkaBTC)).toFixed(2)}</h2>
                 </div>
-            ) : (
-                ""
-            )}
+                {linkButton && (
+                    <>
+                        <div style={{ display: "grid", gridRowGap: 10 }}>
+                            <div className="button-container">
+                                <ButtonComponent
+                                    buttonName="view all issued"
+                                    propsButtonColor="d_yellow"
+                                    buttonId="issuebtn"
+                                    buttonLink="/dashboard/issue"
+                                />
+                            </div>
+                            <div className="button-container">
+                                <ButtonComponent
+                                    buttonName="view all redeemed"
+                                    propsButtonColor="d_yellow"
+                                    buttonId="redeembtn"
+                                    buttonLink="/dashboard/redeem"
+                                />
+                            </div>
+                        </div>
+                    </>
+                )}
+            </div>
             <div className="chart-container">
                 <LineChartComponent
-                    colour={["d_yellow", "d_grey"]}
+                    color={["d_yellow", "d_grey"]}
                     label={[t("dashboard.issue.total_issued_chart"), t("dashboard.issue.perday_issued_chart")]}
-                    yLabels={cumulativeIssuesPerDay.map((dataPoint) => new Date(dataPoint.date).toLocaleDateString())}
-                    yAxisProps={[{ beginAtZero: true, position: "left" }, { position: "right" }]}
+                    yLabels={cumulativeIssuesPerDay
+                        .slice(1)
+                        .map((dataPoint) => new Date(dataPoint.date).toISOString().substring(0, 10))}
+                    yAxisProps={[
+                        { beginAtZero: true, position: "left", maxTicksLimit: 6 },
+                        { position: "right", maxTicksLimit: 6 },
+                    ]}
                     data={[
-                        cumulativeIssuesPerDay.map((dataPoint) => Number(satToBTC(dataPoint.sat.toString()))),
-                        pointIssuesPerDay.map((sat) => Number(satToBTC(sat.toString()))),
+                        cumulativeIssuesPerDay.slice(1).map((dataPoint) => Number(satToBTC(dataPoint.sat.toString()))),
+                        pointIssuesPerDay.slice(1).map((sat) => Number(satToBTC(sat.toString()))),
                     ]}
                 />
             </div>

@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from "react";
+import React, { ReactElement, useState, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { Vault } from "../../types/vault.types";
 import * as constants from "../../../constants";
@@ -7,6 +7,7 @@ import { shortAddress } from "../../utils/utils";
 import { useTranslation } from "react-i18next";
 import Big from "big.js";
 import { StoreType } from "../../../common/types/util.types";
+import DashboardTable from "../dashboard-table/dashboard-table";
 
 export default function VaultTable(): ReactElement {
     const [vaults, setVaults] = useState<Array<Vault>>([]);
@@ -112,122 +113,97 @@ export default function VaultTable(): ReactElement {
         secureCollateralThreshold,
     ]);
 
-    const getStatusColor = (status: string): string => {
-        if (status === constants.VAULT_STATUS_ACTIVE) {
-            return "green-text";
-        }
-        if (status === constants.VAULT_STATUS_UNDER_COLLATERALIZED) {
-            return "orange-text";
-        }
-        if (
-            status === constants.VAULT_STATUS_THEFT ||
-            status === constants.VAULT_STATUS_AUCTION ||
-            status === constants.VAULT_STATUS_LIQUIDATED
-        ) {
-            return "red-text";
-        }
-        return "black-text";
-    };
+    const tableHeadings: ReactElement[] = [
+        <h1>{t("account_id")}</h1>,
+        <h1>{t("locked_dot")}</h1>,
+        <h1>{t("locked_btc")}</h1>,
+        <>
+            <h1>{t("pending_btc")}</h1> &nbsp;
+            <i className="far fa-question-circle" data-tip={t("vault.tip_pending_btc")}></i>
+        </>,
+        <>
+            <h1>{t("collateralization")}</h1> &nbsp;
+            <i className="far fa-question-circle" data-tip={t("vault.tip_collateralization")}></i>
+        </>,
+        <h1>{t("status")}</h1>,
+    ];
 
-    const getCollateralizationColor = (collateralization: string | undefined): string => {
-        if (typeof collateralization !== "undefined") {
-            if (new Big(collateralization).gte(secureCollateralThreshold)) {
+    const tableVaultRow = useMemo(() => {
+        const getStatusColor = (status: string): string => {
+            if (status === constants.VAULT_STATUS_ACTIVE) {
                 return "green-text";
             }
-            if (new Big(collateralization).gte(auctionCollateralThreshold)) {
+            if (status === constants.VAULT_STATUS_UNDER_COLLATERALIZED) {
                 return "orange-text";
             }
-            // Liquidation
-            return "red-text";
-        }
-        return "black-text";
-    };
+            if (
+                status === constants.VAULT_STATUS_THEFT ||
+                status === constants.VAULT_STATUS_AUCTION ||
+                status === constants.VAULT_STATUS_LIQUIDATED
+            ) {
+                return "red-text";
+            }
+            return "black-text";
+        };
 
-    const showCollateralizations = (vault: Vault) => {
-        if (vault.unsettledCollateralization === undefined && vault.settledCollateralization === undefined) {
-            return <td className={getCollateralizationColor(vault.unsettledCollateralization)}>∞</td>;
-        }
-        return (
-            <td>
-                <p className={getCollateralizationColor(vault.settledCollateralization)}>
-                    {vault.settledCollateralization !== undefined
-                        ? roundTwoDecimals(vault.settledCollateralization.toString()) + "%"
-                        : "∞"}
-                </p>
-                <p className="small-text">
-                    <span className="black-text">{"Pending: "}</span>
-                    <span className={getCollateralizationColor(vault.unsettledCollateralization)}>
-                        {vault.unsettledCollateralization !== undefined
-                            ? roundTwoDecimals(vault.unsettledCollateralization.toString()) + "%"
+        const getCollateralizationColor = (collateralization: string | undefined): string => {
+            if (typeof collateralization !== "undefined") {
+                if (new Big(collateralization).gte(secureCollateralThreshold)) {
+                    return "green-text";
+                }
+                if (new Big(collateralization).gte(auctionCollateralThreshold)) {
+                    return "orange-text";
+                }
+                // Liquidation
+                return "red-text";
+            }
+            return "black-text";
+        };
+
+        const showCollateralizations = (vault: Vault) => {
+            if (vault.unsettledCollateralization === undefined && vault.settledCollateralization === undefined) {
+                return <td className={getCollateralizationColor(vault.unsettledCollateralization)}>∞</td>;
+            }
+            return (
+                <td>
+                    <p className={getCollateralizationColor(vault.settledCollateralization)}>
+                        {vault.settledCollateralization !== undefined
+                            ? roundTwoDecimals(vault.settledCollateralization.toString()) + "%"
                             : "∞"}
-                    </span>
-                </p>
-            </td>
-        );
-    };
+                    </p>
+                    <p className="small-text">
+                        <span className="black-text">{t("vault.pending_table_subcell")}</span>
+                        <span className={getCollateralizationColor(vault.unsettledCollateralization)}>
+                            {vault.unsettledCollateralization !== undefined
+                                ? roundTwoDecimals(vault.unsettledCollateralization.toString()) + "%"
+                                : "∞"}
+                        </span>
+                    </p>
+                </td>
+            );
+        };
+
+        return (vault: Vault): ReactElement[] => [
+            <p>{shortAddress(vault.vaultId)}</p>,
+            <p>{vault.lockedDOT}</p>,
+            <p>{vault.lockedBTC}</p>,
+            <p>{vault.pendingBTC}</p>,
+            <p>{showCollateralizations(vault)}</p>,
+            <p className={getStatusColor(vault.status)}>{vault.status}</p>,
+        ];
+    }, [auctionCollateralThreshold, secureCollateralThreshold, t]);
 
     return (
-        <div className="vault-table">
-            <div className="row">
-                <div className="col-12">
-                    <div className="header">Vaults</div>
-                </div>
+        <div className="dashboard-table-container">
+            <div>
+                <p className="table-heading">{t("dashboard.vaults.active_vaults")}</p>
             </div>
-            <div className="row justify-content-center">
-                <div className="col-12">
-                    <div className="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>{t("account_id")}</th>
-                                    <th>{t("locked_dot")}</th>
-                                    <th>{t("locked_btc")}</th>
-                                    <th>
-                                        {t("pending_btc")} &nbsp;
-                                        <i
-                                            className="far fa-question-circle"
-                                            data-tip="BTC volume of in-progress issue requests."
-                                        ></i>
-                                    </th>
-                                    <th>
-                                        {t("collateralization")} &nbsp;
-                                        <i
-                                            className="far fa-question-circle"
-                                            data-tip="Collateralization rate for locked BTC.
-                                           'Pending' includes in-progress issue requests."
-                                        ></i>
-                                    </th>
-                                    <th>{t("status")}</th>
-                                </tr>
-                            </thead>
-                            {vaults && vaults.length ? (
-                                <tbody>
-                                    {vaults.map((vault, index) => {
-                                        return (
-                                            <tr key={index}>
-                                                <td>{shortAddress(vault.vaultId)}</td>
-                                                <td>{vault.lockedDOT}</td>
-                                                <td>{vault.lockedBTC}</td>
-                                                <td>{vault.pendingBTC}</td>
-                                                {showCollateralizations(vault)}
-                                                <td className={getStatusColor(vault.status)}>
-                                                    <span>{vault.status}</span>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            ) : (
-                                <tbody>
-                                    <tr>
-                                        <td colSpan={6}>{t("no_registered_vaults")}</td>
-                                    </tr>
-                                </tbody>
-                            )}
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <DashboardTable
+                pageData={vaults.map((vault) => ({ ...vault, id: vault.vaultId }))}
+                headings={tableHeadings}
+                dataPointDisplayer={tableVaultRow}
+                noDataEl={<td colSpan={6}>{t("no_registered_vaults")}</td>}
+            />
         </div>
     );
 }

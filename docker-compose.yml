@@ -1,9 +1,9 @@
 version: "3.8"
 services:
     polkabtc:
-        image: "registry.gitlab.com/interlay/btc-parachain:dev-ab676f94"
+        image: "registry.gitlab.com/interlay/btc-parachain:dev-626142d2"
         command:
-            - btc-parachain-standalone
+            - btc-parachain
             - --unsafe-rpc-external
             - --unsafe-ws-external
             - --rpc-methods
@@ -60,7 +60,7 @@ services:
             - "3002:3002"
     staked_relayer:
         # only start staked relayer after mining to prevent long catch-up
-        image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:dev-445c256d"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:dev-07e359c5"
         command:
             - /bin/sh
             - -c
@@ -76,7 +76,7 @@ services:
         ports:
             - "3030:3030"
     oracle:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:dev-445c256d"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:dev-07e359c5"
         command:
             - /bin/sh
             - -c
@@ -87,7 +87,7 @@ services:
         environment:
             RUST_LOG: info
     faucet:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/faucet:dev-445c256d"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/faucet:dev-07e359c5"
         command:
             - /bin/sh
             - -c
@@ -99,8 +99,8 @@ services:
             RUST_LOG: info
         ports:
             - "3035:3035"
-    vault_1:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:dev-445c256d"
+    vault:
+        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:dev-07e359c5"
         command:
             - /bin/sh
             - -c
@@ -115,7 +115,7 @@ services:
         ports:
             - "3032:3032"
     testdata_gen:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/testdata-gen:dev-445c256d"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/testdata-gen:dev-07e359c5"
         command:
             - /bin/sh
             - -c
@@ -146,7 +146,7 @@ services:
         ports:
             - "5432:5432"
     polkabtc_stats:
-        image: "registry.gitlab.com/interlay/polkabtc-stats:master-71b899"
+        image: "registry.gitlab.com/interlay/polkabtc-stats:0.0.14"
         restart: always
         depends_on:
             - postgres

@@ -3,8 +3,8 @@
     "version": "1.0.0",
     "private": true,
     "dependencies": {
-        "@interlay/polkabtc": "^0.8.0",
-        "@interlay/polkabtc-stats": "0.0.10",
+        "@interlay/polkabtc": "^0.8.3",
+        "@interlay/polkabtc-stats": "0.0.14",
         "@polkadot/api": "3.6.1",
         "@polkadot/extension-dapp": "0.36.1",
         "@polkadot/ui-keyring": "0.67.1",
@@ -94,7 +94,10 @@
         "build": "react-app-rewired build",
         "test": "ts-mocha --exit --require babel-register --require ignore-styles --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx",
         "test-watch": "watch 'ts-mocha --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx --timeout 5000' src tests --interval=1",
-        "eject": "react-app-rewired eject"
+        "eject": "react-app-rewired eject",
+        "compose:regtest": "docker-compose up",
+        "compose:testnet": "docker-compose up -f ./docker-compose.testnet.yml",
+        "compose:down": "docker-compose down -v"
     },
     "eslintConfig": {
         "extends": "react-app"
