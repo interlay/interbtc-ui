@@ -5,26 +5,36 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { useTranslation } from "react-i18next";
 
+enum Status {
+    Loading,
+    Secure,
+    NotSecure,
+    NoData,
+}
+
 type ParachainSecurityProps = {
     linkButton?: boolean;
 };
 
 const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactElement => {
     const { t } = useTranslation();
-    const [parachainStatus, setParachainStatus] = useState("Loading");
+    const [parachainStatus, setParachainStatus] = useState(Status.Loading);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
     useEffect(() => {
         const fetchOracleData = async () => {
             if (!polkaBtcLoaded) return;
-            const parachainStatus = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
+            try {
+                const parachainStatus = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
 
-            if (parachainStatus.isRunning) {
-                setParachainStatus("secure");
-            } else if (parachainStatus.isError) {
-                setParachainStatus("not secure");
-            } else {
-                setParachainStatus("unavailable");
+                if (parachainStatus.isRunning) {
+                    setParachainStatus(Status.Secure);
+                } else if (parachainStatus.isError) {
+                    setParachainStatus(Status.NotSecure);
+                }
+            } catch (e) {
+                console.log(e);
+                setParachainStatus(Status.NoData);
             }
         };
         fetchOracleData();
@@ -37,7 +47,7 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
                 <div>
                     <h1 className="h1-xl-text">
                         {t("dashboard.parachain.parachain_is")}&nbsp;
-                        {parachainStatus === "secure" ? (
+                        {parachainStatus === Status.Secure ? (
                             <span
                                 style={{ color: getAccents("d_green").color }}
                                 id="parachain-text"
@@ -45,13 +55,21 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
                             >
                                 {t("dashboard.parachain.secure")}
                             </span>
-                        ) : parachainStatus === "not secure" ? (
+                        ) : parachainStatus === Status.NotSecure ? (
                             <span
                                 style={{ color: getAccents("d_red").color }}
                                 id="parachain-text"
                                 className="bold-font"
                             >
                                 {t("dashboard.parachain.not_secure")}
+                            </span>
+                        ) : parachainStatus === Status.NoData ? (
+                            <span
+                                style={{ color: getAccents("d_grey").color }}
+                                id="parachain-text"
+                                className="bold-font"
+                            >
+                                {t("no_data")}
                             </span>
                         ) : (
                             <span

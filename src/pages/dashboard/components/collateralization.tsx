@@ -13,22 +13,28 @@ type CollateralizationProps = {
 export default function Collateralization({ linkButton }: CollateralizationProps): ReactElement {
     const { t } = useTranslation();
 
-    const [systemCollateralization, setSystemCollateralization] = useState("0");
+    const [systemCollateralization, setSystemCollateralization] = useState("∞");
     const [issuablePolkaBTC, setIssuablePolkaBTC] = useState("0");
     const [secureCollateralThreshold, setSecureCollateralThreshold] = useState("0");
+    const [failed, setFailed] = useState(false);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
     useEffect(() => {
         const fetchCollateralizationData = async () => {
             if (!polkaBtcLoaded) return;
-            const [systemCollateralization, issuablePolkaBTC, secureCollateralThreshold] = await Promise.all([
-                window.polkaBTC.vaults.getSystemCollateralization(),
-                window.polkaBTC.vaults.getIssuablePolkaBTC(),
-                window.polkaBTC.vaults.getSecureCollateralThreshold(),
-            ]);
-            setSystemCollateralization(systemCollateralization?.mul(100).toString() || "0");
-            setIssuablePolkaBTC(issuablePolkaBTC?.toString() || "0");
-            setSecureCollateralThreshold(secureCollateralThreshold?.mul(100).toString() || "0");
+            try {
+                const [systemCollateralization, issuablePolkaBTC, secureCollateralThreshold] = await Promise.all([
+                    window.polkaBTC.vaults.getSystemCollateralization(),
+                    window.polkaBTC.vaults.getIssuablePolkaBTC(),
+                    window.polkaBTC.vaults.getSecureCollateralThreshold(),
+                ]);
+                setSystemCollateralization(systemCollateralization?.mul(100).toString() || "0");
+                setIssuablePolkaBTC(issuablePolkaBTC?.toString() || "0");
+                setSecureCollateralThreshold(secureCollateralThreshold?.mul(100).toString() || "0");
+            } catch (e) {
+                console.log(e);
+                setFailed(true);
+            }
         };
         fetchCollateralizationData();
     });
@@ -37,13 +43,19 @@ export default function Collateralization({ linkButton }: CollateralizationProps
         <div className="card">
             <div className="card-top-content">
                 <div className="values-container">
-                    <h1 style={{ color: getAccents("d_blue").color }}>{t("dashboard.vaults.collateralization")}</h1>
-                    <h2>{roundTwoDecimals(systemCollateralization)}%</h2>
-                    <h2>
-                        {t("dashboard.vaults.secure_threshold", {
-                            amount: roundTwoDecimals(secureCollateralThreshold),
-                        })}
-                    </h2>
+                    {!failed && (
+                        <>
+                            <h1 style={{ color: getAccents("d_blue").color }}>
+                                {t("dashboard.vaults.collateralization")}
+                            </h1>
+                            <h2>{roundTwoDecimals(systemCollateralization)}%</h2>
+                            <h2>
+                                {t("dashboard.vaults.secure_threshold", {
+                                    amount: roundTwoDecimals(secureCollateralThreshold),
+                                })}
+                            </h2>
+                        </>
+                    )}
                 </div>
                 {linkButton && (
                     <div className="button-container">
@@ -60,8 +72,9 @@ export default function Collateralization({ linkButton }: CollateralizationProps
             <div className="circle-container">
                 <div className="status-circle" style={{ borderColor: getAccents("d_blue").color }} id="relay-circle">
                     <h1 className="h1-l-text" style={{ color: getAccents("d_blue").color }}>
-                        {roundTwoDecimals(issuablePolkaBTC)} <br />
-                        {t("dashboard.vaults.polkabtc_capacity")}
+                        {failed
+                            ? t("no_data")
+                            : [roundTwoDecimals(issuablePolkaBTC), <br />, t("dashboard.vaults.polkabtc_capacity")]}
                     </h1>
                 </div>
             </div>

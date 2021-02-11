@@ -5,26 +5,39 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { useTranslation } from "react-i18next";
 
+enum Status {
+    Loading,
+    Online,
+    Offline,
+    NoData,
+}
+
 type OracleStatusProps = {
     linkButton?: boolean;
 };
 
 const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
     const { t } = useTranslation();
-    const [oracleStatus, setOracleStatus] = useState("Loading");
+    //TODO: use translations for status
+    const [oracleStatus, setOracleStatus] = useState(Status.Loading);
     const [exchangeRate, setExchangeRate] = useState("0");
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
     useEffect(() => {
         const fetchOracleData = async () => {
             if (!polkaBtcLoaded) return;
-            const oracle = await window.polkaBTC.oracle.getInfo();
-            setExchangeRate(oracle.exchangeRate.toFixed(2));
+            try {
+                const oracle = await window.polkaBTC.oracle.getInfo();
+                setExchangeRate(oracle.exchangeRate.toFixed(2));
 
-            if (oracle) {
-                setOracleStatus("Online");
-            } else {
-                setOracleStatus("Offline");
+                if (oracle) {
+                    setOracleStatus(Status.Online);
+                } else {
+                    setOracleStatus(Status.Offline);
+                }
+            } catch (e) {
+                console.log(e);
+                setOracleStatus(Status.NoData);
             }
         };
         fetchOracleData();
@@ -36,13 +49,17 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
                 <div className="values-container">
                     <h1 className="bold-font">
                         {t("dashboard.oracles.oracles_are")}&nbsp;
-                        {oracleStatus === "Online" ? (
+                        {oracleStatus === Status.Online ? (
                             <span style={{ color: getAccents("d_green").color }} id="oracle-text" className="bold-font">
                                 {t("dashboard.oracles.online")}
                             </span>
-                        ) : oracleStatus === "Offline" ? (
+                        ) : oracleStatus === Status.Offline ? (
                             <span style={{ color: getAccents("d_red").color }} id="oracle-text" className="bold-font">
                                 {t("dashboard.oracles.offline")}
+                            </span>
+                        ) : oracleStatus === Status.NoData ? (
+                            <span style={{ color: getAccents("d_grey").color }} id="oracle-text" className="bold-font">
+                                {t("no_data")}
                             </span>
                         ) : (
                             <span style={{ color: getAccents("d_grey").color }} id="oracle-text" className="bold-font">
