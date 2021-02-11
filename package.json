@@ -94,7 +94,10 @@
         "build": "react-app-rewired build",
         "test": "ts-mocha --exit --require babel-register --require ignore-styles --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx",
         "test-watch": "watch 'ts-mocha --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx --timeout 5000' src tests --interval=1",
-        "eject": "react-app-rewired eject"
+        "eject": "react-app-rewired eject",
+        "compose:regtest": "docker-compose up",
+        "compose:testnet": "docker-compose up -f ./docker-compose.testnet.yml",
+        "compose:down": "docker-compose down -v"
     },
     "eslintConfig": {
         "extends": "react-app"
