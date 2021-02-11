@@ -109,13 +109,9 @@ export default function EnterAmountAndAddress(): ReactElement {
                     }
                 }
                 if (vaultId === undefined) {
-                    // TODO: add to translation
-                    const msg =
-                        "Could not find Vault below premium redeem threshold with sufficient locked PolkaBTC." +
-                        "Please try a different Vault. The maximum amount for premium redeem " +
-                        `is ${maxPremiumRedeem.toString()} PolkaBTC.`;
-
-                    throw new Error(msg);
+                    throw new Error(
+                        t("redeem_page.error_max_premium_redeem", { maxPremiumRedeem: maxPremiumRedeem.toString() })
+                    );
                 }
             }
             // get the vault's data
@@ -182,7 +178,6 @@ export default function EnterAmountAndAddress(): ReactElement {
             }
             const maxBtc = satToBTC(maxAmount.toString());
             setMaxPremiumRedeem(new Big(maxBtc));
-            console.log(maxPremiumRedeem.toString());
         }
         setPremiumRedeem(!premiumRedeem);
     };

@@ -145,7 +145,8 @@
         "amount_received": "Amount received",
         "premium_redeem": "Premium redeem",
         "earned_premium": "Earned premium ({{premium}} %)",
-        "max_premium_redeem": "Available (max)"
+        "max_premium_redeem": "Available (max)",
+        "error_max_premium_redeem": "Could not find Vault below premium redeem threshold with sufficient locked PolkaBTC. Please try a different Vault. The maximum amount for premium redeem is {{maxPremiumRedeem}} PolkaBTC."
     },
     "dashboard": {
         "premium_redeem": "Premium Redeem",
