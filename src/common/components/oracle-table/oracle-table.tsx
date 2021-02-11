@@ -6,8 +6,10 @@ import BN from "bn.js";
 import Big from "big.js";
 import * as constants from "../../../constants";
 import { useTranslation } from "react-i18next";
+import DashboardTable from "../dashboard-table/dashboard-table";
 
 interface OracleInfo {
+    id: string;
     source: string;
     feed: string;
     lastUpdate: string;
@@ -19,7 +21,6 @@ type OracleTableProps = {
 };
 
 export default function OracleTable(props: OracleTableProps): ReactElement {
-    const [oracleStatus, setStatus] = useState("Online");
     const [oracles, setOracles] = useState<Array<OracleInfo>>([]);
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const { t } = useTranslation();
@@ -28,9 +29,9 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
             const oracle = await window.polkaBTC.oracle.getInfo();
-            setStatus(oracle.online ? "Online" : "Offline");
             setOracles([
                 {
+                    id: "0", // todo: if fetching multiple oracles: set to index, or get account_id
                     source: oracle.names.join(","),
                     feed: oracle.feed,
                     lastUpdate: dateToShortString(oracle.lastUpdate),
@@ -46,53 +47,31 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
         return () => clearInterval(interval);
     }, [polkaBtcLoaded]);
 
+    const tableHeadings = [
+        <h1>{t("source")}</h1>,
+        <h1>{t("feed")}</h1>,
+        <h1>{t("last_update")}</h1>,
+        <h1>{t("exchange_rate")}</h1>,
+    ];
+
+    const oracleTableRow = (oracle: OracleInfo): ReactElement[] => [
+        <p>{oracle.source}</p>,
+        <p>{oracle.feed}</p>,
+        <p>{oracle.lastUpdate}</p>,
+        <p> 1 BTC = {oracle.exchangeRate.toFixed(5)} DOT</p>,
+    ];
+
     return (
-        <div className={"oracle-table " + (new BN(props.planckLocked) <= new BN(0) ? "oracle-space" : "")}>
-            <div className="row">
-                <div className="col-12">
-                    <div className="header">
-                        {t("oracle_status")} &nbsp;
-                        <div className={oracleStatus === "Online" ? "green-circle" : "red-circle"}></div> &nbsp;
-                        {oracleStatus}
-                    </div>
-                </div>
+        <div className={"dashboard-table-container " + (new BN(props.planckLocked) <= new BN(0) ? "oracle-space" : "")}>
+            <div>
+                <p className="table-heading">{t("dashboard.oracles.active_oracles")}</p>
             </div>
-            <div className="row justify-content-center">
-                <div className="col-12">
-                    <div className="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>{t("source")}</th>
-                                    <th>{t("feed")}</th>
-                                    <th>{t("last_update")}</th>
-                                    <th>{t("exchange_rate")}</th>
-                                </tr>
-                            </thead>
-                            {oracles && oracles.length ? (
-                                <tbody>
-                                    {oracles.map((oracle, index) => {
-                                        return (
-                                            <tr key={index}>
-                                                <td>{oracle.source}</td>
-                                                <td>{oracle.feed}</td>
-                                                <td>{oracle.lastUpdate}</td>
-                                                <td> 1 BTC = {oracle.exchangeRate.toFixed(5)} DOT</td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            ) : (
-                                <tbody>
-                                    <tr>
-                                        <td colSpan={4}>{t("no_oracles")}</td>
-                                    </tr>
-                                </tbody>
-                            )}
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <DashboardTable
+                pageData={oracles}
+                headings={tableHeadings}
+                dataPointDisplayer={oracleTableRow}
+                noDataEl={<td colSpan={4}>{t("no_oracles")}</td>}
+            />
         </div>
     );
 }

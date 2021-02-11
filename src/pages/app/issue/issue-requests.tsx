@@ -9,7 +9,7 @@ import { StoreType } from "../../../common/types/util.types";
 import { useEffect } from "react";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { toast } from "react-toastify";
-import { updateIssueRequestAction, changeIssueIdAction } from "../../../common/actions/issue.actions";
+import { updateIssueRequestAction, changeSelectedIssueAction } from "../../../common/actions/issue.actions";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
 import { updateBalancePolkaBTCAction, showAccountModalAction } from "../../../common/actions/general.actions";
 import { useTranslation } from "react-i18next";
@@ -179,7 +179,7 @@ export default function IssueRequests() {
     };
 
     const requestClicked = (request: IssueRequest): void => {
-        dispatch(changeIssueIdAction(request.id));
+        dispatch(changeSelectedIssueAction(request));
         openWizard();
     };
 

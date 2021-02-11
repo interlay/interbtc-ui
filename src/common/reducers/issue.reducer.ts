@@ -15,6 +15,7 @@ import {
     OPEN_WIZARD_IN_EDIT_MODE,
     ADD_VAULT_ISSUES,
     INIT_STATE,
+    CHANGE_SELECTED_ISSUE,
     UPDATE_ALL_ISSUE_REQUESTS,
 } from "../types/actions.types";
 import { IssueState } from "../types/issue.types";
@@ -32,10 +33,13 @@ const initialState = {
     issueRequests: new Map(),
     wizardInEditMode: false,
     vaultIssues: [],
+    selectedRequest: undefined,
 };
 
 export const issueReducer = (state: IssueState = initialState, action: IssueActions): IssueState => {
     switch (action.type) {
+        case CHANGE_SELECTED_ISSUE:
+            return { ...state, selectedRequest: action.request };
         case CHANGE_ADDRESS:
             return { ...state, address: action.address };
         case CHANGE_ISSUE_STEP:

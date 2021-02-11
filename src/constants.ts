@@ -44,6 +44,8 @@ export const NUMERIC_STRING_REGEX = /^[0-9]+([.][0-9]+)?$/;
 export const BITCOIN_NETWORK = process.env.REACT_APP_BITCOIN_NETWORK || "testnet";
 export const BITCOIN_REGTEST_URL = process.env.REACT_APP_BITCOIN_REGTEST_URL || "http://localhost:3002";
 
+export const BLOCK_TIME = 6; // seconds
+
 export const BTC_ADDRESS_REGEX =
     BITCOIN_NETWORK === "mainnet"
         ? BTC_MAINNET_REGEX

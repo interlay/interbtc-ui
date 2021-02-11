@@ -1,17 +1,22 @@
 import React, { useState, useEffect, ReactElement, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-
+import { getAccents } from "../../../pages/dashboard/dashboard-colors";
 import { StoreType } from "../../../common/types/util.types";
 import { DashboardRequestInfo } from "../../../common/types/redeem.types";
-import DashboardTable from "../../../common/components/dashboard-table/dashboard-table";
-import { defaultTableDisplayParams } from "../../../common/utils/utils";
+import DashboardTable, {
+    StyledLinkData,
+    StatusComponent,
+    StatusCategories,
+} from "../../../common/components/dashboard-table/dashboard-table";
+import * as constants from "../../../constants";
+import { defaultTableDisplayParams, shortAddress, formatDateTimePrecise } from "../../../common/utils/utils";
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 import { satToBTC } from "@interlay/polkabtc";
 import LineChartComponent from "../components/line-chart-component";
 
 export default function RedeemDashboard(): ReactElement {
-    const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+    const { polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
     const { t } = useTranslation();
     const statsApi = usePolkabtcStats();
 
@@ -34,31 +39,45 @@ export default function RedeemDashboard(): ReactElement {
         totalRedeems,
     ]);
 
-    const tableHeadings = [
-        t("id"),
-        t("redeem_page.amount"),
-        t("parachainblock"),
-        t("issue_page.vault_dot_address"),
-        t("redeem_page.output_BTC_address"),
-        t("status"),
+    const tableHeadings: ReactElement[] = [
+        // <h1>{t("id")}</h1>,
+        <h1>{t("date")}</h1>,
+        <h1>{t("redeem_page.amount")}</h1>,
+        <h1>{t("parachainblock")}</h1>,
+        <h1>{t("issue_page.vault_dot_address")}</h1>,
+        <h1>{t("redeem_page.output_BTC_address")}</h1>,
+        // "BTC Transaction",
+        // "BTC Confirmations",
+        <h1>{t("status")}</h1>,
     ];
 
     const tableRedeemRequestRow = useMemo(
-        () => (rreq: DashboardRequestInfo): string[] => [
-            rreq.id,
-            satToBTC(rreq.amountPolkaBTC),
-            rreq.creation,
-            rreq.vaultDotAddress || "",
-            rreq.btcAddress,
-            rreq.completed
-                ? t("completed")
-                : rreq.cancelled
-                ? t("cancelled")
-                : rreq.isExpired
-                ? t("expired")
-                : rreq.reimbursed
-                ? t("reimbursed")
-                : t("pending"),
+        () => (rreq: DashboardRequestInfo): ReactElement[] => [
+            // <p>{shortAddress(ireq.id)}</p>,
+            <p>{formatDateTimePrecise(new Date(rreq.timestamp))}</p>,
+            <p>{satToBTC(rreq.amountPolkaBTC)}</p>,
+            <p>{rreq.creation}</p>,
+            <p>{shortAddress(rreq.vaultDotAddress)}</p>,
+            <StyledLinkData
+                data={shortAddress(rreq.btcAddress)}
+                target={
+                    (constants.BTC_MAINNET
+                        ? constants.BTC_EXPLORER_ADDRESS_API
+                        : constants.BTC_TEST_EXPLORER_ADDRESS_API) + rreq.btcAddress
+                }
+                newTab={true}
+            />,
+            <StatusComponent
+                {...(rreq.completed
+                    ? { text: t("completed"), category: StatusCategories.Ok }
+                    : rreq.cancelled
+                    ? { text: t("cancelled"), category: StatusCategories.Bad }
+                    : rreq.isExpired
+                    ? { text: t("expired"), category: StatusCategories.Bad }
+                    : rreq.reimbursed
+                    ? { text: t("reimbursed"), category: StatusCategories.Ok }
+                    : { text: t("pending"), category: StatusCategories.Warning })}
+            />,
         ],
         [t]
     );
@@ -121,70 +140,92 @@ export default function RedeemDashboard(): ReactElement {
     }, [polkaBtcLoaded, statsApi]);
 
     return (
-        <div className="dashboard-page container-fluid white-background">
+        <div className="main-container dashboard-page ">
             <div className="dashboard-container dashboard-fade-in-animation">
                 <div className="dashboard-wrapper">
-                    <div className="row">
-                        <div className="title">{t("redeem_requests")}</div>
-                    </div>
-                    <div className="row mt-5 mb-3">
-                        <div className="col-lg-8 offset-2">
-                            <div className="row">
-                                <div className="col-md-3">
-                                    <p>
-                                        {totalRedeemedAmount === "-"
-                                            ? t("no_data")
-                                            : t("dashboard.redeem.total_redeemed", {
-                                                  amount: satToBTC(totalRedeemedAmount),
-                                              })}
-                                    </p>
+                    <div>
+                        <div className="title-container">
+                            <div
+                                style={{ backgroundColor: getAccents("d_pink").color }}
+                                className="issue-page-text-container"
+                            >
+                                <h1>{t("dashboard.redeem.redeem")}</h1>
+                            </div>
+                            <div style={{ backgroundColor: getAccents("d_pink").color }} className="title-line"></div>
+                        </div>
+                        <div className="table-top-data-container">
+                            <div className="values-container redeem-page">
+                                <div>
+                                    <h2 style={{ color: `${getAccents("d_pink").color}` }}>
+                                        {t("dashboard.redeem.total_redeemed")}
+                                    </h2>
+                                    <h1>
+                                        {totalRedeemedAmount === "-" ? t("no_data") : satToBTC(totalRedeemedAmount)}
+                                        &nbsp;BTC
+                                    </h1>
+                                    {totalRedeemedAmount === "-" ? (
+                                        ""
+                                    ) : (
+                                        <h1 className="h1-price-opacity">
+                                            $
+                                            {(
+                                                prices.bitcoin.usd * parseFloat(satToBTC(totalRedeemedAmount))
+                                            ).toLocaleString()}
+                                        </h1>
+                                    )}
                                 </div>
-                                <div className="col-md-3">
-                                    <p>
-                                        {totalSuccessfulRedeems === "-"
-                                            ? t("no_data")
-                                            : t("dashboard.redeem.total_redeems", { amount: totalSuccessfulRedeems })}
-                                    </p>
+                                <div>
+                                    <h2 style={{ color: getAccents("d_green").color }}>
+                                        {t("dashboard.redeem.total_redeems")}
+                                    </h2>
+                                    <h1>{totalSuccessfulRedeems === "-" ? t("no_data") : totalSuccessfulRedeems}</h1>
                                 </div>
-                                <div className="col-md-2">
-                                    <p>
+                                <div>
+                                    <h2 style={{ color: getAccents("d_green").color }}>
+                                        {t("dashboard.redeem.success_rate")}
+                                    </h2>
+                                    <h1>
                                         {totalRedeems === "-"
                                             ? t("no_data")
-                                            : t("dashboard.redeem.success_rate", {
-                                                  rate: (redeemSuccessRate * 100).toFixed(2),
-                                              })}
-                                    </p>
-                                </div>
-                                <div className="col-md-4">
-                                    <LineChartComponent
-                                        colour={["d_pink", "d_grey"]}
-                                        label={[
-                                            t("dashboard.redeem.total_redeemed_chart"),
-                                            t("dashboard.redeem.perday_redeemed_chart"),
-                                        ]}
-                                        yLabels={cumulativeRedeemsPerDay.map((dataPoint) =>
-                                            new Date(dataPoint.date).toLocaleDateString()
-                                        )}
-                                        yAxisProps={[{ beginAtZero: true, position: "left" }, { position: "right" }]}
-                                        data={[
-                                            cumulativeRedeemsPerDay.map((dataPoint) =>
-                                                Number(satToBTC(dataPoint.sat.toString()))
-                                            ),
-                                            pointRedeemsPerDay.map((amount) => Number(satToBTC(amount.toString()))),
-                                        ]}
-                                    />
+                                            : (redeemSuccessRate * 100).toFixed(2) + "%"}
+                                    </h1>
                                 </div>
                             </div>
+                            <div>
+                                <LineChartComponent
+                                    color={["d_pink", "d_grey"]}
+                                    label={[
+                                        t("dashboard.redeem.total_redeemed_chart"),
+                                        t("dashboard.redeem.perday_redeemed_chart"),
+                                    ]}
+                                    yLabels={cumulativeRedeemsPerDay.map((dataPoint) =>
+                                        new Date(dataPoint.date).toLocaleDateString()
+                                    )}
+                                    yAxisProps={[{ beginAtZero: true, position: "left" }, { position: "right" }]}
+                                    data={[
+                                        cumulativeRedeemsPerDay.map((dataPoint) =>
+                                            Number(satToBTC(dataPoint.sat.toString()))
+                                        ),
+                                        pointRedeemsPerDay.map((amount) => Number(satToBTC(amount.toString()))),
+                                    ]}
+                                />
+                            </div>
+                        </div>
+                        <div className="dashboard-table-container">
+                            <div>
+                                <p className="table-heading">{t("issue_page.recent_requests")}</p>
+                            </div>
+                            <DashboardTable
+                                richTable={true}
+                                pageData={redeemRequests}
+                                totalPages={Math.ceil(Number(totalRedeems) / tableParams.perPage)}
+                                tableParams={tableParams}
+                                setTableParams={setTableParams}
+                                headings={tableHeadings}
+                                dataPointDisplayer={tableRedeemRequestRow}
+                            />
                         </div>
                     </div>
-                    <DashboardTable
-                        pageData={redeemRequests}
-                        totalPages={Math.ceil(Number(totalRedeems) / tableParams.perPage)}
-                        tableParams={tableParams}
-                        setTableParams={setTableParams}
-                        headings={tableHeadings}
-                        dataPointDisplayer={tableRedeemRequestRow}
-                    />
                 </div>
             </div>
         </div>

@@ -18,18 +18,18 @@ const ActiveCollators = (): ReactElement => {
     const displayLinkBtn = false;
     const data = [1, 1, 1, 1, 1];
     const dates = range(0, 5).map((i) =>
-        dateToMidnightTemp(new Date(Date.now() - 86400 * 1000 * i)).toLocaleDateString()
+        dateToMidnightTemp(new Date(Date.now() - 86400 * 1000 * i))
+            .toISOString()
+            .substring(0, 10)
     );
     return (
         <div className="card">
             <div className="card-top-content">
                 <div className="values-container">
-                    <h1 style={{ color: `${getAccents("d_blue").colour}` }}>
-                        {t("dashboard.collators.active_collators")}
-                    </h1>
+                    <h1 style={{ color: getAccents("d_blue").color }}>{t("dashboard.collators.active_collators")}</h1>
                     <h2>1</h2>
                 </div>
-                {displayLinkBtn ? (
+                {displayLinkBtn && (
                     <div className="button-container">
                         <ButtonComponent
                             buttonName="view collators"
@@ -38,12 +38,10 @@ const ActiveCollators = (): ReactElement => {
                             buttonLink="/"
                         />
                     </div>
-                ) : (
-                    ""
                 )}
             </div>
             <LineChartComponent
-                colour="d_blue"
+                color="d_blue"
                 label={t("dashboard.collators.total_collators_chart") as string}
                 yLabels={dates}
                 yAxisProps={{ beginAtZero: true, precision: 0 }}
