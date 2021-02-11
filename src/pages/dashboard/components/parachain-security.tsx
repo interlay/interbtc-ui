@@ -45,7 +45,7 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
             {/* TODO: move this to the right */}
             <div className="parachain-content-container">
                 <div>
-                    <h1 className="h1-xl-text">
+                    <h1 className="h1-xl-text-left">
                         {t("dashboard.parachain.parachain_is")}&nbsp;
                         {parachainStatus === Status.Secure ? (
                             <span

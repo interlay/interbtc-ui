@@ -71,7 +71,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
 
             <div className="circle-container">
                 <div className="status-circle" style={{ borderColor: getAccents("d_blue").color }} id="relay-circle">
-                    <h1 className="h1-l-text" style={{ color: getAccents("d_blue").color }}>
+                    <h1 className="h1-xl-text-center" style={{ color: getAccents("d_blue").color }}>
                         {failed
                             ? t("no_data")
                             : [roundTwoDecimals(issuablePolkaBTC), <br />, t("dashboard.vaults.polkabtc_capacity")]}
