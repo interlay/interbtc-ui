@@ -54,10 +54,13 @@ export default function EnterAmountAndAddress(): ReactElement {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
-            // redeems can only be made above the BTC dust limit
-            const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
-            const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
-            setDustValue(dustValueBtc);
+            try {
+                const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
+                const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
+                setDustValue(dustValueBtc);
+            } catch (error) {
+                console.log(error);
+            }
 
             // check if vaults below the premium redeem limit are in the system
             try {
