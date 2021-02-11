@@ -89,7 +89,7 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
                         id="relay-circle"
                     >
                         <h1
-                            className="h1-xl-text"
+                            className="h1-xl-text-center"
                             style={{ color: getAccents(statusColor).color }}
                             id="relay-circle-text"
                         >
@@ -110,7 +110,7 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
                             id="relay-circle"
                         >
                             <h1
-                                className="h1-xl-text"
+                                className="h1-xl-text-center"
                                 style={{ color: getAccents("d_blue").color }}
                                 id="relay-circle-text"
                             >

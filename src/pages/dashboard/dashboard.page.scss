@@ -47,11 +47,19 @@
     .card-top-content {
         padding: 0px 5px;
     }
-    .h1-xl-text {
+    .h1-xl-text-left {
         color: black;
         font-size: 34px;
         text-align: left;
         font-family: airbnb-cereal-bold;
+        text-align: left;
+    }
+    .h1-xl-text-center {
+        color: black;
+        font-size: 34px;
+        text-align: left;
+        font-family: airbnb-cereal-bold;
+        text-align: center;
     }
     .h1-l-text {
         color: black;
