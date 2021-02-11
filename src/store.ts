@@ -1,18 +1,20 @@
 import { rootReducer } from "./common/reducers/index";
 import { toast } from "react-toastify";
-import { AppState, StoreType, StoreState, ParachainStatus } from "./common/types/util.types";
+import { AppState, StoreType, StoreState, ParachainStatus, ActiveTab } from "./common/types/util.types";
 import { createLogger } from "redux-logger";
 import { applyMiddleware, createStore } from "redux";
 import { initializeState } from "./common/actions/general.actions";
-import { PolkaBTCAPI, StakedRelayerClient, VaultClient } from "@interlay/polkabtc";
+import { FaucetClient, PolkaBTCAPI, StakedRelayerClient, VaultClient } from "@interlay/polkabtc";
 import { mapToArray, arrayToMap } from "./common/utils/utils";
 
 declare global {
     interface Window {
         polkaBTC: PolkaBTCAPI;
         relayer: StakedRelayerClient;
+        faucet: FaucetClient;
         vaultClient: VaultClient;
         store: StoreState;
+        isFetchingActive: boolean;
     }
 }
 
@@ -34,6 +36,8 @@ export const getInitialState = (): StoreType => {
             btcRelayHeight: 0,
             bitcoinHeight: 0,
             stateOfBTCParachain: ParachainStatus.Shutdown,
+            activeTab: ActiveTab.Issue,
+            prices: { bitcoin: { usd: 0 }, polkadot: { usd: 0 } },
         },
         issue: {
             address: "",
@@ -46,19 +50,18 @@ export const getInitialState = (): StoreType => {
             id: "",
             btcTxId: "",
             issueRequests: new Map(),
-            transactionListeners: [],
             wizardInEditMode: false,
             vaultIssues: [],
+            selectedRequest: undefined,
         },
         redeem: {
             fee: "0",
             address: "",
-            step: "ENTER_POLKABTC",
+            step: "AMOUNT_AND_ADDRESS",
             amountPolkaBTC: "",
             btcAddress: "",
             vaultBtcAddress: "",
             vaultDotAddress: "",
-            transactionListeners: [],
             id: "",
             redeemRequests: new Map(),
             vaultRedeems: [],

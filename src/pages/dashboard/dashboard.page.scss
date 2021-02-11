@@ -1,127 +1,212 @@
 @import "../../variables";
 @import "../../mixins";
 
-.dashboard-page {
+.dashboard-items-container {
     text-align: center;
+
+    display: grid;
+    padding: 8px 0px;
+}
+.main-container {
+    background-color: #fafafa;
+    padding: 30px 0px;
     min-height: 100vh;
-
-    .dashboard-container {
-        max-width: calc(100vw - 30px);
-        overflow-x: scroll;
-        padding: 0px 15px;
+}
+.card {
+    width: 90%;
+    min-height: 300px;
+    background-color: white;
+    border: none;
+    border-radius: 10;
+    padding: 15px 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    h1 {
+        color: black;
+        font-family: airbnb-cereal-book;
+        font-size: 13px;
+        margin-bottom: 0.3rem;
     }
 
-    .dashboard-button {
+    h2 {
+        color: black;
+        opacity: 0.5;
+        font-size: 16px;
+        font-family: airbnb-cereal-bold;
+        margin-bottom: 0.2rem;
+    }
+    h3 {
+        font-size: 8px;
+        font-family: airbnb-cereal-bold;
+        text-transform: uppercase;
+        margin-bottom: 0rem;
+        letter-spacing: 0.4px;
+    }
+    .values-container {
+        text-align: left;
+    }
+    .card-top-content {
+        padding: 0px 5px;
+    }
+    .h1-xl-text {
+        color: black;
+        font-size: 34px;
+        text-align: left;
+        font-family: airbnb-cereal-bold;
+    }
+    .h1-l-text {
+        color: black;
+        font-size: 28px;
+        font-family: airbnb-cereal-bold;
+    }
+    .parachain-content-container {
+        height: 250px;
+        padding-left: 20px;
+        @include flexCenter();
+        flex-direction: column;
+    }
+    .parachain-button-container {
+        width: 100%;
+        text-align: left;
+        margin-top: 10px;
+    }
+    button {
+        background-color: white;
+        border-radius: 8px;
+        width: 130px;
+        padding: 10px 15px;
+        @include flexCenter();
+    }
+    .button-assets-container {
+        display: flex;
+        align-items: flex-start;
+        vertical-align: middle;
+        text-decoration: none;
+    }
+    .external-link {
+        margin-left: 3px;
+        // filter: brightness(0) saturate(100%) invert(77%) sepia(49%) saturate(5098%) hue-rotate(350deg) brightness(102%)
+        //     contrast(94%);
+    }
+    .card-top-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .circle-container {
+        @include flexCenter();
+        margin-top: 25px;
+    }
+    .status-circle {
+        background: none;
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        border: 3px solid grey;
+        @include flexCenter();
+        flex-direction: column;
+    }
+}
+
+.row-grid {
+    display: grid;
+    justify-items: center;
+    width: 100%;
+    row-gap: 30px;
+}
+.chart-container {
+    position: relative;
+    margin-top: 10px;
+}
+.dashboard-page {
+    canvas {
+        height: 250px !important;
+    }
+}
+.section-top-gap {
+    margin-top: 40px;
+}
+.section-bottom-gap {
+    margin-bottom: 40px;
+}
+.latest-block-text {
+    font-size: 11px;
+    font-family: airbnb-cereal-bold;
+}
+.bold-font {
+    font-family: "airbnb-cereal-bold";
+}
+
+@media only screen and (min-width: $mobile-large-size) {
+    .card {
+        min-height: 340px;
+    }
+    .row-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+    }
+}
+@media only screen and (min-width: $desktop-size) {
+    .dashboard-items-container {
+        @include justifyCenter();
+    }
+    .main-container {
+        padding: 40px 0px;
+    }
+    .row-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+        column-gap: 40px;
+    }
+    .title-text {
+        font-size: 30px;
+    }
+
+    .card {
+        width: 100%;
+        min-height: 340px;
+        padding: 30px 20px;
+        // box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0);
+        h1 {
+            font-size: 16px;
+            margin-bottom: 0.5rem;
+        }
+        h3 {
+            font-size: 10px;
+            letter-spacing: 0.6px;
+        }
+        .parachain-content-container {
+            width: 70%;
+            padding-left: 30px;
+        }
+        button {
+            width: 160px;
+            padding: 12px 12px;
+        }
+    }
+    // .card:hover {
+    //     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    //     -webkit-transition: box-shadow 0.2s ease-in;
+    // }
+    .chart-container {
         margin-top: 20px;
     }
-
-    .title {
-        width: 100%;
-        text-align: center;
-        font-size: 2rem;
-        margin-top: 2rem;
-        font-weight: 600;
+    .canvas {
+        height: 400px !important;
     }
-
-    .small-text {
-        font-size: 0.8rem;
+    .rows-container {
+        max-width: 1700px;
+        width: 90%;
     }
-
-    .table-wrapper {
-        width: 100%;
-        table {
-            table-layout: auto;
-            width: 1200px;
-            margin: auto;
-            overflow: scroll;
-            text-align: center;
-        }
-
-        th,
-        td {
-            padding: 5px 10px;
-            border: 1px solid #ddd;
-
-            i {
-                color: rgba(0, 0, 0, 0.5);
-            }
-            p {
-                margin: 0px;
-            }
-        }
-
-        td.break-words {
-            word-break: break-all;
-        }
-
-        thead {
-            background-color: #eaeaea;
-        }
+    .latest-block-text {
+        font-size: 12px;
+        font-family: airbnb-cereal-bold;
     }
-
-    .header {
-        font-weight: 600;
-        font-size: 1.2rem;
-        margin-top: 2rem;
+    .section-top-gap {
+        margin-top: 40px;
     }
-
-    .report-button-wrapper {
-        padding-top: 2rem;
-        width: 100%;
-        margin: auto;
-        text-align: center;
+    .section-bottom-gap {
+        margin-bottom: 40px;
     }
-
-    .staked-relayer-table {
-        margin-bottom: 80px;
+    .section-div-line {
+        width: 40%;
     }
-
-    .de-note {
-        margin-top: 20px;
-        margin-bottom: 50px;
-    }
-
-    @include mobile-range {
-        .de-note {
-            margin-bottom: 100px;
-        }
-        .staked-relayer-table {
-            margin-bottom: 150px;
-        }
-    }
-
-    @include tablet-range {
-        .de-note {
-            margin-bottom: 100px;
-        }
-        .staked-relayer-table {
-            margin-bottom: 150px;
-        }
-    }
-}
-
-.vote-label {
-    font-weight: 600;
-}
-
-.dashboard-fade-in-animation {
-    animation: dashboard-fade 0.5s ease-in;
-}
-
-@keyframes dashboard-fade {
-    0% {
-        opacity: 0;
-    }
-    20% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-
-
-.main .jumbotron {
-    border-radius: 0px;
 }

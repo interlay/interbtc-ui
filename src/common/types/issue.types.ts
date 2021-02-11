@@ -1,8 +1,11 @@
 export interface IssueRequest {
     id: string;
     amountBTC: string;
+    timestamp?: string;
+    totalAmount: string;
     creation: string;
     vaultBTCAddress: string;
+    vaultDOTAddress: string;
     btcTxId: string;
     confirmations: number;
     completed: boolean;
@@ -14,14 +17,26 @@ export interface IssueRequest {
     griefingCollateral: string;
 }
 
+export type DashboardIssueInfo = {
+    id: string;
+    timestamp: string;
+    amountBTC: string;
+    creation: string;
+    vaultBTCAddress: string;
+    vaultDOTAddress: string;
+    btcTxId: string;
+    completed: boolean;
+    cancelled: boolean;
+};
+
 export interface IssueMap {
     [key: string]: IssueRequest[];
 }
 
 export interface VaultIssue {
     id: string;
-    timestamp: string;
     user: string;
+    timestamp: string;
     btcAddress: string;
     polkaBTC: string;
     lockedDOT: string;
@@ -31,6 +46,7 @@ export interface VaultIssue {
 }
 
 export interface IssueState {
+    selectedRequest?: IssueRequest;
     address: string;
     step: string;
     amountBTC: string;
@@ -41,7 +57,6 @@ export interface IssueState {
     id: string;
     btcTxId: string;
     issueRequests: Map<string, IssueRequest[]>;
-    transactionListeners: string[];
     wizardInEditMode: boolean;
     vaultIssues: VaultIssue[];
 }

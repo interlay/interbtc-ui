@@ -1,0 +1,345 @@
+@import "../../variables";
+
+.app-page {
+    .app-tabs {
+        .app-tab {
+            padding: 0.5rem;
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        .active-tab {
+            padding-bottom: 5px;
+            border-bottom: 3px solid $brand-color;
+            color: $brand-color;
+        }
+
+        .not-active {
+            border-bottom: none;
+        }
+    }
+
+    .grey-text {
+        color: #998;
+    }
+
+    .tab-content-wrapper {
+        box-shadow: 0px 0px 20px darkgrey;
+        border-radius: 5px;
+    }
+
+    #amount-btc-input {
+        border: none;
+        font-size: 3rem;
+        width: 100%;
+        margin-top: 2rem;
+        text-align: right;
+    }
+
+    .app-btn {
+        width: 100%;
+        padding: 15px;
+        margin-bottom: 15px;
+        margin-top: 15px;
+    }
+}
+
+.mark-currency {
+    font-size: 1.5rem;
+    text-align: left;
+    margin-top: 3.7rem;
+    margin-left: -1rem;
+}
+
+.locking-by {
+    border: 2px solid #998;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 3rem;
+
+    img {
+        margin-bottom: 3px;
+    }
+}
+
+.wizard-item {
+    border: 1px solid #998;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 0.5rem 0;
+
+    img {
+        margin-bottom: 3px;
+    }
+}
+
+.balances-title {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.usd-price {
+    color: #998;
+    font-size: 1rem;
+    margin-bottom: 4rem;
+}
+
+.usd-price-modal {
+    text-align: center;
+    color: #998;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+.btc-balance-wrapper {
+    margin-right: 2rem;
+    text-align: right;
+}
+
+.dot-balance-wrapper {
+    margin-left: 2rem;
+    text-align: left;
+}
+
+.wizard-title {
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.3rem;
+}
+
+.issue-amount {
+    text-align: center;
+    font-size: 1.7rem;
+    color: #998;
+    .wizzard-number {
+        color: black;
+        font-size: 3rem;
+    }
+}
+
+.total-amount {
+    font-weight: 600;
+}
+
+.step-item {
+    padding: 0.7rem;
+}
+
+.total-divider {
+    margin: 10px;
+    border-top: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.payment-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.payment-description {
+    font-size: 1rem;
+    text-align: center;
+    padding: 15px;
+}
+
+.payment-address {
+    text-align: center;
+    padding: 15px;
+    font-size: 1rem;
+    font-weight: 600;
+    span {
+        border-radius: 5px;
+        border: 1px solid black;
+        padding: 10px;
+    }
+}
+
+.payment-timer-with {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    padding-top: 15px;
+}
+
+.payment-timer {
+    font-size: 1rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.qr-code-item {
+    text-align: center;
+    padding: 3rem;
+}
+
+.ledger-wrapper {
+    text-align: center;
+    padding: 15px;
+
+    a {
+        text-decoration: none !important;
+    }
+}
+.input-address-wrapper {
+    color: #998;
+    border: 1px solid;
+    height: fit-content;
+    border-radius: 5px;
+}
+
+#btc-address-input {
+    font-size: 1.3rem;
+    padding: 1rem;
+    padding-top: 0;
+    width: 100%;
+    text-align: left;
+    border-radius: 5px;
+    border: none;
+}
+
+.address-label {
+    text-align: left;
+    margin-left: 15px;
+    margin-top: 1rem;
+}
+
+.ledger-logo-wrapper {
+    margin: auto;
+    padding: 15px;
+    border: 1px solid black;
+    width: fit-content;
+    border-radius: 5px;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    .ledger-logo {
+        font-size: 1rem;
+        width: 150px;
+        height: 100px;
+        background-image: url("../../assets/img/ledger.svg");
+        background-position: center center;
+        background-repeat: no-repeat;
+        margin: auto;
+    }
+}
+
+.confirmation-circle {
+    border-radius: 50%;
+    padding-top: 54px;
+    width: 200px;
+    height: 200px;
+    text-align: center;
+    margin: auto;
+}
+
+.completed-confirmations-circle {
+    @extend .confirmation-circle;
+    border: 5px solid green;
+    padding-top: 72px;
+}
+
+.pending-circle {
+    @extend .confirmation-circle;
+    border: 5px solid #998;
+    padding-top: 64px;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.cancelled-confirmations-circle {
+    @extend .confirmation-circle;
+    border: 5px solid $error-color;
+    padding-top: 75px;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.waiting-confirmations-circle {
+    @extend .confirmation-circle;
+    border: 5px solid orange;
+}
+
+.number-of-confirmations {
+    font-size: 1.5rem;
+}
+
+.status-title {
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+    margin: 3rem;
+}
+
+.btc-transaction-view {
+    font-size: 1.3rem;
+    width: fit-content;
+    text-align: center;
+    margin: auto;
+}
+
+.btc-transaction-wrapper {
+    margin-top: 2rem;
+}
+
+.step-title {
+    display: inline;
+    text-align: center;
+    left: calc(50% - 20px);
+    top: 15px;
+}
+
+.step-back {
+    text-align: left;
+
+    .custom-icon-size {
+        font-size: 2rem;
+        color: #998;
+        margin-top: 15px;
+        // float: left;
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
+
+.wizard-input-error {
+    color: $error-color;
+    margin-top: -3rem;
+    margin-bottom: 2rem;
+}
+
+.address-input-error {
+    color: $error-color;
+    margin-top: 1rem;
+    margin-bottom: 0rem;
+}
+
+.wizard-redeem-title {
+    margin-top: 2rem;
+    font-weight: 600;
+    font-size: 1.8rem;
+}
+
+.inform-you {
+    font-weight: 600;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.modal-footer-border {
+    border-top: 1px solid #dee2e6;
+}
+
+.retry-button {
+    min-width: 103px;
+    color: white;
+    background-color: #28a745;
+    border-color: #28a745;
+    &:hover {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+}

@@ -1,53 +1,42 @@
-import React, { ReactElement, useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { ReactElement, useState, useEffect, useMemo } from "react";
+import { useSelector } from "react-redux";
 import { Vault } from "../../types/vault.types";
-import { updatePremiumVaultAction } from "../../actions/vault.actions";
 import * as constants from "../../../constants";
 import { planckToDOT, satToBTC, roundTwoDecimals } from "@interlay/polkabtc";
 import { shortAddress } from "../../utils/utils";
-import BitcoinAddress from "../bitcoin-links/address";
-import { Button, Modal } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import RedeemWizard from "../../../pages/redeem/wizard/redeem-wizard";
-import { resetRedeemWizardAction } from "../../actions/redeem.actions";
-import { toast } from "react-toastify";
-import { StoreType, ParachainStatus } from "../../types/util.types";
-import { showAccountModalAction } from "../../actions/general.actions";
 import Big from "big.js";
+import { StoreType } from "../../../common/types/util.types";
+import DashboardTable from "../dashboard-table/dashboard-table";
 
-
-type VaultTableProps = {
-    isRelayer: boolean | undefined;
-};
-
-export default function VaultTable(props: VaultTableProps): ReactElement {
+export default function VaultTable(): ReactElement {
     const [vaults, setVaults] = useState<Array<Vault>>([]);
-    const [showWizard, setShowWizard] = useState(false);
     const [liquidationThreshold, setLiquidationThreshold] = useState(new Big(0));
     const [auctionCollateralThreshold, setAuctionCollateralThreshold] = useState(new Big(0));
     const [premiumRedeemThreshold, setPremiumRedeemThreshold] = useState(new Big(0));
     const [secureCollateralThreshold, setSecureCollateralThreshold] = useState(new Big(0));
-    const dispatch = useDispatch();
     const { t } = useTranslation();
-    const { address, extensions, btcRelayHeight, bitcoinHeight, stateOfBTCParachain, polkaBtcLoaded } = useSelector(
-        (state: StoreType) => state.general
-    );
+    const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
 
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
 
-            const [auction, premium, secure, liquidation] = await Promise.all([
-                window.polkaBTC.vaults.getAuctionCollateralThreshold(),
-                window.polkaBTC.vaults.getPremiumRedeemThreshold(),
-                window.polkaBTC.vaults.getSecureCollateralThreshold(),
-                window.polkaBTC.vaults.getLiquidationCollateralThreshold(),
-            ]);
+            try {
+                const [auction, premium, secure, liquidation] = await Promise.all([
+                    window.polkaBTC.vaults.getAuctionCollateralThreshold(),
+                    window.polkaBTC.vaults.getPremiumRedeemThreshold(),
+                    window.polkaBTC.vaults.getSecureCollateralThreshold(),
+                    window.polkaBTC.vaults.getLiquidationCollateralThreshold(),
+                ]);
 
-            setAuctionCollateralThreshold(auction);
-            setPremiumRedeemThreshold(premium);
-            setSecureCollateralThreshold(secure);
-            setLiquidationThreshold(liquidation);
+                setAuctionCollateralThreshold(auction);
+                setPremiumRedeemThreshold(premium);
+                setSecureCollateralThreshold(secure);
+                setLiquidationThreshold(liquidation);
+            } catch (e) {
+                console.log(e);
+            }
         };
         fetchData();
     }, [polkaBtcLoaded]);
@@ -81,7 +70,7 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
             const vaults = await window.polkaBTC.vaults.list();
             const vaultsList: Vault[] = [];
 
-            for (let vault of vaults) {
+            for (const vault of vaults) {
                 const accountId = window.polkaBTC.api.createType("AccountId", vault.id);
                 let unsettledCollateralization: Big | undefined = undefined;
                 let settledCollateralization: Big | undefined = undefined;
@@ -94,7 +83,7 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                     console.log(error);
                 }
 
-                let btcAddress = vault.wallet.address;
+                const btcAddress = vault.wallet.btcAddress;
 
                 const balanceLockedPlanck = await window.polkaBTC.collateral.balanceLockedDOT(accountId);
                 const balanceLockedDOT = planckToDOT(balanceLockedPlanck.toString());
@@ -106,9 +95,7 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
                     lockedDOT: balanceLockedDOT,
                     pendingBTC: satToBTC(vault.to_be_issued_tokens.toString()),
                     btcAddress: btcAddress || "",
-                    status:
-                        vault.status &&
-                        checkVaultStatus(vault.status.toString(), unsettledCollateralization),
+                    status: vault.status && checkVaultStatus(vault.status.toString(), unsettledCollateralization),
                     unsettledCollateralization: unsettledCollateralization?.mul(100).toString(),
                     settledCollateralization: settledCollateralization?.mul(100).toString(),
                 });
@@ -130,171 +117,97 @@ export default function VaultTable(props: VaultTableProps): ReactElement {
         secureCollateralThreshold,
     ]);
 
-    const getStatusColor = (status: string): string => {
-        if (status === constants.VAULT_STATUS_ACTIVE) {
-            return "green-text";
-        }
-        if (status === constants.VAULT_STATUS_UNDER_COLLATERALIZED) {
-            return "orange-text";
-        }
-        if (
-            status === constants.VAULT_STATUS_THEFT ||
-            status === constants.VAULT_STATUS_AUCTION ||
-            status === constants.VAULT_STATUS_LIQUIDATED
-        ) {
-            return "red-text";
-        }
-        return "black-text";
-    };
+    const tableHeadings: ReactElement[] = [
+        <h1>{t("account_id")}</h1>,
+        <h1>{t("locked_dot")}</h1>,
+        <h1>{t("locked_btc")}</h1>,
+        <>
+            <h1>{t("pending_btc")}</h1> &nbsp;
+            <i className="far fa-question-circle" data-tip={t("vault.tip_pending_btc")}></i>
+        </>,
+        <>
+            <h1>{t("collateralization")}</h1> &nbsp;
+            <i className="far fa-question-circle" data-tip={t("vault.tip_collateralization")}></i>
+        </>,
+        <h1>{t("status")}</h1>,
+    ];
 
-    const getCollateralizationColor = (collateralization: string | undefined): string => {
-        if (typeof collateralization !== "undefined") {
-            if (new Big(collateralization).gte(secureCollateralThreshold)) {
+    const tableVaultRow = useMemo(() => {
+        const getStatusColor = (status: string): string => {
+            if (status === constants.VAULT_STATUS_ACTIVE) {
                 return "green-text";
             }
-            if (new Big(collateralization).gte(auctionCollateralThreshold)) {
+            if (status === constants.VAULT_STATUS_UNDER_COLLATERALIZED) {
                 return "orange-text";
             }
-            // Liquidation
-            return "red-text";
-        }
-        return "black-text";
-    };
+            if (
+                status === constants.VAULT_STATUS_THEFT ||
+                status === constants.VAULT_STATUS_AUCTION ||
+                status === constants.VAULT_STATUS_LIQUIDATED
+            ) {
+                return "red-text";
+            }
+            return "black-text";
+        };
 
-    const showCollateralizations = (vault: Vault) => {
-        if (vault.unsettledCollateralization === undefined && vault.settledCollateralization === undefined) {
-            return <td className={getCollateralizationColor(vault.unsettledCollateralization)}>∞</td>;
-        }
-        return (
-            <td>
-                <p className={getCollateralizationColor(vault.settledCollateralization)}>
-                    {vault.settledCollateralization !== undefined
-                        ? roundTwoDecimals(vault.settledCollateralization.toString()) + "%"
-                        : "∞"}
-                </p>
-                <p className="small-text">
-                    <span className="black-text">{"Pending: "}</span>
-                    <span className={getCollateralizationColor(vault.unsettledCollateralization)}>
-                        {vault.unsettledCollateralization !== undefined
-                            ? roundTwoDecimals(vault.unsettledCollateralization.toString()) + "%"
+        const getCollateralizationColor = (collateralization: string | undefined): string => {
+            if (typeof collateralization !== "undefined") {
+                if (new Big(collateralization).gte(secureCollateralThreshold)) {
+                    return "green-text";
+                }
+                if (new Big(collateralization).gte(auctionCollateralThreshold)) {
+                    return "orange-text";
+                }
+                // Liquidation
+                return "red-text";
+            }
+            return "black-text";
+        };
+
+        const showCollateralizations = (vault: Vault) => {
+            if (vault.unsettledCollateralization === undefined && vault.settledCollateralization === undefined) {
+                return <td className={getCollateralizationColor(vault.unsettledCollateralization)}>∞</td>;
+            }
+            return (
+                <td>
+                    <p className={getCollateralizationColor(vault.settledCollateralization)}>
+                        {vault.settledCollateralization !== undefined
+                            ? roundTwoDecimals(vault.settledCollateralization.toString()) + "%"
                             : "∞"}
-                    </span>
-                </p>
-            </td>
-        );
-    };
+                    </p>
+                    <p className="small-text">
+                        <span className="black-text">{t("vault.pending_table_subcell")}</span>
+                        <span className={getCollateralizationColor(vault.unsettledCollateralization)}>
+                            {vault.unsettledCollateralization !== undefined
+                                ? roundTwoDecimals(vault.unsettledCollateralization.toString()) + "%"
+                                : "∞"}
+                        </span>
+                    </p>
+                </td>
+            );
+        };
 
-    const handleCloseWizard = () => {
-        dispatch(resetRedeemWizardAction());
-        setShowWizard(false);
-    };
-
-    const openRedeemWizard = (vault: Vault) => {
-        if (stateOfBTCParachain === ParachainStatus.Error) {
-            toast.error(t("redeem_page.error_in_parachain"));
-            return;
-        }
-        if (bitcoinHeight - btcRelayHeight > constants.BLOCKS_BEHIND_LIMIT) {
-            toast.error(t("redeem_page.error_more_than_6_blocks_behind"));
-            return;
-        }
-        if (address && extensions.length) {
-            dispatch(updatePremiumVaultAction(vault));
-            setShowWizard(true);
-        } else {
-            dispatch(showAccountModalAction(true));
-        }
-    };
-
-    const showPremiumButton = (vault: Vault): boolean => {
-        if (vault.unsettledCollateralization === undefined && vault.settledCollateralization === undefined) {
-            return false;
-        }
-        if (
-            vault.settledCollateralization !== undefined &&
-            new Big(vault.settledCollateralization).div(100).gt(auctionCollateralThreshold) &&
-            new Big(vault.settledCollateralization).div(100).lt(premiumRedeemThreshold)
-        ) {
-            return true;
-        }
-        return false;
-    };
+        return (vault: Vault): ReactElement[] => [
+            <p>{shortAddress(vault.vaultId)}</p>,
+            <p>{vault.lockedDOT}</p>,
+            <p>{vault.lockedBTC}</p>,
+            <p>{vault.pendingBTC}</p>,
+            <p>{showCollateralizations(vault)}</p>,
+            <p className={getStatusColor(vault.status)}>{vault.status}</p>,
+        ];
+    }, [auctionCollateralThreshold, secureCollateralThreshold, t]);
 
     return (
-        <div className="vault-table">
-            <div className="row">
-                <div className="col-12">
-                    <div className="header">Vaults</div>
-                </div>
+        <div className="dashboard-table-container">
+            <div>
+                <p className="table-heading">{t("dashboard.vaults.active_vaults")}</p>
             </div>
-            <div className="row justify-content-center">
-                <div className="col-12">
-                    <div className="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>{t("account_id")}</th>
-                                    <th>{t("btc_address")}</th>
-                                    <th>{t("locked_dot")}</th>
-                                    <th>{t("locked_btc")}</th>
-                                    <th>
-                                        {t("pending_btc")} &nbsp;
-                                        <i
-                                            className="far fa-question-circle"
-                                            data-tip="BTC volume of in-progress issue requests."
-                                        ></i>
-                                    </th>
-                                    <th>
-                                        {t("collateralization")} &nbsp;
-                                        <i
-                                            className="far fa-question-circle"
-                                            data-tip="Collateralization rate for locked BTC.
-                                           'Pending' includes in-progress issue requests."
-                                        ></i>
-                                    </th>
-                                    <th>{t("status")}</th>
-                                </tr>
-                            </thead>
-                            {vaults && vaults.length ? (
-                                <tbody>
-                                    {vaults.map((vault, index) => {
-                                        return (
-                                            <tr key={index}>
-                                                <td>{shortAddress(vault.vaultId)}</td>
-                                                <td className="break-words">
-                                                    <BitcoinAddress shorten={true} btcAddress={vault.btcAddress} />
-                                                </td>
-                                                <td>{vault.lockedDOT}</td>
-                                                <td>{vault.lockedBTC}</td>
-                                                <td>{vault.pendingBTC}</td>
-                                                {showCollateralizations(vault)}
-                                                <td className={getStatusColor(vault.status)}>
-                                                    {!props.isRelayer && showPremiumButton(vault) ? (
-                                                        <Button onClick={() => openRedeemWizard(vault)}>
-                                                            {t("dashboard.premium_redeem")}
-                                                        </Button>
-                                                    ) : (
-                                                        <span>{vault.status}</span>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            ) : (
-                                <tbody>
-                                    <tr>
-                                        <td colSpan={7}>{t("no_registered_vaults")}</td>
-                                    </tr>
-                                </tbody>
-                            )}
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <Modal show={showWizard} onHide={handleCloseWizard} size={"lg"}>
-                <RedeemWizard handleClose={handleCloseWizard} />
-            </Modal>
+            <DashboardTable
+                pageData={vaults.map((vault) => ({ ...vault, id: vault.vaultId }))}
+                headings={tableHeadings}
+                dataPointDisplayer={tableVaultRow}
+                noDataEl={<td colSpan={6}>{t("no_registered_vaults")}</td>}
+            />
         </div>
     );
 }

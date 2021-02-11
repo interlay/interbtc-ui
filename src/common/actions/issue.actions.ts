@@ -11,10 +11,10 @@ import {
     UPDATE_ISSUE_GRIEFING_COLLATERAL,
     ADD_ISSUE_REQUEST,
     UPDATE_ISSUE_REQUEST,
-    ADD_TRANSACTION_LISTENER_ISSUE,
     ADD_VAULT_ISSUES,
     OPEN_WIZARD_IN_EDIT_MODE,
     UPDATE_ALL_ISSUE_REQUESTS,
+    CHANGE_SELECTED_ISSUE,
     UpdateAllIssueRequests,
     ChangeIssueStep,
     ChangeBtcAddress,
@@ -28,9 +28,9 @@ import {
     UpdateIssueGriefingCollateral,
     AddIssueRequest,
     UpdateIssueRequest,
-    AddTransactionListenerIssue,
     OpenWizardInEditMode,
     AddVaultIssues,
+    ChangeSelectedIssue,
 } from "../types/actions.types";
 import { IssueRequest, VaultIssue } from "../types/issue.types";
 
@@ -78,6 +78,11 @@ export const changeIssueIdAction = (id: string): ChangeIssueId => ({
     id,
 });
 
+export const changeSelectedIssueAction = (request: IssueRequest): ChangeSelectedIssue => ({
+    type: CHANGE_SELECTED_ISSUE,
+    request,
+});
+
 export const openWizardInEditModeAction = (): OpenWizardInEditMode => ({
     type: OPEN_WIZARD_IN_EDIT_MODE,
 });
@@ -95,11 +100,6 @@ export const addIssueRequestAction = (request: IssueRequest): AddIssueRequest =>
 export const updateIssueRequestAction = (request: IssueRequest): UpdateIssueRequest => ({
     type: UPDATE_ISSUE_REQUEST,
     request,
-});
-
-export const addTransactionListenerIssue = (id: string): AddTransactionListenerIssue => ({
-    type: ADD_TRANSACTION_LISTENER_ISSUE,
-    id,
 });
 
 export const addVaultIssuesAction = (vaultIssues: VaultIssue[]): AddVaultIssues => ({

@@ -8,12 +8,15 @@ import {
     UPDATE_BALANCE_DOT,
     UPDATE_BALANCE_POLKA_BTC,
     GeneralActions,
-    HAS_FEEDBACK_BEEN_DISPLAYED,
     SET_INSTALLED_EXTENSION,
     SHOW_ACCOUNT_MODAL,
     UPDATE_ACCOUNTS,
+    SET_ACTIVE_TAB,
+    UPDATE_OF_PRICES,
+    UPDATE_HEIGHTS,
+    UPDATE_TOTALS,
 } from "../types/actions.types";
-import { GeneralState, ParachainStatus } from "../types/util.types";
+import { GeneralState, ParachainStatus, ActiveTab } from "../types/util.types";
 
 const initialState = {
     polkaBtcLoaded: false,
@@ -31,10 +34,20 @@ const initialState = {
     btcRelayHeight: 0,
     bitcoinHeight: 0,
     stateOfBTCParachain: ParachainStatus.Shutdown,
+    activeTab: ActiveTab.Issue,
+    prices: { bitcoin: { usd: 0 }, polkadot: { usd: 0 } },
 };
 
 export const generalReducer = (state: GeneralState = initialState, action: GeneralActions): GeneralState => {
     switch (action.type) {
+        case UPDATE_TOTALS:
+            return { ...state, totalPolkaBTC: action.totalPolkaBTC, totalLockedDOT: action.totalLockedDOT };
+        case UPDATE_HEIGHTS:
+            return { ...state, btcRelayHeight: action.btcRelayHeight, bitcoinHeight: action.bitcoinHeight };
+        case UPDATE_OF_PRICES:
+            return { ...state, prices: action.prices };
+        case SET_ACTIVE_TAB:
+            return { ...state, activeTab: action.activeTab };
         case IS_POLKA_BTC_LOADED:
             return { ...state, polkaBtcLoaded: action.isLoaded };
         case IS_STAKED_RELAYER_LOADED:
@@ -51,6 +64,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
                 extensions: [],
                 accounts: [],
                 stateOfBTCParachain: ParachainStatus.Shutdown,
+                activeTab: ActiveTab.Issue,
             };
         case INIT_GENERAL_DATA_ACTION:
             return {
@@ -63,8 +77,6 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
             };
         case IS_VAULT_CLIENT_LOADED:
             return { ...state, vaultClientLoaded: action.isLoaded };
-        case HAS_FEEDBACK_BEEN_DISPLAYED:
-            return { ...state, hasFeedbackModalBeenDisplayed: action.hasBeenDisplayed };
         case UPDATE_BALANCE_DOT:
             return { ...state, balanceDOT: action.balanceDOT };
         case UPDATE_BALANCE_POLKA_BTC:

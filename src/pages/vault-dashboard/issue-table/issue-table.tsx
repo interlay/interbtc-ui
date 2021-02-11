@@ -8,8 +8,7 @@ import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 import { VaultIssue } from "../../../common/types/issue.types";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { Badge } from "react-bootstrap";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 export default function IssueTable(): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -27,7 +26,7 @@ export default function IssueTable(): ReactElement {
                 const issueMap = await window.polkaBTC.vaults.mapIssueRequests(vaultId);
 
                 if (!issueMap) return;
-                
+
                 dispatch(addVaultIssuesAction(issueRequestToVaultIssue(issueMap)));
             } catch (err) {
                 console.log(err);
@@ -46,7 +45,11 @@ export default function IssueTable(): ReactElement {
             return <FaCheck></FaCheck>;
         }
         if (request.cancelled) {
-            return <Badge className="badge-style" variant="secondary">{t("cancelled")}</Badge>;
+            return (
+                <Badge className="badge-style" variant="secondary">
+                    {t("cancelled")}
+                </Badge>
+            );
         }
         return <FaHourglass></FaHourglass>;
     };

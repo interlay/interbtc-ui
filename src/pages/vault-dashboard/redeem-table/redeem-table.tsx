@@ -8,8 +8,7 @@ import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 import { VaultRedeem } from "../../../common/types/redeem.types";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { Badge } from "react-bootstrap";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 export default function RedeemTable(): ReactElement {
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -77,7 +76,7 @@ export default function RedeemTable(): ReactElement {
                                     return (
                                         <tr key={index}>
                                             <td>{shortAddress(redeem.id)}</td>
-                                            <td>{redeem.timestamp}</td>
+                                            {/* <td>{redeem.timestamp}</td> */}
                                             <td>{shortAddress(redeem.user)}</td>
                                             <td>
                                                 <BitcoinAddress btcAddress={redeem.btcAddress} shorten />

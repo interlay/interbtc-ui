@@ -23,9 +23,56 @@ It is implemented as a collection of open-source Substrate modules using Rust: <
 -   [React](https://github.com/facebook/react)
 -   [TypeScript](https://github.com/Microsoft/TypeScript)
 -   [polkadot-js](https://polkadot.js.org/)
--   [Yarn](https://github.com/yarnpkg/yarn)
+-   [yarn](https://github.com/yarnpkg/yarn)
+-   [docker-compose](https://docs.docker.com/compose/)
 
-## Getting Started
+
+You can visit [rococo.polkabtc.io](https://rococo.polkabtc.io/) for the latest stable version of the website.
+
+## Quickstart
+
+Make sure you have [docker-compose](https://docs.docker.com/compose/install/) installed locally.
+
+You can run the UI with a local instance of the BTC-Parachain and in combination with [Bitcoin regtest](https://developer.bitcoin.org/examples/testing.html#regtest-mode) or [Bitcoin testnet](https://developer.bitcoin.org/examples/testing.html#testnet) as follows:
+
+Clone this repository and enter into the root folder.
+
+```bash
+git@gitlab.com:interlay/polkabtc-ui.git
+cd polkabtc-ui
+```
+
+### Regtest
+
+In one terminal, start the BTC-Parachain, Bitcoin regtest, vaults and relayers:
+
+```bash
+yarn compose:regtest
+```
+
+On another terminal, start the UI:
+
+```bash
+yarn install && REACT_APP_BITCOIN_NETWORK=regtest yarn start
+```
+
+### Testnet
+
+In one terminal, start the BTC-Parachain, Bitcoin regtest, vaults and relayers:
+
+```bash
+yarn compose:testnet
+```
+
+On another terminal, start the UI:
+
+```bash
+yarn install && REACT_APP_BITCOIN_NETWORK=testnet yarn start
+```
+
+## Detailed Starting Guide
+
+If you wish to run the BTC-Parachain, its clients and Bitcoin without using docker, follow these steps.
 
 ### Prerequisites
 
@@ -41,20 +88,6 @@ If you want to reset the development chain, execute the following command.
 
 ```bash
 ./target/release/btc-parachain purge-chain --dev
-```
-
-**Bitcoin**
-
-Download and start [Bitcoin Core](https://bitcoin.org/en/bitcoin-core/).
-
-```shell
-bitcoind -regtest -server
-```
-
-To mine blocks you may use a command such as the following.
-
-```shell
-bitcoin-cli -regtest generatetoaddress 1 $(bitcoin-cli -regtest getnewaddress)
 ```
 
 **Clients**
@@ -87,27 +120,30 @@ We make heavy use of the [Blockstream API](https://github.com/interlay/electrs) 
 electrs -vvvv --network regtest --jsonrpc-import --cors "*" --cookie "rpcuser:rpcpassword" --daemon-rpc-addr localhost:18443 --http-addr "[::0]:3002" --index-unspendables
 ```
 
-### Docker-Compose (Regtest)
+### Regtest
 
-To simplify testing, you may also run all of the required services with `docker-compose`:
+**Bitcoin**
+
+Download and start [Bitcoin Core](https://bitcoin.org/en/bitcoin-core/).
 
 ```shell
-docker-compose up
+bitcoind -regtest -server
 ```
 
-Docker will run all services: parachain, staked-relayer, vault, oracle and bitcoin. To kill all services and reset the parachain use:
+To mine blocks you may use a command such as the following.
 
 ```shell
-docker-compose down -v
+bitcoin-cli -regtest generatetoaddress 1 $(bitcoin-cli -regtest getnewaddress)
 ```
 
 Start the app with:
 
 ```shell
+yarn install
 REACT_APP_BITCOIN_NETWORK=regtest yarn start
 ```
 
-### Docker-Compose (Testnet)
+### Testnet
 
 To run against Bitcoin testnet first start your daemon:
 
@@ -115,15 +151,10 @@ To run against Bitcoin testnet first start your daemon:
 bitcoind -testnet -server
 ```
 
-Then start the remaining components with `docker-compose`:
-
-```shell
-docker-compose --file docker-compose.testnet.yml up
-```
-
 Start the app with:
 
 ```shell
+yarn install
 REACT_APP_BITCOIN_NETWORK=testnet yarn start
 ```
 
@@ -150,34 +181,7 @@ testdata-gen --keyring bob register-vault --btc-address "bcrt1qu0a2tc422uurm39g4
 Then when `alice` wants to issue 0.001 PolkaBTC, we need to send the equivalent number of Satoshis to `bob`:
 
 ```shell
-testdata-gen --keyring alice send-bitcoin --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --op-return ${OP_RETURN} --satoshis 100000
-```
-
-> Set `${OP_RETURN}` to the value presented on the confirmation page of the UI.
-
-Copy the `txid` printed by the `send-bitcoin` command and use this in the UI to execute the issue request.
-
-### Local Installation
-
-Clone this repository and enter into the root folder.
-
-```bash
-git@gitlab.com:interlay/polkabtc-ui.git
-cd polkabtc-ui
-```
-
-Install the required dependencies.
-
-```bash
-yarn install
-```
-
-Start the development server. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits. You will also see any lint errors in the console.
-
-```bash
-yarn start
+testdata-gen --keyring alice send-bitcoin --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --satoshis 100000
 ```
 
 ### Docker Installation
@@ -209,14 +213,6 @@ Test the project.
 yarn test
 ```
 
-## Usage
-
-One the website is launched, you have three different options:
-
--   _Buy PolkaBTC_
--   _Mint PolkaBTC_
--   _Return BTC_
-
 ## Help
 
 ### Docker
@@ -230,28 +226,23 @@ docker rmi $(docker images -q)
 docker volume rm $(docker volume ls -q)
 ```
 
-## Roadmap
-
--   [ ] Integrate an atomic swap option to buy PolkaBTC.
-
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are greatly appreciated.
 
 1. Fork the Project
-2. Create your Feature Branch (git checkout -b feature/AmazingFeature)
+2. Create your Feature Branch (git checkout -b yourname/AmazingFeature)
 3. Commit your Changes (git commit -m 'Add some AmazingFeature')
-4. Push to the Branch (git push origin feature/AmazingFeature)
+4. Push to the Branch (git push origin yourname/AmazingFeature)
 5. Open a Pull Request
 
 If you are searching for a place to start or would like to discuss features, reach out to us:
 
--   [Telegram](t.me/interlay)
--   [Riot](https://matrix.to/#/!nZablWWaicZyVTWyZk:matrix.org?via=matrix.org)
+- [Discord](https://discord.gg/5uXCU5DW)
 
 ## License
 
-(C) Copyright 2020 [Interlay](https://www.interlay.io) Ltd
+(C) Copyright 2021 [Interlay](https://www.interlay.io) Ltd
 
 polkabtc-ui is licensed under the terms of the Apache License (Version 2.0). See [LICENSE](LICENSE).
 

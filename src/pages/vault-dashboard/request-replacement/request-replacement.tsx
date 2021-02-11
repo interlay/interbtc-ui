@@ -8,8 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { btcToSat, satToBTC } from "@interlay/polkabtc";
 import { requestsToVaultReplaceRequests } from "../../../common/utils/utils";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 type RequestReplacementForm = {
     amount: number;
@@ -27,7 +26,6 @@ export default function RequestReplacementModal(props: RequestReplacementProps) 
     const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
     const [isRequestPending, setRequestPending] = useState(false);
     const { t } = useTranslation();
-
 
     const onSubmit = handleSubmit(async ({ amount }) => {
         setRequestPending(true);
@@ -66,12 +64,12 @@ export default function RequestReplacementModal(props: RequestReplacementProps) 
                 </Modal.Header>
                 <Modal.Body>
                     <div className="row">
-                        <div className="col-12 request-header">
-                            {t("vault.withdraw_your_collateral")}
-                        </div>
+                        <div className="col-12 request-header">{t("vault.withdraw_your_collateral")}</div>
                         <div className="col-12">{t("vault.your_have")}</div>
                         <div className="col-12"> {lockedDot} DOT</div>
-                        <div className="col-12 vault-empty-space">{t("locked")} {lockedBtc} BTC</div>
+                        <div className="col-12 vault-empty-space">
+                            {t("locked")} {lockedBtc} BTC
+                        </div>
                         <div className="col-12 vault-empty-space">{t("vault.replace_amount")}</div>
                         <div className="col-12">
                             <div className="input-group">

@@ -20,11 +20,40 @@ export interface StatusUpdate {
     hasVoted: boolean;
 }
 
+export interface DashboardStatusUpdateInfo {
+    id: string;
+    timestamp: string;
+    proposedStatus: string;
+    addError: string;
+    removeError: string;
+    btc_block_hash: string;
+    yeas: number;
+    nays: number;
+    executed: boolean;
+    rejected: boolean;
+    forced: boolean;
+}
+
 export enum ParachainStatus {
     Error,
     Running,
     Shutdown,
 }
+
+export enum ActiveTab {
+    Issue,
+    Redeem,
+    Transfer,
+}
+
+export type Prices = {
+    bitcoin: {
+        usd: number;
+    };
+    polkadot: {
+        usd: number;
+    };
+};
 
 export type GeneralState = {
     polkaBtcLoaded: boolean;
@@ -42,6 +71,8 @@ export type GeneralState = {
     btcRelayHeight: number;
     bitcoinHeight: number;
     stateOfBTCParachain: ParachainStatus;
+    activeTab: ActiveTab;
+    prices: Prices;
 };
 
 export type AppState = ReturnType<typeof rootReducer>;
@@ -60,3 +91,22 @@ export type dispatcher = {
 
 export type StoreState = Store<CombinedState<StoreType>, GeneralActions | RedeemActions | IssueActions | VaultActions> &
     dispatcher;
+
+export type TimeDataPoint = {
+    x: Date;
+    y: number;
+};
+
+export type TableDisplayParams = {
+    page: number;
+    perPage: number;
+    sortBy?: string;
+    sortAsc?: boolean;
+    searchFilter?: string;
+};
+
+export type RelayedBlock = {
+    height: string;
+    hash: string;
+    relay_ts: string;
+};

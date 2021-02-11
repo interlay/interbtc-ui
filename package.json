@@ -1,12 +1,13 @@
 {
     "name": "polkabtc-ui",
-    "version": "0.3.7",
+    "version": "1.0.0",
     "private": true,
     "dependencies": {
-        "@interlay/polkabtc": "0.7.0",
-        "@polkadot/api": "2.8.1",
-        "@polkadot/extension-dapp": "0.35.1",
-        "@polkadot/ui-keyring": "0.63.1",
+        "@interlay/polkabtc": "^0.8.3",
+        "@interlay/polkabtc-stats": "0.0.14",
+        "@polkadot/api": "3.6.1",
+        "@polkadot/extension-dapp": "0.36.1",
+        "@polkadot/ui-keyring": "0.67.1",
         "@types/big.js": "^4.0.5",
         "@types/bn.js": "^4.11.6",
         "@types/jsdom": "^16.2.5",
@@ -22,14 +23,16 @@
         "big.js": "^6.0.1",
         "bitcoinjs-lib": "^5.2.0",
         "bootstrap": "^4.5.0",
+        "chart.js": "^2.9.4",
         "i18next": "^19.8.4",
         "i18next-browser-languagedetector": "^6.0.1",
         "i18next-http-backend": "^1.0.21",
         "node-sass": "^4.14.1",
-        "qrcode.react": "^1.0.0",
+        "qrcode.react": "^1.0.1",
         "react": "^16.13.1",
         "react-app-rewired": "^2.1.8",
         "react-bootstrap": "^1.0.1",
+        "react-chartjs-2": "^2.11.1",
         "react-copy-to-clipboard": "^5.0.2",
         "react-dom": "^16.13.1",
         "react-hook-form": "^6.8.4",
@@ -47,7 +50,7 @@
         "typescript": "^3.9.0"
     },
     "devDependencies": {
-        "@polkadot/typegen": "2.8.1",
+        "@polkadot/typegen": "3.6.1",
         "@types/chai": "^4.2.14",
         "@types/enzyme": "^3.10.8",
         "@types/enzyme-adapter-react-16": "^1.0.6",
@@ -70,8 +73,9 @@
         "ignore-styles": "^5.0.1",
         "jsdom": "^16.4.0",
         "jsdom-global": "^3.0.2",
+        "lint-staged": "^10.5.4",
         "mocha": "^8.2.1",
-        "prettier": "^2.1.2",
+        "prettier": "2.2.1",
         "react-addons-test-utils": "^15.6.2",
         "redux-mock-store": "^1.5.4",
         "ts-mocha": "^8.0.0",
@@ -85,12 +89,15 @@
         "generate:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package sample-polkadotjs-typegen/interfaces --endpoint btc-parachain.json --output ./src/interfaces",
         "lint": "npx eslint ./src/**/*.ts ./src/**/*.tsx",
         "lint-fix": "eslint ./src/**/*.{ts,tsx} --quiet --fix",
-        "format": "prettier --config .prettierrc --write ./src/**/*.{ts,tsx}",
+        "format": "prettier --config .prettierrc --write .",
         "setup": "yarn generate:defs && yarn generate:meta",
         "build": "react-app-rewired build",
         "test": "ts-mocha --exit --require babel-register --require ignore-styles --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx",
         "test-watch": "watch 'ts-mocha --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx --timeout 5000' src tests --interval=1",
-        "eject": "react-app-rewired eject"
+        "eject": "react-app-rewired eject",
+        "compose:regtest": "docker-compose up",
+        "compose:testnet": "docker-compose up -f ./docker-compose.testnet.yml",
+        "compose:down": "docker-compose down -v"
     },
     "eslintConfig": {
         "extends": "react-app"
@@ -110,7 +117,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "yarn lint & yarn test"
+            "pre-commit": "lint-staged & yarn test"
         }
     }
 }

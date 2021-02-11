@@ -17,6 +17,8 @@ import {
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from "../../constants";
 import { Dispatch } from "redux";
 import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from "../actions/general.actions";
+import Big from "big.js";
+import { TableDisplayParams, RelayedBlock } from "../types/util.types";
 
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;
@@ -32,8 +34,16 @@ export function formatDateTime(date: Date): string {
     return date.toDateString().substring(3) + " " + date.toTimeString().substring(0, 5);
 }
 
+export function formatDateTimePrecise(date: Date): string {
+    return date.toDateString().substring(4) + " " + date.toTimeString().substring(0, 8);
+}
+
 export function dateToShortString(date: Date): string {
     return date.toDateString().substring(3) + " " + date.toTimeString().substring(0, date.toTimeString().length);
+}
+
+export function calculateAmount(amount: string, currencyPrice: number): string {
+    return new Big(amount).mul(new Big(currencyPrice)).toString();
 }
 
 /**
@@ -43,13 +53,18 @@ export function dateToShortString(date: Date): string {
  * @param parachainIssueRequest ParachainIssueRequest
  */
 export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: ParachainIssueRequest): IssueRequest {
+    const amountBTC = satToBTC(parachainIssueRequest.amount.toString());
+    const fee = satToBTC(parachainIssueRequest.fee.toString());
     return {
         id: stripHexPrefix(id.toString()),
-        amountBTC: satToBTC(parachainIssueRequest.amount.toString()),
+        amountBTC,
+        timestamp: "0000-00-00",
         creation: parachainIssueRequest.opentime.toString(),
         vaultBTCAddress: parachainIssueRequest.btc_address,
+        vaultDOTAddress: parachainIssueRequest.vault.toString(),
         btcTxId: "",
-        fee: satToBTC(parachainIssueRequest.fee.toString()),
+        fee,
+        totalAmount: new Big(amountBTC).add(fee).toString(),
         griefingCollateral: parachainIssueRequest.griefing_collateral.toString(),
         confirmations: 0,
         completed: parachainIssueRequest.completed.isTrue,
@@ -64,13 +79,17 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
  * @param parachainIssueRequest ParachainIssueRequest
  */
 export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: ParachainRedeemRequest): RedeemRequest {
+    const amountPolkaBTC = satToBTC(parachainRedeemRequest.amount_polka_btc.toString());
+    const fee = satToBTC(parachainRedeemRequest.fee.toString());
     return {
         id: stripHexPrefix(id.toString()),
-        amountPolkaBTC: satToBTC(parachainRedeemRequest.amount_polka_btc.toString()),
+        amountPolkaBTC,
         creation: parachainRedeemRequest.opentime.toString(),
         btcAddress: parachainRedeemRequest.btc_address,
+        vaultDotAddress: parachainRedeemRequest.vault.toString(),
         btcTxId: "",
-        fee: satToBTC(parachainRedeemRequest.fee.toString()),
+        fee,
+        totalAmount: new Big(amountPolkaBTC).sub(new Big(fee)).toString(),
         confirmations: 0,
         completed: parachainRedeemRequest.completed.isTrue,
         isExpired: false,
@@ -88,6 +107,10 @@ export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: Par
 export function isPositiveNumeric(s: string): boolean {
     const reg = new RegExp(NUMERIC_STRING_REGEX);
     return reg.test(s);
+}
+
+export function range(start: number, end: number): number[] {
+    return Array.from({ length: end - start }, (_, k) => k + start);
 }
 
 export const arrayToMap = (
@@ -131,6 +154,21 @@ export function reverseHashEndianness(hash: Uint8Array): string {
     return uint8ArrayToString(reverseEndianness(hash));
 }
 
+export function defaultBlockData(): RelayedBlock {
+    return {
+        height: "0",
+        hash: "",
+        relay_ts: "0",
+    };
+}
+
+export function defaultTableDisplayParams(): TableDisplayParams {
+    return {
+        page: 0,
+        perPage: 20,
+    };
+}
+
 /**
  * Parses types which belong to request objects and need parsing/conversion to be displayed in the UI.
  *
@@ -166,7 +204,7 @@ export const redeemRequestToVaultRedeem = (requests: Map<H256, ParachainRedeemRe
         const [btcAddress, polkaBTC, unlockedDOT] = convertParachainTypes(request);
         redeemRequests.push({
             id: stripHexPrefix(requestId.toString()),
-            timestamp: request.opentime.toString(),
+            // timestamp: request.opentime.toString(),
             user: request.redeemer.toString(),
             btcAddress: btcAddress,
             polkaBTC: polkaBTC,
@@ -235,4 +273,25 @@ export const updateBalances = async (
     if (currentBalancePolkaBTC !== balancePolkaBTC) {
         dispatch(updateBalancePolkaBTCAction(balancePolkaBTC));
     }
+};
+
+export const requestsInStore = (
+    storeRequests: IssueRequest[] | RedeemRequest[],
+    parachainRequests: IssueRequest[] | RedeemRequest[]
+): boolean => {
+    if (storeRequests.length !== parachainRequests.length) return false;
+    let inStore = true;
+
+    storeRequests.forEach((storeRequest: IssueRequest | RedeemRequest) => {
+        let found = false;
+        parachainRequests.forEach((parachainRequest: IssueRequest | RedeemRequest) => {
+            if (storeRequest.id === parachainRequest.id) {
+                found = true;
+            }
+        });
+        if (!found) {
+            inStore = false;
+        }
+    });
+    return inStore;
 };

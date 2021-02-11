@@ -12,10 +12,10 @@ import {
     UPDATE_ISSUE_REQUEST,
     CHANGE_ADDRESS,
     IssueActions,
-    ADD_TRANSACTION_LISTENER_ISSUE,
     OPEN_WIZARD_IN_EDIT_MODE,
     ADD_VAULT_ISSUES,
     INIT_STATE,
+    CHANGE_SELECTED_ISSUE,
     UPDATE_ALL_ISSUE_REQUESTS,
 } from "../types/actions.types";
 import { IssueState } from "../types/issue.types";
@@ -31,13 +31,15 @@ const initialState = {
     id: "",
     btcTxId: "",
     issueRequests: new Map(),
-    transactionListeners: [],
     wizardInEditMode: false,
     vaultIssues: [],
+    selectedRequest: undefined,
 };
 
 export const issueReducer = (state: IssueState = initialState, action: IssueActions): IssueState => {
     switch (action.type) {
+        case CHANGE_SELECTED_ISSUE:
+            return { ...state, selectedRequest: action.request };
         case CHANGE_ADDRESS:
             return { ...state, address: action.address };
         case CHANGE_ISSUE_STEP:
@@ -59,7 +61,6 @@ export const issueReducer = (state: IssueState = initialState, action: IssueActi
                 ...initialState,
                 address: state.address,
                 issueRequests: state.issueRequests,
-                transactionListeners: state.transactionListeners,
             };
             return newState;
         case ADD_ISSUE_REQUEST:
@@ -83,13 +84,10 @@ export const issueReducer = (state: IssueState = initialState, action: IssueActi
             return { ...state, issueRequests: map };
         case CHANGE_BTC_TX_ID:
             return { ...state, btcTxId: action.btcTxId };
-        case ADD_TRANSACTION_LISTENER_ISSUE:
-            if (state.transactionListeners.indexOf(action.id) !== -1) return state;
-            return { ...state, transactionListeners: [...state.transactionListeners, action.id] };
         case OPEN_WIZARD_IN_EDIT_MODE:
             return { ...state, wizardInEditMode: true };
         case INIT_STATE:
-            return { ...state, fee: "0", transactionListeners: [] };
+            return { ...state, step: "ENTER_BTC_AMOUNT", amountBTC: "", fee: "0" };
         case ADD_VAULT_ISSUES:
             return { ...state, vaultIssues: action.vaultIssues };
         case UPDATE_ALL_ISSUE_REQUESTS:

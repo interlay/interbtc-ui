@@ -1,17 +1,19 @@
 version: "3.8"
 services:
     polkabtc:
-        image: "registry.gitlab.com/interlay/btc-parachain:dev"
+        image: "registry.gitlab.com/interlay/btc-parachain:0-3-0"
         command:
             - btc-parachain
-            - --rpc-external
-            - --ws-external
             - --dev
+            - --unsafe-rpc-external
+            - --unsafe-ws-external
+            - --rpc-methods
+            - Unsafe
         ports:
             - "9933:9933"
             - "9944:9944"
     staked-relayer:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:dev"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:0-3-0"
         command:
             - /bin/sh
             - -c
@@ -27,7 +29,7 @@ services:
         ports:
             - "3030:3030"
     oracle:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:dev"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:0-3-0"
         command:
             - /bin/sh
             - -c
@@ -38,7 +40,7 @@ services:
         environment:
             RUST_LOG: info
     vault:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:dev"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:0-3-0"
         command:
             - /bin/sh
             - -c
@@ -50,3 +52,26 @@ services:
             <<: *client-env
         ports:
             - "3032:3032"
+    postgres:
+        image: "postgres:11"
+        environment:
+            POSTGRES_USER: "user"
+            POSTGRES_PASSWORD: "password"
+        ports:
+            - "5432:5432"
+    polkabtc_stats:
+        image: "registry.gitlab.com/interlay/polkabtc-stats:0.0.14"
+        restart: always
+        depends_on:
+            - postgres
+        command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 1; done; yarn start'
+        environment:
+            MONITOR: "1"
+            ENDPOINT_URL: "ws://polkabtc:9944"
+            PGHOST: "postgres"
+            PGPORT: "5432"
+            PGDATABASE: "postgres"
+            PGUSER: "user"
+            PGPASSWORD: "password"
+        ports:
+            - "3007:3007"

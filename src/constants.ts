@@ -17,6 +17,8 @@ export const FAUCET_ADDRESS_SEED = "//Alice";
 
 export const BALANCE_MAX_INTEGER_LENGTH = 13;
 
+export const BTC_DECIMALS = 8;
+
 // number of blocks before we prevent issue and redeem requests
 export const BLOCKS_BEHIND_LIMIT = 6;
 
@@ -42,6 +44,8 @@ export const NUMERIC_STRING_REGEX = /^[0-9]+([.][0-9]+)?$/;
 export const BITCOIN_NETWORK = process.env.REACT_APP_BITCOIN_NETWORK || "testnet";
 export const BITCOIN_REGTEST_URL = process.env.REACT_APP_BITCOIN_REGTEST_URL || "http://localhost:3002";
 
+export const BLOCK_TIME = 6; // seconds
+
 export const BTC_ADDRESS_REGEX =
     BITCOIN_NETWORK === "mainnet"
         ? BTC_MAINNET_REGEX
@@ -51,7 +55,10 @@ export const BTC_ADDRESS_REGEX =
 
 export const PARACHAIN_URL = process.env.REACT_APP_PARACHAIN_URL || "ws://127.0.0.1:9944";
 export const STAKED_RELAYER_URL = process.env.REACT_APP_STAKED_RELAYER_URL || "http://localhost:3030";
+export const FAUCET_URL = process.env.REACT_APP_FAUCET_URL || "http://localhost:3035";
 export const VAULT_CLIENT_URL = process.env.REACT_APP_VAULT_CLIENT_URL || "http://localhost:3032";
+
+export const STATS_URL = process.env.REACT_APP_STATS_SERVER_URL || "http://localhost:3007";
 
 export const BTC_EXPLORER_BLOCK_API = "https://blockstream.info/block/";
 export const BTC_TEST_EXPLORER_BLOCK_API = "https://blockstream.info/testnet/block/";
@@ -63,7 +70,6 @@ export const BTC_EXPLORER_TRANSACTION_API = "https://blockstream.info/tx/";
 export const BTC_TEST_EXPLORER_TRANSACTION_API = "https://blockstream.info/testnet/tx/";
 
 export const FEEDBACK_URL = "https://forms.gle/2eKFnq4j1fkBgejW7";
-export const FEEDBACK_MODAL_DISPLAY_DELAY_MS = 5000;
 
 //######################################
 // STAKED RELAYER
