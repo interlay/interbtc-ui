@@ -4,16 +4,19 @@
     "confirm": "Confirm",
     "next": "Next",
     "close": "Close",
+    "loading": "Loading",
     "search_vault": "Search Vault",
     "cancel": "Cancel",
     "cancelled": "Cancelled",
     "expired": "Expired",
     "completed": "Completed",
     "reimbursed": "Reimbursed",
+    "ok": "OK",
     "pending": "Pending",
     "fee": "Fee",
     "retry": "Retry",
     "message": "Message",
+    "timestamp": "Timestamp",
     "issue_requests": "Issue Requests",
     "griefing_collateral": "Griefing Collateral",
     "status": "Status",
@@ -82,8 +85,10 @@
     "recipient": "Recipient",
     "confirmed": "Confirmed",
     "address": "Address",
+    "date": "Date",
     "enter_recipient_address": "Please enter the recipient address",
     "successful_transfer": "Successful transfer",
+    "blockstream": "Blockstream",
     "redeem_page": {
         "must_select_account_warning": "No account selected. Please select an account to redeem.",
         "waiting_for": "Waiting for",
@@ -120,7 +125,7 @@
         "amount": "Amount",
         "output_BTC_address": "Output BTC Address",
         "BTC_transaction": "BTC Transaction",
-        "confirmations": "Confirmations",
+        "btc_confirmations": "BTC Confirmations",
         "completed": "Completed",
         "please_enter_amount": "Please enter the amount",
         "reimbursed": "Reimbursed",
@@ -164,6 +169,7 @@
         "issue": {
             "issue": "Issue Requests",
             "issued": "Issued",
+            "issue_requests": "Succesful Issue Requests",
             "total_polkabtc": "{{amount}} PolkaBTC",
             "total_issued": "{{amount}} PolkaBTC issued",
             "total_issues": "{{amount}} successful issues",
@@ -173,8 +179,8 @@
         "redeem": {
             "redeem": "Redeem Requests",
             "total_redeemed": "{{amount}} BTC redeemed",
-            "total_redeems": "{{amount}} executed redeems",
-            "success_rate": "{{rate}}% success rate",
+            "total_redeems": "Executed redeems",
+            "success_rate": "Success rate",
             "total_redeemed_chart": "Total BTC redeemed",
             "perday_redeemed_chart": "BTC redeemed per day"
         },
@@ -183,7 +189,18 @@
             "blocks": "Blocks",
             "block_height": "Block height",
             "block_hash": "Block hash",
-            "timestamp": "Timestamp"
+            "timestamp": "Added to parachain",
+            "block_number": "Block {{number}}",
+            "relay_is": "BTC Relay is",
+            "blockstream_verify_link": "Verify on blockstream.info"
+        },
+        "oracles": {
+            "oracles": "Oracles",
+            "active_oracles": "Active Oracles",
+            "oracles_are": "Oracles are",
+            "online": "online",
+            "offline": "offline",
+            "loading": "loading..."
         },
         "vaults": {
             "vaults": "Vaults",
@@ -197,11 +214,28 @@
             "polkabtc_capacity": "PolkaBTC Capacity"
         },
         "parachain": {
+            "parachain": "Parachain",
             "total_relayers_chart": "Total active relayers",
-            "active_relayers": "Active Staked Relayers"
+            "active_relayers": "Active Staked Relayers",
+            "status_updates": "Parachain status updates",
+            "relayers": "Staked Relayers",
+            "add_error": "Add {{error}}",
+            "remove_error": "Remove {{error}}",
+            "no_change": "No change",
+            "votes": "{{yeas}} : {{nays}}",
+            "executed": "Executed",
+            "forced": "Forced",
+            "rejected": "Rejected",
+            "parachain_is": "The BTC Parachain is",
+            "secure": "secure",
+            "not_secure": "not secure",
+            "slashed": "Slashed",
+            "bonding": "In bonding period"
         }
     },
     "issue_page": {
+        "issue_requests": "Issue Requests",
+        "recent_requests": "Recent Requests",
         "must_select_account_warning": "No account selected. Please select an account to proceed to issue PolkaBTC.",
         "transaction_not_set": "Transaction not set in",
         "time": "time",
@@ -238,7 +272,6 @@
         "btc_transaction": "BTC Transaction",
         "in_parachain_block": "in parachain block",
         "confirmations": "Confirmations",
-        "pending": "Pending...",
         "issue_request_not_found": "Exception: Issue request not found.",
         "confirmation": "Confirmation",
         "your_request_processed": "Your request is now being processed.",
@@ -266,7 +299,10 @@
         "recipient": "Recipient:",
         "amont_with_fee": "Amount: ",
         "using_electrum": "If you are using the Electrum desktop wallet, copy+paste this into the \"Pay to\" field.",
-        "copied_values_are": "Note: copied values are in"
+        "copied_values_are": "Note: copied values are in",
+        "executed": "Executed",
+        "pending": "Pending",
+        "cancelled": "Cancelled"
     },
     "landing": {
         "defi_ecosystem": "Bitcoin for Polkadot's DeFi Ecosystem",
@@ -326,7 +362,10 @@
         "add_collateral": "Add Collateral",
         "vault_dashboard": "Vault Dashboard",
         "locked_collateral": "Locked collateral",
-        "capacity": "Capacity"
+        "capacity": "Capacity",
+        "tip_pending_btc": "BTC volume of in-progress issue requests.",
+        "tip_collateralization": "Collateralization rate for locked BTC. 'Pending' includes in-progress issue requests.",
+        "pending_table_subcell": "Pending: "
     },
     "about": {
         "about_polkabtc": "About PolkaBTC",

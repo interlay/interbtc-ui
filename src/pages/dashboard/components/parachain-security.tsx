@@ -3,34 +3,32 @@ import ButtonComponent from "./button-component";
 import { getAccents } from "../dashboardcolors";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
+import { useTranslation } from "react-i18next";
 
 type ParachainSecurityProps = {
     linkButton?: boolean;
 };
 
 const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactElement => {
-    const [textColour, setTextColour] = useState("d_grey");
+    const { t } = useTranslation();
+    const [parachainStatus, setParachainStatus] = useState("Loading");
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
     useEffect(() => {
         const fetchOracleData = async () => {
             if (!polkaBtcLoaded) return;
             const parachainStatus = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
-            const parachainTextElement = document.getElementById("parachain-text") as HTMLElement;
 
             if (parachainStatus.isRunning) {
-                parachainTextElement.innerHTML = "secure";
-                setTextColour("d_green");
+                setParachainStatus("secure");
             } else if (parachainStatus.isError) {
-                parachainTextElement.innerHTML = "not secure";
-                setTextColour("d_red");
+                setParachainStatus("not secure");
             } else {
-                parachainTextElement.innerHTML = "unavailable";
-                setTextColour("d_grey");
+                setParachainStatus("unavailable");
             }
         };
         fetchOracleData();
-    }, [textColour, polkaBtcLoaded]);
+    }, [polkaBtcLoaded]);
     return (
         <div className="card">
             <div className="values-container"></div>
@@ -38,16 +36,34 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
             <div className="parachain-content-container">
                 <div>
                     <h1 className="h1-xl-text">
-                        The BTC parachain is{" "}
-                        <span
-                            className="h1-xl-text"
-                            style={{ color: `${getAccents(`${textColour}`).colour}` }}
-                            id="parachain-text"
-                        >
-                            Loading
-                        </span>
+                        {t("dashboard.parachain.parachain_is")}&nbsp;
+                        {parachainStatus === "secure" ? (
+                            <span
+                                style={{ color: getAccents("d_green").color }}
+                                id="parachain-text"
+                                className="bold-font"
+                            >
+                                {t("dashboard.parachain.secure")}
+                            </span>
+                        ) : parachainStatus === "not secure" ? (
+                            <span
+                                style={{ color: getAccents("d_red").color }}
+                                id="parachain-text"
+                                className="bold-font"
+                            >
+                                {t("dashboard.parachain.not_secure")}
+                            </span>
+                        ) : (
+                            <span
+                                style={{ color: getAccents("d_grey").color }}
+                                id="parachain-text"
+                                className="bold-font"
+                            >
+                                {t("loading")}
+                            </span>
+                        )}
                     </h1>
-                    {linkButton ? (
+                    {linkButton && (
                         <div className="button-container" style={{ marginTop: "20px" }}>
                             <ButtonComponent
                                 buttonName="Status Updates"
@@ -56,8 +72,6 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
                                 buttonLink="/dashboard/parachain"
                             />
                         </div>
-                    ) : (
-                        ""
                     )}
                 </div>
             </div>

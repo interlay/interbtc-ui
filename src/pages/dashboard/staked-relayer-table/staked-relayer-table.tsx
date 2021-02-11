@@ -1,119 +1,60 @@
-import { planckToDOT } from "@interlay/polkabtc";
 import React, { ReactElement, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { StoreType } from "../../../common/types/util.types";
-import * as constants from "../../../constants";
 import { useTranslation } from "react-i18next";
+import DashboardTable, {
+    StatusComponent,
+    StatusCategories,
+} from "../../../common/components/dashboard-table/dashboard-table";
+import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 
 type StakedRelayer = {
-    AccountId: string;
-    lockedDOT: string;
-    status: string;
+    id: string;
+    stake: string;
+    bonded: boolean;
+    slashed: boolean;
 };
 
 export default function StakedRelayerTable(): ReactElement {
-    const isPolkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const [relayers, setRelayers] = useState<Array<StakedRelayer>>([]);
-    const [relayerStatus, setRelayerStatus] = useState("Ok");
     const { t } = useTranslation();
+    const statsApi = usePolkabtcStats();
+    const [relayers, setRelayers] = useState<Array<StakedRelayer>>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            if (!isPolkaBtcLoaded) return;
-
+        (async () => {
             try {
-                const relayers = await window.polkaBTC.stakedRelayer.map();
-                const relayersList: StakedRelayer[] = [];
-                relayers.forEach((stake, id) => {
-                    relayersList.push({
-                        AccountId: id.toString(),
-                        lockedDOT: planckToDOT(stake.stake.toString()),
-                        // TODO: add a status check for relayers in the parachain
-                        status: constants.STAKED_RELAYER_OK,
-                    });
-                });
-                setRelayers(relayersList);
-                // TODO: add status check for relayers on parachain
-                setRelayerStatus("Ok");
+                const res = await statsApi.getRelayers();
+                setRelayers(res.data);
             } catch (error) {
                 toast.error(error.toString());
             }
-        };
+        })();
+    }, [statsApi]);
 
-        fetchData();
-        const interval = setInterval(() => {
-            fetchData();
-        }, constants.COMPONENT_UPDATE_MS);
-        return () => clearInterval(interval);
-    }, [isPolkaBtcLoaded]);
+    const tableHeadings = [<h1>{t("account_id")}</h1>, <h1>{t("locked_dot")}</h1>, <h1>{t("status")}</h1>];
 
-    const getCircle = (status: string): string => {
-        if (status === "Ok") {
-            return "green-circle";
-        }
-        if (status === "Offline") {
-            return "orange-circle";
-        }
-        return "red-circle";
-    };
-
-    const getStatusColor = (status: string): string => {
-        if (status === constants.STAKED_RELAYER_OK) {
-            return "green-text";
-        }
-        if (status === constants.STAKED_RELAYER_OFFLINE) {
-            return "orange-text";
-        }
-        if (status === constants.STAKED_RELAYER_SLASHED) {
-            return "red-text";
-        }
-        return "black-text";
-    };
+    const relayersTableRow = (relayer: StakedRelayer): ReactElement[] => [
+        <p className="break-words">{relayer.id}</p>,
+        <p>{relayer.stake}</p>,
+        <StatusComponent
+            {...(relayer.slashed
+                ? { text: t("dashboard.parachain.slashed"), category: StatusCategories.Bad }
+                : !relayer.bonded
+                ? { text: t("dashboard.parachain.bonding"), category: StatusCategories.Neutral }
+                : { text: t("ok"), category: StatusCategories.Ok })}
+        />,
+    ];
 
     return (
-        <div className="staked-relayer-table">
-            <div className="row">
-                <div className="col-12">
-                    <div className="header">
-                        Staked Relayer &nbsp; <div className={getCircle(relayerStatus)}></div> &nbsp; {relayerStatus}
-                    </div>
-                </div>
+        <div className="dashboard-table-container">
+            <div>
+                <p className="table-heading">{t("dashboard.parachain.relayers")}</p>
             </div>
-            <div className="row justify-content-center">
-                <div className="col-12">
-                    <div className="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>{t("account_id")}</th>
-                                    <th>{t("locked_dot")}</th>
-                                    <th>{t("status")}</th>
-                                </tr>
-                            </thead>
-                            {relayers && relayers.length ? (
-                                <tbody>
-                                    {relayers.map((relayer, index) => {
-                                        return (
-                                            <tr key={index}>
-                                                <td className="break-words">{relayer.AccountId}</td>
-                                                <td>{relayer.lockedDOT}</td>
-                                                <td className={getStatusColor(relayer.status)}>{relayer.status}</td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            ) : (
-                                <tbody>
-                                    <tr>
-                                        <td colSpan={3}>{t("dashboard.no-registered")}</td>
-                                    </tr>
-                                </tbody>
-                            )}
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <DashboardTable
+                pageData={relayers}
+                headings={tableHeadings}
+                dataPointDisplayer={relayersTableRow}
+                noDataEl={<div>{t("dashboard.no-registered")}</div>}
+            />
         </div>
     );
 }

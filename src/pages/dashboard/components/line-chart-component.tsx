@@ -7,17 +7,18 @@ interface YAxisConfig {
     position?: string;
     precision?: number;
     max?: number;
+    maxTicksLimit?: number;
 }
 
 interface SingleAxisProps {
-    colour: string;
+    color: string;
     label: string;
     yLabels: string[];
     yAxisProps?: YAxisConfig;
     data: number[];
 }
 interface MultiAxisProps {
-    colour: string[];
+    color: string[];
     label: string[];
     yLabels: string[];
     yAxisProps: YAxisConfig[];
@@ -27,10 +28,10 @@ type ChartProps = SingleAxisProps | MultiAxisProps;
 
 export default function LineChartComponent(propsArg: ChartProps): React.ReactElement {
     const props =
-        typeof propsArg.colour !== "string" // meaning propsArg isn't SingleAxisProps
+        typeof propsArg.color !== "string" // meaning propsArg isn't SingleAxisProps
             ? (propsArg as MultiAxisProps)
             : ((propsArg: SingleAxisProps) => ({
-                  colour: [propsArg.colour],
+                  color: [propsArg.color],
                   label: [propsArg.label],
                   yLabels: propsArg.yLabels,
                   yAxisProps: [propsArg.yAxisProps !== undefined ? propsArg.yAxisProps : {}],
@@ -43,13 +44,13 @@ export default function LineChartComponent(propsArg: ChartProps): React.ReactEle
             label: props.label[i],
             yAxisID: i.toString(),
             fill: false,
-            borderColor: getAccents(props.colour[i]).colour,
+            borderColor: getAccents(props.color[i]).color,
             borderWidth: 2,
             borderDash: [],
             borderDashOffset: 0.0,
-            pointBackgroundColor: getAccents(props.colour[i]).colour,
+            pointBackgroundColor: getAccents(props.color[i]).color,
             pointBorderColor: "rgba(255,255,255,0)",
-            pointHoverBackgroundColor: getAccents(props.colour[i]).colour,
+            pointHoverBackgroundColor: getAccents(props.color[i]).color,
             pointBorderWidth: 20,
             pointHoverRadius: 4,
             pointHoverBorderWidth: 15,
@@ -84,7 +85,8 @@ export default function LineChartComponent(propsArg: ChartProps): React.ReactEle
                     ticks: {
                         ...(yArgs.beginAtZero ? { beginAtZero: true } : {}),
                         ...(yArgs.precision !== undefined ? { precision: yArgs.precision } : {}),
-                        ...(yArgs.max !== undefined ? { precision: yArgs.max } : {}),
+                        ...(yArgs.max !== undefined ? { max: yArgs.max } : {}),
+                        ...(yArgs.maxTicksLimit !== undefined ? { maxTicksLimit: yArgs.maxTicksLimit } : {}),
                     },
                     ...(yArgs.position !== undefined ? { position: yArgs.position } : {}),
                 })),

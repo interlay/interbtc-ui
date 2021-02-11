@@ -1182,10 +1182,10 @@
     axios "^0.19.2"
     typescript "~3.5.2"
 
-"@interlay/polkabtc-stats@0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-stats/-/polkabtc-stats-0.0.10.tgz#8bab027f55ee1f2fe50158696b691a40323f062d"
-  integrity sha512-4gLej+6miBLBpQxF5OSERjwyiJiQcuyWIfUH2U7GqhJwkZrt2b0Iu+SYypqyhW0d+j3vm9qfPhK5njeUz2paxg==
+"@interlay/polkabtc-stats@0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-stats/-/polkabtc-stats-0.0.14.tgz#b8ead86925080d8c6729759a0f61b0033163d056"
+  integrity sha512-5zHO1b1OQ4EL9nt48vpeOBJXw9DfGP+iTJ0Up+MOtDfwOB2r9JxcBZSfNNKc8FsPotpBKFiPufzlHIm4s0QEcg==
   dependencies:
     "@interlay/polkabtc" "0.8.2"
     "@interlay/polkabtc-types" "0.4.0"

@@ -37,9 +37,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
         <div className="card">
             <div className="card-top-content">
                 <div className="values-container">
-                    <h1 style={{ color: `${getAccents("d_blue").colour}` }}>
-                        {t("dashboard.vaults.collateralization")}
-                    </h1>
+                    <h1 style={{ color: getAccents("d_blue").color }}>{t("dashboard.vaults.collateralization")}</h1>
                     <h2>{roundTwoDecimals(systemCollateralization)}%</h2>
                     <h2>
                         {t("dashboard.vaults.secure_threshold", {
@@ -47,7 +45,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
                         })}
                     </h2>
                 </div>
-                {linkButton ? (
+                {linkButton && (
                     <div className="button-container">
                         <ButtonComponent
                             buttonName="view vaults"
@@ -56,17 +54,12 @@ export default function Collateralization({ linkButton }: CollateralizationProps
                             buttonLink="/dashboard/vaults"
                         />
                     </div>
-                ) : (
-                    ""
                 )}
             </div>
+
             <div className="circle-container">
-                <div
-                    className="status-circle"
-                    style={{ borderColor: `${getAccents("d_blue").colour}` }}
-                    id="relay-circle"
-                >
-                    <h1 className="h1-l-text" style={{ color: `${getAccents("d_blue").colour}` }}>
+                <div className="status-circle" style={{ borderColor: getAccents("d_blue").color }} id="relay-circle">
+                    <h1 className="h1-l-text" style={{ color: getAccents("d_blue").color }}>
                         {roundTwoDecimals(issuablePolkaBTC)} <br />
                         {t("dashboard.vaults.polkabtc_capacity")}
                     </h1>

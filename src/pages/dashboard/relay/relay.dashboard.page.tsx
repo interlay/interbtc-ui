@@ -3,10 +3,12 @@ import { useTranslation } from "react-i18next";
 
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 
-import RelayStatusChart from "../../../common/components/charts/relay-blocks/relay-status-chart";
-import { defaultTableDisplayParams } from "../../../common/utils/utils";
+import { defaultTableDisplayParams, formatDateTimePrecise } from "../../../common/utils/utils";
 import { RelayedBlock } from "../../../common/types/util.types";
-import DashboardTable from "../../../common/components/dashboard-table/dashboard-table";
+import DashboardTable, { StyledLinkData } from "../../../common/components/dashboard-table/dashboard-table";
+import * as constants from "../../../constants";
+import { getAccents } from "../dashboard-colors";
+import BtcRelay from "../components/btc-relay";
 
 export default function RelayDashboard(): ReactElement {
     const statsApi = usePolkabtcStats();
@@ -33,39 +35,65 @@ export default function RelayDashboard(): ReactElement {
     );
 
     const tableHeadings = [
-        t("dashboard.relay.block_height"),
-        t("dashboard.relay.block_hash"),
-        t("dashboard.relay.timestamp"),
+        <h1>{t("dashboard.relay.block_height")}</h1>,
+        <h1>{t("dashboard.relay.block_hash")}</h1>,
+        <h1>{t("dashboard.relay.timestamp")}</h1>,
     ];
 
-    const tableBlockRow = useMemo(() => (block: RelayedBlock) => [block.height, block.hash, block.relay_ts], []);
+    const tableBlockRow = useMemo(
+        () => (block: RelayedBlock): ReactElement[] => [
+            <p>{block.height}</p>,
+            <StyledLinkData
+                data={block.hash.substring(2)}
+                target={
+                    (constants.BTC_MAINNET ? constants.BTC_EXPLORER_BLOCK_API : constants.BTC_TEST_EXPLORER_BLOCK_API) +
+                    block.hash.substring(2)
+                }
+                newTab={true}
+            />,
+            <p>{formatDateTimePrecise(new Date(block.relay_ts))}</p>,
+        ],
+        []
+    );
 
     useEffect(() => {
         fetchBlocks();
     }, [fetchBlocks, tableParams]);
 
     return (
-        <div className="dashboard-page container-fluid white-background">
+        <div className="main-container dashboard-page">
             <div className="dashboard-container dashboard-fade-in-animation">
                 <div className="dashboard-wrapper">
-                    <div className="row">
-                        <div className="title">{t("dashboard.relay.btcrelay")}</div>
-                    </div>
-                    <div className="row mt-5 mb-3">
-                        <div className="col-lg-8 offset-2">
-                            <div className="row">
-                                <RelayStatusChart displayBlockstreamData={true} />
+                    <div>
+                        <div className="title-container">
+                            <div
+                                style={{ backgroundColor: getAccents("d_blue").color }}
+                                className="issue-page-text-container"
+                            >
+                                <h1>{t("dashboard.relay.btcrelay")}</h1>
+                            </div>
+                            <div style={{ backgroundColor: getAccents("d_blue").color }} className="title-line"></div>
+                        </div>
+                        <div className="dashboard-graphs-container">
+                            <div className="relay-grid-container">
+                                <BtcRelay displayBlockstreamData={true} />
                             </div>
                         </div>
+                        <div className="dashboard-table-container">
+                            <div>
+                                <p className="table-heading">{t("dashboard.relay.blocks")}</p>
+                            </div>
+                            <DashboardTable
+                                richTable={true}
+                                pageData={blocks.map((b) => ({ ...b, id: b.hash }))}
+                                totalPages={Math.ceil(totalRelayedBlocks / tableParams.perPage)}
+                                tableParams={tableParams}
+                                setTableParams={setTableParams}
+                                headings={tableHeadings}
+                                dataPointDisplayer={tableBlockRow}
+                            />
+                        </div>
                     </div>
-                    <DashboardTable
-                        pageData={blocks.map((b) => ({ ...b, id: b.hash }))}
-                        totalPages={Math.ceil(totalRelayedBlocks / tableParams.perPage)}
-                        tableParams={tableParams}
-                        setTableParams={setTableParams}
-                        headings={tableHeadings}
-                        dataPointDisplayer={tableBlockRow}
-                    />
                 </div>
             </div>
         </div>

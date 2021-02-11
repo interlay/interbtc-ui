@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactElement } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import {
@@ -26,7 +26,7 @@ type AmountAndAddressForm = {
     btcAddress: string;
 };
 
-export default function EnterAmountAndAddress() {
+export default function EnterAmountAndAddress(): ReactElement {
     const { t } = useTranslation();
     const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
     const { balancePolkaBTC, polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
