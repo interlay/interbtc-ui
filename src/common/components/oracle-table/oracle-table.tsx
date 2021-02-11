@@ -28,16 +28,20 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
     useEffect(() => {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
-            const oracle = await window.polkaBTC.oracle.getInfo();
-            setOracles([
-                {
-                    id: "0", // todo: if fetching multiple oracles: set to index, or get account_id
-                    source: oracle.names.join(","),
-                    feed: oracle.feed,
-                    lastUpdate: dateToShortString(oracle.lastUpdate),
-                    exchangeRate: oracle.exchangeRate,
-                },
-            ]);
+            try {
+                const oracle = await window.polkaBTC.oracle.getInfo();
+                setOracles([
+                    {
+                        id: "0", // todo: if fetching multiple oracles: set to index, or get account_id
+                        source: oracle.names.join(","),
+                        feed: oracle.feed,
+                        lastUpdate: dateToShortString(oracle.lastUpdate),
+                        exchangeRate: oracle.exchangeRate,
+                    },
+                ]);
+            } catch (e) {
+                console.log(e);
+            }
         };
 
         fetchData();

@@ -57,10 +57,6 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
                             <span style={{ color: getAccents("d_red").color }} id="oracle-text" className="bold-font">
                                 {t("dashboard.oracles.offline")}
                             </span>
-                        ) : oracleStatus === Status.NoData ? (
-                            <span style={{ color: getAccents("d_grey").color }} id="oracle-text" className="bold-font">
-                                {t("no_data")}
-                            </span>
                         ) : (
                             <span style={{ color: getAccents("d_grey").color }} id="oracle-text" className="bold-font">
                                 {t("dashboard.oracles.loading")}
@@ -80,7 +76,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
                 )}
             </div>
             <div className="circle-container">
-                {oracleStatus === "Online" ? (
+                {oracleStatus === Status.Online ? (
                     <div
                         className="status-circle"
                         style={{ borderColor: getAccents("d_green").color }}
@@ -91,18 +87,33 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
                             style={{ color: getAccents("d_green").color }}
                             id="oracle-circle-text"
                         >
-                            {oracleStatus}
+                            {t("online")}
                         </h1>
                         <h2>{exchangeRate} DOT/BTC</h2>
                     </div>
-                ) : oracleStatus === "Offline" ? (
+                ) : oracleStatus === Status.Offline ? (
                     <div
                         className="status-circle"
                         style={{ borderColor: getAccents("d_red").color }}
                         id="oracle-circle"
                     >
                         <h1 className="h1-xl-text" style={{ color: getAccents("d_red").color }} id="oracle-circle-text">
-                            {oracleStatus}
+                            {t("offline")}
+                        </h1>
+                        <h2>{exchangeRate} DOT/BTC</h2>
+                    </div>
+                ) : oracleStatus === Status.NoData ? (
+                    <div
+                        className="status-circle"
+                        style={{ borderColor: getAccents("d_grey").color }}
+                        id="oracle-circle"
+                    >
+                        <h1
+                            className="h1-xl-text"
+                            style={{ color: getAccents("d_grey").color }}
+                            id="oracle-circle-text"
+                        >
+                            {t("no_data")}
                         </h1>
                         <h2>{exchangeRate} DOT/BTC</h2>
                     </div>
@@ -117,7 +128,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
                             style={{ color: getAccents("d_grey").color }}
                             id="oracle-circle-text"
                         >
-                            {oracleStatus}
+                            {t("loading")}
                         </h1>
                         <h2>{exchangeRate} DOT/BTC</h2>
                     </div>

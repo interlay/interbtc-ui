@@ -13,7 +13,7 @@ type CollateralizationProps = {
 export default function Collateralization({ linkButton }: CollateralizationProps): ReactElement {
     const { t } = useTranslation();
 
-    const [systemCollateralization, setSystemCollateralization] = useState("∞");
+    const [systemCollateralization, setSystemCollateralization] = useState("0");
     const [issuablePolkaBTC, setIssuablePolkaBTC] = useState("0");
     const [secureCollateralThreshold, setSecureCollateralThreshold] = useState("0");
     const [failed, setFailed] = useState(false);
