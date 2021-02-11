@@ -1,13 +1,14 @@
 import React, { useState, ReactElement, useEffect } from "react";
 import { toast } from "react-toastify";
 import { Modal, Button } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, useStore } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { useTranslation } from "react-i18next";
 import { RedeemRequest } from "../../../common/types/redeem.types";
 import { retryRedeemRequestAction, reimburseRedeemRequestAction } from "../../../common/actions/redeem.actions";
 import Big from "big.js";
+import fetchBalances from "../../../common/live-data/balances-watcher";
 
 type ReimburseModalProps = {
     onClose: () => void;
@@ -23,6 +24,7 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
     const [rate, setRate] = useState(new Big(0));
     const [amountDOT, setAmountDOT] = useState(new Big(0));
     const dispatch = useDispatch();
+    const store = useStore();
     const { t } = useTranslation();
 
     useEffect(() => {
@@ -51,6 +53,7 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
             const redeemId = window.polkaBTC.api.createType("H256", "0x" + props.request.id);
             await window.polkaBTC.redeem.cancel(redeemId, false);
             dispatch(retryRedeemRequestAction(props.request.id));
+            await fetchBalances(dispatch, store);
             props.onClose();
             toast.success(t("redeem_page.successfully_cancelled_redeem"));
         } catch (error) {
@@ -68,6 +71,7 @@ export default function ReimburseModal(props: ReimburseModalProps): ReactElement
             const redeemId = window.polkaBTC.api.createType("H256", "0x" + props.request.id);
             await window.polkaBTC.redeem.cancel(redeemId, true);
             dispatch(reimburseRedeemRequestAction(props.request.id));
+            await fetchBalances(dispatch, store);
             props.onClose();
         } catch (error) {
             console.log(error);
