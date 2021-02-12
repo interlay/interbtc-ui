@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import BitcoinLogo from "../../../assets/img/Bitcoin-Logo.png";
+import * as constants from "../../../constants";
 
 import {
     changeAmountBTCAction,
@@ -24,7 +25,7 @@ type EnterBTCForm = {
 
 export default function EnterBTCAmount() {
     const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
-    const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
+    const { polkaBtcLoaded, address, bitcoinHeight, btcRelayHeight } = useSelector((state: StoreType) => state.general);
     const amount = useSelector((state: StoreType) => state.issue.amountBTC);
     const defaultValues = amount ? { defaultValues: { amountBTC: amount } } : undefined;
     const { register, handleSubmit, errors, getValues } = useForm<EnterBTCForm>(defaultValues);
@@ -54,6 +55,10 @@ export default function EnterBTCAmount() {
         if (!polkaBtcLoaded) return;
         if (!address) {
             toast.warning(t("issue_page.must_select_account_warning"));
+            return;
+        }
+        if (bitcoinHeight - btcRelayHeight > constants.BLOCKS_BEHIND_LIMIT) {
+            toast.error(t("issue_page.error_more_than_6_blocks_behind"));
             return;
         }
         setRequestPending(true);

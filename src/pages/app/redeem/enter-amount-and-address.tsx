@@ -23,6 +23,7 @@ import { updateBalancePolkaBTCAction } from "../../../common/actions/general.act
 import { calculateAmount } from "../../../common/utils/utils";
 import { PolkaBTC } from "@interlay/polkabtc/build/interfaces";
 import { AccountId } from "@polkadot/types/interfaces/runtime";
+import * as constants from "../../../constants";
 import BN from "bn.js";
 
 type AmountAndAddressForm = {
@@ -35,7 +36,9 @@ type PremiumRedeemVault = Map<AccountId, PolkaBTC>;
 export default function EnterAmountAndAddress(): ReactElement {
     const { t } = useTranslation();
     const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
-    const { balancePolkaBTC, polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
+    const { balancePolkaBTC, polkaBtcLoaded, address, bitcoinHeight, btcRelayHeight } = useSelector(
+        (state: StoreType) => state.general
+    );
     const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
     const defaultValues = amount ? { defaultValues: { amountPolkaBTC: amount, btcAddress: "" } } : undefined;
     const { register, handleSubmit, errors, getValues } = useForm<AmountAndAddressForm>(defaultValues);
@@ -83,6 +86,14 @@ export default function EnterAmountAndAddress(): ReactElement {
 
     const onSubmit = handleSubmit(async ({ amountPolkaBTC, btcAddress }) => {
         if (!polkaBtcLoaded) return;
+        if (!address) {
+            toast.warning(t("issue_page.must_select_account_warning"));
+            return;
+        }
+        if (bitcoinHeight - btcRelayHeight > constants.BLOCKS_BEHIND_LIMIT) {
+            toast.error(t("issue_page.error_more_than_6_blocks_behind"));
+            return;
+        }
 
         setRequestPending(true);
         try {
