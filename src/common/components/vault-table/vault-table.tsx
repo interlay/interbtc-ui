@@ -53,7 +53,6 @@ export default function VaultTable(): ReactElement {
             if (status === constants.VAULT_STATUS_LIQUIDATED) {
                 return constants.VAULT_STATUS_LIQUIDATED;
             }
-            console.log(status);
             if (collateralization) {
                 if (collateralization.lt(liquidationThreshold)) {
                     return constants.VAULT_STATUS_LIQUIDATION;
