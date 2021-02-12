@@ -30,9 +30,8 @@ export const BTC_MAINNET = false;
 
 // regtest btc address validation regex
 export const BTC_REGTEST_REGEX = /\b([2mn][a-km-zA-HJ-NP-Z1-9]{25,34}|bcrt1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})\b/;
-// testnet btc address validation regex - BECH32 ONLY (for alpha testnet)
-export const BTC_TESTNET_REGEX = /\b(tb1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})\b/;
-//export const BTC_TESTNET_REGEX = /\b([2mn][a-km-zA-HJ-NP-Z1-9]{25,34}|tb1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})\b/;
+// testnet btc address validation regex
+export const BTC_TESTNET_REGEX = /\b([2mn][a-km-zA-HJ-NP-Z1-9]{25,34}|tb1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})\b/;
 // mainnet btc address validation regex
 export const BTC_MAINNET_REGEX = /\b([13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})\b/;
 // btc transaction validation regex
