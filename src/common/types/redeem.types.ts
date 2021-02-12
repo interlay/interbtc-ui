@@ -43,7 +43,7 @@ export interface RedeemState {
 
 export interface VaultRedeem {
     id: string;
-    // timestamp: string;
+    timestamp: string;
     user: string;
     btcAddress: string;
     polkaBTC: string;
