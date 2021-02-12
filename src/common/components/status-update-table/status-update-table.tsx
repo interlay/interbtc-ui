@@ -86,10 +86,10 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                         const stakedRelayerId = window.polkaBTC.api.createType("AccountId", props.stakedRelayerAddress);
 
                         // FIXME: Set.has() doesn't work for objects
-                        statusUpdate.tally.aye.forEach((acc) => {
+                        statusUpdate.tally.aye.accounts.forEach((acc) => {
                             hasVoted = acc.hash.toHex() === stakedRelayerId.hash.toHex() ? true : hasVoted;
                         });
-                        statusUpdate.tally.nay.forEach((acc) => {
+                        statusUpdate.tally.nay.accounts.forEach((acc) => {
                             hasVoted = acc.hash.toHex() === stakedRelayerId.hash.toHex() ? true : hasVoted;
                         });
                     }
@@ -101,7 +101,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                         currentStatus: statusUpdate.old_status_code.toString(),
                         proposedChanges: displayProposedChanges(statusUpdate.add_error, statusUpdate.remove_error),
                         blockHash: displayBlockHash(statusUpdate.btc_block_hash),
-                        votes: `${statusUpdate.tally.aye.size} : ${statusUpdate.tally.nay.size}`,
+                        votes: `${statusUpdate.tally.aye.accounts.size} : ${statusUpdate.tally.nay.accounts.size}`,
                         result: statusUpdate.proposal_status.toString(),
                         proposer: statusUpdate.proposer.toString(),
                         message: statusUpdate.message.toString(),
