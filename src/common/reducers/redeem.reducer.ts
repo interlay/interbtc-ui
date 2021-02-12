@@ -117,6 +117,7 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
                 fee: "0",
                 amountPolkaBTC: "",
                 step: "AMOUNT_AND_ADDRESS",
+                redeemRequests: new Map(),
             };
         case ADD_VAULT_REDEEMS:
             return { ...state, vaultRedeems: action.vaultRedeems };

@@ -111,6 +111,7 @@ export default function App(): ReactElement {
             }, 5000);
             window.polkaBTC = await connectToParachain();
             dispatch(isPolkaBtcLoaded(true));
+            startFetchingLiveData(dispatch, store);
             setIsLoading(false);
         } catch (error) {
             if (!window.polkaBTC)
@@ -119,7 +120,7 @@ export default function App(): ReactElement {
                         "Please check your internet connection or try again later."
                 );
         }
-    }, [dispatch]);
+    }, [dispatch, store]);
 
     useEffect((): void => {
         // Do not load data if showing static landing page only

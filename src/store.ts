@@ -13,7 +13,6 @@ declare global {
         relayer: StakedRelayerClient;
         faucet: FaucetClient;
         vaultClient: VaultClient;
-        store: StoreState;
         isFetchingActive: boolean;
     }
 }
