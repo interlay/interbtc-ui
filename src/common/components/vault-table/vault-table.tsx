@@ -42,13 +42,18 @@ export default function VaultTable(): ReactElement {
     }, [polkaBtcLoaded]);
 
     useEffect(() => {
-        const checkVaultStatus = (status: string, collateralization: Big | undefined): string => {
+        const checkVaultStatus = (
+            status: string,
+            collateralization: Big | undefined,
+            banned_until: string | undefined
+        ): string => {
             if (status === constants.VAULT_STATUS_THEFT) {
                 return constants.VAULT_STATUS_THEFT;
             }
             if (status === constants.VAULT_STATUS_LIQUIDATED) {
                 return constants.VAULT_STATUS_LIQUIDATED;
             }
+            console.log(status);
             if (collateralization) {
                 if (collateralization.lt(liquidationThreshold)) {
                     return constants.VAULT_STATUS_LIQUIDATION;
@@ -59,6 +64,9 @@ export default function VaultTable(): ReactElement {
                 if (collateralization.lt(secureCollateralThreshold)) {
                     return constants.VAULT_STATUS_UNDER_COLLATERALIZED;
                 }
+            }
+            if (banned_until) {
+                return constants.VAULT_STATUS_BANNED + banned_until;
             }
             return constants.VAULT_STATUS_ACTIVE;
         };
@@ -95,7 +103,13 @@ export default function VaultTable(): ReactElement {
                     lockedDOT: balanceLockedDOT,
                     pendingBTC: satToBTC(vault.to_be_issued_tokens.toString()),
                     btcAddress: btcAddress || "",
-                    status: vault.status && checkVaultStatus(vault.status.toString(), unsettledCollateralization),
+                    status:
+                        vault.status &&
+                        checkVaultStatus(
+                            vault.status.toString(),
+                            unsettledCollateralization,
+                            vault.banned_until.toString()
+                        ),
                     unsettledCollateralization: unsettledCollateralization?.mul(100).toString(),
                     settledCollateralization: settledCollateralization?.mul(100).toString(),
                 });
