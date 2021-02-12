@@ -22,11 +22,15 @@ export default function RedeemRequests() {
 
     const redeemExpired = useCallback(
         (redeemId: string) => {
-            if (!redeemRequests || !redeemRequests.length) return;
-            const requestToBeUpdated = redeemRequests.filter((request) => request.id === redeemId)[0];
+            try {
+                if (!redeemRequests || !redeemRequests.length) return;
+                const requestToBeUpdated = redeemRequests.filter((request) => request.id === redeemId)[0];
 
-            if (requestToBeUpdated && !requestToBeUpdated.isExpired) {
-                dispatch(redeemExpiredAction({ ...requestToBeUpdated, isExpired: true }));
+                if (requestToBeUpdated && !requestToBeUpdated.isExpired) {
+                    dispatch(redeemExpiredAction({ ...requestToBeUpdated, isExpired: true }));
+                }
+            } catch (error) {
+                console.log(error);
             }
         },
         [redeemRequests, dispatch]

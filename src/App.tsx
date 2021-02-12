@@ -111,6 +111,7 @@ export default function App(): ReactElement {
             }, 5000);
             window.polkaBTC = await connectToParachain();
             dispatch(isPolkaBtcLoaded(true));
+            startFetchingLiveData(dispatch, store);
             setIsLoading(false);
         } catch (error) {
             if (!window.polkaBTC)

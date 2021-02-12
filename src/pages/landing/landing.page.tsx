@@ -52,7 +52,7 @@ export default function LandingPage(): JSX.Element {
                             {polkaBtcLoaded && (
                                 <Row className="mt-5">
                                     <Col className="mt-2" xs="12" sm={{ span: 4, offset: 2 }}>
-                                        <NavLink className="text-decoration-none" to="/issue">
+                                        <NavLink className="text-decoration-none" to="/app">
                                             <Button
                                                 variant="outline-polkadot"
                                                 size="lg"
@@ -64,7 +64,7 @@ export default function LandingPage(): JSX.Element {
                                         </NavLink>
                                     </Col>
                                     <Col className="mt-2" xs="12" sm={{ span: 4 }}>
-                                        <NavLink className="text-decoration-none" to="/redeem">
+                                        <NavLink className="text-decoration-none" to="/app">
                                             <Button
                                                 variant="outline-bitcoin"
                                                 size="lg"
