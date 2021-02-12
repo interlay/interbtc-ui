@@ -97,7 +97,7 @@
         "eject": "react-app-rewired eject",
         "compose:regtest": "docker-compose up",
         "compose:testnet": "docker-compose -f ./docker-compose.testnet.yml up",
-        "compose:down": "docker-compose down -v"
+        "compose:down": "docker-compose down --remove-orphans -v"
     },
     "eslintConfig": {
         "extends": "react-app"
