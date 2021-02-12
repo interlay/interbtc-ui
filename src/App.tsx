@@ -161,7 +161,7 @@ export default function App(): ReactElement {
         if (constants.STATIC_PAGE_ONLY) return;
 
         const loadAccountData = async () => {
-            if (!polkaBtcLoaded || extensions.length) return;
+            if (!polkaBtcLoaded || extensions.length) return false;
 
             const browserExtensions = await web3Enable(constants.APP_NAME);
             dispatch(setInstalledExtensionAction(browserExtensions.map((ext) => ext.name)));
@@ -169,7 +169,7 @@ export default function App(): ReactElement {
             const allAccounts = await web3Accounts();
             if (allAccounts.length === 0) {
                 dispatch(changeAddressAction(""));
-                return;
+                return false;
             }
 
             const accounts = allAccounts.map(({ address }) => address);
@@ -187,8 +187,16 @@ export default function App(): ReactElement {
                 window.polkaBTC.setAccount(newAddress, signer);
                 dispatch(changeAddressAction(newAddress));
             } else dispatch(changeAddressAction(""));
+
+            return true;
         };
-        loadAccountData();
+
+        const id = setTimeout(async () => {
+            const accountsLoaded = await loadAccountData();
+            if (accountsLoaded) {
+                clearInterval(id);
+            }
+        }, 1000);
     }, [address, polkaBtcLoaded, dispatch, extensions.length]);
 
     useEffect(() => {
