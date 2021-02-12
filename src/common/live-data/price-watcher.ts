@@ -12,9 +12,16 @@ export default function fetchPrices(dispatch: Dispatch, store: StoreState): void
             return response.json() as Promise<Prices>;
         })
         .then((prices) => {
-            // update the store only if the price is actually changed
-            if (prices.bitcoin.usd !== storePrices.bitcoin.usd || prices.polkadot.usd !== storePrices.polkadot.usd) {
-                dispatch(updateOfPricesAction(prices));
+            try {
+                // update the store only if the price is actually changed
+                if (
+                    prices.bitcoin.usd !== storePrices.bitcoin.usd ||
+                    prices.polkadot.usd !== storePrices.polkadot.usd
+                ) {
+                    dispatch(updateOfPricesAction(prices));
+                }
+            } catch (error) {
+                console.log(error);
             }
         });
 }
