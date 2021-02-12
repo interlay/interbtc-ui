@@ -1,7 +1,7 @@
 version: "3.8"
 services:
     polkabtc:
-        image: "registry.gitlab.com/interlay/btc-parachain:0-3-0"
+        image: "registry.gitlab.com/interlay/btc-parachain:0-3-1"
         command:
             - btc-parachain
             - --unsafe-rpc-external
@@ -60,7 +60,7 @@ services:
             - "3002:3002"
     staked_relayer:
         # only start staked relayer after mining to prevent long catch-up
-        image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:0-3-0"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:0-3-1"
         command:
             - /bin/sh
             - -c
@@ -76,7 +76,7 @@ services:
         ports:
             - "3030:3030"
     oracle:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:0-3-0"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:0-3-1"
         command:
             - /bin/sh
             - -c
@@ -87,7 +87,7 @@ services:
         environment:
             RUST_LOG: info
     faucet:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/faucet:0-3-0"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/faucet:0-3-1"
         command:
             - /bin/sh
             - -c
@@ -100,7 +100,7 @@ services:
         ports:
             - "3035:3035"
     vault:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:0-3-0"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:0-3-1"
         command:
             - /bin/sh
             - -c
@@ -109,13 +109,13 @@ services:
                 # sleep for 7s to wait for bitcoin to create the Dave wallet
                 # and also to ensure that the issue period and redeem period are set
                 sleep 7
-                vault --keyring=dave  --auto-register-with-collateral 100000000000000 --http-addr '[::0]:3032' --polka-btc-url 'ws://polkabtc:9944'
+                vault --keyring=dave --auto-register-with-collateral 100000000000000 --http-addr '[::0]:3032' --polka-btc-url 'ws://polkabtc:9944'
         environment:
             <<: *client-env
         ports:
             - "3032:3032"
     testdata_gen:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/testdata-gen:0-3-0"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/testdata-gen:0-3-1"
         command:
             - /bin/sh
             - -c
