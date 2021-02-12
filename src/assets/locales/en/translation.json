@@ -65,6 +65,7 @@
     "vote": "Vote",
     "pending_btc": "Pending BTC",
     "locked_dot": "Locked DOT",
+    "locked_planck": "Locked Planck",
     "locked_btc": "Locked BTC",
     "issue": "Issue",
     "redeem": "Redeem",

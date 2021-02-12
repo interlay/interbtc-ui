@@ -30,7 +30,7 @@ export default function StakedRelayerTable(): ReactElement {
         })();
     }, [statsApi]);
 
-    const tableHeadings = [<h1>{t("account_id")}</h1>, <h1>{t("locked_dot")}</h1>, <h1>{t("status")}</h1>];
+    const tableHeadings = [<h1>{t("account_id")}</h1>, <h1>{t("locked_planck")}</h1>, <h1>{t("status")}</h1>];
 
     const relayersTableRow = (relayer: StakedRelayer): ReactElement[] => [
         <p className="break-words">{relayer.id}</p>,
