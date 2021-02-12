@@ -120,7 +120,7 @@ export default function App(): ReactElement {
                         "Please check your internet connection or try again later."
                 );
         }
-    }, [dispatch]);
+    }, [dispatch, store]);
 
     useEffect((): void => {
         // Do not load data if showing static landing page only
