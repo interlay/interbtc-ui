@@ -59,19 +59,19 @@ export default function LandingPage(): JSX.Element {
                                                 block
                                                 onClick={checkWalletAndAccount}
                                             >
-                                                {t("issue_page.issue_polkabtc")}
+                                                {t("app")}
                                             </Button>
                                         </NavLink>
                                     </Col>
                                     <Col className="mt-2" xs="12" sm={{ span: 4 }}>
-                                        <NavLink className="text-decoration-none" to="/app">
+                                        <NavLink className="text-decoration-none" to="/dashboard">
                                             <Button
                                                 variant="outline-bitcoin"
                                                 size="lg"
                                                 block
                                                 onClick={checkWalletAndAccount}
                                             >
-                                                {t("redeem_page.redeem_polkaBTC")}
+                                                {t("nav_dashboard")}
                                             </Button>
                                         </NavLink>
                                     </Col>
