@@ -76,7 +76,7 @@ export default function RedeemTable(): ReactElement {
                                     return (
                                         <tr key={index}>
                                             <td>{shortAddress(redeem.id)}</td>
-                                            {/* <td>{redeem.timestamp}</td> */}
+                                            <td>{redeem.timestamp}</td>
                                             <td>{shortAddress(redeem.user)}</td>
                                             <td>
                                                 <BitcoinAddress btcAddress={redeem.btcAddress} shorten />

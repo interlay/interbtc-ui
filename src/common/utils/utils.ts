@@ -141,6 +141,7 @@ interface ParsableParachainTypes {
     amount?: PolkaBTC;
     amount_dot?: DOT;
     griefing_collateral?: DOT;
+    premium_dot?: DOT;
 }
 
 export const BtcNetwork =
@@ -187,7 +188,9 @@ function convertParachainTypes(parachainObject: ParsableParachainTypes): [string
         throw new Error("No property found for PolkaBTC amount");
     }
 
-    if (parachainObject.amount_dot) {
+    if (parachainObject.premium_dot && parachainObject.premium_dot.toString() !== "0") {
+        parsedDOT = planckToDOT(parachainObject.premium_dot.toString());
+    } else if (parachainObject.amount_dot) {
         parsedDOT = planckToDOT(parachainObject.amount_dot.toString());
     } else if (parachainObject.griefing_collateral) {
         parsedDOT = planckToDOT(parachainObject.griefing_collateral.toString());
@@ -204,7 +207,7 @@ export const redeemRequestToVaultRedeem = (requests: Map<H256, ParachainRedeemRe
         const [btcAddress, polkaBTC, unlockedDOT] = convertParachainTypes(request);
         redeemRequests.push({
             id: stripHexPrefix(requestId.toString()),
-            // timestamp: request.opentime.toString(),
+            timestamp: request.opentime.toString(),
             user: request.redeemer.toString(),
             btcAddress: btcAddress,
             polkaBTC: polkaBTC,
