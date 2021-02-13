@@ -143,7 +143,7 @@ export default function VaultDashboardPage() {
                                 </div>
                                 <div className="col-md-3">
                                     <div className="">{t("sla_score")}</div>
-                                    <span className="stats">{sla}</span>
+                                    <span className="stats">{roundTwoDecimals(sla)}</span>
                                 </div>
                                 <div className="col-md-3">
                                     <div className="">{t("apy")}</div>

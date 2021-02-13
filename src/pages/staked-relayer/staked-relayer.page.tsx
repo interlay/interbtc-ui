@@ -133,7 +133,7 @@ export default function StakedRelayerPage() {
                                 </div>
                                 <div className="col-3">
                                     <div>{t("sla_score")}</div>
-                                    <span className="stats">{sla}</span>
+                                    <span className="stats">{roundTwoDecimals(sla)}</span>
                                 </div>
                                 <div className="col-3">
                                     <div>{t("apy")}</div>
