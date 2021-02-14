@@ -39,6 +39,19 @@ services:
                 oracle --keyring=bob --polka-btc-url 'ws://polkabtc:9944'
         environment:
             RUST_LOG: info
+    faucet:
+        image: "registry.gitlab.com/interlay/polkabtc-clients/faucet:0-3-1"
+        command:
+            - /bin/sh
+            - -c
+            - |
+                echo "Sleeping..."
+                sleep 5
+                faucet --keyring=alice --polka-btc-url 'ws://polkabtc:9944' --user-allowance 1 --vault-allowance 500 --http-addr '[::0]:3035'
+        environment:
+            RUST_LOG: info
+        ports:
+            - "3035:3035"
     vault:
         image: "registry.gitlab.com/interlay/polkabtc-clients/vault:0-3-1"
         command:
