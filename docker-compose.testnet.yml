@@ -20,7 +20,7 @@ services:
             - |
                 echo "Sleeping..."
                 sleep 2
-                staked-relayer --keyring=eve --http-addr '[::0]:3030' --polka-btc-url 'ws://polkabtc:9944'
+                staked-relayer --keyring=eve --http-addr '[::0]:3030' --polka-btc-url 'ws://polkabtc:9944' --auto-register-with-stake=100
         environment: &client-env
             BITCOIN_RPC_URL: http://btc.do.polkabtc.io:18332
             BITCOIN_RPC_USER: rpcuser
