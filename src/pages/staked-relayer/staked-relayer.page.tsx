@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactElement } from "react";
 import BitcoinTable from "../../common/components/bitcoin-table/bitcoin-table";
 import ReportModal from "./report-modal/report-modal";
 import RegisterModal from "./register-modal/register-modal";
@@ -12,10 +12,11 @@ import { toast } from "react-toastify";
 import "./staked-relayer.page.scss";
 import { StoreType } from "../../common/types/util.types";
 import ButtonMaybePending from "../../common/components/pending-button";
-import { satToBTC, planckToDOT, roundTwoDecimals } from "@interlay/polkabtc";
+import { satToBTC, planckToDOT } from "@interlay/polkabtc";
 import { useTranslation } from "react-i18next";
+import { safeRoundTwoDecimals } from "../../common/utils/utils";
 
-export default function StakedRelayerPage() {
+export default function StakedRelayerPage(): ReactElement {
     const [showReportModal, setShowReportModal] = useState(false);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [isDeregisterPending, setDeregisterPending] = useState(false);
@@ -133,11 +134,11 @@ export default function StakedRelayerPage() {
                                 </div>
                                 <div className="col-3">
                                     <div>{t("sla_score")}</div>
-                                    <span className="stats">{roundTwoDecimals(sla)}</span>
+                                    <span className="stats">{safeRoundTwoDecimals(sla)}</span>
                                 </div>
                                 <div className="col-3">
                                     <div>{t("apy")}</div>
-                                    <span className="stats">~{roundTwoDecimals(apy)}</span> %
+                                    <span className="stats">~{safeRoundTwoDecimals(apy)}</span> %
                                 </div>
                             </div>
                         </div>

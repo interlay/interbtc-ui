@@ -13,12 +13,18 @@ import {
     IssueRequestExt as ParachainIssueRequest,
     RedeemRequestExt as ParachainRedeemRequest,
     ReplaceRequestExt as ParachainReplaceRequest,
+    roundTwoDecimals,
 } from "@interlay/polkabtc";
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from "../../constants";
 import { Dispatch } from "redux";
 import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from "../actions/general.actions";
 import Big from "big.js";
 import { TableDisplayParams, RelayedBlock } from "../types/util.types";
+
+export function safeRoundTwoDecimals(input: string | undefined, defaultValue = "0"): string {
+    if (input === undefined) return defaultValue;
+    else return roundTwoDecimals(input);
+}
 
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;

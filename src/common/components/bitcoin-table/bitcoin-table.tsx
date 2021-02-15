@@ -4,6 +4,7 @@ import { StoreType } from "../../types/util.types";
 import * as constants from "../../../constants";
 import { reverseHashEndianness } from "../../utils/utils";
 import { useTranslation } from "react-i18next";
+import { Table } from "react-bootstrap";
 
 interface BlockInfo {
     source: string;
@@ -110,52 +111,44 @@ export default function BitcoinTable(): ReactElement {
     };
 
     return (
-        <div className="bitcoin-table">
-            <div className="row">
-                <div className="col-12">
-                    <div className="header">
-                        {t("btc_relay_status")} &nbsp; <div className={getCircle(relayStatus)}></div> &nbsp;{" "}
-                        {relayStatus}
-                    </div>
+        <div className="dashboard-table-container">
+            <div>
+                <p className="table-heading">{t("dashboard.relay.btcrelay")}</p>
+                <div className="header">
+                    {t("status_colon")} &nbsp; <div className={getCircle(relayStatus)}></div> &nbsp; {relayStatus}
                 </div>
             </div>
-            <div className="row justify-content-center">
-                <div className="col-12">
-                    <div className="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>{t("source")}</th>
-                                    <th>{t("best_block_hash")}</th>
-                                    <th>{t("best_block_height")}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {btcBlocks.map((block, index) => {
-                                    return (
-                                        <tr key={index}>
-                                            <td>{block.source}</td>
-                                            <td>
-                                                <a
-                                                    href={
-                                                        (constants.BTC_MAINNET
-                                                            ? constants.BTC_EXPLORER_BLOCK_API
-                                                            : constants.BTC_TEST_EXPLORER_BLOCK_API) + block.hash
-                                                    }
-                                                    target="__blank"
-                                                >
-                                                    {block.hash}
-                                                </a>
-                                            </td>
-                                            <td className={getHeightColor()}>{block.height}</td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <Table hover responsive size={"md"}>
+                <thead>
+                    <tr>
+                        <th>{t("source")}</th>
+                        <th>{t("best_block_hash")}</th>
+                        <th>{t("best_block_height")}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {btcBlocks.map((block, index) => {
+                        return (
+                            <tr key={index}>
+                                <td>{block.source}</td>
+                                <td>
+                                    <a
+                                        href={
+                                            (constants.BTC_MAINNET
+                                                ? constants.BTC_EXPLORER_BLOCK_API
+                                                : constants.BTC_TEST_EXPLORER_BLOCK_API) + block.hash
+                                        }
+                                        target="__blank"
+                                    >
+                                        {block.hash}
+                                    </a>
+                                </td>
+                                <td className={getHeightColor()}>{block.height}</td>
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </Table>
         </div>
     );
 }

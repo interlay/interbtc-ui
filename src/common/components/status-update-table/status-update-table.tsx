@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { StoreType } from "../../types/util.types";
 import { useSelector } from "react-redux";
-import { Button } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import VoteModal from "../../../pages/staked-relayer/vote-modal/vote-modal";
 import { StatusUpdate } from "../../types/util.types";
 import MessageModal from "../../../pages/staked-relayer/message-modal/message-modal";
@@ -174,7 +174,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
     };
 
     return (
-        <div className="btc-parachain-table">
+        <div className="dashboard-table-container btc-parachain-table">
             <VoteModal
                 show={showVoteModal}
                 onClose={handleClose}
@@ -182,116 +182,107 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                 getColor={getProposedChangesColor}
             ></VoteModal>
             <MessageModal show={showMessageModal} onClose={handleClose} statusUpdate={statusUpdate!}></MessageModal>
-            <div className="row">
-                <div className="col-12">
-                    <div className="header">
-                        {t("btc_parachain_status")}: &nbsp; <div className={getCircle(parachainStatus)}></div>
-                        &nbsp; {parachainStatus}
-                    </div>
+            <div>
+                <p className="table-heading">{t("dashboard.parachain.parachain")}</p>
+                <div className="header">
+                    {t("status_colon")} &nbsp; <div className={getCircle(parachainStatus)}></div> &nbsp;{" "}
+                    {parachainStatus}
                 </div>
-            </div>
-            <div className="row justify-content-center">
-                <div className="col-12">
-                    <div className="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>{t("id")}</th>
-                                    <th>{t("expiration")}</th>
-                                    <th>{t("proposed_status")}</th>
-                                    <th>{t("current_status")}</th>
-                                    <th>{t("proposed_changes")}</th>
-                                    <th>{t("btc_block_hash")}</th>
-                                    <th>{t("votes_yes_no")}</th>
-                                    <th>{t("result")}</th>
-                                </tr>
-                            </thead>
-                            {statusUpdates && statusUpdates.length ? (
-                                <tbody>
-                                    {statusUpdates.map((statusUpdate, index) => {
-                                        return (
-                                            <tr key={index}>
-                                                <td
-                                                    style={{ cursor: "pointer" }}
-                                                    onClick={() => openMessageModal(statusUpdate)}
-                                                >
-                                                    {statusUpdate.id.toString()}
-                                                </td>
-                                                <td>{statusUpdate.timestamp}</td>
-                                                <td
-                                                    className={
-                                                        statusUpdate.proposedStatus === "Running"
-                                                            ? "green-text"
-                                                            : "orange-text"
-                                                    }
-                                                >
-                                                    {statusUpdate.proposedStatus}
-                                                </td>
-                                                <td>{statusUpdate.currentStatus}</td>
-                                                <td className={getProposedChangesColor(statusUpdate.proposedChanges)}>
-                                                    {statusUpdate.proposedChanges}
-                                                </td>
-                                                <td className="break-words">
-                                                    <BitcoinBlockHash blockHash={statusUpdate.blockHash} />
-                                                </td>
-                                                <td>
-                                                    {" "}
-                                                    {statusUpdate.votes && (
-                                                        <React.Fragment>
-                                                            <p>
-                                                                <span className="green-text">
-                                                                    {getPercentage(statusUpdate.votes, "yes")}%
-                                                                </span>
-                                                                <span>&nbsp;:&nbsp;</span>
-                                                                <span className="red-text">
-                                                                    {getPercentage(statusUpdate.votes, "no")}%
-                                                                </span>
-                                                            </p>
-                                                            <p>
-                                                                <span className="green-text">
-                                                                    {statusUpdate.votes.split(":")[0]}
-                                                                </span>
-                                                                <span>:</span>
-                                                                <span className="red-text">
-                                                                    {statusUpdate.votes.split(":")[1]}
-                                                                </span>
-                                                            </p>
-                                                        </React.Fragment>
-                                                    )}
-                                                </td>
-                                                <td className={getResultColor(statusUpdate.result)}>
-                                                    {!props.readOnly ? (
-                                                        props.planckLocked !== undefined &&
-                                                        new BN(props.planckLocked) > new BN(0) &&
-                                                        !statusUpdate.hasVoted &&
-                                                        statusUpdate.result === "Pending" ? (
-                                                            <Button
-                                                                variant="outline-primary"
-                                                                onClick={() => openVoteModal(statusUpdate)}
-                                                            >
-                                                                {t("vote")}
-                                                            </Button>
-                                                        ) : (
-                                                            statusUpdate.result
-                                                        )
-                                                    ) : (
-                                                        "Pending"
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            ) : (
-                                <tbody>
-                                    <tr>
-                                        <td colSpan={8}>{t("no_pending_status")}</td>
+                <Table hover responsive size={"md"}>
+                    <thead>
+                        <tr>
+                            <th>{t("id")}</th>
+                            <th>{t("expiration")}</th>
+                            <th>{t("proposed_status")}</th>
+                            <th>{t("current_status")}</th>
+                            <th>{t("proposed_changes")}</th>
+                            <th>{t("btc_block_hash")}</th>
+                            <th>{t("votes_yes_no")}</th>
+                            <th>{t("result")}</th>
+                        </tr>
+                    </thead>
+                    {statusUpdates && statusUpdates.length ? (
+                        <tbody>
+                            {statusUpdates.map((statusUpdate, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => openMessageModal(statusUpdate)}
+                                        >
+                                            {statusUpdate.id.toString()}
+                                        </td>
+                                        <td>{statusUpdate.timestamp}</td>
+                                        <td
+                                            className={
+                                                statusUpdate.proposedStatus === "Running" ? "green-text" : "orange-text"
+                                            }
+                                        >
+                                            {statusUpdate.proposedStatus}
+                                        </td>
+                                        <td>{statusUpdate.currentStatus}</td>
+                                        <td className={getProposedChangesColor(statusUpdate.proposedChanges)}>
+                                            {statusUpdate.proposedChanges}
+                                        </td>
+                                        <td className="break-words">
+                                            <BitcoinBlockHash blockHash={statusUpdate.blockHash} />
+                                        </td>
+                                        <td>
+                                            {" "}
+                                            {statusUpdate.votes && (
+                                                <React.Fragment>
+                                                    <p>
+                                                        <span className="green-text">
+                                                            {getPercentage(statusUpdate.votes, "yes")}%
+                                                        </span>
+                                                        <span>&nbsp;:&nbsp;</span>
+                                                        <span className="red-text">
+                                                            {getPercentage(statusUpdate.votes, "no")}%
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        <span className="green-text">
+                                                            {statusUpdate.votes.split(":")[0]}
+                                                        </span>
+                                                        <span>:</span>
+                                                        <span className="red-text">
+                                                            {statusUpdate.votes.split(":")[1]}
+                                                        </span>
+                                                    </p>
+                                                </React.Fragment>
+                                            )}
+                                        </td>
+                                        <td className={getResultColor(statusUpdate.result)}>
+                                            {!props.readOnly ? (
+                                                props.planckLocked !== undefined &&
+                                                new BN(props.planckLocked) > new BN(0) &&
+                                                !statusUpdate.hasVoted &&
+                                                statusUpdate.result === "Pending" ? (
+                                                    <Button
+                                                        variant="outline-primary"
+                                                        onClick={() => openVoteModal(statusUpdate)}
+                                                    >
+                                                        {t("vote")}
+                                                    </Button>
+                                                ) : (
+                                                    statusUpdate.result
+                                                )
+                                            ) : (
+                                                "Pending"
+                                            )}
+                                        </td>
                                     </tr>
-                                </tbody>
-                            )}
-                        </table>
-                    </div>
-                </div>
+                                );
+                            })}
+                        </tbody>
+                    ) : (
+                        <tbody>
+                            <tr>
+                                <td colSpan={8}>{t("no_pending_status")}</td>
+                            </tr>
+                        </tbody>
+                    )}
+                </Table>
             </div>
         </div>
     );

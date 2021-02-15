@@ -22,6 +22,7 @@
     "issue_requests": "Issue Requests",
     "griefing_collateral": "Griefing Collateral",
     "status": "Status",
+    "status_colon": "Status:",
     "redeem_requests": "Redeem Requests",
     "id": "Id",
     "expiration": "Expiration",
@@ -221,7 +222,7 @@
             "polkabtc_capacity": "PolkaBTC Capacity"
         },
         "parachain": {
-            "parachain": "Parachain",
+            "parachain": "BTC Parachain",
             "total_relayers_chart": "Total active relayers",
             "active_relayers": "Active Staked Relayers",
             "status_updates": "Parachain status updates",
