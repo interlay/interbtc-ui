@@ -7,7 +7,7 @@ import * as constants from "../../../constants";
 import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 import { VaultIssue } from "../../../common/types/issue.types";
 import { FaCheck, FaHourglass } from "react-icons/fa";
-import { Badge } from "react-bootstrap";
+import { Badge, Table } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
 export default function IssueTable(): ReactElement {
@@ -55,48 +55,46 @@ export default function IssueTable(): ReactElement {
     };
 
     return (
-        <div className="issue-table">
-            <div className="row">
-                <div className="col-12">
-                    <div className="header">{t("issue_requests")}</div>
-                </div>
+        <div className="dashboard-table-container">
+            <div>
+                <p className="table-heading">{t("issue_requests")}</p>
             </div>
-            <div className="row justify-content-center">
-                <div className="col-12">
-                    <div className="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>{t("id")}</th>
-                                    <th>{t("vault.creation_block")}</th>
-                                    <th>{t("user")}</th>
-                                    <th>{t("btc_address")}</th>
-                                    <th>PolkaBTC</th>
-                                    <th>{t("griefing_collateral")}</th>
-                                    <th>{t("status")}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {issues.map((issue, index) => {
-                                    return (
-                                        <tr key={index}>
-                                            <td>{shortAddress(issue.id)}</td>
-                                            <td>{issue.timestamp}</td>
-                                            <td>{shortAddress(issue.user)}</td>
-                                            <td>
-                                                <BitcoinAddress btcAddress={issue.btcAddress} shorten />
-                                            </td>
-                                            <td>{issue.polkaBTC}</td>
-                                            <td>{issue.lockedDOT}</td>
-                                            <td>{showStatus(issue)}</td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            {issues && issues.length > 0 ? (
+                <React.Fragment>
+                    <Table hover responsive size={"md"}>
+                        <thead>
+                            <tr>
+                                <th>{t("id")}</th>
+                                <th>{t("vault.creation_block")}</th>
+                                <th>{t("user")}</th>
+                                <th>{t("btc_address")}</th>
+                                <th>PolkaBTC</th>
+                                <th>{t("griefing_collateral")}</th>
+                                <th>{t("status")}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {issues.map((issue, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td>{issue.id}</td>
+                                        <td>{issue.timestamp}</td>
+                                        <td>{shortAddress(issue.user)}</td>
+                                        <td>
+                                            <BitcoinAddress btcAddress={issue.btcAddress} shorten />
+                                        </td>
+                                        <td>{issue.polkaBTC}</td>
+                                        <td>{issue.lockedDOT}</td>
+                                        <td>{showStatus(issue)}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </Table>
+                </React.Fragment>
+            ) : (
+                <React.Fragment>{t("empty_data")}</React.Fragment>
+            )}
         </div>
     );
 }
