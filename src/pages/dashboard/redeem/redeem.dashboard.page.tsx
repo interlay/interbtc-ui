@@ -14,6 +14,7 @@ import { defaultTableDisplayParams, shortAddress, formatDateTimePrecise } from "
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 import { satToBTC } from "@interlay/polkabtc";
 import LineChartComponent from "../components/line-chart-component";
+import { BtcNetworkName } from "@interlay/polkabtc-stats";
 
 export default function RedeemDashboard(): ReactElement {
     const { polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
@@ -88,7 +89,8 @@ export default function RedeemDashboard(): ReactElement {
                 tableParams.page,
                 tableParams.perPage,
                 tableParams.sortBy,
-                tableParams.sortAsc
+                tableParams.sortAsc,
+                constants.BITCOIN_NETWORK as BtcNetworkName
             );
             setRedeemRequests(res.data);
         },
