@@ -58,10 +58,13 @@ export default function Transfer() {
                             }}
                             ref={register({
                                 required: true,
-                                validate: (value) =>
-                                    value > balancePolkaBTC
-                                        ? t("redeem_page.current_balance") + balancePolkaBTC
-                                        : undefined,
+                                validate: (value) => {
+                                    if (Number(balancePolkaBTC) === 0) return t("insufficient_funds") + "";
+                                    if (Number(balanceDOT) === 0) return t("insufficient_funds_dot") + "";
+                                    if (value > balancePolkaBTC)
+                                        return t("redeem_page.current_balance") + balancePolkaBTC;
+                                    return undefined;
+                                },
                             })}
                         />
                     </div>

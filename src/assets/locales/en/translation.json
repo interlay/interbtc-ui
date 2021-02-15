@@ -93,6 +93,8 @@
     "enter_recipient_address": "Please enter the recipient address",
     "successful_transfer": "Successful transfer",
     "blockstream": "Blockstream",
+    "insufficient_funds_dot": "Insufficient funds to pay for DOT fees.",
+    "insufficient_funds": "Insufficient balance to transfer.",
     "redeem_page": {
         "must_select_account_warning": "No account selected. Please select an account to redeem.",
         "waiting_for": "Waiting for",
@@ -242,6 +244,8 @@
         }
     },
     "issue_page": {
+        "view_on_block_explorer": "VIEW ON BLOCK EXPLORER",
+        "receive_polkabtc_tokens": "You will now receive your 1:1 BTC-backed PolkaBTC tokens. If this does not happen automatically within a few minutes, click the button below.",
         "issue_requests": "Issue Requests",
         "recent_requests": "Recent Requests",
         "must_select_account_warning": "No account selected. Please select an account to proceed to issue PolkaBTC.",
@@ -310,7 +314,8 @@
         "copied_values_are": "Note: copied values are in",
         "executed": "Executed",
         "pending": "Pending",
-        "cancelled": "Cancelled"
+        "cancelled": "Cancelled",
+        "claim_polkabtc": "CLAIM POLKABTC"
     },
     "landing": {
         "defi_ecosystem": "Bitcoin for Polkadot's DeFi Ecosystem",
