@@ -56,7 +56,7 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
                         <thead>
                             <tr>
                                 <th>{t("id")}</th>
-                                <th>{t("parachainblock")}</th>
+                                <th>{t("vault.creation_block")}</th>
                                 <th>{t("vault.old_vault")}</th>
                                 <th>{t("vault.new_vault")}</th>
                                 <th>{t("btc_address")}</th>

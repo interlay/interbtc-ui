@@ -60,7 +60,7 @@ export default function RedeemTable(): ReactElement {
                         <thead>
                             <tr>
                                 <th>{t("id")}</th>
-                                <th>{t("parachainblock")}</th>
+                                <th>{t("vault.creation_block")}</th>
                                 <th>{t("user")}</th>
                                 <th>{t("btc_address")}</th>
                                 <th>PolkaBTC</th>
