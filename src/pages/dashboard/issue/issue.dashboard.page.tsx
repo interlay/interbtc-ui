@@ -15,6 +15,7 @@ import DashboardTable, {
 import * as constants from "../../../constants";
 import PolkaBTC from "../components/polkabtc";
 import "../dashboard-subpage.scss";
+import { BtcNetworkName } from "@interlay/polkabtc-stats";
 
 export default function IssueDashboard(): ReactElement {
     const { totalPolkaBTC, prices } = useSelector((state: StoreType) => state.general);
@@ -32,7 +33,8 @@ export default function IssueDashboard(): ReactElement {
                 tableParams.page,
                 tableParams.perPage,
                 tableParams.sortBy,
-                tableParams.sortAsc
+                tableParams.sortAsc,
+                constants.BITCOIN_NETWORK as BtcNetworkName // not sure why cast is necessary here, but TS complains
             );
             setIssueRequests(res.data);
         },
