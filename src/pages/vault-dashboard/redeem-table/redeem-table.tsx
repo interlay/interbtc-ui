@@ -7,7 +7,7 @@ import * as constants from "../../../constants";
 import BitcoinAddress from "../../../common/components/bitcoin-links/address";
 import { VaultRedeem } from "../../../common/types/redeem.types";
 import { FaCheck, FaHourglass } from "react-icons/fa";
-import { Badge } from "react-bootstrap";
+import { Badge, Table } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
 export default function RedeemTable(): ReactElement {
@@ -50,48 +50,46 @@ export default function RedeemTable(): ReactElement {
     };
 
     return (
-        <div className="redeem-table">
-            <div className="row">
-                <div className="col-12">
-                    <div className="header">{t("redeem_requests")}</div>
-                </div>
+        <div className="dashboard-table-container">
+            <div>
+                <p className="table-heading">{t("redeem_requests")}</p>
             </div>
-            <div className="row justify-content-center">
-                <div className="col-12">
-                    <div className="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>{t("id")}</th>
-                                    <th>{t("parachainblock")}</th>
-                                    <th>{t("user")}</th>
-                                    <th>{t("btc_address")}</th>
-                                    <th>PolkaBTC</th>
-                                    <th>DOT</th>
-                                    <th>{t("status")}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {redeems.map((redeem, index) => {
-                                    return (
-                                        <tr key={index}>
-                                            <td>{shortAddress(redeem.id)}</td>
-                                            <td>{redeem.timestamp}</td>
-                                            <td>{shortAddress(redeem.user)}</td>
-                                            <td>
-                                                <BitcoinAddress btcAddress={redeem.btcAddress} shorten />
-                                            </td>
-                                            <td>{redeem.polkaBTC}</td>
-                                            <td>{redeem.unlockedDOT}</td>
-                                            <td>{showStatus(redeem)}</td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            {redeems && redeems.length > 0 ? (
+                <React.Fragment>
+                    <Table hover responsive size={"md"}>
+                        <thead>
+                            <tr>
+                                <th>{t("id")}</th>
+                                <th>{t("parachainblock")}</th>
+                                <th>{t("user")}</th>
+                                <th>{t("btc_address")}</th>
+                                <th>PolkaBTC</th>
+                                <th>DOT</th>
+                                <th>{t("status")}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {redeems.map((redeem, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td>{shortAddress(redeem.id)}</td>
+                                        <td>{redeem.timestamp}</td>
+                                        <td>{shortAddress(redeem.user)}</td>
+                                        <td>
+                                            <BitcoinAddress btcAddress={redeem.btcAddress} shorten />
+                                        </td>
+                                        <td>{redeem.polkaBTC}</td>
+                                        <td>{redeem.unlockedDOT}</td>
+                                        <td>{showStatus(redeem)}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </Table>
+                </React.Fragment>
+            ) : (
+                <React.Fragment>{t("empty_data")}</React.Fragment>
+            )}
         </div>
     );
 }
