@@ -9,6 +9,7 @@ import DashboardTable, { StyledLinkData } from "../../../common/components/dashb
 import * as constants from "../../../constants";
 import { getAccents } from "../dashboard-colors";
 import BtcRelay from "../components/btc-relay";
+import { reverseEndiannessHex } from "@interlay/polkabtc";
 
 export default function RelayDashboard(): ReactElement {
     const statsApi = usePolkabtcStats();
@@ -85,7 +86,11 @@ export default function RelayDashboard(): ReactElement {
                             </div>
                             <DashboardTable
                                 richTable={true}
-                                pageData={blocks.map((b) => ({ ...b, id: b.hash }))}
+                                pageData={blocks.map((b) => ({
+                                    ...b,
+                                    hash: reverseEndiannessHex(b.hash),
+                                    id: b.hash,
+                                }))}
                                 totalPages={Math.ceil(totalRelayedBlocks / tableParams.perPage)}
                                 tableParams={tableParams}
                                 setTableParams={setTableParams}
