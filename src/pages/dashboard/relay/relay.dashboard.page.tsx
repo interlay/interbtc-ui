@@ -45,10 +45,10 @@ export default function RelayDashboard(): ReactElement {
         () => (block: RelayedBlock): ReactElement[] => [
             <p>{block.height}</p>,
             <StyledLinkData
-                data={block.hash.substring(2)}
+                data={block.hash}
                 target={
                     (constants.BTC_MAINNET ? constants.BTC_EXPLORER_BLOCK_API : constants.BTC_TEST_EXPLORER_BLOCK_API) +
-                    block.hash.substring(2)
+                    block.hash
                 }
                 newTab={true}
             />,
@@ -88,7 +88,7 @@ export default function RelayDashboard(): ReactElement {
                                 richTable={true}
                                 pageData={blocks.map((b) => ({
                                     ...b,
-                                    hash: reverseEndiannessHex(b.hash),
+                                    hash: reverseEndiannessHex(b.hash.substring(2)),
                                     id: b.hash,
                                 }))}
                                 totalPages={Math.ceil(totalRelayedBlocks / tableParams.perPage)}
