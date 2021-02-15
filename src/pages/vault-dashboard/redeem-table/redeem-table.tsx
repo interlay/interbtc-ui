@@ -72,7 +72,7 @@ export default function RedeemTable(): ReactElement {
                             {redeems.map((redeem, index) => {
                                 return (
                                     <tr key={index}>
-                                        <td>{shortAddress(redeem.id)}</td>
+                                        <td>{redeem.id}</td>
                                         <td>{redeem.timestamp}</td>
                                         <td>{shortAddress(redeem.user)}</td>
                                         <td>

@@ -77,7 +77,7 @@ export default function IssueTable(): ReactElement {
                             {issues.map((issue, index) => {
                                 return (
                                     <tr key={index}>
-                                        <td>{shortAddress(issue.id)}</td>
+                                        <td>{issue.id}</td>
                                         <td>{issue.timestamp}</td>
                                         <td>{shortAddress(issue.user)}</td>
                                         <td>

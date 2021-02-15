@@ -69,7 +69,7 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
                             {replaceRequests.map((redeem, index) => {
                                 return (
                                     <tr key={index}>
-                                        <td>{shortAddress(redeem.id)}</td>
+                                        <td>{redeem.id}</td>
                                         <td>{redeem.timestamp}</td>
                                         <td>{shortAddress(redeem.oldVault)}</td>
                                         <td>{shortAddress(redeem.newVault)}</td>
