@@ -58,6 +58,10 @@ export default function Transfer() {
                             }}
                             ref={register({
                                 required: true,
+                                validate: (value) =>
+                                    value > balancePolkaBTC
+                                        ? t("redeem_page.current_balance") + balancePolkaBTC
+                                        : undefined,
                             })}
                         />
                     </div>
