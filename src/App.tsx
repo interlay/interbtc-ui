@@ -111,6 +111,7 @@ export default function App(): ReactElement {
             }, 5000);
             window.polkaBTC = await connectToParachain();
             dispatch(isPolkaBtcLoaded(true));
+            startFetchingLiveData(dispatch, store);
             setIsLoading(false);
         } catch (error) {
             if (!window.polkaBTC)
@@ -119,7 +120,7 @@ export default function App(): ReactElement {
                         "Please check your internet connection or try again later."
                 );
         }
-    }, [dispatch]);
+    }, [dispatch, store]);
 
     useEffect((): void => {
         // Do not load data if showing static landing page only
@@ -161,7 +162,7 @@ export default function App(): ReactElement {
         if (constants.STATIC_PAGE_ONLY) return;
 
         const loadAccountData = async () => {
-            if (!polkaBtcLoaded || extensions.length) return;
+            if (!polkaBtcLoaded || extensions.length) return false;
 
             const browserExtensions = await web3Enable(constants.APP_NAME);
             dispatch(setInstalledExtensionAction(browserExtensions.map((ext) => ext.name)));
@@ -169,7 +170,7 @@ export default function App(): ReactElement {
             const allAccounts = await web3Accounts();
             if (allAccounts.length === 0) {
                 dispatch(changeAddressAction(""));
-                return;
+                return false;
             }
 
             const accounts = allAccounts.map(({ address }) => address);
@@ -187,8 +188,16 @@ export default function App(): ReactElement {
                 window.polkaBTC.setAccount(newAddress, signer);
                 dispatch(changeAddressAction(newAddress));
             } else dispatch(changeAddressAction(""));
+
+            return true;
         };
-        loadAccountData();
+
+        const id = setTimeout(async () => {
+            const accountsLoaded = await loadAccountData();
+            if (accountsLoaded) {
+                clearInterval(id);
+            }
+        }, 1000);
     }, [address, polkaBtcLoaded, dispatch, extensions.length]);
 
     useEffect(() => {

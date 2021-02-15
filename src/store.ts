@@ -13,7 +13,6 @@ declare global {
         relayer: StakedRelayerClient;
         faucet: FaucetClient;
         vaultClient: VaultClient;
-        store: StoreState;
         isFetchingActive: boolean;
     }
 }
@@ -131,7 +130,7 @@ export const saveState = (store: AppState): void => {
             },
         };
         const serializedState = JSON.stringify(preperedState);
-        localStorage.setItem("pbtc-store-1", serializedState);
+        localStorage.setItem("pbtc-store-2", serializedState);
     } catch (error) {
         setTimeout(
             () => toast.error("Local storage is disabled. In order to use platform please enable local storage"),

@@ -1,10 +1,10 @@
 {
     "name": "polkabtc-ui",
-    "version": "1.0.0",
+    "version": "1.1.1",
     "private": true,
     "dependencies": {
-        "@interlay/polkabtc": "^0.8.3",
-        "@interlay/polkabtc-stats": "0.0.14",
+        "@interlay/polkabtc": "^0.8.6",
+        "@interlay/polkabtc-stats": "0.0.17",
         "@polkadot/api": "3.6.1",
         "@polkadot/extension-dapp": "0.36.1",
         "@polkadot/ui-keyring": "0.67.1",
@@ -96,8 +96,8 @@
         "test-watch": "watch 'ts-mocha --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx --timeout 5000' src tests --interval=1",
         "eject": "react-app-rewired eject",
         "compose:regtest": "docker-compose up",
-        "compose:testnet": "docker-compose up -f ./docker-compose.testnet.yml",
-        "compose:down": "docker-compose down -v"
+        "compose:testnet": "docker-compose -f ./docker-compose.testnet.yml up",
+        "compose:down": "docker-compose down --remove-orphans -v"
     },
     "eslintConfig": {
         "extends": "react-app"

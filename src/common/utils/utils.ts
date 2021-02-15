@@ -13,12 +13,18 @@ import {
     IssueRequestExt as ParachainIssueRequest,
     RedeemRequestExt as ParachainRedeemRequest,
     ReplaceRequestExt as ParachainReplaceRequest,
+    roundTwoDecimals,
 } from "@interlay/polkabtc";
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from "../../constants";
 import { Dispatch } from "redux";
 import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from "../actions/general.actions";
 import Big from "big.js";
 import { TableDisplayParams, RelayedBlock } from "../types/util.types";
+
+export function safeRoundTwoDecimals(input: string | undefined, defaultValue = "0"): string {
+    if (input === undefined) return defaultValue;
+    else return roundTwoDecimals(input);
+}
 
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;
@@ -31,7 +37,7 @@ export function shortTxId(txid: string): string {
 }
 
 export function formatDateTime(date: Date): string {
-    return date.toDateString().substring(3) + " " + date.toTimeString().substring(0, 5);
+    return date.toDateString().substring(4) + " " + date.toTimeString().substring(0, 5);
 }
 
 export function formatDateTimePrecise(date: Date): string {
@@ -141,6 +147,7 @@ interface ParsableParachainTypes {
     amount?: PolkaBTC;
     amount_dot?: DOT;
     griefing_collateral?: DOT;
+    premium_dot?: DOT;
 }
 
 export const BtcNetwork =
@@ -187,7 +194,9 @@ function convertParachainTypes(parachainObject: ParsableParachainTypes): [string
         throw new Error("No property found for PolkaBTC amount");
     }
 
-    if (parachainObject.amount_dot) {
+    if (parachainObject.premium_dot && parachainObject.premium_dot.toString() !== "0") {
+        parsedDOT = planckToDOT(parachainObject.premium_dot.toString());
+    } else if (parachainObject.amount_dot) {
         parsedDOT = planckToDOT(parachainObject.amount_dot.toString());
     } else if (parachainObject.griefing_collateral) {
         parsedDOT = planckToDOT(parachainObject.griefing_collateral.toString());
@@ -204,7 +213,7 @@ export const redeemRequestToVaultRedeem = (requests: Map<H256, ParachainRedeemRe
         const [btcAddress, polkaBTC, unlockedDOT] = convertParachainTypes(request);
         redeemRequests.push({
             id: stripHexPrefix(requestId.toString()),
-            // timestamp: request.opentime.toString(),
+            timestamp: request.opentime.toString(),
             user: request.redeemer.toString(),
             btcAddress: btcAddress,
             polkaBTC: polkaBTC,

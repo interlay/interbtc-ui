@@ -30,7 +30,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
                 const oracle = await window.polkaBTC.oracle.getInfo();
                 setExchangeRate(oracle.exchangeRate.toFixed(2));
 
-                if (oracle) {
+                if (oracle.online && Date.now() - oracle.lastUpdate.getTime() < 3600 * 1000) {
                     setOracleStatus(Status.Online);
                 } else {
                     setOracleStatus(Status.Offline);
@@ -83,7 +83,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
                         id="oracle-circle"
                     >
                         <h1
-                            className="h1-xl-text"
+                            className="h1-xl-text-center"
                             style={{ color: getAccents("d_green").color }}
                             id="oracle-circle-text"
                         >
@@ -97,7 +97,11 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
                         style={{ borderColor: getAccents("d_red").color }}
                         id="oracle-circle"
                     >
-                        <h1 className="h1-xl-text" style={{ color: getAccents("d_red").color }} id="oracle-circle-text">
+                        <h1
+                            className="h1-xl-text-center"
+                            style={{ color: getAccents("d_red").color }}
+                            id="oracle-circle-text"
+                        >
                             {t("offline")}
                         </h1>
                         <h2>{exchangeRate} DOT/BTC</h2>
@@ -109,7 +113,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
                         id="oracle-circle"
                     >
                         <h1
-                            className="h1-xl-text"
+                            className="h1-xl-text-center"
                             style={{ color: getAccents("d_grey").color }}
                             id="oracle-circle-text"
                         >
@@ -124,7 +128,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
                         id="oracle-circle"
                     >
                         <h1
-                            className="h1-xl-text"
+                            className="h1-xl-text-center"
                             style={{ color: getAccents("d_grey").color }}
                             id="oracle-circle-text"
                         >

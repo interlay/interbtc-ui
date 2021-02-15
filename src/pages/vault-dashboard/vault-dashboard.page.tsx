@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactElement } from "react";
 import RegisterVaultModal from "./register-vault/register-vault";
 import UpdateCollateralModal from "./update-collateral/update-collateral";
 import RequestReplacementModal from "./request-replacement/request-replacement";
@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import IssueTable from "./issue-table/issue-table";
 import RedeemTable from "./redeem-table/redeem-table";
 import ReplaceTable from "./replace-table/replace-table";
-import { satToBTC, planckToDOT, roundTwoDecimals } from "@interlay/polkabtc";
+import { satToBTC, planckToDOT } from "@interlay/polkabtc";
 import {
     updateBTCAddressAction,
     updateCollateralizationAction,
@@ -20,8 +20,9 @@ import {
 import "./vault-dashboard.page.scss";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { safeRoundTwoDecimals } from "../../common/utils/utils";
 
-export default function VaultDashboardPage() {
+export default function VaultDashboardPage(): ReactElement {
     const [showRegisterVaultModal, setShowRegisterVaultModal] = useState(false);
     const [showUpdateCollateralModal, setShowUpdateCollateralModal] = useState(false);
     const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
@@ -122,14 +123,12 @@ export default function VaultDashboardPage() {
                                 <div className="col-lg-3 col-md-6 col-6">
                                     <div className="">{t("collateralization")}</div>
                                     <span className="stats">
-                                        {collateralization === undefined
-                                            ? "∞"
-                                            : `${roundTwoDecimals(collateralization.toString())}%`}
+                                        {`${safeRoundTwoDecimals(collateralization?.toString(), "∞")}%`}
                                     </span>
                                 </div>
                                 <div className="col-lg-3 col-md-6 col-6">
                                     <div className="">{t("vault.capacity")}</div>
-                                    <span className="stats">~{roundTwoDecimals(capacity)}</span> PolkaBTC
+                                    <span className="stats">~{safeRoundTwoDecimals(capacity)}</span> PolkaBTC
                                 </div>
                             </div>
                             <div className="row justify-content-center mt-4">
@@ -143,11 +142,11 @@ export default function VaultDashboardPage() {
                                 </div>
                                 <div className="col-md-3">
                                     <div className="">{t("sla_score")}</div>
-                                    <span className="stats">{sla}</span>
+                                    <span className="stats">{safeRoundTwoDecimals(sla)}</span>
                                 </div>
                                 <div className="col-md-3">
                                     <div className="">{t("apy")}</div>
-                                    <span className="stats">~{roundTwoDecimals(apy)}</span> %
+                                    <span className="stats">~{safeRoundTwoDecimals(apy)}</span> %
                                 </div>
                             </div>
                         </div>

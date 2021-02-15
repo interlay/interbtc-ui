@@ -270,7 +270,7 @@
     font-size: 2rem;
     font-weight: 600;
     text-align: center;
-    margin: 3rem;
+    margin: 2rem;
 }
 
 .btc-transaction-view {
@@ -342,4 +342,9 @@
         background-color: #28a745;
         border-color: #28a745;
     }
+}
+
+.confirmed-tick {
+    font-size: 10rem;
+    color: $d_green;
 }

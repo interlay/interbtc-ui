@@ -22,14 +22,18 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
         if (!polkaBtcLoaded) return;
 
         const fetchData = async () => {
-            const issuePeriod = await window.polkaBTC.issue.getIssuePeriod();
-            const parachainBlockNumber = await window.polkaBTC.api.query.system.number();
+            try {
+                const issuePeriod = await window.polkaBTC.issue.getIssuePeriod();
+                const parachainBlockNumber = await window.polkaBTC.api.query.system.number();
 
-            const blocks = new Big(parachainBlockNumber.toString()).sub(new Big(props.request.creation));
-            const leftInBlocks = new Big(issuePeriod.toString()).sub(new Big(blocks));
-            const timeLeft = leftInBlocks.mul(new Big(BLOCK_TIME));
-            const timeLeftNumber = Number(timeLeft.toString()) > 0 ? Number(timeLeft.toString()) : 0;
-            setLeftSeconds(timeLeftNumber);
+                const blocks = new Big(parachainBlockNumber.toString()).sub(new Big(props.request.creation));
+                const leftInBlocks = new Big(issuePeriod.toString()).sub(new Big(blocks));
+                const timeLeft = leftInBlocks.mul(new Big(BLOCK_TIME));
+                const timeLeftNumber = Number(timeLeft.toString()) > 0 ? Number(timeLeft.toString()) : 0;
+                setLeftSeconds(timeLeftNumber);
+            } catch (e) {
+                console.log(e);
+            }
         };
 
         fetchData();
