@@ -51,6 +51,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             transactionData = true;
         } catch (err) {
             toast.error(t("issue_page.transaction_not_included"));
+            setExecutePending(false);
         }
 
         if (!transactionData) return;
