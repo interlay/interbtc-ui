@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { updateIssueRequestAction } from "../../../../common/actions/issue.actions";
 import { updateBalancePolkaBTCAction } from "../../../../common/actions/general.actions";
 import { shortAddress } from "../../../../common/utils/utils";
+import Big from "big.js";
 
 type StatusViewProps = {
     request: IssueRequest;
@@ -61,7 +62,6 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             provenReq.rawTransaction = rawTx;
             dispatch(updateIssueRequestAction(provenReq));
 
-            toast.success(t("issue_page.proof_data", { txId }));
             const txIdBuffer = Buffer.from(txId, "hex").reverse();
 
             // prepare types for polkadot
@@ -70,7 +70,6 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             const parsedMerkleProof = window.polkaBTC.api.createType("Bytes", "0x" + merkleProof);
             const parsedRawTx = window.polkaBTC.api.createType("Bytes", rawTx);
 
-            toast.success(t("issue_page.executing", { id: request.id }));
             // execute issue
             const success = await window.polkaBTC.issue.execute(
                 parsedIssuedId,

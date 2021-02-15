@@ -96,7 +96,6 @@ export default function IssueRequests() {
             provenReq.rawTransaction = rawTx;
             dispatch(updateIssueRequestAction(provenReq));
 
-            toast.success(t("issue_page.proof_data", { txId }));
             const txIdBuffer = Buffer.from(txId, "hex").reverse();
 
             // prepare types for polkadot
@@ -105,7 +104,6 @@ export default function IssueRequests() {
             const parsedMerkleProof = window.polkaBTC.api.createType("Bytes", "0x" + merkleProof);
             const parsedRawTx = window.polkaBTC.api.createType("Bytes", rawTx);
 
-            toast.success(t("issue_page.executing", { id: request.id }));
             // execute issue
             const success = await window.polkaBTC.issue.execute(
                 parsedIssuedId,
