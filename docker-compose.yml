@@ -1,7 +1,7 @@
 version: "3.8"
 services:
     polkabtc:
-        image: "registry.gitlab.com/interlay/btc-parachain:0-3-1"
+        image: "registry.gitlab.com/interlay/btc-parachain:0-4-0"
         command:
             - btc-parachain
             - --unsafe-rpc-external
@@ -60,14 +60,14 @@ services:
             - "3002:3002"
     staked_relayer:
         # only start staked relayer after mining to prevent long catch-up
-        image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:0-3-1"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:0-4-0"
         command:
             - /bin/sh
             - -c
             - |
                 echo "Sleeping..."
                 sleep 5
-                staked-relayer --keyring=eve --http-addr '[::0]:3030' --polka-btc-url 'ws://polkabtc:9944'
+                staked-relayer --keyring=eve --http-addr '[::0]:3030' --polka-btc-url 'ws://polkabtc:9944' --auto-register-with-stake=100
         environment: &client-env
             BITCOIN_RPC_URL: http://bitcoind:18443
             BITCOIN_RPC_USER: rpcuser
@@ -76,7 +76,7 @@ services:
         ports:
             - "3030:3030"
     oracle:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:0-3-1"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:0-4-0"
         command:
             - /bin/sh
             - -c
@@ -87,7 +87,7 @@ services:
         environment:
             RUST_LOG: info
     faucet:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/faucet:0-3-1"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/faucet:0-4-0"
         command:
             - /bin/sh
             - -c
@@ -100,7 +100,7 @@ services:
         ports:
             - "3035:3035"
     vault:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:0-3-1"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:0-4-0"
         command:
             - /bin/sh
             - -c
@@ -115,7 +115,7 @@ services:
         ports:
             - "3032:3032"
     testdata_gen:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/testdata-gen:0-3-1"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/testdata-gen:0-4-0"
         command:
             - /bin/sh
             - -c
