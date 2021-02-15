@@ -30,7 +30,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
                 const oracle = await window.polkaBTC.oracle.getInfo();
                 setExchangeRate(oracle.exchangeRate.toFixed(2));
 
-                if (oracle) {
+                if (oracle.online && Date.now() - oracle.lastUpdate.getTime() < 3600 * 1000) {
                     setOracleStatus(Status.Online);
                 } else {
                     setOracleStatus(Status.Offline);

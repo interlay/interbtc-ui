@@ -1,12 +1,12 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { StoreType } from "../../types/util.types";
 import { useSelector } from "react-redux";
-import { dateToShortString } from "../../utils/utils";
+import { formatDateTime } from "../../utils/utils";
 import BN from "bn.js";
 import Big from "big.js";
 import * as constants from "../../../constants";
 import { useTranslation } from "react-i18next";
-import DashboardTable from "../dashboard-table/dashboard-table";
+import DashboardTable, { StatusComponent, StatusCategories } from "../dashboard-table/dashboard-table";
 
 interface OracleInfo {
     id: string;
@@ -14,6 +14,7 @@ interface OracleInfo {
     feed: string;
     lastUpdate: string;
     exchangeRate: Big;
+    online: boolean;
 }
 
 type OracleTableProps = {
@@ -35,8 +36,9 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
                         id: "0", // todo: if fetching multiple oracles: set to index, or get account_id
                         source: oracle.names.join(","),
                         feed: oracle.feed,
-                        lastUpdate: dateToShortString(oracle.lastUpdate),
+                        lastUpdate: formatDateTime(oracle.lastUpdate),
                         exchangeRate: oracle.exchangeRate,
+                        online: oracle.online && Date.now() - oracle.lastUpdate.getTime() < 3600 * 1000,
                     },
                 ]);
             } catch (e) {
@@ -56,6 +58,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
         <h1>{t("feed")}</h1>,
         <h1>{t("last_update")}</h1>,
         <h1>{t("exchange_rate")}</h1>,
+        <h1>{t("status")}</h1>,
     ];
 
     const oracleTableRow = (oracle: OracleInfo): ReactElement[] => [
@@ -63,12 +66,17 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
         <p>{oracle.feed}</p>,
         <p>{oracle.lastUpdate}</p>,
         <p> 1 BTC = {oracle.exchangeRate.toFixed(5)} DOT</p>,
+        <StatusComponent
+            {...(oracle.online
+                ? { text: t("online"), category: StatusCategories.Ok }
+                : { text: t("offline"), category: StatusCategories.Bad })}
+        />,
     ];
 
     return (
         <div className={"dashboard-table-container " + (new BN(props.planckLocked) <= new BN(0) ? "oracle-space" : "")}>
             <div>
-                <p className="table-heading">{t("dashboard.oracles.active_oracles")}</p>
+                <p className="table-heading">{t("dashboard.oracles.oracles")}</p>
             </div>
             <DashboardTable
                 pageData={oracles}
