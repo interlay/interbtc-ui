@@ -135,13 +135,6 @@ export default function IssueRequests() {
     };
 
     const handleCompleted = (request: IssueRequest) => {
-        if (issuePeriod.add(new Big(request.creation)).lte(parachainHeight)) {
-            return (
-                <h5>
-                    <Badge variant="secondary">{t("issue_page.expired")}</Badge>
-                </h5>
-            );
-        }
         if (request.completed) {
             return <FaCheck></FaCheck>;
         }
@@ -150,6 +143,13 @@ export default function IssueRequests() {
                 <Badge className="badge-style" variant="secondary">
                     {t("cancelled")}
                 </Badge>
+            );
+        }
+        if (issuePeriod.add(new Big(request.creation)).lte(parachainHeight)) {
+            return (
+                <h5>
+                    <Badge variant="secondary">{t("issue_page.expired")}</Badge>
+                </h5>
             );
         }
         if (request.confirmations < requiredBtcConfirmations || request.confirmations === 0) {
