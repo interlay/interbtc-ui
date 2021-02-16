@@ -46,6 +46,8 @@ export const BITCOIN_NETWORK = (process.env.REACT_APP_BITCOIN_NETWORK || "testne
     | "regtest";
 export const BITCOIN_REGTEST_URL = process.env.REACT_APP_BITCOIN_REGTEST_URL || "http://localhost:3002";
 
+export const STORE_NAME = "pbtc-store-2";
+
 export const BLOCK_TIME = 6; // seconds
 
 export const BTC_ADDRESS_REGEX =
