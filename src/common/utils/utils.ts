@@ -1,8 +1,8 @@
 import { RedeemRequest, VaultRedeem } from "../types/redeem.types";
-import { IssueRequest, VaultIssue } from "../types/issue.types";
+import { IssueRequest, IssueRequestStatus, VaultIssue } from "../types/issue.types";
 import { DOT, PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 import { VaultReplaceRequest } from "../types/vault.types";
-import { H256 } from "@polkadot/types/interfaces";
+import { H256, BlockNumber } from "@polkadot/types/interfaces";
 import {
     satToBTC,
     planckToDOT,
@@ -58,9 +58,17 @@ export function calculateAmount(amount: string, currencyPrice: number): string {
  * @param id H256, the key of the IssueRequest object in the parachain map storage object
  * @param parachainIssueRequest ParachainIssueRequest
  */
-export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: ParachainIssueRequest): IssueRequest {
+export async function parachainToUIIssueRequest(
+    id: H256,
+    parachainIssueRequest: ParachainIssueRequest
+): Promise<IssueRequest> {
     const amountBTC = satToBTC(parachainIssueRequest.amount.toString());
     const fee = satToBTC(parachainIssueRequest.fee.toString());
+    const status = await computeIssueRequestStatus(
+        parachainIssueRequest.completed.isTrue,
+        parachainIssueRequest.cancelled.isTrue,
+        parachainIssueRequest.opentime
+    );
     return {
         id: stripHexPrefix(id.toString()),
         amountBTC,
@@ -73,9 +81,41 @@ export function parachainToUIIssueRequest(id: H256, parachainIssueRequest: Parac
         totalAmount: new Big(amountBTC).add(fee).toString(),
         griefingCollateral: parachainIssueRequest.griefing_collateral.toString(),
         confirmations: 0,
-        completed: parachainIssueRequest.completed.isTrue,
-        cancelled: parachainIssueRequest.cancelled.isTrue,
+        status,
     };
+}
+
+export async function computeIssueRequestStatus(
+    completed: boolean,
+    cancelled: boolean,
+    creationBlock: BlockNumber,
+    btcTxId = "",
+    confirmations = 0
+): Promise<IssueRequestStatus> {
+    if (completed) {
+        return IssueRequestStatus.Completed;
+    }
+    if (cancelled) {
+        return IssueRequestStatus.Cancelled;
+    }
+    const parachainHeight = await window.polkaBTC.system.getCurrentBlockNumber();
+    const issuePeriod = await window.polkaBTC.issue.getIssuePeriod();
+    if (creationBlock.add(issuePeriod).lte(parachainHeight)) {
+        return IssueRequestStatus.Expired;
+    }
+
+    if (btcTxId === "") {
+        return IssueRequestStatus.PendingWithBtcTxNotFound;
+    }
+    if (confirmations === 0) {
+        return IssueRequestStatus.PendingWithBtcTxNotIncluded;
+    }
+    const requiredBtcConfirmations = await window.polkaBTC.btcRelay.getStableBitcoinConfirmations();
+    if (confirmations < requiredBtcConfirmations) {
+        return IssueRequestStatus.PendingWithTooFewConfirmations;
+    }
+
+    return IssueRequestStatus.PendingWithEnoughConfirmations;
 }
 
 /**

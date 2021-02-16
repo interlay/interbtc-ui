@@ -8,13 +8,22 @@ export interface IssueRequest {
     vaultDOTAddress: string;
     btcTxId: string;
     confirmations: number;
-    completed: boolean;
-    cancelled: boolean;
+    status: IssueRequestStatus;
     merkleProof?: string;
     transactionBlockHeight?: number;
     rawTransaction?: Uint8Array;
     fee: string;
     griefingCollateral: string;
+}
+
+export enum IssueRequestStatus {
+    Completed,
+    Cancelled,
+    Expired,
+    PendingWithBtcTxNotFound,
+    PendingWithBtcTxNotIncluded,
+    PendingWithTooFewConfirmations,
+    PendingWithEnoughConfirmations,
 }
 
 export type DashboardIssueInfo = {

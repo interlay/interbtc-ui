@@ -10,6 +10,7 @@ import WhopsView from "./whoops-view";
 import Big from "big.js";
 import BitcoinLogo from "../../../../assets/img/Bitcoin-Logo.png";
 import { calculateAmount } from "../../../../common/utils/utils";
+import { IssueRequestStatus } from "../../../../common/types/issue.types";
 
 type IssueModalProps = {
     show: boolean;
@@ -71,7 +72,10 @@ export default function IssueModal(props: IssueModalProps) {
                             </div>
                         </div>
                         <div className="col-6">
-                            {!request.btcTxId && !request.cancelled && !request.completed && request ? (
+                            {!request.btcTxId &&
+                            request.status !== IssueRequestStatus.Cancelled &&
+                            request.status !== IssueRequestStatus.Completed &&
+                            request ? (
                                 <PaymentView request={request} />
                             ) : (
                                 <StatusView request={request} />

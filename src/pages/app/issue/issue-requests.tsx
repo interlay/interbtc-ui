@@ -1,12 +1,11 @@
 import React, { useState, MouseEvent } from "react";
 
 import Big from "big.js";
-import { IssueRequest } from "../../../common/types/issue.types";
+import { IssueRequest, IssueRequestStatus } from "../../../common/types/issue.types";
 import { Table, Badge } from "react-bootstrap";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import { useEffect } from "react";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { toast } from "react-toastify";
 import { updateIssueRequestAction, changeSelectedIssueAction } from "../../../common/actions/issue.actions";
@@ -21,11 +20,7 @@ export default function IssueRequests() {
         (state: StoreType) => state.general
     );
     const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
-    const [executePending, setExecutePending] = useState([""]);
     const [showModal, setShowModal] = useState(false);
-    const [requiredBtcConfirmations, setRequiredBtcConfirmations] = useState(0);
-    const [issuePeriod, setIssuePeriod] = useState(new Big(0));
-    const [parachainHeight, setParachainHeight] = useState(new Big(0));
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
@@ -47,27 +42,8 @@ export default function IssueRequests() {
         }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!polkaBtcLoaded) return;
-
-            try {
-                const issuePeriodBlock = await window.polkaBTC.issue.getIssuePeriod();
-                const parachainHeightBlock = await window.polkaBTC.system.getCurrentBlockNumber();
-                setIssuePeriod(new Big(issuePeriodBlock.toString()));
-                setParachainHeight(new Big(parachainHeightBlock.toString()));
-
-                setRequiredBtcConfirmations(await window.polkaBTC.btcRelay.getStableBitcoinConfirmations());
-            } catch (error) {
-                toast.error(error.toString());
-            }
-        };
-        fetchData();
-    }, [polkaBtcLoaded, address, dispatch]);
-
     const execute = async (request: IssueRequest) => {
         if (!polkaBtcLoaded) return;
-        setExecutePending([...executePending, request.id]);
 
         let [merkleProof, rawTx] = [request.merkleProof, request.rawTransaction];
         let transactionData = false;
@@ -117,7 +93,7 @@ export default function IssueRequests() {
             }
 
             const completedReq = provenReq;
-            completedReq.completed = true;
+            completedReq.status = IssueRequestStatus.Completed;
 
             dispatch(
                 updateBalancePolkaBTCAction(new Big(balancePolkaBTC).add(new Big(provenReq.amountBTC)).toString())
@@ -127,36 +103,37 @@ export default function IssueRequests() {
             toast.success(t("issue_page.succesfully_executed", { id: request.id }));
         } catch (error) {
             toast.error(error.toString());
-        } finally {
-            setExecutePending(executePending.splice(executePending.indexOf(request.id), 1));
         }
     };
 
     const handleCompleted = (request: IssueRequest) => {
-        if (request.completed) {
-            return <FaCheck></FaCheck>;
-        }
-        if (request.cancelled) {
-            return (
-                <Badge className="badge-style" variant="secondary">
-                    {t("cancelled")}
-                </Badge>
-            );
-        }
-        if (issuePeriod.add(new Big(request.creation)).lte(parachainHeight)) {
-            return (
-                <h5>
-                    <Badge variant="secondary">{t("issue_page.expired")}</Badge>
-                </h5>
-            );
-        }
-        if (request.confirmations < requiredBtcConfirmations || request.confirmations === 0) {
-            return <FaHourglass></FaHourglass>;
+        switch (request.status) {
+            case IssueRequestStatus.Completed: {
+                return <FaCheck></FaCheck>;
+            }
+            case IssueRequestStatus.Cancelled: {
+                return (
+                    <Badge className="badge-style" variant="secondary">
+                        {t("cancelled")}
+                    </Badge>
+                );
+            }
+            case IssueRequestStatus.Expired: {
+                return (
+                    <h5>
+                        <Badge variant="secondary">{t("issue_page.expired")}</Badge>
+                    </h5>
+                );
+            }
+            case IssueRequestStatus.PendingWithBtcTxNotIncluded:
+            case IssueRequestStatus.PendingWithTooFewConfirmations: {
+                return <FaHourglass></FaHourglass>;
+            }
         }
         return (
             <ButtonMaybePending
                 variant="outline-dark"
-                isPending={executePending.indexOf(request.id) !== -1}
+                isPending={request.status === IssueRequestStatus.PendingWithBtcTxNotFound}
                 size="lg"
                 block
                 onClick={(event: MouseEvent<HTMLElement>) => {
