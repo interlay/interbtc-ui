@@ -6,6 +6,7 @@ import { applyMiddleware, createStore } from "redux";
 import { initializeState } from "./common/actions/general.actions";
 import { FaucetClient, PolkaBTCAPI, StakedRelayerClient, VaultClient } from "@interlay/polkabtc";
 import { mapToArray, arrayToMap } from "./common/utils/utils";
+import * as constants from "./constants";
 
 declare global {
     interface Window {
@@ -81,7 +82,7 @@ export const getInitialState = (): StoreType => {
 
 export const loadState = (): StoreType => {
     try {
-        const serializedState = localStorage.getItem("pbtc-store-1");
+        const serializedState = localStorage.getItem(constants.STORE_NAME);
         if (serializedState === null) {
             const initialState = getInitialState();
             return initialState;
@@ -130,7 +131,7 @@ export const saveState = (store: AppState): void => {
             },
         };
         const serializedState = JSON.stringify(preperedState);
-        localStorage.setItem("pbtc-store-2", serializedState);
+        localStorage.setItem(constants.STORE_NAME, serializedState);
     } catch (error) {
         setTimeout(
             () => toast.error("Local storage is disabled. In order to use platform please enable local storage"),
