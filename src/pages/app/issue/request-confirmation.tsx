@@ -18,7 +18,7 @@ import BitcoinLogo from "../../../assets/img/Bitcoin-Logo.png";
 export default function RequestConfirmation() {
     const [isRequestPending, setRequestPending] = useState(false);
     const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
-    const { amountBTC, vaultDotAddress, fee } = useSelector((state: StoreType) => state.issue);
+    const { amountBTC, vaultDotAddress } = useSelector((state: StoreType) => state.issue);
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
@@ -67,7 +67,7 @@ export default function RequestConfirmation() {
                     <div className="col-6">{t("bridge_fee")}</div>
                     <div className="col-6">
                         <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
-                        {fee} BTC
+                        {"feeee"} BTC
                     </div>
                 </div>
                 <hr className="total-divider"></hr>
@@ -75,11 +75,11 @@ export default function RequestConfirmation() {
                     <div className="col-6 total-amount">{t("total_deposit")}</div>
                     <div className="col-6 total-amount">
                         <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
-                        {new Big(fee).add(new Big(amountBTC)).toString()} BTC
+                        {new Big("0").add(new Big(amountBTC)).toString()} BTC
                     </div>
                 </div>
             </div>
-            <ButtonMaybePending className="btn btn-primary app-btn" isPending={isRequestPending} onClick={onConfirm}>
+            <ButtonMaybePending className="btn grey-button app-btn" isPending={isRequestPending} onClick={onConfirm}>
                 {t("confirm")}
             </ButtonMaybePending>
         </React.Fragment>

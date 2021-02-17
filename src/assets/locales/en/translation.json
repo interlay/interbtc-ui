@@ -245,6 +245,8 @@
     },
     "issue_page": {
         "view_on_block_explorer": "VIEW ON BLOCK EXPLORER",
+        "mint_polka_by_wrapping": "Mint PolkaBTC by wrapping BTC 1:1",
+        "security_deposit": "Security Deposit",
         "receive_polkabtc_tokens": "You will now receive your 1:1 BTC-backed PolkaBTC tokens. If this does not happen automatically within a few minutes, click the button below.",
         "issue_requests": "Issue Requests",
         "recent_requests": "Recent Requests",

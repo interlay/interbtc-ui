@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import BitcoinLogo from "../../../assets/img/Bitcoin-Logo.png";
+import PolkadotLogo from "../../../assets/img/polkadot-logo.png";
 import * as constants from "../../../constants";
+import Big from "big.js";
 
 import {
     changeAmountBTCAction,
     changeIssueStepAction,
     changeVaultDotAddressOnIssueAction,
-    updateIssueFeeAction,
     updateIssueGriefingCollateralAction,
 } from "../../../common/actions/issue.actions";
 import { toast } from "react-toastify";
@@ -24,14 +25,17 @@ type EnterBTCForm = {
 };
 
 export default function EnterBTCAmount() {
-    const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
-    const { polkaBtcLoaded, address, bitcoinHeight, btcRelayHeight } = useSelector((state: StoreType) => state.general);
+    const { polkaBtcLoaded, address, bitcoinHeight, btcRelayHeight, prices } = useSelector(
+        (state: StoreType) => state.general
+    );
     const amount = useSelector((state: StoreType) => state.issue.amountBTC);
     const defaultValues = amount ? { defaultValues: { amountBTC: amount } } : undefined;
     const { register, handleSubmit, errors, getValues } = useForm<EnterBTCForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
     const [dustValue, setDustValue] = useState("0");
     const [usdAmount, setUsdAmount] = useState("");
+    const [fee, setFee] = useState("0");
+    const [deposit, setDeposit] = useState("0");
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
@@ -47,9 +51,9 @@ export default function EnterBTCAmount() {
                 console.log(error);
             }
         };
-        setUsdAmount(calculateAmount(amount || getValues("amountBTC") || "0", usdPrice));
+        setUsdAmount(calculateAmount(amount || getValues("amountBTC") || "0", prices.bitcoin.usd));
         fetchData();
-    }, [polkaBtcLoaded, setUsdAmount, amount, usdPrice, getValues]);
+    }, [polkaBtcLoaded, setUsdAmount, amount, prices.bitcoin.usd, getValues]);
 
     const onSubmit = handleSubmit(async ({ amountBTC }) => {
         if (!polkaBtcLoaded) return;
@@ -77,9 +81,6 @@ export default function EnterBTCAmount() {
 
             const vaultId = await window.polkaBTC.vaults.selectRandomVaultIssue(amountAsSatoshi);
 
-            const fee = await window.polkaBTC.issue.getFeesToPay(amountBTC);
-            dispatch(updateIssueFeeAction(fee));
-
             const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSAT);
             dispatch(updateIssueGriefingCollateralAction(planckToDOT(griefingCollateral)));
 
@@ -91,8 +92,28 @@ export default function EnterBTCAmount() {
         setRequestPending(false);
     });
 
+    const onValueChange = async () => {
+        const value = getValues("amountBTC");
+        setUsdAmount(calculateAmount(value || "0", prices.bitcoin.usd));
+        try {
+            const fee = await window.polkaBTC.issue.getFeesToPay(value);
+            setFee(fee);
+
+            const amountSAT = btcToSat(value);
+            const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountSAT);
+            const vaultId = await window.polkaBTC.vaults.selectRandomVaultIssue(amountAsSatoshi);
+            const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSAT);
+            setDeposit(griefingCollateral);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <form onSubmit={onSubmit}>
+            <div className="row">
+                <div className="col-12 wizard-header-text">{t("issue_page.mint_polka_by_wrapping")}</div>
+            </div>
             <div className="row">
                 <div className="col-6">
                     <input
@@ -102,9 +123,7 @@ export default function EnterBTCAmount() {
                         step="any"
                         placeholder="0.00"
                         className={"" + (errors.amountBTC ? " error-borders" : "")}
-                        onChange={() => {
-                            setUsdAmount(calculateAmount(getValues("amountBTC") || "0", usdPrice));
-                        }}
+                        onChange={onValueChange}
                         ref={register({
                             required: true,
                             validate: (value) => {
@@ -122,7 +141,7 @@ export default function EnterBTCAmount() {
                 <div className="col-6 mark-currency">PolkaBTC</div>
             </div>
             <div className="row usd-price">
-                <div className="col">{"= $" + usdAmount}</div>
+                <div className="col">{"~ $" + usdAmount}</div>
             </div>
             {errors.amountBTC && (
                 <div className="wizard-input-error">
@@ -132,19 +151,47 @@ export default function EnterBTCAmount() {
                 </div>
             )}
             <div className="row">
-                <div className="col-12">
-                    <div className="locking-by">
-                        <div className="row">
-                            <div className="col-6">{t("issue_page.by_locking")}</div>
-                            <div className="col-6">
-                                <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>BTC
-                            </div>
-                        </div>
+                <div className="col bridge-fee">{t("bridge_fee")}</div>
+            </div>
+            <div className="row">
+                <div className="col fee-number">
+                    <div>
+                        <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
+                        <span className="fee-btc">{fee}</span> BTC
                     </div>
+                    <div>{"~ $" + Number(fee) * prices.bitcoin.usd}</div>
                 </div>
             </div>
-            <ButtonMaybePending className="btn btn-primary app-btn" isPending={isRequestPending} onClick={onSubmit}>
-                {t("next")}
+            <div className="row">
+                <div className="col bridge-fee mt-3">{t("issue_page.security_deposit")}</div>
+            </div>
+            <div className="row">
+                <div className="col fee-number">
+                    <div>
+                        <img src={PolkadotLogo} width="20px" height="20px" alt="polkadot logo"></img> &nbsp;
+                        <span className="fee-btc">{fee}</span> DOT
+                    </div>
+                    <div>{"~ $" + new Big(deposit).mul(new Big(prices.polkadot.usd)).toString()}</div>
+                </div>
+            </div>
+
+            <div className="row justify-content-center">
+                <div className="col-8 horizontal-line-total"></div>
+            </div>
+
+            <div className="row justify-content-center mb-3">
+                <div className="col-4 text-left bold">{t("total_deposit")}</div>
+                <div className="col-4 text-right">
+                    <div>
+                        <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
+                        <span className="fee-btc">{fee}</span> BTC
+                    </div>
+                    <div>{"~ $" + Number(fee) * prices.bitcoin.usd}</div>
+                </div>
+            </div>
+
+            <ButtonMaybePending className="btn grey-button app-btn" isPending={isRequestPending} onClick={onSubmit}>
+                {t("confirm")}
             </ButtonMaybePending>
         </form>
     );

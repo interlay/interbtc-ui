@@ -55,23 +55,28 @@ export default function AppPage(): ReactElement {
                 <div className="row justify-content-center">
                     <div className="col-xl-6 col-lg-6 col-md-8 col-sm-12 col-xs-12 tab-content-wrapper">
                         {!hideTabs() ? (
-                            <div id="main-tabs" className="row app-tabs">
-                                <div className={"col-4 app-tab"} onClick={() => changeTab(ActiveTab.Issue)}>
-                                    <div className={activeTab === ActiveTab.Issue ? " active-tab" : " not-active"}>
-                                        {t("issue")}
+                            <React.Fragment>
+                                <div id="main-tabs" className="row app-tabs">
+                                    <div className={"col-4 app-tab"} onClick={() => changeTab(ActiveTab.Issue)}>
+                                        <div className={activeTab === ActiveTab.Issue ? " active-tab" : " not-active"}>
+                                            {t("issue")}
+                                        </div>
+                                    </div>
+                                    <div className={"col-4 app-tab"} onClick={() => changeTab(ActiveTab.Redeem)}>
+                                        <div className={activeTab === ActiveTab.Redeem ? " active-tab" : " not-active"}>
+                                            {t("redeem")}
+                                        </div>
+                                    </div>
+                                    <div className={"col-4 app-tab"} onClick={() => changeTab(ActiveTab.Transfer)}>
+                                        <div
+                                            className={activeTab === ActiveTab.Transfer ? " active-tab" : " not-active"}
+                                        >
+                                            {t("transfer")}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className={"col-4 app-tab"} onClick={() => changeTab(ActiveTab.Redeem)}>
-                                    <div className={activeTab === ActiveTab.Redeem ? " active-tab" : " not-active"}>
-                                        {t("redeem")}
-                                    </div>
-                                </div>
-                                <div className={"col-4 app-tab"} onClick={() => changeTab(ActiveTab.Transfer)}>
-                                    <div className={activeTab === ActiveTab.Transfer ? " active-tab" : " not-active"}>
-                                        {t("transfer")}
-                                    </div>
-                                </div>
-                            </div>
+                                <div className="horizontal-line"></div>
+                            </React.Fragment>
                         ) : (
                             <React.Fragment>
                                 <div className="step-back">

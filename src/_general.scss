@@ -296,6 +296,23 @@ a:not([href]):not([tabindex]):focus {
     }
 }
 
+.grey-button {
+    border: 2px solid $d_grey;
+    color: $d_grey;
+    background-color: white;
+    font-weight: 600;
+    &:hover {
+        color: white;
+        background-color: $d_grey;
+        border: 1px solid $d_grey;
+    }
+    &:disabled {
+        color: white !important;
+        background-color: $d_grey !important;
+        border: 1px solid $d_grey !important;
+    }
+}
+
 .green-button {
     border: 1px solid $d_green;
     color: $d_green;

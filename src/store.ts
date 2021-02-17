@@ -43,7 +43,6 @@ export const getInitialState = (): StoreType => {
             address: "",
             step: "ENTER_BTC_AMOUNT",
             amountBTC: "",
-            fee: "0",
             griefingCollateral: "0",
             vaultBtcAddress: "",
             vaultDotAddress: "",

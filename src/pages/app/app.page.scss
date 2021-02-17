@@ -3,20 +3,23 @@
 .app-page {
     .app-tabs {
         .app-tab {
-            padding: 0.5rem;
             &:hover {
                 cursor: pointer;
             }
         }
 
         .active-tab {
-            padding-bottom: 5px;
-            border-bottom: 3px solid $brand-color;
-            color: $brand-color;
+            border-radius: 5px;
+            background-color: $d_pink;
+            color: white;
+            margin: 0px -15px;
+            padding: 10px;
         }
 
         .not-active {
             border-bottom: none;
+            margin: 0px -15px;
+            padding: 10px;
         }
     }
 
@@ -24,9 +27,28 @@
         color: #998;
     }
 
+    #main-tabs {
+        background-color: $body-color;
+        border-radius: 5px;
+        margin: 0px;
+    }
+
+    .horizontal-line {
+        margin-top: 1rem;
+        width: 100%;
+        border: 1px solid $d_pink;
+    }
+
+    .wizard-header-text {
+        font-weight: 600;
+        text-align: center;
+        margin-top: 1rem;
+    }
+
     .tab-content-wrapper {
         box-shadow: 0px 0px 20px darkgrey;
         border-radius: 5px;
+        padding: 3rem;
     }
 
     #amount-btc-input {
@@ -38,8 +60,8 @@
     }
 
     .app-btn {
-        width: 100%;
-        padding: 15px;
+        width: 50%;
+        padding: 10px;
         margin-bottom: 15px;
         margin-top: 15px;
     }
@@ -50,6 +72,17 @@
     text-align: left;
     margin-top: 3.7rem;
     margin-left: -1rem;
+    color: $d_pink;
+    font-weight: 600;
+}
+
+.horizontal-line-total {
+    border: 1px solid $d_grey;
+    margin: 1rem 0;
+}
+
+.bold {
+    font-weight: 600;
 }
 
 .locking-by {
@@ -81,8 +114,23 @@
 
 .usd-price {
     color: #998;
-    font-size: 1rem;
-    margin-bottom: 4rem;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.bridge-fee {
+    text-align: center;
+    font-weight: 600;
+    color: $d_grey;
+}
+
+.fee-number {
+    color: $d_grey;
+}
+
+.fee-btc {
+    color: black;
+    font-weight: 600;
 }
 
 .usd-price-modal {

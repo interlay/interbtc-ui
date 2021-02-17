@@ -4,7 +4,6 @@ import {
     CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE,
     RESET_ISSUE_WIZARD,
     CHANGE_AMOUNT_BTC,
-    UPDATE_ISSUE_FEE,
     UPDATE_ISSUE_GRIEFING_COLLATERAL,
     CHANGE_BTC_TX_ID,
     CHANGE_ISSUE_ID,
@@ -24,7 +23,6 @@ const initialState = {
     address: "",
     step: "ENTER_BTC_AMOUNT",
     amountBTC: "",
-    fee: "0",
     griefingCollateral: "0",
     vaultBtcAddress: "",
     vaultDotAddress: "",
@@ -46,8 +44,6 @@ export const issueReducer = (state: IssueState = initialState, action: IssueActi
             return { ...state, step: action.step };
         case CHANGE_AMOUNT_BTC:
             return { ...state, amountBTC: action.amount };
-        case UPDATE_ISSUE_FEE:
-            return { ...state, fee: action.fee };
         case UPDATE_ISSUE_GRIEFING_COLLATERAL:
             return { ...state, griefingCollateral: action.griefingCollateral };
         case CHANGE_VAULT_BTC_ADDRESS_ON_ISSUE:
@@ -87,7 +83,7 @@ export const issueReducer = (state: IssueState = initialState, action: IssueActi
         case OPEN_WIZARD_IN_EDIT_MODE:
             return { ...state, wizardInEditMode: true };
         case INIT_STATE:
-            return { ...state, step: "ENTER_BTC_AMOUNT", amountBTC: "", fee: "0", issueRequests: new Map() };
+            return { ...state, step: "ENTER_BTC_AMOUNT", amountBTC: "", issueRequests: new Map() };
         case ADD_VAULT_ISSUES:
             return { ...state, vaultIssues: action.vaultIssues };
         case UPDATE_ALL_ISSUE_REQUESTS:
