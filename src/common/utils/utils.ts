@@ -55,19 +55,29 @@ export function calculateAmount(amount: string, currencyPrice: number): string {
 /**
  * Converts an IssueRequest object retrieved from the parachain
  * to a UI IssueRequest object
+ *
  * @param id H256, the key of the IssueRequest object in the parachain map storage object
  * @param parachainIssueRequest ParachainIssueRequest
+ * @param parachainHeight parachainHeight data (queried from the parachain)
+ * @param issuePeriod issuePeriod data (queried from the parachain)
+ * @param requiredBtcConfirmations requiredBtcConfirmations data (queried from the parachain)
  */
 export async function parachainToUIIssueRequest(
     id: H256,
-    parachainIssueRequest: ParachainIssueRequest
+    parachainIssueRequest: ParachainIssueRequest,
+    parachainHeight: BlockNumber,
+    issuePeriod: BlockNumber,
+    requiredBtcConfirmations: number
 ): Promise<IssueRequest> {
     const amountBTC = satToBTC(parachainIssueRequest.amount.toString());
     const fee = satToBTC(parachainIssueRequest.fee.toString());
     const status = await computeIssueRequestStatus(
         parachainIssueRequest.completed.isTrue,
         parachainIssueRequest.cancelled.isTrue,
-        parachainIssueRequest.opentime
+        parachainIssueRequest.opentime,
+        parachainHeight,
+        issuePeriod,
+        requiredBtcConfirmations
     );
     return {
         id: stripHexPrefix(id.toString()),
@@ -89,6 +99,9 @@ export async function computeIssueRequestStatus(
     completed: boolean,
     cancelled: boolean,
     creationBlock: BlockNumber,
+    parachainHeight: BlockNumber,
+    issuePeriod: BlockNumber,
+    requiredBtcConfirmations: number,
     btcTxId = "",
     confirmations = 0
 ): Promise<IssueRequestStatus> {
@@ -98,8 +111,6 @@ export async function computeIssueRequestStatus(
     if (cancelled) {
         return IssueRequestStatus.Cancelled;
     }
-    const parachainHeight = await window.polkaBTC.system.getCurrentBlockNumber();
-    const issuePeriod = await window.polkaBTC.issue.getIssuePeriod();
     if (creationBlock.add(issuePeriod).lte(parachainHeight)) {
         return IssueRequestStatus.Expired;
     }
@@ -110,7 +121,6 @@ export async function computeIssueRequestStatus(
     if (confirmations === 0) {
         return IssueRequestStatus.PendingWithBtcTxNotIncluded;
     }
-    const requiredBtcConfirmations = await window.polkaBTC.btcRelay.getStableBitcoinConfirmations();
     if (confirmations < requiredBtcConfirmations) {
         return IssueRequestStatus.PendingWithTooFewConfirmations;
     }
