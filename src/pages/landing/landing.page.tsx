@@ -18,7 +18,7 @@ export default function LandingPage(): JSX.Element {
     const dispatch = useDispatch();
 
     const checkWalletAndAccount = () => {
-        if(!extensions.length || !address) {
+        if (!extensions.length || !address) {
             dispatch(showAccountModalAction(true));
         }
     }
@@ -32,6 +32,16 @@ export default function LandingPage(): JSX.Element {
                     </Link>
                     <h1 className="text-white mt-5">PolkaBTC</h1>
                     <h2 className="text-white">Bitcoin for Polkadot's DeFi Ecosystem</h2>
+
+                    <div>
+                        <Row className="mt-4">
+                            <Col xs="12" sm={{ span: 6, offset: 3 }}>
+                                <h5 className="text-white">
+                                    Beta testnet coming soon! Stay up to date on <a href="https://discord.gg/3TWXQ4VF" target="_blank" rel="noopener noreferrer">Discord</a>.
+                                    </h5>
+                            </Col>
+                        </Row>
+                    </div>
 
                     {!constants.STATIC_PAGE_ONLY ? (
                         <div>
@@ -49,7 +59,7 @@ export default function LandingPage(): JSX.Element {
                                 <Row className="mt-5">
                                     <Col className="mt-2" xs="12" sm={{ span: 4, offset: 2 }}>
                                         <NavLink className="text-decoration-none" to="/issue">
-                                            <Button variant="outline-polkadot" size="lg" block 
+                                            <Button variant="outline-polkadot" size="lg" block
                                                 onClick={checkWalletAndAccount}>
                                                 Issue PolkaBTC
                                             </Button>
@@ -69,20 +79,20 @@ export default function LandingPage(): JSX.Element {
                     ) : (
                             <div>
                                 <Row className="mt-5">
-                                    <Col className="mt-2" xs="12" sm={{ span: 4, offset: 2 }}>
+                                    <Col className="mt-2" xs="12" sm={{ span: 4, offset: 4 }}>
                                         <NavLink className="text-decoration-none" to="/about">
                                             <Button variant="outline-bitcoin" size="lg" block>
                                                 How it works
                                 </Button>
                                         </NavLink>
                                     </Col>
-                                    <Col className="mt-2" xs="12" sm={{ span: 4 }}>
+                                    {/* <Col className="mt-2" xs="12" sm={{ span: 4 }}>
                                         <a className="text-decoration-none" href="https://alpha.polkabtc.io">
                                             <Button variant="outline-polkadot" size="lg" block>
                                                 Alpha Testnet
                                 </Button>
                                         </a>
-                                    </Col>
+                                    </Col> */}
                                 </Row>
                             </div>
                         )}
