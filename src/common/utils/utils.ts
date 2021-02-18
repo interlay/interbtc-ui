@@ -1,4 +1,4 @@
-import { RedeemRequest, VaultRedeem } from "../types/redeem.types";
+import { RedeemRequest, RedeemRequestStatus, VaultRedeem } from "../types/redeem.types";
 import { IssueRequest, IssueRequestStatus, VaultIssue } from "../types/issue.types";
 import { DOT, PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 import { VaultReplaceRequest } from "../types/vault.types";
@@ -95,6 +95,17 @@ export async function parachainToUIIssueRequest(
     };
 }
 
+/**
+ * Given parameters about an issue request, computes its status
+ *
+ * @param completed boolean
+ * @param cancelled boolean
+ * @param creationBlock The number of the block where this request was included
+ * @param issuePeriod issuePeriod data (queried from the parachain)
+ * @param requiredBtcConfirmations requiredBtcConfirmations data (queried from the parachain)
+ * @param btcTxId (optional) Bitcoin transaction ID corresponding to this request
+ * @param confirmations (optional) Confirmations of the given `btcTxId`
+ */
 export async function computeIssueRequestStatus(
     completed: boolean,
     cancelled: boolean,
@@ -133,10 +144,29 @@ export async function computeIssueRequestStatus(
  * to a UI IssueRequest object
  * @param id H256, the key of the IssueRequest object in the parachain map storage object
  * @param parachainIssueRequest ParachainIssueRequest
+ * @param parachainHeight parachainHeight data (queried from the parachain)
+ * @param redeemPeriod redeemPeriod data (queried from the parachain)
+ * @param requiredBtcConfirmations requiredBtcConfirmations data (queried from the parachain)
+
  */
-export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: ParachainRedeemRequest): RedeemRequest {
+export async function parachainToUIRedeemRequest(
+    id: H256,
+    parachainRedeemRequest: ParachainRedeemRequest,
+    parachainHeight: BlockNumber,
+    redeemPeriod: BlockNumber,
+    requiredBtcConfirmations: number
+): Promise<RedeemRequest> {
     const amountPolkaBTC = satToBTC(parachainRedeemRequest.amount_polka_btc.toString());
     const fee = satToBTC(parachainRedeemRequest.fee.toString());
+    const status = await computeRedeemRequestStatus(
+        parachainRedeemRequest.completed.isTrue,
+        parachainRedeemRequest.cancelled.isTrue,
+        parachainRedeemRequest.reimburse.isTrue,
+        parachainRedeemRequest.opentime,
+        parachainHeight,
+        redeemPeriod,
+        requiredBtcConfirmations
+    );
     return {
         id: stripHexPrefix(id.toString()),
         amountPolkaBTC,
@@ -147,11 +177,56 @@ export function parachainToUIRedeemRequest(id: H256, parachainRedeemRequest: Par
         fee,
         totalAmount: new Big(amountPolkaBTC).sub(new Big(fee)).toString(),
         confirmations: 0,
-        completed: parachainRedeemRequest.completed.isTrue,
-        isExpired: false,
-        cancelled: parachainRedeemRequest.cancelled.valueOf(),
-        reimbursed: parachainRedeemRequest.reimburse.valueOf(),
+        status,
     };
+}
+
+/**
+ * Given parameters about a redeem request, computes its status
+ *
+ * @param completed boolean
+ * @param cancelled boolean
+ * @param reimbursed boolean
+ * @param creationBlock The number of the block where this request was included
+ * @param parachainHeight Height of the parachain (number of blocks)
+ * @param redeemPeriod issuePeriod data (queried from the parachain)
+ * @param requiredBtcConfirmations requiredBtcConfirmations data (queried from the parachain)
+ * @param btcTxId (optional) Bitcoin transaction ID corresponding to this request
+ * @param confirmations (optional) Confirmations of the given `btcTxId` */
+export async function computeRedeemRequestStatus(
+    completed: boolean,
+    cancelled: boolean,
+    reimbursed: boolean,
+    creationBlock: BlockNumber,
+    parachainHeight: BlockNumber,
+    redeemPeriod: BlockNumber,
+    requiredBtcConfirmations: number,
+    btcTxId = "",
+    confirmations = 0
+): Promise<RedeemRequestStatus> {
+    if (completed) {
+        return RedeemRequestStatus.Completed;
+    }
+    if (cancelled) {
+        return RedeemRequestStatus.Cancelled;
+    }
+    if (reimbursed) {
+        return RedeemRequestStatus.Reimbursed;
+    }
+    if (creationBlock.add(redeemPeriod).lte(parachainHeight)) {
+        return RedeemRequestStatus.Expired;
+    }
+    if (btcTxId === "") {
+        return RedeemRequestStatus.PendingWithBtcTxNotFound;
+    }
+    if (confirmations === 0) {
+        return RedeemRequestStatus.PendingWithBtcTxNotIncluded;
+    }
+    if (confirmations < requiredBtcConfirmations) {
+        return RedeemRequestStatus.PendingWithTooFewConfirmations;
+    }
+
+    return RedeemRequestStatus.PendingWithEnoughConfirmations;
 }
 
 /**

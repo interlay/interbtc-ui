@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { RedeemRequest } from "../../../../common/types/redeem.types";
+import { RedeemRequest, RedeemRequestStatus } from "../../../../common/types/redeem.types";
 import BitcoinTransaction from "../../../../common/components/bitcoin-links/transaction";
 
 type StatusViewProps = {
@@ -20,7 +20,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
 
     return (
         <div className="status-view">
-            {props.request.completed && (
+            {props.request.status === RedeemRequestStatus.Completed && (
                 <React.Fragment>
                     <div className="status-title">{t("completed")}</div>
                     <div className="row">
@@ -58,7 +58,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                     </div>
                 </React.Fragment>
             )}
-            {props.request.btcTxId && !props.request.completed && (
+            {props.request.btcTxId && props.request.status !== RedeemRequestStatus.Completed && (
                 <React.Fragment>
                     <div className="status-title">{t("received")}</div>
                     <div className="row">
