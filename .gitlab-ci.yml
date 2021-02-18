@@ -33,6 +33,7 @@ test:
     - prod
     - dev
     - rococo
+    - beta
 
 build:
   stage: build
@@ -52,6 +53,7 @@ build:
     - prod
     - dev
     - rococo
+    - beta
 
 build_container:
   stage: deploy
@@ -71,3 +73,4 @@ build_container:
     - prod
     - dev
     - rococo
+    - beta
