@@ -17,7 +17,7 @@ import { btcToSat, satToBTC, stripHexPrefix } from "@interlay/polkabtc";
 import { BALANCE_MAX_INTEGER_LENGTH, BTC_ADDRESS_REGEX } from "../../../constants";
 import { useTranslation } from "react-i18next";
 import BitcoinLogo from "../../../assets/img/Bitcoin-Logo.png";
-import PolkadotLogo from "../../../assets/img/Polkadot-Logo.png";
+import PolkadotLogo from "../../../assets/img/polkadot-logo.png";
 import Big from "big.js";
 import { updateBalancePolkaBTCAction } from "../../../common/actions/general.actions";
 import { calculateAmount } from "../../../common/utils/utils";

@@ -244,6 +244,7 @@
         }
     },
     "issue_page": {
+        "deposit": "DEPOSIT",
         "view_on_block_explorer": "VIEW ON BLOCK EXPLORER",
         "mint_polka_by_wrapping": "Mint PolkaBTC by wrapping BTC 1:1",
         "security_deposit": "Security Deposit",

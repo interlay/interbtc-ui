@@ -29,11 +29,8 @@ export default function AppPage(): ReactElement {
 
     const goBack = () => {
         if (activeTab === ActiveTab.Issue) {
-            if (issueStep === "REQUEST_CONFIRMATION") {
-                dispatch(changeIssueStepAction("ENTER_BTC_AMOUNT"));
-            }
             if (issueStep === "BTC_PAYMENT") {
-                dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
+                dispatch(changeIssueStepAction("ENTER_BTC_AMOUNT"));
             }
         }
     };
@@ -79,12 +76,13 @@ export default function AppPage(): ReactElement {
                             </React.Fragment>
                         ) : (
                             <React.Fragment>
-                                <div className="step-back">
-                                    <FaArrowLeft className="custom-icon-size" onClick={goBack}></FaArrowLeft>
-                                </div>
                                 <div className="step-title">
-                                    {activeTab === ActiveTab.Issue ? t("issue_page.issuing_title") : ""}
+                                    <FaArrowLeft className="custom-icon-size" onClick={goBack}></FaArrowLeft>
+                                    <div className="deposit-title">
+                                        {activeTab === ActiveTab.Issue ? t("issue_page.deposit") : ""}
+                                    </div>
                                 </div>
+                                <div className="horizontal-line-deposit"></div>
                             </React.Fragment>
                         )}
                         <div className="content">

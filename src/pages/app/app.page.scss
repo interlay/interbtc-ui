@@ -39,6 +39,12 @@
         border: 1px solid $d_pink;
     }
 
+    .horizontal-line-deposit {
+        margin-top: 3rem;
+        width: 100%;
+        border: 1px solid $d_pink;
+    }
+
     .wizard-header-text {
         font-weight: 600;
         text-align: center;
@@ -334,28 +340,34 @@
 
 .step-title {
     display: inline;
-    text-align: center;
-    left: calc(50% - 20px);
     top: 15px;
+    font-weight: 600;
+    color: $d_pink;
+    left: calc(50% - 20px);
 }
 
-.step-back {
-    text-align: left;
+.deposit-title {
+    position: absolute;
+    left: calc(50% - 32px);
+    top: 3.4rem;
+    font-weight: 600;
+}
 
-    .custom-icon-size {
-        font-size: 2rem;
-        color: #998;
-        margin-top: 15px;
-        // float: left;
-        &:hover {
-            cursor: pointer;
-        }
+.custom-icon-size {
+    font-size: 2rem;
+    color: #998;
+    margin-top: 15px;
+    float: left;
+    margin-top: 0rem;
+    // float: left;
+    &:hover {
+        cursor: pointer;
     }
 }
 
 .wizard-input-error {
     color: $error-color;
-    margin-top: -3rem;
+    margin-top: 1rem;
     margin-bottom: 2rem;
 }
 

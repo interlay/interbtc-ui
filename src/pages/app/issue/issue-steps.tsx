@@ -11,7 +11,6 @@ export default function IssueSteps() {
     return (
         <div className="issue-steps">
             {step === "ENTER_BTC_AMOUNT" && <EnterBTCAmount />}
-            {step === "REQUEST_CONFIRMATION" && <RequestConfirmation />}
             {step === "BTC_PAYMENT" && <BTCPayment />}
         </div>
     );
