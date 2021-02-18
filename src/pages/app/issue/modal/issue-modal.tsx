@@ -75,7 +75,10 @@ export default function IssueModal(props: IssueModalProps) {
                             </div>
                         </div>
                         <div className="col-6">
-                            {request.status !== IssueRequestStatus.PendingWithBtcTxNotFound && request ? (
+                            {request.status !== IssueRequestStatus.PendingWithBtcTxNotFound &&
+                            request &&
+                            request.status !== IssueRequestStatus.Cancelled &&
+                            request.status !== IssueRequestStatus.Completed ? (
                                 <PaymentView request={request} />
                             ) : (
                                 <StatusView request={request} />

@@ -174,6 +174,11 @@
     }
 }
 
+.canceled-circle {
+    font-size: 10rem;
+    color: $d_red;
+}
+
 .total-amount {
     font-weight: 600;
 }
@@ -311,7 +316,7 @@
 
 .completed-confirmations-circle {
     @extend .confirmation-circle;
-    border: 5px solid green;
+    border: 5px solid $d_green;
     padding-top: 72px;
 }
 
@@ -338,13 +343,32 @@
 
 .number-of-confirmations {
     font-size: 1.5rem;
+    color: $d_green;
+    font-weight: 600;
 }
 
 .status-title {
     font-size: 2rem;
     font-weight: 600;
     text-align: center;
-    margin: 2rem;
+    margin: 1rem;
+    font-weight: 600;
+}
+
+.pink-amount {
+    color: $d_pink;
+    text-align: center;
+    font-weight: 600;
+}
+
+.completed-status-title {
+    @extend .status-title;
+    color: $d_green;
+}
+
+.cancel-status-title {
+    @extend .status-title;
+    color: $d_red;
 }
 
 .btc-transaction-view {
@@ -352,6 +376,22 @@
     width: fit-content;
     text-align: center;
     margin: auto;
+}
+
+.btc-transaction-id {
+    @extend .btc-transaction-view;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.btc-transaction-title {
+    @extend .btc-transaction-view;
+    color: $d_grey;
+}
+
+.btc-transaction {
+    @extend .btc-transaction-view;
+    font-weight: 600;
 }
 
 .btc-transaction-wrapper {
