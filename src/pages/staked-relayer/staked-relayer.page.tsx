@@ -1,6 +1,5 @@
 import React, { useState, useEffect, ReactElement } from "react";
 import BitcoinTable from "../../common/components/bitcoin-table/bitcoin-table";
-import ReportModal from "./report-modal/report-modal";
 import RegisterModal from "./register-modal/register-modal";
 import { Button } from "react-bootstrap";
 import StatusUpdateTable from "../../common/components/status-update-table/status-update-table";
@@ -17,7 +16,6 @@ import { useTranslation } from "react-i18next";
 import { safeRoundTwoDecimals } from "../../common/utils/utils";
 
 export default function StakedRelayerPage(): ReactElement {
-    const [showReportModal, setShowReportModal] = useState(false);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [isDeregisterPending, setDeregisterPending] = useState(false);
     const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState("0");
@@ -32,8 +30,6 @@ export default function StakedRelayerPage(): ReactElement {
     const relayerNotRegisteredToastId = "relayer-not-registered-id";
     const { polkaBtcLoaded, relayerLoaded } = useSelector((state: StoreType) => state.general);
     const { t } = useTranslation();
-
-    const handleReportModalClose = () => setShowReportModal(false);
 
     const handleRegisterModalClose = () => setShowRegisterModal(false);
 
@@ -144,17 +140,6 @@ export default function StakedRelayerPage(): ReactElement {
                         </div>
                     )}
                     <BitcoinTable></BitcoinTable>
-                    {relayerRegistered && (
-                        <Button
-                            variant="outline-danger"
-                            className="staked-button"
-                            disabled={relayerInactive}
-                            onClick={() => setShowReportModal(true)}
-                        >
-                            {t("relayer.report_invalid_block")}
-                        </Button>
-                    )}
-                    <ReportModal onClose={handleReportModalClose} show={showReportModal}></ReportModal>
                     <RegisterModal
                         onClose={handleRegisterModalClose}
                         onRegister={() => {

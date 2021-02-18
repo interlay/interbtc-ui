@@ -1,11 +1,9 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { StoreType } from "../../types/util.types";
 import { useSelector } from "react-redux";
-import { Button, Table } from "react-bootstrap";
-import VoteModal from "../../../pages/staked-relayer/vote-modal/vote-modal";
+import { Table } from "react-bootstrap";
 import { StatusUpdate } from "../../types/util.types";
 import MessageModal from "../../../pages/staked-relayer/message-modal/message-modal";
-import BN from "bn.js";
 import BitcoinBlockHash from "../bitcoin-links/block-hash";
 import { reverseHashEndianness } from "../../utils/utils";
 import * as constants from "../../../constants";
@@ -46,10 +44,8 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
     const [parachainStatus, setStatus] = useState("Running");
     const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
     const [statusUpdates, setStatusUpdates] = useState<Array<StatusUpdate>>([]);
-    const [showVoteModal, setShowVoteModal] = useState(false);
     const [showMessageModal, setShowMessageModal] = useState(false);
     const handleClose = () => {
-        setShowVoteModal(false);
         setShowMessageModal(false);
     };
     const [statusUpdate, setStatusUpdate] = useState<StatusUpdate>();
@@ -78,21 +74,6 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
             setStatusUpdates(
                 statusUpdates.map((status) => {
                     const { id, statusUpdate } = status;
-                    let hasVoted = false;
-
-                    // NOTE: passing the `AccountId` in props cases a weird infinite reload bug,
-                    // so we pass the address obtained from the staked relayer client and reconstruct
-                    if (props.stakedRelayerAddress) {
-                        const stakedRelayerId = window.polkaBTC.api.createType("AccountId", props.stakedRelayerAddress);
-
-                        // FIXME: Set.has() doesn't work for objects
-                        statusUpdate.tally.aye.accounts.forEach((acc) => {
-                            hasVoted = acc.hash.toHex() === stakedRelayerId.hash.toHex() ? true : hasVoted;
-                        });
-                        statusUpdate.tally.nay.accounts.forEach((acc) => {
-                            hasVoted = acc.hash.toHex() === stakedRelayerId.hash.toHex() ? true : hasVoted;
-                        });
-                    }
 
                     return {
                         id,
@@ -101,11 +82,11 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                         currentStatus: statusUpdate.old_status_code.toString(),
                         proposedChanges: displayProposedChanges(statusUpdate.add_error, statusUpdate.remove_error),
                         blockHash: displayBlockHash(statusUpdate.btc_block_hash),
-                        votes: `${statusUpdate.tally.aye.accounts.size} : ${statusUpdate.tally.nay.accounts.size}`,
+                        aye_vote_stake: statusUpdate.tally.aye.total_stake.toString(),
+                        nay_vote_stake: statusUpdate.tally.nay.total_stake.toString(),
                         result: statusUpdate.proposal_status.toString(),
                         proposer: statusUpdate.proposer.toString(),
                         message: statusUpdate.message.toString(),
-                        hasVoted,
                     };
                 })
             );
@@ -119,11 +100,6 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
         }, constants.COMPONENT_UPDATE_MS);
         return () => clearInterval(interval);
     }, [polkaBtcLoaded, props.stakedRelayerAddress, props.readOnly]);
-
-    const openVoteModal = (statusUpdate: StatusUpdate) => {
-        setShowVoteModal(true);
-        setStatusUpdate(statusUpdate);
-    };
 
     const openMessageModal = (statusUpdate: StatusUpdate) => {
         setShowMessageModal(true);
@@ -163,24 +139,8 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
         }
     };
 
-    const getPercentage = (votes: string, type: string): number => {
-        const yes = Number(votes.split(":")[0]);
-        const no = Number(votes.split(":")[1]);
-        const total = yes + no;
-        if (type === "yes") {
-            return Number((yes / (total / 100)).toFixed(1));
-        }
-        return Number((no / (total / 100)).toFixed(1));
-    };
-
     return (
         <div className="dashboard-table-container btc-parachain-table">
-            <VoteModal
-                show={showVoteModal}
-                onClose={handleClose}
-                statusUpdate={statusUpdate!}
-                getColor={getProposedChangesColor}
-            ></VoteModal>
             <MessageModal show={showMessageModal} onClose={handleClose} statusUpdate={statusUpdate!}></MessageModal>
             <div>
                 <p className="table-heading">{t("dashboard.parachain.parachain")}</p>
@@ -228,49 +188,15 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
                                             <BitcoinBlockHash blockHash={statusUpdate.blockHash} />
                                         </td>
                                         <td>
-                                            {" "}
-                                            {statusUpdate.votes && (
-                                                <React.Fragment>
-                                                    <p>
-                                                        <span className="green-text">
-                                                            {getPercentage(statusUpdate.votes, "yes")}%
-                                                        </span>
-                                                        <span>&nbsp;:&nbsp;</span>
-                                                        <span className="red-text">
-                                                            {getPercentage(statusUpdate.votes, "no")}%
-                                                        </span>
-                                                    </p>
-                                                    <p>
-                                                        <span className="green-text">
-                                                            {statusUpdate.votes.split(":")[0]}
-                                                        </span>
-                                                        <span>:</span>
-                                                        <span className="red-text">
-                                                            {statusUpdate.votes.split(":")[1]}
-                                                        </span>
-                                                    </p>
-                                                </React.Fragment>
-                                            )}
+                                            <React.Fragment>
+                                                <p>
+                                                    <span className="green-text">{statusUpdate.aye_vote_stake}</span>
+                                                    <span> : </span>
+                                                    <span className="red-text">{statusUpdate.nay_vote_stake}</span>
+                                                </p>
+                                            </React.Fragment>
                                         </td>
-                                        <td className={getResultColor(statusUpdate.result)}>
-                                            {!props.readOnly ? (
-                                                props.planckLocked !== undefined &&
-                                                new BN(props.planckLocked) > new BN(0) &&
-                                                !statusUpdate.hasVoted &&
-                                                statusUpdate.result === "Pending" ? (
-                                                    <Button
-                                                        variant="outline-primary"
-                                                        onClick={() => openVoteModal(statusUpdate)}
-                                                    >
-                                                        {t("vote")}
-                                                    </Button>
-                                                ) : (
-                                                    statusUpdate.result
-                                                )
-                                            ) : (
-                                                "Pending"
-                                            )}
-                                        </td>
+                                        <td className={getResultColor(statusUpdate.result)}>{statusUpdate.result}</td>
                                     </tr>
                                 );
                             })}
