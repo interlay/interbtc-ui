@@ -11,7 +11,7 @@ const formatTime = (leftSeconds: number): string => {
     const h = hours < 10 ? "0" + hours : hours;
     const m = minutes < 10 ? "0" + minutes : minutes;
     const s = seconds < 10 ? "0" + seconds : seconds;
-    return h + "h " + m + "min " + s + "sec";
+    return h + " : " + m + " : " + s;
 };
 
 export default function Timer(props: TimerProps): ReactElement {

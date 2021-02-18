@@ -1,5 +1,4 @@
 import React from "react";
-import RequestConfirmation from "./request-confirmation";
 import EnterBTCAmount from "./enter-btc-amount";
 import BTCPayment from "./btc-payment";
 import { useSelector } from "react-redux";

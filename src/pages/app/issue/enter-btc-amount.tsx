@@ -119,8 +119,8 @@ export default function EnterBTCAmount() {
             setFee(fee);
 
             const amountSAT = btcToSat(value);
-            const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountSAT);
-            const vaultId = await window.polkaBTC.vaults.selectRandomVaultIssue(amountAsSatoshi);
+            // const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountSAT);
+            // const vaultId = await window.polkaBTC.vaults.selectRandomVaultIssue(amountAsSatoshi);
             const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSAT);
             setDeposit(griefingCollateral);
         } catch (error) {

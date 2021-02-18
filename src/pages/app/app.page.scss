@@ -165,10 +165,12 @@
 .issue-amount {
     text-align: center;
     font-size: 1.7rem;
-    color: #998;
+    color: $d_orange;
+    font-weight: 600;
     .wizzard-number {
         color: black;
         font-size: 3rem;
+        font-weight: 600;
     }
 }
 
@@ -195,6 +197,11 @@
     font-size: 1rem;
     text-align: center;
     padding: 15px;
+    color: $d_grey;
+}
+
+.copy-address {
+    cursor: pointer;
 }
 
 .payment-address {
@@ -214,6 +221,19 @@
     font-size: 1rem;
     font-weight: 600;
     padding-top: 15px;
+    color: $d_grey;
+}
+
+.note-title {
+    text-align: center;
+    color: $d_orange;
+    font-size: 1rem;
+}
+
+.note-text {
+    text-align: center;
+    color: $d_grey;
+    font-size: 1rem;
 }
 
 .payment-timer {
@@ -224,7 +244,7 @@
 
 .qr-code-item {
     text-align: center;
-    padding: 3rem;
+    padding: 2rem;
 }
 
 .ledger-wrapper {
@@ -344,6 +364,14 @@
     font-weight: 600;
     color: $d_pink;
     left: calc(50% - 20px);
+}
+
+.send-amount {
+    color: $d_orange;
+}
+
+.send-price {
+    color: $d_grey;
 }
 
 .deposit-title {
