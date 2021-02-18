@@ -1,13 +1,11 @@
-import React, { useState, MouseEvent } from "react";
+import React, { Dispatch, useState } from "react";
 
 import Big from "big.js";
-import { IssueRequest } from "../../../common/types/issue.types";
+import { IssueRequest, IssueRequestStatus } from "../../../common/types/issue.types";
 import { Table, Badge } from "react-bootstrap";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import { useEffect } from "react";
-import ButtonMaybePending from "../../../common/components/pending-button";
 import { toast } from "react-toastify";
 import { updateIssueRequestAction, changeSelectedIssueAction } from "../../../common/actions/issue.actions";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
@@ -15,17 +13,12 @@ import { updateBalancePolkaBTCAction, showAccountModalAction } from "../../../co
 import { useTranslation } from "react-i18next";
 import { ParachainStatus } from "../../../common/types/util.types";
 import IssueModal from "./modal/issue-modal";
+import { TFunction } from "i18next";
 
 export default function IssueRequests() {
-    const { address, balancePolkaBTC, polkaBtcLoaded, extensions, stateOfBTCParachain } = useSelector(
-        (state: StoreType) => state.general
-    );
+    const { address, extensions, stateOfBTCParachain } = useSelector((state: StoreType) => state.general);
     const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
-    const [executePending, setExecutePending] = useState([""]);
     const [showModal, setShowModal] = useState(false);
-    const [requiredBtcConfirmations, setRequiredBtcConfirmations] = useState(0);
-    const [issuePeriod, setIssuePeriod] = useState(new Big(0));
-    const [parachainHeight, setParachainHeight] = useState(new Big(0));
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
@@ -47,126 +40,29 @@ export default function IssueRequests() {
         }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!polkaBtcLoaded) return;
-
-            try {
-                const issuePeriodBlock = await window.polkaBTC.issue.getIssuePeriod();
-                const parachainHeightBlock = await window.polkaBTC.system.getCurrentBlockNumber();
-                setIssuePeriod(new Big(issuePeriodBlock.toString()));
-                setParachainHeight(new Big(parachainHeightBlock.toString()));
-
-                setRequiredBtcConfirmations(await window.polkaBTC.btcRelay.getStableBitcoinConfirmations());
-            } catch (error) {
-                toast.error(error.toString());
+    const handleCompleted = (request: IssueRequest) => {
+        switch (request.status) {
+            case IssueRequestStatus.Completed: {
+                return <FaCheck></FaCheck>;
             }
-        };
-        fetchData();
-    }, [polkaBtcLoaded, address, dispatch]);
-
-    const execute = async (request: IssueRequest) => {
-        if (!polkaBtcLoaded) return;
-        setExecutePending([...executePending, request.id]);
-
-        let [merkleProof, rawTx] = [request.merkleProof, request.rawTransaction];
-        let transactionData = false;
-        let txId = request.btcTxId;
-        try {
-            // get proof data from bitcoin
-            if (txId === "") {
-                txId = await window.polkaBTC.btcCore.getTxIdByRecipientAddress(
-                    request.vaultBTCAddress,
-                    request.amountBTC
+            case IssueRequestStatus.Cancelled: {
+                return (
+                    <Badge className="badge-style" variant="secondary">
+                        {t("cancelled")}
+                    </Badge>
                 );
             }
-            [merkleProof, rawTx] = await Promise.all([
-                window.polkaBTC.btcCore.getMerkleProof(txId),
-                window.polkaBTC.btcCore.getRawTransaction(txId),
-            ]);
-            transactionData = true;
-        } catch (err) {
-            toast.error(t("issue_page.transaction_not_included"));
-        }
-
-        if (!transactionData) return;
-        try {
-            const provenReq = request;
-            provenReq.merkleProof = merkleProof;
-            provenReq.rawTransaction = rawTx;
-            dispatch(updateIssueRequestAction(provenReq));
-
-            const txIdBuffer = Buffer.from(txId, "hex").reverse();
-
-            // prepare types for polkadot
-            const parsedIssuedId = window.polkaBTC.api.createType("H256", "0x" + provenReq.id);
-            const parsedTxId = window.polkaBTC.api.createType("H256", txIdBuffer);
-            const parsedMerkleProof = window.polkaBTC.api.createType("Bytes", "0x" + merkleProof);
-            const parsedRawTx = window.polkaBTC.api.createType("Bytes", rawTx);
-
-            // execute issue
-            const success = await window.polkaBTC.issue.execute(
-                parsedIssuedId,
-                parsedTxId,
-                parsedMerkleProof,
-                parsedRawTx
-            );
-
-            if (!success) {
-                throw new Error(t("issue_page.execute_failed"));
+            case IssueRequestStatus.Expired: {
+                return (
+                    <h5>
+                        <Badge variant="secondary">{t("issue_page.expired")}</Badge>
+                    </h5>
+                );
             }
-
-            const completedReq = provenReq;
-            completedReq.completed = true;
-
-            dispatch(
-                updateBalancePolkaBTCAction(new Big(balancePolkaBTC).add(new Big(provenReq.amountBTC)).toString())
-            );
-            dispatch(updateIssueRequestAction(completedReq));
-
-            toast.success(t("issue_page.succesfully_executed", { id: request.id }));
-        } catch (error) {
-            toast.error(error.toString());
-        } finally {
-            setExecutePending(executePending.splice(executePending.indexOf(request.id), 1));
+            default: {
+                return <FaHourglass></FaHourglass>;
+            }
         }
-    };
-
-    const handleCompleted = (request: IssueRequest) => {
-        if (request.completed) {
-            return <FaCheck></FaCheck>;
-        }
-        if (request.cancelled) {
-            return (
-                <Badge className="badge-style" variant="secondary">
-                    {t("cancelled")}
-                </Badge>
-            );
-        }
-        if (issuePeriod.add(new Big(request.creation)).lte(parachainHeight)) {
-            return (
-                <h5>
-                    <Badge variant="secondary">{t("issue_page.expired")}</Badge>
-                </h5>
-            );
-        }
-        if (request.confirmations < requiredBtcConfirmations || request.confirmations === 0) {
-            return <FaHourglass></FaHourglass>;
-        }
-        return (
-            <ButtonMaybePending
-                variant="outline-dark"
-                isPending={executePending.indexOf(request.id) !== -1}
-                size="lg"
-                block
-                onClick={(event: MouseEvent<HTMLElement>) => {
-                    event.stopPropagation();
-                    execute(request);
-                }}
-            >
-                {t("issue_page.execute")}
-            </ButtonMaybePending>
-        );
     };
 
     const requestClicked = (request: IssueRequest): void => {
@@ -213,4 +109,67 @@ export default function IssueRequests() {
             )}
         </div>
     );
+}
+
+// leaving execute here for now, in case it will be called some other way in
+
+// the future
+export async function execute(
+    request: IssueRequest,
+    polkaBtcLoaded: boolean,
+    dispatch: Dispatch<any>,
+    balancePolkaBTC: string,
+    t: TFunction
+) {
+    if (!polkaBtcLoaded) return;
+
+    let [merkleProof, rawTx] = [request.merkleProof, request.rawTransaction];
+    let transactionData = false;
+    let txId = request.btcTxId;
+    try {
+        // get proof data from bitcoin
+        if (txId === "") {
+            txId = await window.polkaBTC.btcCore.getTxIdByRecipientAddress(request.vaultBTCAddress, request.amountBTC);
+        }
+        [merkleProof, rawTx] = await Promise.all([
+            window.polkaBTC.btcCore.getMerkleProof(txId),
+            window.polkaBTC.btcCore.getRawTransaction(txId),
+        ]);
+        transactionData = true;
+    } catch (err) {
+        toast.error(t("issue_page.transaction_not_included"));
+    }
+
+    if (!transactionData) return;
+    try {
+        const provenReq = request;
+        provenReq.merkleProof = merkleProof;
+        provenReq.rawTransaction = rawTx;
+        dispatch(updateIssueRequestAction(provenReq));
+
+        const txIdBuffer = Buffer.from(txId, "hex").reverse();
+
+        // prepare types for polkadot
+        const parsedIssuedId = window.polkaBTC.api.createType("H256", "0x" + provenReq.id);
+        const parsedTxId = window.polkaBTC.api.createType("H256", txIdBuffer);
+        const parsedMerkleProof = window.polkaBTC.api.createType("Bytes", "0x" + merkleProof);
+        const parsedRawTx = window.polkaBTC.api.createType("Bytes", rawTx);
+
+        // execute issue
+        const success = await window.polkaBTC.issue.execute(parsedIssuedId, parsedTxId, parsedMerkleProof, parsedRawTx);
+
+        if (!success) {
+            throw new Error(t("issue_page.execute_failed"));
+        }
+
+        const completedReq = provenReq;
+        completedReq.status = IssueRequestStatus.Completed;
+
+        dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).add(new Big(provenReq.amountBTC)).toString()));
+        dispatch(updateIssueRequestAction(completedReq));
+
+        toast.success(t("issue_page.succesfully_executed", { id: request.id }));
+    } catch (error) {
+        toast.error(error.toString());
+    }
 }
