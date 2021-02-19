@@ -44,10 +44,6 @@ export function formatDateTimePrecise(date: Date): string {
     return date.toDateString().substring(4) + " " + date.toTimeString().substring(0, 8);
 }
 
-export function dateToShortString(date: Date): string {
-    return date.toDateString().substring(3) + " " + date.toTimeString().substring(0, date.toTimeString().length);
-}
-
 export function calculateAmount(amount: string, currencyPrice: number): string {
     return new Big(amount).mul(new Big(currencyPrice)).toString();
 }
