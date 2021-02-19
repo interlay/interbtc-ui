@@ -9,7 +9,6 @@ import ReactTooltip from "react-tooltip";
 import AccountModal from "./common/components/account-modal/account-modal";
 import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
 import keyring from "@polkadot/ui-keyring";
-import loadingImg from "./assets/img/dual-ball-loading.gif";
 import {
     isPolkaBtcLoaded,
     isStakedRelayerLoaded,

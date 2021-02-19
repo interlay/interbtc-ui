@@ -99,7 +99,7 @@
     "insufficient_funds_dot": "Insufficient funds to pay for DOT fees.",
     "insufficient_funds": "Insufficient balance to transfer.",
     "redeem_page": {
-        "you_will_recieve":"You will receive BTC in exchange for polkaBTC",
+        "you_will_recieve": "You will receive BTC in exchange for polkaBTC",
         "must_select_account_warning": "No account selected. Please select an account to redeem.",
         "waiting_for": "Waiting for",
         "typically_takes": "This typically takes only a few minutes but may sometimes take up to 6 hours.",
@@ -253,6 +253,7 @@
         "you_did_not_send": "You did not send the BTC transaction in time or transferred amount did not not meet the requested amount of PolkaBTC.",
         "waiting_deposit": "Waiting for deposit. If you have already made the payment, please wait for a few minutes for it to appear here.",
         "deposit": "DEPOSIT",
+        "fully_decentralised": "PolkaBTC is a fully decentralised system. Please make sure you send the right amount of BTC, we cannot guarantee that the vault will return the additional BTC that you sent by mistake.",
         "view_parachain_block": "VIEW PARACHAIN BLOCK",
         "view_on_block_explorer": "VIEW ON BLOCK EXPLORER",
         "mint_polka_by_wrapping": "Mint PolkaBTC by wrapping BTC 1:1",
