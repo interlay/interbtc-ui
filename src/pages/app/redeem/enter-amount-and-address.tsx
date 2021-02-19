@@ -357,7 +357,7 @@ export default function EnterAmountAndAddress(): ReactElement {
 
             <ButtonMaybePending
                 type="submit"
-                className="btn btn-primary app-btn"
+                className="btn green-button app-btn"
                 isPending={isRequestPending}
                 onClick={checkAddress}
             >
