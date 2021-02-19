@@ -58,12 +58,24 @@ export default function AppPage(): ReactElement {
                             <React.Fragment>
                                 <div id="main-tabs" className="row app-tabs">
                                     <div className={"col-4 app-tab"} onClick={() => changeTab(ActiveTab.Issue)}>
-                                        <div className={activeTab === ActiveTab.Issue ? " active-tab" : " not-active"}>
+                                        <div
+                                            className={
+                                                activeTab === ActiveTab.Issue
+                                                    ? " active-tab active-tab-issue"
+                                                    : " not-active"
+                                            }
+                                        >
                                             {t("issue")}
                                         </div>
                                     </div>
                                     <div className={"col-4 app-tab"} onClick={() => changeTab(ActiveTab.Redeem)}>
-                                        <div className={activeTab === ActiveTab.Redeem ? " active-tab" : " not-active"}>
+                                        <div
+                                            className={
+                                                activeTab === ActiveTab.Redeem
+                                                    ? " active-tab active-tab-redeem"
+                                                    : " not-active"
+                                            }
+                                        >
                                             {t("redeem")}
                                         </div>
                                     </div>

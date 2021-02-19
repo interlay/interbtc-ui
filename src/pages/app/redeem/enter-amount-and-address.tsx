@@ -36,7 +36,7 @@ type PremiumRedeemVault = Map<AccountId, PolkaBTC>;
 export default function EnterAmountAndAddress(): ReactElement {
     const { t } = useTranslation();
     const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
-    const { balancePolkaBTC, polkaBtcLoaded, address, bitcoinHeight, btcRelayHeight } = useSelector(
+    const { balancePolkaBTC, polkaBtcLoaded, address, bitcoinHeight, btcRelayHeight, prices } = useSelector(
         (state: StoreType) => state.general
     );
     const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
@@ -199,6 +199,9 @@ export default function EnterAmountAndAddress(): ReactElement {
     return (
         <form onSubmit={onSubmit}>
             <div className="row">
+                <div className="col-12 wizard-header-text font-yellow">{t("redeem_page.you_will_recieve")}</div>
+            </div>
+            <div className="row">
                 <div className="col-6">
                     <input
                         id="amount-btc-input"
@@ -233,14 +236,13 @@ export default function EnterAmountAndAddress(): ReactElement {
             )}
             <div className="row">
                 <div className="col-12">
+                    <p className="form-heading">BTC destination address</p>
                     <div className="input-address-wrapper">
-                        <div className="address-label">{t("destination")}</div>
                         <input
                             id="btc-address-input"
                             name="btcAddress"
                             type="string"
                             className={"" + (errors.btcAddress ? " error-borders" : "")}
-                            placeholder="Enter Bitcoin Address"
                             ref={register({
                                 required: true,
                                 pattern: {
@@ -280,14 +282,34 @@ export default function EnterAmountAndAddress(): ReactElement {
                     </div>
                 </div>
             )}
-            <div className="row">
-                <div className="col-12">
-                    <div className="wizard-item mt-5">
+            <div className="row justify-content-center">
+                <div className="col-10">
+                    <div className="wizard-item wizard-item-remove-border mt-4">
                         <div className="row">
                             <div className="col-6 text-left">{t("bridge_fee")}</div>
-                            <div className="col-6">
-                                <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
-                                {redeemFee} BTC
+                            <div className="col fee-number">
+                                <div>
+                                    <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
+                                    <span className="fee-btc">{redeemFee}</span> BTC
+                                </div>
+                                <div>{"~ $" + Number(redeemFee) * prices.bitcoin.usd}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* TODO: Bitcoin network fee */}
+            <div className="row justify-content-center">
+                <div className="col-10">
+                    <div className="wizard-item wizard-item-remove-border">
+                        <div className="row">
+                            <div className="col-6 text-left">{t("bitcoin_network_fee")}</div>
+                            <div className="col fee-number">
+                                <div>
+                                    <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
+                                    <span className="fee-btc">{redeemFee}</span> BTC
+                                </div>
+                                <div>{"~ $" + Number(redeemFee) * prices.bitcoin.usd}</div>
                             </div>
                         </div>
                     </div>
@@ -307,11 +329,14 @@ export default function EnterAmountAndAddress(): ReactElement {
                     </div>
                 </div>
             </div> */}
-            <div className="row">
-                <div className="col-12">
-                    <div className="wizard-item">
+            <div className="row justify-content-center">
+                <div className="col-10 horizontal-line-total"></div>
+            </div>
+            <div className="row justify-content-center">
+                <div className="col-10">
+                    <div className="wizard-item wizard-item-remove-border">
                         <div className="row">
-                            <div className="col-6 text-left font-weight-bold">{t("you_will_receive")}</div>
+                            <div className="col-6 text-left total-added-value">{t("you_will_receive")}</div>
                             <div className="col-6">
                                 <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
                                 {calculateTotalBTC()} BTC
@@ -329,6 +354,7 @@ export default function EnterAmountAndAddress(): ReactElement {
                     </div>
                 </div>
             </div>
+
             <ButtonMaybePending
                 type="submit"
                 className="btn btn-primary app-btn"

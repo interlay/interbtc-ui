@@ -26,7 +26,7 @@ export default function RedeemInfo() {
                 <div className="wizard-redeem-title">{t("redeem_page.redeem_processed")}</div>
                 <div className="row">
                     <div className="col-12">
-                        <div className="wizard-item mt-5">
+                        <div className="wizard-item  mt-5">
                             <div className="row">
                                 <div className="col-6 text-left">{t("redeem_page.will_receive_BTC")}</div>
                                 <div className="col-6">

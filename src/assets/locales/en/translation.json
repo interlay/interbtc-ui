@@ -96,6 +96,7 @@
     "insufficient_funds_dot": "Insufficient funds to pay for DOT fees.",
     "insufficient_funds": "Insufficient balance to transfer.",
     "redeem_page": {
+        "you_will_recieve":"You will receive BTC in exchange for polkaBTC",
         "must_select_account_warning": "No account selected. Please select an account to redeem.",
         "waiting_for": "Waiting for",
         "typically_takes": "This typically takes only a few minutes but may sometimes take up to 6 hours.",

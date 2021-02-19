@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import BitcoinLogo from "../../../assets/img/Bitcoin-Logo.png";
-import PolkadotLogo from "../../../assets/img/polkadot-logo.png";
+import PolkadotLogo from "../../../assets/img/Polkadot-Logo.png";
 import * as constants from "../../../constants";
 import Big from "big.js";
 
@@ -112,7 +112,7 @@ export default function EnterBTCAmount() {
     return (
         <form onSubmit={onSubmit}>
             <div className="row">
-                <div className="col-12 wizard-header-text">{t("issue_page.mint_polka_by_wrapping")}</div>
+                <div className="col-12 wizard-header-text font-pink">{t("issue_page.mint_polka_by_wrapping")}</div>
             </div>
             <div className="row">
                 <div className="col-6">
@@ -150,43 +150,62 @@ export default function EnterBTCAmount() {
                         : errors.amountBTC.message}
                 </div>
             )}
-            <div className="row">
-                <div className="col bridge-fee">{t("bridge_fee")}</div>
-            </div>
-            <div className="row">
-                <div className="col fee-number">
-                    <div>
-                        <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
-                        <span className="fee-btc">{fee}</span> BTC
+            <div className="row justify-content-center">
+                <div className="col-10">
+                    <div className="wizard-item wizard-item-remove-border">
+                        <div className="row">
+                            <div className="col-6 text-left">{t("bridge_fee")}</div>
+                            <div className="col fee-number">
+                                <div>
+                                    <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
+                                    <span className="fee-btc">{fee}</span> BTC
+                                </div>
+                                <div>{"~ $" + Number(fee) * prices.bitcoin.usd}</div>
+                            </div>
+                        </div>
                     </div>
-                    <div>{"~ $" + Number(fee) * prices.bitcoin.usd}</div>
                 </div>
             </div>
-            <div className="row">
-                <div className="col bridge-fee mt-3">{t("issue_page.security_deposit")}</div>
-            </div>
-            <div className="row">
-                <div className="col fee-number">
-                    <div>
-                        <img src={PolkadotLogo} width="20px" height="20px" alt="polkadot logo"></img> &nbsp;
-                        <span className="fee-btc">{fee}</span> DOT
+            <div className="row justify-content-center">
+                <div className="col-10">
+                    <div className="wizard-item wizard-item-remove-border">
+                        <div className="row">
+                            <div className="col-6 text-left">{t("issue_page.security_deposit")}</div>
+                            <div className="col fee-number">
+                                <div>
+                                    <img
+                                        src={PolkadotLogo}
+                                        width="20px"
+                                        height="20px"
+                                        style={{ marginRight: "5px" }}
+                                        alt="polkadot logo"
+                                    ></img>
+                                    <span className="fee-btc">{fee}</span> DOT
+                                </div>
+                                <div>{"~ $" + new Big(deposit).mul(new Big(prices.polkadot.usd)).toString()}</div>
+                            </div>
+                        </div>
                     </div>
-                    <div>{"~ $" + new Big(deposit).mul(new Big(prices.polkadot.usd)).toString()}</div>
                 </div>
             </div>
 
             <div className="row justify-content-center">
-                <div className="col-8 horizontal-line-total"></div>
+                <div className="col-10 horizontal-line-total"></div>
             </div>
-
-            <div className="row justify-content-center mb-3">
-                <div className="col-4 text-left bold">{t("total_deposit")}</div>
-                <div className="col-4 text-right">
-                    <div>
-                        <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
-                        <span className="fee-btc">{fee}</span> BTC
+            <div className="row justify-content-center">
+                <div className="col-10">
+                    <div className="wizard-item wizard-item-remove-border ">
+                        <div className="row justify-content-center">
+                            <div className="col-6 text-left total-added-value">{t("total_deposit")}</div>
+                            <div className="col fee-number">
+                                <div>
+                                    <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
+                                    <span className="fee-btc">{fee}</span> BTC
+                                </div>
+                                <div>{"~ $" + Number(fee) * prices.bitcoin.usd}</div>
+                            </div>
+                        </div>
                     </div>
-                    <div>{"~ $" + Number(fee) * prices.bitcoin.usd}</div>
                 </div>
             </div>
 

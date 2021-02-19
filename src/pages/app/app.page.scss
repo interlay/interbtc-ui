@@ -14,17 +14,35 @@
             color: white;
             margin: 0px -15px;
             padding: 10px;
+            font-family: airbnb-cereal-bold;
+            text-transform: uppercase;
+        }
+        .active-tab-issue {
+            background-color: $d_pink;
+        }
+        .active-tab-redeem {
+            background-color: $d_yellow;
         }
 
         .not-active {
             border-bottom: none;
             margin: 0px -15px;
             padding: 10px;
+            opacity: 0.3;
+            font-family: airbnb-cereal-bold;
+            text-transform: uppercase;
         }
     }
 
     .grey-text {
         color: #998;
+    }
+    .text-left {
+        font-family: airbnb-cereal-medium;
+        opacity: 0.5;
+    }
+    .total-added-value {
+        opacity: 1;
     }
 
     #main-tabs {
@@ -34,15 +52,15 @@
     }
 
     .horizontal-line {
-        margin-top: 1rem;
+        margin-top: 0.5rem;
         width: 100%;
         border: 1px solid $d_pink;
     }
 
     .wizard-header-text {
-        font-weight: 600;
+        font-family: airbnb-cereal-bold;
         text-align: center;
-        margin-top: 1rem;
+        margin-top: 20px;
     }
 
     .tab-content-wrapper {
@@ -55,7 +73,7 @@
         border: none;
         font-size: 3rem;
         width: 100%;
-        margin-top: 2rem;
+        margin-top: 20px;
         text-align: right;
     }
 
@@ -63,22 +81,23 @@
         width: 50%;
         padding: 10px;
         margin-bottom: 15px;
-        margin-top: 15px;
+        margin-top: 35px;
     }
 }
 
 .mark-currency {
-    font-size: 1.5rem;
+    font-family: airbnb-cereal-book;
+    font-size: 18px;
     text-align: left;
-    margin-top: 3.7rem;
-    margin-left: -1rem;
+    margin-top: 48px;
+    margin-left: -1.5rem;
     color: $d_pink;
-    font-weight: 600;
 }
 
 .horizontal-line-total {
-    border: 1px solid $d_grey;
-    margin: 1rem 0;
+    border: 1px solid black;
+    opacity: 0.2;
+    margin: 10px 0px;
 }
 
 .bold {
@@ -106,7 +125,9 @@
         margin-bottom: 3px;
     }
 }
-
+.wizard-item-remove-border {
+    border: none;
+}
 .balances-title {
     font-size: 2rem;
     font-weight: 600;
@@ -123,9 +144,13 @@
     font-weight: 600;
     color: $d_grey;
 }
-
+.form-heading {
+    font-family: airbnb-cereal-medium;
+    margin-bottom: 8px;
+}
 .fee-number {
     color: $d_grey;
+    padding-right: 0px;
 }
 
 .fee-btc {
@@ -164,10 +189,6 @@
         color: black;
         font-size: 3rem;
     }
-}
-
-.total-amount {
-    font-weight: 600;
 }
 
 .step-item {
