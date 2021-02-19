@@ -50,6 +50,10 @@ export default function EnterBTCAmount() {
             try {
                 const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
                 const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
+
+                const vaults = await window.polkaBTC.vaults.getVaultsWithIssuableTokens();
+
+                console.log("VAULTS >>>>>>>>>>>> ", vaults);
                 setDustValue(dustValueBtc);
             } catch (error) {
                 console.log(error);

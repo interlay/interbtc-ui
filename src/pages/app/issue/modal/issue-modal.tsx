@@ -73,6 +73,12 @@ export default function IssueModal(props: IssueModalProps) {
                                 <div className="col-6">{t("issue_page.vault_btc_address")}</div>
                                 <div className="col-6">{shortAddress(request.vaultBTCAddress)}</div>
                             </div>
+                            <div className="row justify-content-center mt-3">
+                                <div className="col-9 note-title">{t("note")}:&nbsp;</div>
+                            </div>
+                            <div className="row justify-content-center">
+                                <div className="col-9 note-text">{t("issue_page.fully_decentralised")}</div>
+                            </div>
                         </div>
                         <div className="col-6">
                             {request.status !== IssueRequestStatus.PendingWithBtcTxNotFound &&
