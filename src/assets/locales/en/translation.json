@@ -320,8 +320,11 @@
     "landing": {
         "defi_ecosystem": "Bitcoin for Polkadot's DeFi Ecosystem",
         "issued": "Issued: ",
-        "how_it_works": "How it works",
-        "testnet": "Alpha Testnet"
+        "docs": "Learn more",
+        "testnet": "Alpha Testnet",
+        "beta_coming": "Beta testnet is coming soon!",
+        "discord": "Join Discord",
+        "countdown": "Launch in:"
     },
     "feedback": {
         "thanks_for_testing": "Thanks for testing PolkaBTC!",
