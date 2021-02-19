@@ -5,13 +5,15 @@ type TimerProps = {
 };
 
 const formatTime = (leftSeconds: number): string => {
-    const hours = Math.floor(Number(leftSeconds.toString()) / 3600);
-    const minutes = Math.floor(Number(leftSeconds.toString()) / 60) - hours * 60;
-    const seconds = leftSeconds - hours * 3600 - minutes * 60;
+    const days = Math.floor(leftSeconds / (3600 * 24));
+    const hours = Math.floor((leftSeconds % (3600 * 24)) / 3600);
+    const minutes = Math.floor((leftSeconds % 3600) / 60);
+    const seconds = Math.floor(leftSeconds % 60);
+    const d = days;
     const h = hours < 10 ? "0" + hours : hours;
     const m = minutes < 10 ? "0" + minutes : minutes;
     const s = seconds < 10 ? "0" + seconds : seconds;
-    return h + " : " + m + " : " + s;
+    return d + " Days " + h + ":" + m + ":" + s;
 };
 
 export default function Timer(props: TimerProps): ReactElement {

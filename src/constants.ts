@@ -97,5 +97,7 @@ export const VAULT_STATUS_LIQUIDATION = "Being liquidated";
 export const BTC_RELAY_DELAY_WARNING = 6;
 export const BTC_RELAY_DELAY_CRITICAL = 12;
 
-// Landing page
-export const MARKDOWN_PATH = "../assets/polkBTCInfo.md";
+//#######################################
+// Beta
+//#######################################
+export const BETA_LAUNCH_DATE = 1614675600; // Tue Mar 02 2021 09:00:00 GMT+0000
