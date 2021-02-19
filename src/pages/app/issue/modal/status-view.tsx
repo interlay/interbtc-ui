@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { IssueRequest } from "../../../../common/types/issue.types";
+import { IssueRequest, IssueRequestStatus } from "../../../../common/types/issue.types";
 import BitcoinTransaction from "../../../../common/components/bitcoin-links/transaction";
 import ButtonMaybePending from "../../../../common/components/pending-button";
 import { useDispatch, useSelector } from "react-redux";
@@ -83,7 +83,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             }
 
             const completedReq = provenReq;
-            completedReq.completed = true;
+            completedReq.status = IssueRequestStatus.Completed;
 
             dispatch(
                 updateBalancePolkaBTCAction(new Big(balancePolkaBTC).add(new Big(provenReq.amountBTC)).toString())
@@ -100,10 +100,16 @@ export default function StatusView(props: StatusViewProps): ReactElement {
 
     return (
         <div className="status-view">
-            {props.request.completed && (
+            {props.request.status === IssueRequestStatus.Completed && (
                 <React.Fragment>
-                    <div className="status-title">{t("completed")}</div>
+                    <div className="completed-status-title">{t("completed")}</div>
                     <div className="row">
+                        <div className="col text-center">
+                            {t("issue_page.you_received")}{" "}
+                            <span className="pink-amount">{props.request.amountBTC + " PolkaBTC"}</span>
+                        </div>
+                    </div>
+                    <div className="row mt-4">
                         <div className="col">
                             <div className="completed-confirmations-circle">
                                 <div>{t("issue_page.in_parachain_block")}</div>
@@ -111,123 +117,159 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                             </div>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col text-center mt-4">
+                            <a href="https://polkadot.js.org/apps/#/explorer" target="_blank" rel="noopener noreferrer">
+                                <button className="btn green-button app-btn">
+                                    {t("issue_page.view_parachain_block")}
+                                </button>
+                            </a>
+                        </div>
+                    </div>
                     <div className="row btc-transaction-wrapper">
                         <div className="col">
-                            <div className="btc-transaction-view">{t("issue_page.deposit_transaction")}</div>
+                            <div className="btc-transaction-title">{t("issue_page.btc_transaction")}</div>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col">
-                            <div className="btc-transaction-view">
-                                <BitcoinTransaction txId={props.request.btcTxId} shorten />
+                            <div className="btc-transaction-id">{shortAddress(props.request.btcTxId)}</div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            <div className="btc-transaction">
+                                <a
+                                    href={
+                                        (constants.BTC_MAINNET
+                                            ? constants.BTC_EXPLORER_TRANSACTION_API
+                                            : constants.BTC_TEST_EXPLORER_TRANSACTION_API) + props.request.btcTxId
+                                    }
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <button className="btn green-button app-btn">
+                                        {t("issue_page.view_on_block_explorer")}
+                                    </button>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </React.Fragment>
             )}
-            {props.request.cancelled && (
+            {props.request.status === IssueRequestStatus.Cancelled && (
                 <React.Fragment>
-                    <div className="status-title">{t("cancelled")}</div>
+                    <div className="cancel-status-title">{t("cancelled")}</div>
                     <div className="row">
-                        <div className="col">
-                            <div className="cancelled-confirmations-circle">
-                                <div>{t("issue_page.transaction_not_set")}</div>
-                                <div>{t("issue_page.time")}</div>
+                        <div className="col text-center">
+                            <i className="fas fa-times-circle canceled-circle"></i>
+                        </div>
+                    </div>
+                    <div className="row justify-content-center mt-4">
+                        <div className="col-9 text-center">{t("issue_page.you_did_not_send")}</div>
+                    </div>
+                    <div className="row justify-content-center mt-5">
+                        <div className="col-9 note-title">
+                            {t("note")}&nbsp;
+                            <i className="fas fa-exclamation-circle"></i>
+                        </div>
+                    </div>
+                    <div className="row justify-content-center">
+                        <div className="col-9 note-text">{t("issue_page.contact_team")}</div>
+                    </div>
+                </React.Fragment>
+            )}
+            {props.request.status !== IssueRequestStatus.Completed &&
+                props.request.status !== IssueRequestStatus.Cancelled && (
+                    <React.Fragment>
+                        <div className="status-title">
+                            {props.request.confirmations < stableBitcoinConfirmations ? t("received") : t("confirmed")}
+                        </div>
+                        <div className="row">
+                            <div className="col">
+                                {props.request.confirmations < stableBitcoinConfirmations ? (
+                                    <React.Fragment>
+                                        <div className="waiting-confirmations-circle">
+                                            <div>{t("issue_page.waiting_for")}</div>
+                                            <div>{t("confirmations")}</div>
+                                            <div className="number-of-confirmations">
+                                                {props.request.confirmations + "/" + stableBitcoinConfirmations}
+                                            </div>
+                                        </div>
+                                        <div className="row btc-transaction-wrapper">
+                                            <div className="col">
+                                                <div className="btc-transaction-view">
+                                                    {t("issue_page.btc_transaction")}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col">
+                                                <div className="btc-transaction-view">
+                                                    <BitcoinTransaction txId={props.request.btcTxId} shorten />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </React.Fragment>
+                                ) : (
+                                    <React.Fragment>
+                                        <div className="row">
+                                            <div className="col text-center">
+                                                <div className="fas fa-check-circle confirmed-tick"></div>
+                                            </div>
+                                        </div>
+                                        <div className="row btc-transaction-wrapper">
+                                            <div className="col">
+                                                <div className="btc-transaction-view">
+                                                    {t("issue_page.btc_transaction")}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col">
+                                                <div className="btc-transaction-view">
+                                                    {shortAddress(props.request.btcTxId)}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row mt-3">
+                                            <div className="col text-center">
+                                                <a
+                                                    href={
+                                                        (constants.BTC_MAINNET
+                                                            ? constants.BTC_EXPLORER_TRANSACTION_API
+                                                            : constants.BTC_TEST_EXPLORER_TRANSACTION_API) +
+                                                        props.request.btcTxId
+                                                    }
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    <button className="btn green-button">
+                                                        {t("issue_page.view_on_block_explorer")}
+                                                    </button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div className="row mt-5 justify-content-center">
+                                            <div className="col-10">{t("issue_page.receive_polkabtc_tokens")}</div>
+                                        </div>
+                                        <div className="row mt-3 justify-content-center">
+                                            <div className="col-6 text-center">
+                                                <ButtonMaybePending
+                                                    isPending={executePending}
+                                                    className={"pink-button"}
+                                                    onClick={() => execute(props.request)}
+                                                >
+                                                    {t("issue_page.claim_polkabtc")}
+                                                </ButtonMaybePending>
+                                            </div>
+                                        </div>
+                                    </React.Fragment>
+                                )}
                             </div>
                         </div>
-                    </div>
-                </React.Fragment>
-            )}
-            {!props.request.completed && !props.request.cancelled && (
-                <React.Fragment>
-                    <div className="status-title">
-                        {props.request.confirmations < stableBitcoinConfirmations ? t("received") : t("confirmed")}
-                    </div>
-                    <div className="row">
-                        <div className="col">
-                            {props.request.confirmations < stableBitcoinConfirmations ? (
-                                <React.Fragment>
-                                    <div className="waiting-confirmations-circle">
-                                        <div>{t("issue_page.waiting_for")}</div>
-                                        <div>{t("confirmations")}</div>
-                                        <div className="number-of-confirmations">
-                                            {props.request.confirmations + "/" + stableBitcoinConfirmations}
-                                        </div>
-                                    </div>
-                                    <div className="row btc-transaction-wrapper">
-                                        <div className="col">
-                                            <div className="btc-transaction-view">
-                                                {t("issue_page.btc_transaction")}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col">
-                                            <div className="btc-transaction-view">
-                                                <BitcoinTransaction txId={props.request.btcTxId} shorten />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </React.Fragment>
-                            ) : (
-                                <React.Fragment>
-                                    <div className="row">
-                                        <div className="col text-center">
-                                            <div className="fas fa-check-circle confirmed-tick"></div>
-                                        </div>
-                                    </div>
-                                    <div className="row btc-transaction-wrapper">
-                                        <div className="col">
-                                            <div className="btc-transaction-view">
-                                                {t("issue_page.btc_transaction")}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col">
-                                            <div className="btc-transaction-view">
-                                                {shortAddress(props.request.btcTxId)}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row mt-3">
-                                        <div className="col text-center">
-                                            <a
-                                                href={
-                                                    (constants.BTC_MAINNET
-                                                        ? constants.BTC_EXPLORER_TRANSACTION_API
-                                                        : constants.BTC_TEST_EXPLORER_TRANSACTION_API) +
-                                                    props.request.btcTxId
-                                                }
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                <button className="btn green-button">
-                                                    {t("issue_page.view_on_block_explorer")}
-                                                </button>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div className="row mt-5 justify-content-center">
-                                        <div className="col-10">{t("issue_page.receive_polkabtc_tokens")}</div>
-                                    </div>
-                                    <div className="row mt-3 justify-content-center">
-                                        <div className="col-6 text-center">
-                                            <ButtonMaybePending
-                                                isPending={executePending}
-                                                className={"pink-button"}
-                                                onClick={() => execute(props.request)}
-                                            >
-                                                {t("issue_page.claim_polkabtc")}
-                                            </ButtonMaybePending>
-                                        </div>
-                                    </div>
-                                </React.Fragment>
-                            )}
-                        </div>
-                    </div>
-                </React.Fragment>
-            )}
+                    </React.Fragment>
+                )}
         </div>
     );
 }

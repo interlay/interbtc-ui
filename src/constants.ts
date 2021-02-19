@@ -12,9 +12,6 @@ const getStaticPage = () => {
 
 export const STATIC_PAGE_ONLY = getStaticPage();
 
-export const FAUCET_AMOUNT = "100000000000"; // 10 DOT in planck
-export const FAUCET_ADDRESS_SEED = "//Alice";
-
 export const BALANCE_MAX_INTEGER_LENGTH = 13;
 
 export const BTC_DECIMALS = 8;

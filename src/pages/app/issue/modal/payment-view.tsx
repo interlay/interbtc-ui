@@ -7,6 +7,7 @@ import { BLOCK_TIME } from "../../../../constants";
 import QRCode from "qrcode.react";
 import Big from "big.js";
 import Timer from "../../../../common/components/timer";
+import AppTooltip from "../../../../common/components/tooltip";
 
 type PaymentViewProps = {
     request: IssueRequest;
@@ -14,7 +15,7 @@ type PaymentViewProps = {
 
 export default function PaymentView(props: PaymentViewProps): ReactElement {
     const { t } = useTranslation();
-    const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+    const { polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
     const amount = new Big(props.request.amountBTC).add(new Big(props.request.fee)).toString();
     const [leftSeconds, setLeftSeconds] = useState(-1);
 
@@ -39,12 +40,21 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
         fetchData();
     }, [polkaBtcLoaded, props.request.creation]);
 
+    const copyToClipboard = () => {
+        navigator.clipboard.writeText(props.request.vaultBTCAddress);
+    };
+
     return (
         <div className="payment-view">
             <div className="payment-title">
                 <div className="row">
-                    <div className="col">
-                        {t("deposit")} &nbsp; {props.request.totalAmount} &nbsp; BTC
+                    <div className="col mt-5">
+                        {t("send")} &nbsp; <span className="send-amount">{props.request.totalAmount} &nbsp;BTC</span>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col send-price">
+                        {"~ $" + (Number(props.request.totalAmount) * prices.bitcoin.usd).toFixed(2)}
                     </div>
                 </div>
                 <div className="row">
@@ -52,7 +62,11 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
                 </div>
                 <div className="row ">
                     <div className="col payment-address">
-                        <span>{props.request.vaultBTCAddress}</span>
+                        <AppTooltip text={t("click_to_copy")}>
+                            <span className="copy-address" onClick={copyToClipboard}>
+                                {props.request.vaultBTCAddress}
+                            </span>
+                        </AppTooltip>
                     </div>
                 </div>
                 <div className="row payment-timer-with">
@@ -65,6 +79,15 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
                     <div className="col qr-code-item">
                         <QRCode value={"bitcoin:" + props.request.vaultBTCAddress + "?amount=" + amount} />
                     </div>
+                </div>
+                <div className="row justify-content-center">
+                    <div className="col-9 note-title">
+                        {t("note")}&nbsp;
+                        <i className="fas fa-exclamation-circle"></i>
+                    </div>
+                </div>
+                <div className="row justify-content-center">
+                    <div className="col-9 note-text">{t("issue_page.waiting_deposit")}</div>
                 </div>
             </div>
         </div>

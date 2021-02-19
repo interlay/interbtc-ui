@@ -5,17 +5,20 @@ import BitcoinLogo from "../../../assets/img/Bitcoin-Logo.png";
 import PolkadotLogo from "../../../assets/img/Polkadot-Logo.png";
 import * as constants from "../../../constants";
 import Big from "big.js";
+import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 
 import {
     changeAmountBTCAction,
     changeIssueStepAction,
     changeVaultDotAddressOnIssueAction,
     updateIssueGriefingCollateralAction,
+    changeVaultBtcAddressOnIssueAction,
+    changeIssueIdAction,
 } from "../../../common/actions/issue.actions";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { btcToSat, satToBTC, planckToDOT } from "@interlay/polkabtc";
+import { btcToSat, satToBTC, planckToDOT, stripHexPrefix } from "@interlay/polkabtc";
 import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
 import { useTranslation } from "react-i18next";
 import { calculateAmount } from "../../../common/utils/utils";
@@ -29,6 +32,7 @@ export default function EnterBTCAmount() {
         (state: StoreType) => state.general
     );
     const amount = useSelector((state: StoreType) => state.issue.amountBTC);
+    const { vaultDotAddress } = useSelector((state: StoreType) => state.issue);
     const defaultValues = amount ? { defaultValues: { amountBTC: amount } } : undefined;
     const { register, handleSubmit, errors, getValues } = useForm<EnterBTCForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
@@ -85,7 +89,22 @@ export default function EnterBTCAmount() {
             dispatch(updateIssueGriefingCollateralAction(planckToDOT(griefingCollateral)));
 
             dispatch(changeVaultDotAddressOnIssueAction(vaultId.toString()));
-            dispatch(changeIssueStepAction("REQUEST_CONFIRMATION"));
+
+            // const amount = window.polkaBTC.api.createType("Balance", amountSAT) as PolkaBTC;
+            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultDotAddress);
+            const requestResult = await window.polkaBTC.issue.request(amountAsSatoshi as PolkaBTC, vaultAccountId);
+
+            const vaultBTCAddress = requestResult.vault.wallet.btcAddress;
+            if (vaultBTCAddress === undefined) {
+                throw new Error("Could not generate unique vault address.");
+            }
+            dispatch(changeVaultBtcAddressOnIssueAction(stripHexPrefix(vaultBTCAddress)));
+            // get the issue id from the request issue event
+            const id = stripHexPrefix(requestResult.id.toString());
+
+            // update the issue status
+            dispatch(changeIssueIdAction(id));
+            dispatch(changeIssueStepAction("BTC_PAYMENT"));
         } catch (error) {
             toast.error(error.toString());
         }
@@ -100,8 +119,8 @@ export default function EnterBTCAmount() {
             setFee(fee);
 
             const amountSAT = btcToSat(value);
-            const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountSAT);
-            const vaultId = await window.polkaBTC.vaults.selectRandomVaultIssue(amountAsSatoshi);
+            // const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountSAT);
+            // const vaultId = await window.polkaBTC.vaults.selectRandomVaultIssue(amountAsSatoshi);
             const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSAT);
             setDeposit(griefingCollateral);
         } catch (error) {
@@ -209,7 +228,7 @@ export default function EnterBTCAmount() {
                 </div>
             </div>
 
-            <ButtonMaybePending className="btn grey-button app-btn" isPending={isRequestPending} onClick={onSubmit}>
+            <ButtonMaybePending className="btn green-button app-btn" isPending={isRequestPending} onClick={onSubmit}>
                 {t("confirm")}
             </ButtonMaybePending>
         </form>

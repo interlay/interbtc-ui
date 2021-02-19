@@ -61,7 +61,7 @@ export default function AppPage(): ReactElement {
                                         <div
                                             className={
                                                 activeTab === ActiveTab.Issue
-                                                    ? " active-tab active-tab-issue"
+                                                    ? " active-tab active-tab-issue "
                                                     : " not-active"
                                             }
                                         >

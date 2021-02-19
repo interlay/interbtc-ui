@@ -57,6 +57,12 @@
         border: 1px solid $d_pink;
     }
 
+    .horizontal-line-deposit {
+        margin-top: 3rem;
+        width: 100%;
+        border: 1px solid $d_pink;
+    }
+
     .wizard-header-text {
         font-family: airbnb-cereal-bold;
         text-align: center;
@@ -184,11 +190,22 @@
 .issue-amount {
     text-align: center;
     font-size: 1.7rem;
-    color: #998;
+    color: $d_orange;
+    font-weight: 600;
     .wizzard-number {
         color: black;
         font-size: 3rem;
+        font-weight: 600;
     }
+}
+
+.canceled-circle {
+    font-size: 10rem;
+    color: $d_red;
+}
+
+.total-amount {
+    font-weight: 600;
 }
 
 .step-item {
@@ -210,6 +227,11 @@
     font-size: 1rem;
     text-align: center;
     padding: 15px;
+    color: $d_grey;
+}
+
+.copy-address {
+    cursor: pointer;
 }
 
 .payment-address {
@@ -229,6 +251,19 @@
     font-size: 1rem;
     font-weight: 600;
     padding-top: 15px;
+    color: $d_grey;
+}
+
+.note-title {
+    text-align: center;
+    color: $d_orange;
+    font-size: 1rem;
+}
+
+.note-text {
+    text-align: center;
+    color: $d_grey;
+    font-size: 1rem;
 }
 
 .payment-timer {
@@ -239,7 +274,7 @@
 
 .qr-code-item {
     text-align: center;
-    padding: 3rem;
+    padding: 2rem;
 }
 
 .ledger-wrapper {
@@ -306,7 +341,7 @@
 
 .completed-confirmations-circle {
     @extend .confirmation-circle;
-    border: 5px solid green;
+    border: 5px solid $d_green;
     padding-top: 72px;
 }
 
@@ -333,13 +368,32 @@
 
 .number-of-confirmations {
     font-size: 1.5rem;
+    color: $d_green;
+    font-weight: 600;
 }
 
 .status-title {
     font-size: 2rem;
     font-weight: 600;
     text-align: center;
-    margin: 2rem;
+    margin: 1rem;
+    font-weight: 600;
+}
+
+.pink-amount {
+    color: $d_pink;
+    text-align: center;
+    font-weight: 600;
+}
+
+.completed-status-title {
+    @extend .status-title;
+    color: $d_green;
+}
+
+.cancel-status-title {
+    @extend .status-title;
+    color: $d_red;
 }
 
 .btc-transaction-view {
@@ -349,34 +403,64 @@
     margin: auto;
 }
 
+.btc-transaction-id {
+    @extend .btc-transaction-view;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.btc-transaction-title {
+    @extend .btc-transaction-view;
+    color: $d_grey;
+}
+
+.btc-transaction {
+    @extend .btc-transaction-view;
+    font-weight: 600;
+}
+
 .btc-transaction-wrapper {
     margin-top: 2rem;
 }
 
 .step-title {
     display: inline;
-    text-align: center;
-    left: calc(50% - 20px);
     top: 15px;
+    font-weight: 600;
+    color: $d_pink;
+    left: calc(50% - 20px);
 }
 
-.step-back {
-    text-align: left;
+.send-amount {
+    color: $d_orange;
+}
 
-    .custom-icon-size {
-        font-size: 2rem;
-        color: #998;
-        margin-top: 15px;
-        // float: left;
-        &:hover {
-            cursor: pointer;
-        }
+.send-price {
+    color: $d_grey;
+}
+
+.deposit-title {
+    position: absolute;
+    left: calc(50% - 32px);
+    top: 3.4rem;
+    font-weight: 600;
+}
+
+.custom-icon-size {
+    font-size: 2rem;
+    color: #998;
+    margin-top: 15px;
+    float: left;
+    margin-top: 0rem;
+    // float: left;
+    &:hover {
+        cursor: pointer;
     }
 }
 
 .wizard-input-error {
     color: $error-color;
-    margin-top: -3rem;
+    margin-top: 1rem;
     margin-bottom: 2rem;
 }
 
