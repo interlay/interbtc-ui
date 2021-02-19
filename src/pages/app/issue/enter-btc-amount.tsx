@@ -6,6 +6,7 @@ import PolkadotLogo from "../../../assets/img/Polkadot-Logo.png";
 import * as constants from "../../../constants";
 import Big from "big.js";
 import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
+import BN from "bn.js";
 
 import {
     changeAmountBTCAction,
@@ -32,12 +33,12 @@ export default function EnterBTCAmount() {
         (state: StoreType) => state.general
     );
     const amount = useSelector((state: StoreType) => state.issue.amountBTC);
-    const { vaultDotAddress } = useSelector((state: StoreType) => state.issue);
     const defaultValues = amount ? { defaultValues: { amountBTC: amount } } : undefined;
     const { register, handleSubmit, errors, getValues } = useForm<EnterBTCForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
     const [dustValue, setDustValue] = useState("0");
     const [usdAmount, setUsdAmount] = useState("");
+    const [vaultId, setVaultId] = useState("");
     const [fee, setFee] = useState("0");
     const [deposit, setDeposit] = useState("0");
     const dispatch = useDispatch();
@@ -50,10 +51,6 @@ export default function EnterBTCAmount() {
             try {
                 const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
                 const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
-
-                const vaults = await window.polkaBTC.vaults.getVaultsWithIssuableTokens();
-
-                console.log("VAULTS >>>>>>>>>>>> ", vaults);
                 setDustValue(dustValueBtc);
             } catch (error) {
                 console.log(error);
@@ -64,7 +61,7 @@ export default function EnterBTCAmount() {
     }, [polkaBtcLoaded, setUsdAmount, amount, prices.bitcoin.usd, getValues]);
 
     const onSubmit = handleSubmit(async ({ amountBTC }) => {
-        if (!polkaBtcLoaded) return;
+        if (!polkaBtcLoaded || !vaultId) return;
         if (!address) {
             toast.warning(t("issue_page.must_select_account_warning"));
             return;
@@ -87,15 +84,12 @@ export default function EnterBTCAmount() {
 
             const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountSAT);
 
-            const vaultId = await window.polkaBTC.vaults.selectRandomVaultIssue(amountAsSatoshi);
-
             const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSAT);
             dispatch(updateIssueGriefingCollateralAction(planckToDOT(griefingCollateral)));
 
-            dispatch(changeVaultDotAddressOnIssueAction(vaultId.toString()));
+            dispatch(changeVaultDotAddressOnIssueAction(vaultId ? vaultId : ""));
 
-            // const amount = window.polkaBTC.api.createType("Balance", amountSAT) as PolkaBTC;
-            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultDotAddress);
+            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultId.toString());
             const requestResult = await window.polkaBTC.issue.request(amountAsSatoshi as PolkaBTC, vaultAccountId);
 
             const vaultBTCAddress = requestResult.vault.wallet.btcAddress;
@@ -123,10 +117,27 @@ export default function EnterBTCAmount() {
             setFee(fee);
 
             const amountSAT = btcToSat(value);
-            // const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountSAT);
-            // const vaultId = await window.polkaBTC.vaults.selectRandomVaultIssue(amountAsSatoshi);
+            const vaults = await window.polkaBTC.vaults.getVaultsWithIssuableTokens();
+            let vaultId = undefined;
+
+            for (const [id, issuableTokens] of vaults) {
+                const issuable = issuableTokens.toBn();
+                if (issuable.gte(new BN(value))) {
+                    vaultId = id;
+                    break;
+                }
+            }
+            if (!vaultId) {
+                toast.warning(t("testing"));
+                return;
+            }
+            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultId);
+            setVaultId(vaultAccountId.toString());
+            for (const vault of vaults.values()) {
+                console.log(vault);
+            }
             const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSAT);
-            setDeposit(griefingCollateral);
+            setDeposit(planckToDOT(griefingCollateral));
         } catch (error) {
             console.log(error);
         }
@@ -223,9 +234,9 @@ export default function EnterBTCAmount() {
                             <div className="col fee-number">
                                 <div>
                                     <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
-                                    <span className="fee-btc">{fee}</span> BTC
+                                    <span className="fee-btc">{Number(getValues("amountBTC")) + Number(fee)}</span> BTC
                                 </div>
-                                <div>{"~ $" + Number(fee) * prices.bitcoin.usd}</div>
+                                <div>{"~ $" + (Number(getValues("amountBTC")) + Number(fee)) * prices.bitcoin.usd}</div>
                             </div>
                         </div>
                     </div>

@@ -396,6 +396,32 @@
     color: $d_red;
 }
 
+.issue-modal {
+    .issue-modal-horizontal-line {
+        border: 1px solid $d_pink;
+        width: 95%;
+        margin: auto;
+        margin-top: 1rem;
+    }
+    .issue-modal-title {
+        text-align: center;
+        margin-top: 1rem;
+        color: $d_pink;
+        font-weight: 600;
+        font-size: 1.5rem;
+        width: 100%;
+    }
+    .close-icon {
+        color: $d_grey;
+        text-align: right;
+        font-size: 1.2rem;
+        position: absolute;
+        right: 2rem;
+        top: 1.5rem;
+        cursor: pointer;
+    }
+}
+
 .btc-transaction-view {
     font-size: 1.3rem;
     width: fit-content;
