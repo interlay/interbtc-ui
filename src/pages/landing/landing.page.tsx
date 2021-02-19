@@ -9,6 +9,7 @@ import { showAccountModalAction } from "../../common/actions/general.actions";
 import { useTranslation } from "react-i18next";
 
 import "./landing.page.scss";
+import Timer from "../../common/components/timer";
 
 export default function LandingPage(): JSX.Element {
     const { totalPolkaBTC, totalLockedDOT, polkaBtcLoaded, address, extensions } = useSelector(
@@ -16,6 +17,8 @@ export default function LandingPage(): JSX.Element {
     );
     const dispatch = useDispatch();
     const { t } = useTranslation();
+    const nowInSeconds = Math.floor(Date.now() / 1000);
+    const secondsUntilBeta = constants.BETA_LAUNCH_DATE - nowInSeconds;
 
     const checkWalletAndAccount = () => {
         if (!extensions.length || !address) {
@@ -79,25 +82,29 @@ export default function LandingPage(): JSX.Element {
                             )}
                         </div>
                     ) : (
-                        <div>
-                            <Row className="mt-5">
-                                <Col className="mt-2" xs="12" sm={{ span: 4, offset: 2 }}>
-                                    <NavLink className="text-decoration-none" to="/about">
-                                        <Button variant="outline-bitcoin" size="lg" block>
-                                            {t("landing.how_it_works")}
-                                        </Button>
-                                    </NavLink>
-                                </Col>
-                                <Col className="mt-2" xs="12" sm={{ span: 4 }}>
-                                    <a className="text-decoration-none" href="https://alpha.polkabtc.io">
-                                        <Button variant="outline-polkadot" size="lg" block>
-                                            {t("landing.testnet")}
-                                        </Button>
-                                    </a>
-                                </Col>
-                            </Row>
-                        </div>
-                    )}
+                            <div>
+                                <h4 className="text-white mt-5">{t("landing.beta_coming")}</h4>
+                                <h1 className="text-white mt-5"><Timer seconds={secondsUntilBeta}></Timer></h1>
+                                {/* <h5 className="text-light mt-1">{formatDateTime(new Date(constants.BETA_LAUNCH_DATE * 1000))}</h5> */}
+
+                                <Row className="mt-5">
+                                    <Col className="mt-2" xs="12" sm={{ span: 4, offset: 2 }}>
+                                        <a className="text-decoration-none" href="https://docs.polkabtc.io/#/" target="_bank" rel="noopener noreferrer">
+                                            <Button variant="outline-bitcoin" size="lg" block>
+                                                {t("landing.docs")}
+                                            </Button>
+                                        </a>
+                                    </Col>
+                                    <Col className="mt-2" xs="12" sm={{ span: 4, offset: 0 }}>
+                                        <a className="text-decoration-none" href="https://discord.gg/jcGEbE6v" target="_blank" rel="noopener noreferrer">
+                                            <Button variant="outline-bitcoin" size="lg" block>
+                                                {t("landing.discord")}
+                                            </Button>
+                                        </a>
+                                    </Col>
+                                </Row>
+                            </div>
+                        )}
                 </div>
             </section>
         </div>
