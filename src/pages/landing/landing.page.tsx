@@ -82,29 +82,43 @@ export default function LandingPage(): JSX.Element {
                             )}
                         </div>
                     ) : (
-                            <div>
-                                <h4 className="text-white mt-5">{t("landing.beta_coming")}</h4>
-                                <h1 className="text-white mt-5"><Timer seconds={secondsUntilBeta}></Timer></h1>
-                                {/* <h5 className="text-light mt-1">{formatDateTime(new Date(constants.BETA_LAUNCH_DATE * 1000))}</h5> */}
+                        <div>
+                            <h4 className="text-white mt-5">{t("landing.beta_coming")}</h4>
+                            <h1 className="text-white mt-5">
+                                <Timer seconds={secondsUntilBeta}></Timer>
+                            </h1>
+                            {/* <h5 className="text-light mt-1">
+                                {formatDateTime(new Date(constants.BETA_LAUNCH_DATE * 1000))}
+                            </h5> */}
 
-                                <Row className="mt-5">
-                                    <Col className="mt-2" xs="12" sm={{ span: 4, offset: 2 }}>
-                                        <a className="text-decoration-none" href="https://docs.polkabtc.io/#/" target="_bank" rel="noopener noreferrer">
-                                            <Button variant="outline-bitcoin" size="lg" block>
-                                                {t("landing.docs")}
-                                            </Button>
-                                        </a>
-                                    </Col>
-                                    <Col className="mt-2" xs="12" sm={{ span: 4, offset: 0 }}>
-                                        <a className="text-decoration-none" href="https://discord.gg/jcGEbE6v" target="_blank" rel="noopener noreferrer">
-                                            <Button variant="outline-bitcoin" size="lg" block>
-                                                {t("landing.discord")}
-                                            </Button>
-                                        </a>
-                                    </Col>
-                                </Row>
-                            </div>
-                        )}
+                            <Row className="mt-5">
+                                <Col className="mt-2" xs="12" sm={{ span: 4, offset: 2 }}>
+                                    <a
+                                        className="text-decoration-none"
+                                        href="https://docs.polkabtc.io/#/"
+                                        target="_bank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <Button variant="outline-bitcoin" size="lg" block>
+                                            {t("landing.docs")}
+                                        </Button>
+                                    </a>
+                                </Col>
+                                <Col className="mt-2" xs="12" sm={{ span: 4, offset: 0 }}>
+                                    <a
+                                        className="text-decoration-none"
+                                        href="https://discord.gg/jcGEbE6v"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <Button variant="outline-bitcoin" size="lg" block>
+                                            {t("landing.discord")}
+                                        </Button>
+                                    </a>
+                                </Col>
+                            </Row>
+                        </div>
+                    )}
                 </div>
             </section>
         </div>
