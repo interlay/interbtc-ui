@@ -19,7 +19,6 @@ export default class Footer extends Component {
                             <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12  col-xs-12">
                                 <div className="nav-link text-capitalize">
                                     <h3 style={{ fontSize: "1.5em", color: "white" }}>
-                                        PolkaBTC is built and powered by &nbsp;{" "}
                                         <a href="https://www.interlay.io/" target="__blank">
                                             <Image src={interlayImg} height="30em"></Image>
                                         </a>
@@ -37,7 +36,7 @@ export default class Footer extends Component {
                                     <a href="https://github.com/interlay/polkabtc-ui" target="__blank">
                                         v{pkg.version}
                                     </a>{" "}
-                                    &nbsp; &copy; 2020 Interlay. All Rights Reserved |{" "}
+                                    &nbsp; &copy; 2021 Interlay. All Rights Reserved |{" "}
                                     <a
                                         className=" text-capitalize"
                                         rel="noopener noreferrer"

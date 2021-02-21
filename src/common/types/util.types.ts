@@ -13,11 +13,11 @@ export interface StatusUpdate {
     currentStatus: string;
     proposedChanges: string;
     blockHash: string;
-    votes: string;
+    aye_vote_stake: string;
+    nay_vote_stake: string;
     result: string;
     proposer: string;
     message: string;
-    hasVoted: boolean;
 }
 
 export interface DashboardStatusUpdateInfo {
