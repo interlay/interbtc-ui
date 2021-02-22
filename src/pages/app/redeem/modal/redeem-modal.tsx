@@ -21,55 +21,61 @@ export default function RedeemModal(props: RedeemModalProps) {
     const { t } = useTranslation();
 
     return (
-        <Modal show={props.show} onHide={props.onClose} size={"xl"}>
-            <Modal.Header closeButton></Modal.Header>
-            <Modal.Body>
-                {request && (
-                    <div className="row">
-                        <div className="col-6 justify-content-center">
-                            <div className="wizard-title">{t("redeem_page.redeem_request_for")}</div>
-                            <div className="issue-amount">
-                                <span className="wizzard-number">{request.amountPolkaBTC}</span>&nbsp;PolkaBTC
-                            </div>
-                            <div className="row usd-price-modal">
-                                <div className="col">
-                                    {"= $" + calculateAmount(request.amountPolkaBTC || "0", prices.bitcoin.usd)}
-                                </div>
-                            </div>
-                            <div className="step-item row">
-                                <div className="col-6 text-left">{t("redeem_page.redeem_id")}</div>
-                                <div className="col-6">{shortAddress(request.id)}</div>
-                            </div>
-                            <div className="step-item row">
-                                <div className="col-6">{t("issue_page.parachain_block")}</div>
-                                <div className="col-6">{shortAddress(request.creation)}</div>
-                            </div>
-                            <div className="step-item row">
-                                <div className="col-6">{t("nav_vault")}</div>
-                                <div className="col-6">{shortAddress(request.vaultDotAddress || "")}</div>
-                            </div>
-                            <div className="step-item row">
-                                <div className="col-6">{t("bridge_fee")}</div>
-                                <div className="col-6">
-                                    <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img>
-                                    {request.fee} BTC
-                                </div>
-                            </div>
-                            <hr className="total-divider"></hr>
-                            <div className="step-item row">
-                                <div className="col-6 total-amount">{t("redeem_page.amount_received")}</div>
-                                <div className="col-6 total-amount">
-                                    <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img>
-                                    {request.totalAmount} BTC
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-6">
-                            <StatusView request={request} />
-                        </div>
+        <Modal className="redeem-modal" show={props.show} onHide={props.onClose} size={"xl"}>
+            {request && (
+                <React.Fragment>
+                    <div className="redeem-modal-title">
+                        {t("issue_page.request", { id: shortAddress(request.id) })}
                     </div>
-                )}
-            </Modal.Body>
+                    <i className="fas fa-times close-icon" onClick={props.onClose}></i>
+                    <div className="redeem-modal-horizontal-line"></div>
+                    <Modal.Body>
+                        <div className="row">
+                            <div className="col-6 justify-content-center">
+                                <div className="wizard-title">{t("redeem_page.redeem_request_for")}</div>
+                                <div className="issue-amount">
+                                    <span className="wizzard-number">{request.amountPolkaBTC}</span>&nbsp;PolkaBTC
+                                </div>
+                                <div className="row usd-price-modal">
+                                    <div className="col">
+                                        {"~ $" + calculateAmount(request.amountPolkaBTC || "0", prices.bitcoin.usd)}
+                                    </div>
+                                </div>
+                                <div className="step-item row">
+                                    <div className="col-6 text-left">{t("redeem_page.redeem_id")}</div>
+                                    <div className="col-6">{shortAddress(request.id)}</div>
+                                </div>
+                                <div className="step-item row">
+                                    <div className="col-6">{t("issue_page.parachain_block")}</div>
+                                    <div className="col-6">{shortAddress(request.creation)}</div>
+                                </div>
+                                <div className="step-item row">
+                                    <div className="col-6">{t("nav_vault")}</div>
+                                    <div className="col-6">{shortAddress(request.vaultDotAddress || "")}</div>
+                                </div>
+                                <div className="step-item row">
+                                    <div className="col-6">{t("bridge_fee")}</div>
+                                    <div className="col-6">
+                                        <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img>
+                                        {request.fee} BTC
+                                    </div>
+                                </div>
+                                <hr className="total-divider"></hr>
+                                <div className="step-item row">
+                                    <div className="col-6 total-amount">{t("redeem_page.amount_received")}</div>
+                                    <div className="col-6 total-amount">
+                                        <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img>
+                                        {request.totalAmount} BTC
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <StatusView request={request} />
+                            </div>
+                        </div>
+                    </Modal.Body>
+                </React.Fragment>
+            )}
         </Modal>
     );
 }

@@ -338,7 +338,7 @@ export default function EnterAmountAndAddress(): ReactElement {
                         <div className="row">
                             <div className="col-6 text-left total-added-value">{t("you_will_receive")}</div>
                             <div className="col-6">
-                                <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img> &nbsp;
+                                <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img> &nbsp;&nbsp;
                                 {calculateTotalBTC()} BTC
                             </div>
                         </div>
