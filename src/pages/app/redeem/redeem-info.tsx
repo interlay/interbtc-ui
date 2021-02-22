@@ -3,7 +3,7 @@ import { FormGroup } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { useTranslation } from "react-i18next";
-import BitcoinLogo from "../../../assets/img/Bitcoin-Logo.png";
+import BitcoinLogo from "../../../assets/img/small-bitcoin-logo.png";
 import { changeRedeemStepAction, resetRedeemWizardAction } from "../../../common/actions/redeem.actions";
 
 export default function RedeemInfo() {
@@ -30,7 +30,7 @@ export default function RedeemInfo() {
                             <div className="row">
                                 <div className="col-6 text-left">{t("redeem_page.will_receive_BTC")}</div>
                                 <div className="col-6">
-                                    <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
+                                    <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img>
                                     {request && request.amountPolkaBTC} BTC
                                 </div>
                             </div>

@@ -16,8 +16,8 @@ import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat, satToBTC, stripHexPrefix } from "@interlay/polkabtc";
 import { BALANCE_MAX_INTEGER_LENGTH, BTC_ADDRESS_REGEX } from "../../../constants";
 import { useTranslation } from "react-i18next";
-import BitcoinLogo from "../../../assets/img/Bitcoin-Logo.png";
-import PolkadotLogo from "../../../assets/img/Polkadot-Logo.png";
+import BitcoinLogo from "../../../assets/img/small-bitcoin-logo.png";
+import PolkadotLogo from "../../../assets/img/small-polkadot-logo.png";
 import Big from "big.js";
 import { updateBalancePolkaBTCAction } from "../../../common/actions/general.actions";
 import { calculateAmount } from "../../../common/utils/utils";
@@ -158,7 +158,7 @@ export default function EnterAmountAndAddress(): ReactElement {
     const calculateTotalBTC = (): string => {
         const amount = getValues("amountPolkaBTC") || "0";
         if (amount === "0") return "0";
-        return new Big(amount).sub(new Big(redeemFee)).toString();
+        return new Big(amount).sub(new Big(redeemFee)).round(5).toString();
     };
 
     const calculateTotalDOT = (): string => {
@@ -289,10 +289,10 @@ export default function EnterAmountAndAddress(): ReactElement {
                             <div className="col-6 text-left">{t("bridge_fee")}</div>
                             <div className="col fee-number">
                                 <div>
-                                    <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
-                                    <span className="fee-btc">{redeemFee}</span> BTC
+                                    <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img> &nbsp;
+                                    <span className="fee-btc">{parseFloat(Number(redeemFee).toFixed(5))}</span> BTC
                                 </div>
-                                <div>{"~ $" + Number(redeemFee) * prices.bitcoin.usd}</div>
+                                <div>{"~ $" + parseFloat((Number(redeemFee) * prices.bitcoin.usd).toFixed(5))}</div>
                             </div>
                         </div>
                     </div>
@@ -306,7 +306,7 @@ export default function EnterAmountAndAddress(): ReactElement {
                             <div className="col-6 text-left">{t("bitcoin_network_fee")}</div>
                             <div className="col fee-number">
                                 <div>
-                                    <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
+                                    <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img> &nbsp;
                                     <span className="fee-btc">{redeemFee}</span> BTC
                                 </div>
                                 <div>{"~ $" + Number(redeemFee) * prices.bitcoin.usd}</div>
@@ -323,7 +323,7 @@ export default function EnterAmountAndAddress(): ReactElement {
                                 {t("bitcoin_network_fee")}
                             </div>
                             <div className="col-6">
-                                <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>BTC
+                                <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img>BTC
                             </div>
                         </div>
                     </div>
@@ -338,7 +338,7 @@ export default function EnterAmountAndAddress(): ReactElement {
                         <div className="row">
                             <div className="col-6 text-left total-added-value">{t("you_will_receive")}</div>
                             <div className="col-6">
-                                <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
+                                <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img> &nbsp;
                                 {calculateTotalBTC()} BTC
                             </div>
                         </div>

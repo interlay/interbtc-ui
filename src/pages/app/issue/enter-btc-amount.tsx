@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
-import BitcoinLogo from "../../../assets/img/Bitcoin-Logo.png";
-import PolkadotLogo from "../../../assets/img/Polkadot-Logo.png";
+import BitcoinLogo from "../../../assets/img/small-bitcoin-logo.png";
+import PolkadotLogo from "../../../assets/img/small-polkadot-logo.png";
 import * as constants from "../../../constants";
 import Big from "big.js";
 import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
@@ -39,8 +39,10 @@ export default function EnterBTCAmount() {
     const [dustValue, setDustValue] = useState("0");
     const [usdAmount, setUsdAmount] = useState("");
     const [vaultId, setVaultId] = useState("");
+    const [vaultMaxAmount, setVaultMaxAmount] = useState("");
     const [fee, setFee] = useState("0");
     const [deposit, setDeposit] = useState("0");
+    const [vaults, setVaults] = useState(new Map());
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
@@ -51,6 +53,16 @@ export default function EnterBTCAmount() {
             try {
                 const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
                 const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
+                const vaultsMap = await window.polkaBTC.vaults.getVaultsWithIssuableTokens();
+                let maxVaultAmount = new BN(0);
+                for (const [id, issuableTokens] of vaultsMap) {
+                    const vaultAccountId = window.polkaBTC.api.createType("AccountId", id);
+                    setVaultId(vaultAccountId.toString());
+                    maxVaultAmount = issuableTokens.toBn();
+                    break;
+                }
+                setVaultMaxAmount(satToBTC(maxVaultAmount.toString()));
+                setVaults(vaultsMap);
                 setDustValue(dustValueBtc);
             } catch (error) {
                 console.log(error);
@@ -117,30 +129,45 @@ export default function EnterBTCAmount() {
             setFee(fee);
 
             const amountSAT = btcToSat(value);
-            const vaults = await window.polkaBTC.vaults.getVaultsWithIssuableTokens();
+
             let vaultId = undefined;
+            const comparisonAmount = new BN(btcToSat(value.toString()));
 
             for (const [id, issuableTokens] of vaults) {
                 const issuable = issuableTokens.toBn();
-                if (issuable.gte(new BN(value))) {
+                if (issuable.gte(comparisonAmount)) {
                     vaultId = id;
                     break;
                 }
             }
-            if (!vaultId) {
-                toast.warning(t("testing"));
-                return;
+            if (vaultId) {
+                const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultId);
+                setVaultId(vaultAccountId.toString());
+            } else {
+                setVaultId("");
             }
-            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultId);
-            setVaultId(vaultAccountId.toString());
-            for (const vault of vaults.values()) {
-                console.log(vault);
-            }
+
             const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSAT);
             setDeposit(planckToDOT(griefingCollateral));
         } catch (error) {
             console.log(error);
         }
+    };
+
+    const validateAmount = (value: number): string | undefined => {
+        if (!vaultId) {
+            return t("issue_page.maximum_in_single_request", {
+                maxAmount: parseFloat(Number(vaultMaxAmount).toFixed(5)),
+            });
+        }
+        if (value > 1) {
+            return t("issue_page.validation_max_value");
+        }
+        if (value < Number(dustValue)) {
+            return t("issue_page.validation_min_value") + dustValue + "BTC).";
+        }
+
+        return undefined;
     };
 
     return (
@@ -161,13 +188,7 @@ export default function EnterBTCAmount() {
                         ref={register({
                             required: true,
                             validate: (value) => {
-                                const message =
-                                    value > 1
-                                        ? t("issue_page.validation_max_value")
-                                        : value < Number(dustValue)
-                                        ? t("issue_page.validation_min_value") + dustValue + "BTC)."
-                                        : undefined;
-                                return message;
+                                return validateAmount(value);
                             },
                         })}
                     />
@@ -191,10 +212,10 @@ export default function EnterBTCAmount() {
                             <div className="col-6 text-left">{t("bridge_fee")}</div>
                             <div className="col fee-number">
                                 <div>
-                                    <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
-                                    <span className="fee-btc">{fee}</span> BTC
+                                    <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img> &nbsp;
+                                    <span className="fee-btc">{parseFloat(Number(fee).toFixed(5))}</span> BTC
                                 </div>
-                                <div>{"~ $" + Number(fee) * prices.bitcoin.usd}</div>
+                                <div>{"~ $" + parseFloat((Number(fee) * prices.bitcoin.usd).toFixed(2))}</div>
                             </div>
                         </div>
                     </div>
@@ -214,9 +235,11 @@ export default function EnterBTCAmount() {
                                         style={{ marginRight: "5px" }}
                                         alt="polkadot logo"
                                     ></img>
-                                    <span className="fee-btc">{fee}</span> DOT
+                                    <span className="fee-btc">{parseFloat(Number(fee).toFixed(5))}</span> DOT
                                 </div>
-                                <div>{"~ $" + new Big(deposit).mul(new Big(prices.polkadot.usd)).toString()}</div>
+                                <div>
+                                    {"~ $" + new Big(deposit).mul(new Big(prices.polkadot.usd)).round(5).toString()}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -233,10 +256,22 @@ export default function EnterBTCAmount() {
                             <div className="col-6 text-left total-added-value">{t("total_deposit")}</div>
                             <div className="col fee-number">
                                 <div>
-                                    <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
-                                    <span className="fee-btc">{Number(getValues("amountBTC")) + Number(fee)}</span> BTC
+                                    <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img>
+                                    &nbsp;&nbsp;
+                                    <span className="fee-btc">
+                                        {parseFloat((Number(getValues("amountBTC") || "0") + Number(fee)).toFixed(5))}
+                                    </span>{" "}
+                                    BTC
                                 </div>
-                                <div>{"~ $" + (Number(getValues("amountBTC")) + Number(fee)) * prices.bitcoin.usd}</div>
+                                <div>
+                                    {"~ $" +
+                                        parseFloat(
+                                            (
+                                                (Number(getValues("amountBTC") || "0") + Number(fee)) *
+                                                prices.bitcoin.usd
+                                            ).toFixed(5)
+                                        )}
+                                </div>
                             </div>
                         </div>
                     </div>

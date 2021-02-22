@@ -8,7 +8,7 @@ import PaymentView from "./payment-view";
 import StatusView from "./status-view";
 import WhopsView from "./whoops-view";
 import Big from "big.js";
-import BitcoinLogo from "../../../../assets/img/Bitcoin-Logo.png";
+import BitcoinLogo from "../../../../assets/img/small-bitcoin-logo.png";
 import { calculateAmount } from "../../../../common/utils/utils";
 import { IssueRequestStatus } from "../../../../common/types/issue.types";
 
@@ -19,9 +19,10 @@ type IssueModalProps = {
 
 export default function IssueModal(props: IssueModalProps) {
     const { prices } = useSelector((state: StoreType) => state.general);
-    const { selectedRequest } = useSelector((state: StoreType) => state.issue);
+    const { selectedRequest, issueRequests, address } = useSelector((state: StoreType) => state.issue);
     const { t } = useTranslation();
-    const request = selectedRequest;
+    const allRequests = issueRequests.get(address) || [];
+    const request = allRequests.filter((req) => req.id === (selectedRequest ? selectedRequest.id : ""))[0];
 
     return (
         <Modal className="issue-modal" show={props.show} onHide={props.onClose} size={"xl"}>
@@ -45,7 +46,7 @@ export default function IssueModal(props: IssueModalProps) {
                                 <div className="step-item row">
                                     <div className="col-6">{t("bridge_fee")}</div>
                                     <div className="col-6">
-                                        <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
+                                        <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img>
                                         {request.fee} BTC
                                         <div className="send-price">
                                             {"~ $" + Number(request.fee) * prices.bitcoin.usd}
@@ -56,7 +57,7 @@ export default function IssueModal(props: IssueModalProps) {
                                 <div className="step-item row">
                                     <div className="col-6 total-amount">{t("total_deposit")}</div>
                                     <div className="col-6 total-amount">
-                                        <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
+                                        <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img>
                                         {new Big(request.fee).add(new Big(request.amountBTC)).toString()} BTC
                                         <div className="send-price">
                                             {"~ $" + Number(request.amountBTC) * prices.bitcoin.usd}
