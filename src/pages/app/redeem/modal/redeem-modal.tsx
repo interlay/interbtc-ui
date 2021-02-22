@@ -37,7 +37,7 @@ export default function RedeemModal(props: RedeemModalProps) {
                                 </div>
                             </div>
                             <div className="step-item row">
-                                <div className="col-6">{t("redeem_page.redeem_id")}</div>
+                                <div className="col-6 text-left">{t("redeem_page.redeem_id")}</div>
                                 <div className="col-6">{shortAddress(request.id)}</div>
                             </div>
                             <div className="step-item row">

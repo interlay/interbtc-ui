@@ -1,5 +1,4 @@
 import React, { ReactElement } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
 import { ActiveTab, StoreType } from "../../common/types/util.types";
 import { useTranslation } from "react-i18next";
@@ -87,7 +86,15 @@ export default function AppPage(): ReactElement {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="horizontal-line"></div>
+                                <div
+                                    className={
+                                        activeTab === ActiveTab.Redeem
+                                            ? "horizontal-line line-yellow"
+                                            : activeTab === ActiveTab.Transfer
+                                            ? "horizontal-line line-blue"
+                                            : "horizontal-line"
+                                    }
+                                ></div>
                             </React.Fragment>
                         ) : (
                             <React.Fragment>

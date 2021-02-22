@@ -23,7 +23,7 @@ td,
 th,
 li,
 ul {
-    font-family: airbnb-cereal-light, "Comic Sans MS", Arial;
+    font-family: airbnb-cereal-light, Arial;
 }
 a:link {
     text-decoration: none;
@@ -594,4 +594,10 @@ a:not([href]):not([tabindex]):focus {
 .badge-style {
     font-size: 1rem;
     padding: 0.25rem;
+}
+.bold-text {
+    font-family: airbnb-cereal-bold;
+}
+.medium-text {
+    font-family: airbnb-cereal-medium;
 }

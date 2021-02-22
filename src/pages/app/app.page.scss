@@ -9,13 +9,14 @@
         }
 
         .active-tab {
-            border-radius: 5px;
+            border-radius: 10px;
             background-color: $d_pink;
             color: white;
             margin: 0px -15px;
             padding: 10px;
             font-family: airbnb-cereal-bold;
             text-transform: uppercase;
+            transition: 0.25s ease-in-out;
         }
         .active-tab-issue {
             background-color: $d_pink;
@@ -37,13 +38,6 @@
     .grey-text {
         color: #998;
     }
-    .text-left {
-        font-family: airbnb-cereal-medium;
-        opacity: 0.5;
-    }
-    .total-added-value {
-        opacity: 1;
-    }
 
     #main-tabs {
         background-color: $body-color;
@@ -55,6 +49,12 @@
         margin-top: 0.5rem;
         width: 100%;
         border: 1px solid $d_pink;
+    }
+    .line-yellow {
+        border: 1px solid $d_yellow;
+    }
+    .line-blue {
+        border: 1px solid $d_blue;
     }
 
     .horizontal-line-deposit {
@@ -94,7 +94,17 @@
         border: 2px solid #4ac948;
     }
 }
+.text-left {
+    font-family: airbnb-cereal-medium;
+    opacity: 0.5;
+}
+.right-text {
+    font-family: airbnb-cereal-bold;
+}
 
+.total-added-value {
+    opacity: 1;
+}
 .mark-currency {
     font-family: airbnb-cereal-book;
     font-size: 18px;
@@ -377,10 +387,14 @@
 
 .status-title {
     font-size: 2rem;
-    font-weight: 600;
+    font-family: airbnb-cereal-bold;
     text-align: center;
     margin: 1rem;
-    font-weight: 600;
+}
+.status-description {
+    font-family: airbnb-cereal-bold;
+    text-align: center;
+    opacity: 0.5;
 }
 
 .pink-amount {
@@ -404,15 +418,15 @@
         border: 1px solid $d_pink;
         width: 95%;
         margin: auto;
-        margin-top: 1rem;
+        margin-top: 10px;
     }
     .issue-modal-title {
         text-align: center;
-        margin-top: 1rem;
         color: $d_pink;
-        font-weight: 600;
-        font-size: 1.5rem;
+        font-size: 1rem;
         width: 100%;
+        text-transform: uppercase;
+        font-family: airbnb-cereal-bold;
     }
     .close-icon {
         color: $d_grey;
@@ -424,7 +438,25 @@
         cursor: pointer;
     }
 }
-
+.modal-btn-green {
+    width: fit-content;
+    padding: 10px 15px;
+    font-family: airbnb-cereal-book;
+    background-color: white;
+    border-radius: 10px;
+    border: 2px solid #4ac948;
+    color: #4ac948;
+    font-size: 15px;
+}
+.modal-btn-green::after {
+    content: url("../../assets/img/icons/Icon-external-link.svg");
+    height: 20px;
+    width: 20px;
+    padding-left: 4px;
+    color: $d_green;
+    filter: brightness(0) saturate(100%) invert(68%) sepia(64%) saturate(530%) hue-rotate(66deg) brightness(89%)
+        contrast(85%);
+}
 .btc-transaction-view {
     font-size: 1.3rem;
     width: fit-content;
@@ -510,11 +542,18 @@
     margin-top: 1rem;
     margin-bottom: 2rem;
 }
-
+.modal-content {
+    padding: 3rem 3rem;
+}
+.modal-body {
+    margin-top: 20px;
+}
 .modal-footer-border {
     border-top: 1px solid #dee2e6;
 }
-
+.send-price {
+    margin-top: 5px;
+}
 .retry-button {
     min-width: 103px;
     color: white;

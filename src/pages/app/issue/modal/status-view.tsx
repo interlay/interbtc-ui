@@ -104,28 +104,27 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                 <React.Fragment>
                     <div className="completed-status-title">{t("completed")}</div>
                     <div className="row">
-                        <div className="col text-center">
+                        <div className="col text-center bold-text ">
                             {t("issue_page.you_received")}{" "}
-                            <span className="pink-amount">{props.request.amountBTC + " PolkaBTC"}</span>
+                            <span className="pink-amount bold-text">{props.request.amountBTC + " PolkaBTC"}</span>
                         </div>
                     </div>
                     <div className="row mt-4">
                         <div className="col">
                             <div className="completed-confirmations-circle">
                                 <div>{t("issue_page.in_parachain_block")}</div>
-                                <div className="number-of-confirmations">{props.request.creation}</div>
+                                <div className="number-of-confirmations ">{props.request.creation}</div>
                             </div>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col text-center mt-4">
                             <a href="https://polkadot.js.org/apps/#/explorer" target="_blank" rel="noopener noreferrer">
-                                <button className="btn green-button app-btn">
-                                    {t("issue_page.view_parachain_block")}
-                                </button>
+                                <button className="modal-btn-green">{t("issue_page.view_parachain_block")}</button>
                             </a>
                         </div>
                     </div>
+
                     <div className="row btc-transaction-wrapper">
                         <div className="col">
                             <div className="btc-transaction-title">{t("issue_page.btc_transaction")}</div>
@@ -148,7 +147,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    <button className="btn green-button app-btn">
+                                    <button className="modal-btn-green">
                                         {t("issue_page.view_on_block_explorer")}
                                     </button>
                                 </a>
@@ -166,7 +165,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                         </div>
                     </div>
                     <div className="row justify-content-center mt-4">
-                        <div className="col-9 text-center">{t("issue_page.you_did_not_send")}</div>
+                        <div className="col-9 status-description">{t("issue_page.you_did_not_send")}</div>
                     </div>
                     <div className="row justify-content-center mt-5">
                         <div className="col-9 note-title">
