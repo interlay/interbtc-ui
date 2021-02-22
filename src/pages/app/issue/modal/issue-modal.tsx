@@ -44,41 +44,47 @@ export default function IssueModal(props: IssueModalProps) {
                                     </div>
                                 </div>
                                 <div className="step-item row">
-                                    <div className="col-6">{t("bridge_fee")}</div>
-                                    <div className="col-6">
-                                        <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img>
-                                        {request.fee} BTC
+                                    <div className="col-6 text-left">{t("bridge_fee")}</div>
+                                    <div className="col-6 right-text">
+                                        <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img>{" "}
+                                        &nbsp;
+                                        {parseFloat(Number(request.fee).toFixed(5))} BTC
                                         <div className="send-price">
-                                            {"~ $" + Number(request.fee) * prices.bitcoin.usd}
+                                            {"~ $" + parseFloat((Number(request.fee) * prices.bitcoin.usd).toFixed(5))}
                                         </div>
                                     </div>
                                 </div>
                                 <hr className="total-divider"></hr>
                                 <div className="step-item row">
-                                    <div className="col-6 total-amount">{t("total_deposit")}</div>
-                                    <div className="col-6 total-amount">
-                                        <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img>
-                                        {new Big(request.fee).add(new Big(request.amountBTC)).toString()} BTC
+                                    <div className="col-6 total-added-value text-left">{t("total_deposit")}</div>
+                                    <div className="col-6 total-amount right-text">
+                                        <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img>{" "}
+                                        &nbsp;
+                                        {parseFloat(
+                                            new Big(request.fee).add(new Big(request.amountBTC)).round(5).toString()
+                                        )}{" "}
+                                        BTC
                                         <div className="send-price">
-                                            {"~ $" + Number(request.amountBTC) * prices.bitcoin.usd}
+                                            {"~ $" +
+                                                parseFloat((Number(request.amountBTC) * prices.bitcoin.usd).toFixed(5))}
                                         </div>
                                     </div>
                                 </div>
-                                <div className="step-item row">
-                                    <div className="col-6">{t("issue_page.destination_address")}</div>
-                                    <div className="col-6">{shortAddress(request.vaultBTCAddress)}</div>
+                                <div className="step-item row mt-2">
+                                    <div className="col-6 text-left">{t("issue_page.destination_address")}</div>
+                                    <div className="col-6 right-text">{shortAddress(request.vaultBTCAddress)}</div>
                                 </div>
                                 <div className="step-item row">
-                                    <div className="col-6">{t("issue_page.parachain_block")}</div>
-                                    <div className="col-6">{shortAddress(request.creation)}</div>
+                                    <div className="col-6 text-left">{t("issue_page.parachain_block")}</div>
+                                    <div className="col-6 right-text">{shortAddress(request.creation)}</div>
                                 </div>
                                 <div className="step-item row">
-                                    <div className="col-6">{t("issue_page.vault_dot_address_modal")}</div>
-                                    <div className="col-6">{shortAddress(request.vaultDOTAddress)}</div>
+                                    <div className="col-6 text-left">{t("issue_page.vault_dot_address_modal")}</div>
+                                    <div className="col-6 right-text">{shortAddress(request.vaultDOTAddress)}</div>
                                 </div>
                                 <div className="step-item row">
-                                    <div className="col-6">{t("issue_page.vault_btc_address")}</div>
-                                    <div className="col-6">{shortAddress(request.vaultBTCAddress)}</div>
+                                    <div className="col-6 text-left">{t("issue_page.vault_btc_address")}</div>
+                                    <div className="col-6 right-text">{shortAddress(request.vaultBTCAddress)}</div>
                                 </div>
                                 <div className="row justify-content-center mt-3">
                                     <div className="col-9 note-title">{t("note")}:&nbsp;</div>
