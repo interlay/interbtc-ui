@@ -8,6 +8,7 @@ import StatusView from "./status-view";
 import BitcoinLogo from "../../../../assets/img/small-bitcoin-logo.png";
 import { calculateAmount } from "../../../../common/utils/utils";
 import ReimburseView from "./reimburse-view";
+import { RedeemRequestStatus } from "../../../../common/types/redeem.types";
 
 type RedeemModalProps = {
     show: boolean;
@@ -85,10 +86,7 @@ export default function RedeemModal(props: RedeemModalProps) {
                                 </div>
                             </div>
                             <div className="col-6">
-                                {!request.completed &&
-                                request.isExpired &&
-                                !request.cancelled &&
-                                !request.reimbursed ? (
+                                {request.status === RedeemRequestStatus.Expired ? (
                                     <ReimburseView request={request} onClose={props.onClose} />
                                 ) : (
                                     <StatusView request={request} />
