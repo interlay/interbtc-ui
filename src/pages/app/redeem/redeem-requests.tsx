@@ -7,15 +7,12 @@ import { StoreType } from "../../../common/types/util.types";
 import { redeemExpiredAction, changeRedeemIdAction } from "../../../common/actions/redeem.actions";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
 import { useTranslation } from "react-i18next";
-import ReimburseModal from "./reimburse-modal";
 import RedeemModal from "./modal/redeem-modal";
 
 export default function RedeemRequests() {
     const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
     const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
     const [isRedeemExpirationSubscribed, setIsRedeemExpirationSubscribed] = useState(false);
-    const [showReimburseModal, setShowReimburseModal] = useState(false);
-    const [reimburseRequest, setReimburseRequest] = useState<RedeemRequest>();
     const [showModal, setShowModal] = useState(false);
     const dispatch = useDispatch();
     const { t } = useTranslation();
@@ -36,15 +33,6 @@ export default function RedeemRequests() {
         [redeemRequests, dispatch]
     );
 
-    const closeReimburseModal = () => {
-        setShowReimburseModal(false);
-    };
-
-    const openReimburseModal = (request: RedeemRequest) => {
-        setReimburseRequest(request);
-        setShowReimburseModal(true);
-    };
-
     const closeModal = () => setShowModal(false);
 
     const handleCompleted = (request: RedeemRequest) => {
@@ -54,14 +42,7 @@ export default function RedeemRequests() {
             }
             if (!request.cancelled && !request.reimbursed) {
                 return (
-                    <Button
-                        onClick={(event) => {
-                            event.stopPropagation();
-                            openReimburseModal(request);
-                        }}
-                        className="ml-3"
-                        variant="outline-dark"
-                    >
+                    <Button className="ml-3" variant="outline-dark">
                         {t("redeem_page.recover")}
                     </Button>
                 );
@@ -141,7 +122,6 @@ export default function RedeemRequests() {
                 </React.Fragment>
             )}
             <RedeemModal show={showModal} onClose={closeModal} />
-            <ReimburseModal show={showReimburseModal} request={reimburseRequest} onClose={closeReimburseModal} />
         </div>
     );
 }

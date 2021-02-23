@@ -349,6 +349,23 @@ a:not([href]):not([tabindex]):focus {
     }
 }
 
+.red-button {
+    border: 1px solid $d_red;
+    color: $d_red;
+    background-color: white;
+    font-weight: 600;
+    &:hover {
+        color: white;
+        background-color: $d_red;
+        border: 1px solid $d_red;
+    }
+    &:disabled {
+        color: white !important;
+        background-color: $d_red !important;
+        border: 1px solid $d_red !important;
+    }
+}
+
 .btn-primary.disabled,
 .btn-primary:disabled {
     color: #fff;

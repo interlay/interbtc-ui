@@ -212,12 +212,62 @@
     }
 }
 
+.redeem-amount {
+    text-align: center;
+    font-size: 1.7rem;
+    color: $d_pink;
+    font-weight: 600;
+    .wizzard-number {
+        color: black;
+        font-size: 3rem;
+        font-weight: 600;
+    }
+}
+
+.reimburse-title {
+    font-size: 1.5rem;
+    color: $d_yellow;
+    font-weight: 600;
+    text-align: center;
+}
+
+.reimburse-send {
+    font-weight: 600;
+    color: $d_grey;
+    text-align: center;
+    span {
+        color: $d_pink;
+    }
+}
+
+.to-redeem {
+    text-align: center;
+    font-weight: 600;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+}
+
+.receive-compesation {
+    font-weight: 600;
+    color: $d_grey;
+    text-align: center;
+    margin-bottom: 1rem;
+    span {
+        color: $d_pink;
+    }
+}
+
 .canceled-circle {
     font-size: 10rem;
     color: $d_red;
 }
 
 .total-amount {
+    font-weight: 600;
+}
+
+.grey-text {
+    color: $d_grey;
     font-weight: 600;
 }
 
@@ -608,14 +658,27 @@
 .send-price {
     margin-top: 5px;
 }
-.retry-button {
-    min-width: 103px;
-    color: white;
-    background-color: #28a745;
-    border-color: #28a745;
-    &:hover {
-        background-color: #28a745;
-        border-color: #28a745;
+.retry {
+    text-align: center;
+    width: 100%;
+    .btn {
+        width: 100%;
+    }
+}
+
+.burn {
+    text-align: center;
+    width: 100%;
+    .btn {
+        width: 100%;
+    }
+}
+
+.burn-desc {
+    text-align: center;
+    margin-bottom: 1rem;
+    span {
+        color: $d_pink;
     }
 }
 

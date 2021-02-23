@@ -7,6 +7,7 @@ import { shortAddress } from "../../../../common/utils/utils";
 import StatusView from "./status-view";
 import BitcoinLogo from "../../../../assets/img/small-bitcoin-logo.png";
 import { calculateAmount } from "../../../../common/utils/utils";
+import ReimburseView from "./reimburse-view";
 
 type RedeemModalProps = {
     show: boolean;
@@ -32,8 +33,7 @@ export default function RedeemModal(props: RedeemModalProps) {
                     <Modal.Body>
                         <div className="row">
                             <div className="col-6 justify-content-center">
-                                <div className="wizard-title">{t("redeem_page.redeem_request_for")}</div>
-                                <div className="issue-amount">
+                                <div className="redeem-amount">
                                     <span className="wizzard-number">{request.amountPolkaBTC}</span>&nbsp;PolkaBTC
                                 </div>
                                 <div className="row usd-price-modal">
@@ -42,35 +42,57 @@ export default function RedeemModal(props: RedeemModalProps) {
                                     </div>
                                 </div>
                                 <div className="step-item row">
-                                    <div className="col-6 text-left">{t("redeem_page.redeem_id")}</div>
-                                    <div className="col-6">{shortAddress(request.id)}</div>
-                                </div>
-                                <div className="step-item row">
-                                    <div className="col-6">{t("issue_page.parachain_block")}</div>
-                                    <div className="col-6">{shortAddress(request.creation)}</div>
-                                </div>
-                                <div className="step-item row">
-                                    <div className="col-6">{t("nav_vault")}</div>
-                                    <div className="col-6">{shortAddress(request.vaultDotAddress || "")}</div>
-                                </div>
-                                <div className="step-item row">
                                     <div className="col-6">{t("bridge_fee")}</div>
                                     <div className="col-6">
-                                        <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img>
+                                        <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img>{" "}
+                                        &nbsp;
                                         {request.fee} BTC
+                                        <div className="send-price">
+                                            {"~ $" + parseFloat((Number(request.fee) * prices.bitcoin.usd).toFixed(5))}
+                                        </div>
                                     </div>
                                 </div>
                                 <hr className="total-divider"></hr>
                                 <div className="step-item row">
-                                    <div className="col-6 total-amount">{t("redeem_page.amount_received")}</div>
+                                    <div className="col-6 total-amount">{t("you_will_receive")}</div>
                                     <div className="col-6 total-amount">
                                         <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img>
+                                        &nbsp;
                                         {request.totalAmount} BTC
+                                        <div className="send-price">
+                                            {"~ $" +
+                                                parseFloat(
+                                                    (Number(request.totalAmount) * prices.bitcoin.usd).toFixed(5)
+                                                )}
+                                        </div>
                                     </div>
+                                </div>
+                                <div className="step-item row">
+                                    <div className="col-6 text-left">{t("issue_page.destination_address")}</div>
+                                    <div className="col-6">{shortAddress(request.btcAddress || "")}</div>
+                                </div>
+                                <div className="step-item row">
+                                    <div className="col-6 text-left">{t("issue_page.parachain_block")}</div>
+                                    <div className="col-6">{shortAddress(request.creation)}</div>
+                                </div>
+                                <div className="step-item row">
+                                    <div className="col-6 text-left">{t("issue_page.vault_dot_address_modal")}</div>
+                                    <div className="col-6">{shortAddress(request.vaultDotAddress || "")}</div>
+                                </div>
+                                <div className="step-item row">
+                                    <div className="col-6 text-left">{t("issue_page.vault_btc_address")}</div>
+                                    <div className="col-6">{shortAddress(request.btcAddress)}</div>
                                 </div>
                             </div>
                             <div className="col-6">
-                                <StatusView request={request} />
+                                {!request.completed &&
+                                request.isExpired &&
+                                !request.cancelled &&
+                                !request.reimbursed ? (
+                                    <ReimburseView request={request} onClose={props.onClose} />
+                                ) : (
+                                    <StatusView request={request} />
+                                )}
                             </div>
                         </div>
                     </Modal.Body>
