@@ -9,10 +9,19 @@ export interface RedeemRequest {
     btcTxId: string;
     totalAmount: string;
     confirmations: number;
-    completed: boolean;
-    isExpired: boolean;
-    cancelled: boolean;
-    reimbursed: boolean;
+    status: RedeemRequestStatus;
+}
+
+export enum RedeemRequestStatus {
+    Completed,
+    Cancelled,
+    Expired,
+    Reimbursed,
+    Retried,
+    PendingWithBtcTxNotFound,
+    PendingWithBtcTxNotIncluded,
+    PendingWithTooFewConfirmations,
+    PendingWithEnoughConfirmations,
 }
 
 export type DashboardRequestInfo = {

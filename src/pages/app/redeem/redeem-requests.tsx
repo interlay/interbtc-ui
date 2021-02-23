@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { RedeemRequest } from "../../../common/types/redeem.types";
+import { RedeemRequest, RedeemRequestStatus } from "../../../common/types/redeem.types";
 import { Table, Button } from "react-bootstrap";
 import { FaCheck, FaHourglass } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
@@ -23,8 +23,8 @@ export default function RedeemRequests() {
                 if (!redeemRequests || !redeemRequests.length) return;
                 const requestToBeUpdated = redeemRequests.filter((request) => request.id === redeemId)[0];
 
-                if (requestToBeUpdated && !requestToBeUpdated.isExpired) {
-                    dispatch(redeemExpiredAction({ ...requestToBeUpdated, isExpired: true }));
+                if (requestToBeUpdated && requestToBeUpdated.status !== RedeemRequestStatus.Expired) {
+                    dispatch(redeemExpiredAction({ ...requestToBeUpdated, status: RedeemRequestStatus.Expired }));
                 }
             } catch (error) {
                 console.log(error);
@@ -35,28 +35,35 @@ export default function RedeemRequests() {
 
     const closeModal = () => setShowModal(false);
 
-    const handleCompleted = (request: RedeemRequest) => {
-        if (!request.completed && request.isExpired) {
-            if (request.reimbursed && request.cancelled) {
+    const handleStatusColumn = (request: RedeemRequest) => {
+        switch (request.status) {
+            case RedeemRequestStatus.Reimbursed: {
                 return <div>{t("redeem_page.reimbursed")}</div>;
             }
-            if (!request.cancelled && !request.reimbursed) {
+            case RedeemRequestStatus.Expired: {
                 return (
                     <Button className="ml-3" variant="outline-dark">
                         {t("redeem_page.recover")}
                     </Button>
                 );
             }
-            return <div>{t("redeem_page.retried")}</div>;
+            // case RedeemRequestStatus.Cancelled: {
             // TODO: do we need the cancelled state?
-            // if (request.cancelled) {
-            //     return <Badge className="badge-style" variant="secondary">{t("cancelled")}</Badge>;
+            //     return (
+            //         <Badge className="badge-style" variant="secondary">
+            //             {t("cancelled")}
+            //         </Badge>
+            //     );
             // }
-        }
-        if (request.completed) {
-            return <FaCheck></FaCheck>;
-        } else {
-            return <FaHourglass></FaHourglass>;
+            case RedeemRequestStatus.Retried: {
+                return <div>{t("redeem_page.retried")}</div>;
+            }
+            case RedeemRequestStatus.Completed: {
+                return <FaCheck></FaCheck>;
+            }
+            default: {
+                return <FaHourglass></FaHourglass>;
+            }
         }
     };
 
@@ -106,14 +113,14 @@ export default function RedeemRequests() {
                                             <td>{request.creation === "0" ? "Pending..." : request.creation}</td>
                                             <td>{request.amountPolkaBTC} BTC</td>
                                             <td>
-                                                {!request.completed && request.isExpired ? (
+                                                {request.status === RedeemRequestStatus.Expired ? (
                                                     <div>{t("redeem_page.failed")}</div>
                                                 ) : (
                                                     <BitcoinTransaction txId={request.btcTxId} shorten />
                                                 )}
                                             </td>
                                             <td>{request.confirmations}</td>
-                                            <td>{handleCompleted(request)}</td>
+                                            <td>{handleStatusColumn(request)}</td>
                                         </tr>
                                     );
                                 })}
