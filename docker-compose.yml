@@ -1,7 +1,7 @@
 version: "3.8"
 services:
     polkabtc:
-        image: "registry.gitlab.com/interlay/btc-parachain:dev"
+        image: "registry.gitlab.com/interlay/btc-parachain:0-5-0"
         command:
             - btc-parachain
             - --unsafe-rpc-external
