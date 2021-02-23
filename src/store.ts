@@ -54,6 +54,7 @@ export const getInitialState = (): StoreType => {
             selectedRequest: undefined,
         },
         redeem: {
+            premiumRedeem: false,
             fee: "0",
             address: "",
             step: "AMOUNT_AND_ADDRESS",

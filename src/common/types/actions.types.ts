@@ -143,10 +143,16 @@ export const UPDATE_ALL_REDEEM_REQUESTS = "UPDATE_ALL_REDEEM_REQUESTS";
 export const RETRY_REDEEM_REQUEST = "RETRY_REDEEM_REQUEST";
 export const REDEEM_EXPIRED = "REDEEM_EXPIRED";
 export const REIMBURSE_REDEEM_REQUEST = "REIMBURSE_REDEEM_REQUEST";
+export const TOGGLE_PREMIUM_REDEEM = "TOGGLE_PREMIUM_REDEEM";
 
 export interface UpdateRedeemFee {
     type: typeof UPDATE_REDEEM_FEE;
     fee: string;
+}
+
+export interface TogglePremiumRedeem {
+    type: typeof TOGGLE_PREMIUM_REDEEM;
+    premiumRedeem: boolean;
 }
 
 export interface ChangeVaultBtcAddressOnRedeem {
@@ -247,7 +253,8 @@ export type RedeemActions =
     | RetryRedeemRequest
     | RedeemExpired
     | UpdateRedeemFee
-    | ReimburseRedeemRequest;
+    | ReimburseRedeemRequest
+    | TogglePremiumRedeem;
 
 // ISSUE
 

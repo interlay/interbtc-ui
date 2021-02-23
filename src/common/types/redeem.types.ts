@@ -39,6 +39,7 @@ export interface RedeemState {
     redeemRequests: Map<string, RedeemRequest[]>;
     vaultRedeems: VaultRedeem[];
     fee: string;
+    premiumRedeem: boolean;
 }
 
 export interface VaultRedeem {

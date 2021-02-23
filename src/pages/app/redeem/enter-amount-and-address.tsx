@@ -9,6 +9,7 @@ import {
     updateRedeemFeeAction,
     changeBTCAddressAction,
     changeRedeemIdAction,
+    togglePremiumRedeemAction,
 } from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
@@ -25,6 +26,8 @@ import { PolkaBTC } from "@interlay/polkabtc/build/interfaces";
 import { AccountId } from "@polkadot/types/interfaces/runtime";
 import * as constants from "../../../constants";
 import BN from "bn.js";
+import Toggle from "react-toggle";
+import "react-toggle/style.css";
 
 type AmountAndAddressForm = {
     amountPolkaBTC: string;
@@ -40,6 +43,7 @@ export default function EnterAmountAndAddress(): ReactElement {
         (state: StoreType) => state.general
     );
     const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
+    const premiumRedeem = useSelector((state: StoreType) => state.redeem.premiumRedeem);
     const defaultValues = amount ? { defaultValues: { amountPolkaBTC: amount, btcAddress: "" } } : undefined;
     const { register, handleSubmit, errors, getValues } = useForm<AmountAndAddressForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
@@ -48,7 +52,6 @@ export default function EnterAmountAndAddress(): ReactElement {
     const [usdAmount, setUsdAmount] = useState("");
     const [redeemFee, setRedeemFee] = useState("0");
     const [btcToDotRate, setBtcToDotRate] = useState(new Big(0));
-    const [premiumRedeem, setPremiumRedeem] = useState(false);
     const [maxPremiumRedeem, setMaxPremiumRedeem] = useState(new Big(0));
     const [premiumRedeemVaults, setPremiumRedeemVaults] = useState(new Map() as PremiumRedeemVault);
     const [premiumRedeemFee, setPremiumRedeemFee] = useState(new Big(0));
@@ -193,11 +196,11 @@ export default function EnterAmountAndAddress(): ReactElement {
             const maxBtc = satToBTC(maxAmount.toString());
             setMaxPremiumRedeem(new Big(maxBtc));
         }
-        setPremiumRedeem(!premiumRedeem);
+        dispatch(togglePremiumRedeemAction(!premiumRedeem));
     };
 
     return (
-        <form onSubmit={onSubmit}>
+        <form className="enter-amount-and-address" onSubmit={onSubmit}>
             <div className="row">
                 <div className="col-12 wizard-header-text font-yellow">{t("redeem_page.you_will_recieve")}</div>
             </div>
@@ -261,24 +264,17 @@ export default function EnterAmountAndAddress(): ReactElement {
                 </div>
             )}
             {premiumRedeemVaults.size > 0 && (
-                <div className="row">
-                    <div className="col-12">
-                        <div className="wizard-item mt-5">
-                            <div className="row">
-                                <div className="col-10 text-left">{t("redeem_page.premium_redeem")}</div>
-                                <div className="col-2">
-                                    <input type="checkbox" id="premiumRedeem" onChange={togglePremium}></input>
-                                </div>
-                            </div>
-                            {premiumRedeem && (
-                                <div className="row">
-                                    <div className="col-2"></div>
-                                    <div className="col-10 text-right font-weight-light">
-                                        {t("redeem_page.max_premium_redeem")}: {maxPremiumRedeem.toString()} PolkaBTC
-                                    </div>
-                                </div>
-                            )}
+                <div className="row justify-content-center">
+                    <div className="col-9 prmium-toggler">
+                        <div className="premium-text">
+                            {t("redeem_page.premium_redeem")} &nbsp;<i className="fas fa-exclamation-circle"></i>
                         </div>
+                        <Toggle
+                            className="premium-toggle"
+                            defaultChecked={premiumRedeem}
+                            icons={false}
+                            onChange={togglePremium}
+                        ></Toggle>
                     </div>
                 </div>
             )}
@@ -340,14 +336,20 @@ export default function EnterAmountAndAddress(): ReactElement {
                             <div className="col-6">
                                 <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img> &nbsp;&nbsp;
                                 {calculateTotalBTC()} BTC
+                                <div className="send-price">
+                                    {"~ $" + Number(calculateTotalBTC()) * prices.bitcoin.usd}
+                                </div>
                             </div>
                         </div>
                         {premiumRedeem && (
-                            <div className="row">
-                                <div className="col-6 text-left">{t("redeem_page.earned_premium")}</div>
+                            <div className="row mt-4">
+                                <div className="col-6 text-left green-text">{t("redeem_page.earned_premium")}</div>
                                 <div className="col-6">
-                                    <img src={PolkadotLogo} width="23px" height="23px" alt="polkadot logo"></img>
+                                    <img src={PolkadotLogo} width="23px" height="23px" alt="polkadot logo"></img> &nbsp;
                                     {calculateTotalDOT()} DOT
+                                    <div className="send-price">
+                                        {"~ $" + Number(calculateTotalDOT()) * prices.bitcoin.usd}
+                                    </div>
                                 </div>
                             </div>
                         )}

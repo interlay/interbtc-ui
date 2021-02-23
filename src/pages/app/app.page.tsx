@@ -16,6 +16,7 @@ export default function AppPage(): ReactElement {
     const dispatch = useDispatch();
     const { activeTab, balancePolkaBTC, balanceDOT } = useSelector((state: StoreType) => state.general);
     const issueStep = useSelector((state: StoreType) => state.issue.step);
+    const premiumRedeem = useSelector((state: StoreType) => state.redeem.premiumRedeem);
     const { t } = useTranslation();
 
     const changeTab = (tab: ActiveTab) => {
@@ -52,7 +53,12 @@ export default function AppPage(): ReactElement {
             </div>
             <div className="container mt-5">
                 <div className="row justify-content-center">
-                    <div className="col-xl-6 col-lg-6 col-md-8 col-sm-12 col-xs-12 tab-content-wrapper">
+                    <div
+                        className={
+                            "col-xl-6 col-lg-6 col-md-8 col-sm-12 col-xs-12 tab-content-wrapper" +
+                            (premiumRedeem ? " pink-gradiant" : "")
+                        }
+                    >
                         {!hideTabs() ? (
                             <React.Fragment>
                                 <div id="main-tabs" className="row app-tabs">

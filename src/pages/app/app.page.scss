@@ -686,3 +686,37 @@
     font-size: 10rem;
     color: $d_green;
 }
+
+.enter-amount-and-address {
+    .react-toggle--checked .react-toggle-track {
+        background-color: $d_pink !important;
+        &:hover {
+            background-color: $d_pink !important;
+        }
+    }
+}
+
+.prmium-toggler {
+    position: relative;
+    font-weight: 600;
+    margin-top: 2rem;
+    .premium-toggle {
+        display: inline-block;
+        top: 0.3rem;
+        margin-left: 2rem;
+    }
+    .premium-text {
+        display: inline-block;
+    }
+}
+
+.pink-gradiant {
+    height: 100%;
+    background-color: white; /* For browsers that do not support gradients */
+    background-image: linear-gradient(white, #fce8f3);
+}
+
+.green-text {
+    color: $d_green;
+    opacity: 1;
+}
