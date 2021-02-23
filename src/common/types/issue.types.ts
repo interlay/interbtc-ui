@@ -59,7 +59,6 @@ export interface IssueState {
     address: string;
     step: string;
     amountBTC: string;
-    fee: string;
     griefingCollateral: string;
     vaultDotAddress: string;
     vaultBtcAddress: string;

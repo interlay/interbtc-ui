@@ -143,10 +143,16 @@ export const UPDATE_ALL_REDEEM_REQUESTS = "UPDATE_ALL_REDEEM_REQUESTS";
 export const RETRY_REDEEM_REQUEST = "RETRY_REDEEM_REQUEST";
 export const REDEEM_EXPIRED = "REDEEM_EXPIRED";
 export const REIMBURSE_REDEEM_REQUEST = "REIMBURSE_REDEEM_REQUEST";
+export const TOGGLE_PREMIUM_REDEEM = "TOGGLE_PREMIUM_REDEEM";
 
 export interface UpdateRedeemFee {
     type: typeof UPDATE_REDEEM_FEE;
     fee: string;
+}
+
+export interface TogglePremiumRedeem {
+    type: typeof TOGGLE_PREMIUM_REDEEM;
+    premiumRedeem: boolean;
 }
 
 export interface ChangeVaultBtcAddressOnRedeem {
@@ -247,7 +253,8 @@ export type RedeemActions =
     | RetryRedeemRequest
     | RedeemExpired
     | UpdateRedeemFee
-    | ReimburseRedeemRequest;
+    | ReimburseRedeemRequest
+    | TogglePremiumRedeem;
 
 // ISSUE
 
@@ -255,7 +262,6 @@ export const CHANGE_VAULT_BTC_ADDRESS_ON_ISSUE = "CHANGE_VAULT_BTC_ADDRESS_ON_IS
 export const CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE = "CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE";
 export const CHANGE_ISSUE_STEP = "CHANGE_ISSUE_STEP";
 export const CHANGE_AMOUNT_BTC = "CHANGE_AMOUNT_BTC";
-export const UPDATE_ISSUE_FEE = "UPDATE_ISSUE_FEE";
 export const UPDATE_ISSUE_GRIEFING_COLLATERAL = "UPDATE_ISSUE_GRIEFING_COLLATERAL";
 export const CHANGE_ISSUE_ID = "CHANGE_ISSUE_ID";
 export const RESET_ISSUE_WIZARD = "RESET_ISSUE_WIZARD";
@@ -296,11 +302,6 @@ export interface ChangeIssueStep {
 export interface ChangeAmountBtc {
     type: typeof CHANGE_AMOUNT_BTC;
     amount: string;
-}
-
-export interface UpdateIssueFee {
-    type: typeof UPDATE_ISSUE_FEE;
-    fee: string;
 }
 
 export interface UpdateIssueGriefingCollateral {
@@ -349,7 +350,6 @@ export interface UpdateAllIssueRequests {
 export type IssueActions =
     | ChangeIssueStep
     | ChangeAmountBtc
-    | UpdateIssueFee
     | UpdateIssueGriefingCollateral
     | ChangeVaultBtcAddressOnIssue
     | ChangeVaultDotAddressOnIssue

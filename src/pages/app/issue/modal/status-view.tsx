@@ -102,24 +102,55 @@ export default function StatusView(props: StatusViewProps): ReactElement {
         <div className="status-view">
             {props.request.status === IssueRequestStatus.Completed && (
                 <React.Fragment>
-                    <div className="status-title">{t("completed")}</div>
+                    <div className="completed-status-title">{t("completed")}</div>
                     <div className="row">
+                        <div className="col text-center bold-text ">
+                            {t("issue_page.you_received")}{" "}
+                            <span className="pink-amount bold-text">{props.request.amountBTC + " PolkaBTC"}</span>
+                        </div>
+                    </div>
+                    <div className="row mt-4">
                         <div className="col">
                             <div className="completed-confirmations-circle">
                                 <div>{t("issue_page.in_parachain_block")}</div>
-                                <div className="number-of-confirmations">{props.request.creation}</div>
+                                <div className="number-of-confirmations ">{props.request.creation}</div>
                             </div>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col text-center mt-4">
+                            <a href="https://polkadot.js.org/apps/#/explorer" target="_blank" rel="noopener noreferrer">
+                                <button className="modal-btn-green">{t("issue_page.view_parachain_block")}</button>
+                            </a>
+                        </div>
+                    </div>
+
                     <div className="row btc-transaction-wrapper">
                         <div className="col">
-                            <div className="btc-transaction-view">{t("issue_page.deposit_transaction")}</div>
+                            <div className="btc-transaction-title">{t("issue_page.btc_transaction")}</div>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col">
-                            <div className="btc-transaction-view">
-                                <BitcoinTransaction txId={props.request.btcTxId} shorten />
+                            <div className="btc-transaction-id">{shortAddress(props.request.btcTxId)}</div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            <div className="btc-transaction">
+                                <a
+                                    href={
+                                        (constants.BTC_MAINNET
+                                            ? constants.BTC_EXPLORER_TRANSACTION_API
+                                            : constants.BTC_TEST_EXPLORER_TRANSACTION_API) + props.request.btcTxId
+                                    }
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <button className="modal-btn-green">
+                                        {t("issue_page.view_on_block_explorer")}
+                                    </button>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -127,14 +158,23 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             )}
             {props.request.status === IssueRequestStatus.Cancelled && (
                 <React.Fragment>
-                    <div className="status-title">{t("cancelled")}</div>
+                    <div className="cancel-status-title">{t("cancelled")}</div>
                     <div className="row">
-                        <div className="col">
-                            <div className="cancelled-confirmations-circle">
-                                <div>{t("issue_page.transaction_not_set")}</div>
-                                <div>{t("issue_page.time")}</div>
-                            </div>
+                        <div className="col text-center">
+                            <i className="fas fa-times-circle canceled-circle"></i>
                         </div>
+                    </div>
+                    <div className="row justify-content-center mt-4">
+                        <div className="col-9 status-description">{t("issue_page.you_did_not_send")}</div>
+                    </div>
+                    <div className="row justify-content-center mt-5">
+                        <div className="col-9 note-title">
+                            {t("note")}&nbsp;
+                            <i className="fas fa-exclamation-circle"></i>
+                        </div>
+                    </div>
+                    <div className="row justify-content-center">
+                        <div className="col-9 note-text">{t("issue_page.contact_team")}</div>
                     </div>
                 </React.Fragment>
             )}

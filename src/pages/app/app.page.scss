@@ -3,20 +3,35 @@
 .app-page {
     .app-tabs {
         .app-tab {
-            padding: 0.5rem;
             &:hover {
                 cursor: pointer;
             }
         }
 
         .active-tab {
-            padding-bottom: 5px;
-            border-bottom: 3px solid $brand-color;
-            color: $brand-color;
+            border-radius: 10px;
+            background-color: $d_pink;
+            color: white;
+            margin: 0px -15px;
+            padding: 10px;
+            font-family: airbnb-cereal-bold;
+            text-transform: uppercase;
+            transition: 0.25s ease-in-out;
+        }
+        .active-tab-issue {
+            background-color: $d_pink;
+        }
+        .active-tab-redeem {
+            background-color: $d_yellow;
         }
 
         .not-active {
             border-bottom: none;
+            margin: 0px -15px;
+            padding: 10px;
+            opacity: 0.3;
+            font-family: airbnb-cereal-bold;
+            text-transform: uppercase;
         }
     }
 
@@ -24,32 +39,88 @@
         color: #998;
     }
 
+    #main-tabs {
+        background-color: $body-color;
+        border-radius: 10px;
+        margin: 0px;
+    }
+
+    .horizontal-line {
+        margin-top: 0.5rem;
+        width: 100%;
+        border: 1px solid $d_pink;
+    }
+    .line-yellow {
+        border: 1px solid $d_yellow;
+    }
+    .line-blue {
+        border: 1px solid $d_blue;
+    }
+
+    .horizontal-line-deposit {
+        margin-top: 3rem;
+        width: 100%;
+        border: 1px solid $d_pink;
+    }
+
+    .wizard-header-text {
+        font-family: airbnb-cereal-bold;
+        text-align: center;
+        margin-top: 20px;
+    }
+
     .tab-content-wrapper {
         box-shadow: 0px 0px 20px darkgrey;
         border-radius: 5px;
+        padding: 3rem;
     }
 
     #amount-btc-input {
         border: none;
         font-size: 3rem;
         width: 100%;
-        margin-top: 2rem;
+        margin-top: 20px;
         text-align: right;
     }
 
     .app-btn {
-        width: 100%;
-        padding: 15px;
+        width: 50%;
+        padding: 10px;
         margin-bottom: 15px;
-        margin-top: 15px;
+        margin-top: 35px;
+        text-transform: uppercase;
+        font-family: airbnb-cereal-bold;
+        border-radius: 10px;
     }
 }
+.text-left {
+    font-family: airbnb-cereal-medium;
+    opacity: 0.5;
+}
+.right-text {
+    font-family: airbnb-cereal-bold;
+}
 
+.total-added-value {
+    opacity: 1;
+}
 .mark-currency {
-    font-size: 1.5rem;
+    font-family: airbnb-cereal-book;
+    font-size: 18px;
     text-align: left;
-    margin-top: 3.7rem;
-    margin-left: -1rem;
+    margin-top: 48px;
+    margin-left: -1.5rem;
+    color: $d_pink;
+}
+
+.horizontal-line-total {
+    border: 1px solid black;
+    opacity: 0.2;
+    margin: 10px 0px;
+}
+
+.bold {
+    font-weight: 600;
 }
 
 .locking-by {
@@ -73,7 +144,9 @@
         margin-bottom: 3px;
     }
 }
-
+.wizard-item-remove-border {
+    border: none;
+}
 .balances-title {
     font-size: 2rem;
     font-weight: 600;
@@ -81,8 +154,27 @@
 
 .usd-price {
     color: #998;
-    font-size: 1rem;
-    margin-bottom: 4rem;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.bridge-fee {
+    text-align: center;
+    font-weight: 600;
+    color: $d_grey;
+}
+.form-heading {
+    font-family: airbnb-cereal-medium;
+    margin-bottom: 8px;
+}
+.fee-number {
+    color: $d_grey;
+    padding-right: 0px;
+}
+
+.fee-btc {
+    color: black;
+    font-weight: 600;
 }
 
 .usd-price-modal {
@@ -111,14 +203,71 @@
 .issue-amount {
     text-align: center;
     font-size: 1.7rem;
-    color: #998;
+    color: $d_orange;
+    font-weight: 600;
     .wizzard-number {
         color: black;
         font-size: 3rem;
+        font-weight: 600;
     }
 }
 
+.redeem-amount {
+    text-align: center;
+    font-size: 1.7rem;
+    color: $d_pink;
+    font-weight: 600;
+    .wizzard-number {
+        color: black;
+        font-size: 3rem;
+        font-weight: 600;
+    }
+}
+
+.reimburse-title {
+    font-size: 1.5rem;
+    color: $d_yellow;
+    font-weight: 600;
+    text-align: center;
+}
+
+.reimburse-send {
+    font-weight: 600;
+    color: $d_grey;
+    text-align: center;
+    span {
+        color: $d_pink;
+    }
+}
+
+.to-redeem {
+    text-align: center;
+    font-weight: 600;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+}
+
+.receive-compesation {
+    font-weight: 600;
+    color: $d_grey;
+    text-align: center;
+    margin-bottom: 1rem;
+    span {
+        color: $d_pink;
+    }
+}
+
+.canceled-circle {
+    font-size: 10rem;
+    color: $d_red;
+}
+
 .total-amount {
+    font-weight: 600;
+}
+
+.grey-text {
+    color: $d_grey;
     font-weight: 600;
 }
 
@@ -141,6 +290,11 @@
     font-size: 1rem;
     text-align: center;
     padding: 15px;
+    color: $d_grey;
+}
+
+.copy-address {
+    cursor: pointer;
 }
 
 .payment-address {
@@ -150,7 +304,7 @@
     font-weight: 600;
     span {
         border-radius: 5px;
-        border: 1px solid black;
+        border: 1.5px solid black;
         padding: 10px;
     }
 }
@@ -160,6 +314,19 @@
     font-size: 1rem;
     font-weight: 600;
     padding-top: 15px;
+    color: $d_grey;
+}
+
+.note-title {
+    text-align: center;
+    color: $d_orange;
+    font-size: 1rem;
+}
+
+.note-text {
+    text-align: center;
+    color: $d_grey;
+    font-size: 1rem;
 }
 
 .payment-timer {
@@ -170,7 +337,7 @@
 
 .qr-code-item {
     text-align: center;
-    padding: 3rem;
+    padding: 2rem;
 }
 
 .ledger-wrapper {
@@ -189,9 +356,8 @@
 }
 
 #btc-address-input {
-    font-size: 1.3rem;
-    padding: 1rem;
-    padding-top: 0;
+    font-size: 1.1rem;
+    padding: 0.5rem;
     width: 100%;
     text-align: left;
     border-radius: 5px;
@@ -237,7 +403,7 @@
 
 .completed-confirmations-circle {
     @extend .confirmation-circle;
-    border: 5px solid green;
+    border: 5px solid $d_green;
     padding-top: 72px;
 }
 
@@ -264,20 +430,156 @@
 
 .number-of-confirmations {
     font-size: 1.5rem;
+    color: $d_green;
+    font-weight: 600;
 }
 
 .status-title {
     font-size: 2rem;
-    font-weight: 600;
+    font-family: airbnb-cereal-bold;
     text-align: center;
-    margin: 2rem;
+    margin: 1rem;
+}
+.status-description {
+    font-family: airbnb-cereal-bold;
+    text-align: center;
+    opacity: 0.5;
 }
 
+.info-redeem-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: $d_yellow;
+    margin-bottom: 1rem;
+    span {
+        color: black;
+    }
+}
+
+.info-redeem-price {
+    color: $d_grey;
+    font-size: 1.5rem;
+}
+
+.typically-takes {
+    font-weight: 600;
+    color: $d_grey;
+}
+
+.btc-destination-address {
+    font-weight: 600;
+    color: $d_grey;
+    margin-top: 1.5rem;
+}
+
+.pink-amount {
+    color: $d_pink;
+    text-align: center;
+    font-weight: 600;
+}
+
+.completed-status-title {
+    @extend .status-title;
+    color: $d_green;
+}
+
+.cancel-status-title {
+    @extend .status-title;
+    color: $d_red;
+}
+
+.issue-modal {
+    .issue-modal-horizontal-line {
+        border: 1px solid $d_pink;
+        width: 95%;
+        margin: auto;
+        margin-top: 10px;
+    }
+    .issue-modal-title {
+        text-align: center;
+        color: $d_pink;
+        font-size: 1rem;
+        width: 100%;
+        text-transform: uppercase;
+        font-family: airbnb-cereal-bold;
+    }
+    .close-icon {
+        color: $d_grey;
+        text-align: right;
+        font-size: 1.2rem;
+        position: absolute;
+        right: 2rem;
+        top: 1.5rem;
+        cursor: pointer;
+    }
+}
+
+.redeem-modal {
+    .redeem-modal-horizontal-line {
+        border: 1px solid $d_yellow;
+        width: 95%;
+        margin: auto;
+        margin-top: 10px;
+    }
+    .redeem-modal-title {
+        text-align: center;
+        color: $d_yellow;
+        font-size: 1rem;
+        width: 100%;
+        text-transform: uppercase;
+        font-family: airbnb-cereal-bold;
+    }
+    .close-icon {
+        color: $d_grey;
+        text-align: right;
+        font-size: 1.2rem;
+        position: absolute;
+        right: 2rem;
+        top: 1.5rem;
+        cursor: pointer;
+    }
+}
+
+.modal-btn-green {
+    width: fit-content;
+    padding: 10px 15px;
+    font-family: airbnb-cereal-book;
+    background-color: white;
+    border-radius: 10px;
+    border: 2px solid #4ac948;
+    color: #4ac948;
+    font-size: 15px;
+}
+.modal-btn-green::after {
+    content: url("../../assets/img/icons/Icon-external-link.svg");
+    height: 20px;
+    width: 20px;
+    padding-left: 4px;
+    color: $d_green;
+    filter: brightness(0) saturate(100%) invert(68%) sepia(64%) saturate(530%) hue-rotate(66deg) brightness(89%)
+        contrast(85%);
+}
 .btc-transaction-view {
     font-size: 1.3rem;
     width: fit-content;
     text-align: center;
     margin: auto;
+}
+
+.btc-transaction-id {
+    @extend .btc-transaction-view;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.btc-transaction-title {
+    @extend .btc-transaction-view;
+    color: $d_grey;
+}
+
+.btc-transaction {
+    @extend .btc-transaction-view;
+    font-weight: 600;
 }
 
 .btc-transaction-wrapper {
@@ -286,28 +588,42 @@
 
 .step-title {
     display: inline;
-    text-align: center;
-    left: calc(50% - 20px);
     top: 15px;
+    font-weight: 600;
+    color: $d_pink;
+    left: calc(50% - 20px);
 }
 
-.step-back {
-    text-align: left;
+.send-amount {
+    color: $d_orange;
+}
 
-    .custom-icon-size {
-        font-size: 2rem;
-        color: #998;
-        margin-top: 15px;
-        // float: left;
-        &:hover {
-            cursor: pointer;
-        }
+.send-price {
+    color: $d_grey;
+}
+
+.deposit-title {
+    position: absolute;
+    left: calc(50% - 32px);
+    top: 3.4rem;
+    font-weight: 600;
+}
+
+.custom-icon-size {
+    font-size: 2rem;
+    color: #998;
+    margin-top: 15px;
+    float: left;
+    margin-top: 0rem;
+    // float: left;
+    &:hover {
+        cursor: pointer;
     }
 }
 
 .wizard-input-error {
     color: $error-color;
-    margin-top: -3rem;
+    margin-top: 1rem;
     margin-bottom: 2rem;
 }
 
@@ -319,32 +635,88 @@
 
 .wizard-redeem-title {
     margin-top: 2rem;
+    margin-bottom: 2rem;
     font-weight: 600;
-    font-size: 1.8rem;
+    font-size: 1rem;
+    color: $d_yellow;
 }
 
 .inform-you {
     font-weight: 600;
     margin-top: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
-
+.modal-content {
+    padding: 3rem 3rem;
+}
+.modal-body {
+    margin-top: 20px;
+}
 .modal-footer-border {
     border-top: 1px solid #dee2e6;
 }
+.send-price {
+    margin-top: 5px;
+}
+.retry {
+    text-align: center;
+    width: 100%;
+    .btn {
+        width: 100%;
+    }
+}
 
-.retry-button {
-    min-width: 103px;
-    color: white;
-    background-color: #28a745;
-    border-color: #28a745;
-    &:hover {
-        background-color: #28a745;
-        border-color: #28a745;
+.burn {
+    text-align: center;
+    width: 100%;
+    .btn {
+        width: 100%;
+    }
+}
+
+.burn-desc {
+    text-align: center;
+    margin-bottom: 1rem;
+    span {
+        color: $d_pink;
     }
 }
 
 .confirmed-tick {
     font-size: 10rem;
     color: $d_green;
+}
+
+.enter-amount-and-address {
+    .react-toggle--checked .react-toggle-track {
+        background-color: $d_pink !important;
+        &:hover {
+            background-color: $d_pink !important;
+        }
+    }
+}
+
+.prmium-toggler {
+    position: relative;
+    font-weight: 600;
+    margin-top: 2rem;
+    .premium-toggle {
+        display: inline-block;
+        top: 0.3rem;
+        margin-left: 2rem;
+    }
+    .premium-text {
+        display: inline-block;
+    }
+}
+
+.pink-gradiant {
+    height: 100%;
+    background-color: white; /* For browsers that do not support gradients */
+    background-image: linear-gradient(white, #fce8f3);
+}
+
+.green-text {
+    color: $d_green;
+    opacity: 1;
 }

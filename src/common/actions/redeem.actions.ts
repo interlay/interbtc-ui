@@ -15,6 +15,8 @@ import {
     RETRY_REDEEM_REQUEST,
     REDEEM_EXPIRED,
     REIMBURSE_REDEEM_REQUEST,
+    TOGGLE_PREMIUM_REDEEM,
+    TogglePremiumRedeem,
     UpdateRedeemFee,
     UpdateAllRedeemRequests,
     ChangeRedeemStep,
@@ -111,4 +113,9 @@ export const reimburseRedeemRequestAction = (id: string): ReimburseRedeemRequest
 export const updateRedeemFeeAction = (fee: string): UpdateRedeemFee => ({
     type: UPDATE_REDEEM_FEE,
     fee,
+});
+
+export const togglePremiumRedeemAction = (premiumRedeem: boolean): TogglePremiumRedeem => ({
+    type: TOGGLE_PREMIUM_REDEEM,
+    premiumRedeem,
 });
