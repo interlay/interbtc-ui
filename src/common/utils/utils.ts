@@ -276,11 +276,11 @@ export function computeRedeemRequestStatus(
     if (completed) {
         return RedeemRequestStatus.Completed;
     }
-    if (cancelled) {
-        return RedeemRequestStatus.Cancelled;
-    }
     if (reimbursed) {
         return RedeemRequestStatus.Reimbursed;
+    }
+    if (cancelled && !reimbursed) {
+        return RedeemRequestStatus.Retried;
     }
     if (creationBlock.add(redeemPeriod).lte(parachainHeight)) {
         return RedeemRequestStatus.Expired;
