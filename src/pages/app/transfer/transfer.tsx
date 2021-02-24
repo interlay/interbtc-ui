@@ -82,8 +82,8 @@ export default function Transfer() {
                 )}
                 <div className="row">
                     <div className="col-12">
+                        <p className="form-heading">{t("recipient")}</p>
                         <div className="input-address-wrapper">
-                            <div className="address-label">{t("recipient")}</div>
                             <input
                                 id="btc-address-input"
                                 name="address"
@@ -103,7 +103,11 @@ export default function Transfer() {
                     </div>
                 )}
                 <div className="mb-5"></div>
-                <ButtonMaybePending className="btn btn-primary app-btn" isPending={isRequestPending} onClick={onSubmit}>
+                <ButtonMaybePending
+                    className="btn green-button app-btn"
+                    isPending={isRequestPending}
+                    onClick={onSubmit}
+                >
                     {t("transfer")}
                 </ButtonMaybePending>
             </form>

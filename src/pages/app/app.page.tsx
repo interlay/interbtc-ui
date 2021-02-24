@@ -86,7 +86,11 @@ export default function AppPage(): ReactElement {
                                     </div>
                                     <div className={"col-4 app-tab"} onClick={() => changeTab(ActiveTab.Transfer)}>
                                         <div
-                                            className={activeTab === ActiveTab.Transfer ? " active-tab" : " not-active"}
+                                            className={
+                                                activeTab === ActiveTab.Transfer
+                                                    ? " active-tab active-tab-transfer"
+                                                    : " not-active"
+                                            }
                                         >
                                             {t("transfer")}
                                         </div>
