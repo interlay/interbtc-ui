@@ -111,7 +111,7 @@
         "as_compensation_instead": " (~${{compensationPrice}}) as compensation instead.",
         "view_progress": "View progress",
         "btc_destination_address": "BTC destination address",
-        "you_will_recieve": "You will receive BTC in exchange for PolkaBTC",
+        "you_will_recieve": "Receive BTC in exchange for PolkaBTC",
         "must_select_account_warning": "No account selected. Please select an account to redeem.",
         "waiting_for": "Waiting for",
         "typically_takes": "This typically takes only a few minutes but may sometimes take up to 6 hours.",
@@ -174,6 +174,9 @@
         "earned_premium": "Earned premium ({{premium}} %)",
         "max_premium_redeem": "Available (max)",
         "error_max_premium_redeem": "Could not find Vault below premium redeem threshold with sufficient locked PolkaBTC. Please try a different Vault. The maximum amount for premium redeem is {{maxPremiumRedeem}} PolkaBTC."
+    },
+    "transfer_page": {
+      "transfer_to": "Transfer PolkaBTC to others"
     },
     "dashboard": {
         "premium_redeem": "Premium Redeem",
