@@ -1,7 +1,7 @@
 version: "3.8"
 services:
     polkabtc:
-        image: "registry.gitlab.com/interlay/btc-parachain:0-4-0"
+        image: "registry.gitlab.com/interlay/btc-parachain:0-5-0"
         command:
             - btc-parachain
             - --dev
@@ -13,7 +13,7 @@ services:
             - "9933:9933"
             - "9944:9944"
     staked_relayer:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:0-4-0"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:0.5.0"
         command:
             - /bin/sh
             - -c
@@ -29,7 +29,7 @@ services:
         ports:
             - "3030:3030"
     oracle:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:0-4-0"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:0.5.0"
         command:
             - /bin/sh
             - -c
@@ -40,7 +40,7 @@ services:
         environment:
             RUST_LOG: info
     faucet:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/faucet:0-4-0"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/faucet:0.5.0"
         command:
             - /bin/sh
             - -c
@@ -53,7 +53,7 @@ services:
         ports:
             - "3035:3035"
     vault:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:0-4-0"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:0.5.0"
         command:
             - /bin/sh
             - -c
