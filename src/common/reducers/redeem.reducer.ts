@@ -130,10 +130,7 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             return { ...state, vaultRedeems: action.vaultRedeems };
         case UPDATE_ALL_REDEEM_REQUESTS:
             const newRequests = new Map(state.redeemRequests);
-            const mappedRequests = action.redeemRequests.map((newRequest) => {
-                return newRequest;
-            });
-            newRequests.set(state.address, mappedRequests);
+            newRequests.set(action.userDotAddress, action.redeemRequests);
             return { ...state, redeemRequests: newRequests };
         default:
             return state;

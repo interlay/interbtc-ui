@@ -1,6 +1,6 @@
 export interface IssueRequest {
     id: string;
-    amountBTC: string;
+    amountPolkaBTC: string;
     timestamp?: string;
     totalAmount: string;
     creation: string;

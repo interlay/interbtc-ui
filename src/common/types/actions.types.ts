@@ -216,6 +216,7 @@ export interface UpdateRedeemRequest {
 
 export interface UpdateAllRedeemRequests {
     type: typeof UPDATE_ALL_REDEEM_REQUESTS;
+    userDotAddress: string;
     redeemRequests: RedeemRequest[];
 }
 
@@ -344,6 +345,7 @@ export interface OpenWizardInEditMode {
 
 export interface UpdateAllIssueRequests {
     type: typeof UPDATE_ALL_ISSUE_REQUESTS;
+    userDotAddress: string;
     issueRequests: IssueRequest[];
 }
 

@@ -15,14 +15,14 @@ import DashboardTable, {
 import * as constants from "../../../constants";
 import PolkaBTC from "../components/polkabtc";
 import "../dashboard-subpage.scss";
-import { BtcNetworkName } from "@interlay/polkabtc-stats";
+import { BtcNetworkName, IssueColumns } from "@interlay/polkabtc-stats";
 
 export default function IssueDashboard(): ReactElement {
     const { totalPolkaBTC, prices } = useSelector((state: StoreType) => state.general);
     const { t } = useTranslation();
     const statsApi = usePolkabtcStats();
     const [issueRequests, setIssueRequests] = useState(new Array<DashboardIssueInfo>());
-    const [tableParams, setTableParams] = useState(defaultTableDisplayParams());
+    const [tableParams, setTableParams] = useState(defaultTableDisplayParams<IssueColumns>());
 
     const [totalSuccessfulIssues, setTotalSuccessfulIssues] = useState("-");
     const [totalIssues, setTotalIssues] = useState("-");

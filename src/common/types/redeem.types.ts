@@ -1,7 +1,7 @@
 export interface RedeemRequest {
     id: string;
     amountPolkaBTC: string;
-    // timestamp: string;
+    timestamp: string;
     creation: string;
     fee: string;
     btcAddress: string;

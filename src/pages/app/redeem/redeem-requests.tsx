@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, ReactElement } from "react";
 import { RedeemRequest, RedeemRequestStatus } from "../../../common/types/redeem.types";
 import { Table, Button } from "react-bootstrap";
 import { FaCheck, FaHourglass } from "react-icons/fa";
@@ -9,7 +9,7 @@ import BitcoinTransaction from "../../../common/components/bitcoin-links/transac
 import { useTranslation } from "react-i18next";
 import RedeemModal from "./modal/redeem-modal";
 
-export default function RedeemRequests() {
+export default function RedeemRequests(): ReactElement {
     const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
     const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
     const [isRedeemExpirationSubscribed, setIsRedeemExpirationSubscribed] = useState(false);
@@ -119,7 +119,11 @@ export default function RedeemRequests() {
                                                     <BitcoinTransaction txId={request.btcTxId} shorten />
                                                 )}
                                             </td>
-                                            <td>{request.confirmations}</td>
+                                            <td>
+                                                {request.btcTxId === ""
+                                                    ? t("not_applicable")
+                                                    : Math.max(request.confirmations, 0)}
+                                            </td>
                                             <td>{handleStatusColumn(request)}</td>
                                         </tr>
                                     );

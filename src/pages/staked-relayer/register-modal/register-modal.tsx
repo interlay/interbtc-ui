@@ -6,6 +6,7 @@ import { StoreType } from "../../../common/types/util.types";
 import { toast } from "react-toastify";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { useTranslation } from "react-i18next";
+import { dotToPlanck } from "@interlay/polkabtc";
 
 type RegisterModalType = {
     onClose: () => void;
@@ -27,7 +28,8 @@ export default function ReportModal(props: RegisterModalType): ReactElement {
         if (!relayerLoaded) return;
         setRegisterPending(true);
         try {
-            await window.relayer.registerStakedRelayer(stake);
+            const planckStake = parseFloat(dotToPlanck(stake.toString()) || "0");
+            await window.relayer.registerStakedRelayer(planckStake);
             toast.success("Successfully Registered");
             props.onRegister();
             props.onClose();
@@ -64,7 +66,7 @@ export default function ReportModal(props: RegisterModalType): ReactElement {
                                 ></input>
                                 <div className="input-group-append">
                                     <span className="input-group-text" id="basic-addon2">
-                                        Planck
+                                        {t("dot")}
                                     </span>
                                 </div>
                             </div>
