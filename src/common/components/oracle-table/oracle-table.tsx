@@ -31,16 +31,17 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
             if (!polkaBtcLoaded) return;
             try {
                 const oracle = await window.polkaBTC.oracle.getInfo();
-                setOracles([
-                    {
-                        id: "0", // todo: if fetching multiple oracles: set to index, or get account_id
-                        source: oracle.names.join(","),
+                oracle.names.push(oracle.names[0]);
+                setOracles(
+                    oracle.names.map((name, i) => ({
+                        id: i.toString(),
+                        source: name,
                         feed: oracle.feed,
                         lastUpdate: formatDateTime(oracle.lastUpdate),
                         exchangeRate: oracle.exchangeRate,
                         online: oracle.online && Date.now() - oracle.lastUpdate.getTime() < 3600 * 1000,
-                    },
-                ]);
+                    }))
+                );
             } catch (e) {
                 console.log(e);
             }

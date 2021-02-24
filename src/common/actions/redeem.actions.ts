@@ -90,8 +90,12 @@ export const updateRedeemRequestAction = (request: RedeemRequest): UpdateRedeemR
     request,
 });
 
-export const updateAllRedeemRequestsAction = (redeemRequests: RedeemRequest[]): UpdateAllRedeemRequests => ({
+export const updateAllRedeemRequestsAction = (
+    userDotAddress: string,
+    redeemRequests: RedeemRequest[]
+): UpdateAllRedeemRequests => ({
     type: UPDATE_ALL_REDEEM_REQUESTS,
+    userDotAddress,
     redeemRequests,
 });
 

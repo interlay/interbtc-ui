@@ -88,17 +88,7 @@ export const issueReducer = (state: IssueState = initialState, action: IssueActi
             return { ...state, vaultIssues: action.vaultIssues };
         case UPDATE_ALL_ISSUE_REQUESTS:
             const newRequests = new Map(state.issueRequests);
-            const currentRequests = state.issueRequests.get(state.address);
-            const resultRequests = action.issueRequests.map((req) => {
-                if (currentRequests) {
-                    const currentRequest = currentRequests.find((r) => r.id === req.id);
-                    if (currentRequest) {
-                        return { ...req, btcTxId: currentRequest.btcTxId };
-                    }
-                }
-                return req;
-            });
-            newRequests.set(state.address, resultRequests);
+            newRequests.set(action.userDotAddress, action.issueRequests);
             return { ...state, issueRequests: newRequests };
         default:
             return state;

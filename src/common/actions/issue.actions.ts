@@ -100,7 +100,11 @@ export const addVaultIssuesAction = (vaultIssues: VaultIssue[]): AddVaultIssues 
     vaultIssues,
 });
 
-export const updateAllIssueRequestsAction = (issueRequests: IssueRequest[]): UpdateAllIssueRequests => ({
+export const updateAllIssueRequestsAction = (
+    userDotAddress: string,
+    issueRequests: IssueRequest[]
+): UpdateAllIssueRequests => ({
     type: UPDATE_ALL_ISSUE_REQUESTS,
+    userDotAddress,
     issueRequests,
 });

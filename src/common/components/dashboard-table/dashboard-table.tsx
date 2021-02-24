@@ -81,20 +81,20 @@ type SimpleDashboardTableProps<D extends DataWithID> = {
     dataPointDisplayer: (dataPoint: D) => ReactElement[];
     noDataEl?: ReactElement;
 };
-type RichDashboardTableProps<D extends DataWithID> = {
+type RichDashboardTableProps<D extends DataWithID, C> = {
     richTable: true;
     pageData: D[];
     totalPages: number;
-    tableParams: TableDisplayParams;
-    setTableParams: (params: TableDisplayParams) => void;
+    tableParams: TableDisplayParams<C>;
+    setTableParams: (params: TableDisplayParams<C>) => void;
     headings: ReactElement[];
     dataPointDisplayer: (dataPoint: D) => ReactElement[];
     noDataEl?: ReactElement;
 };
 
-type DashboardTableProps<D extends DataWithID> = SimpleDashboardTableProps<D> | RichDashboardTableProps<D>;
+type DashboardTableProps<D extends DataWithID, C> = SimpleDashboardTableProps<D> | RichDashboardTableProps<D, C>;
 
-export default function DashboardTable<D extends DataWithID>(props: DashboardTableProps<D>): ReactElement {
+export default function DashboardTable<D extends DataWithID, C>(props: DashboardTableProps<D, C>): ReactElement {
     const { t } = useTranslation();
 
     const setPage = useMemo(

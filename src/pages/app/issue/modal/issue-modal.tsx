@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../../common/types/util.types";
 import { Modal } from "react-bootstrap";
@@ -17,7 +17,7 @@ type IssueModalProps = {
     onClose: () => void;
 };
 
-export default function IssueModal(props: IssueModalProps) {
+export default function IssueModal(props: IssueModalProps): ReactElement {
     const { prices } = useSelector((state: StoreType) => state.general);
     const { selectedRequest, issueRequests, address } = useSelector((state: StoreType) => state.issue);
     const { t } = useTranslation();
@@ -36,11 +36,11 @@ export default function IssueModal(props: IssueModalProps) {
                         <div className="row">
                             <div className="col-6 justify-content-center">
                                 <div className="issue-amount">
-                                    <span className="wizzard-number">{request.amountBTC}</span>&nbsp;BTC
+                                    <span className="wizzard-number">{request.amountPolkaBTC}</span>&nbsp;BTC
                                 </div>
                                 <div className="row usd-price-modal">
                                     <div className="col">
-                                        {"~ $" + calculateAmount(request.amountBTC || "0", prices.bitcoin.usd)}
+                                        {"~ $" + calculateAmount(request.amountPolkaBTC || "0", prices.bitcoin.usd)}
                                     </div>
                                 </div>
                                 <div className="step-item row">
@@ -61,12 +61,17 @@ export default function IssueModal(props: IssueModalProps) {
                                         <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img>{" "}
                                         &nbsp;
                                         {parseFloat(
-                                            new Big(request.fee).add(new Big(request.amountBTC)).round(5).toString()
+                                            new Big(request.fee)
+                                                .add(new Big(request.amountPolkaBTC))
+                                                .round(5)
+                                                .toString()
                                         )}{" "}
                                         BTC
                                         <div className="send-price">
                                             {"~ $" +
-                                                parseFloat((Number(request.amountBTC) * prices.bitcoin.usd).toFixed(5))}
+                                                parseFloat(
+                                                    (Number(request.amountPolkaBTC) * prices.bitcoin.usd).toFixed(5)
+                                                )}
                                         </div>
                                     </div>
                                 </div>
@@ -76,7 +81,7 @@ export default function IssueModal(props: IssueModalProps) {
                                 </div>
                                 <div className="step-item row">
                                     <div className="col-6 text-left">{t("issue_page.parachain_block")}</div>
-                                    <div className="col-6 right-text">{shortAddress(request.creation)}</div>
+                                    <div className="col-6 right-text">{request.creation}</div>
                                 </div>
                                 <div className="step-item row">
                                     <div className="col-6 text-left">{t("issue_page.vault_dot_address_modal")}</div>

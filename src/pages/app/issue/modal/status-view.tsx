@@ -42,7 +42,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             if (txId === "") {
                 txId = await window.polkaBTC.btcCore.getTxIdByRecipientAddress(
                     request.vaultBTCAddress,
-                    request.amountBTC
+                    request.amountPolkaBTC
                 );
             }
             [merkleProof, rawTx] = await Promise.all([
@@ -86,7 +86,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             completedReq.status = IssueRequestStatus.Completed;
 
             dispatch(
-                updateBalancePolkaBTCAction(new Big(balancePolkaBTC).add(new Big(provenReq.amountBTC)).toString())
+                updateBalancePolkaBTCAction(new Big(balancePolkaBTC).add(new Big(provenReq.amountPolkaBTC)).toString())
             );
             dispatch(updateIssueRequestAction(completedReq));
 
@@ -106,7 +106,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                     <div className="row">
                         <div className="col text-center bold-text ">
                             {t("issue_page.you_received")}{" "}
-                            <span className="pink-amount bold-text">{props.request.amountBTC + " PolkaBTC"}</span>
+                            <span className="pink-amount bold-text">{props.request.amountPolkaBTC + " PolkaBTC"}</span>
                         </div>
                     </div>
                     <div className="row mt-4">

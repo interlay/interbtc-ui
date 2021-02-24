@@ -16,7 +16,7 @@ type PaymentViewProps = {
 export default function PaymentView(props: PaymentViewProps): ReactElement {
     const { t } = useTranslation();
     const { polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
-    const amount = new Big(props.request.amountBTC).add(new Big(props.request.fee)).toString();
+    const amount = new Big(props.request.amountPolkaBTC).add(new Big(props.request.fee)).toString();
     const [leftSeconds, setLeftSeconds] = useState(-1);
 
     useEffect(() => {

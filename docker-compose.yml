@@ -146,7 +146,7 @@ services:
         ports:
             - "5432:5432"
     polkabtc_stats:
-        image: "registry.gitlab.com/interlay/polkabtc-stats:0.0.17"
+        image: "registry.gitlab.com/interlay/polkabtc-stats:0.1.5"
         restart: always
         depends_on:
             - postgres
@@ -154,6 +154,7 @@ services:
         environment:
             MONITOR: "1"
             ENDPOINT_URL: "ws://polkabtc:9944"
+            BTC_NETWORK: "http://electrs:3002"
             PGHOST: "postgres"
             PGPORT: "5432"
             PGDATABASE: "postgres"
