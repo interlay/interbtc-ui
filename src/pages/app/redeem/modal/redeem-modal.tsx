@@ -26,9 +26,7 @@ export default function RedeemModal(props: RedeemModalProps): ReactElement {
         <Modal className="redeem-modal" show={props.show} onHide={props.onClose} size={"xl"}>
             {request && (
                 <React.Fragment>
-                    <div className="redeem-modal-title">
-                        {t("issue_page.request", { id: shortAddress(request.id) })}
-                    </div>
+                    <div className="redeem-modal-title">{t("issue_page.request", { id: request.id })}</div>
                     <i className="fas fa-times close-icon" onClick={props.onClose}></i>
                     <div className="redeem-modal-horizontal-line"></div>
                     <Modal.Body>

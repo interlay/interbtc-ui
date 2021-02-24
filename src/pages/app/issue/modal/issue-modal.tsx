@@ -28,7 +28,7 @@ export default function IssueModal(props: IssueModalProps): ReactElement {
         <Modal className="issue-modal" show={props.show} onHide={props.onClose} size={"xl"}>
             {request && (
                 <React.Fragment>
-                    <div className="issue-modal-title">{t("issue_page.request", { id: shortAddress(request.id) })}</div>
+                    <div className="issue-modal-title">{t("issue_page.request", { id: request.id })}</div>
                     <i className="fas fa-times close-icon" onClick={props.onClose}></i>
 
                     <div className="issue-modal-horizontal-line"></div>
