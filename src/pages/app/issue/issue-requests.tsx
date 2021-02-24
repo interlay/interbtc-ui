@@ -29,10 +29,6 @@ export default function IssueRequests(): ReactElement {
             toast.error(t("issue_page.error_in_parachain"));
             return;
         }
-        // if (bitcoinHeight - btcRelayHeight > constants.BLOCKS_BEHIND_LIMIT) {
-        //     toast.error(t("issue_page.error_more_than_6_blocks_behind"));
-        //     return;
-        // }
         if (extensions.length && address) {
             setShowModal(true);
         } else {

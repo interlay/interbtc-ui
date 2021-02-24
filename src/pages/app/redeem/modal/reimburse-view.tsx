@@ -29,11 +29,13 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
         const fetchData = async () => {
             if (!polkaBtcLoaded) return;
             try {
-                const punishment = await window.polkaBTC.vaults.getPunishmentFee();
-                const BtcDotRate = await window.polkaBTC.oracle.getExchangeRate();
+                const [punishment, btcDotRate] = await Promise.all([
+                    window.polkaBTC.vaults.getPunishmentFee(),
+                    window.polkaBTC.oracle.getExchangeRate(),
+                ]);
                 const amountPolkaBTC = props.request ? new Big(props.request.amountPolkaBTC) : new Big(0);
-                setAmountDOT(amountPolkaBTC.mul(BtcDotRate));
-                setPunishmentDOT(amountPolkaBTC.mul(BtcDotRate).mul(new Big(punishment)));
+                setAmountDOT(amountPolkaBTC.mul(btcDotRate));
+                setPunishmentDOT(amountPolkaBTC.mul(btcDotRate).mul(new Big(punishment)));
             } catch (error) {
                 console.log(error);
             }
