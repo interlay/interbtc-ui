@@ -85,6 +85,7 @@
     "bridge_fee": "Bridge fee",
     "bitcoin_network_fee": "Bitcoin network fee",
     "you_will_receive": "You will receive",
+    "you_received": "You received",
     "total_deposit": "Total Deposit",
     "deposit": "Deposit",
     "received": "Received",
@@ -111,7 +112,7 @@
         "as_compensation_instead": " (~${{compensationPrice}}) as compensation instead.",
         "view_progress": "View progress",
         "btc_destination_address": "BTC destination address",
-        "you_will_recieve": "You will receive BTC in exchange for PolkaBTC",
+        "you_will_recieve": "Receive BTC in exchange for PolkaBTC",
         "must_select_account_warning": "No account selected. Please select an account to redeem.",
         "waiting_for": "Waiting for",
         "typically_takes": "This typically takes only a few minutes but may sometimes take up to 6 hours.",
@@ -173,7 +174,20 @@
         "premium_redeem": "Premium redeem",
         "earned_premium": "Earned premium ({{premium}} %)",
         "max_premium_redeem": "Available (max)",
-        "error_max_premium_redeem": "Could not find Vault below premium redeem threshold with sufficient locked PolkaBTC. Please try a different Vault. The maximum amount for premium redeem is {{maxPremiumRedeem}} PolkaBTC."
+        "error_max_premium_redeem": "Could not find Vault below premium redeem threshold with sufficient locked PolkaBTC. Please try a different Vault. The maximum amount for premium redeem is {{maxPremiumRedeem}} PolkaBTC.",
+        "compensation_success": "Compensation successful",
+        "compensation_notice": "Your redeem request failed. You agreed to accept compensation and retry with another vault.",
+        "burn_success": "Burn successful",
+        "burn_notice": "Your redeem request failed. You decided to burn PolkaBTC in return for DOT.",
+        "burned": " burned",
+        "recover_receive_dot": "You received ",
+        "recover_receive_total": " in total",
+        "compensation_payment": "Compensation for inconvenience",
+        "compensation_burn": "Received for burning PolkaBTC",
+        "retry_new_redeem": "You can now create a new redeem request with another vault."
+    },
+    "transfer_page": {
+      "transfer_to": "Transfer PolkaBTC to others"
     },
     "dashboard": {
         "premium_redeem": "Premium Redeem",

@@ -45,6 +45,9 @@ export default function Transfer() {
         <div className="transfer">
             <form onSubmit={onSubmit}>
                 <div className="row">
+                    <div className="col-12 wizard-header-text font-blue">{t("transfer_page.transfer_to")}</div>
+                </div>
+                <div className="row">
                     <div className="col-6">
                         <input
                             id="amount-btc-input"
@@ -71,7 +74,7 @@ export default function Transfer() {
                     <div className="col-6 mark-currency">PolkaBTC</div>
                 </div>
                 <div className="row usd-price">
-                    <div className="col">{"= $" + usdAmount}</div>
+                    <div className="col">{"~ $" + usdAmount}</div>
                 </div>
                 {errors.amountPolkaBTC && (
                     <div className="wizard-input-error">

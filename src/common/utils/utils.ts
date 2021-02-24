@@ -45,8 +45,13 @@ export function formatDateTimePrecise(date: Date): string {
     return date.toDateString().substring(4) + " " + date.toTimeString().substring(0, 8);
 }
 
-export function calculateAmount(amount: string, currencyPrice: number): string {
-    return new Big(amount).mul(new Big(currencyPrice)).toString();
+// always round USD amounts to two decimals
+export function getUsdAmount(amount: string, rate: number): string {
+    return new Big(amount).mul(new Big(rate)).toFixed(2).toString();
+}
+
+export function calculateAmount(amount: string, rate: number): string {
+    return new Big(amount).mul(new Big(rate)).toString();
 }
 
 /**
@@ -276,11 +281,11 @@ export function computeRedeemRequestStatus(
     if (completed) {
         return RedeemRequestStatus.Completed;
     }
-    if (cancelled) {
-        return RedeemRequestStatus.Cancelled;
-    }
     if (reimbursed) {
         return RedeemRequestStatus.Reimbursed;
+    }
+    if (cancelled && !reimbursed) {
+        return RedeemRequestStatus.Retried;
     }
     if (creationBlock.add(redeemPeriod).lte(parachainHeight)) {
         return RedeemRequestStatus.Expired;

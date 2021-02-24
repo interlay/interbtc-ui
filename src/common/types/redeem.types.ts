@@ -14,7 +14,6 @@ export interface RedeemRequest {
 
 export enum RedeemRequestStatus {
     Completed,
-    Cancelled,
     Expired,
     Reimbursed,
     Retried,
