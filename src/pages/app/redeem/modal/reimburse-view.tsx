@@ -90,7 +90,7 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
                     {t("redeem_page.vault_did_not_send")}
                     <span>{punishmentDOT.toFixed(2).toString()} DOT </span>&nbsp; (~${" "}
                     {new Big(prices.polkadot.usd).mul(punishmentDOT).toFixed(2).toString()})&nbsp;
-                    {t("redeem_page.compesation")}
+                    {t("redeem_page.compensation")}
                 </div>
             </div>
             <div className="row justify-content-center">
@@ -99,11 +99,11 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
                 </div>
             </div>
             <div className="row justify-content-center">
-                <div className="col-9 receive-compesation">
-                    {t("redeem_page.receive_compesation")}
+                <div className="col-9 receive-compensation">
+                    {t("redeem_page.receive_compensation")}
                     <span>{punishmentDOT.toFixed(2)} DOT</span> &nbsp;
                     {t("redeem_page.retrh_with_another", {
-                        compesationPrice: punishmentDOT.mul(new Big(prices.polkadot.usd)).toFixed(2),
+                        compensationPrice: punishmentDOT.mul(new Big(prices.polkadot.usd)).toFixed(2),
                     })}
                 </div>
             </div>
@@ -128,8 +128,8 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
                         amountPrice: amountDOT.mul(new Big(prices.polkadot.usd)).toFixed(2).toString(),
                     })}
                     <span>{punishmentDOT.toFixed(5).toString()} DOT</span> &nbsp;
-                    {t("redeem_page.as_compesation_instead", {
-                        compesationPrice: punishmentDOT.mul(new Big(prices.polkadot.usd)).toFixed(2).toString(),
+                    {t("redeem_page.as_compensation_instead", {
+                        compensationPrice: punishmentDOT.mul(new Big(prices.polkadot.usd)).toFixed(2).toString(),
                     })}
                 </div>
             </div>
