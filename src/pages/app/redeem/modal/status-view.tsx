@@ -22,7 +22,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
         <div className="status-view">
             {props.request.status === RedeemRequestStatus.Completed && (
                 <React.Fragment>
-                    <div className="status-title">{t("completed")}</div>
+                    <div className="completed-status-title">{t("completed")}</div>
                     <div className="row">
                         <div className="col">
                             <div className="completed-confirmations-circle">
@@ -45,7 +45,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                     </div>
                 </React.Fragment>
             )}
-            {!props.request.btcTxId && (
+            {props.request.status === RedeemRequestStatus.PendingWithBtcTxNotFound && (
                 <React.Fragment>
                     <div className="status-title">{t("pending")}</div>
                     <div className="row">
@@ -58,7 +58,9 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                     </div>
                 </React.Fragment>
             )}
-            {props.request.btcTxId && props.request.status !== RedeemRequestStatus.Completed && (
+            {props.request.status ===
+                (RedeemRequestStatus.PendingWithTooFewConfirmations ||
+                    RedeemRequestStatus.PendingWithBtcTxNotIncluded) && (
                 <React.Fragment>
                     <div className="status-title">{t("received")}</div>
                     <div className="row">

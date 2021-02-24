@@ -36,7 +36,7 @@ export default function IssueModal(props: IssueModalProps): ReactElement {
                         <div className="row">
                             <div className="col-6 justify-content-center">
                                 <div className="issue-amount">
-                                    <span className="wizzard-number">{request.amountPolkaBTC}</span>&nbsp;BTC
+                                    <span className="wizzard-number">{request.amountPolkaBTC}</span>&nbsp;PolkaBTC
                                 </div>
                                 <div className="row usd-price-modal">
                                     <div className="col">
