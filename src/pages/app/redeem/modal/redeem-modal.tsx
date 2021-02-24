@@ -35,11 +35,11 @@ export default function RedeemModal(props: RedeemModalProps): ReactElement {
                         <div className="row">
                             <div className="col-6 justify-content-center">
                                 <div className="redeem-amount">
-                                    <span className="wizzard-number">{request.amountPolkaBTC}</span>&nbsp;PolkaBTC
+                                    <span className="wizzard-number">{request.totalAmount}</span>&nbsp;PolkaBTC
                                 </div>
                                 <div className="row usd-price-modal">
                                     <div className="col">
-                                        {"~ $" + calculateAmount(request.amountPolkaBTC || "0", prices.bitcoin.usd)}
+                                        {"~ $" + calculateAmount(request.totalAmount || "0", prices.bitcoin.usd)}
                                     </div>
                                 </div>
                                 <div className="step-item row">
@@ -59,11 +59,11 @@ export default function RedeemModal(props: RedeemModalProps): ReactElement {
                                     <div className="col-6 total-amount">
                                         <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img>
                                         &nbsp;
-                                        {request.totalAmount} BTC
+                                        {request.amountPolkaBTC} BTC
                                         <div className="send-price">
                                             {"~ $" +
                                                 parseFloat(
-                                                    (Number(request.totalAmount) * prices.bitcoin.usd).toFixed(5)
+                                                    (Number(request.amountPolkaBTC) * prices.bitcoin.usd).toFixed(5)
                                                 )}
                                         </div>
                                     </div>

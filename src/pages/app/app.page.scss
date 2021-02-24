@@ -480,6 +480,12 @@
     font-weight: 600;
 }
 
+.orange-amount {
+    color: $d_orange;
+    text-align: center;
+    font-weight: 600;
+}
+
 .completed-status-title {
     @extend .status-title;
     color: $d_green;
