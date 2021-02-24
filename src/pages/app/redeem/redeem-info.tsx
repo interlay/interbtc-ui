@@ -47,7 +47,7 @@ export default function RedeemInfo() {
                         </div>
                         <div className="row">
                             <div className="col-12 info-redeem-price">
-                                ~${Number(request.amountPolkaBTC) * prices.bitcoin.usd} BTC
+                                ~${Number(request.amountPolkaBTC) * prices.bitcoin.usd}
                             </div>
                         </div>
                         <div className="row">

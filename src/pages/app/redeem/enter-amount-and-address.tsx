@@ -228,7 +228,7 @@ export default function EnterAmountAndAddress(): ReactElement {
                 <div className="col-6 mark-currency">PolkaBTC</div>
             </div>
             <div className="row usd-price">
-                <div className="col">{"= $" + usdAmount}</div>
+                <div className="col">{"~ $" + usdAmount}</div>
             </div>
             {errors.amountPolkaBTC && (
                 <div className="wizard-input-error">
