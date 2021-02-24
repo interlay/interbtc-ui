@@ -103,6 +103,23 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
             </div>
             {displayBlockstreamData && (
                 <div className="card">
+                    <div className="card-top-content">
+                        <div className="values-container">
+                            <h1 className="bold-font">
+                                {blockstreamTip !== "-" && (
+                                    <StyledLinkData
+                                        data={t("dashboard.relay.blockstream_verify_link")}
+                                        target={
+                                            (constants.BTC_MAINNET
+                                                ? constants.BTC_EXPLORER_BLOCK_API
+                                                : constants.BTC_TEST_EXPLORER_BLOCK_API) + blockstreamTip
+                                        }
+                                        newTab={true}
+                                    />
+                                )}
+                            </h1>
+                        </div>
+                    </div>
                     <div className="circle-container">
                         <div
                             className="status-circle"
@@ -119,17 +136,6 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
                             <p className="latest-block-text">
                                 {t("dashboard.relay.block_number", { number: bitcoinHeight })}
                             </p>
-                            {blockstreamTip !== "-" && (
-                                <StyledLinkData
-                                    data={t("dashboard.relay.blockstream_verify_link")}
-                                    target={
-                                        (constants.BTC_MAINNET
-                                            ? constants.BTC_EXPLORER_BLOCK_API
-                                            : constants.BTC_TEST_EXPLORER_BLOCK_API) + blockstreamTip
-                                    }
-                                    newTab={true}
-                                />
-                            )}
                         </div>
                     </div>
                 </div>
