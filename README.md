@@ -44,6 +44,8 @@ cd polkabtc-ui
 
 ### Regtest
 
+> Note: By default use, regtest for local development.
+
 In one terminal, start the BTC-Parachain, Bitcoin regtest, vaults and relayers:
 
 ```bash
@@ -71,6 +73,8 @@ yarn install && REACT_APP_BITCOIN_NETWORK=testnet yarn start
 ```
 
 ## Detailed Starting Guide
+
+> Note: The detailed starting guide requires you to have a Rust installation and requires you to build all the dependencies manually. This will take about two hours if you are doing this the first time. For most people, the docker-compose setup in the Quickstart guide above is recommended.
 
 If you wish to run the BTC-Parachain, its clients and Bitcoin without using docker, follow these steps.
 
@@ -112,14 +116,6 @@ Lastly, we require a price oracle to compute the exchange rate (BTC <> DOT), the
 oracle --keyring=bob --polka-btc-url 'ws://localhost:9944' --coingecko
 ```
 
-**Electrs**
-
-We make heavy use of the [Blockstream API](https://github.com/interlay/electrs) in the UI to watch for payments made on Bitcoin.
-
-```shell
-electrs -vvvv --network regtest --jsonrpc-import --cors "*" --cookie "rpcuser:rpcpassword" --daemon-rpc-addr localhost:18443 --http-addr "[::0]:3002" --index-unspendables
-```
-
 ### Regtest
 
 **Bitcoin**
@@ -130,10 +126,12 @@ Download and start [Bitcoin Core](https://bitcoin.org/en/bitcoin-core/).
 bitcoind -regtest -server
 ```
 
-To mine blocks you may use a command such as the following.
+**Electrs**
+
+We make heavy use of the [Blockstream API](https://github.com/interlay/electrs) in the UI to watch for payments made on Bitcoin.
 
 ```shell
-bitcoin-cli -regtest generatetoaddress 1 $(bitcoin-cli -regtest getnewaddress)
+electrs -vvvv --network regtest --jsonrpc-import --cors "*" --cookie "rpcuser:rpcpassword" --daemon-rpc-addr localhost:18443 --http-addr "[::0]:3002" --index-unspendables
 ```
 
 Start the app with:
@@ -159,30 +157,6 @@ REACT_APP_BITCOIN_NETWORK=testnet yarn start
 ```
 
 > Note: This is only supported on Linux due to issues with `network_mode: "host"` on Mac.
-
-### Test Data (Regtest)
-
-To simplify testing, you may also use the `testdata-gen` toolkit:
-
-```shell
-git clone git@gitlab.com:interlay/polkabtc-clients.git
-cd polkabtc-clients
-cargo build -p testdata-gen
-# environment variables for bitcoind
-source .env
-```
-
-For example, to register `bob` as a vault we can use the following command:
-
-```shell
-testdata-gen --keyring bob register-vault --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --collateral 100000000
-```
-
-Then when `alice` wants to issue 0.001 PolkaBTC, we need to send the equivalent number of Satoshis to `bob`:
-
-```shell
-testdata-gen --keyring alice send-bitcoin --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --satoshis 100000
-```
 
 ### Docker Installation
 
@@ -215,6 +189,76 @@ yarn test
 
 ## Help
 
+### Bitcoin Regtest
+
+Regtest is a local Bitcoin instance that allows you to practically anything including sending transactions, mining blocks, and generating new addresses.
+For a full overview, [head over to the Bitcoin developer documentation](https://developer.bitcoin.org/examples/testing.html#regtest-mode).
+
+**Sending Transactions**
+
+For the issue process, you need to send a transaction. On regtest this can be achieved with:
+
+```shell
+bitcoin-cli -regtest -rpcwallet=Alice sendtoaddress VAULT_ADDRESS AMOUNT
+```
+**Mining Blocks**
+
+In regtest, blocks are not automatically produced. After you sent a transaction, you need to mine e.g. 1 block:
+
+```shell
+bitcoin-cli -regtest generatetoaddress 1 $(bitcoin-cli -regtest getnewaddress)
+```
+
+**Getting Balances**
+
+You can query the balance of your wallet like so:
+
+```shell
+bitcoin-cli -regtest -rpcwallet=Alice getbalance
+```
+
+### Test Data (Regtest)
+
+For more advanced interactions with the UI, you may also use the `testdata-gen` toolkit to automated some common actions.
+
+For an overview of actions [check the documentation here](https://github.com/interlay/polkabtc-clients/tree/master/testdata-gen#detailed-options).
+
+**Installation**
+
+> Note: This requires a local Rust installation.
+
+```shell
+git clone git@gitlab.com:interlay/polkabtc-clients.git
+cd polkabtc-clients
+cargo build -p testdata-gen
+# environment variables for bitcoind
+source .env
+```
+
+**Registering a New Vault**
+
+For example, to register `bob` as a vault we can use the following command:
+
+```shell
+testdata-gen --keyring bob register-vault --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --collateral 100000000
+```
+
+**Issue PolkaBTC**
+
+Then when `alice` wants to issue 0.001 PolkaBTC, we need to send the equivalent number of Satoshis to `bob`:
+
+```shell
+testdata-gen --keyring alice send-bitcoin --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --satoshis 100000
+```
+
+**More Options**
+
+Print all the available options with:
+
+```shell
+testdata-gen --help
+```
+
 ### Docker
 
 You can hard-reset the docker dependency setup with the following commands:
@@ -238,7 +282,7 @@ Contributions are what make the open source community such an amazing place to b
 
 If you are searching for a place to start or would like to discuss features, reach out to us:
 
-- [Discord](https://discord.gg/5uXCU5DW)
+- [Discord](https://discord.gg/KgCYK3MKSf)
 
 ## License
 

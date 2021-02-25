@@ -1,60 +1,89 @@
-import React from "react";
+import React, { useState } from "react";
 import { FormGroup } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../../common/types/util.types";
 import { useTranslation } from "react-i18next";
-import BitcoinLogo from "../../../assets/img/Bitcoin-Logo.png";
-import { changeRedeemStepAction, resetRedeemWizardAction } from "../../../common/actions/redeem.actions";
+import {
+    changeRedeemStepAction,
+    resetRedeemWizardAction,
+    changeRedeemIdAction,
+} from "../../../common/actions/redeem.actions";
+import RedeemModal from "./modal/redeem-modal";
 
 export default function RedeemInfo() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    const address = useSelector((state: StoreType) => state.general.address);
-    const { id, vaultDotAddress } = useSelector((state: StoreType) => state.redeem);
-    const requests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
-    let request;
-    if (requests) request = requests.filter((request) => request.id === id)[0];
+    const { address, prices } = useSelector((state: StoreType) => state.general);
+    const { id, btcAddress } = useSelector((state: StoreType) => state.redeem);
+    const requests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address) || [];
+    const [showModal, setShowModal] = useState(false);
+    const request = requests.filter((request) => request.id === id)[0];
 
     const onClose = () => {
         dispatch(resetRedeemWizardAction());
         dispatch(changeRedeemStepAction("AMOUNT_AND_ADDRESS"));
     };
 
+    const openModal = () => {
+        dispatch(changeRedeemIdAction(request.id));
+        setShowModal(true);
+    };
+
+    const closeModal = () => setShowModal(false);
+
     return (
         <React.Fragment>
             <FormGroup>
-                <div className="wizard-redeem-title">{t("redeem_page.redeem_processed")}</div>
-                <div className="row">
-                    <div className="col-12">
-                        <div className="wizard-item mt-5">
-                            <div className="row">
-                                <div className="col-6 text-left">{t("redeem_page.will_receive_BTC")}</div>
-                                <div className="col-6">
-                                    <img src={BitcoinLogo} width="40px" height="23px" alt="bitcoin logo"></img>
-                                    {request && request.amountPolkaBTC} BTC
-                                </div>
+                {request && (
+                    <React.Fragment>
+                        <div className="wizard-redeem-title">
+                            <i className="fas fa-exclamation-circle"></i>
+                            {t("redeem_page.redeem_processed")}
+                        </div>
+                        <div className="row">
+                            <div className="col-12 info-redeem-title">
+                                <span>{t("redeem_page.will_receive_BTC")}&nbsp;</span> {request.amountPolkaBTC} BTC
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col m-3">{t("redeem_page.from_vault")}</div>
-                </div>
-                <div className="row ">
-                    <div className="col payment-address">
-                        <span>{vaultDotAddress}</span>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col inform-you">{t("redeem_page.we_will_inform_you_btc")}</div>
-                </div>
-                <div className="row">
-                    <div className="col">{t("redeem_page.typically_takes")}</div>
-                </div>
+                        <div className="row">
+                            <div className="col-12 info-redeem-price">
+                                ~${Number(request.amountPolkaBTC) * prices.bitcoin.usd}
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col btc-destination-address">
+                                {t("redeem_page.btc_destination_address")}
+                            </div>
+                        </div>
+                        <div className="row ">
+                            <div className="col payment-address">
+                                <span className="copy-address">{btcAddress}</span>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col inform-you">{t("redeem_page.we_will_inform_you_btc")}</div>
+                        </div>
+                        <div className="row">
+                            <div className="col typically-takes">{t("redeem_page.typically_takes")}</div>
+                        </div>
+                    </React.Fragment>
+                )}
             </FormGroup>
-            <button className="btn btn-primary app-btn" onClick={onClose}>
-                {t("close")}
-            </button>
+            <div className="row">
+                <div className="col">
+                    <button className="btn black-button app-btn" onClick={openModal}>
+                        {t("redeem_page.view_progress")}
+                    </button>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col">
+                    <button className="btn green-button mt-5 app-btn" onClick={onClose}>
+                        {t("close")}
+                    </button>
+                </div>
+            </div>
+            <RedeemModal show={showModal} onClose={closeModal} />
         </React.Fragment>
     );
 }

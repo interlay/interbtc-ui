@@ -67,7 +67,7 @@ export default class Footer extends Component {
                                     rel="noopener noreferrer"
                                     title=""
                                     data-placement="bottom"
-                                    href="https://discord.gg/C8tjMbgVXh"
+                                    href="https://discord.gg/KgCYK3MKSf"
                                     target="_blank"
                                     data-original-title="Join our Telegram channel"
                                 >

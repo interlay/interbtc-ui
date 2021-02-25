@@ -1,7 +1,7 @@
 export interface RedeemRequest {
     id: string;
     amountPolkaBTC: string;
-    // timestamp: string;
+    timestamp: string;
     creation: string;
     fee: string;
     btcAddress: string;
@@ -9,10 +9,18 @@ export interface RedeemRequest {
     btcTxId: string;
     totalAmount: string;
     confirmations: number;
-    completed: boolean;
-    isExpired: boolean;
-    cancelled: boolean;
-    reimbursed: boolean;
+    status: RedeemRequestStatus;
+}
+
+export enum RedeemRequestStatus {
+    Completed,
+    Expired,
+    Reimbursed,
+    Retried,
+    PendingWithBtcTxNotFound,
+    PendingWithBtcTxNotIncluded,
+    PendingWithTooFewConfirmations,
+    PendingWithEnoughConfirmations,
 }
 
 export type DashboardRequestInfo = {
@@ -39,6 +47,7 @@ export interface RedeemState {
     redeemRequests: Map<string, RedeemRequest[]>;
     vaultRedeems: VaultRedeem[];
     fee: string;
+    premiumRedeem: boolean;
 }
 
 export interface VaultRedeem {

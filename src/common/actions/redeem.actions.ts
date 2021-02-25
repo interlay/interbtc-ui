@@ -15,6 +15,8 @@ import {
     RETRY_REDEEM_REQUEST,
     REDEEM_EXPIRED,
     REIMBURSE_REDEEM_REQUEST,
+    TOGGLE_PREMIUM_REDEEM,
+    TogglePremiumRedeem,
     UpdateRedeemFee,
     UpdateAllRedeemRequests,
     ChangeRedeemStep,
@@ -88,8 +90,12 @@ export const updateRedeemRequestAction = (request: RedeemRequest): UpdateRedeemR
     request,
 });
 
-export const updateAllRedeemRequestsAction = (redeemRequests: RedeemRequest[]): UpdateAllRedeemRequests => ({
+export const updateAllRedeemRequestsAction = (
+    userDotAddress: string,
+    redeemRequests: RedeemRequest[]
+): UpdateAllRedeemRequests => ({
     type: UPDATE_ALL_REDEEM_REQUESTS,
+    userDotAddress,
     redeemRequests,
 });
 
@@ -111,4 +117,9 @@ export const reimburseRedeemRequestAction = (id: string): ReimburseRedeemRequest
 export const updateRedeemFeeAction = (fee: string): UpdateRedeemFee => ({
     type: UPDATE_REDEEM_FEE,
     fee,
+});
+
+export const togglePremiumRedeemAction = (premiumRedeem: boolean): TogglePremiumRedeem => ({
+    type: TOGGLE_PREMIUM_REDEEM,
+    premiumRedeem,
 });

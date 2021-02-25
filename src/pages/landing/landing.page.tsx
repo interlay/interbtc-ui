@@ -107,7 +107,7 @@ export default function LandingPage(): JSX.Element {
                                 <Col className="mt-2" xs="12" sm={{ span: 4, offset: 0 }}>
                                     <a
                                         className="text-decoration-none"
-                                        href="https://discord.gg/jcGEbE6v"
+                                        href="https://discord.gg/KgCYK3MKSf"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >

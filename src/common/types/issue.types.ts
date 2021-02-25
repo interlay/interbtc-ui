@@ -1,6 +1,6 @@
 export interface IssueRequest {
     id: string;
-    amountBTC: string;
+    amountPolkaBTC: string;
     timestamp?: string;
     totalAmount: string;
     creation: string;
@@ -59,7 +59,6 @@ export interface IssueState {
     address: string;
     step: string;
     amountBTC: string;
-    fee: string;
     griefingCollateral: string;
     vaultDotAddress: string;
     vaultBtcAddress: string;

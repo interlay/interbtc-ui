@@ -17,11 +17,11 @@ export default async function fetchBalances(dispatch: Dispatch, store: StoreStat
 
         // update store only if there is a difference between balances
         if (latestBalanceDOT !== balanceDOT) {
-            dispatch(updateBalanceDOTAction(balanceDOT));
+            dispatch(updateBalanceDOTAction(latestBalanceDOT));
         }
 
         if (latestBalancePolkaBTC !== balancePolkaBTC) {
-            dispatch(updateBalancePolkaBTCAction(balancePolkaBTC));
+            dispatch(updateBalancePolkaBTCAction(latestBalancePolkaBTC));
         }
     } catch (error) {
         console.log(error);

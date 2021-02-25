@@ -17,8 +17,9 @@ import {
     UPDATE_ALL_REDEEM_REQUESTS,
     ADD_VAULT_REDEEMS,
     UPDATE_REDEEM_FEE,
+    TOGGLE_PREMIUM_REDEEM,
 } from "../types/actions.types";
-import { RedeemState } from "../types/redeem.types";
+import { RedeemRequestStatus, RedeemState } from "../types/redeem.types";
 
 const initialState = {
     address: "",
@@ -31,10 +32,13 @@ const initialState = {
     id: "",
     redeemRequests: new Map(),
     vaultRedeems: [],
+    premiumRedeem: false,
 };
 
 export const redeemReducer = (state: RedeemState = initialState, action: RedeemActions): RedeemState => {
     switch (action.type) {
+        case TOGGLE_PREMIUM_REDEEM:
+            return { ...state, premiumRedeem: action.premiumRedeem };
         case CHANGE_ADDRESS:
             return { ...state, address: action.address };
         case CHANGE_REDEEM_STEP:
@@ -79,7 +83,10 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             let updateStore = false;
             const requestsToUpdate = currentRequests.map((request) => {
                 if (action.request.id !== request.id) return request;
-                if (action.request.isExpired !== request.isExpired) {
+                if (
+                    action.request.status !== RedeemRequestStatus.Expired &&
+                    request.status === RedeemRequestStatus.Expired
+                ) {
                     updateStore = true;
                 }
                 return action.request;
@@ -93,7 +100,7 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             if (!allRequests) return state;
             const updatedRequests = allRequests.map((request) => {
                 if (request.id === action.id) {
-                    return { ...request, cancelled: true, reimbursed: false };
+                    return { ...request, status: RedeemRequestStatus.Retried };
                 }
                 return request;
             });
@@ -105,7 +112,7 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             if (!allCurrentRequests) return state;
             const allUpdatedRequests = allCurrentRequests.map((request) => {
                 if (request.id === action.id) {
-                    return { ...request, cancelled: true, reimbursed: true };
+                    return { ...request, status: RedeemRequestStatus.Reimbursed };
                 }
                 return request;
             });
@@ -123,14 +130,7 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             return { ...state, vaultRedeems: action.vaultRedeems };
         case UPDATE_ALL_REDEEM_REQUESTS:
             const newRequests = new Map(state.redeemRequests);
-            const mappedRequests = action.redeemRequests.map((newRequest) => {
-                let foundRequest = undefined;
-                const requestsArray = state.redeemRequests.get(state.address);
-                if (requestsArray)
-                    foundRequest = requestsArray.filter((oldRequest) => oldRequest.id === newRequest.id)[0];
-                return { ...newRequest, isExpired: foundRequest ? foundRequest.isExpired : false };
-            });
-            newRequests.set(state.address, mappedRequests);
+            newRequests.set(action.userDotAddress, action.redeemRequests);
             return { ...state, redeemRequests: newRequests };
         default:
             return state;

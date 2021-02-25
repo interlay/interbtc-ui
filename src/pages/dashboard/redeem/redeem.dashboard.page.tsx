@@ -14,14 +14,14 @@ import { defaultTableDisplayParams, shortAddress, formatDateTimePrecise } from "
 import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 import { satToBTC } from "@interlay/polkabtc";
 import LineChartComponent from "../components/line-chart-component";
-import { BtcNetworkName } from "@interlay/polkabtc-stats";
+import { BtcNetworkName, RedeemColumns } from "@interlay/polkabtc-stats";
 
 export default function RedeemDashboard(): ReactElement {
     const { polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
     const { t } = useTranslation();
     const statsApi = usePolkabtcStats();
 
-    const [tableParams, setTableParams] = useState(defaultTableDisplayParams());
+    const [tableParams, setTableParams] = useState(defaultTableDisplayParams<RedeemColumns>());
     const [totalSuccessfulRedeems, setTotalSuccessfulRedeems] = useState("-");
     const [totalRedeems, setTotalRedeems] = useState("-");
     const [totalRedeemedAmount, setTotalRedeemedAmount] = useState("-");

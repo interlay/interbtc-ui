@@ -1,7 +1,6 @@
 pipeline {
     agent {
       kubernetes {
-        //cloud 'kubernetes'
         defaultContainer 'node'
         yaml """
   kind: Pod
@@ -13,8 +12,7 @@ pipeline {
       - cat
       tty: true
     - name: kaniko
-      image: gcr.io/kaniko-project/executor:debug
-      imagePullPolicy: Always
+      image: gcr.io/kaniko-project/executor:v1.5.1-debug
       command:
         - /busybox/cat
       tty: true
@@ -46,7 +44,7 @@ pipeline {
         stage('Prepare') {
             steps {
               sh script: 'apt-get update && apt-get install -y libusb-1.0-0-dev libudev-dev', label: 'Install linux dependencies'
-//              sh "ln -s .env.${BRANCH:dev} .env"
+              sh 'ln -s .env.${BRANCH_NAME:-dev} .env'
               sh 'yarn install'
               sh 'yarn lint'
             }
@@ -77,7 +75,7 @@ pipeline {
                         GIT_BRANCH_SLUG=$(echo $BRANCH_NAME | sed -e 's/\\//-/g')
                         /kaniko/executor -f `pwd`/DockerfileProd -c `pwd` \
                             --destination=${REGISTRY}/${REPOSITORY}/${IMAGE}:${GIT_BRANCH_SLUG} \
-                            --destination=${REGISTRY}/${REPOSITORY}/${IMAGE}:${GIT_BRANCH_SLUG}-${GIT_COMMIT:0:6}
+                            --destination=${REGISTRY}/${REPOSITORY}/${IMAGE}:${GIT_BRANCH_SLUG}-${GIT_COMMIT:0:6}-$(date +%s)
                         '''
                     }
                 }

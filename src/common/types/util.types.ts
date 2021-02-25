@@ -97,11 +97,12 @@ export type TimeDataPoint = {
     y: number;
 };
 
-export type TableDisplayParams = {
+export type TableDisplayParams<Column> = {
     page: number;
     perPage: number;
-    sortBy?: string;
+    sortBy?: Column;
     sortAsc?: boolean;
+    filterBy?: Column;
     searchFilter?: string;
 };
 

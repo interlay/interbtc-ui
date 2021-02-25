@@ -1,112 +1,39 @@
-import { stripHexPrefix } from "@interlay/polkabtc";
 import { Dispatch } from "redux";
 import { RedeemRequest } from "../types/redeem.types";
 import { StoreState } from "../types/util.types";
-import { updateRedeemRequestAction, updateAllRedeemRequestsAction } from "../actions/redeem.actions";
-import { updateBalances, parachainToUIRedeemRequest, requestsInStore } from "../utils/utils";
+import * as constants from "../../constants";
+import * as polkabtcStats from "@interlay/polkabtc-stats";
+import { updateAllRedeemRequestsAction } from "../actions/redeem.actions";
+import { statsToUIRedeemRequest } from "../utils/utils";
+import { BtcNetworkName, RedeemColumns } from "@interlay/polkabtc-stats";
 
 export default async function fetchRedeemTransactions(dispatch: Dispatch, store: StoreState): Promise<void> {
     try {
-        const { address, balanceDOT, balancePolkaBTC, polkaBtcLoaded } = store.getState().general;
+        // temp declaration pending refactor decision
+        const stats = new polkabtcStats.StatsApi(new polkabtcStats.Configuration({ basePath: constants.STATS_URL }));
+
+        const { address, polkaBtcLoaded, bitcoinHeight } = store.getState().general;
         if (!address || !polkaBtcLoaded) return;
 
-        const storeRequests = store.getState().redeem.redeemRequests.get(address) || [];
+        const parachainHeight = await window.polkaBTC.system.getCurrentBlockNumber();
+        const redeemPeriod = await window.polkaBTC.redeem.getRedeemPeriod();
+        const requiredBtcConfirmations = await window.polkaBTC.btcRelay.getStableBitcoinConfirmations();
 
-        const accountId = window.polkaBTC.api.createType("AccountId", address);
-        const redeemRequestMap = await window.polkaBTC.redeem.mapForUser(accountId);
-        const parachainRequests: RedeemRequest[] = [];
+        const databaseRequests: RedeemRequest[] = (
+            await stats.getFilteredRedeems(
+                0, // page 0 (i.e. first page)
+                15, // 15 per page (i.e. fetch 15 latest requests)
+                undefined, // default sorting
+                undefined, // default sort order
+                constants.BITCOIN_NETWORK as BtcNetworkName,
+                [{ column: RedeemColumns.Requester, value: address }] // filter by requester==address
+            )
+        ).data.map((statsRedeem) =>
+            statsToUIRedeemRequest(statsRedeem, bitcoinHeight, parachainHeight, redeemPeriod, requiredBtcConfirmations)
+        );
 
-        for (const [key, value] of redeemRequestMap) {
-            parachainRequests.push(parachainToUIRedeemRequest(key, value));
-        }
-
-        if (!parachainRequests.length) return;
-
-        if (!requestsInStore(storeRequests, parachainRequests)) {
-            updateAllRequests(parachainRequests, dispatch);
-            return;
-        }
-
-        storeRequests.forEach(async (storeRequest) => {
-            try {
-                let shouldRequestBeUpdate = false;
-                const parachainRequest = parachainRequests.filter((request) => request.id === storeRequest.id)[0];
-
-                if (!storeRequest.completed && !storeRequest.cancelled) {
-                    if (storeRequest.creation === "0") {
-                        storeRequest.creation = parachainRequest.creation;
-                        shouldRequestBeUpdate = true;
-                    }
-                    if (!storeRequest.btcTxId) {
-                        const btcTxId = await window.polkaBTC.btcCore.getTxIdByOpReturn(
-                            storeRequest.id,
-                            storeRequest.btcAddress,
-                            storeRequest.amountPolkaBTC
-                        );
-                        storeRequest.btcTxId = btcTxId;
-                        shouldRequestBeUpdate = true;
-                    }
-                    if (parachainRequest.reimbursed !== storeRequest.reimbursed) {
-                        shouldRequestBeUpdate = true;
-                    }
-                    if (parachainRequest.completed || parachainRequest.cancelled) {
-                        storeRequest = {
-                            ...storeRequest,
-                            completed: parachainRequest.completed,
-                            cancelled: parachainRequest.cancelled,
-                        };
-                        updateBalances(dispatch, address, balanceDOT, balancePolkaBTC);
-                        shouldRequestBeUpdate = true;
-                    }
-                }
-                if (storeRequest.btcTxId) {
-                    const txStatus = await window.polkaBTC.btcCore.getTransactionStatus(
-                        stripHexPrefix(storeRequest.btcTxId)
-                    );
-                    if (storeRequest.confirmations !== txStatus.confirmations) {
-                        storeRequest.confirmations = txStatus.confirmations;
-                        shouldRequestBeUpdate = true;
-                    }
-                    if (shouldRequestBeUpdate) {
-                        dispatch(updateRedeemRequestAction(storeRequest));
-                    }
-                }
-            } catch (error) {
-                console.log(error.toString());
-            }
-        });
+        dispatch(updateAllRedeemRequestsAction(address, databaseRequests));
     } catch (error) {
         console.log(error.toString());
     }
-}
-
-async function updateAllRequests(newRequests: RedeemRequest[], dispatch: Dispatch) {
-    await Promise.all(
-        newRequests.map(async (request) => {
-            try {
-                request.btcTxId = await window.polkaBTC.btcCore.getTxIdByOpReturn(
-                    request.id,
-                    request.btcAddress,
-                    request.amountPolkaBTC
-                );
-            } catch (err) {
-                console.log("Redeem Id: " + request.id + " " + err);
-            }
-        })
-    );
-    await Promise.all(
-        newRequests.map(async (request) => {
-            try {
-                if (request.btcTxId) {
-                    request.confirmations = (
-                        await window.polkaBTC.btcCore.getTransactionStatus(request.btcTxId)
-                    ).confirmations;
-                }
-            } catch (err) {
-                console.log(err);
-            }
-        })
-    );
-
-    dispatch(updateAllRedeemRequestsAction(newRequests));
 }
