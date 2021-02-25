@@ -45,6 +45,7 @@ import startFetchingLiveData from "./common/live-data/live-data";
 import RelayDashboard from "./pages/dashboard/relay/relay.dashboard.page";
 import OraclesDashboard from "./pages/dashboard/oracles/oracles.dashboard.page";
 import ParachainDashboard from "./pages/dashboard/parachain/parachain.dashboard.page";
+import FeedbackPage from "./pages/feedback/feedback.page";
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
     return createPolkabtcAPI(
@@ -104,7 +105,7 @@ export default function App(): ReactElement {
                 if (!window.polkaBTC) {
                     toast.warn(
                         "Unable to connect to the BTC-Parachain. " +
-                            "Please check your internet connection or try again later."
+                        "Please check your internet connection or try again later."
                     );
                 }
             }, 5000);
@@ -116,7 +117,7 @@ export default function App(): ReactElement {
             if (!window.polkaBTC)
                 toast.warn(
                     "Unable to connect to the BTC-Parachain. " +
-                        "Please check your internet connection or try again later."
+                    "Please check your internet connection or try again later."
                 );
         }
     }, [dispatch, store]);
@@ -145,8 +146,8 @@ export default function App(): ReactElement {
                         state.isError
                             ? ParachainStatus.Error
                             : state.isRunning
-                            ? ParachainStatus.Running
-                            : ParachainStatus.Shutdown
+                                ? ParachainStatus.Running
+                                : ParachainStatus.Shutdown
                     )
                 );
             } catch (error) {
@@ -274,6 +275,11 @@ export default function App(): ReactElement {
                         {!constants.STATIC_PAGE_ONLY && (
                             <Route path="/vault">
                                 <VaultDashboardPage />
+                            </Route>
+                        )}
+                        {!constants.STATIC_PAGE_ONLY && (
+                            <Route path="/feedback">
+                                <FeedbackPage />
                             </Route>
                         )}
                         <Route path="/" exact>

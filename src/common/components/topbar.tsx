@@ -127,6 +127,9 @@ export default function Topbar(props: TopbarProps): ReactElement {
                             >
                                 {t("nav_docs")}
                             </a>
+                            <Link className="nav-link" to="/feedback">
+                                {t("feedback.feedback")}
+                            </Link>
                         </Nav>
                         {props.address !== undefined && (
                             <React.Fragment>
