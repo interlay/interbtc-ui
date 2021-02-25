@@ -39,7 +39,7 @@ export default function AppPage(): ReactElement {
     };
 
     return (
-        <section className="jumbotron text-center white-background min-vh-100 app-page">
+        <section className="text-center white-background min-vh-100 app-page">
             <div className="row balances-title">
                 <div className="col">{t("balances")}</div>
             </div>
