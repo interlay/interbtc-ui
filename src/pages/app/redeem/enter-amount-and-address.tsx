@@ -245,6 +245,7 @@ export default function EnterAmountAndAddress(): ReactElement {
                             id="btc-address-input"
                             name="btcAddress"
                             type="string"
+                            placeholder={t("enter_btc_address")}
                             className={"" + (errors.btcAddress ? " error-borders" : "")}
                             ref={register({
                                 required: true,

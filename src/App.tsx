@@ -45,6 +45,7 @@ import startFetchingLiveData from "./common/live-data/live-data";
 import RelayDashboard from "./pages/dashboard/relay/relay.dashboard.page";
 import OraclesDashboard from "./pages/dashboard/oracles/oracles.dashboard.page";
 import ParachainDashboard from "./pages/dashboard/parachain/parachain.dashboard.page";
+import FeedbackPage from "./pages/feedback/feedback.page";
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
     return createPolkabtcAPI(
@@ -274,6 +275,11 @@ export default function App(): ReactElement {
                         {!constants.STATIC_PAGE_ONLY && (
                             <Route path="/vault">
                                 <VaultDashboardPage />
+                            </Route>
+                        )}
+                        {!constants.STATIC_PAGE_ONLY && (
+                            <Route path="/feedback">
+                                <FeedbackPage />
                             </Route>
                         )}
                         <Route path="/" exact>

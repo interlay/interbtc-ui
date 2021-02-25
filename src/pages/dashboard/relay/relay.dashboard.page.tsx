@@ -11,6 +11,7 @@ import { getAccents } from "../dashboard-colors";
 import BtcRelay from "../components/btc-relay";
 import { reverseEndiannessHex, stripHexPrefix } from "@interlay/polkabtc";
 import { BlockColumns } from "@interlay/polkabtc-stats";
+import TimerIncrement from "../../../common/components/timer-increment";
 
 export default function RelayDashboard(): ReactElement {
     const statsApi = usePolkabtcStats();
@@ -68,13 +69,11 @@ export default function RelayDashboard(): ReactElement {
                 <div className="dashboard-wrapper">
                     <div>
                         <div className="title-container">
-                            <div
-                                style={{ backgroundColor: getAccents("d_blue").color }}
-                                className="issue-page-text-container"
-                            >
-                                <h1>{t("dashboard.relay.btcrelay")}</h1>
-                            </div>
-                            <div style={{ backgroundColor: getAccents("d_blue").color }} className="title-line"></div>
+                            <h1 className="title-text">{t("dashboard.relay.btcrelay")}</h1>
+                            <p className="latest-block-text">
+                                <TimerIncrement></TimerIncrement>
+                            </p>
+                            <div style={{ backgroundColor: getAccents("d_yellow").color }} className="title-line"></div>
                         </div>
                         <div className="dashboard-graphs-container">
                             <div className="relay-grid-container">

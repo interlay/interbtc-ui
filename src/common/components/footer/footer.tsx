@@ -69,7 +69,7 @@ export default class Footer extends Component {
                                     data-placement="bottom"
                                     href="https://discord.gg/KgCYK3MKSf"
                                     target="_blank"
-                                    data-original-title="Join our Telegram channel"
+                                    data-original-title="Join our Discord channel"
                                 >
                                     <FaDiscord></FaDiscord>
                                 </a>

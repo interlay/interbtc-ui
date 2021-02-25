@@ -92,7 +92,7 @@ export default function Transfer() {
                                 name="address"
                                 type="string"
                                 className={"" + (errors.address ? " error-borders" : "")}
-                                placeholder={t("address")}
+                                placeholder={t("recipient_account")}
                                 ref={register({
                                     required: true,
                                 })}
