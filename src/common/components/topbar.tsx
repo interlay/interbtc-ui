@@ -150,7 +150,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                                 >
                                     <FaGithub></FaGithub> GitHub
                                 </a>
-                                <a href="https://discord.gg/C8tjMbgVXh" target="_blank" rel="noopener noreferrer">
+                                <a href="https://discord.gg/KgCYK3MKSf" target="_blank" rel="noopener noreferrer">
                                     <FaDiscord></FaDiscord> Discord
                                 </a>
                             </DropdownButton>

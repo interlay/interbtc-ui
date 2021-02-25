@@ -282,7 +282,7 @@ Contributions are what make the open source community such an amazing place to b
 
 If you are searching for a place to start or would like to discuss features, reach out to us:
 
-- [Discord](https://discord.gg/5uXCU5DW)
+- [Discord](https://discord.gg/KgCYK3MKSf)
 
 ## License
 
