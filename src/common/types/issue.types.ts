@@ -1,6 +1,6 @@
 export interface IssueRequest {
     id: string;
-    amountPolkaBTC: string;
+    requestedAmountPolkaBTC: string;
     timestamp?: string;
     totalAmount: string;
     creation: string;
@@ -14,11 +14,15 @@ export interface IssueRequest {
     rawTransaction?: Uint8Array;
     fee: string;
     griefingCollateral: string;
+    refundBtcAddress: string;
+    refundAmountBtc: string;
+    issuedAmountBtc: string;
 }
 
 export enum IssueRequestStatus {
     Completed,
     Cancelled,
+    RequestedRefund,
     Expired,
     PendingWithBtcTxNotFound,
     PendingWithBtcTxNotIncluded,

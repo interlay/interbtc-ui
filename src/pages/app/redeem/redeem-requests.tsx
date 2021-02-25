@@ -63,7 +63,11 @@ export default function RedeemRequests(): ReactElement {
                             {redeemRequests &&
                                 redeemRequests.map((request) => {
                                     return (
-                                        <tr key={request.id} onClick={() => requestClicked(request)}>
+                                        <tr
+                                            key={request.id}
+                                            onClick={() => requestClicked(request)}
+                                            className="table-row-opens-modal"
+                                        >
                                             <td>
                                                 {!request.timestamp
                                                     ? t("pending")

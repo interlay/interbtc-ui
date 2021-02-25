@@ -6,11 +6,11 @@ import { useTranslation } from "react-i18next";
 import { shortAddress } from "../../../../common/utils/utils";
 import PaymentView from "./payment-view";
 import StatusView from "./status-view";
-import WhopsView from "./whoops-view";
+import WhoopsView from "./whoops-view";
 import Big from "big.js";
 import BitcoinLogo from "../../../../assets/img/small-bitcoin-logo.png";
 import { calculateAmount } from "../../../../common/utils/utils";
-import { IssueRequestStatus } from "../../../../common/types/issue.types";
+import { IssueRequestStatus, IssueRequest } from "../../../../common/types/issue.types";
 
 type IssueModalProps = {
     show: boolean;
@@ -24,6 +24,20 @@ export default function IssueModal(props: IssueModalProps): ReactElement {
     const allRequests = issueRequests.get(address) || [];
     const request = allRequests.filter((req) => req.id === (selectedRequest ? selectedRequest.id : ""))[0];
 
+    const handleModalStatusPanel = (request: IssueRequest) => {
+        switch (request.status) {
+            case IssueRequestStatus.PendingWithBtcTxNotFound: {
+                return <PaymentView request={request} />;
+            }
+            case IssueRequestStatus.RequestedRefund: {
+                return <WhoopsView request={request} />;
+            }
+            default: {
+                return <StatusView request={request} />;
+            }
+        }
+    };
+
     return (
         <Modal className="issue-modal" show={props.show} onHide={props.onClose} size={"xl"}>
             {request && (
@@ -36,11 +50,13 @@ export default function IssueModal(props: IssueModalProps): ReactElement {
                         <div className="row">
                             <div className="col-6 justify-content-center">
                                 <div className="issue-amount">
-                                    <span className="wizzard-number">{request.amountPolkaBTC}</span>&nbsp;PolkaBTC
+                                    <span className="wizzard-number">{request.requestedAmountPolkaBTC}</span>
+                                    &nbsp;PolkaBTC
                                 </div>
                                 <div className="row usd-price-modal">
                                     <div className="col">
-                                        {"~ $" + calculateAmount(request.amountPolkaBTC || "0", prices.bitcoin.usd)}
+                                        {"~ $" +
+                                            calculateAmount(request.requestedAmountPolkaBTC || "0", prices.bitcoin.usd)}
                                     </div>
                                 </div>
                                 <div className="step-item row">
@@ -62,7 +78,7 @@ export default function IssueModal(props: IssueModalProps): ReactElement {
                                         &nbsp;
                                         {parseFloat(
                                             new Big(request.fee)
-                                                .add(new Big(request.amountPolkaBTC))
+                                                .add(new Big(request.requestedAmountPolkaBTC))
                                                 .round(5)
                                                 .toString()
                                         )}{" "}
@@ -70,7 +86,9 @@ export default function IssueModal(props: IssueModalProps): ReactElement {
                                         <div className="send-price">
                                             {"~ $" +
                                                 parseFloat(
-                                                    (Number(request.amountPolkaBTC) * prices.bitcoin.usd).toFixed(5)
+                                                    (
+                                                        Number(request.requestedAmountPolkaBTC) * prices.bitcoin.usd
+                                                    ).toFixed(5)
                                                 )}
                                         </div>
                                     </div>
@@ -98,14 +116,7 @@ export default function IssueModal(props: IssueModalProps): ReactElement {
                                     <div className="col-9 note-text">{t("issue_page.fully_decentralised")}</div>
                                 </div>
                             </div>
-                            <div className="col-6">
-                                {request && request.status === IssueRequestStatus.PendingWithBtcTxNotFound ? (
-                                    <PaymentView request={request} />
-                                ) : (
-                                    <StatusView request={request} />
-                                )}
-                                {false && request && <WhopsView request={request} />}
-                            </div>
+                            <div className="col-6">{request && handleModalStatusPanel(request)}</div>
                         </div>
                     </Modal.Body>
                 </React.Fragment>
