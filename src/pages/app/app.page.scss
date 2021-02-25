@@ -150,8 +150,9 @@
     border: none;
 }
 .balances-title {
-    font-size: 2rem;
+    font-size: 1.2rem;
     font-weight: 600;
+    color: rgba(0, 0, 0, 0.5);
 }
 
 .usd-price {
@@ -187,12 +188,13 @@
 }
 
 .btc-balance-wrapper {
-    margin-right: 2rem;
+    margin-right: 1rem;
+    margin-left: 1rem;
     text-align: right;
 }
 
 .dot-balance-wrapper {
-    margin-left: 2rem;
+    margin-right: 1rem;
     text-align: left;
 }
 

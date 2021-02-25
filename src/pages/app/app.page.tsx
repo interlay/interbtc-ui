@@ -40,17 +40,6 @@ export default function AppPage(): ReactElement {
 
     return (
         <section className="text-center white-background min-vh-100 app-page">
-            <div className="row balances-title">
-                <div className="col">{t("balances")}</div>
-            </div>
-            <div className="row mt-2 justify-content-center">
-                <div className="col-xl-3 btc-balance-wrapper">
-                    <span className="heavy">{balancePolkaBTC || "0"}</span> PolkaBTC
-                </div>
-                <div className="col-xl-3 dot-balance-wrapper">
-                    <span className="heavy">{balanceDOT || "0"}</span> DOT
-                </div>
-            </div>
             <div className="container mt-5">
                 <div className="row justify-content-center">
                     <div

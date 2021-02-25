@@ -10,6 +10,7 @@ import { planckToDOT } from "@interlay/polkabtc";
 import { updateBalanceDOTAction, showAccountModalAction } from "../actions/general.actions";
 import { updateBalances } from "../utils/utils";
 import { useTranslation } from "react-i18next";
+import Balances from "./balances";
 
 type TopbarProps = {
     address?: string;
@@ -160,6 +161,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                                         {t("request_dot")}
                                     </ButtonMaybePending>
                                 </Nav>
+                                <Balances balanceDOT={balanceDOT} balancePolkaBTC={balancePolkaBTC}></Balances>
                                 <Nav id="account-button" className="d-inline">
                                     <Button
                                         variant="outline-polkadot"
