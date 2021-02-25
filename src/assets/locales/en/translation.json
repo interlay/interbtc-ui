@@ -37,6 +37,7 @@
     "user": "User",
     "account_id": "AccountID",
     "btc_address": "BTC Address",
+    "enter_btc_address": "Enter your BTC address",
     "register": "Register",
     "locked": "Locked: ",
     "request": "Request",
@@ -95,7 +96,8 @@
     "transfer": "Transfer",
     "recipient": "Recipient",
     "confirmed": "Confirmed",
-    "address": "Address",
+    "address": "Account",
+    "recipient_account": "Enter recipient account",
     "date": "Date",
     "enter_recipient_address": "Please enter the recipient address",
     "successful_transfer": "Successful transfer",
@@ -113,7 +115,7 @@
         "as_compensation_instead": " (~${{compensationPrice}}) as compensation instead.",
         "view_progress": "View progress",
         "btc_destination_address": "BTC destination address",
-        "you_will_recieve": "Receive BTC in exchange for PolkaBTC",
+        "you_will_recieve": "Redeem PolkaBTC 1:1 for BTC",
         "must_select_account_warning": "No account selected. Please select an account to redeem.",
         "waiting_for": "Waiting for",
         "typically_takes": "This typically takes only a few minutes but may sometimes take up to 6 hours.",
@@ -188,7 +190,7 @@
         "retry_new_redeem": "You can now create a new redeem request with another vault."
     },
     "transfer_page": {
-      "transfer_to": "Transfer PolkaBTC to others"
+      "transfer_to": "Transfer PolkaBTC"
     },
     "dashboard": {
         "premium_redeem": "Premium Redeem",
@@ -281,7 +283,7 @@
         "contact_team": "Contact the team for debugging if you think this is an error.",
         "you_did_not_send": "You did not send the BTC transaction in time or transferred amount did not not meet the requested amount of PolkaBTC.",
         "waiting_deposit": "Waiting for deposit. If you have already made the payment, please wait for a few minutes for it to appear here.",
-        "deposit": "DEPOSIT",
+        "deposit": "Deposit",
         "fully_decentralised": "PolkaBTC is a fully decentralised system. Please make sure you send the right amount of BTC, we cannot guarantee that the vault will return the additional BTC that you sent by mistake.",
         "view_parachain_block": "View Parachain Block",
         "view_on_block_explorer": "View on Block Explorer",

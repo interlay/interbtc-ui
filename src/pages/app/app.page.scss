@@ -604,8 +604,26 @@
     left: calc(50% - 20px);
 }
 
+.issue-step-title {
+    display: inline;
+    top: 15px;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: $d_yellow;
+    left: calc(50% - 20px);
+}
+
+.redeem-step-title {
+    display: inline;
+    top: 15px;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: $d_pink;
+    left: calc(50% - 20px);
+}
+
 .send-amount {
-    color: $d_orange;
+    color: $d_yellow;
 }
 
 .send-price {

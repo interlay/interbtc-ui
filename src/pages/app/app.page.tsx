@@ -101,7 +101,9 @@ export default function AppPage(): ReactElement {
                                     <FaArrowLeft className="custom-icon-size" onClick={goBack}></FaArrowLeft>
                                 </div>
                                 <div className="step-title">
-                                    {activeTab === ActiveTab.Issue ? t("issue_page.issuing_title") : ""}
+                                    {activeTab === ActiveTab.Issue && (
+                                        <div className="issue-step-title">{t("issue_page.deposit")}</div>
+                                    )}
                                 </div>
                             </React.Fragment>
                         )}
