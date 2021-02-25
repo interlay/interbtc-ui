@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactElement } from "react";
+import React, { ReactElement } from "react";
 import { FaDiscord } from "react-icons/fa";
 
 export default function FeedbackPage(): ReactElement {

@@ -1,11 +1,10 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import polkaBTCLogo from "../../assets/img/polkabtc/PolkaBTC_black.png";
-import { Navbar, Nav, Image, Button, DropdownButton, Dropdown } from "react-bootstrap";
+import { Navbar, Nav, Image, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../types/util.types";
 import ButtonMaybePending from "./pending-button";
-import { FaDiscord, FaGithub, FaEdit } from "react-icons/fa";
 import { planckToDOT } from "@interlay/polkabtc";
 import { updateBalanceDOTAction, showAccountModalAction } from "../actions/general.actions";
 import { updateBalances } from "../utils/utils";

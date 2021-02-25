@@ -14,7 +14,7 @@ import { changeIssueStepAction } from "../../common/actions/issue.actions";
 
 export default function AppPage(): ReactElement {
     const dispatch = useDispatch();
-    const { activeTab, balancePolkaBTC, balanceDOT } = useSelector((state: StoreType) => state.general);
+    const { activeTab } = useSelector((state: StoreType) => state.general);
     const issueStep = useSelector((state: StoreType) => state.issue.step);
     const premiumRedeem = useSelector((state: StoreType) => state.redeem.premiumRedeem);
     const { t } = useTranslation();

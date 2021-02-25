@@ -13,7 +13,6 @@ import DashboardTable, {
     StatusCategories,
 } from "../../../common/components/dashboard-table/dashboard-table";
 import * as constants from "../../../constants";
-import PolkaBTC from "../components/polkabtc";
 import "../dashboard-subpage.scss";
 import { BtcNetworkName, IssueColumns } from "@interlay/polkabtc-stats";
 import TimerIncrement from "../../../common/components/timer-increment";
