@@ -13,12 +13,16 @@ import DashboardTable, {
     StatusComponent,
     StatusCategories,
 } from "../../../common/components/dashboard-table/dashboard-table";
+import { StatusUpdateColumns } from "@interlay/polkabtc-stats";
 
 export default function ParachainDashboard(): ReactElement {
     const { t } = useTranslation();
     const statsApi = usePolkabtcStats();
     const [statusUpdates, setStatusUpdates] = useState(new Array<DashboardStatusUpdateInfo>());
-    const [tableParams, setTableParams] = useState({ ...defaultTableDisplayParams(), perPage: 10 });
+    const [tableParams, setTableParams] = useState({
+        ...defaultTableDisplayParams<StatusUpdateColumns>(),
+        perPage: 10,
+    });
     const [totalStatusUpdates, setTotalStatusUpdates] = useState("-");
 
     const fetchStatusUpdates = useMemo(

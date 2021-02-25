@@ -5,6 +5,8 @@
 @include font-fam("airbnb-cereal-light", "./assets/fonts/airbnb-cereal/AirbnbCerealLight");
 @include font-fam("airbnb-cereal-bold", "./assets/fonts/airbnb-cereal/AirbnbCerealBold");
 @include font-fam("airbnb-cereal-book", "./assets/fonts/airbnb-cereal/AirbnbCerealBook");
+@include font-fam("airbnb-cereal-black", "./assets/fonts/airbnb-cereal/AirbnbCerealBlack");
+@include font-fam("airbnb-cereal-medium", "./assets/fonts/airbnb-cereal/AirbnbCerealMedium");
 
 html,
 body,
@@ -21,7 +23,7 @@ td,
 th,
 li,
 ul {
-    font-family: airbnb-cereal-light, "Comic Sans MS", Arial;
+    font-family: airbnb-cereal-light, Arial;
 }
 a:link {
     text-decoration: none;
@@ -296,6 +298,23 @@ a:not([href]):not([tabindex]):focus {
     }
 }
 
+.grey-button {
+    border: 2px solid $d_grey;
+    color: $d_grey;
+    background-color: white;
+    font-weight: 600;
+    &:hover {
+        color: white;
+        background-color: $d_grey;
+        border: 1px solid $d_grey;
+    }
+    &:disabled {
+        color: white !important;
+        background-color: $d_grey !important;
+        border: 1px solid $d_grey !important;
+    }
+}
+
 .green-button {
     border: 1px solid $d_green;
     color: $d_green;
@@ -310,6 +329,40 @@ a:not([href]):not([tabindex]):focus {
         color: white !important;
         background-color: $d_pink !important;
         border: 1px solid $d_pink !important;
+    }
+}
+
+.black-button {
+    border: 1px solid $text-color;
+    color: $text-color;
+    background-color: white;
+    font-weight: 600;
+    &:hover {
+        color: white;
+        background-color: $text-color;
+        border: 1px solid $text-color;
+    }
+    &:disabled {
+        color: white !important;
+        background-color: $text-color !important;
+        border: 1px solid $text-color !important;
+    }
+}
+
+.red-button {
+    border: 1px solid $d_red;
+    color: $d_red;
+    background-color: white;
+    font-weight: 600;
+    &:hover {
+        color: white;
+        background-color: $d_red;
+        border: 1px solid $d_red;
+    }
+    &:disabled {
+        color: white !important;
+        background-color: $d_red !important;
+        border: 1px solid $d_red !important;
     }
 }
 
@@ -575,4 +628,10 @@ a:not([href]):not([tabindex]):focus {
 .badge-style {
     font-size: 1rem;
     padding: 0.25rem;
+}
+.bold-text {
+    font-family: airbnb-cereal-bold;
+}
+.medium-text {
+    font-family: airbnb-cereal-medium;
 }

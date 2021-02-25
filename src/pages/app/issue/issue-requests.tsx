@@ -1,4 +1,4 @@
-import React, { Dispatch, useState } from "react";
+import React, { Dispatch, useState, ReactElement } from "react";
 
 import Big from "big.js";
 import { IssueRequest, IssueRequestStatus } from "../../../common/types/issue.types";
@@ -15,7 +15,7 @@ import { ParachainStatus } from "../../../common/types/util.types";
 import IssueModal from "./modal/issue-modal";
 import { TFunction } from "i18next";
 
-export default function IssueRequests() {
+export default function IssueRequests(): ReactElement {
     const { address, extensions, stateOfBTCParachain } = useSelector((state: StoreType) => state.general);
     const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
     const [showModal, setShowModal] = useState(false);
@@ -29,10 +29,6 @@ export default function IssueRequests() {
             toast.error(t("issue_page.error_in_parachain"));
             return;
         }
-        // if (bitcoinHeight - btcRelayHeight > constants.BLOCKS_BEHIND_LIMIT) {
-        //     toast.error(t("issue_page.error_more_than_6_blocks_behind"));
-        //     return;
-        // }
         if (extensions.length && address) {
             setShowModal(true);
         } else {
@@ -92,12 +88,12 @@ export default function IssueRequests() {
                                     <tr key={index} onClick={() => requestClicked(request)}>
                                         <td>{request.creation === "0" ? t("issue_page.pending") : request.creation}</td>
                                         <td>
-                                            {request.amountBTC} <span className="grey-text">PolkaBTC</span>
+                                            {request.amountPolkaBTC} <span className="grey-text">PolkaBTC</span>
                                         </td>
                                         <td>
                                             <BitcoinTransaction txId={request.btcTxId} shorten />
                                         </td>
-                                        <td>{request.confirmations}</td>
+                                        <td>{request.btcTxId === "" ? t("not_applicable") : request.confirmations}</td>
                                         <td>{handleCompleted(request)}</td>
                                     </tr>
                                 );
@@ -129,7 +125,10 @@ export async function execute(
     try {
         // get proof data from bitcoin
         if (txId === "") {
-            txId = await window.polkaBTC.btcCore.getTxIdByRecipientAddress(request.vaultBTCAddress, request.amountBTC);
+            txId = await window.polkaBTC.btcCore.getTxIdByRecipientAddress(
+                request.vaultBTCAddress,
+                request.amountPolkaBTC
+            );
         }
         [merkleProof, rawTx] = await Promise.all([
             window.polkaBTC.btcCore.getMerkleProof(txId),
@@ -165,7 +164,9 @@ export async function execute(
         const completedReq = provenReq;
         completedReq.status = IssueRequestStatus.Completed;
 
-        dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).add(new Big(provenReq.amountBTC)).toString()));
+        dispatch(
+            updateBalancePolkaBTCAction(new Big(balancePolkaBTC).add(new Big(provenReq.amountPolkaBTC)).toString())
+        );
         dispatch(updateIssueRequestAction(completedReq));
 
         toast.success(t("issue_page.succesfully_executed", { id: request.id }));

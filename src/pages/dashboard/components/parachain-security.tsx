@@ -57,11 +57,11 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
                             </span>
                         ) : parachainStatus === Status.NotSecure ? (
                             <span
-                                style={{ color: getAccents("d_red").color }}
+                                style={{ color: getAccents("d_yellow").color }}
                                 id="parachain-text"
                                 className="bold-font"
                             >
-                                {t("dashboard.parachain.not_secure")}
+                                {t("dashboard.parachain.halted")}
                             </span>
                         ) : parachainStatus === Status.NoData ? (
                             <span

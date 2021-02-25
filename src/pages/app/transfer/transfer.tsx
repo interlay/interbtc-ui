@@ -45,6 +45,9 @@ export default function Transfer() {
         <div className="transfer">
             <form onSubmit={onSubmit}>
                 <div className="row">
+                    <div className="col-12 wizard-header-text font-blue">{t("transfer_page.transfer_to")}</div>
+                </div>
+                <div className="row">
                     <div className="col-6">
                         <input
                             id="amount-btc-input"
@@ -71,7 +74,7 @@ export default function Transfer() {
                     <div className="col-6 mark-currency">PolkaBTC</div>
                 </div>
                 <div className="row usd-price">
-                    <div className="col">{"= $" + usdAmount}</div>
+                    <div className="col">{"~ $" + usdAmount}</div>
                 </div>
                 {errors.amountPolkaBTC && (
                     <div className="wizard-input-error">
@@ -82,8 +85,8 @@ export default function Transfer() {
                 )}
                 <div className="row">
                     <div className="col-12">
+                        <p className="form-heading">{t("recipient")}</p>
                         <div className="input-address-wrapper">
-                            <div className="address-label">{t("recipient")}</div>
                             <input
                                 id="btc-address-input"
                                 name="address"
@@ -103,7 +106,11 @@ export default function Transfer() {
                     </div>
                 )}
                 <div className="mb-5"></div>
-                <ButtonMaybePending className="btn btn-primary app-btn" isPending={isRequestPending} onClick={onSubmit}>
+                <ButtonMaybePending
+                    className="btn green-button app-btn"
+                    isPending={isRequestPending}
+                    onClick={onSubmit}
+                >
                     {t("transfer")}
                 </ButtonMaybePending>
             </form>
