@@ -16,6 +16,7 @@ import * as constants from "../../../constants";
 import PolkaBTC from "../components/polkabtc";
 import "../dashboard-subpage.scss";
 import { BtcNetworkName, IssueColumns } from "@interlay/polkabtc-stats";
+import TimerIncrement from "../../../common/components/timer-increment";
 
 export default function IssueDashboard(): ReactElement {
     const { totalPolkaBTC, prices } = useSelector((state: StoreType) => state.general);
@@ -117,12 +118,10 @@ export default function IssueDashboard(): ReactElement {
                 <div className="dashboard-wrapper">
                     <div>
                         <div className="title-container">
-                            <div
-                                style={{ backgroundColor: getAccents("d_yellow").color }}
-                                className="issue-page-text-container"
-                            >
-                                <h1>{t("issue_page.issue_requests")}</h1>
-                            </div>
+                            <h1 className="title-text">{t("issue_page.issue_requests")}</h1>
+                            <p className="latest-block-text">
+                                <TimerIncrement></TimerIncrement>
+                            </p>
                             <div style={{ backgroundColor: getAccents("d_yellow").color }} className="title-line"></div>
                         </div>
                         <div className="table-top-data-container">

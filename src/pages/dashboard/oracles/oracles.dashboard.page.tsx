@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import OracleStatus from "../components/oracle-status";
 import OracleTable from "../../../common/components/oracle-table/oracle-table";
 import { getAccents } from "../dashboard-colors";
+import TimerIncrement from "../../../common/components/timer-increment";
 
 export default function OraclesDashboard(): ReactElement {
     const { t } = useTranslation();
@@ -14,12 +15,10 @@ export default function OraclesDashboard(): ReactElement {
                 <div className="dashboard-wrapper">
                     <div>
                         <div className="title-container">
-                            <div
-                                style={{ backgroundColor: getAccents("d_blue").color }}
-                                className="issue-page-text-container"
-                            >
-                                <h1>{t("dashboard.oracles.oracles")}</h1>
-                            </div>
+                            <h1 className="title-text">{t("dashboard.oracles.oracles")}</h1>
+                            <p className="latest-block-text">
+                                <TimerIncrement></TimerIncrement>
+                            </p>
                             <div style={{ backgroundColor: getAccents("d_blue").color }} className="title-line"></div>
                         </div>
 
