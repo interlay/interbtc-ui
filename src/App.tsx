@@ -105,7 +105,7 @@ export default function App(): ReactElement {
                 if (!window.polkaBTC) {
                     toast.warn(
                         "Unable to connect to the BTC-Parachain. " +
-                        "Please check your internet connection or try again later."
+                            "Please check your internet connection or try again later."
                     );
                 }
             }, 5000);
@@ -117,7 +117,7 @@ export default function App(): ReactElement {
             if (!window.polkaBTC)
                 toast.warn(
                     "Unable to connect to the BTC-Parachain. " +
-                    "Please check your internet connection or try again later."
+                        "Please check your internet connection or try again later."
                 );
         }
     }, [dispatch, store]);
@@ -146,8 +146,8 @@ export default function App(): ReactElement {
                         state.isError
                             ? ParachainStatus.Error
                             : state.isRunning
-                                ? ParachainStatus.Running
-                                : ParachainStatus.Shutdown
+                            ? ParachainStatus.Running
+                            : ParachainStatus.Shutdown
                     )
                 );
             } catch (error) {
