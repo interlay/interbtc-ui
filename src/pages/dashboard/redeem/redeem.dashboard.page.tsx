@@ -192,24 +192,26 @@ export default function RedeemDashboard(): ReactElement {
                                     </h1>
                                 </div>
                             </div>
-                            <div>
-                                <LineChartComponent
-                                    color={["d_pink", "d_grey"]}
-                                    label={[
-                                        t("dashboard.redeem.total_redeemed_chart"),
-                                        t("dashboard.redeem.perday_redeemed_chart"),
-                                    ]}
-                                    yLabels={cumulativeRedeemsPerDay.map((dataPoint) =>
-                                        new Date(dataPoint.date).toLocaleDateString()
-                                    )}
-                                    yAxisProps={[{ beginAtZero: true, position: "left" }, { position: "right" }]}
-                                    data={[
-                                        cumulativeRedeemsPerDay.map((dataPoint) =>
-                                            Number(satToBTC(dataPoint.sat.toString()))
-                                        ),
-                                        pointRedeemsPerDay.map((amount) => Number(satToBTC(amount.toString()))),
-                                    ]}
-                                />
+                            <div className="card">
+                                <div className="chart-container">
+                                    <LineChartComponent
+                                        color={["d_pink", "d_grey"]}
+                                        label={[
+                                            t("dashboard.redeem.total_redeemed_chart"),
+                                            t("dashboard.redeem.perday_redeemed_chart"),
+                                        ]}
+                                        yLabels={cumulativeRedeemsPerDay.map((dataPoint) =>
+                                            new Date(dataPoint.date).toLocaleDateString()
+                                        )}
+                                        yAxisProps={[{ beginAtZero: true, position: "left" }, { position: "right" }]}
+                                        data={[
+                                            cumulativeRedeemsPerDay.map((dataPoint) =>
+                                                Number(satToBTC(dataPoint.sat.toString()))
+                                            ),
+                                            pointRedeemsPerDay.map((amount) => Number(satToBTC(amount.toString()))),
+                                        ]}
+                                    />
+                                </div>
                             </div>
                         </div>
                         <div className="dashboard-table-container">

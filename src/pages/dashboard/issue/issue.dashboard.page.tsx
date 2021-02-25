@@ -17,6 +17,7 @@ import PolkaBTC from "../components/polkabtc";
 import "../dashboard-subpage.scss";
 import { BtcNetworkName, IssueColumns } from "@interlay/polkabtc-stats";
 import TimerIncrement from "../../../common/components/timer-increment";
+import LineChartComponent from "../components/line-chart-component";
 
 export default function IssueDashboard(): ReactElement {
     const { totalPolkaBTC, prices } = useSelector((state: StoreType) => state.general);
@@ -27,6 +28,16 @@ export default function IssueDashboard(): ReactElement {
 
     const [totalSuccessfulIssues, setTotalSuccessfulIssues] = useState("-");
     const [totalIssues, setTotalIssues] = useState("-");
+
+    const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number }>());
+    const pointIssuesPerDay = useMemo(
+        () =>
+            cumulativeIssuesPerDay.map((dataPoint, i) => {
+                if (i === 0) return 0;
+                return dataPoint.sat - cumulativeIssuesPerDay[i - 1].sat;
+            }),
+        [cumulativeIssuesPerDay]
+    );
 
     const fetchIssueRequests = useMemo(
         () => async () => {
@@ -95,13 +106,22 @@ export default function IssueDashboard(): ReactElement {
         [t]
     );
 
+    const fetchIssuesLastDays = useMemo(
+        () => async () => {
+            const res = await statsApi.getRecentDailyIssues(6);
+            setCumulativeIssuesPerDay(res.data);
+        },
+        [statsApi] // to silence the compiler
+    );
+
     useEffect(() => {
         try {
             fetchIssueRequests();
+            fetchIssuesLastDays();
         } catch (e) {
             console.error(e);
         }
-    }, [fetchIssueRequests, tableParams]);
+    }, [fetchIssueRequests, tableParams, fetchIssuesLastDays]);
 
     useEffect(() => {
         try {
@@ -142,8 +162,31 @@ export default function IssueDashboard(): ReactElement {
                                     <h1>{totalSuccessfulIssues === "-" ? t("no_data") : totalSuccessfulIssues}</h1>
                                 </div>
                             </div>
-                            <div>
-                                <PolkaBTC />
+                            <div className="card">
+                                <div className="chart-container">
+                                    <LineChartComponent
+                                        color={["d_yellow", "d_grey"]}
+                                        label={[
+                                            t("dashboard.issue.total_issued_chart"),
+                                            t("dashboard.issue.perday_issued_chart"),
+                                        ]}
+                                        yLabels={cumulativeIssuesPerDay
+                                            .slice(1)
+                                            .map((dataPoint) =>
+                                                new Date(dataPoint.date).toISOString().substring(0, 10)
+                                            )}
+                                        yAxisProps={[
+                                            { beginAtZero: true, position: "left", maxTicksLimit: 6 },
+                                            { position: "right", maxTicksLimit: 6 },
+                                        ]}
+                                        data={[
+                                            cumulativeIssuesPerDay
+                                                .slice(1)
+                                                .map((dataPoint) => Number(satToBTC(dataPoint.sat.toString()))),
+                                            pointIssuesPerDay.slice(1).map((sat) => Number(satToBTC(sat.toString()))),
+                                        ]}
+                                    />
+                                </div>
                             </div>
                         </div>
                         <div className="dashboard-table-container">
