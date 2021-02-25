@@ -1170,10 +1170,10 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/polkabtc-stats@0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-stats/-/polkabtc-stats-0.1.5.tgz#984dd0441d7afbea80ca06b0ee1929906d11c1df"
-  integrity sha512-X98YM8m+WrolyFomBvwE5zX9UxDuPZO9exIh90t1SWebHJdEJ8vQlJDUuDr5Mm+M7GdTBABUx2jUYF+plvrR7Q==
+"@interlay/polkabtc-stats@0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-stats/-/polkabtc-stats-0.1.6.tgz#effaab781c698b136945cdef0b62d0cd4a792330"
+  integrity sha512-Vt1Gg6KalQsFf4/BdNh9bHGchD+w/5H7kLaoNpje2E9MM3PZTsC4RcaKnCwT8RgD6+60Pg6N3vJ7QCgUdrpj7w==
   dependencies:
     "@interlay/polkabtc" "^0.8.5"
     "@interlay/polkabtc-types" "0.4.0"
