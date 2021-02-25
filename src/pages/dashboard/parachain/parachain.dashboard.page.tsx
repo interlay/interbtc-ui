@@ -14,6 +14,7 @@ import DashboardTable, {
     StatusCategories,
 } from "../../../common/components/dashboard-table/dashboard-table";
 import { StatusUpdateColumns } from "@interlay/polkabtc-stats";
+import TimerIncrement from "../../../common/components/timer-increment";
 
 export default function ParachainDashboard(): ReactElement {
     const { t } = useTranslation();
@@ -104,13 +105,11 @@ export default function ParachainDashboard(): ReactElement {
                 <div className="dashboard-wrapper">
                     <div>
                         <div className="title-container">
-                            <div
-                                style={{ backgroundColor: getAccents("d_blue").color }}
-                                className="issue-page-text-container"
-                            >
-                                <h1>{t("dashboard.parachain.parachain")}</h1>
-                            </div>
-                            <div style={{ backgroundColor: getAccents("d_blue").color }} className="title-line"></div>
+                            <h1 className="title-text">{t("dashboard.parachain.parachain")}</h1>
+                            <p className="latest-block-text">
+                                <TimerIncrement></TimerIncrement>
+                            </p>
+                            <div style={{ backgroundColor: getAccents("d_pink").color }} className="title-line"></div>
                         </div>
 
                         <div className="parachain-graphs-container dashboard-graphs-container">

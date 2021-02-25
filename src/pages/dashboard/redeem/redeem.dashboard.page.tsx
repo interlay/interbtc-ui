@@ -15,6 +15,7 @@ import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 import { satToBTC } from "@interlay/polkabtc";
 import LineChartComponent from "../components/line-chart-component";
 import { BtcNetworkName, RedeemColumns } from "@interlay/polkabtc-stats";
+import TimerIncrement from "../../../common/components/timer-increment";
 
 export default function RedeemDashboard(): ReactElement {
     const { polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
@@ -147,12 +148,10 @@ export default function RedeemDashboard(): ReactElement {
                 <div className="dashboard-wrapper">
                     <div>
                         <div className="title-container">
-                            <div
-                                style={{ backgroundColor: getAccents("d_pink").color }}
-                                className="issue-page-text-container"
-                            >
-                                <h1>{t("dashboard.redeem.redeem")}</h1>
-                            </div>
+                            <h1 className="title-text">{t("dashboard.redeem.redeem")}</h1>
+                            <p className="latest-block-text">
+                                <TimerIncrement></TimerIncrement>
+                            </p>
                             <div style={{ backgroundColor: getAccents("d_pink").color }} className="title-line"></div>
                         </div>
                         <div className="table-top-data-container">
@@ -193,24 +192,26 @@ export default function RedeemDashboard(): ReactElement {
                                     </h1>
                                 </div>
                             </div>
-                            <div>
-                                <LineChartComponent
-                                    color={["d_pink", "d_grey"]}
-                                    label={[
-                                        t("dashboard.redeem.total_redeemed_chart"),
-                                        t("dashboard.redeem.perday_redeemed_chart"),
-                                    ]}
-                                    yLabels={cumulativeRedeemsPerDay.map((dataPoint) =>
-                                        new Date(dataPoint.date).toLocaleDateString()
-                                    )}
-                                    yAxisProps={[{ beginAtZero: true, position: "left" }, { position: "right" }]}
-                                    data={[
-                                        cumulativeRedeemsPerDay.map((dataPoint) =>
-                                            Number(satToBTC(dataPoint.sat.toString()))
-                                        ),
-                                        pointRedeemsPerDay.map((amount) => Number(satToBTC(amount.toString()))),
-                                    ]}
-                                />
+                            <div className="card">
+                                <div className="chart-container">
+                                    <LineChartComponent
+                                        color={["d_pink", "d_grey"]}
+                                        label={[
+                                            t("dashboard.redeem.total_redeemed_chart"),
+                                            t("dashboard.redeem.perday_redeemed_chart"),
+                                        ]}
+                                        yLabels={cumulativeRedeemsPerDay.map((dataPoint) =>
+                                            new Date(dataPoint.date).toLocaleDateString()
+                                        )}
+                                        yAxisProps={[{ beginAtZero: true, position: "left" }, { position: "right" }]}
+                                        data={[
+                                            cumulativeRedeemsPerDay.map((dataPoint) =>
+                                                Number(satToBTC(dataPoint.sat.toString()))
+                                            ),
+                                            pointRedeemsPerDay.map((amount) => Number(satToBTC(amount.toString()))),
+                                        ]}
+                                    />
+                                </div>
                             </div>
                         </div>
                         <div className="dashboard-table-container">

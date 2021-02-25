@@ -150,8 +150,9 @@
     border: none;
 }
 .balances-title {
-    font-size: 2rem;
+    font-size: 1.2rem;
     font-weight: 600;
+    color: rgba(0, 0, 0, 0.5);
 }
 
 .usd-price {
@@ -187,12 +188,13 @@
 }
 
 .btc-balance-wrapper {
-    margin-right: 2rem;
+    margin-right: 1rem;
+    margin-left: 1rem;
     text-align: right;
 }
 
 .dot-balance-wrapper {
-    margin-left: 2rem;
+    margin-right: 1rem;
     text-align: left;
 }
 
@@ -602,8 +604,26 @@
     left: calc(50% - 20px);
 }
 
+.issue-step-title {
+    display: inline;
+    top: 15px;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: $d_yellow;
+    left: calc(50% - 20px);
+}
+
+.redeem-step-title {
+    display: inline;
+    top: 15px;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: $d_pink;
+    left: calc(50% - 20px);
+}
+
 .send-amount {
-    color: $d_orange;
+    color: $d_yellow;
 }
 
 .send-price {

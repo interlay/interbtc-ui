@@ -31,7 +31,6 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
             if (!polkaBtcLoaded) return;
             try {
                 const oracle = await window.polkaBTC.oracle.getInfo();
-                oracle.names.push(oracle.names[0]);
                 setOracles(
                     oracle.names.map((name, i) => ({
                         id: i.toString(),

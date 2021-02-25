@@ -14,7 +14,7 @@ import { changeIssueStepAction } from "../../common/actions/issue.actions";
 
 export default function AppPage(): ReactElement {
     const dispatch = useDispatch();
-    const { activeTab, balancePolkaBTC, balanceDOT } = useSelector((state: StoreType) => state.general);
+    const { activeTab } = useSelector((state: StoreType) => state.general);
     const issueStep = useSelector((state: StoreType) => state.issue.step);
     const premiumRedeem = useSelector((state: StoreType) => state.redeem.premiumRedeem);
     const { t } = useTranslation();
@@ -39,18 +39,7 @@ export default function AppPage(): ReactElement {
     };
 
     return (
-        <section className="jumbotron text-center white-background min-vh-100 app-page">
-            <div className="row balances-title">
-                <div className="col">{t("balances")}</div>
-            </div>
-            <div className="row mt-2 justify-content-center">
-                <div className="col-xl-3 btc-balance-wrapper">
-                    <span className="heavy">{balancePolkaBTC || "0"}</span> PolkaBTC
-                </div>
-                <div className="col-xl-3 dot-balance-wrapper">
-                    <span className="heavy">{balanceDOT || "0"}</span> DOT
-                </div>
-            </div>
+        <section className="text-center white-background min-vh-100 app-page">
             <div className="container mt-5">
                 <div className="row justify-content-center">
                     <div
@@ -112,7 +101,9 @@ export default function AppPage(): ReactElement {
                                     <FaArrowLeft className="custom-icon-size" onClick={goBack}></FaArrowLeft>
                                 </div>
                                 <div className="step-title">
-                                    {activeTab === ActiveTab.Issue ? t("issue_page.issuing_title") : ""}
+                                    {activeTab === ActiveTab.Issue && (
+                                        <div className="issue-step-title">{t("issue_page.deposit")}</div>
+                                    )}
                                 </div>
                             </React.Fragment>
                         )}
