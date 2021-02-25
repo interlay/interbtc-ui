@@ -78,7 +78,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
 
         if (!address) return "Select Account";
 
-        return "Account:" + address.substring(0, 10) + "..." + address.substring(38);
+        return address.substring(0, 10) + "..." + address.substring(38);
     };
 
     return (
@@ -128,39 +128,28 @@ export default function Topbar(props: TopbarProps): ReactElement {
                                 {t("nav_docs")}
                             </a>
                         </Nav>
-                        <Nav className="d-inline">
-                            <DropdownButton
-                                id="bug-report"
-                                title="Feedback"
-                                variant="outline-polkadot"
-                                size="sm"
-                                menuAlign="right"
-                                className="mr-2"
-                            >
-                                <a href="https://forms.gle/zzmzCrgTfmcXbNDd8" target="_blank" rel="noopener noreferrer">
-                                    <FaEdit></FaEdit> {t("feedback.feedback")}
-                                </a>
-                                <Dropdown.Divider />
-                                <Dropdown.Header>{t("report_bug")}</Dropdown.Header>
-                                <a
-                                    href="https://github.com/interlay/polkabtc-ui/issues"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="mb-1"
-                                >
-                                    <FaGithub></FaGithub> GitHub
-                                </a>
-                                <a href="https://discord.gg/KgCYK3MKSf" target="_blank" rel="noopener noreferrer">
-                                    <FaDiscord></FaDiscord> Discord
-                                </a>
-                            </DropdownButton>
-                        </Nav>
                         {props.address !== undefined && (
                             <React.Fragment>
                                 <Nav className="d-inline">
+                                    <Button
+                                        variant="outline-bitcoin"
+                                        className="mr-2"
+                                        style={{ borderRadius: "8px" }}
+                                        size="sm"
+                                    >
+                                        <a
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            href="https://testnet-faucet.mempool.co/"
+                                            style={{ textDecoration: "none", color: "#000" }}
+                                        >
+                                            {t("request_btc")}
+                                        </a>
+                                    </Button>
                                     <ButtonMaybePending
                                         variant="outline-polkadot"
                                         className="mr-2"
+                                        style={{ borderRadius: "8px" }}
                                         size="sm"
                                         isPending={isRequestPending}
                                         onClick={requestDOT}
@@ -172,7 +161,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                                     <Button
                                         variant="outline-polkadot"
                                         size="sm"
-                                        style={{ borderRadius: "1em" }}
+                                        style={{ borderRadius: "8px" }}
                                         onClick={() => dispatch(showAccountModalAction(true))}
                                     >
                                         {getLabel()}
