@@ -3,9 +3,11 @@
 
 .staked-relayer-page {
     text-align: center;
+    @include justifyCenter();
 
     .staked-container {
         max-width: calc(100vw - 30px);
+        width: 70%;
         overflow-x: scroll;
         padding: 0px 15px;
     }
