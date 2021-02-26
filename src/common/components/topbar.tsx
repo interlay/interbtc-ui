@@ -109,6 +109,11 @@ export default function Topbar(props: TopbarProps): ReactElement {
                                     {t("nav_dashboard")}
                                 </Link>
                             )}
+                            {polkaBtcLoaded && (
+                                <Link className="nav-link" to="/leaderboard">
+                                    {t("nav_leaderboard")}
+                                </Link>
+                            )}
                             {isVaultConnected && (
                                 <Link id="vault-nav-item" className="nav-link" to="/vault">
                                     {t("nav_vault")}
