@@ -12,7 +12,6 @@ import {
     changeAmountBTCAction,
     changeIssueStepAction,
     changeVaultDotAddressOnIssueAction,
-    updateIssueGriefingCollateralAction,
     changeVaultBtcAddressOnIssueAction,
     changeIssueIdAction,
 } from "../../../common/actions/issue.actions";
@@ -20,7 +19,6 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat, satToBTC, planckToDOT, stripHexPrefix } from "@interlay/polkabtc";
-import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
 import { useTranslation } from "react-i18next";
 import { calculateAmount } from "../../../common/utils/utils";
 
