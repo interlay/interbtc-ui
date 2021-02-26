@@ -88,17 +88,13 @@ export default function EnterBTCAmount() {
             if (amountSAT === undefined) {
                 throw new Error("Invalid BTC amount input.");
             }
-            const amountBTCInteger = amountBTC.split(".")[0];
-            if (amountBTCInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
-                throw new Error("Input value is too high");
-            }
             dispatch(changeAmountBTCAction(amountBTC));
 
             const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountSAT);
 
             dispatch(changeVaultDotAddressOnIssueAction(vaultId ? vaultId : ""));
 
-            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultId.toString());
+            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultId);
             const requestResult = await window.polkaBTC.issue.request(amountAsSatoshi as PolkaBTC, vaultAccountId);
 
             const vaultBTCAddress = requestResult.vault.wallet.btcAddress;
