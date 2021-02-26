@@ -4,7 +4,6 @@ import { StoreType } from "../../../common/types/util.types";
 import BitcoinLogo from "../../../assets/img/small-bitcoin-logo.png";
 import PolkadotLogo from "../../../assets/img/small-polkadot-logo.png";
 import * as constants from "../../../constants";
-import Big from "big.js";
 import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 import BN from "bn.js";
 
@@ -20,7 +19,7 @@ import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat, satToBTC, planckToDOT, stripHexPrefix } from "@interlay/polkabtc";
 import { useTranslation } from "react-i18next";
-import { calculateAmount } from "../../../common/utils/utils";
+import { getUsdAmount } from "../../../common/utils/utils";
 
 type EnterBTCForm = {
     amountBTC: string;
@@ -66,7 +65,7 @@ export default function EnterBTCAmount() {
                 console.log(error);
             }
         };
-        setUsdAmount(calculateAmount(amount || getValues("amountBTC") || "0", prices.bitcoin.usd));
+        setUsdAmount(getUsdAmount(amount || getValues("amountBTC") || "0", prices.bitcoin.usd));
         fetchData();
     }, [polkaBtcLoaded, setUsdAmount, amount, prices.bitcoin.usd, getValues]);
 
@@ -114,7 +113,7 @@ export default function EnterBTCAmount() {
 
     const onValueChange = async () => {
         const value = getValues("amountBTC");
-        setUsdAmount(calculateAmount(value || "0", prices.bitcoin.usd));
+        setUsdAmount(getUsdAmount(value || "0", prices.bitcoin.usd));
         try {
             const fee = await window.polkaBTC.issue.getFeesToPay(value);
             setFee(fee);
@@ -206,7 +205,7 @@ export default function EnterBTCAmount() {
                                     <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img> &nbsp;
                                     <span className="fee-btc">{parseFloat(Number(fee).toFixed(5))}</span> BTC
                                 </div>
-                                <div>{"~ $" + parseFloat((Number(fee) * prices.bitcoin.usd).toFixed(2))}</div>
+                                <div>{"~ $" + getUsdAmount(fee, prices.bitcoin.usd)}</div>
                             </div>
                         </div>
                     </div>
@@ -228,9 +227,7 @@ export default function EnterBTCAmount() {
                                     ></img>
                                     <span className="fee-btc">{parseFloat(Number(fee).toFixed(5))}</span> DOT
                                 </div>
-                                <div>
-                                    {"~ $" + new Big(deposit).mul(new Big(prices.polkadot.usd)).round(5).toString()}
-                                </div>
+                                <div>{"~ $" + getUsdAmount(deposit, prices.polkadot.usd)}</div>
                             </div>
                         </div>
                     </div>
@@ -254,15 +251,7 @@ export default function EnterBTCAmount() {
                                     </span>{" "}
                                     BTC
                                 </div>
-                                <div>
-                                    {"~ $" +
-                                        parseFloat(
-                                            (
-                                                (Number(getValues("amountBTC") || "0") + Number(fee)) *
-                                                prices.bitcoin.usd
-                                            ).toFixed(5)
-                                        )}
-                                </div>
+                                <div>{"~ $" + getUsdAmount(fee, prices.bitcoin.usd)}</div>
                             </div>
                         </div>
                     </div>

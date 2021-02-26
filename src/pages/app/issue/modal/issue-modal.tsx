@@ -3,13 +3,12 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../../../common/types/util.types";
 import { Modal } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { shortAddress } from "../../../../common/utils/utils";
+import { getUsdAmount, shortAddress } from "../../../../common/utils/utils";
 import PaymentView from "./payment-view";
 import StatusView from "./status-view";
 import WhoopsView from "./whoops-view";
 import Big from "big.js";
 import BitcoinLogo from "../../../../assets/img/small-bitcoin-logo.png";
-import { calculateAmount } from "../../../../common/utils/utils";
 import { IssueRequestStatus, IssueRequest } from "../../../../common/types/issue.types";
 
 type IssueModalProps = {
@@ -58,7 +57,7 @@ export default function IssueModal(props: IssueModalProps): ReactElement {
                                 <div className="row usd-price-modal">
                                     <div className="col">
                                         {"~ $" +
-                                            calculateAmount(
+                                            getUsdAmount(
                                                 request.issuedAmountBtc || request.requestedAmountPolkaBTC || "0",
                                                 prices.bitcoin.usd
                                             )}
@@ -71,7 +70,7 @@ export default function IssueModal(props: IssueModalProps): ReactElement {
                                         &nbsp;
                                         {parseFloat(Number(request.fee).toFixed(5))} BTC
                                         <div className="send-price">
-                                            {"~ $" + parseFloat((Number(request.fee) * prices.bitcoin.usd).toFixed(5))}
+                                            {"~ $" + getUsdAmount(request.fee, prices.bitcoin.usd)}
                                         </div>
                                     </div>
                                 </div>
@@ -92,12 +91,9 @@ export default function IssueModal(props: IssueModalProps): ReactElement {
                                         BTC
                                         <div className="send-price">
                                             {"~ $" +
-                                                parseFloat(
-                                                    (
-                                                        Number(
-                                                            request.issuedAmountBtc || request.requestedAmountPolkaBTC
-                                                        ) * prices.bitcoin.usd
-                                                    ).toFixed(5)
+                                                getUsdAmount(
+                                                    request.issuedAmountBtc || request.requestedAmountPolkaBTC,
+                                                    prices.bitcoin.usd
                                                 )}
                                         </div>
                                     </div>

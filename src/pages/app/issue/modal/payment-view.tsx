@@ -8,7 +8,7 @@ import QRCode from "qrcode.react";
 import Big from "big.js";
 import Timer from "../../../../common/components/timer";
 import AppTooltip from "../../../../common/components/tooltip";
-import { copyToClipboard } from "../../../../common/utils/utils";
+import { copyToClipboard, getUsdAmount } from "../../../../common/utils/utils";
 
 type PaymentViewProps = {
     request: IssueRequest;
@@ -51,7 +51,7 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
                 </div>
                 <div className="row">
                     <div className="col send-price">
-                        {"~ $" + (Number(props.request.totalAmount) * prices.bitcoin.usd).toFixed(2)}
+                        {"~ $" + getUsdAmount(props.request.totalAmount, prices.bitcoin.usd)}
                     </div>
                 </div>
                 <div className="row">

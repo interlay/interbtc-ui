@@ -21,7 +21,7 @@ import BitcoinLogo from "../../../assets/img/small-bitcoin-logo.png";
 import PolkadotLogo from "../../../assets/img/small-polkadot-logo.png";
 import Big from "big.js";
 import { updateBalancePolkaBTCAction } from "../../../common/actions/general.actions";
-import { calculateAmount } from "../../../common/utils/utils";
+import { getUsdAmount } from "../../../common/utils/utils";
 import { PolkaBTC } from "@interlay/polkabtc/build/interfaces";
 import { AccountId } from "@polkadot/types/interfaces/runtime";
 import * as constants from "../../../constants";
@@ -83,7 +83,7 @@ export default function EnterAmountAndAddress(): ReactElement {
                 console.log(e);
             }
         };
-        setUsdAmount(calculateAmount(amount || getValues("amountPolkaBTC") || "0", usdPrice));
+        setUsdAmount(getUsdAmount(amount || getValues("amountPolkaBTC") || "0", usdPrice));
         fetchData();
     }, [polkaBtcLoaded, getValues, usdPrice, amount]);
 
@@ -172,7 +172,7 @@ export default function EnterAmountAndAddress(): ReactElement {
 
     const onAmountChange = async () => {
         const amount = getValues("amountPolkaBTC") || "0";
-        setUsdAmount(calculateAmount(amount, usdPrice));
+        setUsdAmount(getUsdAmount(amount, usdPrice));
         const fee = await window.polkaBTC.redeem.getFeesToPay(amount);
         setRedeemFee(fee);
     };
@@ -289,29 +289,13 @@ export default function EnterAmountAndAddress(): ReactElement {
                                     <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img> &nbsp;
                                     <span className="fee-btc">{parseFloat(Number(redeemFee).toFixed(5))}</span> BTC
                                 </div>
-                                <div>{"~ $" + parseFloat((Number(redeemFee) * prices.bitcoin.usd).toFixed(5))}</div>
+                                <div>{"~ $" + getUsdAmount(redeemFee, prices.bitcoin.usd)}</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             {/* TODO: Bitcoin network fee */}
-            <div className="row justify-content-center">
-                <div className="col-10">
-                    <div className="wizard-item wizard-item-remove-border">
-                        <div className="row">
-                            <div className="col-6 text-left">{t("bitcoin_network_fee")}</div>
-                            <div className="col fee-number">
-                                <div>
-                                    <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img> &nbsp;
-                                    <span className="fee-btc">{redeemFee}</span> BTC
-                                </div>
-                                <div>{"~ $" + Number(redeemFee) * prices.bitcoin.usd}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             {/* <div className="row">
                 <div className="col-12">
                     <div className="wizard-item">
@@ -338,7 +322,7 @@ export default function EnterAmountAndAddress(): ReactElement {
                                 <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img> &nbsp;&nbsp;
                                 {calculateTotalBTC()} BTC
                                 <div className="send-price">
-                                    {"~ $" + Number(calculateTotalBTC()) * prices.bitcoin.usd}
+                                    {"~ $" + getUsdAmount(calculateTotalBTC(), prices.bitcoin.usd)}
                                 </div>
                             </div>
                         </div>
@@ -349,7 +333,7 @@ export default function EnterAmountAndAddress(): ReactElement {
                                     <img src={PolkadotLogo} width="23px" height="23px" alt="polkadot logo"></img> &nbsp;
                                     {calculateTotalDOT()} DOT
                                     <div className="send-price">
-                                        {"~ $" + Number(calculateTotalDOT()) * prices.bitcoin.usd}
+                                        {"~ $" + getUsdAmount(calculateTotalDOT(), prices.bitcoin.usd)}
                                     </div>
                                 </div>
                             </div>

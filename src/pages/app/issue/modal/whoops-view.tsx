@@ -5,7 +5,7 @@ import { IssueRequest } from "../../../../common/types/issue.types";
 import { StoreType } from "../../../../common/types/util.types";
 import BitcoinLogo from "../../../../assets/img/small-bitcoin-logo.png";
 import AppTooltip from "../../../../common/components/tooltip";
-import { copyToClipboard, safeRoundEightDecimals } from "../../../../common/utils/utils";
+import { copyToClipboard, getUsdAmount, safeRoundEightDecimals } from "../../../../common/utils/utils";
 
 type WhoopsViewProps = {
     request: IssueRequest;
@@ -28,10 +28,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
                         <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img> &nbsp;
                         {props.request.requestedAmountPolkaBTC} PolkaBTC
                         <div className="send-price">
-                            {"~ $" +
-                                parseFloat(
-                                    (Number(props.request.requestedAmountPolkaBTC) * prices.bitcoin.usd).toFixed(5)
-                                )}
+                            {"~ $" + getUsdAmount(props.request.requestedAmountPolkaBTC, prices.bitcoin.usd)}
                         </div>
                     </div>
                 </div>
@@ -43,10 +40,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
                         <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img> &nbsp;
                         {safeRoundEightDecimals(Number(props.request.btcAmountSubmittedByUser))} BTC
                         <div className="send-price">
-                            {"~ $" +
-                                parseFloat(
-                                    (Number(props.request.btcAmountSubmittedByUser) * prices.bitcoin.usd).toFixed(5)
-                                )}
+                            {"~ $" + getUsdAmount(props.request.btcAmountSubmittedByUser, prices.bitcoin.usd)}
                         </div>
                     </div>
                 </div>
@@ -56,8 +50,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
                         <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img> &nbsp;
                         {props.request.issuedAmountBtc} PolkaBTC
                         <div className="send-price">
-                            {"~ $" +
-                                parseFloat((Number(props.request.issuedAmountBtc) * prices.bitcoin.usd).toFixed(5))}
+                            {"~ $" + getUsdAmount(props.request.issuedAmountBtc, prices.bitcoin.usd)}
                         </div>
                     </div>
                 </div>
@@ -72,12 +65,12 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
                         BTC
                         <div className="send-price">
                             {"~ $" +
-                                parseFloat(
+                                getUsdAmount(
                                     (
-                                        (Number(props.request.btcAmountSubmittedByUser) -
-                                            Number(props.request.issuedAmountBtc)) *
-                                        prices.bitcoin.usd
-                                    ).toFixed(5)
+                                        Number(props.request.btcAmountSubmittedByUser) -
+                                        Number(props.request.issuedAmountBtc)
+                                    ).toString(),
+                                    prices.bitcoin.usd
                                 )}
                         </div>
                     </div>
