@@ -39,6 +39,7 @@ export default function IssueRequests(): ReactElement {
 
     const handleCompleted = (request: IssueRequest) => {
         switch (request.status) {
+            case IssueRequestStatus.RequestedRefund:
             case IssueRequestStatus.Completed: {
                 return <FaCheck></FaCheck>;
             }
@@ -86,19 +87,28 @@ export default function IssueRequests(): ReactElement {
                         <tbody>
                             {issueRequests.map((request: IssueRequest, index: number) => {
                                 return (
-                                    <tr key={index} onClick={() => requestClicked(request)}>
+                                    <tr
+                                        key={index}
+                                        onClick={() => requestClicked(request)}
+                                        className="table-row-opens-modal"
+                                    >
                                         <td>
                                             {!request.timestamp
                                                 ? t("pending")
                                                 : formatDateTimePrecise(new Date(request.timestamp))}
                                         </td>
                                         <td>
-                                            {request.amountPolkaBTC} <span className="grey-text">PolkaBTC</span>
+                                            {request.issuedAmountBtc || request.requestedAmountPolkaBTC}{" "}
+                                            <span className="grey-text">PolkaBTC</span>
                                         </td>
                                         <td>
                                             <BitcoinTransaction txId={request.btcTxId} shorten />
                                         </td>
-                                        <td>{request.btcTxId === "" ? t("not_applicable") : request.confirmations}</td>
+                                        <td>
+                                            {request.btcTxId === ""
+                                                ? t("not_applicable")
+                                                : Math.max(request.confirmations, 0)}
+                                        </td>
                                         <td>{handleCompleted(request)}</td>
                                     </tr>
                                 );
@@ -132,7 +142,7 @@ export async function execute(
         if (txId === "") {
             txId = await window.polkaBTC.btcCore.getTxIdByRecipientAddress(
                 request.vaultBTCAddress,
-                request.amountPolkaBTC
+                request.requestedAmountPolkaBTC
             );
         }
         [merkleProof, rawTx] = await Promise.all([
@@ -167,10 +177,13 @@ export async function execute(
         }
 
         const completedReq = provenReq;
-        completedReq.status = IssueRequestStatus.Completed;
 
         dispatch(
-            updateBalancePolkaBTCAction(new Big(balancePolkaBTC).add(new Big(provenReq.amountPolkaBTC)).toString())
+            updateBalancePolkaBTCAction(
+                new Big(balancePolkaBTC)
+                    .add(new Big(provenReq.issuedAmountBtc || provenReq.requestedAmountPolkaBTC))
+                    .toString()
+            )
         );
         dispatch(updateIssueRequestAction(completedReq));
 

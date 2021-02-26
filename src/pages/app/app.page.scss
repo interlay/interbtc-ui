@@ -213,6 +213,7 @@
         color: black;
         font-size: 3rem;
         font-weight: 600;
+        font-family: airbnb-cereal-medium;
     }
 }
 
@@ -224,8 +225,41 @@
     .wizzard-number {
         color: black;
         font-size: 3rem;
-        font-weight: 600;
+        font-weight: 400;
+        font-family: airbnb-cereal-medium;
     }
+}
+
+.refund-title {
+    font-size: 1.1rem;
+    color: black;
+    font-weight: 600;
+    text-align: center;
+    font-family: airbnb-cereal-bold;
+}
+
+.refund-subtitle {
+    font-family: airbnb-cereal-bold;
+    text-align: center;
+    opacity: 0.5;
+    font-size: 1rem;
+}
+
+.refund-amount {
+    font-family: airbnb-cereal-bold;
+    color: $d_orange;
+}
+
+.orange-text {
+    color: $d_orange;
+}
+
+.refund-step > * {
+    float: right;
+}
+
+.green-text {
+    color: $d_green;
 }
 
 .reimburse-title {
@@ -308,8 +342,9 @@
     font-weight: 600;
     span {
         border-radius: 5px;
-        border: 1.5px solid black;
+        border: 2.5px solid black;
         padding: 10px;
+        font-family: airbnb-cereal-bold;
     }
 }
 
@@ -747,4 +782,8 @@
 .green-text {
     color: $d_green;
     opacity: 1;
+}
+
+.table-row-opens-modal {
+    cursor: pointer;
 }

@@ -361,7 +361,16 @@
         "executed": "Executed",
         "pending": "Pending",
         "cancelled": "Cancelled",
-        "claim_polkabtc": "CLAIM POLKABTC"
+        "claim_polkabtc": "CLAIM POLKABTC",
+        "refund_whoops": "Whoops! Too many BTC deposited",
+        "refund_sent_more_btc": "Looks like you sent more BTC than requested",
+        "refund_requested": "Requested",
+        "refund_deposited": "Deposited",
+        "refund_issued": "Issued",
+        "refund_difference": "Difference",
+        "refund_requested_vault": "We have requested the vault",
+        "refund_vault_to_return": "to return",
+        "refund_vault_to_address": "back to your address"
     },
     "landing": {
         "defi_ecosystem": "Bitcoin for Polkadot's DeFi Ecosystem",
