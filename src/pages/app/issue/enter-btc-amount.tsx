@@ -96,9 +96,6 @@ export default function EnterBTCAmount() {
 
             const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountSAT);
 
-            const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSAT);
-            dispatch(updateIssueGriefingCollateralAction(planckToDOT(griefingCollateral)));
-
             dispatch(changeVaultDotAddressOnIssueAction(vaultId ? vaultId : ""));
 
             const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultId.toString());
