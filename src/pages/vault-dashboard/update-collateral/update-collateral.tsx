@@ -121,7 +121,8 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                 newCollateralAsU128
             );
             if (newCollateralization !== undefined) {
-                setNewCollaterlization(newCollateralization.toString());
+                // The vault API returns collateralization as a regular number rather than a percentage
+                setNewCollaterlization(newCollateralization.mul(100).toString());
             } else {
                 setNewCollaterlization("∞");
             }

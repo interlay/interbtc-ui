@@ -42,7 +42,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             if (txId === "") {
                 txId = await window.polkaBTC.btcCore.getTxIdByRecipientAddress(
                     request.vaultBTCAddress,
-                    request.amountPolkaBTC
+                    request.requestedAmountPolkaBTC
                 );
             }
             [merkleProof, rawTx] = await Promise.all([
@@ -86,7 +86,11 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             completedReq.status = IssueRequestStatus.Completed;
 
             dispatch(
-                updateBalancePolkaBTCAction(new Big(balancePolkaBTC).add(new Big(provenReq.amountPolkaBTC)).toString())
+                updateBalancePolkaBTCAction(
+                    new Big(balancePolkaBTC)
+                        .add(new Big(provenReq.issuedAmountBtc || provenReq.requestedAmountPolkaBTC))
+                        .toString()
+                )
             );
             dispatch(updateIssueRequestAction(completedReq));
 
@@ -100,13 +104,16 @@ export default function StatusView(props: StatusViewProps): ReactElement {
 
     return (
         <div className="status-view">
-            {props.request.status === IssueRequestStatus.Completed && (
+            {(props.request.status === IssueRequestStatus.Completed ||
+                props.request.status === IssueRequestStatus.RequestedRefund) && (
                 <React.Fragment>
                     <div className="completed-status-title">{t("completed")}</div>
                     <div className="row">
                         <div className="col text-center bold-text ">
                             {t("issue_page.you_received")}{" "}
-                            <span className="pink-amount bold-text">{props.request.amountPolkaBTC + " PolkaBTC"}</span>
+                            <span className="pink-amount bold-text">
+                                {props.request.issuedAmountBtc || props.request.requestedAmountPolkaBTC + " PolkaBTC"}
+                            </span>
                         </div>
                     </div>
                     <div className="row mt-4">
