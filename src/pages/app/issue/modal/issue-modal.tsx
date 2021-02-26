@@ -50,13 +50,18 @@ export default function IssueModal(props: IssueModalProps): ReactElement {
                         <div className="row">
                             <div className="col-6 justify-content-center">
                                 <div className="issue-amount">
-                                    <span className="wizzard-number">{request.requestedAmountPolkaBTC}</span>
+                                    <span className="wizzard-number">
+                                        {request.issuedAmountBtc || request.requestedAmountPolkaBTC}
+                                    </span>
                                     &nbsp;PolkaBTC
                                 </div>
                                 <div className="row usd-price-modal">
                                     <div className="col">
                                         {"~ $" +
-                                            calculateAmount(request.requestedAmountPolkaBTC || "0", prices.bitcoin.usd)}
+                                            calculateAmount(
+                                                request.issuedAmountBtc || request.requestedAmountPolkaBTC || "0",
+                                                prices.bitcoin.usd
+                                            )}
                                     </div>
                                 </div>
                                 <div className="step-item row">
@@ -78,7 +83,9 @@ export default function IssueModal(props: IssueModalProps): ReactElement {
                                         &nbsp;
                                         {parseFloat(
                                             new Big(request.fee)
-                                                .add(new Big(request.requestedAmountPolkaBTC))
+                                                .add(
+                                                    new Big(request.issuedAmountBtc || request.requestedAmountPolkaBTC)
+                                                )
                                                 .round(5)
                                                 .toString()
                                         )}{" "}
@@ -87,7 +94,9 @@ export default function IssueModal(props: IssueModalProps): ReactElement {
                                             {"~ $" +
                                                 parseFloat(
                                                     (
-                                                        Number(request.requestedAmountPolkaBTC) * prices.bitcoin.usd
+                                                        Number(
+                                                            request.issuedAmountBtc || request.requestedAmountPolkaBTC
+                                                        ) * prices.bitcoin.usd
                                                     ).toFixed(5)
                                                 )}
                                         </div>

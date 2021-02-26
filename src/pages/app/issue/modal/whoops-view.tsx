@@ -41,18 +41,11 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
                     </div>
                     <div className="col-6 right-text">
                         <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img> &nbsp;
-                        {safeRoundEightDecimals(
-                            Number(props.request.issuedAmountBtc) + Number(props.request.refundAmountBtc)
-                        )}{" "}
-                        BTC
+                        {safeRoundEightDecimals(Number(props.request.btcAmountSubmittedByUser))} BTC
                         <div className="send-price">
                             {"~ $" +
                                 parseFloat(
-                                    (
-                                        (Number(props.request.issuedAmountBtc) +
-                                            Number(props.request.refundAmountBtc)) *
-                                        prices.bitcoin.usd
-                                    ).toFixed(5)
+                                    (Number(props.request.btcAmountSubmittedByUser) * prices.bitcoin.usd).toFixed(5)
                                 )}
                         </div>
                     </div>
@@ -73,10 +66,19 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
                     <div className="col-6 text-left total-added-value">{t("issue_page.refund_difference")}</div>
                     <div className="col-6 right-text total-amount">
                         <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img> &nbsp;
-                        {safeRoundEightDecimals(props.request.refundAmountBtc)} BTC
+                        {safeRoundEightDecimals(
+                            Number(props.request.btcAmountSubmittedByUser) - Number(props.request.issuedAmountBtc)
+                        )}{" "}
+                        BTC
                         <div className="send-price">
                             {"~ $" +
-                                parseFloat((Number(props.request.refundAmountBtc) * prices.bitcoin.usd).toFixed(5))}
+                                parseFloat(
+                                    (
+                                        (Number(props.request.btcAmountSubmittedByUser) -
+                                            Number(props.request.issuedAmountBtc)) *
+                                        prices.bitcoin.usd
+                                    ).toFixed(5)
+                                )}
                         </div>
                     </div>
                 </div>

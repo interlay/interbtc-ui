@@ -87,7 +87,9 @@ export default function StatusView(props: StatusViewProps): ReactElement {
 
             dispatch(
                 updateBalancePolkaBTCAction(
-                    new Big(balancePolkaBTC).add(new Big(provenReq.requestedAmountPolkaBTC)).toString()
+                    new Big(balancePolkaBTC)
+                        .add(new Big(provenReq.issuedAmountBtc || provenReq.requestedAmountPolkaBTC))
+                        .toString()
                 )
             );
             dispatch(updateIssueRequestAction(completedReq));
@@ -102,14 +104,15 @@ export default function StatusView(props: StatusViewProps): ReactElement {
 
     return (
         <div className="status-view">
-            {props.request.status === IssueRequestStatus.Completed && (
+            {(props.request.status === IssueRequestStatus.Completed ||
+                props.request.status === IssueRequestStatus.RequestedRefund) && (
                 <React.Fragment>
                     <div className="completed-status-title">{t("completed")}</div>
                     <div className="row">
                         <div className="col text-center bold-text ">
                             {t("issue_page.you_received")}{" "}
                             <span className="pink-amount bold-text">
-                                {props.request.requestedAmountPolkaBTC + " PolkaBTC"}
+                                {props.request.issuedAmountBtc || props.request.requestedAmountPolkaBTC + " PolkaBTC"}
                             </span>
                         </div>
                     </div>

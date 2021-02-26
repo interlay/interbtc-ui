@@ -17,6 +17,7 @@ export interface IssueRequest {
     refundBtcAddress: string;
     refundAmountBtc: string;
     issuedAmountBtc: string;
+    btcAmountSubmittedByUser: string;
 }
 
 export enum IssueRequestStatus {

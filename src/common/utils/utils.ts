@@ -103,16 +103,17 @@ export async function parachainToUIIssueRequest(
         refundBtcAddress: "",
         refundAmountBtc: "",
         issuedAmountBtc: "",
+        btcAmountSubmittedByUser: "",
     };
 }
 
-export const statsToUIIssueRequest = (
+export const statsToUIIssueRequest = async (
     statsIssue: Issue,
     currentBTCHeight: number,
     parachainHeight: BlockNumber,
     issuePeriod: BlockNumber,
     requiredBtcConfirmations: number
-): IssueRequest => ({
+): Promise<IssueRequest> => ({
     id: statsIssue.id,
     requestedAmountPolkaBTC: new Big(statsIssue.amountBTC).sub(new Big(statsIssue.feePolkabtc)).toString(),
     timestamp: statsIssue.timestamp,
@@ -145,7 +146,10 @@ export const statsToUIIssueRequest = (
     refundAmountBtc: statsIssue.refundAmountBTC,
     issuedAmountBtc: statsIssue.executedAmountBTC
         ? new Big(statsIssue.executedAmountBTC).sub(new Big(statsIssue.feePolkabtc)).toString()
-        : "0",
+        : "",
+    btcAmountSubmittedByUser: satToBTC(
+        (await window.polkaBTC.btcCore.getUtxoAmount(statsIssue.btcTxId, statsIssue.vaultBTCAddress)).toString()
+    ),
 });
 
 /**

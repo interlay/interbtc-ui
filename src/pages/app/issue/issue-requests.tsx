@@ -98,7 +98,7 @@ export default function IssueRequests(): ReactElement {
                                                 : formatDateTimePrecise(new Date(request.timestamp))}
                                         </td>
                                         <td>
-                                            {request.requestedAmountPolkaBTC}{" "}
+                                            {request.issuedAmountBtc || request.requestedAmountPolkaBTC}{" "}
                                             <span className="grey-text">PolkaBTC</span>
                                         </td>
                                         <td>
@@ -177,11 +177,12 @@ export async function execute(
         }
 
         const completedReq = provenReq;
-        completedReq.status = IssueRequestStatus.Completed;
 
         dispatch(
             updateBalancePolkaBTCAction(
-                new Big(balancePolkaBTC).add(new Big(provenReq.requestedAmountPolkaBTC)).toString()
+                new Big(balancePolkaBTC)
+                    .add(new Big(provenReq.issuedAmountBtc || provenReq.requestedAmountPolkaBTC))
+                    .toString()
             )
         );
         dispatch(updateIssueRequestAction(completedReq));
