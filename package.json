@@ -4,7 +4,7 @@
     "private": true,
     "dependencies": {
         "@interlay/polkabtc": "^0.8.9",
-        "@interlay/polkabtc-stats": "0.1.7",
+        "@interlay/polkabtc-stats": "0.1.9",
         "@polkadot/api": "3.9.3",
         "@polkadot/extension-dapp": "0.36.1",
         "@polkadot/ui-keyring": "0.67.1",

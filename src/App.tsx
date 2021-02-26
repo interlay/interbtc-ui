@@ -35,6 +35,7 @@ import AppPage from "./pages/app/app.page";
 import DashboardPage from "./pages/dashboard/dashboard.page";
 import VaultDashboardPage from "./pages/vault-dashboard/vault-dashboard.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
+import LeaderboardPage from "./pages/leaderboard/leaderboard.page";
 import VaultsDashboard from "./pages/dashboard/vaults/vaults.dashboard.page";
 import { useSelector, useDispatch, useStore } from "react-redux";
 import { StoreType, ParachainStatus } from "./common/types/util.types";
@@ -240,6 +241,11 @@ export default function App(): ReactElement {
                         {!constants.STATIC_PAGE_ONLY && (
                             <Route path="/dashboard/vaults">
                                 <VaultsDashboard />
+                            </Route>
+                        )}
+                        {!constants.STATIC_PAGE_ONLY && (
+                            <Route path="/leaderboard">
+                                <LeaderboardPage />
                             </Route>
                         )}
                         {!constants.STATIC_PAGE_ONLY && (
