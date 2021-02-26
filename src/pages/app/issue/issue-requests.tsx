@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import { ParachainStatus } from "../../../common/types/util.types";
 import IssueModal from "./modal/issue-modal";
 import { TFunction } from "i18next";
+import { formatDateTimePrecise } from "../../../common/utils/utils";
 
 export default function IssueRequests(): ReactElement {
     const { address, extensions, stateOfBTCParachain } = useSelector((state: StoreType) => state.general);
@@ -86,7 +87,11 @@ export default function IssueRequests(): ReactElement {
                             {issueRequests.map((request: IssueRequest, index: number) => {
                                 return (
                                     <tr key={index} onClick={() => requestClicked(request)}>
-                                        <td>{request.creation === "0" ? t("issue_page.pending") : request.creation}</td>
+                                        <td>
+                                            {!request.timestamp
+                                                ? t("pending")
+                                                : formatDateTimePrecise(new Date(request.timestamp))}
+                                        </td>
                                         <td>
                                             {request.amountPolkaBTC} <span className="grey-text">PolkaBTC</span>
                                         </td>
