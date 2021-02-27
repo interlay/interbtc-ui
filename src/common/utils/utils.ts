@@ -56,10 +56,6 @@ export function getUsdAmount(amount: string, rate: number): string {
     return new Big(amount).mul(new Big(rate)).toFixed(2).toString();
 }
 
-export function calculateAmount(amount: string, rate: number): string {
-    return new Big(amount).mul(new Big(rate)).toString();
-}
-
 /**
  * Converts an IssueRequest object retrieved from the parachain
  * to a UI IssueRequest object

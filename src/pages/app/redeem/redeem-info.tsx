@@ -9,6 +9,7 @@ import {
     changeRedeemIdAction,
 } from "../../../common/actions/redeem.actions";
 import RedeemModal from "./modal/redeem-modal";
+import { getUsdAmount } from "../../../common/utils/utils";
 
 export default function RedeemInfo() {
     const { t } = useTranslation();
@@ -47,7 +48,7 @@ export default function RedeemInfo() {
                         </div>
                         <div className="row">
                             <div className="col-12 info-redeem-price">
-                                ~${Number(request.amountPolkaBTC) * prices.bitcoin.usd}
+                                ~${getUsdAmount(request.amountPolkaBTC, prices.bitcoin.usd)}
                             </div>
                         </div>
                         <div className="row">
