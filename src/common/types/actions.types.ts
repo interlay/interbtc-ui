@@ -126,18 +126,13 @@ export type GeneralActions =
 
 // REDEEM
 
-export const CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM = "CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM";
-export const CHANGE_VAULT_DOT_ADDRESS_ON_REDEEM = "CHANGE_VAULT_DOT_ADDRESS_ON_REDEEM";
 export const CHANGE_REDEEM_STEP = "CHANGE_REDEEM_STEP";
-export const CHANGE_AMOUNT_POLKA_BTC = "CHANGE_AMOUNT_POLKA_BTC";
-export const CHANGE_BTC_ADDRESS = "CHANGE_BTC_ADDRESS";
 export const CHANGE_REDEEM_ID = "CHANGE_REDEEM_ID";
 export const SET_REDEEM_REQUESTS = "SET_REDEEM_REQUESTS";
 export const RESET_REDEEM_WIZARD = "RESET_REDEEM_WIZARD";
 export const STORE_REDEEM_REQUEST = "STORE_REDEEM_REQUEST";
 export const ADD_REDEEM_REQUEST = "ADD_REDEEM_REQUEST";
 export const ADD_VAULT_REDEEMS = "ADD_VAULT_REDEEMS";
-export const UPDATE_REDEEM_FEE = "UPDATE_REDEEM_FEE";
 export const UPDATE_REDEEM_REQUEST = "UPDATE_REDEEM_REQUEST";
 export const UPDATE_ALL_REDEEM_REQUESTS = "UPDATE_ALL_REDEEM_REQUESTS";
 export const RETRY_REDEEM_REQUEST = "RETRY_REDEEM_REQUEST";
@@ -145,39 +140,14 @@ export const REDEEM_EXPIRED = "REDEEM_EXPIRED";
 export const REIMBURSE_REDEEM_REQUEST = "REIMBURSE_REDEEM_REQUEST";
 export const TOGGLE_PREMIUM_REDEEM = "TOGGLE_PREMIUM_REDEEM";
 
-export interface UpdateRedeemFee {
-    type: typeof UPDATE_REDEEM_FEE;
-    fee: string;
-}
-
 export interface TogglePremiumRedeem {
     type: typeof TOGGLE_PREMIUM_REDEEM;
     premiumRedeem: boolean;
 }
 
-export interface ChangeVaultBtcAddressOnRedeem {
-    type: typeof CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM;
-    vaultBtcAddress: string;
-}
-
-export interface ChangeVaultDotAddressOnRedeem {
-    type: typeof CHANGE_VAULT_DOT_ADDRESS_ON_REDEEM;
-    vaultDotAddress: string;
-}
-
 export interface ChangeRedeemStep {
     type: typeof CHANGE_REDEEM_STEP;
     step: string;
-}
-
-export interface ChangeAmountPolkaBtc {
-    type: typeof CHANGE_AMOUNT_POLKA_BTC;
-    amount: string;
-}
-
-export interface ChangeBtcAddress {
-    type: typeof CHANGE_BTC_ADDRESS;
-    btcAddress: string;
 }
 
 export interface ChangeRedeemId {
@@ -237,10 +207,6 @@ export interface ReimburseRedeemRequest {
 
 export type RedeemActions =
     | ChangeRedeemStep
-    | ChangeAmountPolkaBtc
-    | ChangeBtcAddress
-    | ChangeVaultBtcAddressOnRedeem
-    | ChangeVaultDotAddressOnRedeem
     | ChangeRedeemId
     | ResetRedeemWizard
     | SetRedeemRequests
@@ -253,24 +219,17 @@ export type RedeemActions =
     | UpdateAllRedeemRequests
     | RetryRedeemRequest
     | RedeemExpired
-    | UpdateRedeemFee
     | ReimburseRedeemRequest
     | TogglePremiumRedeem;
 
 // ISSUE
 
-export const CHANGE_VAULT_BTC_ADDRESS_ON_ISSUE = "CHANGE_VAULT_BTC_ADDRESS_ON_ISSUE";
-export const CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE = "CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE";
 export const CHANGE_ISSUE_STEP = "CHANGE_ISSUE_STEP";
-export const CHANGE_AMOUNT_BTC = "CHANGE_AMOUNT_BTC";
-export const UPDATE_ISSUE_GRIEFING_COLLATERAL = "UPDATE_ISSUE_GRIEFING_COLLATERAL";
 export const CHANGE_ISSUE_ID = "CHANGE_ISSUE_ID";
 export const RESET_ISSUE_WIZARD = "RESET_ISSUE_WIZARD";
 export const STORE_ISSUE_REQUEST = "STORE_ISSUE_REQUEST";
-export const CHANGE_BTC_TX_ID = "CHANGE_BTC_TX_ID";
 export const ADD_ISSUE_REQUEST = "ADD_ISSUE_REQUEST";
 export const UPDATE_ISSUE_REQUEST = "UPDATE_ISSUE_REQUEST";
-export const OPEN_WIZARD_IN_EDIT_MODE = "OPEN_WIZARD_IN_EDIT_MODE";
 export const ADD_VAULT_ISSUES = "ADD_VAULT_ISSUES";
 export const UPDATE_ALL_ISSUE_REQUESTS = "UPDATE_ALL_ISSUE_REQUESTS";
 export const CHANGE_SELECTED_ISSUE = "CHANGE_SELECTED_ISSUE";
@@ -285,39 +244,14 @@ export interface AddVaultIssues {
     vaultIssues: VaultIssue[];
 }
 
-export interface ChangeVaultBtcAddressOnIssue {
-    type: typeof CHANGE_VAULT_BTC_ADDRESS_ON_ISSUE;
-    vaultBtcAddress: string;
-}
-
-export interface ChangeVaultDotAddressOnIssue {
-    type: typeof CHANGE_VAULT_DOT_ADDRESS_ON_ISSUE;
-    vaultDotAddress: string;
-}
-
 export interface ChangeIssueStep {
     type: typeof CHANGE_ISSUE_STEP;
     step: string;
 }
 
-export interface ChangeAmountBtc {
-    type: typeof CHANGE_AMOUNT_BTC;
-    amount: string;
-}
-
-export interface UpdateIssueGriefingCollateral {
-    type: typeof UPDATE_ISSUE_GRIEFING_COLLATERAL;
-    griefingCollateral: string;
-}
-
 export interface ChangeIssueId {
     type: typeof CHANGE_ISSUE_ID;
     id: string;
-}
-
-export interface ChangeBtcTxId {
-    type: typeof CHANGE_BTC_TX_ID;
-    btcTxId: string;
 }
 
 export interface ResetIssueWizard {
@@ -339,10 +273,6 @@ export interface UpdateIssueRequest {
     request: IssueRequest;
 }
 
-export interface OpenWizardInEditMode {
-    type: typeof OPEN_WIZARD_IN_EDIT_MODE;
-}
-
 export interface UpdateAllIssueRequests {
     type: typeof UPDATE_ALL_ISSUE_REQUESTS;
     userDotAddress: string;
@@ -351,17 +281,11 @@ export interface UpdateAllIssueRequests {
 
 export type IssueActions =
     | ChangeIssueStep
-    | ChangeAmountBtc
-    | UpdateIssueGriefingCollateral
-    | ChangeVaultBtcAddressOnIssue
-    | ChangeVaultDotAddressOnIssue
     | ChangeIssueId
-    | ChangeBtcTxId
     | ResetIssueWizard
     | StoreIssueRequest
     | AddIssueRequest
     | UpdateIssueRequest
-    | OpenWizardInEditMode
     | ChangeAddress
     | InitState
     | AddVaultIssues

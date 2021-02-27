@@ -1,11 +1,6 @@
 import {
-    UPDATE_REDEEM_FEE,
-    CHANGE_AMOUNT_POLKA_BTC,
     CHANGE_REDEEM_STEP,
-    CHANGE_BTC_ADDRESS,
     RESET_REDEEM_WIZARD,
-    CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM,
-    CHANGE_VAULT_DOT_ADDRESS_ON_REDEEM,
     CHANGE_REDEEM_ID,
     ADD_VAULT_REDEEMS,
     SET_REDEEM_REQUESTS,
@@ -17,14 +12,9 @@ import {
     REIMBURSE_REDEEM_REQUEST,
     TOGGLE_PREMIUM_REDEEM,
     TogglePremiumRedeem,
-    UpdateRedeemFee,
     UpdateAllRedeemRequests,
     ChangeRedeemStep,
-    ChangeAmountPolkaBtc,
-    ChangeBtcAddress,
     ResetRedeemWizard,
-    ChangeVaultBtcAddressOnRedeem,
-    ChangeVaultDotAddressOnRedeem,
     ChangeRedeemId,
     SetRedeemRequests,
     AddRedeemRequest,
@@ -41,16 +31,6 @@ export const changeRedeemStepAction = (step: string): ChangeRedeemStep => ({
     step,
 });
 
-export const changeAmountPolkaBTCAction = (amount: string): ChangeAmountPolkaBtc => ({
-    type: CHANGE_AMOUNT_POLKA_BTC,
-    amount,
-});
-
-export const changeBTCAddressAction = (btcAddress: string): ChangeBtcAddress => ({
-    type: CHANGE_BTC_ADDRESS,
-    btcAddress,
-});
-
 export const setRedeemRequestsAction = (requests: RedeemRequest[]): SetRedeemRequests => ({
     type: SET_REDEEM_REQUESTS,
     requests,
@@ -58,16 +38,6 @@ export const setRedeemRequestsAction = (requests: RedeemRequest[]): SetRedeemReq
 
 export const resetRedeemWizardAction = (): ResetRedeemWizard => ({
     type: RESET_REDEEM_WIZARD,
-});
-
-export const changeVaultBtcAddressOnRedeemAction = (vaultBtcAddress: string): ChangeVaultBtcAddressOnRedeem => ({
-    type: CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM,
-    vaultBtcAddress,
-});
-
-export const changeVaultDotAddressOnRedeemAction = (vaultDotAddress: string): ChangeVaultDotAddressOnRedeem => ({
-    type: CHANGE_VAULT_DOT_ADDRESS_ON_REDEEM,
-    vaultDotAddress,
 });
 
 export const changeRedeemIdAction = (id: string): ChangeRedeemId => ({
@@ -112,11 +82,6 @@ export const retryRedeemRequestAction = (id: string): RetryRedeemRequest => ({
 export const reimburseRedeemRequestAction = (id: string): ReimburseRedeemRequest => ({
     type: REIMBURSE_REDEEM_REQUEST,
     id,
-});
-
-export const updateRedeemFeeAction = (fee: string): UpdateRedeemFee => ({
-    type: UPDATE_REDEEM_FEE,
-    fee,
 });
 
 export const togglePremiumRedeemAction = (premiumRedeem: boolean): TogglePremiumRedeem => ({

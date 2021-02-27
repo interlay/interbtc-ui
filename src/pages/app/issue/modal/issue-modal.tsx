@@ -18,10 +18,10 @@ type IssueModalProps = {
 
 export default function IssueModal(props: IssueModalProps): ReactElement {
     const { prices } = useSelector((state: StoreType) => state.general);
-    const { selectedRequest, issueRequests, address } = useSelector((state: StoreType) => state.issue);
+    const { id, issueRequests, address } = useSelector((state: StoreType) => state.issue);
     const { t } = useTranslation();
-    const allRequests = issueRequests.get(address) || [];
-    const request = allRequests.filter((req) => req.id === (selectedRequest ? selectedRequest.id : ""))[0];
+    const userIssueRequests = issueRequests.get(address) || [];
+    const request = userIssueRequests.filter((req) => req.id === id)[0];
 
     const handleModalStatusPanel = (request: IssueRequest) => {
         switch (request.status) {

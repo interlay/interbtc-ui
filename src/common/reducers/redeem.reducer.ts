@@ -1,10 +1,6 @@
 import {
     CHANGE_REDEEM_STEP,
-    CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM,
-    CHANGE_VAULT_DOT_ADDRESS_ON_REDEEM,
     RESET_REDEEM_WIZARD,
-    CHANGE_AMOUNT_POLKA_BTC,
-    CHANGE_BTC_ADDRESS,
     CHANGE_REDEEM_ID,
     CHANGE_ADDRESS,
     RETRY_REDEEM_REQUEST,
@@ -16,19 +12,13 @@ import {
     UPDATE_REDEEM_REQUEST,
     UPDATE_ALL_REDEEM_REQUESTS,
     ADD_VAULT_REDEEMS,
-    UPDATE_REDEEM_FEE,
     TOGGLE_PREMIUM_REDEEM,
 } from "../types/actions.types";
 import { RedeemRequestStatus, RedeemState } from "../types/redeem.types";
 
 const initialState = {
     address: "",
-    fee: "0",
     step: "AMOUNT_AND_ADDRESS",
-    amountPolkaBTC: "",
-    btcAddress: "",
-    vaultBtcAddress: "",
-    vaultDotAddress: "",
     id: "",
     redeemRequests: new Map(),
     vaultRedeems: [],
@@ -43,18 +33,8 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
             return { ...state, address: action.address };
         case CHANGE_REDEEM_STEP:
             return { ...state, step: action.step };
-        case CHANGE_AMOUNT_POLKA_BTC:
-            return { ...state, amountPolkaBTC: action.amount };
-        case CHANGE_BTC_ADDRESS:
-            return { ...state, btcAddress: action.btcAddress };
-        case CHANGE_VAULT_BTC_ADDRESS_ON_REDEEM:
-            return { ...state, vaultBtcAddress: action.vaultBtcAddress };
-        case CHANGE_VAULT_DOT_ADDRESS_ON_REDEEM:
-            return { ...state, vaultDotAddress: action.vaultDotAddress };
         case CHANGE_REDEEM_ID:
             return { ...state, id: action.id };
-        case UPDATE_REDEEM_FEE:
-            return { ...state, fee: action.fee };
         case RESET_REDEEM_WIZARD:
             return { ...initialState, address: state.address, redeemRequests: state.redeemRequests };
         case ADD_REDEEM_REQUEST:
@@ -121,8 +101,6 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
         case INIT_STATE:
             return {
                 ...state,
-                fee: "0",
-                amountPolkaBTC: "",
                 step: "AMOUNT_AND_ADDRESS",
                 redeemRequests: new Map(),
             };
