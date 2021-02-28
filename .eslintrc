@@ -1,194 +1,195 @@
 {
-    "env": {
-        "browser": true,
-        "es2020": true
-        // ray test touch <
-        // "jest": true,
-        // "node": true
-        // ray test touch >
-    },
-    "extends": [
-        "eslint:recommended",
-        // ray test touch <
-        "react-app",
-        "react-app/jest",
-        "google"
-        // "plugin:@typescript-eslint/recommended",
-        // "plugin:prettier/recommended",
-        // "prettier"
-        // ray test touch >
-    ],
+  "env": {
+    "browser": true,
+    "es2020": true
     // ray test touch <
-    // "parser": "@typescript-eslint/parser",
+    // "jest": true,
+    // "node": true
     // ray test touch >
-    "parserOptions": {
-        "ecmaVersion": 11,
-        // ray test touch <
-        "sourceType": "module",
-        "parser": "babel-eslint",
-        // ray test touch >
-        "ecmaFeatures": {
-            "jsx": true
-        }
-    },
-    "plugins": [
-        // ray test touch <
-        "react",
-        "import"
-        // "@typescript-eslint",
-        // "prettier"
-        // ray test touch >
-    ],
-    "rules": {
-        // ray test touch <
-        // ESLinting rules
-        "comma-dangle": [
-            "error",
-            "never"
-        ],
-        "no-console": "warn",
-        "indent": [
-            "error",
-            2
-        ],
-        "quote-props": [
-            "error",
-            "as-needed"
-        ],
-        "capitalized-comments": "off",
-        "max-len": [
-            "warn",
-            {
-                "code": 130
-            } // 130 on GitHub, 80 on npmjs.org for README.md code blocks
-        ],
-        "arrow-parens": [
-            "error",
-            "as-needed"
-        ],
-        "space-before-function-paren": [
-            "error",
-            {
-                "anonymous": "always",
-                "named": "never"
-            }
-        ],
-        "no-negated-condition": "error",
-        "spaced-comment": [
-            "error",
-            "always",
-            {
-                "exceptions": ["/"]
-            }
-        ],
-        "no-dupe-keys": "error",
-        "eqeqeq": "error",
-        "arrow-spacing": [
-            "error",
-            {
-                "before": true,
-                "after": true
-            }
-        ],
-        "no-multiple-empty-lines": [
-            "error",
-            {
-                "max": 1,
-                "maxEOF": 1,
-                "maxBOF": 1
-            }
-        ],
-        "space-infix-ops": [
-            "error",
-            {
-                "int32Hint": false
-            }
-        ],
-        "space-unary-ops": [
-            "error",
-            {
-                "words": true,
-                "nonwords": false
-            }
-        ],
-        "object-curly-spacing": [
-            "error",
-            "always"
-        ],
-        "space-in-parens": [
-            "error",
-            "never"
-        ],
-
-        // React ESLinting rules
-        "react/prop-types": "off",
-        "react/jsx-first-prop-new-line": [
-            "error",
-            "multiline"
-        ],
-        "react/jsx-max-props-per-line": [
-            "error",
-            {
-                "maximum": 1,
-                "when": "always"
-            }
-        ],
-        "react/jsx-closing-tag-location": "error",
-        "react/jsx-curly-brace-presence": [
-            "error",
-            {
-                "props": "never",
-                "children": "never"
-            }
-        ],
-        "react/jsx-curly-spacing": [
-            "error",
-            {
-                "when": "never",
-                "children": true
-            }
-        ],
-        "react/jsx-tag-spacing": [
-            "error",
-            {
-                "closingSlash": "never",
-                "beforeSelfClosing": "always",
-                "afterOpening": "never",
-                "beforeClosing": "never"
-            }
-        ],
-        "jsx-quotes": [
-            "error",
-            "prefer-single"
-        ],
-        "react/jsx-closing-bracket-location": [
-            "error",
-            {
-                "selfClosing": "after-props",
-                "nonEmpty": "after-props"
-            }
-        ],
-        "react/jsx-props-no-multi-spaces": "error",
-        "import/exports-last": "error"
-        // "semi": ["error", "always"],
-        // "jsx-quotes": ["off"],
-        // "no-case-declarations": ["off"],
-        // "quotes": [
-        //     "error",
-        //     "double",
-        //     {
-        //         "avoidEscape": true
-        //     }
-        // ],
-        // "react/no-unescaped-entities": 0,
-        // "max-len": [
-        //     "error",
-        //     {
-        //         "code": 120
-        //     }
-        // ],
-        // "no-eval": "error",
-        // "prettier/prettier": 2
-        // ray test touch >
+  },
+  "extends": [
+    "eslint:recommended",
+    // ray test touch <
+    "react-app",
+    "react-app/jest",
+    "google"
+    // "plugin:@typescript-eslint/recommended",
+    // "plugin:prettier/recommended",
+    // "prettier"
+    // ray test touch >
+  ],
+  // ray test touch <
+  // "parser": "@typescript-eslint/parser",
+  // ray test touch >
+  "parserOptions": {
+    "ecmaVersion": 11,
+    // ray test touch <
+    "sourceType": "module",
+    "parser": "babel-eslint",
+    // ray test touch >
+    "ecmaFeatures": {
+      "jsx": true
     }
+  },
+  "plugins": [
+    // ray test touch <
+    "react",
+    "import"
+    // "@typescript-eslint",
+    // "prettier"
+    // ray test touch >
+  ],
+  "rules": {
+    // ray test touch <
+    // ESLinting rules
+    "comma-dangle": [
+      "error",
+      "never"
+    ],
+    "no-console": "warn",
+    "indent": [
+      "error",
+      2
+    ],
+    "quote-props": [
+      "error",
+      "as-needed"
+    ],
+    "capitalized-comments": "off",
+    "max-len": [
+      "warn",
+      {
+        "code": 130
+      } // 130 on GitHub, 80 on npmjs.org for README.md code blocks
+    ],
+    "arrow-parens": [
+      "error",
+      "as-needed"
+    ],
+    "space-before-function-paren": [
+      "error",
+      {
+        "anonymous": "always",
+        "named": "never"
+      }
+    ],
+    "no-negated-condition": "error",
+    "spaced-comment": [
+      "error",
+      "always",
+      {
+        "exceptions": ["/"]
+      }
+    ],
+    "no-dupe-keys": "error",
+    "eqeqeq": "error",
+    "arrow-spacing": [
+      "error",
+      {
+        "before": true,
+        "after": true
+      }
+    ],
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1,
+        "maxEOF": 1,
+        "maxBOF": 1
+      }
+    ],
+    "space-infix-ops": [
+      "error",
+      {
+        "int32Hint": false
+      }
+    ],
+    "space-unary-ops": [
+      "error",
+      {
+        "words": true,
+        "nonwords": false
+      }
+    ],
+    "object-curly-spacing": [
+      "error",
+      "always"
+    ],
+    "space-in-parens": [
+      "error",
+      "never"
+    ],
+
+    // React ESLinting rules
+    "react/prop-types": "off",
+    "react/jsx-first-prop-new-line": [
+      "error",
+      "multiline"
+    ],
+    "react/jsx-max-props-per-line": [
+      "error",
+      {
+        "maximum": 1,
+        "when": "always"
+      }
+    ],
+    "react/jsx-closing-tag-location": "error",
+    "react/jsx-curly-brace-presence": [
+      "error",
+      {
+        "props": "never",
+        "children": "never"
+      }
+    ],
+    "react/jsx-curly-spacing": [
+      "error",
+      {
+        "when": "never",
+        "children": true
+      }
+    ],
+    "react/jsx-tag-spacing": [
+      "error",
+      {
+        "closingSlash": "never",
+        "beforeSelfClosing": "always",
+        "afterOpening": "never",
+        "beforeClosing": "never"
+      }
+    ],
+    "jsx-quotes": [
+      "error",
+      "prefer-single"
+    ],
+    "react/jsx-closing-bracket-location": [
+      "error",
+      {
+        "selfClosing": "after-props",
+        "nonEmpty": "after-props"
+      }
+    ],
+    "react/jsx-props-no-multi-spaces": "error",
+    "import/exports-last": "error",
+    "require-jsdoc": 0 // TODO: off for now but later should be on
+    // "semi": ["error", "always"],
+    // "jsx-quotes": ["off"],
+    // "no-case-declarations": ["off"],
+    // "quotes": [
+    //     "error",
+    //     "double",
+    //     {
+    //         "avoidEscape": true
+    //     }
+    // ],
+    // "react/no-unescaped-entities": 0,
+    // "max-len": [
+    //     "error",
+    //     {
+    //         "code": 120
+    //     }
+    // ],
+    // "no-eval": "error",
+    // "prettier/prettier": 2
+    // ray test touch >
+  }
 }

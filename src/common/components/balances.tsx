@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement } from 'react';
 
 type BalancesProps = {
     balancePolkaBTC?: string;
@@ -6,20 +6,20 @@ type BalancesProps = {
 };
 
 export default function Balances(props: BalancesProps): ReactElement {
-    return (
-        <div>
-            <span className="btc-balance-wrapper">
-                <span className="">
-                    <b>{props.balancePolkaBTC || "0"}</b>
-                </span>{" "}
+  return (
+    <div>
+      <span className='btc-balance-wrapper'>
+        <span className=''>
+          <b>{props.balancePolkaBTC || '0'}</b>
+        </span>{' '}
                 PolkaBTC
-            </span>
-            <span className="dot-balance-wrapper">
-                <span className="">
-                    <b>{props.balanceDOT || "0"}</b>
-                </span>{" "}
+      </span>
+      <span className='dot-balance-wrapper'>
+        <span className=''>
+          <b>{props.balanceDOT || '0'}</b>
+        </span>{' '}
                 DOT
-            </span>
-        </div>
-    );
+      </span>
+    </div>
+  );
 }
