@@ -7,13 +7,17 @@ import * as constants from "../../../constants";
 import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 import BN from "bn.js";
 
-import { changeIssueStepAction, changeIssueIdAction } from "../../../common/actions/issue.actions";
+import {
+    changeIssueStepAction,
+    changeIssueIdAction,
+    addIssueRequestAction,
+} from "../../../common/actions/issue.actions";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat, satToBTC, planckToDOT, stripHexPrefix } from "@interlay/polkabtc";
 import { useTranslation } from "react-i18next";
-import { getUsdAmount } from "../../../common/utils/utils";
+import { getUsdAmount, parachainToUIIssueRequest } from "../../../common/utils/utils";
 
 type EnterBTCForm = {
     amountBTC: string;
@@ -23,7 +27,7 @@ export default function EnterBTCAmount() {
     const { polkaBtcLoaded, address, bitcoinHeight, btcRelayHeight, prices } = useSelector(
         (state: StoreType) => state.general
     );
-    const [amountBTC, setAmountBTC] = useState("0");
+    const [amountBTC, setAmountBTC] = useState("");
     const defaultValues = amountBTC ? { defaultValues: { amountBTC: amountBTC } } : undefined;
     const { register, handleSubmit, errors, getValues } = useForm<EnterBTCForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
@@ -91,9 +95,12 @@ export default function EnterBTCAmount() {
             }
             // get the issue id from the request issue event
             const id = stripHexPrefix(requestResult.id.toString());
+            dispatch(changeIssueIdAction(id));
+
+            const issueRequest = await parachainToUIIssueRequest(requestResult.id);
 
             // update the issue status
-            dispatch(changeIssueIdAction(id));
+            dispatch(addIssueRequestAction(issueRequest));
             dispatch(changeIssueStepAction("BTC_PAYMENT"));
         } catch (error) {
             toast.error(error.toString());

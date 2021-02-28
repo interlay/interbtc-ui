@@ -66,13 +66,13 @@ export function getUsdAmount(amount: string, rate: number): string {
  * @param issuePeriod issuePeriod data (queried from the parachain)
  * @param requiredBtcConfirmations requiredBtcConfirmations data (queried from the parachain)
  */
-export async function parachainToUIIssueRequest(
-    id: H256,
-    parachainIssueRequest: ParachainIssueRequest,
-    parachainHeight: BlockNumber,
-    issuePeriod: BlockNumber,
-    requiredBtcConfirmations: number
-): Promise<IssueRequest> {
+export async function parachainToUIIssueRequest(id: H256): Promise<IssueRequest> {
+    const [parachainIssueRequest, parachainHeight, issuePeriod, requiredBtcConfirmations] = await Promise.all([
+        window.polkaBTC.issue.getRequestById(id),
+        window.polkaBTC.system.getCurrentBlockNumber(),
+        window.polkaBTC.issue.getIssuePeriod(),
+        window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
+    ]);
     const amountBTC = satToBTC(parachainIssueRequest.amount.toString());
     const fee = satToBTC(parachainIssueRequest.fee.toString());
     const status = computeIssueRequestStatus(
@@ -206,13 +206,13 @@ export function computeIssueRequestStatus(
  * @param requiredBtcConfirmations requiredBtcConfirmations data (queried from the parachain)
 
  */
-export async function parachainToUIRedeemRequest(
-    id: H256,
-    parachainRedeemRequest: ParachainRedeemRequest,
-    parachainHeight: BlockNumber,
-    redeemPeriod: BlockNumber,
-    requiredBtcConfirmations: number
-): Promise<RedeemRequest> {
+export async function parachainToUIRedeemRequest(id: H256): Promise<RedeemRequest> {
+    const [parachainRedeemRequest, parachainHeight, redeemPeriod, requiredBtcConfirmations] = await Promise.all([
+        window.polkaBTC.redeem.getRequestById(id),
+        window.polkaBTC.system.getCurrentBlockNumber(),
+        window.polkaBTC.redeem.getRedeemPeriod(),
+        window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
+    ]);
     const amountPolkaBTC = satToBTC(parachainRedeemRequest.amount_polka_btc.toString());
     const fee = satToBTC(parachainRedeemRequest.fee.toString());
     const status = computeRedeemRequestStatus(

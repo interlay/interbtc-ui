@@ -14,7 +14,7 @@ import { formatDateTimePrecise } from "../../../common/utils/utils";
 
 export default function IssueRequests(): ReactElement {
     const { address, extensions } = useSelector((state: StoreType) => state.general);
-    const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address);
+    const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address) || [];
     const [showModal, setShowModal] = useState(false);
     const dispatch = useDispatch();
     const { t } = useTranslation();

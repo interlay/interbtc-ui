@@ -2,6 +2,7 @@ import {
     CHANGE_ISSUE_STEP,
     RESET_ISSUE_WIZARD,
     CHANGE_ISSUE_ID,
+    CHANGE_ADDRESS,
     ADD_ISSUE_REQUEST,
     UPDATE_ISSUE_REQUEST,
     IssueActions,
@@ -21,6 +22,8 @@ const initialState = {
 
 export const issueReducer = (state: IssueState = initialState, action: IssueActions): IssueState => {
     switch (action.type) {
+        case CHANGE_ADDRESS:
+            return { ...state, address: action.address };
         case CHANGE_ISSUE_STEP:
             return { ...state, step: action.step };
         case CHANGE_ISSUE_ID:

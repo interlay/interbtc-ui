@@ -5,6 +5,7 @@ import {
     changeRedeemStepAction,
     changeRedeemIdAction,
     togglePremiumRedeemAction,
+    addRedeemRequestAction,
 } from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
@@ -16,7 +17,7 @@ import BitcoinLogo from "../../../assets/img/small-bitcoin-logo.png";
 import PolkadotLogo from "../../../assets/img/small-polkadot-logo.png";
 import Big from "big.js";
 import { updateBalancePolkaBTCAction } from "../../../common/actions/general.actions";
-import { getUsdAmount } from "../../../common/utils/utils";
+import { getUsdAmount, parachainToUIRedeemRequest } from "../../../common/utils/utils";
 import { PolkaBTC } from "@interlay/polkabtc/build/interfaces";
 import { AccountId } from "@polkadot/types/interfaces/runtime";
 import * as constants from "../../../constants";
@@ -39,7 +40,7 @@ export default function EnterAmountAndAddress(): ReactElement {
         (state: StoreType) => state.general
     );
     // general redeem
-    const [amountPolkaBTC, setAmountPolkaBTC] = useState("0");
+    const [amountPolkaBTC, setAmountPolkaBTC] = useState("");
     const premiumRedeem = useSelector((state: StoreType) => state.redeem.premiumRedeem);
     const defaultValues = amountPolkaBTC
         ? { defaultValues: { amountPolkaBTC: amountPolkaBTC, btcAddress: "" } }
@@ -137,10 +138,13 @@ export default function EnterAmountAndAddress(): ReactElement {
 
             // get the redeem id from the request redeem event
             const id = stripHexPrefix(requestResult.id.toString());
+            dispatch(changeRedeemIdAction(id));
+
+            const redeemRequest = await parachainToUIRedeemRequest(requestResult.id);
 
             // update the redeem status
-            dispatch(changeRedeemIdAction(id));
             dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(amountPolkaBTC)).toString()));
+            dispatch(addRedeemRequestAction(redeemRequest));
             dispatch(changeRedeemStepAction("REDEEM_INFO"));
         } catch (error) {
             toast.error(error.toString());
