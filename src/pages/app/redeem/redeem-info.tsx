@@ -15,7 +15,7 @@ export default function RedeemInfo() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const { address, prices } = useSelector((state: StoreType) => state.general);
-    const { id, btcAddress } = useSelector((state: StoreType) => state.redeem);
+    const { id } = useSelector((state: StoreType) => state.redeem);
     const requests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address) || [];
     const [showModal, setShowModal] = useState(false);
     const request = requests.filter((request) => request.id === id)[0];
@@ -58,7 +58,7 @@ export default function RedeemInfo() {
                         </div>
                         <div className="row ">
                             <div className="col payment-address">
-                                <span className="copy-address">{btcAddress}</span>
+                                <span className="copy-address">{request.btcAddress}</span>
                             </div>
                         </div>
                         <div className="row">

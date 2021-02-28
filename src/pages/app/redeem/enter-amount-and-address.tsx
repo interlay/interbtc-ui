@@ -3,13 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import {
     changeRedeemStepAction,
-    changeAmountPolkaBTCAction,
-    changeVaultBtcAddressOnRedeemAction,
-    changeVaultDotAddressOnRedeemAction,
-    updateRedeemFeeAction,
-    changeBTCAddressAction,
     changeRedeemIdAction,
     togglePremiumRedeemAction,
+    addRedeemRequestAction,
 } from "../../../common/actions/redeem.actions";
 import { toast } from "react-toastify";
 import { StoreType } from "../../../common/types/util.types";
@@ -21,7 +17,7 @@ import BitcoinLogo from "../../../assets/img/small-bitcoin-logo.png";
 import PolkadotLogo from "../../../assets/img/small-polkadot-logo.png";
 import Big from "big.js";
 import { updateBalancePolkaBTCAction } from "../../../common/actions/general.actions";
-import { getUsdAmount } from "../../../common/utils/utils";
+import { getUsdAmount, parachainToUIRedeemRequest } from "../../../common/utils/utils";
 import { PolkaBTC } from "@interlay/polkabtc/build/interfaces";
 import { AccountId } from "@polkadot/types/interfaces/runtime";
 import * as constants from "../../../constants";
@@ -38,19 +34,24 @@ type PremiumRedeemVault = Map<AccountId, PolkaBTC>;
 
 export default function EnterAmountAndAddress(): ReactElement {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
     const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
     const { balancePolkaBTC, polkaBtcLoaded, address, bitcoinHeight, btcRelayHeight, prices } = useSelector(
         (state: StoreType) => state.general
     );
-    const amount = useSelector((state: StoreType) => state.redeem.amountPolkaBTC);
+    // general redeem
+    const [amountPolkaBTC, setAmountPolkaBTC] = useState("");
     const premiumRedeem = useSelector((state: StoreType) => state.redeem.premiumRedeem);
-    const defaultValues = amount ? { defaultValues: { amountPolkaBTC: amount, btcAddress: "" } } : undefined;
+    const defaultValues = amountPolkaBTC
+        ? { defaultValues: { amountPolkaBTC: amountPolkaBTC, btcAddress: "" } }
+        : undefined;
     const { register, handleSubmit, errors, getValues } = useForm<AmountAndAddressForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
     const [dustValue, setDustValue] = useState("0");
-    const dispatch = useDispatch();
     const [usdAmount, setUsdAmount] = useState("");
     const [redeemFee, setRedeemFee] = useState("0");
+
+    // premium redeem
     const [btcToDotRate, setBtcToDotRate] = useState(new Big(0));
     const [maxPremiumRedeem, setMaxPremiumRedeem] = useState(new Big(0));
     const [premiumRedeemVaults, setPremiumRedeemVaults] = useState(new Map() as PremiumRedeemVault);
@@ -83,9 +84,9 @@ export default function EnterAmountAndAddress(): ReactElement {
                 console.log(e);
             }
         };
-        setUsdAmount(getUsdAmount(amount || getValues("amountPolkaBTC") || "0", usdPrice));
+        setUsdAmount(getUsdAmount(amountPolkaBTC || getValues("amountPolkaBTC") || "0", usdPrice));
         fetchData();
-    }, [polkaBtcLoaded, getValues, usdPrice, amount]);
+    }, [polkaBtcLoaded, getValues, usdPrice, amountPolkaBTC]);
 
     const onSubmit = handleSubmit(async ({ amountPolkaBTC, btcAddress }) => {
         if (!polkaBtcLoaded) return;
@@ -108,13 +109,13 @@ export default function EnterAmountAndAddress(): ReactElement {
             if (amountPolkaBTCInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
                 throw new Error("Input value is too high");
             }
-            dispatch(changeAmountPolkaBTCAction(amountPolkaBTC));
             const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
 
             // differentiate between premium and regular redeem
             let vaultId;
             if (!premiumRedeem) {
                 // select a random vault
+                // TODO: use a list of vaults directly from the parachain
                 vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountAsSatoshi);
             } else {
                 // select a vault from the premium redeem vault list
@@ -131,26 +132,19 @@ export default function EnterAmountAndAddress(): ReactElement {
                     );
                 }
             }
-            // get the vault's data
-            const vault = await window.polkaBTC.vaults.get(vaultId);
-            const vaultBTCAddress = vault.wallet.addresses[0];
-            const fee = await window.polkaBTC.redeem.getFeesToPay(amountPolkaBTC);
-            dispatch(updateRedeemFeeAction(fee));
-
-            dispatch(changeVaultBtcAddressOnRedeemAction(vaultBTCAddress));
-            dispatch(changeVaultDotAddressOnRedeemAction(vaultId.toString()));
-            dispatch(changeBTCAddressAction(btcAddress));
-
             const amount = window.polkaBTC.api.createType("Balance", amountPolkaSAT);
             const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultId.toString());
             const requestResult = await window.polkaBTC.redeem.request(amount, btcAddress, vaultAccountId);
 
             // get the redeem id from the request redeem event
             const id = stripHexPrefix(requestResult.id.toString());
+            dispatch(changeRedeemIdAction(id));
+
+            const redeemRequest = await parachainToUIRedeemRequest(requestResult.id);
 
             // update the redeem status
-            dispatch(changeRedeemIdAction(id));
             dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(amountPolkaBTC)).toString()));
+            dispatch(addRedeemRequestAction(redeemRequest));
             dispatch(changeRedeemStepAction("REDEEM_INFO"));
         } catch (error) {
             toast.error(error.toString());
@@ -172,6 +166,7 @@ export default function EnterAmountAndAddress(): ReactElement {
 
     const onAmountChange = async () => {
         const amount = getValues("amountPolkaBTC") || "0";
+        setAmountPolkaBTC(amount);
         setUsdAmount(getUsdAmount(amount, usdPrice));
         const fee = await window.polkaBTC.redeem.getFeesToPay(amount);
         setRedeemFee(fee);

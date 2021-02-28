@@ -17,8 +17,8 @@ type RedeemModalProps = {
 export default function RedeemModal(props: RedeemModalProps): ReactElement {
     const { address, prices } = useSelector((state: StoreType) => state.general);
     const selectedIdRequest = useSelector((state: StoreType) => state.redeem.id);
-    const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address) || [];
-    const request = redeemRequests.filter((request) => request.id === selectedIdRequest)[0];
+    const userRedeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address) || [];
+    const request = userRedeemRequests.filter((request) => request.id === selectedIdRequest)[0];
     const { t } = useTranslation();
 
     return (
