@@ -16,9 +16,9 @@ const blueAccent = getAccents('d_blue');
  * Helper component to display a blue link with icon.
  **/
 type StyledLinkDataProps = {
-    data: string;
-    target?: string;
-    newTab?: boolean;
+  data: string;
+  target?: string;
+  newTab?: boolean;
 };
 
 // TODO: should follow external link security best practices

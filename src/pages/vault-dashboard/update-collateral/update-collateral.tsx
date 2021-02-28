@@ -11,12 +11,12 @@ import ButtonMaybePending from '../../../common/components/pending-button';
 import { useTranslation } from 'react-i18next';
 
 type UpdateCollateralForm = {
-    collateral: string;
+  collateral: string;
 };
 
 type UpdateCollateralProps = {
-    onClose: () => void;
-    show: boolean;
+  onClose: () => void;
+  show: boolean;
 };
 
 export default function UpdateCollateralModal(props: UpdateCollateralProps) {

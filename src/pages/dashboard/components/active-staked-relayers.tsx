@@ -6,7 +6,7 @@ import LineChartComponent from './line-chart-component';
 import { useTranslation } from 'react-i18next';
 
 type ActiveStakedRelayers = {
-    linkButton?: boolean;
+  linkButton?: boolean;
 };
 
 const ActiveStakedRelayers = ({ linkButton }: ActiveStakedRelayers): ReactElement => {

@@ -4,10 +4,10 @@ import '../dashboard.page.scss';
 import iconExternalLink from '../../../assets/img/icons/Icon-external-link.svg';
 import { getAccents } from '../dashboard-colors';
 type buttonProps = {
-    buttonName: string;
-    propsButtonColor: string;
-    buttonId: string;
-    buttonLink: string;
+  buttonName: string;
+  propsButtonColor: string;
+  buttonId: string;
+  buttonLink: string;
 };
 
 const ButtonComponent = (props: buttonProps): React.ReactElement => {

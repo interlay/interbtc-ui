@@ -7,9 +7,9 @@ import { useTranslation } from 'react-i18next';
 import { Table } from 'react-bootstrap';
 
 interface BlockInfo {
-    source: string;
-    height: string;
-    hash: string;
+  source: string;
+  height: string;
+  hash: string;
 }
 
 export default function BitcoinTable(): ReactElement {

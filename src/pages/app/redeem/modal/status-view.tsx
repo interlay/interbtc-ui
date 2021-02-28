@@ -10,7 +10,7 @@ import Big from 'big.js';
 import PolkadotLogo from '../../../../assets/img/small-polkadot-logo.png';
 
 type StatusViewProps = {
-    request: RedeemRequest;
+  request: RedeemRequest;
 };
 
 export default function StatusView(props: StatusViewProps): ReactElement {

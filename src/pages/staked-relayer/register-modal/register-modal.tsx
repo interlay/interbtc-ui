@@ -9,13 +9,13 @@ import { useTranslation } from 'react-i18next';
 import { dotToPlanck } from '@interlay/polkabtc';
 
 type RegisterModalType = {
-    onClose: () => void;
-    onRegister: () => void;
-    show: boolean;
+  onClose: () => void;
+  onRegister: () => void;
+  show: boolean;
 };
 
 type RegisterForm = {
-    stake: number;
+  stake: number;
 };
 
 export default function ReportModal(props: RegisterModalType): ReactElement {

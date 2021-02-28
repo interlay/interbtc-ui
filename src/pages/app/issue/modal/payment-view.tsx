@@ -11,7 +11,7 @@ import AppTooltip from '../../../../common/components/tooltip';
 import { copyToClipboard, getUsdAmount } from '../../../../common/utils/utils';
 
 type PaymentViewProps = {
-    request: IssueRequest;
+  request: IssueRequest;
 };
 
 export default function PaymentView(props: PaymentViewProps): ReactElement {

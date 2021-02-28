@@ -46,15 +46,15 @@ export default class Footer extends Component {
                   <a
                     href='https://github.com/interlay/polkabtc-ui'
                     target='__blank'>
-                                        v{pkg.version}
+                    v{pkg.version}
                   </a>{' '}
-                                    &nbsp; &copy; 2021 Interlay. All Rights Reserved |{' '}
+                  &nbsp; &copy; 2021 Interlay. All Rights Reserved |{' '}
                   <a
                     className=' text-capitalize'
                     rel='noopener noreferrer'
                     href={privacyPolicy}
                     target='_blank'>
-                                        Privacy Policy
+                    Privacy Policy
                   </a>
                 </div>
               </div>
@@ -69,7 +69,7 @@ export default class Footer extends Component {
                   href='mailto:polkabtc@interlay.io'
                   target='_blank'
                   data-original-title='Drop us an email'>
-                                    polkabtc@interlay.io
+                  polkabtc@interlay.io
                 </a>
 
                 <a

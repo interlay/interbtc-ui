@@ -8,7 +8,7 @@ import AppTooltip from '../../../../common/components/tooltip';
 import { copyToClipboard, getUsdAmount, safeRoundEightDecimals } from '../../../../common/utils/utils';
 
 type WhoopsViewProps = {
-    request: IssueRequest;
+  request: IssueRequest;
 };
 
 export default function WhoopsView(props: WhoopsViewProps): ReactElement {

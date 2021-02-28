@@ -3,12 +3,12 @@ import { Button, ButtonProps } from 'react-bootstrap';
 import { FaHourglass } from 'react-icons/fa';
 
 export default class ButtonMaybePending extends React.Component<
-    ButtonProps & {
-      // ray test touch <
-      isPending?: boolean;
-      // isPending: boolean;
-      // ray test touch >
-    }
+  ButtonProps & {
+    // ray test touch <
+    isPending?: boolean;
+    // isPending: boolean;
+    // ray test touch >
+  }
 > {
   render() {
     const attributes = { ...this.props };

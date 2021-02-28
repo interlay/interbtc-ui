@@ -9,16 +9,16 @@ import { useTranslation } from 'react-i18next';
 import DashboardTable, { StatusComponent, StatusCategories } from '../dashboard-table/dashboard-table';
 
 interface OracleInfo {
-    id: string;
-    source: string;
-    feed: string;
-    lastUpdate: string;
-    exchangeRate: Big;
-    online: boolean;
+  id: string;
+  source: string;
+  feed: string;
+  lastUpdate: string;
+  exchangeRate: Big;
+  online: boolean;
 }
 
 type OracleTableProps = {
-    planckLocked: string;
+  planckLocked: string;
 };
 
 export default function OracleTable(props: OracleTableProps): ReactElement {

@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { getUsdAmount } from '../../../common/utils/utils';
 
 type CollateralLockedProps = {
-    linkButton?: boolean;
+  linkButton?: boolean;
 };
 
 const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement => {

@@ -4,8 +4,8 @@ import { range } from '../../utils/utils';
 import { useTranslation } from 'react-i18next';
 
 type PageLinkProps = {
-    page: number;
-    setPage: (page: number) => void;
+  page: number;
+  setPage: (page: number) => void;
 };
 
 function PageLink({ page, setPage }: PageLinkProps): ReactElement {
@@ -30,7 +30,7 @@ export default function TablePageSelector({ totalPages, currentPage, setPage }: 
   if (totalPages <= 1) totalPages = 1;
 
   const displayedPages = 5;
-  //    const displayedPages = Math.min(totalPages, pagesToDisplay);
+  // const displayedPages = Math.min(totalPages, pagesToDisplay);
   const first = Math.max(currentPage - Math.ceil(displayedPages / 2 - 1), 0);
   const last = Math.min(first + displayedPages, totalPages);
   const pages = range(first, last);

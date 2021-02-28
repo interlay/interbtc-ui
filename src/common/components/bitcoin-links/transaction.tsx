@@ -3,8 +3,8 @@ import * as constants from '../../../constants';
 import { shortTxId } from '../../../common/utils/utils';
 
 export default class BitcoinTransaction extends React.Component<{
-    txId: string;
-    shorten?: boolean;
+  txId: string;
+  shorten?: boolean;
 }> {
   render() {
     return (

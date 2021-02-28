@@ -18,7 +18,7 @@ enum Status {
 }
 
 type OracleStatusProps = {
-    linkButton?: boolean;
+  linkButton?: boolean;
 };
 
 const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {

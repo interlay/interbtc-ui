@@ -13,12 +13,12 @@ const ADD_DATA_ERROR = 'Add NO_DATA error';
 const REMOVE_DATA_ERROR = 'Remove NO_DATA error';
 
 interface Option<T> {
-    isNone: boolean;
-    unwrap(): T;
+  isNone: boolean;
+  unwrap(): T;
 }
 
 interface ErrorCode {
-    toString(): string;
+  toString(): string;
 }
 
 function displayBlockHash(option: Option<Uint8Array>): string {
@@ -34,10 +34,10 @@ function displayProposedChanges(addError: Option<ErrorCode>, removeError: Option
 }
 
 type StatusUpdateTableProps = {
-    dotLocked: string;
-    planckLocked?: string;
-    stakedRelayerAddress?: string;
-    readOnly?: boolean;
+  dotLocked: string;
+  planckLocked?: string;
+  stakedRelayerAddress?: string;
+  readOnly?: boolean;
 };
 
 export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactElement {

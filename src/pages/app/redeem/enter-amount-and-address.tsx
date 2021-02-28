@@ -26,8 +26,8 @@ import Toggle from 'react-toggle';
 import 'react-toggle/style.css';
 
 type AmountAndAddressForm = {
-    amountPolkaBTC: string;
-    btcAddress: string;
+  amountPolkaBTC: string;
+  btcAddress: string;
 };
 
 type PremiumRedeemVault = Map<AccountId, PolkaBTC>;

@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 
 type TimerProps = {
-    seconds: number;
+  seconds: number;
 };
 
 const formatTime = (leftSeconds: number): string => {

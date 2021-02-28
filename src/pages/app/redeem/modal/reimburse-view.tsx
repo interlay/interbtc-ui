@@ -12,8 +12,8 @@ import fetchBalances from '../../../../common/live-data/balances-watcher';
 import { getUsdAmount } from '../../../../common/utils/utils';
 
 type ReimburseViewProps = {
-    onClose: () => void;
-    request: RedeemRequest | undefined;
+  onClose: () => void;
+  request: RedeemRequest | undefined;
 };
 
 export default function ReimburseView(props: ReimburseViewProps): ReactElement {

@@ -18,8 +18,8 @@ enum Status {
 }
 
 type BtcRelayProps = {
-    linkButton?: boolean;
-    displayBlockstreamData?: boolean;
+  linkButton?: boolean;
+  displayBlockstreamData?: boolean;
 };
 
 const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactElement => {

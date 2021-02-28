@@ -3,8 +3,8 @@ import * as constants from '../../../constants';
 import { shortAddress } from '../../../common/utils/utils';
 
 export default class BitcoinAddress extends React.Component<{
-    btcAddress: string;
-    shorten?: boolean;
+  btcAddress: string;
+  shorten?: boolean;
 }> {
   render() {
     return (

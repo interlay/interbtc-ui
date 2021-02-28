@@ -11,12 +11,12 @@ import { requestsToVaultReplaceRequests } from '../../../common/utils/utils';
 import { useTranslation } from 'react-i18next';
 
 type RequestReplacementForm = {
-    amount: number;
+  amount: number;
 };
 
 type RequestReplacementProps = {
-    onClose: () => void;
-    show: boolean;
+  onClose: () => void;
+  show: boolean;
 };
 
 export default function RequestReplacementModal(props: RequestReplacementProps) {

@@ -10,7 +10,7 @@ import * as constants from '../../../constants';
 import { useTranslation } from 'react-i18next';
 
 type ReplaceTableProps = {
-    openModal: (show: boolean) => void;
+  openModal: (show: boolean) => void;
 };
 
 export default function ReplaceTable(props: ReplaceTableProps): ReactElement {

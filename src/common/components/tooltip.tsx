@@ -2,8 +2,8 @@ import React, { ReactElement } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 type AppTooltipProps = {
-    text: string;
-    children: ReactElement;
+  text: string;
+  children: ReactElement;
 };
 
 export default function AppTooltip(properties: AppTooltipProps): ReactElement {

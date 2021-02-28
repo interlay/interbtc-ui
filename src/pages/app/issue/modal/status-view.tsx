@@ -13,7 +13,7 @@ import { shortAddress } from '../../../../common/utils/utils';
 import Big from 'big.js';
 
 type StatusViewProps = {
-    request: IssueRequest;
+  request: IssueRequest;
 };
 
 export default function StatusView(props: StatusViewProps): ReactElement {

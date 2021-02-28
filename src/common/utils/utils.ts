@@ -438,7 +438,7 @@ function convertParachainTypes(parachainObject: ParsableParachainTypes): [string
   return [parachainObject.btc_address, parsedPolkaBTC, parsedDOT];
 }
 
-export const redeemRequestToVaultRedeem = (requests: Map<H256, ParachainRedeemRequest>): VaultRedeem[] => {
+const redeemRequestToVaultRedeem = (requests: Map<H256, ParachainRedeemRequest>): VaultRedeem[] => {
   const redeemRequests: VaultRedeem[] = [];
   requests.forEach((request, requestId) => {
     const [btcAddress, polkaBTC, unlockedDOT] = convertParachainTypes(request);
@@ -457,7 +457,7 @@ export const redeemRequestToVaultRedeem = (requests: Map<H256, ParachainRedeemRe
   return redeemRequests;
 };
 
-export const issueRequestToVaultIssue = (requests: Map<H256, ParachainIssueRequest>): VaultIssue[] => {
+const issueRequestToVaultIssue = (requests: Map<H256, ParachainIssueRequest>): VaultIssue[] => {
   const issueRequests: VaultIssue[] = [];
   requests.forEach((request, requestId) => {
     const [btcAddress, polkaBTC, lockedDOT] = convertParachainTypes(request);
@@ -476,7 +476,7 @@ export const issueRequestToVaultIssue = (requests: Map<H256, ParachainIssueReque
   return issueRequests;
 };
 
-export const requestsToVaultReplaceRequests = (requests: Map<H256, ParachainReplaceRequest>): VaultReplaceRequest[] => {
+const requestsToVaultReplaceRequests = (requests: Map<H256, ParachainReplaceRequest>): VaultReplaceRequest[] => {
   const replaceRequests: VaultReplaceRequest[] = [];
   requests.forEach((request, requestId) => {
     const [btcAddress, polkaBTC, lockedDOT] = convertParachainTypes(request);
@@ -494,7 +494,7 @@ export const requestsToVaultReplaceRequests = (requests: Map<H256, ParachainRepl
   return replaceRequests;
 };
 
-export const updateBalances = async (
+const updateBalances = async (
   dispatch: Dispatch,
   address: string,
   currentBalanceDOT: string,
@@ -515,7 +515,7 @@ export const updateBalances = async (
   }
 };
 
-export const requestsInStore = (
+const requestsInStore = (
   storeRequests: IssueRequest[] | RedeemRequest[],
   parachainRequests: IssueRequest[] | RedeemRequest[]
 ): boolean => {
@@ -536,7 +536,7 @@ export const requestsInStore = (
   return inStore;
 };
 
-export const copyToClipboard = (text: string) => {
+const copyToClipboard = (text: string) => {
   navigator.clipboard.writeText(text);
 };
 

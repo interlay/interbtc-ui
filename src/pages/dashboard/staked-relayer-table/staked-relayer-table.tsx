@@ -8,10 +8,10 @@ import DashboardTable, {
 import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
 
 type StakedRelayer = {
-    id: string;
-    stake: string;
-    bonded: boolean;
-    slashed: boolean;
+  id: string;
+  stake: string;
+  bonded: boolean;
+  slashed: boolean;
 };
 
 export default function StakedRelayerTable(): ReactElement {

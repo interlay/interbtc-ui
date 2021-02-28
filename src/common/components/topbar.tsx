@@ -183,8 +183,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                 </Nav>
                 <Balances
                   balanceDOT={balanceDOT}
-                  balancePolkaBTC={balancePolkaBTC}>
-                </Balances>
+                  balancePolkaBTC={balancePolkaBTC} />
                 <Nav
                   id='account-button'
                   className='d-inline'>

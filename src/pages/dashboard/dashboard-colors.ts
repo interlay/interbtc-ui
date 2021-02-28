@@ -1,6 +1,6 @@
 export interface Style {
-    color: string;
-    filter?: string;
+  color: string;
+  filter?: string;
 }
 
 export function getAccents(color: string): Style {

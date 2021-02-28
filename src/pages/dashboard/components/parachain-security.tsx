@@ -18,7 +18,7 @@ enum Status {
 }
 
 type ParachainSecurityProps = {
-    linkButton?: boolean;
+  linkButton?: boolean;
 };
 
 const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactElement => {

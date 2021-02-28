@@ -13,7 +13,7 @@ const requestDotMocked = async (): Promise<void> => {
   return Promise.resolve();
 };
 
-describe('Component: Topbar ', () => {
+describe('Component: Topbar', () => {
   before(() => {});
 
   it('1. Hide Topbar if is loading', done => {

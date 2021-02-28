@@ -4,9 +4,9 @@ import { StatusUpdate } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
 
 type MessageModalProps = {
-    onClose: () => void;
-    show: boolean;
-    statusUpdate: StatusUpdate;
+  onClose: () => void;
+  show: boolean;
+  statusUpdate: StatusUpdate;
 };
 
 export default function MessageModal(props: MessageModalProps): ReactElement {

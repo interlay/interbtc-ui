@@ -8,7 +8,7 @@ import { expect } from 'chai';
 
 const mockStore = configureMockStore([]);
 
-describe('Component: Test Account Modal ', () => {
+describe('Component: Test Account Modal', () => {
   const onSelect = (): Promise<void> => {
     return Promise.resolve();
   };

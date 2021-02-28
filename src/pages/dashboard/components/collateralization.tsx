@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { safeRoundTwoDecimals } from '../../../common/utils/utils';
 
 type CollateralizationProps = {
-    linkButton?: boolean;
+  linkButton?: boolean;
 };
 
 export default function Collateralization({ linkButton }: CollateralizationProps): ReactElement {

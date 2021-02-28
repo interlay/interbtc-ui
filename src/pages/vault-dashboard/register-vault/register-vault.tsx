@@ -11,13 +11,13 @@ import BN from 'bn.js';
 import { useTranslation } from 'react-i18next';
 
 type RegisterVaultForm = {
-    collateral: string;
+  collateral: string;
 };
 
 type RegisterVaultProps = {
-    onClose: () => void;
-    onRegister: () => void;
-    show: boolean;
+  onClose: () => void;
+  onRegister: () => void;
+  show: boolean;
 };
 
 export default function RegisterVaultModal(props: RegisterVaultProps) {

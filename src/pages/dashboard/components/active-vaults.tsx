@@ -6,7 +6,7 @@ import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
 import { useTranslation } from 'react-i18next';
 
 type ActiveVaultsProps = {
-    linkButton?: boolean;
+  linkButton?: boolean;
 };
 
 const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
