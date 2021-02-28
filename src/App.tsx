@@ -1,307 +1,322 @@
-import React, { useState, ReactElement, useEffect, useCallback } from "react";
-import { FaucetClient, planckToDOT, satToBTC } from "@interlay/polkabtc";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import { createPolkabtcAPI, PolkaBTCAPI, StakedRelayerClient, VaultClient } from "@interlay/polkabtc";
-import Big from "big.js";
-import ReactTooltip from "react-tooltip";
+import React, { useState, ReactElement, useEffect, useCallback } from 'react';
+import { FaucetClient, planckToDOT, satToBTC } from '@interlay/polkabtc';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import { createPolkabtcAPI, PolkaBTCAPI, StakedRelayerClient, VaultClient } from '@interlay/polkabtc';
+import Big from 'big.js';
+import ReactTooltip from 'react-tooltip';
 
-import AccountModal from "./common/components/account-modal/account-modal";
-import { web3Accounts, web3Enable, web3FromAddress } from "@polkadot/extension-dapp";
-import keyring from "@polkadot/ui-keyring";
+import AccountModal from './common/components/account-modal/account-modal';
+import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
+import keyring from '@polkadot/ui-keyring';
 import {
-    isPolkaBtcLoaded,
-    isStakedRelayerLoaded,
-    isVaultClientLoaded,
-    changeAddressAction,
-    initGeneralDataAction,
-    setInstalledExtensionAction,
-    showAccountModalAction,
-    updateAccountsAction,
-    isFaucetLoaded,
-} from "./common/actions/general.actions";
-import * as constants from "./constants";
-import "./i18n";
+  isPolkaBtcLoaded,
+  isStakedRelayerLoaded,
+  isVaultClientLoaded,
+  changeAddressAction,
+  initGeneralDataAction,
+  setInstalledExtensionAction,
+  showAccountModalAction,
+  updateAccountsAction,
+  isFaucetLoaded
+} from './common/actions/general.actions';
+import * as constants from './constants';
+import './i18n';
 
 // theme
 // FIXME: Clean-up and move to scss
-import "./_general.scss";
-import "react-toastify/dist/ReactToastify.css";
+import './_general.scss';
+import 'react-toastify/dist/ReactToastify.css';
 
 // app imports
-import Topbar from "./common/components/topbar";
-import Footer from "./common/components/footer/footer";
-import AppPage from "./pages/app/app.page";
-import DashboardPage from "./pages/dashboard/dashboard.page";
-import VaultDashboardPage from "./pages/vault-dashboard/vault-dashboard.page";
-import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
-import LeaderboardPage from "./pages/leaderboard/leaderboard.page";
-import VaultsDashboard from "./pages/dashboard/vaults/vaults.dashboard.page";
-import { useSelector, useDispatch, useStore } from "react-redux";
-import { StoreType, ParachainStatus } from "./common/types/util.types";
-import IssueDashboard from "./pages/dashboard/issue/issue.dashboard.page";
-import RedeemDashboard from "./pages/dashboard/redeem/redeem.dashboard.page";
-import LandingPage from "./pages/landing/landing.page";
-import startFetchingLiveData from "./common/live-data/live-data";
-import RelayDashboard from "./pages/dashboard/relay/relay.dashboard.page";
-import OraclesDashboard from "./pages/dashboard/oracles/oracles.dashboard.page";
-import ParachainDashboard from "./pages/dashboard/parachain/parachain.dashboard.page";
-import FeedbackPage from "./pages/feedback/feedback.page";
+import Topbar from './common/components/topbar';
+import Footer from './common/components/footer/footer';
+import AppPage from './pages/app/app.page';
+import DashboardPage from './pages/dashboard/dashboard.page';
+import VaultDashboardPage from './pages/vault-dashboard/vault-dashboard.page';
+import StakedRelayerPage from './pages/staked-relayer/staked-relayer.page';
+import LeaderboardPage from './pages/leaderboard/leaderboard.page';
+import VaultsDashboard from './pages/dashboard/vaults/vaults.dashboard.page';
+import { useSelector, useDispatch, useStore } from 'react-redux';
+import { StoreType, ParachainStatus } from './common/types/util.types';
+import IssueDashboard from './pages/dashboard/issue/issue.dashboard.page';
+import RedeemDashboard from './pages/dashboard/redeem/redeem.dashboard.page';
+import LandingPage from './pages/landing/landing.page';
+import startFetchingLiveData from './common/live-data/live-data';
+import RelayDashboard from './pages/dashboard/relay/relay.dashboard.page';
+import OraclesDashboard from './pages/dashboard/oracles/oracles.dashboard.page';
+import ParachainDashboard from './pages/dashboard/parachain/parachain.dashboard.page';
+import FeedbackPage from './pages/feedback/feedback.page';
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
-    return createPolkabtcAPI(
-        constants.PARACHAIN_URL,
-        constants.BITCOIN_NETWORK === "regtest" ? constants.BITCOIN_REGTEST_URL : constants.BITCOIN_NETWORK
-    );
+  return createPolkabtcAPI(
+    constants.PARACHAIN_URL,
+    constants.BITCOIN_NETWORK === 'regtest' ? constants.BITCOIN_REGTEST_URL : constants.BITCOIN_NETWORK
+  );
 }
 
 export default function App(): ReactElement {
-    const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-    const address = useSelector((state: StoreType) => state.general.address);
-    const [isLoading, setIsLoading] = useState(true);
-    const extensions = useSelector((state: StoreType) => state.general.extensions);
-    const dispatch = useDispatch();
-    const store = useStore();
+  const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+  const address = useSelector((state: StoreType) => state.general.address);
+  const [isLoading, setIsLoading] = useState(true);
+  const extensions = useSelector((state: StoreType) => state.general.extensions);
+  const dispatch = useDispatch();
+  const store = useStore();
 
-    const requestDotFromFaucet = async (): Promise<void> => {
-        if (!address) return;
+  const requestDotFromFaucet = async (): Promise<void> => {
+    if (!address) return;
 
-        try {
-            const receiverId = window.polkaBTC.api.createType("AccountId", address);
-            await window.faucet.fundAccount(receiverId);
-            toast.success("Your account has been funded.");
-        } catch (error) {
-            toast.error(`Funding failed. You can only use the faucet once every 6 hours. ${error}`);
+    try {
+      const receiverId = window.polkaBTC.api.createType('AccountId', address);
+      await window.faucet.fundAccount(receiverId);
+      toast.success('Your account has been funded.');
+    } catch (error) {
+      toast.error(`Funding failed. You can only use the faucet once every 6 hours. ${error}`);
+    }
+  };
+
+  const selectAccount = useCallback(
+    async (newAddress: string): Promise<void> => {
+      if (!polkaBtcLoaded || !newAddress) {
+        return;
+      }
+
+      await web3Enable(constants.APP_NAME);
+      const { signer } = await web3FromAddress(newAddress);
+      window.polkaBTC.setAccount(newAddress, signer);
+
+      dispatch(showAccountModalAction(false));
+      dispatch(changeAddressAction(newAddress));
+    },
+    [polkaBtcLoaded, dispatch]
+  );
+
+  const createAPIInstance = useCallback(async (): Promise<void> => {
+    try {
+      window.relayer = new StakedRelayerClient(constants.STAKED_RELAYER_URL);
+      dispatch(isStakedRelayerLoaded(true));
+
+      window.vaultClient = new VaultClient(constants.VAULT_CLIENT_URL);
+      dispatch(isVaultClientLoaded(true));
+
+      window.faucet = new FaucetClient(constants.FAUCET_URL);
+      dispatch(isFaucetLoaded(true));
+
+      setTimeout(() => {
+        if (!window.polkaBTC) {
+          toast.warn(
+            'Unable to connect to the BTC-Parachain. ' +
+                            'Please check your internet connection or try again later.'
+          );
         }
+      }, 10000);
+      window.polkaBTC = await connectToParachain();
+      dispatch(isPolkaBtcLoaded(true));
+      startFetchingLiveData(dispatch, store);
+      setIsLoading(false);
+    } catch (error) {
+      if (!window.polkaBTC) {
+        toast.warn(
+          'Unable to connect to the BTC-Parachain. ' +
+                        'Please check your internet connection or try again later.'
+        );
+      }
+    }
+  }, [dispatch, store]);
+
+  useEffect((): void => {
+    // Do not load data if showing static landing page only
+    if (constants.STATIC_PAGE_ONLY) return;
+
+    const initDataOnAppBootstrap = async () => {
+      if (!polkaBtcLoaded) return;
+
+      try {
+        const [totalPolkaSAT, totalLockedPLANCK, btcRelayHeight, bitcoinHeight, state] = await Promise.all([
+          window.polkaBTC.treasury.totalPolkaBTC(),
+          window.polkaBTC.collateral.totalLockedDOT(),
+          window.polkaBTC.btcRelay.getLatestBlockHeight(),
+          window.polkaBTC.btcCore.getLatestBlockHeight(),
+          window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain()
+        ]);
+        const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
+        const totalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
+        dispatch(
+          initGeneralDataAction(
+            totalPolkaBTC,
+            totalLockedDOT,
+            Number(btcRelayHeight),
+            bitcoinHeight,
+            state.isError ?
+              ParachainStatus.Error :
+              state.isRunning ?
+                ParachainStatus.Running :
+                ParachainStatus.Shutdown
+          )
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    initDataOnAppBootstrap();
+  }, [dispatch, polkaBtcLoaded]);
+
+  useEffect((): void => {
+    // Do not load data if showing static landing page only
+    if (constants.STATIC_PAGE_ONLY) return;
+
+    const loadAccountData = async () => {
+      if (!polkaBtcLoaded || extensions.length) return false;
+
+      const browserExtensions = await web3Enable(constants.APP_NAME);
+      dispatch(setInstalledExtensionAction(browserExtensions.map(ext => ext.name)));
+
+      const allAccounts = await web3Accounts();
+      if (allAccounts.length === 0) {
+        dispatch(changeAddressAction(''));
+        return false;
+      }
+
+      const accounts = allAccounts.map(({ address }) => address);
+      dispatch(updateAccountsAction(accounts));
+
+      let newAddress: string | undefined = undefined;
+      if (accounts.includes(address)) {
+        newAddress = address;
+      } else if (accounts.length === 1) {
+        newAddress = accounts[0];
+      }
+
+      if (newAddress) {
+        const { signer } = await web3FromAddress(newAddress);
+        window.polkaBTC.setAccount(newAddress, signer);
+        dispatch(changeAddressAction(newAddress));
+      } else dispatch(changeAddressAction(''));
+
+      return true;
     };
 
-    const selectAccount = useCallback(
-        async (newAddress: string): Promise<void> => {
-            if (!polkaBtcLoaded || !newAddress) {
-                return;
-            }
+    const id = setTimeout(async () => {
+      const accountsLoaded = await loadAccountData();
+      if (accountsLoaded) {
+        clearInterval(id);
+      }
+    }, 1000);
+  }, [address, polkaBtcLoaded, dispatch, extensions.length]);
 
-            await web3Enable(constants.APP_NAME);
-            const { signer } = await web3FromAddress(newAddress);
-            window.polkaBTC.setAccount(newAddress, signer);
+  useEffect(() => {
+    // Do not load data if showing static landing page only
+    if (constants.STATIC_PAGE_ONLY) return;
 
-            dispatch(showAccountModalAction(false));
-            dispatch(changeAddressAction(newAddress));
-        },
-        [polkaBtcLoaded, dispatch]
-    );
+    const loadData = async () => {
+      try {
+        if (polkaBtcLoaded) return;
 
-    const createAPIInstance = useCallback(async (): Promise<void> => {
-        try {
-            window.relayer = new StakedRelayerClient(constants.STAKED_RELAYER_URL);
-            dispatch(isStakedRelayerLoaded(true));
+        setTimeout(() => {
+          if (isLoading) setIsLoading(false);
+        }, 3000);
+        await createAPIInstance();
+        keyring.loadAll({});
+      } catch (e) {
+        toast.warn('Could not connect to the Parachain, please try again in a few seconds', {
+          autoClose: false
+        });
+      }
+    };
+    loadData();
+    startFetchingLiveData(dispatch, store);
+  }, [createAPIInstance, isLoading, polkaBtcLoaded, dispatch, store]);
 
-            window.vaultClient = new VaultClient(constants.VAULT_CLIENT_URL);
-            dispatch(isVaultClientLoaded(true));
-
-            window.faucet = new FaucetClient(constants.FAUCET_URL);
-            dispatch(isFaucetLoaded(true));
-
-            setTimeout(() => {
-                if (!window.polkaBTC) {
-                    toast.warn(
-                        "Unable to connect to the BTC-Parachain. " +
-                            "Please check your internet connection or try again later."
-                    );
-                }
-            }, 10000);
-            window.polkaBTC = await connectToParachain();
-            dispatch(isPolkaBtcLoaded(true));
-            startFetchingLiveData(dispatch, store);
-            setIsLoading(false);
-        } catch (error) {
-            if (!window.polkaBTC)
-                toast.warn(
-                    "Unable to connect to the BTC-Parachain. " +
-                        "Please check your internet connection or try again later."
-                );
-        }
-    }, [dispatch, store]);
-
-    useEffect((): void => {
-        // Do not load data if showing static landing page only
-        if (constants.STATIC_PAGE_ONLY) return;
-
-        const initDataOnAppBootstrap = async () => {
-            if (!polkaBtcLoaded) return;
-
-            try {
-                const [totalPolkaSAT, totalLockedPLANCK, btcRelayHeight, bitcoinHeight, state] = await Promise.all([
-                    window.polkaBTC.treasury.totalPolkaBTC(),
-                    window.polkaBTC.collateral.totalLockedDOT(),
-                    window.polkaBTC.btcRelay.getLatestBlockHeight(),
-                    window.polkaBTC.btcCore.getLatestBlockHeight(),
-                    window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain(),
-                ]);
-                const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
-                const totalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
-                dispatch(
-                    initGeneralDataAction(
-                        totalPolkaBTC,
-                        totalLockedDOT,
-                        Number(btcRelayHeight),
-                        bitcoinHeight,
-                        state.isError
-                            ? ParachainStatus.Error
-                            : state.isRunning
-                            ? ParachainStatus.Running
-                            : ParachainStatus.Shutdown
-                    )
-                );
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        initDataOnAppBootstrap();
-    }, [dispatch, polkaBtcLoaded]);
-
-    useEffect((): void => {
-        // Do not load data if showing static landing page only
-        if (constants.STATIC_PAGE_ONLY) return;
-
-        const loadAccountData = async () => {
-            if (!polkaBtcLoaded || extensions.length) return false;
-
-            const browserExtensions = await web3Enable(constants.APP_NAME);
-            dispatch(setInstalledExtensionAction(browserExtensions.map((ext) => ext.name)));
-
-            const allAccounts = await web3Accounts();
-            if (allAccounts.length === 0) {
-                dispatch(changeAddressAction(""));
-                return false;
-            }
-
-            const accounts = allAccounts.map(({ address }) => address);
-            dispatch(updateAccountsAction(accounts));
-
-            let newAddress: string | undefined = undefined;
-            if (accounts.includes(address)) {
-                newAddress = address;
-            } else if (accounts.length === 1) {
-                newAddress = accounts[0];
-            }
-
-            if (newAddress) {
-                const { signer } = await web3FromAddress(newAddress);
-                window.polkaBTC.setAccount(newAddress, signer);
-                dispatch(changeAddressAction(newAddress));
-            } else dispatch(changeAddressAction(""));
-
-            return true;
-        };
-
-        const id = setTimeout(async () => {
-            const accountsLoaded = await loadAccountData();
-            if (accountsLoaded) {
-                clearInterval(id);
-            }
-        }, 1000);
-    }, [address, polkaBtcLoaded, dispatch, extensions.length]);
-
-    useEffect(() => {
-        // Do not load data if showing static landing page only
-        if (constants.STATIC_PAGE_ONLY) return;
-
-        const loadData = async () => {
-            try {
-                if (polkaBtcLoaded) return;
-
-                setTimeout(() => {
-                    if (isLoading) setIsLoading(false);
-                }, 3000);
-                await createAPIInstance();
-                keyring.loadAll({});
-            } catch (e) {
-                toast.warn("Could not connect to the Parachain, please try again in a few seconds", {
-                    autoClose: false,
-                });
-            }
-        };
-        loadData();
-        startFetchingLiveData(dispatch, store);
-    }, [createAPIInstance, isLoading, polkaBtcLoaded, dispatch, store]);
-
-    return (
-        <React.Fragment>
-            <Router>
-                <div className="main d-flex flex-column min-vh-100 polkabtc-background fade-in-animation">
-                    <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
-                    <ReactTooltip place="top" type="dark" effect="solid" />
-                    <AccountModal selected={address} onSelected={selectAccount} />
-                    {!constants.STATIC_PAGE_ONLY && <Topbar address={address} requestDOT={requestDotFromFaucet} />}
-                    <Switch>
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/staked-relayer">
-                                <StakedRelayerPage />
-                            </Route>
-                        )}
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/dashboard/vaults">
-                                <VaultsDashboard />
-                            </Route>
-                        )}
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/leaderboard">
-                                <LeaderboardPage />
-                            </Route>
-                        )}
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/dashboard/parachain">
-                                <ParachainDashboard />
-                            </Route>
-                        )}
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/dashboard/oracles">
-                                <OraclesDashboard />
-                            </Route>
-                        )}
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/dashboard/issue">
-                                <IssueDashboard />
-                            </Route>
-                        )}
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/dashboard/redeem">
-                                <RedeemDashboard />
-                            </Route>
-                        )}
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/dashboard/relay">
-                                <RelayDashboard />
-                            </Route>
-                        )}
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/dashboard">
-                                <DashboardPage />
-                            </Route>
-                        )}
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/vault">
-                                <VaultDashboardPage />
-                            </Route>
-                        )}
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route path="/feedback">
-                                <FeedbackPage />
-                            </Route>
-                        )}
-                        <Route path="/" exact>
-                            <LandingPage />
-                        </Route>
-                        {!constants.STATIC_PAGE_ONLY && (
-                            <Route exact path="/app">
-                                <AppPage />
-                            </Route>
-                        )}
-                    </Switch>
-                    <Footer />
-                </div>
-            </Router>
-        </React.Fragment>
-    );
+  return (
+    <React.Fragment>
+      <Router>
+        <div className='main d-flex flex-column min-vh-100 polkabtc-background fade-in-animation'>
+          <ToastContainer
+            position='top-right'
+            autoClose={5000}
+            hideProgressBar={false} />
+          <ReactTooltip
+            place='top'
+            type='dark'
+            effect='solid' />
+          <AccountModal
+            selected={address}
+            onSelected={selectAccount} />
+          {!constants.STATIC_PAGE_ONLY && <Topbar
+            address={address}
+            requestDOT={requestDotFromFaucet} />}
+          <Switch>
+            {!constants.STATIC_PAGE_ONLY && (
+              <Route path='/staked-relayer'>
+                <StakedRelayerPage />
+              </Route>
+            )}
+            {!constants.STATIC_PAGE_ONLY && (
+              <Route path='/dashboard/vaults'>
+                <VaultsDashboard />
+              </Route>
+            )}
+            {!constants.STATIC_PAGE_ONLY && (
+              <Route path='/leaderboard'>
+                <LeaderboardPage />
+              </Route>
+            )}
+            {!constants.STATIC_PAGE_ONLY && (
+              <Route path='/dashboard/parachain'>
+                <ParachainDashboard />
+              </Route>
+            )}
+            {!constants.STATIC_PAGE_ONLY && (
+              <Route path='/dashboard/oracles'>
+                <OraclesDashboard />
+              </Route>
+            )}
+            {!constants.STATIC_PAGE_ONLY && (
+              <Route path='/dashboard/issue'>
+                <IssueDashboard />
+              </Route>
+            )}
+            {!constants.STATIC_PAGE_ONLY && (
+              <Route path='/dashboard/redeem'>
+                <RedeemDashboard />
+              </Route>
+            )}
+            {!constants.STATIC_PAGE_ONLY && (
+              <Route path='/dashboard/relay'>
+                <RelayDashboard />
+              </Route>
+            )}
+            {!constants.STATIC_PAGE_ONLY && (
+              <Route path='/dashboard'>
+                <DashboardPage />
+              </Route>
+            )}
+            {!constants.STATIC_PAGE_ONLY && (
+              <Route path='/vault'>
+                <VaultDashboardPage />
+              </Route>
+            )}
+            {!constants.STATIC_PAGE_ONLY && (
+              <Route path='/feedback'>
+                <FeedbackPage />
+              </Route>
+            )}
+            <Route
+              path='/'
+              exact>
+              <LandingPage />
+            </Route>
+            {!constants.STATIC_PAGE_ONLY && (
+              <Route
+                exact
+                path='/app'>
+                <AppPage />
+              </Route>
+            )}
+          </Switch>
+          <Footer />
+        </div>
+      </Router>
+    </React.Fragment>
+  );
 }
