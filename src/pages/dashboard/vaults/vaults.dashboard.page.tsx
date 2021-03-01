@@ -7,12 +7,14 @@ import ActiveVaults from '../components/active-vaults';
 import CollateralLocked from '../components/collateral-locked';
 import Collateralization from '../components/collateralization';
 import TimerIncrement from '../../../common/components/timer-increment';
+import TestnetBanner from '../../../common/components/testnet-banner';
 
 export default function VaultsDashboard(): ReactElement {
   const { t } = useTranslation();
 
   return (
     <div className='main-container dashboard-page'>
+      <TestnetBanner></TestnetBanner>
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <div>

@@ -460,5 +460,8 @@
     },
     "guide": {
         "alpha_testnet": "PolkaBTC User Guide (Alpha Testnet)"
+    },
+    "testnet": {
+      "warning": "Notice: All assets in the beta testnet are for testing purposes only and have no real value."
     }
 }

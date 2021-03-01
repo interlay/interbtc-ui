@@ -5,12 +5,14 @@ import OracleStatus from '../components/oracle-status';
 import OracleTable from '../../../common/components/oracle-table/oracle-table';
 import { getAccents } from '../dashboard-colors';
 import TimerIncrement from '../../../common/components/timer-increment';
+import TestnetBanner from '../../../common/components/testnet-banner';
 
 export default function OraclesDashboard(): ReactElement {
   const { t } = useTranslation();
 
   return (
     <div className='dashboard-page main-container'>
+      <TestnetBanner></TestnetBanner>
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <div>

@@ -12,6 +12,7 @@ import BtcRelay from '../components/btc-relay';
 import { reverseEndiannessHex, stripHexPrefix } from '@interlay/polkabtc';
 import { BlockColumns } from '@interlay/polkabtc-stats';
 import TimerIncrement from '../../../common/components/timer-increment';
+import TestnetBanner from '../../../common/components/testnet-banner';
 
 export default function RelayDashboard(): ReactElement {
   const statsApi = usePolkabtcStats();
@@ -65,6 +66,7 @@ export default function RelayDashboard(): ReactElement {
 
   return (
     <div className='main-container dashboard-page'>
+      <TestnetBanner></TestnetBanner>
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <div>

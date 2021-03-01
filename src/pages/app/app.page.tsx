@@ -11,6 +11,7 @@ import { setActiveTabAction } from '../../common/actions/general.actions';
 import { FaArrowLeft } from 'react-icons/fa';
 import './app.page.scss';
 import { changeIssueStepAction } from '../../common/actions/issue.actions';
+import TestnetBanner from '../../common/components/testnet-banner';
 
 export default function AppPage(): ReactElement {
   const dispatch = useDispatch();
@@ -39,7 +40,8 @@ export default function AppPage(): ReactElement {
   };
 
   return (
-    <section className='text-center white-background min-vh-100 app-page'>
+    <section className='main-container text-center white-background min-vh-100 app-page'>
+      <TestnetBanner></TestnetBanner>
       <div className='container mt-5'>
         <div className='row justify-content-center'>
           <div
