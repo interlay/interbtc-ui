@@ -15,6 +15,7 @@ import DashboardTable, {
 } from '../../../common/components/dashboard-table/dashboard-table';
 import { StatusUpdateColumns } from '@interlay/polkabtc-stats';
 import TimerIncrement from '../../../common/components/timer-increment';
+import TestnetBanner from '../../../common/components/testnet-banner';
 
 export default function ParachainDashboard(): ReactElement {
   const { t } = useTranslation();
@@ -101,6 +102,7 @@ export default function ParachainDashboard(): ReactElement {
 
   return (
     <div className='main-container dashboard-page'>
+      <TestnetBanner />
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <div>

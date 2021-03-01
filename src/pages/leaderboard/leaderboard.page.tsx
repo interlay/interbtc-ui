@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import DashboardTable from '../../common/components/dashboard-table/dashboard-table';
 import usePolkabtcStats from '../../common/hooks/use-polkabtc-stats';
 import { RelayerData, VaultData } from '@interlay/polkabtc-stats';
+import TestnetBanner from '../../common/components/testnet-banner';
+import TimerIncrement from '../../common/components/timer-increment';
 
 export default function LeaderboardPage(): ReactElement {
   // eslint-disable-next-line no-array-constructor
@@ -81,11 +83,17 @@ export default function LeaderboardPage(): ReactElement {
   }, [polkaBtcLoaded, statsApi, t]);
 
   return (
-    <div className='leaderboard-page container-fluid white-background'>
-      <div className='leaderboard-container dashboard-fade-in-animation dahboard-min-height'>
-        <div className='stacked-wrapper'>
-          <div className='row'>
-            <div className='title'>{t('leaderboard.title')}</div>
+    <div className='main-container dashboard-page'>
+      <TestnetBanner />
+      <div className='dashboard-container dashboard-fade-in-animation dahboard-min-height'>
+        <div className='dashboard-wrapper'>
+          <div className='title-container'>
+            <div className='title-text-container'>
+              <h1 className='title-text'>{t('leaderboard.title')}</h1>
+              <p className='latest-block-text'>
+                <TimerIncrement></TimerIncrement>
+              </p>
+            </div>
           </div>
 
           <div className='dashboard-table-container'>

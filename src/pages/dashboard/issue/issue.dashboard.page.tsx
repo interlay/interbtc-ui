@@ -17,6 +17,7 @@ import '../dashboard-subpage.scss';
 import { BtcNetworkName, IssueColumns } from '@interlay/polkabtc-stats';
 import TimerIncrement from '../../../common/components/timer-increment';
 import LineChartComponent from '../components/line-chart-component';
+import TestnetBanner from '../../../common/components/testnet-banner';
 
 export default function IssueDashboard(): ReactElement {
   const { totalPolkaBTC, prices } = useSelector((state: StoreType) => state.general);
@@ -133,6 +134,7 @@ export default function IssueDashboard(): ReactElement {
 
   return (
     <div className='main-container dashboard-page'>
+      <TestnetBanner />
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <div>

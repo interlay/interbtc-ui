@@ -16,6 +16,7 @@ import { satToBTC } from '@interlay/polkabtc';
 import LineChartComponent from '../components/line-chart-component';
 import { BtcNetworkName, RedeemColumns } from '@interlay/polkabtc-stats';
 import TimerIncrement from '../../../common/components/timer-increment';
+import TestnetBanner from '../../../common/components/testnet-banner';
 
 export default function RedeemDashboard(): ReactElement {
   const { polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
@@ -144,6 +145,7 @@ export default function RedeemDashboard(): ReactElement {
 
   return (
     <div className='main-container dashboard-page '>
+      <TestnetBanner />
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <div>
