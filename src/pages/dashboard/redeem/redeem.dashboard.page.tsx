@@ -57,7 +57,7 @@ export default function RedeemDashboard(): ReactElement {
         () => (rreq: DashboardRequestInfo): ReactElement[] => [
             // <p>{shortAddress(ireq.id)}</p>,
             <p>{formatDateTimePrecise(new Date(rreq.timestamp))}</p>,
-            <p>{satToBTC(rreq.amountPolkaBTC)}</p>,
+            <p>{rreq.amountPolkaBTC}</p>,
             <p>{rreq.creation}</p>,
             <p>{shortAddress(rreq.vaultDotAddress)}</p>,
             <StyledLinkData
