@@ -41,7 +41,7 @@ export default function AppPage(): ReactElement {
 
   return (
     <section className='main-container text-center white-background min-vh-100 app-page'>
-      <TestnetBanner></TestnetBanner>
+      <TestnetBanner />
       <div className='container mt-5'>
         <div className='row justify-content-center'>
           <div

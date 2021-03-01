@@ -81,7 +81,7 @@ export default function LeaderboardPage(): ReactElement {
 
   return (
     <div className='main-container dashboard-page'>
-      <TestnetBanner></TestnetBanner>
+      <TestnetBanner />
       <div className='dashboard-container dashboard-fade-in-animation dahboard-min-height'>
         <div className='dashboard-wrapper'>
           <div className='title-container'>

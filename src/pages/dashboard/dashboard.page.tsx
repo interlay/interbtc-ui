@@ -13,7 +13,7 @@ export default function DashboardPage(): ReactElement {
 
   return (
     <div className='main-container'>
-      <TestnetBanner></TestnetBanner>
+      <TestnetBanner />
       <div className='title-container'>
         <div className='title-text-container'>
           <h1 className='title-text'>{t('dashboard.dashboard')}</h1>

@@ -12,7 +12,7 @@ export default function OraclesDashboard(): ReactElement {
 
   return (
     <div className='dashboard-page main-container'>
-      <TestnetBanner></TestnetBanner>
+      <TestnetBanner />
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <div>
