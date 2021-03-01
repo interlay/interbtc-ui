@@ -42,6 +42,8 @@ git@gitlab.com:interlay/polkabtc-ui.git
 cd polkabtc-ui
 ```
 
+Please make use of the `.env.*` files to set build variables. The priority of these are [defined here](https://create-react-app.dev/docs/adding-custom-environment-variables/#what-other-env-files-can-be-used).
+
 ### Regtest
 
 > Note: By default use, regtest for local development.
