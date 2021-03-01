@@ -40,8 +40,12 @@ export default function LandingPage(): JSX.Element {
                         <Row className="mt-4">
                             <Col xs="12" sm={{ span: 6, offset: 3 }}>
                                 <h5 className="text-white">
-                                    Beta testnet coming soon! Stay up to date on <a href="https://discord.gg/3TWXQ4VF" target="_blank" rel="noopener noreferrer">Discord</a>.
-                                    </h5>
+                                    Beta testnet coming soon! Stay up to date on{" "}
+                                    <a href="https://discord.gg/3TWXQ4VF" target="_blank" rel="noopener noreferrer">
+                                        Discord
+                                    </a>
+                                    .
+                                </h5>
                             </Col>
                         </Row>
                     </div>
