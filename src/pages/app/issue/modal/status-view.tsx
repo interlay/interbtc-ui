@@ -94,7 +94,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
       );
       dispatch(updateIssueRequestAction(completedReq));
 
-      toast.success(t('issue_page.succesfully_executed', { id: request.id }));
+      toast.success(t('issue_page.successfully_executed', { id: request.id }));
     } catch (error) {
       toast.error(error.toString());
     } finally {
@@ -105,7 +105,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
   return (
     <div className='status-view'>
       {(props.request.status === IssueRequestStatus.Completed ||
-                props.request.status === IssueRequestStatus.RequestedRefund) && (
+        props.request.status === IssueRequestStatus.RequestedRefund) && (
         <React.Fragment>
           <div className='completed-status-title'>{t('completed')}</div>
           <div className='row'>
@@ -188,7 +188,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
         </React.Fragment>
       )}
       {props.request.status !== IssueRequestStatus.Completed &&
-                props.request.status !== IssueRequestStatus.Cancelled && (
+        props.request.status !== IssueRequestStatus.Cancelled && (
         <React.Fragment>
           <div className='status-title'>
             {props.request.confirmations < stableBitcoinConfirmations ? t('received') : t('confirmed')}
@@ -249,7 +249,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                           (constants.BTC_MAINNET ?
                             constants.BTC_EXPLORER_TRANSACTION_API :
                             constants.BTC_TEST_EXPLORER_TRANSACTION_API) +
-                                                        props.request.btcTxId
+                              props.request.btcTxId
                         }
                         target='_blank'
                         rel='noopener noreferrer'>
