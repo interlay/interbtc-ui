@@ -1,18 +1,19 @@
-import React, { useState, ReactElement } from 'react';
 
-import { IssueRequest, IssueRequestStatus } from '../../../common/types/issue.types';
+import React, { useState, ReactElement } from 'react';
 import { Table, Badge } from 'react-bootstrap';
 import { FaCheck, FaHourglass } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
-import { StoreType } from '../../../common/types/util.types';
-import { changeIssueIdAction } from '../../../common/actions/issue.actions';
-import BitcoinTransaction from '../../../common/components/bitcoin-links/transaction';
-import { showAccountModalAction } from '../../../common/actions/general.actions';
 import { useTranslation } from 'react-i18next';
-import IssueModal from './modal/issue-modal';
-import { formatDateTimePrecise } from '../../../common/utils/utils';
 
-export default function IssueRequests(): ReactElement {
+import IssueModal from './modal/issue-modal';
+import BitcoinTransaction from 'common/components/bitcoin-links/transaction';
+import { IssueRequest, IssueRequestStatus } from 'common/types/issue.types';
+import { StoreType } from 'common/types/util.types';
+import { formatDateTimePrecise } from 'common/utils/utils';
+import { changeIssueIdAction } from 'common/actions/issue.actions';
+import { showAccountModalAction } from 'common/actions/general.actions';
+
+function IssueRequests(): ReactElement {
   const { address, extensions } = useSelector((state: StoreType) => state.general);
   const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address) || [];
   const [showModal, setShowModal] = useState(false);
@@ -121,3 +122,5 @@ export default function IssueRequests(): ReactElement {
     </div>
   );
 }
+
+export default IssueRequests;
