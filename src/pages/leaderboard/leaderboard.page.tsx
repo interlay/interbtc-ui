@@ -62,16 +62,19 @@ export default function LeaderboardPage(): ReactElement {
       setVaultRows(
         vaults.sort(
           (a, b) =>
-            a.request_issue_count +
-                        a.request_redeem_count -
-                        (b.request_issue_count + b.request_redeem_count)
+            (b.request_issue_count + b.request_redeem_count) -
+            (a.request_issue_count + a.request_redeem_count)
         )
       );
     };
     const fetchRelayerData = async () => {
       if (!polkaBtcLoaded) return;
       const relayers = (await statsApi.getRelayers()).data;
-      setRelayerRows(relayers);
+      setRelayerRows(
+        relayers.sort(
+          (a, b) => b.block_count - a.block_count
+        )
+      );
     };
     fetchVaultData();
     fetchRelayerData();
