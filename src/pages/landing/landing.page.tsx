@@ -36,6 +36,16 @@ export default function LandingPage(): JSX.Element {
                     <h1 className="text-white mt-5">PolkaBTC</h1>
                     <h2 className="text-white">{t("landing.defi_ecosystem")}</h2>
 
+                    <div>
+                        <Row className="mt-4">
+                            <Col xs="12" sm={{ span: 6, offset: 3 }}>
+                                <h5 className="text-white">
+                                    Beta testnet coming soon! Stay up to date on <a href="https://discord.gg/3TWXQ4VF" target="_blank" rel="noopener noreferrer">Discord</a>.
+                                    </h5>
+                            </Col>
+                        </Row>
+                    </div>
+
                     {!constants.STATIC_PAGE_ONLY ? (
                         <div>
                             <Row className="mt-4">

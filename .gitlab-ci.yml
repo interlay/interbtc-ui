@@ -15,7 +15,7 @@ cache:
         - node_modules/
 
 variables:
-    REACT_APP_STATIC_PAGE_ONLY: "false"
+  REACT_APP_STATIC_PAGE_ONLY: "true"
 
 # Test and build on PRs
 test:
@@ -37,8 +37,6 @@ test:
 
 build:
   stage: build
-  variables:
-    NODE_ENV: production
   script:
     - apt-get update && apt-get install -y libusb-1.0-0-dev libudev-dev
     - ln -s .env.${CI_COMMIT_BRANCH:dev} .env
@@ -49,6 +47,7 @@ build:
     paths:
       - build
   only:
+    - merge_requests
     - master
     - prod
     - dev
