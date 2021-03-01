@@ -413,7 +413,8 @@
         "execute_issue_count": "Issues Executed",
         "request_redeem_count": "Redeems Requested",
         "execute_redeem_count": "Redeems Executed",
-        "block_count": "Blocks Submitted"
+        "block_count": "Blocks Submitted",
+        "lifetime_sla": "Lifetime SLA Score"
     },
     "vault": {
         "creation_block": "Creation Block",

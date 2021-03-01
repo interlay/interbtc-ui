@@ -150,7 +150,7 @@ services:
         ports:
             - "5432:5432"
     polkabtc_stats:
-        image: "registry.gitlab.com/interlay/polkabtc-stats:0.1.9"
+        image: "registry.gitlab.com/interlay/polkabtc-stats:0.1.10"
         restart: always
         depends_on:
             - postgres
