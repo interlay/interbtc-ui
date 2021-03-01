@@ -51,7 +51,7 @@ module.exports = {
     'max-len': [
       'warn',
       {
-        code: 130
+        code: 120
       } // 130 on GitHub, 80 on npmjs.org for README.md code blocks
     ],
     'arrow-parens': [
