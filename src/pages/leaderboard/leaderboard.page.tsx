@@ -22,6 +22,7 @@ export default function LeaderboardPage(): ReactElement {
         <h1>{t("leaderboard.execute_issue_count")}</h1>,
         <h1>{t("leaderboard.request_redeem_count")}</h1>,
         <h1>{t("leaderboard.execute_redeem_count")}</h1>,
+        <h1>{t("leaderboard.lifetime_sla")}</h1>,
     ];
 
     // TODO:
@@ -35,6 +36,10 @@ export default function LeaderboardPage(): ReactElement {
             <p>{row.execute_issue_count}</p>,
             <p>{row.request_redeem_count}</p>,
             <p>{row.execute_redeem_count}</p>,
+            <p>{Number(row.lifetime_sla).toFixed(2)}</p>,
+            // lifetime_sla is a string despite schema being "number"
+            // TODO: check how Axios/openapigenerator handle typings, and if necessary
+            // convert stats API data types to `string` to avoid confusion
         ],
         []
     );
@@ -43,13 +48,19 @@ export default function LeaderboardPage(): ReactElement {
         <h1>{t("leaderboard.account_id")}</h1>,
         <h1>{t("leaderboard.stake")}</h1>,
         <h1>{t("leaderboard.block_count")}</h1>,
+        <h1>{t("leaderboard.lifetime_sla")}</h1>,
     ];
 
     // TODO:
     // - exclude Interlay owned relayers
     // - sort relayers with highest lifetime sla
     const tableRelayerRow = useMemo(
-        () => (row: RelayerData): ReactElement[] => [<p>{row.id}</p>, <p>{row.stake} DOT</p>, <p>{row.block_count}</p>],
+        () => (row: RelayerData): ReactElement[] => [
+            <p>{row.id}</p>,
+            <p>{row.stake} DOT</p>,
+            <p>{row.block_count}</p>,
+            <p>{Number(row.lifetime_sla).toFixed(2)}</p>,
+        ],
         []
     );
 
@@ -57,19 +68,12 @@ export default function LeaderboardPage(): ReactElement {
         const fetchVaultData = async () => {
             if (!polkaBtcLoaded) return;
             const vaults = (await statsApi.getVaults()).data;
-            setVaultRows(
-                vaults.sort(
-                    (a, b) =>
-                        a.request_issue_count +
-                        a.request_redeem_count -
-                        (b.request_issue_count + b.request_redeem_count)
-                )
-            );
+            setVaultRows(vaults.sort((a, b) => a.lifetime_sla - b.lifetime_sla));
         };
         const fetchRelayerData = async () => {
             if (!polkaBtcLoaded) return;
             const relayers = (await statsApi.getRelayers()).data;
-            setRelayerRows(relayers);
+            setRelayerRows(relayers.sort((a, b) => a.lifetime_sla - b.lifetime_sla));
         };
         fetchVaultData();
         fetchRelayerData();
