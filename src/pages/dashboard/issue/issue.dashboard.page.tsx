@@ -82,7 +82,7 @@ export default function IssueDashboard(): ReactElement {
         () => (ireq: DashboardIssueInfo): ReactElement[] => [
             // <p>{shortAddress(ireq.id)}</p>,
             <p>{formatDateTimePrecise(new Date(ireq.timestamp))}</p>,
-            <p>{satToBTC(ireq.amountBTC)}</p>,
+            <p>{ireq.amountBTC}</p>,
             <p>{ireq.creation}</p>,
             <p>{shortAddress(ireq.vaultDOTAddress)}</p>,
             <StyledLinkData
