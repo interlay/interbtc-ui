@@ -28,6 +28,7 @@ services:
             RUST_LOG: info
         ports:
             - "3030:3030"
+        restart: unless-stopped
     oracle:
         image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:0.5.3"
         command:
@@ -39,6 +40,7 @@ services:
                 oracle --keyring=bob --polka-btc-url 'ws://polkabtc:9944'
         environment:
             RUST_LOG: info
+        restart: unless-stopped
     faucet:
         image: "registry.gitlab.com/interlay/polkabtc-clients/faucet:0.5.3"
         command:
@@ -52,6 +54,7 @@ services:
             RUST_LOG: info
         ports:
             - "3035:3035"
+        restart: unless-stopped
     vault:
         image: "registry.gitlab.com/interlay/polkabtc-clients/vault:0.5.3"
         command:
@@ -65,6 +68,7 @@ services:
             <<: *client-env
         ports:
             - "3032:3032"
+        restart: unless-stopped
     postgres:
         image: "postgres:11"
         environment:
