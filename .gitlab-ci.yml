@@ -25,7 +25,7 @@ test:
     - ln -s .env.${CI_COMMIT_BRANCH:dev} .env
     - yarn install
     - yarn lint
-    - yarn test --passWithNoTests
+    - yarn test
     - yarn build
   only:
     - merge_requests
