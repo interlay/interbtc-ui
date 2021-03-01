@@ -175,7 +175,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
               </div>
             </div>
           </div>
-          <hr className='total-divider'></hr>
+          <hr className='total-divider' />
           <div className='step-item row'>
             <div className='col-6 total-amount text-green'>{t('you_received')}</div>
             <div className='col-6 total-amount'>
@@ -235,7 +235,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
               </div>
             </div>
           </div>
-          <hr className='total-divider'></hr>
+          <hr className='total-divider' />
           <div className='step-item row'>
             <div className='col-6 total-amount text-green'>{t('you_received')}</div>
             <div className='col-6 total-amount'>

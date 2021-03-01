@@ -90,7 +90,7 @@ function IssueModal(props: IssueModalProps): ReactElement {
                     </div>
                   </div>
                 </div>
-                <hr className='total-divider'></hr>
+                <hr className='total-divider' />
                 <div className='step-item row'>
                   <div className='col-6 total-added-value text-left'>{t('total_deposit')}</div>
                   <div className='col-6 total-amount right-text'>

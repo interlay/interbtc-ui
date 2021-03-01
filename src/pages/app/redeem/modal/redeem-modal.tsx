@@ -63,7 +63,7 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
                     </div>
                   </div>
                 </div>
-                <hr className='total-divider'></hr>
+                <hr className='total-divider' />
                 <div className='step-item row'>
                   <div className='col-6 total-amount'>{t('you_will_receive')}</div>
                   <div className='col-6 total-amount'>
