@@ -25,7 +25,7 @@ function IssueModal(props: IssueModalProps): ReactElement {
   const request = userIssueRequests.filter(request => request.id === selectedIdRequest)[0];
   const { t } = useTranslation();
 
-  const handleModalStatusPanel = (request: IssueRequest) => {
+  const renderModalStatusPanel = (request: IssueRequest) => {
     switch (request.status) {
     case IssueRequestStatus.PendingWithBtcTxNotFound: {
       return <PaymentView request={request} />;
@@ -50,13 +50,14 @@ function IssueModal(props: IssueModalProps): ReactElement {
           <div className='issue-modal-title'>
             {t('issue_page.request', { id: request.id })}
           </div>
+          {/* TODO: could be a component */}
           <i
             className='fas fa-times close-icon'
             onClick={props.onClose} />
           <div className='issue-modal-horizontal-line' />
           <Modal.Body>
             <div className='row'>
-              <div className='col-6 justify-content-center'>
+              <div className='col-xl-6 col-lg-12 justify-content-center'>
                 <div className='issue-amount'>
                   <span className='wizard-number'>
                     {request.issuedAmountBtc || request.requestedAmountPolkaBTC}
@@ -118,6 +119,7 @@ function IssueModal(props: IssueModalProps): ReactElement {
                     </div>
                   </div>
                 </div>
+                {/* TODO: should be reusable */}
                 <div className='step-item row mt-2'>
                   <div className='col-6 text-left'>{t('issue_page.destination_address')}</div>
                   <div className='col-6 right-text'>{shortAddress(request.vaultBTCAddress)}</div>
@@ -135,13 +137,13 @@ function IssueModal(props: IssueModalProps): ReactElement {
                   <div className='col-6 right-text'>{shortAddress(request.vaultBTCAddress)}</div>
                 </div>
                 <div className='row justify-content-center mt-3'>
-                  <div className='col-9 note-title'>{t('note')}:&nbsp;</div>
+                  <div className='col-9 note-title'>{t('note')}:</div>
                 </div>
                 <div className='row justify-content-center'>
                   <div className='col-9 note-text'>{t('issue_page.fully_decentralized')}</div>
                 </div>
               </div>
-              <div className='col-6'>{request && handleModalStatusPanel(request)}</div>
+              <div className='col-xl-6 col-lg-12'>{renderModalStatusPanel(request)}</div>
             </div>
           </Modal.Body>
         </>

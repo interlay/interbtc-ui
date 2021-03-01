@@ -99,6 +99,8 @@
     font-family: airbnb-cereal-medium;
     opacity: 0.5;
 }
+
+// TODO: should be correctly descriptive
 .right-text {
     font-family: airbnb-cereal-bold;
 }
@@ -546,6 +548,7 @@
         font-size: 1rem;
         width: 100%;
         text-transform: uppercase;
+        word-wrap: break-word;
         font-family: airbnb-cereal-bold;
     }
     .close-icon {
