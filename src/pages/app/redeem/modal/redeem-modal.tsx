@@ -39,7 +39,7 @@ export default function RedeemModal(props: RedeemModalProps): ReactElement {
             <div className='row'>
               <div className='col-6 justify-content-center'>
                 <div className='redeem-amount'>
-                  <span className='wizzard-number'>{request.totalAmount}</span>&nbsp;PolkaBTC
+                  <span className='wizard-number'>{request.totalAmount}</span>&nbsp;PolkaBTC
                 </div>
                 <div className='row usd-price-modal'>
                   <div className='col'>

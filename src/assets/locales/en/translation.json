@@ -286,7 +286,7 @@
         "you_did_not_send": "You did not send the BTC transaction in time or transferred amount did not not meet the requested amount of PolkaBTC.",
         "waiting_deposit": "Waiting for deposit. If you have already made the payment, please wait for a few minutes for it to appear here.",
         "deposit": "Deposit",
-        "fully_decentralised": "PolkaBTC is a fully decentralised system. Please make sure you send the right amount of BTC, we cannot guarantee that the vault will return the additional BTC that you sent by mistake.",
+        "fully_decentralized": "PolkaBTC is a fully decentralised system. Please make sure you send the right amount of BTC, we cannot guarantee that the vault will return the additional BTC that you sent by mistake.",
         "view_parachain_block": "View Parachain Block",
         "view_on_block_explorer": "View on Block Explorer",
         "mint_polka_by_wrapping": "Mint PolkaBTC by wrapping BTC 1:1",

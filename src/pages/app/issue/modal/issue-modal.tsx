@@ -1,22 +1,24 @@
+
 import React, { ReactElement } from 'react';
 import { useSelector } from 'react-redux';
-import { StoreType } from '../../../../common/types/util.types';
 import { Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { getUsdAmount, shortAddress } from '../../../../common/utils/utils';
+import Big from 'big.js';
+
 import PaymentView from './payment-view';
 import StatusView from './status-view';
 import WhoopsView from './whoops-view';
-import Big from 'big.js';
-import BitcoinLogo from '../../../../assets/img/small-bitcoin-logo.png';
-import { IssueRequestStatus, IssueRequest } from '../../../../common/types/issue.types';
+import { getUsdAmount, shortAddress } from 'common/utils/utils';
+import { StoreType } from 'common/types/util.types';
+import { IssueRequestStatus, IssueRequest } from 'common/types/issue.types';
+import BitcoinLogo from 'assets/img/small-bitcoin-logo.png';
 
 type IssueModalProps = {
-    show: boolean;
-    onClose: () => void;
+  show: boolean;
+  onClose: () => void;
 };
 
-export default function IssueModal(props: IssueModalProps): ReactElement {
+function IssueModal(props: IssueModalProps): ReactElement {
   const { address, prices } = useSelector((state: StoreType) => state.general);
   const selectedIdRequest = useSelector((state: StoreType) => state.issue.id);
   const userIssueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address) || [];
@@ -44,42 +46,43 @@ export default function IssueModal(props: IssueModalProps): ReactElement {
       onHide={props.onClose}
       size='xl'>
       {request && (
-        <React.Fragment>
-          <div className='issue-modal-title'>{t('issue_page.request', { id: request.id })}</div>
+        <>
+          <div className='issue-modal-title'>
+            {t('issue_page.request', { id: request.id })}
+          </div>
           <i
             className='fas fa-times close-icon'
-            onClick={props.onClose}>
-          </i>
-
-          <div className='issue-modal-horizontal-line'></div>
+            onClick={props.onClose} />
+          <div className='issue-modal-horizontal-line' />
           <Modal.Body>
             <div className='row'>
               <div className='col-6 justify-content-center'>
                 <div className='issue-amount'>
-                  <span className='wizzard-number'>
+                  <span className='wizard-number'>
                     {request.issuedAmountBtc || request.requestedAmountPolkaBTC}
                   </span>
-                                    &nbsp;PolkaBTC
+                  &nbsp;PolkaBTC
                 </div>
                 <div className='row usd-price-modal'>
                   <div className='col'>
-                    {'~ $' +
-                                            getUsdAmount(
-                                              request.issuedAmountBtc || request.requestedAmountPolkaBTC || '0',
-                                              prices.bitcoin.usd
-                                            )}
+                    {'~ $' + getUsdAmount(
+                      request.issuedAmountBtc || request.requestedAmountPolkaBTC || '0',
+                      prices.bitcoin.usd
+                    )}
                   </div>
                 </div>
                 <div className='step-item row'>
                   <div className='col-6 text-left'>{t('bridge_fee')}</div>
                   <div className='col-6 right-text'>
+                    {/* TODO: should have an image component */}
                     <img
                       src={BitcoinLogo}
                       width='23px'
                       height='23px'
-                      alt='bitcoin logo'>
-                    </img>{' '}
-                                        &nbsp;
+                      alt='bitcoin logo' />
+                    {' '}
+                    &nbsp;
+                    {/* TODO: could have a utility helper */}
                     {parseFloat(Number(request.fee).toFixed(5))} BTC
                     <div className='send-price'>
                       {'~ $' + getUsdAmount(request.fee, prices.bitcoin.usd)}
@@ -94,9 +97,9 @@ export default function IssueModal(props: IssueModalProps): ReactElement {
                       src={BitcoinLogo}
                       width='23px'
                       height='23px'
-                      alt='bitcoin logo'>
-                    </img>{' '}
-                                        &nbsp;
+                      alt='bitcoin logo' />
+                    {' '}
+                    &nbsp;
                     {parseFloat(
                       new Big(request.fee)
                         .add(
@@ -104,14 +107,14 @@ export default function IssueModal(props: IssueModalProps): ReactElement {
                         )
                         .round(5)
                         .toString()
-                    )}{' '}
-                                        BTC
+                    )}
+                    {' '}
+                    BTC
                     <div className='send-price'>
-                      {'~ $' +
-                                                getUsdAmount(
-                                                  request.issuedAmountBtc || request.requestedAmountPolkaBTC,
-                                                  prices.bitcoin.usd
-                                                )}
+                      {'~ $' + getUsdAmount(
+                        request.issuedAmountBtc || request.requestedAmountPolkaBTC,
+                        prices.bitcoin.usd
+                      )}
                     </div>
                   </div>
                 </div>
@@ -135,14 +138,16 @@ export default function IssueModal(props: IssueModalProps): ReactElement {
                   <div className='col-9 note-title'>{t('note')}:&nbsp;</div>
                 </div>
                 <div className='row justify-content-center'>
-                  <div className='col-9 note-text'>{t('issue_page.fully_decentralised')}</div>
+                  <div className='col-9 note-text'>{t('issue_page.fully_decentralized')}</div>
                 </div>
               </div>
               <div className='col-6'>{request && handleModalStatusPanel(request)}</div>
             </div>
           </Modal.Body>
-        </React.Fragment>
+        </>
       )}
     </Modal>
   );
 }
+
+export default IssueModal;

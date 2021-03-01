@@ -65,8 +65,8 @@ function IssueRequests(): ReactElement {
 
   return (
     <div className='container mt-5'>
-      {issueRequests && issueRequests.length > 0 && (
-        <React.Fragment>
+      {issueRequests?.length > 0 && (
+        <>
           <h5>{t('issue_requests')}</h5>
           <p>{t('issue_page.click_on_issue_request')}</p>
           <Table
@@ -117,7 +117,7 @@ function IssueRequests(): ReactElement {
           <IssueModal
             show={showModal}
             onClose={closeModal} />
-        </React.Fragment>
+        </>
       )}
     </div>
   );
