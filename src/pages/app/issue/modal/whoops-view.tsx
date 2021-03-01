@@ -69,7 +69,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
             </div>
           </div>
         </div>
-        <hr className='total-divider'></hr>
+        <hr className='total-divider' />
         <div className='step-item row'>
           <div className='col-6 text-left total-added-value'>{t('issue_page.refund_difference')}</div>
           <div className='col-6 right-text total-amount'>
