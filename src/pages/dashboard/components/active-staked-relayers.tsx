@@ -9,7 +9,8 @@ type ActiveStakedRelayers = {
   linkButton?: boolean;
 };
 
-const ActiveStakedRelayers = ({ linkButton }: ActiveStakedRelayers): ReactElement => {
+// TODO: should rename `ActiveStakedRelayersComponent`
+const ActiveStakedRelayersComponent = ({ linkButton }: ActiveStakedRelayers): ReactElement => {
   const statsApi = usePolkabtcStats();
   const { t } = useTranslation();
 
@@ -56,4 +57,4 @@ const ActiveStakedRelayers = ({ linkButton }: ActiveStakedRelayers): ReactElemen
   );
 };
 
-export default ActiveStakedRelayers;
+export default ActiveStakedRelayersComponent;

@@ -27,7 +27,8 @@ function StyledLinkData(props: StyledLinkDataProps): ReactElement {
   return (
     <a
       href={props.target}
-      target={props.newTab ? '_blank' : ''}>
+      target={props.newTab ? '_blank' : ''}
+      rel='noreferrer'>
       <p style={{ color: blueAccent.color }}>
         {props.data}
         <img

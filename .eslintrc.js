@@ -38,7 +38,7 @@ module.exports = {
       'error',
       'never'
     ],
-    'no-console': 'warn',
+    'no-console': 'off', // TODO: `off` for now but later should be `warn`
     indent: [
       'error',
       2
@@ -162,7 +162,7 @@ module.exports = {
     ],
     'react/jsx-props-no-multi-spaces': 'error',
     'import/exports-last': 'error',
-    'require-jsdoc': 0 // TODO: off for now but later should be on
+    'require-jsdoc': 0 // TODO: `0` for now but later should be on by being removed
     // TODO: double-check
     // "prettier/prettier": 2
   }
