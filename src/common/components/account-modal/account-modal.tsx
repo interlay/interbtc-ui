@@ -31,7 +31,7 @@ export default function AccountModal(props: AccountModalProps): ReactElement {
             <Modal.Body className="account-modal">
                 {extensions.length ? (
                     <React.Fragment>
-                        {!accounts.length ? (
+                        {!accounts.length && (
                             <div id="account-modal-no-account">
                                 <p>
                                     {t("no_account")}
@@ -45,8 +45,6 @@ export default function AccountModal(props: AccountModalProps): ReactElement {
                                     . {t("refresh_page")}
                                 </p>
                             </div>
-                        ) : (
-                            <p>{t("select_an_account")}:</p>
                         )}
                         {(accounts || []).map((account: string, index: number) => (
                             <div className="row" key={index}>

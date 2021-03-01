@@ -7,6 +7,7 @@ import { StoreType } from "../../../common/types/util.types";
 import { satToBTC } from "@interlay/polkabtc";
 import LineChartComponent from "./line-chart-component";
 import { useTranslation } from "react-i18next";
+import { getUsdAmount } from "../../../common/utils/utils";
 
 type PolkaBTCProps = {
     linkButton?: boolean;
@@ -48,7 +49,7 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
                     <h1 style={{ color: getAccents("d_yellow").color }}>{t("dashboard.issue.issued")}</h1>
                     <h2>{t("dashboard.issue.total_polkabtc", { amount: totalPolkaBTC })}</h2>
                     {/* TODO: add the price API */}
-                    <h2>${(prices.bitcoin.usd * Number(totalPolkaBTC)).toFixed(2)}</h2>
+                    <h2>${getUsdAmount(totalPolkaBTC, prices.bitcoin.usd)}</h2>
                 </div>
                 {linkButton && (
                     <>

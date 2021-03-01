@@ -15,9 +15,12 @@ export default async function fetchIssueTransactions(dispatch: Dispatch, store: 
         const { address, bitcoinHeight, polkaBtcLoaded } = store.getState().general;
         if (!address || !polkaBtcLoaded) return;
 
-        const parachainHeight = await window.polkaBTC.system.getCurrentBlockNumber();
-        const issuePeriod = await window.polkaBTC.issue.getIssuePeriod();
-        const requiredBtcConfirmations = await window.polkaBTC.btcRelay.getStableBitcoinConfirmations();
+        const [parachainHeight, issuePeriod, requiredBtcConfirmations] = await Promise.all([
+            window.polkaBTC.system.getCurrentBlockNumber(),
+            window.polkaBTC.issue.getIssuePeriod(),
+            window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
+        ]);
+
         const databaseRequests: IssueRequest[] = await Promise.all(
             (
                 await stats.getFilteredIssues(

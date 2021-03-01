@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { StoreType } from "../../../common/types/util.types";
 import ButtonMaybePending from "../../../common/components/pending-button";
-import { calculateAmount, updateBalances } from "../../../common/utils/utils";
+import { getUsdAmount, updateBalances } from "../../../common/utils/utils";
 import { btcToSat } from "@interlay/polkabtc";
 import { updateBalancePolkaBTCAction } from "../../../common/actions/general.actions";
 import Big from "big.js";
@@ -23,7 +23,7 @@ export default function Transfer() {
     const defaultValues = { defaultValues: { amountPolkaBTC: "", btcAddress: "" } };
     const { register, handleSubmit, errors, getValues, reset } = useForm<TransferForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
-    const [usdAmount, setUsdAmount] = useState("0");
+    const [usdAmount, setUsdAmount] = useState("0.00");
     const dispatch = useDispatch();
 
     const onSubmit = handleSubmit(async ({ amountPolkaBTC, address }) => {
@@ -57,7 +57,7 @@ export default function Transfer() {
                             placeholder="0.00"
                             className={"" + (errors.amountPolkaBTC ? " error-borders" : "")}
                             onChange={() => {
-                                setUsdAmount(calculateAmount(getValues("amountPolkaBTC") || "0", usdPrice));
+                                setUsdAmount(getUsdAmount(getValues("amountPolkaBTC") || "0.00", usdPrice));
                             }}
                             ref={register({
                                 required: true,

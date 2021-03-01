@@ -7,6 +7,7 @@ import usePolkabtcStats from "../../../common/hooks/use-polkabtc-stats";
 import { planckToDOT } from "@interlay/polkabtc";
 import LineChartComponent from "./line-chart-component";
 import { useTranslation } from "react-i18next";
+import { getUsdAmount } from "../../../common/utils/utils";
 
 type CollateralLockedProps = {
     linkButton?: boolean;
@@ -49,7 +50,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
                 <div className="values-container">
                     <h1 style={{ color: getAccents("d_pink").color }}>{t("dashboard.vaults.collateral_locked")}</h1>
                     <h2>{totalLockedDOT} DOT</h2>
-                    <h2>${(prices.polkadot.usd * Number(totalLockedDOT)).toFixed(2)}</h2>
+                    <h2>${getUsdAmount(totalLockedDOT, prices.polkadot.usd)}</h2>
                 </div>
                 {linkButton && (
                     <div className="button-container">

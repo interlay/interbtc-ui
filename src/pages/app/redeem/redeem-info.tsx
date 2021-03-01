@@ -9,12 +9,13 @@ import {
     changeRedeemIdAction,
 } from "../../../common/actions/redeem.actions";
 import RedeemModal from "./modal/redeem-modal";
+import { getUsdAmount } from "../../../common/utils/utils";
 
 export default function RedeemInfo() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const { address, prices } = useSelector((state: StoreType) => state.general);
-    const { id, btcAddress } = useSelector((state: StoreType) => state.redeem);
+    const { id } = useSelector((state: StoreType) => state.redeem);
     const requests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address) || [];
     const [showModal, setShowModal] = useState(false);
     const request = requests.filter((request) => request.id === id)[0];
@@ -47,7 +48,7 @@ export default function RedeemInfo() {
                         </div>
                         <div className="row">
                             <div className="col-12 info-redeem-price">
-                                ~${Number(request.amountPolkaBTC) * prices.bitcoin.usd}
+                                ~${getUsdAmount(request.amountPolkaBTC, prices.bitcoin.usd)}
                             </div>
                         </div>
                         <div className="row">
@@ -57,7 +58,7 @@ export default function RedeemInfo() {
                         </div>
                         <div className="row ">
                             <div className="col payment-address">
-                                <span className="copy-address">{btcAddress}</span>
+                                <span className="copy-address">{request.btcAddress}</span>
                             </div>
                         </div>
                         <div className="row">

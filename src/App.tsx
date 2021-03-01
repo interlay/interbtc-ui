@@ -109,7 +109,7 @@ export default function App(): ReactElement {
                             "Please check your internet connection or try again later."
                     );
                 }
-            }, 5000);
+            }, 10000);
             window.polkaBTC = await connectToParachain();
             dispatch(isPolkaBtcLoaded(true));
             startFetchingLiveData(dispatch, store);
@@ -131,18 +131,20 @@ export default function App(): ReactElement {
             if (!polkaBtcLoaded) return;
 
             try {
-                const totalPolkaSAT = await window.polkaBTC.treasury.totalPolkaBTC();
-                const totalLockedPLANCK = await window.polkaBTC.collateral.totalLockedDOT();
+                const [totalPolkaSAT, totalLockedPLANCK, btcRelayHeight, bitcoinHeight, state] = await Promise.all([
+                    window.polkaBTC.treasury.totalPolkaBTC(),
+                    window.polkaBTC.collateral.totalLockedDOT(),
+                    window.polkaBTC.btcRelay.getLatestBlockHeight(),
+                    window.polkaBTC.btcCore.getLatestBlockHeight(),
+                    window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain(),
+                ]);
                 const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
                 const totalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
-                const btcRelayHeight = Number(await window.polkaBTC.btcRelay.getLatestBlockHeight());
-                const bitcoinHeight = await window.polkaBTC.btcCore.getLatestBlockHeight();
-                const state = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
                 dispatch(
                     initGeneralDataAction(
                         totalPolkaBTC,
                         totalLockedDOT,
-                        btcRelayHeight,
+                        Number(btcRelayHeight),
                         bitcoinHeight,
                         state.isError
                             ? ParachainStatus.Error
