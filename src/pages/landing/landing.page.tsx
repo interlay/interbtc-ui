@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import Timer from 'common/components/timer';
 import * as constants from '../../constants';
 import checkStaticPage from 'config/check-static-page';
+import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import PolkaBTCImg from 'assets/img/polkabtc/PolkaBTC_white.svg';
@@ -126,7 +127,7 @@ export default function LandingPage(): JSX.Element {
                     sm={{ span: 4, offset: 2 }}>
                     <NavLink
                       className='text-decoration-none'
-                      to='/app'>
+                      to={PAGES.APPLICATION}>
                       <Button
                         variant='outline-polkadot'
                         size='lg'
@@ -142,7 +143,7 @@ export default function LandingPage(): JSX.Element {
                     sm={{ span: 4 }}>
                     <NavLink
                       className='text-decoration-none'
-                      to='/dashboard'>
+                      to={PAGES.DASHBOARD}>
                       <Button
                         variant='outline-bitcoin'
                         size='lg'

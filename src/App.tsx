@@ -57,6 +57,7 @@ import Topbar from 'common/components/topbar';
 import Footer from 'common/components/footer/footer';
 import LazyLoadingErrorBoundary from 'utils/hocs/LazyLoadingErrorBoundary';
 import checkStaticPage from 'config/check-static-page';
+import { PAGES } from 'utils/constants/links';
 import {
   isPolkaBtcLoaded,
   isStakedRelayerLoaded,
@@ -284,57 +285,57 @@ function App(): ReactElement {
         <LazyLoadingErrorBoundary>
           <Switch>
             {!checkStaticPage() && (
-              <Route path='/staked-relayer'>
+              <Route path={PAGES.STAKED_RELAYER}>
                 <StakedRelayerPage />
               </Route>
             )}
             {!checkStaticPage() && (
-              <Route path='/dashboard/vaults'>
+              <Route path={PAGES.VAULTS}>
                 <VaultsDashboard />
               </Route>
             )}
             {!checkStaticPage() && (
-              <Route path='/leaderboard'>
+              <Route path={PAGES.LEADERBOARD}>
                 <LeaderboardPage />
               </Route>
             )}
             {!checkStaticPage() && (
-              <Route path='/dashboard/parachain'>
+              <Route path={PAGES.PARACHAIN}>
                 <ParachainDashboard />
               </Route>
             )}
             {!checkStaticPage() && (
-              <Route path='/dashboard/oracles'>
+              <Route path={PAGES.ORACLES}>
                 <OraclesDashboard />
               </Route>
             )}
             {!checkStaticPage() && (
-              <Route path='/dashboard/issue'>
+              <Route path={PAGES.ISSUE}>
                 <IssueDashboard />
               </Route>
             )}
             {!checkStaticPage() && (
-              <Route path='/dashboard/redeem'>
+              <Route path={PAGES.REDEEM}>
                 <RedeemDashboard />
               </Route>
             )}
             {!checkStaticPage() && (
-              <Route path='/dashboard/relay'>
+              <Route path={PAGES.RELAY}>
                 <RelayDashboard />
               </Route>
             )}
             {!checkStaticPage() && (
-              <Route path='/dashboard'>
+              <Route path={PAGES.DASHBOARD}>
                 <DashboardPage />
               </Route>
             )}
             {!checkStaticPage() && (
-              <Route path='/vault'>
+              <Route path={PAGES.VAULT}>
                 <VaultDashboardPage />
               </Route>
             )}
             {!checkStaticPage() && (
-              <Route path='/feedback'>
+              <Route path={PAGES.FEEDBACK}>
                 <FeedbackPage />
               </Route>
             )}
@@ -346,7 +347,7 @@ function App(): ReactElement {
             {!checkStaticPage() && (
               <Route
                 exact
-                path='/app'>
+                path={PAGES.APPLICATION}>
                 <AppPage />
               </Route>
             )}
