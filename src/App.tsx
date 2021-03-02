@@ -40,7 +40,6 @@ import {
 import Layout from 'parts/Layout';
 import AccountModal from 'common/components/account-modal/account-modal';
 import Topbar from 'common/components/topbar';
-import Footer from 'common/components/footer/footer';
 import LazyLoadingErrorBoundary from 'utils/hocs/LazyLoadingErrorBoundary';
 import checkStaticPage from 'config/check-static-page';
 import { PAGES } from 'utils/constants/links';
@@ -232,7 +231,10 @@ function App(): ReactElement {
       }
     };
     initDataOnAppBootstrap();
-  }, [dispatch, polkaBtcLoaded]);
+  }, [
+    dispatch,
+    polkaBtcLoaded
+  ]);
 
   useEffect((): void => {
     // Do not load data if showing static landing page only
@@ -275,7 +277,12 @@ function App(): ReactElement {
         clearInterval(id);
       }
     }, 1000);
-  }, [address, polkaBtcLoaded, dispatch, extensions.length]);
+  }, [
+    address,
+    polkaBtcLoaded,
+    dispatch,
+    extensions.length
+  ]);
 
   useEffect(() => {
     // Do not load data if showing static landing page only
@@ -290,7 +297,7 @@ function App(): ReactElement {
         }, 3000);
         await createAPIInstance();
         keyring.loadAll({});
-      } catch (e) {
+      } catch (error) {
         toast.warn('Could not connect to the Parachain, please try again in a few seconds', {
           autoClose: false
         });
@@ -298,7 +305,13 @@ function App(): ReactElement {
     };
     loadData();
     startFetchingLiveData(dispatch, store);
-  }, [createAPIInstance, isLoading, polkaBtcLoaded, dispatch, store]);
+  }, [
+    createAPIInstance,
+    isLoading,
+    polkaBtcLoaded,
+    dispatch,
+    store
+  ]);
 
   return (
     <Layout>
@@ -393,7 +406,6 @@ function App(): ReactElement {
           </Switch>
         </LazyLoadingErrorBoundary>
       </React.Suspense>
-      <Footer />
     </Layout>
   );
 }
