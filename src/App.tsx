@@ -51,7 +51,7 @@ import {
   initGeneralDataAction,
   setInstalledExtensionAction,
   showAccountModalAction,
-  updateAccountsAction,
+  updateAddressesAction,
   isFaucetLoaded
 } from 'common/actions/general.actions';
 import './i18n';
@@ -146,7 +146,10 @@ function App(): ReactElement {
       dispatch(showAccountModalAction(false));
       dispatch(changeAddressAction(newAddress));
     },
-    [polkaBtcLoaded, dispatch]
+    [
+      polkaBtcLoaded,
+      dispatch
+    ]
   );
 
   const createAPIInstance = useCallback(async (): Promise<void> => {
@@ -160,7 +163,7 @@ function App(): ReactElement {
       window.faucet = new FaucetClient(constants.FAUCET_URL);
       dispatch(isFaucetLoaded(true));
 
-      // TODO: could be a race condition
+      // TODO: should avoid any race condition
       setTimeout(() => {
         if (!window.polkaBTC) {
           toast.warn(
@@ -187,15 +190,21 @@ function App(): ReactElement {
     store
   ]);
 
-  useEffect((): void => {
+  useEffect(() => {
     // Do not load data if showing static landing page only
     if (checkStaticPage()) return;
+    if (!polkaBtcLoaded) return;
 
-    const initDataOnAppBootstrap = async () => {
-      if (!polkaBtcLoaded) return;
-
+    // Initialize data on app bootstrap
+    (async () => {
       try {
-        const [totalPolkaSAT, totalLockedPLANCK, btcRelayHeight, bitcoinHeight, state] = await Promise.all([
+        const [
+          totalPolkaSAT,
+          totalLockedPLANCK,
+          btcRelayHeight,
+          bitcoinHeight,
+          state
+        ] = await Promise.all([
           window.polkaBTC.treasury.totalPolkaBTC(),
           window.polkaBTC.collateral.totalLockedDOT(),
           window.polkaBTC.btcRelay.getLatestBlockHeight(),
@@ -218,16 +227,16 @@ function App(): ReactElement {
           )
         );
       } catch (error) {
+        // TODO: should have error handling instead of console
         console.log(error);
       }
-    };
-    initDataOnAppBootstrap();
+    })();
   }, [
     dispatch,
     polkaBtcLoaded
   ]);
 
-  useEffect((): void => {
+  useEffect(() => {
     // Do not load data if showing static landing page only
     if (checkStaticPage()) return;
 
@@ -237,27 +246,29 @@ function App(): ReactElement {
       const browserExtensions = await web3Enable(constants.APP_NAME);
       dispatch(setInstalledExtensionAction(browserExtensions.map(ext => ext.name)));
 
-      const allAccounts = await web3Accounts();
-      if (allAccounts.length === 0) {
+      const accounts = await web3Accounts();
+      if (accounts.length === 0) {
         dispatch(changeAddressAction(''));
         return false;
       }
 
-      const accounts = allAccounts.map(({ address }) => address);
-      dispatch(updateAccountsAction(accounts));
+      const addresses = accounts.map(({ address }) => address);
+      dispatch(updateAddressesAction(addresses));
 
       let newAddress: string | undefined = undefined;
-      if (accounts.includes(address)) {
+      if (addresses.includes(address)) {
         newAddress = address;
-      } else if (accounts.length === 1) {
-        newAddress = accounts[0];
+      } else if (addresses.length === 1) {
+        newAddress = addresses[0];
       }
 
       if (newAddress) {
         const { signer } = await web3FromAddress(newAddress);
         window.polkaBTC.setAccount(newAddress, signer);
         dispatch(changeAddressAction(newAddress));
-      } else dispatch(changeAddressAction(''));
+      } else {
+        dispatch(changeAddressAction(''));
+      }
 
       return true;
     };
@@ -278,11 +289,11 @@ function App(): ReactElement {
   useEffect(() => {
     // Do not load data if showing static landing page only
     if (checkStaticPage()) return;
+    if (polkaBtcLoaded) return;
 
-    const loadData = async () => {
+    (async () => {
       try {
-        if (polkaBtcLoaded) return;
-
+        // TODO: should avoid any race condition
         setTimeout(() => {
           if (isLoading) setIsLoading(false);
         }, 3000);
@@ -293,8 +304,7 @@ function App(): ReactElement {
           autoClose: false
         });
       }
-    };
-    loadData();
+    })();
     startFetchingLiveData(dispatch, store);
   }, [
     createAPIInstance,

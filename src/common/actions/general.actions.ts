@@ -109,7 +109,7 @@ export const setInstalledExtensionAction = (extensions: string[]): SetInstalledE
   extensions
 });
 
-export const updateAccountsAction = (accounts: string[]): UpdateAccounts => ({
+export const updateAddressesAction = (accounts: string[]): UpdateAccounts => ({
   type: UPDATE_ACCOUNTS,
   accounts
 });

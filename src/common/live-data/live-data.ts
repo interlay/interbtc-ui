@@ -7,6 +7,7 @@ import fetchIssueTransactions from './issue-transaction.watcher';
 import fetchRedeemTransactions from './redeem-transaction.watcher';
 import { StoreState } from '../types/util.types';
 
+// TODO: should use web sockets instead of infinite times of fetch
 export default function startFetchingLiveData(dispatch: Dispatch, store: StoreState): void {
   if (window.isFetchingActive) return;
   window.isFetchingActive = true;
