@@ -5,7 +5,6 @@ import React, {
   useCallback
 } from 'react';
 import {
-  BrowserRouter as Router,
   Switch,
   Route
 } from 'react-router-dom';
@@ -39,19 +38,6 @@ import {
 } from 'react-redux';
 
 import Layout from 'parts/Layout';
-import AppPage from 'pages/app/app.page';
-import DashboardPage from 'pages/dashboard/dashboard.page';
-import VaultDashboardPage from 'pages/vault-dashboard/vault-dashboard.page';
-import StakedRelayerPage from 'pages/staked-relayer/staked-relayer.page';
-import LeaderboardPage from 'pages/leaderboard/leaderboard.page';
-import VaultsDashboard from 'pages/dashboard/vaults/vaults.dashboard.page';
-import IssueDashboard from 'pages/dashboard/issue/issue.dashboard.page';
-import RedeemDashboard from 'pages/dashboard/redeem/redeem.dashboard.page';
-import LandingPage from 'pages/landing/landing.page';
-import RelayDashboard from 'pages/dashboard/relay/relay.dashboard.page';
-import OraclesDashboard from 'pages/dashboard/oracles/oracles.dashboard.page';
-import ParachainDashboard from 'pages/dashboard/parachain/parachain.dashboard.page';
-import FeedbackPage from 'pages/feedback/feedback.page';
 import AccountModal from 'common/components/account-modal/account-modal';
 import Topbar from 'common/components/topbar';
 import Footer from 'common/components/footer/footer';
@@ -77,6 +63,58 @@ import { StoreType, ParachainStatus } from 'common/types/util.types';
 // FIXME: Clean-up and move to scss
 import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
+
+const ApplicationPage = React.lazy(() =>
+  import(/* webpackChunkName: 'application' */ 'pages/app/app.page')
+);
+
+const DashboardPage = React.lazy(() =>
+  import(/* webpackChunkName: 'dashboard' */ 'pages/dashboard/dashboard.page')
+);
+
+const VaultDashboardPage = React.lazy(() =>
+  import(/* webpackChunkName: 'vault' */ 'pages/vault-dashboard/vault-dashboard.page')
+);
+
+const StakedRelayerPage = React.lazy(() =>
+  import(/* webpackChunkName: 'staked-relayer' */ 'pages/staked-relayer/staked-relayer.page')
+);
+
+const LeaderboardPage = React.lazy(() =>
+  import(/* webpackChunkName: 'leaderboard' */ 'pages/leaderboard/leaderboard.page')
+);
+
+const VaultsDashboard = React.lazy(() =>
+  import(/* webpackChunkName: 'vaults' */ 'pages/dashboard/vaults/vaults.dashboard.page')
+);
+
+const IssueDashboard = React.lazy(() =>
+  import(/* webpackChunkName: 'issue' */ 'pages/dashboard/issue/issue.dashboard.page')
+);
+
+const RedeemDashboard = React.lazy(() =>
+  import(/* webpackChunkName: 'redeem' */ 'pages/dashboard/redeem/redeem.dashboard.page')
+);
+
+const LandingPage = React.lazy(() =>
+  import(/* webpackChunkName: 'landing' */ 'pages/landing/landing.page')
+);
+
+const RelayDashboard = React.lazy(() =>
+  import(/* webpackChunkName: 'relay' */ 'pages/dashboard/relay/relay.dashboard.page')
+);
+
+const OraclesDashboard = React.lazy(() =>
+  import(/* webpackChunkName: 'oracles' */ 'pages/dashboard/oracles/oracles.dashboard.page')
+);
+
+const ParachainDashboard = React.lazy(() =>
+  import(/* webpackChunkName: 'parachain' */ 'pages/dashboard/parachain/parachain.dashboard.page')
+);
+
+const FeedbackPage = React.lazy(() =>
+  import(/* webpackChunkName: 'feedback' */ 'pages/feedback/feedback.page')
+);
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
   return createPolkabtcAPI(
@@ -263,25 +301,26 @@ function App(): ReactElement {
   }, [createAPIInstance, isLoading, polkaBtcLoaded, dispatch, store]);
 
   return (
-    <Router>
-      <Layout>
-        <ToastContainer
-          position='top-right'
-          autoClose={5000}
-          hideProgressBar={false} />
-        <ReactTooltip
-          place='top'
-          type='dark'
-          effect='solid' />
-        <AccountModal
-          selected={address}
-          onSelected={selectAccount} />
-        {/* TODO: should move into `Layout` */}
-        {!checkStaticPage() && (
-          <Topbar
-            address={address}
-            requestDOT={requestDotFromFaucet} />
-        )}
+    <Layout>
+      <ToastContainer
+        position='top-right'
+        autoClose={5000}
+        hideProgressBar={false} />
+      <ReactTooltip
+        place='top'
+        type='dark'
+        effect='solid' />
+      <AccountModal
+        selected={address}
+        onSelected={selectAccount} />
+      {/* TODO: should move into `Layout` */}
+      {!checkStaticPage() && (
+        <Topbar
+          address={address}
+          requestDOT={requestDotFromFaucet} />
+      )}
+      {/* TODO: should update `Loading...` */}
+      <React.Suspense fallback={<div>Loading...</div>}>
         <LazyLoadingErrorBoundary>
           <Switch>
             {!checkStaticPage() && (
@@ -348,14 +387,14 @@ function App(): ReactElement {
               <Route
                 exact
                 path={PAGES.APPLICATION}>
-                <AppPage />
+                <ApplicationPage />
               </Route>
             )}
           </Switch>
         </LazyLoadingErrorBoundary>
-        <Footer />
-      </Layout>
-    </Router>
+      </React.Suspense>
+      <Footer />
+    </Layout>
   );
 }
 
