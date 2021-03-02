@@ -122,7 +122,7 @@
         "waiting_for": "Waiting for",
         "typically_takes": "This typically takes only a few minutes but may sometimes take up to 6 hours.",
         "from_vault": "from Vault",
-        "we_will_inform_you_btc": "We will infom you when the BTC payment is executed.",
+        "we_will_inform_you_btc": "We will inform you when the BTC payment is executed.",
         "redeem_processed": "Your Redeem request is being processed",
         "retried": "Retried",
         "error_in_parachain": "You can't redeem PolkaBTC at the moment because the PolkaBTC bridge has encountered errors and recovering.",
@@ -463,6 +463,6 @@
         "alpha_testnet": "PolkaBTC User Guide (Alpha Testnet)"
     },
     "testnet": {
-      "warning": "Notice: All assets in the beta testnet are for testing purposes only and have no real value."
+        "warning": "Notice: All assets in the beta testnet are for testing purposes only and have no real value."
     }
 }
