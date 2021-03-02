@@ -55,6 +55,7 @@ import FeedbackPage from 'pages/feedback/feedback.page';
 import AccountModal from 'common/components/account-modal/account-modal';
 import Topbar from 'common/components/topbar';
 import Footer from 'common/components/footer/footer';
+import LazyLoadingErrorBoundary from 'utils/hocs/LazyLoadingErrorBoundary';
 import checkStaticPage from 'utils/helpers/check-static-page';
 import {
   isPolkaBtcLoaded,
@@ -280,75 +281,77 @@ function App(): ReactElement {
             address={address}
             requestDOT={requestDotFromFaucet} />
         )}
-        <Switch>
-          {!checkStaticPage() && (
-            <Route path='/staked-relayer'>
-              <StakedRelayerPage />
-            </Route>
-          )}
-          {!checkStaticPage() && (
-            <Route path='/dashboard/vaults'>
-              <VaultsDashboard />
-            </Route>
-          )}
-          {!checkStaticPage() && (
-            <Route path='/leaderboard'>
-              <LeaderboardPage />
-            </Route>
-          )}
-          {!checkStaticPage() && (
-            <Route path='/dashboard/parachain'>
-              <ParachainDashboard />
-            </Route>
-          )}
-          {!checkStaticPage() && (
-            <Route path='/dashboard/oracles'>
-              <OraclesDashboard />
-            </Route>
-          )}
-          {!checkStaticPage() && (
-            <Route path='/dashboard/issue'>
-              <IssueDashboard />
-            </Route>
-          )}
-          {!checkStaticPage() && (
-            <Route path='/dashboard/redeem'>
-              <RedeemDashboard />
-            </Route>
-          )}
-          {!checkStaticPage() && (
-            <Route path='/dashboard/relay'>
-              <RelayDashboard />
-            </Route>
-          )}
-          {!checkStaticPage() && (
-            <Route path='/dashboard'>
-              <DashboardPage />
-            </Route>
-          )}
-          {!checkStaticPage() && (
-            <Route path='/vault'>
-              <VaultDashboardPage />
-            </Route>
-          )}
-          {!checkStaticPage() && (
-            <Route path='/feedback'>
-              <FeedbackPage />
-            </Route>
-          )}
-          <Route
-            path='/'
-            exact>
-            <LandingPage />
-          </Route>
-          {!checkStaticPage() && (
+        <LazyLoadingErrorBoundary>
+          <Switch>
+            {!checkStaticPage() && (
+              <Route path='/staked-relayer'>
+                <StakedRelayerPage />
+              </Route>
+            )}
+            {!checkStaticPage() && (
+              <Route path='/dashboard/vaults'>
+                <VaultsDashboard />
+              </Route>
+            )}
+            {!checkStaticPage() && (
+              <Route path='/leaderboard'>
+                <LeaderboardPage />
+              </Route>
+            )}
+            {!checkStaticPage() && (
+              <Route path='/dashboard/parachain'>
+                <ParachainDashboard />
+              </Route>
+            )}
+            {!checkStaticPage() && (
+              <Route path='/dashboard/oracles'>
+                <OraclesDashboard />
+              </Route>
+            )}
+            {!checkStaticPage() && (
+              <Route path='/dashboard/issue'>
+                <IssueDashboard />
+              </Route>
+            )}
+            {!checkStaticPage() && (
+              <Route path='/dashboard/redeem'>
+                <RedeemDashboard />
+              </Route>
+            )}
+            {!checkStaticPage() && (
+              <Route path='/dashboard/relay'>
+                <RelayDashboard />
+              </Route>
+            )}
+            {!checkStaticPage() && (
+              <Route path='/dashboard'>
+                <DashboardPage />
+              </Route>
+            )}
+            {!checkStaticPage() && (
+              <Route path='/vault'>
+                <VaultDashboardPage />
+              </Route>
+            )}
+            {!checkStaticPage() && (
+              <Route path='/feedback'>
+                <FeedbackPage />
+              </Route>
+            )}
             <Route
-              exact
-              path='/app'>
-              <AppPage />
+              path='/'
+              exact>
+              <LandingPage />
             </Route>
-          )}
-        </Switch>
+            {!checkStaticPage() && (
+              <Route
+                exact
+                path='/app'>
+                <AppPage />
+              </Route>
+            )}
+          </Switch>
+        </LazyLoadingErrorBoundary>
         <Footer />
       </Layout>
     </Router>
