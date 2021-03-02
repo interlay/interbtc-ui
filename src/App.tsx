@@ -38,6 +38,7 @@ import {
   useStore
 } from 'react-redux';
 
+import Layout from 'parts/Layout';
 import AppPage from 'pages/app/app.page';
 import DashboardPage from 'pages/dashboard/dashboard.page';
 import VaultDashboardPage from 'pages/vault-dashboard/vault-dashboard.page';
@@ -260,96 +261,97 @@ function App(): ReactElement {
   }, [createAPIInstance, isLoading, polkaBtcLoaded, dispatch, store]);
 
   return (
-    <React.Fragment>
-      <Router>
-        <div className='main d-flex flex-column min-vh-100 polkabtc-background fade-in-animation'>
-          <ToastContainer
-            position='top-right'
-            autoClose={5000}
-            hideProgressBar={false} />
-          <ReactTooltip
-            place='top'
-            type='dark'
-            effect='solid' />
-          <AccountModal
-            selected={address}
-            onSelected={selectAccount} />
-          {!checkStaticPage() && <Topbar
+    <Router>
+      <Layout>
+        <ToastContainer
+          position='top-right'
+          autoClose={5000}
+          hideProgressBar={false} />
+        <ReactTooltip
+          place='top'
+          type='dark'
+          effect='solid' />
+        <AccountModal
+          selected={address}
+          onSelected={selectAccount} />
+        {/* TODO: should move into `Layout` */}
+        {!checkStaticPage() && (
+          <Topbar
             address={address}
-            requestDOT={requestDotFromFaucet} />}
-          <Switch>
-            {!checkStaticPage() && (
-              <Route path='/staked-relayer'>
-                <StakedRelayerPage />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path='/dashboard/vaults'>
-                <VaultsDashboard />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path='/leaderboard'>
-                <LeaderboardPage />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path='/dashboard/parachain'>
-                <ParachainDashboard />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path='/dashboard/oracles'>
-                <OraclesDashboard />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path='/dashboard/issue'>
-                <IssueDashboard />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path='/dashboard/redeem'>
-                <RedeemDashboard />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path='/dashboard/relay'>
-                <RelayDashboard />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path='/dashboard'>
-                <DashboardPage />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path='/vault'>
-                <VaultDashboardPage />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path='/feedback'>
-                <FeedbackPage />
-              </Route>
-            )}
-            <Route
-              path='/'
-              exact>
-              <LandingPage />
+            requestDOT={requestDotFromFaucet} />
+        )}
+        <Switch>
+          {!checkStaticPage() && (
+            <Route path='/staked-relayer'>
+              <StakedRelayerPage />
             </Route>
-            {!checkStaticPage() && (
-              <Route
-                exact
-                path='/app'>
-                <AppPage />
-              </Route>
-            )}
-          </Switch>
-          <Footer />
-        </div>
-      </Router>
-    </React.Fragment>
+          )}
+          {!checkStaticPage() && (
+            <Route path='/dashboard/vaults'>
+              <VaultsDashboard />
+            </Route>
+          )}
+          {!checkStaticPage() && (
+            <Route path='/leaderboard'>
+              <LeaderboardPage />
+            </Route>
+          )}
+          {!checkStaticPage() && (
+            <Route path='/dashboard/parachain'>
+              <ParachainDashboard />
+            </Route>
+          )}
+          {!checkStaticPage() && (
+            <Route path='/dashboard/oracles'>
+              <OraclesDashboard />
+            </Route>
+          )}
+          {!checkStaticPage() && (
+            <Route path='/dashboard/issue'>
+              <IssueDashboard />
+            </Route>
+          )}
+          {!checkStaticPage() && (
+            <Route path='/dashboard/redeem'>
+              <RedeemDashboard />
+            </Route>
+          )}
+          {!checkStaticPage() && (
+            <Route path='/dashboard/relay'>
+              <RelayDashboard />
+            </Route>
+          )}
+          {!checkStaticPage() && (
+            <Route path='/dashboard'>
+              <DashboardPage />
+            </Route>
+          )}
+          {!checkStaticPage() && (
+            <Route path='/vault'>
+              <VaultDashboardPage />
+            </Route>
+          )}
+          {!checkStaticPage() && (
+            <Route path='/feedback'>
+              <FeedbackPage />
+            </Route>
+          )}
+          <Route
+            path='/'
+            exact>
+            <LandingPage />
+          </Route>
+          {!checkStaticPage() && (
+            <Route
+              exact
+              path='/app'>
+              <AppPage />
+            </Route>
+          )}
+        </Switch>
+        <Footer />
+      </Layout>
+    </Router>
   );
 }
 
