@@ -5,10 +5,10 @@ import { toast, ToastContainer } from 'react-toastify';
 import { createPolkabtcAPI, PolkaBTCAPI, StakedRelayerClient, VaultClient } from '@interlay/polkabtc';
 import Big from 'big.js';
 import ReactTooltip from 'react-tooltip';
-
-import AccountModal from './common/components/account-modal/account-modal';
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import keyring from '@polkadot/ui-keyring';
+
+import AccountModal from 'common/components/account-modal/account-modal';
 import {
   isPolkaBtcLoaded,
   isStakedRelayerLoaded,
@@ -19,16 +19,9 @@ import {
   showAccountModalAction,
   updateAccountsAction,
   isFaucetLoaded
-} from './common/actions/general.actions';
+} from 'common/actions/general.actions';
 import * as constants from './constants';
 import './i18n';
-
-// theme
-// FIXME: Clean-up and move to scss
-import './_general.scss';
-import 'react-toastify/dist/ReactToastify.css';
-
-// app imports
 import Topbar from './common/components/topbar';
 import Footer from './common/components/footer/footer';
 import AppPage from './pages/app/app.page';
@@ -47,6 +40,12 @@ import RelayDashboard from './pages/dashboard/relay/relay.dashboard.page';
 import OraclesDashboard from './pages/dashboard/oracles/oracles.dashboard.page';
 import ParachainDashboard from './pages/dashboard/parachain/parachain.dashboard.page';
 import FeedbackPage from './pages/feedback/feedback.page';
+import checkStaticPage from 'utils/helpers/check-static-page';
+
+// theme
+// FIXME: Clean-up and move to scss
+import './_general.scss';
+import 'react-toastify/dist/ReactToastify.css';
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
   return createPolkabtcAPI(
@@ -55,7 +54,7 @@ function connectToParachain(): Promise<PolkaBTCAPI> {
   );
 }
 
-export default function App(): ReactElement {
+function App(): ReactElement {
   const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
   const address = useSelector((state: StoreType) => state.general.address);
   const [isLoading, setIsLoading] = useState(true);
@@ -102,31 +101,36 @@ export default function App(): ReactElement {
       window.faucet = new FaucetClient(constants.FAUCET_URL);
       dispatch(isFaucetLoaded(true));
 
+      // TODO: could be a race condition
       setTimeout(() => {
         if (!window.polkaBTC) {
           toast.warn(
             'Unable to connect to the BTC-Parachain. ' +
-                            'Please check your internet connection or try again later.'
+            'Please check your internet connection or try again later.'
           );
         }
       }, 10000);
       window.polkaBTC = await connectToParachain();
       dispatch(isPolkaBtcLoaded(true));
+
       startFetchingLiveData(dispatch, store);
       setIsLoading(false);
     } catch (error) {
       if (!window.polkaBTC) {
         toast.warn(
           'Unable to connect to the BTC-Parachain. ' +
-                        'Please check your internet connection or try again later.'
+          'Please check your internet connection or try again later.'
         );
       }
     }
-  }, [dispatch, store]);
+  }, [
+    dispatch,
+    store
+  ]);
 
   useEffect((): void => {
     // Do not load data if showing static landing page only
-    if (constants.STATIC_PAGE_ONLY) return;
+    if (checkStaticPage()) return;
 
     const initDataOnAppBootstrap = async () => {
       if (!polkaBtcLoaded) return;
@@ -163,7 +167,7 @@ export default function App(): ReactElement {
 
   useEffect((): void => {
     // Do not load data if showing static landing page only
-    if (constants.STATIC_PAGE_ONLY) return;
+    if (checkStaticPage()) return;
 
     const loadAccountData = async () => {
       if (!polkaBtcLoaded || extensions.length) return false;
@@ -206,7 +210,7 @@ export default function App(): ReactElement {
 
   useEffect(() => {
     // Do not load data if showing static landing page only
-    if (constants.STATIC_PAGE_ONLY) return;
+    if (checkStaticPage()) return;
 
     const loadData = async () => {
       try {
@@ -242,61 +246,61 @@ export default function App(): ReactElement {
           <AccountModal
             selected={address}
             onSelected={selectAccount} />
-          {!constants.STATIC_PAGE_ONLY && <Topbar
+          {!checkStaticPage() && <Topbar
             address={address}
             requestDOT={requestDotFromFaucet} />}
           <Switch>
-            {!constants.STATIC_PAGE_ONLY && (
+            {!checkStaticPage() && (
               <Route path='/staked-relayer'>
                 <StakedRelayerPage />
               </Route>
             )}
-            {!constants.STATIC_PAGE_ONLY && (
+            {!checkStaticPage() && (
               <Route path='/dashboard/vaults'>
                 <VaultsDashboard />
               </Route>
             )}
-            {!constants.STATIC_PAGE_ONLY && (
+            {!checkStaticPage() && (
               <Route path='/leaderboard'>
                 <LeaderboardPage />
               </Route>
             )}
-            {!constants.STATIC_PAGE_ONLY && (
+            {!checkStaticPage() && (
               <Route path='/dashboard/parachain'>
                 <ParachainDashboard />
               </Route>
             )}
-            {!constants.STATIC_PAGE_ONLY && (
+            {!checkStaticPage() && (
               <Route path='/dashboard/oracles'>
                 <OraclesDashboard />
               </Route>
             )}
-            {!constants.STATIC_PAGE_ONLY && (
+            {!checkStaticPage() && (
               <Route path='/dashboard/issue'>
                 <IssueDashboard />
               </Route>
             )}
-            {!constants.STATIC_PAGE_ONLY && (
+            {!checkStaticPage() && (
               <Route path='/dashboard/redeem'>
                 <RedeemDashboard />
               </Route>
             )}
-            {!constants.STATIC_PAGE_ONLY && (
+            {!checkStaticPage() && (
               <Route path='/dashboard/relay'>
                 <RelayDashboard />
               </Route>
             )}
-            {!constants.STATIC_PAGE_ONLY && (
+            {!checkStaticPage() && (
               <Route path='/dashboard'>
                 <DashboardPage />
               </Route>
             )}
-            {!constants.STATIC_PAGE_ONLY && (
+            {!checkStaticPage() && (
               <Route path='/vault'>
                 <VaultDashboardPage />
               </Route>
             )}
-            {!constants.STATIC_PAGE_ONLY && (
+            {!checkStaticPage() && (
               <Route path='/feedback'>
                 <FeedbackPage />
               </Route>
@@ -306,7 +310,7 @@ export default function App(): ReactElement {
               exact>
               <LandingPage />
             </Route>
-            {!constants.STATIC_PAGE_ONLY && (
+            {!checkStaticPage() && (
               <Route
                 exact
                 path='/app'>
@@ -320,3 +324,5 @@ export default function App(): ReactElement {
     </React.Fragment>
   );
 }
+
+export default App;

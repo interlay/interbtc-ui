@@ -1,15 +1,28 @@
+
 import React from 'react';
-import { Button, Col, Image, Row } from 'react-bootstrap';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link, NavLink } from 'react-router-dom';
-import { StoreType } from '../../common/types/util.types';
-import * as constants from '../../constants';
-import PolkaBTCImg from '../../assets/img/polkabtc/PolkaBTC_white.svg';
-import { showAccountModalAction } from '../../common/actions/general.actions';
+import {
+  Button,
+  Col,
+  Image,
+  Row
+} from 'react-bootstrap';
+import {
+  useSelector,
+  useDispatch
+} from 'react-redux';
+import {
+  Link,
+  NavLink
+} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
+import Timer from 'common/components/timer';
+import * as constants from '../../constants';
+import checkStaticPage from 'utils/helpers/check-static-page';
+import { StoreType } from 'common/types/util.types';
+import { showAccountModalAction } from 'common/actions/general.actions';
+import PolkaBTCImg from 'assets/img/polkabtc/PolkaBTC_white.svg';
 import './landing.page.scss';
-import Timer from '../../common/components/timer';
 
 export default function LandingPage(): JSX.Element {
   const { totalPolkaBTC, totalLockedDOT, polkaBtcLoaded, address, extensions } = useSelector(
@@ -39,7 +52,7 @@ export default function LandingPage(): JSX.Element {
           <h1 className='text-white mt-5'>PolkaBTC</h1>
           <h2 className='text-white'>{t('landing.defi_ecosystem')}</h2>
 
-          {constants.STATIC_PAGE_ONLY ? (
+          {checkStaticPage() ? (
             <div>
               <h4 className='text-white mt-5'>{t('landing.beta_coming')}</h4>
               <h1 className='text-white mt-5'>
