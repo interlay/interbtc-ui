@@ -31,6 +31,7 @@ export const issueReducer = (state: IssueState = initialState, action: IssueActi
   case RESET_ISSUE_WIZARD: {
     const newState = {
       ...initialState,
+      address: state.address,
       issueRequests: state.issueRequests
     };
     return newState;

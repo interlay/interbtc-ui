@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
 import { safeRoundTwoDecimals } from '../../../common/utils/utils';
+import { PAGES } from 'utils/constants/links';
 
 type CollateralizationProps = {
   linkButton?: boolean;
@@ -63,7 +64,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
               buttonName='view vaults'
               propsButtonColor='d_blue'
               buttonId='collateralization'
-              buttonLink='/dashboard/vaults' />
+              buttonLink={PAGES.VAULTS} />
           </div>
         )}
       </div>

@@ -8,9 +8,7 @@ import RedeemSteps from './redeem/redeem-steps';
 import RedeemRequests from './redeem/redeem-requests';
 import Transfer from './transfer/transfer';
 import { setActiveTabAction } from '../../common/actions/general.actions';
-import { FaArrowLeft } from 'react-icons/fa';
 import './app.page.scss';
-import { changeIssueStepAction } from '../../common/actions/issue.actions';
 import TestnetBanner from '../../common/components/testnet-banner';
 
 export default function AppPage(): ReactElement {
@@ -28,17 +26,6 @@ export default function AppPage(): ReactElement {
     return issueStep !== 'ENTER_BTC_AMOUNT' && activeTab === ActiveTab.Issue;
   };
 
-  const goBack = () => {
-    if (activeTab === ActiveTab.Issue) {
-      if (issueStep === 'REQUEST_CONFIRMATION') {
-        dispatch(changeIssueStepAction('ENTER_BTC_AMOUNT'));
-      }
-      if (issueStep === 'BTC_PAYMENT') {
-        dispatch(changeIssueStepAction('REQUEST_CONFIRMATION'));
-      }
-    }
-  };
-
   return (
     <section className='main-container text-center white-background min-vh-100 app-page'>
       <TestnetBanner />
@@ -51,12 +38,6 @@ export default function AppPage(): ReactElement {
             }>
             {hideTabs() ? (
               <React.Fragment>
-                <div className='step-back'>
-                  <FaArrowLeft
-                    className='custom-icon-size'
-                    onClick={goBack}>
-                  </FaArrowLeft>
-                </div>
                 <div className='step-title'>
                   {activeTab === ActiveTab.Issue && (
                     <div className='issue-step-title'>{t('issue_page.deposit')}</div>
