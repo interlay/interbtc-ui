@@ -1,14 +1,60 @@
-import React, { useState, ReactElement, useEffect, useCallback } from 'react';
-import { FaucetClient, planckToDOT, satToBTC } from '@interlay/polkabtc';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import { createPolkabtcAPI, PolkaBTCAPI, StakedRelayerClient, VaultClient } from '@interlay/polkabtc';
-import Big from 'big.js';
+import React, {
+  useState,
+  ReactElement,
+  useEffect,
+  useCallback
+} from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from 'react-router-dom';
+import {
+  toast,
+  ToastContainer
+} from 'react-toastify';
 import ReactTooltip from 'react-tooltip';
-import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
+import Big from 'big.js';
+import {
+  web3Accounts,
+  web3Enable,
+  web3FromAddress
+} from '@polkadot/extension-dapp';
 import keyring from '@polkadot/ui-keyring';
+import {
+  FaucetClient,
+  planckToDOT,
+  satToBTC
+} from '@interlay/polkabtc';
+import {
+  createPolkabtcAPI,
+  PolkaBTCAPI,
+  StakedRelayerClient,
+  VaultClient
+} from '@interlay/polkabtc';
+import {
+  useSelector,
+  useDispatch,
+  useStore
+} from 'react-redux';
 
+import AppPage from 'pages/app/app.page';
+import DashboardPage from 'pages/dashboard/dashboard.page';
+import VaultDashboardPage from 'pages/vault-dashboard/vault-dashboard.page';
+import StakedRelayerPage from 'pages/staked-relayer/staked-relayer.page';
+import LeaderboardPage from 'pages/leaderboard/leaderboard.page';
+import VaultsDashboard from 'pages/dashboard/vaults/vaults.dashboard.page';
+import IssueDashboard from 'pages/dashboard/issue/issue.dashboard.page';
+import RedeemDashboard from 'pages/dashboard/redeem/redeem.dashboard.page';
+import LandingPage from 'pages/landing/landing.page';
+import RelayDashboard from 'pages/dashboard/relay/relay.dashboard.page';
+import OraclesDashboard from 'pages/dashboard/oracles/oracles.dashboard.page';
+import ParachainDashboard from 'pages/dashboard/parachain/parachain.dashboard.page';
+import FeedbackPage from 'pages/feedback/feedback.page';
 import AccountModal from 'common/components/account-modal/account-modal';
+import Topbar from 'common/components/topbar';
+import Footer from 'common/components/footer/footer';
+import checkStaticPage from 'utils/helpers/check-static-page';
 import {
   isPolkaBtcLoaded,
   isStakedRelayerLoaded,
@@ -20,28 +66,10 @@ import {
   updateAccountsAction,
   isFaucetLoaded
 } from 'common/actions/general.actions';
-import * as constants from './constants';
 import './i18n';
-import Topbar from './common/components/topbar';
-import Footer from './common/components/footer/footer';
-import AppPage from './pages/app/app.page';
-import DashboardPage from './pages/dashboard/dashboard.page';
-import VaultDashboardPage from './pages/vault-dashboard/vault-dashboard.page';
-import StakedRelayerPage from './pages/staked-relayer/staked-relayer.page';
-import LeaderboardPage from './pages/leaderboard/leaderboard.page';
-import VaultsDashboard from './pages/dashboard/vaults/vaults.dashboard.page';
-import { useSelector, useDispatch, useStore } from 'react-redux';
-import { StoreType, ParachainStatus } from './common/types/util.types';
-import IssueDashboard from './pages/dashboard/issue/issue.dashboard.page';
-import RedeemDashboard from './pages/dashboard/redeem/redeem.dashboard.page';
-import LandingPage from './pages/landing/landing.page';
-import startFetchingLiveData from './common/live-data/live-data';
-import RelayDashboard from './pages/dashboard/relay/relay.dashboard.page';
-import OraclesDashboard from './pages/dashboard/oracles/oracles.dashboard.page';
-import ParachainDashboard from './pages/dashboard/parachain/parachain.dashboard.page';
-import FeedbackPage from './pages/feedback/feedback.page';
-import checkStaticPage from 'utils/helpers/check-static-page';
-
+import * as constants from './constants';
+import startFetchingLiveData from 'common/live-data/live-data';
+import { StoreType, ParachainStatus } from 'common/types/util.types';
 // theme
 // FIXME: Clean-up and move to scss
 import './_general.scss';
