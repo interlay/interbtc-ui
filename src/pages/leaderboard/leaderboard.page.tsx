@@ -69,12 +69,12 @@ export default function LeaderboardPage(): ReactElement {
     const fetchVaultData = async () => {
       if (!polkaBtcLoaded) return;
       const vaults = (await statsApi.getVaults()).data;
-      setVaultRows(vaults.sort((a, b) => a.lifetime_sla - b.lifetime_sla));
+      setVaultRows(vaults.sort((a, b) => b.lifetime_sla - a.lifetime_sla));
     };
     const fetchRelayerData = async () => {
       if (!polkaBtcLoaded) return;
       const relayers = (await statsApi.getRelayers()).data;
-      setRelayerRows(relayers.sort((a, b) => a.lifetime_sla - b.lifetime_sla));
+      setRelayerRows(relayers.sort((a, b) => b.lifetime_sla - a.lifetime_sla));
     };
     fetchVaultData();
     fetchRelayerData();
