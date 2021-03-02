@@ -99,6 +99,8 @@
     font-family: airbnb-cereal-medium;
     opacity: 0.5;
 }
+
+// TODO: should be correctly descriptive
 .right-text {
     font-family: airbnb-cereal-bold;
 }
@@ -209,7 +211,7 @@
     font-size: 1.7rem;
     color: $d_pink;
     font-weight: 600;
-    .wizzard-number {
+    .wizard-number {
         color: black;
         font-size: 3rem;
         font-weight: 600;
@@ -222,7 +224,7 @@
     font-size: 1.7rem;
     color: $d_pink;
     font-weight: 600;
-    .wizzard-number {
+    .wizard-number {
         color: black;
         font-size: 3rem;
         font-weight: 400;
@@ -546,6 +548,7 @@
         font-size: 1rem;
         width: 100%;
         text-transform: uppercase;
+        word-wrap: break-word;
         font-family: airbnb-cereal-bold;
     }
     .close-icon {
@@ -572,6 +575,7 @@
         font-size: 1rem;
         width: 100%;
         text-transform: uppercase;
+        word-wrap: break-word;
         font-family: airbnb-cereal-bold;
     }
     .close-icon {
@@ -773,7 +777,7 @@
     }
 }
 
-.pink-gradiant {
+.pink-gradient {
     height: 100%;
     background-color: white; /* For browsers that do not support gradients */
     background-image: linear-gradient(white, #fce8f3);
