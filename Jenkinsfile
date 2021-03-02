@@ -51,7 +51,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'yarn test --passWithNoTests'
+                sh 'yarn test'
             }
         }
         stage('Build') {
