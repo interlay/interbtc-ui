@@ -11,17 +11,23 @@ import {
 } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
+import { ReactComponent as PolkadotExtensionLogo } from 'assets/img/polkadot-extension-logo.svg';
 import { StoreType } from '../../types/util.types';
 import { showAccountModalAction } from '../../actions/general.actions';
 import fetchIssueTransactions from '../../live-data/issue-transaction.watcher';
 import './account-modal.scss';
 
-type AccountModalProps = {
-  onSelected: (account: string) => void | Promise<void>;
-  selected?: string;
+type Props = {
+  selectAccount: (account: string) => void | Promise<void>;
+  selectedAccount?: string;
 };
 
-function AccountModal(props: AccountModalProps): ReactElement {
+const POLKADOT_EXTENSION = 'https://polkadot.js.org/extension/';
+
+function AccountModal({
+  selectAccount,
+  selectedAccount
+}: Props): ReactElement {
   const {
     showAccountModal,
     accounts,
@@ -31,81 +37,77 @@ function AccountModal(props: AccountModalProps): ReactElement {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const onClose = () => dispatch(showAccountModalAction(false));
+  const handleClose = () => dispatch(showAccountModalAction(false));
+
+  const handleAccountSelect = (account: string) => () => {
+    selectAccount(account);
+    fetchIssueTransactions(dispatch, store);
+  };
 
   return (
     <Modal
       show={showAccountModal}
-      onHide={onClose}
+      onHide={handleClose}
       size='lg'>
       <Modal.Header closeButton>
         <Modal.Title>
-          <p id='account-modal-title'>{extensions.length ? 'Select account' : 'Pick a wallet'}</p>
+          {extensions.length ? 'Select account' : 'Pick a wallet'}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className='account-modal'>
         {extensions.length ? (
           <>
-            {!accounts.length && (
-              <div id='account-modal-no-account'>
-                <p>
-                  {t('no_account')}
-                  <a
-                    href='https://polkadot.js.org/extension/'
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    &nbsp;{t('here')}
-                  </a>
-                  . {t('refresh_page')}
-                </p>
-              </div>
+            {/* Create a new account when no accounts are available */}
+            {!accounts?.length && (
+              <p>
+                {t('no_account')}
+                <a
+                  href={POLKADOT_EXTENSION}
+                  target='_blank'
+                  rel='noopener noreferrer'>
+                  &nbsp;{t('here')}
+                </a>
+                .
+                {t('refresh_page')}
+              </p>
             )}
-            {accounts?.map((account: string, index: number) => (
-              <div
-                className='row'
-                key={index}>
-                <div className='col-12'>
-                  <div
-                    className='one-account'
-                    onClick={() => {
-                      props.onSelected(account);
-                      fetchIssueTransactions(dispatch, store);
-                    }}>
-                    {account}
-                  </div>
-                </div>
-              </div>
-            ))}
+            {/* List all available accounts */}
+            <ul>
+              {accounts?.map((account: string) => (
+                <li
+                  key={account}
+                  className='account-item'
+                  // TODO: should use a button for semantic HTML usage
+                  onClick={handleAccountSelect(account)}>
+                  {account}
+                  &nbsp;
+                  {selectedAccount === account ? '(selected)' : ''}
+                </li>
+              ))}
+            </ul>
           </>
         ) : (
           <>
-            <div className='row description'>
-              <div className='col-12'>{t('install_supported_wallets')}</div>
-            </div>
-            <div className='row'>
-              <div className='col-12'>
-                <a
-                  href='https://polkadot.js.org/extension/'
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <div className='wallet'>
-                    <img
-                      src='https://polkadot.js.org/logo.svg'
-                      width='30'
-                      height='30'
-                      alt='wallet-logo' />
-                    <span className='name'>Polkadot.js</span>
-                  </div>
-                </a>
-              </div>
-            </div>
+            <p>
+              {t('install_supported_wallets')}
+            </p>
+            <a
+              className='polkadot-extension-link'
+              href={POLKADOT_EXTENSION}
+              target='_blank'
+              rel='noopener noreferrer'>
+              <PolkadotExtensionLogo
+                width={30}
+                height={30} />
+              <span style={{ marginLeft: 16 }}>Polkadot.js</span>
+            </a>
           </>
         )}
       </Modal.Body>
       <Modal.Footer>
         <Button
           variant='secondary'
-          onClick={onClose}>
+          onClick={handleClose}>
           Close
         </Button>
       </Modal.Footer>

@@ -1,41 +1,40 @@
+
 .account-modal {
-    .description {
-        margin-bottom: 1rem;
-    }
+  a {
+    text-decoration: none !important;
+    color: #510101;
+  }
+}
 
-    a {
-        text-decoration: none !important;
-        color: #510101;
-        :hover {
-            text-decoration: none;
-        }
-        .name {
-            margin-left: 15px;
-        }
-    }
+.polkadot-extension-link {
+  display: flex;
+  align-items: center;
+  width: 50%;
+  box-shadow: 0 0 4px #510101;
+  padding: 10px 16px;
+  border-radius: 4px;
+}
 
-    .one-account {
-        width: 100%;
-        padding: 15px;
-        box-shadow: 0 0 5px #510101;
-        border-radius: 5px;
-        margin-bottom: 1rem;
-        &:hover {
-            cursor: pointer;
-            background-color: #510101;
-            color: white;
-        }
-    }
+.account-item {
+  padding: 16px;
+  box-shadow: 0 0 4px #510101;
+  border-radius: 4px;
+  &:hover {
+    cursor: pointer;
+    background-color: #510101;
+    color: white;
+  }
+}
 
-    .wallet {
-        width: 50%;
-        box-shadow: 0 0 5px #510101;
-        padding: 10px 15px;
-        border-radius: 5px;
+.account-item:not(:first-child) {
+  margin-top: 1rem;
+}
 
-        margin-bottom: 1rem;
-        :hover {
-            cursor: pointer;
-        }
-    }
+// TODO: should remove this quick workaround
+ul {
+  padding: 0;
+}
+
+li {
+  list-style: none;
 }
