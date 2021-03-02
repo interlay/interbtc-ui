@@ -1,3 +1,4 @@
+
 import React, {
   useState,
   ReactElement,
@@ -315,8 +316,8 @@ function App(): ReactElement {
         effect='solid' />
       {/* TODO: should move into `Topbar` */}
       <AccountModal
-        selected={address}
-        onSelected={selectAccount} />
+        selectedAccount={address}
+        selectAccount={selectAccount} />
       <React.Suspense fallback={<div>Loading...</div>}>
         <LazyLoadingErrorBoundary>
           <Switch>
