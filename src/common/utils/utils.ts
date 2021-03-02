@@ -27,6 +27,12 @@ export function safeRoundTwoDecimals(input: string | undefined, defaultValue = "
     else return roundTwoDecimals(input);
 }
 
+export function safeRoundEightDecimals(input: string | number | undefined, defaultValue = "0"): string {
+    if (input === undefined) return defaultValue;
+    const number = new Big(input);
+    return number.round(8).toString();
+}
+
 export function shortAddress(address: string): string {
     if (address.length < 12) return address;
     return address.substr(0, 6) + "..." + address.substr(address.length - 7, address.length - 1);
@@ -50,10 +56,6 @@ export function getUsdAmount(amount: string, rate: number): string {
     return new Big(amount).mul(new Big(rate)).toFixed(2).toString();
 }
 
-export function calculateAmount(amount: string, rate: number): string {
-    return new Big(amount).mul(new Big(rate)).toString();
-}
-
 /**
  * Converts an IssueRequest object retrieved from the parachain
  * to a UI IssueRequest object
@@ -64,13 +66,13 @@ export function calculateAmount(amount: string, rate: number): string {
  * @param issuePeriod issuePeriod data (queried from the parachain)
  * @param requiredBtcConfirmations requiredBtcConfirmations data (queried from the parachain)
  */
-export async function parachainToUIIssueRequest(
-    id: H256,
-    parachainIssueRequest: ParachainIssueRequest,
-    parachainHeight: BlockNumber,
-    issuePeriod: BlockNumber,
-    requiredBtcConfirmations: number
-): Promise<IssueRequest> {
+export async function parachainToUIIssueRequest(id: H256): Promise<IssueRequest> {
+    const [parachainIssueRequest, parachainHeight, issuePeriod, requiredBtcConfirmations] = await Promise.all([
+        window.polkaBTC.issue.getRequestById(id),
+        window.polkaBTC.system.getCurrentBlockNumber(),
+        window.polkaBTC.issue.getIssuePeriod(),
+        window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
+    ]);
     const amountBTC = satToBTC(parachainIssueRequest.amount.toString());
     const fee = satToBTC(parachainIssueRequest.fee.toString());
     const status = computeIssueRequestStatus(
@@ -83,7 +85,7 @@ export async function parachainToUIIssueRequest(
     );
     return {
         id: stripHexPrefix(id.toString()),
-        amountPolkaBTC: amountBTC,
+        requestedAmountPolkaBTC: amountBTC,
         timestamp: "0000-00-00",
         creation: parachainIssueRequest.opentime.toString(),
         vaultBTCAddress: parachainIssueRequest.btc_address,
@@ -94,18 +96,22 @@ export async function parachainToUIIssueRequest(
         griefingCollateral: parachainIssueRequest.griefing_collateral.toString(),
         confirmations: 0,
         status,
+        refundBtcAddress: "",
+        refundAmountBtc: "",
+        issuedAmountBtc: "",
+        btcAmountSubmittedByUser: "",
     };
 }
 
-export const statsToUIIssueRequest = (
+export const statsToUIIssueRequest = async (
     statsIssue: Issue,
     currentBTCHeight: number,
     parachainHeight: BlockNumber,
     issuePeriod: BlockNumber,
     requiredBtcConfirmations: number
-): IssueRequest => ({
+): Promise<IssueRequest> => ({
     id: statsIssue.id,
-    amountPolkaBTC: new Big(statsIssue.amountBTC).sub(new Big(statsIssue.feePolkabtc)).toString(),
+    requestedAmountPolkaBTC: new Big(statsIssue.amountBTC).sub(new Big(statsIssue.feePolkabtc)).toString(),
     timestamp: statsIssue.timestamp,
     totalAmount: statsIssue.amountBTC,
     creation: statsIssue.creation,
@@ -126,11 +132,20 @@ export const statsToUIIssueRequest = (
         parachainHeight,
         issuePeriod,
         requiredBtcConfirmations,
+        statsIssue.requestedRefund,
         statsIssue.btcTxId,
         statsIssue.confirmations
     ),
     fee: statsIssue.feePolkabtc,
     griefingCollateral: statsIssue.griefingCollateral,
+    refundBtcAddress: statsIssue.refundBtcAddress,
+    refundAmountBtc: statsIssue.refundAmountBTC,
+    issuedAmountBtc: statsIssue.executedAmountBTC
+        ? new Big(statsIssue.executedAmountBTC).sub(new Big(statsIssue.feePolkabtc)).toString()
+        : "",
+    btcAmountSubmittedByUser: satToBTC(
+        (await window.polkaBTC.btcCore.getUtxoAmount(statsIssue.btcTxId, statsIssue.vaultBTCAddress)).toString()
+    ),
 });
 
 /**
@@ -151,9 +166,13 @@ export function computeIssueRequestStatus(
     parachainHeight: BlockNumber,
     issuePeriod: BlockNumber,
     requiredBtcConfirmations: number,
+    requestedRefund = false,
     btcTxId = "",
     confirmations = 0
 ): IssueRequestStatus {
+    if (requestedRefund) {
+        return IssueRequestStatus.RequestedRefund;
+    }
     if (completed) {
         return IssueRequestStatus.Completed;
     }
@@ -187,13 +206,13 @@ export function computeIssueRequestStatus(
  * @param requiredBtcConfirmations requiredBtcConfirmations data (queried from the parachain)
 
  */
-export async function parachainToUIRedeemRequest(
-    id: H256,
-    parachainRedeemRequest: ParachainRedeemRequest,
-    parachainHeight: BlockNumber,
-    redeemPeriod: BlockNumber,
-    requiredBtcConfirmations: number
-): Promise<RedeemRequest> {
+export async function parachainToUIRedeemRequest(id: H256): Promise<RedeemRequest> {
+    const [parachainRedeemRequest, parachainHeight, redeemPeriod, requiredBtcConfirmations] = await Promise.all([
+        window.polkaBTC.redeem.getRequestById(id),
+        window.polkaBTC.system.getCurrentBlockNumber(),
+        window.polkaBTC.redeem.getRedeemPeriod(),
+        window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
+    ]);
     const amountPolkaBTC = satToBTC(parachainRedeemRequest.amount_polka_btc.toString());
     const fee = satToBTC(parachainRedeemRequest.fee.toString());
     const status = computeRedeemRequestStatus(
@@ -502,4 +521,8 @@ export const requestsInStore = (
         }
     });
     return inStore;
+};
+
+export const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
 };

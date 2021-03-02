@@ -8,6 +8,7 @@ import { changeRedeemIdAction } from "../../../common/actions/redeem.actions";
 import BitcoinTransaction from "../../../common/components/bitcoin-links/transaction";
 import { useTranslation } from "react-i18next";
 import RedeemModal from "./modal/redeem-modal";
+import { formatDateTimePrecise } from "../../../common/utils/utils";
 
 export default function RedeemRequests(): ReactElement {
     const { address } = useSelector((state: StoreType) => state.general);
@@ -62,8 +63,16 @@ export default function RedeemRequests(): ReactElement {
                             {redeemRequests &&
                                 redeemRequests.map((request) => {
                                     return (
-                                        <tr key={request.id} onClick={() => requestClicked(request)}>
-                                            <td>{request.creation === "0" ? "Pending..." : request.creation}</td>
+                                        <tr
+                                            key={request.id}
+                                            onClick={() => requestClicked(request)}
+                                            className="table-row-opens-modal"
+                                        >
+                                            <td>
+                                                {!request.timestamp
+                                                    ? t("pending")
+                                                    : formatDateTimePrecise(new Date(request.timestamp))}
+                                            </td>
                                             <td>{request.amountPolkaBTC} BTC</td>
                                             <td>
                                                 {request.status === RedeemRequestStatus.Expired ? (

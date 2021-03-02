@@ -9,6 +9,7 @@ import { RedeemRequest } from "../../../../common/types/redeem.types";
 import { retryRedeemRequestAction, reimburseRedeemRequestAction } from "../../../../common/actions/redeem.actions";
 import Big from "big.js";
 import fetchBalances from "../../../../common/live-data/balances-watcher";
+import { getUsdAmount } from "../../../../common/utils/utils";
 
 type ReimburseViewProps = {
     onClose: () => void;
@@ -91,7 +92,7 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
                 <div className="col-9 reimburse-send">
                     {t("redeem_page.vault_did_not_send")}
                     <span>{punishmentDOT.toFixed(2).toString()} DOT </span>&nbsp; (~${" "}
-                    {new Big(prices.polkadot.usd).mul(punishmentDOT).toFixed(2).toString()})&nbsp;
+                    {getUsdAmount(punishmentDOT.toString(), prices.polkadot.usd)})&nbsp;
                     {t("redeem_page.compensation")}
                 </div>
             </div>
@@ -105,7 +106,7 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
                     {t("redeem_page.receive_compensation")}
                     <span>{punishmentDOT.toFixed(2)} DOT</span> &nbsp;
                     {t("redeem_page.retrh_with_another", {
-                        compensationPrice: punishmentDOT.mul(new Big(prices.polkadot.usd)).toFixed(2),
+                        compensationPrice: getUsdAmount(punishmentDOT.toString(), prices.polkadot.usd),
                     })}
                 </div>
             </div>
@@ -127,11 +128,11 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
                     {t("redeem_page.burn_polkabtc")}
                     <span>{amountDOT.toFixed(5).toString()} DOT</span> &nbsp;
                     {t("redeem_page.with_added", {
-                        amountPrice: amountDOT.mul(new Big(prices.polkadot.usd)).toFixed(2).toString(),
+                        amountPrice: getUsdAmount(amountDOT.toString(), prices.polkadot.usd),
                     })}
                     <span>{punishmentDOT.toFixed(5).toString()} DOT</span> &nbsp;
                     {t("redeem_page.as_compensation_instead", {
-                        compensationPrice: punishmentDOT.mul(new Big(prices.polkadot.usd)).toFixed(2).toString(),
+                        compensationPrice: getUsdAmount(punishmentDOT.toString(), prices.polkadot.usd),
                     })}
                 </div>
             </div>

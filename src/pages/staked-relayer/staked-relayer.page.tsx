@@ -14,6 +14,7 @@ import ButtonMaybePending from "../../common/components/pending-button";
 import { satToBTC, planckToDOT } from "@interlay/polkabtc";
 import { useTranslation } from "react-i18next";
 import { safeRoundTwoDecimals } from "../../common/utils/utils";
+import TimerIncrement from "../../common/components/timer-increment";
 
 export default function StakedRelayerPage(): ReactElement {
     const [showRegisterModal, setShowRegisterModal] = useState(false);
@@ -99,11 +100,14 @@ export default function StakedRelayerPage(): ReactElement {
     }, [polkaBtcLoaded, relayerLoaded, t]);
 
     return (
-        <div className="staked-relayer-page container-fluid white-background">
+        <div className="staked-relayer-page main-container">
             <div className="staked-container dashboard-fade-in-animation dahboard-min-height">
                 <div className="stacked-wrapper">
-                    <div className="row">
-                        <div className="title">{t("relayer.staked_relayer_dashboard")}</div>
+                    <div className="title-text-container">
+                        <h1 className="title-text">{t("relayer.staked_relayer_dashboard")}</h1>
+                        <p className="latest-block-text">
+                            <TimerIncrement></TimerIncrement>
+                        </p>
                     </div>
                     {!relayerRegistered && polkaBtcLoaded ? (
                         <Button

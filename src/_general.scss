@@ -135,8 +135,8 @@ input[type="number"] {
 }
 
 .btn-outline-polkadot {
-    color: #510101;
-    border-color: #510101;
+    color: #000000;
+    border-color: rgba(0, 0, 0, 0.5);
 }
 
 .btn-outline-polkadot:hover {
@@ -634,4 +634,24 @@ a:not([href]):not([tabindex]):focus {
 }
 .medium-text {
     font-family: airbnb-cereal-medium;
+}
+
+.title-text {
+    font-size: 25px;
+    font-family: airbnb-cereal-bold;
+}
+.title-container {
+    background-color: #fff;
+
+    @include flexCenter();
+    p,
+    span {
+        font-family: airbnb-cereal-book;
+    }
+    h1 {
+        margin-bottom: 0.2rem;
+    }
+}
+.title-text-container {
+    text-align: center;
 }

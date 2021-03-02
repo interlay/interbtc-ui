@@ -8,6 +8,7 @@ import QRCode from "qrcode.react";
 import Big from "big.js";
 import Timer from "../../../../common/components/timer";
 import AppTooltip from "../../../../common/components/tooltip";
+import { copyToClipboard, getUsdAmount } from "../../../../common/utils/utils";
 
 type PaymentViewProps = {
     request: IssueRequest;
@@ -16,7 +17,7 @@ type PaymentViewProps = {
 export default function PaymentView(props: PaymentViewProps): ReactElement {
     const { t } = useTranslation();
     const { polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
-    const amount = new Big(props.request.amountPolkaBTC).add(new Big(props.request.fee)).toString();
+    const amount = new Big(props.request.requestedAmountPolkaBTC).add(new Big(props.request.fee)).toString();
     const [leftSeconds, setLeftSeconds] = useState(-1);
 
     useEffect(() => {
@@ -40,10 +41,6 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
         fetchData();
     }, [polkaBtcLoaded, props.request.creation]);
 
-    const copyToClipboard = () => {
-        navigator.clipboard.writeText(props.request.vaultBTCAddress);
-    };
-
     return (
         <div className="payment-view">
             <div className="payment-title">
@@ -54,7 +51,7 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
                 </div>
                 <div className="row">
                     <div className="col send-price">
-                        {"~ $" + (Number(props.request.totalAmount) * prices.bitcoin.usd).toFixed(2)}
+                        {"~ $" + getUsdAmount(props.request.totalAmount, prices.bitcoin.usd)}
                     </div>
                 </div>
                 <div className="row">
@@ -63,7 +60,10 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
                 <div className="row ">
                     <div className="col payment-address">
                         <AppTooltip text={t("click_to_copy")}>
-                            <span className="copy-address" onClick={copyToClipboard}>
+                            <span
+                                className="copy-address"
+                                onClick={() => copyToClipboard(props.request.vaultBTCAddress)}
+                            >
                                 {props.request.vaultBTCAddress}
                             </span>
                         </AppTooltip>

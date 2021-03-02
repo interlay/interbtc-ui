@@ -4,25 +4,20 @@ import { StoreType } from "../../../common/types/util.types";
 import BitcoinLogo from "../../../assets/img/small-bitcoin-logo.png";
 import PolkadotLogo from "../../../assets/img/small-polkadot-logo.png";
 import * as constants from "../../../constants";
-import Big from "big.js";
 import { PolkaBTC } from "@interlay/polkabtc/build/interfaces/default";
 import BN from "bn.js";
 
 import {
-    changeAmountBTCAction,
     changeIssueStepAction,
-    changeVaultDotAddressOnIssueAction,
-    updateIssueGriefingCollateralAction,
-    changeVaultBtcAddressOnIssueAction,
     changeIssueIdAction,
+    addIssueRequestAction,
 } from "../../../common/actions/issue.actions";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import ButtonMaybePending from "../../../common/components/pending-button";
 import { btcToSat, satToBTC, planckToDOT, stripHexPrefix } from "@interlay/polkabtc";
-import { BALANCE_MAX_INTEGER_LENGTH } from "../../../constants";
 import { useTranslation } from "react-i18next";
-import { calculateAmount } from "../../../common/utils/utils";
+import { getUsdAmount, parachainToUIIssueRequest } from "../../../common/utils/utils";
 
 type EnterBTCForm = {
     amountBTC: string;
@@ -32,8 +27,8 @@ export default function EnterBTCAmount() {
     const { polkaBtcLoaded, address, bitcoinHeight, btcRelayHeight, prices } = useSelector(
         (state: StoreType) => state.general
     );
-    const amount = useSelector((state: StoreType) => state.issue.amountBTC);
-    const defaultValues = amount ? { defaultValues: { amountBTC: amount } } : undefined;
+    const [amountBTC, setAmountBTC] = useState("");
+    const defaultValues = amountBTC ? { defaultValues: { amountBTC: amountBTC } } : undefined;
     const { register, handleSubmit, errors, getValues } = useForm<EnterBTCForm>(defaultValues);
     const [isRequestPending, setRequestPending] = useState(false);
     const [dustValue, setDustValue] = useState("0");
@@ -68,9 +63,9 @@ export default function EnterBTCAmount() {
                 console.log(error);
             }
         };
-        setUsdAmount(calculateAmount(amount || getValues("amountBTC") || "0", prices.bitcoin.usd));
+        setUsdAmount(getUsdAmount(amountBTC || getValues("amountBTC") || "0", prices.bitcoin.usd));
         fetchData();
-    }, [polkaBtcLoaded, setUsdAmount, amount, prices.bitcoin.usd, getValues]);
+    }, [polkaBtcLoaded, setUsdAmount, amountBTC, prices.bitcoin.usd, getValues]);
 
     const onSubmit = handleSubmit(async ({ amountBTC }) => {
         if (!polkaBtcLoaded || !vaultId) return;
@@ -88,32 +83,24 @@ export default function EnterBTCAmount() {
             if (amountSAT === undefined) {
                 throw new Error("Invalid BTC amount input.");
             }
-            const amountBTCInteger = amountBTC.split(".")[0];
-            if (amountBTCInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
-                throw new Error("Input value is too high");
-            }
-            dispatch(changeAmountBTCAction(amountBTC));
 
             const amountAsSatoshi = window.polkaBTC.api.createType("Balance", amountSAT);
 
-            const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSAT);
-            dispatch(updateIssueGriefingCollateralAction(planckToDOT(griefingCollateral)));
-
-            dispatch(changeVaultDotAddressOnIssueAction(vaultId ? vaultId : ""));
-
-            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultId.toString());
+            const vaultAccountId = window.polkaBTC.api.createType("AccountId", vaultId);
             const requestResult = await window.polkaBTC.issue.request(amountAsSatoshi as PolkaBTC, vaultAccountId);
 
             const vaultBTCAddress = requestResult.vault.wallet.btcAddress;
             if (vaultBTCAddress === undefined) {
                 throw new Error("Could not generate unique vault address.");
             }
-            dispatch(changeVaultBtcAddressOnIssueAction(stripHexPrefix(vaultBTCAddress)));
             // get the issue id from the request issue event
             const id = stripHexPrefix(requestResult.id.toString());
+            dispatch(changeIssueIdAction(id));
+
+            const issueRequest = await parachainToUIIssueRequest(requestResult.id);
 
             // update the issue status
-            dispatch(changeIssueIdAction(id));
+            dispatch(addIssueRequestAction(issueRequest));
             dispatch(changeIssueStepAction("BTC_PAYMENT"));
         } catch (error) {
             toast.error(error.toString());
@@ -123,7 +110,8 @@ export default function EnterBTCAmount() {
 
     const onValueChange = async () => {
         const value = getValues("amountBTC");
-        setUsdAmount(calculateAmount(value || "0", prices.bitcoin.usd));
+        setAmountBTC(value);
+        setUsdAmount(getUsdAmount(value || "0", prices.bitcoin.usd));
         try {
             const fee = await window.polkaBTC.issue.getFeesToPay(value);
             setFee(fee);
@@ -215,7 +203,7 @@ export default function EnterBTCAmount() {
                                     <img src={BitcoinLogo} width="23px" height="23px" alt="bitcoin logo"></img> &nbsp;
                                     <span className="fee-btc">{parseFloat(Number(fee).toFixed(5))}</span> BTC
                                 </div>
-                                <div>{"~ $" + parseFloat((Number(fee) * prices.bitcoin.usd).toFixed(2))}</div>
+                                <div>{"~ $" + getUsdAmount(fee, prices.bitcoin.usd)}</div>
                             </div>
                         </div>
                     </div>
@@ -237,9 +225,7 @@ export default function EnterBTCAmount() {
                                     ></img>
                                     <span className="fee-btc">{parseFloat(Number(fee).toFixed(5))}</span> DOT
                                 </div>
-                                <div>
-                                    {"~ $" + new Big(deposit).mul(new Big(prices.polkadot.usd)).round(5).toString()}
-                                </div>
+                                <div>{"~ $" + getUsdAmount(deposit, prices.polkadot.usd)}</div>
                             </div>
                         </div>
                     </div>
@@ -263,15 +249,7 @@ export default function EnterBTCAmount() {
                                     </span>{" "}
                                     BTC
                                 </div>
-                                <div>
-                                    {"~ $" +
-                                        parseFloat(
-                                            (
-                                                (Number(getValues("amountBTC") || "0") + Number(fee)) *
-                                                prices.bitcoin.usd
-                                            ).toFixed(5)
-                                        )}
-                                </div>
+                                <div>{"~ $" + getUsdAmount(fee, prices.bitcoin.usd)}</div>
                             </div>
                         </div>
                     </div>

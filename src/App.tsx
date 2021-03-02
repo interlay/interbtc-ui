@@ -35,6 +35,7 @@ import AppPage from "./pages/app/app.page";
 import DashboardPage from "./pages/dashboard/dashboard.page";
 import VaultDashboardPage from "./pages/vault-dashboard/vault-dashboard.page";
 import StakedRelayerPage from "./pages/staked-relayer/staked-relayer.page";
+import LeaderboardPage from "./pages/leaderboard/leaderboard.page";
 import VaultsDashboard from "./pages/dashboard/vaults/vaults.dashboard.page";
 import { useSelector, useDispatch, useStore } from "react-redux";
 import { StoreType, ParachainStatus } from "./common/types/util.types";
@@ -45,6 +46,7 @@ import startFetchingLiveData from "./common/live-data/live-data";
 import RelayDashboard from "./pages/dashboard/relay/relay.dashboard.page";
 import OraclesDashboard from "./pages/dashboard/oracles/oracles.dashboard.page";
 import ParachainDashboard from "./pages/dashboard/parachain/parachain.dashboard.page";
+import FeedbackPage from "./pages/feedback/feedback.page";
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
     return createPolkabtcAPI(
@@ -107,7 +109,7 @@ export default function App(): ReactElement {
                             "Please check your internet connection or try again later."
                     );
                 }
-            }, 5000);
+            }, 10000);
             window.polkaBTC = await connectToParachain();
             dispatch(isPolkaBtcLoaded(true));
             startFetchingLiveData(dispatch, store);
@@ -129,18 +131,20 @@ export default function App(): ReactElement {
             if (!polkaBtcLoaded) return;
 
             try {
-                const totalPolkaSAT = await window.polkaBTC.treasury.totalPolkaBTC();
-                const totalLockedPLANCK = await window.polkaBTC.collateral.totalLockedDOT();
+                const [totalPolkaSAT, totalLockedPLANCK, btcRelayHeight, bitcoinHeight, state] = await Promise.all([
+                    window.polkaBTC.treasury.totalPolkaBTC(),
+                    window.polkaBTC.collateral.totalLockedDOT(),
+                    window.polkaBTC.btcRelay.getLatestBlockHeight(),
+                    window.polkaBTC.btcCore.getLatestBlockHeight(),
+                    window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain(),
+                ]);
                 const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
                 const totalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
-                const btcRelayHeight = Number(await window.polkaBTC.btcRelay.getLatestBlockHeight());
-                const bitcoinHeight = await window.polkaBTC.btcCore.getLatestBlockHeight();
-                const state = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
                 dispatch(
                     initGeneralDataAction(
                         totalPolkaBTC,
                         totalLockedDOT,
-                        btcRelayHeight,
+                        Number(btcRelayHeight),
                         bitcoinHeight,
                         state.isError
                             ? ParachainStatus.Error
@@ -242,6 +246,11 @@ export default function App(): ReactElement {
                             </Route>
                         )}
                         {!constants.STATIC_PAGE_ONLY && (
+                            <Route path="/leaderboard">
+                                <LeaderboardPage />
+                            </Route>
+                        )}
+                        {!constants.STATIC_PAGE_ONLY && (
                             <Route path="/dashboard/parachain">
                                 <ParachainDashboard />
                             </Route>
@@ -274,6 +283,11 @@ export default function App(): ReactElement {
                         {!constants.STATIC_PAGE_ONLY && (
                             <Route path="/vault">
                                 <VaultDashboardPage />
+                            </Route>
+                        )}
+                        {!constants.STATIC_PAGE_ONLY && (
+                            <Route path="/feedback">
+                                <FeedbackPage />
                             </Route>
                         )}
                         <Route path="/" exact>

@@ -21,6 +21,7 @@ import "./vault-dashboard.page.scss";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { safeRoundTwoDecimals } from "../../common/utils/utils";
+import TimerIncrement from "../../common/components/timer-increment";
 
 export default function VaultDashboardPage(): ReactElement {
     const [showRegisterVaultModal, setShowRegisterVaultModal] = useState(false);
@@ -101,11 +102,14 @@ export default function VaultDashboardPage(): ReactElement {
     }, [polkaBtcLoaded, vaultClientLoaded, dispatch, vaultRegistered]);
 
     return (
-        <div className="vault-dashboard-page container-fluid white-background">
+        <div className="vault-dashboard-page main-container">
             <div className="vault-container dashboard-fade-in-animation dashboard-min-height">
                 <div className="stacked-wrapper">
-                    <div className="row">
-                        <div className="title">{t("vault.vault_dashboard")}</div>
+                    <div className="title-text-container">
+                        <h1 className="title-text">{t("vault.vault_dashboard")}</h1>
+                        <p className="latest-block-text">
+                            <TimerIncrement></TimerIncrement>
+                        </p>
                     </div>
                 </div>
                 {vaultId === accountId && (

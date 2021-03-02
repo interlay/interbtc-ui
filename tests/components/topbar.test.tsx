@@ -362,7 +362,7 @@ describe("Component: Topbar ", () => {
 
         setTimeout(() => {
             wrapper.update();
-            expect(wrapper.find("#account-button").at(0).text()).equal("Account:5GrwvaEF5z...cNoHGKutQY");
+            expect(wrapper.find("#account-button").at(0).text()).equal("5GrwvaEF5z...cNoHGKutQY");
             done();
         });
     });

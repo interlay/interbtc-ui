@@ -1,6 +1,6 @@
 export interface IssueRequest {
     id: string;
-    amountPolkaBTC: string;
+    requestedAmountPolkaBTC: string;
     timestamp?: string;
     totalAmount: string;
     creation: string;
@@ -14,11 +14,16 @@ export interface IssueRequest {
     rawTransaction?: Uint8Array;
     fee: string;
     griefingCollateral: string;
+    refundBtcAddress: string;
+    refundAmountBtc: string;
+    issuedAmountBtc: string;
+    btcAmountSubmittedByUser: string;
 }
 
 export enum IssueRequestStatus {
     Completed,
     Cancelled,
+    RequestedRefund,
     Expired,
     PendingWithBtcTxNotFound,
     PendingWithBtcTxNotIncluded,
@@ -42,6 +47,7 @@ export interface IssueMap {
     [key: string]: IssueRequest[];
 }
 
+// TODO: replace and remove with polkabtc-stats call
 export interface VaultIssue {
     id: string;
     user: string;
@@ -55,16 +61,14 @@ export interface VaultIssue {
 }
 
 export interface IssueState {
-    selectedRequest?: IssueRequest;
+    // TODO: use current account from general state
     address: string;
+    // current step in the wizard
     step: string;
-    amountBTC: string;
-    griefingCollateral: string;
-    vaultDotAddress: string;
-    vaultBtcAddress: string;
+    // id of the current issue request
     id: string;
-    btcTxId: string;
+    // mapping of all issue requests
     issueRequests: Map<string, IssueRequest[]>;
-    wizardInEditMode: boolean;
+    // TODO: remove
     vaultIssues: VaultIssue[];
 }

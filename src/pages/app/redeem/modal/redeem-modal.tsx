@@ -3,10 +3,9 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../../../common/types/util.types";
 import { Modal } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { shortAddress } from "../../../../common/utils/utils";
+import { getUsdAmount, shortAddress } from "../../../../common/utils/utils";
 import StatusView from "./status-view";
 import BitcoinLogo from "../../../../assets/img/small-bitcoin-logo.png";
-import { calculateAmount } from "../../../../common/utils/utils";
 import ReimburseView from "./reimburse-view";
 import { RedeemRequestStatus } from "../../../../common/types/redeem.types";
 
@@ -18,8 +17,8 @@ type RedeemModalProps = {
 export default function RedeemModal(props: RedeemModalProps): ReactElement {
     const { address, prices } = useSelector((state: StoreType) => state.general);
     const selectedIdRequest = useSelector((state: StoreType) => state.redeem.id);
-    const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address) || [];
-    const request = redeemRequests.filter((request) => request.id === selectedIdRequest)[0];
+    const userRedeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address) || [];
+    const request = userRedeemRequests.filter((request) => request.id === selectedIdRequest)[0];
     const { t } = useTranslation();
 
     return (
@@ -37,7 +36,7 @@ export default function RedeemModal(props: RedeemModalProps): ReactElement {
                                 </div>
                                 <div className="row usd-price-modal">
                                     <div className="col">
-                                        {"~ $" + calculateAmount(request.totalAmount || "0", prices.bitcoin.usd)}
+                                        {"~ $" + getUsdAmount(request.totalAmount || "0", prices.bitcoin.usd)}
                                     </div>
                                 </div>
                                 <div className="step-item row">
@@ -47,7 +46,7 @@ export default function RedeemModal(props: RedeemModalProps): ReactElement {
                                         &nbsp;
                                         {request.fee} BTC
                                         <div className="send-price">
-                                            {"~ $" + parseFloat((Number(request.fee) * prices.bitcoin.usd).toFixed(5))}
+                                            {"~ $" + getUsdAmount(request.fee, prices.bitcoin.usd)}
                                         </div>
                                     </div>
                                 </div>
@@ -59,10 +58,7 @@ export default function RedeemModal(props: RedeemModalProps): ReactElement {
                                         &nbsp;
                                         {request.amountPolkaBTC} BTC
                                         <div className="send-price">
-                                            {"~ $" +
-                                                parseFloat(
-                                                    (Number(request.amountPolkaBTC) * prices.bitcoin.usd).toFixed(5)
-                                                )}
+                                            {"~ $" + getUsdAmount(request.amountPolkaBTC, prices.bitcoin.usd)}
                                         </div>
                                     </div>
                                 </div>

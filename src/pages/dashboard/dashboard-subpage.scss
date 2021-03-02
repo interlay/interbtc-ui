@@ -1,24 +1,6 @@
 @import "../../variables";
 @import "../../mixins";
-.title-text {
-    font-size: 25px;
-    font-family: airbnb-cereal-bold;
-}
-.title-container {
-    background-color: #fafafa;
 
-    @include flexCenter();
-    p,
-    span {
-        font-family: airbnb-cereal-book;
-    }
-    h1 {
-        margin-bottom: 0.2rem;
-    }
-}
-.title-text-container {
-    text-align: center;
-}
 .section-div-line {
     width: 50%;
     height: 1px;
@@ -68,7 +50,7 @@
     }
 }
 .dashboard-container {
-    background-color: #fafafa;
+    background-color: #fff;
     @include justifyCenter();
 }
 .dashboard-wrapper {

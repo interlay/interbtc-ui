@@ -6,6 +6,7 @@ import { getAccents } from "../../../pages/dashboard/dashboard-colors";
 import ActiveVaults from "../components/active-vaults";
 import CollateralLocked from "../components/collateral-locked";
 import Collateralization from "../components/collateralization";
+import TimerIncrement from "../../../common/components/timer-increment";
 
 export default function VaultsDashboard(): ReactElement {
     const { t } = useTranslation();
@@ -16,12 +17,10 @@ export default function VaultsDashboard(): ReactElement {
                 <div className="dashboard-wrapper">
                     <div>
                         <div className="title-container">
-                            <div
-                                style={{ backgroundColor: getAccents("d_blue").color }}
-                                className="issue-page-text-container"
-                            >
-                                <h1>{t("dashboard.vaults.vaults")}</h1>
-                            </div>
+                            <h1 className="title-text">{t("dashboard.vaults.vaults")}</h1>
+                            <p className="latest-block-text">
+                                <TimerIncrement></TimerIncrement>
+                            </p>
                             <div style={{ backgroundColor: getAccents("d_blue").color }} className="title-line"></div>
                         </div>
 
