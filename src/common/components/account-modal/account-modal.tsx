@@ -68,7 +68,6 @@ function AccountModal({
                   &nbsp;{t('here')}
                 </a>
                 .
-                {t('refresh_page')}
               </p>
             )}
             {/* List all available accounts */}
