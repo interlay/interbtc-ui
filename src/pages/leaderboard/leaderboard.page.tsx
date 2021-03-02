@@ -1,13 +1,14 @@
 import React, { useState, useEffect, ReactElement, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import './leaderboard.page.scss';
-import { StoreType } from '../../common/types/util.types';
+import 'pages/leaderboard/leaderboard.page.scss';
+import 'pages/dashboard/dashboard-subpage.scss';
+import { StoreType } from 'common/types/util.types';
 import { useTranslation } from 'react-i18next';
-import DashboardTable from '../../common/components/dashboard-table/dashboard-table';
-import usePolkabtcStats from '../../common/hooks/use-polkabtc-stats';
+import DashboardTable from 'common/components/dashboard-table/dashboard-table';
+import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { RelayerData, VaultData } from '@interlay/polkabtc-stats';
-import TestnetBanner from '../../common/components/testnet-banner';
-import TimerIncrement from '../../common/components/timer-increment';
+import TestnetBanner from 'common/components/testnet-banner';
+import TimerIncrement from 'common/components/timer-increment';
 
 export default function LeaderboardPage(): ReactElement {
   // eslint-disable-next-line no-array-constructor
