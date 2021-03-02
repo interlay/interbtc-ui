@@ -42,6 +42,7 @@ class LazyLoadingErrorBoundary extends React.Component<Props, State> {
               textAlign: 'center',
               padding: '12px 0'
             }}>
+            {/* TODO: should use i18n */}
             Lazy-loading failed!
           </p>
         </div>
