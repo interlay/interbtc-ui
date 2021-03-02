@@ -8,6 +8,7 @@ import { satToBTC } from '@interlay/polkabtc';
 import LineChartComponent from './line-chart-component';
 import { useTranslation } from 'react-i18next';
 import { getUsdAmount } from '../../../common/utils/utils';
+import { PAGES } from 'utils/constants/links';
 
 type PolkaBTCProps = {
   linkButton?: boolean;
@@ -60,14 +61,14 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
                   buttonName='view all issued'
                   propsButtonColor='d_yellow'
                   buttonId='issuebtn'
-                  buttonLink='/dashboard/issue' />
+                  buttonLink={PAGES.ISSUE} />
               </div>
               <div className='button-container'>
                 <ButtonComponent
                   buttonName='view all redeemed'
                   propsButtonColor='d_yellow'
                   buttonId='redeembtn'
-                  buttonLink='/dashboard/redeem' />
+                  buttonLink={PAGES.REDEEM} />
               </div>
             </div>
           </>

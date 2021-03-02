@@ -4,6 +4,7 @@ import { getAccents } from '../dashboardcolors';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
+import { PAGES } from 'utils/constants/links';
 
 // eslint-disable-next-line no-unused-vars
 enum Status {
@@ -90,7 +91,7 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
                 buttonName='Status Updates'
                 propsButtonColor='d_green'
                 buttonId='parachain-security'
-                buttonLink='/dashboard/parachain' />
+                buttonLink={PAGES.PARACHAIN} />
             </div>
           )}
         </div>

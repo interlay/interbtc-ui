@@ -1,17 +1,5 @@
 const APP_NAME = 'PolkaBTC';
 
-// Set to true to show only the static landing page
-const getStaticPage = () => {
-  if (process.env.REACT_APP_STATIC_PAGE_ONLY !== undefined) {
-    if (process.env.REACT_APP_STATIC_PAGE_ONLY === 'true') {
-      return true;
-    }
-  }
-  return false;
-};
-
-export const STATIC_PAGE_ONLY = getStaticPage();
-
 export const BALANCE_MAX_INTEGER_LENGTH = 13;
 
 export const BTC_DECIMALS = 8;

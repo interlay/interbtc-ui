@@ -8,6 +8,7 @@ import { planckToDOT } from '@interlay/polkabtc';
 import LineChartComponent from './line-chart-component';
 import { useTranslation } from 'react-i18next';
 import { getUsdAmount } from '../../../common/utils/utils';
+import { PAGES } from 'utils/constants/links';
 
 type CollateralLockedProps = {
   linkButton?: boolean;
@@ -59,7 +60,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
               buttonName='view all vaults'
               propsButtonColor='d_pink'
               buttonId='collateral-locked'
-              buttonLink='/dashboard/vaults' />
+              buttonLink={PAGES.VAULTS} />
           </div>
         )}
       </div>

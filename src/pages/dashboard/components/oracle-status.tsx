@@ -4,6 +4,7 @@ import { getAccents } from '../dashboardcolors';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
+import { PAGES } from 'utils/constants/links';
 
 // eslint-disable-next-line no-unused-vars
 enum Status {
@@ -84,7 +85,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
               buttonName='view oracles'
               propsButtonColor='d_green'
               buttonId='oracle-status'
-              buttonLink='/dashboard/oracles' />
+              buttonLink={PAGES.ORACLES} />
           </div>
         )}
       </div>
