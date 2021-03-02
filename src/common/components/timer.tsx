@@ -13,7 +13,7 @@ const formatTime = (leftSeconds: number): string => {
   const h = hours < 10 ? '0' + hours : hours;
   const m = minutes < 10 ? '0' + minutes : minutes;
   const s = seconds < 10 ? '0' + seconds : seconds;
-  return d + ' Days ' + h + ':' + m + ':' + s;
+  return leftSeconds > 0 ? d + ' Days ' + h + ':' + m + ':' + s : '00:00:00';
 };
 
 export default function Timer(props: TimerProps): ReactElement {
