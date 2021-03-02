@@ -39,7 +39,6 @@ import {
 
 import Layout from 'parts/Layout';
 import AccountModal from 'common/components/account-modal/account-modal';
-import Topbar from 'common/components/topbar';
 import LazyLoadingErrorBoundary from 'utils/hocs/LazyLoadingErrorBoundary';
 import checkStaticPage from 'config/check-static-page';
 import { PAGES } from 'utils/constants/links';
@@ -57,7 +56,10 @@ import {
 import './i18n';
 import * as constants from './constants';
 import startFetchingLiveData from 'common/live-data/live-data';
-import { StoreType, ParachainStatus } from 'common/types/util.types';
+import {
+  StoreType,
+  ParachainStatus
+} from 'common/types/util.types';
 // theme
 // FIXME: Clean-up and move to scss
 import './_general.scss';
@@ -129,18 +131,6 @@ function App(): ReactElement {
   const extensions = useSelector((state: StoreType) => state.general.extensions);
   const dispatch = useDispatch();
   const store = useStore();
-
-  const requestDotFromFaucet = async (): Promise<void> => {
-    if (!address) return;
-
-    try {
-      const receiverId = window.polkaBTC.api.createType('AccountId', address);
-      await window.faucet.fundAccount(receiverId);
-      toast.success('Your account has been funded.');
-    } catch (error) {
-      toast.error(`Funding failed. You can only use the faucet once every 6 hours. ${error}`);
-    }
-  };
 
   const selectAccount = useCallback(
     async (newAddress: string): Promise<void> => {
@@ -323,16 +313,10 @@ function App(): ReactElement {
         place='top'
         type='dark'
         effect='solid' />
+      {/* TODO: should move into `Topbar` */}
       <AccountModal
         selected={address}
         onSelected={selectAccount} />
-      {/* TODO: should move into `Layout` */}
-      {!checkStaticPage() && (
-        <Topbar
-          address={address}
-          requestDOT={requestDotFromFaucet} />
-      )}
-      {/* TODO: should update `Loading...` */}
       <React.Suspense fallback={<div>Loading...</div>}>
         <LazyLoadingErrorBoundary>
           <Switch>
