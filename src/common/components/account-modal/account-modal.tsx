@@ -12,9 +12,9 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { ReactComponent as PolkadotExtensionLogo } from 'assets/img/polkadot-extension-logo.svg';
-import { StoreType } from '../../types/util.types';
-import { showAccountModalAction } from '../../actions/general.actions';
-import fetchIssueTransactions from '../../live-data/issue-transaction.watcher';
+import { StoreType } from 'common/types/util.types';
+import { showAccountModalAction } from 'common/actions/general.actions';
+import fetchIssueTransactions from 'common/live-data/issue-transaction.watcher';
 import './account-modal.scss';
 
 type Props = {
