@@ -56,7 +56,7 @@ import AccountModal from 'common/components/account-modal/account-modal';
 import Topbar from 'common/components/topbar';
 import Footer from 'common/components/footer/footer';
 import LazyLoadingErrorBoundary from 'utils/hocs/LazyLoadingErrorBoundary';
-import checkStaticPage from 'utils/helpers/check-static-page';
+import checkStaticPage from 'config/check-static-page';
 import {
   isPolkaBtcLoaded,
   isStakedRelayerLoaded,

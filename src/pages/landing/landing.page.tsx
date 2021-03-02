@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 
 import Timer from 'common/components/timer';
 import * as constants from '../../constants';
-import checkStaticPage from 'utils/helpers/check-static-page';
+import checkStaticPage from 'config/check-static-page';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import PolkaBTCImg from 'assets/img/polkabtc/PolkaBTC_white.svg';
