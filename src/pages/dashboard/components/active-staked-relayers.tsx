@@ -4,6 +4,7 @@ import { getAccents } from '../dashboard-colors';
 import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
 import LineChartComponent from './line-chart-component';
 import { useTranslation } from 'react-i18next';
+import { PAGES } from 'utils/constants/links';
 
 type ActiveStakedRelayers = {
   linkButton?: boolean;
@@ -41,7 +42,7 @@ const ActiveStakedRelayersComponent = ({ linkButton }: ActiveStakedRelayers): Re
               buttonName='view relayers'
               propsButtonColor='d_orange'
               buttonId='active-staked'
-              buttonLink='/dashboard/parachain' />
+              buttonLink={PAGES.PARACHAIN} />
           </div>
         )}
       </div>

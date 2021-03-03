@@ -87,7 +87,7 @@ async function parachainToUIIssueRequest(id: H256): Promise<IssueRequest> {
   return {
     id: stripHexPrefix(id.toString()),
     requestedAmountPolkaBTC: amountBTC,
-    timestamp: '0000-00-00',
+    timestamp: formatDateTimePrecise(new Date(Date.now())),
     creation: parachainIssueRequest.opentime.toString(),
     vaultBTCAddress: parachainIssueRequest.btc_address,
     vaultDOTAddress: parachainIssueRequest.vault.toString(),
@@ -230,7 +230,7 @@ async function parachainToUIRedeemRequest(id: H256): Promise<RedeemRequest> {
   return {
     id: stripHexPrefix(id.toString()),
     amountPolkaBTC,
-    timestamp: '0000-00-00',
+    timestamp: formatDateTimePrecise(new Date(Date.now())),
     creation: parachainRedeemRequest.opentime.toString(),
     btcAddress: parachainRedeemRequest.btc_address,
     vaultDotAddress: parachainRedeemRequest.vault.toString(),

@@ -6,6 +6,7 @@ import { StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
 import { StyledLinkData } from '../../../common/components/dashboard-table/dashboard-table';
 import * as constants from '../../../constants';
+import { PAGES } from 'utils/constants/links';
 
 // eslint-disable-next-line no-unused-vars
 enum Status {
@@ -80,7 +81,7 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
                 buttonName='view BTC Relay'
                 propsButtonColor='d_green'
                 buttonId='btc-relay'
-                buttonLink='/dashboard/relay' />
+                buttonLink={PAGES.RELAY} />
             </div>
           )}
         </div>

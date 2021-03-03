@@ -1,102 +1,117 @@
-import React, { ReactElement } from 'react';
-import { Button, Modal } from 'react-bootstrap';
-import { useDispatch, useSelector, useStore } from 'react-redux';
-import { StoreType } from '../../types/util.types';
-import { showAccountModalAction } from '../../actions/general.actions';
-import { useTranslation } from 'react-i18next';
-import fetchIssueTransactions from '../../live-data/issue-transaction.watcher';
 
+import React, { ReactElement } from 'react';
+import {
+  Button,
+  Modal
+} from 'react-bootstrap';
+import {
+  useDispatch,
+  useSelector,
+  useStore
+} from 'react-redux';
+import { useTranslation } from 'react-i18next';
+
+import { ReactComponent as PolkadotExtensionLogo } from 'assets/img/polkadot-extension-logo.svg';
+import { StoreType } from 'common/types/util.types';
+import { showAccountModalAction } from 'common/actions/general.actions';
+import fetchIssueTransactions from 'common/live-data/issue-transaction.watcher';
 import './account-modal.scss';
 
-type AccountModalProps = {
-    onSelected: (account: string) => void | Promise<void>;
-    selected?: string;
+type Props = {
+  selectAccount: (account: string) => void | Promise<void>;
+  selectedAccount?: string;
 };
 
-export default function AccountModal(props: AccountModalProps): ReactElement {
-  const { showAccountModal, accounts, extensions } = useSelector((state: StoreType) => state.general);
+const POLKADOT_EXTENSION = 'https://polkadot.js.org/extension/';
+
+function AccountModal({
+  selectAccount,
+  selectedAccount
+}: Props): ReactElement {
+  const {
+    showAccountModal,
+    accounts,
+    extensions
+  } = useSelector((state: StoreType) => state.general);
   const store = useStore();
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const onClose = () => dispatch(showAccountModalAction(false));
+  const handleClose = () => dispatch(showAccountModalAction(false));
+
+  const handleAccountSelect = (account: string) => () => {
+    selectAccount(account);
+    fetchIssueTransactions(dispatch, store);
+  };
 
   return (
     <Modal
       show={showAccountModal}
-      onHide={onClose}
+      onHide={handleClose}
       size='lg'>
       <Modal.Header closeButton>
         <Modal.Title>
-          <p id='account-modal-title'>{extensions.length ? 'Select account' : 'Pick a wallet'}</p>
+          {extensions.length ? 'Select account' : 'Pick a wallet'}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className='account-modal'>
         {extensions.length ? (
-          <React.Fragment>
-            {!accounts.length && (
-              <div id='account-modal-no-account'>
-                <p>
-                  {t('no_account')}
-                  <a
-                    href='https://polkadot.js.org/extension/'
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                                        &nbsp;{t('here')}
-                  </a>
-                                    . {t('refresh_page')}
-                </p>
-              </div>
-            )}
-            {(accounts || []).map((account: string, index: number) => (
-              <div
-                className='row'
-                key={index}>
-                <div className='col-12'>
-                  <div
-                    className='one-account'
-                    onClick={() => {
-                      props.onSelected(account);
-                      fetchIssueTransactions(dispatch, store);
-                    }}>
-                    {account}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
-            <div className='row description'>
-              <div className='col-12'>{t('install_supported_wallets')}</div>
-            </div>
-            <div className='row'>
-              <div className='col-12'>
+          <>
+            {/* Create a new account when no accounts are available */}
+            {!accounts?.length && (
+              <p>
+                {t('no_account')}
                 <a
-                  href='https://polkadot.js.org/extension/'
+                  href={POLKADOT_EXTENSION}
                   target='_blank'
                   rel='noopener noreferrer'>
-                  <div className='wallet'>
-                    <img
-                      src='https://polkadot.js.org/logo.svg'
-                      width='30'
-                      height='30'
-                      alt='wallet-logo' />
-                    <span className='name'>Polkadot.js</span>
-                  </div>
+                  &nbsp;{t('here')}
                 </a>
-              </div>
-            </div>
-          </React.Fragment>
+                .
+              </p>
+            )}
+            {/* List all available accounts */}
+            <ul>
+              {accounts?.map((account: string) => (
+                <li
+                  key={account}
+                  className='account-item'
+                  // TODO: should use a button for semantic HTML usage
+                  onClick={handleAccountSelect(account)}>
+                  {account}
+                  &nbsp;
+                  {selectedAccount === account ? '(selected)' : ''}
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : (
+          <>
+            <p>
+              {t('install_supported_wallets')}
+            </p>
+            <a
+              className='polkadot-extension-link'
+              href={POLKADOT_EXTENSION}
+              target='_blank'
+              rel='noopener noreferrer'>
+              <PolkadotExtensionLogo
+                width={30}
+                height={30} />
+              <span style={{ marginLeft: 16 }}>Polkadot.js</span>
+            </a>
+          </>
         )}
       </Modal.Body>
       <Modal.Footer>
         <Button
           variant='secondary'
-          onClick={onClose}>
-                    Close
+          onClick={handleClose}>
+          Close
         </Button>
       </Modal.Footer>
     </Modal>
   );
 }
+
+export default AccountModal;

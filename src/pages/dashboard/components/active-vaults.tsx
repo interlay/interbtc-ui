@@ -4,6 +4,7 @@ import { getAccents } from '../dashboard-colors';
 import LineChartComponent from './line-chart-component';
 import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
 import { useTranslation } from 'react-i18next';
+import { PAGES } from 'utils/constants/links';
 
 type ActiveVaultsProps = {
   linkButton?: boolean;
@@ -39,7 +40,7 @@ const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
               buttonName='view all vaults'
               propsButtonColor='d_pink'
               buttonId='active-vaults'
-              buttonLink='/dashboard/vaults' />
+              buttonLink={PAGES.VAULTS} />
           </div>
         )}
       </div>

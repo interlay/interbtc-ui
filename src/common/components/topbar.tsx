@@ -10,6 +10,7 @@ import { updateBalanceDOTAction, showAccountModalAction } from '../actions/gener
 import { updateBalances } from '../utils/utils';
 import { useTranslation } from 'react-i18next';
 import Balances from './balances';
+import { PAGES } from 'utils/constants/links';
 
 type TopbarProps = {
     address?: string;
@@ -108,14 +109,14 @@ export default function Topbar(props: TopbarProps): ReactElement {
               {polkaBtcLoaded && (
                 <Link
                   className='nav-link'
-                  to='/app'>
+                  to={PAGES.APPLICATION}>
                   {t('app')}
                 </Link>
               )}
               {polkaBtcLoaded && (
                 <Link
                   className='nav-link'
-                  to='/dashboard'>
+                  to={PAGES.DASHBOARD}>
                   {t('nav_dashboard')}
                 </Link>
               )}
@@ -123,7 +124,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                 <Link
                   id='vault-nav-item'
                   className='nav-link'
-                  to='/vault'>
+                  to={PAGES.VAULT}>
                   {t('nav_vault')}
                 </Link>
               )}
@@ -131,20 +132,20 @@ export default function Topbar(props: TopbarProps): ReactElement {
                 <Link
                   id='relayer-nav-item'
                   className='nav-link'
-                  to='/staked-relayer'>
+                  to={PAGES.STAKED_RELAYER}>
                   {t('nav_relayer')}
                 </Link>
               )}
               {polkaBtcLoaded && (
                 <Link
                   className='nav-link'
-                  to='/leaderboard'>
+                  to={PAGES.LEADERBOARD}>
                   {t('nav_leaderboard')}
                 </Link>
               )}
               <Link
                 className='nav-link'
-                to='/feedback'>
+                to={PAGES.FEEDBACK}>
                 {t('feedback.feedback')}
               </Link>
               <a
