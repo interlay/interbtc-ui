@@ -52,7 +52,7 @@
     "here": "here",
     "refresh_page.": "Once you create a new account please refresh the page.",
     "select_an_account": "Please select an account",
-    "install_supported_wallets": "Please install one of the currently supported wallets",
+    "install_supported_wallets": "Please install one of the currently supported wallets.",
     "btc_relay_status": "BTC Relay Status:",
     "no_data": "Unable to fetch data.",
     "empty_data": "No data available.",
