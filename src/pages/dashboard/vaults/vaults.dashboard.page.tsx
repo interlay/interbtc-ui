@@ -8,6 +8,9 @@ import CollateralLocked from '../components/collateral-locked';
 import Collateralization from '../components/collateralization';
 import TimerIncrement from '../../../common/components/timer-increment';
 import TestnetBanner from '../../../common/components/testnet-banner';
+// TODO: should fix by scoping only necessary CSS into a component
+import '../dashboard.page.scss';
+import '../dashboard-subpage.scss';
 
 export default function VaultsDashboard(): ReactElement {
   const { t } = useTranslation();
