@@ -1,0 +1,11 @@
+
+.testnet-banner {
+  margin: 16px;
+}
+
+@media (min-width: 576px) {
+  .testnet-banner {
+    width: 60%;
+    margin: 16px auto;
+  }
+}
