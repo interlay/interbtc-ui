@@ -39,6 +39,7 @@ import {
 } from 'react-redux';
 
 import Layout from 'parts/Layout';
+import TransitionWrapper from 'parts/TransitionWrapper';
 import AccountModal from 'common/components/account-modal/account-modal';
 import LazyLoadingErrorBoundary from 'utils/hocs/LazyLoadingErrorBoundary';
 import checkStaticPage from 'config/check-static-page';
@@ -330,75 +331,86 @@ function App(): ReactElement {
         selectAccount={selectAccount} />
       <React.Suspense fallback={<div>Loading...</div>}>
         <LazyLoadingErrorBoundary>
-          <Switch>
-            {!checkStaticPage() && (
-              <Route path={PAGES.STAKED_RELAYER}>
-                <StakedRelayerPage />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.VAULTS}>
-                <VaultsDashboard />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.LEADERBOARD}>
-                <LeaderboardPage />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.PARACHAIN}>
-                <ParachainDashboard />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.ORACLES}>
-                <OraclesDashboard />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.ISSUE}>
-                <IssueDashboard />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.REDEEM}>
-                <RedeemDashboard />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.RELAY}>
-                <RelayDashboard />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.DASHBOARD}>
-                <DashboardPage />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.VAULT}>
-                <VaultDashboardPage />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.FEEDBACK}>
-                <FeedbackPage />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route
-                exact
-                path={PAGES.APPLICATION}>
-                <ApplicationPage />
-              </Route>
-            )}
-            <Route
-              path={PAGES.HOME}
-              exact>
-              <LandingPage />
-            </Route>
-          </Switch>
+          <Route
+            render={({ location }) => {
+              // ray test touch <
+              // TODO: filtering
+              // ray test touch >
+
+              return (
+                <TransitionWrapper location={location}>
+                  <Switch location={location}>
+                    {!checkStaticPage() && (
+                      <Route path={PAGES.STAKED_RELAYER}>
+                        <StakedRelayerPage />
+                      </Route>
+                    )}
+                    {!checkStaticPage() && (
+                      <Route path={PAGES.VAULTS}>
+                        <VaultsDashboard />
+                      </Route>
+                    )}
+                    {!checkStaticPage() && (
+                      <Route path={PAGES.LEADERBOARD}>
+                        <LeaderboardPage />
+                      </Route>
+                    )}
+                    {!checkStaticPage() && (
+                      <Route path={PAGES.PARACHAIN}>
+                        <ParachainDashboard />
+                      </Route>
+                    )}
+                    {!checkStaticPage() && (
+                      <Route path={PAGES.ORACLES}>
+                        <OraclesDashboard />
+                      </Route>
+                    )}
+                    {!checkStaticPage() && (
+                      <Route path={PAGES.ISSUE}>
+                        <IssueDashboard />
+                      </Route>
+                    )}
+                    {!checkStaticPage() && (
+                      <Route path={PAGES.REDEEM}>
+                        <RedeemDashboard />
+                      </Route>
+                    )}
+                    {!checkStaticPage() && (
+                      <Route path={PAGES.RELAY}>
+                        <RelayDashboard />
+                      </Route>
+                    )}
+                    {!checkStaticPage() && (
+                      <Route path={PAGES.DASHBOARD}>
+                        <DashboardPage />
+                      </Route>
+                    )}
+                    {!checkStaticPage() && (
+                      <Route path={PAGES.VAULT}>
+                        <VaultDashboardPage />
+                      </Route>
+                    )}
+                    {!checkStaticPage() && (
+                      <Route path={PAGES.FEEDBACK}>
+                        <FeedbackPage />
+                      </Route>
+                    )}
+                    {!checkStaticPage() && (
+                      <Route
+                        exact
+                        path={PAGES.APPLICATION}>
+                        <ApplicationPage />
+                      </Route>
+                    )}
+                    <Route
+                      path={PAGES.HOME}
+                      exact>
+                      <LandingPage />
+                    </Route>
+                  </Switch>
+                </TransitionWrapper>
+              );
+            }} />
         </LazyLoadingErrorBoundary>
       </React.Suspense>
     </Layout>
