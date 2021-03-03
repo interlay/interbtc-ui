@@ -74,11 +74,7 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
         <div className='row payment-timer'>
           <div className='col'>{leftSeconds !== -1 && <Timer seconds={leftSeconds}></Timer>}</div>
         </div>
-        <div className='row justify-content-center'>
-          <div className='col note-title'>
-          </div>
-        </div>
-        <div className='row justify-content-center'>
+        <div className='row mt-2 justify-content-center'>
           <div className='col note-text'>
             {t('issue_page.warning_mbtc_wallets')}
             <span className='send-amount'> {
