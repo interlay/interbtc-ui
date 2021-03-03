@@ -41,7 +41,8 @@ import {
 } from '@interlay/polkabtc';
 
 import Layout from 'parts/Layout';
-import TransitionWrapper from 'parts/TransitionWrapper';
+// TODO: block for now
+// import TransitionWrapper from 'parts/TransitionWrapper';
 import AccountModal from 'common/components/account-modal/account-modal';
 import LazyLoadingErrorBoundary from 'utils/hocs/LazyLoadingErrorBoundary';
 import checkStaticPage from 'config/check-static-page';
@@ -360,56 +361,57 @@ function App(): ReactElement {
               }
 
               return (
-                <TransitionWrapper location={location}>
-                  {/* TODO: should use loading spinner instead of `Loading...` */}
-                  <React.Suspense fallback={<div>Loading...</div>}>
-                    <Switch location={location}>
-                      <Route path={PAGES.STAKED_RELAYER}>
-                        <StakedRelayerPage />
-                      </Route>
-                      <Route path={PAGES.VAULTS}>
-                        <VaultsDashboard />
-                      </Route>
-                      <Route path={PAGES.LEADERBOARD}>
-                        <LeaderboardPage />
-                      </Route>
-                      <Route path={PAGES.PARACHAIN}>
-                        <ParachainDashboard />
-                      </Route>
-                      <Route path={PAGES.ORACLES}>
-                        <OraclesDashboard />
-                      </Route>
-                      <Route path={PAGES.ISSUE}>
-                        <IssueDashboard />
-                      </Route>
-                      <Route path={PAGES.REDEEM}>
-                        <RedeemDashboard />
-                      </Route>
-                      <Route path={PAGES.RELAY}>
-                        <RelayDashboard />
-                      </Route>
-                      <Route path={PAGES.DASHBOARD}>
-                        <DashboardPage />
-                      </Route>
-                      <Route path={PAGES.VAULT}>
-                        <VaultDashboardPage />
-                      </Route>
-                      <Route path={PAGES.FEEDBACK}>
-                        <FeedbackPage />
-                      </Route>
-                      <Route
-                        exact
-                        path={PAGES.APPLICATION}>
-                        <ApplicationPage />
-                      </Route>
-                      <Route
-                        path={PAGES.HOME}
-                        exact>
-                        <LandingPage />
-                      </Route>
-                    </Switch>
-                  </React.Suspense>
-                </TransitionWrapper>
+                // TODO: block for now
+                // <TransitionWrapper location={location}>
+                // TODO: should use loading spinner instead of `Loading...`
+                <React.Suspense fallback={<div>Loading...</div>}>
+                  <Switch location={location}>
+                    <Route path={PAGES.STAKED_RELAYER}>
+                      <StakedRelayerPage />
+                    </Route>
+                    <Route path={PAGES.VAULTS}>
+                      <VaultsDashboard />
+                    </Route>
+                    <Route path={PAGES.LEADERBOARD}>
+                      <LeaderboardPage />
+                    </Route>
+                    <Route path={PAGES.PARACHAIN}>
+                      <ParachainDashboard />
+                    </Route>
+                    <Route path={PAGES.ORACLES}>
+                      <OraclesDashboard />
+                    </Route>
+                    <Route path={PAGES.ISSUE}>
+                      <IssueDashboard />
+                    </Route>
+                    <Route path={PAGES.REDEEM}>
+                      <RedeemDashboard />
+                    </Route>
+                    <Route path={PAGES.RELAY}>
+                      <RelayDashboard />
+                    </Route>
+                    <Route path={PAGES.DASHBOARD}>
+                      <DashboardPage />
+                    </Route>
+                    <Route path={PAGES.VAULT}>
+                      <VaultDashboardPage />
+                    </Route>
+                    <Route path={PAGES.FEEDBACK}>
+                      <FeedbackPage />
+                    </Route>
+                    <Route
+                      exact
+                      path={PAGES.APPLICATION}>
+                      <ApplicationPage />
+                    </Route>
+                    <Route
+                      path={PAGES.HOME}
+                      exact>
+                      <LandingPage />
+                    </Route>
+                  </Switch>
+                </React.Suspense>
+                // </TransitionWrapper>
               );
             }} />
         </LazyLoadingErrorBoundary>
