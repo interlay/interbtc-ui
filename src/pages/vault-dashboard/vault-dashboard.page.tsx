@@ -107,6 +107,7 @@ export default function VaultDashboardPage(): ReactElement {
         <div className='stacked-wrapper'>
           <div className='title-text-container'>
             <h1 className='title-text'>{t('vault.vault_dashboard')}</h1>
+            {accountId}
             <p className='latest-block-text'>
               <TimerIncrement></TimerIncrement>
             </p>
@@ -117,53 +118,83 @@ export default function VaultDashboardPage(): ReactElement {
             <div className='col-lg-10 offset-1'>
               <div className='row mt-3'>
                 <div className='col-lg-3 col-md-6 col-6'>
-                  <div className=''>{t('vault.locked_collateral')}</div>
-                  <span className='stats'>{collateral}</span> DOT
+                  <div
+                    className='card stats-card mb-3'
+                    style={{ minHeight: '100px' }}>
+                    <div className=''>{t('vault.locked_collateral')}</div>
+                    <span className='stats'>{collateral}</span> DOT
+                  </div>
                 </div>
                 <div className='col-lg-3 col-md-6 col-6'>
-                  <div className=''>{t('locked_btc')}</div>
-                  <span className='stats'>{lockedBTC}</span> BTC
+                  <div
+                    className='card stats-card mb-3'
+                    style={{ minHeight: '100px' }}>
+                    <div className=''>{t('locked_btc')}</div>
+                    <span className='stats'>{lockedBTC}</span> BTC
+                  </div>
                 </div>
                 <div className='col-lg-3 col-md-6 col-6'>
-                  <div className=''>{t('collateralization')}</div>
-                  <span className='stats'>
-                    {`${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`}
-                  </span>
+                  <div
+                    className='card stats-card mb-3'
+                    style={{ minHeight: '100px' }}>
+                    <div className=''>{t('collateralization')}</div>
+                    <span className='stats'>
+                      {`${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`}
+                    </span>
+                  </div>
                 </div>
                 <div className='col-lg-3 col-md-6 col-6'>
-                  <div className=''>{t('vault.capacity')}</div>
-                  <span className='stats'>~{safeRoundTwoDecimals(capacity)}</span> PolkaBTC
+                  <div
+                    className='card stats-card mb-3'
+                    style={{ minHeight: '100px' }}>
+                    <div className=''>{t('vault.capacity')}</div>
+                    <span className='stats'>~{safeRoundTwoDecimals(capacity)}</span> PolkaBTC
+                  </div>
                 </div>
               </div>
               <div className='row justify-content-center mt-4'>
                 <div className='col-md-3'>
-                  <div className=''>{t('fees_earned')}</div>
-                  <span className='stats'>{feesEarnedPolkaBTC.toString()}</span> PolkaBTC
+                  <div
+                    className='card stats-card mb-3'
+                    style={{ minHeight: '100px' }}>
+                    <div className=''>{t('fees_earned')}</div>
+                    <span className='stats'>{feesEarnedPolkaBTC.toString()}</span> PolkaBTC
+                  </div>
                 </div>
                 <div className='col-md-3'>
-                  <div className=''>{t('fees_earned')}</div>
-                  <span className='stats'>{feesEarnedDOT.toString()}</span> DOT
+                  <div
+                    className='card stats-card mb-3'
+                    style={{ minHeight: '100px' }}>
+                    <div className=''>{t('fees_earned')}</div>
+                    <span className='stats'>{feesEarnedDOT.toString()}</span> DOT
+                  </div>
                 </div>
                 <div className='col-md-3'>
-                  <div className=''>{t('sla_score')}</div>
-                  <span className='stats'>{safeRoundTwoDecimals(sla)}</span>
+                  <div
+                    className='card stats-card mb-3'
+                    style={{ minHeight: '100px' }}>
+                    <div className=''>{t('sla_score')}</div>
+                    <span className='stats'>{safeRoundTwoDecimals(sla)}</span>
+                  </div>
                 </div>
                 <div className='col-md-3'>
-                  <div className=''>{t('apy')}</div>
-                  <span className='stats'>~{safeRoundTwoDecimals(apy)}</span> %
+                  <div
+                    className='card stats-card mb-3'
+                    style={{ minHeight: '100px' }}>
+                    <div className=''>{t('apy')}</div>
+                    <span className='stats'>~{safeRoundTwoDecimals(apy)}</span> %
+                  </div>
                 </div>
               </div>
             </div>
             <div className='row'>
               <div className='col-12'>
-                <div className=''>
-                  {t('vault.collateral')}: &nbsp; {collateral} DOT for {lockedBTC + ' BTC'}
-                                    &nbsp;&nbsp;&nbsp;
-                  <i
-                    className='fa fa-edit'
-                    onClick={() => setShowUpdateCollateralModal(true)}>
-                  </i>
-                </div>
+                <Button
+                  variant='outline-success'
+                  className=''
+                  onClick={() => setShowUpdateCollateralModal(true)}>
+                  {t('vault.update_collateral')}
+                </Button>
               </div>
             </div>
           </React.Fragment>
