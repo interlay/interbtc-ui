@@ -56,6 +56,10 @@ function getUsdAmount(amount: string, rate: number): string {
   return new Big(amount).mul(new Big(rate)).toFixed(2).toString();
 }
 
+function displayBtcAmount(amount: string | number): string {
+  return new Big(amount).round(8).toString();
+}
+
 /**
  * Converts an IssueRequest object retrieved from the parachain
  * to a UI IssueRequest object
@@ -548,6 +552,7 @@ export {
   formatDateTime,
   formatDateTimePrecise,
   getUsdAmount,
+  displayBtcAmount,
   parachainToUIIssueRequest,
   statsToUIIssueRequest,
   computeIssueRequestStatus,
