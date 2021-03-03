@@ -1,9 +1,12 @@
 import React, { ReactElement } from 'react';
 import { FaDiscord } from 'react-icons/fa';
 
+import 'pages/dashboard/dashboard-subpage.scss';
+import 'pages/dashboard/dashboard.page.scss';
+
 export default function FeedbackPage(): ReactElement {
   return (
-    <div className='main-container'>
+    <div className='main-container dashboard-page'>
       <div className='title-container mb-3'>
         <div className='title-text-container'>
           <h1 className='title-text'>Feedback</h1>
