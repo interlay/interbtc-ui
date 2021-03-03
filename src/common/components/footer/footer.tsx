@@ -6,8 +6,6 @@ import web3FoundationImg from '../../../assets/img/polkabtc/web3 foundation_gran
 import './footer.scss';
 
 // eslint-disable-next-line
-const privacyPolicy = require("../../../assets/docs/privacy-policy.pdf");
-// eslint-disable-next-line
 const pkg = require("../../../../package.json");
 export default class Footer extends Component {
   render() {
@@ -27,7 +25,7 @@ export default class Footer extends Component {
                         height='30em'>
                       </Image>
                     </a>
-                                        &nbsp; &nbsp; &nbsp; &nbsp;
+                    &nbsp; &nbsp; &nbsp; &nbsp;
                     <a
                       href='https://web3.foundation/'
                       target='__blank'>
@@ -52,7 +50,7 @@ export default class Footer extends Component {
                   <a
                     className=' text-capitalize'
                     rel='noopener noreferrer'
-                    href={privacyPolicy}
+                    href='https://www.interlay.io/docs/privacy-policy.pdf'
                     target='_blank'>
                     Privacy Policy
                   </a>
