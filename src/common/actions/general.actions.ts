@@ -32,7 +32,8 @@ import {
   UpdateHeights,
   UpdateTotals
 } from '../types/actions.types';
-import { StoreType, ParachainStatus, ActiveTab, Prices } from '../types/util.types';
+import { StoreType, ParachainStatus, Prices } from '../types/util.types';
+import { ActiveTab } from 'utils/enums/active-tab';
 
 export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
   type: IS_POLKA_BTC_LOADED,

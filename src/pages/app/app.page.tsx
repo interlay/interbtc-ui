@@ -12,13 +12,11 @@ import RedeemSteps from './redeem/redeem-steps';
 import RedeemRequests from './redeem/redeem-requests';
 import Transfer from './transfer/transfer';
 import { setActiveTabAction } from 'common/actions/general.actions';
-import {
-  ActiveTab,
-  StoreType
-} from 'common/types/util.types';
+import { StoreType } from 'common/types/util.types';
+import { ActiveTab } from 'utils/enums/active-tab';
 import './app.page.scss';
 
-function AppPage(): ReactElement {
+function Application(): ReactElement {
   const dispatch = useDispatch();
   // TODO: should avoid getting the store bloated
   const { activeTab } = useSelector((state: StoreType) => state.general);
@@ -117,4 +115,4 @@ function AppPage(): ReactElement {
   );
 }
 
-export default AppPage;
+export default Application;

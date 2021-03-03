@@ -5,7 +5,7 @@ import { u256 } from '@polkadot/types/primitive';
 import { IssueState } from './issue.types';
 import { RedeemState } from './redeem.types';
 import { VaultState } from './vault.types';
-
+import { ActiveTab } from 'utils/enums/active-tab';
 export interface StatusUpdate {
   id: u256;
   timestamp: string;
@@ -44,15 +44,6 @@ export enum ParachainStatus {
   Running,
   // eslint-disable-next-line no-unused-vars
   Shutdown,
-}
-
-export enum ActiveTab {
-  // eslint-disable-next-line no-unused-vars
-  Issue,
-  // eslint-disable-next-line no-unused-vars
-  Redeem,
-  // eslint-disable-next-line no-unused-vars
-  Transfer,
 }
 
 export type Prices = {

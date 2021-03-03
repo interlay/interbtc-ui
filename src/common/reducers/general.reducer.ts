@@ -16,7 +16,8 @@ import {
   UPDATE_HEIGHTS,
   UPDATE_TOTALS
 } from '../types/actions.types';
-import { GeneralState, ParachainStatus, ActiveTab } from '../types/util.types';
+import { GeneralState, ParachainStatus } from '../types/util.types';
+import { ActiveTab } from 'utils/enums/active-tab';
 
 const initialState = {
   polkaBtcLoaded: false,

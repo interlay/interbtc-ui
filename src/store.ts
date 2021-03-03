@@ -1,6 +1,7 @@
 import { rootReducer } from './common/reducers/index';
 import { toast } from 'react-toastify';
-import { AppState, StoreType, StoreState, ParachainStatus, ActiveTab } from './common/types/util.types';
+import { AppState, StoreType, StoreState, ParachainStatus } from './common/types/util.types';
+import { ActiveTab } from 'utils/enums/active-tab';
 import { createLogger } from 'redux-logger';
 import { applyMiddleware, createStore } from 'redux';
 import { initializeState } from './common/actions/general.actions';
