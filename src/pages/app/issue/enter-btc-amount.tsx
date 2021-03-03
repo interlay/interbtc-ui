@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
 import BitcoinLogo from '../../../assets/img/small-bitcoin-logo.png';
@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form';
 import ButtonMaybePending from '../../../common/components/pending-button';
 import { btcToSat, satToBTC, planckToDOT, stripHexPrefix } from '@interlay/polkabtc';
 import { useTranslation } from 'react-i18next';
-import { getUsdAmount, parachainToUIIssueRequest } from '../../../common/utils/utils';
+import { displayBtcAmount, getUsdAmount, parachainToUIIssueRequest } from '../../../common/utils/utils';
 
 type EnterBTCForm = {
     amountBTC: string;
@@ -205,7 +205,7 @@ export default function EnterBTCAmount() {
                     height='23px'
                     alt='bitcoin logo'>
                   </img> &nbsp;
-                  <span className='fee-btc'>{parseFloat(Number(fee).toFixed(5))}</span> BTC
+                  <span className='fee-btc'>{displayBtcAmount(fee)}</span> BTC
                 </div>
                 <div>{'~ $' + getUsdAmount(fee, prices.bitcoin.usd)}</div>
               </div>
@@ -227,7 +227,7 @@ export default function EnterBTCAmount() {
                     style={{ marginRight: '5px' }}
                     alt='polkadot logo'>
                   </img>
-                  <span className='fee-btc'>{parseFloat(Number(fee).toFixed(5))}</span> DOT
+                  <span className='fee-btc'>{parseFloat(Number(deposit).toFixed(5))}</span> DOT
                 </div>
                 <div>{'~ $' + getUsdAmount(deposit, prices.polkadot.usd)}</div>
               </div>
@@ -254,11 +254,16 @@ export default function EnterBTCAmount() {
                   </img>
                                     &nbsp;&nbsp;
                   <span className='fee-btc'>
-                    {parseFloat((Number(getValues('amountBTC') || '0') + Number(fee)).toFixed(5))}
+                    {displayBtcAmount(Number(getValues('amountBTC') || '0') + Number(fee))}
                   </span>{' '}
                                     BTC
                 </div>
-                <div>{'~ $' + getUsdAmount(fee, prices.bitcoin.usd)}</div>
+                <div>
+                  {'~ $' + getUsdAmount(
+                    (Number(getValues('amountBTC') || '0') + Number(fee)).toString(),
+                    prices.bitcoin.usd
+                  )}
+                </div>
               </div>
             </div>
           </div>
