@@ -10,4 +10,8 @@
   --palette-error-main: #f44336;
   --palette-text-primary: #fff;
   --palette-text-secondary: rgba(255, 255, 255, 0.7); */
+  /* TODO: should name descriptively */
+  --d_pink: #e6007a;
+  --d_yellow: #f7931a;
+  --d_blue: #1c86ee;
 }

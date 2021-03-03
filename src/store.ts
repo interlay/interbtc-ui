@@ -1,7 +1,7 @@
 import { rootReducer } from './common/reducers/index';
 import { toast } from 'react-toastify';
 import { AppState, StoreType, StoreState, ParachainStatus } from './common/types/util.types';
-import { ActiveTab } from 'utils/enums/active-tab';
+import { TabTypes } from 'utils/enums/tab-types';
 import { createLogger } from 'redux-logger';
 import { applyMiddleware, createStore } from 'redux';
 import { initializeState } from './common/actions/general.actions';
@@ -36,7 +36,7 @@ export const getInitialState = (): StoreType => {
       btcRelayHeight: 0,
       bitcoinHeight: 0,
       stateOfBTCParachain: ParachainStatus.Shutdown,
-      activeTab: ActiveTab.Issue,
+      selectedTabType: TabTypes.Issue,
       prices: { bitcoin: { usd: 0 }, polkadot: { usd: 0 } }
     },
     issue: {

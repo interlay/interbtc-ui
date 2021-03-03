@@ -5,7 +5,7 @@ import { u256 } from '@polkadot/types/primitive';
 import { IssueState } from './issue.types';
 import { RedeemState } from './redeem.types';
 import { VaultState } from './vault.types';
-import { ActiveTab } from 'utils/enums/active-tab';
+import { TabTypes } from 'utils/enums/tab-types';
 export interface StatusUpdate {
   id: u256;
   timestamp: string;
@@ -70,7 +70,7 @@ export type GeneralState = {
   btcRelayHeight: number;
   bitcoinHeight: number;
   stateOfBTCParachain: ParachainStatus;
-  activeTab: ActiveTab;
+  selectedTabType: TabTypes;
   prices: Prices;
 };
 

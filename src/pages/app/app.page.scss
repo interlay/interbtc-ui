@@ -1,43 +1,6 @@
 @import "../../variables";
 
 .app-page {
-    .app-tabs {
-        .app-tab {
-            &:hover {
-                cursor: pointer;
-            }
-        }
-
-        .active-tab {
-            border-radius: 10px;
-            background-color: $d_pink;
-            color: white;
-            margin: 0px -15px;
-            padding: 10px;
-            font-family: airbnb-cereal-bold;
-            text-transform: uppercase;
-            transition: 0.25s ease-in-out;
-        }
-        .active-tab-issue {
-            background-color: $d_pink;
-        }
-        .active-tab-redeem {
-            background-color: $d_yellow;
-        }
-        .active-tab-transfer {
-            background-color: $d_blue;
-        }
-
-        .not-active {
-            border-bottom: none;
-            margin: 0px -15px;
-            padding: 10px;
-            opacity: 0.3;
-            font-family: airbnb-cereal-bold;
-            text-transform: uppercase;
-        }
-    }
-
     .grey-text {
         color: #998;
     }

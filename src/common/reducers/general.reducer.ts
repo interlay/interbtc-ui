@@ -17,7 +17,7 @@ import {
   UPDATE_TOTALS
 } from '../types/actions.types';
 import { GeneralState, ParachainStatus } from '../types/util.types';
-import { ActiveTab } from 'utils/enums/active-tab';
+import { TabTypes } from 'utils/enums/tab-types';
 
 const initialState = {
   polkaBtcLoaded: false,
@@ -35,7 +35,7 @@ const initialState = {
   btcRelayHeight: 0,
   bitcoinHeight: 0,
   stateOfBTCParachain: ParachainStatus.Shutdown,
-  activeTab: ActiveTab.Issue,
+  selectedTabType: TabTypes.Issue,
   prices: { bitcoin: { usd: 0 }, polkadot: { usd: 0 } }
 };
 
@@ -48,7 +48,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
   case UPDATE_OF_PRICES:
     return { ...state, prices: action.prices };
   case SET_ACTIVE_TAB:
-    return { ...state, activeTab: action.activeTab };
+    return { ...state, selectedTabType: action.selectedTabType };
   case IS_POLKA_BTC_LOADED:
     return { ...state, polkaBtcLoaded: action.isLoaded };
   case IS_STAKED_RELAYER_LOADED:
@@ -65,7 +65,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       extensions: [],
       accounts: [],
       stateOfBTCParachain: ParachainStatus.Shutdown,
-      activeTab: ActiveTab.Issue
+      selectedTabType: TabTypes.Issue
     };
   case INIT_GENERAL_DATA_ACTION:
     return {

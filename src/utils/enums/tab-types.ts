@@ -1,5 +1,5 @@
 
-export enum ActiveTab {
+export enum TabTypes {
   // eslint-disable-next-line no-unused-vars
   Issue,
   // eslint-disable-next-line no-unused-vars
