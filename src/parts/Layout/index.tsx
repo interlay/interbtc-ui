@@ -10,6 +10,7 @@ import TestnetBanner from 'components/TestnetBanner';
 import checkStaticPage from 'config/check-static-page';
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
+import styles from './layout.module.css';
 
 interface Props {
   children: React.ReactNode;
@@ -39,7 +40,7 @@ const Layout = ({ children }: Props) => {
     <div
       className={clsx(
         'main d-flex flex-column min-vh-100',
-        { 'polkabtc-background': isHomePage }
+        { [styles['polkabtc-background']]: isHomePage }
       )}>
       {!checkStaticPage() && (
         <Topbar
