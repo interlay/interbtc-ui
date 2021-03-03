@@ -4,6 +4,7 @@ import { getAccents } from '../dashboard-colors';
 import LineChartComponent from './line-chart-component';
 import { range } from '../../../common/utils/utils';
 import { useTranslation } from 'react-i18next';
+import { PAGES } from 'utils/constants/links';
 
 const ActiveCollators = (): ReactElement => {
   const { t } = useTranslation();
@@ -35,7 +36,7 @@ const ActiveCollators = (): ReactElement => {
               buttonName='view collators'
               propsButtonColor='d_blue'
               buttonId='active-collators'
-              buttonLink='/' />
+              buttonLink={PAGES.HOME} />
           </div>
         )}
       </div>

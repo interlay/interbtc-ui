@@ -1,0 +1,29 @@
+
+.app-tab {
+  padding: 10px;
+  font-family: airbnb-cereal-bold;
+  text-transform: uppercase;
+}
+
+.app-tab:hover {
+  cursor: pointer;
+}
+
+.active-tab {
+  border-radius: 10px;
+  color: white;
+  transition: 0.25s ease-in-out;
+}
+.active-tab-issue {
+  background-color: var(--d_pink);
+}
+.active-tab-redeem {
+  background-color: var(--d_yellow);
+}
+.active-tab-transfer {
+  background-color: var(--d_blue);
+}
+
+.not-active-tab {
+  opacity: 0.3;
+}

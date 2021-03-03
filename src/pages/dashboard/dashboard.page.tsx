@@ -6,14 +6,12 @@ import './dashboard.page.scss';
 import Row1 from './rows/row1';
 import Row2 from './rows/row2';
 import Row3 from './rows/row3';
-import TestnetBanner from '../../common/components/testnet-banner';
 
 export default function DashboardPage(): ReactElement {
   const { t } = useTranslation();
 
   return (
     <div className='main-container'>
-      <TestnetBanner />
       <div className='title-container'>
         <div className='title-text-container'>
           <h1 className='title-text'>{t('dashboard.dashboard')}</h1>

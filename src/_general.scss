@@ -209,13 +209,6 @@ input[type="number"] {
 .transparent-background {
     background-color: transparent;
 }
-.polkabtc-background {
-    background-image: url("./assets/img/polkabtc/background.png");
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-}
 
 .white-background {
     background-color: white;
@@ -568,10 +561,6 @@ a:not([href]):not([tabindex]):focus {
 .divider-text {
     width: 100%;
     padding: 0.25rem 1.5rem;
-}
-
-.fade-in-animation {
-    animation: fade 0.5s ease-in;
 }
 
 .static-fade-in-animation {
