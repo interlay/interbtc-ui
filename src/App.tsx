@@ -333,36 +333,36 @@ function App(): ReactElement {
         selectedAccount={address}
         selectAccount={selectAccount} />
       <Layout>
+        <LazyLoadingErrorBoundary>
+          <Route
+            render={({ location }) => {
+              if (checkStaticPage()) {
+                const pageURLs = [
+                  PAGES.STAKED_RELAYER,
+                  PAGES.VAULTS,
+                  PAGES.LEADERBOARD,
+                  PAGES.PARACHAIN,
+                  PAGES.ORACLES,
+                  PAGES.ISSUE,
+                  PAGES.REDEEM,
+                  PAGES.RELAY,
+                  PAGES.DASHBOARD,
+                  PAGES.VAULT,
+                  PAGES.FEEDBACK,
+                  PAGES.APPLICATION
+                ];
 
-        <React.Suspense fallback={<div>Loading...</div>}>
-          <LazyLoadingErrorBoundary>
-            <Route
-              render={({ location }) => {
-                if (checkStaticPage()) {
-                  const pageURLs = [
-                    PAGES.STAKED_RELAYER,
-                    PAGES.VAULTS,
-                    PAGES.LEADERBOARD,
-                    PAGES.PARACHAIN,
-                    PAGES.ORACLES,
-                    PAGES.ISSUE,
-                    PAGES.REDEEM,
-                    PAGES.RELAY,
-                    PAGES.DASHBOARD,
-                    PAGES.VAULT,
-                    PAGES.FEEDBACK,
-                    PAGES.APPLICATION
-                  ];
-
-                  for (const pageURL of pageURLs) {
-                    if (matchPath(location.pathname, { path: pageURL })) {
-                      return <Redirect to={PAGES.HOME} />;
-                    }
+                for (const pageURL of pageURLs) {
+                  if (matchPath(location.pathname, { path: pageURL })) {
+                    return <Redirect to={PAGES.HOME} />;
                   }
                 }
+              }
 
-                return (
-                  <TransitionWrapper location={location}>
+              return (
+                <TransitionWrapper location={location}>
+                  {/* TODO: should use loading spinner instead of `Loading...` */}
+                  <React.Suspense fallback={<div>Loading...</div>}>
                     <Switch location={location}>
                       <Route path={PAGES.STAKED_RELAYER}>
                         <StakedRelayerPage />
@@ -408,11 +408,11 @@ function App(): ReactElement {
                         <LandingPage />
                       </Route>
                     </Switch>
-                  </TransitionWrapper>
-                );
-              }} />
-          </LazyLoadingErrorBoundary>
-        </React.Suspense>
+                  </React.Suspense>
+                </TransitionWrapper>
+              );
+            }} />
+        </LazyLoadingErrorBoundary>
       </Layout>
     </>
   );
