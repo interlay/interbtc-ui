@@ -13,6 +13,9 @@ import { reverseEndiannessHex, stripHexPrefix } from '@interlay/polkabtc';
 import { BlockColumns } from '@interlay/polkabtc-stats';
 import TimerIncrement from '../../../common/components/timer-increment';
 import TestnetBanner from '../../../common/components/testnet-banner';
+// TODO: should fix by scoping only necessary CSS into a component
+import '../dashboard.page.scss';
+import '../dashboard-subpage.scss';
 
 export default function RelayDashboard(): ReactElement {
   const statsApi = usePolkabtcStats();
