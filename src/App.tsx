@@ -386,11 +386,6 @@ function App(): ReactElement {
                 <FeedbackPage />
               </Route>
             )}
-            <Route
-              path='/'
-              exact>
-              <LandingPage />
-            </Route>
             {!checkStaticPage() && (
               <Route
                 exact
@@ -398,6 +393,11 @@ function App(): ReactElement {
                 <ApplicationPage />
               </Route>
             )}
+            <Route
+              path={PAGES.HOME}
+              exact>
+              <LandingPage />
+            </Route>
           </Switch>
         </LazyLoadingErrorBoundary>
       </React.Suspense>

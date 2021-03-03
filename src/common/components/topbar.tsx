@@ -94,7 +94,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
             <Link
               id='main-logo'
               className='text-decoration-none'
-              to='/'>
+              to={PAGES.HOME}>
               <Image
                 src={polkaBTCLogo}
                 width='90'

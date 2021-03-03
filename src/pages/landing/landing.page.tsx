@@ -44,7 +44,7 @@ export default function LandingPage(): JSX.Element {
     <div>
       <section className='jumbotron min-vh-90 text-center transparent-background'>
         <div className='container mt-5'>
-          <Link to='/'>
+          <Link to={PAGES.HOME}>
             <Image
               src={PolkaBTCImg}
               width='256'>

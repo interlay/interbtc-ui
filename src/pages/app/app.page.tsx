@@ -1,57 +1,63 @@
+
 import React, { ReactElement } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { ActiveTab, StoreType } from '../../common/types/util.types';
+import {
+  useDispatch,
+  useSelector
+} from 'react-redux';
 import { useTranslation } from 'react-i18next';
+
 import IssueSteps from './issue/issue-steps';
 import IssueRequests from './issue/issue-requests';
 import RedeemSteps from './redeem/redeem-steps';
 import RedeemRequests from './redeem/redeem-requests';
 import Transfer from './transfer/transfer';
-import { setActiveTabAction } from '../../common/actions/general.actions';
+import { setActiveTabAction } from 'common/actions/general.actions';
+import {
+  ActiveTab,
+  StoreType
+} from 'common/types/util.types';
 import './app.page.scss';
-import TestnetBanner from '../../common/components/testnet-banner';
 
-export default function AppPage(): ReactElement {
+function AppPage(): ReactElement {
   const dispatch = useDispatch();
+  // TODO: should avoid getting the store bloated
   const { activeTab } = useSelector((state: StoreType) => state.general);
   const issueStep = useSelector((state: StoreType) => state.issue.step);
   const premiumRedeem = useSelector((state: StoreType) => state.redeem.premiumRedeem);
   const { t } = useTranslation();
 
-  const changeTab = (tab: ActiveTab) => {
+  const handleTabChange = (tab: ActiveTab) => () => {
     dispatch(setActiveTabAction(tab));
   };
 
-  const hideTabs = () => {
+  const handleTabsHide = () => {
     return issueStep !== 'ENTER_BTC_AMOUNT' && activeTab === ActiveTab.Issue;
   };
 
   return (
     <section className='main-container text-center white-background min-vh-100 app-page'>
-      <TestnetBanner />
       <div className='container mt-5'>
         <div className='row justify-content-center'>
           <div
+            // TODO: should use `clsx`
             className={
               'col-xl-6 col-lg-6 col-md-8 col-sm-12 col-xs-12 tab-content-wrapper' +
-                            (premiumRedeem ? ' pink-gradient' : '')
+              (premiumRedeem ? ' pink-gradient' : '')
             }>
-            {hideTabs() ? (
-              <React.Fragment>
-                <div className='step-title'>
-                  {activeTab === ActiveTab.Issue && (
-                    <div className='issue-step-title'>{t('issue_page.deposit')}</div>
-                  )}
-                </div>
-              </React.Fragment>
+            {handleTabsHide() ? (
+              <div className='step-title'>
+                {activeTab === ActiveTab.Issue && (
+                  <div className='issue-step-title'>{t('issue_page.deposit')}</div>
+                )}
+              </div>
             ) : (
-              <React.Fragment>
+              <>
                 <div
                   id='main-tabs'
                   className='row app-tabs'>
                   <div
                     className='col-4 app-tab'
-                    onClick={() => changeTab(ActiveTab.Issue)}>
+                    onClick={handleTabChange(ActiveTab.Issue)}>
                     <div
                       className={
                         activeTab === ActiveTab.Issue ?
@@ -63,7 +69,7 @@ export default function AppPage(): ReactElement {
                   </div>
                   <div
                     className='col-4 app-tab'
-                    onClick={() => changeTab(ActiveTab.Redeem)}>
+                    onClick={handleTabChange(ActiveTab.Redeem)}>
                     <div
                       className={
                         activeTab === ActiveTab.Redeem ?
@@ -75,7 +81,7 @@ export default function AppPage(): ReactElement {
                   </div>
                   <div
                     className='col-4 app-tab'
-                    onClick={() => changeTab(ActiveTab.Transfer)}>
+                    onClick={handleTabChange(ActiveTab.Transfer)}>
                     <div
                       className={
                         activeTab === ActiveTab.Transfer ?
@@ -95,7 +101,7 @@ export default function AppPage(): ReactElement {
                         'horizontal-line'
                   }>
                 </div>
-              </React.Fragment>
+              </>
             )}
             <div className='content'>
               {activeTab === ActiveTab.Issue && <IssueSteps />}
@@ -110,3 +116,5 @@ export default function AppPage(): ReactElement {
     </section>
   );
 }
+
+export default AppPage;
