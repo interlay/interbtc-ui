@@ -7,13 +7,20 @@ import React, {
 } from 'react';
 import {
   Switch,
-  Route
+  Route,
+  Redirect
 } from 'react-router-dom';
+import { matchPath } from 'react-router';
 import {
   toast,
   ToastContainer
 } from 'react-toastify';
 import ReactTooltip from 'react-tooltip';
+import {
+  useSelector,
+  useDispatch,
+  useStore
+} from 'react-redux';
 import Big from 'big.js';
 import {
   web3Accounts,
@@ -32,11 +39,6 @@ import {
   StakedRelayerClient,
   VaultClient
 } from '@interlay/polkabtc';
-import {
-  useSelector,
-  useDispatch,
-  useStore
-} from 'react-redux';
 
 import Layout from 'parts/Layout';
 import TransitionWrapper from 'parts/TransitionWrapper';
@@ -66,6 +68,7 @@ import {
 // FIXME: Clean-up and move to scss
 import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
+import './app.css';
 
 const ApplicationPage = React.lazy(() =>
   import(/* webpackChunkName: 'application' */ 'pages/app/app.page')
@@ -316,7 +319,7 @@ function App(): ReactElement {
   ]);
 
   return (
-    <Layout>
+    <>
       <ToastContainer
         position='top-right'
         autoClose={5000}
@@ -329,91 +332,89 @@ function App(): ReactElement {
       <AccountModal
         selectedAccount={address}
         selectAccount={selectAccount} />
-      <React.Suspense fallback={<div>Loading...</div>}>
-        <LazyLoadingErrorBoundary>
-          <Route
-            render={({ location }) => {
-              // ray test touch <
-              // TODO: filtering
-              // ray test touch >
+      <Layout>
 
-              return (
-                <TransitionWrapper location={location}>
-                  <Switch location={location}>
-                    {!checkStaticPage() && (
+        <React.Suspense fallback={<div>Loading...</div>}>
+          <LazyLoadingErrorBoundary>
+            <Route
+              render={({ location }) => {
+                if (checkStaticPage()) {
+                  const pageURLs = [
+                    PAGES.STAKED_RELAYER,
+                    PAGES.VAULTS,
+                    PAGES.LEADERBOARD,
+                    PAGES.PARACHAIN,
+                    PAGES.ORACLES,
+                    PAGES.ISSUE,
+                    PAGES.REDEEM,
+                    PAGES.RELAY,
+                    PAGES.DASHBOARD,
+                    PAGES.VAULT,
+                    PAGES.FEEDBACK,
+                    PAGES.APPLICATION
+                  ];
+
+                  for (const pageURL of pageURLs) {
+                    if (matchPath(location.pathname, { path: pageURL })) {
+                      return <Redirect to={PAGES.HOME} />;
+                    }
+                  }
+                }
+
+                return (
+                  <TransitionWrapper location={location}>
+                    <Switch location={location}>
                       <Route path={PAGES.STAKED_RELAYER}>
                         <StakedRelayerPage />
                       </Route>
-                    )}
-                    {!checkStaticPage() && (
                       <Route path={PAGES.VAULTS}>
                         <VaultsDashboard />
                       </Route>
-                    )}
-                    {!checkStaticPage() && (
                       <Route path={PAGES.LEADERBOARD}>
                         <LeaderboardPage />
                       </Route>
-                    )}
-                    {!checkStaticPage() && (
                       <Route path={PAGES.PARACHAIN}>
                         <ParachainDashboard />
                       </Route>
-                    )}
-                    {!checkStaticPage() && (
                       <Route path={PAGES.ORACLES}>
                         <OraclesDashboard />
                       </Route>
-                    )}
-                    {!checkStaticPage() && (
                       <Route path={PAGES.ISSUE}>
                         <IssueDashboard />
                       </Route>
-                    )}
-                    {!checkStaticPage() && (
                       <Route path={PAGES.REDEEM}>
                         <RedeemDashboard />
                       </Route>
-                    )}
-                    {!checkStaticPage() && (
                       <Route path={PAGES.RELAY}>
                         <RelayDashboard />
                       </Route>
-                    )}
-                    {!checkStaticPage() && (
                       <Route path={PAGES.DASHBOARD}>
                         <DashboardPage />
                       </Route>
-                    )}
-                    {!checkStaticPage() && (
                       <Route path={PAGES.VAULT}>
                         <VaultDashboardPage />
                       </Route>
-                    )}
-                    {!checkStaticPage() && (
                       <Route path={PAGES.FEEDBACK}>
                         <FeedbackPage />
                       </Route>
-                    )}
-                    {!checkStaticPage() && (
                       <Route
                         exact
                         path={PAGES.APPLICATION}>
                         <ApplicationPage />
                       </Route>
-                    )}
-                    <Route
-                      path={PAGES.HOME}
-                      exact>
-                      <LandingPage />
-                    </Route>
-                  </Switch>
-                </TransitionWrapper>
-              );
-            }} />
-        </LazyLoadingErrorBoundary>
-      </React.Suspense>
-    </Layout>
+                      <Route
+                        path={PAGES.HOME}
+                        exact>
+                        <LandingPage />
+                      </Route>
+                    </Switch>
+                  </TransitionWrapper>
+                );
+              }} />
+          </LazyLoadingErrorBoundary>
+        </React.Suspense>
+      </Layout>
+    </>
   );
 }
 
