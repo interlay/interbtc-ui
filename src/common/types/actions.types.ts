@@ -1,7 +1,8 @@
 import { IssueRequest, VaultIssue } from './issue.types';
 import { RedeemRequest, VaultRedeem } from './redeem.types';
 import { VaultReplaceRequest, Vault } from './vault.types';
-import { StoreType, ParachainStatus, ActiveTab, Prices } from './util.types';
+import { StoreType, ParachainStatus, Prices } from './util.types';
+import { TabTypes } from 'utils/enums/tab-types';
 
 // GENERAL ACTIONS
 
@@ -45,7 +46,7 @@ export interface IsPolkaBtcLoaded {
 
 export interface SetActiveTab {
     type: typeof SET_ACTIVE_TAB;
-    activeTab: ActiveTab;
+    selectedTabType: TabTypes;
 }
 
 export interface IsStakedRelayerLoaded {

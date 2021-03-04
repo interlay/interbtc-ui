@@ -1,13 +1,16 @@
 
-import {
-  useSelector
-} from 'react-redux';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { useLocation } from 'react-router-dom';
+import clsx from 'clsx';
 
 import Topbar from 'common/components/topbar';
 import Footer from 'common/components/footer/footer';
+import TestnetBanner from 'components/TestnetBanner';
 import checkStaticPage from 'config/check-static-page';
+import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
+import styles from './layout.module.css';
 
 interface Props {
   children: React.ReactNode;
@@ -15,6 +18,7 @@ interface Props {
 
 const Layout = ({ children }: Props) => {
   const address = useSelector((state: StoreType) => state.general.address);
+  const location = useLocation();
 
   const handleRequestDotFromFaucet = async (): Promise<void> => {
     // TODO: should show a descriptive warning
@@ -29,15 +33,23 @@ const Layout = ({ children }: Props) => {
     }
   };
 
+  // TODO: a hack for now
+  const isHomePage = location.pathname === PAGES.HOME;
+
   return (
-    <div className='main d-flex flex-column min-vh-100 polkabtc-background fade-in-animation'>
+    <div
+      className={clsx(
+        'main d-flex flex-column min-vh-100',
+        { [styles['polkabtc-background']]: isHomePage }
+      )}>
       {!checkStaticPage() && (
         <Topbar
           address={address}
           requestDOT={handleRequestDotFromFaucet} />
       )}
+      {!isHomePage && <TestnetBanner />}
       {children}
-      <Footer />
+      <Footer isHomePage={isHomePage} />
     </div>
   );
 };

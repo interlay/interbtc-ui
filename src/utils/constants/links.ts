@@ -2,8 +2,8 @@
 const PAGES = Object.freeze({
   HOME: '/',
   STAKED_RELAYER: '/staked-relayer',
+  CHALLENGES: '/challenges',
   VAULTS: '/dashboard/vaults',
-  LEADERBOARD: '/leaderboard',
   PARACHAIN: '/dashboard/parachain',
   ORACLES: '/dashboard/oracles',
   ISSUE: '/dashboard/issue',

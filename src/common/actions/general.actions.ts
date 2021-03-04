@@ -32,16 +32,17 @@ import {
   UpdateHeights,
   UpdateTotals
 } from '../types/actions.types';
-import { StoreType, ParachainStatus, ActiveTab, Prices } from '../types/util.types';
+import { StoreType, ParachainStatus, Prices } from '../types/util.types';
+import { TabTypes } from 'utils/enums/tab-types';
 
 export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
   type: IS_POLKA_BTC_LOADED,
   isLoaded
 });
 
-export const setActiveTabAction = (activeTab: ActiveTab): SetActiveTab => ({
+export const setActiveTabAction = (selectedTabType: TabTypes): SetActiveTab => ({
   type: SET_ACTIVE_TAB,
-  activeTab
+  selectedTabType
 });
 
 export const isStakedRelayerLoaded = (isLoaded = false): IsStakedRelayerLoaded => ({
@@ -109,7 +110,7 @@ export const setInstalledExtensionAction = (extensions: string[]): SetInstalledE
   extensions
 });
 
-export const updateAccountsAction = (accounts: string[]): UpdateAccounts => ({
+export const updateAddressesAction = (accounts: string[]): UpdateAccounts => ({
   type: UPDATE_ACCOUNTS,
   accounts
 });

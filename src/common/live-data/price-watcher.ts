@@ -13,10 +13,10 @@ export default function fetchPrices(dispatch: Dispatch, store: StoreState): void
     })
     .then(prices => {
       try {
-        // update the store only if the price is actually changed
+        // Update the store only if the price is actually changed
         if (
           prices.bitcoin.usd !== storePrices.bitcoin.usd ||
-                    prices.polkadot.usd !== storePrices.polkadot.usd
+          prices.polkadot.usd !== storePrices.polkadot.usd
         ) {
           dispatch(updateOfPricesAction(prices));
         }

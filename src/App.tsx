@@ -7,13 +7,20 @@ import React, {
 } from 'react';
 import {
   Switch,
-  Route
+  Route,
+  Redirect
 } from 'react-router-dom';
+import { matchPath } from 'react-router';
 import {
   toast,
   ToastContainer
 } from 'react-toastify';
 import ReactTooltip from 'react-tooltip';
+import {
+  useSelector,
+  useDispatch,
+  useStore
+} from 'react-redux';
 import Big from 'big.js';
 import {
   web3Accounts,
@@ -32,13 +39,23 @@ import {
   StakedRelayerClient,
   VaultClient
 } from '@interlay/polkabtc';
-import {
-  useSelector,
-  useDispatch,
-  useStore
-} from 'react-redux';
 
 import Layout from 'parts/Layout';
+import ApplicationPage from 'pages/app/app.page';
+import DashboardPage from 'pages/dashboard/dashboard.page';
+import VaultDashboardPage from 'pages/vault-dashboard/vault-dashboard.page';
+import StakedRelayerPage from 'pages/staked-relayer/staked-relayer.page';
+import ChallengesPage from 'pages/leaderboard/leaderboard.page';
+import VaultsDashboard from 'pages/dashboard/vaults/vaults.dashboard.page';
+import IssueDashboard from 'pages/dashboard/issue/issue.dashboard.page';
+import RedeemDashboard from 'pages/dashboard/redeem/redeem.dashboard.page';
+import LandingPage from 'pages/landing/landing.page';
+import RelayDashboard from 'pages/dashboard/relay/relay.dashboard.page';
+import OraclesDashboard from 'pages/dashboard/oracles/oracles.dashboard.page';
+import ParachainDashboard from 'pages/dashboard/parachain/parachain.dashboard.page';
+import FeedbackPage from 'pages/feedback/feedback.page';
+// TODO: block for now
+// import TransitionWrapper from 'parts/TransitionWrapper';
 import AccountModal from 'common/components/account-modal/account-modal';
 import LazyLoadingErrorBoundary from 'utils/hocs/LazyLoadingErrorBoundary';
 import checkStaticPage from 'config/check-static-page';
@@ -51,7 +68,7 @@ import {
   initGeneralDataAction,
   setInstalledExtensionAction,
   showAccountModalAction,
-  updateAccountsAction,
+  updateAddressesAction,
   isFaucetLoaded
 } from 'common/actions/general.actions';
 import './i18n';
@@ -65,58 +82,48 @@ import {
 // FIXME: Clean-up and move to scss
 import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
+import './app.css';
 
-const ApplicationPage = React.lazy(() =>
-  import(/* webpackChunkName: 'application' */ 'pages/app/app.page')
-);
-
-const DashboardPage = React.lazy(() =>
-  import(/* webpackChunkName: 'dashboard' */ 'pages/dashboard/dashboard.page')
-);
-
-const VaultDashboardPage = React.lazy(() =>
-  import(/* webpackChunkName: 'vault' */ 'pages/vault-dashboard/vault-dashboard.page')
-);
-
-const StakedRelayerPage = React.lazy(() =>
-  import(/* webpackChunkName: 'staked-relayer' */ 'pages/staked-relayer/staked-relayer.page')
-);
-
-const LeaderboardPage = React.lazy(() =>
-  import(/* webpackChunkName: 'leaderboard' */ 'pages/leaderboard/leaderboard.page')
-);
-
-const VaultsDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'vaults' */ 'pages/dashboard/vaults/vaults.dashboard.page')
-);
-
-const IssueDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'issue' */ 'pages/dashboard/issue/issue.dashboard.page')
-);
-
-const RedeemDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'redeem' */ 'pages/dashboard/redeem/redeem.dashboard.page')
-);
-
-const LandingPage = React.lazy(() =>
-  import(/* webpackChunkName: 'landing' */ 'pages/landing/landing.page')
-);
-
-const RelayDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'relay' */ 'pages/dashboard/relay/relay.dashboard.page')
-);
-
-const OraclesDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'oracles' */ 'pages/dashboard/oracles/oracles.dashboard.page')
-);
-
-const ParachainDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'parachain' */ 'pages/dashboard/parachain/parachain.dashboard.page')
-);
-
-const FeedbackPage = React.lazy(() =>
-  import(/* webpackChunkName: 'feedback' */ 'pages/feedback/feedback.page')
-);
+// TODO: block code-splitting for now
+// const ApplicationPage = React.lazy(() =>
+//   import(/* webpackChunkName: 'application' */ 'pages/app/app.page')
+// );
+// const DashboardPage = React.lazy(() =>
+//   import(/* webpackChunkName: 'dashboard' */ 'pages/dashboard/dashboard.page')
+// );
+// const VaultDashboardPage = React.lazy(() =>
+//   import(/* webpackChunkName: 'vault' */ 'pages/vault-dashboard/vault-dashboard.page')
+// );
+// const StakedRelayerPage = React.lazy(() =>
+//   import(/* webpackChunkName: 'staked-relayer' */ 'pages/staked-relayer/staked-relayer.page')
+// );
+// const LeaderboardPage = React.lazy(() =>
+//   import(/* webpackChunkName: 'leaderboard' */ 'pages/leaderboard/leaderboard.page')
+// );
+// const VaultsDashboard = React.lazy(() =>
+//   import(/* webpackChunkName: 'vaults' */ 'pages/dashboard/vaults/vaults.dashboard.page')
+// );
+// const IssueDashboard = React.lazy(() =>
+//   import(/* webpackChunkName: 'issue' */ 'pages/dashboard/issue/issue.dashboard.page')
+// );
+// const RedeemDashboard = React.lazy(() =>
+//   import(/* webpackChunkName: 'redeem' */ 'pages/dashboard/redeem/redeem.dashboard.page')
+// );
+// const LandingPage = React.lazy(() =>
+//   import(/* webpackChunkName: 'landing' */ 'pages/landing/landing.page')
+// );
+// const RelayDashboard = React.lazy(() =>
+//   import(/* webpackChunkName: 'relay' */ 'pages/dashboard/relay/relay.dashboard.page')
+// );
+// const OraclesDashboard = React.lazy(() =>
+//   import(/* webpackChunkName: 'oracles' */ 'pages/dashboard/oracles/oracles.dashboard.page')
+// );
+// const ParachainDashboard = React.lazy(() =>
+//   import(/* webpackChunkName: 'parachain' */ 'pages/dashboard/parachain/parachain.dashboard.page')
+// );
+// const FeedbackPage = React.lazy(() =>
+//   import(/* webpackChunkName: 'feedback' */ 'pages/feedback/feedback.page')
+// );
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
   return createPolkabtcAPI(
@@ -146,7 +153,10 @@ function App(): ReactElement {
       dispatch(showAccountModalAction(false));
       dispatch(changeAddressAction(newAddress));
     },
-    [polkaBtcLoaded, dispatch]
+    [
+      polkaBtcLoaded,
+      dispatch
+    ]
   );
 
   const createAPIInstance = useCallback(async (): Promise<void> => {
@@ -160,7 +170,7 @@ function App(): ReactElement {
       window.faucet = new FaucetClient(constants.FAUCET_URL);
       dispatch(isFaucetLoaded(true));
 
-      // TODO: could be a race condition
+      // TODO: should avoid any race condition
       setTimeout(() => {
         if (!window.polkaBTC) {
           toast.warn(
@@ -187,15 +197,21 @@ function App(): ReactElement {
     store
   ]);
 
-  useEffect((): void => {
+  useEffect(() => {
     // Do not load data if showing static landing page only
     if (checkStaticPage()) return;
+    if (!polkaBtcLoaded) return;
 
-    const initDataOnAppBootstrap = async () => {
-      if (!polkaBtcLoaded) return;
-
+    // Initialize data on app bootstrap
+    (async () => {
       try {
-        const [totalPolkaSAT, totalLockedPLANCK, btcRelayHeight, bitcoinHeight, state] = await Promise.all([
+        const [
+          totalPolkaSAT,
+          totalLockedPLANCK,
+          btcRelayHeight,
+          bitcoinHeight,
+          state
+        ] = await Promise.all([
           window.polkaBTC.treasury.totalPolkaBTC(),
           window.polkaBTC.collateral.totalLockedDOT(),
           window.polkaBTC.btcRelay.getLatestBlockHeight(),
@@ -218,16 +234,16 @@ function App(): ReactElement {
           )
         );
       } catch (error) {
+        // TODO: should have error handling instead of console
         console.log(error);
       }
-    };
-    initDataOnAppBootstrap();
+    })();
   }, [
     dispatch,
     polkaBtcLoaded
   ]);
 
-  useEffect((): void => {
+  useEffect(() => {
     // Do not load data if showing static landing page only
     if (checkStaticPage()) return;
 
@@ -237,27 +253,29 @@ function App(): ReactElement {
       const browserExtensions = await web3Enable(constants.APP_NAME);
       dispatch(setInstalledExtensionAction(browserExtensions.map(ext => ext.name)));
 
-      const allAccounts = await web3Accounts();
-      if (allAccounts.length === 0) {
+      const accounts = await web3Accounts();
+      if (accounts.length === 0) {
         dispatch(changeAddressAction(''));
         return false;
       }
 
-      const accounts = allAccounts.map(({ address }) => address);
-      dispatch(updateAccountsAction(accounts));
+      const addresses = accounts.map(({ address }) => address);
+      dispatch(updateAddressesAction(addresses));
 
       let newAddress: string | undefined = undefined;
-      if (accounts.includes(address)) {
+      if (addresses.includes(address)) {
         newAddress = address;
-      } else if (accounts.length === 1) {
-        newAddress = accounts[0];
+      } else if (addresses.length === 1) {
+        newAddress = addresses[0];
       }
 
       if (newAddress) {
         const { signer } = await web3FromAddress(newAddress);
         window.polkaBTC.setAccount(newAddress, signer);
         dispatch(changeAddressAction(newAddress));
-      } else dispatch(changeAddressAction(''));
+      } else {
+        dispatch(changeAddressAction(''));
+      }
 
       return true;
     };
@@ -278,11 +296,11 @@ function App(): ReactElement {
   useEffect(() => {
     // Do not load data if showing static landing page only
     if (checkStaticPage()) return;
+    if (polkaBtcLoaded) return;
 
-    const loadData = async () => {
+    (async () => {
       try {
-        if (polkaBtcLoaded) return;
-
+        // TODO: should avoid any race condition
         setTimeout(() => {
           if (isLoading) setIsLoading(false);
         }, 3000);
@@ -293,8 +311,7 @@ function App(): ReactElement {
           autoClose: false
         });
       }
-    };
-    loadData();
+    })();
     startFetchingLiveData(dispatch, store);
   }, [
     createAPIInstance,
@@ -305,7 +322,7 @@ function App(): ReactElement {
   ]);
 
   return (
-    <Layout>
+    <>
       <ToastContainer
         position='top-right'
         autoClose={5000}
@@ -318,80 +335,90 @@ function App(): ReactElement {
       <AccountModal
         selectedAccount={address}
         selectAccount={selectAccount} />
-      <React.Suspense fallback={<div>Loading...</div>}>
+      <Layout>
         <LazyLoadingErrorBoundary>
-          <Switch>
-            {!checkStaticPage() && (
-              <Route path={PAGES.STAKED_RELAYER}>
-                <StakedRelayerPage />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.VAULTS}>
-                <VaultsDashboard />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.LEADERBOARD}>
-                <LeaderboardPage />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.PARACHAIN}>
-                <ParachainDashboard />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.ORACLES}>
-                <OraclesDashboard />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.ISSUE}>
-                <IssueDashboard />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.REDEEM}>
-                <RedeemDashboard />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.RELAY}>
-                <RelayDashboard />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.DASHBOARD}>
-                <DashboardPage />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.VAULT}>
-                <VaultDashboardPage />
-              </Route>
-            )}
-            {!checkStaticPage() && (
-              <Route path={PAGES.FEEDBACK}>
-                <FeedbackPage />
-              </Route>
-            )}
-            <Route
-              path='/'
-              exact>
-              <LandingPage />
-            </Route>
-            {!checkStaticPage() && (
-              <Route
-                exact
-                path={PAGES.APPLICATION}>
-                <ApplicationPage />
-              </Route>
-            )}
-          </Switch>
+          <Route
+            render={({ location }) => {
+              if (checkStaticPage()) {
+                const pageURLs = [
+                  PAGES.STAKED_RELAYER,
+                  PAGES.VAULTS,
+                  PAGES.CHALLENGES,
+                  PAGES.PARACHAIN,
+                  PAGES.ORACLES,
+                  PAGES.ISSUE,
+                  PAGES.REDEEM,
+                  PAGES.RELAY,
+                  PAGES.DASHBOARD,
+                  PAGES.VAULT,
+                  PAGES.FEEDBACK,
+                  PAGES.APPLICATION
+                ];
+
+                for (const pageURL of pageURLs) {
+                  if (matchPath(location.pathname, { path: pageURL })) {
+                    return <Redirect to={PAGES.HOME} />;
+                  }
+                }
+              }
+
+              return (
+                // TODO: block for now
+                // <TransitionWrapper location={location}>
+                // TODO: should use loading spinner instead of `Loading...`
+                <React.Suspense fallback={<div>Loading...</div>}>
+                  <Switch location={location}>
+                    <Route path={PAGES.STAKED_RELAYER}>
+                      <StakedRelayerPage />
+                    </Route>
+                    <Route path={PAGES.VAULTS}>
+                      <VaultsDashboard />
+                    </Route>
+                    <Route path={PAGES.CHALLENGES}>
+                      <ChallengesPage />
+                    </Route>
+                    <Route path={PAGES.PARACHAIN}>
+                      <ParachainDashboard />
+                    </Route>
+                    <Route path={PAGES.ORACLES}>
+                      <OraclesDashboard />
+                    </Route>
+                    <Route path={PAGES.ISSUE}>
+                      <IssueDashboard />
+                    </Route>
+                    <Route path={PAGES.REDEEM}>
+                      <RedeemDashboard />
+                    </Route>
+                    <Route path={PAGES.RELAY}>
+                      <RelayDashboard />
+                    </Route>
+                    <Route path={PAGES.DASHBOARD}>
+                      <DashboardPage />
+                    </Route>
+                    <Route path={PAGES.VAULT}>
+                      <VaultDashboardPage />
+                    </Route>
+                    <Route path={PAGES.FEEDBACK}>
+                      <FeedbackPage />
+                    </Route>
+                    <Route
+                      exact
+                      path={PAGES.APPLICATION}>
+                      <ApplicationPage />
+                    </Route>
+                    <Route
+                      path={PAGES.HOME}
+                      exact>
+                      <LandingPage />
+                    </Route>
+                  </Switch>
+                </React.Suspense>
+                // </TransitionWrapper>
+              );
+            }} />
         </LazyLoadingErrorBoundary>
-      </React.Suspense>
-    </Layout>
+      </Layout>
+    </>
   );
 }
 
