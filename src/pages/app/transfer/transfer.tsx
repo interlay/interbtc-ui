@@ -106,8 +106,8 @@ export default function Transfer() {
                   })} />
               </div>
               <Button
-                variant='primary'
-                className='col-xs-3 m-1'
+                variant='outline-primary'
+                className='col-xs-3 mx-1'
                 onClick={() => setDisplayNetworkModal(true)}>
                 <img
                   src={networkImage}
