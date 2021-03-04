@@ -46,13 +46,11 @@ export default function Collateralization({ linkButton }: CollateralizationProps
         <div className='values-container'>
           {!failed && (
             <>
-              <h1 style={{ color: getAccents('d_blue').color }}>
-                {t('dashboard.vaults.collateralization')}
-              </h1>
+              <h1 style={{ color: getAccents('d_blue').color }}>{t('dashboard.vault.collateralization')}</h1>
               <h2>{safeRoundTwoDecimals(systemCollateralization)}%</h2>
               <h2>
-                {t('dashboard.vaults.secure_threshold', {
-                  amount: safeRoundTwoDecimals(secureCollateralThreshold)
+                {t('dashboard.vault.secure_threshold', {
+                  threshold: safeRoundTwoDecimals(secureCollateralThreshold)
                 })}
               </h2>
             </>
@@ -77,9 +75,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
           <h1
             className='h1-xl-text-center'
             style={{ color: getAccents('d_blue').color }}>
-            {failed ?
-              t('no_data') :
-              [safeRoundTwoDecimals(issuablePolkaBTC), <br />, t('dashboard.vaults.polkabtc_capacity')]}
+            {failed ? t('no_data') : [safeRoundTwoDecimals(issuablePolkaBTC), <br />, t('dashboard.vault.capacity')]}
           </h1>
         </div>
       </div>

@@ -221,7 +221,7 @@ export default function VaultTable(): ReactElement {
   return (
     <div className='dashboard-table-container'>
       <div>
-        <p className='table-heading'>{t('dashboard.vaults.active_vaults')}</p>
+        <p className='table-heading'>{t('dashboard.vault.active_vaults')}</p>
       </div>
       <DashboardTable
         pageData={vaults.map(vault => ({ ...vault, id: vault.vaultId }))}
