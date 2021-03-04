@@ -21,6 +21,8 @@ import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from '../actions/
 import Big from 'big.js';
 import { TableDisplayParams, RelayedBlock } from '../types/util.types';
 import { Issue, Redeem } from '@interlay/polkabtc-stats';
+import { AccountId, Balance } from '@polkadot/types/interfaces/runtime';
+import BN from 'bn.js';
 
 function safeRoundTwoDecimals(input: string | undefined, defaultValue = '0'): string {
   if (input === undefined) return defaultValue;
@@ -347,9 +349,7 @@ function range(start: number, end: number): number[] {
   return Array.from({ length: end - start }, (_, k) => k + start);
 }
 
-const arrayToMap = (
-  arr: IssueRequest[][] | RedeemRequest[][]
-): Map<string, IssueRequest[] | RedeemRequest[]> => {
+const arrayToMap = (arr: IssueRequest[][] | RedeemRequest[][]): Map<string, IssueRequest[] | RedeemRequest[]> => {
   const map = new Map();
   // eslint-disable-next-line guard-for-in
   for (const key in arr) {
@@ -544,6 +544,15 @@ const copyToClipboard = (text: string) => {
   navigator.clipboard.writeText(text);
 };
 
+const getRandomVaultIdWithCapacity = (vaults: [AccountId, Balance][], requiredCapacity: BN): string => {
+  const filteredVaults = vaults.filter(vault => vault[1].gte(requiredCapacity));
+  return filteredVaults.length > 0 ? getRandomArrayElement(filteredVaults)[0].toString() : '';
+};
+
+function getRandomArrayElement<T>(array: Array<T>): T {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
 export {
   safeRoundTwoDecimals,
   safeRoundEightDecimals,
@@ -567,11 +576,12 @@ export {
   reverseHashEndianness,
   defaultBlockData,
   defaultTableDisplayParams,
-
   redeemRequestToVaultRedeem,
   issueRequestToVaultIssue,
   requestsToVaultReplaceRequests,
   updateBalances,
   requestsInStore,
-  copyToClipboard
+  copyToClipboard,
+  getRandomVaultIdWithCapacity,
+  getRandomArrayElement
 };
