@@ -1,5 +1,6 @@
 import React, { useState, useEffect, ReactElement, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { Image } from 'react-bootstrap';
 import 'pages/leaderboard/leaderboard.page.scss';
 import 'pages/dashboard/dashboard-subpage.scss';
 import { StoreType } from 'common/types/util.types';
@@ -9,6 +10,7 @@ import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { RelayerData, VaultData } from '@interlay/polkabtc-stats';
 import TimerIncrement from 'common/components/timer-increment';
 import { Card, Tab, Tabs } from 'react-bootstrap';
+import newImg from '../../assets/img/icons/new.png';
 
 export default function ChallengesPage(): ReactElement {
   // eslint-disable-next-line no-array-constructor
@@ -95,7 +97,13 @@ export default function ChallengesPage(): ReactElement {
               <Card
                 className='text-center'
                 style={{ minHeight: '100px' }}>
-                <h2>{t('leaderboard.challenges.treasure_hunt')}</h2>
+                <h2>{t('leaderboard.challenges.treasure_hunt')}
+                  <Image
+                    src={newImg}
+                    height='20em'
+                    width='20em'>
+                  </Image>
+                </h2>
                 <Card.Body>
                   {t('leaderboard.challenges.treasure_hunt_desc')}
                   <br />
