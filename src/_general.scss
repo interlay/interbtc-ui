@@ -633,8 +633,8 @@ a:not([href]):not([tabindex]):focus {
     background-color: #fff;
 
     @include flexCenter();
-    p,
-    span {
+    // span,
+    p {
         font-family: airbnb-cereal-book;
     }
     h1 {

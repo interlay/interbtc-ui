@@ -50,7 +50,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
     <div className='card'>
       <div className='card-top-content'>
         <div className='values-container'>
-          <h1 style={{ color: getAccents('d_pink').color }}>{t('dashboard.vaults.collateral_locked')}</h1>
+          <h1 style={{ color: getAccents('d_pink').color }}>{t('dashboard.vault.locked_collateral')}</h1>
           <h2>{totalLockedDOT} DOT</h2>
           <h2>${getUsdAmount(totalLockedDOT, prices.polkadot.usd)}</h2>
         </div>
@@ -67,10 +67,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
       <div className='chart-container'>
         <LineChartComponent
           color={['d_pink', 'd_grey']}
-          label={[
-            t('dashboard.vaults.total_collateral_locked'),
-            t('dashboard.vaults.perday_collateral_locked')
-          ]}
+          label={[t('dashboard.vault.total_collateral_locked'), t('dashboard.vault.perday_collateral_locked')]}
           yLabels={cumulativeCollateralPerDay
             .slice(1)
             .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}
@@ -79,9 +76,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
             { position: 'right', maxTicksLimit: 5 }
           ]}
           data={[
-            cumulativeCollateralPerDay
-              .slice(1)
-              .map(dataPoint => Number(planckToDOT(dataPoint.amount.toString()))),
+            cumulativeCollateralPerDay.slice(1).map(dataPoint => Number(planckToDOT(dataPoint.amount.toString()))),
             pointCollateralPerDay.slice(1).map(amount => Number(planckToDOT(amount.toString())))
           ]} />
       </div>

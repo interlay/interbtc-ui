@@ -5,6 +5,8 @@
   "click_to_copy": "Click to copy",
   "confirm": "Confirm",
   "next": "Next",
+  "loading_ellipsis": "Loading...",
+  "nav_challenges": "Challenges",
   "note": "Note",
   "close": "Close",
   "loading": "Loading",
@@ -248,9 +250,11 @@
       "loading": "loading..."
     },
     "vault": {
+      "active_vaults": "Active Vaults",
       "creation_block": "Creation Block",
       "register_vault": "Register Vault",
       "collateral": "Collateral",
+      "collateralization": "Collateralization",
       "collateral_is_required": "Collateral is required",
       "replace_requests": "Replace Requests",
       "old_vault": "Old Vault",
@@ -277,7 +281,11 @@
       "tip_pending_btc": "BTC volume of in-progress issue requests.",
       "tip_collateralization": "Collateralization rate for locked BTC. 'Pending' includes in-progress issue requests.",
       "pending_table_subcell": "Pending: ",
-      "theft": "Theft detected"
+      "theft": "Theft detected",
+      "secure_threshold": "Secure Threshold: {{threshold}} %",
+      "total_collateral_locked": "Total Collateral Locked",
+      "perday_collateral_locked": "Collateral Locked Per Day",
+      "total_vaults_chart": "Total number of vaults"
     },
     "parachain": {
       "parachain": "BTC Parachain",
@@ -426,6 +434,7 @@
   },
   "leaderboard": {
     "title": "Leaderboard",
+    "challenges_title": "Challenges",
     "vault_scores": "Vault Scores",
     "relayer_scores": "Staked Relayer Scores",
     "account_id": "Account ID",
@@ -436,7 +445,20 @@
     "request_redeem_count": "Redeems Requested",
     "execute_redeem_count": "Redeems Executed",
     "block_count": "Blocks Submitted",
-    "lifetime_sla": "Lifetime SLA Score"
+    "lifetime_sla": "Lifetime SLA Score",
+    "more_info": "More info",
+    "challenges": {
+      "treasure_hunt": "Challenge 1: Treasure Hunt",
+      "treasure_hunt_desc": "Issue & redeem to claim reward.",
+      "vaults_relayers": "Challenge 4: King of the Hill",
+      "vaults_relayers_desc": "Stay tuned, coming soon!",
+      "lottery": "Challenge 5: Lottery",
+      "lottery_desc": "Stay tuned, coming soon!",
+      "vault_treasure_hunt": "Challenge 2: Vault Treasure",
+      "vault_treasure_hunt_desc": "Stay tuned, coming soon!",
+      "relayer_treasure_hunt": "Challenge 3: Relayer Treasure",
+      "relayer_treasure_hunt_desc": "Stay tuned, coming soon!"
+    }
   },
   "vault": {
     "creation_block": "Creation Block",
