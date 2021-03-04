@@ -13,11 +13,12 @@ import DashboardTable, {
   StatusCategories
 } from '../../../common/components/dashboard-table/dashboard-table';
 import * as constants from '../../../constants';
-import '../dashboard-subpage.scss';
 import { BtcNetworkName, IssueColumns } from '@interlay/polkabtc-stats';
 import TimerIncrement from '../../../common/components/timer-increment';
 import LineChartComponent from '../components/line-chart-component';
-import TestnetBanner from '../../../common/components/testnet-banner';
+// TODO: should fix by scoping only necessary CSS into a component
+import '../dashboard.page.scss';
+import '../dashboard-subpage.scss';
 
 export default function IssueDashboard(): ReactElement {
   const { totalPolkaBTC, prices } = useSelector((state: StoreType) => state.general);
@@ -134,7 +135,6 @@ export default function IssueDashboard(): ReactElement {
 
   return (
     <div className='main-container dashboard-page'>
-      <TestnetBanner />
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <div>

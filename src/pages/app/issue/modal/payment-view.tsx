@@ -74,6 +74,15 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
         <div className='row payment-timer'>
           <div className='col'>{leftSeconds !== -1 && <Timer seconds={leftSeconds}></Timer>}</div>
         </div>
+        <div className='row mt-2 justify-content-center'>
+          <div className='col note-text'>
+            {t('issue_page.warning_mbtc_wallets')}
+            <span className='send-amount'> {
+              new Big(props.request.totalAmount).mul(1000).round(5).toString()
+            }&nbsp;mBTC
+            </span>
+          </div>
+        </div>
         <div className='row'>
           <div className='col qr-code-item'>
             <QRCode value={'bitcoin:' + props.request.vaultBTCAddress + '?amount=' + amount} />

@@ -17,7 +17,7 @@ import BitcoinLogo from '../../../assets/img/small-bitcoin-logo.png';
 import PolkadotLogo from '../../../assets/img/small-polkadot-logo.png';
 import Big from 'big.js';
 import { updateBalancePolkaBTCAction } from '../../../common/actions/general.actions';
-import { getUsdAmount, parachainToUIRedeemRequest } from '../../../common/utils/utils';
+import { displayBtcAmount, getUsdAmount, parachainToUIRedeemRequest } from '../../../common/utils/utils';
 import { PolkaBTC } from '@interlay/polkabtc/build/interfaces';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
 import * as constants from '../../../constants';
@@ -155,7 +155,7 @@ export default function EnterAmountAndAddress(): ReactElement {
   const calculateTotalBTC = (): string => {
     const amount = getValues('amountPolkaBTC') || '0';
     if (amount === '0') return '0';
-    return new Big(amount).sub(new Big(redeemFee)).round(5).toString();
+    return new Big(amount).sub(new Big(redeemFee)).round(8).toString();
   };
 
   const calculateTotalDOT = (): string => {
@@ -287,7 +287,7 @@ export default function EnterAmountAndAddress(): ReactElement {
                     height='23px'
                     alt='bitcoin logo'>
                   </img> &nbsp;
-                  <span className='fee-btc'>{parseFloat(Number(redeemFee).toFixed(5))}</span> BTC
+                  <span className='fee-btc'>{displayBtcAmount(redeemFee)}</span> BTC
                 </div>
                 <div>{'~ $' + getUsdAmount(redeemFee, prices.bitcoin.usd)}</div>
               </div>

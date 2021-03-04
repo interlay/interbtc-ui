@@ -372,7 +372,8 @@
         "refund_difference": "Difference",
         "refund_requested_vault": "We have requested the vault",
         "refund_vault_to_return": "to return",
-        "refund_vault_to_address": "back to your address"
+        "refund_vault_to_address": "back to your address",
+        "warning_mbtc_wallets": "Warning: some wallets display values in mBTC. If this is the case for you, please ensure you send the correct amount: "
     },
     "landing": {
         "defi_ecosystem": "Bitcoin for Polkadot's DeFi Ecosystem",

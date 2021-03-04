@@ -1,0 +1,12 @@
+
+.testnet-banner {
+  margin: 16px;
+}
+
+/* TODO: should avoid hard-coding (bootstrap breakpoints) */
+@media (min-width: 576px) {
+  .testnet-banner {
+    width: 60%;
+    margin: 16px auto;
+  }
+}
