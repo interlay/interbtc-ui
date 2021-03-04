@@ -442,16 +442,16 @@
     "lifetime_sla": "Lifetime SLA Score",
     "more_info": "More info",
     "challenges": {
-      "treasure_hunt": "Treasure Hunt",
-      "treasure_hunt_desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, TODO",
-      "vaults_relayers": "Best Vaults and Relayers",
-      "vaults_relayers_desc": "More information coming soon...",
-      "lottery": "Lottery",
-      "lottery_desc": "More information coming soon...",
-      "fourth_challenge": "Coming soon!",
-      "fourth_challenge_desc": "More information coming soon...",
-      "fifth_challenge": "Coming soon!",
-      "fifth_challenge_desc": "More information coming soon..."
+      "treasure_hunt": "Challenge 1: Treasure Hunt",
+      "treasure_hunt_desc": "Issue & redeem to claim reward.",
+      "vaults_relayers": "Challenge 4: King of the Hill",
+      "vaults_relayers_desc": "Stay tuned, coming soon!",
+      "lottery": "Challenge 5: Lottery",
+      "lottery_desc": "Stay tuned, coming soon!",
+      "vault_treasure_hunt": "Challenge 2: Vault Treasure",
+      "vault_treasure_hunt_desc": "Stay tuned, coming soon!",
+      "relayer_treasure_hunt": "Challenge 3: Relayer Treasure",
+      "relayer_treasure_hunt_desc": "Stay tuned, coming soon!"
     }
   },
   "vault": {

@@ -89,84 +89,71 @@ export default function ChallengesPage(): ReactElement {
             <div className='title-text-container'>
               <h1 className='title-text'>{t('leaderboard.challenges_title')}</h1>
             </div>
-            <div className='row'>
-              <div className='col-lg-10 offset-lg-1'>
-                <div className='row mt-3'>
-                  <div className='col-lg-4 mb-3'>
-                    <Card
-                      className='text-center'
-                      style={{ minHeight: '100px' }}>
-                      <Card.Header>{t('leaderboard.challenges.treasure_hunt')}</Card.Header>
-                      <Card.Body>
-                        {t('leaderboard.challenges.treasure_hunt_desc')}
-                        <a
-                          className='nav-link'
-                          href='https://docs.polkabtc.io/#/start/beta?id=treasure-hunt-500-dot'
-                          target='_blank'
-                          rel='noopener noreferrer'>
-                          {t('leaderboard.more_info')} <span className='fa fa-external-link'></span>{' '}
-                        </a>
-                      </Card.Body>
-                    </Card>
-                  </div>
-                  <div className='col-lg-4 mb-3'>
-                    <Card
-                      className='text-center'
-                      style={{ minHeight: '100px' }}>
-                      <Card.Header>{t('leaderboard.challenges.vaults_relayers')}</Card.Header>
-                      <Card.Body>
-                        {t('leaderboard.challenges.vaults_relayers_desc')}
-                        <a
-                          className='nav-link'
-                          href='https://docs.polkabtc.io/#/start/beta?id=best-vaults-and-relayers-200-dot'
-                          target='_blank'
-                          rel='noopener noreferrer'>
-                          {t('leaderboard.more_info')} <span className='fa fa-external-link'></span>{' '}
-                        </a>
-                      </Card.Body>
-                    </Card>
-                  </div>
-                  <div className='col-lg-4 mb-3'>
-                    <Card
-                      className='text-center'
-                      style={{ minHeight: '100px' }}>
-                      <Card.Header>{t('leaderboard.challenges.lottery')}</Card.Header>
-                      <Card.Body>
-                        {t('leaderboard.challenges.lottery_desc')}
-                        <a
-                          className='nav-link'
-                          href='https://docs.polkabtc.io/#/start/beta?id=lottery-200-dot'
-                          target='_blank'
-                          rel='noopener noreferrer'>
-                          {t('leaderboard.more_info')} <span className='fa fa-external-link'></span>{' '}
-                        </a>
-                      </Card.Body>
-                    </Card>
-                  </div>
-                </div>
-              </div>
+          </div>
+          <div className='row mt-3'>
+            <div className='col-lg-4 mb-3'>
+              <Card
+                className='text-center'
+                style={{ minHeight: '100px' }}>
+                <h2>{t('leaderboard.challenges.treasure_hunt')}</h2>
+                <Card.Body>
+                  {t('leaderboard.challenges.treasure_hunt_desc')}
+                  <br />
+                  <a
+                    className='link'
+                    href='https://docs.polkabtc.io/#/start/beta?id=treasure-hunt-500-dot'
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    {t('leaderboard.more_info')} <span className='fa fa-external-link'></span>{' '}
+                  </a>
+                </Card.Body>
+              </Card>
             </div>
-            <div className='row mt-3'>
-              <div className='col-lg-5 offset-lg-1 mb-3'>
-                <Card
-                  className='text-center'
-                  style={{ minHeight: '100px' }}>
-                  <Card.Header>{t('leaderboard.challenges.fourth_challenge')}</Card.Header>
-                  <Card.Body>
-                    {t('leaderboard.challenges.fourth_challenge_desc')}
-                  </Card.Body>
-                </Card>
-              </div>
-              <div className='col-lg-5 mb-3'>
-                <Card
-                  className='text-center'
-                  style={{ minHeight: '100px' }}>
-                  <Card.Header>{t('leaderboard.challenges.fifth_challenge')}</Card.Header>
-                  <Card.Body>
-                    {t('leaderboard.challenges.fifth_challenge_desc')}
-                  </Card.Body>
-                </Card>
-              </div>
+            <div className='col-lg-4 mb-3'>
+              <Card
+                className='text-center'
+                style={{ minHeight: '100px' }}>
+                <h2>{t('leaderboard.challenges.vault_treasure_hunt')}</h2>
+                <Card.Body>
+                  {t('leaderboard.challenges.vault_treasure_hunt_desc')}
+                  <br />
+                  <br />
+                </Card.Body>
+              </Card>
+            </div>
+            <div className='col-lg-4 mb-3'>
+              <Card
+                className='text-center'
+                style={{ minHeight: '100px' }}>
+                <h2>{t('leaderboard.challenges.relayer_treasure_hunt')}</h2>
+                <Card.Body>
+                  {t('leaderboard.challenges.relayer_treasure_hunt_desc')}
+                  <br />
+                  <br />
+                </Card.Body>
+              </Card>
+            </div>
+          </div>
+          <div className='row mt-3'>
+            <div className='col-lg-4 offset-lg-2 mb-3'>
+              <Card
+                className='text-center'
+                style={{ minHeight: '100px' }}>
+                <h2>{t('leaderboard.challenges.vaults_relayers')}</h2>
+                <Card.Body>
+                  {t('leaderboard.challenges.vaults_relayers_desc')}
+                </Card.Body>
+              </Card>
+            </div>
+            <div className='col-lg-4 mb-3'>
+              <Card
+                className='text-center'
+                style={{ minHeight: '100px' }}>
+                <h2>{t('leaderboard.challenges.lottery')}</h2>
+                <Card.Body>
+                  {t('leaderboard.challenges.lottery_desc')}
+                </Card.Body>
+              </Card>
             </div>
           </div>
           <div className='title-container'>
