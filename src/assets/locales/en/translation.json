@@ -446,7 +446,8 @@
         "capacity": "Capacity",
         "tip_pending_btc": "BTC volume of in-progress issue requests.",
         "tip_collateralization": "Collateralization rate for locked BTC. 'Pending' includes in-progress issue requests.",
-        "pending_table_subcell": "Pending: "
+        "pending_table_subcell": "Pending: ",
+        "theft": "Theft detected"
     },
     "about": {
         "about_polkabtc": "About PolkaBTC",
