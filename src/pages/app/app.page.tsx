@@ -8,8 +8,7 @@ import IssueRequests from './issue/issue-requests';
 import RedeemSteps from './redeem/redeem-steps';
 import RedeemRequests from './redeem/redeem-requests';
 import Transfer from './transfer/transfer';
-import Tab from './Tab';
-import HorizontalLine from './HorizontalLine';
+import Tabs, { Tab, HorizontalLine } from './Tabs';
 import { StoreType } from 'common/types/util.types';
 import { TabTypes } from 'utils/enums/tab-types';
 import './app.page.scss';
@@ -41,9 +40,7 @@ function Application(): ReactElement {
               </div>
             ) : (
               <>
-                <div
-                  id='main-tabs'
-                  className='row'>
+                <Tabs>
                   <Tab
                     tabType={TabTypes.Issue}
                     selectedTabType={selectedTabType}>
@@ -59,7 +56,7 @@ function Application(): ReactElement {
                     selectedTabType={selectedTabType}>
                     {t('transfer')}
                   </Tab>
-                </div>
+                </Tabs>
                 <HorizontalLine selectedTabType={selectedTabType} />
               </>
             )}
