@@ -1,5 +1,5 @@
 import React, { SyntheticEvent, useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,13 +10,21 @@ import Big from 'big.js';
 import ButtonMaybePending from '../../../common/components/pending-button';
 import { useTranslation } from 'react-i18next';
 
+// Commenting because moving this to last line casues 3 "used before it was defined" warnings
+// eslint-disable-next-line import/exports-last
+export enum CollateralUpdateStatus {
+  Hidden,
+  Increase,
+  Decrease
+}
+
 type UpdateCollateralForm = {
   collateral: string;
 };
 
 type UpdateCollateralProps = {
   onClose: () => void;
-  show: boolean;
+  status: CollateralUpdateStatus;
 };
 
 export default function UpdateCollateralModal(props: UpdateCollateralProps) {
@@ -30,7 +38,6 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
   const [currentCollateral, setCurrentCollateral] = useState('');
   const [newCollateralization, setNewCollateralization] = useState('∞');
 
-  const [isAWithdrawal, setIsAWithdrawal] = useState(false);
   const [isUpdatePending, setUpdatePending] = useState(false);
   const [isCollateralUpdateAllowed, setCollateralUpdateAllowed] = useState(false);
   const dispatch = useDispatch();
@@ -91,35 +98,37 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
         return;
       }
 
-      const newCollateral = dotToPlanck(value);
-      if (!newCollateral) {
+      const collateralChange = dotToPlanck(value);
+      if (!collateralChange) {
         throw new Error('Please enter an amount greater than 1 Planck');
       }
-      setNewCollateral(newCollateral);
+
+      // decide if we withdraw or add collateral
+      const currentCollateral = dotToPlanck(currentDOTCollateral);
+      if (!currentCollateral) {
+        throw new Error('Couldn\'t fetch current vault collateral');
+      }
+      setCurrentCollateral(currentCollateral);
+
+      let newCollateral = new Big(currentCollateral);
+      if (props.status === CollateralUpdateStatus.Increase) {
+        newCollateral = newCollateral.add(new Big(collateralChange));
+      } else if (props.status === CollateralUpdateStatus.Decrease) {
+        newCollateral = newCollateral.sub(new Big(collateralChange));
+      }
+      setNewCollateral(newCollateral.toString());
 
       const accountId = await window.vaultClient.getAccountId();
       const vaultId = window.polkaBTC.api.createType('AccountId', accountId);
       const requiredCollateral = (await window.polkaBTC.vaults.getRequiredCollateralForVault(vaultId)).toString();
 
       // collateral update only allowed if above required collateral
-      const allowed = new Big(newCollateral).gte(new Big(requiredCollateral));
+      const allowed = newCollateral.gte(new Big(requiredCollateral));
       setCollateralUpdateAllowed(allowed);
-
-      // decide if we withdraw or add collateral
-      const currentCollateral = dotToPlanck(currentDOTCollateral);
-      if (!currentCollateral) {
-        throw new Error('Error with current vault collateral');
-      }
-      setCurrentCollateral(currentCollateral);
-      const withdraw = new Big(newCollateral).lt(currentCollateral);
-      withdraw ? setIsAWithdrawal(true) : setIsAWithdrawal(false);
 
       // get the updated collateralization
       const newCollateralAsU128 = window.polkaBTC.api.createType('u128', newCollateral);
-      const newCollateralization = await window.polkaBTC.vaults.getVaultCollateralization(
-        vaultId,
-        newCollateralAsU128
-      );
+      const newCollateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId, newCollateralAsU128);
       if (newCollateralization === undefined) {
         setNewCollateralization('∞');
       } else {
@@ -131,9 +140,13 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     }
   };
 
+  const isAWithdrawal = (status: CollateralUpdateStatus): boolean => {
+    return status === CollateralUpdateStatus.Decrease;
+  };
+
   return (
     <Modal
-      show={props.show}
+      status={props.status}
       onHide={closeModal}>
       <form onSubmit={onSubmit}>
         <Modal.Header closeButton>
@@ -150,9 +163,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                 <input
                   name='collateral'
                   type='float'
-                  className={
-                    'form-control custom-input' + (errors.collateral ? ' error-borders' : '')
-                  }
+                  className={'form-control custom-input' + (errors.collateral ? ' error-borders' : '')}
                   aria-describedby='basic-addon2'
                   ref={register({
                     required: true,
@@ -173,9 +184,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
                   {errors.collateral.type === 'required' ?
                     t('vault.collateral_is_required') :
                     errors.collateral.message}
-                  {errors.collateral.type === 'min' ?
-                    t('vault.collateral_higher_than_0') :
-                    errors.collateral.message}
+                  {errors.collateral.type === 'min' ? t('vault.collateral_higher_than_0') : errors.collateral.message}
                 </div>
               )}
             </div>
@@ -193,17 +202,12 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant='secondary'
-            onClick={closeModal}>
-            {t('cancel')}
-          </Button>
           <ButtonMaybePending
-            variant={isAWithdrawal ? 'outline-danger' : 'outline-success'}
+            variant={isAWithdrawal(props.status) ? 'outline-danger' : 'outline-success'}
             isPending={isUpdatePending}
             type='submit'
             disabled={!isCollateralUpdateAllowed}>
-            {isAWithdrawal ? t('vault.withdraw_collateral') : t('vault.add_collateral')}
+            {isAWithdrawal(props.status) ? t('vault.withdraw_collateral') : t('vault.add_collateral')}
           </ButtonMaybePending>
         </Modal.Footer>
       </form>
