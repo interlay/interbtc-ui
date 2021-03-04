@@ -445,9 +445,13 @@
       "treasure_hunt": "Treasure Hunt",
       "treasure_hunt_desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, TODO",
       "vaults_relayers": "Best Vaults and Relayers",
-      "vaults_relayers_desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, TODO",
+      "vaults_relayers_desc": "More information coming soon...",
       "lottery": "Lottery",
-      "lottery_desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, TODO"
+      "lottery_desc": "More information coming soon...",
+      "fourth_challenge": "Coming soon!",
+      "fourth_challenge_desc": "More information coming soon...",
+      "fifth_challenge": "Coming soon!",
+      "fifth_challenge_desc": "More information coming soon..."
     }
   },
   "vault": {
