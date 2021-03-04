@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useMemo, useEffect } from 'react';
+import { ReactElement, useState, useMemo, useEffect } from 'react';
 import ButtonComponent from './button-component';
 import { getAccents } from '../dashboard-colors';
 import LineChartComponent from './line-chart-component';

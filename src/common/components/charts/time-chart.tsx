@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { Line } from 'react-chartjs-2';
 import { TimeDataPoint } from '../../../common/types/util.types';
 

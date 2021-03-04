@@ -1,44 +1,14 @@
-
-import React, {
-  useState,
-  ReactElement,
-  useEffect,
-  useCallback
-} from 'react';
-import {
-  Switch,
-  Route,
-  Redirect
-} from 'react-router-dom';
+import React, { useState, ReactElement, useEffect, useCallback } from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { matchPath } from 'react-router';
-import {
-  toast,
-  ToastContainer
-} from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import ReactTooltip from 'react-tooltip';
-import {
-  useSelector,
-  useDispatch,
-  useStore
-} from 'react-redux';
+import { useSelector, useDispatch, useStore } from 'react-redux';
 import Big from 'big.js';
-import {
-  web3Accounts,
-  web3Enable,
-  web3FromAddress
-} from '@polkadot/extension-dapp';
+import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import keyring from '@polkadot/ui-keyring';
-import {
-  FaucetClient,
-  planckToDOT,
-  satToBTC
-} from '@interlay/polkabtc';
-import {
-  createPolkabtcAPI,
-  PolkaBTCAPI,
-  StakedRelayerClient,
-  VaultClient
-} from '@interlay/polkabtc';
+import { FaucetClient, planckToDOT, satToBTC } from '@interlay/polkabtc';
+import { createPolkabtcAPI, PolkaBTCAPI, StakedRelayerClient, VaultClient } from '@interlay/polkabtc';
 
 import Layout from 'parts/Layout';
 import ApplicationPage from 'pages/app/app.page';
@@ -74,10 +44,7 @@ import {
 import './i18n';
 import * as constants from './constants';
 import startFetchingLiveData from 'common/live-data/live-data';
-import {
-  StoreType,
-  ParachainStatus
-} from 'common/types/util.types';
+import { StoreType, ParachainStatus } from 'common/types/util.types';
 // theme
 // FIXME: Clean-up and move to scss
 import './_general.scss';
@@ -153,10 +120,7 @@ function App(): ReactElement {
       dispatch(showAccountModalAction(false));
       dispatch(changeAddressAction(newAddress));
     },
-    [
-      polkaBtcLoaded,
-      dispatch
-    ]
+    [polkaBtcLoaded, dispatch]
   );
 
   const createAPIInstance = useCallback(async (): Promise<void> => {
@@ -174,8 +138,7 @@ function App(): ReactElement {
       setTimeout(() => {
         if (!window.polkaBTC) {
           toast.warn(
-            'Unable to connect to the BTC-Parachain. ' +
-            'Please check your internet connection or try again later.'
+            'Unable to connect to the BTC-Parachain. Please check your internet connection or try again later.'
           );
         }
       }, 10000);
@@ -187,15 +150,11 @@ function App(): ReactElement {
     } catch (error) {
       if (!window.polkaBTC) {
         toast.warn(
-          'Unable to connect to the BTC-Parachain. ' +
-          'Please check your internet connection or try again later.'
+          'Unable to connect to the BTC-Parachain. Please check your internet connection or try again later.'
         );
       }
     }
-  }, [
-    dispatch,
-    store
-  ]);
+  }, [dispatch, store]);
 
   useEffect(() => {
     // Do not load data if showing static landing page only
@@ -205,13 +164,7 @@ function App(): ReactElement {
     // Initialize data on app bootstrap
     (async () => {
       try {
-        const [
-          totalPolkaSAT,
-          totalLockedPLANCK,
-          btcRelayHeight,
-          bitcoinHeight,
-          state
-        ] = await Promise.all([
+        const [totalPolkaSAT, totalLockedPLANCK, btcRelayHeight, bitcoinHeight, state] = await Promise.all([
           window.polkaBTC.treasury.totalPolkaBTC(),
           window.polkaBTC.collateral.totalLockedDOT(),
           window.polkaBTC.btcRelay.getLatestBlockHeight(),
@@ -226,11 +179,7 @@ function App(): ReactElement {
             totalLockedDOT,
             Number(btcRelayHeight),
             bitcoinHeight,
-            state.isError ?
-              ParachainStatus.Error :
-              state.isRunning ?
-                ParachainStatus.Running :
-                ParachainStatus.Shutdown
+            state.isError ? ParachainStatus.Error : state.isRunning ? ParachainStatus.Running : ParachainStatus.Shutdown
           )
         );
       } catch (error) {
@@ -238,10 +187,7 @@ function App(): ReactElement {
         console.log(error);
       }
     })();
-  }, [
-    dispatch,
-    polkaBtcLoaded
-  ]);
+  }, [dispatch, polkaBtcLoaded]);
 
   useEffect(() => {
     // Do not load data if showing static landing page only
@@ -286,12 +232,7 @@ function App(): ReactElement {
         clearInterval(id);
       }
     }, 1000);
-  }, [
-    address,
-    polkaBtcLoaded,
-    dispatch,
-    extensions.length
-  ]);
+  }, [address, polkaBtcLoaded, dispatch, extensions.length]);
 
   useEffect(() => {
     // Do not load data if showing static landing page only
@@ -313,13 +254,7 @@ function App(): ReactElement {
       }
     })();
     startFetchingLiveData(dispatch, store);
-  }, [
-    createAPIInstance,
-    isLoading,
-    polkaBtcLoaded,
-    dispatch,
-    store
-  ]);
+  }, [createAPIInstance, isLoading, polkaBtcLoaded, dispatch, store]);
 
   return (
     <>

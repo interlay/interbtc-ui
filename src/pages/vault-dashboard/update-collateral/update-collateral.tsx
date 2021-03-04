@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -13,8 +13,11 @@ import { useTranslation } from 'react-i18next';
 // Commenting because moving this to last line casues 3 "used before it was defined" warnings
 // eslint-disable-next-line import/exports-last
 export enum CollateralUpdateStatus {
+  // eslint-disable-next-line no-unused-vars
   Hidden,
+  // eslint-disable-next-line no-unused-vars
   Increase,
+  // eslint-disable-next-line no-unused-vars
   Decrease
 }
 
@@ -37,6 +40,8 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
   // denoted in planck
   const [currentCollateral, setCurrentCollateral] = useState('');
   const [newCollateralization, setNewCollateralization] = useState('∞');
+
+  const [currentButtonText, setCurrentButtonText] = useState('');
 
   const [isUpdatePending, setUpdatePending] = useState(false);
   const [isCollateralUpdateAllowed, setCollateralUpdateAllowed] = useState(false);
@@ -127,7 +132,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
       setCollateralUpdateAllowed(allowed);
 
       // get the updated collateralization
-      const newCollateralAsU128 = window.polkaBTC.api.createType('u128', newCollateral);
+      const newCollateralAsU128 = window.polkaBTC.api.createType('u128', newCollateral.toString());
       const newCollateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId, newCollateralAsU128);
       if (newCollateralization === undefined) {
         setNewCollateralization('∞');
@@ -140,24 +145,50 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
     }
   };
 
-  const isAWithdrawal = (status: CollateralUpdateStatus): boolean => {
-    return status === CollateralUpdateStatus.Decrease;
+  const getButtonVariant = (status: CollateralUpdateStatus): string => {
+    switch (status) {
+    case CollateralUpdateStatus.Increase:
+      return 'outline-success';
+    case CollateralUpdateStatus.Decrease:
+      return 'outline-danger';
+    default:
+      return '';
+    }
   };
+
+  function getStatusText(status: CollateralUpdateStatus): string {
+    switch (status) {
+    case CollateralUpdateStatus.Increase:
+      if (currentButtonText !== t('vault.increase_collateral')) {
+        setCurrentButtonText(t('vault.increase_collateral'));
+      }
+      return t('vault.increase_collateral');
+    case CollateralUpdateStatus.Decrease:
+      if (currentButtonText !== t('vault.withdraw_collateral')) {
+        setCurrentButtonText(t('vault.withdraw_collateral'));
+      }
+      return t('vault.withdraw_collateral');
+    default:
+      return currentButtonText || '';
+    }
+  }
 
   return (
     <Modal
-      status={props.status}
+      show={props.status !== CollateralUpdateStatus.Hidden}
       onHide={closeModal}>
       <form onSubmit={onSubmit}>
         <Modal.Header closeButton>
-          <Modal.Title>{t('vault.update_collateral')}</Modal.Title>
+          <Modal.Title>{getStatusText(props.status)}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className='row'>
             <div className='col-12 current-collateral'>
               {t('vault.current_total_collateral', { currentDOTCollateral })}
             </div>
-            <div className='col-12'>{t('vault.new_total_collateral')}</div>
+            <div className='col-12'>
+              {t('vault.update_collateral')}
+            </div>
             <div className='col-12 basic-addon'>
               <div className='input-group'>
                 <input
@@ -201,13 +232,13 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
             </div>
           </div>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className='row justify-content-center'>
           <ButtonMaybePending
-            variant={isAWithdrawal(props.status) ? 'outline-danger' : 'outline-success'}
+            variant={getButtonVariant(props.status)}
             isPending={isUpdatePending}
             type='submit'
             disabled={!isCollateralUpdateAllowed}>
-            {isAWithdrawal(props.status) ? t('vault.withdraw_collateral') : t('vault.add_collateral')}
+            {getStatusText(props.status)}
           </ButtonMaybePending>
         </Modal.Footer>
       </form>

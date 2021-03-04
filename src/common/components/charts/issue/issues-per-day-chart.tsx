@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactElement, useMemo } from 'react';
+import { useState, useEffect, ReactElement, useMemo } from 'react';
 import usePolkabtcStats from '../../../hooks/use-polkabtc-stats';
 
 export default function IssuesPerDayChart(): ReactElement {

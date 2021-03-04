@@ -46,7 +46,6 @@ module.exports = {
       } // 130 on GitHub, 80 on npmjs.org for README.md code blocks
     ],
     'arrow-parens': ['error', 'as-needed'],
-    'no-unused-vars': 0,
     'space-before-function-paren': [
       'error',
       {

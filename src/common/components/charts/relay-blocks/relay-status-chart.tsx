@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useMemo, useEffect } from 'react';
+import { ReactElement, useState, useMemo, useEffect } from 'react';
 import { defaultBlockData } from '../../../utils/utils';
 import usePolkabtcStats from '../../../hooks/use-polkabtc-stats';
 import { useSelector } from 'react-redux';

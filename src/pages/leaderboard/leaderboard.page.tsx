@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactElement, useMemo } from 'react';
+import { useState, useEffect, ReactElement, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Image } from 'react-bootstrap';
 import 'pages/leaderboard/leaderboard.page.scss';

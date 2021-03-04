@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import VaultTable from '../../../common/components/vault-table/vault-table';
 import { useTranslation } from 'react-i18next';
 import { getAccents } from '../../../pages/dashboard/dashboard-colors';
