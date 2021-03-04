@@ -29,6 +29,7 @@ export default function Transfer() {
   const [isRequestPending, setRequestPending] = useState(false);
   const [usdAmount, setUsdAmount] = useState('0.00');
   const [displayNetworkModal, setDisplayNetworkModal] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
   const [networkImage, setNetworkImage] = useState(PolkaBTCLogo);
   const [networkName, setNetworkName] = useState('PolkaBTC');
   const dispatch = useDispatch();
@@ -128,8 +129,9 @@ export default function Transfer() {
         <ButtonMaybePending
           className='btn green-button app-btn'
           isPending={isRequestPending}
+          disabled={isDisabled}
           onClick={onSubmit}>
-          {t('transfer')}
+          {isDisabled ? t('coming_soon') : t('transfer')}
         </ButtonMaybePending>
       </form>
       <Modal
@@ -156,6 +158,11 @@ export default function Transfer() {
                   setNetworkName(data.text);
                   setNetworkImage(data.img);
                   setDisplayNetworkModal(false);
+                  if (data.text === 'PolkaBTC') {
+                    setIsDisabled(false);
+                  } else {
+                    setIsDisabled(true);
+                  }
                 }
                 }>
                 <img
