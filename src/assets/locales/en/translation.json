@@ -8,6 +8,7 @@
     "note": "Note",
     "close": "Close",
     "loading": "Loading",
+    "loading_ellipsis": "Loading...",
     "search_vault": "Search Vault",
     "cancel": "Cancel",
     "cancelled": "Cancelled",
@@ -78,7 +79,7 @@
     "issue": "Issue",
     "redeem": "Redeem",
     "nav_dashboard": "Dashboard",
-    "nav_leaderboard": "Leaderboard",
+    "nav_challenges": "Challenges",
     "nav_vault": "Vault",
     "nav_relayer": "Relayer",
     "nav_docs": "Docs",
@@ -405,6 +406,7 @@
     },
     "leaderboard": {
         "title": "Leaderboard",
+        "challenges_title": "Challenges",
         "vault_scores": "Vault Scores",
         "relayer_scores": "Staked Relayer Scores",
         "account_id": "Account ID",
@@ -415,7 +417,16 @@
         "request_redeem_count": "Redeems Requested",
         "execute_redeem_count": "Redeems Executed",
         "block_count": "Blocks Submitted",
-        "lifetime_sla": "Lifetime SLA Score"
+        "lifetime_sla": "Lifetime SLA Score",
+        "more_info": "More info",
+        "challenges": {
+          "treasure_hunt": "Treasure Hunt",
+          "treasure_hunt_desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, TODO",
+          "vaults_relayers": "Best Vaults and Relayers",
+          "vaults_relayers_desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, TODO",
+          "lottery": "Lottery",
+          "lottery_desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, TODO"
+        }
     },
     "vault": {
         "creation_block": "Creation Block",

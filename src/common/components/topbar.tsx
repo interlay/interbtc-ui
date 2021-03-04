@@ -139,8 +139,8 @@ export default function Topbar(props: TopbarProps): ReactElement {
               {polkaBtcLoaded && (
                 <Link
                   className='nav-link'
-                  to={PAGES.LEADERBOARD}>
-                  {t('nav_leaderboard')}
+                  to={PAGES.CHALLENGES}>
+                  {t('nav_challenges')}
                 </Link>
               )}
               <Link

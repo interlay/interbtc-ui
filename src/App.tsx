@@ -87,7 +87,7 @@ const StakedRelayerPage = React.lazy(() =>
   import(/* webpackChunkName: 'staked-relayer' */ 'pages/staked-relayer/staked-relayer.page')
 );
 
-const LeaderboardPage = React.lazy(() =>
+const ChallengesPage = React.lazy(() =>
   import(/* webpackChunkName: 'leaderboard' */ 'pages/leaderboard/leaderboard.page')
 );
 
@@ -341,7 +341,7 @@ function App(): ReactElement {
                 const pageURLs = [
                   PAGES.STAKED_RELAYER,
                   PAGES.VAULTS,
-                  PAGES.LEADERBOARD,
+                  PAGES.CHALLENGES,
                   PAGES.PARACHAIN,
                   PAGES.ORACLES,
                   PAGES.ISSUE,
@@ -372,8 +372,8 @@ function App(): ReactElement {
                     <Route path={PAGES.VAULTS}>
                       <VaultsDashboard />
                     </Route>
-                    <Route path={PAGES.LEADERBOARD}>
-                      <LeaderboardPage />
+                    <Route path={PAGES.CHALLENGES}>
+                      <ChallengesPage />
                     </Route>
                     <Route path={PAGES.PARACHAIN}>
                       <ParachainDashboard />
