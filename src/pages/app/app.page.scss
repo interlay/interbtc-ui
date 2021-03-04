@@ -669,6 +669,10 @@
 .modal-content {
     padding: 3rem 3rem;
 }
+.transferNetworkSelectionModal > div > .modal-content {
+    padding: 0px !important;
+    border-radius: 15px;
+}
 .modal-body {
     margin-top: 20px;
 }
