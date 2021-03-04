@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import DashboardTable from 'common/components/dashboard-table/dashboard-table';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { RelayerData, VaultData } from '@interlay/polkabtc-stats';
-import TestnetBanner from 'common/components/testnet-banner';
 import TimerIncrement from 'common/components/timer-increment';
 
 export default function LeaderboardPage(): ReactElement {
@@ -83,7 +82,6 @@ export default function LeaderboardPage(): ReactElement {
 
   return (
     <div className='main-container dashboard-page'>
-      <TestnetBanner />
       <div className='dashboard-container dashboard-fade-in-animation dahboard-min-height'>
         <div className='dashboard-wrapper'>
           <div className='title-container'>

@@ -209,13 +209,6 @@ input[type="number"] {
 .transparent-background {
     background-color: transparent;
 }
-.polkabtc-background {
-    background-image: url("./assets/img/polkabtc/background.png");
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-}
 
 .white-background {
     background-color: white;
@@ -570,10 +563,6 @@ a:not([href]):not([tabindex]):focus {
     padding: 0.25rem 1.5rem;
 }
 
-.fade-in-animation {
-    animation: fade 0.5s ease-in;
-}
-
 .static-fade-in-animation {
     animation: fade 0.5s ease-in;
 }
@@ -658,4 +647,41 @@ a:not([href]):not([tabindex]):focus {
 
 .stats-card {
     padding: 0px !important;
+}
+
+// TODO: should be scoped
+.btn-outline-bitcoin {
+  color: #343a40;
+  border-color: #343a40;
+}
+
+.btn-outline-bitcoin:hover {
+  color: #000000;
+  background-color: #ff9900;
+  border-color: #ff9900;
+}
+
+.btn-outline-bitcoin:focus,
+.btn-outline-bitcoin.focus {
+  box-shadow: 0 0 0 0.2rem rgba(255, 153, 0, 0.5);
+}
+
+.btn-outline-bitcoin.disabled,
+.btn-outline-bitcoin:disabled {
+  color: #000000;
+  background-color: transparent;
+}
+
+.btn-outline-bitcoin:not(:disabled):not(.disabled):active,
+.btn-outline-bitcoin:not(:disabled):not(.disabled).active,
+.show > .btn-outline-bitcoin.dropdown-toggle {
+  color: #000000;
+  background-color: #ff9900;
+  border-color: #ff9900;
+}
+
+.btn-outline-bitcoin:not(:disabled):not(.disabled):active:focus,
+.btn-outline-bitcoin:not(:disabled):not(.disabled).active:focus,
+.show > .btn-outline-bitcoin.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(230, 1, 122, 0.5);
 }

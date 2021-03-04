@@ -23,7 +23,6 @@ import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import PolkaBTCImg from 'assets/img/polkabtc/PolkaBTC_white.svg';
-import './landing.page.scss';
 
 export default function LandingPage(): JSX.Element {
   const { totalPolkaBTC, totalLockedDOT, polkaBtcLoaded, address, extensions } = useSelector(
@@ -44,7 +43,7 @@ export default function LandingPage(): JSX.Element {
     <div>
       <section className='jumbotron min-vh-90 text-center transparent-background'>
         <div className='container mt-5'>
-          <Link to='/'>
+          <Link to={PAGES.HOME}>
             <Image
               src={PolkaBTCImg}
               width='256'>
