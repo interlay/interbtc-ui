@@ -6,7 +6,7 @@ import { setActiveTabAction } from 'common/actions/general.actions';
 import { TabTypes } from 'utils/enums/tab-types';
 import styles from './tab.module.css';
 
-interface TabProps {
+interface Props {
   tabType: TabTypes;
   selectedTabType: TabTypes;
   children: React.ReactNode;
@@ -16,7 +16,7 @@ const Tab = ({
   tabType,
   selectedTabType,
   children
-}: TabProps) => {
+}: Props) => {
   const dispatch = useDispatch();
 
   // TODO: should use query parameter instead of redux

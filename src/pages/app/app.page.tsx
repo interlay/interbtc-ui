@@ -9,6 +9,7 @@ import RedeemSteps from './redeem/redeem-steps';
 import RedeemRequests from './redeem/redeem-requests';
 import Transfer from './transfer/transfer';
 import Tab from './Tab';
+import HorizontalLine from './HorizontalLine';
 import { StoreType } from 'common/types/util.types';
 import { TabTypes } from 'utils/enums/tab-types';
 import './app.page.scss';
@@ -59,15 +60,7 @@ function Application(): ReactElement {
                     {t('transfer')}
                   </Tab>
                 </div>
-                <div
-                  className={
-                    selectedTabType === TabTypes.Redeem ?
-                      'horizontal-line line-yellow' :
-                      selectedTabType === TabTypes.Transfer ?
-                        'horizontal-line line-blue' :
-                        'horizontal-line'
-                  }>
-                </div>
+                <HorizontalLine selectedTabType={selectedTabType} />
               </>
             )}
             <div className='content'>
