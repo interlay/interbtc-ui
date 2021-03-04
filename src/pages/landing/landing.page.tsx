@@ -23,7 +23,6 @@ import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import PolkaBTCImg from 'assets/img/polkabtc/PolkaBTC_white.svg';
-import './landing.page.scss';
 
 export default function LandingPage(): JSX.Element {
   const { totalPolkaBTC, totalLockedDOT, polkaBtcLoaded, address, extensions } = useSelector(

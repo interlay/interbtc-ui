@@ -72,7 +72,7 @@ export const STAKED_RELAYER_SLASHED = 'Slashed';
 // ######################################
 export const VAULT_STATUS_ACTIVE = 'Active';
 export const VAULT_STATUS_BANNED = 'Banned until block ';
-export const VAULT_STATUS_THEFT = 'Committed Theft';
+export const VAULT_STATUS_THEFT = 'CommittedTheft';
 export const VAULT_STATUS_LIQUIDATED = 'Liquidated';
 export const VAULT_STATUS_UNDER_COLLATERALIZED = 'Undercollateralized';
 export const VAULT_STATUS_AUCTION = 'Auction';

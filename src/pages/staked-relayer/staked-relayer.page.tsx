@@ -15,6 +15,8 @@ import { satToBTC, planckToDOT } from '@interlay/polkabtc';
 import { useTranslation } from 'react-i18next';
 import { safeRoundTwoDecimals } from '../../common/utils/utils';
 import TimerIncrement from '../../common/components/timer-increment';
+// TODO: should fix by scoping only necessary CSS into a component
+import '../dashboard/dashboard-subpage.scss';
 
 export default function StakedRelayerPage(): ReactElement {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
@@ -105,6 +107,7 @@ export default function StakedRelayerPage(): ReactElement {
         <div className='stacked-wrapper'>
           <div className='title-text-container'>
             <h1 className='title-text'>{t('relayer.staked_relayer_dashboard')}</h1>
+            {stakedRelayerAddress}
             <p className='latest-block-text'>
               <TimerIncrement></TimerIncrement>
             </p>
@@ -119,25 +122,45 @@ export default function StakedRelayerPage(): ReactElement {
           ) : (
             <div className='col-lg-10 offset-1'>
               <div className='row justify-content-center'>
-                <div className='col-3'>
-                  <div>{t('relayer.stake_locked')}</div>
-                  <span className='stats'>{dotLocked.toString()}</span> DOT
+                <div className='col-lg-3'>
+                  <div
+                    className='card stats-card mb-3'
+                    style={{ minHeight: '100px' }}>
+                    <div>{t('relayer.stake_locked')}</div>
+                    <span className='stats'>{dotLocked.toString()}</span> DOT
+                  </div>
                 </div>
-                <div className='col-3'>
-                  <div>{t('fees_earned')}</div>
-                  <span className='stats'>{feesEarnedPolkaBTC}</span> PolkaBTC
+                <div className='col-lg-3'>
+                  <div
+                    className='card stats-card mb-3'
+                    style={{ minHeight: '100px' }}>
+                    <div>{t('fees_earned')}</div>
+                    <span className='stats'>{feesEarnedPolkaBTC}</span> PolkaBTC
+                  </div>
                 </div>
-                <div className='col-3'>
-                  <div>{t('fees_earned')}</div>
-                  <span className='stats'>{feesEarnedDOT}</span> DOT
+                <div className='col-lg-3'>
+                  <div
+                    className='card stats-card mb-3'
+                    style={{ minHeight: '100px' }}>
+                    <div>{t('fees_earned')}</div>
+                    <span className='stats'>{feesEarnedDOT}</span> DOT
+                  </div>
                 </div>
-                <div className='col-3'>
-                  <div>{t('sla_score')}</div>
-                  <span className='stats'>{safeRoundTwoDecimals(sla)}</span>
+                <div className='col-lg-3'>
+                  <div
+                    className='card stats-card mb-3'
+                    style={{ minHeight: '100px' }}>
+                    <div>{t('sla_score')}</div>
+                    <span className='stats'>{safeRoundTwoDecimals(sla)}</span>
+                  </div>
                 </div>
-                <div className='col-3'>
-                  <div>{t('apy')}</div>
-                  <span className='stats'>~{safeRoundTwoDecimals(apy)}</span> %
+                <div className='col-lg-3'>
+                  <div
+                    className='card stats-card mb-3'
+                    style={{ minHeight: '100px' }}>
+                    <div>{t('apy')}</div>
+                    <span className='stats'>~{safeRoundTwoDecimals(apy)}</span> %
+                  </div>
                 </div>
               </div>
             </div>

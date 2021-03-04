@@ -1,168 +1,168 @@
-version: "3.8"
+version: '3.8'
 services:
-    polkabtc:
-        image: "registry.gitlab.com/interlay/btc-parachain/standalone:0.5.3"
-        command:
-            - btc-parachain
-            - --unsafe-rpc-external
-            - --unsafe-ws-external
-            - --rpc-methods
-            - Unsafe
-            - --dev
-        ports:
-            - "9933:9933"
-            - "9944:9944"
-    bitcoind:
-        image: "ruimarinho/bitcoin-core:0.20"
-        command:
-            - -regtest
-            - -server
-            - -rpcbind=0.0.0.0
-            - -rpcallowip=0.0.0.0/0
-            - -rpcuser=rpcuser
-            - -rpcpassword=rpcpassword
-            - -fallbackfee=0.0002
-        ports:
-            - "18443:18443"
-    bitcoin_cli:
-        image: "ruimarinho/bitcoin-core:0.20"
-        command:
-            - /bin/sh
-            - -c
-            - |
-                bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword createwallet Alice
-                bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword createwallet Bob
-                bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword createwallet Dave
-                bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword loadwallet Alice
-                bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword loadwallet Bob
-                bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword loadwallet Dave
-                ALICE_ADDRESS=$$(bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword -rpcwallet=Alice getnewaddress)
-                # coins need 100 confirmations to be spendable
-                bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword generatetoaddress 101 $${ALICE_ADDRESS}
-    electrs:
-        image: "interlayhq/electrs:latest"
-        command:
-            - electrs
-            - -vvvv
-            - --network
-            - regtest
-            - --jsonrpc-import
-            - --cors
-            - "*"
-            - --cookie
-            - "rpcuser:rpcpassword"
-            - --daemon-rpc-addr
-            - bitcoind:18443
-            - --http-addr
-            - "[::0]:3002"
-            - --index-unspendables
-        ports:
-            - "3002:3002"
-    staked_relayer:
-        # only start staked relayer after mining to prevent long catch-up
-        image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:0.5.3"
-        command:
-            - /bin/sh
-            - -c
-            - |
-                echo "Sleeping..."
-                sleep 5
-                staked-relayer --keyring=eve --http-addr '[::0]:3030' --polka-btc-url 'ws://polkabtc:9944' --auto-register-with-stake=100
-        environment: &client-env
-            BITCOIN_RPC_URL: http://bitcoind:18443
-            BITCOIN_RPC_USER: rpcuser
-            BITCOIN_RPC_PASS: rpcpassword
-            RUST_LOG: info
-        ports:
-            - "3030:3030"
-        restart: unless-stopped
-    oracle:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:0.5.3"
-        command:
-            - /bin/sh
-            - -c
-            - |
-                echo "Sleeping..."
-                sleep 10
-                oracle --keyring=bob --polka-btc-url 'ws://polkabtc:9944'
-        environment:
-            RUST_LOG: info
-        restart: unless-stopped
-    faucet:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/faucet:0.5.3"
-        command:
-            - /bin/sh
-            - -c
-            - |
-                echo "Sleeping..."
-                sleep 10
-                faucet --keyring=alice --polka-btc-url 'ws://polkabtc:9944' --user-allowance 1 --vault-allowance 500 --http-addr '[::0]:3035'
-        environment:
-            RUST_LOG: info
-        ports:
-            - "3035:3035"
-        restart: unless-stopped
-    vault:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:0.5.3"
-        command:
-            - /bin/sh
-            - -c
-            - |
-                echo "Sleeping..."
-                # sleep for 7s to wait for bitcoin to create the Dave wallet
-                # and also to ensure that the issue period and redeem period are set
-                sleep 7
-                vault --keyring=dave --auto-register-with-collateral 100000000000000 --http-addr '[::0]:3032' --polka-btc-url 'ws://polkabtc:9944'
-        environment:
-            <<: *client-env
-        ports:
-            - "3032:3032"
-        restart: unless-stopped
-    testdata_gen:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/testdata-gen:0.5.3"
-        command:
-            - /bin/sh
-            - -c
-            - |
-                echo "Sleeping..."
-                sleep 3
-                testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice set-issue-period --period=2000
-                testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice set-redeem-period --period=2000
+  polkabtc:
+    image: 'registry.gitlab.com/interlay/btc-parachain/standalone:0.5.3'
+    command:
+      - btc-parachain
+      - --unsafe-rpc-external
+      - --unsafe-ws-external
+      - --rpc-methods
+      - Unsafe
+      - --dev
+    ports:
+      - '9933:9933'
+      - '9944:9944'
+  bitcoind:
+    image: 'ruimarinho/bitcoin-core:0.20'
+    command:
+      - -regtest
+      - -server
+      - -rpcbind=0.0.0.0
+      - -rpcallowip=0.0.0.0/0
+      - -rpcuser=rpcuser
+      - -rpcpassword=rpcpassword
+      - -fallbackfee=0.0002
+    ports:
+      - '18443:18443'
+  bitcoin_cli:
+    image: 'ruimarinho/bitcoin-core:0.20'
+    command:
+      - /bin/sh
+      - -c
+      - |
+        bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword createwallet Alice
+        bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword createwallet Bob
+        bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword createwallet Dave
+        bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword loadwallet Alice
+        bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword loadwallet Bob
+        bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword loadwallet Dave
+        ALICE_ADDRESS=$$(bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword -rpcwallet=Alice getnewaddress)
+        # coins need 100 confirmations to be spendable
+        bitcoin-cli -regtest -rpcconnect=bitcoind -rpcwait -rpcuser=rpcuser -rpcpassword=rpcpassword generatetoaddress 101 $${ALICE_ADDRESS}
+  electrs:
+    image: 'interlayhq/electrs:latest'
+    command:
+      - electrs
+      - -vvvv
+      - --network
+      - regtest
+      - --jsonrpc-import
+      - --cors
+      - '*'
+      - --cookie
+      - 'rpcuser:rpcpassword'
+      - --daemon-rpc-addr
+      - bitcoind:18443
+      - --http-addr
+      - '[::0]:3002'
+      - --index-unspendables
+    ports:
+      - '3002:3002'
+  staked_relayer:
+    # only start staked relayer after mining to prevent long catch-up
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:0.5.7'
+    command:
+      - /bin/sh
+      - -c
+      - |
+        echo "Sleeping..."
+        sleep 5
+        staked-relayer --keyring=eve --http-addr '[::0]:3030' --polka-btc-url 'ws://polkabtc:9944' --auto-register-with-stake=100
+    environment: &client-env
+      BITCOIN_RPC_URL: http://bitcoind:18443
+      BITCOIN_RPC_USER: rpcuser
+      BITCOIN_RPC_PASS: rpcpassword
+      RUST_LOG: info
+    ports:
+      - '3030:3030'
+    restart: unless-stopped
+  oracle:
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/oracle:0.5.7'
+    command:
+      - /bin/sh
+      - -c
+      - |
+        echo "Sleeping..."
+        sleep 10
+        oracle --keyring=bob --polka-btc-url 'ws://polkabtc:9944'
+    environment:
+      RUST_LOG: info
+    restart: unless-stopped
+  faucet:
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/faucet:0.5.7'
+    command:
+      - /bin/sh
+      - -c
+      - |
+        echo "Sleeping..."
+        sleep 10
+        faucet --keyring=alice --polka-btc-url 'ws://polkabtc:9944' --user-allowance 1 --vault-allowance 500 --http-addr '[::0]:3035'
+    environment:
+      RUST_LOG: info
+    ports:
+      - '3035:3035'
+    restart: unless-stopped
+  vault:
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/vault:0.5.7'
+    command:
+      - /bin/sh
+      - -c
+      - |
+        echo "Sleeping..."
+        # sleep for 7s to wait for bitcoin to create the Dave wallet
+        # and also to ensure that the issue period and redeem period are set
+        sleep 7
+        vault --keyring=dave --auto-register-with-collateral 100000000000000 --http-addr '[::0]:3032' --polka-btc-url 'ws://polkabtc:9944'
+    environment:
+      <<: *client-env
+    ports:
+      - '3032:3032'
+    restart: unless-stopped
+  testdata_gen:
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/testdata-gen:0.5.7'
+    command:
+      - /bin/sh
+      - -c
+      - |
+        echo "Sleeping..."
+        sleep 3
+        testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice set-issue-period --period=2000
+        testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice set-redeem-period --period=2000
 
-                # wait for the vault to register
-                sleep 9
-                # NOTE: bitcoin-cli not installed on image
-                ALICE_ADDRESS="bcrt1q56l7a4g3hluklqmxs89wj8dkpazemfykwfkz4x"
-                testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=bob set-exchange-rate --exchange-rate=385523187
-                testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice request-issue --issue-amount=10000000 --vault=dave
-                REDEEM_ID=$$(testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice request-redeem --redeem-amount=1000000 --btc-address=$${ALICE_ADDRESS} --vault=dave)
-                # testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice execute-redeem --redeem-id=$${REDEEM_ID}
+        # wait for the vault to register
+        sleep 9
+        # NOTE: bitcoin-cli not installed on image
+        ALICE_ADDRESS="bcrt1q56l7a4g3hluklqmxs89wj8dkpazemfykwfkz4x"
+        testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=bob set-exchange-rate --exchange-rate=385523187
+        testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice request-issue --issue-amount=10000000 --vault=dave
+        REDEEM_ID=$$(testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice request-redeem --redeem-amount=1000000 --btc-address=$${ALICE_ADDRESS} --vault=dave)
+        # testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice execute-redeem --redeem-id=$${REDEEM_ID}
 
-        environment:
-            <<: *client-env
-        ports:
-            - "3033:3033"
-    postgres:
-        image: "postgres:11"
-        environment:
-            POSTGRES_USER: "user"
-            POSTGRES_PASSWORD: "password"
-        ports:
-            - "5432:5432"
-    polkabtc_stats:
-        image: "registry.gitlab.com/interlay/polkabtc-stats:0.1.11"
-        restart: always
-        depends_on:
-            - postgres
-        command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 1; done; yarn start'
-        environment:
-            MONITOR: "1"
-            ENDPOINT_URL: "ws://polkabtc:9944"
-            BTC_NETWORK: "http://electrs:3002"
-            PGHOST: "postgres"
-            PGPORT: "5432"
-            PGDATABASE: "postgres"
-            PGUSER: "user"
-            PGPASSWORD: "password"
-        ports:
-            - "3007:3007"
+    environment:
+      <<: *client-env
+    ports:
+      - '3033:3033'
+  postgres:
+    image: 'postgres:11'
+    environment:
+      POSTGRES_USER: 'user'
+      POSTGRES_PASSWORD: 'password'
+    ports:
+      - '5432:5432'
+  polkabtc_stats:
+    image: 'registry.gitlab.com/interlay/polkabtc-stats:0.1.11'
+    restart: always
+    depends_on:
+      - postgres
+    command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 1; done; yarn start'
+    environment:
+      MONITOR: '1'
+      ENDPOINT_URL: 'ws://polkabtc:9944'
+      BTC_NETWORK: 'http://electrs:3002'
+      PGHOST: 'postgres'
+      PGPORT: '5432'
+      PGDATABASE: 'postgres'
+      PGUSER: 'user'
+      PGPASSWORD: 'password'
+    ports:
+      - '3007:3007'
