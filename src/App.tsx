@@ -41,6 +41,19 @@ import {
 } from '@interlay/polkabtc';
 
 import Layout from 'parts/Layout';
+import ApplicationPage from 'pages/app/app.page';
+import DashboardPage from 'pages/dashboard/dashboard.page';
+import VaultDashboardPage from 'pages/vault-dashboard/vault-dashboard.page';
+import StakedRelayerPage from 'pages/staked-relayer/staked-relayer.page';
+import ChallengesPage from 'pages/leaderboard/leaderboard.page';
+import VaultsDashboard from 'pages/dashboard/vaults/vaults.dashboard.page';
+import IssueDashboard from 'pages/dashboard/issue/issue.dashboard.page';
+import RedeemDashboard from 'pages/dashboard/redeem/redeem.dashboard.page';
+import LandingPage from 'pages/landing/landing.page';
+import RelayDashboard from 'pages/dashboard/relay/relay.dashboard.page';
+import OraclesDashboard from 'pages/dashboard/oracles/oracles.dashboard.page';
+import ParachainDashboard from 'pages/dashboard/parachain/parachain.dashboard.page';
+import FeedbackPage from 'pages/feedback/feedback.page';
 // TODO: block for now
 // import TransitionWrapper from 'parts/TransitionWrapper';
 import AccountModal from 'common/components/account-modal/account-modal';
@@ -71,57 +84,46 @@ import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import './app.css';
 
-const ApplicationPage = React.lazy(() =>
-  import(/* webpackChunkName: 'application' */ 'pages/app/app.page')
-);
-
-const DashboardPage = React.lazy(() =>
-  import(/* webpackChunkName: 'dashboard' */ 'pages/dashboard/dashboard.page')
-);
-
-const VaultDashboardPage = React.lazy(() =>
-  import(/* webpackChunkName: 'vault' */ 'pages/vault-dashboard/vault-dashboard.page')
-);
-
-const StakedRelayerPage = React.lazy(() =>
-  import(/* webpackChunkName: 'staked-relayer' */ 'pages/staked-relayer/staked-relayer.page')
-);
-
-const ChallengesPage = React.lazy(() =>
-  import(/* webpackChunkName: 'leaderboard' */ 'pages/leaderboard/leaderboard.page')
-);
-
-const VaultsDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'vaults' */ 'pages/dashboard/vaults/vaults.dashboard.page')
-);
-
-const IssueDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'issue' */ 'pages/dashboard/issue/issue.dashboard.page')
-);
-
-const RedeemDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'redeem' */ 'pages/dashboard/redeem/redeem.dashboard.page')
-);
-
-const LandingPage = React.lazy(() =>
-  import(/* webpackChunkName: 'landing' */ 'pages/landing/landing.page')
-);
-
-const RelayDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'relay' */ 'pages/dashboard/relay/relay.dashboard.page')
-);
-
-const OraclesDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'oracles' */ 'pages/dashboard/oracles/oracles.dashboard.page')
-);
-
-const ParachainDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'parachain' */ 'pages/dashboard/parachain/parachain.dashboard.page')
-);
-
-const FeedbackPage = React.lazy(() =>
-  import(/* webpackChunkName: 'feedback' */ 'pages/feedback/feedback.page')
-);
+// TODO: block code-splitting for now
+// const ApplicationPage = React.lazy(() =>
+//   import(/* webpackChunkName: 'application' */ 'pages/app/app.page')
+// );
+// const DashboardPage = React.lazy(() =>
+//   import(/* webpackChunkName: 'dashboard' */ 'pages/dashboard/dashboard.page')
+// );
+// const VaultDashboardPage = React.lazy(() =>
+//   import(/* webpackChunkName: 'vault' */ 'pages/vault-dashboard/vault-dashboard.page')
+// );
+// const StakedRelayerPage = React.lazy(() =>
+//   import(/* webpackChunkName: 'staked-relayer' */ 'pages/staked-relayer/staked-relayer.page')
+// );
+// const LeaderboardPage = React.lazy(() =>
+//   import(/* webpackChunkName: 'leaderboard' */ 'pages/leaderboard/leaderboard.page')
+// );
+// const VaultsDashboard = React.lazy(() =>
+//   import(/* webpackChunkName: 'vaults' */ 'pages/dashboard/vaults/vaults.dashboard.page')
+// );
+// const IssueDashboard = React.lazy(() =>
+//   import(/* webpackChunkName: 'issue' */ 'pages/dashboard/issue/issue.dashboard.page')
+// );
+// const RedeemDashboard = React.lazy(() =>
+//   import(/* webpackChunkName: 'redeem' */ 'pages/dashboard/redeem/redeem.dashboard.page')
+// );
+// const LandingPage = React.lazy(() =>
+//   import(/* webpackChunkName: 'landing' */ 'pages/landing/landing.page')
+// );
+// const RelayDashboard = React.lazy(() =>
+//   import(/* webpackChunkName: 'relay' */ 'pages/dashboard/relay/relay.dashboard.page')
+// );
+// const OraclesDashboard = React.lazy(() =>
+//   import(/* webpackChunkName: 'oracles' */ 'pages/dashboard/oracles/oracles.dashboard.page')
+// );
+// const ParachainDashboard = React.lazy(() =>
+//   import(/* webpackChunkName: 'parachain' */ 'pages/dashboard/parachain/parachain.dashboard.page')
+// );
+// const FeedbackPage = React.lazy(() =>
+//   import(/* webpackChunkName: 'feedback' */ 'pages/feedback/feedback.page')
+// );
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
   return createPolkabtcAPI(

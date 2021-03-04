@@ -250,9 +250,11 @@
       "loading": "loading..."
     },
     "vault": {
+      "active_vaults": "Active Vaults",
       "creation_block": "Creation Block",
       "register_vault": "Register Vault",
       "collateral": "Collateral",
+      "collateralization": "Collateralization",
       "collateral_is_required": "Collateral is required",
       "replace_requests": "Replace Requests",
       "old_vault": "Old Vault",
@@ -279,7 +281,11 @@
       "tip_pending_btc": "BTC volume of in-progress issue requests.",
       "tip_collateralization": "Collateralization rate for locked BTC. 'Pending' includes in-progress issue requests.",
       "pending_table_subcell": "Pending: ",
-      "theft": "Theft detected"
+      "theft": "Theft detected",
+      "secure_threshold": "Secure Threshold: {{threshold}} %",
+      "total_collateral_locked": "Total Collateral Locked",
+      "perday_collateral_locked": "Collateral Locked Per Day",
+      "total_vaults_chart": "Total number of vaults"
     },
     "parachain": {
       "parachain": "BTC Parachain",
