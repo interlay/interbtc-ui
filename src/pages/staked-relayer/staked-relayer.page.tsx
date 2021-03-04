@@ -15,6 +15,8 @@ import { satToBTC, planckToDOT } from '@interlay/polkabtc';
 import { useTranslation } from 'react-i18next';
 import { safeRoundTwoDecimals } from '../../common/utils/utils';
 import TimerIncrement from '../../common/components/timer-increment';
+// TODO: should fix by scoping only necessary CSS into a component
+import '../dashboard/dashboard-subpage.scss';
 
 export default function StakedRelayerPage(): ReactElement {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
