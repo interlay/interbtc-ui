@@ -45,7 +45,7 @@ import ApplicationPage from 'pages/app/app.page';
 import DashboardPage from 'pages/dashboard/dashboard.page';
 import VaultDashboardPage from 'pages/vault-dashboard/vault-dashboard.page';
 import StakedRelayerPage from 'pages/staked-relayer/staked-relayer.page';
-import LeaderboardPage from 'pages/leaderboard/leaderboard.page';
+import ChallengesPage from 'pages/leaderboard/leaderboard.page';
 import VaultsDashboard from 'pages/dashboard/vaults/vaults.dashboard.page';
 import IssueDashboard from 'pages/dashboard/issue/issue.dashboard.page';
 import RedeemDashboard from 'pages/dashboard/redeem/redeem.dashboard.page';
@@ -343,7 +343,7 @@ function App(): ReactElement {
                 const pageURLs = [
                   PAGES.STAKED_RELAYER,
                   PAGES.VAULTS,
-                  PAGES.LEADERBOARD,
+                  PAGES.CHALLENGES,
                   PAGES.PARACHAIN,
                   PAGES.ORACLES,
                   PAGES.ISSUE,
@@ -374,8 +374,8 @@ function App(): ReactElement {
                     <Route path={PAGES.VAULTS}>
                       <VaultsDashboard />
                     </Route>
-                    <Route path={PAGES.LEADERBOARD}>
-                      <LeaderboardPage />
+                    <Route path={PAGES.CHALLENGES}>
+                      <ChallengesPage />
                     </Route>
                     <Route path={PAGES.PARACHAIN}>
                       <ParachainDashboard />
