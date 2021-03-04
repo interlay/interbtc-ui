@@ -645,6 +645,10 @@ a:not([href]):not([tabindex]):focus {
     text-align: center;
 }
 
+.stats-card {
+    padding: 0px !important;
+}
+
 // TODO: should be scoped
 .btn-outline-bitcoin {
   color: #343a40;
