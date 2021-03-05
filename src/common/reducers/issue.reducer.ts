@@ -58,7 +58,7 @@ export const issueReducer = (state: IssueState = initialState, action: IssueActi
     return { ...state, issueRequests: map };
   }
   case INIT_STATE:
-    return { ...state, step: 'ENTER_BTC_AMOUNT', issueRequests: new Map() };
+    return { ...state, step: 'ENTER_BTC_AMOUNT' };
   case ADD_VAULT_ISSUES:
     return { ...state, vaultIssues: action.vaultIssues };
   case UPDATE_ALL_ISSUE_REQUESTS: {

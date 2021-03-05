@@ -28,7 +28,7 @@ export default function StakedRelayerPage(): ReactElement {
   const [stakedRelayerAddress, setStakedRelayerAddress] = useState('');
   const [relayerRegistered, setRelayerRegistered] = useState(false);
   const [relayerInactive, setRelayerInactive] = useState(false);
-  const [sla, setSLA] = useState('0');
+  const [sla, setSLA] = useState(0);
   const [apy, setAPY] = useState('0');
   const relayerNotRegisteredToastId = 'relayer-not-registered-id';
   const { polkaBtcLoaded, relayerLoaded } = useSelector((state: StoreType) => state.general);
@@ -72,18 +72,18 @@ export default function StakedRelayerPage(): ReactElement {
 
         // show warning if relayer is not registered with the parachain
         if (isRegistered) {
-          const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId.toString());
+          const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId);
           setSLA(slaScore);
 
-          const apyScore = await window.polkaBTC.stakedRelayer.getAPY(stakedRelayerId.toString());
+          const apyScore = await window.polkaBTC.stakedRelayer.getAPY(stakedRelayerId);
           setAPY(apyScore);
 
           const feesPolkaSAT = await window.polkaBTC.stakedRelayer.getFeesPolkaBTC(
-            stakedRelayerId.toString()
+            stakedRelayerId
           );
           setFeesEarnedPolkaBTC(satToBTC(feesPolkaSAT));
 
-          const feesPlanck = await window.polkaBTC.stakedRelayer.getFeesDOT(stakedRelayerId.toString());
+          const feesPlanck = await window.polkaBTC.stakedRelayer.getFeesDOT(stakedRelayerId);
           setFeesEarnedDOT(planckToDOT(feesPlanck));
         } else {
           toast.warn(t('relayer.warning_relayer_not_registered'), {

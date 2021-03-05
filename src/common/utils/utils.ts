@@ -24,9 +24,9 @@ import { Issue, Redeem } from '@interlay/polkabtc-stats';
 import { AccountId, Balance } from '@polkadot/types/interfaces/runtime';
 import BN from 'bn.js';
 
-function safeRoundTwoDecimals(input: string | undefined, defaultValue = '0'): string {
+function safeRoundTwoDecimals(input: string | number | undefined, defaultValue = '0'): string {
   if (input === undefined) return defaultValue;
-  else return roundTwoDecimals(input);
+  else return roundTwoDecimals(input.toString());
 }
 
 function safeRoundEightDecimals(input: string | number | undefined, defaultValue = '0'): string {
@@ -73,9 +73,11 @@ function displayBtcAmount(amount: string | number): string {
  * @param requiredBtcConfirmations requiredBtcConfirmations data (queried from the parachain)
  */
 
-async function parachainToUIIssueRequest(id: H256): Promise<IssueRequest> {
-  const [parachainIssueRequest, parachainHeight, issuePeriod, requiredBtcConfirmations] = await Promise.all([
-    window.polkaBTC.issue.getRequestById(id),
+async function parachainToUIIssueRequest(
+  id: H256,
+  parachainIssueRequest: ParachainIssueRequest
+): Promise<IssueRequest> {
+  const [parachainHeight, issuePeriod, requiredBtcConfirmations] = await Promise.all([
     window.polkaBTC.system.getCurrentBlockNumber(),
     window.polkaBTC.issue.getIssuePeriod(),
     window.polkaBTC.btcRelay.getStableBitcoinConfirmations()

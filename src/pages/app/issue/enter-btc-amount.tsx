@@ -92,7 +92,7 @@ export default function EnterBTCAmount() {
       const vaultAccountId = window.polkaBTC.api.createType('AccountId', vaultId);
       const requestResult = await window.polkaBTC.issue.request(amountAsSatoshi as PolkaBTC, vaultAccountId);
 
-      const vaultBTCAddress = requestResult.vault.wallet.btcAddress;
+      const vaultBTCAddress = requestResult.issueRequest.btc_address;
       if (vaultBTCAddress === undefined) {
         throw new Error('Could not generate unique vault address.');
       }
@@ -100,7 +100,7 @@ export default function EnterBTCAmount() {
       const id = stripHexPrefix(requestResult.id.toString());
       dispatch(changeIssueIdAction(id));
 
-      const issueRequest = await parachainToUIIssueRequest(requestResult.id);
+      const issueRequest = await parachainToUIIssueRequest(requestResult.id, requestResult.issueRequest);
 
       // update the issue status
       dispatch(addIssueRequestAction(issueRequest));
