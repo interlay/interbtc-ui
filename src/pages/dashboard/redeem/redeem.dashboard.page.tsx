@@ -96,7 +96,7 @@ export default function RedeemDashboard(): ReactElement {
         tableParams.perPage,
         tableParams.sortBy,
         tableParams.sortAsc,
-                constants.BITCOIN_NETWORK as BtcNetworkName
+        constants.BITCOIN_NETWORK as BtcNetworkName
       );
       setRedeemRequests(res.data);
     },
@@ -161,7 +161,7 @@ export default function RedeemDashboard(): ReactElement {
             <div className='table-top-data-container'>
               <div className='values-container redeem-page'>
                 <div>
-                  <h2 style={{ color: `${getAccents('d_pink').color}` }}>
+                  <h2 style={{ color: `${getAccents('d_yellow').color}` }}>
                     {t('dashboard.redeem.total_redeemed')}
                   </h2>
                   <h1>
@@ -172,7 +172,7 @@ export default function RedeemDashboard(): ReactElement {
                     ''
                   ) : (
                     <h1 className='h1-price-opacity'>
-                                            $
+                      $
                       {(
                         prices.bitcoin.usd * parseFloat(satToBTC(totalRedeemedAmount))
                       ).toLocaleString()}
@@ -199,7 +199,7 @@ export default function RedeemDashboard(): ReactElement {
               <div className='card'>
                 <div className='chart-container'>
                   <LineChartComponent
-                    color={['d_pink', 'd_grey']}
+                    color={['d_yellow', 'd_grey']}
                     label={[
                       t('dashboard.redeem.total_redeemed_chart'),
                       t('dashboard.redeem.perday_redeemed_chart')

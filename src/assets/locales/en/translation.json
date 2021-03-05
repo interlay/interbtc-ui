@@ -362,7 +362,7 @@
     "vault_btc_address": "Vault BTC Address",
     "vault_dot_address": "Vault Account",
     "btc_transaction": "BTC Transaction",
-    "in_parachain_block": "in parachain block",
+    "in_parachain_block": "In Parachain Block",
     "confirmations": "Confirmations",
     "issue_request_not_found": "Exception: Issue request not found.",
     "confirmation": "Confirmation",
