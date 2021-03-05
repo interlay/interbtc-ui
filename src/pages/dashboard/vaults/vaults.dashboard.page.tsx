@@ -20,7 +20,7 @@ export default function VaultsDashboard(): ReactElement {
         <div className='dashboard-wrapper'>
           <div>
             <div className='title-container'>
-              <h1 className='title-text'>{t('dashboard.vaults.vaults')}</h1>
+              <h1 className='title-text'>{t('dashboard.vault.vaults')}</h1>
               <p className='latest-block-text'>
                 <TimerIncrement></TimerIncrement>
               </p>
