@@ -75,10 +75,10 @@ export default function VaultDashboardPage(): ReactElement {
         const collateralDot = planckToDOT(balanceLockedDOT.toString());
         dispatch(updateCollateralAction(collateralDot));
 
-        const feesPolkaSAT = await window.polkaBTC.vaults.getFeesPolkaBTC(vaultId.toString());
+        const feesPolkaSAT = await window.polkaBTC.vaults.getFeesPolkaBTC(vaultId);
         setFeesEarnedPolkaBTC(satToBTC(feesPolkaSAT));
 
-        const feesPlanck = await window.polkaBTC.vaults.getFeesDOT(vaultId.toString());
+        const feesPlanck = await window.polkaBTC.vaults.getFeesDOT(vaultId);
         setFeesEarnedDOT(planckToDOT(feesPlanck));
 
         const totalPolkaSAT = await window.polkaBTC.vaults.getIssuedPolkaBTCAmount(vaultId);
@@ -88,10 +88,10 @@ export default function VaultDashboardPage(): ReactElement {
         const collateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId);
         dispatch(updateCollateralizationAction(collateralization?.mul(100).toString()));
 
-        const slaScore = await window.polkaBTC.vaults.getSLA(vaultId.toString());
+        const slaScore = await window.polkaBTC.vaults.getSLA(vaultId);
         dispatch(updateSLAAction(slaScore));
 
-        const apyScore = await window.polkaBTC.vaults.getAPY(vaultId.toString());
+        const apyScore = await window.polkaBTC.vaults.getAPY(vaultId);
         dispatch(updateAPYAction(apyScore));
 
         const issuablePolkaBTC = await window.polkaBTC.vaults.getIssuablePolkaBTC();
