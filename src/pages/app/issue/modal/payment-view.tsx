@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IssueRequest } from '../../../../common/types/issue.types';
 import { useSelector } from 'react-redux';

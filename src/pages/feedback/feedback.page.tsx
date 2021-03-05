@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { FaDiscord } from 'react-icons/fa';
 
 import 'pages/dashboard/dashboard-subpage.scss';

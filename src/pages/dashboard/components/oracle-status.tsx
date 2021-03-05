@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactElement } from 'react';
+import { useState, useEffect, ReactElement } from 'react';
 import ButtonComponent from './button-component';
 import { getAccents } from '../dashboardcolors';
 import { useSelector } from 'react-redux';

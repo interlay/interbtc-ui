@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import TimerIncrement from '../../common/components/timer-increment';
 import { useTranslation } from 'react-i18next';
 

@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useMemo, useEffect } from 'react';
+import { ReactElement, useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ParachainSecurity from '../components/parachain-security';

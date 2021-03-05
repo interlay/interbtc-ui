@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { Row, Button, Col } from 'react-bootstrap';
 import { range } from '../../utils/utils';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,8 @@ function PageLink({ page, setPage }: PageLinkProps): ReactElement {
   return (
     <span
       key={page}
-      onClick={() => setPage(page)}>
+      onClick={() => setPage(page)}
+      className='table-page-link hover-underline'>
       {page + 1}&nbsp;
     </span>
   );
@@ -36,8 +37,11 @@ export default function TablePageSelector({ totalPages, currentPage, setPage }: 
   const pages = range(first, last);
 
   return (
-    <Row className='justify-content-between'>
-      <Button onClick={() => setPage(Math.max(currentPage - 1, 0))}>{t('prev')}</Button>
+    <Row className='justify-content-between mt-5'>
+      <Button
+        variant='outline-dark'
+        onClick={() => setPage(Math.max(currentPage - 1, 0))}>{t('prev')}
+      </Button>
       <Col sm={4}>
         {pages[0] === 0 ? (
           ''
@@ -61,7 +65,10 @@ export default function TablePageSelector({ totalPages, currentPage, setPage }: 
           </>
         )}
       </Col>
-      <Button onClick={() => setPage(Math.min(currentPage + 1, totalPages - 1))}>{t('next')}</Button>
+      <Button
+        variant='outline-dark'
+        onClick={() => setPage(Math.min(currentPage + 1, totalPages - 1))}>{t('next')}
+      </Button>
     </Row>
   );
 }
