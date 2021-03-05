@@ -5,23 +5,13 @@
         color: #998;
     }
 
+    // ray test touch <
     #main-tabs {
         background-color: $body-color;
         border-radius: 10px;
         margin: 0px;
     }
-
-    .horizontal-line {
-        margin-top: 0.5rem;
-        width: 100%;
-        border: 1px solid $d_pink;
-    }
-    .line-yellow {
-        border: 1px solid $d_yellow;
-    }
-    .line-blue {
-        border: 1px solid $d_blue;
-    }
+    // ray test touch >
 
     .horizontal-line-deposit {
         margin-top: 3rem;
@@ -678,6 +668,10 @@
 }
 .modal-content {
     padding: 3rem 3rem;
+}
+.transferNetworkSelectionModal > div > .modal-content {
+    padding: 0px !important;
+    border-radius: 15px;
 }
 .modal-body {
     margin-top: 20px;

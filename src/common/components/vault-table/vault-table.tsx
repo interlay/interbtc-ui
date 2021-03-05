@@ -47,8 +47,9 @@ export default function VaultTable(): ReactElement {
       collateralization: Big | undefined,
       bannedUntil: string | undefined
     ): string => {
+      console.log(status);
       if (status === constants.VAULT_STATUS_THEFT) {
-        return constants.VAULT_STATUS_THEFT;
+        return t('vault.theft');
       }
       if (status === constants.VAULT_STATUS_LIQUIDATED) {
         return constants.VAULT_STATUS_LIQUIDATED;
@@ -127,7 +128,8 @@ export default function VaultTable(): ReactElement {
     liquidationThreshold,
     auctionCollateralThreshold,
     premiumRedeemThreshold,
-    secureCollateralThreshold
+    secureCollateralThreshold,
+    t
   ]);
 
   const tableHeadings: ReactElement[] = [
@@ -219,7 +221,7 @@ export default function VaultTable(): ReactElement {
   return (
     <div className='dashboard-table-container'>
       <div>
-        <p className='table-heading'>{t('dashboard.vaults.active_vaults')}</p>
+        <p className='table-heading'>{t('dashboard.vault.active_vaults')}</p>
       </div>
       <DashboardTable
         pageData={vaults.map(vault => ({ ...vault, id: vault.vaultId }))}

@@ -11,6 +11,7 @@ import { updateBalances } from '../utils/utils';
 import { useTranslation } from 'react-i18next';
 import Balances from './balances';
 import { PAGES } from 'utils/constants/links';
+import newImg from '../../assets/img/icons/new.png';
 
 type TopbarProps = {
     address?: string;
@@ -139,8 +140,12 @@ export default function Topbar(props: TopbarProps): ReactElement {
               {polkaBtcLoaded && (
                 <Link
                   className='nav-link'
-                  to={PAGES.LEADERBOARD}>
-                  {t('nav_leaderboard')}
+                  to={PAGES.CHALLENGES}>
+                  {t('nav_challenges')}
+                  <Image
+                    src={newImg}
+                    height='20em'>
+                  </Image>
                 </Link>
               )}
               <Link

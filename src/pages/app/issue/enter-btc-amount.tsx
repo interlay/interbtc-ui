@@ -17,10 +17,15 @@ import { useForm } from 'react-hook-form';
 import ButtonMaybePending from '../../../common/components/pending-button';
 import { btcToSat, satToBTC, planckToDOT, stripHexPrefix } from '@interlay/polkabtc';
 import { useTranslation } from 'react-i18next';
-import { displayBtcAmount, getUsdAmount, parachainToUIIssueRequest } from '../../../common/utils/utils';
+import {
+  displayBtcAmount,
+  getRandomVaultIdWithCapacity,
+  getUsdAmount,
+  parachainToUIIssueRequest
+} from '../../../common/utils/utils';
 
 type EnterBTCForm = {
-    amountBTC: string;
+  amountBTC: string;
 };
 
 export default function EnterBTCAmount() {
@@ -33,11 +38,11 @@ export default function EnterBTCAmount() {
   const [isRequestPending, setRequestPending] = useState(false);
   const [dustValue, setDustValue] = useState('0');
   const [usdAmount, setUsdAmount] = useState('');
-  const [vaultId, setVaultId] = useState('');
   const [vaultMaxAmount, setVaultMaxAmount] = useState('');
   const [fee, setFee] = useState('0');
   const [deposit, setDeposit] = useState('0');
   const [vaults, setVaults] = useState(new Map());
+  const [vaultId, setVaultId] = useState('');
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -50,9 +55,7 @@ export default function EnterBTCAmount() {
         const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
         const vaultsMap = await window.polkaBTC.vaults.getVaultsWithIssuableTokens();
         let maxVaultAmount = new BN(0);
-        for (const [id, issuableTokens] of vaultsMap) {
-          const vaultAccountId = window.polkaBTC.api.createType('AccountId', id);
-          setVaultId(vaultAccountId.toString());
+        for (const issuableTokens of vaultsMap.values()) {
           maxVaultAmount = issuableTokens.toBn();
           break;
         }
@@ -117,17 +120,7 @@ export default function EnterBTCAmount() {
       setFee(fee);
 
       const amountSAT = btcToSat(value);
-
-      let vaultId = undefined;
-      const comparisonAmount = new BN(btcToSat(value.toString()));
-
-      for (const [id, issuableTokens] of vaults) {
-        const issuable = issuableTokens.toBn();
-        if (issuable.gte(comparisonAmount)) {
-          vaultId = id;
-          break;
-        }
-      }
+      const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), new BN(amountSAT));
       if (vaultId) {
         const vaultAccountId = window.polkaBTC.api.createType('AccountId', vaultId);
         setVaultId(vaultAccountId.toString());
@@ -187,9 +180,7 @@ export default function EnterBTCAmount() {
       </div>
       {errors.amountBTC && (
         <div className='wizard-input-error'>
-          {errors.amountBTC.type === 'required' ?
-            t('issue_page.enter_valid_amount') :
-            errors.amountBTC.message}
+          {errors.amountBTC.type === 'required' ? t('issue_page.enter_valid_amount') : errors.amountBTC.message}
         </div>
       )}
       <div className='row justify-content-center'>
@@ -252,17 +243,15 @@ export default function EnterBTCAmount() {
                     height='23px'
                     alt='bitcoin logo'>
                   </img>
-                                    &nbsp;&nbsp;
+                  &nbsp;&nbsp;
                   <span className='fee-btc'>
                     {displayBtcAmount(Number(getValues('amountBTC') || '0') + Number(fee))}
                   </span>{' '}
-                                    BTC
+                  BTC
                 </div>
                 <div>
-                  {'~ $' + getUsdAmount(
-                    (Number(getValues('amountBTC') || '0') + Number(fee)).toString(),
-                    prices.bitcoin.usd
-                  )}
+                  {'~ $' +
+                    getUsdAmount((Number(getValues('amountBTC') || '0') + Number(fee)).toString(), prices.bitcoin.usd)}
                 </div>
               </div>
             </div>
