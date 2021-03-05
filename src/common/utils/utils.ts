@@ -13,8 +13,7 @@ import {
   IssueRequestExt as ParachainIssueRequest,
   RedeemRequestExt as ParachainRedeemRequest,
   ReplaceRequestExt as ParachainReplaceRequest,
-  roundTwoDecimals,
-  IssueRequestExt
+  roundTwoDecimals
 } from '@interlay/polkabtc';
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from '../../constants';
 import { Dispatch } from 'redux';
@@ -74,7 +73,10 @@ function displayBtcAmount(amount: string | number): string {
  * @param requiredBtcConfirmations requiredBtcConfirmations data (queried from the parachain)
  */
 
-async function parachainToUIIssueRequest(id: H256, parachainIssueRequest: IssueRequestExt): Promise<IssueRequest> {
+async function parachainToUIIssueRequest(
+  id: H256,
+  parachainIssueRequest: ParachainIssueRequest
+): Promise<IssueRequest> {
   const [parachainHeight, issuePeriod, requiredBtcConfirmations] = await Promise.all([
     window.polkaBTC.system.getCurrentBlockNumber(),
     window.polkaBTC.issue.getIssuePeriod(),
