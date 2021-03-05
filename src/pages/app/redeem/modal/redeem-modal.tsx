@@ -91,10 +91,6 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
                   <div className='col-6 text-left'>{t('issue_page.vault_dot_address_modal')}</div>
                   <div className='col-6 right-text'>{shortAddress(request.vaultDotAddress || '')}</div>
                 </div>
-                <div className='step-item row'>
-                  <div className='col-6 text-left'>{t('issue_page.vault_btc_address')}</div>
-                  <div className='col-6 right-text'>{shortAddress(request.btcAddress)}</div>
-                </div>
               </div>
               <div className='col-xl-6 col-lg-12'>
                 {request.status === RedeemRequestStatus.Expired ? (

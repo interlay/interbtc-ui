@@ -111,6 +111,7 @@
   "insufficient_funds": "Insufficient balance to transfer.",
   "issue_redeem_disabled": "Issue and Redeem is currently disabled.",
   "polkabtc_bridge_recovery_mode": "The PolkaBTC bridge has entered recovery mode. User funds are safe. Please try again later or check the status on the Dashboard page.",
+  "waiting_for_confirmations": "Waiting for Confirmations",
   "redeem_page": {
     "burn": "Burn",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
@@ -313,7 +314,7 @@
   },
   "issue_page": {
     "maximum_in_single_request": "The maximum you can issue in a single request is {{maxAmount}} PolkaBTC. Please enter a lower amount.",
-    "request": "Request  #{{id}}",
+    "request": "Request id  #{{id}}",
     "you_received": "You have received ",
     "contact_team": "Contact the team for debugging if you think this is an error.",
     "you_did_not_send": "You did not send the BTC transaction in time or transferred amount did not not meet the requested amount of PolkaBTC.",
@@ -396,7 +397,7 @@
     "executed": "Executed",
     "pending": "Pending",
     "cancelled": "Cancelled",
-    "claim_polkabtc": "CLAIM POLKABTC",
+    "claim_polkabtc": "Claim PolkaBTC",
     "refund_whoops": "Whoops! Too many BTC deposited",
     "refund_sent_more_btc": "Looks like you sent more BTC than requested",
     "refund_requested": "Requested",

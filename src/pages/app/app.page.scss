@@ -744,6 +744,10 @@
   color: $d_green;
 }
 
+.pending-text {
+  color: $d_yellow;
+}
+
 .enter-amount-and-address {
   .react-toggle--checked .react-toggle-track {
     background-color: $d_pink !important;
