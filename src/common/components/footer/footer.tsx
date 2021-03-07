@@ -8,6 +8,7 @@ import clsx from 'clsx';
 
 import InterlayImage from 'components/InterlayImage';
 import InterlayLink from 'components/InterlayLink';
+import { getCurrentYear } from 'utils/helpers/time';
 import {
   POLKA_BTC_UI_GITHUB,
   WEB3_FOUNDATION,
@@ -67,8 +68,7 @@ const Footer = ({ isHomePage }: Props) => (
         rel='noopener noreferrer'>
         v&nbsp;{packageJson.version}
       </InterlayLink>
-      {/* TODO: 2021 is hardcoded */}
-      <span className='interlay-text-white'>&copy;2021 Interlay.</span>
+      <span className='interlay-text-white'>&copy;{getCurrentYear()} Interlay.</span>
       <span className='interlay-text-white'>All Rights Reserved</span>
       <span>|</span>
       <InterlayLink
@@ -93,6 +93,7 @@ const Footer = ({ isHomePage }: Props) => (
         rel='noopener noreferrer'
         data-placement='bottom'
         data-original-title='Join our Discord channel'>
+        {/* TODO: could larger icons */}
         <FaDiscord />
       </InterlayLink>
       <InterlayLink
