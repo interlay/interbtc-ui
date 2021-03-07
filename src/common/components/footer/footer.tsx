@@ -1,13 +1,29 @@
 
-import { Container, Image } from 'react-bootstrap';
-import { FaGithub, FaTwitter, FaDiscord } from 'react-icons/fa';
+import {
+  FaGithub,
+  FaTwitter,
+  FaDiscord
+} from 'react-icons/fa';
 import clsx from 'clsx';
 
-import interlayImg from 'assets/img/interlay.png';
-import web3FoundationImg from 'assets/img/polkabtc/web3 foundation_grants_badge_black.png';
-import './footer.scss';
+import InterlayImage from 'components/InterlayImage';
+import InterlayLink from 'components/InterlayLink';
+import {
+  POLKA_BTC_UI_GITHUB,
+  WEB3_FOUNDATION,
+  INTERLAY_COMPANY,
+  INTERLAY_EMAIL,
+  INTERLAY_DISCORD,
+  INTERLAY_GITHUB,
+  INTERLAY_TWITTER
+} from 'config/links';
+// TODO: should use an SVG
+import interlayImage from 'assets/img/interlay.png';
+// TODO: should use next-gen format
+import web3FoundationImage from 'assets/img/polkabtc/web3-foundation-grants-badge-black.png';
+import styles from './footer.module.css';
 
-const pkg = require('../../../../package.json');
+const packageJson = require('../../../../package.json');
 
 interface Props {
   isHomePage: boolean;
@@ -16,100 +32,86 @@ interface Props {
 const Footer = ({ isHomePage }: Props) => (
   <footer
     className={clsx(
-      'footer flex-fill transparent-background text-white',
+      styles['footer'],
       // TODO: a hack for now
-      { 'footer-gradient': !isHomePage }
+      { [styles['footer-gradient']]: !isHomePage }
     )}>
-    <Container>
-      <div className='col-xs-12 col-lg-8 offset-lg-2'>
-        <div className='row'>
-          <div className='col-xl-12 col-lg-12 col-md-12 col-sm-12  col-xs-12'>
-            <div className='nav-link text-capitalize'>
-              <h3 style={{ fontSize: '1.5em', color: 'white' }}>
-                <a
-                  href='https://www.interlay.io/'
-                  target='__blank'>
-                  <Image
-                    src={interlayImg}
-                    height='30em' />
-                </a>
-                &nbsp; &nbsp; &nbsp; &nbsp;
-                <a
-                  href='https://web3.foundation/'
-                  target='__blank'>
-                  <Image
-                    src={web3FoundationImg}
-                    height='40rem' />
-                </a>
-              </h3>
-            </div>
-          </div>
-        </div>
-        <div className='row'>
-          <div className='col-xl-12 col-lg-12 col-md-12 col-sm-12  col-xs-12'>
-            <div className='nav-link text-capitalize'>
-              <a
-                href='https://github.com/interlay/polkabtc-ui'
-                target='__blank'>
-                v{pkg.version}
-              </a>{' '}
-              &nbsp; &copy; 2021 Interlay. All Rights Reserved |{' '}
-              <a
-                className=' text-capitalize'
-                rel='noopener noreferrer'
-                href='https://www.interlay.io/docs/privacy-policy.pdf'
-                target='_blank'>
-                Privacy Policy
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className='row'>
-          <div className='col-xl-12 col-lg-12 col-md-12 col-sm-12  col-xs-12'>
-            <a
-              className='nav-link d-inline'
-              title=''
-              data-placement='bottom'
-              rel='noopener noreferrer'
-              href='mailto:polkabtc@interlay.io'
-              target='_blank'
-              data-original-title='Drop us an email'>
-              polkabtc@interlay.io
-            </a>
-            <a
-              className='nav-link d-inline'
-              rel='noopener noreferrer'
-              title=''
-              data-placement='bottom'
-              href='https://discord.gg/KgCYK3MKSf'
-              target='_blank'
-              data-original-title='Join our Discord channel'>
-              <FaDiscord />
-            </a>
-            <a
-              className='nav-link d-inline'
-              rel='noopener noreferrer'
-              title=''
-              data-placement='bottom'
-              href='https://github.com/interlay'
-              target='_blank'
-              data-original-title='Follow us on Github'>
-              <FaGithub />
-            </a>
-            <a
-              className='nav-link d-inline'
-              rel='noopener noreferrer'
-              title=''
-              data-placement='bottom'
-              href='https://twitter.com/interlayHQ'
-              target='_blank'
-              data-original-title='Follow us on Twitter'>
-              <FaTwitter />
-            </a>
-          </div>
-        </div>
-      </div>
-    </Container>
+    <div className={clsx(styles['footer-row'], styles['first-row'])}>
+      <InterlayLink
+        href={INTERLAY_COMPANY}
+        target='_blank'
+        rel='noopener noreferrer'
+        style={{ display: 'inline-block' }}>
+        <InterlayImage
+          src={interlayImage}
+          width={128}
+          height={30}
+          alt='Interlay' />
+      </InterlayLink>
+      <InterlayLink
+        href={WEB3_FOUNDATION}
+        target='_blank'
+        rel='noopener noreferrer'
+        style={{ display: 'inline-block' }}>
+        <InterlayImage
+          src={web3FoundationImage}
+          width={116}
+          height={40}
+          alt='Web3 Foundation' />
+      </InterlayLink>
+    </div>
+    <div className={clsx(styles['footer-row'], styles['second-row'])}>
+      <InterlayLink
+        href={POLKA_BTC_UI_GITHUB}
+        target='_blank'
+        rel='noopener noreferrer'>
+        v&nbsp;{packageJson.version}
+      </InterlayLink>
+      {/* TODO: 2021 is hardcoded */}
+      <span className='interlay-text-white'>&copy;2021 Interlay.</span>
+      <span className='interlay-text-white'>All Rights Reserved</span>
+      <span>|</span>
+      <InterlayLink
+        href='https://www.interlay.io/docs/privacy-policy.pdf'
+        target='_blank'
+        rel='noopener noreferrer'>
+        Privacy Policy
+      </InterlayLink>
+    </div>
+    <div className={clsx(styles['footer-row'], styles['third-row'])}>
+      <InterlayLink
+        href={INTERLAY_EMAIL}
+        target='_blank'
+        rel='noopener noreferrer'
+        data-placement='bottom'
+        data-original-title='Drop us an email'>
+        polkabtc@interlay.io
+      </InterlayLink>
+      <InterlayLink
+        href={INTERLAY_DISCORD}
+        target='_blank'
+        rel='noopener noreferrer'
+        data-placement='bottom'
+        data-original-title='Join our Discord channel'>
+        <FaDiscord />
+      </InterlayLink>
+      <InterlayLink
+        href={INTERLAY_GITHUB}
+        target='_blank'
+        rel='noopener noreferrer'
+        data-placement='bottom'
+        data-original-title='Follow us on Github'>
+        <FaGithub />
+      </InterlayLink>
+      <InterlayLink
+        href={INTERLAY_TWITTER}
+        target='_blank'
+        rel='noopener noreferrer'
+        data-placement='bottom'
+        data-original-title='Follow us on Twitter'>
+        <FaTwitter />
+      </InterlayLink>
+    </div>
   </footer>
 );
 
