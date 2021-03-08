@@ -1,19 +1,36 @@
-/* eslint-disable no-unused-vars */
-import { useState, useEffect, ReactElement, useMemo } from 'react';
+import {
+  useState,
+  useEffect,
+  ReactElement,
+  useMemo
+} from 'react';
 import { useSelector } from 'react-redux';
-import { Image, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
-import 'pages/leaderboard/leaderboard.page.scss';
-import 'pages/dashboard/dashboard-subpage.scss';
+import {
+  Image,
+  ToggleButton,
+  ToggleButtonGroup,
+  Card,
+  Tab,
+  Tabs
+} from 'react-bootstrap';
+import {
+  useTranslation,
+  TFunction
+} from 'react-i18next';
+import {
+  RelayerData,
+  VaultData
+} from '@interlay/polkabtc-stats';
+
+import MainContainer from 'parts/MainContainer';
 import { StoreType } from 'common/types/util.types';
-import { TFunction, useTranslation } from 'react-i18next';
 import DashboardTable from 'common/components/dashboard-table/dashboard-table';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
-import { RelayerData, VaultData } from '@interlay/polkabtc-stats';
 import TimerIncrement from 'common/components/timer-increment';
 import { CHALLENGE_1_START } from '../../constants'; // relative path due to conflict
-import { Card, Tab, Tabs } from 'react-bootstrap';
-import newImg from '../../assets/img/icons/new.png';
-import MainContainer from 'parts/MainContainer';
+import newImg from 'assets/img/icons/new.png';
+import 'pages/dashboard/dashboard-subpage.scss';
+import './challenges.scss';
 
 const CHALLENGE_CUTOFFS = [
   0, // all time
@@ -25,6 +42,7 @@ type ChallengeSelectorProps = {
   setChallengeIdx: (idx: number) => void;
   t: TFunction;
 }
+
 function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelectorProps): ReactElement {
   return (
     <ToggleButtonGroup
@@ -47,7 +65,7 @@ function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelect
   );
 }
 
-export default function ChallengesPage(): ReactElement {
+function Challenges(): ReactElement {
   // eslint-disable-next-line no-array-constructor
   const [vaultRows, setVaultRows] = useState(new Array<VaultData>());
   // eslint-disable-next-line no-array-constructor
@@ -81,7 +99,7 @@ export default function ChallengesPage(): ReactElement {
       <p>{row.execute_redeem_count}</p>,
       <p>{Number(row.lifetime_sla).toFixed(2)}</p>
       // lifetime_sla is a string despite schema being "number"
-      // TODO: check how Axios/openapigenerator handle typings, and if necessary
+      // TODO: check how Axios/openapi-generator handle typings, and if necessary
       // convert stats API data types to `string` to avoid confusion
     ],
     []
@@ -113,11 +131,13 @@ export default function ChallengesPage(): ReactElement {
       const vaults = (await statsApi.getVaults(CHALLENGE_CUTOFFS[challengeIdx])).data;
       setVaultRows(vaults.sort((a, b) => b.lifetime_sla - a.lifetime_sla));
     };
+
     const fetchRelayerData = async () => {
       if (!polkaBtcLoaded) return;
       const relayers = (await statsApi.getRelayers(CHALLENGE_CUTOFFS[challengeIdx])).data;
       setRelayerRows(relayers.sort((a, b) => b.lifetime_sla - a.lifetime_sla));
     };
+
     fetchVaultData();
     fetchRelayerData();
   }, [polkaBtcLoaded, statsApi, challengeIdx, t]);
@@ -242,3 +262,5 @@ export default function ChallengesPage(): ReactElement {
     </MainContainer>
   );
 }
+
+export default Challenges;
