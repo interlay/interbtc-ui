@@ -4,9 +4,13 @@ import clsx from 'clsx';
 
 import { setActiveTabAction } from 'common/actions/general.actions';
 import { TabTypes } from 'utils/enums/tab-types';
-import styles from './tab.module.css';
+import styles from './tabs.module.css';
 
 interface Props {
+  children: React.ReactNode
+}
+
+interface TabProps {
   tabType: TabTypes;
   selectedTabType: TabTypes;
   children: React.ReactNode;
@@ -16,7 +20,7 @@ const Tab = ({
   tabType,
   selectedTabType,
   children
-}: Props) => {
+}: TabProps) => {
   const dispatch = useDispatch();
 
   // TODO: should use query parameter instead of redux
@@ -42,4 +46,30 @@ const Tab = ({
   );
 };
 
-export default Tab;
+interface HorizontalLineProps {
+  selectedTabType: TabTypes;
+}
+
+const HorizontalLine = ({ selectedTabType }: HorizontalLineProps) => (
+  <hr
+    className={clsx(
+      styles['horizontal-line'],
+      { [styles['horizontal-line-pink']]: selectedTabType === TabTypes.Issue },
+      { [styles['horizontal-line-yellow']]: selectedTabType === TabTypes.Redeem },
+      { [styles['horizontal-line-blue']]: selectedTabType === TabTypes.Transfer }
+    )} />
+);
+
+// TODO: could be simpler using a library
+const Tabs = ({ children }: Props) => (
+  <div className={clsx(styles['app-tabs'], 'row')}>
+    {children}
+  </div>
+);
+
+export {
+  Tab,
+  HorizontalLine
+};
+
+export default Tabs;
