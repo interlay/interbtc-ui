@@ -5,6 +5,7 @@ import {
   FaDiscord
 } from 'react-icons/fa';
 
+import MainContainer from 'parts/MainContainer';
 import InterlayLink from 'components/InterlayLink';
 import {
   USER_FEEDBACK_FORM,
@@ -46,7 +47,7 @@ const FEEDBACK_TYPES = [
 const Feedback = () => (
   <>
     {/* TODO: should use footer layout pattern */}
-    <div className='main-container'>
+    <MainContainer>
       {/* TODO: should create a component */}
       <h1 className={styles['title']}>Feedback</h1>
       <ul className={styles['feedback']}>
@@ -64,7 +65,7 @@ const Feedback = () => (
           </li>
         ))}
       </ul>
-    </div>
+    </MainContainer>
   </>
 );
 

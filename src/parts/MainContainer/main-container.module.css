@@ -1,0 +1,11 @@
+
+.main-container {
+  padding: 30px 0px;
+  min-height: 100vh;
+}
+
+@media only screen and (min-width: 1200px) {
+  .main-container {
+    padding: 40px 0px;
+  }
+}
