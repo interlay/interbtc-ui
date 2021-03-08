@@ -22,7 +22,7 @@ export default function StakedRelayerTable(): ReactElement {
   useEffect(() => {
     (async () => {
       try {
-        const res = await statsApi.getRelayers();
+        const res = await statsApi.getRelayers(0);
         setRelayers(res.data);
       } catch (error) {
         toast.error(error.toString());
