@@ -46,7 +46,7 @@ const FEEDBACK_TYPES = [
 const Feedback = () => (
   <>
     {/* TODO: should use footer layout pattern */}
-    <div className='main-container dashboard-page'>
+    <div className='main-container'>
       {/* TODO: should create a component */}
       <h1 className={styles['title']}>Feedback</h1>
       <ul className={styles['feedback']}>

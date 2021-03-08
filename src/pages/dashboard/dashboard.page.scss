@@ -7,11 +7,15 @@
     display: grid;
     padding: 8px 0px;
 }
+
+// ray test touch <
 .main-container {
     background-color: #fff;
     padding: 30px 0px;
     min-height: 100vh;
 }
+// ray test touch >
+
 .card {
     width: 90%;
     min-height: 300px;
@@ -124,11 +128,7 @@
     position: relative;
     margin-top: 10px;
 }
-.dashboard-page {
-    canvas {
-        height: 250px !important;
-    }
-}
+
 .section-top-gap {
     margin-top: 40px;
 }
@@ -156,9 +156,11 @@
     .dashboard-items-container {
         @include justifyCenter();
     }
+    // ray test touch <
     .main-container {
         padding: 40px 0px;
     }
+    // ray test touch >
     .row-grid {
         grid-template-columns: 1fr 1fr 1fr;
         column-gap: 40px;

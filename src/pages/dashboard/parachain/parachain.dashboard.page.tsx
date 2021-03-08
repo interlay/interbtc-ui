@@ -103,7 +103,7 @@ export default function ParachainDashboard(): ReactElement {
   );
 
   return (
-    <div className='main-container dashboard-page'>
+    <div className='main-container'>
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <div>

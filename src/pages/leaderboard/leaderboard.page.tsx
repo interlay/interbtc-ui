@@ -122,8 +122,8 @@ export default function ChallengesPage(): ReactElement {
   }, [polkaBtcLoaded, statsApi, challengeIdx, t]);
 
   return (
-    <div className='main-container dashboard-page'>
-      <div className='dashboard-container dashboard-fade-in-animation dahboard-min-height'>
+    <div className='main-container'>
+      <div className='dashboard-container dashboard-fade-in-animation dashboard-min-height'>
         <div className='dashboard-wrapper'>
           <div className='title-container'>
             <div className='title-text-container'>

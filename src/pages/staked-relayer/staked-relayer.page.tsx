@@ -103,7 +103,7 @@ export default function StakedRelayerPage(): ReactElement {
 
   return (
     <div className='staked-relayer-page main-container'>
-      <div className='staked-container dashboard-fade-in-animation dahboard-min-height'>
+      <div className='staked-container dashboard-fade-in-animation dashboard-min-height'>
         <div className='stacked-wrapper'>
           <div className='title-text-container'>
             <h1 className='title-text'>{t('relayer.staked_relayer_dashboard')}</h1>
