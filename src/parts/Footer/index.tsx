@@ -24,7 +24,7 @@ import interlayImage from 'assets/img/interlay.png';
 import web3FoundationImage from 'assets/img/polkabtc/web3-foundation-grants-badge-black.png';
 import styles from './footer.module.css';
 
-const packageJson = require('../../../../package.json');
+const packageJson = require('../../../package.json');
 
 interface Props {
   isHomePage: boolean;

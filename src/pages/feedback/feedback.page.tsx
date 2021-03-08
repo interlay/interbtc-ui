@@ -1,110 +1,71 @@
-import { ReactElement } from 'react';
-import { FaDiscord } from 'react-icons/fa';
 
-import 'pages/dashboard/dashboard-subpage.scss';
-import 'pages/dashboard/dashboard.page.scss';
+import {
+  FaExternalLinkAlt,
+  FaGithub,
+  FaDiscord
+} from 'react-icons/fa';
 
-export default function FeedbackPage(): ReactElement {
-  return (
+import InterlayLink from 'components/InterlayLink';
+import {
+  USER_FEEDBACK_FORM,
+  VAULT_FEEDBACK_FORM,
+  RELAYER_FEEDBACK_FORM,
+  POLKA_BTC_UI_GITHUB_ISSUES,
+  INTERLAY_DISCORD
+} from 'config/links';
+import styles from './feedback.module.css';
+
+const FEEDBACK_TYPES = [
+  {
+    title: 'User Feedback Form',
+    link: USER_FEEDBACK_FORM,
+    icon: <FaExternalLinkAlt />
+  },
+  {
+    title: 'Vault Feedback Form',
+    link: VAULT_FEEDBACK_FORM,
+    icon: <FaExternalLinkAlt />
+  },
+  {
+    title: 'Relayer Feedback Form',
+    link: RELAYER_FEEDBACK_FORM,
+    icon: <FaExternalLinkAlt />
+  },
+  {
+    title: 'Open an Issue on Github',
+    link: POLKA_BTC_UI_GITHUB_ISSUES,
+    icon: <FaGithub />
+  },
+  {
+    title: 'Discuss on Discord',
+    link: INTERLAY_DISCORD,
+    icon: <FaDiscord />
+  }
+];
+
+const Feedback = () => (
+  <>
+    {/* TODO: should use footer layout pattern */}
     <div className='main-container dashboard-page'>
-      <div className='title-container mb-3'>
-        <div className='title-text-container'>
-          <h1 className='title-text'>Feedback</h1>
-        </div>
-      </div>
-      <div className='row'>
-        <div className='col-lg-8 offset-lg-2'>
-          <div className='row'>
-            <div className='col-lg-4 mb-3'>
-              <div
-                className='card'
-                style={{ minHeight: '100px' }}>
-                <div className='card-body text-center'>
-                  <a
-                    className='nav-link'
-                    href='https://forms.gle/JXBoRdspbG8pMs3k6'
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    <h1 style={{ fontSize: '1.3em' }}>
-                                            User Feedback Form <span className='fa fa-external-link'></span>{' '}
-                    </h1>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className='col-lg-4 mb-3'>
-              <div
-                className='card'
-                style={{ minHeight: '100px' }}>
-                <div className='card-body text-center'>
-                  <a
-                    className='nav-link'
-                    href='https://forms.gle/zzKhaEzttCKksjej7'
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    <h1 style={{ fontSize: '1.3em' }}>
-                                            Vault Feedback Form <span className='fa fa-external-link'></span>{' '}
-                    </h1>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className='col-lg-4 mb-3'>
-              <div
-                className='card'
-                style={{ minHeight: '100px' }}>
-                <div className='card-body text-center'>
-                  <a
-                    className='nav-link'
-                    href='https://forms.gle/hriZNJ6pSEKHzwpS7'
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    <h1 style={{ fontSize: '1.3em' }}>
-                                            Relayer Feedback Form <span className='fa fa-external-link'></span>{' '}
-                    </h1>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className='row mt-3'>
-            <div className='col-lg-4 offset-lg-2 mb-3'>
-              <div
-                className='card'
-                style={{ minHeight: '100px' }}>
-                <div className='card-body text-center'>
-                  <a
-                    className='nav-link'
-                    href='https://github.com/interlay/polkabtc-ui/issues'
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    <h1 style={{ fontSize: '1.3em' }}>
-                                            Open an Issue on Github <span className='fa fa-github'></span>{' '}
-                    </h1>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className='col-lg-4 mb-3'>
-              <div
-                className='card'
-                style={{ minHeight: '100px' }}>
-                <div className='card-body text-center'>
-                  <a
-                    className='nav-link'
-                    href='https://discord.gg/KgCYK3MKSf'
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    <h1 style={{ fontSize: '1.3em' }}>
-                                            Discuss on Discord <FaDiscord></FaDiscord>{' '}
-                    </h1>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* TODO: should create a component */}
+      <h1 className={styles['title']}>Feedback</h1>
+      <ul className={styles['feedback']}>
+        {FEEDBACK_TYPES.map(feedbackType => (
+          <li
+            key={feedbackType.title}
+            className={styles['feedback-item']}>
+            <InterlayLink
+              href={feedbackType.link}
+              target='_blank'
+              rel='noopener noreferrer'
+              style={{ display: 'block' }}>
+              {feedbackType.title}&nbsp;{feedbackType.icon}
+            </InterlayLink>
+          </li>
+        ))}
+      </ul>
     </div>
-  );
-}
+  </>
+);
+
+export default Feedback;

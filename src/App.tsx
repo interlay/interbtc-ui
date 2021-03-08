@@ -53,7 +53,7 @@ import LandingPage from 'pages/landing/landing.page';
 import RelayDashboard from 'pages/dashboard/relay/relay.dashboard.page';
 import OraclesDashboard from 'pages/dashboard/oracles/oracles.dashboard.page';
 import ParachainDashboard from 'pages/dashboard/parachain/parachain.dashboard.page';
-import FeedbackPage from 'pages/feedback/feedback.page';
+import Feedback from 'pages/feedback/feedback.page';
 // TODO: block for now
 // import TransitionWrapper from 'parts/TransitionWrapper';
 import AccountModal from 'common/components/account-modal/account-modal';
@@ -399,7 +399,7 @@ function App(): ReactElement {
                       <VaultDashboardPage />
                     </Route>
                     <Route path={PAGES.FEEDBACK}>
-                      <FeedbackPage />
+                      <Feedback />
                     </Route>
                     <Route
                       exact

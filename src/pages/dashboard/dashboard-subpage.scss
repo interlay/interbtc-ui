@@ -56,11 +56,13 @@
 .dashboard-wrapper {
     width: 70%;
 }
+
 .title-container {
     margin-top: 30px;
     @include justifyCenter();
     flex-direction: column;
 }
+
 .title-line {
     height: 1px;
     margin-top: 20px;
