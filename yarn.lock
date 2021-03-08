@@ -1239,9 +1239,32 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/polkabtc-stats@link:../polkabtc-stats":
-  version "0.0.0"
-  uid ""
+"@interlay/polkabtc-stats@0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-stats/-/polkabtc-stats-0.1.12.tgz#12a95ce4e5c91353bdb4e4cb98208ca2f6f90bfa"
+  integrity sha512-tTfERedaLl20vEe9sbirQ/EdhhUYlgesv9qRlstTxiy7yvNbJfYMP3K3DPWUPOu4eaQz7xSAW4eYa8jGuDJoUw==
+  dependencies:
+    "@interlay/polkabtc" "^0.8.5"
+    "@interlay/polkabtc-types" "0.4.0"
+    "@polkadot/api" "3.6.1"
+    "@polkadot/rpc-core" "3.6.1"
+    "@supercharge/promise-pool" "^1.6.0"
+    "@types/big.js" "^6.0.2"
+    "@types/morgan" "^1.9.2"
+    "@types/pg-format" "^1.0.1"
+    big.js "^6.0.3"
+    bitcoinjs-lib "^5.2.0"
+    body-parser "^1.19.0"
+    dotenv "^8.2.0"
+    express "^4.17.1"
+    lodash "^4.17.20"
+    morgan "^1.10.0"
+    pg "^8.5.1"
+    pg-format "^1.0.4"
+    reflect-metadata "^0.1.13"
+    swagger-ui-express "^4.1.6"
+    tsoa "^3.4.0"
+    typeorm "^0.2.30"
 
 "@interlay/polkabtc-types@0.4.0":
   version "0.4.0"

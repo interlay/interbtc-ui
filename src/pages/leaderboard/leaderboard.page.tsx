@@ -10,12 +10,13 @@ import DashboardTable from 'common/components/dashboard-table/dashboard-table';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { RelayerData, VaultData } from '@interlay/polkabtc-stats';
 import TimerIncrement from 'common/components/timer-increment';
+import { CHALLENGE_1_START } from '../../constants'; // relative path due to conflict
 import { Card, Tab, Tabs } from 'react-bootstrap';
 import newImg from '../../assets/img/icons/new.png';
 
 const CHALLENGE_CUTOFFS = [
   0, // all time
-  new Date('2021-03-09').getTime()
+  CHALLENGE_1_START
 ];
 
 type ChallengeSelectorProps = {
