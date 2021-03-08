@@ -5,6 +5,7 @@ import OracleStatus from '../components/oracle-status';
 import OracleTable from '../../../common/components/oracle-table/oracle-table';
 import { getAccents } from '../dashboard-colors';
 import TimerIncrement from '../../../common/components/timer-increment';
+import MainContainer from 'parts/MainContainer';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard.page.scss';
 import '../dashboard-subpage.scss';
@@ -13,7 +14,7 @@ export default function OraclesDashboard(): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <div className='main-container'>
+    <MainContainer>
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <div>
@@ -35,6 +36,6 @@ export default function OraclesDashboard(): ReactElement {
           </div>
         </div>
       </div>
-    </div>
+    </MainContainer>
   );
 }

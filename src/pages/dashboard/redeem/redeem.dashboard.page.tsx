@@ -16,6 +16,7 @@ import { satToBTC } from '@interlay/polkabtc';
 import LineChartComponent from '../components/line-chart-component';
 import { BtcNetworkName, RedeemColumns } from '@interlay/polkabtc-stats';
 import TimerIncrement from '../../../common/components/timer-increment';
+import MainContainer from 'parts/MainContainer';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard.page.scss';
 import '../dashboard-subpage.scss';
@@ -146,7 +147,7 @@ export default function RedeemDashboard(): ReactElement {
   }, [polkaBtcLoaded, statsApi]);
 
   return (
-    <div className='main-container'>
+    <MainContainer>
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <div>
@@ -235,6 +236,6 @@ export default function RedeemDashboard(): ReactElement {
           </div>
         </div>
       </div>
-    </div>
+    </MainContainer>
   );
 }

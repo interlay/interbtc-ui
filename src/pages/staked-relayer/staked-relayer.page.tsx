@@ -15,6 +15,7 @@ import { satToBTC, planckToDOT } from '@interlay/polkabtc';
 import { useTranslation } from 'react-i18next';
 import { safeRoundTwoDecimals } from '../../common/utils/utils';
 import TimerIncrement from '../../common/components/timer-increment';
+import MainContainer from 'parts/MainContainer';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard/dashboard-subpage.scss';
 
@@ -102,7 +103,7 @@ export default function StakedRelayerPage(): ReactElement {
   }, [polkaBtcLoaded, relayerLoaded, t]);
 
   return (
-    <div className='staked-relayer-page main-container'>
+    <MainContainer className='staked-relayer-page'>
       <div className='staked-container dashboard-fade-in-animation dashboard-min-height'>
         <div className='stacked-wrapper'>
           <div className='title-text-container'>
@@ -196,6 +197,6 @@ export default function StakedRelayerPage(): ReactElement {
           )}
         </div>
       </div>
-    </div>
+    </MainContainer>
   );
 }

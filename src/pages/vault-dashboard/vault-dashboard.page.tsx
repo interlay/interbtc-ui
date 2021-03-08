@@ -22,6 +22,7 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { safeRoundTwoDecimals } from '../../common/utils/utils';
 import TimerIncrement from '../../common/components/timer-increment';
+import MainContainer from 'parts/MainContainer';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard/dashboard-subpage.scss';
 
@@ -104,7 +105,7 @@ export default function VaultDashboardPage(): ReactElement {
   }, [polkaBtcLoaded, vaultClientLoaded, dispatch, vaultRegistered]);
 
   return (
-    <div className='vault-dashboard-page main-container'>
+    <MainContainer className='vault-dashboard-page'>
       <div className='vault-container dashboard-fade-in-animation dashboard-min-height'>
         <div className='stacked-wrapper'>
           <div className='title-text-container'>
@@ -229,6 +230,6 @@ export default function VaultDashboardPage(): ReactElement {
           onClose={closeRequestReplacementModal}
           show={showRequestReplacementModal} />
       </div>
-    </div>
+    </MainContainer>
   );
 }

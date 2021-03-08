@@ -1,6 +1,7 @@
 import { ReactElement } from 'react';
 import TimerIncrement from '../../common/components/timer-increment';
 import { useTranslation } from 'react-i18next';
+import MainContainer from 'parts/MainContainer';
 
 import './dashboard.page.scss';
 import Row1 from './rows/row1';
@@ -11,7 +12,7 @@ export default function DashboardPage(): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <div className='main-container'>
+    <MainContainer>
       <div className='title-container'>
         <div className='title-text-container'>
           <h1 className='title-text'>{t('dashboard.dashboard')}</h1>
@@ -29,6 +30,6 @@ export default function DashboardPage(): ReactElement {
           <Row3 />
         </div>
       </div>
-    </div>
+    </MainContainer>
   );
 }

@@ -13,6 +13,7 @@ import TimerIncrement from 'common/components/timer-increment';
 import { CHALLENGE_1_START } from '../../constants'; // relative path due to conflict
 import { Card, Tab, Tabs } from 'react-bootstrap';
 import newImg from '../../assets/img/icons/new.png';
+import MainContainer from 'parts/MainContainer';
 
 const CHALLENGE_CUTOFFS = [
   0, // all time
@@ -122,7 +123,7 @@ export default function ChallengesPage(): ReactElement {
   }, [polkaBtcLoaded, statsApi, challengeIdx, t]);
 
   return (
-    <div className='main-container'>
+    <MainContainer>
       <div className='dashboard-container dashboard-fade-in-animation dashboard-min-height'>
         <div className='dashboard-wrapper'>
           <div className='title-container'>
@@ -238,6 +239,6 @@ export default function ChallengesPage(): ReactElement {
           </Tabs>
         </div>
       </div>
-    </div>
+    </MainContainer>
   );
 }
