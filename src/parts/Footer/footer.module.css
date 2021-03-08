@@ -23,21 +23,3 @@
 .third-row > *:not(:first-child) {
   margin-left: 32px;
 }
-
-/* TODO: should avoid hard-coding */
-.footer-gradient {
-  background-image: linear-gradient(
-    to left top,
-    #f5882d,
-    #f58035,
-    #f4783c,
-    #f37143,
-    #f06a4a,
-    #ef624e,
-    #ed5952,
-    #eb5157,
-    #ea445b,
-    #e83761,
-    #e52766
-  );
-}

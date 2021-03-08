@@ -7,7 +7,7 @@ interface Props {
   className?: string;
 }
 
-// TODO: should double-check as it's temporary alternative
+// TODO: should double-check as it's a temporary alternative
 const MainContainer = ({
   className,
   ...rest

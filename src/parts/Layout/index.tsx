@@ -49,7 +49,7 @@ const Layout = ({ children }: Props) => {
       )}
       {!isHomePage && <TestnetBanner />}
       {children}
-      <Footer isHomePage={isHomePage} />
+      <Footer />
     </div>
   );
 };

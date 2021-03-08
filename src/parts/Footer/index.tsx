@@ -26,17 +26,9 @@ import styles from './footer.module.css';
 
 const packageJson = require('../../../package.json');
 
-interface Props {
-  isHomePage: boolean;
-}
-
-const Footer = ({ isHomePage }: Props) => (
+const Footer = () => (
   <footer
-    className={clsx(
-      styles['footer'],
-      // TODO: a hack for now
-      { [styles['footer-gradient']]: !isHomePage }
-    )}>
+    className={styles['footer']}>
     <div className={clsx(styles['footer-row'], styles['first-row'])}>
       <InterlayLink
         href={INTERLAY_COMPANY}
@@ -68,8 +60,8 @@ const Footer = ({ isHomePage }: Props) => (
         rel='noopener noreferrer'>
         v&nbsp;{packageJson.version}
       </InterlayLink>
-      <span className='interlay-text-white'>&copy;{getCurrentYear()} Interlay.</span>
-      <span className='interlay-text-white'>All Rights Reserved</span>
+      <span>&copy;{getCurrentYear()} Interlay.</span>
+      <span>All Rights Reserved</span>
       <span>|</span>
       <InterlayLink
         href='https://www.interlay.io/docs/privacy-policy.pdf'
