@@ -1,5 +1,5 @@
 
-import React, { useState, ReactElement } from 'react';
+import { useState, ReactElement } from 'react';
 import { Table, Badge } from 'react-bootstrap';
 import { FaCheck, FaHourglass } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';

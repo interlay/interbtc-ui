@@ -1,4 +1,3 @@
-import React from 'react';
 import EnterAmountAndAddress from './enter-amount-and-address';
 import RedeemInfo from './redeem-info';
 import { useSelector } from 'react-redux';

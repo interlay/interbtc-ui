@@ -137,7 +137,6 @@ services:
         testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice request-issue --issue-amount=10000000 --vault=dave
         REDEEM_ID=$$(testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice request-redeem --redeem-amount=1000000 --btc-address=$${ALICE_ADDRESS} --vault=dave)
         # testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice execute-redeem --redeem-id=$${REDEEM_ID}
-
     environment:
       <<: *client-env
     ports:
@@ -150,13 +149,15 @@ services:
     ports:
       - '5432:5432'
   polkabtc_stats:
-    image: 'registry.gitlab.com/interlay/polkabtc-stats:0.1.11'
+    image: 'registry.gitlab.com/interlay/polkabtc-stats:PR-19'
     restart: always
     depends_on:
       - postgres
     command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 1; done; yarn start'
     environment:
       MONITOR: '1'
+      LOG_PRETTY_PRINT: '1'
+      SYNC_DB_SCHEMA: '1'
       ENDPOINT_URL: 'ws://polkabtc:9944'
       BTC_NETWORK: 'http://electrs:3002'
       PGHOST: 'postgres'

@@ -1,5 +1,4 @@
 import { ReactElement, useMemo } from 'react';
-import React from 'react';
 import { TableDisplayParams } from '../../types/util.types';
 import { useTranslation } from 'react-i18next';
 import { getAccents } from '../../../pages/dashboard/dashboard-colors';

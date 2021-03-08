@@ -745,6 +745,11 @@
     opacity: 1;
 }
 
-.table-row-opens-modal {
+.table-page-link {
     cursor: pointer;
+    padding:0.7rem;
+}
+
+.hover-underline:hover {
+    text-decoration: underline;
 }

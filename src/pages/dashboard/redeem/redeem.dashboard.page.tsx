@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactElement, useMemo } from 'react';
+import { useState, useEffect, ReactElement, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { getAccents } from '../../../pages/dashboard/dashboard-colors';
