@@ -53,7 +53,7 @@ import LandingPage from 'pages/landing/landing.page';
 import RelayDashboard from 'pages/dashboard/relay/relay.dashboard.page';
 import OraclesDashboard from 'pages/dashboard/oracles/oracles.dashboard.page';
 import ParachainDashboard from 'pages/dashboard/parachain/parachain.dashboard.page';
-import Feedback from 'pages/feedback/feedback.page';
+import Feedback from 'pages/Feedback';
 // TODO: block for now
 // import TransitionWrapper from 'parts/TransitionWrapper';
 import AccountModal from 'common/components/account-modal/account-modal';
@@ -121,8 +121,8 @@ import './app.css';
 // const ParachainDashboard = React.lazy(() =>
 //   import(/* webpackChunkName: 'parachain' */ 'pages/dashboard/parachain/parachain.dashboard.page')
 // );
-// const FeedbackPage = React.lazy(() =>
-//   import(/* webpackChunkName: 'feedback' */ 'pages/feedback/feedback.page')
+// const Feedback = React.lazy(() =>
+//   import(/* webpackChunkName: 'feedback' */ 'pages/Feedback')
 // );
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
