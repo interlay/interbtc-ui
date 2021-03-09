@@ -14,6 +14,8 @@ const USER_FEEDBACK_FORM = 'https://forms.gle/JXBoRdspbG8pMs3k6';
 const VAULT_FEEDBACK_FORM = 'https://forms.gle/zzKhaEzttCKksjej7';
 const RELAYER_FEEDBACK_FORM = 'https://forms.gle/hriZNJ6pSEKHzwpS7';
 
+const POLKA_BTC_DOC_TREASURE_HUNT = 'https://docs.polkabtc.io/#/start/beta?id=treasure-hunt-500-dot';
+
 export {
   POLKA_BTC_UI_GITHUB,
   WEB3_FOUNDATION,
@@ -25,5 +27,6 @@ export {
   POLKA_BTC_UI_GITHUB_ISSUES,
   USER_FEEDBACK_FORM,
   VAULT_FEEDBACK_FORM,
-  RELAYER_FEEDBACK_FORM
+  RELAYER_FEEDBACK_FORM,
+  POLKA_BTC_DOC_TREASURE_HUNT
 };

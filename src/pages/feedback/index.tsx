@@ -7,6 +7,7 @@ import {
 
 import MainContainer from 'parts/MainContainer';
 import InterlayLink from 'components/InterlayLink';
+import CardList, { Card } from 'components/CardList';
 import {
   USER_FEEDBACK_FORM,
   VAULT_FEEDBACK_FORM,
@@ -16,7 +17,7 @@ import {
 } from 'config/links';
 import styles from './feedback.module.css';
 
-const FEEDBACK_TYPES = [
+const FEEDBACK_ITEMS = [
   {
     title: 'User Feedback Form',
     link: USER_FEEDBACK_FORM,
@@ -50,11 +51,9 @@ const Feedback = () => (
     <MainContainer>
       {/* TODO: should create a component */}
       <h1 className={styles['title']}>Feedback</h1>
-      <ul className={styles['feedback']}>
-        {FEEDBACK_TYPES.map(feedbackType => (
-          <li
-            key={feedbackType.title}
-            className={styles['feedback-item']}>
+      <CardList>
+        {FEEDBACK_ITEMS.map(feedbackType => (
+          <Card key={feedbackType.title}>
             <InterlayLink
               href={feedbackType.link}
               target='_blank'
@@ -62,9 +61,9 @@ const Feedback = () => (
               style={{ display: 'block' }}>
               {feedbackType.title}&nbsp;{feedbackType.icon}
             </InterlayLink>
-          </li>
+          </Card>
         ))}
-      </ul>
+      </CardList>
     </MainContainer>
   </>
 );

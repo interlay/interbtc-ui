@@ -11,7 +11,7 @@ import { updateBalances } from '../utils/utils';
 import { useTranslation } from 'react-i18next';
 import Balances from './balances';
 import { PAGES } from 'utils/constants/links';
-import newImg from '../../assets/img/icons/new.png';
+import newMark from '../../assets/img/icons/new-mark.png';
 
 type TopbarProps = {
     address?: string;
@@ -143,7 +143,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                   to={PAGES.CHALLENGES}>
                   {t('nav_challenges')}
                   <Image
-                    src={newImg}
+                    src={newMark}
                     height='20em'>
                   </Image>
                 </Link>
