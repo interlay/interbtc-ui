@@ -186,7 +186,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                 alt='bitcoin logo'>
               </img>
                                 &nbsp;
-              {amountDOT.toString()} PolkaBTC
+              {amountDOT.toString()} DOT
               <div className='send-price'>
                 {'~ $' + getUsdAmount(amountDOT.toString(), prices.polkadot.usd)}
               </div>
@@ -246,7 +246,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                 alt='bitcoin logo'>
               </img>
                                 &nbsp;
-              {punishmentDOT.toString()} PolkaBTC
+              {punishmentDOT.toString()} DOT
               <div className='send-price'>
                 {'~ $' + getUsdAmount(punishmentDOT.toString(), prices.polkadot.usd)}
               </div>

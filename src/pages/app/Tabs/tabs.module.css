@@ -1,4 +1,10 @@
 
+.app-tabs {
+  background-color: var(--body-color);
+  border-radius: 10px;
+  margin: 0px;
+}
+
 .app-tab {
   padding: 10px;
   font-family: airbnb-cereal-bold;
@@ -26,4 +32,21 @@
 
 .not-active-tab {
   opacity: 0.3;
+}
+
+.horizontal-line {
+  border-top-width: 2px;
+  margin: 0.5rem 0;
+}
+
+.horizontal-line-pink {
+  border-color: var(--d_pink);
+}
+
+.horizontal-line-yellow {
+  border-color: var(--d_yellow);
+}
+
+.horizontal-line-blue {
+  border-color: var(--d_blue);
 }

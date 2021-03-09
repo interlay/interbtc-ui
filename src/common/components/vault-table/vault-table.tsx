@@ -49,7 +49,7 @@ export default function VaultTable(): ReactElement {
     ): string => {
       console.log(status);
       if (status === constants.VAULT_STATUS_THEFT) {
-        return t('vault.theft');
+        return t('dashboard.vault.theft');
       }
       if (status === constants.VAULT_STATUS_LIQUIDATED) {
         return constants.VAULT_STATUS_LIQUIDATED;
@@ -107,7 +107,7 @@ export default function VaultTable(): ReactElement {
                         vault.status &&
                         checkVaultStatus(
                           vault.status.toString(),
-                          unsettledCollateralization,
+                          settledCollateralization,
                           vault.banned_until.toString()
                         ),
           unsettledCollateralization: unsettledCollateralization?.mul(100).toString(),
