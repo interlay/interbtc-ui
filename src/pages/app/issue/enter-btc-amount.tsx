@@ -11,13 +11,13 @@ import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import BigNum from 'bn.js';
-import {
-  PolkaBTC,
-  StatusCode
-} from '@interlay/polkabtc/build/interfaces/default';
+import { PolkaBTC } from '@interlay/polkabtc/build/interfaces/default';
 
 import ButtonMaybePending from 'common/components/pending-button';
-import { StoreType } from 'common/types/util.types';
+import {
+  StoreType,
+  ParachainStatus
+} from 'common/types/util.types';
 import * as constants from '../../../constants';
 import {
   changeIssueStepAction,
@@ -49,7 +49,8 @@ function EnterBTCAmount() {
     address,
     bitcoinHeight,
     btcRelayHeight,
-    prices
+    prices,
+    stateOfBTCParachain
   } = useSelector((state: StoreType) => state.general);
   const [amountBTC, setAmountBTC] = useState('');
   const defaultValues = amountBTC ? { defaultValues: { amountBTC: amountBTC } } : undefined;
@@ -67,25 +68,8 @@ function EnterBTCAmount() {
   const [deposit, setDeposit] = useState('0');
   const [vaults, setVaults] = useState(new Map());
   const [vaultId, setVaultId] = useState('');
-  const [parachainStatus, setParachainStatus] = useState<StatusCode>();
   const dispatch = useDispatch();
   const { t } = useTranslation();
-
-  // TODO: should use a subscription or web socket for real-time update
-  useEffect(() => {
-    if (!polkaBtcLoaded) return;
-
-    (async () => {
-      try {
-        const theParachainStatus = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
-        // TODO: could handle using useForm
-        setParachainStatus(theParachainStatus);
-      } catch (error) {
-        // TODO: should add error handling
-        console.log('[EnterBTCAmount] error => ', error);
-      }
-    })();
-  }, [polkaBtcLoaded]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -202,7 +186,7 @@ function EnterBTCAmount() {
   };
 
   // TODO: should be simpler by loading UX integration
-  const parachainRunning = parachainStatus?.isRunning;
+  const parachainRunning = stateOfBTCParachain === ParachainStatus.Running;
 
   return (
     <form onSubmit={onSubmit}>

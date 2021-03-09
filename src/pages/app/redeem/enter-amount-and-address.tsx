@@ -18,10 +18,7 @@ import {
   satToBTC,
   stripHexPrefix
 } from '@interlay/polkabtc';
-import {
-  PolkaBTC,
-  StatusCode
-} from '@interlay/polkabtc/build/interfaces';
+import { PolkaBTC } from '@interlay/polkabtc/build/interfaces';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
 import Big from 'big.js';
 import BigNum from 'bn.js';
@@ -34,7 +31,10 @@ import {
   addRedeemRequestAction
 } from 'common/actions/redeem.actions';
 import { updateBalancePolkaBTCAction } from 'common/actions/general.actions';
-import { StoreType } from 'common/types/util.types';
+import {
+  StoreType,
+  ParachainStatus
+} from 'common/types/util.types';
 import {
   BALANCE_MAX_INTEGER_LENGTH,
   BTC_ADDRESS_REGEX
@@ -65,9 +65,9 @@ function EnterAmountAndAddress(): ReactElement {
     address,
     bitcoinHeight,
     btcRelayHeight,
-    prices
+    prices,
+    stateOfBTCParachain
   } = useSelector((state: StoreType) => state.general);
-  const [parachainStatus, setParachainStatus] = useState<StatusCode>();
 
   // General redeem
   const [amountPolkaBTC, setAmountPolkaBTC] = useState('');
@@ -86,20 +86,6 @@ function EnterAmountAndAddress(): ReactElement {
   const [maxPremiumRedeem, setMaxPremiumRedeem] = useState(new Big(0));
   const [premiumRedeemVaults, setPremiumRedeemVaults] = useState(new Map() as PremiumRedeemVault);
   const [premiumRedeemFee, setPremiumRedeemFee] = useState(new Big(0));
-
-  // TODO: should integrate at context level
-  useEffect(() => {
-    if (!polkaBtcLoaded) return;
-
-    (async () => {
-      try {
-        const theParachainStatus = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
-        setParachainStatus(theParachainStatus);
-      } catch (error) {
-        console.log('[EnterAmountAndAddress] error => ', error);
-      }
-    })();
-  }, [polkaBtcLoaded]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -245,7 +231,7 @@ function EnterAmountAndAddress(): ReactElement {
     dispatch(togglePremiumRedeemAction(!premiumRedeem));
   };
 
-  const parachainRunning = parachainStatus?.isRunning;
+  const parachainRunning = stateOfBTCParachain === ParachainStatus.Running;
 
   return (
     <form
