@@ -449,6 +449,8 @@
     "block_count": "Blocks Submitted",
     "lifetime_sla": "Lifetime SLA Score",
     "more_info": "More info",
+    "all_time": "All-time",
+    "challenge": "Challenge",
     "challenges": {
       "treasure_hunt": "Challenge 1: Treasure Hunt",
       "treasure_hunt_desc": "Issue & redeem to claim reward.",
