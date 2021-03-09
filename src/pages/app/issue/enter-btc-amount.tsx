@@ -11,7 +11,10 @@ import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import BigNum from 'bn.js';
-import { PolkaBTC } from '@interlay/polkabtc/build/interfaces/default';
+import {
+  PolkaBTC,
+  StatusCode
+} from '@interlay/polkabtc/build/interfaces/default';
 
 import ButtonMaybePending from 'common/components/pending-button';
 import { StoreType } from 'common/types/util.types';
@@ -64,8 +67,25 @@ function EnterBTCAmount() {
   const [deposit, setDeposit] = useState('0');
   const [vaults, setVaults] = useState(new Map());
   const [vaultId, setVaultId] = useState('');
+  const [parachainStatus, setParachainStatus] = useState<StatusCode>();
   const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  // TODO: should use a subscription or web socket for real-time update
+  useEffect(() => {
+    if (!polkaBtcLoaded) return;
+
+    (async () => {
+      try {
+        const theParachainStatus = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
+        // TODO: could handle using useForm
+        setParachainStatus(theParachainStatus);
+      } catch (error) {
+        // TODO: should add error handling
+        console.log('[EnterBTCAmount] error => ', error);
+      }
+    })();
+  }, [polkaBtcLoaded]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -181,6 +201,8 @@ function EnterBTCAmount() {
     return undefined;
   };
 
+  const isParachainRunning = parachainStatus?.isRunning;
+
   return (
     <form onSubmit={onSubmit}>
       <div className='row'>
@@ -211,6 +233,21 @@ function EnterBTCAmount() {
       {errors.amountBTC && (
         <div className='wizard-input-error'>
           {errors.amountBTC.type === 'required' ? t('issue_page.enter_valid_amount') : errors.amountBTC.message}
+        </div>
+      )}
+      {!isParachainRunning && (
+        // TODO: should avoid hard-coding styles and componentize properly
+        <div className='wizard-input-error'>
+          <p
+            style={{
+              fontSize: '20px',
+              marginBottom: 4
+            }}>
+            {t('issue_redeem_disabled')}
+          </p>
+          <p style={{ fontSize: '16px' }}>
+            {t('polkabtc_bridge_recovery_mode')}
+          </p>
         </div>
       )}
       <div className='row justify-content-center'>
@@ -289,6 +326,7 @@ function EnterBTCAmount() {
       </div>
       <ButtonMaybePending
         className='btn green-button app-btn'
+        disabled={!isParachainRunning}
         isPending={isRequestPending}
         onClick={onSubmit}>
         {t('confirm')}

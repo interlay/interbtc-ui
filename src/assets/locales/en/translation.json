@@ -109,6 +109,8 @@
   "blockstream": "Blockstream",
   "insufficient_funds_dot": "Insufficient funds to pay for DOT fees.",
   "insufficient_funds": "Insufficient balance to transfer.",
+  "issue_redeem_disabled": "Issue and Redeem is currently disabled.",
+  "polkabtc_bridge_recovery_mode": "The PolkaBTC bridge has entered recovery mode. User funds are safe. Please try again later or check the status on the Dashboard page.",
   "redeem_page": {
     "burn": "Burn",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
