@@ -1,45 +1,75 @@
-import { useState, useEffect, ReactElement } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+
+import {
+  useState,
+  useEffect,
+  ReactElement
+} from 'react';
+import {
+  useSelector,
+  useDispatch
+} from 'react-redux';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import Toggle from 'react-toggle';
+import 'react-toggle/style.css';
+import { useTranslation } from 'react-i18next';
+import {
+  btcToSat,
+  satToBTC,
+  stripHexPrefix
+} from '@interlay/polkabtc';
+import { PolkaBTC } from '@interlay/polkabtc/build/interfaces';
+import { AccountId } from '@polkadot/types/interfaces/runtime';
+import Big from 'big.js';
+import BN from 'bn.js';
+
+import ButtonMaybePending from 'common/components/pending-button';
 import {
   changeRedeemStepAction,
   changeRedeemIdAction,
   togglePremiumRedeemAction,
   addRedeemRequestAction
-} from '../../../common/actions/redeem.actions';
-import { toast } from 'react-toastify';
-import { StoreType } from '../../../common/types/util.types';
-import ButtonMaybePending from '../../../common/components/pending-button';
-import { btcToSat, satToBTC, stripHexPrefix } from '@interlay/polkabtc';
-import { BALANCE_MAX_INTEGER_LENGTH, BTC_ADDRESS_REGEX } from '../../../constants';
-import { useTranslation } from 'react-i18next';
-import BitcoinLogo from '../../../assets/img/small-bitcoin-logo.png';
-import PolkadotLogo from '../../../assets/img/small-polkadot-logo.png';
-import Big from 'big.js';
-import { updateBalancePolkaBTCAction } from '../../../common/actions/general.actions';
-import { displayBtcAmount, getUsdAmount, parachainToUIRedeemRequest } from '../../../common/utils/utils';
-import { PolkaBTC } from '@interlay/polkabtc/build/interfaces';
-import { AccountId } from '@polkadot/types/interfaces/runtime';
+} from 'common/actions/redeem.actions';
+import { updateBalancePolkaBTCAction } from 'common/actions/general.actions';
+import {
+  StoreType,
+  ParachainStatus
+} from 'common/types/util.types';
+import {
+  BALANCE_MAX_INTEGER_LENGTH,
+  BTC_ADDRESS_REGEX
+} from '../../../constants';
 import * as constants from '../../../constants';
-import BN from 'bn.js';
-import Toggle from 'react-toggle';
-import 'react-toggle/style.css';
+import {
+  displayBtcAmount,
+  getUsdAmount,
+  parachainToUIRedeemRequest
+} from 'common/utils/utils';
+import bitcoinLogo from 'assets/img/small-bitcoin-logo.png';
+import polkadotLogo from 'assets/img/small-polkadot-logo.png';
 
 type AmountAndAddressForm = {
   amountPolkaBTC: string;
   btcAddress: string;
-};
+}
 
 type PremiumRedeemVault = Map<AccountId, PolkaBTC>;
 
-export default function EnterAmountAndAddress(): ReactElement {
+function EnterAmountAndAddress(): ReactElement {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
-  const { balancePolkaBTC, polkaBtcLoaded, address, bitcoinHeight, btcRelayHeight, prices } = useSelector(
-    (state: StoreType) => state.general
-  );
-    // general redeem
+  const {
+    balancePolkaBTC,
+    polkaBtcLoaded,
+    address,
+    bitcoinHeight,
+    btcRelayHeight,
+    prices,
+    stateOfBTCParachain
+  } = useSelector((state: StoreType) => state.general);
+
+  // General redeem
   const [amountPolkaBTC, setAmountPolkaBTC] = useState('');
   const premiumRedeem = useSelector((state: StoreType) => state.redeem.premiumRedeem);
   const defaultValues = amountPolkaBTC ?
@@ -51,7 +81,7 @@ export default function EnterAmountAndAddress(): ReactElement {
   const [usdAmount, setUsdAmount] = useState('');
   const [redeemFee, setRedeemFee] = useState('0');
 
-  // premium redeem
+  // Premium redeem
   const [btcToDotRate, setBtcToDotRate] = useState(new Big(0));
   const [maxPremiumRedeem, setMaxPremiumRedeem] = useState(new Big(0));
   const [premiumRedeemVaults, setPremiumRedeemVaults] = useState(new Map() as PremiumRedeemVault);
@@ -69,7 +99,7 @@ export default function EnterAmountAndAddress(): ReactElement {
         console.log(error);
       }
 
-      // check if vaults below the premium redeem limit are in the system
+      // Check if vaults below the premium redeem limit are in the system
       try {
         const premiumRedeemVaults = await window.polkaBTC.vaults.getPremiumRedeemVaults();
         setPremiumRedeemVaults(premiumRedeemVaults);
@@ -86,14 +116,21 @@ export default function EnterAmountAndAddress(): ReactElement {
     };
     setUsdAmount(getUsdAmount(amountPolkaBTC || getValues('amountPolkaBTC') || '0', usdPrice));
     fetchData();
-  }, [polkaBtcLoaded, getValues, usdPrice, amountPolkaBTC]);
+  }, [
+    polkaBtcLoaded,
+    getValues,
+    usdPrice,
+    amountPolkaBTC
+  ]);
 
   const onSubmit = handleSubmit(async ({ amountPolkaBTC, btcAddress }) => {
     if (!polkaBtcLoaded) return;
+
     if (!address) {
       toast.warning(t('issue_page.must_select_account_warning'));
       return;
     }
+
     if (bitcoinHeight - btcRelayHeight > constants.BLOCKS_BEHIND_LIMIT) {
       toast.error(t('issue_page.error_more_than_6_blocks_behind'));
       return;
@@ -111,10 +148,10 @@ export default function EnterAmountAndAddress(): ReactElement {
       }
       const amountAsSatoshi = window.polkaBTC.api.createType('Balance', amountPolkaSAT);
 
-      // differentiate between premium and regular redeem
+      // Differentiate between premium and regular redeem
       let vaultId;
       if (premiumRedeem) {
-        // select a vault from the premium redeem vault list
+        // Select a vault from the premium redeem vault list
         for (const [id, redeemableTokens] of premiumRedeemVaults) {
           const redeemable = redeemableTokens.toBn();
           if (redeemable.gte(new BN(amountPolkaSAT))) {
@@ -128,7 +165,7 @@ export default function EnterAmountAndAddress(): ReactElement {
           );
         }
       } else {
-        // select a random vault
+        // Select a random vault
         // TODO: use a list of vaults directly from the parachain
         vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountAsSatoshi);
       }
@@ -136,13 +173,13 @@ export default function EnterAmountAndAddress(): ReactElement {
       const vaultAccountId = window.polkaBTC.api.createType('AccountId', vaultId.toString());
       const requestResult = await window.polkaBTC.redeem.request(amount, btcAddress, vaultAccountId);
 
-      // get the redeem id from the request redeem event
+      // Get the redeem id from the request redeem event
       const id = stripHexPrefix(requestResult.id.toString());
       dispatch(changeRedeemIdAction(id));
 
       const redeemRequest = await parachainToUIRedeemRequest(requestResult.id);
 
-      // update the redeem status
+      // Update the redeem status
       dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(amountPolkaBTC)).toString()));
       dispatch(addRedeemRequestAction(redeemRequest));
       dispatch(changeRedeemStepAction('REDEEM_INFO'));
@@ -194,12 +231,14 @@ export default function EnterAmountAndAddress(): ReactElement {
     dispatch(togglePremiumRedeemAction(!premiumRedeem));
   };
 
+  const parachainRunning = stateOfBTCParachain === ParachainStatus.Running;
+
   return (
     <form
       className='enter-amount-and-address'
       onSubmit={onSubmit}>
       <div className='row'>
-        <div className='col-12 wizard-header-text font-yellow'>{t('redeem_page.you_will_recieve')}</div>
+        <div className='col-12 wizard-header-text font-yellow'>{t('redeem_page.you_will_receive')}</div>
       </div>
       <div className='row'>
         <div className='col-6'>
@@ -233,6 +272,20 @@ export default function EnterAmountAndAddress(): ReactElement {
             errors.amountPolkaBTC.message}
         </div>
       )}
+      {!parachainRunning && (
+        <div className='wizard-input-error'>
+          <p
+            style={{
+              fontSize: '20px',
+              marginBottom: 4
+            }}>
+            {t('issue_redeem_disabled')}
+          </p>
+          <p style={{ fontSize: '16px' }}>
+            {t('polkabtc_bridge_recovery_mode')}
+          </p>
+        </div>
+      )}
       <div className='row'>
         <div className='col-12'>
           <p className='form-heading'>BTC destination address</p>
@@ -261,7 +314,7 @@ export default function EnterAmountAndAddress(): ReactElement {
       )}
       {premiumRedeemVaults.size > 0 && (
         <div className='row justify-content-center'>
-          <div className='col-9 prmium-toggler'>
+          <div className='col-9 premium-toggler'>
             <div className='premium-text'>
               {t('redeem_page.premium_redeem')} &nbsp;<i className='fas fa-exclamation-circle'></i>
             </div>
@@ -282,7 +335,7 @@ export default function EnterAmountAndAddress(): ReactElement {
               <div className='col fee-number'>
                 <div>
                   <img
-                    src={BitcoinLogo}
+                    src={bitcoinLogo}
                     width='23px'
                     height='23px'
                     alt='bitcoin logo'>
@@ -320,7 +373,7 @@ export default function EnterAmountAndAddress(): ReactElement {
               <div className='col-6 text-left total-added-value'>{t('you_will_receive')}</div>
               <div className='col-6'>
                 <img
-                  src={BitcoinLogo}
+                  src={bitcoinLogo}
                   width='23px'
                   height='23px'
                   alt='bitcoin logo'>
@@ -336,7 +389,7 @@ export default function EnterAmountAndAddress(): ReactElement {
                 <div className='col-6 text-left green-text'>{t('redeem_page.earned_premium')}</div>
                 <div className='col-6'>
                   <img
-                    src={PolkadotLogo}
+                    src={polkadotLogo}
                     width='23px'
                     height='23px'
                     alt='polkadot logo'>
@@ -351,10 +404,10 @@ export default function EnterAmountAndAddress(): ReactElement {
           </div>
         </div>
       </div>
-
       <ButtonMaybePending
         type='submit'
         className='btn green-button app-btn'
+        disabled={!parachainRunning}
         isPending={isRequestPending}
         onClick={checkAddress}>
         {t('confirm')}
@@ -362,3 +415,5 @@ export default function EnterAmountAndAddress(): ReactElement {
     </form>
   );
 }
+
+export default EnterAmountAndAddress;

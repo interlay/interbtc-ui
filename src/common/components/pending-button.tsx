@@ -2,20 +2,21 @@ import React from 'react';
 import { Button, ButtonProps } from 'react-bootstrap';
 import { FaHourglass } from 'react-icons/fa';
 
-export default class ButtonMaybePending extends React.Component<
-  ButtonProps & {
-    isPending?: boolean;
-  }
-> {
-  render() {
-    const attributes = { ...this.props };
-    delete attributes.isPending;
-    return (
-      <Button
-        disabled={this.props.isPending || this.props.disabled}
-        {...attributes}>
-        {(this.props.isPending && <FaHourglass></FaHourglass>) || this.props.children}
-      </Button>
-    );
-  }
+interface Props {
+  isPending?: boolean;
 }
+
+const ButtonMaybePending = ({
+  isPending,
+  disabled,
+  children,
+  ...rest
+}: Props & ButtonProps) => (
+  <Button
+    disabled={isPending || disabled}
+    {...rest}>
+    {(isPending && <FaHourglass />) || children}
+  </Button>
+);
+
+export default ButtonMaybePending;

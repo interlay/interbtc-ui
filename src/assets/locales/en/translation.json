@@ -109,6 +109,8 @@
   "blockstream": "Blockstream",
   "insufficient_funds_dot": "Insufficient funds to pay for DOT fees.",
   "insufficient_funds": "Insufficient balance to transfer.",
+  "issue_redeem_disabled": "Issue and Redeem is currently disabled.",
+  "polkabtc_bridge_recovery_mode": "The PolkaBTC bridge has entered recovery mode. User funds are safe. Please try again later or check the status on the Dashboard page.",
   "redeem_page": {
     "burn": "Burn",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
@@ -120,7 +122,7 @@
     "as_compensation_instead": " (~${{compensationPrice}}) as compensation instead.",
     "view_progress": "View progress",
     "btc_destination_address": "BTC destination address",
-    "you_will_recieve": "Redeem PolkaBTC 1:1 for BTC",
+    "you_will_receive": "Redeem PolkaBTC 1:1 for BTC",
     "must_select_account_warning": "No account selected. Please select an account to redeem.",
     "waiting_for": "Waiting for",
     "typically_takes": "This typically takes only a few minutes but may sometimes take up to 6 hours.",
