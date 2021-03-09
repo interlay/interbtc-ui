@@ -215,11 +215,13 @@ function Challenges(): ReactElement {
           <PageTitle
             mainTitle={t('leaderboard.title')}
             subTitle={<TimerIncrement />} />
+          {/* TODO: should use a tailwindcss Tabs component */}
           <Tabs>
             <Tab
               eventKey='vaults'
               title={t('leaderboard.vault_scores')}>
               <ChallengeSelector {...{ challengeIdx, setChallengeIdx, t }} />
+              {/* TODO: should use a good table package */}
               <div style={{ margin: '40px 0px' }}>
                 <DashboardTable
                   pageData={vaultRows}
