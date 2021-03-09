@@ -13,6 +13,7 @@ import { reverseEndiannessHex, stripHexPrefix } from '@interlay/polkabtc';
 import { BlockColumns } from '@interlay/polkabtc-stats';
 import TimerIncrement from '../../../common/components/timer-increment';
 import MainContainer from 'parts/MainContainer';
+import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard.page.scss';
 import '../dashboard-subpage.scss';
@@ -72,16 +73,12 @@ export default function RelayDashboard(): ReactElement {
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <div>
-            <div className='title-container'>
-              <h1 className='title-text'>{t('dashboard.relay.btcrelay')}</h1>
-              <p className='latest-block-text'>
-                <TimerIncrement></TimerIncrement>
-              </p>
-              <div
-                style={{ backgroundColor: getAccents('d_yellow').color }}
-                className='title-line'>
-              </div>
-            </div>
+            <PageTitle
+              mainTitle={t('dashboard.relay.btcrelay')}
+              subTitle={<TimerIncrement />} />
+            <div
+              style={{ backgroundColor: getAccents('d_yellow').color }}
+              className='title-line' />
             <div className='dashboard-graphs-container'>
               <div className='relay-grid-container'>
                 <BtcRelay displayBlockstreamData={true} />

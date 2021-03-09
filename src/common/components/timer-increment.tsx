@@ -12,5 +12,5 @@ export default function TimerIncrement(): ReactElement {
     }, 1000);
   }, []);
 
-  return <div>{formatTime(timer)}</div>;
+  return <>{formatTime(timer)}</>;
 }

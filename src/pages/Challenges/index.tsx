@@ -22,6 +22,7 @@ import {
 } from '@interlay/polkabtc-stats';
 
 import MainContainer from 'parts/MainContainer';
+import PageTitle from 'parts/PageTitle';
 import InterlayImage from 'components/InterlayImage';
 import InterlayLink from 'components/InterlayLink';
 import CardList, {
@@ -30,13 +31,13 @@ import CardList, {
   CardBody
 } from 'components/CardList';
 import { POLKA_BTC_DOC_TREASURE_HUNT } from 'config/links';
-import newMark from 'assets/img/icons/new-mark.png';
 import DashboardTable from 'common/components/dashboard-table/dashboard-table';
 import TimerIncrement from 'common/components/timer-increment';
 import { CHALLENGE_1_START } from '../../constants'; // relative path due to conflict
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { StoreType } from 'common/types/util.types';
 // TODO: should use an SVG
+import newMark from 'assets/img/icons/new-mark.png';
 import 'pages/dashboard/dashboard-subpage.scss';
 import './challenges.scss';
 
@@ -185,13 +186,7 @@ function Challenges(): ReactElement {
     <MainContainer>
       <div className='dashboard-container dashboard-fade-in-animation dashboard-min-height'>
         <div className='dashboard-wrapper'>
-          {/* ray test touch < */}
-          <div className='title-container'>
-            <div className='title-text-container'>
-              <h1 className='title-text'>{t('leaderboard.challenges_title')}</h1>
-            </div>
-          </div>
-          {/* ray test touch > */}
+          <PageTitle mainTitle={t('leaderboard.challenges_title')} />
           <CardList>
             {CHALLENGE_ITEMS.map(cardItem => (
               <Card key={cardItem.title}>
@@ -216,14 +211,9 @@ function Challenges(): ReactElement {
               </Card>
             ))}
           </CardList>
-          <div className='title-container'>
-            <div className='title-text-container'>
-              <h1 className='title-text'>{t('leaderboard.title')}</h1>
-              <p className='latest-block-text'>
-                <TimerIncrement />
-              </p>
-            </div>
-          </div>
+          <PageTitle
+            mainTitle={t('leaderboard.title')}
+            subTitle={<TimerIncrement />} />
           <Tabs>
             <Tab
               eventKey='vaults'

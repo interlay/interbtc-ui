@@ -6,6 +6,7 @@ import OracleTable from '../../../common/components/oracle-table/oracle-table';
 import { getAccents } from '../dashboard-colors';
 import TimerIncrement from '../../../common/components/timer-increment';
 import MainContainer from 'parts/MainContainer';
+import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard.page.scss';
 import '../dashboard-subpage.scss';
@@ -18,17 +19,12 @@ export default function OraclesDashboard(): ReactElement {
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <div>
-            <div className='title-container'>
-              <h1 className='title-text'>{t('dashboard.oracles.oracles')}</h1>
-              <p className='latest-block-text'>
-                <TimerIncrement></TimerIncrement>
-              </p>
-              <div
-                style={{ backgroundColor: getAccents('d_blue').color }}
-                className='title-line'>
-              </div>
-            </div>
-
+            <PageTitle
+              mainTitle={t('dashboard.oracles.oracles')}
+              subTitle={<TimerIncrement />} />
+            <div
+              style={{ backgroundColor: getAccents('d_blue').color }}
+              className='title-line' />
             <div className='dashboard-graphs-container'>
               <OracleStatus />
             </div>

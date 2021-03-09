@@ -96,7 +96,7 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
               id='relay-circle-text'>
               {graphText}
             </h1>
-            <p className='latest-block-text'>
+            <p>
               {t('dashboard.relay.block_number', { number: btcRelayHeight })}
             </p>
           </div>
@@ -131,7 +131,7 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
                 id='relay-circle-text'>
                 {t('blockstream')}
               </h1>
-              <p className='latest-block-text'>
+              <p>
                 {t('dashboard.relay.block_number', { number: bitcoinHeight })}
               </p>
             </div>

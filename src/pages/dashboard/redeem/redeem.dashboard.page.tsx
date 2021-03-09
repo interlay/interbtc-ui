@@ -17,6 +17,7 @@ import LineChartComponent from '../components/line-chart-component';
 import { BtcNetworkName, RedeemColumns } from '@interlay/polkabtc-stats';
 import TimerIncrement from '../../../common/components/timer-increment';
 import MainContainer from 'parts/MainContainer';
+import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard.page.scss';
 import '../dashboard-subpage.scss';
@@ -151,16 +152,12 @@ export default function RedeemDashboard(): ReactElement {
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <div>
-            <div className='title-container'>
-              <h1 className='title-text'>{t('dashboard.redeem.redeem')}</h1>
-              <p className='latest-block-text'>
-                <TimerIncrement></TimerIncrement>
-              </p>
-              <div
-                style={{ backgroundColor: getAccents('d_pink').color }}
-                className='title-line'>
-              </div>
-            </div>
+            <PageTitle
+              mainTitle={t('dashboard.redeem.redeem')}
+              subTitle={<TimerIncrement />} />
+            <div
+              style={{ backgroundColor: getAccents('d_pink').color }}
+              className='title-line' />
             <div className='table-top-data-container'>
               <div className='values-container redeem-page'>
                 <div>

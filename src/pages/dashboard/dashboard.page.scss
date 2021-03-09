@@ -127,10 +127,7 @@
 .section-bottom-gap {
     margin-bottom: 40px;
 }
-.latest-block-text {
-    font-size: 11px;
-    font-family: airbnb-cereal-bold;
-}
+
 .bold-font {
     font-family: "airbnb-cereal-bold";
 }
@@ -152,10 +149,6 @@
     .row-grid {
         grid-template-columns: 1fr 1fr 1fr;
         column-gap: 40px;
-    }
-
-    .title-text {
-        font-size: 30px;
     }
 
     .card {
@@ -194,10 +187,7 @@
         max-width: 1700px;
         width: 90%;
     }
-    .latest-block-text {
-        font-size: 12px;
-        font-family: airbnb-cereal-bold;
-    }
+
     .section-top-gap {
         margin-top: 40px;
     }

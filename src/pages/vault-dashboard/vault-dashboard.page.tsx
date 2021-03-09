@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 import { safeRoundTwoDecimals } from '../../common/utils/utils';
 import TimerIncrement from '../../common/components/timer-increment';
 import MainContainer from 'parts/MainContainer';
+import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard/dashboard-subpage.scss';
 
@@ -108,13 +109,9 @@ export default function VaultDashboardPage(): ReactElement {
     <MainContainer className='vault-dashboard-page'>
       <div className='vault-container dashboard-fade-in-animation dashboard-min-height'>
         <div className='stacked-wrapper'>
-          <div className='title-text-container'>
-            <h1 className='title-text'>{t('vault.vault_dashboard')}</h1>
-            {accountId}
-            <p className='latest-block-text'>
-              <TimerIncrement></TimerIncrement>
-            </p>
-          </div>
+          <PageTitle
+            mainTitle={t('vault.vault_dashboard')}
+            subTitle={<TimerIncrement />} />
         </div>
         {vaultId === accountId && (
           <React.Fragment>

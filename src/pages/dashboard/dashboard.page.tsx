@@ -2,6 +2,7 @@ import { ReactElement } from 'react';
 import TimerIncrement from '../../common/components/timer-increment';
 import { useTranslation } from 'react-i18next';
 import MainContainer from 'parts/MainContainer';
+import PageTitle from 'parts/PageTitle';
 
 import './dashboard.page.scss';
 import Row1 from './rows/row1';
@@ -13,14 +14,9 @@ export default function DashboardPage(): ReactElement {
 
   return (
     <MainContainer>
-      <div className='title-container'>
-        <div className='title-text-container'>
-          <h1 className='title-text'>{t('dashboard.dashboard')}</h1>
-          <p className='latest-block-text'>
-            <TimerIncrement></TimerIncrement>
-          </p>
-        </div>
-      </div>
+      <PageTitle
+        mainTitle={t('dashboard.dashboard')}
+        subTitle={<TimerIncrement />} />
       <div className='dashboard-items-container'>
         <div className='rows-container'>
           <Row1 />

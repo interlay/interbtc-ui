@@ -17,6 +17,7 @@ import { BtcNetworkName, IssueColumns } from '@interlay/polkabtc-stats';
 import TimerIncrement from '../../../common/components/timer-increment';
 import LineChartComponent from '../components/line-chart-component';
 import MainContainer from 'parts/MainContainer';
+import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard.page.scss';
 import '../dashboard-subpage.scss';
@@ -139,16 +140,13 @@ export default function IssueDashboard(): ReactElement {
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <div>
-            <div className='title-container'>
-              <h1 className='title-text'>{t('issue_page.issue_requests')}</h1>
-              <p className='latest-block-text'>
-                <TimerIncrement></TimerIncrement>
-              </p>
-              <div
-                style={{ backgroundColor: getAccents('d_yellow').color }}
-                className='title-line'>
-              </div>
-            </div>
+            <PageTitle
+              mainTitle={t('issue_page.issue_requests')}
+              subTitle={<TimerIncrement />} />
+            {/* TODO: should use hr or pseudo element */}
+            <div
+              style={{ backgroundColor: getAccents('d_yellow').color }}
+              className='title-line' />
             <div className='table-top-data-container'>
               <div className='values-container'>
                 <div>

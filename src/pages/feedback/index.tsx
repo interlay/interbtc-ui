@@ -6,6 +6,7 @@ import {
 } from 'react-icons/fa';
 
 import MainContainer from 'parts/MainContainer';
+import PageTitle from 'parts/PageTitle';
 import InterlayLink from 'components/InterlayLink';
 import CardList, { Card } from 'components/CardList';
 import {
@@ -15,7 +16,6 @@ import {
   POLKA_BTC_UI_GITHUB_ISSUES,
   INTERLAY_DISCORD
 } from 'config/links';
-import styles from './feedback.module.css';
 
 const FEEDBACK_ITEMS = [
   {
@@ -49,8 +49,7 @@ const Feedback = () => (
   <>
     {/* TODO: should use footer layout pattern */}
     <MainContainer>
-      {/* TODO: should create a component */}
-      <h1 className={styles['title']}>Feedback</h1>
+      <PageTitle mainTitle='Feedback' />
       <CardList>
         {FEEDBACK_ITEMS.map(feedbackType => (
           <Card key={feedbackType.title}>
