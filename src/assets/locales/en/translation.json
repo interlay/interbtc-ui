@@ -122,7 +122,7 @@
     "as_compensation_instead": " (~${{compensationPrice}}) as compensation instead.",
     "view_progress": "View progress",
     "btc_destination_address": "BTC destination address",
-    "you_will_recieve": "Redeem PolkaBTC 1:1 for BTC",
+    "you_will_receive": "Redeem PolkaBTC 1:1 for BTC",
     "must_select_account_warning": "No account selected. Please select an account to redeem.",
     "waiting_for": "Waiting for",
     "typically_takes": "This typically takes only a few minutes but may sometimes take up to 6 hours.",
