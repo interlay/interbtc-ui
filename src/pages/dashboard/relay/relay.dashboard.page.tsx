@@ -84,9 +84,15 @@ export default function RelayDashboard(): ReactElement {
                 <BtcRelay displayBlockstreamData={true} />
               </div>
             </div>
-            <div className='dashboard-table-container'>
+            <div style={{ margin: '40px 0px' }}>
               <div>
-                <p className='table-heading'>{t('dashboard.relay.blocks')}</p>
+                <p
+                  style={{
+                    fontFamily: 'airbnb-cereal-bold',
+                    fontSize: '26px'
+                  }}>
+                  {t('dashboard.relay.blocks')}
+                </p>
               </div>
               <DashboardTable
                 richTable={true}

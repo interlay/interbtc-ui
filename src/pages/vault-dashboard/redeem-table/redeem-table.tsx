@@ -50,9 +50,15 @@ export default function RedeemTable(): ReactElement {
   };
 
   return (
-    <div className='dashboard-table-container'>
+    <div style={{ margin: '40px 0px' }}>
       <div>
-        <p className='table-heading'>{t('redeem_requests')}</p>
+        <p
+          style={{
+            fontFamily: 'airbnb-cereal-bold',
+            fontSize: '26px'
+          }}>
+          {t('redeem_requests')}
+        </p>
       </div>
       {redeems && redeems.length > 0 ? (
         <React.Fragment>

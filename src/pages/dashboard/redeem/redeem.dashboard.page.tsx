@@ -217,9 +217,15 @@ export default function RedeemDashboard(): ReactElement {
                 </div>
               </div>
             </div>
-            <div className='dashboard-table-container'>
+            <div style={{ margin: '40px 0px' }}>
               <div>
-                <p className='table-heading'>{t('issue_page.recent_requests')}</p>
+                <p
+                  style={{
+                    fontFamily: 'airbnb-cereal-bold',
+                    fontSize: '26px'
+                  }}>
+                  {t('issue_page.recent_requests')}
+                </p>
               </div>
               <DashboardTable
                 richTable={true}

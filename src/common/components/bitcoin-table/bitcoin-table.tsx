@@ -112,9 +112,15 @@ export default function BitcoinTable(): ReactElement {
   };
 
   return (
-    <div className='dashboard-table-container'>
+    <div style={{ margin: '40px 0px' }}>
       <div>
-        <p className='table-heading'>{t('dashboard.relay.btcrelay')}</p>
+        <p
+          style={{
+            fontFamily: 'airbnb-cereal-bold',
+            fontSize: '26px'
+          }}>
+          {t('dashboard.relay.btcrelay')}
+        </p>
         <div className='header'>
           {t('status_colon')} &nbsp; <div className={getCircle(relayStatus)}></div> &nbsp; {relayStatus}
         </div>

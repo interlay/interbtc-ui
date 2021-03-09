@@ -1,3 +1,4 @@
+
 import {
   useState,
   useEffect,
@@ -219,7 +220,7 @@ function Challenges(): ReactElement {
               eventKey='vaults'
               title={t('leaderboard.vault_scores')}>
               <ChallengeSelector {...{ challengeIdx, setChallengeIdx, t }} />
-              <div className='dashboard-table-container'>
+              <div style={{ margin: '40px 0px' }}>
                 <DashboardTable
                   pageData={vaultRows}
                   headings={vaultTableHeadings}
@@ -231,7 +232,7 @@ function Challenges(): ReactElement {
               eventKey='relayers'
               title={t('leaderboard.relayer_scores')}>
               <ChallengeSelector {...{ challengeIdx, setChallengeIdx, t }} />
-              <div className='dashboard-table-container'>
+              <div style={{ margin: '40px 0px' }}>
                 <DashboardTable
                   pageData={relayerRows}
                   headings={relayerTableHeadings}

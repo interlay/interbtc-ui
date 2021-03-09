@@ -219,9 +219,15 @@ export default function VaultTable(): ReactElement {
   }, [auctionCollateralThreshold, secureCollateralThreshold, t]);
 
   return (
-    <div className='dashboard-table-container'>
+    <div style={{ margin: '40px 0px' }}>
       <div>
-        <p className='table-heading'>{t('dashboard.vault.active_vaults')}</p>
+        <p
+          style={{
+            fontFamily: 'airbnb-cereal-bold',
+            fontSize: '26px'
+          }}>
+          {t('dashboard.vault.active_vaults')}
+        </p>
       </div>
       <DashboardTable
         pageData={vaults.map(vault => ({ ...vault, id: vault.vaultId }))}
