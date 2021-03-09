@@ -1,40 +1,61 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { StoreType } from '../../../common/types/util.types';
-import BitcoinLogo from '../../../assets/img/small-bitcoin-logo.png';
-import PolkadotLogo from '../../../assets/img/small-polkadot-logo.png';
-import * as constants from '../../../constants';
-import { PolkaBTC } from '@interlay/polkabtc/build/interfaces/default';
-import BN from 'bn.js';
 
+import {
+  useState,
+  useEffect
+} from 'react';
+import {
+  useDispatch,
+  useSelector
+} from 'react-redux';
+import { toast } from 'react-toastify';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import BigNum from 'bn.js';
+import { PolkaBTC } from '@interlay/polkabtc/build/interfaces/default';
+
+import ButtonMaybePending from 'common/components/pending-button';
+import { StoreType } from 'common/types/util.types';
+import * as constants from '../../../constants';
 import {
   changeIssueStepAction,
   changeIssueIdAction,
   addIssueRequestAction
-} from '../../../common/actions/issue.actions';
-import { toast } from 'react-toastify';
-import { useForm } from 'react-hook-form';
-import ButtonMaybePending from '../../../common/components/pending-button';
-import { btcToSat, satToBTC, planckToDOT, stripHexPrefix } from '@interlay/polkabtc';
-import { useTranslation } from 'react-i18next';
+} from 'common/actions/issue.actions';
+import {
+  btcToSat,
+  satToBTC,
+  planckToDOT,
+  stripHexPrefix
+} from '@interlay/polkabtc';
 import {
   displayBtcAmount,
   getRandomVaultIdWithCapacity,
   getUsdAmount,
   parachainToUIIssueRequest
-} from '../../../common/utils/utils';
+} from 'common/utils/utils';
+import bitcoinLogo from 'assets/img/small-bitcoin-logo.png';
+import polkadotLogo from 'assets/img/small-polkadot-logo.png';
 
 type EnterBTCForm = {
   amountBTC: string;
-};
+}
 
-export default function EnterBTCAmount() {
-  const { polkaBtcLoaded, address, bitcoinHeight, btcRelayHeight, prices } = useSelector(
-    (state: StoreType) => state.general
-  );
+function EnterBTCAmount() {
+  const {
+    polkaBtcLoaded,
+    address,
+    bitcoinHeight,
+    btcRelayHeight,
+    prices
+  } = useSelector((state: StoreType) => state.general);
   const [amountBTC, setAmountBTC] = useState('');
   const defaultValues = amountBTC ? { defaultValues: { amountBTC: amountBTC } } : undefined;
-  const { register, handleSubmit, errors, getValues } = useForm<EnterBTCForm>(defaultValues);
+  const {
+    register,
+    handleSubmit,
+    errors,
+    getValues
+  } = useForm<EnterBTCForm>(defaultValues);
   const [isRequestPending, setRequestPending] = useState(false);
   const [dustValue, setDustValue] = useState('0');
   const [usdAmount, setUsdAmount] = useState('');
@@ -54,7 +75,7 @@ export default function EnterBTCAmount() {
         const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
         const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
         const vaultsMap = await window.polkaBTC.vaults.getVaultsWithIssuableTokens();
-        let maxVaultAmount = new BN(0);
+        let maxVaultAmount = new BigNum(0);
         for (const issuableTokens of vaultsMap.values()) {
           maxVaultAmount = issuableTokens.toBn();
           break;
@@ -68,18 +89,27 @@ export default function EnterBTCAmount() {
     };
     setUsdAmount(getUsdAmount(amountBTC || getValues('amountBTC') || '0', prices.bitcoin.usd));
     fetchData();
-  }, [polkaBtcLoaded, setUsdAmount, amountBTC, prices.bitcoin.usd, getValues]);
+  }, [
+    polkaBtcLoaded,
+    setUsdAmount,
+    amountBTC,
+    prices.bitcoin.usd,
+    getValues
+  ]);
 
   const onSubmit = handleSubmit(async ({ amountBTC }) => {
     if (!polkaBtcLoaded || !vaultId) return;
+
     if (!address) {
       toast.warning(t('issue_page.must_select_account_warning'));
       return;
     }
+
     if (bitcoinHeight - btcRelayHeight > constants.BLOCKS_BEHIND_LIMIT) {
       toast.error(t('issue_page.error_more_than_6_blocks_behind'));
       return;
     }
+
     setRequestPending(true);
     try {
       const amountSAT = btcToSat(amountBTC);
@@ -120,7 +150,7 @@ export default function EnterBTCAmount() {
       setFee(fee);
 
       const amountSAT = btcToSat(value);
-      const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), new BN(amountSAT));
+      const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), new BigNum(amountSAT));
       if (vaultId) {
         const vaultAccountId = window.polkaBTC.api.createType('AccountId', vaultId);
         setVaultId(vaultAccountId.toString());
@@ -191,7 +221,7 @@ export default function EnterBTCAmount() {
               <div className='col fee-number'>
                 <div>
                   <img
-                    src={BitcoinLogo}
+                    src={bitcoinLogo}
                     width='23px'
                     height='23px'
                     alt='bitcoin logo'>
@@ -212,7 +242,7 @@ export default function EnterBTCAmount() {
               <div className='col fee-number'>
                 <div>
                   <img
-                    src={PolkadotLogo}
+                    src={polkadotLogo}
                     width='20px'
                     height='20px'
                     style={{ marginRight: '5px' }}
@@ -226,7 +256,6 @@ export default function EnterBTCAmount() {
           </div>
         </div>
       </div>
-
       <div className='row justify-content-center'>
         <div className='col-10 horizontal-line-total'></div>
       </div>
@@ -238,7 +267,7 @@ export default function EnterBTCAmount() {
               <div className='col fee-number'>
                 <div>
                   <img
-                    src={BitcoinLogo}
+                    src={bitcoinLogo}
                     width='23px'
                     height='23px'
                     alt='bitcoin logo'>
@@ -258,7 +287,6 @@ export default function EnterBTCAmount() {
           </div>
         </div>
       </div>
-
       <ButtonMaybePending
         className='btn green-button app-btn'
         isPending={isRequestPending}
@@ -268,3 +296,5 @@ export default function EnterBTCAmount() {
     </form>
   );
 }
+
+export default EnterBTCAmount;
