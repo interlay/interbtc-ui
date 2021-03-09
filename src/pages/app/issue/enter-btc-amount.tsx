@@ -10,7 +10,7 @@ import {
 import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import BigNum from 'bn.js';
+import BN from 'bn.js';
 import { PolkaBTC } from '@interlay/polkabtc/build/interfaces/default';
 
 import ButtonMaybePending from 'common/components/pending-button';
@@ -79,7 +79,7 @@ function EnterBTCAmount() {
         const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
         const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
         const vaultsMap = await window.polkaBTC.vaults.getVaultsWithIssuableTokens();
-        let maxVaultAmount = new BigNum(0);
+        let maxVaultAmount = new BN(0);
         for (const issuableTokens of vaultsMap.values()) {
           maxVaultAmount = issuableTokens.toBn();
           break;
@@ -154,7 +154,7 @@ function EnterBTCAmount() {
       setFee(fee);
 
       const amountSAT = btcToSat(value);
-      const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), new BigNum(amountSAT));
+      const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), new BN(amountSAT));
       if (vaultId) {
         const vaultAccountId = window.polkaBTC.api.createType('AccountId', vaultId);
         setVaultId(vaultAccountId.toString());

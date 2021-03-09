@@ -21,7 +21,7 @@ import {
 import { PolkaBTC } from '@interlay/polkabtc/build/interfaces';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
 import Big from 'big.js';
-import BigNum from 'bn.js';
+import BN from 'bn.js';
 
 import ButtonMaybePending from 'common/components/pending-button';
 import {
@@ -154,7 +154,7 @@ function EnterAmountAndAddress(): ReactElement {
         // Select a vault from the premium redeem vault list
         for (const [id, redeemableTokens] of premiumRedeemVaults) {
           const redeemable = redeemableTokens.toBn();
-          if (redeemable.gte(new BigNum(amountPolkaSAT))) {
+          if (redeemable.gte(new BN(amountPolkaSAT))) {
             vaultId = id;
             break;
           }
@@ -218,7 +218,7 @@ function EnterAmountAndAddress(): ReactElement {
 
   const togglePremium = () => {
     if (!premiumRedeem) {
-      let maxAmount = new BigNum(0);
+      let maxAmount = new BN(0);
       for (const redeemableTokens of premiumRedeemVaults.values()) {
         const redeemable = redeemableTokens.toBn();
         if (maxAmount.lt(redeemable)) {
