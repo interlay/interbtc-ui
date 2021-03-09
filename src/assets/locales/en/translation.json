@@ -286,7 +286,8 @@
       "secure_threshold": "Secure Threshold: {{threshold}} %",
       "total_collateral_locked": "Total Collateral Locked",
       "perday_collateral_locked": "Collateral Locked Per Day",
-      "total_vaults_chart": "Total number of vaults"
+      "total_vaults_chart": "Total number of vaults",
+      "vaults": "Vaults"
     },
     "parachain": {
       "parachain": "BTC Parachain",
