@@ -97,8 +97,8 @@ import './app.css';
 // const StakedRelayerPage = React.lazy(() =>
 //   import(/* webpackChunkName: 'staked-relayer' */ 'pages/staked-relayer/staked-relayer.page')
 // );
-// const LeaderboardPage = React.lazy(() =>
-//   import(/* webpackChunkName: 'leaderboard' */ 'pages/leaderboard/leaderboard.page')
+// const Challenges = React.lazy(() =>
+//   import(/* webpackChunkName: 'challenges' */ 'pages/Challenges')
 // );
 // const VaultsDashboard = React.lazy(() =>
 //   import(/* webpackChunkName: 'vaults' */ 'pages/dashboard/vaults/vaults.dashboard.page')
