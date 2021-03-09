@@ -18,7 +18,10 @@ import {
   satToBTC,
   stripHexPrefix
 } from '@interlay/polkabtc';
-import { PolkaBTC } from '@interlay/polkabtc/build/interfaces';
+import {
+  PolkaBTC,
+  StatusCode
+} from '@interlay/polkabtc/build/interfaces';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
 import Big from 'big.js';
 import BigNum from 'bn.js';
@@ -64,6 +67,7 @@ function EnterAmountAndAddress(): ReactElement {
     btcRelayHeight,
     prices
   } = useSelector((state: StoreType) => state.general);
+  const [parachainStatus, setParachainStatus] = useState<StatusCode>();
 
   // General redeem
   const [amountPolkaBTC, setAmountPolkaBTC] = useState('');
@@ -82,6 +86,20 @@ function EnterAmountAndAddress(): ReactElement {
   const [maxPremiumRedeem, setMaxPremiumRedeem] = useState(new Big(0));
   const [premiumRedeemVaults, setPremiumRedeemVaults] = useState(new Map() as PremiumRedeemVault);
   const [premiumRedeemFee, setPremiumRedeemFee] = useState(new Big(0));
+
+  // TODO: should integrate at context level
+  useEffect(() => {
+    if (!polkaBtcLoaded) return;
+
+    (async () => {
+      try {
+        const theParachainStatus = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
+        setParachainStatus(theParachainStatus);
+      } catch (error) {
+        console.log('[EnterAmountAndAddress] error => ', error);
+      }
+    })();
+  }, [polkaBtcLoaded]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -227,6 +245,8 @@ function EnterAmountAndAddress(): ReactElement {
     dispatch(togglePremiumRedeemAction(!premiumRedeem));
   };
 
+  const parachainRunning = parachainStatus?.isRunning;
+
   return (
     <form
       className='enter-amount-and-address'
@@ -264,6 +284,20 @@ function EnterAmountAndAddress(): ReactElement {
           {errors.amountPolkaBTC.type === 'required' ?
             t('redeem_page.please_enter_amount') :
             errors.amountPolkaBTC.message}
+        </div>
+      )}
+      {!parachainRunning && (
+        <div className='wizard-input-error'>
+          <p
+            style={{
+              fontSize: '20px',
+              marginBottom: 4
+            }}>
+            {t('issue_redeem_disabled')}
+          </p>
+          <p style={{ fontSize: '16px' }}>
+            {t('polkabtc_bridge_recovery_mode')}
+          </p>
         </div>
       )}
       <div className='row'>
@@ -387,6 +421,7 @@ function EnterAmountAndAddress(): ReactElement {
       <ButtonMaybePending
         type='submit'
         className='btn green-button app-btn'
+        disabled={!parachainRunning}
         isPending={isRequestPending}
         onClick={checkAddress}>
         {t('confirm')}

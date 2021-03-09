@@ -201,7 +201,8 @@ function EnterBTCAmount() {
     return undefined;
   };
 
-  const isParachainRunning = parachainStatus?.isRunning;
+  // TODO: should be simpler by loading UX integration
+  const parachainRunning = parachainStatus?.isRunning;
 
   return (
     <form onSubmit={onSubmit}>
@@ -235,7 +236,8 @@ function EnterBTCAmount() {
           {errors.amountBTC.type === 'required' ? t('issue_page.enter_valid_amount') : errors.amountBTC.message}
         </div>
       )}
-      {!isParachainRunning && (
+      {/* TODO: could use finite state machine */}
+      {!parachainRunning && (
         // TODO: should avoid hard-coding styles and componentize properly
         <div className='wizard-input-error'>
           <p
@@ -326,7 +328,7 @@ function EnterBTCAmount() {
       </div>
       <ButtonMaybePending
         className='btn green-button app-btn'
-        disabled={!isParachainRunning}
+        disabled={!parachainRunning}
         isPending={isRequestPending}
         onClick={onSubmit}>
         {t('confirm')}
