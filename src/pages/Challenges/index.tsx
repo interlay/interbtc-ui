@@ -58,7 +58,7 @@ type ChallengeSelectorProps = {
 }
 
 function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelectorProps): ReactElement {
-  const timestamp = Math.floor(Date.now() / 1000);
+  const timestamp = Date.now();
   return (
     <ToggleButtonGroup
       className='mt-4 mx-3'
