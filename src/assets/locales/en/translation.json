@@ -462,9 +462,9 @@
       "lottery": "Challenge 5: Lottery",
       "lottery_desc": "Stay tuned, coming soon!",
       "vault_treasure_hunt": "Challenge 2: Vault Treasure",
-      "vault_treasure_hunt_desc": "Stay tuned, coming soon!",
+      "vault_treasure_hunt_desc": "Run a Vault client to fulfill issue and redeem requests.",
       "relayer_treasure_hunt": "Challenge 3: Relayer Treasure",
-      "relayer_treasure_hunt_desc": "Stay tuned, coming soon!"
+      "relayer_treasure_hunt_desc": "Run a Relayer client to submit BTC block headers."
     }
   },
   "vault": {

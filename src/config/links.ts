@@ -15,6 +15,8 @@ const VAULT_FEEDBACK_FORM = 'https://forms.gle/zzKhaEzttCKksjej7';
 const RELAYER_FEEDBACK_FORM = 'https://forms.gle/hriZNJ6pSEKHzwpS7';
 
 const POLKA_BTC_DOC_TREASURE_HUNT = 'https://docs.polkabtc.io/#/start/beta?id=treasure-hunt-500-dot';
+const POLKA_BTC_DOC_TREASURE_HUNT_VAULT = 'https://docs.polkabtc.io/#/start/beta?id=vault-award-4-dot-for-the-first-50-200-dot-in-total';
+const POLKA_BTC_DOC_TREASURE_HUNT_RELAYER = 'https://docs.polkabtc.io/#/start/beta?id=staked-relayer-award-4-dot-for-the-first-50-200-dot-in-total';
 
 export {
   POLKA_BTC_UI_GITHUB,
@@ -28,5 +30,7 @@ export {
   USER_FEEDBACK_FORM,
   VAULT_FEEDBACK_FORM,
   RELAYER_FEEDBACK_FORM,
-  POLKA_BTC_DOC_TREASURE_HUNT
+  POLKA_BTC_DOC_TREASURE_HUNT,
+  POLKA_BTC_DOC_TREASURE_HUNT_VAULT,
+  POLKA_BTC_DOC_TREASURE_HUNT_RELAYER
 };

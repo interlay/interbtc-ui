@@ -31,7 +31,7 @@ import CardList, {
   CardHeader,
   CardBody
 } from 'components/CardList';
-import { POLKA_BTC_DOC_TREASURE_HUNT } from 'config/links';
+import { POLKA_BTC_DOC_TREASURE_HUNT, POLKA_BTC_DOC_TREASURE_HUNT_VAULT, POLKA_BTC_DOC_TREASURE_HUNT_RELAYER } from 'config/links';
 import DashboardTable from 'common/components/dashboard-table/dashboard-table';
 import TimerIncrement from 'common/components/timer-increment';
 import { CHALLENGE_4_START } from '../../constants'; // relative path due to conflict
@@ -95,11 +95,13 @@ const CHALLENGE_ITEMS = [
   },
   {
     title: 'leaderboard.challenges.vault_treasure_hunt',
-    content: 'leaderboard.challenges.vault_treasure_hunt_desc'
+    content: 'leaderboard.challenges.vault_treasure_hunt_desc',
+    contentLink: POLKA_BTC_DOC_TREASURE_HUNT_VAULT
   },
   {
     title: 'leaderboard.challenges.relayer_treasure_hunt',
-    content: 'leaderboard.challenges.relayer_treasure_hunt_desc'
+    content: 'leaderboard.challenges.relayer_treasure_hunt_desc',
+    contentLink: POLKA_BTC_DOC_TREASURE_HUNT_RELAYER
   },
   {
     title: 'leaderboard.challenges.vaults_relayers',
