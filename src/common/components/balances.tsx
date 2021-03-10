@@ -1,14 +1,19 @@
-import { ReactElement } from 'react';
 
+import { safeRoundFiveDecimals } from 'common/utils/utils';
 import polkaBitcoin from 'assets/img/PolkaBitcoin-logo.png';
 import polkadotLogo from 'assets/img/small-polkadot-logo.png';
 
-type BalancesProps = {
+interface Props {
   balancePolkaBTC?: string;
   balanceDOT?: string;
-};
+}
 
-export default function Balances(props: BalancesProps): ReactElement {
+const Balances = ({
+  balancePolkaBTC,
+  balanceDOT
+}: Props) => {
+  const roundedBalanceDot = safeRoundFiveDecimals(balanceDOT);
+
   return (
     <div>
       <span className='btc-balance-wrapper'>
@@ -19,7 +24,7 @@ export default function Balances(props: BalancesProps): ReactElement {
             height='20px'
             alt='polka bitcoin logo'
             className='mr-1' />
-          <b>{props.balancePolkaBTC || '0'}</b>
+          <b>{balancePolkaBTC || '0'}</b>
         </span>{' '}
         PolkaBTC
       </span>
@@ -31,10 +36,12 @@ export default function Balances(props: BalancesProps): ReactElement {
           alt='polkadot logo'
           className='mr-1' />
         <span className=''>
-          <b>{props.balanceDOT || '0'}</b>
+          <b>{roundedBalanceDot ?? '0'}</b>
         </span>{' '}
         DOT
       </span>
     </div>
   );
-}
+};
+
+export default Balances;
