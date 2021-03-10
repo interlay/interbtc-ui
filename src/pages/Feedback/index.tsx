@@ -57,7 +57,11 @@ const Feedback = () => (
               href={feedbackType.link}
               target='_blank'
               rel='noopener noreferrer'
-              style={{ display: 'block' }}>
+              style={{
+                display: 'block',
+                // TODO: hardcoded for now
+                fontFamily: 'airbnb-cereal-bold'
+              }}>
               {feedbackType.title}&nbsp;{feedbackType.icon}
             </InterlayLink>
           </Card>

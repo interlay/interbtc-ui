@@ -7,7 +7,7 @@ import ButtonMaybePending from '../../../common/components/pending-button';
 import { getUsdAmount, updateBalances } from '../../../common/utils/utils';
 import { btcToSat } from '@interlay/polkabtc';
 import { updateBalancePolkaBTCAction } from '../../../common/actions/general.actions';
-import PolkaBTCLogo from '../../../assets/img/polkabtc-logo-cropped.png';
+import PolkaBTCLogo from '../../../assets/img/polkabtc/PolkaBTC_black.svg';
 import AcalaLogo from '../../../assets/img/acala-logo-cropped.png';
 import PlasmLogo from '../../../assets/img/plasm-logo.png';
 import Big from 'big.js';
