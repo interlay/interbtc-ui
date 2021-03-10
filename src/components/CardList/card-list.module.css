@@ -1,0 +1,46 @@
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 120px;
+  padding: 16px 32px;
+  /* TODO: hardcoded */
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%);
+}
+
+.card-header {
+  color: var(--palette-common-black);
+  font-size: 16px;
+  font-family: airbnb-cereal-bold;
+}
+
+@media (max-width: 991px) {
+  .card:not(:first-child) {
+    margin-top: 16px;
+  }
+}
+
+@media (min-width: 992px) {
+  .card-list {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .card {
+    width: 360px;
+  }
+
+  .card {
+    margin: 8px;
+  }
+}

@@ -4,8 +4,8 @@ import { toast } from 'react-toastify';
 import { useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 
+import Footer from 'parts/Footer';
 import Topbar from 'common/components/topbar';
-import Footer from 'common/components/footer/footer';
 import TestnetBanner from 'components/TestnetBanner';
 import checkStaticPage from 'config/check-static-page';
 import { PAGES } from 'utils/constants/links';
@@ -49,7 +49,7 @@ const Layout = ({ children }: Props) => {
       )}
       {!isHomePage && <TestnetBanner />}
       {children}
-      <Footer isHomePage={isHomePage} />
+      <Footer />
     </div>
   );
 };

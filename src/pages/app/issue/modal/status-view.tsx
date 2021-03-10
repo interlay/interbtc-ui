@@ -115,7 +115,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             <div className='col text-center bold-text '>
               {t('issue_page.you_received')}{' '}
               <span className='pink-amount bold-text'>
-                {props.request.issuedAmountBtc || props.request.requestedAmountPolkaBTC + ' PolkaBTC'}
+                {props.request.issuedAmountBtc || props.request.requestedAmountPolkaBTC} PolkaBTC
               </span>
             </div>
           </div>
@@ -221,6 +221,23 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                     <BitcoinTransaction
                       txId={props.request.btcTxId}
                       shorten />
+                  </div>
+                  <div className='row mt-3'>
+                    <div className='col text-center'>
+                      <a
+                        href={
+                          (constants.BTC_MAINNET ?
+                            constants.BTC_EXPLORER_TRANSACTION_API :
+                            constants.BTC_TEST_EXPLORER_TRANSACTION_API) +
+                            props.request.btcTxId
+                        }
+                        target='_blank'
+                        rel='noopener noreferrer'>
+                        <button className='btn green-button'>
+                          {t('issue_page.view_on_block_explorer')}
+                        </button>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>

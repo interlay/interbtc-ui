@@ -16,6 +16,8 @@ import * as constants from '../../../constants';
 import { BtcNetworkName, IssueColumns } from '@interlay/polkabtc-stats';
 import TimerIncrement from '../../../common/components/timer-increment';
 import LineChartComponent from '../components/line-chart-component';
+import MainContainer from 'parts/MainContainer';
+import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard.page.scss';
 import '../dashboard-subpage.scss';
@@ -49,7 +51,7 @@ export default function IssueDashboard(): ReactElement {
         tableParams.perPage,
         tableParams.sortBy,
         tableParams.sortAsc,
-                constants.BITCOIN_NETWORK as BtcNetworkName // not sure why cast is necessary here, but TS complains
+        constants.BITCOIN_NETWORK as BtcNetworkName // not sure why cast is necessary here, but TS complains
       );
       setIssueRequests(res.data);
     },
@@ -134,29 +136,26 @@ export default function IssueDashboard(): ReactElement {
   }, [fetchTotalSuccessfulIssues, fetchTotalIssues]);
 
   return (
-    <div className='main-container dashboard-page'>
+    <MainContainer>
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <div>
-            <div className='title-container'>
-              <h1 className='title-text'>{t('issue_page.issue_requests')}</h1>
-              <p className='latest-block-text'>
-                <TimerIncrement></TimerIncrement>
-              </p>
-              <div
-                style={{ backgroundColor: getAccents('d_yellow').color }}
-                className='title-line'>
-              </div>
-            </div>
+            <PageTitle
+              mainTitle={t('issue_page.issue_requests')}
+              subTitle={<TimerIncrement />} />
+            {/* TODO: should use hr or pseudo element */}
+            <div
+              style={{ backgroundColor: getAccents('d_yellow').color }}
+              className='title-line' />
             <div className='table-top-data-container'>
               <div className='values-container'>
                 <div>
-                  <h2 style={{ color: getAccents('d_yellow').color }}>
+                  <h2 style={{ color: getAccents('d_pink').color }}>
                     {t('dashboard.issue.issued')}
                   </h2>
                   <h1>{t('dashboard.issue.total_polkabtc', { amount: totalPolkaBTC })}</h1>
                   <h1 className='h1-price-opacity'>
-                                        ${(prices.bitcoin.usd * parseFloat(totalPolkaBTC)).toLocaleString()}
+                    ${(prices.bitcoin.usd * parseFloat(totalPolkaBTC)).toLocaleString()}
                   </h1>
                 </div>
                 <div>
@@ -169,7 +168,7 @@ export default function IssueDashboard(): ReactElement {
               <div className='card'>
                 <div className='chart-container'>
                   <LineChartComponent
-                    color={['d_yellow', 'd_grey']}
+                    color={['d_pink', 'd_grey']}
                     label={[
                       t('dashboard.issue.total_issued_chart'),
                       t('dashboard.issue.perday_issued_chart')
@@ -192,9 +191,15 @@ export default function IssueDashboard(): ReactElement {
                 </div>
               </div>
             </div>
-            <div className='dashboard-table-container'>
+            <div style={{ margin: '40px 0px' }}>
               <div>
-                <p className='table-heading'>{t('issue_page.recent_requests')}</p>
+                <p
+                  style={{
+                    fontFamily: 'airbnb-cereal-bold',
+                    fontSize: '26px'
+                  }}>
+                  {t('issue_page.recent_requests')}
+                </p>
               </div>
               <DashboardTable
                 richTable={true}
@@ -208,6 +213,6 @@ export default function IssueDashboard(): ReactElement {
           </div>
         </div>
       </div>
-    </div>
+    </MainContainer>
   );
 }

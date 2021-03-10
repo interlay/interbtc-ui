@@ -1,34 +1,34 @@
-import { ReactElement } from 'react';
-import TimerIncrement from '../../common/components/timer-increment';
+
 import { useTranslation } from 'react-i18next';
 
-import './dashboard.page.scss';
+import MainContainer from 'parts/MainContainer';
+import PageTitle from 'parts/PageTitle';
+import TimerIncrement from 'common/components/timer-increment';
 import Row1 from './rows/row1';
 import Row2 from './rows/row2';
 import Row3 from './rows/row3';
+import './dashboard.page.scss';
 
-export default function DashboardPage(): ReactElement {
+function DashboardPage() {
   const { t } = useTranslation();
 
   return (
-    <div className='main-container'>
-      <div className='title-container'>
-        <div className='title-text-container'>
-          <h1 className='title-text'>{t('dashboard.dashboard')}</h1>
-          <p className='latest-block-text'>
-            <TimerIncrement></TimerIncrement>
-          </p>
-        </div>
-      </div>
+    <MainContainer>
+      <PageTitle
+        mainTitle={t('dashboard.dashboard')}
+        subTitle={<TimerIncrement />} />
+      {/* TODO: should use flex-grid */}
       <div className='dashboard-items-container'>
         <div className='rows-container'>
           <Row1 />
-          <div className='section-div-line'></div>
+          <div className='section-div-line' />
           <Row2 />
-          <div className='section-div-line'></div>
+          <div className='section-div-line' />
           <Row3 />
         </div>
       </div>
-    </div>
+    </MainContainer>
   );
 }
+
+export default DashboardPage;

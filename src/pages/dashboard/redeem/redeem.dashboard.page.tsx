@@ -16,6 +16,8 @@ import { satToBTC } from '@interlay/polkabtc';
 import LineChartComponent from '../components/line-chart-component';
 import { BtcNetworkName, RedeemColumns } from '@interlay/polkabtc-stats';
 import TimerIncrement from '../../../common/components/timer-increment';
+import MainContainer from 'parts/MainContainer';
+import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard.page.scss';
 import '../dashboard-subpage.scss';
@@ -94,7 +96,7 @@ export default function RedeemDashboard(): ReactElement {
         tableParams.perPage,
         tableParams.sortBy,
         tableParams.sortAsc,
-                constants.BITCOIN_NETWORK as BtcNetworkName
+        constants.BITCOIN_NETWORK as BtcNetworkName
       );
       setRedeemRequests(res.data);
     },
@@ -146,24 +148,20 @@ export default function RedeemDashboard(): ReactElement {
   }, [polkaBtcLoaded, statsApi]);
 
   return (
-    <div className='main-container dashboard-page '>
+    <MainContainer>
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <div>
-            <div className='title-container'>
-              <h1 className='title-text'>{t('dashboard.redeem.redeem')}</h1>
-              <p className='latest-block-text'>
-                <TimerIncrement></TimerIncrement>
-              </p>
-              <div
-                style={{ backgroundColor: getAccents('d_pink').color }}
-                className='title-line'>
-              </div>
-            </div>
+            <PageTitle
+              mainTitle={t('dashboard.redeem.redeem')}
+              subTitle={<TimerIncrement />} />
+            <div
+              style={{ backgroundColor: getAccents('d_pink').color }}
+              className='title-line' />
             <div className='table-top-data-container'>
               <div className='values-container redeem-page'>
                 <div>
-                  <h2 style={{ color: `${getAccents('d_pink').color}` }}>
+                  <h2 style={{ color: `${getAccents('d_yellow').color}` }}>
                     {t('dashboard.redeem.total_redeemed')}
                   </h2>
                   <h1>
@@ -174,7 +172,7 @@ export default function RedeemDashboard(): ReactElement {
                     ''
                   ) : (
                     <h1 className='h1-price-opacity'>
-                                            $
+                      $
                       {(
                         prices.bitcoin.usd * parseFloat(satToBTC(totalRedeemedAmount))
                       ).toLocaleString()}
@@ -201,7 +199,7 @@ export default function RedeemDashboard(): ReactElement {
               <div className='card'>
                 <div className='chart-container'>
                   <LineChartComponent
-                    color={['d_pink', 'd_grey']}
+                    color={['d_yellow', 'd_grey']}
                     label={[
                       t('dashboard.redeem.total_redeemed_chart'),
                       t('dashboard.redeem.perday_redeemed_chart')
@@ -219,9 +217,15 @@ export default function RedeemDashboard(): ReactElement {
                 </div>
               </div>
             </div>
-            <div className='dashboard-table-container'>
+            <div style={{ margin: '40px 0px' }}>
               <div>
-                <p className='table-heading'>{t('issue_page.recent_requests')}</p>
+                <p
+                  style={{
+                    fontFamily: 'airbnb-cereal-bold',
+                    fontSize: '26px'
+                  }}>
+                  {t('issue_page.recent_requests')}
+                </p>
               </div>
               <DashboardTable
                 richTable={true}
@@ -235,6 +239,6 @@ export default function RedeemDashboard(): ReactElement {
           </div>
         </div>
       </div>
-    </div>
+    </MainContainer>
   );
 }

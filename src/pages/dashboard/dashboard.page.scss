@@ -2,218 +2,256 @@
 @import "../../mixins";
 
 .dashboard-items-container {
-    text-align: center;
+  text-align: center;
 
-    display: grid;
-    padding: 8px 0px;
+  display: grid;
+  padding: 8px 0px;
 }
-.main-container {
-    background-color: #fff;
-    padding: 30px 0px;
-    min-height: 100vh;
-}
+
 .card {
-    width: 90%;
-    min-height: 300px;
-    background-color: white;
-    border: none;
-    border-radius: 10;
-    padding: 15px 20px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    h1 {
-        color: black;
-        font-family: airbnb-cereal-book;
-        font-size: 13px;
-        margin-bottom: 0.3rem;
-    }
+  width: 90%;
+  min-height: 300px;
+  background-color: white;
+  border: none;
+  border-radius: 10;
+  padding: 15px 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 
-    h2 {
-        color: black;
-        font-size: 16px;
-        font-family: airbnb-cereal-bold;
-        margin-bottom: 0.2rem;
-    }
-    h3 {
-        font-size: 8px;
-        font-family: airbnb-cereal-bold;
-        text-transform: uppercase;
-        margin-bottom: 0rem;
-        letter-spacing: 0.4px;
-    }
-    .values-container {
-        text-align: left;
-    }
-    .card-top-content {
-        padding: 0px 5px;
-    }
-    .h1-xl-text-left {
-        color: black;
-        font-size: 34px;
-        text-align: left;
-        font-family: airbnb-cereal-bold;
-        text-align: left;
-    }
-    .h1-xl-text-center {
-        color: black;
-        font-size: 34px;
-        text-align: left;
-        font-family: airbnb-cereal-bold;
-        text-align: center;
-    }
-    .h1-l-text {
-        color: black;
-        font-size: 28px;
-        font-family: airbnb-cereal-bold;
-    }
-    .parachain-content-container {
-        height: 250px;
-        padding-left: 20px;
-        @include flexCenter();
-        flex-direction: column;
-    }
-    .parachain-button-container {
-        width: 100%;
-        text-align: left;
-        margin-top: 10px;
-    }
-    button {
-        background-color: white;
-        border-radius: 8px;
-        width: 130px;
-        padding: 10px 15px;
-        @include flexCenter();
-    }
-    .button-assets-container {
-        display: flex;
-        align-items: flex-start;
-        vertical-align: middle;
-        text-decoration: none;
-    }
-    .external-link {
-        margin-left: 3px;
-        // filter: brightness(0) saturate(100%) invert(77%) sepia(49%) saturate(5098%) hue-rotate(350deg) brightness(102%)
-        //     contrast(94%);
-    }
-    .card-top-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .circle-container {
-        @include flexCenter();
-        margin-top: 25px;
-    }
-    .status-circle {
-        background: none;
-        width: 250px;
-        height: 250px;
-        border-radius: 50%;
-        border: 3px solid grey;
-        @include flexCenter();
-        flex-direction: column;
-    }
+  h1 {
+    color: black;
+    font-family: airbnb-cereal-book;
+    font-size: 13px;
+    margin-bottom: 0.3rem;
+  }
+
+  h2 {
+    color: black;
+    font-size: 16px;
+    font-family: airbnb-cereal-bold;
+    margin-bottom: 0.2rem;
+  }
+
+  h3 {
+    font-size: 8px;
+    font-family: airbnb-cereal-bold;
+    text-transform: uppercase;
+    margin-bottom: 0rem;
+    letter-spacing: 0.4px;
+  }
+
+  .values-container {
+    text-align: left;
+  }
+
+  .card-top-content {
+    padding: 0px 5px;
+  }
+
+  .h1-xl-text-left {
+    color: black;
+    font-size: 34px;
+    text-align: left;
+    font-family: airbnb-cereal-bold;
+    text-align: left;
+  }
+
+  .h1-xl-text-center {
+    color: black;
+    font-size: 34px;
+    text-align: left;
+    font-family: airbnb-cereal-bold;
+    text-align: center;
+  }
+
+  .h1-l-text {
+    color: black;
+    font-size: 28px;
+    font-family: airbnb-cereal-bold;
+  }
+
+  .parachain-content-container {
+    height: 250px;
+    padding-left: 20px;
+    @include flexCenter();
+    flex-direction: column;
+  }
+
+  .parachain-button-container {
+    width: 100%;
+    text-align: left;
+    margin-top: 10px;
+  }
+
+  button {
+    background-color: white;
+    border-radius: 8px;
+    width: 130px;
+    padding: 10px 15px;
+    @include flexCenter();
+  }
+
+  .button-assets-container {
+    display: flex;
+    align-items: flex-start;
+    vertical-align: middle;
+    text-decoration: none;
+  }
+
+  .external-link {
+    margin-left: 3px;
+    // filter: brightness(0) saturate(100%) invert(77%) sepia(49%) saturate(5098%) hue-rotate(350deg) brightness(102%)
+    //     contrast(94%);
+  }
+
+  .card-top-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .circle-container {
+    @include flexCenter();
+    margin-top: 25px;
+  }
+
+  .status-circle {
+    background: none;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    border: 3px solid grey;
+    @include flexCenter();
+    flex-direction: column;
+  }
 }
 
 .row-grid {
-    display: grid;
-    justify-items: center;
-    width: 100%;
-    row-gap: 30px;
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  row-gap: 30px;
 }
+
 .chart-container {
-    position: relative;
-    margin-top: 10px;
+  position: relative;
+  margin-top: 10px;
 }
-.dashboard-page {
-    canvas {
-        height: 250px !important;
-    }
-}
+
 .section-top-gap {
-    margin-top: 40px;
+  margin-top: 40px;
 }
+
 .section-bottom-gap {
-    margin-bottom: 40px;
+  margin-bottom: 40px;
 }
-.latest-block-text {
-    font-size: 11px;
-    font-family: airbnb-cereal-bold;
-}
+
 .bold-font {
-    font-family: "airbnb-cereal-bold";
+  font-family: "airbnb-cereal-bold";
 }
 
 @media only screen and (min-width: $mobile-large-size) {
-    .card {
-        min-height: 340px;
-    }
-    .row-grid {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr;
-    }
-}
-@media only screen and (min-width: $desktop-size) {
-    .dashboard-items-container {
-        @include justifyCenter();
-    }
-    .main-container {
-        padding: 40px 0px;
-    }
-    .row-grid {
-        grid-template-columns: 1fr 1fr 1fr;
-        column-gap: 40px;
-    }
-    .title-text {
-        font-size: 30px;
-    }
+  .card {
+    min-height: 340px;
+  }
 
-    .card {
-        width: 100%;
-        min-height: 340px;
-        padding: 30px 20px;
-        // box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0);
-        h1 {
-            font-size: 16px;
-            margin-bottom: 0.5rem;
-        }
-        h3 {
-            font-size: 10px;
-            letter-spacing: 0.6px;
-        }
-        .parachain-content-container {
-            width: 70%;
-            padding-left: 30px;
-        }
-        button {
-            width: 160px;
-            padding: 12px 12px;
-        }
+  .row-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+  }
+}
+
+@media only screen and (min-width: $desktop-size) {
+  .dashboard-items-container {
+    @include justifyCenter();
+  }
+  
+  .row-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 40px;
+  }
+
+  .card {
+    width: 100%;
+    min-height: 340px;
+    padding: 30px 20px;
+    // box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0);
+    h1 {
+        font-size: 16px;
+        margin-bottom: 0.5rem;
     }
-    // .card:hover {
-    //     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    //     -webkit-transition: box-shadow 0.2s ease-in;
-    // }
-    .chart-container {
-        margin-top: 20px;
+    h3 {
+        font-size: 10px;
+        letter-spacing: 0.6px;
     }
-    .canvas {
-        height: 400px !important;
+    .parachain-content-container {
+        width: 70%;
+        padding-left: 30px;
     }
-    .rows-container {
-        max-width: 1700px;
-        width: 90%;
+    button {
+        width: 160px;
+        padding: 12px 12px;
     }
-    .latest-block-text {
-        font-size: 12px;
-        font-family: airbnb-cereal-bold;
-    }
-    .section-top-gap {
-        margin-top: 40px;
-    }
-    .section-bottom-gap {
-        margin-bottom: 40px;
-    }
-    .section-div-line {
-        width: 40%;
-    }
+  }
+  // .card:hover {
+  //     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  //     -webkit-transition: box-shadow 0.2s ease-in;
+  // }
+  .chart-container {
+    margin-top: 20px;
+  }
+  .canvas {
+    height: 400px !important;
+  }
+  .rows-container {
+    max-width: 1700px;
+    width: 90%;
+  }
+
+  .section-top-gap {
+    margin-top: 40px;
+  }
+
+  .parachain-content-container {
+    width: 70%;
+    padding-left: 30px;
+  }
+
+  button {
+    width: 160px;
+    padding: 12px 12px;
+  }
+
+  // .card:hover {
+  //     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  //     -webkit-transition: box-shadow 0.2s ease-in;
+  // }
+  .chart-container {
+    margin-top: 20px;
+  }
+
+  .canvas {
+    height: 400px !important;
+  }
+
+  .rows-container {
+    max-width: 1700px;
+    width: 90%;
+  }
+
+  .latest-block-text {
+    font-size: 12px;
+    font-family: airbnb-cereal-bold;
+  }
+
+  .section-top-gap {
+    margin-top: 40px;
+  }
+
+  .section-bottom-gap {
+    margin-bottom: 40px;
+  }
+
+  .section-div-line {
+    width: 40%;
+  }
 }

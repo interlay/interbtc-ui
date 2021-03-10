@@ -48,13 +48,13 @@ export default function LandingPage(): JSX.Element {
               width='256'>
             </Image>
           </Link>
-          <h1 className='text-white mt-5'>PolkaBTC</h1>
-          <h2 className='text-white'>{t('landing.defi_ecosystem')}</h2>
+          <h1 className='interlay-text-white mt-5'>PolkaBTC</h1>
+          <h2 className='interlay-text-white'>{t('landing.defi_ecosystem')}</h2>
 
           {checkStaticPage() ? (
             <div>
-              <h4 className='text-white mt-5'>{t('landing.beta_coming')}</h4>
-              <h1 className='text-white mt-5'>
+              <h4 className='interlay-text-white mt-5'>{t('landing.beta_coming')}</h4>
+              <h1 className='interlay-text-white mt-5'>
                 <Timer seconds={secondsUntilBeta}></Timer>
               </h1>
               {/* <h5 className="text-light mt-1">
@@ -103,7 +103,7 @@ export default function LandingPage(): JSX.Element {
                 <Col
                   xs='12'
                   sm={{ span: 6, offset: 3 }}>
-                  <h5 className='text-white'>
+                  <h5 className='interlay-text-white'>
                     {t('landing.issued')} {totalPolkaBTC} PolkaBTC
                   </h5>
                 </Col>
@@ -112,7 +112,7 @@ export default function LandingPage(): JSX.Element {
                 <Col
                   xs='12'
                   sm={{ span: 6, offset: 3 }}>
-                  <h5 className='text-white'>
+                  <h5 className='interlay-text-white'>
                     {t('locked')} {totalLockedDOT} DOT
                   </h5>
                 </Col>
@@ -127,7 +127,7 @@ export default function LandingPage(): JSX.Element {
                       className='text-decoration-none'
                       to={PAGES.APPLICATION}>
                       <Button
-                        variant='outline-polkadot'
+                        variant='outline-dark'
                         size='lg'
                         block
                         onClick={checkWalletAndAccount}>
@@ -143,7 +143,7 @@ export default function LandingPage(): JSX.Element {
                       className='text-decoration-none'
                       to={PAGES.DASHBOARD}>
                       <Button
-                        variant='outline-bitcoin'
+                        variant='outline-dark'
                         size='lg'
                         block
                         onClick={checkWalletAndAccount}>
