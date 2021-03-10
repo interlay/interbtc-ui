@@ -137,6 +137,42 @@ input[type="number"] {
   max-width: 100%;
 }
 
+.btn-outline-dark {
+  color: #000;
+  border-color: #000;
+}
+
+.btn-outline-dark:hover {
+  color: whitesmoke;
+  background-color: #ed3855;
+  border-color: #ed3855;
+}
+
+.btn-outline-dark:focus,
+.btn-outline-polkadot.focus {
+  box-shadow: 0 0 0 0.2rem rgba(230, 1, 122, 0.5);
+}
+
+.btn-outline-dark.disabled,
+.btn-outline-dark:disabled {
+  color: #000000;
+  background-color: transparent;
+}
+
+.btn-outline-dark:not(:disabled):not(.disabled):active,
+.btn-outline-dark:not(:disabled):not(.disabled).active,
+.show>.btn-outline-polkadot.dropdown-toggle {
+  color: #000000;
+  background-color: #ed3855;
+  border-color: #ed3855;
+}
+
+.btn-outline-dark:not(:disabled):not(.disabled):active:focus,
+.btn-outline-dark:not(:disabled):not(.disabled).active:focus,
+.show>.btn-outline-dark.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(230, 1, 122, 0.5);
+}
+
 .btn-outline-polkadot {
   color: #ed3855;
   border-color: #ed3855;
