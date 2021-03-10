@@ -61,23 +61,26 @@ type ChallengeSelectorProps = {
 function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelectorProps): ReactElement {
   const timestamp = Date.now();
   return (
-    <ToggleButtonGroup
-      className='mt-4 mx-3'
-      type='radio'
-      value={challengeIdx}
-      name='challenge'
-      onChange={val => setChallengeIdx(val)}>
-      {timestamp > CHALLENGE_CUTOFFS[1] && ( // only show buttons at all if at least the first is active
-        CHALLENGE_CUTOFFS.map((displayFrom, idx) =>
-          timestamp > displayFrom &&
+    <div className='text-right'>
+      <ToggleButtonGroup
+        className='mt-4 mx-3'
+        type='radio'
+        value={challengeIdx}
+        name='challenge'
+        onChange={val => setChallengeIdx(val)}>
+        {timestamp > CHALLENGE_CUTOFFS[1] && ( // only show buttons at all if at least the first is active
+          CHALLENGE_CUTOFFS.map((displayFrom, idx) =>
+            timestamp > displayFrom &&
             <ToggleButton
               variant='outline-polkadot'
               value={idx}>
               {t(`leaderboard.challenge_buttons.${idx}`)}
             </ToggleButton>
-        )
-      )}
-    </ToggleButtonGroup>
+          )
+        )}
+      </ToggleButtonGroup>
+
+    </div>
   );
 }
 
