@@ -127,7 +127,7 @@ export default function LandingPage(): JSX.Element {
                       className='text-decoration-none'
                       to={PAGES.APPLICATION}>
                       <Button
-                        variant='outline-polkadot'
+                        variant='outline-dark'
                         size='lg'
                         block
                         onClick={checkWalletAndAccount}>
@@ -143,7 +143,7 @@ export default function LandingPage(): JSX.Element {
                       className='text-decoration-none'
                       to={PAGES.DASHBOARD}>
                       <Button
-                        variant='outline-bitcoin'
+                        variant='outline-dark'
                         size='lg'
                         block
                         onClick={checkWalletAndAccount}>
