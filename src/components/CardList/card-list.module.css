@@ -19,6 +19,7 @@
 
 .card-header {
   color: var(--palette-common-black);
+  /* TODO: hardcoded */
   font-size: 16px;
   font-family: airbnb-cereal-bold;
 }
