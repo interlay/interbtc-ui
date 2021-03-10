@@ -1,8 +1,9 @@
+@import "_variables";
 
 .account-modal {
   a {
     text-decoration: none !important;
-    color: #510101;
+    color: $d_pink;
   }
 }
 
@@ -10,18 +11,19 @@
   display: flex;
   align-items: center;
   width: 50%;
-  box-shadow: 0 0 4px #510101;
+  box-shadow: 0 0 4px $d_pink;
   padding: 10px 16px;
   border-radius: 4px;
 }
 
 .account-item {
+  font-weight: bold;
   padding: 16px;
-  box-shadow: 0 0 4px #510101;
   border-radius: 4px;
+  border: 1px solid $d_pink;
   &:hover {
     cursor: pointer;
-    background-color: #510101;
+    background-color: $d_pink;
     color: white;
   }
 }
