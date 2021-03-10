@@ -38,7 +38,7 @@ import {
 } from 'config/links';
 import DashboardTable from 'common/components/dashboard-table/dashboard-table';
 import TimerIncrement from 'common/components/timer-increment';
-import { CHALLENGE_4_START } from '../../constants'; // relative path due to conflict
+import { CHALLENGES_2_AND_3_START, CHALLENGE_4_START } from '../../constants'; // relative path due to conflict
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { StoreType } from 'common/types/util.types';
 // TODO: should use an SVG
@@ -48,6 +48,7 @@ import './challenges.scss';
 
 const CHALLENGE_CUTOFFS = [
   0, // all time
+  CHALLENGES_2_AND_3_START,
   CHALLENGE_4_START
 ];
 
@@ -58,29 +59,28 @@ type ChallengeSelectorProps = {
 }
 
 function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelectorProps): ReactElement {
-  const timestamp = Math.floor(Date.now() / 1000);
+  const timestamp = Date.now();
   return (
-    <ToggleButtonGroup
-      className='mt-4 mx-3'
-      type='radio'
-      value={challengeIdx}
-      name='challenge'
-      onChange={val => setChallengeIdx(val)}>
-      {timestamp > CHALLENGE_4_START && (
-        <>
-          <ToggleButton
-            variant='outline-secondary'
-            value={0}>
-            {t('leaderboard.all_time')}
-          </ToggleButton>
-          <ToggleButton
-            variant='outline-polkadot'
-            value={1}>
-            {t('leaderboard.challenge')}
-          </ToggleButton>
-        </>
-      )}
-    </ToggleButtonGroup>
+    <div className='text-right'>
+      <ToggleButtonGroup
+        className='mt-4 mx-3'
+        type='radio'
+        value={challengeIdx}
+        name='challenge'
+        onChange={val => setChallengeIdx(val)}>
+        {timestamp > CHALLENGE_CUTOFFS[1] && ( // only show buttons at all if at least the first is active
+          CHALLENGE_CUTOFFS.map((displayFrom, idx) =>
+            timestamp > displayFrom &&
+            <ToggleButton
+              variant='outline-polkadot'
+              value={idx}>
+              {t(`leaderboard.challenge_buttons.${idx}`)}
+            </ToggleButton>
+          )
+        )}
+      </ToggleButtonGroup>
+
+    </div>
   );
 }
 
