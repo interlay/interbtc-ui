@@ -7,7 +7,7 @@ import { StoreType } from '../types/util.types';
 import ButtonMaybePending from './pending-button';
 import { planckToDOT } from '@interlay/polkabtc';
 import { updateBalanceDOTAction, showAccountModalAction } from '../actions/general.actions';
-import { updateBalances } from '../utils/utils';
+import { shortAddress, updateBalances } from '../utils/utils';
 import { useTranslation } from 'react-i18next';
 import Balances from './balances';
 import { PAGES } from 'utils/constants/links';
@@ -80,7 +80,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
 
     if (!address) return 'Select Account';
 
-    return address.substring(0, 10) + '...' + address.substring(38);
+    return shortAddress(address);
   };
 
   return (
