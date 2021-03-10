@@ -87,6 +87,11 @@ function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelect
 const CHALLENGE_ITEMS = [
   {
     title: 'leaderboard.challenges.treasure_hunt',
+    content: 'leaderboard.challenges.treasure_hunt_desc',
+    contentLink: POLKA_BTC_DOC_TREASURE_HUNT
+  },
+  {
+    title: 'leaderboard.challenges.vault_treasure_hunt',
     titleIcon: (
       <InterlayImage
         src={newMark}
@@ -94,16 +99,18 @@ const CHALLENGE_ITEMS = [
         height={20}
         alt='new' />
     ),
-    content: 'leaderboard.challenges.treasure_hunt_desc',
-    contentLink: POLKA_BTC_DOC_TREASURE_HUNT
-  },
-  {
-    title: 'leaderboard.challenges.vault_treasure_hunt',
     content: 'leaderboard.challenges.vault_treasure_hunt_desc',
     contentLink: POLKA_BTC_DOC_TREASURE_HUNT_VAULT
   },
   {
     title: 'leaderboard.challenges.relayer_treasure_hunt',
+    titleIcon: (
+      <InterlayImage
+        src={newMark}
+        width={20}
+        height={20}
+        alt='new' />
+    ),
     content: 'leaderboard.challenges.relayer_treasure_hunt_desc',
     contentLink: POLKA_BTC_DOC_TREASURE_HUNT_RELAYER
   },
