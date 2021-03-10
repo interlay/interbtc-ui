@@ -67,17 +67,15 @@ function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelect
       value={challengeIdx}
       name='challenge'
       onChange={val => setChallengeIdx(val)}>
-      {timestamp > 0 && ( // only show buttons at all if at least 1 challenge
-        <>
-          {CHALLENGE_CUTOFFS.map((_displayFrom, idx) =>
-            timestamp > 0 &&
+      {timestamp > CHALLENGE_CUTOFFS[1] && ( // only show buttons at all if at least the first is active
+        CHALLENGE_CUTOFFS.map((displayFrom, idx) =>
+          timestamp > displayFrom &&
             <ToggleButton
               variant='outline-polkadot'
               value={idx}>
               {t(`leaderboard.challenge_buttons.${idx}`)}
             </ToggleButton>
-          )}
-        </>
+        )
       )}
     </ToggleButtonGroup>
   );
