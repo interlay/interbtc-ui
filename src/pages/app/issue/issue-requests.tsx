@@ -30,26 +30,20 @@ function IssueRequests(): ReactElement {
     }
   };
 
-  const handleCompleted = (request: IssueRequest) => {
-    switch (request.status) {
+  const handleCompleted = (status: IssueRequestStatus) => {
+    switch (status) {
     case IssueRequestStatus.RequestedRefund:
     case IssueRequestStatus.Completed: {
       return <FaCheck></FaCheck>;
     }
-    case IssueRequestStatus.Cancelled: {
+    case IssueRequestStatus.Cancelled:
+    case IssueRequestStatus.Expired: {
       return (
         <Badge
           className='badge-style'
           variant='secondary'>
           {t('cancelled')}
         </Badge>
-      );
-    }
-    case IssueRequestStatus.Expired: {
-      return (
-        <h5>
-          <Badge variant='secondary'>{t('issue_page.expired')}</Badge>
-        </h5>
       );
     }
     default: {
@@ -108,7 +102,7 @@ function IssueRequests(): ReactElement {
                         t('not_applicable') :
                         Math.max(request.confirmations, 0)}
                     </td>
-                    <td>{handleCompleted(request)}</td>
+                    <td>{handleCompleted(request.status)}</td>
                   </tr>
                 );
               })}

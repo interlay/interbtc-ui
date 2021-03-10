@@ -1,22 +1,57 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect, ReactElement, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { Image } from 'react-bootstrap';
+import { Image, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
 import 'pages/leaderboard/leaderboard.page.scss';
 import 'pages/dashboard/dashboard-subpage.scss';
 import { StoreType } from 'common/types/util.types';
-import { useTranslation } from 'react-i18next';
+import { TFunction, useTranslation } from 'react-i18next';
 import DashboardTable from 'common/components/dashboard-table/dashboard-table';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { RelayerData, VaultData } from '@interlay/polkabtc-stats';
 import TimerIncrement from 'common/components/timer-increment';
+import { CHALLENGE_1_START } from '../../constants'; // relative path due to conflict
 import { Card, Tab, Tabs } from 'react-bootstrap';
 import newImg from '../../assets/img/icons/new.png';
+
+const CHALLENGE_CUTOFFS = [
+  0, // all time
+  CHALLENGE_1_START
+];
+
+type ChallengeSelectorProps = {
+  challengeIdx: number;
+  setChallengeIdx: (idx: number) => void;
+  t: TFunction;
+}
+function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelectorProps): ReactElement {
+  return (
+    <ToggleButtonGroup
+      className='mt-4 mx-3'
+      type='radio'
+      value={challengeIdx}
+      name='challenge'
+      onChange={val => setChallengeIdx(val)}>
+      <ToggleButton
+        variant='outline-primary'
+        value={0}>
+        {t('leaderboard.all_time')}
+      </ToggleButton>
+      <ToggleButton
+        variant='outline-primary'
+        value={1}>
+        {t('leaderboard.challenge')}
+      </ToggleButton>
+    </ToggleButtonGroup>
+  );
+}
 
 export default function ChallengesPage(): ReactElement {
   // eslint-disable-next-line no-array-constructor
   const [vaultRows, setVaultRows] = useState(new Array<VaultData>());
   // eslint-disable-next-line no-array-constructor
   const [relayerRows, setRelayerRows] = useState(new Array<RelayerData>());
+  const [challengeIdx, setChallengeIdx] = useState(0); // all time
 
   const statsApi = usePolkabtcStats();
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
@@ -62,7 +97,10 @@ export default function ChallengesPage(): ReactElement {
   // - exclude Interlay owned relayers
   // - sort relayers with highest lifetime sla
   const tableRelayerRow = useMemo(
-    () => (row: RelayerData): ReactElement[] => [<p>{row.id}</p>, <p>{row.stake} DOT</p>, <p>{row.block_count}</p>,
+    () => (row: RelayerData): ReactElement[] => [
+      <p>{row.id}</p>,
+      <p>{row.stake} DOT</p>,
+      <p>{row.block_count}</p>,
       <p>{Number(row.lifetime_sla).toFixed(2)}</p>
     ],
     []
@@ -71,17 +109,17 @@ export default function ChallengesPage(): ReactElement {
   useEffect(() => {
     const fetchVaultData = async () => {
       if (!polkaBtcLoaded) return;
-      const vaults = (await statsApi.getVaults()).data;
+      const vaults = (await statsApi.getVaults(CHALLENGE_CUTOFFS[challengeIdx])).data;
       setVaultRows(vaults.sort((a, b) => b.lifetime_sla - a.lifetime_sla));
     };
     const fetchRelayerData = async () => {
       if (!polkaBtcLoaded) return;
-      const relayers = (await statsApi.getRelayers()).data;
+      const relayers = (await statsApi.getRelayers(CHALLENGE_CUTOFFS[challengeIdx])).data;
       setRelayerRows(relayers.sort((a, b) => b.lifetime_sla - a.lifetime_sla));
     };
     fetchVaultData();
     fetchRelayerData();
-  }, [polkaBtcLoaded, statsApi, t]);
+  }, [polkaBtcLoaded, statsApi, challengeIdx, t]);
 
   return (
     <div className='main-container dashboard-page'>
@@ -176,6 +214,7 @@ export default function ChallengesPage(): ReactElement {
             <Tab
               eventKey='vaults'
               title={t('leaderboard.vault_scores')}>
+              <ChallengeSelector {...{ challengeIdx, setChallengeIdx, t }} />
               <div className='dashboard-table-container'>
                 <DashboardTable
                   pageData={vaultRows}
@@ -187,6 +226,7 @@ export default function ChallengesPage(): ReactElement {
             <Tab
               eventKey='relayers'
               title={t('leaderboard.relayer_scores')}>
+              <ChallengeSelector {...{ challengeIdx, setChallengeIdx, t }} />
               <div className='dashboard-table-container'>
                 <DashboardTable
                   pageData={relayerRows}
