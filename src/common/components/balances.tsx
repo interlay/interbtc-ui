@@ -1,7 +1,8 @@
 import { ReactElement } from 'react';
 
-import PolkaBitcoin from 'assets/img/PolkaBitcoin-logo.png';
-import PolkadotLogo from 'assets/img/small-polkadot-logo.png';
+import polkaBitcoin from 'assets/img/PolkaBitcoin-logo.png';
+import polkadotLogo from 'assets/img/small-polkadot-logo.png';
+
 type BalancesProps = {
   balancePolkaBTC?: string;
   balanceDOT?: string;
@@ -13,7 +14,7 @@ export default function Balances(props: BalancesProps): ReactElement {
       <span className='btc-balance-wrapper'>
         <span className=''>
           <img
-            src={PolkaBitcoin}
+            src={polkaBitcoin}
             width='20px'
             height='20px'
             alt='polka bitcoin logo'
@@ -22,10 +23,9 @@ export default function Balances(props: BalancesProps): ReactElement {
         </span>{' '}
         PolkaBTC
       </span>
-
       <span className='dot-balance-wrapper'>
         <img
-          src={PolkadotLogo}
+          src={polkadotLogo}
           width='20px'
           height='20px'
           alt='polkadot logo'
