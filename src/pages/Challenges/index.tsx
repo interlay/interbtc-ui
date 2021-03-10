@@ -54,6 +54,7 @@ type ChallengeSelectorProps = {
 }
 
 function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelectorProps): ReactElement {
+  const timestamp = Math.floor(Date.now() / 1000);
   return (
     <ToggleButtonGroup
       className='mt-4 mx-3'
@@ -61,16 +62,20 @@ function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelect
       value={challengeIdx}
       name='challenge'
       onChange={val => setChallengeIdx(val)}>
-      <ToggleButton
-        variant='outline-primary'
-        value={0}>
-        {t('leaderboard.all_time')}
-      </ToggleButton>
-      <ToggleButton
-        variant='outline-primary'
-        value={1}>
-        {t('leaderboard.challenge')}
-      </ToggleButton>
+      {timestamp > CHALLENGE_4_START && (
+        <>
+          <ToggleButton
+            variant='outline-secondary'
+            value={0}>
+            {t('leaderboard.all_time')}
+          </ToggleButton>
+          <ToggleButton
+            variant='outline-polkadot'
+            value={1}>
+            {t('leaderboard.challenge')}
+          </ToggleButton>
+        </>
+      )}
     </ToggleButtonGroup>
   );
 }
