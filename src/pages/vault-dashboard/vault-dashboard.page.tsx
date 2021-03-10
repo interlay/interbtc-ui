@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ReactElement } from 'react';
 import RegisterVaultModal from './register-vault/register-vault';
-import UpdateCollateralModal from './update-collateral/update-collateral';
+import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
 import RequestReplacementModal from './request-replacement/request-replacement';
 import { Button } from 'react-bootstrap';
 import { StoreType } from '../../common/types/util.types';
@@ -22,12 +22,14 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { safeRoundTwoDecimals } from '../../common/utils/utils';
 import TimerIncrement from '../../common/components/timer-increment';
+import MainContainer from 'parts/MainContainer';
+import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard/dashboard-subpage.scss';
 
 export default function VaultDashboardPage(): ReactElement {
   const [showRegisterVaultModal, setShowRegisterVaultModal] = useState(false);
-  const [showUpdateCollateralModal, setShowUpdateCollateralModal] = useState(false);
+  const [updateCollateralModalStatus, setUpdateCollateralModalStatus] = useState(CollateralUpdateStatus.Hidden);
   const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
   const { vaultClientLoaded, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
   const { collateralization, collateral, lockedBTC, sla, apy } = useSelector((state: StoreType) => state.vault);
@@ -43,7 +45,7 @@ export default function VaultDashboardPage(): ReactElement {
   const { t } = useTranslation();
 
   const closeRegisterVaultModal = () => setShowRegisterVaultModal(false);
-  const closeUpdateCollateralModal = () => setShowUpdateCollateralModal(false);
+  const closeUpdateCollateralModal = () => setUpdateCollateralModalStatus(CollateralUpdateStatus.Hidden);
   const closeRequestReplacementModal = () => setShowRequestReplacementModal(false);
 
   useEffect(() => {
@@ -62,7 +64,7 @@ export default function VaultDashboardPage(): ReactElement {
         if (accountId !== vault.id.toString()) {
           toast.warn(
             'Local vault client running, but vault is not yet registered with the parachain.' +
-                            ' Client needs to be registered and DOT locked to start backing PolkaBTC and earning fees.',
+              ' Client needs to be registered and DOT locked to start backing PolkaBTC and earning fees.',
             { autoClose: false, toastId: vaultNotRegisteredToastId }
           );
         }
@@ -75,10 +77,10 @@ export default function VaultDashboardPage(): ReactElement {
         const collateralDot = planckToDOT(balanceLockedDOT.toString());
         dispatch(updateCollateralAction(collateralDot));
 
-        const feesPolkaSAT = await window.polkaBTC.vaults.getFeesPolkaBTC(vaultId.toString());
+        const feesPolkaSAT = await window.polkaBTC.vaults.getFeesPolkaBTC(vaultId);
         setFeesEarnedPolkaBTC(satToBTC(feesPolkaSAT));
 
-        const feesPlanck = await window.polkaBTC.vaults.getFeesDOT(vaultId.toString());
+        const feesPlanck = await window.polkaBTC.vaults.getFeesDOT(vaultId);
         setFeesEarnedDOT(planckToDOT(feesPlanck));
 
         const totalPolkaSAT = await window.polkaBTC.vaults.getIssuedPolkaBTCAmount(vaultId);
@@ -88,10 +90,10 @@ export default function VaultDashboardPage(): ReactElement {
         const collateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId);
         dispatch(updateCollateralizationAction(collateralization?.mul(100).toString()));
 
-        const slaScore = await window.polkaBTC.vaults.getSLA(vaultId.toString());
+        const slaScore = await window.polkaBTC.vaults.getSLA(vaultId);
         dispatch(updateSLAAction(slaScore));
 
-        const apyScore = await window.polkaBTC.vaults.getAPY(vaultId.toString());
+        const apyScore = await window.polkaBTC.vaults.getAPY(vaultId);
         dispatch(updateAPYAction(apyScore));
 
         const issuablePolkaBTC = await window.polkaBTC.vaults.getIssuablePolkaBTC();
@@ -104,16 +106,12 @@ export default function VaultDashboardPage(): ReactElement {
   }, [polkaBtcLoaded, vaultClientLoaded, dispatch, vaultRegistered]);
 
   return (
-    <div className='vault-dashboard-page main-container'>
+    <MainContainer className='vault-dashboard-page'>
       <div className='vault-container dashboard-fade-in-animation dashboard-min-height'>
         <div className='stacked-wrapper'>
-          <div className='title-text-container'>
-            <h1 className='title-text'>{t('vault.vault_dashboard')}</h1>
-            {accountId}
-            <p className='latest-block-text'>
-              <TimerIncrement></TimerIncrement>
-            </p>
-          </div>
+          <PageTitle
+            mainTitle={t('vault.vault_dashboard')}
+            subTitle={<TimerIncrement />} />
         </div>
         {vaultId === accountId && (
           <React.Fragment>
@@ -140,9 +138,7 @@ export default function VaultDashboardPage(): ReactElement {
                     className='card stats-card mb-3'
                     style={{ minHeight: '100px' }}>
                     <div className=''>{t('collateralization')}</div>
-                    <span className='stats'>
-                      {`${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`}
-                    </span>
+                    <span className='stats'>{`${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`}</span>
                   </div>
                 </div>
                 <div className='col-lg-3 col-md-6 col-6'>
@@ -189,13 +185,21 @@ export default function VaultDashboardPage(): ReactElement {
                 </div>
               </div>
             </div>
-            <div className='row'>
-              <div className='col-12'>
+            <div className='row justify-content-center mt-3'>
+              <div className='col-lg-2'>
                 <Button
                   variant='outline-success'
                   className=''
-                  onClick={() => setShowUpdateCollateralModal(true)}>
-                  {t('vault.update_collateral')}
+                  onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Increase)}>
+                  {t('vault.increase_collateral')}
+                </Button>
+              </div>
+              <div className='col-lg-2'>
+                <Button
+                  variant='outline-danger'
+                  className=''
+                  onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Decrease)}>
+                  {t('vault.withdraw_collateral')}
                 </Button>
               </div>
             </div>
@@ -218,11 +222,11 @@ export default function VaultDashboardPage(): ReactElement {
           show={showRegisterVaultModal} />
         <UpdateCollateralModal
           onClose={closeUpdateCollateralModal}
-          show={showUpdateCollateralModal} />
+          status={updateCollateralModalStatus} />
         <RequestReplacementModal
           onClose={closeRequestReplacementModal}
           show={showRequestReplacementModal} />
       </div>
-    </div>
+    </MainContainer>
   );
 }

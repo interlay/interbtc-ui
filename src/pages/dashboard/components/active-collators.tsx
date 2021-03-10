@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import ButtonComponent from './button-component';
 import { getAccents } from '../dashboard-colors';
 import LineChartComponent from './line-chart-component';

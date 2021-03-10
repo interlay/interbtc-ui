@@ -1,17 +1,20 @@
 
 :root {
-  /* TODO: placeholder for now */
-  /* --palette-background-default: #303030;
-  --palette-primary-main: #90caf9;
-  --palette-primary-dark: #648dae;
-  --palette-secondary-main: #f48fb1;
-  --palette-warning-main: #ff9800;
-  --palette-success-main: #4caf50;
-  --palette-error-main: #f44336;
-  --palette-text-primary: #fff;
-  --palette-text-secondary: rgba(255, 255, 255, 0.7); */
-  /* TODO: should name descriptively */
+  --palette-common-black: #000;
+  --palette-common-white: #fff;
+  /* RE: bootstrap breakpoints */
+  --breakpoints-value-xs: '0px';
+  --breakpoints-value-sm: '576px';
+  --breakpoints-value-md: '768px';
+  --breakpoints-value-lg: '992px';
+  --breakpoints-value-xl: '1200px';
+    /* TODO: should name descriptively */
   --d_pink: #e6007a;
   --d_yellow: #f7931a;
   --d_blue: #1c86ee;
+  --body-color: #e9ecef;
+}
+
+.interlay-text-white {
+  color: var(--palette-common-white);
 }

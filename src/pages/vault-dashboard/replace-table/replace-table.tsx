@@ -46,9 +46,15 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
   }, [polkaBtcLoaded, dispatch]);
 
   return (
-    <div className='dashboard-table-container'>
+    <div style={{ margin: '40px 0px' }}>
       <div>
-        <p className='table-heading'>{t('vault.replace_requests')}</p>
+        <p
+          style={{
+            fontFamily: 'airbnb-cereal-bold',
+            fontSize: '26px'
+          }}>
+          {t('vault.replace_requests')}
+        </p>
       </div>
       {replaceRequests && replaceRequests.length > 0 ? (
         <React.Fragment>

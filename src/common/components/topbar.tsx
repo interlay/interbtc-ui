@@ -7,15 +7,15 @@ import { StoreType } from '../types/util.types';
 import ButtonMaybePending from './pending-button';
 import { planckToDOT } from '@interlay/polkabtc';
 import { updateBalanceDOTAction, showAccountModalAction } from '../actions/general.actions';
-import { updateBalances } from '../utils/utils';
+import { shortAddress, updateBalances } from '../utils/utils';
 import { useTranslation } from 'react-i18next';
 import Balances from './balances';
 import { PAGES } from 'utils/constants/links';
-import newImg from '../../assets/img/icons/new.png';
+import newMark from '../../assets/img/icons/new-mark.png';
 
 type TopbarProps = {
-    address?: string;
-    requestDOT: () => Promise<void>;
+  address?: string;
+  requestDOT: () => Promise<void>;
 };
 
 export default function Topbar(props: TopbarProps): ReactElement {
@@ -80,7 +80,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
 
     if (!address) return 'Select Account';
 
-    return address.substring(0, 10) + '...' + address.substring(38);
+    return shortAddress(address);
   };
 
   return (
@@ -143,7 +143,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                   to={PAGES.CHALLENGES}>
                   {t('nav_challenges')}
                   <Image
-                    src={newImg}
+                    src={newMark}
                     height='20em'>
                   </Image>
                 </Link>
@@ -163,44 +163,54 @@ export default function Topbar(props: TopbarProps): ReactElement {
             </Nav>
             {props.address !== undefined && (
               <React.Fragment>
-                <Nav className='d-inline'>
-                  <Button
-                    variant='outline-bitcoin'
-                    className='mr-2'
-                    style={{ borderRadius: '8px' }}
-                    size='sm'>
-                    <a
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      href='https://testnet-faucet.mempool.co/'
-                      style={{ textDecoration: 'none', color: '#000' }}>
-                      {t('request_btc')}
-                    </a>
-                  </Button>
-                  <ButtonMaybePending
-                    variant='outline-polkadot'
-                    className='mr-2'
-                    style={{ borderRadius: '8px' }}
-                    size='sm'
-                    isPending={isRequestPending}
-                    onClick={requestDOT}>
-                    {t('request_dot')}
-                  </ButtonMaybePending>
-                </Nav>
-                <Balances
-                  balanceDOT={balanceDOT}
-                  balancePolkaBTC={balancePolkaBTC} />
-                <Nav
-                  id='account-button'
-                  className='d-inline'>
-                  <Button
-                    variant='outline-polkadot'
-                    size='sm'
-                    style={{ borderRadius: '8px' }}
-                    onClick={() => dispatch(showAccountModalAction(true))}>
-                    {getLabel()}
-                  </Button>
-                </Nav>
+                {address === '' ? (
+                  <Nav
+                    id='account-button'
+                    className='d-inline'>
+                    <Button
+                      variant='outline-account-not-connected'
+                      className='nav-bar-button'
+                      onClick={() => dispatch(showAccountModalAction(true))}>
+                      {getLabel()}
+                    </Button>
+                  </Nav>
+                ) : (
+                  <>
+                    <Nav className='d-inline'>
+                      <a
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        href='https://testnet-faucet.mempool.co/'
+                        style={{ textDecoration: 'none' }}>
+                        <Button
+                          variant='outline-bitcoin'
+                          className='nav-bar-button'>
+                          {t('request_btc')}
+                        </Button>
+                      </a>
+                      <ButtonMaybePending
+                        variant='outline-polkadot'
+                        className='nav-bar-button'
+                        isPending={isRequestPending}
+                        onClick={requestDOT}>
+                        {t('request_dot')}
+                      </ButtonMaybePending>
+                    </Nav>
+                    <Balances
+                      balanceDOT={balanceDOT}
+                      balancePolkaBTC={balancePolkaBTC} />
+                    <Nav
+                      id='account-button'
+                      className='d-inline'>
+                      <Button
+                        variant='outline-account'
+                        className='nav-bar-button'
+                        onClick={() => dispatch(showAccountModalAction(true))}>
+                        {getLabel()}
+                      </Button>
+                    </Nav>
+                  </>
+                )}
               </React.Fragment>
             )}
           </Navbar.Collapse>

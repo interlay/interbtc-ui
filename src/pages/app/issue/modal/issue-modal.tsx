@@ -1,5 +1,5 @@
 
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { useSelector } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
@@ -122,7 +122,7 @@ function IssueModal(props: IssueModalProps): ReactElement {
                 {/* TODO: should be reusable */}
                 <div className='step-item row mt-2'>
                   <div className='col-6 text-left'>{t('issue_page.destination_address')}</div>
-                  <div className='col-6 right-text'>{shortAddress(request.vaultBTCAddress)}</div>
+                  <div className='col-6 right-text'>{shortAddress(address)}</div>
                 </div>
                 <div className='step-item row'>
                   <div className='col-6 text-left'>{t('issue_page.parachain_block')}</div>

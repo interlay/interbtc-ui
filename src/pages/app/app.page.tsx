@@ -1,15 +1,15 @@
 
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
+import MainContainer from 'parts/MainContainer';
 import IssueSteps from './issue/issue-steps';
 import IssueRequests from './issue/issue-requests';
 import RedeemSteps from './redeem/redeem-steps';
 import RedeemRequests from './redeem/redeem-requests';
 import Transfer from './transfer/transfer';
-import Tab from './Tab';
-import HorizontalLine from './HorizontalLine';
+import Tabs, { Tab, HorizontalLine } from './Tabs';
 import { StoreType } from 'common/types/util.types';
 import { TabTypes } from 'utils/enums/tab-types';
 import './app.page.scss';
@@ -24,7 +24,7 @@ function Application(): ReactElement {
   const tabsHidden = issueStep !== 'ENTER_BTC_AMOUNT' && selectedTabType === TabTypes.Issue;
 
   return (
-    <section className='main-container text-center white-background min-vh-100 app-page'>
+    <MainContainer className='text-center white-background min-vh-100 app-page'>
       <div className='container mt-5'>
         <div className='row justify-content-center'>
           <div
@@ -41,9 +41,7 @@ function Application(): ReactElement {
               </div>
             ) : (
               <>
-                <div
-                  id='main-tabs'
-                  className='row'>
+                <Tabs>
                   <Tab
                     tabType={TabTypes.Issue}
                     selectedTabType={selectedTabType}>
@@ -59,7 +57,7 @@ function Application(): ReactElement {
                     selectedTabType={selectedTabType}>
                     {t('transfer')}
                   </Tab>
-                </div>
+                </Tabs>
                 <HorizontalLine selectedTabType={selectedTabType} />
               </>
             )}
@@ -73,7 +71,7 @@ function Application(): ReactElement {
       </div>
       {selectedTabType === TabTypes.Issue && <IssueRequests />}
       {selectedTabType === TabTypes.Redeem && <RedeemRequests />}
-    </section>
+    </MainContainer>
   );
 }
 

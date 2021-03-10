@@ -15,6 +15,8 @@ import { satToBTC, planckToDOT } from '@interlay/polkabtc';
 import { useTranslation } from 'react-i18next';
 import { safeRoundTwoDecimals } from '../../common/utils/utils';
 import TimerIncrement from '../../common/components/timer-increment';
+import MainContainer from 'parts/MainContainer';
+import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard/dashboard-subpage.scss';
 
@@ -28,7 +30,7 @@ export default function StakedRelayerPage(): ReactElement {
   const [stakedRelayerAddress, setStakedRelayerAddress] = useState('');
   const [relayerRegistered, setRelayerRegistered] = useState(false);
   const [relayerInactive, setRelayerInactive] = useState(false);
-  const [sla, setSLA] = useState('0');
+  const [sla, setSLA] = useState(0);
   const [apy, setAPY] = useState('0');
   const relayerNotRegisteredToastId = 'relayer-not-registered-id';
   const { polkaBtcLoaded, relayerLoaded } = useSelector((state: StoreType) => state.general);
@@ -72,18 +74,18 @@ export default function StakedRelayerPage(): ReactElement {
 
         // show warning if relayer is not registered with the parachain
         if (isRegistered) {
-          const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId.toString());
+          const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId);
           setSLA(slaScore);
 
-          const apyScore = await window.polkaBTC.stakedRelayer.getAPY(stakedRelayerId.toString());
+          const apyScore = await window.polkaBTC.stakedRelayer.getAPY(stakedRelayerId);
           setAPY(apyScore);
 
           const feesPolkaSAT = await window.polkaBTC.stakedRelayer.getFeesPolkaBTC(
-            stakedRelayerId.toString()
+            stakedRelayerId
           );
           setFeesEarnedPolkaBTC(satToBTC(feesPolkaSAT));
 
-          const feesPlanck = await window.polkaBTC.stakedRelayer.getFeesDOT(stakedRelayerId.toString());
+          const feesPlanck = await window.polkaBTC.stakedRelayer.getFeesDOT(stakedRelayerId);
           setFeesEarnedDOT(planckToDOT(feesPlanck));
         } else {
           toast.warn(t('relayer.warning_relayer_not_registered'), {
@@ -102,16 +104,12 @@ export default function StakedRelayerPage(): ReactElement {
   }, [polkaBtcLoaded, relayerLoaded, t]);
 
   return (
-    <div className='staked-relayer-page main-container'>
-      <div className='staked-container dashboard-fade-in-animation dahboard-min-height'>
+    <MainContainer className='staked-relayer-page'>
+      <div className='staked-container dashboard-fade-in-animation dashboard-min-height'>
         <div className='stacked-wrapper'>
-          <div className='title-text-container'>
-            <h1 className='title-text'>{t('relayer.staked_relayer_dashboard')}</h1>
-            {stakedRelayerAddress}
-            <p className='latest-block-text'>
-              <TimerIncrement></TimerIncrement>
-            </p>
-          </div>
+          <PageTitle
+            mainTitle={t('relayer.staked_relayer_dashboard')}
+            subTitle={<TimerIncrement />} />
           {!relayerRegistered && polkaBtcLoaded ? (
             <Button
               variant='outline-success'
@@ -196,6 +194,6 @@ export default function StakedRelayerPage(): ReactElement {
           )}
         </div>
       </div>
-    </div>
+    </MainContainer>
   );
 }

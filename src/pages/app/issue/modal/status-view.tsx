@@ -102,17 +102,20 @@ export default function StatusView(props: StatusViewProps): ReactElement {
     }
   };
 
-  return (
-    <div className='status-view'>
-      {(props.request.status === IssueRequestStatus.Completed ||
-        props.request.status === IssueRequestStatus.RequestedRefund) && (
-        <React.Fragment>
+  function getStatus(status: IssueRequestStatus) {
+    // note: the following states are handled already in issue-modal.tsx
+    // IssueRequestStatus.RequestedRefund
+    // IssueRequestStatus.PendingWithBtcTxNotFound
+    switch (status) {
+    case IssueRequestStatus.Completed:
+      return (
+        <>
           <div className='completed-status-title'>{t('completed')}</div>
           <div className='row'>
             <div className='col text-center bold-text '>
               {t('issue_page.you_received')}{' '}
               <span className='pink-amount bold-text'>
-                {props.request.issuedAmountBtc || props.request.requestedAmountPolkaBTC + ' PolkaBTC'}
+                {props.request.issuedAmountBtc || props.request.requestedAmountPolkaBTC} PolkaBTC
               </span>
             </div>
           </div>
@@ -163,10 +166,12 @@ export default function StatusView(props: StatusViewProps): ReactElement {
               </div>
             </div>
           </div>
-        </React.Fragment>
-      )}
-      {props.request.status === IssueRequestStatus.Cancelled && (
-        <React.Fragment>
+        </>
+      );
+    case IssueRequestStatus.Cancelled:
+    case IssueRequestStatus.Expired:
+      return (
+        <>
           <div className='cancel-status-title'>{t('cancelled')}</div>
           <div className='row'>
             <div className='col text-center'>
@@ -185,62 +190,37 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           <div className='row justify-content-center'>
             <div className='col-9 note-text'>{t('issue_page.contact_team')}</div>
           </div>
-        </React.Fragment>
-      )}
-      {props.request.status !== IssueRequestStatus.Completed &&
-        props.request.status !== IssueRequestStatus.Cancelled && (
-        <React.Fragment>
+        </>
+      );
+    case IssueRequestStatus.PendingWithBtcTxNotIncluded:
+    case IssueRequestStatus.PendingWithTooFewConfirmations:
+      return (
+        <>
           <div className='status-title'>
-            {props.request.confirmations < stableBitcoinConfirmations ? t('received') : t('confirmed')}
+            {t('received')}
           </div>
           <div className='row'>
             <div className='col'>
-              {props.request.confirmations < stableBitcoinConfirmations ? (
-                <React.Fragment>
-                  <div className='waiting-confirmations-circle'>
-                    <div>{t('issue_page.waiting_for')}</div>
-                    <div>{t('confirmations')}</div>
-                    <div className='number-of-confirmations'>
-                      {props.request.confirmations + '/' + stableBitcoinConfirmations}
-                    </div>
+              <div className='waiting-confirmations-circle'>
+                <div>{t('issue_page.waiting_for')}</div>
+                <div>{t('confirmations')}</div>
+                <div className='number-of-confirmations'>
+                  {props.request.confirmations + '/' + stableBitcoinConfirmations}
+                </div>
+              </div>
+              <div className='row btc-transaction-wrapper'>
+                <div className='col'>
+                  <div className='btc-transaction-view'>
+                    {t('issue_page.btc_transaction')}
                   </div>
-                  <div className='row btc-transaction-wrapper'>
-                    <div className='col'>
-                      <div className='btc-transaction-view'>
-                        {t('issue_page.btc_transaction')}
-                      </div>
-                    </div>
-                  </div>
-                  <div className='row'>
-                    <div className='col'>
-                      <div className='btc-transaction-view'>
-                        <BitcoinTransaction
-                          txId={props.request.btcTxId}
-                          shorten />
-                      </div>
-                    </div>
-                  </div>
-                </React.Fragment>
-              ) : (
-                <React.Fragment>
-                  <div className='row'>
-                    <div className='col text-center'>
-                      <div className='fas fa-check-circle confirmed-tick'></div>
-                    </div>
-                  </div>
-                  <div className='row btc-transaction-wrapper'>
-                    <div className='col'>
-                      <div className='btc-transaction-view'>
-                        {t('issue_page.btc_transaction')}
-                      </div>
-                    </div>
-                  </div>
-                  <div className='row'>
-                    <div className='col'>
-                      <div className='btc-transaction-view'>
-                        {shortAddress(props.request.btcTxId)}
-                      </div>
-                    </div>
+                </div>
+              </div>
+              <div className='row'>
+                <div className='col'>
+                  <div className='btc-transaction-view'>
+                    <BitcoinTransaction
+                      txId={props.request.btcTxId}
+                      shorten />
                   </div>
                   <div className='row mt-3'>
                     <div className='col text-center'>
@@ -249,7 +229,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                           (constants.BTC_MAINNET ?
                             constants.BTC_EXPLORER_TRANSACTION_API :
                             constants.BTC_TEST_EXPLORER_TRANSACTION_API) +
-                              props.request.btcTxId
+                            props.request.btcTxId
                         }
                         target='_blank'
                         rel='noopener noreferrer'>
@@ -259,25 +239,76 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                       </a>
                     </div>
                   </div>
-                  <div className='row mt-5 justify-content-center'>
-                    <div className='col-10'>{t('issue_page.receive_polkabtc_tokens')}</div>
-                  </div>
-                  <div className='row mt-3 justify-content-center'>
-                    <div className='col-6 text-center'>
-                      <ButtonMaybePending
-                        isPending={executePending}
-                        className='pink-button'
-                        onClick={() => execute(props.request)}>
-                        {t('issue_page.claim_polkabtc')}
-                      </ButtonMaybePending>
-                    </div>
-                  </div>
-                </React.Fragment>
-              )}
+                </div>
+              </div>
             </div>
           </div>
-        </React.Fragment>
-      )}
-    </div>
-  );
+        </>
+      );
+    case IssueRequestStatus.PendingWithEnoughConfirmations:
+      return (
+        <>
+          <div className='status-title'>
+            {t('confirmed')}
+          </div>
+          <div className='row'>
+            <div className='col'>
+              <div className='row'>
+                <div className='col text-center'>
+                  <div className='fas fa-check-circle confirmed-tick'></div>
+                </div>
+              </div>
+              <div className='row btc-transaction-wrapper'>
+                <div className='col'>
+                  <div className='btc-transaction-view'>
+                    {t('issue_page.btc_transaction')}
+                  </div>
+                </div>
+              </div>
+              <div className='row'>
+                <div className='col'>
+                  <div className='btc-transaction-view'>
+                    {shortAddress(props.request.btcTxId)}
+                  </div>
+                </div>
+              </div>
+              <div className='row mt-3'>
+                <div className='col text-center'>
+                  <a
+                    // TODO: use the transaction wrapper for this link
+                    href={
+                      (constants.BTC_MAINNET ?
+                        constants.BTC_EXPLORER_TRANSACTION_API :
+                        constants.BTC_TEST_EXPLORER_TRANSACTION_API) +
+                        props.request.btcTxId
+                    }
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    <button className='btn green-button'>
+                      {t('issue_page.view_on_block_explorer')}
+                    </button>
+                  </a>
+                </div>
+              </div>
+              <div className='row mt-5 justify-content-center'>
+                <div className='col-10'>{t('issue_page.receive_polkabtc_tokens')}</div>
+              </div>
+              <div className='row mt-3 justify-content-center'>
+                <div className='col-6 text-center'>
+                  <ButtonMaybePending
+                    isPending={executePending}
+                    className='pink-button'
+                    onClick={() => execute(props.request)}>
+                    {t('issue_page.claim_polkabtc')}
+                  </ButtonMaybePending>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      );
+    }
+  }
+
+  return <div className='status-view'>{getStatus(props.request.status)}</div>;
 }

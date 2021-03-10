@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import DashboardTable, {
@@ -22,7 +22,7 @@ export default function StakedRelayerTable(): ReactElement {
   useEffect(() => {
     (async () => {
       try {
-        const res = await statsApi.getRelayers();
+        const res = await statsApi.getRelayers(0);
         setRelayers(res.data);
       } catch (error) {
         toast.error(error.toString());
@@ -44,9 +44,15 @@ export default function StakedRelayerTable(): ReactElement {
   ];
 
   return (
-    <div className='dashboard-table-container'>
+    <div style={{ margin: '40px 0px' }}>
       <div>
-        <p className='table-heading'>{t('dashboard.parachain.relayers')}</p>
+        <p
+          style={{
+            fontFamily: 'airbnb-cereal-bold',
+            fontSize: '26px'
+          }}>
+          {t('dashboard.parachain.relayers')}
+        </p>
       </div>
       <DashboardTable
         pageData={relayers}

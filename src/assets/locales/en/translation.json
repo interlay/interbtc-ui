@@ -109,6 +109,9 @@
   "blockstream": "Blockstream",
   "insufficient_funds_dot": "Insufficient funds to pay for DOT fees.",
   "insufficient_funds": "Insufficient balance to transfer.",
+  "issue_redeem_disabled": "Issue and Redeem is currently disabled.",
+  "polkabtc_bridge_recovery_mode": "The PolkaBTC bridge has entered recovery mode. User funds are safe. Please try again later or check the status on the Dashboard page.",
+  "waiting_for_confirmations": "Waiting for Confirmations",
   "redeem_page": {
     "burn": "Burn",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
@@ -120,7 +123,7 @@
     "as_compensation_instead": " (~${{compensationPrice}}) as compensation instead.",
     "view_progress": "View progress",
     "btc_destination_address": "BTC destination address",
-    "you_will_recieve": "Redeem PolkaBTC 1:1 for BTC",
+    "you_will_receive": "Redeem PolkaBTC 1:1 for BTC",
     "must_select_account_warning": "No account selected. Please select an account to redeem.",
     "waiting_for": "Waiting for",
     "typically_takes": "This typically takes only a few minutes but may sometimes take up to 6 hours.",
@@ -286,7 +289,8 @@
       "secure_threshold": "Secure Threshold: {{threshold}} %",
       "total_collateral_locked": "Total Collateral Locked",
       "perday_collateral_locked": "Collateral Locked Per Day",
-      "total_vaults_chart": "Total number of vaults"
+      "total_vaults_chart": "Total number of vaults",
+      "vaults": "Vaults"
     },
     "parachain": {
       "parachain": "BTC Parachain",
@@ -310,7 +314,7 @@
   },
   "issue_page": {
     "maximum_in_single_request": "The maximum you can issue in a single request is {{maxAmount}} PolkaBTC. Please enter a lower amount.",
-    "request": "Request  #{{id}}",
+    "request": "Request id  #{{id}}",
     "you_received": "You have received ",
     "contact_team": "Contact the team for debugging if you think this is an error.",
     "you_did_not_send": "You did not send the BTC transaction in time or transferred amount did not not meet the requested amount of PolkaBTC.",
@@ -359,7 +363,7 @@
     "vault_btc_address": "Vault BTC Address",
     "vault_dot_address": "Vault Account",
     "btc_transaction": "BTC Transaction",
-    "in_parachain_block": "in parachain block",
+    "in_parachain_block": "In Parachain Block",
     "confirmations": "Confirmations",
     "issue_request_not_found": "Exception: Issue request not found.",
     "confirmation": "Confirmation",
@@ -393,7 +397,7 @@
     "executed": "Executed",
     "pending": "Pending",
     "cancelled": "Cancelled",
-    "claim_polkabtc": "CLAIM POLKABTC",
+    "claim_polkabtc": "Claim PolkaBTC",
     "refund_whoops": "Whoops! Too many BTC deposited",
     "refund_sent_more_btc": "Looks like you sent more BTC than requested",
     "refund_requested": "Requested",
@@ -448,6 +452,11 @@
     "block_count": "Blocks Submitted",
     "lifetime_sla": "Lifetime SLA Score",
     "more_info": "More info",
+    "challenge_buttons": [
+      "Challenges 2 & 3",
+      "Challenge 4",
+      "All-time"
+    ],
     "challenges": {
       "treasure_hunt": "Challenge 1: Treasure Hunt",
       "treasure_hunt_desc": "Issue & redeem to claim reward.",
@@ -456,9 +465,9 @@
       "lottery": "Challenge 5: Lottery",
       "lottery_desc": "Stay tuned, coming soon!",
       "vault_treasure_hunt": "Challenge 2: Vault Treasure",
-      "vault_treasure_hunt_desc": "Stay tuned, coming soon!",
+      "vault_treasure_hunt_desc": "Run a Vault client to fulfill issue and redeem requests.",
       "relayer_treasure_hunt": "Challenge 3: Relayer Treasure",
-      "relayer_treasure_hunt_desc": "Stay tuned, coming soon!"
+      "relayer_treasure_hunt_desc": "Run a Relayer client to submit BTC block headers."
     }
   },
   "vault": {
@@ -478,9 +487,10 @@
     "current_btc_address": "Current BTC Address:",
     "automatically_created": "Your new BTC address will be automatically created from your BTC wallet connected to the vault client when you click update.",
     "successfully_updated_collateral": "Successfully updated collateral",
-    "update_collateral": "Update Collateral",
+    "increase_collateral": "Increase Collateral",
     "current_total_collateral": "Current Total Collateral {{currentDOTCollateral}} DOT ",
     "new_total_collateral": "New Total Collateral",
+    "update_collateral": "Update Collateral By",
     "collateral_higher_than_0": "Collateral must be higher than 0",
     "new_collateralization": "New Collateralization:",
     "withdraw_collateral": "Withdraw Collateral",

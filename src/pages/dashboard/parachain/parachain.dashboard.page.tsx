@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useMemo, useEffect } from 'react';
+import { ReactElement, useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ParachainSecurity from '../components/parachain-security';
@@ -15,6 +15,8 @@ import DashboardTable, {
 } from '../../../common/components/dashboard-table/dashboard-table';
 import { StatusUpdateColumns } from '@interlay/polkabtc-stats';
 import TimerIncrement from '../../../common/components/timer-increment';
+import MainContainer from 'parts/MainContainer';
+import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard.page.scss';
 import '../dashboard-subpage.scss';
@@ -103,28 +105,29 @@ export default function ParachainDashboard(): ReactElement {
   );
 
   return (
-    <div className='main-container dashboard-page'>
+    <MainContainer>
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <div>
-            <div className='title-container'>
-              <h1 className='title-text'>{t('dashboard.parachain.parachain')}</h1>
-              <p className='latest-block-text'>
-                <TimerIncrement></TimerIncrement>
-              </p>
-              <div
-                style={{ backgroundColor: getAccents('d_pink').color }}
-                className='title-line'>
-              </div>
-            </div>
-
+            <PageTitle
+              mainTitle={t('dashboard.parachain.parachain')}
+              subTitle={<TimerIncrement />} />
+            <div
+              style={{ backgroundColor: getAccents('d_pink').color }}
+              className='title-line' />
             <div className='parachain-graphs-container dashboard-graphs-container'>
               <ParachainSecurity />
               <ActiveStakedRelayers />
             </div>
-            <div className='dashboard-table-container'>
+            <div style={{ margin: '40px 0px' }}>
               <div>
-                <p className='table-heading'>{t('dashboard.parachain.status_updates')}</p>
+                <p
+                  style={{
+                    fontFamily: 'airbnb-cereal-bold',
+                    fontSize: '26px'
+                  }}>
+                  {t('dashboard.parachain.status_updates')}
+                </p>
               </div>
               <DashboardTable
                 richTable={true}
@@ -139,6 +142,6 @@ export default function ParachainDashboard(): ReactElement {
           </div>
         </div>
       </div>
-    </div>
+    </MainContainer>
   );
 }

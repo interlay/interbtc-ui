@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { StoreType } from '../../types/util.types';
 import { useSelector } from 'react-redux';
 import { formatDateTime } from '../../utils/utils';
@@ -73,9 +73,17 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
   ];
 
   return (
-    <div className={'dashboard-table-container ' + (new BN(props.planckLocked) <= new BN(0) ? 'oracle-space' : '')}>
+    <div
+      style={{ margin: '40px 0px' }}
+      className={(new BN(props.planckLocked) <= new BN(0) ? 'oracle-space' : '')}>
       <div>
-        <p className='table-heading'>{t('dashboard.oracles.oracles')}</p>
+        <p
+          style={{
+            fontFamily: 'airbnb-cereal-bold',
+            fontSize: '26px'
+          }}>
+          {t('dashboard.oracles.oracles')}
+        </p>
       </div>
       <DashboardTable
         pageData={oracles}

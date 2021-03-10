@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect, useMemo } from 'react';
+import { ReactElement, useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Vault } from '../../types/vault.types';
 import * as constants from '../../../constants';
@@ -49,7 +49,7 @@ export default function VaultTable(): ReactElement {
     ): string => {
       console.log(status);
       if (status === constants.VAULT_STATUS_THEFT) {
-        return t('vault.theft');
+        return t('dashboard.vault.theft');
       }
       if (status === constants.VAULT_STATUS_LIQUIDATED) {
         return constants.VAULT_STATUS_LIQUIDATED;
@@ -107,7 +107,7 @@ export default function VaultTable(): ReactElement {
                         vault.status &&
                         checkVaultStatus(
                           vault.status.toString(),
-                          unsettledCollateralization,
+                          settledCollateralization,
                           vault.banned_until.toString()
                         ),
           unsettledCollateralization: unsettledCollateralization?.mul(100).toString(),
@@ -219,9 +219,15 @@ export default function VaultTable(): ReactElement {
   }, [auctionCollateralThreshold, secureCollateralThreshold, t]);
 
   return (
-    <div className='dashboard-table-container'>
+    <div style={{ margin: '40px 0px' }}>
       <div>
-        <p className='table-heading'>{t('dashboard.vault.active_vaults')}</p>
+        <p
+          style={{
+            fontFamily: 'airbnb-cereal-bold',
+            fontSize: '26px'
+          }}>
+          {t('dashboard.vault.active_vaults')}
+        </p>
       </div>
       <DashboardTable
         pageData={vaults.map(vault => ({ ...vault, id: vault.vaultId }))}

@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 
 const formatTime = (seconds: number): string => {
   return 'Last updated ' + seconds + ' seconds ago';
@@ -12,5 +12,5 @@ export default function TimerIncrement(): ReactElement {
     }, 1000);
   }, []);
 
-  return <div>{formatTime(timer)}</div>;
+  return <>{formatTime(timer)}</>;
 }

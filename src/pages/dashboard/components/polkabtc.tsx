@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ButtonComponent from './button-component';
 import { getAccents } from '../dashboard-colors';
 import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
@@ -48,7 +48,7 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
     <div className='card'>
       <div className='card-top-content'>
         <div className='values-container'>
-          <h1 style={{ color: getAccents('d_yellow').color }}>{t('dashboard.issue.issued')}</h1>
+          <h1 style={{ color: getAccents('d_pink').color }}>{t('dashboard.issue.issued')}</h1>
           <h2>{t('dashboard.issue.total_polkabtc', { amount: totalPolkaBTC })}</h2>
           {/* TODO: add the price API */}
           <h2>${getUsdAmount(totalPolkaBTC, prices.bitcoin.usd)}</h2>
@@ -59,7 +59,7 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
               <div className='button-container'>
                 <ButtonComponent
                   buttonName='view all issued'
-                  propsButtonColor='d_yellow'
+                  propsButtonColor='d_pink'
                   buttonId='issuebtn'
                   buttonLink={PAGES.ISSUE} />
               </div>
