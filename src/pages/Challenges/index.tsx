@@ -31,10 +31,14 @@ import CardList, {
   CardHeader,
   CardBody
 } from 'components/CardList';
-import { POLKA_BTC_DOC_TREASURE_HUNT } from 'config/links';
+import {
+  POLKA_BTC_DOC_TREASURE_HUNT,
+  POLKA_BTC_DOC_TREASURE_HUNT_VAULT,
+  POLKA_BTC_DOC_TREASURE_HUNT_RELAYER
+} from 'config/links';
 import DashboardTable from 'common/components/dashboard-table/dashboard-table';
 import TimerIncrement from 'common/components/timer-increment';
-import { CHALLENGE_1_START } from '../../constants'; // relative path due to conflict
+import { CHALLENGE_4_START } from '../../constants'; // relative path due to conflict
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { StoreType } from 'common/types/util.types';
 // TODO: should use an SVG
@@ -44,7 +48,7 @@ import './challenges.scss';
 
 const CHALLENGE_CUTOFFS = [
   0, // all time
-  CHALLENGE_1_START
+  CHALLENGE_4_START
 ];
 
 type ChallengeSelectorProps = {
@@ -54,6 +58,7 @@ type ChallengeSelectorProps = {
 }
 
 function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelectorProps): ReactElement {
+  const timestamp = Math.floor(Date.now() / 1000);
   return (
     <ToggleButtonGroup
       className='mt-4 mx-3'
@@ -61,16 +66,20 @@ function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelect
       value={challengeIdx}
       name='challenge'
       onChange={val => setChallengeIdx(val)}>
-      <ToggleButton
-        variant='outline-primary'
-        value={0}>
-        {t('leaderboard.all_time')}
-      </ToggleButton>
-      <ToggleButton
-        variant='outline-primary'
-        value={1}>
-        {t('leaderboard.challenge')}
-      </ToggleButton>
+      {timestamp > CHALLENGE_4_START && (
+        <>
+          <ToggleButton
+            variant='outline-secondary'
+            value={0}>
+            {t('leaderboard.all_time')}
+          </ToggleButton>
+          <ToggleButton
+            variant='outline-polkadot'
+            value={1}>
+            {t('leaderboard.challenge')}
+          </ToggleButton>
+        </>
+      )}
     </ToggleButtonGroup>
   );
 }
@@ -78,6 +87,11 @@ function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelect
 const CHALLENGE_ITEMS = [
   {
     title: 'leaderboard.challenges.treasure_hunt',
+    content: 'leaderboard.challenges.treasure_hunt_desc',
+    contentLink: POLKA_BTC_DOC_TREASURE_HUNT
+  },
+  {
+    title: 'leaderboard.challenges.vault_treasure_hunt',
     titleIcon: (
       <InterlayImage
         src={newMark}
@@ -85,16 +99,20 @@ const CHALLENGE_ITEMS = [
         height={20}
         alt='new' />
     ),
-    content: 'leaderboard.challenges.treasure_hunt_desc',
-    contentLink: POLKA_BTC_DOC_TREASURE_HUNT
-  },
-  {
-    title: 'leaderboard.challenges.vault_treasure_hunt',
-    content: 'leaderboard.challenges.vault_treasure_hunt_desc'
+    content: 'leaderboard.challenges.vault_treasure_hunt_desc',
+    contentLink: POLKA_BTC_DOC_TREASURE_HUNT_VAULT
   },
   {
     title: 'leaderboard.challenges.relayer_treasure_hunt',
-    content: 'leaderboard.challenges.relayer_treasure_hunt_desc'
+    titleIcon: (
+      <InterlayImage
+        src={newMark}
+        width={20}
+        height={20}
+        alt='new' />
+    ),
+    content: 'leaderboard.challenges.relayer_treasure_hunt_desc',
+    contentLink: POLKA_BTC_DOC_TREASURE_HUNT_RELAYER
   },
   {
     title: 'leaderboard.challenges.vaults_relayers',
