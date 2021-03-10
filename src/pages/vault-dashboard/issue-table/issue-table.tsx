@@ -57,9 +57,15 @@ export default function IssueTable(): ReactElement {
   };
 
   return (
-    <div className='dashboard-table-container'>
+    <div style={{ margin: '40px 0px' }}>
       <div>
-        <p className='table-heading'>{t('issue_requests')}</p>
+        <p
+          style={{
+            fontFamily: 'airbnb-cereal-bold',
+            fontSize: '26px'
+          }}>
+          {t('issue_requests')}
+        </p>
       </div>
       {issues && issues.length > 0 ? (
         <React.Fragment>

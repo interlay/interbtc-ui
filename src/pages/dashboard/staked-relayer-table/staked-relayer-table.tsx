@@ -44,9 +44,15 @@ export default function StakedRelayerTable(): ReactElement {
   ];
 
   return (
-    <div className='dashboard-table-container'>
+    <div style={{ margin: '40px 0px' }}>
       <div>
-        <p className='table-heading'>{t('dashboard.parachain.relayers')}</p>
+        <p
+          style={{
+            fontFamily: 'airbnb-cereal-bold',
+            fontSize: '26px'
+          }}>
+          {t('dashboard.parachain.relayers')}
+        </p>
       </div>
       <DashboardTable
         pageData={relayers}

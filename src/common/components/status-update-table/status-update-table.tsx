@@ -140,13 +140,21 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
   };
 
   return (
-    <div className='dashboard-table-container btc-parachain-table'>
+    <div
+      style={{ margin: '40px 0px' }}
+      className='btc-parachain-table'>
       <MessageModal
         show={showMessageModal}
         onClose={handleClose}
         statusUpdate={statusUpdate!} />
       <div>
-        <p className='table-heading'>{t('dashboard.parachain.parachain')}</p>
+        <p
+          style={{
+            fontFamily: 'airbnb-cereal-bold',
+            fontSize: '26px'
+          }}>
+          {t('dashboard.parachain.parachain')}
+        </p>
         <div className='header'>
           {t('status_colon')} &nbsp; <div className={getCircle(parachainStatus)}></div> &nbsp;{' '}
           {parachainStatus}
