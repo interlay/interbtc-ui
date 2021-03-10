@@ -90,7 +90,7 @@ export const BTC_RELAY_DELAY_CRITICAL = 12;
 // #######################################
 export const BETA_LAUNCH_DATE = 1614675600; // Tue Mar 02 2021 09:00:00 GMT+0000
 
-export const CHALLENGE_1_START = 1615384800000; // Tue Mar 09 2021 14:00:00 GMT+0000
+export const CHALLENGE_4_START = 1615816800; // Mon Mar 15 2021 14:00:00 GMT+0000
 
 export {
   APP_NAME

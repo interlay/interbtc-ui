@@ -34,7 +34,7 @@ import CardList, {
 import { POLKA_BTC_DOC_TREASURE_HUNT } from 'config/links';
 import DashboardTable from 'common/components/dashboard-table/dashboard-table';
 import TimerIncrement from 'common/components/timer-increment';
-import { CHALLENGE_1_START } from '../../constants'; // relative path due to conflict
+import { CHALLENGE_4_START } from '../../constants'; // relative path due to conflict
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { StoreType } from 'common/types/util.types';
 // TODO: should use an SVG
@@ -44,7 +44,7 @@ import './challenges.scss';
 
 const CHALLENGE_CUTOFFS = [
   0, // all time
-  CHALLENGE_1_START
+  CHALLENGE_4_START
 ];
 
 type ChallengeSelectorProps = {
