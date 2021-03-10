@@ -1,7 +1,7 @@
 version: "3.8"
 services:
     polkabtc:
-        image: "registry.gitlab.com/interlay/btc-parachain/standalone:0.5.3"
+        image: "registry.gitlab.com/interlay/btc-parachain/standalone:0.5.4"
         command:
             - btc-parachain
             - --dev
@@ -13,7 +13,7 @@ services:
             - "9933:9933"
             - "9944:9944"
     staked_relayer:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:0.5.3"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:0.5.8-rc1"
         command:
             - /bin/sh
             - -c
@@ -30,7 +30,7 @@ services:
             - "3030:3030"
         restart: unless-stopped
     oracle:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:0.5.3"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:0.5.8-rc1"
         command:
             - /bin/sh
             - -c
@@ -42,7 +42,7 @@ services:
             RUST_LOG: info
         restart: unless-stopped
     faucet:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/faucet:0.5.3"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/faucet:0.5.8-rc1"
         command:
             - /bin/sh
             - -c
@@ -56,7 +56,7 @@ services:
             - "3035:3035"
         restart: unless-stopped
     vault:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:0.5.3"
+        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:0.5.8-rc1"
         command:
             - /bin/sh
             - -c
@@ -77,7 +77,7 @@ services:
         ports:
             - "5432:5432"
     polkabtc_stats:
-        image: "registry.gitlab.com/interlay/polkabtc-stats:0.1.12"
+        image: "registry.gitlab.com/interlay/polkabtc-stats:PR-19"
         restart: always
         depends_on:
             - postgres
