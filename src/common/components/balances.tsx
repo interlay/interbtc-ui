@@ -1,6 +1,6 @@
 
 import { safeRoundFiveDecimals } from 'common/utils/utils';
-import polkaBitcoin from 'assets/img/PolkaBitcoin-logo.png';
+import polkaBTCLogo from 'assets/img/polkabtc/PolkaBTC_black.svg';
 import polkadotLogo from 'assets/img/small-polkadot-logo.png';
 
 interface Props {
@@ -19,9 +19,9 @@ const Balances = ({
       <span className='btc-balance-wrapper'>
         <span className=''>
           <img
-            src={polkaBitcoin}
-            width='20px'
-            height='20px'
+            src={polkaBTCLogo}
+            width='50px'
+            height='30px'
             alt='polka bitcoin logo'
             className='mr-1' />
           <b>{balancePolkaBTC || '0'}</b>
