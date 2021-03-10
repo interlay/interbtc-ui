@@ -35,9 +35,7 @@ import {
 } from '@interlay/polkabtc';
 import {
   createPolkabtcAPI,
-  PolkaBTCAPI,
-  StakedRelayerClient,
-  VaultClient
+  PolkaBTCAPI
 } from '@interlay/polkabtc';
 
 import Layout from 'parts/Layout';
@@ -62,14 +60,14 @@ import checkStaticPage from 'config/check-static-page';
 import { PAGES } from 'utils/constants/links';
 import {
   isPolkaBtcLoaded,
-  isStakedRelayerLoaded,
-  isVaultClientLoaded,
   changeAddressAction,
   initGeneralDataAction,
   setInstalledExtensionAction,
   showAccountModalAction,
   updateAddressesAction,
-  isFaucetLoaded
+  isFaucetLoaded,
+  isStakedRelayerLoaded,
+  isVaultClientLoaded
 } from 'common/actions/general.actions';
 import './i18n';
 import * as constants from './constants';
@@ -161,12 +159,6 @@ function App(): ReactElement {
 
   const createAPIInstance = useCallback(async (): Promise<void> => {
     try {
-      window.relayer = new StakedRelayerClient(constants.STAKED_RELAYER_URL);
-      dispatch(isStakedRelayerLoaded(true));
-
-      window.vaultClient = new VaultClient(constants.VAULT_CLIENT_URL);
-      dispatch(isVaultClientLoaded(true));
-
       window.faucet = new FaucetClient(constants.FAUCET_URL);
       dispatch(isFaucetLoaded(true));
 
@@ -192,9 +184,30 @@ function App(): ReactElement {
         );
       }
     }
+
+    let relayerLoaded = false;
+    let vaultLoaded = false;
+    const id = window.polkaBTC.api.createType('AccountId', address);
+    try {
+      const vault = await window.polkaBTC.vaults.get(id);
+      vaultLoaded = vault !== undefined;
+    } catch (error) {
+      console.log('No PolkaBTC vault found for the account in the connected Polkadot wallet.');
+    }
+
+    try {
+      const isActive = await window.polkaBTC.stakedRelayer.isStakedRelayerActive(id);
+      const isInactive = await window.polkaBTC.stakedRelayer.isStakedRelayerInactive(id);
+      relayerLoaded = isActive || isInactive;
+    } catch (error) {
+      console.log('No PolkaBTC staked relayer found for the account in the connected Polkadot wallet.');
+    }
+    dispatch(isVaultClientLoaded(vaultLoaded));
+    dispatch(isStakedRelayerLoaded(relayerLoaded));
   }, [
     dispatch,
-    store
+    store,
+    address
   ]);
 
   useEffect(() => {

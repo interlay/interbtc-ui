@@ -71,16 +71,12 @@ export default function StatusView(props: StatusViewProps): ReactElement {
       const parsedRawTx = window.polkaBTC.api.createType('Bytes', rawTx);
 
       // execute issue
-      const success = await window.polkaBTC.issue.execute(
+      await window.polkaBTC.issue.execute(
         parsedIssuedId,
         parsedTxId,
         parsedMerkleProof,
         parsedRawTx
       );
-
-      if (!success) {
-        throw new Error(t('issue_page.execute_failed'));
-      }
 
       const completedReq = provenReq;
       completedReq.status = IssueRequestStatus.Completed;
@@ -96,7 +92,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
 
       toast.success(t('issue_page.successfully_executed', { id: request.id }));
     } catch (error) {
-      toast.error(error.toString());
+      toast.error(`${t('issue_page.execute_failed')}: ${error.toString()}`);
     } finally {
       setExecutePending(false);
     }

@@ -162,8 +162,9 @@ function EnterBTCAmount() {
         setVaultId('');
       }
 
-      const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSAT);
-      setDeposit(planckToDOT(griefingCollateral));
+      const amountSatTyped = window.polkaBTC.api.createType('Balance', amountSAT) as PolkaBTC;
+      const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSatTyped);
+      setDeposit(planckToDOT(griefingCollateral.toString()));
     } catch (error) {
       console.log(error);
     }

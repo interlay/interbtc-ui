@@ -14,7 +14,7 @@ type ReplaceTableProps = {
 };
 
 export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
-  const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+  const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
   const replaceRequests = useSelector((state: StoreType) => state.vault.requests);
   const [polkaBTCAmount, setPolkaBTCamount] = useState(new BN('0'));
@@ -25,8 +25,7 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
       if (!polkaBtcLoaded) return;
 
       try {
-        const accountId = await window.vaultClient.getAccountId();
-        const vaultId = window.polkaBTC.api.createType('AccountId', accountId);
+        const vaultId = window.polkaBTC.api.createType('AccountId', address);
         const issuedPolkaBTCAmount = await window.polkaBTC.vaults.getIssuedPolkaBTCAmount(vaultId);
         setPolkaBTCamount(issuedPolkaBTCAmount.toBn());
         const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
@@ -43,7 +42,7 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
       fetchData();
     }, constants.COMPONENT_UPDATE_MS);
     return () => clearInterval(interval);
-  }, [polkaBtcLoaded, dispatch]);
+  }, [polkaBtcLoaded, dispatch, address]);
 
   return (
     <div style={{ margin: '40px 0px' }}>

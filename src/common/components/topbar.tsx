@@ -22,34 +22,23 @@ export default function Topbar(props: TopbarProps): ReactElement {
   const {
     extensions,
     address,
-    relayerLoaded,
-    vaultClientLoaded,
     polkaBtcLoaded,
     balanceDOT,
-    balancePolkaBTC
+    balancePolkaBTC,
+    vaultClientLoaded,
+    relayerLoaded
   } = useSelector((state: StoreType) => state.general);
-  const [isRelayerConnected, setIsRelayerConnected] = useState(false);
-  const [isVaultConnected, setIsVaultConnected] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isRequestPending, setIsRequestPending] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (!relayerLoaded || !vaultClientLoaded || !polkaBtcLoaded) {
+    if (!polkaBtcLoaded) {
       setTimeout(() => setIsLoading(false), 2500);
       return;
     }
-
-    const checkIsConnected = async () => {
-      const relayerConnected = await window.relayer.isConnected();
-      const vaultConnected = await window.vaultClient.isConnected();
-      setIsRelayerConnected(relayerConnected);
-      setIsVaultConnected(vaultConnected);
-      setIsLoading(false);
-    };
-    checkIsConnected();
-  }, [relayerLoaded, vaultClientLoaded, polkaBtcLoaded]);
+  }, [polkaBtcLoaded]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -121,7 +110,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                   {t('nav_dashboard')}
                 </Link>
               )}
-              {isVaultConnected && (
+              {vaultClientLoaded && (
                 <Link
                   id='vault-nav-item'
                   className='nav-link'
@@ -129,7 +118,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                   {t('nav_vault')}
                 </Link>
               )}
-              {isRelayerConnected && (
+              {relayerLoaded && (
                 <Link
                   id='relayer-nav-item'
                   className='nav-link'

@@ -11,7 +11,7 @@ import { Badge, Table } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 export default function IssueTable(): ReactElement {
-  const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+  const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
   const issues = useSelector((state: StoreType) => state.issue.vaultIssues);
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -21,8 +21,7 @@ export default function IssueTable(): ReactElement {
       if (!polkaBtcLoaded) return;
 
       try {
-        const accountId = await window.vaultClient.getAccountId();
-        const vaultId = window.polkaBTC.api.createType('AccountId', accountId);
+        const vaultId = window.polkaBTC.api.createType('AccountId', address);
         const issueMap = await window.polkaBTC.vaults.mapIssueRequests(vaultId);
 
         if (!issueMap) return;
@@ -38,7 +37,7 @@ export default function IssueTable(): ReactElement {
       fetchData();
     }, constants.COMPONENT_UPDATE_MS);
     return () => clearInterval(interval);
-  }, [polkaBtcLoaded, dispatch]);
+  }, [polkaBtcLoaded, dispatch, address]);
 
   const showStatus = (request: VaultIssue) => {
     if (request.completed) {

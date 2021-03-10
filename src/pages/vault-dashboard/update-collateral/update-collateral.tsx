@@ -9,6 +9,7 @@ import { StoreType } from '../../../common/types/util.types';
 import Big from 'big.js';
 import ButtonMaybePending from '../../../common/components/pending-button';
 import { useTranslation } from 'react-i18next';
+import { DOT } from '@interlay/polkabtc/build/interfaces';
 
 // Commenting because moving this to last line casues 3 "used before it was defined" warnings
 // eslint-disable-next-line import/exports-last
@@ -31,7 +32,7 @@ type UpdateCollateralProps = {
 };
 
 export default function UpdateCollateralModal(props: UpdateCollateralProps) {
-  const { polkaBtcLoaded, vaultClientLoaded } = useSelector((state: StoreType) => state.general);
+  const { polkaBtcLoaded, vaultClientLoaded, address } = useSelector((state: StoreType) => state.general);
   const { register, handleSubmit, errors } = useForm<UpdateCollateralForm>();
   // denoted in DOT
   const currentDOTCollateral = useSelector((state: StoreType) => state.vault.collateral);
@@ -59,17 +60,18 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
 
       if (currentCollateralBN.gt(newCollateralBN)) {
         const withdrawAmount = currentCollateralBN.sub(newCollateralBN);
-        await window.vaultClient.withdrawCollateral(withdrawAmount.toString());
+        const planckToWithraw = window.polkaBTC.api.createType('Balance', withdrawAmount.toString()) as DOT;
+        await window.polkaBTC.vaults.withdrawCollateral(planckToWithraw);
       } else if (currentCollateralBN.lt(newCollateralBN)) {
         const depositAmount = newCollateralBN.sub(currentCollateralBN);
-        await window.vaultClient.lockAdditionalCollateral(depositAmount.toString());
+        const planckToDeposit = window.polkaBTC.api.createType('Balance', depositAmount.toString()) as DOT;
+        await window.polkaBTC.vaults.lockAdditionalCollateral(planckToDeposit);
       } else {
         closeModal();
         return;
       }
 
-      const accountId = await window.vaultClient.getAccountId();
-      const vaultId = window.polkaBTC.api.createType('AccountId', accountId);
+      const vaultId = window.polkaBTC.api.createType('AccountId', address);
       const balanceLockedDOT = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
       const collateralDotString = planckToDOT(balanceLockedDOT.toString());
 
@@ -123,8 +125,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
       }
       setNewCollateral(newCollateral.toString());
 
-      const accountId = await window.vaultClient.getAccountId();
-      const vaultId = window.polkaBTC.api.createType('AccountId', accountId);
+      const vaultId = window.polkaBTC.api.createType('AccountId', address);
       const requiredCollateral = (await window.polkaBTC.vaults.getRequiredCollateralForVault(vaultId)).toString();
 
       // collateral update only allowed if above required collateral
