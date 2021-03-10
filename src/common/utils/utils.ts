@@ -24,15 +24,23 @@ import { Issue, Redeem } from '@interlay/polkabtc-stats';
 import { AccountId, Balance } from '@polkadot/types/interfaces/runtime';
 import BN from 'bn.js';
 
+// TODO: should be one module
 function safeRoundTwoDecimals(input: string | number | undefined, defaultValue = '0'): string {
   if (input === undefined) return defaultValue;
   else return roundTwoDecimals(input.toString());
 }
-
 function safeRoundEightDecimals(input: string | number | undefined, defaultValue = '0'): string {
   if (input === undefined) return defaultValue;
   const number = new Big(input);
   return number.round(8).toString();
+}
+function safeRoundFiveDecimals(
+  input: string | number | undefined,
+  defaultValue = '0'
+): string {
+  if (input === undefined) return defaultValue;
+  const number = new Big(input);
+  return number.round(5).toString();
 }
 
 function shortAddress(address: string): string {
@@ -558,6 +566,7 @@ function getRandomArrayElement<T>(array: Array<T>): T {
 export {
   safeRoundTwoDecimals,
   safeRoundEightDecimals,
+  safeRoundFiveDecimals,
   shortAddress,
   shortTxId,
   formatDateTime,
