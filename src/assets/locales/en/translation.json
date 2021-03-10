@@ -453,9 +453,9 @@
     "lifetime_sla": "Lifetime SLA Score",
     "more_info": "More info",
     "challenge_buttons": [
-      "All-time",
       "Challenges 2 & 3",
-      "Challenge 4"
+      "Challenge 4",
+      "All-time"
     ],
     "challenges": {
       "treasure_hunt": "Challenge 1: Treasure Hunt",

@@ -47,9 +47,9 @@ import 'pages/dashboard/dashboard-subpage.scss';
 import './challenges.scss';
 
 const CHALLENGE_CUTOFFS = [
-  0, // all time
   CHALLENGES_2_AND_3_START,
-  CHALLENGE_4_START
+  CHALLENGE_4_START,
+  0 // all time
 ];
 
 type ChallengeSelectorProps = {
@@ -68,11 +68,12 @@ function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelect
         value={challengeIdx}
         name='challenge'
         onChange={val => setChallengeIdx(val)}>
-        {timestamp > CHALLENGE_CUTOFFS[1] && ( // only show buttons at all if at least the first is active
+        {timestamp > CHALLENGE_CUTOFFS[0] && ( // only show buttons at all if at least the first is active
           CHALLENGE_CUTOFFS.map((displayFrom, idx) =>
             timestamp > displayFrom &&
             <ToggleButton
               variant='outline-polkadot'
+              className='font-weight-bold'
               value={idx}>
               {t(`leaderboard.challenge_buttons.${idx}`)}
             </ToggleButton>
