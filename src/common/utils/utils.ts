@@ -140,7 +140,7 @@ const statsToUIIssueRequest = async (
     statsIssue.confirmations !== undefined ?
       statsIssue.confirmations :
       statsIssue.btcBlockHeight ?
-        currentBTCHeight - statsIssue.btcBlockHeight :
+        currentBTCHeight - statsIssue.btcBlockHeight + 1 :
         0,
   transactionBlockHeight: statsIssue.btcBlockHeight,
   status: computeIssueRequestStatus(
@@ -279,7 +279,7 @@ const statsToUIRedeemRequest = (
     statsRedeem.confirmations !== undefined ?
       statsRedeem.confirmations :
       statsRedeem.btcBlockHeight ?
-        currentBTCHeight - statsRedeem.btcBlockHeight :
+        currentBTCHeight - statsRedeem.btcBlockHeight + 1 :
         0,
   status: computeRedeemRequestStatus(
     statsRedeem.completed,

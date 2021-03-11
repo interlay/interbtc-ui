@@ -43,7 +43,7 @@ services:
     image: 'interlayhq/electrs:latest'
     command:
       - electrs
-      - -vvvv
+      - -v
       - --network
       - regtest
       - --jsonrpc-import
@@ -149,7 +149,7 @@ services:
     ports:
       - '5432:5432'
   polkabtc_stats:
-    image: 'registry.gitlab.com/interlay/polkabtc-stats:PR-19'
+    image: 'registry.gitlab.com/interlay/polkabtc-stats:0.1.14'
     restart: always
     depends_on:
       - postgres
