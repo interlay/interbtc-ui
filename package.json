@@ -1,6 +1,6 @@
 {
   "name": "polkabtc-ui",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "private": true,
   "dependencies": {
     "@interlay/polkabtc": "^0.9.0",
