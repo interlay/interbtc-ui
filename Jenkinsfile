@@ -81,6 +81,22 @@ pipeline {
                 }
             }
         }
+        stage('Create GitHub release') {
+            when {
+                anyOf {
+                    tag '*'
+                }
+            }
+            steps {
+                sh '''
+                    wget -q -O - https://github.com/git-chglog/git-chglog/releases/download/v0.10.0/git-chglog_0.10.0_linux_amd64.tar.gz | tar xzf -
+                    #export PREV_TAG=$(git describe --abbrev=0 --tags `git rev-list --tags --skip=1 --max-count=1`)
+                    #export TAG_NAME=$(git describe --abbrev=0 --tags `git rev-list --tags --skip=0 --max-count=1`)
+                    ./git-chglog --output CHANGELOG.md $TAG_NAME
+                '''
+                archiveArtifacts 'CHANGELOG.md'
+            }
+        }
     }
     post {
       always {
