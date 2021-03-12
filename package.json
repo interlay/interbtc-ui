@@ -3,6 +3,7 @@
   "version": "1.4.2",
   "private": true,
   "dependencies": {
+    "@craco/craco": "^6.1.1",
     "@interlay/polkabtc": "^0.9.0",
     "@interlay/polkabtc-stats": "0.1.14",
     "@polkadot/extension-dapp": "0.36.1",
@@ -66,12 +67,11 @@
     "lint-staged": "^10.5.4",
     "postcss": "7",
     "prettier": "2.2.1",
-    "react-app-rewired": "^2.1.8",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "ts-node": "^8.6.2"
   },
   "scripts": {
-    "start": "react-app-rewired start",
+    "start": "craco start",
     "start-regtest": "cross-env REACT_APP_BITCOIN_NETWORK=regtest yarn start",
     "start-testnet": "cross-env REACT_APP_BITCOIN_NETWORK=testnet yarn start",
     "generate:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package sample-polkadotjs-typegen/interfaces --input ./src/interfaces",
@@ -80,7 +80,7 @@
     "lint-fix": "eslint --fix ./src/**/*.{ts,tsx} --ignore-path .eslintignore .",
     "format": "prettier --config .prettierrc --write .",
     "setup": "yarn generate:defs && yarn generate:meta",
-    "build": "react-app-rewired build",
+    "build": "craco build",
     "test": "node -e \"console.log('Tests are not ready yet!')\"",
     "old-test": "ts-mocha --exit --require babel-register --require ignore-styles --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx",
     "old-test-watch": "watch 'ts-mocha --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx --timeout 5000' src tests --interval=1",
