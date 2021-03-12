@@ -56,14 +56,18 @@
   },
   "devDependencies": {
     "@polkadot/typegen": "3.9.3",
+    "@tailwindcss/postcss7-compat": "^2.0.3",
+    "autoprefixer": "9",
     "cross-env": "^7.0.3",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-prettier": "^3.1.4",
     "husky": "^4.3.0",
     "lint-staged": "^10.5.4",
+    "postcss": "7",
     "prettier": "2.2.1",
     "react-app-rewired": "^2.1.8",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "ts-node": "^8.6.2"
   },
   "scripts": {

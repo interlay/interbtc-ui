@@ -1,3 +1,4 @@
+
 module.exports = function override(webpackConfig) {
   webpackConfig.module.rules.push({
     test: /\.mjs$/,
