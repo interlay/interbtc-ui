@@ -25,7 +25,6 @@
     "@types/redux-logger": "^3.0.8",
     "big.js": "^6.0.1",
     "bitcoinjs-lib": "^5.2.0",
-    "bootstrap": "^4.5.0",
     "chart.js": "^2.9.4",
     "clsx": "^1.1.1",
     "i18next": "^19.8.4",
