@@ -1,5 +1,14 @@
 
 module.exports = {
+  style: {
+    postcss: {
+      plugins: [
+        require('tailwindcss'),
+        require('autoprefixer')
+      ]
+    }
+  },
+
   webpack: {
     configure: (webpackConfig, { env, paths }) => {
       webpackConfig.module.rules.push({
