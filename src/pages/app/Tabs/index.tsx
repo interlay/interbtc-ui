@@ -4,7 +4,6 @@ import clsx from 'clsx';
 
 import { setActiveTabAction } from 'common/actions/general.actions';
 import { TabTypes } from 'utils/enums/tab-types';
-import styles from './tabs.module.css';
 
 interface Props {
   children: React.ReactNode
@@ -30,14 +29,20 @@ const Tab = ({
 
   return (
     <div
+      // TODO: hardcoded
+      style={{
+        fontFamily: 'airbnb-cereal-bold'
+      }}
       className={clsx(
-        'col-4',
-        styles['app-tab'],
-        { [styles['active-tab']]: selectedTabType === tabType },
+        'flex-1',
+        'p-2.5',
+        'uppercase',
+        'cursor-pointer',
+        { 'rounded-lg text-white transition-all duration-200 ease-in-out': selectedTabType === tabType },
         { 'bg-interlayPink': tabType === TabTypes.Issue && selectedTabType === TabTypes.Issue },
         { 'bg-interlayYellow': tabType === TabTypes.Redeem && selectedTabType === TabTypes.Redeem },
         { 'bg-interlayBlue': tabType === TabTypes.Transfer && selectedTabType === TabTypes.Transfer },
-        { [styles['not-active-tab']]: selectedTabType !== tabType }
+        { 'opacity-30': selectedTabType !== tabType }
       )}
       // TODO: should use button semantically
       onClick={handleTabChange(tabType)}>
@@ -53,7 +58,8 @@ interface HorizontalLineProps {
 const HorizontalLine = ({ selectedTabType }: HorizontalLineProps) => (
   <hr
     className={clsx(
-      styles['horizontal-line'],
+      'border-t-2',
+      'my-2',
       { 'border-interlayPink': selectedTabType === TabTypes.Issue },
       { 'border-interlayYellow': selectedTabType === TabTypes.Redeem },
       { 'border-interlayBlue': selectedTabType === TabTypes.Transfer }
