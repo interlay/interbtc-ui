@@ -1,8 +1,6 @@
 
 import clsx from 'clsx';
 
-import styles from './interlay-link.module.css';
-
 interface Props {
   className?: string;
   children: React.ReactNode;
@@ -14,7 +12,10 @@ const InterlayLink = ({
   ...rest
 }: Props & React.ComponentPropsWithoutRef<'a'>) => (
   <a
-    className={clsx(styles['interlay-link'], className)}
+    className={clsx(
+      'text-black',
+      className
+    )}
     {...rest}>
     {children}
   </a>
