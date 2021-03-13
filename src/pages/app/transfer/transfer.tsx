@@ -13,6 +13,7 @@ import PlasmLogo from '../../../assets/img/plasm-logo.png';
 import Big from 'big.js';
 import { toast } from 'react-toastify';
 import { Button, Modal } from 'react-bootstrap';
+import clsx from 'clsx';
 
 type TransferForm = {
     amountPolkaBTC: string;
@@ -53,7 +54,13 @@ export default function Transfer() {
     <div className='transfer'>
       <form onSubmit={onSubmit}>
         <div className='row'>
-          <div className='col-12 wizard-header-text font-blue'>{t('transfer_page.transfer_to')}</div>
+          <div
+            className={clsx(
+              'col-12 wizard-header-text',
+              'text-interlayBlue'
+            )}>
+            {t('transfer_page.transfer_to')}
+          </div>
         </div>
         <div className='row'>
           <div className='col-6'>

@@ -19,7 +19,7 @@ function TestnetBanner() {
         'rounded',
         'text-center'
       )}>
-      <strong className='font-pink'>
+      <strong className='text-interlayPink'>
         {t('testnet.warning')}
       </strong>
     </div>

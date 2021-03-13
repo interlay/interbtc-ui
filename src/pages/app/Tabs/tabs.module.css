@@ -1,10 +1,4 @@
 
-.app-tabs {
-  background-color: var(--body-color);
-  border-radius: 10px;
-  margin: 0px;
-}
-
 .app-tab {
   padding: 10px;
   font-family: airbnb-cereal-bold;
@@ -20,15 +14,6 @@
   color: white;
   transition: 0.25s ease-in-out;
 }
-.active-tab-issue {
-  background-color: var(--d_pink);
-}
-.active-tab-redeem {
-  background-color: var(--d_yellow);
-}
-.active-tab-transfer {
-  background-color: var(--d_blue);
-}
 
 .not-active-tab {
   opacity: 0.3;
@@ -37,16 +22,4 @@
 .horizontal-line {
   border-top-width: 2px;
   margin: 0.5rem 0;
-}
-
-.horizontal-line-pink {
-  border-color: var(--d_pink);
-}
-
-.horizontal-line-yellow {
-  border-color: var(--d_yellow);
-}
-
-.horizontal-line-blue {
-  border-color: var(--d_blue);
 }

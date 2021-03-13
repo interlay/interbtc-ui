@@ -24,6 +24,11 @@ module.exports = {
         },
         interlayRed: {
           DEFAULT: '#f32013'
+        },
+        // TODO: could use `Gray` shades from https://tailwindcss.com/docs/customizing-colors
+        interlayGrey: {
+          light: '#e9ecef', // TODO: could be gray-200 in the default theme
+          DEFAULT: '#a9a9a9'
         }
       }
     }

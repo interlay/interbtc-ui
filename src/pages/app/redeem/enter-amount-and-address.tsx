@@ -22,6 +22,7 @@ import { PolkaBTC } from '@interlay/polkabtc/build/interfaces';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
 import Big from 'big.js';
 import BN from 'bn.js';
+import clsx from 'clsx';
 
 import ButtonMaybePending from 'common/components/pending-button';
 import {
@@ -238,7 +239,13 @@ function EnterAmountAndAddress(): ReactElement {
       className='enter-amount-and-address'
       onSubmit={onSubmit}>
       <div className='row'>
-        <div className='col-12 wizard-header-text font-yellow'>{t('redeem_page.you_will_receive')}</div>
+        <div
+          className={clsx(
+            'col-12 wizard-header-text',
+            'text-interlayYellow'
+          )}>
+          {t('redeem_page.you_will_receive')}
+        </div>
       </div>
       <div className='row'>
         <div className='col-6'>

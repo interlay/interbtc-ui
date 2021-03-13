@@ -13,9 +13,7 @@ export function getAccents(color: string): Style {
       'hue-rotate(350deg) brightness(102%) contrast(94%)';
     break;
   case 'd_pink':
-    // ray test touch <
     accent.color = '#e6007a';
-    // ray test touch >
     accent.filter =
       'brightness(0) saturate(100%) invert(16%) sepia(99%) saturate(6939%) ' +
       'hue-rotate(321deg) brightness(90%) contrast(102%)';

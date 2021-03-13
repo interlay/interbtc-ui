@@ -78,7 +78,6 @@ import {
 // FIXME: Clean-up and move to scss
 import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
-import './app.css';
 import { ACCOUNT_ID_TYPE_NAME } from './constants';
 import { StatusCode } from '@interlay/polkabtc/build/interfaces';
 
