@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import styles from './page-title.module.css';
 
 interface Props {
-  className?: string;
   mainTitle: string | React.ReactNode;
   subTitle?: string | React.ReactNode;
 }

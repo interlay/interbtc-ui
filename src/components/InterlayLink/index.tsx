@@ -1,24 +1,26 @@
 
+import * as React from 'react';
 import clsx from 'clsx';
 
-interface Props {
-  className?: string;
-  children: React.ReactNode;
-}
+import styles from './interlay-link.module.css';
 
-const InterlayLink = ({
+type Ref = HTMLAnchorElement;
+
+const InterlayLink = React.forwardRef<Ref, React.ComponentPropsWithoutRef<'a'>>(({
   className,
   children,
   ...rest
-}: Props & React.ComponentPropsWithoutRef<'a'>) => (
+}, ref) => (
   <a
+    ref={ref}
     className={clsx(
-      'text-black',
+      styles['interlay-link'],
+      'text-black', // TODO: should double-check the necessity after removing bootstrap's `reboot`
       className
     )}
     {...rest}>
     {children}
   </a>
-);
+));
 
 export default InterlayLink;

@@ -1,14 +1,10 @@
 
 import clsx from 'clsx';
 
-interface CardProps {
-  className?: string;
-}
-
 const Card = ({
   className,
   ...rest
-}: CardProps & React.ComponentPropsWithoutRef<'li'>) => (
+}: React.ComponentPropsWithoutRef<'li'>) => (
   <li
     className={clsx(
       'flex',
@@ -31,16 +27,11 @@ const Card = ({
     {...rest} />
 );
 
-interface CardHeaderProps {
-  className?: string;
-  children: React.ReactNode;
-}
-
 const CardHeader = ({
   className,
   children,
   ...rest
-}: CardHeaderProps & React.ComponentPropsWithoutRef<'h2'>) => (
+}: React.ComponentPropsWithoutRef<'h2'>) => (
   <h2
     // TODO: hardcoded for now
     style={{ fontFamily: 'airbnb-cereal-bold' }}
@@ -54,22 +45,14 @@ const CardHeader = ({
   </h2>
 );
 
-interface CardBodyProps {
-  className?: string;
-}
-
-const CardBody = (props: CardBodyProps & React.ComponentPropsWithoutRef<'div'>) => (
+const CardBody = (props: React.ComponentPropsWithoutRef<'div'>) => (
   <div {...props} />
 );
-
-interface CardListProps {
-  className?: string;
-}
 
 const CardList = ({
   className,
   ...rest
-}: CardListProps & React.ComponentPropsWithoutRef<'ul'>) => (
+}: React.ComponentPropsWithoutRef<'ul'>) => (
   <ul
     className={clsx(
       'lg:flex',

@@ -5,6 +5,7 @@ import * as constants from '../../../constants';
 import { reverseHashEndianness } from '../../utils/utils';
 import { useTranslation } from 'react-i18next';
 import { Table } from 'react-bootstrap';
+import InterlayLink from 'components/InterlayLink';
 
 interface BlockInfo {
   source: string;
@@ -142,15 +143,16 @@ export default function BitcoinTable(): ReactElement {
               <tr key={index}>
                 <td>{block.source}</td>
                 <td>
-                  <a
+                  <InterlayLink
                     href={
                       (constants.BTC_MAINNET ?
                         constants.BTC_EXPLORER_BLOCK_API :
                         constants.BTC_TEST_EXPLORER_BLOCK_API) + block.hash
                     }
-                    target='__blank'>
+                    target='_blank'
+                    rel='noopener noreferrer'>
                     {block.hash}
-                  </a>
+                  </InterlayLink>
                 </td>
                 <td className={getHeightColor()}>{block.height}</td>
               </tr>

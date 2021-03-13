@@ -9,19 +9,17 @@ import {
   useSelector,
   useDispatch
 } from 'react-redux';
-import {
-  Link,
-  NavLink
-} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import Timer from 'common/components/timer';
-import * as constants from '../../constants';
+import InterlayLink from 'components/InterlayLink';
+import InterlayRouterLink from 'components/InterlayLink/router';
 import checkStaticPage from 'config/check-static-page';
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
-import PolkaBTCImg from 'assets/img/polkabtc/PolkaBTC_white.svg';
+import * as constants from '../../constants';
+import polkaBTCImg from 'assets/img/polkabtc/PolkaBTC_white.svg';
 
 export default function LandingPage(): JSX.Element {
   const { totalPolkaBTC, totalLockedDOT, polkaBtcLoaded, address, extensions } = useSelector(
@@ -42,12 +40,12 @@ export default function LandingPage(): JSX.Element {
     <div>
       <section className='jumbotron min-vh-90 text-center transparent-background'>
         <div className='container mt-5'>
-          <Link to={PAGES.HOME}>
+          <InterlayRouterLink to={PAGES.HOME}>
             <Image
-              src={PolkaBTCImg}
+              src={polkaBTCImg}
               width='256'>
             </Image>
-          </Link>
+          </InterlayRouterLink>
           <h1 className='interlay-text-white mt-5'>PolkaBTC</h1>
           <h2 className='interlay-text-white'>{t('landing.defi_ecosystem')}</h2>
 
@@ -65,7 +63,7 @@ export default function LandingPage(): JSX.Element {
                   className='mt-2'
                   xs='12'
                   sm={{ span: 4, offset: 2 }}>
-                  <a
+                  <InterlayLink
                     className='text-decoration-none'
                     href='https://docs.polkabtc.io/#/'
                     target='_bank'
@@ -76,13 +74,13 @@ export default function LandingPage(): JSX.Element {
                       block>
                       {t('landing.docs')}
                     </Button>
-                  </a>
+                  </InterlayLink>
                 </Col>
                 <Col
                   className='mt-2'
                   xs='12'
                   sm={{ span: 4, offset: 0 }}>
-                  <a
+                  <InterlayLink
                     className='text-decoration-none'
                     href='https://discord.gg/KgCYK3MKSf'
                     target='_blank'
@@ -93,7 +91,7 @@ export default function LandingPage(): JSX.Element {
                       block>
                       {t('landing.discord')}
                     </Button>
-                  </a>
+                  </InterlayLink>
                 </Col>
               </Row>
             </div>
@@ -123,7 +121,7 @@ export default function LandingPage(): JSX.Element {
                     className='mt-2'
                     xs='12'
                     sm={{ span: 4, offset: 2 }}>
-                    <NavLink
+                    <InterlayRouterLink
                       className='text-decoration-none'
                       to={PAGES.APPLICATION}>
                       <Button
@@ -133,13 +131,13 @@ export default function LandingPage(): JSX.Element {
                         onClick={checkWalletAndAccount}>
                         {t('app')}
                       </Button>
-                    </NavLink>
+                    </InterlayRouterLink>
                   </Col>
                   <Col
                     className='mt-2'
                     xs='12'
                     sm={{ span: 4 }}>
-                    <NavLink
+                    <InterlayRouterLink
                       className='text-decoration-none'
                       to={PAGES.DASHBOARD}>
                       <Button
@@ -149,7 +147,7 @@ export default function LandingPage(): JSX.Element {
                         onClick={checkWalletAndAccount}>
                         {t('nav_dashboard')}
                       </Button>
-                    </NavLink>
+                    </InterlayRouterLink>
                   </Col>
                 </Row>
               )}

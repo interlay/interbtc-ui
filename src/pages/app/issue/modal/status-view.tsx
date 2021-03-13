@@ -11,6 +11,7 @@ import { updateIssueRequestAction } from '../../../../common/actions/issue.actio
 import { updateBalancePolkaBTCAction } from '../../../../common/actions/general.actions';
 import { shortAddress } from '../../../../common/utils/utils';
 import Big from 'big.js';
+import InterlayLink from 'components/InterlayLink';
 
 type StatusViewProps = {
   request: IssueRequest;
@@ -125,12 +126,12 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           </div>
           <div className='row'>
             <div className='col text-center mt-4'>
-              <a
+              <InterlayLink
                 href='https://polkadot.js.org/apps/#/explorer'
                 target='_blank'
                 rel='noopener noreferrer'>
                 <button className='modal-btn-green'>{t('issue_page.view_parachain_block')}</button>
-              </a>
+              </InterlayLink>
             </div>
           </div>
 
@@ -147,7 +148,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           <div className='row'>
             <div className='col'>
               <div className='btc-transaction'>
-                <a
+                <InterlayLink
                   href={
                     (constants.BTC_MAINNET ?
                       constants.BTC_EXPLORER_TRANSACTION_API :
@@ -158,7 +159,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                   <button className='modal-btn-green'>
                     {t('issue_page.view_on_block_explorer')}
                   </button>
-                </a>
+                </InterlayLink>
               </div>
             </div>
           </div>
@@ -220,7 +221,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                   </div>
                   <div className='row mt-3'>
                     <div className='col text-center'>
-                      <a
+                      <InterlayLink
                         href={
                           (constants.BTC_MAINNET ?
                             constants.BTC_EXPLORER_TRANSACTION_API :
@@ -232,7 +233,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                         <button className='btn green-button'>
                           {t('issue_page.view_on_block_explorer')}
                         </button>
-                      </a>
+                      </InterlayLink>
                     </div>
                   </div>
                 </div>
@@ -270,7 +271,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
               </div>
               <div className='row mt-3'>
                 <div className='col text-center'>
-                  <a
+                  <InterlayLink
                     // TODO: use the transaction wrapper for this link
                     href={
                       (constants.BTC_MAINNET ?
@@ -283,7 +284,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                     <button className='btn green-button'>
                       {t('issue_page.view_on_block_explorer')}
                     </button>
-                  </a>
+                  </InterlayLink>
                 </div>
               </div>
               <div className='row mt-5 justify-content-center'>
