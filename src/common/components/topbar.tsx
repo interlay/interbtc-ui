@@ -14,6 +14,7 @@ import newMark from '../../assets/img/icons/new-mark.png';
 import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
 import InterlayLink from 'components/InterlayLink';
 import InterlayRouterLink from 'components/InterlayLink/router';
+import clsx from 'clsx';
 
 type TopbarProps = {
   address?: string;
@@ -71,7 +72,10 @@ export default function Topbar(props: TopbarProps): ReactElement {
       id='pbtc-topbar'
       bg='light'
       expand='lg'
-      className='border-bottom shadow-sm top-bar'>
+      className={clsx(
+        'border-bottom top-bar',
+        'shadow'
+      )}>
       {polkaBtcLoaded && (
         <React.Fragment>
           <Navbar.Brand>
