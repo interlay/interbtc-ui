@@ -7,8 +7,6 @@ function TestnetBanner() {
 
   return (
     <div
-      // TODO: hardcoded
-      style={{ borderColor: '#e6007a' }}
       className={clsx(
         'px-5',
         'py-3',
@@ -17,7 +15,7 @@ function TestnetBanner() {
         'md:max-w-3xl',
         'border',
         'border-solid',
-        // 'border-red-500',
+        'border-interlayPink',
         'rounded',
         'text-center'
       )}>

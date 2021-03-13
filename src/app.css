@@ -9,7 +9,9 @@
   --breakpoints-value-lg: '992px';
   --breakpoints-value-xl: '1200px';
     /* TODO: should name descriptively */
+  /* ray test touch < */
   --d_pink: #e6007a;
+  /* ray test touch > */
   --d_yellow: #f7931a;
   --d_blue: #1c86ee;
   --body-color: #e9ecef;
