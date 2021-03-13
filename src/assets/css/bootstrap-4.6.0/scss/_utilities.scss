@@ -1,6 +1,7 @@
 @import "utilities/align";
 @import "utilities/background";
-@import "utilities/borders";
+// MEMO: override with tailwindcss
+// @import "utilities/borders";
 @import "utilities/clearfix";
 @import "utilities/display";
 @import "utilities/embed";
@@ -10,9 +11,11 @@
 @import "utilities/overflow";
 @import "utilities/position";
 @import "utilities/screenreaders";
-@import "utilities/shadows";
+// MEMO: override with tailwindcss
+// @import "utilities/shadows";
 @import "utilities/sizing";
-@import "utilities/spacing";
+// MEMO: override with tailwindcss
+// @import "utilities/spacing";
 @import "utilities/stretched-link";
 @import "utilities/text";
 @import "utilities/visibility";
