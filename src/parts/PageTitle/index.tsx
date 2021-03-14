@@ -1,8 +1,6 @@
 
 import clsx from 'clsx';
 
-import styles from './page-title.module.css';
-
 interface Props {
   mainTitle: string | React.ReactNode;
   subTitle?: string | React.ReactNode;
@@ -15,13 +13,29 @@ const PageTitle = ({
   ...rest
 }: Props & React.ComponentPropsWithoutRef<'div'>) => (
   <div
-    className={clsx(styles['page-title'], className)}
+    // TODO: hardcoded
+    style={{ fontFamily: 'airbnb-cereal-bold' }}
+    className={clsx(
+      'text-center',
+      'mt-7',
+      'mb-4',
+      className
+    )}
     {...rest}>
-    <h2 className={styles['main-title']}>
+    <h2
+      className={clsx(
+        'text-2xl',
+        'xl:text-3xl',
+        'mb-1'
+      )}>
       {mainTitle}
     </h2>
     {subTitle && (
-      <p className={styles['sub-title']}>
+      <p
+        className={clsx(
+          'text-xs',
+          'xl:text-sm'
+        )}>
         {subTitle}
       </p>
     )}
