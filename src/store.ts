@@ -5,16 +5,14 @@ import { TabTypes } from 'utils/enums/tab-types';
 import { createLogger } from 'redux-logger';
 import { applyMiddleware, createStore } from 'redux';
 import { initializeState } from './common/actions/general.actions';
-import { FaucetClient, PolkaBTCAPI, StakedRelayerClient, VaultClient } from '@interlay/polkabtc';
+import { FaucetClient, PolkaBTCAPI } from '@interlay/polkabtc';
 import { mapToArray, arrayToMap } from './common/utils/utils';
 import * as constants from './constants';
 
 declare global {
     interface Window {
         polkaBTC: PolkaBTCAPI;
-        relayer: StakedRelayerClient;
         faucet: FaucetClient;
-        vaultClient: VaultClient;
         isFetchingActive: boolean;
     }
 }

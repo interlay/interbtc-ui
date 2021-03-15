@@ -36,6 +36,7 @@ import {
   ParachainStatus
 } from 'common/types/util.types';
 import {
+  ACCOUNT_ID_TYPE_NAME,
   BALANCE_MAX_INTEGER_LENGTH,
   BTC_ADDRESS_REGEX
 } from '../../../constants';
@@ -170,7 +171,7 @@ function EnterAmountAndAddress(): ReactElement {
         vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountAsSatoshi);
       }
       const amount = window.polkaBTC.api.createType('Balance', amountPolkaSAT);
-      const vaultAccountId = window.polkaBTC.api.createType('AccountId', vaultId.toString());
+      const vaultAccountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vaultId.toString());
       const requestResult = await window.polkaBTC.redeem.request(amount, btcAddress, vaultAccountId);
 
       // Get the redeem id from the request redeem event

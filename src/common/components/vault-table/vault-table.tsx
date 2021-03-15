@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import { StoreType } from '../../../common/types/util.types';
 import DashboardTable from '../dashboard-table/dashboard-table';
+import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 
 export default function VaultTable(): ReactElement {
   const [vaults, setVaults] = useState<Array<Vault>>([]);
@@ -79,7 +80,7 @@ export default function VaultTable(): ReactElement {
       const vaultsList: Vault[] = [];
 
       for (const vault of vaults) {
-        const accountId = window.polkaBTC.api.createType('AccountId', vault.id);
+        const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vault.id);
         let unsettledCollateralization: Big | undefined = undefined;
         let settledCollateralization: Big | undefined = undefined;
         try {

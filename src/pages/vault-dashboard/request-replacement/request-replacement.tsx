@@ -9,6 +9,8 @@ import { StoreType } from '../../../common/types/util.types';
 import { btcToSat, satToBTC } from '@interlay/polkabtc';
 import { requestsToVaultReplaceRequests } from '../../../common/utils/utils';
 import { useTranslation } from 'react-i18next';
+import { PolkaBTC } from '@interlay/polkabtc/build/interfaces';
+import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 
 type RequestReplacementForm = {
   amount: number;
@@ -22,6 +24,7 @@ type RequestReplacementProps = {
 export default function RequestReplacementModal(props: RequestReplacementProps) {
   const { register, handleSubmit, errors } = useForm<RequestReplacementForm>();
   const dispatch = useDispatch();
+  const { address } = useSelector((state: StoreType) => state.general);
   const lockedDot = useSelector((state: StoreType) => state.vault.collateral);
   const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
   const [isRequestPending, setRequestPending] = useState(false);
@@ -40,10 +43,10 @@ export default function RequestReplacementModal(props: RequestReplacementProps) 
         const dustValue = satToBTC(dustValueAsSatoshi.toString());
         throw new Error(`Please enter an amount greater than Bitcoin dust (${dustValue} BTC)`);
       }
-      await window.vaultClient.requestReplace(amountAsSatoshisString);
+      const amountAsSatoshis = window.polkaBTC.api.createType('Balance', amountAsSatoshisString) as PolkaBTC;
+      await window.polkaBTC.replace.request(amountAsSatoshis);
 
-      const accountId = await window.vaultClient.getAccountId();
-      const vaultId = window.polkaBTC.api.createType('AccountId', accountId);
+      const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
       const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
       if (!requests) return;
 

@@ -38,6 +38,7 @@ import {
 } from 'common/utils/utils';
 import bitcoinLogo from 'assets/img/small-bitcoin-logo.png';
 import polkadotLogo from 'assets/img/small-polkadot-logo.png';
+import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 
 type EnterBTCForm = {
   amountBTC: string;
@@ -123,7 +124,7 @@ function EnterBTCAmount() {
 
       const amountAsSatoshi = window.polkaBTC.api.createType('Balance', amountSAT);
 
-      const vaultAccountId = window.polkaBTC.api.createType('AccountId', vaultId);
+      const vaultAccountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vaultId);
       const requestResult = await window.polkaBTC.issue.request(amountAsSatoshi as PolkaBTC, vaultAccountId);
 
       const vaultBTCAddress = requestResult.issueRequest.btc_address;
@@ -156,14 +157,15 @@ function EnterBTCAmount() {
       const amountSAT = btcToSat(value);
       const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), new BN(amountSAT));
       if (vaultId) {
-        const vaultAccountId = window.polkaBTC.api.createType('AccountId', vaultId);
+        const vaultAccountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vaultId);
         setVaultId(vaultAccountId.toString());
       } else {
         setVaultId('');
       }
 
-      const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSAT);
-      setDeposit(planckToDOT(griefingCollateral));
+      const amountSatTyped = window.polkaBTC.api.createType('Balance', amountSAT) as PolkaBTC;
+      const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSatTyped);
+      setDeposit(planckToDOT(griefingCollateral.toString()));
     } catch (error) {
       console.log(error);
     }
