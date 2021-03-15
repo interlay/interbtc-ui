@@ -10,6 +10,7 @@ import Big from 'big.js';
 import ButtonMaybePending from '../../../common/components/pending-button';
 import { useTranslation } from 'react-i18next';
 import { DOT } from '@interlay/polkabtc/build/interfaces';
+import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 
 // Commenting because moving this to last line casues 3 "used before it was defined" warnings
 // eslint-disable-next-line import/exports-last
@@ -71,7 +72,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
         return;
       }
 
-      const vaultId = window.polkaBTC.api.createType('AccountId', address);
+      const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
       const balanceLockedDOT = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
       const collateralDotString = planckToDOT(balanceLockedDOT.toString());
 
@@ -125,7 +126,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
       }
       setNewCollateral(newCollateral.toString());
 
-      const vaultId = window.polkaBTC.api.createType('AccountId', address);
+      const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
       const requiredCollateral = (await window.polkaBTC.vaults.getRequiredCollateralForVault(vaultId)).toString();
 
       // collateral update only allowed if above required collateral

@@ -31,9 +31,7 @@ import keyring from '@polkadot/ui-keyring';
 import {
   FaucetClient,
   planckToDOT,
-  satToBTC
-} from '@interlay/polkabtc';
-import {
+  satToBTC,
   createPolkabtcAPI,
   PolkaBTCAPI
 } from '@interlay/polkabtc';
@@ -81,6 +79,7 @@ import {
 import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import './app.css';
+import { ACCOUNT_ID_TYPE_NAME } from './constants';
 
 // TODO: block code-splitting for now
 // const ApplicationPage = React.lazy(() =>
@@ -185,25 +184,27 @@ function App(): ReactElement {
       }
     }
 
-    let relayerLoaded = false;
+    const id = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
     let vaultLoaded = false;
-    const id = window.polkaBTC.api.createType('AccountId', address);
     try {
       const vault = await window.polkaBTC.vaults.get(id);
       vaultLoaded = vault !== undefined;
     } catch (error) {
       console.log('No PolkaBTC vault found for the account in the connected Polkadot wallet.');
+    } finally {
+      dispatch(isVaultClientLoaded(vaultLoaded));
     }
 
+    let relayerLoaded = false;
     try {
       const isActive = await window.polkaBTC.stakedRelayer.isStakedRelayerActive(id);
       const isInactive = await window.polkaBTC.stakedRelayer.isStakedRelayerInactive(id);
       relayerLoaded = isActive || isInactive;
     } catch (error) {
       console.log('No PolkaBTC staked relayer found for the account in the connected Polkadot wallet.');
+    } finally {
+      dispatch(isStakedRelayerLoaded(relayerLoaded));
     }
-    dispatch(isVaultClientLoaded(vaultLoaded));
-    dispatch(isStakedRelayerLoaded(relayerLoaded));
   }, [
     dispatch,
     store,

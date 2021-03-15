@@ -8,6 +8,7 @@ import BN from 'bn.js';
 import { shortAddress } from '../../../common/utils/utils';
 import * as constants from '../../../constants';
 import { useTranslation } from 'react-i18next';
+import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 
 type ReplaceTableProps = {
   openModal: (show: boolean) => void;
@@ -22,10 +23,10 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!polkaBtcLoaded) return;
+      if (!polkaBtcLoaded || !address) return;
 
       try {
-        const vaultId = window.polkaBTC.api.createType('AccountId', address);
+        const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
         const issuedPolkaBTCAmount = await window.polkaBTC.vaults.getIssuedPolkaBTCAmount(vaultId);
         setPolkaBTCamount(issuedPolkaBTCAmount.toBn());
         const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);

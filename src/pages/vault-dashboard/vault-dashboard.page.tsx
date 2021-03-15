@@ -25,6 +25,7 @@ import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard/dashboard-subpage.scss';
+import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
 
 export default function VaultDashboardPage(): ReactElement {
   const [updateCollateralModalStatus, setUpdateCollateralModalStatus] = useState(CollateralUpdateStatus.Hidden);
@@ -43,10 +44,10 @@ export default function VaultDashboardPage(): ReactElement {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!polkaBtcLoaded || !vaultClientLoaded) return;
+      if (!polkaBtcLoaded || !vaultClientLoaded || !address) return;
 
       try {
-        const vaultId = window.polkaBTC.api.createType('AccountId', address);
+        const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
         const vault = await window.polkaBTC.vaults.get(vaultId);
 
         let vaultBTCAddress = vault.wallet.btcAddress;
@@ -93,7 +94,7 @@ export default function VaultDashboardPage(): ReactElement {
             mainTitle={t('vault.vault_dashboard')}
             subTitle={<TimerIncrement />} />
         </div>
-        <React.Fragment>
+        <>
           <div className='col-lg-10 offset-1'>
             <div className='row mt-3'>
               <div className='col-lg-3 col-md-6 col-6'>
@@ -182,7 +183,7 @@ export default function VaultDashboardPage(): ReactElement {
               </Button>
             </div>
           </div>
-        </React.Fragment>
+        </>
         <IssueTable></IssueTable>
         <RedeemTable></RedeemTable>
         <ReplaceTable openModal={setShowRequestReplacementModal}></ReplaceTable>

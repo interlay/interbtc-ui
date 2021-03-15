@@ -10,6 +10,7 @@ import { btcToSat, satToBTC } from '@interlay/polkabtc';
 import { requestsToVaultReplaceRequests } from '../../../common/utils/utils';
 import { useTranslation } from 'react-i18next';
 import { PolkaBTC } from '@interlay/polkabtc/build/interfaces';
+import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 
 type RequestReplacementForm = {
   amount: number;
@@ -45,7 +46,7 @@ export default function RequestReplacementModal(props: RequestReplacementProps) 
       const amountAsSatoshis = window.polkaBTC.api.createType('Balance', amountAsSatoshisString) as PolkaBTC;
       await window.polkaBTC.replace.request(amountAsSatoshis);
 
-      const vaultId = window.polkaBTC.api.createType('AccountId', address);
+      const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
       const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
       if (!requests) return;
 

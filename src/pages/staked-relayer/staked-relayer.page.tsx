@@ -17,6 +17,7 @@ import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard/dashboard-subpage.scss';
+import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
 
 export default function StakedRelayerPage(): ReactElement {
   const [isDeregisterPending, setDeregisterPending] = useState(false);
@@ -28,7 +29,6 @@ export default function StakedRelayerPage(): ReactElement {
   const [relayerInactive, setRelayerInactive] = useState(false);
   const [sla, setSLA] = useState(0);
   const [apy, setAPY] = useState('0');
-  const relayerNotRegisteredToastId = 'relayer-not-registered-id';
   const { polkaBtcLoaded, relayerLoaded, address } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
@@ -47,10 +47,10 @@ export default function StakedRelayerPage(): ReactElement {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!polkaBtcLoaded || !relayerLoaded) return;
+      if (!polkaBtcLoaded || !relayerLoaded || !address) return;
 
       try {
-        const stakedRelayerId = window.polkaBTC.api.createType('AccountId', address);
+        const stakedRelayerId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
 
         const isInactive = await window.polkaBTC.stakedRelayer.isStakedRelayerInactive(stakedRelayerId);
         setRelayerInactive(isInactive);
@@ -61,27 +61,19 @@ export default function StakedRelayerPage(): ReactElement {
         ).toString();
         const lockedDOT = planckToDOT(lockedPlanck);
 
-        // show warning if relayer is not registered with the parachain
-        if (relayerLoaded) {
-          const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId);
-          setSLA(slaScore);
+        const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId);
+        setSLA(slaScore);
 
-          const apyScore = await window.polkaBTC.stakedRelayer.getAPY(stakedRelayerId);
-          setAPY(apyScore);
+        const apyScore = await window.polkaBTC.stakedRelayer.getAPY(stakedRelayerId);
+        setAPY(apyScore);
 
-          const feesPolkaSAT = await window.polkaBTC.stakedRelayer.getFeesPolkaBTC(
-            stakedRelayerId
-          );
-          setFeesEarnedPolkaBTC(satToBTC(feesPolkaSAT));
+        const feesPolkaSAT = await window.polkaBTC.stakedRelayer.getFeesPolkaBTC(
+          stakedRelayerId
+        );
+        setFeesEarnedPolkaBTC(satToBTC(feesPolkaSAT));
 
-          const feesPlanck = await window.polkaBTC.stakedRelayer.getFeesDOT(stakedRelayerId);
-          setFeesEarnedDOT(planckToDOT(feesPlanck));
-        } else {
-          toast.warn(t('relayer.warning_relayer_not_registered'), {
-            autoClose: false,
-            toastId: relayerNotRegisteredToastId
-          });
-        }
+        const feesPlanck = await window.polkaBTC.stakedRelayer.getFeesDOT(stakedRelayerId);
+        setFeesEarnedDOT(planckToDOT(feesPlanck));
 
         setDotLocked(lockedDOT);
         setPlanckLocked(lockedPlanck);
@@ -145,7 +137,7 @@ export default function StakedRelayerPage(): ReactElement {
               </div>
             </div>
           )}
-          <BitcoinTable></BitcoinTable>
+          <BitcoinTable />
           <StatusUpdateTable
             dotLocked={dotLocked}
             planckLocked={planckLocked}

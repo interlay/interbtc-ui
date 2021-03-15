@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import Balances from './balances';
 import { PAGES } from 'utils/constants/links';
 import newMark from '../../assets/img/icons/new-mark.png';
+import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
 
 type TopbarProps = {
   address?: string;
@@ -28,17 +29,9 @@ export default function Topbar(props: TopbarProps): ReactElement {
     vaultClientLoaded,
     relayerLoaded
   } = useSelector((state: StoreType) => state.general);
-  const [isLoading, setIsLoading] = useState(true);
   const [isRequestPending, setIsRequestPending] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
-
-  useEffect(() => {
-    if (!polkaBtcLoaded) {
-      setTimeout(() => setIsLoading(false), 2500);
-      return;
-    }
-  }, [polkaBtcLoaded]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,7 +47,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
     setIsRequestPending(true);
     try {
       await props.requestDOT();
-      const accountId = window.polkaBTC.api.createType('AccountId', address);
+      const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
       const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
       const balanceDOT = planckToDOT(balancePLANCK.toString());
       dispatch(updateBalanceDOTAction(balanceDOT));
@@ -78,7 +71,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
       bg='light'
       expand='lg'
       className='border-bottom shadow-sm top-bar'>
-      {!isLoading && (
+      {polkaBtcLoaded && (
         <React.Fragment>
           <Navbar.Brand>
             <Link

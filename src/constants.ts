@@ -60,6 +60,8 @@ export const BTC_TEST_EXPLORER_TRANSACTION_API = 'https://blockstream.info/testn
 
 export const FEEDBACK_URL = 'https://forms.gle/2eKFnq4j1fkBgejW7';
 
+export const ACCOUNT_ID_TYPE_NAME = 'AccountId';
+
 // ######################################
 // STAKED RELAYER
 // ######################################

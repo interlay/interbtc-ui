@@ -38,7 +38,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
     let transactionData = false;
     let txId = request.btcTxId;
     try {
-      // get proof data from bitcoin
+      // Get proof data from bitcoin
       if (txId === '') {
         txId = await window.polkaBTC.btcCore.getTxIdByRecipientAddress(
           request.vaultBTCAddress,
@@ -64,13 +64,13 @@ export default function StatusView(props: StatusViewProps): ReactElement {
 
       const txIdBuffer = Buffer.from(txId, 'hex').reverse();
 
-      // prepare types for polkadot
+      // Prepare types for polkadot
       const parsedIssuedId = window.polkaBTC.api.createType('H256', '0x' + provenReq.id);
       const parsedTxId = window.polkaBTC.api.createType('H256', txIdBuffer);
       const parsedMerkleProof = window.polkaBTC.api.createType('Bytes', '0x' + merkleProof);
       const parsedRawTx = window.polkaBTC.api.createType('Bytes', rawTx);
 
-      // execute issue
+      // Execute issue
       await window.polkaBTC.issue.execute(
         parsedIssuedId,
         parsedTxId,
@@ -92,14 +92,14 @@ export default function StatusView(props: StatusViewProps): ReactElement {
 
       toast.success(t('issue_page.successfully_executed', { id: request.id }));
     } catch (error) {
-      toast.error(`${t('issue_page.execute_failed')}: ${error.toString()}`);
+      toast.error(`${t('issue_page.execute_failed')}: ${error.message}`);
     } finally {
       setExecutePending(false);
     }
   };
 
   function getStatus(status: IssueRequestStatus) {
-    // note: the following states are handled already in issue-modal.tsx
+    // Note: the following states are handled already in issue-modal.tsx
     // IssueRequestStatus.RequestedRefund
     // IssueRequestStatus.PendingWithBtcTxNotFound
     switch (status) {

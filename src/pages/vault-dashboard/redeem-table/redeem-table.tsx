@@ -9,6 +9,7 @@ import { VaultRedeem } from '../../../common/types/redeem.types';
 import { FaCheck, FaHourglass } from 'react-icons/fa';
 import { Badge, Table } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 
 export default function RedeemTable(): ReactElement {
   const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
@@ -18,10 +19,10 @@ export default function RedeemTable(): ReactElement {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!polkaBtcLoaded) return;
+      if (!polkaBtcLoaded || !address) return;
 
       try {
-        const vaultId = window.polkaBTC.api.createType('AccountId', address);
+        const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
         const redeemMap = await window.polkaBTC.vaults.mapRedeemRequests(vaultId);
 
         if (!redeemMap) return;
