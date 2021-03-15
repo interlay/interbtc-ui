@@ -191,6 +191,7 @@ function App(): ReactElement {
       vaultLoaded = vault !== undefined;
     } catch (error) {
       console.log('No PolkaBTC vault found for the account in the connected Polkadot wallet.');
+      console.log('error.message => ', error.message);
     } finally {
       dispatch(isVaultClientLoaded(vaultLoaded));
     }
@@ -202,6 +203,7 @@ function App(): ReactElement {
       relayerLoaded = isActive || isInactive;
     } catch (error) {
       console.log('No PolkaBTC staked relayer found for the account in the connected Polkadot wallet.');
+      console.log('error.message => ', error.message);
     } finally {
       dispatch(isStakedRelayerLoaded(relayerLoaded));
     }
