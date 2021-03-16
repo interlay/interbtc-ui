@@ -33,7 +33,7 @@ export const getInitialState = (): StoreType => {
       accounts: [],
       btcRelayHeight: 0,
       bitcoinHeight: 0,
-      stateOfBTCParachain: ParachainStatus.Shutdown,
+      parachainStatus: ParachainStatus.Shutdown,
       selectedTabType: TabTypes.Issue,
       prices: { bitcoin: { usd: 0 }, polkadot: { usd: 0 } }
     },

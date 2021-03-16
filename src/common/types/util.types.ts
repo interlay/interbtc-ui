@@ -39,6 +39,8 @@ export interface DashboardStatusUpdateInfo {
 
 export enum ParachainStatus {
   // eslint-disable-next-line no-unused-vars
+  Loading,
+  // eslint-disable-next-line no-unused-vars
   Error,
   // eslint-disable-next-line no-unused-vars
   Running,
@@ -69,7 +71,7 @@ export type GeneralState = {
   accounts: string[];
   btcRelayHeight: number;
   bitcoinHeight: number;
-  stateOfBTCParachain: ParachainStatus;
+  parachainStatus: ParachainStatus;
   selectedTabType: TabTypes;
   prices: Prices;
 };

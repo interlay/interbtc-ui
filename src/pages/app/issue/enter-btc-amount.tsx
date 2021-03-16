@@ -15,8 +15,8 @@ import { PolkaBTC } from '@interlay/polkabtc/build/interfaces/default';
 
 import ButtonMaybePending from 'common/components/pending-button';
 import {
-  StoreType,
-  ParachainStatus
+  ParachainStatus,
+  StoreType
 } from 'common/types/util.types';
 import * as constants from '../../../constants';
 import {
@@ -39,6 +39,7 @@ import {
 import bitcoinLogo from 'assets/img/small-bitcoin-logo.png';
 import polkadotLogo from 'assets/img/small-polkadot-logo.png';
 import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
+import ParachainStatusInfo from 'components/ParachainStatusInfo';
 
 type EnterBTCForm = {
   amountBTC: string;
@@ -51,7 +52,7 @@ function EnterBTCAmount() {
     bitcoinHeight,
     btcRelayHeight,
     prices,
-    stateOfBTCParachain
+    parachainStatus
   } = useSelector((state: StoreType) => state.general);
   const [amountBTC, setAmountBTC] = useState('');
   const defaultValues = amountBTC ? { defaultValues: { amountBTC: amountBTC } } : undefined;
@@ -187,9 +188,6 @@ function EnterBTCAmount() {
     return undefined;
   };
 
-  // TODO: should be simpler by loading UX integration
-  const parachainRunning = stateOfBTCParachain === ParachainStatus.Running;
-
   return (
     <form onSubmit={onSubmit}>
       <div className='row'>
@@ -222,22 +220,7 @@ function EnterBTCAmount() {
           {errors.amountBTC.type === 'required' ? t('issue_page.enter_valid_amount') : errors.amountBTC.message}
         </div>
       )}
-      {/* TODO: could use finite state machine */}
-      {!parachainRunning && (
-        // TODO: should avoid hard-coding styles and componentize properly
-        <div className='wizard-input-error'>
-          <p
-            style={{
-              fontSize: '20px',
-              marginBottom: 4
-            }}>
-            {t('issue_redeem_disabled')}
-          </p>
-          <p style={{ fontSize: '16px' }}>
-            {t('polkabtc_bridge_recovery_mode')}
-          </p>
-        </div>
-      )}
+      <ParachainStatusInfo status={parachainStatus} />
       <div className='row justify-content-center'>
         <div className='col-10'>
           <div className='wizard-item wizard-item-remove-border'>
@@ -314,7 +297,7 @@ function EnterBTCAmount() {
       </div>
       <ButtonMaybePending
         className='btn green-button app-btn'
-        disabled={!parachainRunning}
+        disabled={parachainStatus !== ParachainStatus.Running}
         isPending={isRequestPending}
         onClick={onSubmit}>
         {t('confirm')}
