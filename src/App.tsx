@@ -80,6 +80,7 @@ import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import './app.css';
 import { ACCOUNT_ID_TYPE_NAME } from './constants';
+import { StatusCode } from '@interlay/polkabtc/build/interfaces';
 
 // TODO: block code-splitting for now
 // const ApplicationPage = React.lazy(() =>
@@ -236,17 +237,26 @@ function App(): ReactElement {
         ]);
         const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
         const totalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
+
+        const parachainStatus = (state: StatusCode) => {
+          if (state.isError) {
+            return ParachainStatus.Error;
+          } else if (state.isRunning) {
+            return ParachainStatus.Running;
+          } else if (state.isShutdown) {
+            return ParachainStatus.Shutdown;
+          } else {
+            return ParachainStatus.Loading;
+          }
+        };
+
         dispatch(
           initGeneralDataAction(
             totalPolkaBTC,
             totalLockedDOT,
             Number(btcRelayHeight),
             bitcoinHeight,
-            state.isError ?
-              ParachainStatus.Error :
-              state.isRunning ?
-                ParachainStatus.Running :
-                ParachainStatus.Shutdown
+            parachainStatus(state)
           )
         );
       } catch (error) {
