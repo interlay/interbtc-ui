@@ -14,7 +14,7 @@ const ParachainStatusInfo = ({ status }: Props) => {
     return (
       <div className='wizard-input-info'>
         <p style={{ fontSize: '16px' }}>
-          {t('polkbtc_bridge_loading')}
+          {t('polkabtc_bridge_loading')}
         </p>
       </div>
     );
