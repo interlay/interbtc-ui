@@ -177,12 +177,8 @@ function App(): ReactElement {
       startFetchingLiveData(dispatch, store);
       setIsLoading(false);
     } catch (error) {
-      if (!window.polkaBTC) {
-        toast.warn(
-          'Unable to connect to the BTC-Parachain. ' +
-          'Please check your internet connection or try again later.'
-        );
-      }
+      console.log('Unable to connect to the BTC-Parachain.');
+      console.log('error.message => ', error.message);
     }
 
     const id = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
