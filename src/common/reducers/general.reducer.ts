@@ -34,7 +34,7 @@ const initialState = {
   accounts: [],
   btcRelayHeight: 0,
   bitcoinHeight: 0,
-  stateOfBTCParachain: ParachainStatus.Shutdown,
+  parachainStatus: ParachainStatus.Loading,
   selectedTabType: TabTypes.Issue,
   prices: { bitcoin: { usd: 0 }, polkadot: { usd: 0 } }
 };
@@ -64,7 +64,6 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       showAccountModal: false,
       extensions: [],
       accounts: [],
-      stateOfBTCParachain: ParachainStatus.Shutdown,
       selectedTabType: TabTypes.Issue
     };
   case INIT_GENERAL_DATA_ACTION:
@@ -74,7 +73,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       totalPolkaBTC: action.totalPolkaBTC,
       btcRelayHeight: action.btcRelayHeight,
       bitcoinHeight: action.bitcoinHeight,
-      stateOfBTCParachain: action.stateOfBTCParachain
+      parachainStatus: action.parachainStatus
     };
   case IS_VAULT_CLIENT_LOADED:
     return { ...state, vaultClientLoaded: action.isLoaded };

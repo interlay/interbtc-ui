@@ -31,6 +31,7 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
     const fetchOracleData = async () => {
       if (!polkaBtcLoaded) return;
       try {
+        // TODO: replace with state
         const parachainStatus = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
 
         if (parachainStatus.isRunning) {

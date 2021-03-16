@@ -80,7 +80,7 @@ export interface InitGeneralDataAction {
     totalLockedDOT: string;
     btcRelayHeight: number;
     bitcoinHeight: number;
-    stateOfBTCParachain: ParachainStatus;
+    parachainStatus: ParachainStatus;
 }
 
 export interface UpdateBalancePolkaBTC {

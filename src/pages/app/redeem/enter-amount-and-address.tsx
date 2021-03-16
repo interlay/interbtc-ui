@@ -48,6 +48,7 @@ import {
 } from 'common/utils/utils';
 import bitcoinLogo from 'assets/img/small-bitcoin-logo.png';
 import polkadotLogo from 'assets/img/small-polkadot-logo.png';
+import ParachainStatusInfo from 'components/ParachainStatusInfo';
 
 type AmountAndAddressForm = {
   amountPolkaBTC: string;
@@ -67,7 +68,7 @@ function EnterAmountAndAddress(): ReactElement {
     bitcoinHeight,
     btcRelayHeight,
     prices,
-    stateOfBTCParachain
+    parachainStatus
   } = useSelector((state: StoreType) => state.general);
 
   // General redeem
@@ -232,8 +233,6 @@ function EnterAmountAndAddress(): ReactElement {
     dispatch(togglePremiumRedeemAction(!premiumRedeem));
   };
 
-  const parachainRunning = stateOfBTCParachain === ParachainStatus.Running;
-
   return (
     <form
       className='enter-amount-and-address'
@@ -273,20 +272,7 @@ function EnterAmountAndAddress(): ReactElement {
             errors.amountPolkaBTC.message}
         </div>
       )}
-      {!parachainRunning && (
-        <div className='wizard-input-error'>
-          <p
-            style={{
-              fontSize: '20px',
-              marginBottom: 4
-            }}>
-            {t('issue_redeem_disabled')}
-          </p>
-          <p style={{ fontSize: '16px' }}>
-            {t('polkabtc_bridge_recovery_mode')}
-          </p>
-        </div>
-      )}
+      <ParachainStatusInfo status={parachainStatus} />
       <div className='row'>
         <div className='col-12'>
           <p className='form-heading'>BTC destination address</p>
@@ -408,7 +394,7 @@ function EnterAmountAndAddress(): ReactElement {
       <ButtonMaybePending
         type='submit'
         className='btn green-button app-btn'
-        disabled={!parachainRunning}
+        disabled={parachainStatus !== ParachainStatus.Running}
         isPending={isRequestPending}
         onClick={checkAddress}>
         {t('confirm')}
