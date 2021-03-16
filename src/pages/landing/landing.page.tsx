@@ -40,7 +40,12 @@ export default function LandingPage(): JSX.Element {
   return (
     <div>
       <section className='jumbotron min-vh-90 text-center transparent-background'>
-        <div className='container mt-5'>
+        <div
+          className={clsx(
+            'container',
+            'mt-12',
+            'mx-auto'
+          )}>
           <InterlayRouterLink to={PAGES.HOME}>
             <Image
               src={polkaBTCImg}
@@ -50,7 +55,7 @@ export default function LandingPage(): JSX.Element {
           <h1
             className={clsx(
               'text-white',
-              'mt-5',
+              'mt-12',
               'font-light'
             )}>
             PolkaBTC
@@ -65,14 +70,21 @@ export default function LandingPage(): JSX.Element {
 
           {checkStaticPage() ? (
             <div>
-              <h4 className='text-white mt-5'>{t('landing.beta_coming')}</h4>
-              <h1 className='text-white mt-5'>
+              <h4
+                className={clsx(
+                  'text-white',
+                  'mt-12'
+                )}>
+                {t('landing.beta_coming')}
+              </h4>
+              <h1
+                className={clsx(
+                  'text-white',
+                  'mt-12'
+                )}>
                 <Timer seconds={secondsUntilBeta}></Timer>
               </h1>
-              {/* <h5 className="text-light mt-1">
-                {formatDateTime(new Date(constants.BETA_LAUNCH_DATE * 1000))}
-              </h5> */}
-              <Row className='mt-5'>
+              <Row className={clsx('mt-12')}>
                 <Col
                   className='mt-2'
                   xs='12'
@@ -115,7 +127,7 @@ export default function LandingPage(): JSX.Element {
             </div>
           ) : (
             <div>
-              <Row className='mt-4'>
+              <Row className={clsx('mt-6')}>
                 <Col
                   xs='12'
                   sm={{ span: 6, offset: 3 }}>
@@ -142,7 +154,7 @@ export default function LandingPage(): JSX.Element {
                 </Col>
               </Row>
               {polkaBtcLoaded && (
-                <Row className='mt-5'>
+                <Row className={clsx('mt-12')}>
                   <Col
                     className='mt-2'
                     xs='12'

@@ -4,6 +4,7 @@ import { Table, Badge } from 'react-bootstrap';
 import { FaCheck, FaHourglass } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
 import IssueModal from './modal/issue-modal';
 import BitcoinTransaction from 'common/components/bitcoin-links/transaction';
@@ -58,7 +59,12 @@ function IssueRequests(): ReactElement {
   };
 
   return (
-    <div className='container mt-5'>
+    <div
+      className={clsx(
+        'container',
+        'mt-12',
+        'mx-auto'
+      )}>
       {issueRequests?.length > 0 && (
         <>
           <h5>{t('issue_requests')}</h5>

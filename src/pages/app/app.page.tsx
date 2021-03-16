@@ -2,6 +2,7 @@
 import { ReactElement } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
 import MainContainer from 'parts/MainContainer';
 import IssueSteps from './issue/issue-steps';
@@ -25,7 +26,12 @@ function Application(): ReactElement {
 
   return (
     <MainContainer className='text-center white-background min-vh-100 app-page'>
-      <div className='container mt-5'>
+      <div
+        className={clsx(
+          'container',
+          'mt-12',
+          'mx-auto'
+        )}>
         <div className='row justify-content-center'>
           <div
             // TODO: should use `clsx`
