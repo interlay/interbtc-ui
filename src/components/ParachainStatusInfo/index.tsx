@@ -19,7 +19,7 @@ const ParachainStatusInfo = ({ status }: Props) => {
       </div>
     );
   case ParachainStatus.Running:
-    return <div></div>;
+    return <div />;
     // Covers the cases of Shutdown and Error
   default:
     return (
