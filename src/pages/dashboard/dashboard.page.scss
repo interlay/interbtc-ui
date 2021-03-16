@@ -19,7 +19,7 @@
 
   h1 {
     color: black;
-    font-family: airbnb-cereal-book;
+    font-weight: 400;
     font-size: 13px;
     margin-bottom: 0.3rem;
   }
@@ -27,13 +27,13 @@
   h2 {
     color: black;
     font-size: 16px;
-    font-family: airbnb-cereal-bold;
+    font-weight: 700;
     margin-bottom: 0.2rem;
   }
 
   h3 {
     font-size: 8px;
-    font-family: airbnb-cereal-bold;
+    font-weight: 700;
     text-transform: uppercase;
     margin-bottom: 0rem;
     letter-spacing: 0.4px;
@@ -51,22 +51,20 @@
     color: black;
     font-size: 34px;
     text-align: left;
-    font-family: airbnb-cereal-bold;
-    text-align: left;
+    font-weight: 700;
   }
 
   .h1-xl-text-center {
     color: black;
     font-size: 34px;
-    text-align: left;
-    font-family: airbnb-cereal-bold;
+    font-weight: 700;
     text-align: center;
   }
 
   .h1-l-text {
     color: black;
     font-size: 28px;
-    font-family: airbnb-cereal-bold;
+    font-weight: 700;
   }
 
   .parachain-content-container {
@@ -146,7 +144,7 @@
 }
 
 .bold-font {
-  font-family: "airbnb-cereal-bold";
+  font-weight: 700;
 }
 
 @media only screen and (min-width: $mobile-large-size) {
@@ -240,7 +238,7 @@
 
   .latest-block-text {
     font-size: 12px;
-    font-family: airbnb-cereal-bold;
+    font-weight: 700;
   }
 
   .section-top-gap {

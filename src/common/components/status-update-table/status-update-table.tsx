@@ -151,7 +151,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
       <div>
         <p
           style={{
-            fontFamily: 'airbnb-cereal-bold',
+            fontWeight: 700,
             fontSize: '26px'
           }}>
           {t('dashboard.parachain.parachain')}

@@ -224,7 +224,7 @@ export default function VaultTable(): ReactElement {
       <div>
         <p
           style={{
-            fontFamily: 'airbnb-cereal-bold',
+            fontWeight: 700,
             fontSize: '26px'
           }}>
           {t('dashboard.vault.active_vaults')}

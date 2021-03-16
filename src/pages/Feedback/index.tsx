@@ -4,6 +4,7 @@ import {
   FaGithub,
   FaDiscord
 } from 'react-icons/fa';
+import clsx from 'clsx';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -57,11 +58,10 @@ const Feedback = () => (
               href={feedbackType.link}
               target='_blank'
               rel='noopener noreferrer'
-              style={{
-                display: 'block',
-                // TODO: hardcoded for now
-                fontFamily: 'airbnb-cereal-bold'
-              }}>
+              className={clsx(
+                'block',
+                'font-bold'
+              )}>
               {feedbackType.title}&nbsp;{feedbackType.icon}
             </InterlayLink>
           </Card>

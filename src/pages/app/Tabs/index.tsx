@@ -31,7 +31,7 @@ const Tab = ({
     <div
       // TODO: hardcoded
       style={{
-        fontFamily: 'airbnb-cereal-bold'
+        fontWeight: 700
       }}
       className={clsx(
         'flex-1',

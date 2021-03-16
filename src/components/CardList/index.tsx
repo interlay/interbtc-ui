@@ -34,7 +34,9 @@ const CardHeader = ({
 }: React.ComponentPropsWithoutRef<'h2'>) => (
   <h2
     // TODO: hardcoded for now
-    style={{ fontFamily: 'airbnb-cereal-bold' }}
+    style={{
+      fontWeight: 700
+    }}
     className={clsx(
       'text-base',
       'font-bold',

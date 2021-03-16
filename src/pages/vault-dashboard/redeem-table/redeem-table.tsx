@@ -54,7 +54,7 @@ export default function RedeemTable(): ReactElement {
       <div>
         <p
           style={{
-            fontFamily: 'airbnb-cereal-bold',
+            fontWeight: 700,
             fontSize: '26px'
           }}>
           {t('redeem_requests')}

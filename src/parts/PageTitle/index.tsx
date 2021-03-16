@@ -14,7 +14,9 @@ const PageTitle = ({
 }: Props & React.ComponentPropsWithoutRef<'div'>) => (
   <div
     // TODO: hardcoded
-    style={{ fontFamily: 'airbnb-cereal-bold' }}
+    style={{
+      fontWeight: 700
+    }}
     className={clsx(
       'text-center',
       'mt-7',

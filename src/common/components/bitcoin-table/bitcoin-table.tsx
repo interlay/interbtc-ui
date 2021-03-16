@@ -117,7 +117,7 @@ export default function BitcoinTable(): ReactElement {
       <div>
         <p
           style={{
-            fontFamily: 'airbnb-cereal-bold',
+            fontWeight: 700,
             fontSize: '26px'
           }}>
           {t('dashboard.relay.btcrelay')}
