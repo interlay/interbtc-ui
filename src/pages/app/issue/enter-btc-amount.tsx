@@ -22,7 +22,8 @@ import * as constants from '../../../constants';
 import {
   changeIssueStepAction,
   changeIssueIdAction,
-  addIssueRequestAction
+  addIssueRequestAction,
+  updateIssuePeriodAction
 } from 'common/actions/issue.actions';
 import {
   btcToSat,
@@ -78,6 +79,25 @@ function EnterBTCAmount() {
       if (!polkaBtcLoaded) return;
 
       try {
+        // set issue period
+        const issuePeriodInBlocks = await window.polkaBTC.issue.getIssuePeriod();
+        const issuePeriod = new BN(issuePeriodInBlocks.toString()).mul(new BN(constants.BLOCK_TIME)).toNumber();
+        dispatch(updateIssuePeriodAction(issuePeriod));
+      } catch (error) {
+        console.log('[EnterBtcAmount] error.message => ', error.message);
+      }
+    };
+    fetchData();
+  }, [
+    polkaBtcLoaded,
+    dispatch
+  ]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!polkaBtcLoaded) return;
+
+      try {
         const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
         const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
         const vaultsMap = await window.polkaBTC.vaults.getVaultsWithIssuableTokens();
@@ -90,7 +110,7 @@ function EnterBTCAmount() {
         setVaults(vaultsMap);
         setDustValue(dustValueBtc);
       } catch (error) {
-        console.log(error);
+        console.log('[EnterBtcAmount] error.message => ', error.message);
       }
     };
     setUsdAmount(getUsdAmount(amountBTC || getValues('amountBTC') || '0', prices.bitcoin.usd));
