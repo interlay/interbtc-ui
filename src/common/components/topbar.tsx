@@ -84,7 +84,6 @@ export default function Topbar(props: TopbarProps): ReactElement {
               style={{
                 textDecoration: 'none'
               }}
-              className='text-decoration-none'
               to={PAGES.HOME}>
               <Image
                 src={polkaBTCLogo}

@@ -78,7 +78,9 @@ export default function LandingPage(): JSX.Element {
                   xs='12'
                   sm={{ span: 4, offset: 2 }}>
                   <InterlayLink
-                    className='text-decoration-none'
+                    style={{
+                      textDecoration: 'none'
+                    }}
                     href='https://docs.polkabtc.io/#/'
                     target='_bank'
                     rel='noopener noreferrer'>
@@ -95,7 +97,9 @@ export default function LandingPage(): JSX.Element {
                   xs='12'
                   sm={{ span: 4, offset: 0 }}>
                   <InterlayLink
-                    className='text-decoration-none'
+                    style={{
+                      textDecoration: 'none'
+                    }}
                     href='https://discord.gg/KgCYK3MKSf'
                     target='_blank'
                     rel='noopener noreferrer'>
@@ -144,7 +148,9 @@ export default function LandingPage(): JSX.Element {
                     xs='12'
                     sm={{ span: 4, offset: 2 }}>
                     <InterlayRouterLink
-                      className='text-decoration-none'
+                      style={{
+                        textDecoration: 'none'
+                      }}
                       to={PAGES.APPLICATION}>
                       <Button
                         variant='outline-dark'
@@ -160,7 +166,9 @@ export default function LandingPage(): JSX.Element {
                     xs='12'
                     sm={{ span: 4 }}>
                     <InterlayRouterLink
-                      className='text-decoration-none'
+                      style={{
+                        textDecoration: 'none'
+                      }}
                       to={PAGES.DASHBOARD}>
                       <Button
                         variant='outline-dark'
