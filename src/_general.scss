@@ -4,6 +4,8 @@
 
 // RE: https://drafts.csswg.org/css-fonts/#font-weight-numeric-values
 // TODO: should set up based on https://css-tricks.com/snippets/css/using-font-face/
+// TODO: should follow https://tailwindcss.com/docs/adding-base-styles#font-face-rules and https://tailwindcss.com/docs/adding-base-styles#using-classes-in-your-html
+// TODO: should follow https://tailwindcss.com/docs/font-family
 @font-face {
   font-family: "airbnb-cereal";
   src: url("./assets/fonts/airbnb-cereal/AirbnbCerealLight.ttf") format("truetype");
@@ -64,12 +66,8 @@ td,
 th,
 li,
 ul {
-  // ray test touch <
   font-family: "airbnb-cereal", Arial;
-  // ray test touch >
 }
-
-
 
 .header {
   text-align: center;
