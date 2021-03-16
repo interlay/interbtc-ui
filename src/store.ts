@@ -42,7 +42,8 @@ export const getInitialState = (): StoreType => {
       step: 'ENTER_BTC_AMOUNT',
       id: '',
       issueRequests: new Map(),
-      vaultIssues: []
+      vaultIssues: [],
+      issuePeriod: 86400
     },
     redeem: {
       premiumRedeem: false,

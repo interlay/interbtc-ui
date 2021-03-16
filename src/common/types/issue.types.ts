@@ -79,4 +79,6 @@ export interface IssueState {
   issueRequests: Map<string, IssueRequest[]>;
   // TODO: remove
   vaultIssues: VaultIssue[];
+  // issue period in seconds
+  issuePeriod: number;
 }

@@ -7,6 +7,7 @@ import {
   ADD_VAULT_ISSUES,
   UPDATE_ALL_ISSUE_REQUESTS,
   CHANGE_SELECTED_ISSUE,
+  UPDATE_ISSUE_PERIOD,
   UpdateAllIssueRequests,
   ChangeIssueStep,
   ResetIssueWizard,
@@ -14,7 +15,8 @@ import {
   AddIssueRequest,
   UpdateIssueRequest,
   AddVaultIssues,
-  ChangeSelectedIssue
+  ChangeSelectedIssue,
+  UpdateIssuePeriod
 } from '../types/actions.types';
 import { IssueRequest, VaultIssue } from '../types/issue.types';
 
@@ -59,4 +61,9 @@ export const updateAllIssueRequestsAction = (
   type: UPDATE_ALL_ISSUE_REQUESTS,
   userDotAddress,
   issueRequests
+});
+
+export const updateIssuePeriodAction = (period: number): UpdateIssuePeriod => ({
+  type: UPDATE_ISSUE_PERIOD,
+  period
 });

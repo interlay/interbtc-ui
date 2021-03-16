@@ -22,7 +22,8 @@ import * as constants from '../../../constants';
 import {
   changeIssueStepAction,
   changeIssueIdAction,
-  addIssueRequestAction
+  addIssueRequestAction,
+  updateIssuePeriodAction
 } from 'common/actions/issue.actions';
 import {
   btcToSat,
@@ -72,6 +73,25 @@ function EnterBTCAmount() {
   const [vaultId, setVaultId] = useState('');
   const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!polkaBtcLoaded) return;
+
+      try {
+        // set issue period
+        const issuePeriodInBlocks = await window.polkaBTC.issue.getIssuePeriod();
+        const issuePeriod = new BN(issuePeriodInBlocks.toString()).mul(new BN(constants.BLOCK_TIME)).toNumber();
+        dispatch(updateIssuePeriodAction(issuePeriod));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, [
+    polkaBtcLoaded,
+    dispatch
+  ]);
 
   useEffect(() => {
     const fetchData = async () => {
