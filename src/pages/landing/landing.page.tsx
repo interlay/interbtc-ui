@@ -10,6 +10,7 @@ import {
   useDispatch
 } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
 import Timer from 'common/components/timer';
 import InterlayLink from 'components/InterlayLink';
@@ -46,8 +47,21 @@ export default function LandingPage(): JSX.Element {
               width='256'>
             </Image>
           </InterlayRouterLink>
-          <h1 className='text-white mt-5'>PolkaBTC</h1>
-          <h2 className='text-white'>{t('landing.defi_ecosystem')}</h2>
+          <h1
+            className={clsx(
+              'text-white',
+              'mt-5',
+              'font-light'
+            )}>
+            PolkaBTC
+          </h1>
+          <h2
+            className={clsx(
+              'text-white',
+              'font-light'
+            )}>
+            {t('landing.defi_ecosystem')}
+          </h2>
 
           {checkStaticPage() ? (
             <div>
@@ -101,7 +115,11 @@ export default function LandingPage(): JSX.Element {
                 <Col
                   xs='12'
                   sm={{ span: 6, offset: 3 }}>
-                  <h5 className='text-white'>
+                  <h5
+                    className={clsx(
+                      'text-white',
+                      'font-light'
+                    )}>
                     {t('landing.issued')} {totalPolkaBTC} PolkaBTC
                   </h5>
                 </Col>
@@ -110,7 +128,11 @@ export default function LandingPage(): JSX.Element {
                 <Col
                   xs='12'
                   sm={{ span: 6, offset: 3 }}>
-                  <h5 className='text-white'>
+                  <h5
+                    className={clsx(
+                      'text-white',
+                      'font-light'
+                    )}>
                     {t('locked')} {totalLockedDOT} DOT
                   </h5>
                 </Col>
