@@ -28,10 +28,13 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
       const unixTimestamp = Math.floor(new Date(props.request.timestamp).getTime() / 1000);
       const secondsLeft = unixTimestamp + issuePeriod - Math.floor(Date.now() / 1000);
       setLeftSeconds(secondsLeft);
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log('[PaymentView] error.message => ', error.message);
     }
-  }, [props.request.timestamp, issuePeriod]);
+  }, [
+    props.request.timestamp,
+    issuePeriod
+  ]);
 
   return (
     <div className='payment-view'>

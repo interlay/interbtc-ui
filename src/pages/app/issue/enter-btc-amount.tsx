@@ -84,7 +84,7 @@ function EnterBTCAmount() {
         const issuePeriod = new BN(issuePeriodInBlocks.toString()).mul(new BN(constants.BLOCK_TIME)).toNumber();
         dispatch(updateIssuePeriodAction(issuePeriod));
       } catch (error) {
-        console.log(error);
+        console.log('[EnterBtcAmount] error.message => ', error.message);
       }
     };
     fetchData();
@@ -110,7 +110,7 @@ function EnterBTCAmount() {
         setVaults(vaultsMap);
         setDustValue(dustValueBtc);
       } catch (error) {
-        console.log(error);
+        console.log('[EnterBtcAmount] error.message => ', error.message);
       }
     };
     setUsdAmount(getUsdAmount(amountBTC || getValues('amountBTC') || '0', prices.bitcoin.usd));
