@@ -92,7 +92,8 @@ export default function VaultTable(): ReactElement {
         };
 
         const vaultCollateral = new Big(planckToDOT(vault.backing_collateral.toString()));
-        const unsettledTokens = new Big(satToBTC(vault.issued_tokens.toString())).add(new Big(satToBTC(vault.to_be_issued_tokens.toString())));
+        const unsettledTokens = new Big(satToBTC(vault.issued_tokens.toString()))
+          .add(new Big(satToBTC(vault.to_be_issued_tokens.toString())));
         const settledTokens = new Big(satToBTC(vault.issued_tokens.toString()));
         const unsettledCollateralization = getCollateralization(vaultCollateral, unsettledTokens);
         const settledCollateralization = getCollateralization(vaultCollateral, settledTokens);
