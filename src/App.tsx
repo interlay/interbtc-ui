@@ -142,6 +142,7 @@ function App(): ReactElement {
     try {
       window.polkaBTC = await connectToParachain();
       dispatch(isPolkaBtcLoaded(true));
+      setIsLoading(false);
     } catch (error) {
       toast.warn('Unable to connect to the BTC-Parachain.');
       console.log('Unable to connect to the BTC-Parachain.');
@@ -150,7 +151,6 @@ function App(): ReactElement {
 
     try {
       startFetchingLiveData(dispatch, store);
-      setIsLoading(false);
     } catch (error) {
       console.log('Error fetching live data.');
       console.log('error.message => ', error.message);
