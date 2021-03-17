@@ -8,7 +8,7 @@ export const BTC_DECIMALS = 8;
 export const BLOCKS_BEHIND_LIMIT = 6;
 
 // timeout in milliseconds for setInterval
-export const COMPONENT_UPDATE_MS = 10000;
+export const COMPONENT_UPDATE_MS = 10000000;
 
 // Set to true is on mainnet.
 export const BTC_MAINNET = false;
