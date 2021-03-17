@@ -32,13 +32,14 @@ function Application(): ReactElement {
           'mt-12',
           'mx-auto'
         )}>
+        {/* ray test touch < */}
         <div className='row justify-content-center'>
           <div
-            // TODO: should use `clsx`
-            className={
-              'col-xl-6 col-lg-6 col-md-8 col-sm-12 col-xs-12 tab-content-wrapper' +
-              (premiumRedeem ? ' pink-gradient' : '')
-            }>
+            className={clsx(
+              'col-xs-12 col-md-8 col-lg-6',
+              'tab-content-wrapper',
+              { 'pink-gradient': premiumRedeem }
+            )}>
             {tabsHidden ? (
               <div className='step-title'>
                 {selectedTabType === TabTypes.Issue && (
@@ -74,6 +75,7 @@ function Application(): ReactElement {
             </div>
           </div>
         </div>
+        {/* ray test touch > */}
       </div>
       {selectedTabType === TabTypes.Issue && <IssueRequests />}
       {selectedTabType === TabTypes.Redeem && <RedeemRequests />}
