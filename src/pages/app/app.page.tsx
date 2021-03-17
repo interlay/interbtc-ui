@@ -32,50 +32,48 @@ function Application(): ReactElement {
           'mt-12',
           'mx-auto'
         )}>
-        {/* ray test touch < */}
-        <div className='row justify-content-center'>
-          <div
-            className={clsx(
-              'col-xs-12 col-md-8 col-lg-6',
-              'tab-content-wrapper',
-              { 'pink-gradient': premiumRedeem }
-            )}>
-            {tabsHidden ? (
-              <div className='step-title'>
-                {selectedTabType === TabTypes.Issue && (
-                  <div className='issue-step-title'>{t('issue_page.deposit')}</div>
-                )}
-              </div>
-            ) : (
-              <>
-                <Tabs>
-                  <Tab
-                    tabType={TabTypes.Issue}
-                    selectedTabType={selectedTabType}>
-                    {t('issue')}
-                  </Tab>
-                  <Tab
-                    tabType={TabTypes.Redeem}
-                    selectedTabType={selectedTabType}>
-                    {t('redeem')}
-                  </Tab>
-                  <Tab
-                    tabType={TabTypes.Transfer}
-                    selectedTabType={selectedTabType}>
-                    {t('transfer')}
-                  </Tab>
-                </Tabs>
-                <HorizontalLine selectedTabType={selectedTabType} />
-              </>
-            )}
-            <div className='content'>
-              {selectedTabType === TabTypes.Issue && <IssueSteps />}
-              {selectedTabType === TabTypes.Redeem && <RedeemSteps />}
-              {selectedTabType === TabTypes.Transfer && <Transfer />}
+        <div
+          className={clsx(
+            'mx-auto',
+            'w-full',
+            'md:max-w-xl',
+            'tab-content-wrapper',
+            { 'pink-gradient': premiumRedeem }
+          )}>
+          {tabsHidden ? (
+            <div className='step-title'>
+              {selectedTabType === TabTypes.Issue && (
+                <div className='issue-step-title'>{t('issue_page.deposit')}</div>
+              )}
             </div>
+          ) : (
+            <>
+              <Tabs>
+                <Tab
+                  tabType={TabTypes.Issue}
+                  selectedTabType={selectedTabType}>
+                  {t('issue')}
+                </Tab>
+                <Tab
+                  tabType={TabTypes.Redeem}
+                  selectedTabType={selectedTabType}>
+                  {t('redeem')}
+                </Tab>
+                <Tab
+                  tabType={TabTypes.Transfer}
+                  selectedTabType={selectedTabType}>
+                  {t('transfer')}
+                </Tab>
+              </Tabs>
+              <HorizontalLine selectedTabType={selectedTabType} />
+            </>
+          )}
+          <div className='content'>
+            {selectedTabType === TabTypes.Issue && <IssueSteps />}
+            {selectedTabType === TabTypes.Redeem && <RedeemSteps />}
+            {selectedTabType === TabTypes.Transfer && <Transfer />}
           </div>
         </div>
-        {/* ray test touch > */}
       </div>
       {selectedTabType === TabTypes.Issue && <IssueRequests />}
       {selectedTabType === TabTypes.Redeem && <RedeemRequests />}
