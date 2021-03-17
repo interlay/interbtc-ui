@@ -114,6 +114,9 @@ export default function VaultDashboardPage(): ReactElement {
           <PageTitle
             mainTitle={t('vault.vault_dashboard')}
             subTitle={<TimerIncrement />} />
+          <PageTitle
+            mainTitle=''
+            subTitle={address} />
         </div>
         <>
           <div className='col-lg-10 offset-1'>
@@ -123,7 +126,7 @@ export default function VaultDashboardPage(): ReactElement {
                   className='card stats-card mb-3'
                   style={{ minHeight: '100px' }}>
                   <div className=''>{t('vault.locked_collateral')}</div>
-                  <span className='stats'>{safeRoundTwoDecimals(collateral)}</span> DOT
+                  <span className='stats'>{collateral}</span> DOT
                 </div>
               </div>
               <div className='col-lg-3 col-md-6 col-6'>
