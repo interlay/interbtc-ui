@@ -55,12 +55,10 @@ export const getInitialState = (): StoreType => {
     },
     vault: {
       requests: [],
-      btcAddress: '',
       collateralization: undefined,
-      collateral: '',
-      lockedBTC: '',
+      collateral: '0',
+      lockedBTC: '0',
       sla: '0',
-      premiumVault: undefined,
       apy: '0'
     }
   };

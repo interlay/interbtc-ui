@@ -6,7 +6,6 @@ import { Button, Table } from 'react-bootstrap';
 import { requestsToVaultReplaceRequests } from '../../../common/utils/utils';
 import BN from 'bn.js';
 import { shortAddress } from '../../../common/utils/utils';
-import * as constants from '../../../constants';
 import { useTranslation } from 'react-i18next';
 import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 
@@ -39,10 +38,6 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
     };
 
     fetchData();
-    const interval = setInterval(() => {
-      fetchData();
-    }, constants.COMPONENT_UPDATE_MS);
-    return () => clearInterval(interval);
   }, [polkaBtcLoaded, dispatch, address]);
 
   return (

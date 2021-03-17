@@ -78,7 +78,7 @@ export default function StakedRelayerPage(): ReactElement {
         setDotLocked(lockedDOT);
         setPlanckLocked(lockedPlanck);
       } catch (error) {
-        toast.error(error.toString());
+        console.log(error.message);
       }
     };
     fetchData();
@@ -91,6 +91,9 @@ export default function StakedRelayerPage(): ReactElement {
           <PageTitle
             mainTitle={t('relayer.staked_relayer_dashboard')}
             subTitle={<TimerIncrement />} />
+          <PageTitle
+            mainTitle=''
+            subTitle={address} />
           {relayerLoaded && polkaBtcLoaded && (
             <div className='col-lg-10 offset-1'>
               <div className='row justify-content-center'>

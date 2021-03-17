@@ -14,11 +14,11 @@ export default function startFetchingLiveData(dispatch: Dispatch, store: StoreSt
 
   // FETCH LIVE DATA PRICES
   fetchPrices(dispatch, store);
-  window.setInterval(() => fetchPrices(dispatch, store), 5000);
+  window.setInterval(() => fetchPrices(dispatch, store), 60000);
 
   // FETCH BTC-RELAY HEIGHT AND BITCOIN HEIGHT
   fetchBtcRelayAndBitcoinHeight(dispatch, store);
-  window.setInterval(() => fetchBtcRelayAndBitcoinHeight(dispatch, store), 20000);
+  window.setInterval(() => fetchBtcRelayAndBitcoinHeight(dispatch, store), 60000);
 
   // FETCH TOTALS
   fetchTotals(dispatch, store);
@@ -30,9 +30,9 @@ export default function startFetchingLiveData(dispatch: Dispatch, store: StoreSt
 
   // FETCH ISSUE TRANSACTIONS
   fetchIssueTransactions(dispatch, store);
-  window.setInterval(() => fetchIssueTransactions(dispatch, store), 5000);
+  window.setInterval(() => fetchIssueTransactions(dispatch, store), 10000);
 
-  // FETCH REDEEM TRANSACTIONS
+  // // FETCH REDEEM TRANSACTIONS
   fetchRedeemTransactions(dispatch, store);
-  window.setInterval(() => fetchRedeemTransactions(dispatch, store), 5000);
+  window.setInterval(() => fetchRedeemTransactions(dispatch, store), 10000);
 }
