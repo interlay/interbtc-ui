@@ -28,9 +28,11 @@ export default function startFetchingLiveData(dispatch: Dispatch, store: StoreSt
   fetchBalances(dispatch, store);
   window.setInterval(() => fetchBalances(dispatch, store), 5000);
 
+  // ray test touch <
   // FETCH ISSUE TRANSACTIONS
   fetchIssueTransactions(dispatch, store);
   window.setInterval(() => fetchIssueTransactions(dispatch, store), 10000);
+  // ray test touch >
 
   // // FETCH REDEEM TRANSACTIONS
   fetchRedeemTransactions(dispatch, store);
