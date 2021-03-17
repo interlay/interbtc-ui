@@ -78,7 +78,7 @@ export default function StakedRelayerPage(): ReactElement {
         setDotLocked(lockedDOT);
         setPlanckLocked(lockedPlanck);
       } catch (error) {
-        toast.error(error.toString());
+        console.log(error.message);
       }
     };
     fetchData();
