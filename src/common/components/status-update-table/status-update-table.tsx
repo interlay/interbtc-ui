@@ -6,7 +6,6 @@ import { StatusUpdate } from '../../types/util.types';
 import MessageModal from '../../../pages/staked-relayer/message-modal/message-modal';
 import BitcoinBlockHash from '../bitcoin-links/block-hash';
 import { reverseHashEndianness } from '../../utils/utils';
-import * as constants from '../../../constants';
 import { useTranslation } from 'react-i18next';
 
 const ADD_DATA_ERROR = 'Add NO_DATA error';
@@ -95,11 +94,6 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
 
     fetchStatus();
     fetchUpdates();
-    const interval = setInterval(() => {
-      fetchStatus();
-      fetchUpdates();
-    }, constants.COMPONENT_UPDATE_MS);
-    return () => clearInterval(interval);
   }, [polkaBtcLoaded, props.stakedRelayerAddress, props.readOnly]);
 
   const openMessageModal = (statusUpdate: StatusUpdate) => {

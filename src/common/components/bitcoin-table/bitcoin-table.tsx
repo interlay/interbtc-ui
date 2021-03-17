@@ -86,10 +86,6 @@ export default function BitcoinTable(): ReactElement {
     };
 
     fetchData();
-    const interval = setInterval(() => {
-      fetchData();
-    }, constants.COMPONENT_UPDATE_MS);
-    return () => clearInterval(interval);
   }, [polkaBtcLoaded, noData, fork, heightDiff]);
 
   const getCircle = (status: string): string => {

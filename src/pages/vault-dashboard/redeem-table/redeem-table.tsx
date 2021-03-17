@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
 import { addVaultRedeemsAction } from '../../../common/actions/redeem.actions';
 import { redeemRequestToVaultRedeem, shortAddress } from '../../../common/utils/utils';
-import * as constants from '../../../constants';
 import BitcoinAddress from '../../../common/components/bitcoin-links/address';
 import { VaultRedeem } from '../../../common/types/redeem.types';
 import { FaCheck, FaHourglass } from 'react-icons/fa';
@@ -33,10 +32,6 @@ export default function RedeemTable(): ReactElement {
     };
 
     fetchData();
-    const interval = setInterval(() => {
-      fetchData();
-    }, constants.COMPONENT_UPDATE_MS);
-    return () => clearInterval(interval);
   }, [polkaBtcLoaded, dispatch, address]);
 
   const showStatus = (request: VaultRedeem) => {
