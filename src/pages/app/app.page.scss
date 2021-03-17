@@ -12,7 +12,7 @@
   }
 
   .wizard-header-text {
-    font-family: airbnb-cereal-bold;
+    font-weight: 700;
     text-align: center;
     margin-top: 20px;
   }
@@ -36,20 +36,20 @@
     padding: 10px;
     margin-bottom: 15px;
     margin-top: 35px;
-    font-family: airbnb-cereal-bold;
+    font-weight: 700;
     border-radius: 10px;
     text-transform: uppercase;
   }
 }
 
 .text-left {
-  font-family: airbnb-cereal-medium;
+  font-weight: 500;
   opacity: 0.5;
 }
 
 // TODO: should be correctly descriptive
 .right-text {
-  font-family: airbnb-cereal-bold;
+  font-weight: 700;
 }
 
 .total-added-value {
@@ -57,7 +57,7 @@
 }
 
 .mark-currency {
-  font-family: airbnb-cereal-book;
+  font-weight: 400;
   font-size: 18px;
   text-align: left;
   margin-top: 48px;
@@ -120,7 +120,7 @@
 }
 
 .form-heading {
-  font-family: airbnb-cereal-medium;
+  font-weight: 500;
   margin-bottom: 8px;
 }
 
@@ -169,8 +169,7 @@
   .wizard-number {
     color: $d_pink;
     font-size: 3rem;
-    font-weight: 600;
-    font-family: airbnb-cereal-medium;
+    font-weight: 500;
   }
 }
 
@@ -183,28 +182,26 @@
   .wizard-number {
     color: black;
     font-size: 3rem;
-    font-weight: 400;
-    font-family: airbnb-cereal-medium;
+    font-weight: 500;
   }
 }
 
 .refund-title {
   font-size: 1.1rem;
   color: black;
-  font-weight: 600;
   text-align: center;
-  font-family: airbnb-cereal-bold;
+  font-weight: 700;
 }
 
 .refund-subtitle {
-  font-family: airbnb-cereal-bold;
+  font-weight: 700;
   text-align: center;
   opacity: 0.5;
   font-size: 1rem;
 }
 
 .refund-amount {
-  font-family: airbnb-cereal-bold;
+  font-weight: 700;
   color: $d_orange;
 }
 
@@ -305,7 +302,7 @@
     border-radius: 5px;
     border: 2.5px solid black;
     padding: 10px;
-    font-family: airbnb-cereal-bold;
+    font-weight: 700;
   }
 }
 
@@ -437,13 +434,13 @@
 
 .status-title {
   font-size: 2rem;
-  font-family: airbnb-cereal-bold;
+  font-weight: 700;
   text-align: center;
   margin: 1rem;
 }
 
 .status-description {
-  font-family: airbnb-cereal-bold;
+  font-weight: 700;
   text-align: center;
   opacity: 0.5;
 }
@@ -512,7 +509,7 @@
     width: 100%;
     text-transform: uppercase;
     word-wrap: break-word;
-    font-family: airbnb-cereal-bold;
+    font-weight: 700;
   }
 
   .close-icon {
@@ -541,7 +538,7 @@
     width: 100%;
     text-transform: uppercase;
     word-wrap: break-word;
-    font-family: airbnb-cereal-bold;
+    font-weight: 700;
   }
 
   .close-icon {
@@ -558,7 +555,7 @@
 .modal-btn-green {
   width: fit-content;
   padding: 10px 15px;
-  font-family: airbnb-cereal-book;
+  font-weight: 400;
   background-color: white;
   border-radius: 10px;
   border: 2px solid #4ac948;
@@ -586,7 +583,7 @@
   @extend .btc-transaction-view;
   margin-top: .5rem;
   margin-bottom: 1rem;
-  font-family: airbnb-cereal-bold;
+  font-weight: 700;
 }
 
 .btc-transaction-title {

@@ -34,13 +34,18 @@ const Layout = ({ children }: Props) => {
     }
   };
 
-  // TODO: a hack for now
+  /**
+   * TODO: a hack for now.
+   * - Should apply the gradient on the landing page
+   */
   const isHomePage = location.pathname === PAGES.HOME;
 
   return (
     <div
       className={clsx(
-        'main d-flex flex-column min-vh-100',
+        'flex',
+        'flex-col',
+        'min-h-screen',
         { [styles['polkabtc-background']]: isHomePage }
       )}>
       {!checkStaticPage() && (

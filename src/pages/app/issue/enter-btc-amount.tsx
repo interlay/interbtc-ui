@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import BN from 'bn.js';
 import { PolkaBTC } from '@interlay/polkabtc/build/interfaces/default';
+import clsx from 'clsx';
 
 import ButtonMaybePending from 'common/components/pending-button';
 import {
@@ -211,7 +212,13 @@ function EnterBTCAmount() {
   return (
     <form onSubmit={onSubmit}>
       <div className='row'>
-        <div className='col-12 wizard-header-text font-pink'>{t('issue_page.mint_polka_by_wrapping')}</div>
+        <div
+          className={clsx(
+            'col-12 wizard-header-text',
+            'text-interlayPink'
+          )}>
+          {t('issue_page.mint_polka_by_wrapping')}
+        </div>
       </div>
       <div className='row'>
         <div className='col-6'>

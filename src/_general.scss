@@ -2,11 +2,54 @@
 @import "mixins";
 @import "variables";
 
-@include font-fam("airbnb-cereal-light", "./assets/fonts/airbnb-cereal/AirbnbCerealLight");
-@include font-fam("airbnb-cereal-bold", "./assets/fonts/airbnb-cereal/AirbnbCerealBold");
-@include font-fam("airbnb-cereal-book", "./assets/fonts/airbnb-cereal/AirbnbCerealBook");
-@include font-fam("airbnb-cereal-black", "./assets/fonts/airbnb-cereal/AirbnbCerealBlack");
-@include font-fam("airbnb-cereal-medium", "./assets/fonts/airbnb-cereal/AirbnbCerealMedium");
+// RE: https://drafts.csswg.org/css-fonts/#font-weight-numeric-values
+// TODO: should set up based on https://css-tricks.com/snippets/css/using-font-face/
+// TODO: should follow https://tailwindcss.com/docs/adding-base-styles#font-face-rules and https://tailwindcss.com/docs/adding-base-styles#using-classes-in-your-html
+// TODO: should follow https://tailwindcss.com/docs/font-family
+@font-face {
+  font-family: "airbnb-cereal";
+  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealLight.ttf") format("truetype");
+  font-weight: 300; // light
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "airbnb-cereal";
+  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealBook.ttf") format("truetype");
+  // TODO: should double-check as `book` is not a standard term
+  font-weight: 400; // book
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "airbnb-cereal";
+  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealMedium.ttf") format("truetype");
+  font-weight: 500; // medium
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "airbnb-cereal";
+  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealBold.ttf") format("truetype");
+  font-weight: 700; // bold
+  font-style: normal;
+}
+
+// TODO: unused for now
+@font-face {
+  font-family: "airbnb-cereal";
+  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealExtraBold.ttf") format("truetype");
+  font-weight: 800; // extra bold
+  font-style: normal;
+}
+
+// TODO: unused for now
+@font-face {
+  font-family: "airbnb-cereal";
+  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealExtraBold.ttf") format("truetype");
+  font-weight: 900; // black
+  font-style: normal;
+}
 
 html,
 body,
@@ -23,23 +66,7 @@ td,
 th,
 li,
 ul {
-  font-family: airbnb-cereal-light, Arial;
-}
-
-a:link {
-  text-decoration: none;
-}
-
-a:visited {
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: none;
-}
-
-a:active {
-  text-decoration: none;
+  font-family: "airbnb-cereal", Arial;
 }
 
 .header {
@@ -264,32 +291,6 @@ input[type="number"] {
   .float-xs-left {
     float: left !important;
   }
-}
-
-a {
-  color: #510101;
-  text-decoration: none;
-  background-color: transparent;
-}
-
-a:hover {
-  color: #050000;
-  text-decoration: underline;
-}
-
-a:not([href]):not([tabindex]) {
-  color: inherit;
-  text-decoration: none;
-}
-
-a:not([href]):not([tabindex]):hover,
-a:not([href]):not([tabindex]):focus {
-  color: inherit;
-  text-decoration: none;
-}
-
-a:not([href]):not([tabindex]):focus {
-  outline: 0;
 }
 
 .btn-primary {
@@ -667,11 +668,11 @@ a:not([href]):not([tabindex]):focus {
 }
 
 .bold-text {
-  font-family: airbnb-cereal-bold;
+  font-weight: 700;
 }
 
 .medium-text {
-  font-family: airbnb-cereal-medium;
+  font-weight: 500;
 }
 
 .stats-card {
@@ -684,7 +685,7 @@ a:not([href]):not([tabindex]):focus {
   border-radius: 8px;
   margin-right: 10px;
   font-size: 15px;
-  font-family: airbnb-cereal-medium;
+  font-weight: 500;
 }
 
 .btn-outline-account {

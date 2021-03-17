@@ -1,8 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import '../dashboard.page.scss';
 import iconExternalLink from '../../../assets/img/icons/Icon-external-link.svg';
 import { getAccents } from '../dashboard-colors';
+import InterlayRouterLink from 'components/InterlayLink/router';
+
 type buttonProps = {
   buttonName: string;
   propsButtonColor: string;
@@ -33,7 +34,12 @@ const ButtonComponent = (props: buttonProps): React.ReactElement => {
     linkId.style.filter = `${accent.filter}`;
   };
   return (
-    <Link
+    // TODO: should create `LinkButton`
+    <InterlayRouterLink
+      // TODO: hardcoded
+      style={{
+        textDecoration: 'none'
+      }}
       className='button-assets-container'
       to={props.buttonLink}>
       <button
@@ -57,7 +63,7 @@ const ButtonComponent = (props: buttonProps): React.ReactElement => {
           alt=''
           id={`${props.buttonId}-arrow`} />
       </button>
-    </Link>
+    </InterlayRouterLink>
   );
 };
 

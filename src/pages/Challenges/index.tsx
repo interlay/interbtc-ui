@@ -21,6 +21,7 @@ import {
   RelayerData,
   VaultData
 } from '@interlay/polkabtc-stats';
+import clsx from 'clsx';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -237,6 +238,10 @@ function Challenges(): ReactElement {
           {/* TODO: should use a tailwindcss Tabs component */}
           <Tabs>
             <Tab
+              tabClassName={clsx(
+                'no-underline',
+                'text-black'
+              )}
               eventKey='vaults'
               title={t('leaderboard.vault_scores')}>
               <ChallengeSelector {...{ challengeIdx, setChallengeIdx, t }} />
@@ -250,6 +255,10 @@ function Challenges(): ReactElement {
               </div>
             </Tab>
             <Tab
+              tabClassName={clsx(
+                'no-underline',
+                'text-black'
+              )}
               eventKey='relayers'
               title={t('leaderboard.relayer_scores')}>
               <ChallengeSelector {...{ challengeIdx, setChallengeIdx, t }} />

@@ -2,6 +2,7 @@
 import { ReactElement } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
 import MainContainer from 'parts/MainContainer';
 import IssueSteps from './issue/issue-steps';
@@ -25,47 +26,52 @@ function Application(): ReactElement {
 
   return (
     <MainContainer className='text-center white-background min-vh-100 app-page'>
-      <div className='container mt-5'>
-        <div className='row justify-content-center'>
-          <div
-            // TODO: should use `clsx`
-            className={
-              'col-xl-6 col-lg-6 col-md-8 col-sm-12 col-xs-12 tab-content-wrapper' +
-              (premiumRedeem ? ' pink-gradient' : '')
-            }>
-            {tabsHidden ? (
-              <div className='step-title'>
-                {selectedTabType === TabTypes.Issue && (
-                  <div className='issue-step-title'>{t('issue_page.deposit')}</div>
-                )}
-              </div>
-            ) : (
-              <>
-                <Tabs>
-                  <Tab
-                    tabType={TabTypes.Issue}
-                    selectedTabType={selectedTabType}>
-                    {t('issue')}
-                  </Tab>
-                  <Tab
-                    tabType={TabTypes.Redeem}
-                    selectedTabType={selectedTabType}>
-                    {t('redeem')}
-                  </Tab>
-                  <Tab
-                    tabType={TabTypes.Transfer}
-                    selectedTabType={selectedTabType}>
-                    {t('transfer')}
-                  </Tab>
-                </Tabs>
-                <HorizontalLine selectedTabType={selectedTabType} />
-              </>
-            )}
-            <div className='content'>
-              {selectedTabType === TabTypes.Issue && <IssueSteps />}
-              {selectedTabType === TabTypes.Redeem && <RedeemSteps />}
-              {selectedTabType === TabTypes.Transfer && <Transfer />}
+      <div
+        className={clsx(
+          'container',
+          'mt-12',
+          'mx-auto'
+        )}>
+        <div
+          className={clsx(
+            'mx-auto',
+            'w-full',
+            'md:max-w-xl',
+            'tab-content-wrapper',
+            { 'pink-gradient': premiumRedeem }
+          )}>
+          {tabsHidden ? (
+            <div className='step-title'>
+              {selectedTabType === TabTypes.Issue && (
+                <div className='issue-step-title'>{t('issue_page.deposit')}</div>
+              )}
             </div>
+          ) : (
+            <>
+              <Tabs>
+                <Tab
+                  tabType={TabTypes.Issue}
+                  selectedTabType={selectedTabType}>
+                  {t('issue')}
+                </Tab>
+                <Tab
+                  tabType={TabTypes.Redeem}
+                  selectedTabType={selectedTabType}>
+                  {t('redeem')}
+                </Tab>
+                <Tab
+                  tabType={TabTypes.Transfer}
+                  selectedTabType={selectedTabType}>
+                  {t('transfer')}
+                </Tab>
+              </Tabs>
+              <HorizontalLine selectedTabType={selectedTabType} />
+            </>
+          )}
+          <div className='content'>
+            {selectedTabType === TabTypes.Issue && <IssueSteps />}
+            {selectedTabType === TabTypes.Redeem && <RedeemSteps />}
+            {selectedTabType === TabTypes.Transfer && <Transfer />}
           </div>
         </div>
       </div>

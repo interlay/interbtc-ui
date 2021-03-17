@@ -88,7 +88,7 @@ export default function RelayDashboard(): ReactElement {
               <div>
                 <p
                   style={{
-                    fontFamily: 'airbnb-cereal-bold',
+                    fontWeight: 700,
                     fontSize: '26px'
                   }}>
                   {t('dashboard.relay.blocks')}

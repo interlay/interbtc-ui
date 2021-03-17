@@ -11,6 +11,7 @@ import {
 } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
+import InterlayLink from 'components/InterlayLink';
 import { ReactComponent as PolkadotExtensionLogo } from 'assets/img/polkadot-extension-logo.svg';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
@@ -61,12 +62,12 @@ function AccountModal({
             {!accounts?.length && (
               <p>
                 {t('no_account')}
-                <a
+                <InterlayLink
                   href={POLKADOT_EXTENSION}
                   target='_blank'
                   rel='noopener noreferrer'>
                   &nbsp;{t('here')}
-                </a>
+                </InterlayLink>
                 .
               </p>
             )}
@@ -90,7 +91,7 @@ function AccountModal({
             <p>
               {t('install_supported_wallets')}
             </p>
-            <a
+            <InterlayLink
               className='polkadot-extension-link'
               href={POLKADOT_EXTENSION}
               target='_blank'
@@ -99,7 +100,7 @@ function AccountModal({
                 width={30}
                 height={30} />
               <span style={{ marginLeft: 16 }}>Polkadot.js</span>
-            </a>
+            </InterlayLink>
           </>
         )}
       </Modal.Body>

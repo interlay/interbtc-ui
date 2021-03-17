@@ -1,6 +1,7 @@
 import React from 'react';
 import * as constants from '../../../constants';
 import { shortTxId } from '../../../common/utils/utils';
+import InterlayLink from 'components/InterlayLink';
 
 export default class BitcoinTransaction extends React.Component<{
   txId: string;
@@ -10,7 +11,7 @@ export default class BitcoinTransaction extends React.Component<{
     return (
       <div>
         {this.props.txId ? (
-          <a
+          <InterlayLink
             href={
               (constants.BTC_MAINNET ?
                 constants.BTC_EXPLORER_TRANSACTION_API :
@@ -19,7 +20,7 @@ export default class BitcoinTransaction extends React.Component<{
             target='_blank'
             rel='noopener noreferrer'>
             {this.props.shorten ? shortTxId(this.props.txId) : this.props.txId}
-          </a>
+          </InterlayLink>
         ) : (
           'Pending...'
         )}

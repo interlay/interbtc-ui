@@ -50,7 +50,7 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
       <div>
         <p
           style={{
-            fontFamily: 'airbnb-cereal-bold',
+            fontWeight: 700,
             fontSize: '26px'
           }}>
           {t('vault.replace_requests')}
