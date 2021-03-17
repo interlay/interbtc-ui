@@ -101,13 +101,13 @@ If you want to reset the development chain, execute the following command.
 In order to automatically submit block headers, run the [staked-relayer](https://gitlab.com/interlay/polkabtc-clients/-/tree/dev/staked-relayer) client software.
 
 ```shell
-staked-relayer --keyring=eve --http-addr '[::0]:3030' --polka-btc-url 'ws://localhost:9944'
+staked-relayer --keyring=eve --polka-btc-url 'ws://localhost:9944'
 ```
 
 The architecture also relies upon collateralized vaults; use the [vault](https://gitlab.com/interlay/polkabtc-clients/-/tree/dev/vault) client to register automatically.
 
 ```shell
-vault --keyring=charlie --network=testnet --auto-register-with-collateral 100000000 --http-addr '[::0]:3031' --polka-btc-url 'ws://localhost:9944'
+vault --keyring=charlie --network=testnet --auto-register-with-collateral 100000000 --polka-btc-url 'ws://localhost:9944'
 ```
 
 Issue requests (BTC -> PolkaBTC) can be executed solely through the UI but a vault client is required to redeem (PolkaBTC -> BTC).
