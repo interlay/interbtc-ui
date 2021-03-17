@@ -142,11 +142,17 @@ function App(): ReactElement {
     try {
       window.polkaBTC = await connectToParachain();
       dispatch(isPolkaBtcLoaded(true));
+    } catch (error) {
+      toast.warn('Unable to connect to the BTC-Parachain.');
+      console.log('Unable to connect to the BTC-Parachain.');
+      console.log('error.message => ', error.message);
+    }
 
+    try {
       startFetchingLiveData(dispatch, store);
       setIsLoading(false);
     } catch (error) {
-      console.log('Unable to connect to the BTC-Parachain.');
+      console.log('Error fetching live data.');
       console.log('error.message => ', error.message);
     }
   }, [
@@ -366,9 +372,7 @@ function App(): ReactElement {
         await loadFaucet();
         keyring.loadAll({});
       } catch (error) {
-        toast.warn('Could not connect to the Parachain, please try again in a few seconds', {
-          autoClose: false
-        });
+        console.log(error.message);
       }
     })();
     startFetchingLiveData(dispatch, store);

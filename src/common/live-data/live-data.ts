@@ -3,8 +3,8 @@ import fetchPrices from './price-watcher';
 import fetchBtcRelayAndBitcoinHeight from './block-height-watcher';
 import fetchTotals from './totals-watcher';
 import fetchBalances from './balances-watcher';
-// import fetchIssueTransactions from './issue-transaction.watcher';
-// import fetchRedeemTransactions from './redeem-transaction.watcher';
+import fetchIssueTransactions from './issue-transaction.watcher';
+import fetchRedeemTransactions from './redeem-transaction.watcher';
 import { StoreState } from '../types/util.types';
 
 // TODO: should use web sockets instead of infinite times of fetch
@@ -29,10 +29,10 @@ export default function startFetchingLiveData(dispatch: Dispatch, store: StoreSt
   window.setInterval(() => fetchBalances(dispatch, store), 5000);
 
   // FETCH ISSUE TRANSACTIONS
-  // fetchIssueTransactions(dispatch, store);
-  // window.setInterval(() => fetchIssueTransactions(dispatch, store), 5000);
+  fetchIssueTransactions(dispatch, store);
+  window.setInterval(() => fetchIssueTransactions(dispatch, store), 10000);
 
   // // FETCH REDEEM TRANSACTIONS
-  // fetchRedeemTransactions(dispatch, store);
-  // window.setInterval(() => fetchRedeemTransactions(dispatch, store), 5000);
+  fetchRedeemTransactions(dispatch, store);
+  window.setInterval(() => fetchRedeemTransactions(dispatch, store), 10000);
 }
