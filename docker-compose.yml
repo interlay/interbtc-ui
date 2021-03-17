@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   polkabtc:
-    image: 'registry.gitlab.com/interlay/btc-parachain/standalone:0.5.4'
+    image: 'registry.gitlab.com/interlay/btc-parachain/standalone:0.5.6-rc1'
     command:
       - btc-parachain
       - --unsafe-rpc-external
@@ -60,66 +60,67 @@ services:
       - '3002:3002'
   staked_relayer:
     # only start staked relayer after mining to prevent long catch-up
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:0.5.8'
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:0.5.13'
     command:
-      - /bin/sh
-      - -c
-      - |
-        echo "Sleeping..."
-        sleep 5
-        staked-relayer --keyring=eve --http-addr '[::0]:3030' --polka-btc-url 'ws://polkabtc:9944' --auto-register-with-stake=100
+      - staked-relayer
+      - --keyring
+      - eve
+      - --polka-btc-url
+      - "ws://polkabtc:9944"
+      - --auto-register-with-stake
+      - "100"
     environment: &client-env
       BITCOIN_RPC_URL: http://bitcoind:18443
       BITCOIN_RPC_USER: rpcuser
       BITCOIN_RPC_PASS: rpcpassword
       RUST_LOG: info
-    ports:
-      - '3030:3030'
     restart: unless-stopped
   oracle:
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/oracle:0.5.8'
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/oracle:0.5.13'
     command:
-      - /bin/sh
-      - -c
-      - |
-        echo "Sleeping..."
-        sleep 10
-        oracle --keyring=bob --polka-btc-url 'ws://polkabtc:9944'
+      - oracle
+      - --keyring
+      - bob
+      - --polka-btc-url
+      - "ws://polkabtc:9944"
     environment:
       RUST_LOG: info
     restart: unless-stopped
   faucet:
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/faucet:0.5.8'
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/faucet:0.5.13'
     command:
-      - /bin/sh
-      - -c
-      - |
-        echo "Sleeping..."
-        sleep 10
-        faucet --keyring=alice --polka-btc-url 'ws://polkabtc:9944' --user-allowance 1 --vault-allowance 500 --http-addr '[::0]:3035'
+      - faucet
+      - --keyring
+      - ferdie
+      - --polka-btc-url
+      - "ws://polkabtc:9944"
+      - --user-allowance
+      - "1"
+      - --vault-allowance
+      - "500"
+      - --http-addr
+      - "[::0]:3035"
     environment:
       RUST_LOG: info
     ports:
       - '3035:3035'
     restart: unless-stopped
   vault:
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/vault:0.5.8'
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/vault:0.5.13'
     command:
       - /bin/sh
       - -c
       - |
         echo "Sleeping..."
-        # sleep for 7s to wait for bitcoin to create the Dave wallet
+        # sleep for 10s to wait for bitcoin to create the Dave wallet
         # and also to ensure that the issue period and redeem period are set
-        sleep 7
-        vault --keyring=charlie --auto-register-with-collateral 100000000000000 --http-addr '[::0]:3032' --polka-btc-url 'ws://polkabtc:9944'
+        sleep 10
+        vault --keyring=charlie --auto-register-with-collateral 100000000000000 --polka-btc-url 'ws://polkabtc:9944'
     environment:
       <<: *client-env
-    ports:
-      - '3032:3032'
     restart: unless-stopped
   testdata_gen:
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/testdata-gen:0.5.8'
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/testdata-gen:0.5.13'
     command:
       - /bin/sh
       - -c
