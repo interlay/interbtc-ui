@@ -6,8 +6,7 @@ import {
 } from 'react-bootstrap';
 import {
   useDispatch,
-  useSelector,
-  useStore
+  useSelector
 } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
@@ -15,7 +14,6 @@ import InterlayLink from 'components/InterlayLink';
 import { ReactComponent as PolkadotExtensionLogo } from 'assets/img/polkadot-extension-logo.svg';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
-import fetchIssueTransactions from 'common/live-data/issue-transaction.watcher';
 import './account-modal.scss';
 
 type Props = {
@@ -34,7 +32,6 @@ function AccountModal({
     accounts,
     extensions
   } = useSelector((state: StoreType) => state.general);
-  const store = useStore();
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
@@ -42,7 +39,6 @@ function AccountModal({
 
   const handleAccountSelect = (account: string) => () => {
     selectAccount(account);
-    fetchIssueTransactions(dispatch, store);
   };
 
   return (

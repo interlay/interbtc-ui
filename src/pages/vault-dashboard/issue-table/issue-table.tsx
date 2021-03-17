@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
 import { addVaultIssuesAction } from '../../../common/actions/issue.actions';
 import { issueRequestToVaultIssue, shortAddress } from '../../../common/utils/utils';
-import * as constants from '../../../constants';
 import BitcoinAddress from '../../../common/components/bitcoin-links/address';
 import { VaultIssue } from '../../../common/types/issue.types';
 import { FaCheck, FaHourglass } from 'react-icons/fa';
@@ -34,10 +33,6 @@ export default function IssueTable(): ReactElement {
     };
 
     fetchData();
-    const interval = setInterval(() => {
-      fetchData();
-    }, constants.COMPONENT_UPDATE_MS);
-    return () => clearInterval(interval);
   }, [polkaBtcLoaded, dispatch, address]);
 
   const showStatus = (request: VaultIssue) => {

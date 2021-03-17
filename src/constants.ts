@@ -7,9 +7,6 @@ export const BTC_DECIMALS = 8;
 // number of blocks before we prevent issue and redeem requests
 export const BLOCKS_BEHIND_LIMIT = 6;
 
-// timeout in milliseconds for setInterval
-export const COMPONENT_UPDATE_MS = 10000000;
-
 // Set to true is on mainnet.
 export const BTC_MAINNET = false;
 
@@ -43,9 +40,7 @@ export const BTC_ADDRESS_REGEX =
         BTC_REGTEST_REGEX;
 
 export const PARACHAIN_URL = process.env.REACT_APP_PARACHAIN_URL || 'ws://127.0.0.1:9944';
-export const STAKED_RELAYER_URL = process.env.REACT_APP_STAKED_RELAYER_URL || 'http://localhost:3030';
 export const FAUCET_URL = process.env.REACT_APP_FAUCET_URL || 'http://localhost:3035';
-export const VAULT_CLIENT_URL = process.env.REACT_APP_VAULT_CLIENT_URL || 'http://localhost:3032';
 
 export const STATS_URL = process.env.REACT_APP_STATS_SERVER_URL || 'http://localhost:3007';
 

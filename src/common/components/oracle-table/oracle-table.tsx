@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { formatDateTime } from '../../utils/utils';
 import BN from 'bn.js';
 import Big from 'big.js';
-import * as constants from '../../../constants';
 import { useTranslation } from 'react-i18next';
 import DashboardTable, { StatusComponent, StatusCategories } from '../dashboard-table/dashboard-table';
 
@@ -47,10 +46,6 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
     };
 
     fetchData();
-    const interval = setInterval(() => {
-      fetchData();
-    }, constants.COMPONENT_UPDATE_MS);
-    return () => clearInterval(interval);
   }, [polkaBtcLoaded]);
 
   const tableHeadings = [

@@ -22,11 +22,9 @@ export interface VaultReplaceRequest {
 
 export interface VaultState {
     requests: VaultReplaceRequest[];
-    btcAddress: string;
     collateralization: string | undefined;
     collateral: string;
     lockedBTC: string;
     sla: string;
-    premiumVault: Vault | undefined;
     apy: string;
 }
