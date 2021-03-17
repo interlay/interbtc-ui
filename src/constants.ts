@@ -8,7 +8,7 @@ export const BTC_DECIMALS = 8;
 export const BLOCKS_BEHIND_LIMIT = 6;
 
 // timeout in milliseconds for setInterval
-export const COMPONENT_UPDATE_MS = 10000;
+export const COMPONENT_UPDATE_MS = 10000000;
 
 // Set to true is on mainnet.
 export const BTC_MAINNET = false;
@@ -59,6 +59,8 @@ export const BTC_EXPLORER_TRANSACTION_API = 'https://blockstream.info/tx/';
 export const BTC_TEST_EXPLORER_TRANSACTION_API = 'https://blockstream.info/testnet/tx/';
 
 export const FEEDBACK_URL = 'https://forms.gle/2eKFnq4j1fkBgejW7';
+
+export const ACCOUNT_ID_TYPE_NAME = 'AccountId';
 
 // ######################################
 // STAKED RELAYER

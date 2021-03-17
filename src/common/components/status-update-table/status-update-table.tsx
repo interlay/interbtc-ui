@@ -55,6 +55,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
     const fetchStatus = async () => {
       if (!polkaBtcLoaded) return;
 
+      // TODO: replace with state item
       const result = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
       setStatus(result.isRunning ? 'Running' : result.isError ? 'Error' : 'Shutdown');
     };
@@ -150,7 +151,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
       <div>
         <p
           style={{
-            fontFamily: 'airbnb-cereal-bold',
+            fontWeight: 700,
             fontSize: '26px'
           }}>
           {t('dashboard.parachain.parachain')}

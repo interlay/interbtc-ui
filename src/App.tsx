@@ -31,13 +31,9 @@ import keyring from '@polkadot/ui-keyring';
 import {
   FaucetClient,
   planckToDOT,
-  satToBTC
-} from '@interlay/polkabtc';
-import {
+  satToBTC,
   createPolkabtcAPI,
-  PolkaBTCAPI,
-  StakedRelayerClient,
-  VaultClient
+  PolkaBTCAPI
 } from '@interlay/polkabtc';
 
 import Layout from 'parts/Layout';
@@ -62,14 +58,14 @@ import checkStaticPage from 'config/check-static-page';
 import { PAGES } from 'utils/constants/links';
 import {
   isPolkaBtcLoaded,
-  isStakedRelayerLoaded,
-  isVaultClientLoaded,
   changeAddressAction,
   initGeneralDataAction,
   setInstalledExtensionAction,
   showAccountModalAction,
   updateAddressesAction,
-  isFaucetLoaded
+  isFaucetLoaded,
+  isStakedRelayerLoaded,
+  isVaultClientLoaded
 } from 'common/actions/general.actions';
 import './i18n';
 import * as constants from './constants';
@@ -82,7 +78,8 @@ import {
 // FIXME: Clean-up and move to scss
 import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
-import './app.css';
+import { ACCOUNT_ID_TYPE_NAME } from './constants';
+import { StatusCode } from '@interlay/polkabtc/build/interfaces';
 
 // TODO: block code-splitting for now
 // const ApplicationPage = React.lazy(() =>
@@ -161,12 +158,6 @@ function App(): ReactElement {
 
   const createAPIInstance = useCallback(async (): Promise<void> => {
     try {
-      window.relayer = new StakedRelayerClient(constants.STAKED_RELAYER_URL);
-      dispatch(isStakedRelayerLoaded(true));
-
-      window.vaultClient = new VaultClient(constants.VAULT_CLIENT_URL);
-      dispatch(isVaultClientLoaded(true));
-
       window.faucet = new FaucetClient(constants.FAUCET_URL);
       dispatch(isFaucetLoaded(true));
 
@@ -185,16 +176,37 @@ function App(): ReactElement {
       startFetchingLiveData(dispatch, store);
       setIsLoading(false);
     } catch (error) {
-      if (!window.polkaBTC) {
-        toast.warn(
-          'Unable to connect to the BTC-Parachain. ' +
-          'Please check your internet connection or try again later.'
-        );
-      }
+      console.log('Unable to connect to the BTC-Parachain.');
+      console.log('error.message => ', error.message);
+    }
+
+    const id = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
+    let vaultLoaded = false;
+    try {
+      const vault = await window.polkaBTC.vaults.get(id);
+      vaultLoaded = vault !== undefined;
+    } catch (error) {
+      console.log('No PolkaBTC vault found for the account in the connected Polkadot wallet.');
+      console.log('error.message => ', error.message);
+    } finally {
+      dispatch(isVaultClientLoaded(vaultLoaded));
+    }
+
+    let relayerLoaded = false;
+    try {
+      const isActive = await window.polkaBTC.stakedRelayer.isStakedRelayerActive(id);
+      const isInactive = await window.polkaBTC.stakedRelayer.isStakedRelayerInactive(id);
+      relayerLoaded = isActive || isInactive;
+    } catch (error) {
+      console.log('No PolkaBTC staked relayer found for the account in the connected Polkadot wallet.');
+      console.log('error.message => ', error.message);
+    } finally {
+      dispatch(isStakedRelayerLoaded(relayerLoaded));
     }
   }, [
     dispatch,
-    store
+    store,
+    address
   ]);
 
   useEffect(() => {
@@ -220,17 +232,26 @@ function App(): ReactElement {
         ]);
         const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
         const totalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
+
+        const parachainStatus = (state: StatusCode) => {
+          if (state.isError) {
+            return ParachainStatus.Error;
+          } else if (state.isRunning) {
+            return ParachainStatus.Running;
+          } else if (state.isShutdown) {
+            return ParachainStatus.Shutdown;
+          } else {
+            return ParachainStatus.Loading;
+          }
+        };
+
         dispatch(
           initGeneralDataAction(
             totalPolkaBTC,
             totalLockedDOT,
             Number(btcRelayHeight),
             bitcoinHeight,
-            state.isError ?
-              ParachainStatus.Error :
-              state.isRunning ?
-                ParachainStatus.Running :
-                ParachainStatus.Shutdown
+            parachainStatus(state)
           )
         );
       } catch (error) {

@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import { StoreType } from '../../../common/types/util.types';
 import DashboardTable from '../dashboard-table/dashboard-table';
+import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 
 export default function VaultTable(): ReactElement {
   const [vaults, setVaults] = useState<Array<Vault>>([]);
@@ -15,6 +16,7 @@ export default function VaultTable(): ReactElement {
   const [auctionCollateralThreshold, setAuctionCollateralThreshold] = useState(new Big(0));
   const [premiumRedeemThreshold, setPremiumRedeemThreshold] = useState(new Big(0));
   const [secureCollateralThreshold, setSecureCollateralThreshold] = useState(new Big(0));
+  const [btcToDotRate, setBtcToDotRate] = useState(new Big(0));
   const { t } = useTranslation();
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
 
@@ -23,17 +25,19 @@ export default function VaultTable(): ReactElement {
       if (!polkaBtcLoaded) return;
 
       try {
-        const [auction, premium, secure, liquidation] = await Promise.all([
+        const [auction, premium, secure, liquidation, btcToDot] = await Promise.all([
           window.polkaBTC.vaults.getAuctionCollateralThreshold(),
           window.polkaBTC.vaults.getPremiumRedeemThreshold(),
           window.polkaBTC.vaults.getSecureCollateralThreshold(),
-          window.polkaBTC.vaults.getLiquidationCollateralThreshold()
+          window.polkaBTC.vaults.getLiquidationCollateralThreshold(),
+          window.polkaBTC.oracle.getExchangeRate()
         ]);
 
         setAuctionCollateralThreshold(auction);
         setPremiumRedeemThreshold(premium);
         setSecureCollateralThreshold(secure);
         setLiquidationThreshold(liquidation);
+        setBtcToDotRate(btcToDot);
       } catch (e) {
         console.log(e);
       }
@@ -47,7 +51,6 @@ export default function VaultTable(): ReactElement {
       collateralization: Big | undefined,
       bannedUntil: string | undefined
     ): string => {
-      console.log(status);
       if (status === constants.VAULT_STATUS_THEFT) {
         return t('dashboard.vault.theft');
       }
@@ -79,17 +82,22 @@ export default function VaultTable(): ReactElement {
       const vaultsList: Vault[] = [];
 
       for (const vault of vaults) {
-        const accountId = window.polkaBTC.api.createType('AccountId', vault.id);
-        let unsettledCollateralization: Big | undefined = undefined;
-        let settledCollateralization: Big | undefined = undefined;
-        try {
-          [unsettledCollateralization, settledCollateralization] = await Promise.all([
-            window.polkaBTC.vaults.getVaultCollateralization(vault.id),
-            window.polkaBTC.vaults.getVaultCollateralization(vault.id, undefined, true)
-          ]);
-        } catch (error) {
-          console.log(error);
-        }
+        const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vault.id);
+
+        const getCollateralization = (collateral: Big, tokens: Big) => {
+          if (tokens.gt(0) && btcToDotRate.gt(0)) {
+            return collateral.div(tokens).div(btcToDotRate).mul(100);
+          } else {
+            return undefined;
+          }
+        };
+
+        const vaultCollateral = new Big(planckToDOT(vault.backing_collateral.toString()));
+        const unsettledTokens = new Big(satToBTC(vault.issued_tokens.toString()))
+          .add(new Big(satToBTC(vault.to_be_issued_tokens.toString())));
+        const settledTokens = new Big(satToBTC(vault.issued_tokens.toString()));
+        const unsettledCollateralization = getCollateralization(vaultCollateral, unsettledTokens);
+        const settledCollateralization = getCollateralization(vaultCollateral, settledTokens);
 
         const btcAddress = vault.wallet.btcAddress;
 
@@ -110,25 +118,24 @@ export default function VaultTable(): ReactElement {
                           settledCollateralization,
                           vault.banned_until.toString()
                         ),
-          unsettledCollateralization: unsettledCollateralization?.mul(100).toString(),
-          settledCollateralization: settledCollateralization?.mul(100).toString()
+          unsettledCollateralization: unsettledCollateralization?.toString(),
+          settledCollateralization: settledCollateralization?.toString()
         });
+        // TODO: hacky way to update 5 vaults at a time
+        if (vaultsList.length % 5 === 0) {
+          setVaults(vaultsList);
+        }
       }
-
       setVaults(vaultsList);
     };
-
     fetchData();
-    const interval = setInterval(() => {
-      fetchData();
-    }, constants.COMPONENT_UPDATE_MS);
-    return () => clearInterval(interval);
   }, [
     polkaBtcLoaded,
     liquidationThreshold,
     auctionCollateralThreshold,
     premiumRedeemThreshold,
     secureCollateralThreshold,
+    btcToDotRate,
     t
   ]);
 
@@ -223,7 +230,7 @@ export default function VaultTable(): ReactElement {
       <div>
         <p
           style={{
-            fontFamily: 'airbnb-cereal-bold',
+            fontWeight: 700,
             fontSize: '26px'
           }}>
           {t('dashboard.vault.active_vaults')}
@@ -233,7 +240,7 @@ export default function VaultTable(): ReactElement {
         pageData={vaults.map(vault => ({ ...vault, id: vault.vaultId }))}
         headings={tableHeadings}
         dataPointDisplayer={tableVaultRow}
-        noDataEl={<td colSpan={6}>{t('no_registered_vaults')}</td>} />
+        noDataEl={<td colSpan={6}>{t('loading')}</td>} />
     </div>
   );
 }

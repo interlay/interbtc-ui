@@ -90,14 +90,14 @@ export const initGeneralDataAction = (
   totalLockedDOT: string,
   btcRelayHeight: number,
   bitcoinHeight: number,
-  stateOfBTCParachain: ParachainStatus
+  parachainStatus: ParachainStatus
 ): InitGeneralDataAction => ({
   type: INIT_GENERAL_DATA_ACTION,
   btcRelayHeight,
   bitcoinHeight,
   totalPolkaBTC,
   totalLockedDOT,
-  stateOfBTCParachain
+  parachainStatus
 });
 
 export const showAccountModalAction = (showAccountModal: boolean): ShowAccountModal => ({

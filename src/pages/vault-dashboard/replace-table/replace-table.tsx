@@ -8,13 +8,14 @@ import BN from 'bn.js';
 import { shortAddress } from '../../../common/utils/utils';
 import * as constants from '../../../constants';
 import { useTranslation } from 'react-i18next';
+import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 
 type ReplaceTableProps = {
   openModal: (show: boolean) => void;
 };
 
 export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
-  const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+  const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
   const replaceRequests = useSelector((state: StoreType) => state.vault.requests);
   const [polkaBTCAmount, setPolkaBTCamount] = useState(new BN('0'));
@@ -22,11 +23,10 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!polkaBtcLoaded) return;
+      if (!polkaBtcLoaded || !address) return;
 
       try {
-        const accountId = await window.vaultClient.getAccountId();
-        const vaultId = window.polkaBTC.api.createType('AccountId', accountId);
+        const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
         const issuedPolkaBTCAmount = await window.polkaBTC.vaults.getIssuedPolkaBTCAmount(vaultId);
         setPolkaBTCamount(issuedPolkaBTCAmount.toBn());
         const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
@@ -43,14 +43,14 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
       fetchData();
     }, constants.COMPONENT_UPDATE_MS);
     return () => clearInterval(interval);
-  }, [polkaBtcLoaded, dispatch]);
+  }, [polkaBtcLoaded, dispatch, address]);
 
   return (
     <div style={{ margin: '40px 0px' }}>
       <div>
         <p
           style={{
-            fontFamily: 'airbnb-cereal-bold',
+            fontWeight: 700,
             fontSize: '26px'
           }}>
           {t('vault.replace_requests')}

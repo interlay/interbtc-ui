@@ -79,7 +79,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
       <div>
         <p
           style={{
-            fontFamily: 'airbnb-cereal-bold',
+            fontWeight: 700,
             fontSize: '26px'
           }}>
           {t('dashboard.oracles.oracles')}

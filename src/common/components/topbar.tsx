@@ -1,7 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import polkaBTCLogo from '../../assets/img/polkabtc/PolkaBTC_black.png';
 import { Navbar, Nav, Image, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { StoreType } from '../types/util.types';
 import ButtonMaybePending from './pending-button';
@@ -12,6 +11,10 @@ import { useTranslation } from 'react-i18next';
 import Balances from './balances';
 import { PAGES } from 'utils/constants/links';
 import newMark from '../../assets/img/icons/new-mark.png';
+import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
+import InterlayLink from 'components/InterlayLink';
+import InterlayRouterLink from 'components/InterlayLink/router';
+import clsx from 'clsx';
 
 type TopbarProps = {
   address?: string;
@@ -22,34 +25,15 @@ export default function Topbar(props: TopbarProps): ReactElement {
   const {
     extensions,
     address,
-    relayerLoaded,
-    vaultClientLoaded,
     polkaBtcLoaded,
     balanceDOT,
-    balancePolkaBTC
+    balancePolkaBTC,
+    vaultClientLoaded,
+    relayerLoaded
   } = useSelector((state: StoreType) => state.general);
-  const [isRelayerConnected, setIsRelayerConnected] = useState(false);
-  const [isVaultConnected, setIsVaultConnected] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [isRequestPending, setIsRequestPending] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
-
-  useEffect(() => {
-    if (!relayerLoaded || !vaultClientLoaded || !polkaBtcLoaded) {
-      setTimeout(() => setIsLoading(false), 2500);
-      return;
-    }
-
-    const checkIsConnected = async () => {
-      const relayerConnected = await window.relayer.isConnected();
-      const vaultConnected = await window.vaultClient.isConnected();
-      setIsRelayerConnected(relayerConnected);
-      setIsVaultConnected(vaultConnected);
-      setIsLoading(false);
-    };
-    checkIsConnected();
-  }, [relayerLoaded, vaultClientLoaded, polkaBtcLoaded]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,7 +49,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
     setIsRequestPending(true);
     try {
       await props.requestDOT();
-      const accountId = window.polkaBTC.api.createType('AccountId', address);
+      const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
       const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
       const balanceDOT = planckToDOT(balancePLANCK.toString());
       dispatch(updateBalanceDOTAction(balanceDOT));
@@ -88,13 +72,18 @@ export default function Topbar(props: TopbarProps): ReactElement {
       id='pbtc-topbar'
       bg='light'
       expand='lg'
-      className='border-bottom shadow-sm top-bar'>
-      {!isLoading && (
+      className={clsx(
+        'border-bottom top-bar',
+        'shadow'
+      )}>
+      {polkaBtcLoaded && (
         <React.Fragment>
           <Navbar.Brand>
-            <Link
-              id='main-logo'
-              className='text-decoration-none'
+            <InterlayRouterLink
+              // TODO: hardcoded
+              style={{
+                textDecoration: 'none'
+              }}
               to={PAGES.HOME}>
               <Image
                 src={polkaBTCLogo}
@@ -102,43 +91,57 @@ export default function Topbar(props: TopbarProps): ReactElement {
                 className='d-inline-block align-top'
                 height='30'
                 fluid />
-            </Link>
+            </InterlayRouterLink>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='mr-auto'>
               {polkaBtcLoaded && (
-                <Link
+                // TODO: should use https://reactrouter.com/web/api/NavLink with `activeClassName`
+                <InterlayRouterLink
+                  style={{
+                    textDecoration: 'none'
+                  }}
                   className='nav-link'
                   to={PAGES.APPLICATION}>
                   {t('app')}
-                </Link>
+                </InterlayRouterLink>
               )}
               {polkaBtcLoaded && (
-                <Link
+                <InterlayRouterLink
+                  style={{
+                    textDecoration: 'none'
+                  }}
                   className='nav-link'
                   to={PAGES.DASHBOARD}>
                   {t('nav_dashboard')}
-                </Link>
+                </InterlayRouterLink>
               )}
-              {isVaultConnected && (
-                <Link
-                  id='vault-nav-item'
+              {vaultClientLoaded && (
+                <InterlayRouterLink
+                  style={{
+                    textDecoration: 'none'
+                  }}
                   className='nav-link'
                   to={PAGES.VAULT}>
                   {t('nav_vault')}
-                </Link>
+                </InterlayRouterLink>
               )}
-              {isRelayerConnected && (
-                <Link
-                  id='relayer-nav-item'
+              {relayerLoaded && (
+                <InterlayRouterLink
+                  style={{
+                    textDecoration: 'none'
+                  }}
                   className='nav-link'
                   to={PAGES.STAKED_RELAYER}>
                   {t('nav_relayer')}
-                </Link>
+                </InterlayRouterLink>
               )}
               {polkaBtcLoaded && (
-                <Link
+                <InterlayRouterLink
+                  style={{
+                    textDecoration: 'none'
+                  }}
                   className='nav-link'
                   to={PAGES.CHALLENGES}>
                   {t('nav_challenges')}
@@ -146,20 +149,26 @@ export default function Topbar(props: TopbarProps): ReactElement {
                     src={newMark}
                     height='20em'>
                   </Image>
-                </Link>
+                </InterlayRouterLink>
               )}
-              <Link
+              <InterlayRouterLink
+                style={{
+                  textDecoration: 'none'
+                }}
                 className='nav-link'
                 to={PAGES.FEEDBACK}>
                 {t('feedback.feedback')}
-              </Link>
-              <a
+              </InterlayRouterLink>
+              <InterlayLink
+                style={{
+                  textDecoration: 'none'
+                }}
                 className='nav-link'
                 href='https://docs.polkabtc.io/#/'
                 target='_blank'
                 rel='noopener noreferrer'>
                 {t('nav_docs')}
-              </a>
+              </InterlayLink>
             </Nav>
             {props.address !== undefined && (
               <React.Fragment>
@@ -177,7 +186,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                 ) : (
                   <>
                     <Nav className='d-inline'>
-                      <a
+                      <InterlayLink
                         target='_blank'
                         rel='noopener noreferrer'
                         href='https://testnet-faucet.mempool.co/'
@@ -187,7 +196,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                           className='nav-bar-button'>
                           {t('request_btc')}
                         </Button>
-                      </a>
+                      </InterlayLink>
                       <ButtonMaybePending
                         variant='outline-polkadot'
                         className='nav-bar-button'

@@ -12,17 +12,19 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import BN from 'bn.js';
 import { PolkaBTC } from '@interlay/polkabtc/build/interfaces/default';
+import clsx from 'clsx';
 
 import ButtonMaybePending from 'common/components/pending-button';
 import {
-  StoreType,
-  ParachainStatus
+  ParachainStatus,
+  StoreType
 } from 'common/types/util.types';
 import * as constants from '../../../constants';
 import {
   changeIssueStepAction,
   changeIssueIdAction,
-  addIssueRequestAction
+  addIssueRequestAction,
+  updateIssuePeriodAction
 } from 'common/actions/issue.actions';
 import {
   btcToSat,
@@ -38,6 +40,8 @@ import {
 } from 'common/utils/utils';
 import bitcoinLogo from 'assets/img/small-bitcoin-logo.png';
 import polkadotLogo from 'assets/img/small-polkadot-logo.png';
+import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
+import ParachainStatusInfo from 'components/ParachainStatusInfo';
 
 type EnterBTCForm = {
   amountBTC: string;
@@ -50,7 +54,7 @@ function EnterBTCAmount() {
     bitcoinHeight,
     btcRelayHeight,
     prices,
-    stateOfBTCParachain
+    parachainStatus
   } = useSelector((state: StoreType) => state.general);
   const [amountBTC, setAmountBTC] = useState('');
   const defaultValues = amountBTC ? { defaultValues: { amountBTC: amountBTC } } : undefined;
@@ -76,6 +80,25 @@ function EnterBTCAmount() {
       if (!polkaBtcLoaded) return;
 
       try {
+        // set issue period
+        const issuePeriodInBlocks = await window.polkaBTC.issue.getIssuePeriod();
+        const issuePeriod = new BN(issuePeriodInBlocks.toString()).mul(new BN(constants.BLOCK_TIME)).toNumber();
+        dispatch(updateIssuePeriodAction(issuePeriod));
+      } catch (error) {
+        console.log('[EnterBtcAmount] error.message => ', error.message);
+      }
+    };
+    fetchData();
+  }, [
+    polkaBtcLoaded,
+    dispatch
+  ]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!polkaBtcLoaded) return;
+
+      try {
         const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
         const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
         const vaultsMap = await window.polkaBTC.vaults.getVaultsWithIssuableTokens();
@@ -88,7 +111,7 @@ function EnterBTCAmount() {
         setVaults(vaultsMap);
         setDustValue(dustValueBtc);
       } catch (error) {
-        console.log(error);
+        console.log('[EnterBtcAmount] error.message => ', error.message);
       }
     };
     setUsdAmount(getUsdAmount(amountBTC || getValues('amountBTC') || '0', prices.bitcoin.usd));
@@ -123,7 +146,7 @@ function EnterBTCAmount() {
 
       const amountAsSatoshi = window.polkaBTC.api.createType('Balance', amountSAT);
 
-      const vaultAccountId = window.polkaBTC.api.createType('AccountId', vaultId);
+      const vaultAccountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vaultId);
       const requestResult = await window.polkaBTC.issue.request(amountAsSatoshi as PolkaBTC, vaultAccountId);
 
       const vaultBTCAddress = requestResult.issueRequest.btc_address;
@@ -156,14 +179,15 @@ function EnterBTCAmount() {
       const amountSAT = btcToSat(value);
       const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), new BN(amountSAT));
       if (vaultId) {
-        const vaultAccountId = window.polkaBTC.api.createType('AccountId', vaultId);
+        const vaultAccountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vaultId);
         setVaultId(vaultAccountId.toString());
       } else {
         setVaultId('');
       }
 
-      const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSAT);
-      setDeposit(planckToDOT(griefingCollateral));
+      const amountSatTyped = window.polkaBTC.api.createType('Balance', amountSAT) as PolkaBTC;
+      const griefingCollateral = await window.polkaBTC.issue.getGriefingCollateralInPlanck(amountSatTyped);
+      setDeposit(planckToDOT(griefingCollateral.toString()));
     } catch (error) {
       console.log(error);
     }
@@ -185,13 +209,16 @@ function EnterBTCAmount() {
     return undefined;
   };
 
-  // TODO: should be simpler by loading UX integration
-  const parachainRunning = stateOfBTCParachain === ParachainStatus.Running;
-
   return (
     <form onSubmit={onSubmit}>
       <div className='row'>
-        <div className='col-12 wizard-header-text font-pink'>{t('issue_page.mint_polka_by_wrapping')}</div>
+        <div
+          className={clsx(
+            'col-12 wizard-header-text',
+            'text-interlayPink'
+          )}>
+          {t('issue_page.mint_polka_by_wrapping')}
+        </div>
       </div>
       <div className='row'>
         <div className='col-6'>
@@ -220,22 +247,7 @@ function EnterBTCAmount() {
           {errors.amountBTC.type === 'required' ? t('issue_page.enter_valid_amount') : errors.amountBTC.message}
         </div>
       )}
-      {/* TODO: could use finite state machine */}
-      {!parachainRunning && (
-        // TODO: should avoid hard-coding styles and componentize properly
-        <div className='wizard-input-error'>
-          <p
-            style={{
-              fontSize: '20px',
-              marginBottom: 4
-            }}>
-            {t('issue_redeem_disabled')}
-          </p>
-          <p style={{ fontSize: '16px' }}>
-            {t('polkabtc_bridge_recovery_mode')}
-          </p>
-        </div>
-      )}
+      <ParachainStatusInfo status={parachainStatus} />
       <div className='row justify-content-center'>
         <div className='col-10'>
           <div className='wizard-item wizard-item-remove-border'>
@@ -312,7 +324,7 @@ function EnterBTCAmount() {
       </div>
       <ButtonMaybePending
         className='btn green-button app-btn'
-        disabled={!parachainRunning}
+        disabled={parachainStatus !== ParachainStatus.Running}
         isPending={isRequestPending}
         onClick={onSubmit}>
         {t('confirm')}

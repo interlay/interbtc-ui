@@ -2,15 +2,24 @@
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import styles from './testnet-banner.module.css';
-
 function TestnetBanner() {
   const { t } = useTranslation();
 
   return (
     <div
-      className={clsx(styles['testnet-banner'], 'alert border-danger text-center')}>
-      <strong className='font-pink'>
+      className={clsx(
+        'px-5',
+        'py-3',
+        'm-4',
+        'sm:mx-auto',
+        'md:max-w-3xl',
+        'border',
+        'border-solid',
+        'border-interlayPink',
+        'rounded',
+        'text-center'
+      )}>
+      <strong className='text-interlayPink'>
         {t('testnet.warning')}
       </strong>
     </div>

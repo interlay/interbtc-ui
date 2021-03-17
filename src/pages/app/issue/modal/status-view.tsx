@@ -11,6 +11,7 @@ import { updateIssueRequestAction } from '../../../../common/actions/issue.actio
 import { updateBalancePolkaBTCAction } from '../../../../common/actions/general.actions';
 import { shortAddress } from '../../../../common/utils/utils';
 import Big from 'big.js';
+import InterlayLink from 'components/InterlayLink';
 
 type StatusViewProps = {
   request: IssueRequest;
@@ -38,7 +39,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
     let transactionData = false;
     let txId = request.btcTxId;
     try {
-      // get proof data from bitcoin
+      // Get proof data from bitcoin
       if (txId === '') {
         txId = await window.polkaBTC.btcCore.getTxIdByRecipientAddress(
           request.vaultBTCAddress,
@@ -64,23 +65,19 @@ export default function StatusView(props: StatusViewProps): ReactElement {
 
       const txIdBuffer = Buffer.from(txId, 'hex').reverse();
 
-      // prepare types for polkadot
+      // Prepare types for polkadot
       const parsedIssuedId = window.polkaBTC.api.createType('H256', '0x' + provenReq.id);
       const parsedTxId = window.polkaBTC.api.createType('H256', txIdBuffer);
       const parsedMerkleProof = window.polkaBTC.api.createType('Bytes', '0x' + merkleProof);
       const parsedRawTx = window.polkaBTC.api.createType('Bytes', rawTx);
 
-      // execute issue
-      const success = await window.polkaBTC.issue.execute(
+      // Execute issue
+      await window.polkaBTC.issue.execute(
         parsedIssuedId,
         parsedTxId,
         parsedMerkleProof,
         parsedRawTx
       );
-
-      if (!success) {
-        throw new Error(t('issue_page.execute_failed'));
-      }
 
       const completedReq = provenReq;
       completedReq.status = IssueRequestStatus.Completed;
@@ -96,14 +93,14 @@ export default function StatusView(props: StatusViewProps): ReactElement {
 
       toast.success(t('issue_page.successfully_executed', { id: request.id }));
     } catch (error) {
-      toast.error(error.toString());
+      toast.error(`${t('issue_page.execute_failed')}: ${error.message}`);
     } finally {
       setExecutePending(false);
     }
   };
 
   function getStatus(status: IssueRequestStatus) {
-    // note: the following states are handled already in issue-modal.tsx
+    // Note: the following states are handled already in issue-modal.tsx
     // IssueRequestStatus.RequestedRefund
     // IssueRequestStatus.PendingWithBtcTxNotFound
     switch (status) {
@@ -129,12 +126,12 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           </div>
           <div className='row'>
             <div className='col text-center mt-4'>
-              <a
+              <InterlayLink
                 href='https://polkadot.js.org/apps/#/explorer'
                 target='_blank'
                 rel='noopener noreferrer'>
                 <button className='modal-btn-green'>{t('issue_page.view_parachain_block')}</button>
-              </a>
+              </InterlayLink>
             </div>
           </div>
 
@@ -151,7 +148,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           <div className='row'>
             <div className='col'>
               <div className='btc-transaction'>
-                <a
+                <InterlayLink
                   href={
                     (constants.BTC_MAINNET ?
                       constants.BTC_EXPLORER_TRANSACTION_API :
@@ -162,7 +159,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                   <button className='modal-btn-green'>
                     {t('issue_page.view_on_block_explorer')}
                   </button>
-                </a>
+                </InterlayLink>
               </div>
             </div>
           </div>
@@ -224,7 +221,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                   </div>
                   <div className='row mt-3'>
                     <div className='col text-center'>
-                      <a
+                      <InterlayLink
                         href={
                           (constants.BTC_MAINNET ?
                             constants.BTC_EXPLORER_TRANSACTION_API :
@@ -236,7 +233,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                         <button className='btn green-button'>
                           {t('issue_page.view_on_block_explorer')}
                         </button>
-                      </a>
+                      </InterlayLink>
                     </div>
                   </div>
                 </div>
@@ -274,7 +271,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
               </div>
               <div className='row mt-3'>
                 <div className='col text-center'>
-                  <a
+                  <InterlayLink
                     // TODO: use the transaction wrapper for this link
                     href={
                       (constants.BTC_MAINNET ?
@@ -287,7 +284,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                     <button className='btn green-button'>
                       {t('issue_page.view_on_block_explorer')}
                     </button>
-                  </a>
+                  </InterlayLink>
                 </div>
               </div>
               <div className='row mt-5 justify-content-center'>

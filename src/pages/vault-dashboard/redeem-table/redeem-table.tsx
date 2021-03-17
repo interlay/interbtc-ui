@@ -9,20 +9,20 @@ import { VaultRedeem } from '../../../common/types/redeem.types';
 import { FaCheck, FaHourglass } from 'react-icons/fa';
 import { Badge, Table } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 
 export default function RedeemTable(): ReactElement {
-  const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+  const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
   const redeems = useSelector((state: StoreType) => state.redeem.vaultRedeems);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!polkaBtcLoaded) return;
+      if (!polkaBtcLoaded || !address) return;
 
       try {
-        const accountId = await window.vaultClient.getAccountId();
-        const vaultId = window.polkaBTC.api.createType('AccountId', accountId);
+        const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
         const redeemMap = await window.polkaBTC.vaults.mapRedeemRequests(vaultId);
 
         if (!redeemMap) return;
@@ -37,7 +37,7 @@ export default function RedeemTable(): ReactElement {
       fetchData();
     }, constants.COMPONENT_UPDATE_MS);
     return () => clearInterval(interval);
-  }, [polkaBtcLoaded, dispatch]);
+  }, [polkaBtcLoaded, dispatch, address]);
 
   const showStatus = (request: VaultRedeem) => {
     if (request.completed) {
@@ -54,7 +54,7 @@ export default function RedeemTable(): ReactElement {
       <div>
         <p
           style={{
-            fontFamily: 'airbnb-cereal-bold',
+            fontWeight: 700,
             fontSize: '26px'
           }}>
           {t('redeem_requests')}

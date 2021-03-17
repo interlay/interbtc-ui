@@ -11,6 +11,7 @@ import checkStaticPage from 'config/check-static-page';
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 import styles from './layout.module.css';
+import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
 
 interface Props {
   children: React.ReactNode;
@@ -25,7 +26,7 @@ const Layout = ({ children }: Props) => {
     if (!address) return;
 
     try {
-      const receiverId = window.polkaBTC.api.createType('AccountId', address);
+      const receiverId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
       await window.faucet.fundAccount(receiverId);
       toast.success('Your account has been funded.');
     } catch (error) {
@@ -33,13 +34,18 @@ const Layout = ({ children }: Props) => {
     }
   };
 
-  // TODO: a hack for now
+  /**
+   * TODO: a hack for now.
+   * - Should apply the gradient on the landing page
+   */
   const isHomePage = location.pathname === PAGES.HOME;
 
   return (
     <div
       className={clsx(
-        'main d-flex flex-column min-vh-100',
+        'flex',
+        'flex-col',
+        'min-h-screen',
         { [styles['polkabtc-background']]: isHomePage }
       )}>
       {!checkStaticPage() && (

@@ -5,16 +5,14 @@ import { TabTypes } from 'utils/enums/tab-types';
 import { createLogger } from 'redux-logger';
 import { applyMiddleware, createStore } from 'redux';
 import { initializeState } from './common/actions/general.actions';
-import { FaucetClient, PolkaBTCAPI, StakedRelayerClient, VaultClient } from '@interlay/polkabtc';
+import { FaucetClient, PolkaBTCAPI } from '@interlay/polkabtc';
 import { mapToArray, arrayToMap } from './common/utils/utils';
 import * as constants from './constants';
 
 declare global {
     interface Window {
         polkaBTC: PolkaBTCAPI;
-        relayer: StakedRelayerClient;
         faucet: FaucetClient;
-        vaultClient: VaultClient;
         isFetchingActive: boolean;
     }
 }
@@ -35,7 +33,7 @@ export const getInitialState = (): StoreType => {
       accounts: [],
       btcRelayHeight: 0,
       bitcoinHeight: 0,
-      stateOfBTCParachain: ParachainStatus.Shutdown,
+      parachainStatus: ParachainStatus.Loading,
       selectedTabType: TabTypes.Issue,
       prices: { bitcoin: { usd: 0 }, polkadot: { usd: 0 } }
     },
@@ -44,7 +42,8 @@ export const getInitialState = (): StoreType => {
       step: 'ENTER_BTC_AMOUNT',
       id: '',
       issueRequests: new Map(),
-      vaultIssues: []
+      vaultIssues: [],
+      issuePeriod: 86400
     },
     redeem: {
       premiumRedeem: false,

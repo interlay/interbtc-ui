@@ -9,6 +9,7 @@ import BitcoinTransaction from '../../../common/components/bitcoin-links/transac
 import { useTranslation } from 'react-i18next';
 import RedeemModal from './modal/redeem-modal';
 import { formatDateTimePrecise } from '../../../common/utils/utils';
+import clsx from 'clsx';
 
 export default function RedeemRequests(): ReactElement {
   const { address } = useSelector((state: StoreType) => state.general);
@@ -45,7 +46,12 @@ export default function RedeemRequests(): ReactElement {
   };
 
   return (
-    <div className='container mt-5'>
+    <div
+      className={clsx(
+        'container',
+        'mt-12',
+        'mx-auto'
+      )}>
       {redeemRequests && redeemRequests.length > 0 && (
         <React.Fragment>
           <h5>{t('redeem_requests')}</h5>

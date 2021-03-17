@@ -15,7 +15,7 @@ import {
   ReplaceRequestExt as ParachainReplaceRequest,
   roundTwoDecimals
 } from '@interlay/polkabtc';
-import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from '../../constants';
+import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK, ACCOUNT_ID_TYPE_NAME } from '../../constants';
 import { Dispatch } from 'redux';
 import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from '../actions/general.actions';
 import Big from 'big.js';
@@ -514,7 +514,7 @@ const updateBalances = async (
   currentBalanceDOT: string,
   currentBalancePolkaBTC: string
 ): Promise<void> => {
-  const accountId = window.polkaBTC.api.createType('AccountId', address);
+  const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
   const balancePolkaSAT = await window.polkaBTC.treasury.balancePolkaBTC(accountId);
   const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
   const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());

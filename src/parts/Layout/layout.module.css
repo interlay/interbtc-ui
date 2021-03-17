@@ -1,6 +1,6 @@
 
 .polkabtc-background {
-  /* TODO: should avoid hard-coding colors */
+  /* TODO: should avoid hard-coding colors (https://tailwindcss.com/docs/gradient-color-stops) */
   background-image: linear-gradient(
     to right bottom,
     #e1106d,

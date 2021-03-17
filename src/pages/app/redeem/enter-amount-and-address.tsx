@@ -22,6 +22,7 @@ import { PolkaBTC } from '@interlay/polkabtc/build/interfaces';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
 import Big from 'big.js';
 import BN from 'bn.js';
+import clsx from 'clsx';
 
 import ButtonMaybePending from 'common/components/pending-button';
 import {
@@ -36,6 +37,7 @@ import {
   ParachainStatus
 } from 'common/types/util.types';
 import {
+  ACCOUNT_ID_TYPE_NAME,
   BALANCE_MAX_INTEGER_LENGTH,
   BTC_ADDRESS_REGEX
 } from '../../../constants';
@@ -47,6 +49,7 @@ import {
 } from 'common/utils/utils';
 import bitcoinLogo from 'assets/img/small-bitcoin-logo.png';
 import polkadotLogo from 'assets/img/small-polkadot-logo.png';
+import ParachainStatusInfo from 'components/ParachainStatusInfo';
 
 type AmountAndAddressForm = {
   amountPolkaBTC: string;
@@ -66,7 +69,7 @@ function EnterAmountAndAddress(): ReactElement {
     bitcoinHeight,
     btcRelayHeight,
     prices,
-    stateOfBTCParachain
+    parachainStatus
   } = useSelector((state: StoreType) => state.general);
 
   // General redeem
@@ -170,7 +173,7 @@ function EnterAmountAndAddress(): ReactElement {
         vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountAsSatoshi);
       }
       const amount = window.polkaBTC.api.createType('Balance', amountPolkaSAT);
-      const vaultAccountId = window.polkaBTC.api.createType('AccountId', vaultId.toString());
+      const vaultAccountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vaultId.toString());
       const requestResult = await window.polkaBTC.redeem.request(amount, btcAddress, vaultAccountId);
 
       // Get the redeem id from the request redeem event
@@ -231,14 +234,18 @@ function EnterAmountAndAddress(): ReactElement {
     dispatch(togglePremiumRedeemAction(!premiumRedeem));
   };
 
-  const parachainRunning = stateOfBTCParachain === ParachainStatus.Running;
-
   return (
     <form
       className='enter-amount-and-address'
       onSubmit={onSubmit}>
       <div className='row'>
-        <div className='col-12 wizard-header-text font-yellow'>{t('redeem_page.you_will_receive')}</div>
+        <div
+          className={clsx(
+            'col-12 wizard-header-text',
+            'text-interlayYellow'
+          )}>
+          {t('redeem_page.you_will_receive')}
+        </div>
       </div>
       <div className='row'>
         <div className='col-6'>
@@ -272,20 +279,7 @@ function EnterAmountAndAddress(): ReactElement {
             errors.amountPolkaBTC.message}
         </div>
       )}
-      {!parachainRunning && (
-        <div className='wizard-input-error'>
-          <p
-            style={{
-              fontSize: '20px',
-              marginBottom: 4
-            }}>
-            {t('issue_redeem_disabled')}
-          </p>
-          <p style={{ fontSize: '16px' }}>
-            {t('polkabtc_bridge_recovery_mode')}
-          </p>
-        </div>
-      )}
+      <ParachainStatusInfo status={parachainStatus} />
       <div className='row'>
         <div className='col-12'>
           <p className='form-heading'>BTC destination address</p>
@@ -407,7 +401,7 @@ function EnterAmountAndAddress(): ReactElement {
       <ButtonMaybePending
         type='submit'
         className='btn green-button app-btn'
-        disabled={!parachainRunning}
+        disabled={parachainStatus !== ParachainStatus.Running}
         isPending={isRequestPending}
         onClick={checkAddress}>
         {t('confirm')}

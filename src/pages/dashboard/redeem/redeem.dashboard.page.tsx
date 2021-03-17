@@ -221,7 +221,7 @@ export default function RedeemDashboard(): ReactElement {
               <div>
                 <p
                   style={{
-                    fontFamily: 'airbnb-cereal-bold',
+                    fontWeight: 700,
                     fontSize: '26px'
                   }}>
                   {t('issue_page.recent_requests')}

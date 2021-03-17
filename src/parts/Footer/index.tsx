@@ -22,14 +22,21 @@ import {
 import interlayImage from 'assets/img/interlay.png';
 // TODO: should use next-gen format
 import web3FoundationImage from 'assets/img/polkabtc/web3-foundation-grants-badge-black.png';
-import styles from './footer.module.css';
 
 const packageJson = require('../../../package.json');
 
 const Footer = () => (
   <footer
-    className={styles['footer']}>
-    <div className={clsx(styles['footer-row'], styles['first-row'])}>
+    className={clsx(
+      'flex',
+      'flex-col',
+      'items-center',
+      'px-3',
+      'py-8',
+      'text-sm',
+      'space-y-3'
+    )}>
+    <div className='space-x-6'>
       <InterlayLink
         href={INTERLAY_COMPANY}
         target='_blank'
@@ -53,7 +60,7 @@ const Footer = () => (
           alt='Web3 Foundation' />
       </InterlayLink>
     </div>
-    <div className={clsx(styles['footer-row'], styles['second-row'])}>
+    <div className='space-x-2'>
       <InterlayLink
         href={POLKA_BTC_UI_GITHUB}
         target='_blank'
@@ -70,7 +77,7 @@ const Footer = () => (
         Privacy Policy
       </InterlayLink>
     </div>
-    <div className={clsx(styles['footer-row'], styles['third-row'])}>
+    <div className='space-x-8'>
       <InterlayLink
         href={INTERLAY_EMAIL}
         target='_blank'

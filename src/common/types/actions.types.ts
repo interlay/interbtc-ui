@@ -80,7 +80,7 @@ export interface InitGeneralDataAction {
     totalLockedDOT: string;
     btcRelayHeight: number;
     bitcoinHeight: number;
-    stateOfBTCParachain: ParachainStatus;
+    parachainStatus: ParachainStatus;
 }
 
 export interface UpdateBalancePolkaBTC {
@@ -234,6 +234,7 @@ export const UPDATE_ISSUE_REQUEST = 'UPDATE_ISSUE_REQUEST';
 export const ADD_VAULT_ISSUES = 'ADD_VAULT_ISSUES';
 export const UPDATE_ALL_ISSUE_REQUESTS = 'UPDATE_ALL_ISSUE_REQUESTS';
 export const CHANGE_SELECTED_ISSUE = 'CHANGE_SELECTED_ISSUE';
+export const UPDATE_ISSUE_PERIOD = 'UPDATE_ISSUE_PERIOD';
 
 export interface ChangeSelectedIssue {
     type: typeof CHANGE_SELECTED_ISSUE;
@@ -279,6 +280,10 @@ export interface UpdateAllIssueRequests {
     userDotAddress: string;
     issueRequests: IssueRequest[];
 }
+export interface UpdateIssuePeriod {
+    type: typeof UPDATE_ISSUE_PERIOD;
+    period: number;
+}
 
 export type IssueActions =
     | ChangeIssueStep
@@ -291,7 +296,8 @@ export type IssueActions =
     | InitState
     | AddVaultIssues
     | UpdateAllIssueRequests
-    | ChangeSelectedIssue;
+    | ChangeSelectedIssue
+    | UpdateIssuePeriod;
 
 // VAULT
 

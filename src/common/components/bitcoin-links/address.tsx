@@ -1,6 +1,7 @@
 import React from 'react';
 import * as constants from '../../../constants';
 import { shortAddress } from '../../../common/utils/utils';
+import InterlayLink from 'components/InterlayLink';
 
 export default class BitcoinAddress extends React.Component<{
   btcAddress: string;
@@ -8,7 +9,7 @@ export default class BitcoinAddress extends React.Component<{
 }> {
   render() {
     return (
-      <a
+      <InterlayLink
         href={
           (constants.BTC_MAINNET ?
             constants.BTC_EXPLORER_ADDRESS_API :
@@ -19,7 +20,7 @@ export default class BitcoinAddress extends React.Component<{
         {this.props.shorten && this.props.btcAddress ?
           shortAddress(this.props.btcAddress) :
           this.props.btcAddress}
-      </a>
+      </InterlayLink>
     );
   }
 }

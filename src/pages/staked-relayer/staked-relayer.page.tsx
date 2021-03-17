@@ -1,7 +1,5 @@
 import React, { useState, useEffect, ReactElement } from 'react';
 import BitcoinTable from '../../common/components/bitcoin-table/bitcoin-table';
-import RegisterModal from './register-modal/register-modal';
-import { Button } from 'react-bootstrap';
 import StatusUpdateTable from '../../common/components/status-update-table/status-update-table';
 import VaultTable from '../../common/components/vault-table/vault-table';
 import OracleTable from '../../common/components/oracle-table/oracle-table';
@@ -19,51 +17,42 @@ import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard/dashboard-subpage.scss';
+import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
 
 export default function StakedRelayerPage(): ReactElement {
-  const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [isDeregisterPending, setDeregisterPending] = useState(false);
   const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState('0');
   const [feesEarnedDOT, setFeesEarnedDOT] = useState('0');
   const [dotLocked, setDotLocked] = useState('0');
   const [planckLocked, setPlanckLocked] = useState('0');
   const [stakedRelayerAddress, setStakedRelayerAddress] = useState('');
-  const [relayerRegistered, setRelayerRegistered] = useState(false);
   const [relayerInactive, setRelayerInactive] = useState(false);
   const [sla, setSLA] = useState(0);
   const [apy, setAPY] = useState('0');
-  const relayerNotRegisteredToastId = 'relayer-not-registered-id';
-  const { polkaBtcLoaded, relayerLoaded } = useSelector((state: StoreType) => state.general);
+  const { polkaBtcLoaded, relayerLoaded, address } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
-
-  const handleRegisterModalClose = () => setShowRegisterModal(false);
 
   const deregisterStakedRelayer = async () => {
     if (!relayerLoaded) return;
     setDeregisterPending(true);
     try {
-      await window.relayer.deregisterStakedRelayer();
+      await window.polkaBTC.stakedRelayer.deregisterStakedRelayer();
       toast.success('Successfully Deregistered');
     } catch (error) {
       toast.error(error.toString());
     }
-    setRelayerRegistered(false);
     setRelayerInactive(false);
     setDeregisterPending(false);
   };
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!polkaBtcLoaded || !relayerLoaded) return;
+      if (!polkaBtcLoaded || !relayerLoaded || !address) return;
 
       try {
-        const address = await window.relayer.getAccountId();
-        const stakedRelayerId = window.polkaBTC.api.createType('AccountId', address);
+        const stakedRelayerId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
 
-        const isActive = await window.polkaBTC.stakedRelayer.isStakedRelayerActive(stakedRelayerId);
         const isInactive = await window.polkaBTC.stakedRelayer.isStakedRelayerInactive(stakedRelayerId);
-        const isRegistered = isActive || isInactive;
-        setRelayerRegistered(isRegistered);
         setRelayerInactive(isInactive);
         setStakedRelayerAddress(address);
 
@@ -72,27 +61,19 @@ export default function StakedRelayerPage(): ReactElement {
         ).toString();
         const lockedDOT = planckToDOT(lockedPlanck);
 
-        // show warning if relayer is not registered with the parachain
-        if (isRegistered) {
-          const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId);
-          setSLA(slaScore);
+        const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId);
+        setSLA(slaScore);
 
-          const apyScore = await window.polkaBTC.stakedRelayer.getAPY(stakedRelayerId);
-          setAPY(apyScore);
+        const apyScore = await window.polkaBTC.stakedRelayer.getAPY(stakedRelayerId);
+        setAPY(apyScore);
 
-          const feesPolkaSAT = await window.polkaBTC.stakedRelayer.getFeesPolkaBTC(
-            stakedRelayerId
-          );
-          setFeesEarnedPolkaBTC(satToBTC(feesPolkaSAT));
+        const feesPolkaSAT = await window.polkaBTC.stakedRelayer.getFeesPolkaBTC(
+          stakedRelayerId
+        );
+        setFeesEarnedPolkaBTC(satToBTC(feesPolkaSAT));
 
-          const feesPlanck = await window.polkaBTC.stakedRelayer.getFeesDOT(stakedRelayerId);
-          setFeesEarnedDOT(planckToDOT(feesPlanck));
-        } else {
-          toast.warn(t('relayer.warning_relayer_not_registered'), {
-            autoClose: false,
-            toastId: relayerNotRegisteredToastId
-          });
-        }
+        const feesPlanck = await window.polkaBTC.stakedRelayer.getFeesDOT(stakedRelayerId);
+        setFeesEarnedDOT(planckToDOT(feesPlanck));
 
         setDotLocked(lockedDOT);
         setPlanckLocked(lockedPlanck);
@@ -101,7 +82,7 @@ export default function StakedRelayerPage(): ReactElement {
       }
     };
     fetchData();
-  }, [polkaBtcLoaded, relayerLoaded, t]);
+  }, [polkaBtcLoaded, relayerLoaded, address, t]);
 
   return (
     <MainContainer className='staked-relayer-page'>
@@ -110,14 +91,7 @@ export default function StakedRelayerPage(): ReactElement {
           <PageTitle
             mainTitle={t('relayer.staked_relayer_dashboard')}
             subTitle={<TimerIncrement />} />
-          {!relayerRegistered && polkaBtcLoaded ? (
-            <Button
-              variant='outline-success'
-              className='staked-button'
-              onClick={() => setShowRegisterModal(true)}>
-              {t('relayer.register_dot')}
-            </Button>
-          ) : (
+          {relayerLoaded && polkaBtcLoaded && (
             <div className='col-lg-10 offset-1'>
               <div className='row justify-content-center'>
                 <div className='col-lg-3'>
@@ -163,21 +137,14 @@ export default function StakedRelayerPage(): ReactElement {
               </div>
             </div>
           )}
-          <BitcoinTable></BitcoinTable>
-          <RegisterModal
-            onClose={handleRegisterModalClose}
-            onRegister={() => {
-              setRelayerRegistered(true);
-              setRelayerInactive(true);
-            }}
-            show={showRegisterModal} />
+          <BitcoinTable />
           <StatusUpdateTable
             dotLocked={dotLocked}
             planckLocked={planckLocked}
             stakedRelayerAddress={stakedRelayerAddress} />
           <VaultTable></VaultTable>
           <OracleTable planckLocked={planckLocked}></OracleTable>
-          {relayerRegistered && (
+          {relayerLoaded && (
             <React.Fragment>
               <ButtonMaybePending
                 className='staked-button'

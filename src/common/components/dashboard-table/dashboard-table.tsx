@@ -8,6 +8,7 @@ import iconConfirm from '../../../assets/img/icons/Icon_confirm.svg';
 import iconCancel from '../../../assets/img/icons/Icon_cancel.svg';
 import iconPending from '../../../assets/img/icons/Icon_pending.svg';
 import TablePageSelector from '../table-page-selector/table-page-selector';
+import InterlayLink from 'components/InterlayLink';
 
 const blueAccent = getAccents('d_blue');
 
@@ -24,10 +25,10 @@ type StyledLinkDataProps = {
 function StyledLinkData(props: StyledLinkDataProps): ReactElement {
   // TODO: make into actual hyperlink
   return (
-    <a
+    <InterlayLink
       href={props.target}
       target={props.newTab ? '_blank' : ''}
-      rel='noreferrer'>
+      rel='noopener noreferrer'>
       <p style={{ color: blueAccent.color }}>
         {props.data}
         <img
@@ -38,7 +39,7 @@ function StyledLinkData(props: StyledLinkDataProps): ReactElement {
           src={iconExternalLink}
           alt='' />
       </p>
-    </a>
+    </InterlayLink>
   );
 }
 

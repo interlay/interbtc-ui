@@ -7,6 +7,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import { configureStore } from './store';
 import reportWebVitals from './reportWebVitals';
+import './index.css';
 
 const store = configureStore();
 window.isFetchingActive = false;
