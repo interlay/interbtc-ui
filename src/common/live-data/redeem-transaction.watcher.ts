@@ -24,9 +24,15 @@ async function fetchRedeemTransactions(dispatch: Dispatch, store: StoreState): P
     } = store.getState().general;
     if (!address || !polkaBtcLoaded) return;
 
-    const parachainHeight = await window.polkaBTC.system.getCurrentBlockNumber();
-    const redeemPeriod = await window.polkaBTC.redeem.getRedeemPeriod();
-    const requiredBtcConfirmations = await window.polkaBTC.btcRelay.getStableBitcoinConfirmations();
+    const [
+      parachainHeight,
+      redeemPeriod,
+      requiredBtcConfirmations
+    ] = await Promise.all([
+      window.polkaBTC.system.getCurrentBlockNumber(), // TODO: should avoid as it's called for issue
+      window.polkaBTC.redeem.getRedeemPeriod(),
+      window.polkaBTC.btcRelay.getStableBitcoinConfirmations() // TODO: should avoid as it's called for issue
+    ]);
 
     const databaseRequests: RedeemRequest[] = (
       await stats.getFilteredRedeems(
@@ -38,12 +44,18 @@ async function fetchRedeemTransactions(dispatch: Dispatch, store: StoreState): P
         [{ column: RedeemColumns.Requester, value: address }] // Filter by requester == address
       )
     ).data.map(statsRedeem =>
-      statsToUIRedeemRequest(statsRedeem, bitcoinHeight, parachainHeight, redeemPeriod, requiredBtcConfirmations)
+      statsToUIRedeemRequest(
+        statsRedeem,
+        bitcoinHeight,
+        parachainHeight,
+        redeemPeriod,
+        requiredBtcConfirmations
+      )
     );
 
     dispatch(updateAllRedeemRequestsAction(address, databaseRequests));
   } catch (error) {
-    console.log(error.toString());
+    console.log('[fetchRedeemTransactions] error.message => ', error.message);
   }
 }
 
