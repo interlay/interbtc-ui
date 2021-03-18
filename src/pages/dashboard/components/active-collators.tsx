@@ -28,7 +28,7 @@ const ActiveCollators = (): ReactElement => {
       <div className='card-top-content'>
         <div className='values-container'>
           <h1 style={{ color: getAccents('d_blue').color }}>{t('dashboard.collators.active_collators')}</h1>
-          <h2>1</h2>
+          <h2>3</h2>
         </div>
         {displayLinkBtn && (
           <div className='button-container'>
