@@ -1306,10 +1306,10 @@
     sinon "^9.0.3"
     ts-mock-imports "^1.3.0"
 
-"@interlay/polkabtc@^0.9.3":
-  version "0.9.3"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.9.3.tgz#634687b1bedab95cc7fbd3f2b60ded6240d76046"
-  integrity sha512-JdjOtbOEOVf7ygnjwAhA9IwpDwbUbaMvpTh+PJScWkRZaCWF3otmzbcCBO0u1riDJNKXt3dlM39T9HNc3Up5SA==
+"@interlay/polkabtc@^0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.10.1.tgz#9b4368b7b869e6fd7e90c21db1ebf750b5e7ea94"
+  integrity sha512-dt/H9IAX65jqcdJ/PZ87k8WL3mLZeo6JQ3f4shILcRQffxvMeuzHSsFL+weHwwtO6R6Ql6MoHIXuLoZ0s30H+w==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
     "@interlay/polkabtc-types" "0.5.2"

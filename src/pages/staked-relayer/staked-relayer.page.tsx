@@ -36,7 +36,7 @@ export default function StakedRelayerPage(): ReactElement {
     if (!relayerLoaded) return;
     setDeregisterPending(true);
     try {
-      await window.polkaBTC.stakedRelayer.deregisterStakedRelayer();
+      await window.polkaBTC.stakedRelayer.deregister();
       toast.success('Successfully Deregistered');
     } catch (error) {
       toast.error(error.toString());
