@@ -101,14 +101,11 @@ export default function VaultTable(): ReactElement {
 
         const btcAddress = vault.wallet.btcAddress;
 
-        const balanceLockedPlanck = await window.polkaBTC.collateral.balanceLockedDOT(accountId);
-        const balanceLockedDOT = planckToDOT(balanceLockedPlanck.toString());
-
         vaultsList.push({
           vaultId: accountId.toString(),
           // TODO: fetch collateral reserved
           lockedBTC: satToBTC(vault.issued_tokens.toString()),
-          lockedDOT: balanceLockedDOT,
+          lockedDOT: vaultCollateral.toString(),
           pendingBTC: satToBTC(vault.to_be_issued_tokens.toString()),
           btcAddress: btcAddress || '',
           status:
