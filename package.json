@@ -5,7 +5,7 @@
   "dependencies": {
     "@craco/craco": "^6.1.1",
     "@interlay/polkabtc": "^0.9.3",
-    "@interlay/polkabtc-stats": "0.1.14",
+    "@interlay/polkabtc-stats": "0.1.18",
     "@polkadot/extension-dapp": "0.36.1",
     "@polkadot/ui-keyring": "0.67.1",
     "@testing-library/jest-dom": "^5.11.4",
