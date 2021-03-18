@@ -30,23 +30,36 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
   const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
   useEffect(() => {
-    const fetchOracleData = async () => {
+    const fetchExchangeRate = async () => {
       if (!polkaBtcLoaded) return;
       try {
-        const oracle = await window.polkaBTC.oracle.getInfo();
-        setExchangeRate(oracle.exchangeRate.toFixed(2));
+        const exchangeRate = await window.polkaBTC.oracle.getExchangeRate();
+        setExchangeRate(exchangeRate.toFixed(2));
+      } catch (error) {
+        console.log('[OracleStatus useEffect] error.message => ', error.message);
+        setOracleStatus(Status.NoData);
+      }
+    };
+    const fetchOracleStatus = async () => {
+      if (!polkaBtcLoaded) return;
+      try {
+        const [online, lastUpdate] = await Promise.all([
+          window.polkaBTC.oracle.isOnline(),
+          window.polkaBTC.oracle.getLastExchangeRateTime()
+        ]);
 
-        if (oracle.online && Date.now() - oracle.lastUpdate.getTime() < 3600 * 1000) {
+        if (online && Date.now() - lastUpdate.getTime() < 3600 * 1000) {
           setOracleStatus(Status.Online);
         } else {
           setOracleStatus(Status.Offline);
         }
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log('[OracleStatus useEffect] error.message => ', error.message);
         setOracleStatus(Status.NoData);
       }
     };
-    fetchOracleData();
+    fetchOracleStatus();
+    fetchExchangeRate();
   }, [polkaBtcLoaded]);
 
   return (
