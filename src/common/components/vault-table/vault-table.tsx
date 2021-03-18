@@ -1,4 +1,4 @@
-import { ReactElement, useState, useEffect, useMemo } from 'react';
+import { ReactElement, useState, useEffect, useMemo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Vault } from '../../types/vault.types';
 import * as constants from '../../../constants';
@@ -51,37 +51,43 @@ export default function VaultTable(): ReactElement {
     fetchData();
   }, [polkaBtcLoaded]);
 
-  const checkVaultStatus = (
-    status: string,
-    collateralization: Big | undefined,
-    bannedUntil: string | undefined
-  ): string => {
-    if (status === constants.VAULT_STATUS_THEFT) {
-      return t('dashboard.vault.theft');
-    }
-    if (status === constants.VAULT_STATUS_LIQUIDATED) {
-      return constants.VAULT_STATUS_LIQUIDATED;
-    }
-    if (collateralization) {
-      if (collateralization.lt(liquidationThreshold)) {
-        return constants.VAULT_STATUS_LIQUIDATION;
+  const checkVaultStatus = useCallback(
+    (
+      status: string,
+      collateralization: Big | undefined,
+      bannedUntil: string | undefined
+    ): string => {
+      if (status === constants.VAULT_STATUS_THEFT) {
+        return t('dashboard.vault.theft');
       }
-      if (collateralization.lt(auctionCollateralThreshold)) {
-        return constants.VAULT_STATUS_AUCTION;
+      if (status === constants.VAULT_STATUS_LIQUIDATED) {
+        return constants.VAULT_STATUS_LIQUIDATED;
       }
-      if (collateralization.lt(secureCollateralThreshold)) {
-        return constants.VAULT_STATUS_UNDER_COLLATERALIZED;
+      if (collateralization) {
+        if (collateralization.lt(liquidationThreshold)) {
+          return constants.VAULT_STATUS_LIQUIDATION;
+        }
+        if (collateralization.lt(auctionCollateralThreshold)) {
+          return constants.VAULT_STATUS_AUCTION;
+        }
+        if (collateralization.lt(secureCollateralThreshold)) {
+          return constants.VAULT_STATUS_UNDER_COLLATERALIZED;
+        }
       }
-    }
-    if (bannedUntil) {
-      return constants.VAULT_STATUS_BANNED + bannedUntil;
-    }
-    return constants.VAULT_STATUS_ACTIVE;
-  };
+      if (bannedUntil) {
+        return constants.VAULT_STATUS_BANNED + bannedUntil;
+      }
+      return constants.VAULT_STATUS_ACTIVE;
+    }, [
+      auctionCollateralThreshold,
+      liquidationThreshold,
+      secureCollateralThreshold,
+      t
+    ]);
 
   useEffect(() => {
     const fetchData = () => {
-      if (!vaultsExt) return;
+      if (vaultsExt.length === 0) return;
       if (secureCollateralThreshold.eq(0)) return;
 
       const vaultsList: Vault[] = [];
@@ -131,6 +137,8 @@ export default function VaultTable(): ReactElement {
     fetchData();
   }, [
     vaultsExt,
+    secureCollateralThreshold,
+    checkVaultStatus,
     btcToDotRate
   ]);
 
