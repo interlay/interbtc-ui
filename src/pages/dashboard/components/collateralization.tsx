@@ -16,28 +16,44 @@ export default function Collateralization({ linkButton }: CollateralizationProps
 
   const [systemCollateralization, setSystemCollateralization] = useState('0');
   const [issuablePolkaBTC, setIssuablePolkaBTC] = useState('0');
-  const [secureCollateralThreshold, setSecureCollateralThreshold] = useState('0');
+  const [secureCollateralThreshold, setSecureCollateralThreshold] = useState('150');
   const [failed, setFailed] = useState(false);
   const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
   useEffect(() => {
-    const fetchCollateralizationData = async () => {
+    const fetchSystemCollateralization = async () => {
       if (!polkaBtcLoaded) return;
       try {
-        const [systemCollateralization, issuablePolkaBTC, secureCollateralThreshold] = await Promise.all([
-          window.polkaBTC.vaults.getSystemCollateralization(),
-          window.polkaBTC.vaults.getIssuablePolkaBTC(),
-          window.polkaBTC.vaults.getSecureCollateralThreshold()
-        ]);
+        const systemCollateralization = await window.polkaBTC.vaults.getSystemCollateralization();
         setSystemCollateralization(systemCollateralization?.mul(100).toString() || '0');
-        setIssuablePolkaBTC(issuablePolkaBTC?.toString() || '0');
-        setSecureCollateralThreshold(secureCollateralThreshold?.mul(100).toString() || '0');
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log('[Collateralization useEffect] error.message => ', error.message);
         setFailed(true);
       }
     };
-    fetchCollateralizationData();
+    const fetchIssuableTokens = async () => {
+      if (!polkaBtcLoaded) return;
+      try {
+        const issuablePolkaBTC = await window.polkaBTC.vaults.getIssuablePolkaBTC();
+        setIssuablePolkaBTC(issuablePolkaBTC?.toString() || '0');
+      } catch (error) {
+        console.log('[Collateralization useEffect] error.message => ', error.message);
+        setFailed(true);
+      }
+    };
+    const fetchSecureCollateralThreshold = async () => {
+      if (!polkaBtcLoaded) return;
+      try {
+        const secureCollateralThreshold = await window.polkaBTC.vaults.getSecureCollateralThreshold();
+        setSecureCollateralThreshold(secureCollateralThreshold?.mul(100).toString() || '150');
+      } catch (error) {
+        console.log('[Collateralization useEffect] error.message => ', error.message);
+        setFailed(true);
+      }
+    };
+    fetchSystemCollateralization();
+    fetchIssuableTokens();
+    fetchSecureCollateralThreshold();
   });
 
   return (
@@ -75,7 +91,12 @@ export default function Collateralization({ linkButton }: CollateralizationProps
           <h1
             className='h1-xl-text-center'
             style={{ color: getAccents('d_blue').color }}>
-            {failed ? t('no_data') : [safeRoundTwoDecimals(issuablePolkaBTC), <br />, t('dashboard.vault.capacity')]}
+            {failed ? t('no_data') :
+              [
+                issuablePolkaBTC === '0' ? t('loading') : safeRoundTwoDecimals(issuablePolkaBTC) + ' PolkaBTC',
+                <br />, t('dashboard.vault.capacity')
+              ]
+            }
           </h1>
         </div>
       </div>

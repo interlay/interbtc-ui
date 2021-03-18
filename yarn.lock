@@ -1256,14 +1256,14 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/polkabtc-stats@0.1.14":
-  version "0.1.14"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-stats/-/polkabtc-stats-0.1.14.tgz#730dad19902f55e64a81261dcbb47bb9ab19e170"
-  integrity sha512-QChVPFHc09sz2hXh+WQCTUfzCUKfR4Jb1yY1EbPHemxShnDlUIzW9loRUs1fNBl/FuGxHz+BTyQdMY2rI4uDhQ==
+"@interlay/polkabtc-stats@0.1.18":
+  version "0.1.18"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-stats/-/polkabtc-stats-0.1.18.tgz#95c3682740bda02035d87d5c7aa7e27d5fb5b70b"
+  integrity sha512-RHFCCwvvFmVL8kLy86PnJRrwiR0w+Ef0THDp568/GEN2nOadp64jQloTvJtR7CMOcn8ckVXX4GZ0cB50fNCY0w==
   dependencies:
-    "@interlay/polkabtc" "^0.8.5"
-    "@interlay/polkabtc-types" "0.4.0"
-    "@polkadot/api" "3.6.1"
+    "@interlay/polkabtc" "0.9.2"
+    "@interlay/polkabtc-types" "0.5.2"
+    "@polkadot/api" "3.11.1"
     "@polkadot/rpc-core" "3.6.1"
     "@supercharge/promise-pool" "^1.6.0"
     "@types/big.js" "^6.0.2"
@@ -1284,23 +1284,20 @@
     tsoa "^3.4.0"
     typeorm "^0.2.30"
 
-"@interlay/polkabtc-types@0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.4.0.tgz#05329cefe512b95678990539b71f3a25f891dcae"
-  integrity sha512-o52W4PKioZARyAA+Pnptpwu56E60LTXhmeEBR+TXCV4gRNUpWfQ6FAy9eJkWsAQ5E+YRv7eiAZhfFKJvft91pA==
-
 "@interlay/polkabtc-types@0.5.2":
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.5.2.tgz#403ec1ecb5edddafc4a957b1f20439894d112563"
   integrity sha512-Tc397SZSVfo6cvh+Rv9HxZdcymZoHXyNyX5LwnCgsqE04bfjrsn2uocOH6V8KHimffOn5MMmYE4i6zc11ntAoA==
 
-"@interlay/polkabtc@^0.8.5":
-  version "0.8.9"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.8.9.tgz#c2ec045b50c92afaded9140f28357b8a52bb57ba"
-  integrity sha512-sBl6EO/XABEds/rH+ZzKhPNlEonZNlecZRB+7rL9zrZgLC70C8ujVUzfppU8OkEAGpR7I+8t68BRIlGCo6F4Eg==
+"@interlay/polkabtc@0.9.2":
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.9.2.tgz#7d70f997d2d306e3cc00445ad44f5bf2a8bb2ba4"
+  integrity sha512-wEwd/kilYx5hxOHUynGecIf18srM/aTn8btHUgq+b0QNSL9PwCQxBNd7Nzg34PlqQGDQeWPdvz8imNBFiYgomg==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
     "@interlay/polkabtc-types" "0.5.2"
+    "@polkadot/api" "3.11.1"
+    "@polkadot/typegen" "3.11.1"
     "@types/big.js" "^4.0.5"
     big.js "^6.0.1"
     bitcoinjs-lib "^5.2.0"
@@ -1309,10 +1306,10 @@
     sinon "^9.0.3"
     ts-mock-imports "^1.3.0"
 
-"@interlay/polkabtc@^0.9.3":
-  version "0.9.3"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.9.3.tgz#634687b1bedab95cc7fbd3f2b60ded6240d76046"
-  integrity sha512-JdjOtbOEOVf7ygnjwAhA9IwpDwbUbaMvpTh+PJScWkRZaCWF3otmzbcCBO0u1riDJNKXt3dlM39T9HNc3Up5SA==
+"@interlay/polkabtc@^0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.10.1.tgz#9b4368b7b869e6fd7e90c21db1ebf750b5e7ea94"
+  integrity sha512-dt/H9IAX65jqcdJ/PZ87k8WL3mLZeo6JQ3f4shILcRQffxvMeuzHSsFL+weHwwtO6R6Ql6MoHIXuLoZ0s30H+w==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
     "@interlay/polkabtc-types" "0.5.2"
@@ -1632,20 +1629,6 @@
     "@polkadot/x-rxjs" "^5.9.2"
     bn.js "^4.11.9"
 
-"@polkadot/api-derive@3.6.1":
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/@polkadot/api-derive/-/api-derive-3.6.1.tgz#22ae893b71b665a2312968ba97914086d7715b9b"
-  integrity sha512-k5xAEOeRB9DgV/3k5eiscNtg9wlQzR4iznZRl9pUGwr41PZKK3WQYqSVzeIO83muDD5//7eF/3/1E3T+wmVArw==
-  dependencies:
-    "@babel/runtime" "^7.12.5"
-    "@polkadot/api" "3.6.1"
-    "@polkadot/rpc-core" "3.6.1"
-    "@polkadot/types" "3.6.1"
-    "@polkadot/util" "^5.4.2"
-    "@polkadot/util-crypto" "^5.4.2"
-    "@polkadot/x-rxjs" "^5.4.2"
-    bn.js "^4.11.9"
-
 "@polkadot/api-derive@3.9.3":
   version "3.9.3"
   resolved "https://registry.yarnpkg.com/@polkadot/api-derive/-/api-derive-3.9.3.tgz#a8272fe4835c0fe05c8d00f5e63e0f03727cf138"
@@ -1676,25 +1659,6 @@
     "@polkadot/util" "^5.9.2"
     "@polkadot/util-crypto" "^5.9.2"
     "@polkadot/x-rxjs" "^5.9.2"
-    bn.js "^4.11.9"
-    eventemitter3 "^4.0.7"
-
-"@polkadot/api@3.6.1":
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/@polkadot/api/-/api-3.6.1.tgz#40e8e7260ebc9b0eb981b640e1c1f330683484d5"
-  integrity sha512-/pymDigRBFqoyOmZbjnhG0y+pVRNc2TKA95Ts69rHpSVZR8RU2kxkt656sh2Je2sKQdLrHfF+usvPbmCLyKT7A==
-  dependencies:
-    "@babel/runtime" "^7.12.5"
-    "@polkadot/api-derive" "3.6.1"
-    "@polkadot/keyring" "^5.4.2"
-    "@polkadot/metadata" "3.6.1"
-    "@polkadot/rpc-core" "3.6.1"
-    "@polkadot/rpc-provider" "3.6.1"
-    "@polkadot/types" "3.6.1"
-    "@polkadot/types-known" "3.6.1"
-    "@polkadot/util" "^5.4.2"
-    "@polkadot/util-crypto" "^5.4.2"
-    "@polkadot/x-rxjs" "^5.4.2"
     bn.js "^4.11.9"
     eventemitter3 "^4.0.7"
 
@@ -1754,7 +1718,7 @@
     "@polkadot/util" "^5.9.2"
     "@zondax/ledger-polkadot" "^0.13.1"
 
-"@polkadot/keyring@^5.4.2", "@polkadot/keyring@^5.4.4", "@polkadot/keyring@^5.6.2", "@polkadot/keyring@^5.9.2":
+"@polkadot/keyring@^5.4.4", "@polkadot/keyring@^5.6.2", "@polkadot/keyring@^5.9.2":
   version "5.9.2"
   resolved "https://registry.yarnpkg.com/@polkadot/keyring/-/keyring-5.9.2.tgz#f8011a524767bb8f000bec3e26178fc5feffae5b"
   integrity sha512-h9AhrzyUmludbmo0ixRFLEyRJvUc7GTl5koSBrG0uv+9Yn0I/7YRgAKn3zKcUVZyvgoLvzZnBFwekGbdFcl9Yg==

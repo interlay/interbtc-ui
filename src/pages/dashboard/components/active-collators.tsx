@@ -17,7 +17,7 @@ const ActiveCollators = (): ReactElement => {
     return date;
   };
   const displayLinkBtn = false;
-  const data = [1, 1, 1, 1, 1];
+  const data = [3, 3, 3, 3, 3];
   const dates = range(0, 5).map(i =>
     dateToMidnightTemp(new Date(Date.now() - 86400 * 1000 * i))
       .toISOString()
@@ -28,7 +28,7 @@ const ActiveCollators = (): ReactElement => {
       <div className='card-top-content'>
         <div className='values-container'>
           <h1 style={{ color: getAccents('d_blue').color }}>{t('dashboard.collators.active_collators')}</h1>
-          <h2>1</h2>
+          <h2>3</h2>
         </div>
         {displayLinkBtn && (
           <div className='button-container'>
