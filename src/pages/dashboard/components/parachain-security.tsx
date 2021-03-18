@@ -5,18 +5,6 @@ import { ParachainStatus, StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
 import { PAGES } from 'utils/constants/links';
 
-// eslint-disable-next-line no-unused-vars
-enum Status {
-  // eslint-disable-next-line no-unused-vars
-  Loading,
-  // eslint-disable-next-line no-unused-vars
-  Secure,
-  // eslint-disable-next-line no-unused-vars
-  Halted,
-  // eslint-disable-next-line no-unused-vars
-  NoData,
-}
-
 type ParachainSecurityProps = {
   linkButton?: boolean;
 };

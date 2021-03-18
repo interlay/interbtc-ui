@@ -259,7 +259,9 @@ function EnterBTCAmount() {
       </div>
       {errors.amountPolkaBTC && (
         <div className='wizard-input-error'>
-          {errors.amountPolkaBTC.type === 'required' ? t('issue_page.enter_valid_amount') : errors.amountPolkaBTC.message}
+          {errors.amountPolkaBTC.type === 'required' ?
+            t('issue_page.enter_valid_amount') :
+            errors.amountPolkaBTC.message}
         </div>
       )}
       <ParachainStatusInfo status={parachainStatus} />
