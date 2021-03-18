@@ -1,5 +1,4 @@
 
-// ray test touch <
 import { Dispatch } from 'redux';
 import * as polkabtcStats from '@interlay/polkabtc-stats';
 import {
@@ -63,4 +62,3 @@ async function fetchIssueTransactions(dispatch: Dispatch, store: StoreState): Pr
 }
 
 export default fetchIssueTransactions;
-// ray test touch >

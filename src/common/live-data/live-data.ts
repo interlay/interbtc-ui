@@ -3,7 +3,6 @@ import fetchPrices from './price-watcher';
 import fetchBtcRelayAndBitcoinHeight from './block-height-watcher';
 import fetchTotals from './totals-watcher';
 import fetchBalances from './balances-watcher';
-import fetchIssueTransactions from './issue-transaction.watcher';
 import fetchRedeemTransactions from './redeem-transaction.watcher';
 import { StoreState } from '../types/util.types';
 
@@ -12,15 +11,15 @@ export default function startFetchingLiveData(dispatch: Dispatch, store: StoreSt
   if (window.isFetchingActive) return;
   window.isFetchingActive = true;
 
-  // FETCH LIVE DATA PRICES
+  // Fetch live data prices
   fetchPrices(dispatch, store);
   window.setInterval(() => fetchPrices(dispatch, store), 60000);
 
-  // FETCH BTC-RELAY HEIGHT AND BITCOIN HEIGHT
+  // Fetch btc-relay height and bitcoin height
   fetchBtcRelayAndBitcoinHeight(dispatch, store);
   window.setInterval(() => fetchBtcRelayAndBitcoinHeight(dispatch, store), 60000);
 
-  // FETCH TOTALS
+  // Fetch totals
   fetchTotals(dispatch, store);
   window.setInterval(() => fetchTotals(dispatch, store), 60000);
 
@@ -28,13 +27,7 @@ export default function startFetchingLiveData(dispatch: Dispatch, store: StoreSt
   fetchBalances(dispatch, store);
   window.setInterval(() => fetchBalances(dispatch, store), 5000);
 
-  // ray test touch <
-  // FETCH ISSUE TRANSACTIONS
-  fetchIssueTransactions(dispatch, store);
-  window.setInterval(() => fetchIssueTransactions(dispatch, store), 10000);
-  // ray test touch >
-
-  // // FETCH REDEEM TRANSACTIONS
+  // Fetch redeem transactions
   fetchRedeemTransactions(dispatch, store);
   window.setInterval(() => fetchRedeemTransactions(dispatch, store), 10000);
 }
