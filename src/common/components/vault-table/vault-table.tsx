@@ -1,4 +1,4 @@
-import { ReactElement, useState, useEffect, useMemo } from 'react';
+import { ReactElement, useState, useEffect, useMemo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Vault } from '../../types/vault.types';
 import * as constants from '../../../constants';
@@ -8,13 +8,13 @@ import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import { StoreType } from '../../../common/types/util.types';
 import DashboardTable from '../dashboard-table/dashboard-table';
-import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
+import { VaultExt } from '@interlay/polkabtc/build/parachain/vaults';
 
 export default function VaultTable(): ReactElement {
   const [vaults, setVaults] = useState<Array<Vault>>([]);
+  const [vaultsExt, setVaultsExt] = useState<Array<VaultExt>>([]);
   const [liquidationThreshold, setLiquidationThreshold] = useState(new Big(0));
   const [auctionCollateralThreshold, setAuctionCollateralThreshold] = useState(new Big(0));
-  const [premiumRedeemThreshold, setPremiumRedeemThreshold] = useState(new Big(0));
   const [secureCollateralThreshold, setSecureCollateralThreshold] = useState(new Big(0));
   const [btcToDotRate, setBtcToDotRate] = useState(new Big(0));
   const { t } = useTranslation();
@@ -25,19 +25,25 @@ export default function VaultTable(): ReactElement {
       if (!polkaBtcLoaded) return;
 
       try {
-        const [auction, premium, secure, liquidation, btcToDot] = await Promise.all([
+        const [
+          auction,
+          secure,
+          liquidation,
+          btcToDot,
+          vaultsExt
+        ] = await Promise.all([
           window.polkaBTC.vaults.getAuctionCollateralThreshold(),
-          window.polkaBTC.vaults.getPremiumRedeemThreshold(),
           window.polkaBTC.vaults.getSecureCollateralThreshold(),
           window.polkaBTC.vaults.getLiquidationCollateralThreshold(),
-          window.polkaBTC.oracle.getExchangeRate()
+          window.polkaBTC.oracle.getExchangeRate(),
+          window.polkaBTC.vaults.list()
         ]);
 
         setAuctionCollateralThreshold(auction);
-        setPremiumRedeemThreshold(premium);
         setSecureCollateralThreshold(secure);
         setLiquidationThreshold(liquidation);
         setBtcToDotRate(btcToDot);
+        setVaultsExt(vaultsExt);
       } catch (e) {
         console.log(e);
       }
@@ -45,8 +51,8 @@ export default function VaultTable(): ReactElement {
     fetchData();
   }, [polkaBtcLoaded]);
 
-  useEffect(() => {
-    const checkVaultStatus = (
+  const checkVaultStatus = useCallback(
+    (
       status: string,
       collateralization: Big | undefined,
       bannedUntil: string | undefined
@@ -72,18 +78,21 @@ export default function VaultTable(): ReactElement {
         return constants.VAULT_STATUS_BANNED + bannedUntil;
       }
       return constants.VAULT_STATUS_ACTIVE;
-    };
+    }, [
+      auctionCollateralThreshold,
+      liquidationThreshold,
+      secureCollateralThreshold,
+      t
+    ]);
 
-    const fetchData = async () => {
-      if (!polkaBtcLoaded) return;
+  useEffect(() => {
+    const fetchData = () => {
+      if (vaultsExt.length === 0) return;
       if (secureCollateralThreshold.eq(0)) return;
 
-      const vaults = await window.polkaBTC.vaults.list();
       const vaultsList: Vault[] = [];
 
-      for (const vault of vaults) {
-        const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vault.id);
-
+      for (const vault of vaultsExt) {
         const getCollateralization = (collateral: Big, tokens: Big) => {
           if (tokens.gt(0) && btcToDotRate.gt(0)) {
             return collateral.div(tokens).div(btcToDotRate).mul(100);
@@ -102,19 +111,19 @@ export default function VaultTable(): ReactElement {
         const btcAddress = vault.wallet.btcAddress;
 
         vaultsList.push({
-          vaultId: accountId.toString(),
+          vaultId: vault.id.toString(),
           // TODO: fetch collateral reserved
           lockedBTC: satToBTC(vault.issued_tokens.toString()),
           lockedDOT: vaultCollateral.toString(),
           pendingBTC: satToBTC(vault.to_be_issued_tokens.toString()),
           btcAddress: btcAddress || '',
           status:
-                        vault.status &&
-                        checkVaultStatus(
-                          vault.status.toString(),
-                          settledCollateralization,
-                          vault.banned_until.toString()
-                        ),
+            vault.status &&
+            checkVaultStatus(
+              vault.status.toString(),
+              settledCollateralization,
+              vault.banned_until.toString()
+            ),
           unsettledCollateralization: unsettledCollateralization?.toString(),
           settledCollateralization: settledCollateralization?.toString()
         });
@@ -127,13 +136,10 @@ export default function VaultTable(): ReactElement {
     };
     fetchData();
   }, [
-    polkaBtcLoaded,
-    liquidationThreshold,
-    auctionCollateralThreshold,
-    premiumRedeemThreshold,
+    vaultsExt,
     secureCollateralThreshold,
-    btcToDotRate,
-    t
+    checkVaultStatus,
+    btcToDotRate
   ]);
 
   const tableHeadings: ReactElement[] = [
@@ -167,8 +173,8 @@ export default function VaultTable(): ReactElement {
       }
       if (
         status === constants.VAULT_STATUS_THEFT ||
-                status === constants.VAULT_STATUS_AUCTION ||
-                status === constants.VAULT_STATUS_LIQUIDATED
+        status === constants.VAULT_STATUS_AUCTION ||
+        status === constants.VAULT_STATUS_LIQUIDATED
       ) {
         return 'red-text';
       }
