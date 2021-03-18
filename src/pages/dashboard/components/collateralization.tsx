@@ -91,7 +91,12 @@ export default function Collateralization({ linkButton }: CollateralizationProps
           <h1
             className='h1-xl-text-center'
             style={{ color: getAccents('d_blue').color }}>
-            {failed ? t('no_data') : [safeRoundTwoDecimals(issuablePolkaBTC), <br />, t('dashboard.vault.capacity')]}
+            {failed ? t('no_data') :
+              [
+                issuablePolkaBTC === '0' ? t('loading') : safeRoundTwoDecimals(issuablePolkaBTC) + ' PolkaBTC',
+                <br />, t('dashboard.vault.capacity')
+              ]
+            }
           </h1>
         </div>
       </div>
