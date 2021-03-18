@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
 import ButtonComponent from './button-component';
 import { getAccents } from '../dashboardcolors';
 import { useSelector } from 'react-redux';
-import { StoreType } from '../../../common/types/util.types';
+import { ParachainStatus, StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
 import { PAGES } from 'utils/constants/links';
 
@@ -13,7 +12,7 @@ enum Status {
   // eslint-disable-next-line no-unused-vars
   Secure,
   // eslint-disable-next-line no-unused-vars
-  NotSecure,
+  Halted,
   // eslint-disable-next-line no-unused-vars
   NoData,
 }
@@ -24,28 +23,54 @@ type ParachainSecurityProps = {
 
 const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactElement => {
   const { t } = useTranslation();
-  const [parachainStatus, setParachainStatus] = useState(Status.Loading);
-  const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+  const { parachainStatus } = useSelector((state: StoreType) => state.general);
 
-  useEffect(() => {
-    const fetchOracleData = async () => {
-      if (!polkaBtcLoaded) return;
-      try {
-        // TODO: replace with state
-        const parachainStatus = await window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain();
+  const parachainState = () => {
+    switch (parachainStatus) {
+    case ParachainStatus.Running:
+      return (
+        <span
+          style={{ color: getAccents('d_green').color }}
+          id='parachain-text'
+          className='bold-font'>
+          {t('dashboard.parachain.secure')}
+        </span>
 
-        if (parachainStatus.isRunning) {
-          setParachainStatus(Status.Secure);
-        } else if (parachainStatus.isError) {
-          setParachainStatus(Status.NotSecure);
-        }
-      } catch (e) {
-        console.log(e);
-        setParachainStatus(Status.NoData);
-      }
-    };
-    fetchOracleData();
-  }, [polkaBtcLoaded]);
+      );
+    case ParachainStatus.Loading:
+      return (
+        <span
+          style={{ color: getAccents('d_grey').color }}
+          id='parachain-text'
+          className='bold-font'>
+          {t('loading')}
+        </span>
+
+      );
+    case ParachainStatus.Error:
+    case ParachainStatus.Shutdown:
+      return (
+        <span
+          style={{ color: getAccents('d_yellow').color }}
+          id='parachain-text'
+          className='bold-font'>
+          {t('dashboard.parachain.halted')}
+        </span>
+
+      );
+    default:
+      return (
+        <span
+          style={{ color: getAccents('d_grey').color }}
+          id='parachain-text'
+          className='bold-font'>
+          {t('no_data')}
+        </span>
+
+      );
+    }
+  };
+
   return (
     <div className='card'>
       <div className='values-container'></div>
@@ -54,35 +79,7 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
         <div>
           <h1 className='h1-xl-text-left'>
             {t('dashboard.parachain.parachain_is')}&nbsp;
-            {parachainStatus === Status.Secure ? (
-              <span
-                style={{ color: getAccents('d_green').color }}
-                id='parachain-text'
-                className='bold-font'>
-                {t('dashboard.parachain.secure')}
-              </span>
-            ) : parachainStatus === Status.NotSecure ? (
-              <span
-                style={{ color: getAccents('d_yellow').color }}
-                id='parachain-text'
-                className='bold-font'>
-                {t('dashboard.parachain.halted')}
-              </span>
-            ) : parachainStatus === Status.NoData ? (
-              <span
-                style={{ color: getAccents('d_grey').color }}
-                id='parachain-text'
-                className='bold-font'>
-                {t('no_data')}
-              </span>
-            ) : (
-              <span
-                style={{ color: getAccents('d_grey').color }}
-                id='parachain-text'
-                className='bold-font'>
-                {t('loading')}
-              </span>
-            )}
+            {parachainState()}
           </h1>
           {linkButton && (
             <div
