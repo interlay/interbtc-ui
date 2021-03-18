@@ -160,7 +160,7 @@ function IssueDashboard() {
   ]);
 
   /**
-   * TODO: should use a custom hook to simplify the logic.
+   * TODO: should create a custom hook to simplify the logic.
    * - Re: `react-use`
    * - Re: https://overreacted.io/making-setinterval-declarative-with-react-hooks/
    * - Re: https://stackoverflow.com/questions/53090432/react-hooks-right-way-to-clear-timeouts-and-intervals
