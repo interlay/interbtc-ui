@@ -17,7 +17,7 @@ const ActiveCollators = (): ReactElement => {
     return date;
   };
   const displayLinkBtn = false;
-  const data = [1, 1, 1, 1, 1];
+  const data = [3, 3, 3, 3, 3];
   const dates = range(0, 5).map(i =>
     dateToMidnightTemp(new Date(Date.now() - 86400 * 1000 * i))
       .toISOString()
