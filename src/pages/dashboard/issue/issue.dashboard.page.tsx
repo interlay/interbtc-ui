@@ -5,11 +5,7 @@ import {
   ReactElement,
   useMemo
 } from 'react';
-import {
-  useSelector,
-  useDispatch,
-  useStore
-} from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { satToBTC } from '@interlay/polkabtc';
 import { BtcNetworkName, IssueColumns } from '@interlay/polkabtc-stats';
@@ -24,7 +20,6 @@ import DashboardTable, {
 import TimerIncrement from 'common/components/timer-increment';
 import LineChartComponent from '../components/line-chart-component';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
-import fetchIssueTransactions from 'common/live-data/issue-transaction.watcher';
 import { getAccents } from 'pages/dashboard/dashboard-colors';
 import { StoreType } from 'common/types/util.types';
 import { DashboardIssueInfo } from 'common/types/issue.types';
@@ -157,30 +152,6 @@ function IssueDashboard() {
   }, [
     fetchTotalSuccessfulIssues,
     fetchTotalIssues
-  ]);
-
-  /**
-   * TODO: should create a custom hook to simplify the logic.
-   * - Re: `react-use`
-   * - Re: https://overreacted.io/making-setinterval-declarative-with-react-hooks/
-   * - Re: https://stackoverflow.com/questions/53090432/react-hooks-right-way-to-clear-timeouts-and-intervals
-   * - Could avoid using redux
-   */
-  const dispatch = useDispatch();
-  const store = useStore();
-  useEffect(() => {
-    if (!dispatch) return;
-    if (!store) return;
-
-    fetchIssueTransactions(dispatch, store);
-    const timerId = setInterval(() => fetchIssueTransactions(dispatch, store), 10000);
-
-    return () => {
-      clearInterval(timerId);
-    };
-  }, [
-    dispatch,
-    store
   ]);
 
   return (

@@ -1,6 +1,10 @@
 
-import { ReactElement } from 'react';
-import { useSelector } from 'react-redux';
+import * as React from 'react';
+import {
+  useSelector,
+  useDispatch,
+  useStore
+} from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
@@ -10,12 +14,17 @@ import IssueRequests from './issue/issue-requests';
 import RedeemSteps from './redeem/redeem-steps';
 import RedeemRequests from './redeem/redeem-requests';
 import Transfer from './transfer/transfer';
-import Tabs, { Tab, HorizontalLine } from './Tabs';
+import Tabs, {
+  Tab,
+  HorizontalLine
+} from './Tabs';
+import fetchIssueTransactions from 'common/live-data/issue-transaction.watcher';
+import fetchRedeemTransactions from 'common/live-data/redeem-transaction.watcher';
 import { StoreType } from 'common/types/util.types';
 import { TabTypes } from 'utils/enums/tab-types';
 import './app.page.scss';
 
-function Application(): ReactElement {
+function Application() {
   // TODO: should avoid getting the store bloated
   const { selectedTabType } = useSelector((state: StoreType) => state.general);
   const issueStep = useSelector((state: StoreType) => state.issue.step);
@@ -23,6 +32,46 @@ function Application(): ReactElement {
   const { t } = useTranslation();
 
   const tabsHidden = issueStep !== 'ENTER_BTC_AMOUNT' && selectedTabType === TabTypes.Issue;
+
+  /**
+   * TODO: should create a custom hook to simplify the logic.
+   * - Re: `react-use`
+   * - Re: https://overreacted.io/making-setinterval-declarative-with-react-hooks/
+   * - Re: https://stackoverflow.com/questions/53090432/react-hooks-right-way-to-clear-timeouts-and-intervals
+   * - Could avoid using redux.
+   * - Should use nested `setTimeout` instead of `setInterval`.
+   */
+  const dispatch = useDispatch();
+  const store = useStore();
+  React.useEffect(() => {
+    if (!dispatch) return;
+    if (!store) return;
+
+    fetchIssueTransactions(dispatch, store);
+    const timerId = setInterval(() => fetchIssueTransactions(dispatch, store), 10000);
+
+    return () => {
+      clearInterval(timerId);
+    };
+  }, [
+    dispatch,
+    store
+  ]);
+
+  React.useEffect(() => {
+    if (!dispatch) return;
+    if (!store) return;
+
+    fetchRedeemTransactions(dispatch, store);
+    const timerId = setInterval(() => fetchRedeemTransactions(dispatch, store), 10000);
+
+    return () => {
+      clearInterval(timerId);
+    };
+  }, [
+    dispatch,
+    store
+  ]);
 
   return (
     <MainContainer className='text-center white-background min-vh-100 app-page'>
