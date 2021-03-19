@@ -7,9 +7,6 @@ import {
 } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-// ray test touch <
-import { Transaction } from '@interlay/polkabtc';
-// ray test touch >
 
 import MainContainer from 'parts/MainContainer';
 import IssueSteps from './issue/issue-steps';
@@ -29,9 +26,6 @@ import './app.page.scss';
 
 function Application() {
   // TODO: should avoid getting the store bloated
-  // ray test touch <
-  const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-  // ray test touch >
   const { selectedTabType } = useSelector((state: StoreType) => state.general);
   const issueStep = useSelector((state: StoreType) => state.issue.step);
   const premiumRedeem = useSelector((state: StoreType) => state.redeem.premiumRedeem);
@@ -50,81 +44,34 @@ function Application() {
    */
   const dispatch = useDispatch();
   const store = useStore();
-  // ray test touch <
-  // React.useEffect(() => {
-  //   if (!dispatch) return;
-  //   if (!store) return;
-  //   fetchIssueTransactions(dispatch, store);
-  //   const timerId = setInterval(() => fetchIssueTransactions(dispatch, store), 10000);
-  //   return () => {
-  //     clearInterval(timerId);
-  //   };
-  // }, [
-  //   dispatch,
-  //   store
-  // ]);
-  // React.useEffect(() => {
-  //   if (!dispatch) return;
-  //   if (!store) return;
-  //   fetchRedeemTransactions(dispatch, store);
-  //   const timerId = setInterval(() => fetchRedeemTransactions(dispatch, store), 10000);
-  //   return () => {
-  //     clearInterval(timerId);
-  //   };
-  // }, [
-  //   dispatch,
-  //   store
-  // ]);
-
   React.useEffect(() => {
     if (!dispatch) return;
     if (!store) return;
-    if (!polkaBtcLoaded) return;
 
-    // Initial population
     fetchIssueTransactions(dispatch, store);
-    fetchRedeemTransactions(dispatch, store);
+    const timerId = setInterval(() => fetchIssueTransactions(dispatch, store), 10000);
 
-    // With a default connection to the local node
-    const connectionAPI = window.polkaBTC.api;
-
-    const transaction = new Transaction(connectionAPI);
-
-    // TODO: should unsubscribe when unmounted
-    // Subscribe to system events via storage
-    connectionAPI.query.system.events(events => {
-      const myAccountRecord = events.find(record => {
-        const event = record.event;
-        const myAccountItem = event.data.find(item => item.toString() === window.polkaBTC.account);
-
-        return !!myAccountItem;
-      });
-
-      if (myAccountRecord) {
-        switch (true) {
-        // TODO: could define `isSuccessful` as a static method as it's a utility
-        case transaction.isSuccessful(events, connectionAPI.events.issue.CancelIssue):
-        case transaction.isSuccessful(events, connectionAPI.events.issue.ExecuteIssue):
-        case transaction.isSuccessful(events, connectionAPI.events.issue.RequestIssue): {
-          fetchIssueTransactions(dispatch, store);
-          break;
-        }
-        case transaction.isSuccessful(events, connectionAPI.events.redeem.CancelRedeem):
-        case transaction.isSuccessful(events, connectionAPI.events.redeem.ExecuteRedeem):
-        case transaction.isSuccessful(events, connectionAPI.events.redeem.LiquidationRedeem):
-        case transaction.isSuccessful(events, connectionAPI.events.redeem.RequestRedeem): {
-          fetchRedeemTransactions(dispatch, store);
-          break;
-        }
-        }
-      }
-    });
+    return () => {
+      clearInterval(timerId);
+    };
   }, [
     dispatch,
-    store,
-    polkaBtcLoaded
+    store
   ]);
-  // ray test touch >
+  React.useEffect(() => {
+    if (!dispatch) return;
+    if (!store) return;
+
+    fetchRedeemTransactions(dispatch, store);
+    const timerId = setInterval(() => fetchRedeemTransactions(dispatch, store), 10000);
+
+    return () => {
+      clearInterval(timerId);
+    };
+  }, [
+    dispatch,
+    store
+  ]);
 
   return (
     <MainContainer className='text-center white-background min-vh-100 app-page'>
