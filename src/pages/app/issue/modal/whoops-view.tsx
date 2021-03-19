@@ -111,6 +111,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
         </div>
         <div className='row mt-2'>
           <div className='col payment-address'>
+            {/* ray test touch < */}
             <AppTooltip text={t('click_to_copy')}>
               <span
                 className='copy-address'
@@ -118,6 +119,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
                 {props.request.refundBtcAddress}
               </span>
             </AppTooltip>
+            {/* ray test touch > */}
           </div>
         </div>
       </React.Fragment>

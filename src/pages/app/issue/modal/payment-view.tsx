@@ -54,6 +54,7 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
         </div>
         <div className='row '>
           <div className='col payment-address'>
+            {/* ray test touch < */}
             <AppTooltip text={t('click_to_copy')}>
               <span
                 className='copy-address'
@@ -61,6 +62,7 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
                 {props.request.vaultBTCAddress}
               </span>
             </AppTooltip>
+            {/* ray test touch > */}
           </div>
         </div>
         <div className='row payment-timer-with'>

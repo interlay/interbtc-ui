@@ -307,7 +307,8 @@ function EnterAmountAndAddress(): ReactElement {
           {errors.btcAddress.type === 'required' ? t('redeem_page.enter_btc') : errors.btcAddress.message}
         </div>
       )}
-      {premiumRedeemVaults.size > 0 && (
+      {/* ray test touch < */}
+      {premiumRedeemVaults.size > 0 || true && (
         <div className='row justify-content-center'>
           <div className='col-9 premium-toggler'>
             <div className='premium-text'>
@@ -322,6 +323,7 @@ function EnterAmountAndAddress(): ReactElement {
           </div>
         </div>
       )}
+      {/* ray test touch > */}
       <div className='row justify-content-center'>
         <div className='col-10'>
           <div className='wizard-item wizard-item-remove-border mt-4'>

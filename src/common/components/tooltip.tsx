@@ -1,18 +1,23 @@
-import { ReactElement } from 'react';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+// ray test touch <
+import {
+  OverlayTrigger,
+  Tooltip
+} from 'react-bootstrap';
 
-type AppTooltipProps = {
+interface Props {
   text: string;
-  children: ReactElement;
-};
+  children: React.ReactElement;
+}
 
-export default function AppTooltip(properties: AppTooltipProps): ReactElement {
-  // eslint-disable-next-line
-    const renderTooltip = (props: any) => (
+function AppTooltip({
+  text,
+  children
+}: Props) {
+  const renderTooltip = (props: any) => (
     <Tooltip
       id='button-tooltip'
       {...props}>
-      {properties.text}
+      {text}
     </Tooltip>
   );
 
@@ -21,7 +26,10 @@ export default function AppTooltip(properties: AppTooltipProps): ReactElement {
       placement='top'
       delay={{ show: 250, hide: 400 }}
       overlay={renderTooltip}>
-      {properties.children}
+      {children}
     </OverlayTrigger>
   );
 }
+
+export default AppTooltip;
+// ray test touch >
