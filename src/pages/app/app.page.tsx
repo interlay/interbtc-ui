@@ -7,6 +7,9 @@ import {
 } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+// ray test touch <
+import { Transaction } from '@interlay/polkabtc';
+// ray test touch >
 
 import MainContainer from 'parts/MainContainer';
 import IssueSteps from './issue/issue-steps';
@@ -26,6 +29,9 @@ import './app.page.scss';
 
 function Application() {
   // TODO: should avoid getting the store bloated
+  // ray test touch <
+  const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+  // ray test touch >
   const { selectedTabType } = useSelector((state: StoreType) => state.general);
   const issueStep = useSelector((state: StoreType) => state.issue.step);
   const premiumRedeem = useSelector((state: StoreType) => state.redeem.premiumRedeem);
@@ -40,38 +46,123 @@ function Application() {
    * - Re: https://stackoverflow.com/questions/53090432/react-hooks-right-way-to-clear-timeouts-and-intervals
    * - Could avoid using redux.
    * - Should use nested `setTimeout` instead of `setInterval`.
+   * - Should merge issue and redeem logic as they make the same calls.
    */
   const dispatch = useDispatch();
   const store = useStore();
+  // ray test touch <
+  // React.useEffect(() => {
+  //   if (!dispatch) return;
+  //   if (!store) return;
+  //   fetchIssueTransactions(dispatch, store);
+  //   const timerId = setInterval(() => fetchIssueTransactions(dispatch, store), 10000);
+  //   return () => {
+  //     clearInterval(timerId);
+  //   };
+  // }, [
+  //   dispatch,
+  //   store
+  // ]);
+  // React.useEffect(() => {
+  //   if (!dispatch) return;
+  //   if (!store) return;
+  //   fetchRedeemTransactions(dispatch, store);
+  //   const timerId = setInterval(() => fetchRedeemTransactions(dispatch, store), 10000);
+  //   return () => {
+  //     clearInterval(timerId);
+  //   };
+  // }, [
+  //   dispatch,
+  //   store
+  // ]);
+
   React.useEffect(() => {
     if (!dispatch) return;
     if (!store) return;
+    if (!polkaBtcLoaded) return;
 
-    fetchIssueTransactions(dispatch, store);
-    const timerId = setInterval(() => fetchIssueTransactions(dispatch, store), 10000);
+    // With a default connection to the local node
+    const connectionAPI = window.polkaBTC.api;
 
-    return () => {
-      clearInterval(timerId);
-    };
+    const transaction = new Transaction(connectionAPI);
+
+    // TODO: should unsubscribe
+    // Subscribe to system events via storage
+    connectionAPI.query.system.events(events => {
+      const myAccountRecord = events.find(record => {
+        const event = record.event;
+        const myAccountItem = event.data.find(item => item.toString() === window.polkaBTC.account);
+
+        return !!myAccountItem;
+      });
+
+      // ray test touch <
+      console.log(`\nReceived ${events.length} events:`);
+      // ray test touch >
+
+      if (myAccountRecord) {
+        // ray test touch <
+        console.log('ray : ***** myAccountRecord => ', myAccountRecord);
+        // // Loop through the Vec<EventRecord>
+        // events.forEach(record => {
+        //   // Extract the phase, event and the event types
+        //   const { event, phase } = record;
+        //   const types = event.typeDef;
+        //   // Show what we are busy with
+        //   console.log(`\t${event.section}:${event.method}:: (phase=${phase.toString()})`);
+        //   console.log(`\t\t${event.meta.documentation.toString()}`);
+        //   // Loop through each of the parameters, displaying the type and data
+        //   event.data.forEach((data, index) => {
+        //     console.log(`\t\t\t${types[index].type}: ${data.toString()}`);
+        //   });
+        // });
+        // ray test touch >
+
+        switch (true) {
+        // TODO: could define `isSuccessful` as a static method as it's an utility
+        case transaction.isSuccessful(events, connectionAPI.events.issue.CancelIssue):
+        case transaction.isSuccessful(events, connectionAPI.events.issue.ExecuteIssue):
+        case transaction.isSuccessful(events, connectionAPI.events.issue.RequestIssue): {
+          // ray test touch <
+          console.log('ray : ***** issue successful so fetch issue transactions');
+          // ray test touch >
+          fetchIssueTransactions(dispatch, store);
+          break;
+        }
+        case transaction.isSuccessful(events, connectionAPI.events.redeem.CancelRedeem):
+        case transaction.isSuccessful(events, connectionAPI.events.redeem.ExecuteRedeem):
+        case transaction.isSuccessful(events, connectionAPI.events.redeem.LiquidationRedeem):
+        case transaction.isSuccessful(events, connectionAPI.events.redeem.RequestRedeem): {
+          fetchRedeemTransactions(dispatch, store);
+          break;
+        }
+        }
+      } else {
+        // ray test touch <
+        console.log('ray : ***** NOT myAccountRecord');
+        // console.log(`\nReceived ${events.length} events:`);
+        // // Loop through the Vec<EventRecord>
+        // events.forEach(record => {
+        //   // Extract the phase, event and the event types
+        //   const { event, phase } = record;
+        //   const types = event.typeDef;
+        //   // Show what we are busy with
+        //   console.log(`\t${event.section}:${event.method}:: (phase=${phase.toString()})`);
+        //   console.log(`\t\t${event.meta.documentation.toString()}`);
+        //   // Loop through each of the parameters, displaying the type and data
+        //   event.data.forEach((data, index) => {
+        //     console.log(`\t\t\t${types[index].type}: ${data.toString()}`);
+        //   });
+        // });
+        // ray test touch >
+      }
+    });
   }, [
     dispatch,
-    store
+    store,
+    polkaBtcLoaded
   ]);
-
-  React.useEffect(() => {
-    if (!dispatch) return;
-    if (!store) return;
-
-    fetchRedeemTransactions(dispatch, store);
-    const timerId = setInterval(() => fetchRedeemTransactions(dispatch, store), 10000);
-
-    return () => {
-      clearInterval(timerId);
-    };
-  }, [
-    dispatch,
-    store
-  ]);
+  // ray test touch >
 
   return (
     <MainContainer className='text-center white-background min-vh-100 app-page'>
