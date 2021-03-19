@@ -100,36 +100,12 @@ function Application() {
         return !!myAccountItem;
       });
 
-      // ray test touch <
-      console.log(`\nReceived ${events.length} events:`);
-      // ray test touch >
-
       if (myAccountRecord) {
-        // ray test touch <
-        console.log('ray : ***** myAccountRecord => ', myAccountRecord);
-        // // Loop through the Vec<EventRecord>
-        // events.forEach(record => {
-        //   // Extract the phase, event and the event types
-        //   const { event, phase } = record;
-        //   const types = event.typeDef;
-        //   // Show what we are busy with
-        //   console.log(`\t${event.section}:${event.method}:: (phase=${phase.toString()})`);
-        //   console.log(`\t\t${event.meta.documentation.toString()}`);
-        //   // Loop through each of the parameters, displaying the type and data
-        //   event.data.forEach((data, index) => {
-        //     console.log(`\t\t\t${types[index].type}: ${data.toString()}`);
-        //   });
-        // });
-        // ray test touch >
-
         switch (true) {
-        // TODO: could define `isSuccessful` as a static method as it's an utility
+        // TODO: could define `isSuccessful` as a static method as it's a utility
         case transaction.isSuccessful(events, connectionAPI.events.issue.CancelIssue):
         case transaction.isSuccessful(events, connectionAPI.events.issue.ExecuteIssue):
         case transaction.isSuccessful(events, connectionAPI.events.issue.RequestIssue): {
-          // ray test touch <
-          console.log('ray : ***** issue successful so fetch issue transactions');
-          // ray test touch >
           fetchIssueTransactions(dispatch, store);
           break;
         }
@@ -141,24 +117,6 @@ function Application() {
           break;
         }
         }
-      } else {
-        // ray test touch <
-        console.log('ray : ***** NOT myAccountRecord');
-        // console.log(`\nReceived ${events.length} events:`);
-        // // Loop through the Vec<EventRecord>
-        // events.forEach(record => {
-        //   // Extract the phase, event and the event types
-        //   const { event, phase } = record;
-        //   const types = event.typeDef;
-        //   // Show what we are busy with
-        //   console.log(`\t${event.section}:${event.method}:: (phase=${phase.toString()})`);
-        //   console.log(`\t\t${event.meta.documentation.toString()}`);
-        //   // Loop through each of the parameters, displaying the type and data
-        //   event.data.forEach((data, index) => {
-        //     console.log(`\t\t\t${types[index].type}: ${data.toString()}`);
-        //   });
-        // });
-        // ray test touch >
       }
     });
   }, [
