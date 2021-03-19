@@ -81,12 +81,16 @@ function Application() {
     if (!store) return;
     if (!polkaBtcLoaded) return;
 
+    // Initial population
+    fetchIssueTransactions(dispatch, store);
+    fetchRedeemTransactions(dispatch, store);
+
     // With a default connection to the local node
     const connectionAPI = window.polkaBTC.api;
 
     const transaction = new Transaction(connectionAPI);
 
-    // TODO: should unsubscribe
+    // TODO: should unsubscribe when unmounted
     // Subscribe to system events via storage
     connectionAPI.query.system.events(events => {
       const myAccountRecord = events.find(record => {
