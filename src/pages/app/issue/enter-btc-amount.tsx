@@ -240,7 +240,7 @@ function EnterBTCAmount() {
             id='amount-btc-input'
             name='amountPolkaBTC'
             type='number'
-            step='0.001'
+            step='any'
             placeholder='0.00'
             className={'' + (errors.amountPolkaBTC ? ' error-borders' : '')}
             onChange={onValueChange}
