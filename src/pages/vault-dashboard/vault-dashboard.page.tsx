@@ -119,6 +119,7 @@ export default function VaultDashboardPage(): ReactElement {
             subTitle={address} />
         </div>
         <>
+          {/* ray test touch < */}
           <div className='col-lg-10 offset-1'>
             <div className='row mt-3'>
               <div className='col-lg-3 col-md-6 col-6'>
@@ -189,6 +190,7 @@ export default function VaultDashboardPage(): ReactElement {
               </div>
             </div>
           </div>
+          {/* ray test touch > */}
           <div className='row justify-content-center mt-3'>
             <div className='col-lg-2'>
               <Button

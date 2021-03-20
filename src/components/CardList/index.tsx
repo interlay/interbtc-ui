@@ -47,7 +47,7 @@ const CardHeader = ({
   </h2>
 );
 
-const CardBody = (props: React.ComponentPropsWithoutRef<'div'>) => (
+const CardContent = (props: React.ComponentPropsWithoutRef<'div'>) => (
   <div {...props} />
 );
 
@@ -68,7 +68,7 @@ const CardList = ({
 export {
   Card,
   CardHeader,
-  CardBody
+  CardContent
 };
 
 export default CardList;

@@ -30,7 +30,7 @@ import InterlayLink from 'components/InterlayLink';
 import CardList, {
   Card,
   CardHeader,
-  CardBody
+  CardContent
 } from 'components/CardList';
 import {
   POLKA_BTC_DOC_TREASURE_HUNT,
@@ -215,7 +215,7 @@ function Challenges(): ReactElement {
                   {t(cardItem.title)}
                   {cardItem.titleIcon}
                 </CardHeader>
-                <CardBody>
+                <CardContent>
                   {t(cardItem.content)}
                   {cardItem.contentLink && (
                     <InterlayLink
@@ -228,7 +228,7 @@ function Challenges(): ReactElement {
                       <FaExternalLinkAlt />
                     </InterlayLink>
                   )}
-                </CardBody>
+                </CardContent>
               </Card>
             ))}
           </CardList>
