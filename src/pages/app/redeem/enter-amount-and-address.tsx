@@ -24,6 +24,7 @@ import Big from 'big.js';
 import BN from 'bn.js';
 import clsx from 'clsx';
 
+import InterlayTooltip from 'components/InterlayTooltip';
 import ButtonMaybePending from 'common/components/pending-button';
 import {
   changeRedeemStepAction,
@@ -307,12 +308,14 @@ function EnterAmountAndAddress(): ReactElement {
           {errors.btcAddress.type === 'required' ? t('redeem_page.enter_btc') : errors.btcAddress.message}
         </div>
       )}
-      {/* ray test touch < */}
-      {premiumRedeemVaults.size > 0 || true && (
+      {premiumRedeemVaults.size > 0 && (
         <div className='row justify-content-center'>
           <div className='col-9 premium-toggler'>
             <div className='premium-text'>
-              {t('redeem_page.premium_redeem')} &nbsp;<i className='fas fa-exclamation-circle'></i>
+              {t('redeem_page.premium_redeem')}&nbsp;&nbsp;
+              <InterlayTooltip overlay={t('redeem_page.failed')}>
+                <i className='fas fa-exclamation-circle' />
+              </InterlayTooltip>
             </div>
             <Toggle
               className='premium-toggle'
@@ -323,7 +326,6 @@ function EnterAmountAndAddress(): ReactElement {
           </div>
         </div>
       )}
-      {/* ray test touch > */}
       <div className='row justify-content-center'>
         <div className='col-10'>
           <div className='wizard-item wizard-item-remove-border mt-4'>
