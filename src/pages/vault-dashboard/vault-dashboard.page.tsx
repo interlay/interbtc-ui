@@ -1,35 +1,62 @@
-import React, { useState, useEffect, ReactElement } from 'react';
+
+import React, {
+  useState,
+  useEffect
+} from 'react';
+import { Button } from 'react-bootstrap';
+import {
+  useSelector,
+  useDispatch
+} from 'react-redux';
+import {
+  satToBTC,
+  planckToDOT
+} from '@interlay/polkabtc';
+import { useTranslation } from 'react-i18next';
+
+import MainContainer from 'parts/MainContainer';
+import PageTitle from 'parts/PageTitle';
+import CardList, {
+  Card,
+  CardHeader,
+  CardContent
+} from 'components/CardList';
+import BoldParagraph from 'components/BoldParagraph';
+import TimerIncrement from 'common/components/timer-increment';
 import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
 import RequestReplacementModal from './request-replacement/request-replacement';
-import { Button } from 'react-bootstrap';
-import { StoreType } from '../../common/types/util.types';
-import { useSelector, useDispatch } from 'react-redux';
 import IssueTable from './issue-table/issue-table';
 import RedeemTable from './redeem-table/redeem-table';
 import ReplaceTable from './replace-table/replace-table';
-import { satToBTC, planckToDOT } from '@interlay/polkabtc';
+import { StoreType } from 'common/types/util.types';
+import { safeRoundTwoDecimals } from 'common/utils/utils';
 import {
   updateCollateralizationAction,
   updateCollateralAction,
   updateLockedBTCAction,
   updateSLAAction,
   updateAPYAction
-} from '../../common/actions/vault.actions';
+} from 'common/actions/vault.actions';
+import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
 import './vault-dashboard.page.scss';
-import { useTranslation } from 'react-i18next';
-import { safeRoundTwoDecimals } from '../../common/utils/utils';
-import TimerIncrement from '../../common/components/timer-increment';
-import MainContainer from 'parts/MainContainer';
-import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard/dashboard-subpage.scss';
-import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
 
-export default function VaultDashboardPage(): ReactElement {
+function VaultDashboard() {
   const [updateCollateralModalStatus, setUpdateCollateralModalStatus] = useState(CollateralUpdateStatus.Hidden);
   const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
-  const { vaultClientLoaded, polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
-  const { collateralization, collateral, lockedBTC, sla, apy } = useSelector((state: StoreType) => state.vault);
+  const {
+    vaultClientLoaded,
+    polkaBtcLoaded,
+    address
+  } = useSelector((state: StoreType) => state.general);
+  const {
+    collateralization,
+    collateral,
+    lockedBTC,
+    sla,
+    apy
+  } = useSelector((state: StoreType) => state.vault);
   const [capacity, setCapacity] = useState('0');
   const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState('0');
   const [feesEarnedDOT, setFeesEarnedDOT] = useState('0');
@@ -41,8 +68,10 @@ export default function VaultDashboardPage(): ReactElement {
   const closeRequestReplacementModal = () => setShowRequestReplacementModal(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!polkaBtcLoaded || !vaultClientLoaded || !address) return;
+    (async () => {
+      if (!polkaBtcLoaded) return;
+      if (!vaultClientLoaded) return;
+      if (!address) return;
 
       try {
         const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
@@ -100,12 +129,56 @@ export default function VaultDashboardPage(): ReactElement {
           setCapacity(issuablePolkaBTC.value);
         }
       } catch (error) {
-        console.log('Error getting vault data');
-        console.log(error.message);
+        console.log('[VaultDashboard useEffect] error.message => ', error.message);
       }
-    };
-    fetchData();
-  }, [polkaBtcLoaded, vaultClientLoaded, dispatch, address]);
+    })();
+  }, [
+    polkaBtcLoaded,
+    vaultClientLoaded,
+    dispatch,
+    address
+  ]);
+
+  const VAULT_ITEMS = [
+    {
+      title: t('vault.locked_collateral'),
+      value: collateral,
+      unit: 'DOT'
+    },
+    {
+      title: t('locked_btc'),
+      value: lockedBTC,
+      unit: 'BTC'
+    },
+    {
+      title: t('collateralization'),
+      value: `${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`
+    },
+    {
+      title: t('vault.capacity'),
+      value: `~${safeRoundTwoDecimals(capacity)}`,
+      unit: 'PolkaBTC'
+    },
+    {
+      title: t('fees_earned'),
+      value: feesEarnedPolkaBTC.toString(),
+      unit: 'PolkaBTC'
+    },
+    {
+      title: t('fees_earned'),
+      value: feesEarnedDOT.toString(),
+      unit: 'DOT'
+    },
+    {
+      title: t('sla_score'),
+      value: safeRoundTwoDecimals(sla)
+    },
+    {
+      title: t('apy'),
+      value: `~${safeRoundTwoDecimals(apy)}`,
+      unit: '%'
+    }
+  ];
 
   return (
     <MainContainer className='vault-dashboard-page'>
@@ -114,83 +187,30 @@ export default function VaultDashboardPage(): ReactElement {
           <PageTitle
             mainTitle={t('vault.vault_dashboard')}
             subTitle={<TimerIncrement />} />
-          <PageTitle
-            mainTitle=''
-            subTitle={address} />
+          <BoldParagraph>{address}</BoldParagraph>
         </div>
         <>
-          {/* ray test touch < */}
-          <div className='col-lg-10 offset-1'>
-            <div className='row mt-3'>
-              <div className='col-lg-3 col-md-6 col-6'>
-                <div
-                  className='card stats-card mb-3'
-                  style={{ minHeight: '100px' }}>
-                  <div className=''>{t('vault.locked_collateral')}</div>
-                  <span className='stats'>{collateral}</span> DOT
-                </div>
-              </div>
-              <div className='col-lg-3 col-md-6 col-6'>
-                <div
-                  className='card stats-card mb-3'
-                  style={{ minHeight: '100px' }}>
-                  <div className=''>{t('locked_btc')}</div>
-                  <span className='stats'>{lockedBTC}</span> BTC
-                </div>
-              </div>
-              <div className='col-lg-3 col-md-6 col-6'>
-                <div
-                  className='card stats-card mb-3'
-                  style={{ minHeight: '100px' }}>
-                  <div className=''>{t('collateralization')}</div>
-                  <span className='stats'>{`${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`}</span>
-                </div>
-              </div>
-              <div className='col-lg-3 col-md-6 col-6'>
-                <div
-                  className='card stats-card mb-3'
-                  style={{ minHeight: '100px' }}>
-                  <div className=''>{t('vault.capacity')}</div>
-                  <span className='stats'>~{safeRoundTwoDecimals(capacity)}</span> PolkaBTC
-                </div>
-              </div>
-            </div>
-            <div className='row justify-content-center mt-4'>
-              <div className='col-md-3'>
-                <div
-                  className='card stats-card mb-3'
-                  style={{ minHeight: '100px' }}>
-                  <div className=''>{t('fees_earned')}</div>
-                  <span className='stats'>{feesEarnedPolkaBTC.toString()}</span> PolkaBTC
-                </div>
-              </div>
-              <div className='col-md-3'>
-                <div
-                  className='card stats-card mb-3'
-                  style={{ minHeight: '100px' }}>
-                  <div className=''>{t('fees_earned')}</div>
-                  <span className='stats'>{feesEarnedDOT.toString()}</span> DOT
-                </div>
-              </div>
-              <div className='col-md-3'>
-                <div
-                  className='card stats-card mb-3'
-                  style={{ minHeight: '100px' }}>
-                  <div className=''>{t('sla_score')}</div>
-                  <span className='stats'>{safeRoundTwoDecimals(sla)}</span>
-                </div>
-              </div>
-              <div className='col-md-3'>
-                <div
-                  className='card stats-card mb-3'
-                  style={{ minHeight: '100px' }}>
-                  <div className=''>{t('apy')}</div>
-                  <span className='stats'>~{safeRoundTwoDecimals(apy)}</span> %
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* ray test touch > */}
+          <CardList>
+            {VAULT_ITEMS.map(vaultItem => (
+              <Card
+                key={vaultItem.title}
+                // ray test touch <
+                className='lg:w-56'>
+                {/* ray test touch > */}
+                <CardHeader>
+                  {vaultItem.title}
+                </CardHeader>
+                <CardContent>
+                  <div className='text-4xl'>
+                    {vaultItem.value}
+                  </div>
+                  <div>
+                    {vaultItem.unit}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </CardList>
           <div className='row justify-content-center mt-3'>
             <div className='col-lg-2'>
               <Button
@@ -210,9 +230,9 @@ export default function VaultDashboardPage(): ReactElement {
             </div>
           </div>
         </>
-        <IssueTable></IssueTable>
-        <RedeemTable></RedeemTable>
-        <ReplaceTable openModal={setShowRequestReplacementModal}></ReplaceTable>
+        <IssueTable />
+        <RedeemTable />
+        <ReplaceTable openModal={setShowRequestReplacementModal} />
         <UpdateCollateralModal
           onClose={closeUpdateCollateralModal}
           status={updateCollateralModalStatus} />
@@ -223,3 +243,5 @@ export default function VaultDashboardPage(): ReactElement {
     </MainContainer>
   );
 }
+
+export default VaultDashboard;

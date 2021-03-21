@@ -13,14 +13,11 @@ const PageTitle = ({
   ...rest
 }: Props & React.ComponentPropsWithoutRef<'div'>) => (
   <div
-    // TODO: hardcoded
-    style={{
-      fontWeight: 700
-    }}
     className={clsx(
       'text-center',
       'mt-7',
       'mb-4',
+      'font-bold',
       className
     )}
     {...rest}>
