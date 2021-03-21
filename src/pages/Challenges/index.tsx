@@ -68,7 +68,7 @@ function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelect
         type='radio'
         value={challengeIdx}
         name='challenge'
-        onChange={val => setChallengeIdx(val)}>
+        onChange={(val: any) => setChallengeIdx(val)}>
         {timestamp > CHALLENGE_CUTOFFS[0] && ( // only show buttons at all if at least the first is active
           CHALLENGE_CUTOFFS.map((displayFrom, idx) =>
             timestamp > displayFrom &&
@@ -81,7 +81,6 @@ function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelect
           )
         )}
       </ToggleButtonGroup>
-
     </div>
   );
 }

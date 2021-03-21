@@ -13,6 +13,7 @@ import {
   planckToDOT
 } from '@interlay/polkabtc';
 import { useTranslation } from 'react-i18next';
+import tw from 'twin.macro';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -192,10 +193,8 @@ function VaultDashboard() {
           <CardList>
             {VAULT_ITEMS.map(vaultItem => (
               <Card
-                key={vaultItem.title}
-                // ray test touch <
-                className='lg:w-56'>
-                {/* ray test touch > */}
+                key={`${vaultItem.title}-${vaultItem?.unit}`}
+                twStyle={tw`lg:w-56`}>
                 <CardHeader>
                   {vaultItem.title}
                 </CardHeader>

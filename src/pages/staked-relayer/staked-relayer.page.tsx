@@ -1,4 +1,3 @@
-
 import React, {
   useState,
   useEffect
@@ -10,6 +9,7 @@ import {
   planckToDOT
 } from '@interlay/polkabtc';
 import { useTranslation } from 'react-i18next';
+import tw from 'twin.macro';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -148,10 +148,8 @@ function StakedRelayer() {
             <CardList>
               {STAKED_RELAYER_ITEMS.map(stakedRelayerItem => (
                 <Card
-                  key={stakedRelayerItem.title}
-                  // ray test touch <
-                  className='lg:w-56'>
-                  {/* ray test touch > */}
+                  key={`${stakedRelayerItem.title}-${stakedRelayerItem?.unit}`}
+                  twStyle={tw`lg:w-56`}>
                   <CardHeader>
                     {stakedRelayerItem.title}
                   </CardHeader>
