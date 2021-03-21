@@ -96,7 +96,6 @@ function VaultDashboard() {
           window.polkaBTC.vaults.getIssuablePolkaBTC()
         ]);
 
-        // const balanceLockedDOT = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
         if (vault.status === 'fulfilled') {
           const collateralDot = planckToDOT(vault.value.backing_collateral.toString());
           dispatch(updateCollateralAction(collateralDot));
@@ -211,23 +210,18 @@ function VaultDashboard() {
               </Card>
             ))}
           </CardList>
-          <div className='row justify-content-center mt-3'>
-            <div className='col-lg-2'>
-              <Button
-                variant='outline-success'
-                className=''
-                onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Increase)}>
-                {t('vault.increase_collateral')}
-              </Button>
-            </div>
-            <div className='col-lg-2'>
-              <Button
-                variant='outline-danger'
-                className=''
-                onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Decrease)}>
-                {t('vault.withdraw_collateral')}
-              </Button>
-            </div>
+          <div className='flex justify-center space-x-4 mt-3'>
+            <Button
+              variant='outline-success'
+              // TODO: should not use inlined functions
+              onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Increase)}>
+              {t('vault.increase_collateral')}
+            </Button>
+            <Button
+              variant='outline-danger'
+              onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Decrease)}>
+              {t('vault.withdraw_collateral')}
+            </Button>
           </div>
         </>
         <IssueTable />
