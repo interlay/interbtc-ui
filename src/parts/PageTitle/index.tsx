@@ -11,7 +11,7 @@ const PageTitle = ({
   mainTitle,
   subTitle,
   ...rest
-}: Props & React.ComponentPropsWithoutRef<'div'>) => (
+}: Props & React.ComponentPropsWithRef<'div'>) => (
   <div
     className={clsx(
       'text-center',

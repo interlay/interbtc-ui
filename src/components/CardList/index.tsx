@@ -10,7 +10,7 @@ interface Props {
 const Card = ({
   twStyle,
   ...rest
-}: Props & React.ComponentPropsWithoutRef<'li'>) => (
+}: Props & React.ComponentPropsWithRef<'li'>) => (
   <li
     css={[
       tw`flex`,
@@ -37,7 +37,7 @@ const CardHeader = ({
   className,
   children,
   ...rest
-}: React.ComponentPropsWithoutRef<'h2'>) => (
+}: React.ComponentPropsWithRef<'h2'>) => (
   <h2
     // TODO: hardcoded for now
     style={{
@@ -53,14 +53,14 @@ const CardHeader = ({
   </h2>
 );
 
-const CardContent = (props: React.ComponentPropsWithoutRef<'div'>) => (
+const CardContent = (props: React.ComponentPropsWithRef<'div'>) => (
   <div {...props} />
 );
 
 const CardList = ({
   className,
   ...rest
-}: React.ComponentPropsWithoutRef<'ul'>) => (
+}: React.ComponentPropsWithRef<'ul'>) => (
   <ul
     className={clsx(
       'lg:flex',
