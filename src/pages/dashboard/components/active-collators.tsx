@@ -5,6 +5,7 @@ import LineChartComponent from './line-chart-component';
 import { range } from '../../../common/utils/utils';
 import { useTranslation } from 'react-i18next';
 import { PAGES } from 'utils/constants/links';
+import DashboardCard from 'pages/dashboard/DashboardCard';
 
 const ActiveCollators = (): ReactElement => {
   const { t } = useTranslation();
@@ -24,7 +25,7 @@ const ActiveCollators = (): ReactElement => {
       .substring(0, 10)
   );
   return (
-    <div className='card'>
+    <DashboardCard>
       <div className='card-top-content'>
         <div className='values-container'>
           <h1 style={{ color: getAccents('d_blue').color }}>{t('dashboard.collators.active_collators')}</h1>
@@ -46,7 +47,7 @@ const ActiveCollators = (): ReactElement => {
         yLabels={dates}
         yAxisProps={{ beginAtZero: true, precision: 0 }}
         data={data} />
-    </div>
+    </DashboardCard>
   );
 };
 
