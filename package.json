@@ -69,6 +69,7 @@
     "lint-staged": "^10.5.4",
     "postcss": "7",
     "prettier": "2.2.1",
+    "tailwind-config-viewer": "^1.5.1",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "ts-node": "^8.6.2",
     "webpack-bundle-analyzer": "^4.4.0"
@@ -85,6 +86,7 @@
     "setup": "yarn generate:defs && yarn generate:meta",
     "build": "craco build",
     "build-with-webpack-bundle-analysis": "yarn build --stats && webpack-bundle-analyzer build/bundle-stats.json -m static -r build/bundle-stats.html -O",
+    "tailwind-config-viewer": "cd src && tailwind-config-viewer -o",
     "test": "node -e \"console.log('Tests are not ready yet!')\"",
     "old-test": "ts-mocha --exit --require babel-register --require ignore-styles --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx",
     "old-test-watch": "watch 'ts-mocha --paths -p src/tests-tsconfig.json -r src/setupTests.ts tests/**/*.test.tsx --timeout 5000' src tests --interval=1",
