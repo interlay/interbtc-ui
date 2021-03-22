@@ -1,5 +1,6 @@
 
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -23,15 +24,25 @@ function Dashboard() {
       <PageTitle
         mainTitle={t('dashboard.dashboard')}
         subTitle={<TimerIncrement />} />
-      <div className='container mx-auto grid gap-5 grid-cols-1 md:grid-cols-2 lg:gap-10 xl:grid-cols-3'>
-        <PolkaBTC linkButton={true} />
-        <CollateralLocked linkButton={true} />
-        <Collateralization linkButton={true} />
-        <ParachainSecurity linkButton={true} />
-        <BtcRelay linkButton={true} />
-        <OracleStatus linkButton={true} />
-        <ActiveVaults linkButton={true} />
-        <ActiveStakedRelayers linkButton={true} />
+      <div
+        className={clsx(
+          'container',
+          'mx-auto',
+          'grid',
+          'gap-5',
+          'grid-cols-1',
+          'md:grid-cols-2',
+          'lg:gap-10',
+          'xl:grid-cols-3'
+        )}>
+        <PolkaBTC linkButton />
+        <CollateralLocked linkButton />
+        <Collateralization linkButton />
+        <ParachainSecurity linkButton />
+        <BtcRelay linkButton />
+        <OracleStatus linkButton />
+        <ActiveVaults linkButton />
+        <ActiveStakedRelayers linkButton />
         <ActiveCollators />
       </div>
     </MainContainer>
