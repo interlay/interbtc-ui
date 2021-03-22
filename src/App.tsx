@@ -15,7 +15,6 @@ import {
   toast,
   ToastContainer
 } from 'react-toastify';
-import ReactTooltip from 'react-tooltip';
 import {
   useSelector,
   useDispatch,
@@ -391,10 +390,6 @@ function App(): ReactElement {
         position='top-right'
         autoClose={5000}
         hideProgressBar={false} />
-      <ReactTooltip
-        place='top'
-        type='dark'
-        effect='solid' />
       {/* TODO: should move into `Topbar` */}
       <AccountModal
         selectedAccount={address}
