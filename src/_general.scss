@@ -67,6 +67,7 @@ th,
 li,
 ul {
   font-family: "airbnb-cereal", Arial;
+  font-weight: 400;
 }
 
 .header {
@@ -579,13 +580,6 @@ input[type="number"] {
   font-weight: 400;
 }
 
-.stats {
-  width: 100%;
-  text-align: center;
-  font-size: 2.2rem;
-  font-weight: 400;
-}
-
 .title {
   width: 100%;
   text-align: center;
@@ -673,10 +667,6 @@ input[type="number"] {
 
 .medium-text {
   font-weight: 500;
-}
-
-.stats-card {
-  padding: 0px !important;
 }
 
 // TODO: should be scoped

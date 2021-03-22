@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
+// import { GlobalStyles } from 'twin.macro';
 
 import App from './App';
 import { configureStore } from './store';
@@ -16,6 +17,8 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <Router>
+        {/* TODO: could avoid vanilla tailwindcss */}
+        {/* <GlobalStyles /> */}
         <App />
       </Router>
     </Provider>

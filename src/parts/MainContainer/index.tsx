@@ -5,7 +5,7 @@ import clsx from 'clsx';
 const MainContainer = ({
   className,
   ...rest
-}: React.ComponentPropsWithoutRef<'div'>) => (
+}: React.ComponentPropsWithRef<'div'>) => (
   <div
     className={clsx(
       'min-h-screen',

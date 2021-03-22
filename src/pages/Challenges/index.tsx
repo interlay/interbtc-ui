@@ -30,7 +30,7 @@ import InterlayLink from 'components/InterlayLink';
 import CardList, {
   Card,
   CardHeader,
-  CardBody
+  CardContent
 } from 'components/CardList';
 import {
   POLKA_BTC_DOC_TREASURE_HUNT,
@@ -68,7 +68,7 @@ function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelect
         type='radio'
         value={challengeIdx}
         name='challenge'
-        onChange={val => setChallengeIdx(val)}>
+        onChange={(val: any) => setChallengeIdx(val)}>
         {timestamp > CHALLENGE_CUTOFFS[0] && ( // only show buttons at all if at least the first is active
           CHALLENGE_CUTOFFS.map((displayFrom, idx) =>
             timestamp > displayFrom &&
@@ -81,7 +81,6 @@ function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelect
           )
         )}
       </ToggleButtonGroup>
-
     </div>
   );
 }
@@ -215,7 +214,7 @@ function Challenges(): ReactElement {
                   {t(cardItem.title)}
                   {cardItem.titleIcon}
                 </CardHeader>
-                <CardBody>
+                <CardContent>
                   {t(cardItem.content)}
                   {cardItem.contentLink && (
                     <InterlayLink
@@ -228,7 +227,7 @@ function Challenges(): ReactElement {
                       <FaExternalLinkAlt />
                     </InterlayLink>
                   )}
-                </CardBody>
+                </CardContent>
               </Card>
             ))}
           </CardList>

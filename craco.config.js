@@ -3,7 +3,9 @@ module.exports = {
   style: {
     postcss: {
       plugins: [
-        require('tailwindcss'),
+        // TODO: should type properly
+        // @ts-ignore
+        require('tailwindcss')('./src/tailwind.config.js'),
         require('autoprefixer')
       ]
     }

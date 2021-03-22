@@ -1,25 +1,38 @@
-import React, { useState, useEffect, ReactElement } from 'react';
-import BitcoinTable from '../../common/components/bitcoin-table/bitcoin-table';
-import StatusUpdateTable from '../../common/components/status-update-table/status-update-table';
-import VaultTable from '../../common/components/vault-table/vault-table';
-import OracleTable from '../../common/components/oracle-table/oracle-table';
+import React, {
+  useState,
+  useEffect
+} from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-
-import './staked-relayer.page.scss';
-import { StoreType } from '../../common/types/util.types';
-import ButtonMaybePending from '../../common/components/pending-button';
-import { satToBTC, planckToDOT } from '@interlay/polkabtc';
+import {
+  satToBTC,
+  planckToDOT
+} from '@interlay/polkabtc';
 import { useTranslation } from 'react-i18next';
-import { safeRoundTwoDecimals } from '../../common/utils/utils';
-import TimerIncrement from '../../common/components/timer-increment';
+import tw from 'twin.macro';
+
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
+import CardList, {
+  Card,
+  CardHeader,
+  CardContent
+} from 'components/CardList';
+import BoldParagraph from 'components/BoldParagraph';
+import BitcoinTable from 'common/components/bitcoin-table/bitcoin-table';
+import StatusUpdateTable from 'common/components/status-update-table/status-update-table';
+import VaultTable from 'common/components/vault-table/vault-table';
+import OracleTable from 'common/components/oracle-table/oracle-table';
+import ButtonMaybePending from 'common/components/pending-button';
+import TimerIncrement from 'common/components/timer-increment';
+import { StoreType } from 'common/types/util.types';
+import { safeRoundTwoDecimals } from 'common/utils/utils';
+import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
+import './staked-relayer.page.scss';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard/dashboard-subpage.scss';
-import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
 
-export default function StakedRelayerPage(): ReactElement {
+function StakedRelayer() {
   const [isDeregisterPending, setDeregisterPending] = useState(false);
   const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState('0');
   const [feesEarnedDOT, setFeesEarnedDOT] = useState('0');
@@ -29,25 +42,33 @@ export default function StakedRelayerPage(): ReactElement {
   const [relayerInactive, setRelayerInactive] = useState(false);
   const [sla, setSLA] = useState(0);
   const [apy, setAPY] = useState('0');
-  const { polkaBtcLoaded, relayerLoaded, address } = useSelector((state: StoreType) => state.general);
+  const {
+    polkaBtcLoaded,
+    relayerLoaded,
+    address
+  } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
+  // TODO: should double-check (e.g. `unregisterStakedRelayer`)
   const deregisterStakedRelayer = async () => {
     if (!relayerLoaded) return;
+
     setDeregisterPending(true);
     try {
       await window.polkaBTC.stakedRelayer.deregister();
       toast.success('Successfully Deregistered');
     } catch (error) {
-      toast.error(error.toString());
+      toast.error(error.message);
     }
     setRelayerInactive(false);
     setDeregisterPending(false);
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!polkaBtcLoaded || !relayerLoaded || !address) return;
+    (async () => {
+      if (!polkaBtcLoaded) return;
+      if (!relayerLoaded) return;
+      if (!address) return;
 
       try {
         const stakedRelayerId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
@@ -78,11 +99,42 @@ export default function StakedRelayerPage(): ReactElement {
         setDotLocked(lockedDOT);
         setPlanckLocked(lockedPlanck);
       } catch (error) {
-        console.log(error.message);
+        console.log('[StakedRelayerPage useEffect] error.message => ', error.message);
       }
-    };
-    fetchData();
-  }, [polkaBtcLoaded, relayerLoaded, address, t]);
+    })();
+  }, [
+    polkaBtcLoaded,
+    relayerLoaded,
+    address,
+    t // TODO: should double-check
+  ]);
+
+  const STAKED_RELAYER_ITEMS = [
+    {
+      title: t('relayer.stake_locked'),
+      value: dotLocked.toString(),
+      unit: 'DOT'
+    },
+    {
+      title: t('fees_earned'),
+      value: feesEarnedPolkaBTC,
+      unit: 'PolkaBTC'
+    },
+    {
+      title: t('fees_earned'),
+      value: feesEarnedDOT,
+      unit: 'DOT'
+    },
+    {
+      title: t('sla_score'),
+      value: safeRoundTwoDecimals(sla)
+    },
+    {
+      title: t('apy'),
+      value: `~${safeRoundTwoDecimals(apy)}`,
+      unit: '%'
+    }
+  ];
 
   return (
     <MainContainer className='staked-relayer-page'>
@@ -91,64 +143,37 @@ export default function StakedRelayerPage(): ReactElement {
           <PageTitle
             mainTitle={t('relayer.staked_relayer_dashboard')}
             subTitle={<TimerIncrement />} />
-          <PageTitle
-            mainTitle=''
-            subTitle={address} />
+          <BoldParagraph>{address}</BoldParagraph>
           {relayerLoaded && polkaBtcLoaded && (
-            <div className='col-lg-10 offset-1'>
-              <div className='row justify-content-center'>
-                <div className='col-lg-3'>
-                  <div
-                    className='card stats-card mb-3'
-                    style={{ minHeight: '100px' }}>
-                    <div>{t('relayer.stake_locked')}</div>
-                    <span className='stats'>{dotLocked.toString()}</span> DOT
-                  </div>
-                </div>
-                <div className='col-lg-3'>
-                  <div
-                    className='card stats-card mb-3'
-                    style={{ minHeight: '100px' }}>
-                    <div>{t('fees_earned')}</div>
-                    <span className='stats'>{feesEarnedPolkaBTC}</span> PolkaBTC
-                  </div>
-                </div>
-                <div className='col-lg-3'>
-                  <div
-                    className='card stats-card mb-3'
-                    style={{ minHeight: '100px' }}>
-                    <div>{t('fees_earned')}</div>
-                    <span className='stats'>{feesEarnedDOT}</span> DOT
-                  </div>
-                </div>
-                <div className='col-lg-3'>
-                  <div
-                    className='card stats-card mb-3'
-                    style={{ minHeight: '100px' }}>
-                    <div>{t('sla_score')}</div>
-                    <span className='stats'>{safeRoundTwoDecimals(sla)}</span>
-                  </div>
-                </div>
-                <div className='col-lg-3'>
-                  <div
-                    className='card stats-card mb-3'
-                    style={{ minHeight: '100px' }}>
-                    <div>{t('apy')}</div>
-                    <span className='stats'>~{safeRoundTwoDecimals(apy)}</span> %
-                  </div>
-                </div>
-              </div>
-            </div>
+            <CardList>
+              {STAKED_RELAYER_ITEMS.map(stakedRelayerItem => (
+                <Card
+                  key={`${stakedRelayerItem.title}-${stakedRelayerItem?.unit}`}
+                  twStyle={tw`lg:w-56`}>
+                  <CardHeader>
+                    {stakedRelayerItem.title}
+                  </CardHeader>
+                  <CardContent>
+                    <div className='text-4xl'>
+                      {stakedRelayerItem.value}
+                    </div>
+                    <div>
+                      {stakedRelayerItem.unit}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </CardList>
           )}
           <BitcoinTable />
           <StatusUpdateTable
             dotLocked={dotLocked}
             planckLocked={planckLocked}
             stakedRelayerAddress={stakedRelayerAddress} />
-          <VaultTable></VaultTable>
-          <OracleTable planckLocked={planckLocked}></OracleTable>
+          <VaultTable />
+          <OracleTable planckLocked={planckLocked} />
           {relayerLoaded && (
-            <React.Fragment>
+            <>
               <ButtonMaybePending
                 className='staked-button'
                 variant='outline-danger'
@@ -158,12 +183,16 @@ export default function StakedRelayerPage(): ReactElement {
                 {t('relayer.deregister')}
               </ButtonMaybePending>
               <div className='row'>
-                <div className='col-12 de-note'>{t('relayer.note_you_can_deregister')}</div>
+                <div className='col-12 de-note'>
+                  {t('relayer.note_you_can_deregister')}
+                </div>
               </div>
-            </React.Fragment>
+            </>
           )}
         </div>
       </div>
     </MainContainer>
   );
 }
+
+export default StakedRelayer;
