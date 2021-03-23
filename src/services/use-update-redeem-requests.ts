@@ -17,7 +17,7 @@ import { RedeemRequest } from 'common/types/redeem.types';
 import { StoreType } from 'common/types/util.types';
 import * as constants from '../constants';
 
-const useUpdateRedeemTransactions = (
+const useUpdateRedeemRequests = (
   page: number = 0,
   limit: number = 15,
   delay: number = 10000
@@ -67,10 +67,10 @@ const useUpdateRedeemTransactions = (
 
       dispatch(updateAllRedeemRequestsAction(address, databaseRequests));
     } catch (error) {
-      console.log('[useUpdateRedeemTransactions useInterval] error.message => ', error.message);
+      console.log('[useUpdateRedeemRequests useInterval] error.message => ', error.message);
     }
   }, isRunning ? delay : null, true);
 };
 
-export default useUpdateRedeemTransactions;
+export default useUpdateRedeemRequests;
 // ray test touch >

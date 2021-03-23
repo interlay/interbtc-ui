@@ -13,8 +13,8 @@ import Tabs, {
   Tab,
   HorizontalLine
 } from './Tabs';
-import useUpdateIssueTransactions from 'services/use-update-issue-transactions';
-import useUpdateRedeemTransactions from 'services/use-update-redeem-transactions';
+import useUpdateIssueRequests from 'services/use-update-issue-requests';
+import useUpdateRedeemRequests from 'services/use-update-redeem-requests';
 import { StoreType } from 'common/types/util.types';
 import { TabTypes } from 'utils/enums/tab-types';
 import './app.page.scss';
@@ -34,8 +34,8 @@ function Application() {
    * - Could merge fetching issue and redeem transactions
    * or at least should use SWR caching strategy (https or react-query).
    */
-  useUpdateIssueTransactions(0, 15, 10000);
-  useUpdateRedeemTransactions(0, 15, 10000);
+  useUpdateIssueRequests(0, 15, 10000);
+  useUpdateRedeemRequests(0, 15, 10000);
 
   return (
     <MainContainer className='text-center white-background min-vh-100 app-page'>

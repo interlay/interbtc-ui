@@ -16,7 +16,7 @@ import { IssueRequest } from 'common/types/issue.types';
 import { StoreType } from 'common/types/util.types';
 import * as constants from '../constants';
 
-const useUpdateIssueTransactions = (
+const useUpdateIssueRequests = (
   page: number = 0,
   limit: number = 15,
   delay: number = 10000
@@ -67,9 +67,9 @@ const useUpdateIssueTransactions = (
 
       dispatch(updateAllIssueRequestsAction(address, databaseRequests));
     } catch (error) {
-      console.log('[useUpdateIssueTransactions useInterval] error.message => ', error.message);
+      console.log('[useUpdateIssueRequests useInterval] error.message => ', error.message);
     }
   }, isRunning ? delay : null, true);
 };
 
-export default useUpdateIssueTransactions;
+export default useUpdateIssueRequests;
