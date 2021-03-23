@@ -20,8 +20,8 @@ import Tabs, {
 } from './Tabs';
 // ray test touch <
 import useInterval from 'utils/hooks/use-interval';
+import useUpdateIssueTransactions from 'services/use-update-issue-transactions';
 // ray test touch >
-import fetchIssueTransactions from 'common/live-data/issue-transaction.watcher';
 import fetchRedeemTransactions from 'common/live-data/redeem-transaction.watcher';
 import { StoreType } from 'common/types/util.types';
 import { TabTypes } from 'utils/enums/tab-types';
@@ -36,30 +36,22 @@ function Application() {
 
   const tabsHidden = issueStep !== 'ENTER_BTC_AMOUNT' && selectedTabType === TabTypes.Issue;
 
-  /**
-   * TODO: should create a custom hook to simplify the logic.
-   * - Could avoid using redux.
-   * - Should use nested `setTimeout` instead of `setInterval`.
-   * - Should merge issue and redeem logic as they make the same calls.
-   */
+  // TODO: should avoid using redux
   const dispatch = useDispatch();
   const store = useStore();
 
   // ray test touch <
+  useUpdateIssueTransactions(0, 15, 10000);
+
   useEffect(() => {
     if (!dispatch) return;
     if (!store) return;
 
-    fetchIssueTransactions(dispatch, store);
     fetchRedeemTransactions(dispatch, store);
   }, [
     dispatch,
     store
   ]);
-
-  useInterval(() => {
-    fetchIssueTransactions(dispatch, store);
-  }, 10000);
 
   useInterval(() => {
     fetchRedeemTransactions(dispatch, store);

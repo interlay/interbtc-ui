@@ -4,7 +4,11 @@ import {
   useRef
 } from 'react';
 
-function useInterval(callback: () => void, delay: number | null) {
+function useInterval(
+  callback: () => void,
+  delay: number | null,
+  shouldRunInitially: boolean = false
+) {
   const savedCallback = useRef<() => void>();
 
   // Remember the latest callback
@@ -15,6 +19,10 @@ function useInterval(callback: () => void, delay: number | null) {
   // Set up the interval
   useEffect(() => {
     if (delay !== null) {
+      if (shouldRunInitially) {
+        savedCallback.current?.();
+      }
+
       let timerId = setTimeout(function tick() {
         savedCallback.current?.();
 
@@ -23,7 +31,10 @@ function useInterval(callback: () => void, delay: number | null) {
 
       return () => clearInterval(timerId);
     }
-  }, [delay]);
+  }, [
+    delay,
+    shouldRunInitially
+  ]);
 }
 
 export default useInterval;
