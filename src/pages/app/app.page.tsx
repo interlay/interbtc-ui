@@ -1,10 +1,5 @@
 
-import { useEffect } from 'react';
-import {
-  useSelector,
-  useDispatch,
-  useStore
-} from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
@@ -18,11 +13,8 @@ import Tabs, {
   Tab,
   HorizontalLine
 } from './Tabs';
-// ray test touch <
-import useInterval from 'utils/hooks/use-interval';
 import useUpdateIssueTransactions from 'services/use-update-issue-transactions';
-// ray test touch >
-import fetchRedeemTransactions from 'common/live-data/redeem-transaction.watcher';
+import useUpdateRedeemTransactions from 'services/use-update-redeem-transactions';
 import { StoreType } from 'common/types/util.types';
 import { TabTypes } from 'utils/enums/tab-types';
 import './app.page.scss';
@@ -36,27 +28,14 @@ function Application() {
 
   const tabsHidden = issueStep !== 'ENTER_BTC_AMOUNT' && selectedTabType === TabTypes.Issue;
 
-  // TODO: should avoid using redux
-  const dispatch = useDispatch();
-  const store = useStore();
-
-  // ray test touch <
+  /**
+   * TODO:
+   * - Should avoid using redux.
+   * - Could merge fetching issue and redeem transactions
+   * or at least should use SWR caching strategy (https or react-query).
+   */
   useUpdateIssueTransactions(0, 15, 10000);
-
-  useEffect(() => {
-    if (!dispatch) return;
-    if (!store) return;
-
-    fetchRedeemTransactions(dispatch, store);
-  }, [
-    dispatch,
-    store
-  ]);
-
-  useInterval(() => {
-    fetchRedeemTransactions(dispatch, store);
-  }, 10000);
-  // ray test touch >
+  useUpdateRedeemTransactions(0, 15, 10000);
 
   return (
     <MainContainer className='text-center white-background min-vh-100 app-page'>
