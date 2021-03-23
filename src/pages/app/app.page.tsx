@@ -1,10 +1,5 @@
 
-import * as React from 'react';
-import {
-  useSelector,
-  useDispatch,
-  useStore
-} from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
@@ -18,8 +13,8 @@ import Tabs, {
   Tab,
   HorizontalLine
 } from './Tabs';
-import fetchIssueTransactions from 'common/live-data/issue-transaction.watcher';
-import fetchRedeemTransactions from 'common/live-data/redeem-transaction.watcher';
+import useUpdateIssueRequests from 'services/use-update-issue-requests';
+import useUpdateRedeemRequests from 'services/use-update-redeem-requests';
 import { StoreType } from 'common/types/util.types';
 import { TabTypes } from 'utils/enums/tab-types';
 import './app.page.scss';
@@ -34,44 +29,13 @@ function Application() {
   const tabsHidden = issueStep !== 'ENTER_BTC_AMOUNT' && selectedTabType === TabTypes.Issue;
 
   /**
-   * TODO: should create a custom hook to simplify the logic.
-   * - Re: `react-use`
-   * - Re: https://overreacted.io/making-setinterval-declarative-with-react-hooks/
-   * - Re: https://stackoverflow.com/questions/53090432/react-hooks-right-way-to-clear-timeouts-and-intervals
-   * - Could avoid using redux.
-   * - Should use nested `setTimeout` instead of `setInterval`.
-   * - Should merge issue and redeem logic as they make the same calls.
+   * TODO:
+   * - Should avoid using redux.
+   * - Could merge fetching issue and redeem transactions
+   * or at least should use SWR caching strategy (https or react-query).
    */
-  const dispatch = useDispatch();
-  const store = useStore();
-  React.useEffect(() => {
-    if (!dispatch) return;
-    if (!store) return;
-
-    fetchIssueTransactions(dispatch, store);
-    const timerId = setInterval(() => fetchIssueTransactions(dispatch, store), 10000);
-
-    return () => {
-      clearInterval(timerId);
-    };
-  }, [
-    dispatch,
-    store
-  ]);
-  React.useEffect(() => {
-    if (!dispatch) return;
-    if (!store) return;
-
-    fetchRedeemTransactions(dispatch, store);
-    const timerId = setInterval(() => fetchRedeemTransactions(dispatch, store), 10000);
-
-    return () => {
-      clearInterval(timerId);
-    };
-  }, [
-    dispatch,
-    store
-  ]);
+  useUpdateIssueRequests(0, 15, 10000);
+  useUpdateRedeemRequests(0, 15, 10000);
 
   return (
     <MainContainer className='text-center white-background min-vh-100 app-page'>
