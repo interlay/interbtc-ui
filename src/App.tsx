@@ -37,7 +37,7 @@ import {
 
 import Layout from 'parts/Layout';
 import ApplicationPage from 'pages/app/app.page';
-import DashboardPage from 'pages/dashboard/dashboard.page';
+import Dashboard from 'pages/dashboard/dashboard.page';
 import VaultDashboard from 'pages/vault-dashboard/vault-dashboard.page';
 import StakedRelayer from 'pages/staked-relayer/staked-relayer.page';
 import Challenges from 'pages/Challenges';
@@ -452,7 +452,7 @@ function App(): ReactElement {
                       <RelayDashboard />
                     </Route>
                     <Route path={PAGES.DASHBOARD}>
-                      <DashboardPage />
+                      <Dashboard />
                     </Route>
                     <Route path={PAGES.VAULT}>
                       <VaultDashboard />

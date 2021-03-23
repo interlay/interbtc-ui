@@ -9,6 +9,7 @@ import LineChartComponent from './line-chart-component';
 import { useTranslation } from 'react-i18next';
 import { getUsdAmount } from '../../../common/utils/utils';
 import { PAGES } from 'utils/constants/links';
+import DashboardCard from 'pages/dashboard/DashboardCard';
 
 type PolkaBTCProps = {
   linkButton?: boolean;
@@ -45,7 +46,7 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
   }, [fetchIssuesLastDays]);
 
   return (
-    <div className='card'>
+    <DashboardCard>
       <div className='card-top-content'>
         <div className='values-container'>
           <h1 style={{ color: getAccents('d_pink').color }}>{t('dashboard.issue.issued')}</h1>
@@ -90,7 +91,7 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
             pointIssuesPerDay.slice(1).map(sat => Number(satToBTC(sat.toString())))
           ]} />
       </div>
-    </div>
+    </DashboardCard>
   );
 };
 

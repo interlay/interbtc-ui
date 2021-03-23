@@ -5,6 +5,7 @@ import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
 import LineChartComponent from './line-chart-component';
 import { useTranslation } from 'react-i18next';
 import { PAGES } from 'utils/constants/links';
+import DashboardCard from 'pages/dashboard/DashboardCard';
 
 type ActiveStakedRelayers = {
   linkButton?: boolean;
@@ -29,7 +30,7 @@ const ActiveStakedRelayersComponent = ({ linkButton }: ActiveStakedRelayers): Re
     fetchRelayersPerDay();
   }, [fetchRelayersPerDay]);
   return (
-    <div className='card'>
+    <DashboardCard>
       <div className='card-top-content'>
         <div className='values-container'>
           <h1 style={{ color: getAccents('d_orange').color }}>{t('dashboard.parachain.active_relayers')}</h1>
@@ -54,7 +55,7 @@ const ActiveStakedRelayersComponent = ({ linkButton }: ActiveStakedRelayers): Re
         )}
         yAxisProps={{ beginAtZero: true, precision: 0 }}
         data={totalRelayersPerDay.map(dataPoint => dataPoint.count)} />
-    </div>
+    </DashboardCard>
   );
 };
 

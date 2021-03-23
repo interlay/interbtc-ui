@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { ParachainStatus, StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
 import { PAGES } from 'utils/constants/links';
+import DashboardCard from 'pages/dashboard/DashboardCard';
 
 type ParachainSecurityProps = {
   linkButton?: boolean;
@@ -60,7 +61,7 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
   };
 
   return (
-    <div className='card'>
+    <DashboardCard>
       <div className='values-container'></div>
       {/* TODO: move this to the right */}
       <div className='parachain-content-container'>
@@ -82,7 +83,7 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
           )}
         </div>
       </div>
-    </div>
+    </DashboardCard>
   );
 };
 

@@ -6,6 +6,7 @@ import { StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
 import { safeRoundTwoDecimals } from '../../../common/utils/utils';
 import { PAGES } from 'utils/constants/links';
+import DashboardCard from 'pages/dashboard/DashboardCard';
 
 type CollateralizationProps = {
   linkButton?: boolean;
@@ -57,7 +58,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
   });
 
   return (
-    <div className='card'>
+    <DashboardCard>
       <div className='card-top-content'>
         <div className='values-container'>
           {!failed && (
@@ -82,7 +83,6 @@ export default function Collateralization({ linkButton }: CollateralizationProps
           </div>
         )}
       </div>
-
       <div className='circle-container'>
         <div
           className='status-circle'
@@ -100,6 +100,6 @@ export default function Collateralization({ linkButton }: CollateralizationProps
           </h1>
         </div>
       </div>
-    </div>
+    </DashboardCard>
   );
 }

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { StyledLinkData } from '../../../common/components/dashboard-table/dashboard-table';
 import * as constants from '../../../constants';
 import { PAGES } from 'utils/constants/links';
+import DashboardCard from 'pages/dashboard/DashboardCard';
 
 // eslint-disable-next-line no-unused-vars
 enum Status {
@@ -62,7 +63,7 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
 
   return (
     <>
-      <div className='card'>
+      <DashboardCard>
         <div className='card-top-content'>
           <div className='values-container'>
             <h1 className='bold-font'>
@@ -101,9 +102,9 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
             </h2>
           </div>
         </div>
-      </div>
+      </DashboardCard>
       {displayBlockstreamData && (
-        <div className='card'>
+        <DashboardCard>
           <div className='card-top-content'>
             <div className='values-container'>
               <h1 className='bold-font'>
@@ -136,7 +137,7 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
               </h2>
             </div>
           </div>
-        </div>
+        </DashboardCard>
       )}
     </>
   );

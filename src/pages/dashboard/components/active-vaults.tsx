@@ -5,6 +5,7 @@ import LineChartComponent from './line-chart-component';
 import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
 import { useTranslation } from 'react-i18next';
 import { PAGES } from 'utils/constants/links';
+import DashboardCard from 'pages/dashboard/DashboardCard';
 
 type ActiveVaultsProps = {
   linkButton?: boolean;
@@ -28,7 +29,7 @@ const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
     fetchVaultsPerDay();
   }, [fetchVaultsPerDay]);
   return (
-    <div className='card'>
+    <DashboardCard>
       <div className='card-top-content'>
         <div className='values-container'>
           <h1 style={{ color: getAccents('d_pink').color }}>{t('dashboard.vault.active_vaults')}</h1>
@@ -50,7 +51,7 @@ const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
         yLabels={totalVaultsPerDay.map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}
         yAxisProps={{ beginAtZero: true, precision: 0 }}
         data={totalVaultsPerDay.map(dataPoint => dataPoint.count)} />
-    </div>
+    </DashboardCard>
   );
 };
 

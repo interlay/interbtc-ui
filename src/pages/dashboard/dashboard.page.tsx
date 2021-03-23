@@ -1,15 +1,22 @@
 
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'common/components/timer-increment';
-import Row1 from './rows/row1';
-import Row2 from './rows/row2';
-import Row3 from './rows/row3';
+import PolkaBTC from './components/polkabtc';
+import CollateralLocked from './components/collateral-locked';
+import Collateralization from './components/collateralization';
+import ParachainSecurity from './components/parachain-security';
+import BtcRelay from './components/btc-relay';
+import OracleStatus from './components/oracle-status';
+import ActiveVaults from './components/active-vaults';
+import ActiveStakedRelayers from './components/active-staked-relayers';
+import ActiveCollators from './components/active-collators';
 import './dashboard.page.scss';
 
-function DashboardPage() {
+function Dashboard() {
   const { t } = useTranslation();
 
   return (
@@ -17,18 +24,29 @@ function DashboardPage() {
       <PageTitle
         mainTitle={t('dashboard.dashboard')}
         subTitle={<TimerIncrement />} />
-      {/* TODO: should use flex-grid */}
-      <div className='dashboard-items-container'>
-        <div className='rows-container'>
-          <Row1 />
-          <div className='section-div-line' />
-          <Row2 />
-          <div className='section-div-line' />
-          <Row3 />
-        </div>
+      <div
+        className={clsx(
+          'container',
+          'mx-auto',
+          'grid',
+          'gap-5',
+          'grid-cols-1',
+          'md:grid-cols-2',
+          'lg:gap-10',
+          'xl:grid-cols-3'
+        )}>
+        <PolkaBTC linkButton />
+        <CollateralLocked linkButton />
+        <Collateralization linkButton />
+        <ParachainSecurity linkButton />
+        <BtcRelay linkButton />
+        <OracleStatus linkButton />
+        <ActiveVaults linkButton />
+        <ActiveStakedRelayers linkButton />
+        <ActiveCollators />
       </div>
     </MainContainer>
   );
 }
 
-export default DashboardPage;
+export default Dashboard;
