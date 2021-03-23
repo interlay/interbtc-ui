@@ -1,5 +1,5 @@
 
-import * as React from 'react';
+import { useEffect } from 'react';
 import {
   useSelector,
   useDispatch,
@@ -18,6 +18,9 @@ import Tabs, {
   Tab,
   HorizontalLine
 } from './Tabs';
+// ray test touch <
+import useInterval from 'utils/hooks/use-interval';
+// ray test touch >
 import fetchIssueTransactions from 'common/live-data/issue-transaction.watcher';
 import fetchRedeemTransactions from 'common/live-data/redeem-transaction.watcher';
 import { StoreType } from 'common/types/util.types';
@@ -35,43 +38,33 @@ function Application() {
 
   /**
    * TODO: should create a custom hook to simplify the logic.
-   * - Re: `react-use`
-   * - Re: https://overreacted.io/making-setinterval-declarative-with-react-hooks/
-   * - Re: https://stackoverflow.com/questions/53090432/react-hooks-right-way-to-clear-timeouts-and-intervals
    * - Could avoid using redux.
    * - Should use nested `setTimeout` instead of `setInterval`.
    * - Should merge issue and redeem logic as they make the same calls.
    */
   const dispatch = useDispatch();
   const store = useStore();
-  React.useEffect(() => {
+
+  // ray test touch <
+  useEffect(() => {
     if (!dispatch) return;
     if (!store) return;
 
     fetchIssueTransactions(dispatch, store);
-    const timerId = setInterval(() => fetchIssueTransactions(dispatch, store), 10000);
-
-    return () => {
-      clearInterval(timerId);
-    };
-  }, [
-    dispatch,
-    store
-  ]);
-  React.useEffect(() => {
-    if (!dispatch) return;
-    if (!store) return;
-
     fetchRedeemTransactions(dispatch, store);
-    const timerId = setInterval(() => fetchRedeemTransactions(dispatch, store), 10000);
-
-    return () => {
-      clearInterval(timerId);
-    };
   }, [
     dispatch,
     store
   ]);
+
+  useInterval(() => {
+    fetchIssueTransactions(dispatch, store);
+  }, 10000);
+
+  useInterval(() => {
+    fetchRedeemTransactions(dispatch, store);
+  }, 10000);
+  // ray test touch >
 
   return (
     <MainContainer className='text-center white-background min-vh-100 app-page'>
