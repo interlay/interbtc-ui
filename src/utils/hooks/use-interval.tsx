@@ -1,5 +1,4 @@
 
-// ray test touch <
 import {
   useEffect,
   useRef
@@ -15,11 +14,12 @@ function useInterval(callback: () => void, delay: number | null) {
 
   // Set up the interval
   useEffect(() => {
-    function tick() {
-      savedCallback.current?.();
-    }
     if (delay !== null) {
-      const timerId = setInterval(tick, delay);
+      let timerId = setTimeout(function tick() {
+        savedCallback.current?.();
+
+        timerId = setTimeout(tick, delay);
+      }, delay);
 
       return () => clearInterval(timerId);
     }
@@ -27,4 +27,3 @@ function useInterval(callback: () => void, delay: number | null) {
 }
 
 export default useInterval;
-// ray test touch >
