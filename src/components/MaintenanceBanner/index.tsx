@@ -29,41 +29,39 @@ function MaintenanceBanner() {
   ];
 
   return (
-    <div>
-      {maintenanceWindows.map(maintenance => {
-        if (now < Number(maintenance.endTime)) {
-          return (
-            <div
-              className={clsx(
-                'px-5',
-                'py-3',
-                'm-4',
-                'sm:mx-auto',
-                'md:max-w-3xl',
-                'border',
-                'border-solid',
-                'border-interlayGrey',
-                'rounded',
-                'text-center'
-              )}>
-              <strong className='text-interlayGrey'>
-                {`${maintenance.type} ${formatDateTime(maintenance.startTime)}: ${maintenance.reason} `}
-                <InterlayLink
-                  href={maintenance.link}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  {t('maintenance.info')}
-                </InterlayLink>
-              </strong>
-            </div>
-          );
-        } else {
-          return (
-            <div></div>
-          );
-        }
-      })}
-    </div>
+    <ul>
+      {maintenanceWindows.map(maintenance => (
+        <>
+          {now < Number(maintenance.endTime) ? (
+            <li key={maintenance.startTime.toString()}>
+              <div
+                className={clsx(
+                  'px-5',
+                  'py-3',
+                  'm-4',
+                  'sm:mx-auto',
+                  'md:max-w-3xl',
+                  'border',
+                  'border-solid',
+                  'border-interlayGrey',
+                  'rounded',
+                  'text-center'
+                )}>
+                <strong className='text-interlayGrey'>
+                  {`${maintenance.type} ${formatDateTime(maintenance.startTime)}: ${maintenance.reason} `}
+                  <InterlayLink
+                    href={maintenance.link}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    {t('maintenance.info')}
+                  </InterlayLink>
+                </strong>
+              </div>
+            </li>
+          ) : null}
+        </>
+      ))}
+    </ul>
   );
 }
 

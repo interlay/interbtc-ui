@@ -7,12 +7,12 @@ import clsx from 'clsx';
 import Footer from 'parts/Footer';
 import Topbar from 'common/components/topbar';
 import TestnetBanner from 'components/TestnetBanner';
+import MaintenanceBanner from 'components/MaintenanceBanner';
 import checkStaticPage from 'config/check-static-page';
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 import styles from './layout.module.css';
 import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
-import MaintenanceBanner from 'components/MaintenanceBanner';
 
 interface Props {
   children: React.ReactNode;
