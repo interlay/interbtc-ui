@@ -61,6 +61,7 @@ type ChallengeSelectorProps = {
 
 function ChallengeSelector({ challengeIdx, setChallengeIdx, t }: ChallengeSelectorProps): ReactElement {
   const timestamp = Date.now();
+
   return (
     <div className='text-right'>
       <ToggleButtonGroup
@@ -126,16 +127,19 @@ const CHALLENGE_ITEMS = [
 ];
 
 function Challenges(): ReactElement {
+  // ray test touch <
   // eslint-disable-next-line no-array-constructor
   const [vaultRows, setVaultRows] = useState(new Array<VaultData>());
   // eslint-disable-next-line no-array-constructor
   const [relayerRows, setRelayerRows] = useState(new Array<RelayerData>());
   const [challengeIdx, setChallengeIdx] = useState(0); // all time
+  // ray test touch >
 
   const statsApi = usePolkabtcStats();
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
+  // ray test touch <
   const vaultTableHeadings = [
     <h1>{t('leaderboard.account_id')}</h1>,
     <h1>{t('leaderboard.collateral')}</h1>,
@@ -145,7 +149,9 @@ function Challenges(): ReactElement {
     <h1>{t('leaderboard.execute_redeem_count')}</h1>,
     <h1>{t('leaderboard.lifetime_sla')}</h1>
   ];
+  // ray test touch >
 
+  // ray test touch <
   // TODO:
   // - exclude Interlay owned vaults
   // - sort vaults with highest lifetime sla
@@ -164,14 +170,18 @@ function Challenges(): ReactElement {
     ],
     []
   );
+  // ray test touch >
 
+  // ray test touch <
   const relayerTableHeadings = [
     <h1>{t('leaderboard.account_id')}</h1>,
     <h1>{t('leaderboard.stake')}</h1>,
     <h1>{t('leaderboard.block_count')}</h1>,
     <h1>{t('leaderboard.lifetime_sla')}</h1>
   ];
+  // ray test touch >
 
+  // ray test touch <
   // TODO:
   // - exclude Interlay owned relayers
   // - sort relayers with highest lifetime sla
@@ -184,7 +194,9 @@ function Challenges(): ReactElement {
     ],
     []
   );
+  // ray test touch >
 
+  // ray test touch <
   useEffect(() => {
     const fetchVaultData = async () => {
       if (!polkaBtcLoaded) return;
@@ -200,7 +212,13 @@ function Challenges(): ReactElement {
 
     fetchVaultData();
     fetchRelayerData();
-  }, [polkaBtcLoaded, statsApi, challengeIdx, t]);
+  }, [
+    polkaBtcLoaded,
+    statsApi,
+    challengeIdx,
+    t
+  ]);
+  // ray test touch >
 
   return (
     <MainContainer>
@@ -234,6 +252,7 @@ function Challenges(): ReactElement {
           <PageTitle
             mainTitle={t('leaderboard.title')}
             subTitle={<TimerIncrement />} />
+          {/* ray test touch < */}
           {/* TODO: should use a tailwindcss Tabs component */}
           <Tabs>
             <Tab
@@ -270,6 +289,7 @@ function Challenges(): ReactElement {
               </div>
             </Tab>
           </Tabs>
+          {/* ray test touch > */}
         </div>
       </div>
     </MainContainer>
