@@ -8,9 +8,7 @@ import {
 import { useSelector } from 'react-redux';
 import {
   ToggleButton,
-  ToggleButtonGroup,
-  Tab,
-  Tabs
+  ToggleButtonGroup
 } from 'react-bootstrap';
 import {
   useTranslation,
@@ -26,6 +24,7 @@ import clsx from 'clsx';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import InterlayLink from 'components/InterlayLink';
+import InterlayTabs, { InterlayTab } from 'components/InterlayTabs';
 import CardList, {
   Card,
   CardHeader,
@@ -249,10 +248,8 @@ function Challenges(): ReactElement {
           <PageTitle
             mainTitle={t('leaderboard.title')}
             subTitle={<TimerIncrement />} />
-          {/* ray test touch < */}
-          {/* TODO: should use a tailwindcss Tabs component */}
-          <Tabs>
-            <Tab
+          <InterlayTabs>
+            <InterlayTab
               tabClassName={clsx(
                 'no-underline',
                 'text-black'
@@ -260,6 +257,7 @@ function Challenges(): ReactElement {
               eventKey='vaults'
               title={t('leaderboard.vault_scores')}>
               <ChallengeSelector {...{ challengeIdx, setChallengeIdx, t }} />
+              {/* ray test touch < */}
               {/* TODO: should use a good table package */}
               <div style={{ margin: '40px 0px' }}>
                 <DashboardTable
@@ -268,8 +266,9 @@ function Challenges(): ReactElement {
                   dataPointDisplayer={tableVaultRow}
                   noDataEl={<td colSpan={6}>{t('loading_ellipsis')}</td>} />
               </div>
-            </Tab>
-            <Tab
+              {/* ray test touch > */}
+            </InterlayTab>
+            <InterlayTab
               tabClassName={clsx(
                 'no-underline',
                 'text-black'
@@ -277,6 +276,7 @@ function Challenges(): ReactElement {
               eventKey='relayers'
               title={t('leaderboard.relayer_scores')}>
               <ChallengeSelector {...{ challengeIdx, setChallengeIdx, t }} />
+              {/* ray test touch < */}
               <div style={{ margin: '40px 0px' }}>
                 <DashboardTable
                   pageData={relayerRows}
@@ -284,9 +284,9 @@ function Challenges(): ReactElement {
                   dataPointDisplayer={tableRelayerRow}
                   noDataEl={<td colSpan={6}>{t('loading_ellipsis')}</td>} />
               </div>
-            </Tab>
-          </Tabs>
-          {/* ray test touch > */}
+              {/* ray test touch > */}
+            </InterlayTab>
+          </InterlayTabs>
         </div>
       </div>
     </MainContainer>
