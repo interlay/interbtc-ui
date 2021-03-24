@@ -11,7 +11,7 @@ function TestnetBanner() {
         'px-5',
         'py-3',
         'm-4',
-        'sm:mx-auto',
+        'md:mx-auto',
         'md:max-w-3xl',
         'border',
         'border-solid',
