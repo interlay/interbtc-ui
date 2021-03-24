@@ -1,14 +1,16 @@
 
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+
 import { formatDateTime } from 'common/utils/utils';
+import InterlayLink from 'components/InterlayLink';
 
 interface Message {
-  startTime: Date,
-  endTime: Date,
-  type: string,
-  reason: string,
-  link: string
+  startTime: Date;
+  endTime: Date;
+  type: string;
+  reason: string;
+  link: string;
 }
 
 // TODO: make this easily modifiable by having a list of maintenance elements somewhere else
@@ -46,7 +48,12 @@ function MaintenanceBanner() {
               )}>
               <strong className='text-interlayGrey'>
                 {`${maintenance.type} ${formatDateTime(maintenance.startTime)}: ${maintenance.reason} `}
-                <a href={maintenance.link}>{t('maintenance.info')}</a>
+                <InterlayLink
+                  href={maintenance.link}
+                  target='_blank'
+                  rel='noopener noreferrer'>
+                  {t('maintenance.info')}
+                </InterlayLink>
               </strong>
             </div>
           );

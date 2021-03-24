@@ -523,8 +523,8 @@
   },
   "maintenance": {
     "type": {
-      "scheduled": "Scheduled maintenance on ",
-      "unplanned": "Unplanned maintenanceon "
+      "scheduled": "Scheduled maintenance on",
+      "unplanned": "Unplanned maintenance on"
     },
     "reason": {
       "chain": "The chain will be upgraded."
