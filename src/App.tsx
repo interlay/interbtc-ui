@@ -198,9 +198,6 @@ function App(): ReactElement {
         window.polkaBTC.stakedRelayer.isStakedRelayerActive(id),
         window.polkaBTC.stakedRelayer.isStakedRelayerInactive(id)
       ]);
-      console.log(newAddress);
-      console.log('Active ' + isActive);
-      console.log('Inactive ' + isInactive);
       relayerLoaded = isActive || isInactive;
     } catch (error) {
       console.log('No PolkaBTC staked relayer found for the account in the connected Polkadot wallet.');
