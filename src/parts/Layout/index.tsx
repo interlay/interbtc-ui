@@ -12,6 +12,7 @@ import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 import styles from './layout.module.css';
 import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
+import MaintenanceBanner from 'components/MaintenanceBanner';
 
 interface Props {
   children: React.ReactNode;
@@ -54,6 +55,7 @@ const Layout = ({ children }: Props) => {
           requestDOT={handleRequestDotFromFaucet} />
       )}
       {!isHomePage && <TestnetBanner />}
+      {!isHomePage && <MaintenanceBanner />}
       {children}
       <Footer />
     </div>
