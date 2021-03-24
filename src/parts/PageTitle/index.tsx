@@ -17,7 +17,6 @@ const PageTitle = ({
       'text-center',
       'mt-7',
       'mb-4',
-      'font-bold',
       className
     )}
     {...rest}>
@@ -25,7 +24,8 @@ const PageTitle = ({
       className={clsx(
         'text-2xl',
         'xl:text-3xl',
-        'mb-1'
+        'mb-1',
+        'font-bold'
       )}>
       {mainTitle}
     </h2>
