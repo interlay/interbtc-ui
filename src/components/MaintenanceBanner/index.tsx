@@ -50,6 +50,10 @@ function MaintenanceBanner() {
               </strong>
             </div>
           );
+        } else {
+          return (
+            <div></div>
+          );
         }
       })}
     </div>
