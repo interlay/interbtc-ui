@@ -11,7 +11,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import InterlayLink from 'components/InterlayLink';
-import { ReactComponent as PolkadotExtensionLogo } from 'assets/img/polkadot-extension-logo.svg';
+import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import './account-modal.scss';
@@ -92,7 +92,7 @@ function AccountModal({
               href={POLKADOT_EXTENSION}
               target='_blank'
               rel='noopener noreferrer'>
-              <PolkadotExtensionLogo
+              <PolkadotExtensionLogoIcon
                 width={30}
                 height={30} />
               <span style={{ marginLeft: 16 }}>Polkadot.js</span>

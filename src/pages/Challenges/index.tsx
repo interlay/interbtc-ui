@@ -25,7 +25,6 @@ import clsx from 'clsx';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
-import InterlayImage from 'components/InterlayImage';
 import InterlayLink from 'components/InterlayLink';
 import CardList, {
   Card,
@@ -39,11 +38,13 @@ import {
 } from 'config/links';
 import DashboardTable from 'common/components/dashboard-table/dashboard-table';
 import TimerIncrement from 'common/components/timer-increment';
-import { CHALLENGES_2_AND_3_START, CHALLENGE_4_START } from '../../constants'; // relative path due to conflict
+import {
+  CHALLENGES_2_AND_3_START,
+  CHALLENGE_4_START
+} from '../../constants';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { StoreType } from 'common/types/util.types';
-// TODO: should use an SVG
-import newMark from 'assets/img/icons/new-mark.png';
+import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
 import 'pages/dashboard/dashboard-subpage.scss';
 import './challenges.scss';
 
@@ -95,11 +96,9 @@ const CHALLENGE_ITEMS = [
   {
     title: 'leaderboard.challenges.vault_treasure_hunt',
     titleIcon: (
-      <InterlayImage
-        src={newMark}
+      <NewMarkIcon
         width={20}
-        height={20}
-        alt='new' />
+        height={20} />
     ),
     content: 'leaderboard.challenges.vault_treasure_hunt_desc',
     contentLink: POLKA_BTC_DOC_TREASURE_HUNT_VAULT
@@ -107,11 +106,9 @@ const CHALLENGE_ITEMS = [
   {
     title: 'leaderboard.challenges.relayer_treasure_hunt',
     titleIcon: (
-      <InterlayImage
-        src={newMark}
+      <NewMarkIcon
         width={20}
-        height={20}
-        alt='new' />
+        height={20} />
     ),
     content: 'leaderboard.challenges.relayer_treasure_hunt_desc',
     contentLink: POLKA_BTC_DOC_TREASURE_HUNT_RELAYER
