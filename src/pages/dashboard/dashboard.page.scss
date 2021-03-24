@@ -1,22 +1,7 @@
 @import "../../variables";
 @import "../../mixins";
 
-.dashboard-items-container {
-  text-align: center;
-
-  display: grid;
-  padding: 8px 0px;
-}
-
-.card {
-  width: 90%;
-  min-height: 300px;
-  background-color: white;
-  border: none;
-  border-radius: 10;
-  padding: 15px 20px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-
+.dashboard-card {
   h1 {
     color: black;
     font-weight: 400;
@@ -97,8 +82,6 @@
 
   .external-link {
     margin-left: 3px;
-    // filter: brightness(0) saturate(100%) invert(77%) sepia(49%) saturate(5098%) hue-rotate(350deg) brightness(102%)
-    //     contrast(94%);
   }
 
   .card-top-content {
@@ -123,56 +106,17 @@
   }
 }
 
-.row-grid {
-  display: grid;
-  justify-items: center;
-  width: 100%;
-  row-gap: 30px;
-}
-
 .chart-container {
   position: relative;
   margin-top: 10px;
-}
-
-.section-top-gap {
-  margin-top: 40px;
-}
-
-.section-bottom-gap {
-  margin-bottom: 40px;
 }
 
 .bold-font {
   font-weight: 700;
 }
 
-@media only screen and (min-width: $mobile-large-size) {
-  .card {
-    min-height: 340px;
-  }
-
-  .row-grid {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr;
-  }
-}
-
 @media only screen and (min-width: $desktop-size) {
-  .dashboard-items-container {
-    @include justifyCenter();
-  }
-  
-  .row-grid {
-    grid-template-columns: 1fr 1fr 1fr;
-    column-gap: 40px;
-  }
-
-  .card {
-    width: 100%;
-    min-height: 340px;
-    padding: 30px 20px;
-    // box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0);
+  .dashboard-card {
     h1 {
         font-size: 16px;
         margin-bottom: 0.5rem;
@@ -190,23 +134,12 @@
         padding: 12px 12px;
     }
   }
-  // .card:hover {
-  //     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  //     -webkit-transition: box-shadow 0.2s ease-in;
-  // }
+  
   .chart-container {
     margin-top: 20px;
   }
   .canvas {
     height: 400px !important;
-  }
-  .rows-container {
-    max-width: 1700px;
-    width: 90%;
-  }
-
-  .section-top-gap {
-    margin-top: 40px;
   }
 
   .parachain-content-container {
@@ -219,10 +152,6 @@
     padding: 12px 12px;
   }
 
-  // .card:hover {
-  //     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  //     -webkit-transition: box-shadow 0.2s ease-in;
-  // }
   .chart-container {
     margin-top: 20px;
   }
@@ -231,22 +160,9 @@
     height: 400px !important;
   }
 
-  .rows-container {
-    max-width: 1700px;
-    width: 90%;
-  }
-
   .latest-block-text {
     font-size: 12px;
     font-weight: 700;
-  }
-
-  .section-top-gap {
-    margin-top: 40px;
-  }
-
-  .section-bottom-gap {
-    margin-bottom: 40px;
   }
 
   .section-div-line {

@@ -1,5 +1,4 @@
 
-import { ReactElement } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
@@ -10,12 +9,17 @@ import IssueRequests from './issue/issue-requests';
 import RedeemSteps from './redeem/redeem-steps';
 import RedeemRequests from './redeem/redeem-requests';
 import Transfer from './transfer/transfer';
-import Tabs, { Tab, HorizontalLine } from './Tabs';
+import Tabs, {
+  Tab,
+  HorizontalLine
+} from './Tabs';
+import useUpdateIssueRequests from 'services/use-update-issue-requests';
+import useUpdateRedeemRequests from 'services/use-update-redeem-requests';
 import { StoreType } from 'common/types/util.types';
 import { TabTypes } from 'utils/enums/tab-types';
 import './app.page.scss';
 
-function Application(): ReactElement {
+function Application() {
   // TODO: should avoid getting the store bloated
   const { selectedTabType } = useSelector((state: StoreType) => state.general);
   const issueStep = useSelector((state: StoreType) => state.issue.step);
@@ -23,6 +27,15 @@ function Application(): ReactElement {
   const { t } = useTranslation();
 
   const tabsHidden = issueStep !== 'ENTER_BTC_AMOUNT' && selectedTabType === TabTypes.Issue;
+
+  /**
+   * TODO:
+   * - Should avoid using redux.
+   * - Could merge fetching issue and redeem transactions
+   * or at least should use SWR caching strategy (https or react-query).
+   */
+  useUpdateIssueRequests(0, 15, 10000);
+  useUpdateRedeemRequests(0, 15, 10000);
 
   return (
     <MainContainer className='text-center white-background min-vh-100 app-page'>

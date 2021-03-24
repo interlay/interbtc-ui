@@ -6,7 +6,7 @@ import { StoreType } from '../../../../common/types/util.types';
 import QRCode from 'qrcode.react';
 import Big from 'big.js';
 import Timer from '../../../../common/components/timer';
-import AppTooltip from '../../../../common/components/tooltip';
+import InterlayTooltip from 'components/InterlayTooltip';
 import { copyToClipboard, getUsdAmount } from '../../../../common/utils/utils';
 
 type PaymentViewProps = {
@@ -54,13 +54,13 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
         </div>
         <div className='row '>
           <div className='col payment-address'>
-            <AppTooltip text={t('click_to_copy')}>
+            <InterlayTooltip overlay={t('click_to_copy')}>
               <span
                 className='copy-address'
                 onClick={() => copyToClipboard(props.request.vaultBTCAddress)}>
                 {props.request.vaultBTCAddress}
               </span>
-            </AppTooltip>
+            </InterlayTooltip>
           </div>
         </div>
         <div className='row payment-timer-with'>

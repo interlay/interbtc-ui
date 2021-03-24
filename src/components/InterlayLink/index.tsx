@@ -6,7 +6,7 @@ import styles from './interlay-link.module.css';
 
 type Ref = HTMLAnchorElement;
 
-const InterlayLink = React.forwardRef<Ref, React.ComponentPropsWithoutRef<'a'>>(({
+const InterlayLink = React.forwardRef<Ref, React.ComponentPropsWithRef<'a'>>(({
   className,
   children,
   ...rest

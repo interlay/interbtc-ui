@@ -3,7 +3,7 @@
 const InterlayImage = ({
   alt,
   ...rest
-}: React.ComponentPropsWithoutRef<'img'>) => (
+}: React.ComponentPropsWithRef<'img'>) => (
   <img
     alt={alt}
     {...rest} />

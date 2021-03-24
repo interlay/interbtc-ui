@@ -1,29 +1,43 @@
-import { useState, useEffect, ReactElement, useMemo } from 'react';
+
+import {
+  useState,
+  useEffect,
+  ReactElement,
+  useMemo
+} from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
 import { satToBTC } from '@interlay/polkabtc';
-import { getAccents } from '../../../pages/dashboard/dashboard-colors';
-import { StoreType } from '../../../common/types/util.types';
-import { DashboardIssueInfo } from '../../../common/types/issue.types';
-import { defaultTableDisplayParams, shortAddress, formatDateTimePrecise } from '../../../common/utils/utils';
+import { BtcNetworkName, IssueColumns } from '@interlay/polkabtc-stats';
+
+import MainContainer from 'parts/MainContainer';
+import PageTitle from 'parts/PageTitle';
 import DashboardTable, {
   StyledLinkData,
   StatusComponent,
   StatusCategories
-} from '../../../common/components/dashboard-table/dashboard-table';
-import * as constants from '../../../constants';
-import { BtcNetworkName, IssueColumns } from '@interlay/polkabtc-stats';
-import TimerIncrement from '../../../common/components/timer-increment';
+} from 'common/components/dashboard-table/dashboard-table';
+import TimerIncrement from 'common/components/timer-increment';
 import LineChartComponent from '../components/line-chart-component';
-import MainContainer from 'parts/MainContainer';
-import PageTitle from 'parts/PageTitle';
+import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import { getAccents } from 'pages/dashboard/dashboard-colors';
+import { StoreType } from 'common/types/util.types';
+import { DashboardIssueInfo } from 'common/types/issue.types';
+import {
+  defaultTableDisplayParams,
+  shortAddress,
+  formatDateTimePrecise
+} from 'common/utils/utils';
+import * as constants from '../../../constants';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard.page.scss';
 import '../dashboard-subpage.scss';
 
-export default function IssueDashboard(): ReactElement {
-  const { totalPolkaBTC, prices } = useSelector((state: StoreType) => state.general);
+function IssueDashboard() {
+  const {
+    totalPolkaBTC,
+    prices
+  } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
   const statsApi = usePolkabtcStats();
   // eslint-disable-next-line no-array-constructor
@@ -36,11 +50,10 @@ export default function IssueDashboard(): ReactElement {
   // eslint-disable-next-line no-array-constructor
   const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number }>());
   const pointIssuesPerDay = useMemo(
-    () =>
-      cumulativeIssuesPerDay.map((dataPoint, i) => {
-        if (i === 0) return 0;
-        return dataPoint.sat - cumulativeIssuesPerDay[i - 1].sat;
-      }),
+    () => cumulativeIssuesPerDay.map((dataPoint, index) => {
+      if (index === 0) return 0;
+      return dataPoint.sat - cumulativeIssuesPerDay[index - 1].sat;
+    }),
     [cumulativeIssuesPerDay]
   );
 
@@ -55,7 +68,10 @@ export default function IssueDashboard(): ReactElement {
       );
       setIssueRequests(res.data);
     },
-    [tableParams, statsApi]
+    [
+      tableParams,
+      statsApi
+    ]
   );
 
   const [fetchTotalSuccessfulIssues, fetchTotalIssues] = useMemo(
@@ -69,24 +85,20 @@ export default function IssueDashboard(): ReactElement {
         setTotalIssues(res.data);
       }
     ],
-    [statsApi] // to silence the compiler
+    [statsApi] // To silence the compiler
   );
 
   const tableHeadings = [
-    // <h1>{t("id")}</h1>,
     <h1>{t('date')}</h1>,
     <h1>{t('issue_page.amount')}</h1>,
     <h1>{t('issue_page.parachain_block')}</h1>,
     <h1>{t('issue_page.vault_dot_address')}</h1>,
     <h1>{t('issue_page.vault_btc_address')}</h1>,
-    // "BTC Transaction",
-    // "BTC Confirmations",
     <h1>{t('status')}</h1>
   ];
 
   const tableIssueRequestRow = useMemo(
     () => (ireq: DashboardIssueInfo): ReactElement[] => [
-      // <p>{shortAddress(ireq.id)}</p>,
       <p>{formatDateTimePrecise(new Date(ireq.timestamp))}</p>,
       <p>{ireq.amountBTC}</p>,
       <p>{ireq.creation}</p>,
@@ -114,26 +126,33 @@ export default function IssueDashboard(): ReactElement {
       const res = await statsApi.getRecentDailyIssues(6);
       setCumulativeIssuesPerDay(res.data);
     },
-    [statsApi] // to silence the compiler
+    [statsApi] // To silence the compiler
   );
 
   useEffect(() => {
     try {
       fetchIssueRequests();
       fetchIssuesLastDays();
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error('[IssueDashboard useEffect] error.message => ', error.message);
     }
-  }, [fetchIssueRequests, tableParams, fetchIssuesLastDays]);
+  }, [
+    fetchIssueRequests,
+    tableParams,
+    fetchIssuesLastDays
+  ]);
 
   useEffect(() => {
     try {
       fetchTotalSuccessfulIssues();
       fetchTotalIssues();
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error('[IssueDashboard useEffect] error.message => ', error.message);
     }
-  }, [fetchTotalSuccessfulIssues, fetchTotalIssues]);
+  }, [
+    fetchTotalSuccessfulIssues,
+    fetchTotalIssues
+  ]);
 
   return (
     <MainContainer>
@@ -216,3 +235,5 @@ export default function IssueDashboard(): ReactElement {
     </MainContainer>
   );
 }
+
+export default IssueDashboard;

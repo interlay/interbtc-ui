@@ -19,10 +19,12 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "jsxImportSource": "@emotion/react" // for the css prop
   },
   "include": [
-    "src"
+    "src",
+    "twin.d.ts"
   ],
   "rules": [
     {

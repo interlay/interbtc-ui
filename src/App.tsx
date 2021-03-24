@@ -15,7 +15,6 @@ import {
   toast,
   ToastContainer
 } from 'react-toastify';
-import ReactTooltip from 'react-tooltip';
 import {
   useSelector,
   useDispatch,
@@ -38,9 +37,9 @@ import {
 
 import Layout from 'parts/Layout';
 import ApplicationPage from 'pages/app/app.page';
-import DashboardPage from 'pages/dashboard/dashboard.page';
-import VaultDashboardPage from 'pages/vault-dashboard/vault-dashboard.page';
-import StakedRelayerPage from 'pages/staked-relayer/staked-relayer.page';
+import Dashboard from 'pages/dashboard/dashboard.page';
+import VaultDashboard from 'pages/vault-dashboard/vault-dashboard.page';
+import StakedRelayer from 'pages/staked-relayer/staked-relayer.page';
 import Challenges from 'pages/Challenges';
 import VaultsDashboard from 'pages/dashboard/vaults/vaults.dashboard.page';
 import IssueDashboard from 'pages/dashboard/issue/issue.dashboard.page';
@@ -391,10 +390,6 @@ function App(): ReactElement {
         position='top-right'
         autoClose={5000}
         hideProgressBar={false} />
-      <ReactTooltip
-        place='top'
-        type='dark'
-        effect='solid' />
       {/* TODO: should move into `Topbar` */}
       <AccountModal
         selectedAccount={address}
@@ -433,7 +428,7 @@ function App(): ReactElement {
                 <React.Suspense fallback={<div>Loading...</div>}>
                   <Switch location={location}>
                     <Route path={PAGES.STAKED_RELAYER}>
-                      <StakedRelayerPage />
+                      <StakedRelayer />
                     </Route>
                     <Route path={PAGES.VAULTS}>
                       <VaultsDashboard />
@@ -457,10 +452,10 @@ function App(): ReactElement {
                       <RelayDashboard />
                     </Route>
                     <Route path={PAGES.DASHBOARD}>
-                      <DashboardPage />
+                      <Dashboard />
                     </Route>
                     <Route path={PAGES.VAULT}>
-                      <VaultDashboardPage />
+                      <VaultDashboard />
                     </Route>
                     <Route path={PAGES.FEEDBACK}>
                       <Feedback />

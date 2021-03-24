@@ -1,29 +1,46 @@
-import { useState, useEffect, ReactElement, useMemo } from 'react';
+
+import {
+  useState,
+  useEffect,
+  ReactElement,
+  useMemo
+} from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { getAccents } from '../../../pages/dashboard/dashboard-colors';
-import { StoreType } from '../../../common/types/util.types';
-import { DashboardRequestInfo } from '../../../common/types/redeem.types';
+import { satToBTC } from '@interlay/polkabtc';
+import {
+  BtcNetworkName,
+  RedeemColumns
+} from '@interlay/polkabtc-stats';
+
+import MainContainer from 'parts/MainContainer';
+import PageTitle from 'parts/PageTitle';
 import DashboardTable, {
   StyledLinkData,
   StatusComponent,
   StatusCategories
-} from '../../../common/components/dashboard-table/dashboard-table';
+} from 'common/components/dashboard-table/dashboard-table';
+import TimerIncrement from 'common/components/timer-increment';
+import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import { getAccents } from 'pages/dashboard/dashboard-colors';
+import { StoreType } from 'common/types/util.types';
+import { DashboardRequestInfo } from 'common/types/redeem.types';
 import * as constants from '../../../constants';
-import { defaultTableDisplayParams, shortAddress, formatDateTimePrecise } from '../../../common/utils/utils';
-import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
-import { satToBTC } from '@interlay/polkabtc';
+import {
+  defaultTableDisplayParams,
+  shortAddress,
+  formatDateTimePrecise
+} from 'common/utils/utils';
 import LineChartComponent from '../components/line-chart-component';
-import { BtcNetworkName, RedeemColumns } from '@interlay/polkabtc-stats';
-import TimerIncrement from '../../../common/components/timer-increment';
-import MainContainer from 'parts/MainContainer';
-import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard.page.scss';
 import '../dashboard-subpage.scss';
 
-export default function RedeemDashboard(): ReactElement {
-  const { polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
+function RedeemDashboard() {
+  const {
+    polkaBtcLoaded,
+    prices
+  } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
   const statsApi = usePolkabtcStats();
 
@@ -43,26 +60,26 @@ export default function RedeemDashboard(): ReactElement {
       }),
     [cumulativeRedeemsPerDay]
   );
+  /**
+   * TODO: should not use `useMemo` as it's not the case like expensive array calculation.
+   * - should double-check `useMemo` and `useCallback` cases
+   */
   const redeemSuccessRate = useMemo(() => Number(totalSuccessfulRedeems) / Number(totalRedeems) || 0, [
     totalSuccessfulRedeems,
     totalRedeems
   ]);
 
   const tableHeadings: ReactElement[] = [
-    // <h1>{t("id")}</h1>,
     <h1>{t('date')}</h1>,
     <h1>{t('redeem_page.amount')}</h1>,
     <h1>{t('parachainblock')}</h1>,
     <h1>{t('issue_page.vault_dot_address')}</h1>,
     <h1>{t('redeem_page.output_BTC_address')}</h1>,
-    // "BTC Transaction",
-    // "BTC Confirmations",
     <h1>{t('status')}</h1>
   ];
 
   const tableRedeemRequestRow = useMemo(
     () => (rreq: DashboardRequestInfo): ReactElement[] => [
-      // <p>{shortAddress(ireq.id)}</p>,
       <p>{formatDateTimePrecise(new Date(rreq.timestamp))}</p>,
       <p>{rreq.amountPolkaBTC}</p>,
       <p>{rreq.creation}</p>,
@@ -100,16 +117,22 @@ export default function RedeemDashboard(): ReactElement {
       );
       setRedeemRequests(res.data);
     },
-    [tableParams, statsApi]
+    [
+      tableParams,
+      statsApi
+    ]
   );
 
   useEffect(() => {
     try {
       fetchRedeemRequests();
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error('[RedeemDashboard useEffect] error.message => ', error.message);
     }
-  }, [fetchRedeemRequests, tableParams]);
+  }, [
+    fetchRedeemRequests,
+    tableParams
+  ]);
 
   useEffect(() => {
     const fetchTotalSuccessfulRedeems = async () => {
@@ -141,11 +164,14 @@ export default function RedeemDashboard(): ReactElement {
           fetchTotalRedeemedAmount(),
           fetchRedeemsLastDays()
         ]);
-      } catch (e) {
-        console.error(e);
+      } catch (error) {
+        console.error('[RedeemDashboard useEffect] error.message => ', error.message);
       }
     })();
-  }, [polkaBtcLoaded, statsApi]);
+  }, [
+    polkaBtcLoaded,
+    statsApi
+  ]);
 
   return (
     <MainContainer>
@@ -166,16 +192,14 @@ export default function RedeemDashboard(): ReactElement {
                   </h2>
                   <h1>
                     {totalRedeemedAmount === '-' ? t('no_data') : satToBTC(totalRedeemedAmount)}
-                                        &nbsp;BTC
+                    &nbsp;BTC
                   </h1>
                   {totalRedeemedAmount === '-' ? (
                     ''
                   ) : (
                     <h1 className='h1-price-opacity'>
                       $
-                      {(
-                        prices.bitcoin.usd * parseFloat(satToBTC(totalRedeemedAmount))
-                      ).toLocaleString()}
+                      {(prices.bitcoin.usd * parseFloat(satToBTC(totalRedeemedAmount))).toLocaleString()}
                     </h1>
                   )}
                 </div>
@@ -190,9 +214,7 @@ export default function RedeemDashboard(): ReactElement {
                     {t('dashboard.redeem.success_rate')}
                   </h2>
                   <h1>
-                    {totalRedeems === '-' ?
-                      t('no_data') :
-                      (redeemSuccessRate * 100).toFixed(2) + '%'}
+                    {totalRedeems === '-' ? t('no_data') : (redeemSuccessRate * 100).toFixed(2) + '%'}
                   </h1>
                 </div>
               </div>
@@ -242,3 +264,5 @@ export default function RedeemDashboard(): ReactElement {
     </MainContainer>
   );
 }
+
+export default RedeemDashboard;

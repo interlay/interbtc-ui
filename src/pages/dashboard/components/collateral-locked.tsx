@@ -9,6 +9,7 @@ import LineChartComponent from './line-chart-component';
 import { useTranslation } from 'react-i18next';
 import { getUsdAmount } from '../../../common/utils/utils';
 import { PAGES } from 'utils/constants/links';
+import DashboardCard from 'pages/dashboard/DashboardCard';
 
 type CollateralLockedProps = {
   linkButton?: boolean;
@@ -47,7 +48,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
   }, [fetchCollateralLastDays]);
 
   return (
-    <div className='card'>
+    <DashboardCard>
       <div className='card-top-content'>
         <div className='values-container'>
           <h1 style={{ color: getAccents('d_pink').color }}>{t('dashboard.vault.locked_collateral')}</h1>
@@ -80,7 +81,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
             pointCollateralPerDay.slice(1).map(amount => Number(planckToDOT(amount.toString())))
           ]} />
       </div>
-    </div>
+    </DashboardCard>
   );
 };
 

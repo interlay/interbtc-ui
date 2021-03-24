@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
 import { PAGES } from 'utils/constants/links';
+import DashboardCard from 'pages/dashboard/DashboardCard';
 
 // eslint-disable-next-line no-unused-vars
 enum Status {
@@ -63,7 +64,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
   }, [polkaBtcLoaded]);
 
   return (
-    <div className='card'>
+    <DashboardCard>
       <div className='card-top-content'>
         <div className='values-container'>
           <h1 className='bold-font'>
@@ -157,7 +158,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
           </div>
         )}
       </div>
-    </div>
+    </DashboardCard>
   );
 };
 
