@@ -520,5 +520,15 @@
   },
   "testnet": {
     "warning": "Notice: All assets in the beta testnet are for testing purposes only and have no real value."
+  },
+  "maintenance": {
+    "type": {
+      "scheduled": "Scheduled maintenance on",
+      "unplanned": "Unplanned maintenance on"
+    },
+    "reason": {
+      "chain": "The chain will be upgraded."
+    },
+    "info": "More info here."
   }
 }
