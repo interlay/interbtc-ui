@@ -58,7 +58,7 @@ export default function RedeemInfo() {
             </div>
             <div className='row '>
               <div className='col payment-address'>
-                <span className='copy-address'>{request.btcAddress}</span>
+                <span className='copy-address'>{request.userBTCAddress}</span>
               </div>
             </div>
             <div className='row'>

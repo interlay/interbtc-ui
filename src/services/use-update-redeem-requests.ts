@@ -12,7 +12,7 @@ import {
 
 import useInterval from 'utils/hooks/use-interval';
 import { updateAllRedeemRequestsAction } from 'common/actions/redeem.actions';
-import { statsToUIRedeemRequest } from 'common/utils/utils';
+import { statsToUIRedeemRequest } from 'common/utils/requests';
 import { RedeemRequest } from 'common/types/redeem.types';
 import { StoreType } from 'common/types/util.types';
 import * as constants from '../constants';

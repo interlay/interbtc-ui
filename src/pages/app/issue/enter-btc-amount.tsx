@@ -35,9 +35,9 @@ import {
 import {
   displayBtcAmount,
   getRandomVaultIdWithCapacity,
-  getUsdAmount,
-  parachainToUIIssueRequest
+  getUsdAmount
 } from 'common/utils/utils';
+import { parachainToUIIssueRequest } from 'common/utils/requests';
 import bitcoinLogo from 'assets/img/small-bitcoin-logo.png';
 import polkadotLogo from 'assets/img/small-polkadot-logo.png';
 import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';

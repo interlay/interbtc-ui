@@ -2,7 +2,6 @@ import {
   CHANGE_REDEEM_STEP,
   RESET_REDEEM_WIZARD,
   CHANGE_REDEEM_ID,
-  ADD_VAULT_REDEEMS,
   SET_REDEEM_REQUESTS,
   ADD_REDEEM_REQUEST,
   UPDATE_REDEEM_REQUEST,
@@ -18,13 +17,12 @@ import {
   ChangeRedeemId,
   SetRedeemRequests,
   AddRedeemRequest,
-  AddVaultRedeems,
   UpdateRedeemRequest,
   RetryRedeemRequest,
   RedeemExpired,
   ReimburseRedeemRequest
 } from '../types/actions.types';
-import { RedeemRequest, VaultRedeem } from '../types/redeem.types';
+import { RedeemRequest } from '../types/redeem.types';
 
 export const changeRedeemStepAction = (step: string): ChangeRedeemStep => ({
   type: CHANGE_REDEEM_STEP,
@@ -48,11 +46,6 @@ export const changeRedeemIdAction = (id: string): ChangeRedeemId => ({
 export const addRedeemRequestAction = (request: RedeemRequest): AddRedeemRequest => ({
   type: ADD_REDEEM_REQUEST,
   request
-});
-
-export const addVaultRedeemsAction = (vaultRedeems: VaultRedeem[]): AddVaultRedeems => ({
-  type: ADD_VAULT_REDEEMS,
-  vaultRedeems
 });
 
 export const updateRedeemRequestAction = (request: RedeemRequest): UpdateRedeemRequest => ({

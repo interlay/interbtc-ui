@@ -11,7 +11,6 @@ import {
   ADD_REDEEM_REQUEST,
   UPDATE_REDEEM_REQUEST,
   UPDATE_ALL_REDEEM_REQUESTS,
-  ADD_VAULT_REDEEMS,
   TOGGLE_PREMIUM_REDEEM
 } from '../types/actions.types';
 import { RedeemRequestStatus, RedeemState } from '../types/redeem.types';
@@ -21,7 +20,6 @@ const initialState = {
   step: 'AMOUNT_AND_ADDRESS',
   id: '',
   redeemRequests: new Map(),
-  vaultRedeems: [],
   premiumRedeem: false
 };
 
@@ -109,8 +107,6 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
       step: 'AMOUNT_AND_ADDRESS',
       redeemRequests: new Map()
     };
-  case ADD_VAULT_REDEEMS:
-    return { ...state, vaultRedeems: action.vaultRedeems };
   case UPDATE_ALL_REDEEM_REQUESTS: {
     const newRequests = new Map(state.redeemRequests);
     newRequests.set(action.userDotAddress, action.redeemRequests);

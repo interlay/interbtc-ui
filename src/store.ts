@@ -6,7 +6,7 @@ import { createLogger } from 'redux-logger';
 import { applyMiddleware, createStore } from 'redux';
 import { initializeState } from './common/actions/general.actions';
 import { FaucetClient, PolkaBTCAPI } from '@interlay/polkabtc';
-import { mapToArray, arrayToMap } from './common/utils/utils';
+import { mapToArray, arrayToMap } from './common/utils/requests';
 import * as constants from './constants';
 
 declare global {
@@ -42,7 +42,6 @@ export const getInitialState = (): StoreType => {
       step: 'ENTER_BTC_AMOUNT',
       id: '',
       issueRequests: new Map(),
-      vaultIssues: [],
       issuePeriod: 86400
     },
     redeem: {
@@ -50,8 +49,7 @@ export const getInitialState = (): StoreType => {
       address: '',
       step: 'AMOUNT_AND_ADDRESS',
       id: '',
-      redeemRequests: new Map(),
-      vaultRedeems: []
+      redeemRequests: new Map()
     },
     vault: {
       requests: [],

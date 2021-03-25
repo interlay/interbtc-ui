@@ -45,12 +45,12 @@ import {
 import * as constants from '../../../constants';
 import {
   displayBtcAmount,
-  getUsdAmount,
-  parachainToUIRedeemRequest
+  getUsdAmount
 } from 'common/utils/utils';
 import bitcoinLogo from 'assets/img/small-bitcoin-logo.png';
 import polkadotLogo from 'assets/img/small-polkadot-logo.png';
 import ParachainStatusInfo from 'components/ParachainStatusInfo';
+import { parachainToUIRedeemRequest } from 'common/utils/requests';
 
 type AmountAndAddressForm = {
   amountPolkaBTC: string;
@@ -313,7 +313,7 @@ function EnterAmountAndAddress(): ReactElement {
           <div className='col-9 premium-toggler'>
             <div className='premium-text'>
               {t('redeem_page.premium_redeem')}&nbsp;&nbsp;
-              <InterlayTooltip overlay={t('redeem_page.failed')}>
+              <InterlayTooltip overlay={t('redeem_page.premium_redeem_info')}>
                 <i className='fas fa-exclamation-circle' />
               </InterlayTooltip>
             </div>
@@ -395,7 +395,7 @@ function EnterAmountAndAddress(): ReactElement {
                   </img> &nbsp;
                   {calculateTotalDOT()} DOT
                   <div className='send-price'>
-                    {'~ $' + getUsdAmount(calculateTotalDOT(), prices.bitcoin.usd)}
+                    {'~ $' + getUsdAmount(calculateTotalDOT(), prices.polkadot.usd)}
                   </div>
                 </div>
               </div>

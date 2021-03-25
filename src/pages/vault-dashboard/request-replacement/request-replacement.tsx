@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import ButtonMaybePending from '../../../common/components/pending-button';
+import ButtonMaybePending from 'common/components/pending-button';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { addReplaceRequestsAction } from '../../../common/actions/vault.actions';
+import { addReplaceRequestsAction } from 'common/actions/vault.actions';
 import { useDispatch, useSelector } from 'react-redux';
-import { StoreType } from '../../../common/types/util.types';
+import { StoreType } from 'common/types/util.types';
 import { btcToSat, satToBTC } from '@interlay/polkabtc';
-import { requestsToVaultReplaceRequests } from '../../../common/utils/utils';
+import { parachainToUIReplaceRequests } from 'common/utils/requests';
 import { useTranslation } from 'react-i18next';
 import { PolkaBTC } from '@interlay/polkabtc/build/interfaces';
 import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
@@ -50,7 +50,7 @@ export default function RequestReplacementModal(props: RequestReplacementProps) 
       const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
       if (!requests) return;
 
-      dispatch(addReplaceRequestsAction(requestsToVaultReplaceRequests(requests)));
+      dispatch(addReplaceRequestsAction(parachainToUIReplaceRequests(requests)));
       toast.success('Replacment request is submitted');
       props.onClose();
     } catch (error) {
