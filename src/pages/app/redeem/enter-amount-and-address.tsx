@@ -395,7 +395,7 @@ function EnterAmountAndAddress(): ReactElement {
                   </img> &nbsp;
                   {calculateTotalDOT()} DOT
                   <div className='send-price'>
-                    {'~ $' + getUsdAmount(calculateTotalDOT(), prices.bitcoin.usd)}
+                    {'~ $' + getUsdAmount(calculateTotalDOT(), prices.polkadot.usd)}
                   </div>
                 </div>
               </div>
