@@ -1,5 +1,5 @@
-import { IssueRequest, VaultIssue } from './issue.types';
-import { RedeemRequest, VaultRedeem } from './redeem.types';
+import { IssueRequest } from './issue.types';
+import { RedeemRequest } from './redeem.types';
 import { VaultReplaceRequest } from './vault.types';
 import { StoreType, ParachainStatus, Prices } from './util.types';
 import { TabTypes } from 'utils/enums/tab-types';
@@ -175,11 +175,6 @@ export interface AddRedeemRequest {
     request: RedeemRequest;
 }
 
-export interface AddVaultRedeems {
-    type: typeof ADD_VAULT_REDEEMS;
-    vaultRedeems: VaultRedeem[];
-}
-
 export interface UpdateRedeemRequest {
     type: typeof UPDATE_REDEEM_REQUEST;
     request: RedeemRequest;
@@ -215,7 +210,6 @@ export type RedeemActions =
     | AddRedeemRequest
     | ChangeAddress
     | InitState
-    | AddVaultRedeems
     | UpdateRedeemRequest
     | UpdateAllRedeemRequests
     | RetryRedeemRequest
@@ -231,7 +225,6 @@ export const RESET_ISSUE_WIZARD = 'RESET_ISSUE_WIZARD';
 export const STORE_ISSUE_REQUEST = 'STORE_ISSUE_REQUEST';
 export const ADD_ISSUE_REQUEST = 'ADD_ISSUE_REQUEST';
 export const UPDATE_ISSUE_REQUEST = 'UPDATE_ISSUE_REQUEST';
-export const ADD_VAULT_ISSUES = 'ADD_VAULT_ISSUES';
 export const UPDATE_ALL_ISSUE_REQUESTS = 'UPDATE_ALL_ISSUE_REQUESTS';
 export const CHANGE_SELECTED_ISSUE = 'CHANGE_SELECTED_ISSUE';
 export const UPDATE_ISSUE_PERIOD = 'UPDATE_ISSUE_PERIOD';
@@ -239,11 +232,6 @@ export const UPDATE_ISSUE_PERIOD = 'UPDATE_ISSUE_PERIOD';
 export interface ChangeSelectedIssue {
     type: typeof CHANGE_SELECTED_ISSUE;
     request: IssueRequest;
-}
-
-export interface AddVaultIssues {
-    type: typeof ADD_VAULT_ISSUES;
-    vaultIssues: VaultIssue[];
 }
 
 export interface ChangeIssueStep {
@@ -294,7 +282,6 @@ export type IssueActions =
     | UpdateIssueRequest
     | ChangeAddress
     | InitState
-    | AddVaultIssues
     | UpdateAllIssueRequests
     | ChangeSelectedIssue
     | UpdateIssuePeriod;

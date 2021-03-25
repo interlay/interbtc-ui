@@ -1,18 +1,18 @@
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { StoreType } from '../../../common/types/util.types';
-import { addVaultRedeemsAction } from '../../../common/actions/redeem.actions';
-import { redeemRequestToVaultRedeem, shortAddress } from '../../../common/utils/utils';
-import BitcoinAddress from '../../../common/components/bitcoin-links/address';
-import { VaultRedeem } from '../../../common/types/redeem.types';
+import { StoreType } from 'common/types/util.types';
+import { shortAddress } from 'common/utils/utils';
+import BitcoinAddress from 'common/components/bitcoin-links/address';
 import { FaCheck, FaHourglass } from 'react-icons/fa';
 import { Badge, Table } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
+import { RedeemRequest, RedeemRequestStatus } from 'common/types/redeem.types';
+import { parachainToUIRedeemRequest } from 'common/utils/requests';
 
 export default function RedeemTable(): ReactElement {
   const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
-  const redeems = useSelector((state: StoreType) => state.redeem.vaultRedeems);
+  const [redeemRequests, setRedeemRequests] = useState<Array<RedeemRequest>>([]);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -22,10 +22,24 @@ export default function RedeemTable(): ReactElement {
 
       try {
         const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-        const redeemMap = await window.polkaBTC.vaults.mapRedeemRequests(vaultId);
+        const [parachainHeight, issuePeriod, requiredBtcConfirmations, redeemMap] = await Promise.all([
+          window.polkaBTC.system.getCurrentBlockNumber(),
+          window.polkaBTC.issue.getIssuePeriod(),
+          window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
+          window.polkaBTC.vaults.mapRedeemRequests(vaultId)
+        ]);
 
         if (!redeemMap) return;
-        dispatch(addVaultRedeemsAction(redeemRequestToVaultRedeem(redeemMap)));
+
+        const redeemRequests: Array<RedeemRequest> = [];
+
+        redeemMap.forEach(async (request, id) => {
+          redeemRequests.push(
+            await parachainToUIRedeemRequest(id, request, parachainHeight, issuePeriod, requiredBtcConfirmations)
+          );
+        });
+
+        setRedeemRequests(redeemRequests);
       } catch (err) {
         console.log(err);
       }
@@ -34,14 +48,17 @@ export default function RedeemTable(): ReactElement {
     fetchData();
   }, [polkaBtcLoaded, dispatch, address]);
 
-  const showStatus = (request: VaultRedeem) => {
-    if (request.completed) {
+  const showStatus = (status: RedeemRequestStatus) => {
+    switch (status) {
+    case RedeemRequestStatus.Completed:
       return <FaCheck></FaCheck>;
-    }
-    if (request.cancelled) {
+    case RedeemRequestStatus.Expired:
+    case RedeemRequestStatus.Reimbursed:
+    case RedeemRequestStatus.Retried:
       return <Badge variant='secondary'>{t('cancelled')}</Badge>;
+    default:
+      return <FaHourglass></FaHourglass>;
     }
-    return <FaHourglass></FaHourglass>;
   };
 
   return (
@@ -55,7 +72,7 @@ export default function RedeemTable(): ReactElement {
           {t('redeem_requests')}
         </p>
       </div>
-      {redeems && redeems.length > 0 ? (
+      {redeemRequests && redeemRequests.length > 0 ? (
         <React.Fragment>
           <Table
             hover
@@ -68,25 +85,23 @@ export default function RedeemTable(): ReactElement {
                 <th>{t('user')}</th>
                 <th>{t('btc_address')}</th>
                 <th>PolkaBTC</th>
-                <th>DOT</th>
                 <th>{t('status')}</th>
               </tr>
             </thead>
             <tbody>
-              {redeems.map((redeem, index) => {
+              {redeemRequests.map((redeem, index) => {
                 return (
                   <tr key={index}>
                     <td>{redeem.id}</td>
                     <td>{redeem.timestamp}</td>
-                    <td>{shortAddress(redeem.user)}</td>
+                    <td>{shortAddress(redeem.userDOTAddress)}</td>
                     <td>
                       <BitcoinAddress
-                        btcAddress={redeem.btcAddress}
+                        btcAddress={redeem.userBTCAddress}
                         shorten />
                     </td>
-                    <td>{redeem.polkaBTC}</td>
-                    <td>{redeem.unlockedDOT}</td>
-                    <td>{showStatus(redeem)}</td>
+                    <td>{redeem.amountPolkaBTC}</td>
+                    <td>{showStatus(redeem.status)}</td>
                   </tr>
                 );
               })}

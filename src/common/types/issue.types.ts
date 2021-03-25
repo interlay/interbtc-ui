@@ -6,6 +6,7 @@ export interface IssueRequest {
   creation: string;
   vaultBTCAddress: string;
   vaultDOTAddress: string;
+  userDOTAddress: string;
   btcTxId: string;
   confirmations: number;
   status: IssueRequestStatus;
@@ -55,19 +56,6 @@ export interface IssueMap {
   [key: string]: IssueRequest[];
 }
 
-// TODO: replace and remove with polkabtc-stats call
-export interface VaultIssue {
-  id: string;
-  user: string;
-  timestamp: string;
-  btcAddress: string;
-  polkaBTC: string;
-  lockedDOT: string;
-  status: string;
-  completed: boolean;
-  cancelled: boolean;
-}
-
 export interface IssueState {
   // TODO: use current account from general state
   address: string;
@@ -77,8 +65,6 @@ export interface IssueState {
   id: string;
   // mapping of all issue requests
   issueRequests: Map<string, IssueRequest[]>;
-  // TODO: remove
-  vaultIssues: VaultIssue[];
   // issue period in seconds
   issuePeriod: number;
 }
