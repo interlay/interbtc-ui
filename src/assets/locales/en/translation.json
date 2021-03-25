@@ -196,7 +196,8 @@
     "recover_receive_total": " in total",
     "compensation_payment": "Compensation for inconvenience",
     "compensation_burn": "Received for burning PolkaBTC",
-    "retry_new_redeem": "You can now create a new redeem request with another vault."
+    "retry_new_redeem": "You can now create a new redeem request with another vault.",
+    "premium_redeem_info": "If you select premium redeem, you will try to redeem with a vault that is below the secure collateral threshold. This operation has a higher risk since the vault might be liquidated. For this higher risk, you will receive a compensation."
   },
   "transfer_page": {
     "transfer_to": "Transfer PolkaBTC"

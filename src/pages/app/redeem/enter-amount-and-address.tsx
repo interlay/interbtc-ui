@@ -313,7 +313,7 @@ function EnterAmountAndAddress(): ReactElement {
           <div className='col-9 premium-toggler'>
             <div className='premium-text'>
               {t('redeem_page.premium_redeem')}&nbsp;&nbsp;
-              <InterlayTooltip overlay={t('redeem_page.failed')}>
+              <InterlayTooltip overlay={t('redeem_page.premium_redeem_info')}>
                 <i className='fas fa-exclamation-circle' />
               </InterlayTooltip>
             </div>
