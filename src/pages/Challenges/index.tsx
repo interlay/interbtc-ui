@@ -2,12 +2,10 @@
 import { useState } from 'react';
 import {
   ToggleButton,
-  ToggleButtonGroup
+  ToggleButtonGroup,
+  ToggleButtonRadioProps
 } from 'react-bootstrap';
-import {
-  useTranslation,
-  TFunction
-} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
 
@@ -28,60 +26,44 @@ import {
   POLKA_BTC_DOC_TREASURE_HUNT_RELAYER
 } from 'config/links';
 import TimerIncrement from 'common/components/timer-increment';
-import {
-  CHALLENGES_2_AND_3_START,
-  CHALLENGE_4_START
-} from '../../constants';
 import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
+import { CHALLENGE_CUT_OFFS } from 'config/challenges';
 import 'pages/dashboard/dashboard-subpage.scss';
 import './challenges.scss';
 
-// ray test touch <
-const CHALLENGE_CUT_OFFS = [
-  CHALLENGES_2_AND_3_START,
-  CHALLENGE_4_START,
-  0 // all time
-];
-// ray test touch >
+const challengeCutOffs = Object.values(CHALLENGE_CUT_OFFS);
 
-type ChallengeSelectorProps = {
-  challengeIndex: number;
-  setChallengeIndex: (index: number) => void;
-  t: TFunction;
-}
+function ChallengeSelector(props: ToggleButtonRadioProps<number>) {
+  const { t } = useTranslation();
 
-// ray test touch <
-function ChallengeSelector({
-  challengeIndex,
-  setChallengeIndex,
-  t
-}: ChallengeSelectorProps) {
-  const timestamp = Date.now();
+  const nowTimestamp = Date.now();
+
+  const validChallengeCutOffs = challengeCutOffs.filter(item => nowTimestamp > item.time);
+
+  if (validChallengeCutOffs.length <= 0) {
+    return null;
+  }
 
   return (
-    <div className='text-right'>
-      <ToggleButtonGroup
-        className='mt-4 mx-3'
-        type='radio'
-        value={challengeIndex}
-        name='challenge'
-        onChange={(val: any) => setChallengeIndex(val)}>
-        {timestamp > CHALLENGE_CUT_OFFS[0] && ( // only show buttons at all if at least the first is active
-          CHALLENGE_CUT_OFFS.map((displayFrom, idx) =>
-            timestamp > displayFrom &&
-            <ToggleButton
-              variant='outline-polkadot'
-              className='font-weight-bold'
-              value={idx}>
-              {t(`leaderboard.challenge_buttons.${idx}`)}
-            </ToggleButton>
-          )
-        )}
-      </ToggleButtonGroup>
-    </div>
+    <ToggleButtonGroup
+      type='radio'
+      {...props}>
+      {validChallengeCutOffs.map(challengeCutOff => (
+        <ToggleButton
+          // TODO: should use tailwindcss
+          variant='outline-polkadot'
+          // className={clsx(
+          //   'border-interlayRed-light',
+          //   'bg-interlayRed-light'
+          // )}
+          key={challengeCutOff.id}
+          value={challengeCutOff.id}>
+          {t(`leaderboard.challenge_buttons.${challengeCutOff.id}`)}
+        </ToggleButton>
+      ))}
+    </ToggleButtonGroup>
   );
 }
-// ray test touch >
 
 const CHALLENGE_ITEMS = [
   {
@@ -119,11 +101,41 @@ const CHALLENGE_ITEMS = [
   }
 ];
 
+const tabStyles = {
+  className: clsx(
+    'py-2'
+  ),
+  // TODO: hack for now
+  tabClassName: clsx(
+    'no-underline',
+    'text-black'
+  )
+};
+
+const TAB_KEYS = Object.freeze({
+  VAULTS: 'vaults',
+  STAKED_RELAYER: 'staked-relayer'
+});
+
 function Challenges() {
   // TODO: should be persisted using query parameters
-  const [challengeIndex, setChallengeIndex] = useState(0); // all time
-
+  const [challengeId, setChallengeId] = useState(CHALLENGE_CUT_OFFS.challengesAllTime.id);
+  const [tabKey, setTabKey] = useState<string | null>('vaults');
   const { t } = useTranslation();
+
+  const handleChallengeIdChange = (newChallengeId: number) => {
+    setChallengeId(newChallengeId);
+  };
+
+  const handleTabSelect = (newTabKey: string | null) => {
+    setTabKey(newTabKey);
+  };
+
+  const challengeTime = challengeCutOffs.find(item => item.id === challengeId)?.time;
+  if (challengeTime === undefined) {
+    // TODO: should translate
+    throw new Error('Something went wrong!');
+  }
 
   return (
     <MainContainer>
@@ -157,28 +169,30 @@ function Challenges() {
           <PageTitle
             mainTitle={t('leaderboard.title')}
             subTitle={<TimerIncrement />} />
-          <InterlayTabs>
+          <div
+            className={clsx(
+              'text-right',
+              'px-4',
+              // TODO: hack for now
+              'mt-8'
+            )}>
+            <ChallengeSelector
+              name='challenge'
+              value={challengeId}
+              onChange={handleChallengeIdChange} />
+          </div>
+          <InterlayTabs onSelect={handleTabSelect}>
             <InterlayTab
-              className='space-y-10'
-              tabClassName={clsx(
-                'no-underline',
-                'text-black'
-              )}
-              eventKey='vaults'
+              {...tabStyles}
+              eventKey={TAB_KEYS.VAULTS}
               title={t('leaderboard.vault_scores')}>
-              <ChallengeSelector {...{ challengeIndex, setChallengeIndex, t }} />
-              <VaultScoresTable challengeCutOff={CHALLENGE_CUT_OFFS[challengeIndex]} />
+              {tabKey === TAB_KEYS.VAULTS && <VaultScoresTable challengeTime={challengeTime} />}
             </InterlayTab>
             <InterlayTab
-              className='space-y-10'
-              tabClassName={clsx(
-                'no-underline',
-                'text-black'
-              )}
-              eventKey='relayers'
+              {...tabStyles}
+              eventKey={TAB_KEYS.STAKED_RELAYER}
               title={t('leaderboard.relayer_scores')}>
-              <ChallengeSelector {...{ challengeIndex, setChallengeIndex, t }} />
-              <StakedRelayerScoresTable challengeCutOff={CHALLENGE_CUT_OFFS[challengeIndex]} />
+              {tabKey === TAB_KEYS.STAKED_RELAYER && <StakedRelayerScoresTable challengeTime={challengeTime} />}
             </InterlayTab>
           </InterlayTabs>
         </div>

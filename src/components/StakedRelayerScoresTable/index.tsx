@@ -20,7 +20,7 @@ import { StoreType } from 'common/types/util.types';
 
 interface Props {
   className?: string;
-  challengeCutOff: number;
+  challengeTime: number;
 }
 
 interface PatchedRelayerData extends Omit<RelayerData, 'lifetime_sla'> {
@@ -30,7 +30,7 @@ interface PatchedRelayerData extends Omit<RelayerData, 'lifetime_sla'> {
 
 const StakedRelayerScoresTable = ({
   className,
-  challengeCutOff
+  challengeTime
 }: Props) => {
   const [data, setData] = useState<(PatchedRelayerData)[]>([]);
   const { t } = useTranslation();
@@ -43,7 +43,7 @@ const StakedRelayerScoresTable = ({
 
     (async () => {
       try {
-        const stakedRelayers = (await statsApi.getRelayers(challengeCutOff)).data;
+        const stakedRelayers = (await statsApi.getRelayers(challengeTime)).data;
         const sortedStakedRelayers = stakedRelayers.sort((a, b) => b.lifetime_sla - a.lifetime_sla);
         const transformedStakedRelayers = sortedStakedRelayers.map(stakedRelayer => ({
           ...stakedRelayer,
@@ -57,7 +57,7 @@ const StakedRelayerScoresTable = ({
     })();
   }, [
     polkaBtcLoaded,
-    challengeCutOff,
+    challengeTime,
     statsApi
   ]);
 

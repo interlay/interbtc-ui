@@ -22,7 +22,7 @@ import { StoreType } from 'common/types/util.types';
 interface Props {
   className?: string;
   // TODO: should be union type
-  challengeCutOff: number;
+  challengeTime: number;
 }
 
 interface PatchedVaultData extends Omit<VaultData, 'lifetime_sla'> {
@@ -33,7 +33,7 @@ interface PatchedVaultData extends Omit<VaultData, 'lifetime_sla'> {
 // TODO: should be paginated
 const VaultScoresTable = ({
   className,
-  challengeCutOff
+  challengeTime
 }: Props) => {
   const [data, setData] = useState<(PatchedVaultData)[]>([]);
   const { t } = useTranslation();
@@ -49,7 +49,7 @@ const VaultScoresTable = ({
     // TODO: should add loading UX
     (async () => {
       try {
-        const vaults = (await statsApi.getVaults(challengeCutOff)).data;
+        const vaults = (await statsApi.getVaults(challengeTime)).data;
         const sortedVaults = vaults.sort((a, b) => b.lifetime_sla - a.lifetime_sla);
         const transformedVaults = sortedVaults.map(vault => ({
           ...vault,
@@ -64,7 +64,7 @@ const VaultScoresTable = ({
     })();
   }, [
     polkaBtcLoaded,
-    challengeCutOff,
+    challengeTime,
     statsApi
   ]);
 

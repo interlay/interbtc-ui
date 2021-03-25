@@ -23,6 +23,7 @@ module.exports = {
           DEFAULT: '#4ac948'
         },
         interlayRed: {
+          light: '#ed3855',
           DEFAULT: '#f32013'
         },
         // TODO: could use `Gray` shades from https://tailwindcss.com/docs/customizing-colors
