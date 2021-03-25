@@ -1,5 +1,4 @@
 
-// ray test touch <
 // TODO: could use TypeScript enum
 const STATUSES = Object.freeze({
   IDLE: 'idle',
@@ -9,4 +8,3 @@ const STATUSES = Object.freeze({
 });
 
 export default STATUSES;
-// ray test touch >

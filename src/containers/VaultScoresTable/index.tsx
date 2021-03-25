@@ -10,8 +10,11 @@ import { useTranslation } from 'react-i18next';
 import { VaultData } from '@interlay/polkabtc-stats';
 
 import InterlayTable from 'components/InterlayTable';
+import EllipsisLoader from 'components/TreeDotLoader';
+import ErrorNotification from 'components/ErrorNotification';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { StoreType } from 'common/types/util.types';
+import STATUSES from 'utils/constants/statuses';
 
 /**
  * TODO:
@@ -35,31 +38,36 @@ const VaultScoresTable = ({
   className,
   challengeTime
 }: Props) => {
-  const [data, setData] = useState<(PatchedVaultData)[]>([]);
-  const { t } = useTranslation();
-  const statsApi = usePolkabtcStats();
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+  const statsApi = usePolkabtcStats();
+  const [data, setData] = useState<(PatchedVaultData)[]>([]);
+  const [status, setStatus] = useState(STATUSES.IDLE);
+  const [error, setError] = useState<Error | null>(null);
+  const { t } = useTranslation();
 
+  // TODO: should add an abort-controller
   useEffect(() => {
     // TODO: should follow `<AuthenticatedApp />` vs. `<UnauthenticatedApp />` approach
     // - (Re: https://kentcdodds.com/blog/authentication-in-react-applications)
     if (!polkaBtcLoaded) return;
     if (!statsApi) return;
 
-    // TODO: should add loading UX
     (async () => {
       try {
+        setStatus(STATUSES.PENDING);
         const vaults = (await statsApi.getVaults(challengeTime)).data;
+        // TODO: should be done by table sort feature
         const sortedVaults = vaults.sort((a, b) => b.lifetime_sla - a.lifetime_sla);
         const transformedVaults = sortedVaults.map(vault => ({
           ...vault,
           lifetime_sla: Number(vault.lifetime_sla).toFixed(2)
         }));
+        setStatus(STATUSES.RESOLVED);
 
         setData(transformedVaults);
       } catch (error) {
-        // TODO: should do error handling not console log
-        console.log('[VaultScoresTable] error.message => ', error.message);
+        setStatus(STATUSES.REJECTED);
+        setError(error);
       }
     })();
   }, [
@@ -103,13 +111,31 @@ const VaultScoresTable = ({
     [t]
   );
 
-  // TODO: should optimize re-renders https://kentcdodds.com/blog/optimize-react-re-renders
-  return (
-    <InterlayTable
-      className={className}
-      columns={columns}
-      data={data} />
-  );
+  if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
+    return (
+      <div className='flex justify-center'>
+        <EllipsisLoader dotClassName='bg-interlayGreen' />
+      </div>
+    );
+  }
+
+  if (status === STATUSES.REJECTED) {
+    return (
+      <ErrorNotification message={error?.message} />
+    );
+  }
+
+  if (status === STATUSES.RESOLVED) {
+    // TODO: should optimize re-renders https://kentcdodds.com/blog/optimize-react-re-renders
+    return (
+      <InterlayTable
+        className={className}
+        columns={columns}
+        data={data} />
+    );
+  }
+
+  return null;
 };
 
 export default VaultScoresTable;
