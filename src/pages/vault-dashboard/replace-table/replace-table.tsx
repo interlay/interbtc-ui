@@ -1,11 +1,11 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { StoreType } from '../../../common/types/util.types';
-import { addReplaceRequestsAction } from '../../../common/actions/vault.actions';
+import { StoreType } from 'common/types/util.types';
+import { addReplaceRequestsAction } from 'common/actions/vault.actions';
 import { Button, Table } from 'react-bootstrap';
-import { requestsToVaultReplaceRequests } from '../../../common/utils/utils';
+import { parachainToUIReplaceRequests } from 'common/utils/requests';
 import BN from 'bn.js';
-import { shortAddress } from '../../../common/utils/utils';
+import { shortAddress } from 'common/utils/utils';
 import { useTranslation } from 'react-i18next';
 import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 
@@ -31,7 +31,7 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
         const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
         if (!requests) return;
 
-        dispatch(addReplaceRequestsAction(requestsToVaultReplaceRequests(requests)));
+        dispatch(addReplaceRequestsAction(parachainToUIReplaceRequests(requests)));
       } catch (err) {
         console.log(err);
       }

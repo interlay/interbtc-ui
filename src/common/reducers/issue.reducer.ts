@@ -6,7 +6,6 @@ import {
   ADD_ISSUE_REQUEST,
   UPDATE_ISSUE_REQUEST,
   IssueActions,
-  ADD_VAULT_ISSUES,
   INIT_STATE,
   UPDATE_ALL_ISSUE_REQUESTS,
   UPDATE_ISSUE_PERIOD
@@ -18,7 +17,6 @@ const initialState = {
   step: 'ENTER_BTC_AMOUNT',
   id: '',
   issueRequests: new Map(),
-  vaultIssues: [],
   issuePeriod: 86400
 };
 
@@ -61,8 +59,6 @@ export const issueReducer = (state: IssueState = initialState, action: IssueActi
   }
   case INIT_STATE:
     return { ...state, step: 'ENTER_BTC_AMOUNT' };
-  case ADD_VAULT_ISSUES:
-    return { ...state, vaultIssues: action.vaultIssues };
   case UPDATE_ALL_ISSUE_REQUESTS: {
     const newRequests = new Map(state.issueRequests);
     newRequests.set(action.userDotAddress, action.issueRequests);

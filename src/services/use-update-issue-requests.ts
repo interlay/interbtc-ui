@@ -11,7 +11,7 @@ import {
 
 import useInterval from 'utils/hooks/use-interval';
 import { updateAllIssueRequestsAction } from 'common/actions/issue.actions';
-import { statsToUIIssueRequest } from 'common/utils/utils';
+import { statsToUIIssueRequest } from 'common/utils/requests';
 import { IssueRequest } from 'common/types/issue.types';
 import { StoreType } from 'common/types/util.types';
 import * as constants from '../constants';

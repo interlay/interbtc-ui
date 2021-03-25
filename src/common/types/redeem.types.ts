@@ -4,8 +4,9 @@ export interface RedeemRequest {
   timestamp: string;
   creation: string;
   fee: string;
-  btcAddress: string;
-  vaultDotAddress?: string;
+  userBTCAddress: string;
+  userDOTAddress: string;
+  vaultDOTAddress?: string;
   btcTxId: string;
   totalAmount: string;
   confirmations: number;
@@ -44,19 +45,6 @@ export type DashboardRequestInfo = {
   reimbursed: boolean;
 };
 
-// TODO: remove and replace with polkabtc-stats
-export interface VaultRedeem {
-  id: string;
-  timestamp: string;
-  user: string;
-  btcAddress: string;
-  polkaBTC: string;
-  unlockedDOT: string;
-  status: string;
-  completed: boolean;
-  cancelled: boolean;
-}
-
 export interface RedeemState {
   // TODO: use current account from general state
   address: string;
@@ -68,6 +56,4 @@ export interface RedeemState {
   premiumRedeem: boolean;
   // mapping of all redeem requests
   redeemRequests: Map<string, RedeemRequest[]>;
-  // TODO: remove
-  vaultRedeems: VaultRedeem[];
 }

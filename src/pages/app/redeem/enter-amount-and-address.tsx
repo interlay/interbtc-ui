@@ -45,12 +45,12 @@ import {
 import * as constants from '../../../constants';
 import {
   displayBtcAmount,
-  getUsdAmount,
-  parachainToUIRedeemRequest
+  getUsdAmount
 } from 'common/utils/utils';
 import bitcoinLogo from 'assets/img/small-bitcoin-logo.png';
 import polkadotLogo from 'assets/img/small-polkadot-logo.png';
 import ParachainStatusInfo from 'components/ParachainStatusInfo';
+import { parachainToUIRedeemRequest } from 'common/utils/requests';
 
 type AmountAndAddressForm = {
   amountPolkaBTC: string;

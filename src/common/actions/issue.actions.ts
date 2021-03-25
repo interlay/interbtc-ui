@@ -4,7 +4,6 @@ import {
   CHANGE_ISSUE_ID,
   ADD_ISSUE_REQUEST,
   UPDATE_ISSUE_REQUEST,
-  ADD_VAULT_ISSUES,
   UPDATE_ALL_ISSUE_REQUESTS,
   CHANGE_SELECTED_ISSUE,
   UPDATE_ISSUE_PERIOD,
@@ -14,11 +13,10 @@ import {
   ChangeIssueId,
   AddIssueRequest,
   UpdateIssueRequest,
-  AddVaultIssues,
   ChangeSelectedIssue,
   UpdateIssuePeriod
 } from '../types/actions.types';
-import { IssueRequest, VaultIssue } from '../types/issue.types';
+import { IssueRequest } from '../types/issue.types';
 
 export const changeIssueStepAction = (step: string): ChangeIssueStep => ({
   type: CHANGE_ISSUE_STEP,
@@ -47,11 +45,6 @@ export const addIssueRequestAction = (request: IssueRequest): AddIssueRequest =>
 export const updateIssueRequestAction = (request: IssueRequest): UpdateIssueRequest => ({
   type: UPDATE_ISSUE_REQUEST,
   request
-});
-
-export const addVaultIssuesAction = (vaultIssues: VaultIssue[]): AddVaultIssues => ({
-  type: ADD_VAULT_ISSUES,
-  vaultIssues
 });
 
 export const updateAllIssueRequestsAction = (
