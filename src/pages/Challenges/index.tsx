@@ -6,6 +6,8 @@ import clsx from 'clsx';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
+import VaultScoresTable from 'containers/VaultScoresTable';
+import StakedRelayerScoresTable from 'containers/StakedRelayerScoresTable';
 import InterlayLink from 'components/InterlayLink';
 import InterlayTabs, { InterlayTab } from 'components/InterlayTabs';
 import InterlayToggleButtonGroup, {
@@ -17,8 +19,6 @@ import CardList, {
   CardHeader,
   CardContent
 } from 'components/CardList';
-import VaultScoresTable from 'components/VaultScoresTable';
-import StakedRelayerScoresTable from 'components/StakedRelayerScoresTable';
 import {
   POLKA_BTC_DOC_TREASURE_HUNT,
   POLKA_BTC_DOC_TREASURE_HUNT_VAULT,
@@ -119,6 +119,7 @@ const TAB_KEYS = Object.freeze({
 function Challenges() {
   // TODO: should be persisted using query parameters
   const [challengeId, setChallengeId] = useState(challengeCutOffs[0].id ?? null);
+  // TODO: should be persisted using query parameters
   const [tabKey, setTabKey] = useState<string | null>('vaults');
   const { t } = useTranslation();
 
