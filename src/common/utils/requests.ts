@@ -194,8 +194,9 @@ async function parachainToUIRedeemRequest(
       window.polkaBTC.btcRelay.getStableBitcoinConfirmations()
     ]);
   }
-  const amountPolkaBTC = satToBTC(parachainRedeemRequest.amount_polka_btc.toString());
+  const amountBTC = satToBTC(parachainRedeemRequest.amount_btc.toString());
   const fee = satToBTC(parachainRedeemRequest.fee.toString());
+  const amountPolkaBTC = new Big(amountBTC).add(new Big(fee)).toString();
   const status = computeRedeemRequestStatus(
     parachainRedeemRequest.status.isCompleted,
     parachainRedeemRequest.status.isRetried,
@@ -208,6 +209,7 @@ async function parachainToUIRedeemRequest(
   return {
     id: stripHexPrefix(id.toString()),
     amountPolkaBTC,
+    amountBTC,
     timestamp: formatDateTimePrecise(new Date(Date.now())),
     creation: parachainRedeemRequest.opentime.toString(),
     userBTCAddress: parachainRedeemRequest.btc_address,
@@ -215,7 +217,6 @@ async function parachainToUIRedeemRequest(
     vaultDOTAddress: parachainRedeemRequest.vault.toString(),
     btcTxId: '',
     fee,
-    totalAmount: new Big(amountPolkaBTC).sub(new Big(fee)).toString(),
     confirmations: 0,
     status
   };
@@ -229,15 +230,16 @@ const statsToUIRedeemRequest = (
   requiredBtcConfirmations: number
 ): RedeemRequest => ({
   id: statsRedeem.id,
-  amountPolkaBTC: statsRedeem.amountPolkaBTC,
+  amountPolkaBTC: new Big(statsRedeem.amountPolkaBTC).add(new Big(statsRedeem.feePolkabtc)).toString(),
+  // FIXME: naming of vars
+  amountBTC: statsRedeem.amountPolkaBTC,
+  fee: statsRedeem.feePolkabtc,
   timestamp: statsRedeem.timestamp,
   creation: statsRedeem.creation,
-  fee: statsRedeem.feePolkabtc,
   userBTCAddress: statsRedeem.btcAddress,
   userDOTAddress: statsRedeem.requester,
   vaultDOTAddress: statsRedeem.vaultDotAddress,
   btcTxId: statsRedeem.btcTxId,
-  totalAmount: new Big(statsRedeem.amountPolkaBTC).add(new Big(statsRedeem.feePolkabtc)).toString(),
   confirmations:
     // eslint-disable-next-line no-negated-condition
     statsRedeem.confirmations !== undefined ?

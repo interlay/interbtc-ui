@@ -40,11 +40,11 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
             <div className='row'>
               <div className='col-xl-6 col-lg-12 justify-content-center'>
                 <div className='redeem-amount'>
-                  <span className='wizard-number'>{request.totalAmount}</span>&nbsp;PolkaBTC
+                  <span className='wizard-number'>{request.amountPolkaBTC}</span>&nbsp;PolkaBTC
                 </div>
                 <div className='row usd-price-modal'>
                   <div className='col'>
-                    {'~ $' + getUsdAmount(request.totalAmount || '0', prices.bitcoin.usd)}
+                    {'~ $' + getUsdAmount(request.amountPolkaBTC || '0', prices.bitcoin.usd)}
                   </div>
                 </div>
                 <div className='step-item row'>
@@ -73,9 +73,9 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
                       height='23px'
                       alt='bitcoin logo' />
                       &nbsp;
-                    {request.amountPolkaBTC} BTC
+                    {request.amountBTC} BTC
                     <div className='send-price'>
-                      {'~ $' + getUsdAmount(request.amountPolkaBTC, prices.bitcoin.usd)}
+                      {'~ $' + getUsdAmount(request.amountBTC, prices.bitcoin.usd)}
                     </div>
                   </div>
                 </div>
