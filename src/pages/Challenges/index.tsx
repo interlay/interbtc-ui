@@ -15,10 +15,7 @@ import {
   TFunction
 } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import {
-  RelayerData,
-  VaultData
-} from '@interlay/polkabtc-stats';
+import { RelayerData } from '@interlay/polkabtc-stats';
 import clsx from 'clsx';
 
 import MainContainer from 'parts/MainContainer';
@@ -30,6 +27,7 @@ import CardList, {
   CardHeader,
   CardContent
 } from 'components/CardList';
+import VaultScoresTable from 'components/VaultScoresTable';
 import {
   POLKA_BTC_DOC_TREASURE_HUNT,
   POLKA_BTC_DOC_TREASURE_HUNT_VAULT,
@@ -125,8 +123,6 @@ const CHALLENGE_ITEMS = [
 function Challenges(): ReactElement {
   // ray test touch <
   // eslint-disable-next-line no-array-constructor
-  const [vaultRows, setVaultRows] = useState(new Array<VaultData>());
-  // eslint-disable-next-line no-array-constructor
   const [relayerRows, setRelayerRows] = useState(new Array<RelayerData>());
   const [challengeIdx, setChallengeIdx] = useState(0); // all time
   // ray test touch >
@@ -134,39 +130,6 @@ function Challenges(): ReactElement {
   const statsApi = usePolkabtcStats();
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
-
-  // ray test touch <
-  const vaultTableHeadings = [
-    <h1>{t('leaderboard.account_id')}</h1>,
-    <h1>{t('leaderboard.collateral')}</h1>,
-    <h1>{t('leaderboard.request_issue_count')}</h1>,
-    <h1>{t('leaderboard.execute_issue_count')}</h1>,
-    <h1>{t('leaderboard.request_redeem_count')}</h1>,
-    <h1>{t('leaderboard.execute_redeem_count')}</h1>,
-    <h1>{t('leaderboard.lifetime_sla')}</h1>
-  ];
-  // ray test touch >
-
-  // ray test touch <
-  // TODO:
-  // - exclude Interlay owned vaults
-  // - sort vaults with highest lifetime sla
-  const tableVaultRow = useMemo(
-    () => (row: VaultData): ReactElement[] => [
-      <p>{row.id}</p>,
-      <p>{row.collateral} DOT</p>,
-      <p>{row.request_issue_count}</p>,
-      <p>{row.execute_issue_count}</p>,
-      <p>{row.request_redeem_count}</p>,
-      <p>{row.execute_redeem_count}</p>,
-      <p>{Number(row.lifetime_sla).toFixed(2)}</p>
-      // lifetime_sla is a string despite schema being "number"
-      // TODO: check how Axios/openapi-generator handle typings, and if necessary
-      // convert stats API data types to `string` to avoid confusion
-    ],
-    []
-  );
-  // ray test touch >
 
   // ray test touch <
   const relayerTableHeadings = [
@@ -194,19 +157,12 @@ function Challenges(): ReactElement {
 
   // ray test touch <
   useEffect(() => {
-    const fetchVaultData = async () => {
-      if (!polkaBtcLoaded) return;
-      const vaults = (await statsApi.getVaults(CHALLENGE_CUTOFFS[challengeIdx])).data;
-      setVaultRows(vaults.sort((a, b) => b.lifetime_sla - a.lifetime_sla));
-    };
-
     const fetchRelayerData = async () => {
       if (!polkaBtcLoaded) return;
       const relayers = (await statsApi.getRelayers(CHALLENGE_CUTOFFS[challengeIdx])).data;
       setRelayerRows(relayers.sort((a, b) => b.lifetime_sla - a.lifetime_sla));
     };
 
-    fetchVaultData();
     fetchRelayerData();
   }, [
     polkaBtcLoaded,
@@ -250,6 +206,7 @@ function Challenges(): ReactElement {
             subTitle={<TimerIncrement />} />
           <InterlayTabs>
             <InterlayTab
+              className='space-y-10'
               tabClassName={clsx(
                 'no-underline',
                 'text-black'
@@ -257,16 +214,7 @@ function Challenges(): ReactElement {
               eventKey='vaults'
               title={t('leaderboard.vault_scores')}>
               <ChallengeSelector {...{ challengeIdx, setChallengeIdx, t }} />
-              {/* ray test touch < */}
-              {/* TODO: should use a good table package */}
-              <div style={{ margin: '40px 0px' }}>
-                <DashboardTable
-                  pageData={vaultRows}
-                  headings={vaultTableHeadings}
-                  dataPointDisplayer={tableVaultRow}
-                  noDataEl={<td colSpan={6}>{t('loading_ellipsis')}</td>} />
-              </div>
-              {/* ray test touch > */}
+              <VaultScoresTable challengeCutOff={CHALLENGE_CUTOFFS[challengeIdx]} />
             </InterlayTab>
             <InterlayTab
               tabClassName={clsx(
