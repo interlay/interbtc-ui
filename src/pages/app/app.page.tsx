@@ -34,8 +34,8 @@ function Application() {
    * - Could merge fetching issue and redeem transactions
    * or at least should use SWR caching strategy (https or react-query).
    */
-  useUpdateIssueRequests(0, 15, 10000);
-  useUpdateRedeemRequests(0, 15, 10000);
+  useUpdateIssueRequests(0, 100, 10000);
+  useUpdateRedeemRequests(0, 100, 10000);
 
   return (
     <MainContainer className='text-center white-background min-vh-100 app-page'>
