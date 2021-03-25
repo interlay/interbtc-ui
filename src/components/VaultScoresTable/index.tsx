@@ -30,6 +30,7 @@ interface PatchedVaultData extends Omit<VaultData, 'lifetime_sla'> {
   lifetime_sla: string;
 }
 
+// TODO: should be paginated
 const VaultScoresTable = ({
   className,
   challengeCutOff
@@ -52,7 +53,6 @@ const VaultScoresTable = ({
         const sortedVaults = vaults.sort((a, b) => b.lifetime_sla - a.lifetime_sla);
         const transformedVaults = sortedVaults.map(vault => ({
           ...vault,
-          collateral: vault.collateral,
           lifetime_sla: Number(vault.lifetime_sla).toFixed(2)
         }));
 
