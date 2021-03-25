@@ -1,10 +1,5 @@
 
 import { useState } from 'react';
-import {
-  ToggleButton,
-  ToggleButtonGroup,
-  ToggleButtonRadioProps
-} from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
@@ -13,6 +8,10 @@ import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import InterlayLink from 'components/InterlayLink';
 import InterlayTabs, { InterlayTab } from 'components/InterlayTabs';
+import InterlayToggleButtonGroup, {
+  InterlayToggleButton,
+  InterlayToggleButtonGroupProps
+} from 'components/InterlayToggleButtonGroup';
 import CardList, {
   Card,
   CardHeader,
@@ -33,7 +32,7 @@ import './challenges.scss';
 
 const challengeCutOffs = Object.values(CHALLENGE_CUT_OFFS);
 
-function ChallengeSelector(props: ToggleButtonRadioProps<number>) {
+function ChallengeSelector(props: InterlayToggleButtonGroupProps) {
   const { t } = useTranslation();
 
   const nowTimestamp = Date.now();
@@ -45,11 +44,11 @@ function ChallengeSelector(props: ToggleButtonRadioProps<number>) {
   }
 
   return (
-    <ToggleButtonGroup
+    <InterlayToggleButtonGroup
       type='radio'
       {...props}>
       {validChallengeCutOffs.map(challengeCutOff => (
-        <ToggleButton
+        <InterlayToggleButton
           // TODO: should use tailwindcss
           variant='outline-polkadot'
           // className={clsx(
@@ -59,9 +58,9 @@ function ChallengeSelector(props: ToggleButtonRadioProps<number>) {
           key={challengeCutOff.id}
           value={challengeCutOff.id}>
           {t(`leaderboard.challenge_buttons.${challengeCutOff.id}`)}
-        </ToggleButton>
+        </InterlayToggleButton>
       ))}
-    </ToggleButtonGroup>
+    </InterlayToggleButtonGroup>
   );
 }
 
@@ -119,7 +118,7 @@ const TAB_KEYS = Object.freeze({
 
 function Challenges() {
   // TODO: should be persisted using query parameters
-  const [challengeId, setChallengeId] = useState(CHALLENGE_CUT_OFFS.challengesAllTime.id);
+  const [challengeId, setChallengeId] = useState(challengeCutOffs[0].id ?? null);
   const [tabKey, setTabKey] = useState<string | null>('vaults');
   const { t } = useTranslation();
 
