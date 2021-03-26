@@ -2,9 +2,10 @@ import { ReactElement, useEffect, useState } from 'react';
 import BN from 'bn.js';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
+import { OracleStatus } from '@interlay/polkabtc-stats';
+
 import DashboardTable, { StatusComponent, StatusCategories } from '../dashboard-table/dashboard-table';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
-import { OracleStatus } from '@interlay/polkabtc-stats';
 
 type OracleTableProps = {
   planckLocked: string;
