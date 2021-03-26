@@ -1,14 +1,6 @@
 @import "../../variables";
 @import "../../mixins";
 
-.section-div-line {
-  width: 50%;
-  height: 1px;
-  margin: auto;
-  background-color: black;
-  opacity: 0.2;
-}
-
 .dashboard-table {
   .dashboard-table-grid {
     display: grid;

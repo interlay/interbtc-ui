@@ -1,14 +1,20 @@
-import { ReactElement, useMemo } from 'react';
-import { TableDisplayParams } from '../../types/util.types';
+
+// ray test touch <
+import {
+  ReactElement,
+  useMemo
+} from 'react';
 import { useTranslation } from 'react-i18next';
-import { getAccents } from '../../../pages/dashboard/dashboard-colors';
-// TODO: should follow SVG usage best practices
-import iconExternalLink from '../../../assets/img/icons/Icon-external-link.svg';
-import iconConfirm from '../../../assets/img/icons/Icon_confirm.svg';
-import iconCancel from '../../../assets/img/icons/Icon_cancel.svg';
-import iconPending from '../../../assets/img/icons/Icon_pending.svg';
-import TablePageSelector from '../table-page-selector/table-page-selector';
+
 import InterlayLink from 'components/InterlayLink';
+import { TableDisplayParams } from 'common/types/util.types';
+import { getAccents } from 'pages/dashboard/dashboard-colors';
+import TablePageSelector from '../table-page-selector/table-page-selector';
+// TODO: should follow SVG usage best practices
+import iconExternalLink from 'assets/img/icons/Icon-external-link.svg';
+import iconConfirm from 'assets/img/icons/Icon_confirm.svg';
+import iconCancel from 'assets/img/icons/Icon_cancel.svg';
+import iconPending from 'assets/img/icons/Icon_pending.svg';
 
 const blueAccent = getAccents('d_blue');
 
@@ -21,7 +27,6 @@ type StyledLinkDataProps = {
   newTab?: boolean;
 };
 
-// TODO: should follow external link security best practices
 function StyledLinkData(props: StyledLinkDataProps): ReactElement {
   // TODO: make into actual hyperlink
   return (
@@ -61,15 +66,16 @@ type StatusComponentProps = {
     text: string;
     category: StatusCategories;
 };
+
 function StatusComponent({ text, category }: StatusComponentProps): ReactElement {
   const icon =
-        category === StatusCategories.Ok ?
-          iconConfirm :
-          category === StatusCategories.Bad ?
-            iconCancel :
-            iconPending;
+    category === StatusCategories.Ok ?
+      iconConfirm :
+      category === StatusCategories.Bad ?
+        iconCancel :
+        iconPending;
   const color =
-        category === StatusCategories.Ok ? 'd_green' : category === StatusCategories.Bad ? 'd_red' : 'd_yellow';
+    category === StatusCategories.Ok ? 'd_green' : category === StatusCategories.Bad ? 'd_red' : 'd_yellow';
   return (
     <div className='status-container'>
       {category === StatusCategories.Neutral ? '' : (
@@ -108,7 +114,7 @@ type RichDashboardTableProps<D extends DataWithID, C> = {
 
 type DashboardTableProps<D extends DataWithID, C> = SimpleDashboardTableProps<D> | RichDashboardTableProps<D, C>;
 
-export default function DashboardTable<D extends DataWithID, C>(props: DashboardTableProps<D, C>): ReactElement {
+function DashboardTable<D extends DataWithID, C>(props: DashboardTableProps<D, C>): ReactElement {
   const { t } = useTranslation();
 
   const setPage = useMemo(
@@ -154,3 +160,6 @@ export {
   StatusComponent,
   StatusCategories
 };
+
+export default DashboardTable;
+// ray test touch >

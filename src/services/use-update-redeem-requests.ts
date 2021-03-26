@@ -1,5 +1,4 @@
 
-// ray test touch <
 import {
   useSelector,
   useDispatch
@@ -73,4 +72,3 @@ const useUpdateRedeemRequests = (
 };
 
 export default useUpdateRedeemRequests;
-// ray test touch >

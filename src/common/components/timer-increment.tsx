@@ -1,8 +1,7 @@
 
-import {
-  useState,
-  useEffect
-} from 'react';
+import { useState } from 'react';
+
+import useInterval from 'utils/hooks/use-interval';
 
 const formatTime = (seconds: number): string => {
   return `Last updated ${seconds} seconds ago`;
@@ -11,15 +10,9 @@ const formatTime = (seconds: number): string => {
 function TimerIncrement() {
   const [seconds, setSeconds] = useState(0);
 
-  useEffect(() => {
-    const timerId = setInterval(() => {
-      setSeconds(prev => prev + 1);
-    }, 1000);
-
-    return () => {
-      clearInterval(timerId);
-    };
-  }, []);
+  useInterval(() => {
+    setSeconds(prev => prev + 1);
+  }, 1000);
 
   return <>{formatTime(seconds)}</>;
 }
