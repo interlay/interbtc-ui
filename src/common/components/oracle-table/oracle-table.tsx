@@ -21,8 +21,8 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
       try {
         const oracleStatuses = await statsApi.getLatestSubmissionForEachOracle();
         setOracles(oracleStatuses.data);
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log('[OracleTable] error.message => ', error.message);
       }
     };
 
