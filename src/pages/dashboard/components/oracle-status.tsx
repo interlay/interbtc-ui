@@ -1,11 +1,12 @@
 import { useState, useEffect, ReactElement } from 'react';
-import ButtonComponent from './button-component';
-import { getAccents } from '../dashboardcolors';
 import { useTranslation } from 'react-i18next';
+import Big from 'big.js';
+
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
-import Big from 'big.js';
+import ButtonComponent from './button-component';
+import { getAccents } from '../dashboardcolors';
 
 // eslint-disable-next-line no-unused-vars
 enum Status {
@@ -31,7 +32,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
   const [exchangeRate, setExchangeRate] = useState('0');
 
   useEffect(() => {
-    const fetchOracleStatus = async () => {
+    (async () => {
       try {
         const oracleStatus = (await statsApi.getLatestSubmission()).data;
         const exchangeRate = new Big(oracleStatus.exchangeRate);
@@ -42,8 +43,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
         console.log('[OracleStatus useEffect] error.message => ', error.message);
         setOracleStatus(Status.NoData);
       }
-    };
-    fetchOracleStatus();
+    })();
   }, [statsApi]);
 
   return (
