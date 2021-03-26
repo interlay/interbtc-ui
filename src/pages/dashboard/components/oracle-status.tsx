@@ -1,11 +1,11 @@
 import { useState, useEffect, ReactElement } from 'react';
 import ButtonComponent from './button-component';
 import { getAccents } from '../dashboardcolors';
-import { useSelector } from 'react-redux';
-import { StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
+import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import Big from 'big.js';
 
 // eslint-disable-next-line no-unused-vars
 enum Status {
@@ -24,44 +24,27 @@ type OracleStatusProps = {
 };
 
 const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
+  const statsApi = usePolkabtcStats();
   const { t } = useTranslation();
   // TODO: use translations for status
   const [oracleStatus, setOracleStatus] = useState(Status.Loading);
   const [exchangeRate, setExchangeRate] = useState('0');
-  const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
   useEffect(() => {
-    const fetchExchangeRate = async () => {
-      if (!polkaBtcLoaded) return;
-      try {
-        const exchangeRate = await window.polkaBTC.oracle.getExchangeRate();
-        setExchangeRate(exchangeRate.toFixed(2));
-      } catch (error) {
-        console.log('[OracleStatus useEffect] error.message => ', error.message);
-        setOracleStatus(Status.NoData);
-      }
-    };
     const fetchOracleStatus = async () => {
-      if (!polkaBtcLoaded) return;
       try {
-        const [online, lastUpdate] = await Promise.all([
-          window.polkaBTC.oracle.isOnline(),
-          window.polkaBTC.oracle.getLastExchangeRateTime()
-        ]);
-
-        if (online && Date.now() - lastUpdate.getTime() < 3600 * 1000) {
-          setOracleStatus(Status.Online);
-        } else {
-          setOracleStatus(Status.Offline);
-        }
+        const oracleStatus = (await statsApi.getLatestSubmission()).data;
+        const exchangeRate = new Big(oracleStatus.exchangeRate);
+        setExchangeRate(exchangeRate.toFixed(2));
+        const status = oracleStatus.online ? Status.Online : Status.Offline;
+        setOracleStatus(status);
       } catch (error) {
         console.log('[OracleStatus useEffect] error.message => ', error.message);
         setOracleStatus(Status.NoData);
       }
     };
     fetchOracleStatus();
-    fetchExchangeRate();
-  }, [polkaBtcLoaded]);
+  }, [statsApi]);
 
   return (
     <DashboardCard>
