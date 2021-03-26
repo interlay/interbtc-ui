@@ -9,8 +9,11 @@ import { useTranslation } from 'react-i18next';
 import { RelayerData } from '@interlay/polkabtc-stats';
 
 import InterlayTable from 'components/InterlayTable';
+import EllipsisLoader from 'components/TreeDotLoader';
+import ErrorNotification from 'components/ErrorNotification';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { StoreType } from 'common/types/util.types';
+import STATUSES from 'utils/constants/statuses';
 
 /**
  * TODO:
@@ -32,10 +35,12 @@ const StakedRelayerScoresTable = ({
   className,
   challengeTime
 }: Props) => {
-  const [data, setData] = useState<(PatchedRelayerData)[]>([]);
-  const { t } = useTranslation();
-  const statsApi = usePolkabtcStats();
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+  const statsApi = usePolkabtcStats();
+  const [data, setData] = useState<(PatchedRelayerData)[]>([]);
+  const [status, setStatus] = useState(STATUSES.IDLE);
+  const [error, setError] = useState<Error | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!polkaBtcLoaded) return;
@@ -43,16 +48,19 @@ const StakedRelayerScoresTable = ({
 
     (async () => {
       try {
+        setStatus(STATUSES.PENDING);
         const stakedRelayers = (await statsApi.getRelayers(challengeTime)).data;
         const sortedStakedRelayers = stakedRelayers.sort((a, b) => b.lifetime_sla - a.lifetime_sla);
         const transformedStakedRelayers = sortedStakedRelayers.map(stakedRelayer => ({
           ...stakedRelayer,
           lifetime_sla: Number(stakedRelayer.lifetime_sla).toFixed(2)
         }));
+        setStatus(STATUSES.RESOLVED);
 
         setData(transformedStakedRelayers);
       } catch (error) {
-        console.log('[StakedRelayerScoresTable] error.message => ', error.message);
+        setStatus(STATUSES.REJECTED);
+        setError(error);
       }
     })();
   }, [
@@ -83,12 +91,30 @@ const StakedRelayerScoresTable = ({
     [t]
   );
 
-  return (
-    <InterlayTable
-      className={className}
-      columns={columns}
-      data={data} />
-  );
+  if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
+    return (
+      <div className='flex justify-center'>
+        <EllipsisLoader dotClassName='bg-interlayGreen' />
+      </div>
+    );
+  }
+
+  if (status === STATUSES.REJECTED) {
+    return (
+      <ErrorNotification message={error?.message} />
+    );
+  }
+
+  if (status === STATUSES.RESOLVED) {
+    return (
+      <InterlayTable
+        className={className}
+        columns={columns}
+        data={data} />
+    );
+  }
+
+  return null;
 };
 
 export default StakedRelayerScoresTable;
