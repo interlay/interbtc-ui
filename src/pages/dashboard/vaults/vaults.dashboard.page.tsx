@@ -6,7 +6,7 @@ import { getAccents } from '../../../pages/dashboard/dashboard-colors';
 import ActiveVaults from '../components/active-vaults';
 import CollateralLocked from '../components/collateral-locked';
 import Collateralization from '../components/collateralization';
-import TimerIncrement from '../../../common/components/timer-increment';
+import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component

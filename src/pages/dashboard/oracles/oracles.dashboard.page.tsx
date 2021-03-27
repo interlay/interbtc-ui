@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import OracleStatus from '../components/oracle-status';
 import OracleTable from '../../../common/components/oracle-table/oracle-table';
 import { getAccents } from '../dashboard-colors';
-import TimerIncrement from '../../../common/components/timer-increment';
+import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component
