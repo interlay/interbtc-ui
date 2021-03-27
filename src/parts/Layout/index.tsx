@@ -6,8 +6,8 @@ import clsx from 'clsx';
 
 import Footer from 'parts/Footer';
 import TestnetBanner from 'parts/TestnetBanner';
+import MaintenanceBanner from 'parts/MaintenanceBanner';
 import Topbar from 'common/components/topbar';
-import MaintenanceBanner from 'components/MaintenanceBanner';
 import checkStaticPage from 'config/check-static-page';
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
