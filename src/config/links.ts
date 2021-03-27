@@ -28,7 +28,8 @@ const POLKA_BTC_DOC_DEVELOPERS = 'https://docs.polkabtc.io/#/developers/integrat
 const POLKA_BTC_DOC_ROAD_MAP = 'https://docs.polkabtc.io/#/about/roadmap';
 
 const PRIVACY_POLICY = 'https://www.interlay.io/docs/privacy-policy.pdf';
-const NEWS_LETTER_ACTION = 'https://interlay.us4.list-manage.com/subscribe/post?u=4c3c3f21d3ec4c3ed94ea7353&amp;id=ad217abce9';
+const NEWS_LETTER_ACTION =
+'https://interlay.us4.list-manage.com/subscribe/post?u=4c3c3f21d3ec4c3ed94ea7353&amp;id=ad217abce9';
 
 export {
   POLKA_BTC_UI_GITHUB,
