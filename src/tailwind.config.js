@@ -10,9 +10,12 @@ module.exports = {
         interlayYellow: {
           DEFAULT: '#f7931a'
         },
+        // ray test touch <
+        // TODO: could be `polkadotPink`
         interlayPink: {
           DEFAULT: '#e6007a'
         },
+        // ray test touch >
         interlayBlue: {
           DEFAULT: '#1c86ee'
         },
@@ -30,7 +33,13 @@ module.exports = {
         interlayGrey: {
           light: '#e9ecef', // TODO: could be gray-200 in the default theme
           DEFAULT: '#a9a9a9'
+        },
+        // ray test touch <
+        // TODO: could be `bitcoin`
+        interlayBitcoin: {
+          DEFAULT: '#ff9900'
         }
+        // ray test touch >
       }
     }
   },
