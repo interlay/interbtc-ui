@@ -5,8 +5,8 @@ import { useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 
 import Footer from 'parts/Footer';
+import TestnetBanner from 'parts/TestnetBanner';
 import Topbar from 'common/components/topbar';
-import TestnetBanner from 'components/TestnetBanner';
 import MaintenanceBanner from 'components/MaintenanceBanner';
 import checkStaticPage from 'config/check-static-page';
 import { PAGES } from 'utils/constants/links';
