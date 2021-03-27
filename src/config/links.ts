@@ -21,14 +21,15 @@ const POLKA_BTC_DOC_TREASURE_HUNT_VAULT =
 const POLKA_BTC_DOC_TREASURE_HUNT_RELAYER =
   'https://docs.polkabtc.io/#/start/beta?id=staked-relayer-award-4-dot-for-the-first-50-200-dot-in-total';
 
-const GETTING_STARTED = 'https://docs.polkabtc.io/#/start/overview';
-const VAULTS_DOCS = 'https://docs.polkabtc.io/#/vault/overview';
-const RELAYERS_DOCS = 'https://docs.polkabtc.io/#/relayer/overview';
-const DEVELOPERS_DOCS = 'https://docs.polkabtc.io/#/developers/integration';
-const ROADMAP = 'https://docs.polkabtc.io/#/about/roadmap';
+const POLKA_BTC_DOC_GETTING_STARTED = 'https://docs.polkabtc.io/#/start/overview';
+const POLKA_BTC_DOC_VAULTS = 'https://docs.polkabtc.io/#/vault/overview';
+const POLKA_BTC_DOC_RELAYERS = 'https://docs.polkabtc.io/#/relayer/overview';
+const POLKA_BTC_DOC_DEVELOPERS = 'https://docs.polkabtc.io/#/developers/integration';
+const POLKA_BTC_DOC_ROAD_MAP = 'https://docs.polkabtc.io/#/about/roadmap';
 
 const PRIVACY_POLICY = 'https://www.interlay.io/docs/privacy-policy.pdf';
-const NEWSLETTER_ACTION = 'https://interlay.us4.list-manage.com/subscribe/post?u=4c3c3f21d3ec4c3ed94ea7353&amp;id=ad217abce9';
+const NEWS_LETTER_ACTION = 'https://interlay.us4.list-manage.com/subscribe/post?u=4c3c3f21d3ec4c3ed94ea7353&amp;id=ad217abce9';
+
 export {
   POLKA_BTC_UI_GITHUB,
   WEB3_FOUNDATION,
@@ -46,11 +47,11 @@ export {
   POLKA_BTC_DOC_TREASURE_HUNT,
   POLKA_BTC_DOC_TREASURE_HUNT_VAULT,
   POLKA_BTC_DOC_TREASURE_HUNT_RELAYER,
-  GETTING_STARTED,
-  VAULTS_DOCS,
-  RELAYERS_DOCS,
-  DEVELOPERS_DOCS,
-  ROADMAP,
+  POLKA_BTC_DOC_GETTING_STARTED,
+  POLKA_BTC_DOC_VAULTS,
+  POLKA_BTC_DOC_RELAYERS,
+  POLKA_BTC_DOC_DEVELOPERS,
+  POLKA_BTC_DOC_ROAD_MAP,
   PRIVACY_POLICY,
-  NEWSLETTER_ACTION
+  NEWS_LETTER_ACTION
 };

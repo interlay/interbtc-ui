@@ -21,13 +21,13 @@ import {
   POLKA_BTC_DOC_TREASURE_HUNT,
   POLKA_BTC_DOC_TREASURE_HUNT_VAULT,
   POLKA_BTC_DOC_TREASURE_HUNT_RELAYER,
-  GETTING_STARTED,
-  VAULTS_DOCS,
-  RELAYERS_DOCS,
-  DEVELOPERS_DOCS,
-  ROADMAP,
+  POLKA_BTC_DOC_GETTING_STARTED,
+  POLKA_BTC_DOC_VAULTS,
+  POLKA_BTC_DOC_RELAYERS,
+  POLKA_BTC_DOC_DEVELOPERS,
+  POLKA_BTC_DOC_ROAD_MAP,
   PRIVACY_POLICY,
-  NEWSLETTER_ACTION
+  NEWS_LETTER_ACTION
 } from 'config/links';
 import styles from './footer.module.css';
 // TODO: should use an SVG
@@ -174,31 +174,31 @@ const Footer = () => {
             <div className={styles['footer-items-container']}>
               <ul>
                 <InterlayLink
-                  href={GETTING_STARTED}
+                  href={POLKA_BTC_DOC_GETTING_STARTED}
                   target='_blank'
                   rel='noopener noreferrer'>
                   <li>{t('footer.getting_started')}</li>
                 </InterlayLink>
                 <InterlayLink
-                  href={VAULTS_DOCS}
+                  href={POLKA_BTC_DOC_VAULTS}
                   target='_blank'
                   rel='noopener noreferrer'>
                   <li>{t('footer.vaults_docs')}</li>
                 </InterlayLink>
                 <InterlayLink
-                  href={RELAYERS_DOCS}
+                  href={POLKA_BTC_DOC_RELAYERS}
                   target='_blank'
                   rel='noopener noreferrer'>
                   <li>{t('footer.Relayer_docs')}</li>
                 </InterlayLink>
                 <InterlayLink
-                  href={DEVELOPERS_DOCS}
+                  href={POLKA_BTC_DOC_DEVELOPERS}
                   target='_blank'
                   rel='noopener noreferrer'>
                   <li>{t('footer.developers')}</li>
                 </InterlayLink>
                 <InterlayLink
-                  href={ROADMAP}
+                  href={POLKA_BTC_DOC_ROAD_MAP}
                   target='_blank'
                   rel='noopener noreferrer'>
                   <li>{t('footer.roadmap')}</li>
@@ -258,7 +258,7 @@ const Footer = () => {
             <ul>
               <li>
                 <form
-                  action={NEWSLETTER_ACTION}
+                  action={NEWS_LETTER_ACTION}
                   method='post'
                   id='mc-embedded-subscribe-form'
                   name='mc-embedded-subscribe-form'
