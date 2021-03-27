@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { RelayerData } from '@interlay/polkabtc-stats';
 
 import InterlayTable from 'components/InterlayTable';
-import EllipsisLoader from 'components/TreeDotLoader';
+import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorNotification from 'components/ErrorNotification';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { StoreType } from 'common/types/util.types';
