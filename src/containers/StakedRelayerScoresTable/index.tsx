@@ -10,7 +10,7 @@ import { RelayerData } from '@interlay/polkabtc-stats';
 
 import InterlayTable from 'components/InterlayTable';
 import EllipsisLoader from 'components/EllipsisLoader';
-import ErrorNotification from 'components/ErrorNotification';
+import ErrorMessage from 'components/ErrorMessage';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { StoreType } from 'common/types/util.types';
 import STATUSES from 'utils/constants/statuses';
@@ -101,7 +101,7 @@ const StakedRelayerScoresTable = ({
 
   if (status === STATUSES.REJECTED) {
     return (
-      <ErrorNotification message={error?.message} />
+      <ErrorMessage message={error?.message} />
     );
   }
 

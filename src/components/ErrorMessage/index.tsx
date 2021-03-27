@@ -3,10 +3,10 @@ interface Props {
   message?: string;
 }
 
-const ErrorNotification = ({ message }: Props) => (
+const ErrorMessage = ({ message }: Props) => (
   <>
     {message && <p>{message}</p>}
   </>
 );
 
-export default ErrorNotification;
+export default ErrorMessage;
