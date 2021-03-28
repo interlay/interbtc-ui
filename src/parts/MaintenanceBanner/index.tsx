@@ -2,7 +2,7 @@
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import InterlayLink from 'components/InterlayLink';
+import InterlayLink from 'components/UI/InterlayLink';
 import { formatDateTime } from 'common/utils/utils';
 
 interface Message {

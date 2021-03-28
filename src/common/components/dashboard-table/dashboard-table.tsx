@@ -6,7 +6,7 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import InterlayLink from 'components/InterlayLink';
+import InterlayLink from 'components/UI/InterlayLink';
 import { TableDisplayParams } from 'common/types/util.types';
 import { getAccents } from 'pages/dashboard/dashboard-colors';
 import TablePageSelector from '../table-page-selector/table-page-selector';

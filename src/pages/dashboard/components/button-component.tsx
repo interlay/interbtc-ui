@@ -2,7 +2,7 @@ import React from 'react';
 import '../dashboard.page.scss';
 import iconExternalLink from '../../../assets/img/icons/Icon-external-link.svg';
 import { getAccents } from '../dashboard-colors';
-import InterlayRouterLink from 'components/InterlayLink/router';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
 
 type buttonProps = {
   buttonName: string;

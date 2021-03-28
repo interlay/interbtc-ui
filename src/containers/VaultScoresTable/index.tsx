@@ -9,9 +9,9 @@ import { useTranslation } from 'react-i18next';
 // TODO: should do tree-shaking
 import { VaultData } from '@interlay/polkabtc-stats';
 
-import InterlayTable from 'components/InterlayTable';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorMessage from 'components/ErrorMessage';
+import InterlayTable from 'components/UI/InterlayTable';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { StoreType } from 'common/types/util.types';
 import STATUSES from 'utils/constants/statuses';

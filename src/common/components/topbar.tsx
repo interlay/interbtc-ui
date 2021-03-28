@@ -12,8 +12,8 @@ import Balances from './balances';
 import { PAGES } from 'utils/constants/links';
 import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
 import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
-import InterlayLink from 'components/InterlayLink';
-import InterlayRouterLink from 'components/InterlayLink/router';
+import InterlayLink from 'components/UI/InterlayLink';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import clsx from 'clsx';
 
 type TopbarProps = {
