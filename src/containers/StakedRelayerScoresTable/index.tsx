@@ -94,7 +94,7 @@ const StakedRelayerScoresTable = ({
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
     return (
       <div className='flex justify-center'>
-        <EllipsisLoader dotClassName='bg-interlayGreen' />
+        <EllipsisLoader dotClassName='bg-interlayYellow-light' />
       </div>
     );
   }
