@@ -10,13 +10,13 @@ import InterlayLink from 'components/UI/InterlayLink';
 import { TableDisplayParams } from 'common/types/util.types';
 import { getAccents } from 'pages/dashboard/dashboard-colors';
 import TablePageSelector from '../table-page-selector/table-page-selector';
+import { ReactComponent as ExternalLinkIcon } from 'assets/img/icons/external-link.svg';
 // TODO: should follow SVG usage best practices
-import iconExternalLink from 'assets/img/icons/Icon-external-link.svg';
+// ray test touch <
 import iconConfirm from 'assets/img/icons/Icon_confirm.svg';
 import iconCancel from 'assets/img/icons/Icon_cancel.svg';
 import iconPending from 'assets/img/icons/Icon_pending.svg';
-
-const blueAccent = getAccents('d_blue');
+// ray test touch >
 
 /**
  * Helper component to display a blue link with icon.
@@ -31,19 +31,15 @@ function StyledLinkData(props: StyledLinkDataProps): ReactElement {
   // TODO: make into actual hyperlink
   return (
     <InterlayLink
+      className='text-interlayBlue'
       href={props.target}
       target={props.newTab ? '_blank' : ''}
       rel='noopener noreferrer'>
-      <p style={{ color: blueAccent.color }}>
-        {props.data}
-        <img
-          style={{
-            filter: blueAccent.filter
-          }}
-          className='external-link'
-          src={iconExternalLink}
-          alt='' />
-      </p>
+      <span>{props.data}</span>
+      <ExternalLinkIcon
+        className='ml-1'
+        width={14}
+        height={14} />
     </InterlayLink>
   );
 }
@@ -80,7 +76,9 @@ function StatusComponent({ text, category }: StatusComponentProps): ReactElement
     <div className='status-container'>
       {category === StatusCategories.Neutral ? '' : (
         <img
-          className='external-link'
+          // ray test touch <
+          className='ml-1 w-3.5 h-3.5'
+          // ray test touch >
           src={icon}
           alt='' />
       )}

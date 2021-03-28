@@ -123,12 +123,10 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
           </div>
           <div className='circle-container'>
             <div
-              className='status-circle'
-              style={{ borderColor: getAccents('d_blue').color }}
+              className='status-circle border-interlayBlue'
               id='relay-circle'>
               <h1
-                className='h1-xl-text-center'
-                style={{ color: getAccents('d_blue').color }}
+                className='h1-xl-text-center text-interlayBlue'
                 id='relay-circle-text'>
                 {t('blockstream')}
               </h1>

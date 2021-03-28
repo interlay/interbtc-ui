@@ -1,6 +1,6 @@
 import React from 'react';
 import '../dashboard.page.scss';
-import iconExternalLink from '../../../assets/img/icons/Icon-external-link.svg';
+import { ReactComponent as ExternalLinkIcon } from 'assets/img/icons/external-link.svg';
 import { getAccents } from '../dashboard-colors';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 
@@ -54,14 +54,9 @@ const ButtonComponent = (props: buttonProps): React.ReactElement => {
           style={{ color: buttonColor.color }}>
           {props.buttonName}
         </h3>
-        <img
-          style={{
-            filter: `${accent.filter}`
-          }}
-          className='external-link'
-          src={iconExternalLink}
-          alt=''
-          id={`${props.buttonId}-arrow`} />
+        <ExternalLinkIcon
+          style={{ color: `${accent.color}` }}
+          className='ml-1' />
       </button>
     </InterlayRouterLink>
   );

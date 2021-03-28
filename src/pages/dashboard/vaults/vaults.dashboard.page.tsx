@@ -1,7 +1,6 @@
 import { ReactElement } from 'react';
 import VaultTable from '../../../common/components/vault-table/vault-table';
 import { useTranslation } from 'react-i18next';
-import { getAccents } from '../../../pages/dashboard/dashboard-colors';
 
 import ActiveVaults from '../components/active-vaults';
 import CollateralLocked from '../components/collateral-locked';
@@ -24,9 +23,7 @@ export default function VaultsDashboard(): ReactElement {
             <PageTitle
               mainTitle={t('dashboard.vault.vaults')}
               subTitle={<TimerIncrement />} />
-            <div
-              style={{ backgroundColor: getAccents('d_blue').color }}
-              className='title-line' />
+            <div className='title-line bg-interlayBlue' />
             <div className='vaults-graphs-container dashboard-graphs-container'>
               <ActiveVaults />
               <CollateralLocked />
