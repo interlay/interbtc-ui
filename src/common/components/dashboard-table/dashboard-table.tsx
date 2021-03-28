@@ -5,18 +5,15 @@ import {
   useMemo
 } from 'react';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
 import InterlayLink from 'components/UI/InterlayLink';
 import { TableDisplayParams } from 'common/types/util.types';
-import { getAccents } from 'pages/dashboard/dashboard-colors';
 import TablePageSelector from '../table-page-selector/table-page-selector';
 import { ReactComponent as ExternalLinkIcon } from 'assets/img/icons/external-link.svg';
-// TODO: should follow SVG usage best practices
-// ray test touch <
-import iconConfirm from 'assets/img/icons/Icon_confirm.svg';
-import iconCancel from 'assets/img/icons/Icon_cancel.svg';
-import iconPending from 'assets/img/icons/Icon_pending.svg';
-// ray test touch >
+import { ReactComponent as CheckCircleIcon } from 'assets/img/icons/check-circle.svg';
+import { ReactComponent as CancelIcon } from 'assets/img/icons/cancel.svg';
+import { ReactComponent as ErrorIcon } from 'assets/img/icons/error.svg';
 
 /**
  * Helper component to display a blue link with icon.
@@ -64,29 +61,40 @@ type StatusComponentProps = {
 };
 
 function StatusComponent({ text, category }: StatusComponentProps): ReactElement {
-  const icon =
+  const Icon =
     category === StatusCategories.Ok ?
-      iconConfirm :
+      CheckCircleIcon :
       category === StatusCategories.Bad ?
-        iconCancel :
-        iconPending;
-  const color =
-    category === StatusCategories.Ok ? 'd_green' : category === StatusCategories.Bad ? 'd_red' : 'd_yellow';
+        CancelIcon :
+        ErrorIcon;
   return (
     <div className='status-container'>
       {category === StatusCategories.Neutral ? '' : (
-        <img
-          // ray test touch <
-          className='ml-1 w-3.5 h-3.5'
-          // ray test touch >
-          src={icon}
-          alt='' />
+        <Icon
+          className={clsx(
+            'ml-1',
+            { 'text-interlayGreen': category === StatusCategories.Ok },
+            { 'text-interlayRed': category === StatusCategories.Bad },
+            { 'text-interlayYellow': category !== StatusCategories.Ok && category !== StatusCategories.Bad }
+          )}
+          width={14}
+          height={14} />
       )}
-      <p
-        style={category === StatusCategories.Neutral ? {} : { color: getAccents(color).color }}
-        className='status'>
+      <span
+        className={clsx(
+          'ml-1',
+          'font-bold',
+          { 'text-interlayGreen': category === StatusCategories.Ok },
+          { 'text-interlayRed': category === StatusCategories.Bad },
+          {
+            'text-interlayYellow':
+              category !== StatusCategories.Ok &&
+              category !== StatusCategories.Bad &&
+              category !== StatusCategories.Neutral
+          }
+        )}>
         {text}
-      </p>
+      </span>
     </div>
   );
 }

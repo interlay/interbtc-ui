@@ -55,6 +55,7 @@ const ButtonComponent = (props: buttonProps): React.ReactElement => {
           {props.buttonName}
         </h3>
         <ExternalLinkIcon
+          id={`${props.buttonId}-arrow`}
           style={{ color: `${accent.color}` }}
           className='ml-1' />
       </button>
