@@ -21,7 +21,7 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
         <span
           style={{ color: getAccents('d_green').color }}
           id='parachain-text'
-          className='bold-font'>
+          className='font-bold'>
           {t('dashboard.parachain.secure')}
         </span>
 
@@ -31,7 +31,7 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
         <span
           style={{ color: getAccents('d_grey').color }}
           id='parachain-text'
-          className='bold-font'>
+          className='font-bold'>
           {t('loading')}
         </span>
 
@@ -42,7 +42,7 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
         <span
           style={{ color: getAccents('d_yellow').color }}
           id='parachain-text'
-          className='bold-font'>
+          className='font-bold'>
           {t('dashboard.parachain.halted')}
         </span>
 
@@ -52,7 +52,7 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
         <span
           style={{ color: getAccents('d_grey').color }}
           id='parachain-text'
-          className='bold-font'>
+          className='font-bold'>
           {t('no_data')}
         </span>
 

@@ -50,27 +50,27 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
     <DashboardCard>
       <div className='card-top-content'>
         <div className='values-container'>
-          <h1 className='bold-font'>
+          <h1 className='font-bold'>
             {t('dashboard.oracles.oracles_are')}&nbsp;
             {oracleStatus === Status.Online ? (
               <span
                 style={{ color: getAccents('d_green').color }}
                 id='oracle-text'
-                className='bold-font'>
+                className='font-bold'>
                 {t('dashboard.oracles.online')}
               </span>
             ) : oracleStatus === Status.Offline ? (
               <span
                 style={{ color: getAccents('d_red').color }}
                 id='oracle-text'
-                className='bold-font'>
+                className='font-bold'>
                 {t('dashboard.oracles.offline')}
               </span>
             ) : (
               <span
                 style={{ color: getAccents('d_grey').color }}
                 id='oracle-text'
-                className='bold-font'>
+                className='font-bold'>
                 {t('dashboard.oracles.loading')}
               </span>
             )}
