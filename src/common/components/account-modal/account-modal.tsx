@@ -10,7 +10,7 @@ import {
 } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-import InterlayLink from 'components/InterlayLink';
+import InterlayLink from 'components/UI/InterlayLink';
 import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';

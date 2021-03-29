@@ -1,7 +1,7 @@
 import React from 'react';
 import * as constants from '../../../constants';
 import { shortTxId } from '../../../common/utils/utils';
-import InterlayLink from 'components/InterlayLink';
+import InterlayLink from 'components/UI/InterlayLink';
 
 export default class BitcoinTransaction extends React.Component<{
   txId: string;

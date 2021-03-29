@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { IssueRequest } from '../../../../common/types/issue.types';
 import { StoreType } from '../../../../common/types/util.types';
 import BitcoinLogo from '../../../../assets/img/small-bitcoin-logo.png';
-import InterlayTooltip from 'components/InterlayTooltip';
+import InterlayTooltip from 'components/UI/InterlayTooltip';
 import { copyToClipboard, getUsdAmount, safeRoundEightDecimals } from '../../../../common/utils/utils';
 
 type WhoopsViewProps = {

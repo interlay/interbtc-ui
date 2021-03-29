@@ -5,7 +5,7 @@ import * as constants from '../../../constants';
 import { reverseHashEndianness } from '../../utils/utils';
 import { useTranslation } from 'react-i18next';
 import { Table } from 'react-bootstrap';
-import InterlayLink from 'components/InterlayLink';
+import InterlayLink from 'components/UI/InterlayLink';
 
 interface BlockInfo {
   source: string;

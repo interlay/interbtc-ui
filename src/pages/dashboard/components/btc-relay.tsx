@@ -66,12 +66,12 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
       <DashboardCard>
         <div className='card-top-content'>
           <div className='values-container'>
-            <h1 className='bold-font'>
+            <h1 className='font-bold'>
               {t('dashboard.relay.relay_is')}&nbsp;
               <span
                 style={{ color: getAccents(statusColor).color }}
                 id='relay-text'
-                className='bold-font'>
+                className='font-bold'>
                 {statusText}
               </span>
             </h1>
@@ -107,7 +107,7 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
         <DashboardCard>
           <div className='card-top-content'>
             <div className='values-container'>
-              <h1 className='bold-font'>
+              <h1 className='font-bold'>
                 {blockstreamTip !== '-' && (
                   <StyledLinkData
                     data={t('dashboard.relay.blockstream_verify_link')}
@@ -123,12 +123,10 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
           </div>
           <div className='circle-container'>
             <div
-              className='status-circle'
-              style={{ borderColor: getAccents('d_blue').color }}
+              className='status-circle border-interlayBlue'
               id='relay-circle'>
               <h1
-                className='h1-xl-text-center'
-                style={{ color: getAccents('d_blue').color }}
+                className='h1-xl-text-center text-interlayBlue'
                 id='relay-circle-text'>
                 {t('blockstream')}
               </h1>

@@ -13,6 +13,7 @@ import tw from 'twin.macro';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
+import TimerIncrement from 'parts/TimerIncrement';
 import CardList, {
   Card,
   CardHeader,
@@ -24,7 +25,6 @@ import StatusUpdateTable from 'common/components/status-update-table/status-upda
 import VaultTable from 'common/components/vault-table/vault-table';
 import OracleTable from 'common/components/oracle-table/oracle-table';
 import ButtonMaybePending from 'common/components/pending-button';
-import TimerIncrement from 'common/components/timer-increment';
 import { StoreType } from 'common/types/util.types';
 import { safeRoundTwoDecimals } from 'common/utils/utils';
 import { ACCOUNT_ID_TYPE_NAME } from '../../constants';

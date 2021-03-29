@@ -6,25 +6,25 @@ import clsx from 'clsx';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
+import TimerIncrement from 'parts/TimerIncrement';
 import VaultScoresTable from 'containers/VaultScoresTable';
 import StakedRelayerScoresTable from 'containers/StakedRelayerScoresTable';
-import InterlayLink from 'components/InterlayLink';
-import InterlayTabs, { InterlayTab } from 'components/InterlayTabs';
-import InterlayToggleButtonGroup, {
-  InterlayToggleButton,
-  InterlayToggleButtonGroupProps
-} from 'components/InterlayToggleButtonGroup';
 import CardList, {
   Card,
   CardHeader,
   CardContent
 } from 'components/CardList';
+import InterlayLink from 'components/UI/InterlayLink';
+import InterlayTabs, { InterlayTab } from 'components/UI/InterlayTabs';
+import InterlayToggleButtonGroup, {
+  InterlayToggleButton,
+  InterlayToggleButtonGroupProps
+} from 'components/UI/InterlayToggleButtonGroup';
 import {
   POLKA_BTC_DOC_TREASURE_HUNT,
   POLKA_BTC_DOC_TREASURE_HUNT_VAULT,
   POLKA_BTC_DOC_TREASURE_HUNT_RELAYER
 } from 'config/links';
-import TimerIncrement from 'common/components/timer-increment';
 import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
 import { CHALLENGE_CUT_OFFS } from 'config/challenges';
 import 'pages/dashboard/dashboard-subpage.scss';

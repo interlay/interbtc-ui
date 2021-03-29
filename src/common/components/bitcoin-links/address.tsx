@@ -1,7 +1,7 @@
 import React from 'react';
 import * as constants from '../../../constants';
 import { shortAddress } from '../../../common/utils/utils';
-import InterlayLink from 'components/InterlayLink';
+import InterlayLink from 'components/UI/InterlayLink';
 
 export default class BitcoinAddress extends React.Component<{
   btcAddress: string;

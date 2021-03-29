@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import OracleStatus from '../components/oracle-status';
 import OracleTable from '../../../common/components/oracle-table/oracle-table';
-import { getAccents } from '../dashboard-colors';
-import TimerIncrement from '../../../common/components/timer-increment';
+import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component
@@ -22,9 +21,7 @@ export default function OraclesDashboard(): ReactElement {
             <PageTitle
               mainTitle={t('dashboard.oracles.oracles')}
               subTitle={<TimerIncrement />} />
-            <div
-              style={{ backgroundColor: getAccents('d_blue').color }}
-              className='title-line' />
+            <div className='title-line bg-interlayBlue' />
             <div className='dashboard-graphs-container'>
               <OracleStatus />
             </div>

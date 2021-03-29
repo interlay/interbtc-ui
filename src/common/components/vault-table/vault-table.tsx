@@ -9,7 +9,7 @@ import Big from 'big.js';
 import { StoreType } from '../../../common/types/util.types';
 import DashboardTable from '../dashboard-table/dashboard-table';
 import { VaultExt } from '@interlay/polkabtc/build/parachain/vaults';
-import InterlayTooltip from 'components/InterlayTooltip';
+import InterlayTooltip from 'components/UI/InterlayTooltip';
 
 export default function VaultTable(): ReactElement {
   const [vaults, setVaults] = useState<Array<Vault>>([]);

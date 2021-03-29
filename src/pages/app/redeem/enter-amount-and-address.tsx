@@ -24,7 +24,7 @@ import Big from 'big.js';
 import BN from 'bn.js';
 import clsx from 'clsx';
 
-import InterlayTooltip from 'components/InterlayTooltip';
+import InterlayTooltip from 'components/UI/InterlayTooltip';
 import ButtonMaybePending from 'common/components/pending-button';
 import {
   changeRedeemStepAction,

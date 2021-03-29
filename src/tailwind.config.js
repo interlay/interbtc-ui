@@ -8,10 +8,11 @@ module.exports = {
     extend: {
       colors: {
         interlayYellow: {
+          light: '#ff9900', // MEMO: bitcoin color
           DEFAULT: '#f7931a'
         },
         interlayPink: {
-          DEFAULT: '#e6007a'
+          DEFAULT: '#e6007a' // MEMO: polkadot's branding pink
         },
         interlayBlue: {
           DEFAULT: '#1c86ee'

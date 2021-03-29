@@ -6,7 +6,7 @@ import { StoreType } from '../../../../common/types/util.types';
 import QRCode from 'qrcode.react';
 import Big from 'big.js';
 import Timer from '../../../../common/components/timer';
-import InterlayTooltip from 'components/InterlayTooltip';
+import InterlayTooltip from 'components/UI/InterlayTooltip';
 import { copyToClipboard, getUsdAmount } from '../../../../common/utils/utils';
 
 type PaymentViewProps = {
