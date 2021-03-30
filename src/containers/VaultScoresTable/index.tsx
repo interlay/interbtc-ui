@@ -22,6 +22,69 @@ import STATUSES from 'utils/constants/statuses';
  * - Should sort vaults with highest lifetime sla.
  */
 
+// TODO: should type properly
+function NumberRangeColumnFilter({
+  column: {
+    filterValue = [],
+    preFilteredRows,
+    setFilter,
+    id
+  }
+}: any) {
+  const [
+    min,
+    max
+  ] = useMemo(() => {
+    let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
+    let max = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
+    preFilteredRows.forEach((row: any) => {
+      min = Math.min(row.values[id], min);
+      max = Math.max(row.values[id], max);
+    });
+
+    return [
+      min,
+      max
+    ];
+  }, [
+    id,
+    preFilteredRows
+  ]);
+
+  return (
+    <div
+      style={{
+        display: 'flex'
+      }}>
+      <input
+        value={filterValue[0] || ''}
+        type='number'
+        onChange={event => {
+          const val = event.target.value;
+          setFilter((old = []) => [val ? parseInt(val, 10) : undefined, old[1]]);
+        }}
+        placeholder={`Min (${min})`}
+        style={{
+          width: '70px',
+          marginRight: '0.5rem'
+        }} />
+      to
+      <input
+        value={filterValue[1] || ''}
+        type='number'
+        onChange={event => {
+          const val = event.target.value;
+          setFilter((old = []) => [old[0], val ? parseInt(val, 10) : undefined]);
+        }}
+        placeholder={`Max (${max})`}
+        style={{
+          width: '70px',
+          marginLeft: '0.5rem'
+        }} />
+    </div>
+  );
+}
+
 interface Props {
   className?: string;
   // TODO: should be union type
@@ -85,27 +148,39 @@ const VaultScoresTable = ({
       },
       {
         Header: `${t('leaderboard.collateral')} (DOT)`,
-        accessor: 'collateral'
+        accessor: 'collateral',
+        Filter: NumberRangeColumnFilter,
+        filter: 'between'
       },
       {
         Header: t('leaderboard.request_issue_count'),
-        accessor: 'request_issue_count'
+        accessor: 'request_issue_count',
+        Filter: NumberRangeColumnFilter,
+        filter: 'between'
       },
       {
         Header: t('leaderboard.execute_issue_count'),
-        accessor: 'execute_issue_count'
+        accessor: 'execute_issue_count',
+        Filter: NumberRangeColumnFilter,
+        filter: 'between'
       },
       {
         Header: t('leaderboard.request_redeem_count'),
-        accessor: 'request_redeem_count'
+        accessor: 'request_redeem_count',
+        Filter: NumberRangeColumnFilter,
+        filter: 'between'
       },
       {
         Header: t('leaderboard.execute_redeem_count'),
-        accessor: 'execute_redeem_count'
+        accessor: 'execute_redeem_count',
+        Filter: NumberRangeColumnFilter,
+        filter: 'between'
       },
       {
         Header: t('leaderboard.lifetime_sla'),
-        accessor: 'lifetime_sla'
+        accessor: 'lifetime_sla',
+        Filter: NumberRangeColumnFilter,
+        filter: 'between'
       }
     ],
     [t]
