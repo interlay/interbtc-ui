@@ -92,7 +92,6 @@ function NumberRangeColumnFilter({
 }
 
 interface Props {
-  className?: string;
   // TODO: should be union type
   challengeTime: number;
 }
@@ -104,7 +103,6 @@ interface PatchedVaultData extends Omit<VaultData, 'lifetime_sla'> {
 
 // TODO: should be paginated
 const VaultScoresTable = ({
-  className,
   challengeTime
 }: Props) => {
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
@@ -205,7 +203,6 @@ const VaultScoresTable = ({
     // TODO: should optimize re-renders https://kentcdodds.com/blog/optimize-react-re-renders
     return (
       <InterlayTable
-        className={className}
         columns={columns}
         data={data} />
     );

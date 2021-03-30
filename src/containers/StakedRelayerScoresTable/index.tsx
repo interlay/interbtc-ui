@@ -22,7 +22,6 @@ import STATUSES from 'utils/constants/statuses';
  */
 
 interface Props {
-  className?: string;
   challengeTime: number;
 }
 
@@ -32,7 +31,6 @@ interface PatchedRelayerData extends Omit<RelayerData, 'lifetime_sla'> {
 }
 
 const StakedRelayerScoresTable = ({
-  className,
   challengeTime
 }: Props) => {
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
@@ -108,7 +106,6 @@ const StakedRelayerScoresTable = ({
   if (status === STATUSES.RESOLVED) {
     return (
       <InterlayTable
-        className={className}
         columns={columns}
         data={data} />
     );

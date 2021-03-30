@@ -137,19 +137,15 @@ function DefaultColumnFilter({
   );
 }
 
+const defaultColumn = {
+  Filter: DefaultColumnFilter
+};
+
 // TODO: should type properly (Re:https://github.com/tannerlinsley/react-table/blob/master/TYPESCRIPT.md)
 const InterlayTable = ({
-  className,
   columns,
   data
 }) => {
-  const defaultColumn = React.useMemo(
-    () => ({
-      Filter: DefaultColumnFilter
-    }),
-    []
-  );
-
   const {
     getTableProps,
     getTableBodyProps,
