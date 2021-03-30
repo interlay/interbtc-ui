@@ -1,4 +1,6 @@
 
+// TODO: should type properly
+// @ts-nocheck
 import {
   useMemo,
   useEffect,
@@ -6,11 +8,27 @@ import {
 } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import {
+  useTable,
+  useSortBy,
+  useFilters,
+  useGlobalFilter
+} from 'react-table';
 import { RelayerData } from '@interlay/polkabtc-stats';
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorMessage from 'components/ErrorMessage';
-import InterlayTable from 'components/UI/InterlayTable';
+import InterlayTable, {
+  InterlayTableContainer,
+  InterlayThead,
+  InterlayTbody,
+  InterlayTr,
+  InterlayTh,
+  InterlayTd
+} from 'components/UI/InterlayTable';
+import DefaultColumnFilter from 'components/UI/InterlayTable/DefaultColumnFilter';
+import GlobalFilter from 'components/UI/InterlayTable/GlobalFilter';
+import NumberRangeColumnFilter from 'components/UI/InterlayTable/NumberRangeColumnFilter';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { StoreType } from 'common/types/util.types';
 import STATUSES from 'utils/constants/statuses';
@@ -29,6 +47,10 @@ interface PatchedRelayerData extends Omit<RelayerData, 'lifetime_sla'> {
   // eslint-disable-next-line camelcase
   lifetime_sla: string;
 }
+
+const defaultColumn = {
+  Filter: DefaultColumnFilter
+};
 
 const StakedRelayerScoresTable = ({
   challengeTime
@@ -75,18 +97,43 @@ const StakedRelayerScoresTable = ({
       },
       {
         Header: `${t('leaderboard.stake')} (DOT)`,
-        accessor: 'stake'
+        accessor: 'stake',
+        disableFilters: true
       },
       {
         Header: t('leaderboard.block_count'),
-        accessor: 'block_count'
+        accessor: 'block_count',
+        disableFilters: true
       },
       {
         Header: t('leaderboard.lifetime_sla'),
-        accessor: 'lifetime_sla'
+        accessor: 'lifetime_sla',
+        Filter: NumberRangeColumnFilter,
+        filter: 'between'
       }
     ],
     [t]
+  );
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    state,
+    visibleColumns,
+    preGlobalFilteredRows,
+    setGlobalFilter
+  } = useTable(
+    {
+      columns,
+      data,
+      defaultColumn
+    },
+    useFilters,
+    useGlobalFilter,
+    useSortBy
   );
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
@@ -105,9 +152,57 @@ const StakedRelayerScoresTable = ({
 
   if (status === STATUSES.RESOLVED) {
     return (
-      <InterlayTable
-        columns={columns}
-        data={data} />
+      <InterlayTableContainer>
+        <InterlayTable
+          {...getTableProps()}>
+          <InterlayThead>
+            {headerGroups.map(headerGroup => (
+              <InterlayTr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map(column => (
+                  <InterlayTh {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render('Header')}
+                    {column.isSorted && (
+                      // ray test touch <
+                      <span className='ml-1'>
+                        {column.isSortedDesc ? '▼' : '▲'}
+                      </span>
+                      // ray test touch >
+                    )}
+                    {column.canFilter && <div>{column.render('Filter')}</div>}
+                  </InterlayTh>
+                ))}
+              </InterlayTr>
+            ))}
+            <InterlayTr>
+              <InterlayTh
+                colSpan={visibleColumns.length}
+                // ray test touch <
+                style={{
+                  textAlign: 'left'
+                }}>
+                {/* ray test touch > */}
+                <GlobalFilter
+                  preGlobalFilteredRows={preGlobalFilteredRows}
+                  globalFilter={state.globalFilter}
+                  setGlobalFilter={setGlobalFilter} />
+              </InterlayTh>
+            </InterlayTr>
+          </InterlayThead>
+          <InterlayTbody {...getTableBodyProps()}>
+            {rows.map(row => {
+              prepareRow(row);
+
+              return (
+                <InterlayTr {...row.getRowProps()}>
+                  {row.cells.map(cell => {
+                    return <InterlayTd {...cell.getCellProps()}>{cell.render('Cell')}</InterlayTd>;
+                  })}
+                </InterlayTr>
+              );
+            })}
+          </InterlayTbody>
+        </InterlayTable>
+      </InterlayTableContainer>
     );
   }
 

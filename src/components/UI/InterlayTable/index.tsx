@@ -1,15 +1,9 @@
-// @ts-nocheck
+
 import * as React from 'react';
-import {
-  useTable,
-  useSortBy,
-  useFilters,
-  useGlobalFilter,
-  useAsyncDebounce
-} from 'react-table';
+
 import clsx from 'clsx';
 
-const TableContainer = ({
+const InterlayTableContainer = ({
   className,
   ...rest
 }: React.ComponentPropsWithRef<'div'>) => (
@@ -21,7 +15,7 @@ const TableContainer = ({
     {...rest} />
 );
 
-const Table = ({
+const InterlayTable = ({
   className,
   ...rest
 }: React.ComponentPropsWithRef<'table'>) => (
@@ -33,15 +27,15 @@ const Table = ({
     {...rest} />
 );
 
-const Thead = (props: React.ComponentPropsWithRef<'thead'>) => (
+const InterlayThead = (props: React.ComponentPropsWithRef<'thead'>) => (
   <thead {...props} />
 );
 
-const Tbody = (props: React.ComponentPropsWithRef<'tbody'>) => (
+const InterlayTbody = (props: React.ComponentPropsWithRef<'tbody'>) => (
   <tbody {...props} />
 );
 
-const Tr = ({
+const InterlayTr = ({
   className,
   ...rest
 }: React.ComponentPropsWithRef<'tr'>) => (
@@ -59,7 +53,7 @@ const Tr = ({
     {...rest} />
 );
 
-const Th = ({
+const InterlayTh = ({
   className,
   ...rest
 }: React.ComponentPropsWithRef<'th'>) => (
@@ -73,7 +67,7 @@ const Th = ({
     {...rest} />
 );
 
-const Td = ({
+const InterlayTd = ({
   className,
   ...rest
 }: React.ComponentPropsWithRef<'th'>) => (
@@ -86,136 +80,13 @@ const Td = ({
     {...rest} />
 );
 
-function GlobalFilter({
-  preGlobalFilteredRows,
-  globalFilter,
-  setGlobalFilter
-}) {
-  const count = preGlobalFilteredRows.length;
-  const [value, setValue] = React.useState(globalFilter);
-  const onChange = useAsyncDebounce(value => {
-    setGlobalFilter(value || undefined);
-  }, 200);
-
-  return (
-    <span>
-      Search:{' '}
-      <input
-        value={value || ''}
-        onChange={event => {
-          setValue(event.target.value);
-          onChange(event.target.value);
-        }}
-        placeholder={`${count} records...`}
-        style={{
-          fontSize: '1.1rem',
-          border: '0'
-        }} />
-    </span>
-  );
-}
-
-function DefaultColumnFilter({
-  column: {
-    filterValue,
-    preFilteredRows,
-    setFilter
-  }
-}) {
-  const count = preFilteredRows.length;
-
-  return (
-    <input
-      value={filterValue || ''}
-      onChange={event => {
-        setFilter(event.target.value || undefined); // Set undefined to remove the filter entirely
-      }}
-      onClick={event => {
-        event.stopPropagation();
-      }}
-      placeholder={`Search ${count} records...`} />
-  );
-}
-
-const defaultColumn = {
-  Filter: DefaultColumnFilter
-};
-
-// TODO: should type properly (Re:https://github.com/tannerlinsley/react-table/blob/master/TYPESCRIPT.md)
-const InterlayTable = ({
-  columns,
-  data
-}) => {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    state,
-    visibleColumns,
-    preGlobalFilteredRows,
-    setGlobalFilter
-  } = useTable(
-    {
-      columns,
-      data,
-      defaultColumn
-    },
-    useFilters,
-    useGlobalFilter,
-    useSortBy
-  );
-
-  return (
-    <TableContainer>
-      <Table
-        {...getTableProps()}>
-        <Thead>
-          {headerGroups.map(headerGroup => (
-            <Tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <Th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                  {column.render('Header')}
-                  {column.isSorted && (
-                    <span className='ml-1'>
-                      {column.isSortedDesc ? '▼' : '▲'}
-                    </span>
-                  )}
-                  {column.canFilter && <div>{column.render('Filter')}</div>}
-                </Th>
-              ))}
-            </Tr>
-          ))}
-          <Tr>
-            <Th
-              colSpan={visibleColumns.length}
-              style={{
-                textAlign: 'left'
-              }}>
-              <GlobalFilter
-                preGlobalFilteredRows={preGlobalFilteredRows}
-                globalFilter={state.globalFilter}
-                setGlobalFilter={setGlobalFilter} />
-            </Th>
-          </Tr>
-        </Thead>
-        <Tbody {...getTableBodyProps()}>
-          {rows.map(row => {
-            prepareRow(row);
-
-            return (
-              <Tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  return <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>;
-                })}
-              </Tr>
-            );
-          })}
-        </Tbody>
-      </Table>
-    </TableContainer>
-  );
+export {
+  InterlayTableContainer,
+  InterlayThead,
+  InterlayTbody,
+  InterlayTr,
+  InterlayTh,
+  InterlayTd
 };
 
 export default InterlayTable;
