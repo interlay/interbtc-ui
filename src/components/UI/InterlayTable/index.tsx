@@ -1,8 +1,5 @@
 // @ts-nocheck
-import {
-  useState,
-  useMemo
-} from 'react';
+import * as React from 'react';
 import {
   useTable,
   useSortBy,
@@ -12,7 +9,82 @@ import {
 } from 'react-table';
 import clsx from 'clsx';
 
-import styles from './interlay-table.module.css';
+const TableContainer = ({
+  className,
+  ...rest
+}: React.ComponentPropsWithRef<'div'>) => (
+  <div
+    className={clsx(
+      'overflow-scroll',
+      className
+    )}
+    {...rest} />
+);
+
+const Table = ({
+  className,
+  ...rest
+}: React.ComponentPropsWithRef<'table'>) => (
+  <table
+    className={clsx(
+      'w-full',
+      className
+    )}
+    {...rest} />
+);
+
+const Thead = (props: React.ComponentPropsWithRef<'thead'>) => (
+  <thead {...props} />
+);
+
+const Tbody = (props: React.ComponentPropsWithRef<'tbody'>) => (
+  <tbody {...props} />
+);
+
+const Tr = ({
+  className,
+  ...rest
+}: React.ComponentPropsWithRef<'tr'>) => (
+  <tr
+    className={clsx(
+      'border-b',
+      'border-l-0',
+      'border-r-0',
+      'border-t-0',
+      'border-solid',
+      'border-gray-300', // TODO: should update per design
+      'text-sm',
+      className
+    )}
+    {...rest} />
+);
+
+const Th = ({
+  className,
+  ...rest
+}: React.ComponentPropsWithRef<'th'>) => (
+  <th
+    className={clsx(
+      'text-secondary',
+      'text-base',
+      'p-2',
+      className
+    )}
+    {...rest} />
+);
+
+const Td = ({
+  className,
+  ...rest
+}: React.ComponentPropsWithRef<'th'>) => (
+  <td
+    className={clsx(
+      'h-12',
+      'p-2',
+      className
+    )}
+    {...rest} />
+);
 
 function GlobalFilter({
   preGlobalFilteredRows,
@@ -20,7 +92,7 @@ function GlobalFilter({
   setGlobalFilter
 }) {
   const count = preGlobalFilteredRows.length;
-  const [value, setValue] = useState(globalFilter);
+  const [value, setValue] = React.useState(globalFilter);
   const onChange = useAsyncDebounce(value => {
     setGlobalFilter(value || undefined);
   }, 200);
@@ -71,7 +143,7 @@ const InterlayTable = ({
   columns,
   data
 }) => {
-  const defaultColumn = useMemo(
+  const defaultColumn = React.useMemo(
     () => ({
       Filter: DefaultColumnFilter
     }),
@@ -100,19 +172,14 @@ const InterlayTable = ({
   );
 
   return (
-    <div
-      className={clsx(
-        'overflow-scroll',
-        className
-      )}>
-      <table
-        className={styles['interlay-table']}
+    <TableContainer>
+      <Table
         {...getTableProps()}>
-        <thead>
+        <Thead>
           {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <Tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                <Th {...column.getHeaderProps(column.getSortByToggleProps())}>
                   {column.render('Header')}
                   {column.isSorted && (
                     <span className='ml-1'>
@@ -120,12 +187,12 @@ const InterlayTable = ({
                     </span>
                   )}
                   {column.canFilter && <div>{column.render('Filter')}</div>}
-                </th>
+                </Th>
               ))}
-            </tr>
+            </Tr>
           ))}
-          <tr>
-            <th
+          <Tr>
+            <Th
               colSpan={visibleColumns.length}
               style={{
                 textAlign: 'left'
@@ -134,24 +201,24 @@ const InterlayTable = ({
                 preGlobalFilteredRows={preGlobalFilteredRows}
                 globalFilter={state.globalFilter}
                 setGlobalFilter={setGlobalFilter} />
-            </th>
-          </tr>
-        </thead>
-        <tbody {...getTableBodyProps()}>
+            </Th>
+          </Tr>
+        </Thead>
+        <Tbody {...getTableBodyProps()}>
           {rows.map(row => {
             prepareRow(row);
 
             return (
-              <tr {...row.getRowProps()}>
+              <Tr {...row.getRowProps()}>
                 {row.cells.map(cell => {
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                  return <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>;
                 })}
-              </tr>
+              </Tr>
             );
           })}
-        </tbody>
-      </table>
-    </div>
+        </Tbody>
+      </Table>
+    </TableContainer>
   );
 };
 
