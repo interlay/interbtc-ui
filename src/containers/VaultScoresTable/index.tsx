@@ -63,6 +63,9 @@ function NumberRangeColumnFilter({
           const val = event.target.value;
           setFilter((old = []) => [val ? parseInt(val, 10) : undefined, old[1]]);
         }}
+        onClick={event => {
+          event.stopPropagation();
+        }}
         placeholder={`Min (${min})`}
         style={{
           width: '70px',
@@ -75,6 +78,9 @@ function NumberRangeColumnFilter({
         onChange={event => {
           const val = event.target.value;
           setFilter((old = []) => [old[0], val ? parseInt(val, 10) : undefined]);
+        }}
+        onClick={event => {
+          event.stopPropagation();
         }}
         placeholder={`Max (${max})`}
         style={{

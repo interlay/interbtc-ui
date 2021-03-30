@@ -30,9 +30,9 @@ function GlobalFilter({
       Search:{' '}
       <input
         value={value || ''}
-        onChange={e => {
-          setValue(e.target.value);
-          onChange(e.target.value);
+        onChange={event => {
+          setValue(event.target.value);
+          onChange(event.target.value);
         }}
         placeholder={`${count} records...`}
         style={{
@@ -57,6 +57,9 @@ function DefaultColumnFilter({
       value={filterValue || ''}
       onChange={event => {
         setFilter(event.target.value || undefined); // Set undefined to remove the filter entirely
+      }}
+      onClick={event => {
+        event.stopPropagation();
       }}
       placeholder={`Search ${count} records...`} />
   );
