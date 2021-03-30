@@ -155,32 +155,27 @@ const VaultScoresTable = ({
       {
         Header: `${t('leaderboard.collateral')} (DOT)`,
         accessor: 'collateral',
-        Filter: NumberRangeColumnFilter,
-        filter: 'between'
+        disableFilters: true
       },
       {
         Header: t('leaderboard.request_issue_count'),
         accessor: 'request_issue_count',
-        Filter: NumberRangeColumnFilter,
-        filter: 'between'
+        disableFilters: true
       },
       {
         Header: t('leaderboard.execute_issue_count'),
         accessor: 'execute_issue_count',
-        Filter: NumberRangeColumnFilter,
-        filter: 'between'
+        disableFilters: true
       },
       {
         Header: t('leaderboard.request_redeem_count'),
         accessor: 'request_redeem_count',
-        Filter: NumberRangeColumnFilter,
-        filter: 'between'
+        disableFilters: true
       },
       {
         Header: t('leaderboard.execute_redeem_count'),
         accessor: 'execute_redeem_count',
-        Filter: NumberRangeColumnFilter,
-        filter: 'between'
+        disableFilters: true
       },
       {
         Header: t('leaderboard.lifetime_sla'),
