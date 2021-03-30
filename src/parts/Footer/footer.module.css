@@ -69,7 +69,8 @@
     text-transform: uppercase;
     border: 1px solid #4ac948;
     color: #4ac948;
-    margin-left: 10px;
+    margin-left: 0px;
+    margin-top: 10px;
   }
   .newsletter-button:hover {
     color: white;
@@ -84,7 +85,8 @@
     font-weight: 700;
   }
   
-  @media only screen and (max-width: 600px) {
+  /* TODO: Tablet resposiveness (while updating to design system) */
+  @media only screen and (max-width: 1024px) {
     .footer {
       padding: 20px;
       display: flex;
@@ -111,9 +113,6 @@
       display: flex;
       justify-content: flex-start;
     }
-    .newsletter-button{
-        margin-left: 0px;
-        margin-top: 10px;
-    }
+ 
   }
   

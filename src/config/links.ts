@@ -25,7 +25,7 @@ const POLKA_BTC_DOC_GETTING_STARTED = 'https://docs.polkabtc.io/#/start/overview
 const POLKA_BTC_DOC_VAULTS = 'https://docs.polkabtc.io/#/vault/overview';
 const POLKA_BTC_DOC_RELAYERS = 'https://docs.polkabtc.io/#/relayer/overview';
 const POLKA_BTC_DOC_DEVELOPERS = 'https://docs.polkabtc.io/#/developers/integration';
-const POLKA_BTC_DOC_ROAD_MAP = 'https://docs.polkabtc.io/#/about/roadmap';
+const POLKA_BTC_DOC_ROADMAP = 'https://docs.polkabtc.io/#/about/roadmap';
 
 const PRIVACY_POLICY = 'https://www.interlay.io/docs/privacy-policy.pdf';
 const NEWS_LETTER_ACTION =
@@ -52,7 +52,7 @@ export {
   POLKA_BTC_DOC_VAULTS,
   POLKA_BTC_DOC_RELAYERS,
   POLKA_BTC_DOC_DEVELOPERS,
-  POLKA_BTC_DOC_ROAD_MAP,
+  POLKA_BTC_DOC_ROADMAP,
   PRIVACY_POLICY,
   NEWS_LETTER_ACTION
 };

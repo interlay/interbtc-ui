@@ -25,14 +25,13 @@ import {
   POLKA_BTC_DOC_VAULTS,
   POLKA_BTC_DOC_RELAYERS,
   POLKA_BTC_DOC_DEVELOPERS,
-  POLKA_BTC_DOC_ROAD_MAP,
+  POLKA_BTC_DOC_ROADMAP,
   PRIVACY_POLICY,
   NEWS_LETTER_ACTION
 } from 'config/links';
 import styles from './footer.module.css';
-// TODO: should use an SVG
-import interlayImage from 'assets/img/interlay.png';
-// TODO: should use next-gen format
+import interlayImage from 'assets/img/interlay.svg';
+// TODO: Update svg
 import web3FoundationImage from 'assets/img/polkabtc/web3-foundation-grants-badge-black.png';
 
 const packageJson = require('../../../package.json');
@@ -76,22 +75,26 @@ const Footer = () => {
             <div className={styles['title']}>{t('footer.contact')}</div>
             <div className={styles['footer-items-container']}>
               <ul>
-                <InterlayLink
-                  href={INTERLAY_DISCORD}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  data-placement='bottom'
-                  data-original-title='Join our Discord channel'>
-                  <li>Discord</li>
-                </InterlayLink>
-                <InterlayLink
-                  href={INTERLAY_EMAIL}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  data-placement='bottom'
-                  data-original-title='Drop us an email'>
-                  <li>Email</li>
-                </InterlayLink>
+                <li>
+                  <InterlayLink
+                    href={INTERLAY_DISCORD}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    data-placement='bottom'
+                    data-original-title='Join our Discord channel'>
+                 Discord
+                  </InterlayLink>
+                </li>
+                <li>
+                  <InterlayLink
+                    href={INTERLAY_EMAIL}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    data-placement='bottom'
+                    data-original-title='Drop us an email'>
+                 Email
+                  </InterlayLink>
+                </li>
               </ul>
             </div>
           </div>
@@ -103,24 +106,30 @@ const Footer = () => {
             <div className={styles['title']}>{t('footer.challenges')}</div>
             <div className={styles['footer-items-container']}>
               <ul>
-                <InterlayLink
-                  href={POLKA_BTC_DOC_TREASURE_HUNT}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <li>{t('footer.treasure_hunt')}</li>
-                </InterlayLink>
-                <InterlayLink
-                  href={POLKA_BTC_DOC_TREASURE_HUNT_VAULT}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <li>{t('footer.vault_treasure')}</li>
-                </InterlayLink>
-                <InterlayLink
-                  href={POLKA_BTC_DOC_TREASURE_HUNT_RELAYER}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <li>{t('footer.relayer_treasure')}</li>
-                </InterlayLink>
+                <li>
+                  <InterlayLink
+                    href={POLKA_BTC_DOC_TREASURE_HUNT}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    {t('footer.treasure_hunt')}
+                  </InterlayLink>
+                </li>
+                <li>
+                  <InterlayLink
+                    href={POLKA_BTC_DOC_TREASURE_HUNT_VAULT}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    {t('footer.vault_treasure')}
+                  </InterlayLink>
+                </li>
+                <li>
+                  <InterlayLink
+                    href={POLKA_BTC_DOC_TREASURE_HUNT_RELAYER}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    {t('footer.relayer_treasure')}
+                  </InterlayLink>
+                </li>
               </ul>
             </div>
           </div>
@@ -132,36 +141,46 @@ const Footer = () => {
             <div className={styles['title']}>{t('footer.feedback')}</div>
             <div className={styles['footer-items-container']}>
               <ul>
-                <InterlayLink
-                  href={USER_FEEDBACK_FORM}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <li>{t('footer.user_feedback')}</li>
-                </InterlayLink>
-                <InterlayLink
-                  href={VAULT_FEEDBACK_FORM}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <li>{t('footer.vault_feedback')}</li>
-                </InterlayLink>
-                <InterlayLink
-                  href={RELAYER_FEEDBACK_FORM}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <li>{t('footer.relayer_feedback')}</li>
-                </InterlayLink>
-                <InterlayLink
-                  href={POLKA_BTC_UI_GITHUB_ISSUES}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <li>{t('footer.open_issue')}</li>
-                </InterlayLink>
-                <InterlayLink
-                  href={INTERLAY_DISCORD}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <li>{t('footer.discuss_discord')}</li>
-                </InterlayLink>
+                <li>
+                  <InterlayLink
+                    href={USER_FEEDBACK_FORM}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    {t('footer.user_feedback')}
+                  </InterlayLink>
+                </li>
+                <li>
+                  <InterlayLink
+                    href={VAULT_FEEDBACK_FORM}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    {t('footer.vault_feedback')}
+                  </InterlayLink>
+                </li>
+                <li>
+                  <InterlayLink
+                    href={RELAYER_FEEDBACK_FORM}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    {t('footer.relayer_feedback')}
+                  </InterlayLink>
+                </li>
+                <li>
+                  <InterlayLink
+                    href={POLKA_BTC_UI_GITHUB_ISSUES}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    {t('footer.open_issue')}
+                  </InterlayLink>
+                </li>
+                <li>
+                  <InterlayLink
+                    href={INTERLAY_DISCORD}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    {t('footer.discuss_discord')}
+                  </InterlayLink>
+                </li>
               </ul>
             </div>
           </div>
@@ -173,36 +192,46 @@ const Footer = () => {
             <div className={styles['title']}>{t('footer.docs')}</div>
             <div className={styles['footer-items-container']}>
               <ul>
-                <InterlayLink
-                  href={POLKA_BTC_DOC_GETTING_STARTED}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <li>{t('footer.getting_started')}</li>
-                </InterlayLink>
-                <InterlayLink
-                  href={POLKA_BTC_DOC_VAULTS}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <li>{t('footer.vaults_docs')}</li>
-                </InterlayLink>
-                <InterlayLink
-                  href={POLKA_BTC_DOC_RELAYERS}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <li>{t('footer.Relayer_docs')}</li>
-                </InterlayLink>
-                <InterlayLink
-                  href={POLKA_BTC_DOC_DEVELOPERS}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <li>{t('footer.developers')}</li>
-                </InterlayLink>
-                <InterlayLink
-                  href={POLKA_BTC_DOC_ROAD_MAP}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <li>{t('footer.roadmap')}</li>
-                </InterlayLink>
+                <li>
+                  <InterlayLink
+                    href={POLKA_BTC_DOC_GETTING_STARTED}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    {t('footer.getting_started')}
+                  </InterlayLink>
+                </li>
+                <li>
+                  <InterlayLink
+                    href={POLKA_BTC_DOC_VAULTS}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    {t('footer.vaults_docs')}
+                  </InterlayLink>
+                </li>
+                <li>
+                  <InterlayLink
+                    href={POLKA_BTC_DOC_RELAYERS}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    {t('footer.Relayer_docs')}
+                  </InterlayLink>
+                </li>
+                <li>
+                  <InterlayLink
+                    href={POLKA_BTC_DOC_DEVELOPERS}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    {t('footer.developers')}
+                  </InterlayLink>
+                </li>
+                <li>
+                  <InterlayLink
+                    href={POLKA_BTC_DOC_ROADMAP}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    {t('footer.roadmap')}
+                  </InterlayLink>
+                </li>
               </ul>
             </div>
           </div>
@@ -214,38 +243,46 @@ const Footer = () => {
             <div className={styles['title']}>{t('footer.follow_us')}</div>
             <div className={styles['footer-items-container']}>
               <ul>
-                <InterlayLink
-                  href={INTERLAY_TWITTER}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  data-placement='bottom'
-                  data-original-title='Follow us on Twitter'>
-                  <li>Twitter</li>
-                </InterlayLink>
-                <InterlayLink
-                  href={INTERLAY_MEDIUM}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  data-placement='bottom'
-                  data-original-title='Follow us on Medium'>
-                  <li>Medium</li>
-                </InterlayLink>
-                <InterlayLink
-                  href={INTERLAY_GITHUB}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  data-placement='bottom'
-                  data-original-title='Follow us on Github'>
-                  <li>Github</li>
-                </InterlayLink>
-                <InterlayLink
-                  href={INTERLAY_LINKEDIN}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  data-placement='bottom'
-                  data-original-title='Follow us on LinkedIn'>
-                  <li>LinkedIn</li>
-                </InterlayLink>
+                <li>
+                  <InterlayLink
+                    href={INTERLAY_TWITTER}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    data-placement='bottom'
+                    data-original-title='Follow us on Twitter'>
+                  Twitter
+                  </InterlayLink>
+                </li>
+                <li>
+                  <InterlayLink
+                    href={INTERLAY_MEDIUM}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    data-placement='bottom'
+                    data-original-title='Follow us on Medium'>
+                  Medium
+                  </InterlayLink>
+                </li>
+                <li>
+                  <InterlayLink
+                    href={INTERLAY_GITHUB}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    data-placement='bottom'
+                    data-original-title='Follow us on Github'>
+                 Github
+                  </InterlayLink>
+                </li>
+                <li>
+                  <InterlayLink
+                    href={INTERLAY_LINKEDIN}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    data-placement='bottom'
+                    data-original-title='Follow us on LinkedIn'>
+                  LinkedIn
+                  </InterlayLink>
+                </li>
               </ul>
             </div>
           </div>
