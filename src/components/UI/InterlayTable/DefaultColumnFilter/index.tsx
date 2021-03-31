@@ -6,7 +6,8 @@ function DefaultColumnFilter({
     filterValue,
     preFilteredRows,
     setFilter
-  }
+  },
+  placeholder
 }) {
   const count = preFilteredRows.length;
 
@@ -19,7 +20,7 @@ function DefaultColumnFilter({
       onClick={event => {
         event.stopPropagation();
       }}
-      placeholder={`Search ${count} records...`} />
+      placeholder={placeholder || `Search ${count} records...`} />
   );
 }
 

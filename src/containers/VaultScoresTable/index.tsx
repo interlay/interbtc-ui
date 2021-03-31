@@ -24,7 +24,6 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import DefaultColumnFilter from 'components/UI/InterlayTable/DefaultColumnFilter';
-import GlobalFilter from 'components/UI/InterlayTable/GlobalFilter';
 import NumberRangeColumnFilter from 'components/UI/InterlayTable/NumberRangeColumnFilter';
 import SortBy from 'components/UI/InterlayTable/SortBy';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
@@ -140,7 +139,7 @@ const VaultScoresTable = ({
           'text-right'
         ],
         style: {
-          minWidth: 180
+          minWidth: 200
         }
       },
       {
@@ -174,11 +173,7 @@ const VaultScoresTable = ({
     getTableBodyProps,
     headerGroups,
     rows,
-    prepareRow,
-    state,
-    visibleColumns,
-    preGlobalFilteredRows,
-    setGlobalFilter
+    prepareRow
   } = useTable(
     {
       columns,
@@ -227,26 +222,12 @@ const VaultScoresTable = ({
                         isSortedDesc={column.isSortedDesc} />
                     </div>
                     {column.canFilter && column.Filter && (
-                      <div>{column.render('Filter')}</div>
+                      <div>{column.render('Filter', { placeholder: 'Search by Account ID' })}</div>
                     )}
                   </InterlayTh>
                 ))}
               </InterlayTr>
             ))}
-            <InterlayTr>
-              <InterlayTh
-                colSpan={visibleColumns.length}
-                // ray test touch <
-                style={{
-                  textAlign: 'left'
-                }}>
-                {/* ray test touch > */}
-                <GlobalFilter
-                  preGlobalFilteredRows={preGlobalFilteredRows}
-                  globalFilter={state.globalFilter}
-                  setGlobalFilter={setGlobalFilter} />
-              </InterlayTh>
-            </InterlayTr>
           </InterlayThead>
           <InterlayTbody {...getTableBodyProps()}>
             {rows.map(row => {
