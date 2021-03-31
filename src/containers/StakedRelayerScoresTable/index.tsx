@@ -93,23 +93,27 @@ const StakedRelayerScoresTable = ({
     () => [
       {
         Header: t('leaderboard.account_id'),
-        accessor: 'id'
+        accessor: 'id',
+        minWidth: 480
       },
       {
         Header: `${t('leaderboard.stake')} (DOT)`,
         accessor: 'stake',
-        disableFilters: true
+        disableFilters: true,
+        minWidth: 180
       },
       {
         Header: t('leaderboard.block_count'),
         accessor: 'block_count',
-        disableFilters: true
+        disableFilters: true,
+        minWidth: 180
       },
       {
         Header: t('leaderboard.lifetime_sla'),
         accessor: 'lifetime_sla',
         Filter: NumberRangeColumnFilter,
-        filter: 'between'
+        filter: 'between',
+        minWidth: 180
       }
     ],
     [t]
@@ -153,13 +157,14 @@ const StakedRelayerScoresTable = ({
   if (status === STATUSES.RESOLVED) {
     return (
       <InterlayTableContainer>
-        <InterlayTable
-          {...getTableProps()}>
+        <InterlayTable {...getTableProps()}>
           <InterlayThead>
             {headerGroups.map(headerGroup => (
               <InterlayTr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => (
-                  <InterlayTh {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  <InterlayTh
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    style={{ minWidth: column.minWidth }}>
                     {column.render('Header')}
                     {column.isSorted && (
                       // ray test touch <

@@ -97,38 +97,45 @@ const VaultScoresTable = ({
       // TODO: should type properly
       {
         Header: t('leaderboard.account_id'),
-        accessor: 'id'
+        accessor: 'id',
+        minWidth: 480
       },
       {
         Header: `${t('leaderboard.collateral')} (DOT)`,
         accessor: 'collateral',
-        disableFilters: true
+        disableFilters: true,
+        minWidth: 180
       },
       {
         Header: t('leaderboard.request_issue_count'),
         accessor: 'request_issue_count',
-        disableFilters: true
+        disableFilters: true,
+        minWidth: 180
       },
       {
         Header: t('leaderboard.execute_issue_count'),
         accessor: 'execute_issue_count',
-        disableFilters: true
+        disableFilters: true,
+        minWidth: 180
       },
       {
         Header: t('leaderboard.request_redeem_count'),
         accessor: 'request_redeem_count',
-        disableFilters: true
+        disableFilters: true,
+        minWidth: 180
       },
       {
         Header: t('leaderboard.execute_redeem_count'),
         accessor: 'execute_redeem_count',
-        disableFilters: true
+        disableFilters: true,
+        minWidth: 180
       },
       {
         Header: t('leaderboard.lifetime_sla'),
         accessor: 'lifetime_sla',
         Filter: NumberRangeColumnFilter,
-        filter: 'between'
+        filter: 'between',
+        minWidth: 180
       }
     ],
     [t]
@@ -173,13 +180,14 @@ const VaultScoresTable = ({
     // TODO: should optimize re-renders https://kentcdodds.com/blog/optimize-react-re-renders
     return (
       <InterlayTableContainer>
-        <InterlayTable
-          {...getTableProps()}>
+        <InterlayTable {...getTableProps()}>
           <InterlayThead>
             {headerGroups.map(headerGroup => (
               <InterlayTr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => (
-                  <InterlayTh {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  <InterlayTh
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    style={{ minWidth: column.minWidth }}>
                     {column.render('Header')}
                     {column.isSorted && (
                       // ray test touch <
