@@ -46,10 +46,6 @@ interface PatchedVaultData extends Omit<VaultData, 'lifetime_sla'> {
   lifetime_sla: string;
 }
 
-const defaultColumn = {
-  Filter: DefaultColumnFilter
-};
-
 // TODO: should be paginated
 const VaultScoresTable = ({
   challengeTime
@@ -98,36 +94,32 @@ const VaultScoresTable = ({
       {
         Header: t('leaderboard.account_id'),
         accessor: 'id',
+        Filter: DefaultColumnFilter,
         minWidth: 480
       },
       {
         Header: `${t('leaderboard.collateral')} (DOT)`,
         accessor: 'collateral',
-        disableFilters: true,
         minWidth: 180
       },
       {
         Header: t('leaderboard.request_issue_count'),
         accessor: 'request_issue_count',
-        disableFilters: true,
         minWidth: 180
       },
       {
         Header: t('leaderboard.execute_issue_count'),
         accessor: 'execute_issue_count',
-        disableFilters: true,
         minWidth: 180
       },
       {
         Header: t('leaderboard.request_redeem_count'),
         accessor: 'request_redeem_count',
-        disableFilters: true,
         minWidth: 180
       },
       {
         Header: t('leaderboard.execute_redeem_count'),
         accessor: 'execute_redeem_count',
-        disableFilters: true,
         minWidth: 180
       },
       {
@@ -154,8 +146,7 @@ const VaultScoresTable = ({
   } = useTable(
     {
       columns,
-      data,
-      defaultColumn
+      data
     },
     useFilters,
     useGlobalFilter,
@@ -196,7 +187,7 @@ const VaultScoresTable = ({
                       </span>
                       // ray test touch >
                     )}
-                    {column.canFilter && <div>{column.render('Filter')}</div>}
+                    {column.canFilter && column.Filter && <div>{column.render('Filter')}</div>}
                   </InterlayTh>
                 ))}
               </InterlayTr>

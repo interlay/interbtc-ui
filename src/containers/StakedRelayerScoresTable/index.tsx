@@ -48,10 +48,6 @@ interface PatchedRelayerData extends Omit<RelayerData, 'lifetime_sla'> {
   lifetime_sla: string;
 }
 
-const defaultColumn = {
-  Filter: DefaultColumnFilter
-};
-
 const StakedRelayerScoresTable = ({
   challengeTime
 }: Props) => {
@@ -94,18 +90,17 @@ const StakedRelayerScoresTable = ({
       {
         Header: t('leaderboard.account_id'),
         accessor: 'id',
+        Filter: DefaultColumnFilter,
         minWidth: 480
       },
       {
         Header: `${t('leaderboard.stake')} (DOT)`,
         accessor: 'stake',
-        disableFilters: true,
         minWidth: 180
       },
       {
         Header: t('leaderboard.block_count'),
         accessor: 'block_count',
-        disableFilters: true,
         minWidth: 180
       },
       {
@@ -132,8 +127,7 @@ const StakedRelayerScoresTable = ({
   } = useTable(
     {
       columns,
-      data,
-      defaultColumn
+      data
     },
     useFilters,
     useGlobalFilter,
@@ -173,7 +167,7 @@ const StakedRelayerScoresTable = ({
                       </span>
                       // ray test touch >
                     )}
-                    {column.canFilter && <div>{column.render('Filter')}</div>}
+                    {column.canFilter && column.Filter && <div>{column.render('Filter')}</div>}
                   </InterlayTh>
                 ))}
               </InterlayTr>
