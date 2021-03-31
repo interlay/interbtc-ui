@@ -175,21 +175,29 @@ const VaultScoresTable = ({
           <InterlayThead>
             {headerGroups.map(headerGroup => (
               <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
-                  <InterlayTh
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    style={{ minWidth: column.minWidth }}>
-                    {column.render('Header')}
-                    {column.isSorted && (
-                      // ray test touch <
-                      <span className='ml-1'>
-                        {column.isSortedDesc ? '▼' : '▲'}
-                      </span>
-                      // ray test touch >
-                    )}
-                    {column.canFilter && column.Filter && <div>{column.render('Filter')}</div>}
-                  </InterlayTh>
-                ))}
+                {headerGroup.headers.map(column => {
+                  const {
+                    key,
+                    ...columnHeaderProps
+                  } = column.getHeaderProps(column.getSortByToggleProps());
+
+                  return (
+                    <InterlayTh
+                      key={key}
+                      columnHeaderProps={columnHeaderProps}
+                      style={{ minWidth: column.minWidth }}>
+                      {column.render('Header')}
+                      {column.isSorted && (
+                        // ray test touch <
+                        <span className='ml-1'>
+                          {column.isSortedDesc ? '▼' : '▲'}
+                        </span>
+                        // ray test touch >
+                      )}
+                      {column.canFilter && column.Filter && <div>{column.render('Filter')}</div>}
+                    </InterlayTh>
+                  );
+                })}
               </InterlayTr>
             ))}
             <InterlayTr>
