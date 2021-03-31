@@ -14,6 +14,7 @@ import {
   useFilters,
   useGlobalFilter
 } from 'react-table';
+import clsx from 'clsx';
 import { RelayerData } from '@interlay/polkabtc-stats';
 
 import EllipsisLoader from 'components/EllipsisLoader';
@@ -91,24 +92,44 @@ const StakedRelayerScoresTable = ({
         Header: t('leaderboard.account_id'),
         accessor: 'id',
         Filter: DefaultColumnFilter,
-        minWidth: 480
+        classNames: [
+          'text-left'
+        ],
+        style: {
+          minWidth: 480
+        }
       },
       {
         Header: `${t('leaderboard.stake')} (DOT)`,
         accessor: 'stake',
-        minWidth: 180
+        classNames: [
+          'text-right'
+        ],
+        style: {
+          minWidth: 180
+        }
       },
       {
         Header: t('leaderboard.block_count'),
         accessor: 'block_count',
-        minWidth: 180
+        classNames: [
+          'text-right'
+        ],
+        style: {
+          minWidth: 180
+        }
       },
       {
         Header: t('leaderboard.lifetime_sla'),
         accessor: 'lifetime_sla',
         Filter: NumberRangeColumnFilter,
         filter: 'between',
-        minWidth: 180
+        classNames: [
+          'text-right'
+        ],
+        style: {
+          minWidth: 180
+        }
       }
     ],
     [t]
@@ -155,29 +176,26 @@ const StakedRelayerScoresTable = ({
           <InterlayThead>
             {headerGroups.map(headerGroup => (
               <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => {
-                  const {
-                    key,
-                    ...columnHeaderProps
-                  } = column.getHeaderProps(column.getSortByToggleProps());
-
-                  return (
-                    <InterlayTh
-                      key={key}
-                      columnHeaderProps={columnHeaderProps}
-                      style={{ minWidth: column.minWidth }}>
-                      {column.render('Header')}
-                      {column.isSorted && (
-                        // ray test touch <
-                        <span className='ml-1'>
-                          {column.isSortedDesc ? '▼' : '▲'}
-                        </span>
-                        // ray test touch >
-                      )}
-                      {column.canFilter && column.Filter && <div>{column.render('Filter')}</div>}
-                    </InterlayTh>
-                  );
-                })}
+                {headerGroup.headers.map(column => (
+                  <InterlayTh
+                    {...column.getHeaderProps([
+                      {
+                        className: clsx(...column.classNames),
+                        style: column.style
+                      },
+                      column.getSortByToggleProps()
+                    ])}>
+                    {column.render('Header')}
+                    {/* ray test touch < */}
+                    {column.isSorted && (
+                      <span className='ml-1'>
+                        {column.isSortedDesc ? '▼' : '▲'}
+                      </span>
+                    )}
+                    {/* ray test touch > */}
+                    {column.canFilter && column.Filter && <div>{column.render('Filter')}</div>}
+                  </InterlayTh>
+                ))}
               </InterlayTr>
             ))}
             <InterlayTr>
@@ -202,7 +220,17 @@ const StakedRelayerScoresTable = ({
               return (
                 <InterlayTr {...row.getRowProps()}>
                   {row.cells.map(cell => {
-                    return <InterlayTd {...cell.getCellProps()}>{cell.render('Cell')}</InterlayTd>;
+                    return (
+                      <InterlayTd
+                        {...cell.getCellProps([
+                          {
+                            className: clsx(...cell.column.classNames),
+                            style: cell.column.style
+                          }
+                        ])}>
+                        {cell.render('Cell')}
+                      </InterlayTd>
+                    );
                   })}
                 </InterlayTr>
               );

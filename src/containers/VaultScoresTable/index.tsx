@@ -3,15 +3,15 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-// TODO: should type properly (Re:https://github.com/tannerlinsley/react-table/blob/master/TYPESCRIPT.md)
 import {
   useTable,
   useSortBy,
   useFilters,
   useGlobalFilter
-} from 'react-table';
-// TODO: should do tree-shaking
-import { VaultData } from '@interlay/polkabtc-stats';
+// eslint-disable-next-line max-len
+} from 'react-table'; // TODO: should type properly (Re:https://github.com/tannerlinsley/react-table/blob/master/TYPESCRIPT.md)
+import clsx from 'clsx';
+import { VaultData } from '@interlay/polkabtc-stats'; // TODO: should do tree-shaking
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorMessage from 'components/ErrorMessage';
@@ -95,39 +95,74 @@ const VaultScoresTable = ({
         Header: t('leaderboard.account_id'),
         accessor: 'id',
         Filter: DefaultColumnFilter,
-        minWidth: 480
+        classNames: [
+          'text-left'
+        ],
+        style: {
+          minWidth: 480
+        }
       },
       {
         Header: `${t('leaderboard.collateral')} (DOT)`,
         accessor: 'collateral',
-        minWidth: 180
+        classNames: [
+          'text-right'
+        ],
+        style: {
+          minWidth: 180
+        }
       },
       {
         Header: t('leaderboard.request_issue_count'),
         accessor: 'request_issue_count',
-        minWidth: 180
+        classNames: [
+          'text-right'
+        ],
+        style: {
+          minWidth: 180
+        }
       },
       {
         Header: t('leaderboard.execute_issue_count'),
         accessor: 'execute_issue_count',
-        minWidth: 180
+        classNames: [
+          'text-right'
+        ],
+        style: {
+          minWidth: 180
+        }
       },
       {
         Header: t('leaderboard.request_redeem_count'),
         accessor: 'request_redeem_count',
-        minWidth: 180
+        classNames: [
+          'text-right'
+        ],
+        style: {
+          minWidth: 180
+        }
       },
       {
         Header: t('leaderboard.execute_redeem_count'),
         accessor: 'execute_redeem_count',
-        minWidth: 180
+        classNames: [
+          'text-right'
+        ],
+        style: {
+          minWidth: 180
+        }
       },
       {
         Header: t('leaderboard.lifetime_sla'),
         accessor: 'lifetime_sla',
         Filter: NumberRangeColumnFilter,
         filter: 'between',
-        minWidth: 180
+        classNames: [
+          'text-right'
+        ],
+        style: {
+          minWidth: 180
+        }
       }
     ],
     [t]
@@ -175,29 +210,26 @@ const VaultScoresTable = ({
           <InterlayThead>
             {headerGroups.map(headerGroup => (
               <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => {
-                  const {
-                    key,
-                    ...columnHeaderProps
-                  } = column.getHeaderProps(column.getSortByToggleProps());
-
-                  return (
-                    <InterlayTh
-                      key={key}
-                      columnHeaderProps={columnHeaderProps}
-                      style={{ minWidth: column.minWidth }}>
-                      {column.render('Header')}
-                      {column.isSorted && (
-                        // ray test touch <
-                        <span className='ml-1'>
-                          {column.isSortedDesc ? '▼' : '▲'}
-                        </span>
-                        // ray test touch >
-                      )}
-                      {column.canFilter && column.Filter && <div>{column.render('Filter')}</div>}
-                    </InterlayTh>
-                  );
-                })}
+                {headerGroup.headers.map(column => (
+                  <InterlayTh
+                    {...column.getHeaderProps([
+                      {
+                        className: clsx(...column.classNames),
+                        style: column.style
+                      },
+                      column.getSortByToggleProps()
+                    ])}>
+                    {column.render('Header')}
+                    {/* ray test touch < */}
+                    {column.isSorted && (
+                      <span className='ml-1'>
+                        {column.isSortedDesc ? '▼' : '▲'}
+                      </span>
+                    )}
+                    {/* ray test touch > */}
+                    {column.canFilter && column.Filter && <div>{column.render('Filter')}</div>}
+                  </InterlayTh>
+                ))}
               </InterlayTr>
             ))}
             <InterlayTr>
@@ -222,7 +254,17 @@ const VaultScoresTable = ({
               return (
                 <InterlayTr {...row.getRowProps()}>
                   {row.cells.map(cell => {
-                    return <InterlayTd {...cell.getCellProps()}>{cell.render('Cell')}</InterlayTd>;
+                    return (
+                      <InterlayTd
+                        {...cell.getCellProps([
+                          {
+                            className: clsx(...cell.column.classNames),
+                            style: cell.column.style
+                          }
+                        ])}>
+                        {cell.render('Cell')}
+                      </InterlayTd>
+                    );
                   })}
                 </InterlayTr>
               );

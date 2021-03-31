@@ -53,42 +53,24 @@ const InterlayTr = ({
     {...rest} />
 );
 
-interface InterlayThProps {
-  columnHeaderProps: React.ComponentPropsWithRef<'th'>;
-}
-
 const InterlayTh = ({
   className,
-  columnHeaderProps,
-  style,
   ...rest
-}: InterlayThProps & React.ComponentPropsWithRef<'th'>) => {
-  const {
-    style: columnHeaderStyleProps,
-    ...restColumnHeaderProps
-  } = (columnHeaderProps ?? {});
-
-  return (
-    <th
-      className={clsx(
-        'text-secondary',
-        'text-base',
-        'p-2',
-        className
-      )}
-      style={{
-        ...columnHeaderStyleProps,
-        ...style
-      }}
-      {...restColumnHeaderProps}
-      {...rest} />
-  );
-};
+}: React.ComponentPropsWithRef<'th'>) => (
+  <th
+    className={clsx(
+      'text-secondary',
+      'text-base',
+      'p-2',
+      className
+    )}
+    {...rest} />
+);
 
 const InterlayTd = ({
   className,
   ...rest
-}: React.ComponentPropsWithRef<'th'>) => (
+}: React.ComponentPropsWithRef<'td'>) => (
   <td
     className={clsx(
       'h-12',

@@ -73,7 +73,7 @@ function IssueModal(props: IssueModalProps): ReactElement {
                   </div>
                 </div>
                 <div className='step-item row'>
-                  <div className='col-6 text-left'>{t('bridge_fee')}</div>
+                  <div className='col-6 temp-text-left'>{t('bridge_fee')}</div>
                   <div className='col-6 right-text'>
                     {/* TODO: should have an image component */}
                     <img
@@ -92,7 +92,7 @@ function IssueModal(props: IssueModalProps): ReactElement {
                 </div>
                 <hr className='total-divider' />
                 <div className='step-item row'>
-                  <div className='col-6 total-added-value text-left'>{t('total_deposit')}</div>
+                  <div className='col-6 total-added-value temp-text-left'>{t('total_deposit')}</div>
                   <div className='col-6 total-amount right-text'>
                     <img
                       src={BitcoinLogo}
@@ -121,19 +121,19 @@ function IssueModal(props: IssueModalProps): ReactElement {
                 </div>
                 {/* TODO: should be reusable */}
                 <div className='step-item row mt-2'>
-                  <div className='col-6 text-left'>{t('issue_page.destination_address')}</div>
+                  <div className='col-6 temp-text-left'>{t('issue_page.destination_address')}</div>
                   <div className='col-6 right-text'>{shortAddress(address)}</div>
                 </div>
                 <div className='step-item row'>
-                  <div className='col-6 text-left'>{t('issue_page.parachain_block')}</div>
+                  <div className='col-6 temp-text-left'>{t('issue_page.parachain_block')}</div>
                   <div className='col-6 right-text'>{request.creation}</div>
                 </div>
                 <div className='step-item row'>
-                  <div className='col-6 text-left'>{t('issue_page.vault_dot_address_modal')}</div>
+                  <div className='col-6 temp-text-left'>{t('issue_page.vault_dot_address_modal')}</div>
                   <div className='col-6 right-text'>{shortAddress(request.vaultDOTAddress)}</div>
                 </div>
                 <div className='step-item row'>
-                  <div className='col-6 text-left'>{t('issue_page.vault_btc_address')}</div>
+                  <div className='col-6 temp-text-left'>{t('issue_page.vault_btc_address')}</div>
                   <div className='col-6 right-text'>{shortAddress(request.vaultBTCAddress)}</div>
                 </div>
                 <div className='row justify-content-center mt-3'>
