@@ -1,9 +1,9 @@
 
-// ray test touch <
 // TODO: should type properly
 // @ts-nocheck
 import * as React from 'react';
 import { useAsyncDebounce } from 'react-table';
+import clsx from 'clsx';
 
 function GlobalFilter({
   preGlobalFilteredRows,
@@ -18,21 +18,20 @@ function GlobalFilter({
 
   return (
     <span>
-      Search:{' '}
+      Search:&nbsp;
       <input
+        className={clsx(
+          'text-lg',
+          'border-0'
+        )}
         value={value || ''}
         onChange={event => {
           setValue(event.target.value);
           onChange(event.target.value);
         }}
-        placeholder={`${count} records...`}
-        style={{
-          fontSize: '1.1rem',
-          border: '0'
-        }} />
+        placeholder={`${count} records...`} />
     </span>
   );
 }
 
 export default GlobalFilter;
-// ray test touch >

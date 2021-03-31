@@ -1,8 +1,9 @@
 
-// ray test touch <
-import * as React from 'react';
-
 // TODO: should type properly
+// @ts-nocheck
+import * as React from 'react';
+import clsx from 'clsx';
+
 function NumberRangeColumnFilter({
   column: {
     filterValue = [],
@@ -10,7 +11,7 @@ function NumberRangeColumnFilter({
     setFilter,
     id
   }
-}: any) {
+}) {
   const [
     min,
     max
@@ -33,43 +34,38 @@ function NumberRangeColumnFilter({
 
   return (
     <div
-      style={{
-        display: 'flex'
-      }}>
+      className={clsx(
+        'flex',
+        'space-x-4',
+        'items-center'
+      )}>
       <input
+        className='w-20'
         value={filterValue[0] || ''}
         type='number'
         onChange={event => {
-          const val = event.target.value;
-          setFilter((old = []) => [val ? parseInt(val, 10) : undefined, old[1]]);
+          const value = event.currentTarget.value;
+          setFilter((old = []) => [value ? parseInt(value, 10) : undefined, old[1]]);
         }}
         onClick={event => {
           event.stopPropagation();
         }}
-        placeholder={`Min (${min})`}
-        style={{
-          width: '70px',
-          marginRight: '0.5rem'
-        }} />
-      to
+        placeholder={`Min (${min})`} />
+      <span>to</span>
       <input
+        className='w-20'
         value={filterValue[1] || ''}
         type='number'
         onChange={event => {
-          const val = event.target.value;
-          setFilter((old = []) => [old[0], val ? parseInt(val, 10) : undefined]);
+          const value = event.currentTarget.value;
+          setFilter((old = []) => [old[0], value ? parseInt(value, 10) : undefined]);
         }}
         onClick={event => {
           event.stopPropagation();
         }}
-        placeholder={`Max (${max})`}
-        style={{
-          width: '70px',
-          marginLeft: '0.5rem'
-        }} />
+        placeholder={`Max (${max})`} />
     </div>
   );
 }
 
 export default NumberRangeColumnFilter;
-// ray test touch >

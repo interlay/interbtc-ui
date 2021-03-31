@@ -1,20 +1,20 @@
 
-// ray test touch <
 // TODO: should type properly
+// @ts-nocheck
 function DefaultColumnFilter({
   column: {
     filterValue,
     preFilteredRows,
     setFilter
   }
-}: any) {
+}) {
   const count = preFilteredRows.length;
 
   return (
     <input
       value={filterValue || ''}
       onChange={event => {
-        setFilter(event.target.value || undefined); // Set undefined to remove the filter entirely
+        setFilter(event.currentTarget.value || undefined); // Set undefined to remove the filter entirely
       }}
       onClick={event => {
         event.stopPropagation();
@@ -24,4 +24,3 @@ function DefaultColumnFilter({
 }
 
 export default DefaultColumnFilter;
-// ray test touch >
