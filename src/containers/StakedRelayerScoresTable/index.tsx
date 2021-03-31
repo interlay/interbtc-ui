@@ -30,6 +30,7 @@ import InterlayTable, {
 import DefaultColumnFilter from 'components/UI/InterlayTable/DefaultColumnFilter';
 import GlobalFilter from 'components/UI/InterlayTable/GlobalFilter';
 import NumberRangeColumnFilter from 'components/UI/InterlayTable/NumberRangeColumnFilter';
+import SortBy from 'components/UI/InterlayTable/SortBy';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { StoreType } from 'common/types/util.types';
 import STATUSES from 'utils/constants/statuses';
@@ -186,14 +187,15 @@ const StakedRelayerScoresTable = ({
                       column.getSortByToggleProps()
                     ])}>
                     {column.render('Header')}
-                    {/* ray test touch < */}
-                    {column.isSorted && (
-                      <span className='ml-1'>
-                        {column.isSortedDesc ? '▼' : '▲'}
-                      </span>
+                    <div>
+                      {column.render('Header')}
+                      <SortBy
+                        isSorted={column.isSorted}
+                        isSortedDesc={column.isSortedDesc} />
+                    </div>
+                    {column.canFilter && column.Filter && (
+                      <div>{column.render('Filter')}</div>
                     )}
-                    {/* ray test touch > */}
-                    {column.canFilter && column.Filter && <div>{column.render('Filter')}</div>}
                   </InterlayTh>
                 ))}
               </InterlayTr>

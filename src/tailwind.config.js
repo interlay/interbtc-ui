@@ -1,5 +1,8 @@
 // TODO: should type properly
 // @ts-nocheck
+
+const plugin = require('tailwindcss/plugin');
+
 module.exports = {
   purge: [
     './src/**/*.{js,jsx,ts,tsx}',
@@ -45,5 +48,20 @@ module.exports = {
   variants: {
     extend: {}
   },
-  plugins: []
+  plugins: [
+    require('tailwindcss-pseudo-elements'),
+    plugin(function ({ addUtilities }) {
+      addUtilities(
+        {
+          '.empty-content': {
+            content: '""'
+          }
+        },
+        [
+          'before',
+          'after'
+        ]
+      );
+    })
+  ]
 };

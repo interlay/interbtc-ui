@@ -1,0 +1,33 @@
+
+/* TODO: should avoid hard-coding colors */
+.sort-by { 
+	padding-right: 20px;
+	position: relative;
+}
+.sort-by:before,
+.sort-by:after {
+	border: 4px solid transparent;
+	content: "";
+	display: block;
+	height: 0;
+	right: 4px;
+	top: 50%;
+	position: absolute;
+	width: 0;
+}
+.sort-by:before {
+	border-bottom-color: #9ca3af;
+	margin-top: -8px;
+}
+.sort-by:after {
+	border-top-color: #9ca3af;
+	margin-top: 2px;
+}
+
+.sort-by-ascending:after {
+	border-top-color: #000;
+}
+
+.sort-by-descending:before {
+	border-bottom-color: #000;
+}
