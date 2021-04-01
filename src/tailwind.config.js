@@ -1,3 +1,8 @@
+// TODO: should type properly
+// @ts-nocheck
+
+const plugin = require('tailwindcss/plugin');
+
 module.exports = {
   purge: [
     './src/**/*.{js,jsx,ts,tsx}',
@@ -32,11 +37,36 @@ module.exports = {
           light: '#e9ecef', // TODO: could be gray-200 in the default theme
           DEFAULT: '#a9a9a9'
         }
-      }
+      },
+      textColor: theme => ({
+        // TODO: should avoid using complete black (#000) (Re: #212529 in bootstrap)
+        primary: theme('colors.black'),
+        secondary: theme('colors.gray.400')
+      })
     }
   },
   variants: {
-    extend: {}
+    extend: {
+      borderColor: [
+        'before',
+        'after'
+      ]
+    }
   },
-  plugins: []
+  plugins: [
+    require('tailwindcss-pseudo-elements'),
+    plugin(function ({ addUtilities }) {
+      addUtilities(
+        {
+          '.empty-content': {
+            content: '""'
+          }
+        },
+        [
+          'before',
+          'after'
+        ]
+      );
+    })
+  ]
 };

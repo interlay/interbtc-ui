@@ -269,7 +269,7 @@ function EnterBTCAmount() {
         <div className='col-10'>
           <div className='wizard-item wizard-item-remove-border'>
             <div className='row'>
-              <div className='col-6 text-left'>{t('bridge_fee')}</div>
+              <div className='col-6 temp-text-left'>{t('bridge_fee')}</div>
               <div className='col fee-number'>
                 <div>
                   <img
@@ -290,7 +290,7 @@ function EnterBTCAmount() {
         <div className='col-10'>
           <div className='wizard-item wizard-item-remove-border'>
             <div className='row'>
-              <div className='col-6 text-left'>{t('issue_page.security_deposit')}</div>
+              <div className='col-6 temp-text-left'>{t('issue_page.security_deposit')}</div>
               <div className='col fee-number'>
                 <div>
                   <img
@@ -315,7 +315,7 @@ function EnterBTCAmount() {
         <div className='col-10'>
           <div className='wizard-item wizard-item-remove-border '>
             <div className='row justify-content-center'>
-              <div className='col-6 text-left total-added-value'>{t('total_deposit')}</div>
+              <div className='col-6 temp-text-left total-added-value'>{t('total_deposit')}</div>
               <div className='col fee-number'>
                 <div>
                   <img

@@ -1,4 +1,6 @@
 
+// TODO: should type properly
+// @ts-nocheck
 import {
   useMemo,
   useEffect,
@@ -6,11 +8,28 @@ import {
 } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import {
+  useTable,
+  useSortBy,
+  useFilters,
+  useGlobalFilter
+} from 'react-table';
+import clsx from 'clsx';
 import { RelayerData } from '@interlay/polkabtc-stats';
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorMessage from 'components/ErrorMessage';
-import InterlayTable from 'components/UI/InterlayTable';
+import InterlayTable, {
+  InterlayTableContainer,
+  InterlayThead,
+  InterlayTbody,
+  InterlayTr,
+  InterlayTh,
+  InterlayTd
+} from 'components/UI/InterlayTable';
+import DefaultColumnFilter from 'components/UI/InterlayTable/DefaultColumnFilter';
+import NumberRangeColumnFilter from 'components/UI/InterlayTable/NumberRangeColumnFilter';
+import SortBy, { SortByContainer } from 'components/UI/InterlayTable/SortBy';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { StoreType } from 'common/types/util.types';
 import STATUSES from 'utils/constants/statuses';
@@ -22,7 +41,6 @@ import STATUSES from 'utils/constants/statuses';
  */
 
 interface Props {
-  className?: string;
   challengeTime: number;
 }
 
@@ -32,7 +50,6 @@ interface PatchedRelayerData extends Omit<RelayerData, 'lifetime_sla'> {
 }
 
 const StakedRelayerScoresTable = ({
-  className,
   challengeTime
 }: Props) => {
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
@@ -73,22 +90,56 @@ const StakedRelayerScoresTable = ({
     () => [
       {
         Header: t('leaderboard.account_id'),
-        accessor: 'id'
+        accessor: 'id',
+        Filter: DefaultColumnFilter,
+        classNames: [
+          'text-left'
+        ]
       },
       {
         Header: `${t('leaderboard.stake')} (DOT)`,
-        accessor: 'stake'
+        accessor: 'stake',
+        classNames: [
+          'text-right'
+        ],
+        style: {
+          minWidth: 120
+        }
       },
       {
         Header: t('leaderboard.block_count'),
-        accessor: 'block_count'
+        accessor: 'block_count',
+        classNames: [
+          'text-right'
+        ]
       },
       {
         Header: t('leaderboard.lifetime_sla'),
-        accessor: 'lifetime_sla'
+        accessor: 'lifetime_sla',
+        Filter: NumberRangeColumnFilter,
+        filter: 'between',
+        classNames: [
+          'text-right'
+        ]
       }
     ],
     [t]
+  );
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow
+  } = useTable(
+    {
+      columns,
+      data
+    },
+    useFilters,
+    useGlobalFilter,
+    useSortBy
   );
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
@@ -107,10 +158,59 @@ const StakedRelayerScoresTable = ({
 
   if (status === STATUSES.RESOLVED) {
     return (
-      <InterlayTable
-        className={className}
-        columns={columns}
-        data={data} />
+      <InterlayTableContainer>
+        <InterlayTable {...getTableProps()}>
+          <InterlayThead>
+            {headerGroups.map(headerGroup => (
+              <InterlayTr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map(column => (
+                  <InterlayTh
+                    {...column.getHeaderProps([
+                      {
+                        className: clsx(...column.classNames),
+                        style: column.style
+                      },
+                      column.getSortByToggleProps()
+                    ])}>
+                    <SortByContainer>
+                      <span>{column.render('Header')}</span>
+                      <SortBy
+                        isSorted={column.isSorted}
+                        isSortedDesc={column.isSortedDesc} />
+                    </SortByContainer>
+                    {column.canFilter && column.Filter && (
+                      <div>{column.render('Filter', { placeholder: 'Search by Account ID' })}</div>
+                    )}
+                  </InterlayTh>
+                ))}
+              </InterlayTr>
+            ))}
+          </InterlayThead>
+          <InterlayTbody {...getTableBodyProps()}>
+            {rows.map(row => {
+              prepareRow(row);
+
+              return (
+                <InterlayTr {...row.getRowProps()}>
+                  {row.cells.map(cell => {
+                    return (
+                      <InterlayTd
+                        {...cell.getCellProps([
+                          {
+                            className: clsx(...cell.column.classNames),
+                            style: cell.column.style
+                          }
+                        ])}>
+                        {cell.render('Cell')}
+                      </InterlayTd>
+                    );
+                  })}
+                </InterlayTr>
+              );
+            })}
+          </InterlayTbody>
+        </InterlayTable>
+      </InterlayTableContainer>
     );
   }
 

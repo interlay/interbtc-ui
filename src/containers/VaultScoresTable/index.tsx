@@ -1,17 +1,31 @@
 
-import {
-  useMemo,
-  useEffect,
-  useState
-} from 'react';
+// @ts-nocheck
+import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-// TODO: should do tree-shaking
-import { VaultData } from '@interlay/polkabtc-stats';
+import {
+  useTable,
+  useSortBy,
+  useFilters,
+  useGlobalFilter
+// eslint-disable-next-line max-len
+} from 'react-table'; // TODO: should type properly (Re:https://github.com/tannerlinsley/react-table/blob/master/TYPESCRIPT.md)
+import clsx from 'clsx';
+import { VaultData } from '@interlay/polkabtc-stats'; // TODO: should do tree-shaking
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorMessage from 'components/ErrorMessage';
-import InterlayTable from 'components/UI/InterlayTable';
+import InterlayTable, {
+  InterlayTableContainer,
+  InterlayThead,
+  InterlayTbody,
+  InterlayTr,
+  InterlayTh,
+  InterlayTd
+} from 'components/UI/InterlayTable';
+import DefaultColumnFilter from 'components/UI/InterlayTable/DefaultColumnFilter';
+import NumberRangeColumnFilter from 'components/UI/InterlayTable/NumberRangeColumnFilter';
+import SortBy, { SortByContainer } from 'components/UI/InterlayTable/SortBy';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { StoreType } from 'common/types/util.types';
 import STATUSES from 'utils/constants/statuses';
@@ -23,7 +37,6 @@ import STATUSES from 'utils/constants/statuses';
  */
 
 interface Props {
-  className?: string;
   // TODO: should be union type
   challengeTime: number;
 }
@@ -35,18 +48,17 @@ interface PatchedVaultData extends Omit<VaultData, 'lifetime_sla'> {
 
 // TODO: should be paginated
 const VaultScoresTable = ({
-  className,
   challengeTime
 }: Props) => {
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
   const statsApi = usePolkabtcStats();
-  const [data, setData] = useState<(PatchedVaultData)[]>([]);
-  const [status, setStatus] = useState(STATUSES.IDLE);
-  const [error, setError] = useState<Error | null>(null);
+  const [data, setData] = React.useState<(PatchedVaultData)[]>([]);
+  const [status, setStatus] = React.useState(STATUSES.IDLE);
+  const [error, setError] = React.useState<Error | null>(null);
   const { t } = useTranslation();
 
   // TODO: should add an abort-controller
-  useEffect(() => {
+  React.useEffect(() => {
     // TODO: should follow `<AuthenticatedApp />` vs. `<UnauthenticatedApp />` approach
     // - (Re: https://kentcdodds.com/blog/authentication-in-react-applications)
     if (!polkaBtcLoaded) return;
@@ -76,39 +88,79 @@ const VaultScoresTable = ({
     statsApi
   ]);
 
-  const columns = useMemo(
+  const columns = React.useMemo(
     () => [
       // TODO: should type properly
       {
         Header: t('leaderboard.account_id'),
-        accessor: 'id'
+        accessor: 'id',
+        Filter: DefaultColumnFilter,
+        classNames: [
+          'text-left'
+        ]
       },
       {
         Header: `${t('leaderboard.collateral')} (DOT)`,
-        accessor: 'collateral'
+        accessor: 'collateral',
+        classNames: [
+          'text-right'
+        ]
       },
       {
         Header: t('leaderboard.request_issue_count'),
-        accessor: 'request_issue_count'
+        accessor: 'request_issue_count',
+        classNames: [
+          'text-right'
+        ]
       },
       {
         Header: t('leaderboard.execute_issue_count'),
-        accessor: 'execute_issue_count'
+        accessor: 'execute_issue_count',
+        classNames: [
+          'text-right'
+        ]
       },
       {
         Header: t('leaderboard.request_redeem_count'),
-        accessor: 'request_redeem_count'
+        accessor: 'request_redeem_count',
+        classNames: [
+          'text-right'
+        ]
       },
       {
         Header: t('leaderboard.execute_redeem_count'),
-        accessor: 'execute_redeem_count'
+        accessor: 'execute_redeem_count',
+        classNames: [
+          'text-right'
+        ]
       },
       {
         Header: t('leaderboard.lifetime_sla'),
-        accessor: 'lifetime_sla'
+        accessor: 'lifetime_sla',
+        Filter: NumberRangeColumnFilter,
+        filter: 'between',
+        classNames: [
+          'text-right'
+        ]
       }
     ],
     [t]
+  );
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow
+  } = useTable(
+    {
+      columns,
+      data
+    },
+    useFilters,
+    useGlobalFilter,
+    useSortBy
   );
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
@@ -128,10 +180,59 @@ const VaultScoresTable = ({
   if (status === STATUSES.RESOLVED) {
     // TODO: should optimize re-renders https://kentcdodds.com/blog/optimize-react-re-renders
     return (
-      <InterlayTable
-        className={className}
-        columns={columns}
-        data={data} />
+      <InterlayTableContainer>
+        <InterlayTable {...getTableProps()}>
+          <InterlayThead>
+            {headerGroups.map(headerGroup => (
+              <InterlayTr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map(column => (
+                  <InterlayTh
+                    {...column.getHeaderProps([
+                      {
+                        className: clsx(...column.classNames),
+                        style: column.style
+                      },
+                      column.getSortByToggleProps()
+                    ])}>
+                    <SortByContainer>
+                      <span>{column.render('Header')}</span>
+                      <SortBy
+                        isSorted={column.isSorted}
+                        isSortedDesc={column.isSortedDesc} />
+                    </SortByContainer>
+                    {column.canFilter && column.Filter && (
+                      <div>{column.render('Filter', { placeholder: 'Search by Account ID' })}</div>
+                    )}
+                  </InterlayTh>
+                ))}
+              </InterlayTr>
+            ))}
+          </InterlayThead>
+          <InterlayTbody {...getTableBodyProps()}>
+            {rows.map(row => {
+              prepareRow(row);
+
+              return (
+                <InterlayTr {...row.getRowProps()}>
+                  {row.cells.map(cell => {
+                    return (
+                      <InterlayTd
+                        {...cell.getCellProps([
+                          {
+                            className: clsx(...cell.column.classNames),
+                            style: cell.column.style
+                          }
+                        ])}>
+                        {cell.render('Cell')}
+                      </InterlayTd>
+                    );
+                  })}
+                </InterlayTr>
+              );
+            })}
+          </InterlayTbody>
+        </InterlayTable>
+      </InterlayTableContainer>
     );
   }
 
