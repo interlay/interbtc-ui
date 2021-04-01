@@ -6,24 +6,24 @@
 }
 .sort-by:before,
 .sort-by:after {
-	border-width: 4px;
-	border-style: solid;
-	border-left-color: transparent;
-	border-right-color: transparent;
-	content: "";
+	position: absolute;
 	display: block;
-	height: 0;
+	content: "";
 	right: 4px;
 	top: 50%;
-	position: absolute;
+	height: 0;
 	width: 0;
+	border-width: 4px;
+	border-left-color: transparent !important;
+	border-right-color: transparent !important;
+	border-style: solid;
 }
 .sort-by:before {
-	border-top-color: transparent;
+	border-top-color: transparent !important;
 	margin-top: -8px;
 }
 .sort-by:after {
-	border-bottom-color: transparent;
+	border-bottom-color: transparent !important;
 	margin-top: 2px;
 }
 

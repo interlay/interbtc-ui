@@ -28,9 +28,8 @@ const SortBy = ({
     // TODO: could extend `before` & `after` variants in the tailwindcss theme
     className={clsx(
       styles['sort-by'],
-      { 'before:border-gray-400 after:border-gray-400': !isSorted },
-      { 'after:border-black': isSorted && !isSortedDesc },
-      { 'before:border-black': isSorted && isSortedDesc }
+      { 'before:border-black': isSorted && !isSortedDesc },
+      { 'after:border-black': isSorted && isSortedDesc }
     )} />
   // <span
   //   className={clsx(

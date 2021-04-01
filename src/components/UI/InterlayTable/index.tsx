@@ -9,7 +9,7 @@ const InterlayTableContainer = ({
 }: React.ComponentPropsWithRef<'div'>) => (
   <div
     className={clsx(
-      'overflow-scroll',
+      'overflow-x-auto',
       className
     )}
     {...rest} />
