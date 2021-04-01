@@ -46,7 +46,12 @@ module.exports = {
     }
   },
   variants: {
-    extend: {}
+    extend: {
+      borderColor: [
+        'before',
+        'after'
+      ]
+    }
   },
   plugins: [
     require('tailwindcss-pseudo-elements'),

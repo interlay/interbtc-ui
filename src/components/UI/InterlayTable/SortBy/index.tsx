@@ -25,18 +25,18 @@ const SortBy = ({
   isSortedDesc
 }: Props) => (
   <span
+    // TODO: could extend `before` & `after` variants in the tailwindcss theme
     className={clsx(
       styles['sort-by'],
-      { [styles['sort-by-ascending']]: isSorted && !isSortedDesc },
-      { [styles['sort-by-descending']]: isSorted && isSortedDesc }
+      { 'before:border-gray-400 after:border-gray-400': !isSorted },
+      { 'after:border-black': isSorted && !isSortedDesc },
+      { 'before:border-black': isSorted && isSortedDesc }
     )} />
-  // TODO: could extend `before` & `after` variants in the tailwindcss theme
   // <span
   //   className={clsx(
   //     'relative',
   //     'before:border-b-4',
   //     'before:border-solid',
-  //     'before:border-red-500',
   //     'before:empty-content',
   //     'before:block',
   //     'before:h-0',
@@ -47,7 +47,6 @@ const SortBy = ({
   //     'before:-mt-2',
   //     'after:border-b-4',
   //     'after:border-solid',
-  //     'after:border-red-500',
   //     'after:empty-content',
   //     'after:block',
   //     'after:h-0',
