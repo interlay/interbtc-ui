@@ -1,6 +1,6 @@
 
 import clsx from 'clsx';
-import styles from './sorter.module.css';
+import styles from './sort-by.module.css';
 
 interface Props {
   isSorted: boolean;
