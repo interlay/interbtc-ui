@@ -7,6 +7,19 @@ interface Props {
   isSortedDesc?: boolean;
 }
 
+const SortByContainer = ({
+  className,
+  ...rest
+}: React.ComponentPropsWithRef<'div'>) => (
+  <div
+    className={clsx(
+      'flex',
+      'items-center',
+      className
+    )}
+    {...rest} />
+);
+
 const SortBy = ({
   isSorted,
   isSortedDesc
@@ -17,7 +30,7 @@ const SortBy = ({
       { [styles['sort-by-ascending']]: isSorted && !isSortedDesc },
       { [styles['sort-by-descending']]: isSorted && isSortedDesc }
     )} />
-  // TODO: could extend `before` & `after` variants
+  // TODO: could extend `before` & `after` variants in the tailwindcss theme
   // <span
   //   className={clsx(
   //     'relative',
@@ -45,5 +58,9 @@ const SortBy = ({
   //     'after:mt-0.5'
   //   )} />
 );
+
+export {
+  SortByContainer
+};
 
 export default SortBy;

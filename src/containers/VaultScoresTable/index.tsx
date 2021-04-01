@@ -25,7 +25,7 @@ import InterlayTable, {
 } from 'components/UI/InterlayTable';
 import DefaultColumnFilter from 'components/UI/InterlayTable/DefaultColumnFilter';
 import NumberRangeColumnFilter from 'components/UI/InterlayTable/NumberRangeColumnFilter';
-import SortBy from 'components/UI/InterlayTable/SortBy';
+import SortBy, { SortByContainer } from 'components/UI/InterlayTable/SortBy';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { StoreType } from 'common/types/util.types';
 import STATUSES from 'utils/constants/statuses';
@@ -97,60 +97,42 @@ const VaultScoresTable = ({
         Filter: DefaultColumnFilter,
         classNames: [
           'text-left'
-        ],
-        style: {
-          minWidth: 480
-        }
+        ]
       },
       {
         Header: `${t('leaderboard.collateral')} (DOT)`,
         accessor: 'collateral',
         classNames: [
           'text-right'
-        ],
-        style: {
-          minWidth: 180
-        }
+        ]
       },
       {
         Header: t('leaderboard.request_issue_count'),
         accessor: 'request_issue_count',
         classNames: [
           'text-right'
-        ],
-        style: {
-          minWidth: 180
-        }
+        ]
       },
       {
         Header: t('leaderboard.execute_issue_count'),
         accessor: 'execute_issue_count',
         classNames: [
           'text-right'
-        ],
-        style: {
-          minWidth: 180
-        }
+        ]
       },
       {
         Header: t('leaderboard.request_redeem_count'),
         accessor: 'request_redeem_count',
         classNames: [
           'text-right'
-        ],
-        style: {
-          minWidth: 200
-        }
+        ]
       },
       {
         Header: t('leaderboard.execute_redeem_count'),
         accessor: 'execute_redeem_count',
         classNames: [
           'text-right'
-        ],
-        style: {
-          minWidth: 180
-        }
+        ]
       },
       {
         Header: t('leaderboard.lifetime_sla'),
@@ -159,10 +141,7 @@ const VaultScoresTable = ({
         filter: 'between',
         classNames: [
           'text-right'
-        ],
-        style: {
-          minWidth: 180
-        }
+        ]
       }
     ],
     [t]
@@ -215,12 +194,12 @@ const VaultScoresTable = ({
                       },
                       column.getSortByToggleProps()
                     ])}>
-                    <div>
-                      {column.render('Header')}
+                    <SortByContainer>
+                      <span>{column.render('Header')}</span>
                       <SortBy
                         isSorted={column.isSorted}
                         isSortedDesc={column.isSortedDesc} />
-                    </div>
+                    </SortByContainer>
                     {column.canFilter && column.Filter && (
                       <div>{column.render('Filter', { placeholder: 'Search by Account ID' })}</div>
                     )}
