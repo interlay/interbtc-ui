@@ -1,7 +1,6 @@
 
 import { useTranslation } from 'react-i18next';
 
-import InterlayImage from 'components/UI/InterlayImage';
 import InterlayLink from 'components/UI/InterlayLink';
 import { getCurrentYear } from 'utils/helpers/time';
 import {
@@ -30,9 +29,8 @@ import {
   NEWS_LETTER_ACTION
 } from 'config/links';
 import styles from './footer.module.css';
-import interlayImage from 'assets/img/interlay.svg';
-// TODO: Update svg
-import web3FoundationImage from 'assets/img/polkabtc/web3-foundation-grants-badge-black.png';
+import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
+import { ReactComponent as Web3FoundationGrantsBadgeIcon } from 'assets/img/polkabtc/web3-foundation-grants-badge.svg';
 
 const packageJson = require('../../../package.json');
 
@@ -47,11 +45,9 @@ const Footer = () => {
           target='_blank'
           rel='noopener noreferrer'
           style={{ display: 'inline-block' }}>
-          <InterlayImage
-            src={interlayImage}
+          <InterlayLogoIcon
             width={150}
-            height={40}
-            alt='Interlay' />
+            height={40} />
         </InterlayLink>
         <div className={styles['padding-for-logo-2']}>
           <InterlayLink
@@ -59,11 +55,9 @@ const Footer = () => {
             target='_blank'
             rel='noopener noreferrer'
             style={{ display: 'inline-block' }}>
-            <InterlayImage
-              src={web3FoundationImage}
+            <Web3FoundationGrantsBadgeIcon
               width={150}
-              height={50}
-              alt='Web3 Foundation' />
+              height={50} />
           </InterlayLink>
         </div>
       </div>
