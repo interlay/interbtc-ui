@@ -6,8 +6,8 @@ import {
 } from 'react-icons/fa';
 import clsx from 'clsx';
 
-import InterlayImage from 'components/InterlayImage';
-import InterlayLink from 'components/InterlayLink';
+import InterlayImage from 'components/UI/InterlayImage';
+import InterlayLink from 'components/UI/InterlayLink';
 import { getCurrentYear } from 'utils/helpers/time';
 import {
   POLKA_BTC_UI_GITHUB,

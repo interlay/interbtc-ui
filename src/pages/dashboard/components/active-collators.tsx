@@ -1,6 +1,5 @@
 import { ReactElement } from 'react';
 import ButtonComponent from './button-component';
-import { getAccents } from '../dashboard-colors';
 import LineChartComponent from './line-chart-component';
 import { range } from '../../../common/utils/utils';
 import { useTranslation } from 'react-i18next';
@@ -28,7 +27,7 @@ const ActiveCollators = (): ReactElement => {
     <DashboardCard>
       <div className='card-top-content'>
         <div className='values-container'>
-          <h1 style={{ color: getAccents('d_blue').color }}>{t('dashboard.collators.active_collators')}</h1>
+          <h1 className='text-interlayBlue'>{t('dashboard.collators.active_collators')}</h1>
           <h2>3</h2>
         </div>
         {displayLinkBtn && (

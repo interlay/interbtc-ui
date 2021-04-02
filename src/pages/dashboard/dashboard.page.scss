@@ -80,10 +80,6 @@
     text-decoration: none;
   }
 
-  .external-link {
-    margin-left: 3px;
-  }
-
   .card-top-content {
     display: flex;
     justify-content: space-between;
@@ -109,10 +105,6 @@
 .chart-container {
   position: relative;
   margin-top: 10px;
-}
-
-.bold-font {
-  font-weight: 700;
 }
 
 @media only screen and (min-width: $desktop-size) {
@@ -163,9 +155,5 @@
   .latest-block-text {
     font-size: 12px;
     font-weight: 700;
-  }
-
-  .section-div-line {
-    width: 40%;
   }
 }

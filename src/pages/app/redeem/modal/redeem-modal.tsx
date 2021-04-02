@@ -48,7 +48,7 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
                   </div>
                 </div>
                 <div className='step-item row'>
-                  <div className='col-6 text-left'>{t('bridge_fee')}</div>
+                  <div className='col-6 temp-text-left'>{t('bridge_fee')}</div>
                   <div className='col-6'>
                     <img
                       src={BitcoinLogo}
@@ -65,7 +65,7 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
                 </div>
                 <hr className='total-divider' />
                 <div className='step-item row'>
-                  <div className='col-6 total-amount text-left total-added-value'>{t('you_will_receive')}</div>
+                  <div className='col-6 total-amount temp-text-left total-added-value'>{t('you_will_receive')}</div>
                   <div className='col-6 total-amount'>
                     <img
                       src={BitcoinLogo}
@@ -80,15 +80,15 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
                   </div>
                 </div>
                 <div className='step-item row'>
-                  <div className='col-6 text-left'>{t('issue_page.destination_address')}</div>
+                  <div className='col-6 temp-text-left'>{t('issue_page.destination_address')}</div>
                   <div className='col-6 right-text'>{shortAddress(request.userBTCAddress || '')}</div>
                 </div>
                 <div className='step-item row'>
-                  <div className='col-6 text-left'>{t('issue_page.parachain_block')}</div>
+                  <div className='col-6 temp-text-left'>{t('issue_page.parachain_block')}</div>
                   <div className='col-6 right-text'>{request.creation}</div>
                 </div>
                 <div className='step-item row'>
-                  <div className='col-6 text-left'>{t('issue_page.vault_dot_address_modal')}</div>
+                  <div className='col-6 temp-text-left'>{t('issue_page.vault_dot_address_modal')}</div>
                   <div className='col-6 right-text'>{shortAddress(request.vaultDOTAddress || '')}</div>
                 </div>
               </div>

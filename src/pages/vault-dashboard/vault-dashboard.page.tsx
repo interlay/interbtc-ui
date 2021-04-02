@@ -17,13 +17,13 @@ import tw from 'twin.macro';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
+import TimerIncrement from 'parts/TimerIncrement';
 import CardList, {
   Card,
   CardHeader,
   CardContent
 } from 'components/CardList';
 import BoldParagraph from 'components/BoldParagraph';
-import TimerIncrement from 'common/components/timer-increment';
 import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
 import RequestReplacementModal from './request-replacement/request-replacement';
 import IssueTable from './issue-table/issue-table';

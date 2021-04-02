@@ -8,8 +8,8 @@ import clsx from 'clsx';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
-import InterlayLink from 'components/InterlayLink';
 import CardList, { Card } from 'components/CardList';
+import InterlayLink from 'components/UI/InterlayLink';
 import {
   USER_FEEDBACK_FORM,
   VAULT_FEEDBACK_FORM,

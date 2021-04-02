@@ -13,8 +13,8 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
 import Timer from 'common/components/timer';
-import InterlayLink from 'components/InterlayLink';
-import InterlayRouterLink from 'components/InterlayLink/router';
+import InterlayLink from 'components/UI/InterlayLink';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import checkStaticPage from 'config/check-static-page';
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';

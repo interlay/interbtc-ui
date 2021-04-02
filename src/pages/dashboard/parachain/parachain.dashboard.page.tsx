@@ -14,7 +14,7 @@ import DashboardTable, {
   StatusCategories
 } from '../../../common/components/dashboard-table/dashboard-table';
 import { StatusUpdateColumns } from '@interlay/polkabtc-stats';
-import TimerIncrement from '../../../common/components/timer-increment';
+import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 // TODO: should fix by scoping only necessary CSS into a component

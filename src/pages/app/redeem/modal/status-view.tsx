@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { StoreType } from '../../../../common/types/util.types';
 import Big from 'big.js';
 import PolkadotLogo from '../../../../assets/img/small-polkadot-logo.png';
-import InterlayLink from 'components/InterlayLink';
+import InterlayLink from 'components/UI/InterlayLink';
 
 type StatusViewProps = {
   request: RedeemRequest;

@@ -42,9 +42,10 @@
   }
 }
 
-.text-left {
+.temp-text-left {
   font-weight: 500;
   opacity: 0.5;
+  text-align: left;
 }
 
 // TODO: should be correctly descriptive
@@ -564,7 +565,7 @@
 }
 
 .modal-btn-green::after {
-  content: url("../../assets/img/icons/Icon-external-link.svg");
+  content: url("../../assets/img/icons/external-link.svg");
   height: 20px;
   width: 20px;
   padding-left: 4px;

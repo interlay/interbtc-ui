@@ -15,12 +15,12 @@ import {
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
+import TimerIncrement from 'parts/TimerIncrement';
 import DashboardTable, {
   StyledLinkData,
   StatusComponent,
   StatusCategories
 } from 'common/components/dashboard-table/dashboard-table';
-import TimerIncrement from 'common/components/timer-increment';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { getAccents } from 'pages/dashboard/dashboard-colors';
 import { StoreType } from 'common/types/util.types';

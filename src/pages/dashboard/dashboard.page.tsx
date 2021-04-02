@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
-import TimerIncrement from 'common/components/timer-increment';
+import TimerIncrement from 'parts/TimerIncrement';
 import PolkaBTC from './components/polkabtc';
 import CollateralLocked from './components/collateral-locked';
 import Collateralization from './components/collateralization';

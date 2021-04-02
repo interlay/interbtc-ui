@@ -1,6 +1,5 @@
 import { useEffect, useState, ReactElement } from 'react';
 import ButtonComponent from './button-component';
-import { getAccents } from '../dashboard-colors';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
@@ -63,7 +62,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
         <div className='values-container'>
           {!failed && (
             <>
-              <h1 style={{ color: getAccents('d_blue').color }}>{t('dashboard.vault.collateralization')}</h1>
+              <h1 className='text-interlayBlue'>{t('dashboard.vault.collateralization')}</h1>
               <h2>{safeRoundTwoDecimals(systemCollateralization)}%</h2>
               <h2>
                 {t('dashboard.vault.secure_threshold', {
@@ -85,12 +84,9 @@ export default function Collateralization({ linkButton }: CollateralizationProps
       </div>
       <div className='circle-container'>
         <div
-          className='status-circle'
-          style={{ borderColor: getAccents('d_blue').color }}
+          className='status-circle border-interlayBlue'
           id='relay-circle'>
-          <h1
-            className='h1-xl-text-center'
-            style={{ color: getAccents('d_blue').color }}>
+          <h1 className='h1-xl-text-center text-interlayBlue'>
             {failed ? t('no_data') :
               [
                 issuablePolkaBTC === '0' ? t('loading') : safeRoundTwoDecimals(issuablePolkaBTC) + ' PolkaBTC',

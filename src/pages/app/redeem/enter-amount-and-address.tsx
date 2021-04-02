@@ -24,7 +24,7 @@ import Big from 'big.js';
 import BN from 'bn.js';
 import clsx from 'clsx';
 
-import InterlayTooltip from 'components/InterlayTooltip';
+import InterlayTooltip from 'components/UI/InterlayTooltip';
 import ButtonMaybePending from 'common/components/pending-button';
 import {
   changeRedeemStepAction,
@@ -330,7 +330,7 @@ function EnterAmountAndAddress(): ReactElement {
         <div className='col-10'>
           <div className='wizard-item wizard-item-remove-border mt-4'>
             <div className='row'>
-              <div className='col-6 text-left'>{t('bridge_fee')}</div>
+              <div className='col-6 temp-text-left'>{t('bridge_fee')}</div>
               <div className='col fee-number'>
                 <div>
                   <img
@@ -352,7 +352,7 @@ function EnterAmountAndAddress(): ReactElement {
         <div className="col-12">
           <div className="wizard-item">
             <div className="row">
-              <div className="col-6 text-left">
+              <div className="col-6 temp-text-left">
                 {t("bitcoin_network_fee")}
               </div>
               <div className="col-6">
@@ -369,7 +369,7 @@ function EnterAmountAndAddress(): ReactElement {
         <div className='col-10'>
           <div className='wizard-item wizard-item-remove-border'>
             <div className='row'>
-              <div className='col-6 text-left total-added-value'>{t('you_will_receive')}</div>
+              <div className='col-6 temp-text-left total-added-value'>{t('you_will_receive')}</div>
               <div className='col-6'>
                 <img
                   src={bitcoinLogo}
@@ -385,7 +385,7 @@ function EnterAmountAndAddress(): ReactElement {
             </div>
             {premiumRedeem && (
               <div className='row mt-4'>
-                <div className='col-6 text-left green-text'>{t('redeem_page.earned_premium')}</div>
+                <div className='col-6 temp-text-left green-text'>{t('redeem_page.earned_premium')}</div>
                 <div className='col-6'>
                   <img
                     src={polkadotLogo}

@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { IssueRequest } from '../../../../common/types/issue.types';
 import { StoreType } from '../../../../common/types/util.types';
 import BitcoinLogo from '../../../../assets/img/small-bitcoin-logo.png';
-import InterlayTooltip from 'components/InterlayTooltip';
+import InterlayTooltip from 'components/UI/InterlayTooltip';
 import { copyToClipboard, getUsdAmount, safeRoundEightDecimals } from '../../../../common/utils/utils';
 
 type WhoopsViewProps = {
@@ -23,7 +23,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
           <div className='col mt-2 text-center refund-subtitle'>{t('issue_page.refund_sent_more_btc')} </div>
         </div>
         <div className='step-item row mt-5'>
-          <div className='col-6 text-left'>{t('issue_page.refund_requested')}</div>
+          <div className='col-6 temp-text-left'>{t('issue_page.refund_requested')}</div>
           <div className='col-6 right-text'>
             <img
               src={BitcoinLogo}
@@ -38,7 +38,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
           </div>
         </div>
         <div className='step-item row'>
-          <div className='col-6 text-left orange-text total-added-value'>
+          <div className='col-6 temp-text-left orange-text total-added-value'>
             {t('issue_page.refund_deposited')}
           </div>
           <div className='col-6 right-text'>
@@ -55,7 +55,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
           </div>
         </div>
         <div className='step-item row'>
-          <div className='col-6 text-left green-text total-added-value'>{t('issue_page.refund_issued')}</div>
+          <div className='col-6 temp-text-left green-text total-added-value'>{t('issue_page.refund_issued')}</div>
           <div className='col-6 right-text'>
             <img
               src={BitcoinLogo}
@@ -71,7 +71,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
         </div>
         <hr className='total-divider' />
         <div className='step-item row'>
-          <div className='col-6 text-left total-added-value'>{t('issue_page.refund_difference')}</div>
+          <div className='col-6 temp-text-left total-added-value'>{t('issue_page.refund_difference')}</div>
           <div className='col-6 right-text total-amount'>
             <img
               src={BitcoinLogo}

@@ -11,7 +11,7 @@ import { updateIssueRequestAction } from '../../../../common/actions/issue.actio
 import { updateBalancePolkaBTCAction } from '../../../../common/actions/general.actions';
 import { shortAddress } from '../../../../common/utils/utils';
 import Big from 'big.js';
-import InterlayLink from 'components/InterlayLink';
+import InterlayLink from 'components/UI/InterlayLink';
 
 type StatusViewProps = {
   request: IssueRequest;

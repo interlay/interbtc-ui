@@ -10,10 +10,10 @@ import { shortAddress, updateBalances } from '../utils/utils';
 import { useTranslation } from 'react-i18next';
 import Balances from './balances';
 import { PAGES } from 'utils/constants/links';
-import newMark from '../../assets/img/icons/new-mark.png';
+import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
 import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
-import InterlayLink from 'components/InterlayLink';
-import InterlayRouterLink from 'components/InterlayLink/router';
+import InterlayLink from 'components/UI/InterlayLink';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import clsx from 'clsx';
 
 type TopbarProps = {
@@ -145,10 +145,9 @@ export default function Topbar(props: TopbarProps): ReactElement {
                   className='nav-link'
                   to={PAGES.CHALLENGES}>
                   {t('nav_challenges')}
-                  <Image
-                    src={newMark}
-                    height='20em'>
-                  </Image>
+                  <NewMarkIcon
+                    width={20}
+                    height={20} />
                 </InterlayRouterLink>
               )}
               <InterlayRouterLink

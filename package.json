@@ -1,13 +1,13 @@
 {
   "name": "polkabtc-ui",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.1",
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.1.5",
-    "@interlay/polkabtc": "^0.11.1",
-    "@interlay/polkabtc-stats": "0.1.20",
+    "@interlay/polkabtc": "^0.11.2",
+    "@interlay/polkabtc-stats": "0.1.21",
     "@polkadot/extension-dapp": "0.36.1",
     "@polkadot/ui-keyring": "0.67.1",
     "@testing-library/jest-dom": "^5.11.4",
@@ -48,6 +48,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "react-table": "^7.6.3",
     "react-toastify": "^6.0.5",
     "react-toggle": "^4.1.1",
     "react-transition-group": "^4.4.1",
@@ -71,6 +72,7 @@
     "prettier": "2.2.1",
     "tailwind-config-viewer": "^1.5.1",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
+    "tailwindcss-pseudo-elements": "^1.5.1",
     "ts-node": "^8.6.2",
     "webpack-bundle-analyzer": "^4.4.0"
   },
