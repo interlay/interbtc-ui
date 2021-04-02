@@ -140,7 +140,7 @@ const Footer = () => {
                     href={USER_FEEDBACK_FORM}
                     target='_blank'
                     rel='noopener noreferrer'>
-                    {t('footer.user_feedback')}
+                    {t('footer.user_feedback_form')}
                   </InterlayLink>
                 </li>
                 <li>
@@ -148,7 +148,7 @@ const Footer = () => {
                     href={VAULT_FEEDBACK_FORM}
                     target='_blank'
                     rel='noopener noreferrer'>
-                    {t('footer.vault_feedback')}
+                    {t('footer.vault_feedback_form')}
                   </InterlayLink>
                 </li>
                 <li>
@@ -156,7 +156,7 @@ const Footer = () => {
                     href={RELAYER_FEEDBACK_FORM}
                     target='_blank'
                     rel='noopener noreferrer'>
-                    {t('footer.relayer_feedback')}
+                    {t('footer.relayer_feedback_form')}
                   </InterlayLink>
                 </li>
                 <li>
@@ -164,7 +164,7 @@ const Footer = () => {
                     href={POLKA_BTC_UI_GITHUB_ISSUES}
                     target='_blank'
                     rel='noopener noreferrer'>
-                    {t('footer.open_issue')}
+                    {t('footer.open_an_issue_on_github')}
                   </InterlayLink>
                 </li>
                 <li>
@@ -172,7 +172,7 @@ const Footer = () => {
                     href={INTERLAY_DISCORD}
                     target='_blank'
                     rel='noopener noreferrer'>
-                    {t('footer.discuss_discord')}
+                    {t('footer.discuss_on_discord')}
                   </InterlayLink>
                 </li>
               </ul>
@@ -199,7 +199,7 @@ const Footer = () => {
                     href={POLKA_BTC_DOC_VAULTS}
                     target='_blank'
                     rel='noopener noreferrer'>
-                    {t('footer.vaults_docs')}
+                    {t('footer.vaults')}
                   </InterlayLink>
                 </li>
                 <li>
@@ -207,7 +207,7 @@ const Footer = () => {
                     href={POLKA_BTC_DOC_RELAYERS}
                     target='_blank'
                     rel='noopener noreferrer'>
-                    {t('footer.Relayer_docs')}
+                    {t('footer.relayers')}
                   </InterlayLink>
                 </li>
                 <li>
@@ -234,7 +234,7 @@ const Footer = () => {
           id='contact-container'
           className={styles['center-container']}>
           <div>
-            <div className={styles['title']}>{t('footer.follow_us')}</div>
+            <div className={styles['title']}>{t('footer.follow_us_on')}</div>
             <div className={styles['footer-items-container']}>
               <ul>
                 <li>
@@ -317,7 +317,7 @@ const Footer = () => {
                 </form>
               </li>
               <li>
-                <div className={styles['signup-text-container']}>{t('footer.join_newsletter')}</div>
+                <div className={styles['signup-text-container']}>{t('footer.join_newsletter_description')}</div>
               </li>
               <li>
                 <div className={styles['rights-container']}>
@@ -327,14 +327,14 @@ const Footer = () => {
                     rel='noopener noreferrer'>
                     v&nbsp;{packageJson.version}
                   </InterlayLink>
-                  &nbsp;&#169; {getCurrentYear()} Interlay. {t('footer.rights_reserved')}
+                  &nbsp;&#169; {getCurrentYear()} Interlay. {t('footer.all_rights_reserved')}
                 </div>
                 <li>
                   <InterlayLink
                     href={PRIVACY_POLICY}
                     target='_blank'
                     rel='noopener noreferrer'>
-                    {t('footer.read_our_policy')}
+                    {t('footer.read_our_privacy_policy')}
                   </InterlayLink>
                 </li>
               </li>
