@@ -17,16 +17,16 @@ import {
   USER_FEEDBACK_FORM,
   VAULT_FEEDBACK_FORM,
   RELAYER_FEEDBACK_FORM,
-  POLKA_BTC_DOC_TREASURE_HUNT,
-  POLKA_BTC_DOC_TREASURE_HUNT_VAULT,
-  POLKA_BTC_DOC_TREASURE_HUNT_RELAYER,
-  POLKA_BTC_DOC_GETTING_STARTED,
-  POLKA_BTC_DOC_VAULTS,
-  POLKA_BTC_DOC_RELAYERS,
-  POLKA_BTC_DOC_DEVELOPERS,
-  POLKA_BTC_DOC_ROADMAP,
+  POLKA_BTC_DOC_START_TREASURE_HUNT,
+  POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT,
+  POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER,
+  POLKA_BTC_DOC_START_OVERVIEW,
+  POLKA_BTC_DOC_VAULTS_OVERVIEW,
+  POLKA_BTC_DOC_RELAYERS_OVERVIEW,
+  POLKA_BTC_DOC_DEVELOPERS_INTEGRATION,
+  POLKA_BTC_DOC_ABOUT_ROADMAP,
   PRIVACY_POLICY,
-  NEWS_LETTER_ACTION
+  NEWS_LETTER_SUBSCRIPTION_ENDPOINT
 } from 'config/links';
 import styles from './footer.module.css';
 import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
@@ -102,7 +102,7 @@ const Footer = () => {
               <ul>
                 <li>
                   <InterlayLink
-                    href={POLKA_BTC_DOC_TREASURE_HUNT}
+                    href={POLKA_BTC_DOC_START_TREASURE_HUNT}
                     target='_blank'
                     rel='noopener noreferrer'>
                     {t('footer.treasure_hunt')}
@@ -110,7 +110,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <InterlayLink
-                    href={POLKA_BTC_DOC_TREASURE_HUNT_VAULT}
+                    href={POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT}
                     target='_blank'
                     rel='noopener noreferrer'>
                     {t('footer.vault_treasure')}
@@ -118,7 +118,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <InterlayLink
-                    href={POLKA_BTC_DOC_TREASURE_HUNT_RELAYER}
+                    href={POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER}
                     target='_blank'
                     rel='noopener noreferrer'>
                     {t('footer.relayer_treasure')}
@@ -188,7 +188,7 @@ const Footer = () => {
               <ul>
                 <li>
                   <InterlayLink
-                    href={POLKA_BTC_DOC_GETTING_STARTED}
+                    href={POLKA_BTC_DOC_START_OVERVIEW}
                     target='_blank'
                     rel='noopener noreferrer'>
                     {t('footer.getting_started')}
@@ -196,7 +196,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <InterlayLink
-                    href={POLKA_BTC_DOC_VAULTS}
+                    href={POLKA_BTC_DOC_VAULTS_OVERVIEW}
                     target='_blank'
                     rel='noopener noreferrer'>
                     {t('footer.vaults')}
@@ -204,7 +204,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <InterlayLink
-                    href={POLKA_BTC_DOC_RELAYERS}
+                    href={POLKA_BTC_DOC_RELAYERS_OVERVIEW}
                     target='_blank'
                     rel='noopener noreferrer'>
                     {t('footer.relayers')}
@@ -212,7 +212,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <InterlayLink
-                    href={POLKA_BTC_DOC_DEVELOPERS}
+                    href={POLKA_BTC_DOC_DEVELOPERS_INTEGRATION}
                     target='_blank'
                     rel='noopener noreferrer'>
                     {t('footer.developers')}
@@ -220,7 +220,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <InterlayLink
-                    href={POLKA_BTC_DOC_ROADMAP}
+                    href={POLKA_BTC_DOC_ABOUT_ROADMAP}
                     target='_blank'
                     rel='noopener noreferrer'>
                     {t('footer.roadmap')}
@@ -289,7 +289,7 @@ const Footer = () => {
             <ul>
               <li>
                 <form
-                  action={NEWS_LETTER_ACTION}
+                  action={NEWS_LETTER_SUBSCRIPTION_ENDPOINT}
                   method='post'
                   id='mc-embedded-subscribe-form'
                   name='mc-embedded-subscribe-form'

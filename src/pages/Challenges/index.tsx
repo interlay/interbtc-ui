@@ -21,9 +21,9 @@ import InterlayToggleButtonGroup, {
   InterlayToggleButtonGroupProps
 } from 'components/UI/InterlayToggleButtonGroup';
 import {
-  POLKA_BTC_DOC_TREASURE_HUNT,
-  POLKA_BTC_DOC_TREASURE_HUNT_VAULT,
-  POLKA_BTC_DOC_TREASURE_HUNT_RELAYER
+  POLKA_BTC_DOC_START_TREASURE_HUNT,
+  POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT,
+  POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER
 } from 'config/links';
 import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
 import { CHALLENGE_CUT_OFFS } from 'config/challenges';
@@ -68,7 +68,7 @@ const CHALLENGE_ITEMS = [
   {
     title: 'leaderboard.challenges.treasure_hunt',
     content: 'leaderboard.challenges.treasure_hunt_desc',
-    contentLink: POLKA_BTC_DOC_TREASURE_HUNT
+    contentLink: POLKA_BTC_DOC_START_TREASURE_HUNT
   },
   {
     title: 'leaderboard.challenges.vault_treasure_hunt',
@@ -78,7 +78,7 @@ const CHALLENGE_ITEMS = [
         height={20} />
     ),
     content: 'leaderboard.challenges.vault_treasure_hunt_desc',
-    contentLink: POLKA_BTC_DOC_TREASURE_HUNT_VAULT
+    contentLink: POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT
   },
   {
     title: 'leaderboard.challenges.relayer_treasure_hunt',
@@ -88,7 +88,7 @@ const CHALLENGE_ITEMS = [
         height={20} />
     ),
     content: 'leaderboard.challenges.relayer_treasure_hunt_desc',
-    contentLink: POLKA_BTC_DOC_TREASURE_HUNT_RELAYER
+    contentLink: POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER
   },
   {
     title: 'leaderboard.challenges.vaults_relayers',
