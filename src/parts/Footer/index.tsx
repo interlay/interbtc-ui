@@ -29,8 +29,10 @@ import {
   POLKA_BTC_DOC_ABOUT_ROADMAP
   // NEWS_LETTER_SUBSCRIPTION_ENDPOINT
 } from 'config/links';
-// import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
-// import { ReactComponent as Web3FoundationGrantsBadgeIcon } from 'assets/img/polkabtc/web3-foundation-grants-badge.svg';
+import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
+// import {
+//   ReactComponent as Web3FoundationGrantsBadgeIcon
+// } from 'assets/img/polkabtc/web3-foundation-grants-badge.svg';
 import styles from './footer.module.css';
 
 const packageJson = require('../../../package.json');
@@ -216,29 +218,48 @@ const Footer = () => {
             );
           })}
         </div>
-        <ul
+        <div
           className={clsx(
             'flex',
-            'flex-wrap'
+            'flex-wrap',
+            'items-end',
+            'space-x-10'
           )}>
-          {FOOTER_BOTTOM_ITEMS.map(footerBottomItem => (
-            <li className={styles['footer-bottom-item']}>
-              {footerBottomItem.link ? (
-                <InterlayLink
-                  className='whitespace-nowrap'
-                  href={footerBottomItem.link}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  {t(footerBottomItem.title)}
-                </InterlayLink>
-              ) : (
-                <span className='whitespace-nowrap'>
-                  {t(footerBottomItem.title)}
-                </span>
-              )}
-            </li>
-          ))}
-        </ul>
+          <InterlayLogoIcon
+            width={150}
+            height={40} />
+          {/* <Web3FoundationGrantsBadgeIcon
+            width={150}
+            height={50} /> */}
+          <ul
+            className={clsx(
+              'flex',
+              'flex-wrap',
+              'm-0'
+            )}>
+            {FOOTER_BOTTOM_ITEMS.map(footerBottomItem => (
+              <li
+                className={clsx(
+                  styles['footer-bottom-item'],
+                  'text-sm'
+                )}>
+                {footerBottomItem.link ? (
+                  <InterlayLink
+                    className='whitespace-nowrap'
+                    href={footerBottomItem.link}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    {t(footerBottomItem.title)}
+                  </InterlayLink>
+                ) : (
+                  <span className='whitespace-nowrap'>
+                    {t(footerBottomItem.title)}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </footer>
   );
