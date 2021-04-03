@@ -1,17 +1,18 @@
 
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
 import InterlayLink from 'components/UI/InterlayLink';
-import { getCurrentYear } from 'utils/helpers/time';
+// import { getCurrentYear } from 'utils/helpers/time';
 import {
-  POLKA_BTC_UI_GITHUB,
-  WEB3_FOUNDATION,
-  INTERLAY_COMPANY,
+  // POLKA_BTC_UI_GITHUB,
+  // WEB3_FOUNDATION,
+  // INTERLAY_COMPANY,
   INTERLAY_EMAIL,
   INTERLAY_DISCORD,
-  INTERLAY_LINKEDIN,
-  INTERLAY_MEDIUM,
-  INTERLAY_GITHUB,
+  // INTERLAY_LINKEDIN,
+  // INTERLAY_MEDIUM,
+  // INTERLAY_GITHUB,
   POLKA_BTC_UI_GITHUB_ISSUES,
   INTERLAY_TWITTER,
   USER_FEEDBACK_FORM,
@@ -24,323 +25,173 @@ import {
   POLKA_BTC_DOC_VAULTS_OVERVIEW,
   POLKA_BTC_DOC_RELAYERS_OVERVIEW,
   POLKA_BTC_DOC_DEVELOPERS_INTEGRATION,
-  POLKA_BTC_DOC_ABOUT_ROADMAP,
-  PRIVACY_POLICY,
-  NEWS_LETTER_SUBSCRIPTION_ENDPOINT
+  POLKA_BTC_DOC_ABOUT_ROADMAP
+  // PRIVACY_POLICY,
+  // NEWS_LETTER_SUBSCRIPTION_ENDPOINT
 } from 'config/links';
-import styles from './footer.module.css';
-import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
-import { ReactComponent as Web3FoundationGrantsBadgeIcon } from 'assets/img/polkabtc/web3-foundation-grants-badge.svg';
+// import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
+// import { ReactComponent as Web3FoundationGrantsBadgeIcon } from 'assets/img/polkabtc/web3-foundation-grants-badge.svg';
 
-const packageJson = require('../../../package.json');
+// const packageJson = require('../../../package.json');
+
+const FOOTER_COLUMNS = [
+  {
+    title: 'footer.contact',
+    listItems: [
+      {
+        title: 'Twitter',
+        link: INTERLAY_TWITTER
+      },
+      {
+        title: 'Discord',
+        link: INTERLAY_DISCORD
+      },
+      {
+        title: 'Email',
+        link: INTERLAY_EMAIL
+      }
+    ]
+  },
+  {
+    title: 'footer.challenges',
+    listItems: [
+      {
+        title: 'footer.treasure_hunt',
+        link: POLKA_BTC_DOC_START_TREASURE_HUNT
+      },
+      {
+        title: 'footer.vault_treasure',
+        link: POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT
+      },
+      {
+        title: 'footer.relayer_treasure',
+        link: POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER
+      }
+    ]
+  },
+  {
+    title: 'footer.feedback',
+    listItems: [
+      {
+        title: 'footer.user_feedback_form',
+        link: USER_FEEDBACK_FORM
+      },
+      {
+        title: 'footer.vault_feedback_form',
+        link: VAULT_FEEDBACK_FORM
+      },
+      {
+        title: 'footer.relayer_feedback_form',
+        link: RELAYER_FEEDBACK_FORM
+      },
+      {
+        title: 'footer.open_an_issue_on_github',
+        link: POLKA_BTC_UI_GITHUB_ISSUES
+      },
+      {
+        title: 'footer.discuss_on_discord',
+        link: INTERLAY_DISCORD
+      }
+    ]
+  },
+  {
+    title: 'footer.docs',
+    listItems: [
+      {
+        title: 'footer.getting_started',
+        link: POLKA_BTC_DOC_START_OVERVIEW
+      },
+      {
+        title: 'footer.vaults',
+        link: POLKA_BTC_DOC_VAULTS_OVERVIEW
+      },
+      {
+        title: 'footer.relayers',
+        link: POLKA_BTC_DOC_RELAYERS_OVERVIEW
+      },
+      {
+        title: 'footer.developers',
+        link: POLKA_BTC_DOC_DEVELOPERS_INTEGRATION
+      },
+      {
+        title: 'footer.roadmap',
+        link: POLKA_BTC_DOC_ABOUT_ROADMAP
+      }
+    ]
+  }
+];
+
+const ColumnTitle = ({
+  children,
+  ...rest
+}: React.ComponentPropsWithRef<'h5'>) => (
+  <h5 {...rest}>
+    {children}
+  </h5>
+);
+
+const Column = (props: React.ComponentPropsWithRef<'div'>) => (
+  <div {...props} />
+);
+
+const ColumnList = (props: React.ComponentPropsWithRef<'ul'>) => (
+  <ul {...props} />
+);
+
+const ColumnListItem = (props: React.ComponentPropsWithRef<'li'>) => (
+  <li {...props} />
+);
 
 const Footer = () => {
   const { t } = useTranslation();
 
   return (
-    <footer className={styles['footer']}>
-      <div className={styles[`logos-container`]}>
-        <InterlayLink
-          href={INTERLAY_COMPANY}
-          target='_blank'
-          rel='noopener noreferrer'
-          style={{ display: 'inline-block' }}>
-          <InterlayLogoIcon
-            width={150}
-            height={40} />
-        </InterlayLink>
-        <div className={styles['padding-for-logo-2']}>
-          <InterlayLink
-            href={WEB3_FOUNDATION}
-            target='_blank'
-            rel='noopener noreferrer'
-            style={{ display: 'inline-block' }}>
-            <Web3FoundationGrantsBadgeIcon
-              width={150}
-              height={50} />
-          </InterlayLink>
-        </div>
-      </div>
-      <div className={styles['grid-container']}>
-        <div
-          id='contact-container'
-          className={styles['center-container']}>
-          <div>
-            <div className={styles['title']}>{t('footer.contact')}</div>
-            <div className={styles['footer-items-container']}>
-              <ul>
-                <li>
-                  <InterlayLink
-                    href={INTERLAY_DISCORD}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    data-placement='bottom'
-                    data-original-title='Join our Discord channel'>
-                 Discord
-                  </InterlayLink>
-                </li>
-                <li>
-                  <InterlayLink
-                    href={INTERLAY_EMAIL}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    data-placement='bottom'
-                    data-original-title='Drop us an email'>
-                 Email
-                  </InterlayLink>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div
-          id='challenges-container'
-          className={styles['center-container']}>
-          <div>
-            <div className={styles['title']}>{t('footer.challenges')}</div>
-            <div className={styles['footer-items-container']}>
-              <ul>
-                <li>
-                  <InterlayLink
-                    href={POLKA_BTC_DOC_START_TREASURE_HUNT}
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    {t('footer.treasure_hunt')}
-                  </InterlayLink>
-                </li>
-                <li>
-                  <InterlayLink
-                    href={POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT}
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    {t('footer.vault_treasure')}
-                  </InterlayLink>
-                </li>
-                <li>
-                  <InterlayLink
-                    href={POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER}
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    {t('footer.relayer_treasure')}
-                  </InterlayLink>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div
-          id='feedback-container'
-          className={styles['center-container']}>
-          <div>
-            <div className={styles['title']}>{t('footer.feedback')}</div>
-            <div className={styles['footer-items-container']}>
-              <ul>
-                <li>
-                  <InterlayLink
-                    href={USER_FEEDBACK_FORM}
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    {t('footer.user_feedback_form')}
-                  </InterlayLink>
-                </li>
-                <li>
-                  <InterlayLink
-                    href={VAULT_FEEDBACK_FORM}
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    {t('footer.vault_feedback_form')}
-                  </InterlayLink>
-                </li>
-                <li>
-                  <InterlayLink
-                    href={RELAYER_FEEDBACK_FORM}
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    {t('footer.relayer_feedback_form')}
-                  </InterlayLink>
-                </li>
-                <li>
-                  <InterlayLink
-                    href={POLKA_BTC_UI_GITHUB_ISSUES}
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    {t('footer.open_an_issue_on_github')}
-                  </InterlayLink>
-                </li>
-                <li>
-                  <InterlayLink
-                    href={INTERLAY_DISCORD}
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    {t('footer.discuss_on_discord')}
-                  </InterlayLink>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div
-          id='docs-container'
-          className={styles['center-container']}>
-          <div>
-            <div className={styles['title']}>{t('footer.docs')}</div>
-            <div className={styles['footer-items-container']}>
-              <ul>
-                <li>
-                  <InterlayLink
-                    href={POLKA_BTC_DOC_START_OVERVIEW}
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    {t('footer.getting_started')}
-                  </InterlayLink>
-                </li>
-                <li>
-                  <InterlayLink
-                    href={POLKA_BTC_DOC_VAULTS_OVERVIEW}
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    {t('footer.vaults')}
-                  </InterlayLink>
-                </li>
-                <li>
-                  <InterlayLink
-                    href={POLKA_BTC_DOC_RELAYERS_OVERVIEW}
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    {t('footer.relayers')}
-                  </InterlayLink>
-                </li>
-                <li>
-                  <InterlayLink
-                    href={POLKA_BTC_DOC_DEVELOPERS_INTEGRATION}
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    {t('footer.developers')}
-                  </InterlayLink>
-                </li>
-                <li>
-                  <InterlayLink
-                    href={POLKA_BTC_DOC_ABOUT_ROADMAP}
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    {t('footer.roadmap')}
-                  </InterlayLink>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div
-          id='contact-container'
-          className={styles['center-container']}>
-          <div>
-            <div className={styles['title']}>{t('footer.follow_us_on')}</div>
-            <div className={styles['footer-items-container']}>
-              <ul>
-                <li>
-                  <InterlayLink
-                    href={INTERLAY_TWITTER}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    data-placement='bottom'
-                    data-original-title='Follow us on Twitter'>
-                  Twitter
-                  </InterlayLink>
-                </li>
-                <li>
-                  <InterlayLink
-                    href={INTERLAY_MEDIUM}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    data-placement='bottom'
-                    data-original-title='Follow us on Medium'>
-                  Medium
-                  </InterlayLink>
-                </li>
-                <li>
-                  <InterlayLink
-                    href={INTERLAY_GITHUB}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    data-placement='bottom'
-                    data-original-title='Follow us on Github'>
-                 Github
-                  </InterlayLink>
-                </li>
-                <li>
-                  <InterlayLink
-                    href={INTERLAY_LINKEDIN}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    data-placement='bottom'
-                    data-original-title='Follow us on LinkedIn'>
-                  LinkedIn
-                  </InterlayLink>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div
-          id='newsletter-container'
-          className={styles['footer-items-container']}>
-          <div>
-            <div className={styles['title']}>{t('footer.newsletter')}</div>
-            <ul>
-              <li>
-                <form
-                  action={NEWS_LETTER_SUBSCRIPTION_ENDPOINT}
-                  method='post'
-                  id='mc-embedded-subscribe-form'
-                  name='mc-embedded-subscribe-form'
-                  className={styles['signup-container']}
-                  target='_blank'>
-                  <div id='mc_embed_signup_scroll'>
-                    <div className='input-group'>
-                      <input
-                        type='email'
-                        className={styles['newsletter-input']}
-                        placeholder=' Enter email here'
-                        name='EMAIL'
-                        id='mce-EMAIL' />
-                      <div>
-                        <button
-                          className={styles['newsletter-button']}
-                          type='submit'
-                          name='subscribe'
-                          id='mc-embedded-subscribe'>
-                          {t('footer.subscribe')}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </li>
-              <li>
-                <div className={styles['signup-text-container']}>{t('footer.join_newsletter_description')}</div>
-              </li>
-              <li>
-                <div className={styles['rights-container']}>
-                  <InterlayLink
-                    href={POLKA_BTC_UI_GITHUB}
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    v&nbsp;{packageJson.version}
-                  </InterlayLink>
-                  &nbsp;&#169; {getCurrentYear()} Interlay. {t('footer.all_rights_reserved')}
-                </div>
-                <li>
-                  <InterlayLink
-                    href={PRIVACY_POLICY}
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    {t('footer.read_our_privacy_policy')}
-                  </InterlayLink>
-                </li>
-              </li>
-            </ul>
-          </div>
-        </div>
+    <footer
+      className={clsx(
+        'bg-default'
+      )}>
+      <div
+        className={clsx(
+          'container',
+          'py-8',
+          'px-20',
+          'mx-auto',
+          'sm:flex',
+          'sm:flex-wrap',
+          'sm:justify-between'
+        )}>
+        {FOOTER_COLUMNS.map(footerColumn => {
+          const columnTitle = footerColumn.title;
+          const columnListItems = footerColumn.listItems;
+
+          return (
+            <Column
+              className={clsx(
+                'py-4',
+                'px-20',
+                'space-y-3.5'
+              )}>
+              <ColumnTitle>
+                {t(columnTitle)}
+              </ColumnTitle>
+              <ColumnList
+                className={clsx(
+                  'space-y-3.5'
+                )}>
+                {columnListItems.map(columnListItem => (
+                  <ColumnListItem>
+                    <InterlayLink
+                      href={columnListItem.link}
+                      target='_blank'
+                      rel='noopener noreferrer'>
+                      {t(columnListItem.title)}
+                    </InterlayLink>
+                  </ColumnListItem>
+                ))}
+              </ColumnList>
+            </Column>
+          );
+        })}
       </div>
     </footer>
   );

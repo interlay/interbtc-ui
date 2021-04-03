@@ -68,11 +68,12 @@ export default function Topbar(props: TopbarProps): ReactElement {
   return (
     <Navbar
       id='pbtc-topbar'
-      bg='light'
       expand='lg'
       className={clsx(
-        'border-bottom top-bar',
-        'shadow'
+        'top-bar',
+        'border-bottom',
+        'shadow',
+        'bg-default'
       )}>
       {polkaBtcLoaded && (
         <React.Fragment>

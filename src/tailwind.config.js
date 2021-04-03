@@ -39,9 +39,12 @@ module.exports = {
         }
       },
       textColor: theme => ({
-        // TODO: should avoid using complete black (#000) (Re: #212529 in bootstrap)
-        primary: theme('colors.black'),
+        primary: theme('colors.gray.900'),
         secondary: theme('colors.gray.400')
+      }),
+      backgroundColor: theme => ({
+        paper: theme('colors.white'),
+        default: theme('colors.gray.50')
       })
     }
   },
