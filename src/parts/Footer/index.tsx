@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
 import InterlayLink from 'components/UI/InterlayLink';
-// import { getCurrentYear } from 'utils/helpers/time';
+import { getCurrentYear } from 'utils/helpers/time';
 import {
-  // POLKA_BTC_UI_GITHUB,
+  POLKA_BTC_UI_GITHUB,
   // WEB3_FOUNDATION,
   // INTERLAY_COMPANY,
   INTERLAY_EMAIL,
@@ -25,14 +25,15 @@ import {
   POLKA_BTC_DOC_VAULTS_OVERVIEW,
   POLKA_BTC_DOC_RELAYERS_OVERVIEW,
   POLKA_BTC_DOC_DEVELOPERS_INTEGRATION,
+  PRIVACY_POLICY,
   POLKA_BTC_DOC_ABOUT_ROADMAP
-  // PRIVACY_POLICY,
   // NEWS_LETTER_SUBSCRIPTION_ENDPOINT
 } from 'config/links';
 // import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
 // import { ReactComponent as Web3FoundationGrantsBadgeIcon } from 'assets/img/polkabtc/web3-foundation-grants-badge.svg';
+import styles from './footer.module.css';
 
-// const packageJson = require('../../../package.json');
+const packageJson = require('../../../package.json');
 
 const FOOTER_COLUMNS = [
   {
@@ -121,6 +122,25 @@ const FOOTER_COLUMNS = [
   }
 ];
 
+const FOOTER_BOTTOM_ITEMS = [
+  {
+    title: `© ${getCurrentYear()} Interlay`,
+    link: null
+  },
+  {
+    title: 'footer.all_rights_reserved',
+    link: null
+  },
+  {
+    title: 'footer.privacy',
+    link: PRIVACY_POLICY
+  },
+  {
+    title: `version ${packageJson.version}`,
+    link: POLKA_BTC_UI_GITHUB
+  }
+];
+
 const ColumnTitle = ({
   children,
   ...rest
@@ -156,42 +176,69 @@ const Footer = () => {
           'py-8',
           'px-20',
           'mx-auto',
-          'sm:flex',
-          'sm:flex-wrap',
-          'sm:justify-between'
+          'space-y-10'
         )}>
-        {FOOTER_COLUMNS.map(footerColumn => {
-          const columnTitle = footerColumn.title;
-          const columnListItems = footerColumn.listItems;
+        <div
+          className={clsx(
+            'flex',
+            'flex-wrap',
+            'justify-between'
+          )}>
+          {FOOTER_COLUMNS.map(footerColumn => {
+            const columnTitle = footerColumn.title;
+            const columnListItems = footerColumn.listItems;
 
-          return (
-            <Column
-              className={clsx(
-                'py-4',
-                'px-20',
-                'space-y-3.5'
-              )}>
-              <ColumnTitle>
-                {t(columnTitle)}
-              </ColumnTitle>
-              <ColumnList
+            return (
+              <Column
                 className={clsx(
+                  'p-4',
                   'space-y-3.5'
                 )}>
-                {columnListItems.map(columnListItem => (
-                  <ColumnListItem>
-                    <InterlayLink
-                      href={columnListItem.link}
-                      target='_blank'
-                      rel='noopener noreferrer'>
-                      {t(columnListItem.title)}
-                    </InterlayLink>
-                  </ColumnListItem>
-                ))}
-              </ColumnList>
-            </Column>
-          );
-        })}
+                <ColumnTitle>
+                  {t(columnTitle)}
+                </ColumnTitle>
+                <ColumnList
+                  className={clsx(
+                    'space-y-3.5'
+                  )}>
+                  {columnListItems.map(columnListItem => (
+                    <ColumnListItem>
+                      <InterlayLink
+                        href={columnListItem.link}
+                        target='_blank'
+                        rel='noopener noreferrer'>
+                        {t(columnListItem.title)}
+                      </InterlayLink>
+                    </ColumnListItem>
+                  ))}
+                </ColumnList>
+              </Column>
+            );
+          })}
+        </div>
+        <ul
+          className={clsx(
+            'flex',
+            'flex-wrap'
+          )}>
+          {FOOTER_BOTTOM_ITEMS.map(footerBottomItem => (
+            <li className={styles['footer-bottom-item']}>
+              {footerBottomItem.link ? (
+                <InterlayLink
+                  className='whitespace-nowrap'
+                  href={footerBottomItem.link}
+                  target='_blank'
+                  rel='noopener noreferrer'>
+                  {t(footerBottomItem.title)}
+                </InterlayLink>
+              ) : (
+                <span className='whitespace-nowrap'>
+                  {t(footerBottomItem.title)}
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
       </div>
     </footer>
   );
