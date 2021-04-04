@@ -12,15 +12,15 @@ import {
 import InterlayLink from 'components/UI/InterlayLink';
 import { getCurrentYear } from 'utils/helpers/time';
 import {
-  POLKA_BTC_UI_GITHUB,
+  INTERLAY_COMPANY,
   // WEB3_FOUNDATION,
-  // INTERLAY_COMPANY,
   INTERLAY_EMAIL,
   INTERLAY_TWITTER,
   INTERLAY_MEDIUM,
   INTERLAY_GITHUB,
   INTERLAY_LINKEDIN,
   INTERLAY_DISCORD,
+  POLKA_BTC_UI_GITHUB,
   POLKA_BTC_UI_GITHUB_ISSUES,
   USER_FEEDBACK_FORM,
   VAULT_FEEDBACK_FORM,
@@ -289,12 +289,22 @@ const Footer = () => {
             'items-end',
             'space-x-10'
           )}>
-          <InterlayLogoIcon
-            width={150}
-            height={40} />
-          {/* <Web3FoundationGrantsBadgeIcon
-            width={150}
-            height={50} /> */}
+          <InterlayLink
+            href={INTERLAY_COMPANY}
+            target='_blank'
+            rel='noopener noreferrer'>
+            <InterlayLogoIcon
+              width={150}
+              height={40} />
+          </InterlayLink>
+          {/* <InterlayLink
+            href={WEB3_FOUNDATION}
+            target='_blank'
+            rel='noopener noreferrer'>
+            <Web3FoundationGrantsBadgeIcon
+              width={150}
+              height={50} />
+          </InterlayLink> */}
           <ul
             className={clsx(
               'flex',
