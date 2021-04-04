@@ -1,6 +1,13 @@
 
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import {
+  FaTwitter,
+  FaMediumM,
+  FaGithub,
+  FaLinkedinIn,
+  FaDiscord
+} from 'react-icons/fa';
 
 import InterlayLink from 'components/UI/InterlayLink';
 import { getCurrentYear } from 'utils/helpers/time';
@@ -9,12 +16,12 @@ import {
   // WEB3_FOUNDATION,
   // INTERLAY_COMPANY,
   INTERLAY_EMAIL,
-  INTERLAY_DISCORD,
-  // INTERLAY_LINKEDIN,
-  // INTERLAY_MEDIUM,
-  // INTERLAY_GITHUB,
-  POLKA_BTC_UI_GITHUB_ISSUES,
   INTERLAY_TWITTER,
+  INTERLAY_MEDIUM,
+  INTERLAY_GITHUB,
+  INTERLAY_LINKEDIN,
+  INTERLAY_DISCORD,
+  POLKA_BTC_UI_GITHUB_ISSUES,
   USER_FEEDBACK_FORM,
   VAULT_FEEDBACK_FORM,
   RELAYER_FEEDBACK_FORM,
@@ -30,6 +37,7 @@ import {
   // NEWS_LETTER_SUBSCRIPTION_ENDPOINT
 } from 'config/links';
 import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
+// TODO: should use a vivid-looking version
 // import {
 //   ReactComponent as Web3FoundationGrantsBadgeIcon
 // } from 'assets/img/polkabtc/web3-foundation-grants-badge.svg';
@@ -124,6 +132,29 @@ const FOOTER_COLUMNS = [
   }
 ];
 
+const SOCIAL_PLATFORM_ITEMS = [
+  {
+    link: INTERLAY_TWITTER,
+    icon: <FaTwitter />
+  },
+  {
+    link: INTERLAY_MEDIUM,
+    icon: <FaMediumM />
+  },
+  {
+    link: INTERLAY_GITHUB,
+    icon: <FaGithub />
+  },
+  {
+    link: INTERLAY_LINKEDIN,
+    icon: <FaLinkedinIn />
+  },
+  {
+    link: INTERLAY_DISCORD,
+    icon: <FaDiscord />
+  }
+];
+
 const FOOTER_BOTTOM_ITEMS = [
   {
     title: `© ${getCurrentYear()} Interlay`,
@@ -152,8 +183,16 @@ const ColumnTitle = ({
   </h5>
 );
 
-const Column = (props: React.ComponentPropsWithRef<'div'>) => (
-  <div {...props} />
+const Column = ({
+  className,
+  ...rest
+}: React.ComponentPropsWithRef<'div'>) => (
+  <div
+    className={clsx(
+      'mb-8',
+      className
+    )}
+    {...rest} />
 );
 
 const ColumnList = (props: React.ComponentPropsWithRef<'ul'>) => (
@@ -217,6 +256,31 @@ const Footer = () => {
               </Column>
             );
           })}
+          <Column
+            className={clsx(
+              'flex',
+              'flex-wrap'
+            )}>
+            {SOCIAL_PLATFORM_ITEMS.map(socialPlatformItem => (
+              <InterlayLink
+                className={clsx(
+                  'border',
+                  'border-black',
+                  'border-solid',
+                  'rounded-full',
+                  'w-12',
+                  'h-12',
+                  'm-1',
+                  'grid',
+                  'place-items-center'
+                )}
+                href={socialPlatformItem.link}
+                target='_blank'
+                rel='noopener noreferrer'>
+                {socialPlatformItem.icon}
+              </InterlayLink>
+            ))}
+          </Column>
         </div>
         <div
           className={clsx(
