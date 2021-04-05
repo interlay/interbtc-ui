@@ -1,8 +1,10 @@
 // stylelint-disable declaration-no-important
 
-@each $color, $value in $theme-colors {
-  @include bg-variant(".bg-#{$color}", $value, true);
-}
+// ray test touch <
+// @each $color, $value in $theme-colors {
+//   @include bg-variant(".bg-#{$color}", $value, true);
+// }
+// ray test touch >
 
 @if $enable-gradients {
   @each $color, $value in $theme-colors {

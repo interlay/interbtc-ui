@@ -294,13 +294,15 @@ label {
   margin-bottom: $label-margin-bottom;
 }
 
+// ray test touch <
 // Remove the default `border-radius` that macOS Chrome adds.
 //
 // Details at https://github.com/twbs/bootstrap/issues/24093
-button {
-  // stylelint-disable-next-line property-disallowed-list
-  border-radius: 0;
-}
+// button {
+//   // stylelint-disable-next-line property-disallowed-list
+//   border-radius: 0;
+// }
+// ray test touch >
 
 // Explicitly remove focus outline in Chromium when it shouldn't be
 // visible (e.g. as result of mouse click or touch tap). It already

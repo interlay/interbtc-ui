@@ -65,13 +65,15 @@
     margin-top: 10px;
   }
 
-  button {
-    background-color: white;
-    border-radius: 8px;
-    width: 130px;
-    padding: 10px 15px;
-    @include flexCenter();
-  }
+  // ray test touch <
+  // button {
+  //   background-color: white;
+  //   border-radius: 8px;
+  //   width: 130px;
+  //   padding: 10px 15px;
+  //   @include flexCenter();
+  // }
+  // ray test touch >
 
   .button-assets-container {
     display: flex;
@@ -121,10 +123,12 @@
         width: 70%;
         padding-left: 30px;
     }
-    button {
-        width: 160px;
-        padding: 12px 12px;
-    }
+    // ray test touch <
+    // button {
+    //   width: 160px;
+    //   padding: 12px 12px;
+    // }
+    // ray test touch >
   }
   
   .chart-container {
@@ -139,10 +143,12 @@
     padding-left: 30px;
   }
 
-  button {
-    width: 160px;
-    padding: 12px 12px;
-  }
+  // ray test touch <
+  // button {
+  //   width: 160px;
+  //   padding: 12px 12px;
+  // }
+  // ray test touch >
 
   .chart-container {
     margin-top: 20px;

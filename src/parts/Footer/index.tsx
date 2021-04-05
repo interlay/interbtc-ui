@@ -9,6 +9,7 @@ import {
   FaDiscord
 } from 'react-icons/fa';
 
+import SubscribeForm from 'components/SubscribeForm';
 import InterlayLink from 'components/UI/InterlayLink';
 import { getCurrentYear } from 'utils/helpers/time';
 import {
@@ -189,6 +190,7 @@ const Column = ({
 }: React.ComponentPropsWithRef<'div'>) => (
   <div
     className={clsx(
+      'p-4',
       'mb-8',
       className
     )}
@@ -230,18 +232,11 @@ const Footer = () => {
             const columnListItems = footerColumn.listItems;
 
             return (
-              <Column
-                className={clsx(
-                  'p-4',
-                  'space-y-3.5'
-                )}>
+              <Column className='space-y-3.5'>
                 <ColumnTitle>
                   {t(columnTitle)}
                 </ColumnTitle>
-                <ColumnList
-                  className={clsx(
-                    'space-y-3.5'
-                  )}>
+                <ColumnList className='space-y-3.5'>
                   {columnListItems.map(columnListItem => (
                     <ColumnListItem>
                       <InterlayLink
@@ -256,30 +251,33 @@ const Footer = () => {
               </Column>
             );
           })}
-          <Column
-            className={clsx(
-              'flex',
-              'flex-wrap'
-            )}>
-            {SOCIAL_PLATFORM_ITEMS.map(socialPlatformItem => (
-              <InterlayLink
-                className={clsx(
-                  'border',
-                  'border-black',
-                  'border-solid',
-                  'rounded-full',
-                  'w-12',
-                  'h-12',
-                  'm-1',
-                  'grid',
-                  'place-items-center'
-                )}
-                href={socialPlatformItem.link}
-                target='_blank'
-                rel='noopener noreferrer'>
-                {socialPlatformItem.icon}
-              </InterlayLink>
-            ))}
+          <Column className='space-y-6'>
+            <div
+              className={clsx(
+                'flex',
+                'flex-wrap'
+              )}>
+              {SOCIAL_PLATFORM_ITEMS.map(socialPlatformItem => (
+                <InterlayLink
+                  className={clsx(
+                    'border',
+                    'border-black',
+                    'border-solid',
+                    'rounded-full',
+                    'w-12',
+                    'h-12',
+                    'm-1',
+                    'grid',
+                    'place-items-center'
+                  )}
+                  href={socialPlatformItem.link}
+                  target='_blank'
+                  rel='noopener noreferrer'>
+                  {socialPlatformItem.icon}
+                </InterlayLink>
+              ))}
+            </div>
+            <SubscribeForm />
           </Column>
         </div>
         <div
