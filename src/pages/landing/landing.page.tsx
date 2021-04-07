@@ -57,14 +57,16 @@ export default function LandingPage(): JSX.Element {
             className={clsx(
               'text-white',
               'mt-12',
-              'font-light'
+              'mb-2',
+              'text-4xl'
             )}>
             PolkaBTC
           </h1>
           <h2
             className={clsx(
               'text-white',
-              'font-light'
+              'mb-2',
+              'text-3xl'
             )}>
             {t('landing.defi_ecosystem')}
           </h2>
@@ -74,14 +76,18 @@ export default function LandingPage(): JSX.Element {
               <h4
                 className={clsx(
                   'text-white',
-                  'mt-12'
+                  'mt-12',
+                  'mb-2',
+                  'text-2xl'
                 )}>
                 {t('landing.beta_coming')}
               </h4>
               <h1
                 className={clsx(
                   'text-white',
-                  'mt-12'
+                  'mt-12',
+                  'mb-2',
+                  'text-4xl'
                 )}>
                 <Timer seconds={secondsUntilBeta}></Timer>
               </h1>
@@ -135,7 +141,8 @@ export default function LandingPage(): JSX.Element {
                   <h5
                     className={clsx(
                       'text-white',
-                      'font-light'
+                      'mb-2',
+                      'text-xl'
                     )}>
                     {t('landing.issued')} {totalPolkaBTC} PolkaBTC
                   </h5>
@@ -148,7 +155,8 @@ export default function LandingPage(): JSX.Element {
                   <h5
                     className={clsx(
                       'text-white',
-                      'font-light'
+                      'mb-2',
+                      'text-xl'
                     )}>
                     {t('locked')} {totalLockedDOT} DOT
                   </h5>

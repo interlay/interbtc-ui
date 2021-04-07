@@ -7,7 +7,7 @@ const DashboardCard = ({
 }: React.ComponentPropsWithRef<'div'>) => (
   <div
     className={clsx(
-      'dashboard-card',
+      'dashboard-card', // TODO: should remove this global CSS class
       'h-96',
       'px-5',
       'py-4',
