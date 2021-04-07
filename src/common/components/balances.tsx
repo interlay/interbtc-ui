@@ -1,6 +1,6 @@
 
 import { safeRoundFiveDecimals } from 'common/utils/utils';
-import polkaBTCLogo from 'assets/img/polkabtc/PolkaBTC_black.svg';
+import { ReactComponent as PolkaBTCLogoIcon } from 'assets/img/polkabtc/PolkaBTCLogo.svg';
 import polkadotLogo from 'assets/img/small-polkadot-logo.png';
 
 interface Props {
@@ -18,12 +18,10 @@ const Balances = ({
     <div>
       <span className='btc-balance-wrapper'>
         <span className=''>
-          <img
-            src={polkaBTCLogo}
-            width='50px'
-            height='30px'
-            alt='polka bitcoin logo'
-            className='mr-1' />
+          <PolkaBTCLogoIcon
+            className='mr-1'
+            width={50}
+            height={30} />
           <b>{balancePolkaBTC || '0'}</b>
         </span>{' '}
         PolkaBTC
