@@ -59,7 +59,7 @@ const InterlayTh = ({
 }: React.ComponentPropsWithRef<'th'>) => (
   <th
     className={clsx(
-      'text-secondary',
+      'text-textSecondary',
       'text-base',
       'p-2',
       className
