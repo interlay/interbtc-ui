@@ -7,6 +7,7 @@ import {
 } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 import { satToBTC } from '@interlay/polkabtc';
 import {
   BtcNetworkName,
@@ -187,33 +188,74 @@ function RedeemDashboard() {
             <div className='table-top-data-container'>
               <div className='values-container redeem-page'>
                 <div>
-                  <h2 style={{ color: `${getAccents('d_yellow').color}` }}>
+                  <h2
+                    style={{ color: `${getAccents('d_yellow').color}` }}
+                    className={clsx(
+                      'mb-2',
+                      'text-base',
+                      'font-normal'
+                    )}>
                     {t('dashboard.redeem.total_redeemed')}
                   </h2>
-                  <h1>
+                  <h1
+                    className={clsx(
+                      'mb-2',
+                      'text-xl',
+                      'font-bold'
+                    )}>
                     {totalRedeemedAmount === '-' ? t('no_data') : satToBTC(totalRedeemedAmount)}
                     &nbsp;BTC
                   </h1>
                   {totalRedeemedAmount === '-' ? (
                     ''
                   ) : (
-                    <h1 className='h1-price-opacity'>
+                    <h1
+                      className={clsx(
+                        'opacity-50',
+                        'mb-2',
+                        'text-xl',
+                        'font-bold'
+                      )}>
                       $
                       {(prices.bitcoin.usd * parseFloat(satToBTC(totalRedeemedAmount))).toLocaleString()}
                     </h1>
                   )}
                 </div>
                 <div>
-                  <h2 style={{ color: getAccents('d_green').color }}>
+                  <h2
+                    style={{ color: getAccents('d_green').color }}
+                    className={clsx(
+                      'mb-2',
+                      'text-base',
+                      'font-normal'
+                    )}>
                     {t('dashboard.redeem.total_redeems')}
                   </h2>
-                  <h1>{totalSuccessfulRedeems === '-' ? t('no_data') : totalSuccessfulRedeems}</h1>
+                  <h1
+                    className={clsx(
+                      'mb-2',
+                      'text-xl',
+                      'font-bold'
+                    )}>
+                    {totalSuccessfulRedeems === '-' ? t('no_data') : totalSuccessfulRedeems}
+                  </h1>
                 </div>
                 <div>
-                  <h2 style={{ color: getAccents('d_green').color }}>
+                  <h2
+                    style={{ color: getAccents('d_green').color }}
+                    className={clsx(
+                      'mb-2',
+                      'text-base',
+                      'font-normal'
+                    )}>
                     {t('dashboard.redeem.success_rate')}
                   </h2>
-                  <h1>
+                  <h1
+                    className={clsx(
+                      'mb-2',
+                      'text-xl',
+                      'font-bold'
+                    )}>
                     {totalRedeems === '-' ? t('no_data') : (redeemSuccessRate * 100).toFixed(2) + '%'}
                   </h1>
                 </div>
