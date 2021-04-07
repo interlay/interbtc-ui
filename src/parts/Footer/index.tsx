@@ -176,10 +176,16 @@ const FOOTER_BOTTOM_ITEMS = [
 ];
 
 const ColumnTitle = ({
+  className,
   children,
   ...rest
 }: React.ComponentPropsWithRef<'h5'>) => (
-  <h5 {...rest}>
+  <h5
+    className={clsx(
+      'font-bold',
+      className
+    )}
+    {...rest}>
     {children}
   </h5>
 );

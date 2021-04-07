@@ -67,8 +67,17 @@ function IssueRequests(): ReactElement {
       )}>
       {issueRequests?.length > 0 && (
         <>
-          <h5>{t('issue_requests')}</h5>
-          <p>{t('issue_page.click_on_issue_request')}</p>
+          <h5
+            className={clsx(
+              'font-bold',
+              'text-xl',
+              'mb-2'
+            )}>
+            {t('issue_requests')}
+          </h5>
+          <p className='mb-4'>
+            {t('issue_page.click_on_issue_request')}
+          </p>
           <Table
             hover
             responsive
