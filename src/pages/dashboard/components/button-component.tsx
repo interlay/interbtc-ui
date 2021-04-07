@@ -43,6 +43,7 @@ const ButtonComponent = (props: buttonProps): React.ReactElement => {
       className='button-assets-container'
       to={props.buttonLink}>
       <button
+        className='temp-dashboard-button'
         style={buttonColor}
         onMouseOver={() => handleHoverOn()}
         onMouseOut={() => {
