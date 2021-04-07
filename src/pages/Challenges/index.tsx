@@ -145,7 +145,7 @@ function Challenges() {
           <CardList>
             {CHALLENGE_ITEMS.map(cardItem => (
               <Card key={cardItem.title}>
-                <CardHeader>
+                <CardHeader className='flex'>
                   {t(cardItem.title)}
                   {cardItem.titleIcon}
                 </CardHeader>
@@ -153,12 +153,16 @@ function Challenges() {
                   {t(cardItem.content)}
                   {cardItem.contentLink && (
                     <InterlayLink
+                      className={clsx(
+                        'inline-flex',
+                        'items-center',
+                        'space-x-1',
+                        'ml-1'
+                      )}
                       href={cardItem.contentLink}
                       target='_blank'
                       rel='noopener noreferrer'>
-                      &nbsp;
-                      {t('leaderboard.more_info')}
-                      &nbsp;
+                      <span>{t('leaderboard.more_info')}</span>
                       <FaExternalLinkAlt />
                     </InterlayLink>
                   )}
