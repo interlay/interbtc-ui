@@ -76,11 +76,10 @@ function VaultDashboard() {
 
       try {
         const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-
         const [
           vault,
-          feesPolkaSAT,
-          feesPlanck,
+          feesPolkaBTC,
+          feesDOT,
           totalPolkaSAT,
           collateralization,
           slaScore,
@@ -102,12 +101,12 @@ function VaultDashboard() {
           dispatch(updateCollateralAction(collateralDot));
         }
 
-        if (feesPolkaSAT.status === 'fulfilled') {
-          setFeesEarnedPolkaBTC(satToBTC(feesPolkaSAT.value));
+        if (feesPolkaBTC.status === 'fulfilled') {
+          setFeesEarnedPolkaBTC(feesPolkaBTC.value.toString());
         }
 
-        if (feesPlanck.status === 'fulfilled') {
-          setFeesEarnedDOT(planckToDOT(feesPlanck.value));
+        if (feesDOT.status === 'fulfilled') {
+          setFeesEarnedDOT(feesDOT.value.toString());
         }
 
         const lockedAmountBTC = satToBTC(totalPolkaSAT.toString());

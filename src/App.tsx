@@ -20,7 +20,6 @@ import {
   useDispatch,
   useStore
 } from 'react-redux';
-import Big from 'big.js';
 import {
   web3Accounts,
   web3Enable,
@@ -29,7 +28,6 @@ import {
 import keyring from '@polkadot/ui-keyring';
 import {
   FaucetClient,
-  planckToDOT,
   satToBTC,
   createPolkabtcAPI,
   PolkaBTCAPI
@@ -248,19 +246,18 @@ function App(): ReactElement {
       try {
         const [
           totalPolkaSAT,
-          totalLockedPLANCK,
+          totalLockedDOT,
           btcRelayHeight,
           bitcoinHeight,
           state
         ] = await Promise.all([
           window.polkaBTC.treasury.totalPolkaBTC(),
-          window.polkaBTC.collateral.totalLockedDOT(),
+          window.polkaBTC.collateral.totalLocked(),
           window.polkaBTC.btcRelay.getLatestBlockHeight(),
           window.polkaBTC.btcCore.getLatestBlockHeight(),
           window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain()
         ]);
         const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
-        const totalLockedDOT = new Big(planckToDOT(totalLockedPLANCK.toString())).round(3).toString();
 
         const parachainStatus = (state: StatusCode) => {
           if (state.isError) {
@@ -277,7 +274,7 @@ function App(): ReactElement {
         dispatch(
           initGeneralDataAction(
             totalPolkaBTC,
-            totalLockedDOT,
+            totalLockedDOT.round(3).toString(),
             Number(btcRelayHeight),
             bitcoinHeight,
             parachainStatus(state)

@@ -4,7 +4,6 @@ import { Navbar, Nav, Image, Button } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { StoreType } from '../types/util.types';
 import ButtonMaybePending from './pending-button';
-import { planckToDOT } from '@interlay/polkabtc';
 import { updateBalanceDOTAction, showAccountModalAction } from '../actions/general.actions';
 import { shortAddress, updateBalances } from '../utils/utils';
 import { useTranslation } from 'react-i18next';
@@ -50,9 +49,8 @@ export default function Topbar(props: TopbarProps): ReactElement {
     try {
       await props.requestDOT();
       const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
-      const balanceDOT = planckToDOT(balancePLANCK.toString());
-      dispatch(updateBalanceDOTAction(balanceDOT));
+      const balanceDOT = await window.polkaBTC.collateral.balance(accountId);
+      dispatch(updateBalanceDOTAction(balanceDOT.toString()));
     } catch (error) {
       console.log(error);
     }

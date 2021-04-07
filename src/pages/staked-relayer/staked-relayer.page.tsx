@@ -5,7 +5,6 @@ import React, {
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import {
-  satToBTC,
   planckToDOT
 } from '@interlay/polkabtc';
 import { useTranslation } from 'react-i18next';
@@ -88,13 +87,13 @@ function StakedRelayer() {
         const apyScore = await window.polkaBTC.stakedRelayer.getAPY(stakedRelayerId);
         setAPY(apyScore);
 
-        const feesPolkaSAT = await window.polkaBTC.stakedRelayer.getFeesPolkaBTC(
+        const feesPolkaBTC = await window.polkaBTC.stakedRelayer.getFeesPolkaBTC(
           stakedRelayerId
         );
-        setFeesEarnedPolkaBTC(satToBTC(feesPolkaSAT));
+        setFeesEarnedPolkaBTC(feesPolkaBTC.toString());
 
-        const feesPlanck = await window.polkaBTC.stakedRelayer.getFeesDOT(stakedRelayerId);
-        setFeesEarnedDOT(planckToDOT(feesPlanck));
+        const feesDOT = await window.polkaBTC.stakedRelayer.getFeesDOT(stakedRelayerId);
+        setFeesEarnedDOT(feesDOT.toString());
 
         setDotLocked(lockedDOT);
         setPlanckLocked(lockedPlanck);
