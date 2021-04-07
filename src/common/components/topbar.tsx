@@ -145,6 +145,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                   to={PAGES.CHALLENGES}>
                   {t('nav_challenges')}
                   <NewMarkIcon
+                    className='inline-block'
                     width={20}
                     height={20} />
                 </InterlayRouterLink>

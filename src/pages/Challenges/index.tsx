@@ -143,15 +143,15 @@ function Challenges() {
         <div className='dashboard-wrapper'>
           <PageTitle mainTitle={t('leaderboard.challenges_title')} />
           <CardList>
-            {CHALLENGE_ITEMS.map(cardItem => (
-              <Card key={cardItem.title}>
+            {CHALLENGE_ITEMS.map(challengeItem => (
+              <Card key={challengeItem.title}>
                 <CardHeader className='flex'>
-                  {t(cardItem.title)}
-                  {cardItem.titleIcon}
+                  {t(challengeItem.title)}
+                  {challengeItem.titleIcon}
                 </CardHeader>
                 <CardContent>
-                  {t(cardItem.content)}
-                  {cardItem.contentLink && (
+                  {t(challengeItem.content)}
+                  {challengeItem.contentLink && (
                     <InterlayLink
                       className={clsx(
                         'inline-flex',
@@ -159,7 +159,7 @@ function Challenges() {
                         'space-x-1',
                         'ml-1'
                       )}
-                      href={cardItem.contentLink}
+                      href={challengeItem.contentLink}
                       target='_blank'
                       rel='noopener noreferrer'>
                       <span>{t('leaderboard.more_info')}</span>
