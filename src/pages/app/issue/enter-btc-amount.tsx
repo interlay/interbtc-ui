@@ -241,6 +241,7 @@ function EnterBTCAmount() {
             name='amountPolkaBTC'
             type='number'
             step='any'
+            autoFocus
             placeholder='0.00'
             className={'' + (errors.amountPolkaBTC ? ' error-borders' : '')}
             onChange={onValueChange}
@@ -300,7 +301,7 @@ function EnterBTCAmount() {
                     style={{ marginRight: '5px' }}
                     alt='polkadot logo'>
                   </img>
-                  <span className='fee-btc'>{deposit}</span> DOT
+                  <span className='fee-btc'>{parseFloat(deposit).toFixed(5)}</span> DOT
                 </div>
                 <div>{'~ $' + getUsdAmount(deposit, prices.polkadot.usd)}</div>
               </div>
