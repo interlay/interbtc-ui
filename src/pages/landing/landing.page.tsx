@@ -19,7 +19,7 @@ import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import * as constants from '../../constants';
-import { ReactComponent as PolkaBTCLogoIcon } from 'assets/img/polkabtc/PolkaBTCLogo.svg';
+import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc/polkabtc-logo.svg';
 
 export default function LandingPage(): JSX.Element {
   const { totalPolkaBTC, totalLockedDOT, polkaBtcLoaded, address, extensions } = useSelector(
@@ -48,7 +48,7 @@ export default function LandingPage(): JSX.Element {
           <InterlayRouterLink
             style={{ display: 'inline-block' }}
             to={PAGES.HOME}>
-            <PolkaBTCLogoIcon
+            <PolkabtcLogoIcon
               className='text-white'
               width={256}
               height={150.84} />

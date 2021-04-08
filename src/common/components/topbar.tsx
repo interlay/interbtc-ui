@@ -24,7 +24,7 @@ import { StoreType } from 'common/types/util.types';
 import Balances from './balances';
 import { PAGES } from 'utils/constants/links';
 import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
-import { ReactComponent as PolkaBTCLogoIcon } from 'assets/img/polkabtc/PolkaBTCLogo.svg';
+import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc/polkabtc-logo.svg';
 import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
 
 type TopbarProps = {
@@ -96,7 +96,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                 textDecoration: 'none'
               }}
               to={PAGES.HOME}>
-              <PolkaBTCLogoIcon
+              <PolkabtcLogoIcon
                 width={90}
                 height={53} />
             </InterlayRouterLink>

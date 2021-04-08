@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 import { safeRoundFiveDecimals } from 'common/utils/utils';
 // ray test touch <
-import { ReactComponent as PolkaBTCLogoIcon } from 'assets/img/polkabtc/PolkaBTCLogo.svg';
+import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc/polkabtc-logo.svg';
 // ray test touch >
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
@@ -32,7 +32,7 @@ const Balances = ({
           'items-center',
           'space-x-2'
         )}>
-        <PolkaBTCLogoIcon
+        <PolkabtcLogoIcon
           width={50}
           height={30} />
         <span className='font-bold'>{balancePolkaBTC || '0'}</span>
