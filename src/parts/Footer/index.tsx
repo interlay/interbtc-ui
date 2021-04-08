@@ -14,7 +14,7 @@ import InterlayLink from 'components/UI/InterlayLink';
 import { getCurrentYear } from 'utils/helpers/time';
 import {
   INTERLAY_COMPANY,
-  // WEB3_FOUNDATION,
+  WEB3_FOUNDATION,
   INTERLAY_EMAIL,
   INTERLAY_TWITTER,
   INTERLAY_MEDIUM,
@@ -34,14 +34,14 @@ import {
   POLKA_BTC_DOC_RELAYERS_OVERVIEW,
   POLKA_BTC_DOC_DEVELOPERS_INTEGRATION,
   PRIVACY_POLICY,
-  POLKA_BTC_DOC_ABOUT_ROADMAP
-  // NEWS_LETTER_SUBSCRIPTION_ENDPOINT
+  POLKA_BTC_DOC_ABOUT_ROADMAP,
+  NEWS_LETTER_SUBSCRIPTION_ENDPOINT
 } from 'config/links';
 import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
 // TODO: should use a vivid-looking version
-// import {
-//   ReactComponent as Web3FoundationGrantsBadgeIcon
-// } from 'assets/img/polkabtc/web3-foundation-grants-badge.svg';
+import {
+  ReactComponent as Web3FoundationGrantsBadgeIcon
+} from 'assets/img/polkabtc/web3-foundation-grants-badge.svg';
 import styles from './footer.module.css';
 
 const packageJson = require('../../../package.json');
@@ -283,7 +283,7 @@ const Footer = () => {
                 </InterlayLink>
               ))}
             </div>
-            <SubscribeForm />
+            <SubscribeForm endpoint={NEWS_LETTER_SUBSCRIPTION_ENDPOINT} />
           </Column>
         </div>
         <div
@@ -301,14 +301,14 @@ const Footer = () => {
               width={150}
               height={40} />
           </InterlayLink>
-          {/* <InterlayLink
+          <InterlayLink
             href={WEB3_FOUNDATION}
             target='_blank'
             rel='noopener noreferrer'>
             <Web3FoundationGrantsBadgeIcon
               width={150}
               height={50} />
-          </InterlayLink> */}
+          </InterlayLink>
           <ul
             className={clsx(
               'flex',
