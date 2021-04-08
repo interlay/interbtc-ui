@@ -32,10 +32,10 @@ export default function RedeemRequests(): ReactElement {
       return <div>{t('redeem_page.retried')}</div>;
     }
     case RedeemRequestStatus.Completed: {
-      return <FaCheck></FaCheck>;
+      return <FaCheck />;
     }
     default: {
-      return <FaHourglass></FaHourglass>;
+      return <FaHourglass />;
     }
     }
   };

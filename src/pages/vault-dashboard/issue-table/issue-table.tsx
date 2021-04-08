@@ -50,7 +50,7 @@ export default function IssueTable(): ReactElement {
 
   const showStatus = (status: IssueRequestStatus) => {
     if (status === IssueRequestStatus.Completed) {
-      return <FaCheck></FaCheck>;
+      return <FaCheck />;
     }
     if (status === IssueRequestStatus.Cancelled) {
       return (
@@ -61,7 +61,7 @@ export default function IssueTable(): ReactElement {
         </Badge>
       );
     }
-    return <FaHourglass></FaHourglass>;
+    return <FaHourglass />;
   };
 
   return (

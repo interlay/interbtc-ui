@@ -51,13 +51,13 @@ export default function RedeemTable(): ReactElement {
   const showStatus = (status: RedeemRequestStatus) => {
     switch (status) {
     case RedeemRequestStatus.Completed:
-      return <FaCheck></FaCheck>;
+      return <FaCheck />;
     case RedeemRequestStatus.Expired:
     case RedeemRequestStatus.Reimbursed:
     case RedeemRequestStatus.Retried:
       return <Badge variant='secondary'>{t('cancelled')}</Badge>;
     default:
-      return <FaHourglass></FaHourglass>;
+      return <FaHourglass />;
     }
   };
 
