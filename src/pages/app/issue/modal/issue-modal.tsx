@@ -75,15 +75,14 @@ function IssueModal(props: IssueModalProps): ReactElement {
                 <div className='step-item row'>
                   <div className='col-6 temp-text-left'>{t('bridge_fee')}</div>
                   <div className='col-6 right-text'>
-                    {/* TODO: should have an image component */}
                     <img
+                      className='inline-block'
                       src={BitcoinLogo}
                       width='23px'
                       height='23px'
                       alt='bitcoin logo' />
                     {' '}
                     &nbsp;
-                    {/* TODO: could have a utility helper */}
                     {parseFloat(Number(request.fee).toFixed(5))} BTC
                     <div className='send-price'>
                       {'~ $' + getUsdAmount(request.fee, prices.bitcoin.usd)}
@@ -95,6 +94,7 @@ function IssueModal(props: IssueModalProps): ReactElement {
                   <div className='col-6 total-added-value temp-text-left'>{t('total_deposit')}</div>
                   <div className='col-6 total-amount right-text'>
                     <img
+                      className='inline-block'
                       src={BitcoinLogo}
                       width='23px'
                       height='23px'

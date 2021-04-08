@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Button, ButtonProps } from 'react-bootstrap';
 import { FaHourglass } from 'react-icons/fa';
 
@@ -15,7 +15,7 @@ const ButtonMaybePending = ({
   <Button
     disabled={isPending || disabled}
     {...rest}>
-    {(isPending && <FaHourglass />) || children}
+    {(isPending && <FaHourglass className='inline-block' />) || children}
   </Button>
 );
 

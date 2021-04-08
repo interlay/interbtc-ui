@@ -51,6 +51,7 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
                   <div className='col-6 temp-text-left'>{t('bridge_fee')}</div>
                   <div className='col-6'>
                     <img
+                      className='inline-block'
                       src={BitcoinLogo}
                       width='23px'
                       height='23px'
@@ -68,6 +69,7 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
                   <div className='col-6 total-amount temp-text-left total-added-value'>{t('you_will_receive')}</div>
                   <div className='col-6 total-amount'>
                     <img
+                      className='inline-block'
                       src={BitcoinLogo}
                       width='23px'
                       height='23px'

@@ -35,7 +35,7 @@ function IssueRequests(): ReactElement {
     switch (status) {
     case IssueRequestStatus.RequestedRefund:
     case IssueRequestStatus.Completed: {
-      return <FaCheck></FaCheck>;
+      return <FaCheck />;
     }
     case IssueRequestStatus.Cancelled:
     case IssueRequestStatus.Expired: {
@@ -48,7 +48,7 @@ function IssueRequests(): ReactElement {
       );
     }
     default: {
-      return <FaHourglass></FaHourglass>;
+      return <FaHourglass />;
     }
     }
   };

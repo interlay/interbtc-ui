@@ -26,6 +26,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
           <div className='col-6 temp-text-left'>{t('issue_page.refund_requested')}</div>
           <div className='col-6 right-text'>
             <img
+              className='inline-block'
               src={BitcoinLogo}
               width='23px'
               height='23px'
@@ -43,6 +44,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
           </div>
           <div className='col-6 right-text'>
             <img
+              className='inline-block'
               src={BitcoinLogo}
               width='23px'
               height='23px'
@@ -58,6 +60,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
           <div className='col-6 temp-text-left green-text total-added-value'>{t('issue_page.refund_issued')}</div>
           <div className='col-6 right-text'>
             <img
+              className='inline-block'
               src={BitcoinLogo}
               width='23px'
               height='23px'
@@ -74,6 +77,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
           <div className='col-6 temp-text-left total-added-value'>{t('issue_page.refund_difference')}</div>
           <div className='col-6 right-text total-amount'>
             <img
+              className='inline-block'
               src={BitcoinLogo}
               width='23px'
               height='23px'
@@ -85,13 +89,13 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
                         BTC
             <div className='send-price'>
               {'~ $' +
-                                getUsdAmount(
-                                  (
-                                    Number(props.request.btcAmountSubmittedByUser) -
-                                        Number(props.request.issuedAmountBtc)
-                                  ).toString(),
-                                  prices.bitcoin.usd
-                                )}
+              getUsdAmount(
+                (
+                  Number(props.request.btcAmountSubmittedByUser) -
+                      Number(props.request.issuedAmountBtc)
+                ).toString(),
+                prices.bitcoin.usd
+              )}
             </div>
           </div>
         </div>

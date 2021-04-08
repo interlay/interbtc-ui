@@ -334,6 +334,7 @@ function EnterAmountAndAddress(): ReactElement {
               <div className='col fee-number'>
                 <div>
                   <img
+                    className='inline-block'
                     src={bitcoinLogo}
                     width='23px'
                     height='23px'
@@ -372,6 +373,7 @@ function EnterAmountAndAddress(): ReactElement {
               <div className='col-6 temp-text-left total-added-value'>{t('you_will_receive')}</div>
               <div className='col-6'>
                 <img
+                  className='inline-block'
                   src={bitcoinLogo}
                   width='23px'
                   height='23px'
@@ -388,6 +390,7 @@ function EnterAmountAndAddress(): ReactElement {
                 <div className='col-6 temp-text-left green-text'>{t('redeem_page.earned_premium')}</div>
                 <div className='col-6'>
                   <img
+                    className='inline-block'
                     src={polkadotLogo}
                     width='23px'
                     height='23px'

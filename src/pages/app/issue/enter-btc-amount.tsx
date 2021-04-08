@@ -271,14 +271,20 @@ function EnterBTCAmount() {
             <div className='row'>
               <div className='col-6 temp-text-left'>{t('bridge_fee')}</div>
               <div className='col fee-number'>
-                <div>
+                <div
+                  className={clsx(
+                    'flex',
+                    'justify-center',
+                    'space-x-1'
+                  )}>
                   <img
                     src={bitcoinLogo}
                     width='23px'
                     height='23px'
                     alt='bitcoin logo'>
-                  </img> &nbsp;
-                  <span className='fee-btc'>{displayBtcAmount(fee)}</span> BTC
+                  </img>
+                  <span className='fee-btc'>{displayBtcAmount(fee)}</span>
+                  <span>BTC</span>
                 </div>
                 <div>{'~ $' + getUsdAmount(fee, prices.bitcoin.usd)}</div>
               </div>
@@ -292,15 +298,20 @@ function EnterBTCAmount() {
             <div className='row'>
               <div className='col-6 temp-text-left'>{t('issue_page.security_deposit')}</div>
               <div className='col fee-number'>
-                <div>
+                <div
+                  className={clsx(
+                    'flex',
+                    'justify-center',
+                    'space-x-1'
+                  )}>
                   <img
                     src={polkadotLogo}
                     width='20px'
                     height='20px'
-                    style={{ marginRight: '5px' }}
                     alt='polkadot logo'>
                   </img>
-                  <span className='fee-btc'>{deposit}</span> DOT
+                  <span className='fee-btc'>{deposit}</span>
+                  <span>DOT</span>
                 </div>
                 <div>{'~ $' + getUsdAmount(deposit, prices.polkadot.usd)}</div>
               </div>
@@ -317,22 +328,25 @@ function EnterBTCAmount() {
             <div className='row justify-content-center'>
               <div className='col-6 temp-text-left total-added-value'>{t('total_deposit')}</div>
               <div className='col fee-number'>
-                <div>
+                <div
+                  className={clsx(
+                    'flex',
+                    'justify-center',
+                    'space-x-1'
+                  )}>
                   <img
                     src={bitcoinLogo}
                     width='23px'
                     height='23px'
                     alt='bitcoin logo'>
                   </img>
-                  &nbsp;&nbsp;
                   <span className='fee-btc'>
                     {displayBtcAmount(amountBTC)}
-                  </span>{' '}
-                  BTC
+                  </span>
+                  <span>BTC</span>
                 </div>
                 <div>
-                  {'~ $' +
-                    getUsdAmount(amountBTC, prices.bitcoin.usd)}
+                  {'~ $' + getUsdAmount(amountBTC, prices.bitcoin.usd)}
                 </div>
               </div>
             </div>

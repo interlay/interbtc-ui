@@ -150,6 +150,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             <div className='col-6'>{t('redeem_page.compensation_burn')}</div>
             <div className='col-6'>
               <img
+                className='inline-block'
                 src={PolkadotLogo}
                 width='23px'
                 height='23px'
@@ -165,6 +166,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             <div className='col-6'>{t('redeem_page.compensation_payment')}</div>
             <div className='col-6'>
               <img
+                className='inline-block'
                 src={PolkadotLogo}
                 width='23px'
                 height='23px'
@@ -181,12 +183,13 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             <div className='col-6 total-amount text-green'>{t('you_received')}</div>
             <div className='col-6 total-amount'>
               <img
+                className='inline-block'
                 src={PolkadotLogo}
                 width='23px'
                 height='23px'
                 alt='bitcoin logo'>
               </img>
-                                &nbsp;
+              &nbsp;
               {amountDOT.toString()} DOT
               <div className='send-price'>
                 {'~ $' + getUsdAmount(amountDOT.toString(), prices.polkadot.usd)}
@@ -225,6 +228,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             <div className='col-6'>{t('redeem_page.compensation_payment')}</div>
             <div className='col-6'>
               <img
+                className='inline-block'
                 src={PolkadotLogo}
                 width='23px'
                 height='23px'
@@ -241,12 +245,13 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             <div className='col-6 total-amount text-green'>{t('you_received')}</div>
             <div className='col-6 total-amount'>
               <img
+                className='inline-block'
                 src={PolkadotLogo}
                 width='23px'
                 height='23px'
                 alt='bitcoin logo'>
               </img>
-                                &nbsp;
+              &nbsp;
               {punishmentDOT.toString()} DOT
               <div className='send-price'>
                 {'~ $' + getUsdAmount(punishmentDOT.toString(), prices.polkadot.usd)}
