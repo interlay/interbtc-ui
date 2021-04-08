@@ -48,7 +48,7 @@ import {
   getUsdAmount
 } from 'common/utils/utils';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import polkadotLogo from 'assets/img/small-polkadot-logo.png';
+import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import ParachainStatusInfo from 'components/ParachainStatusInfo';
 import { parachainToUIRedeemRequest } from 'common/utils/requests';
 
@@ -383,13 +383,10 @@ function EnterAmountAndAddress(): ReactElement {
               <div className='row mt-4'>
                 <div className='col-6 temp-text-left green-text'>{t('redeem_page.earned_premium')}</div>
                 <div className='col-6'>
-                  <img
+                  <PolkadotLogoIcon
                     className='inline-block'
-                    src={polkadotLogo}
-                    width='23px'
-                    height='23px'
-                    alt='polkadot logo'>
-                  </img> &nbsp;
+                    width={23}
+                    height={23} /> &nbsp;
                   {calculateTotalDOT()} DOT
                   <div className='send-price'>
                     {'~ $' + getUsdAmount(calculateTotalDOT(), prices.polkadot.usd)}

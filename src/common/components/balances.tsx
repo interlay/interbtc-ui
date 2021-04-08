@@ -2,9 +2,10 @@
 import clsx from 'clsx';
 
 import { safeRoundFiveDecimals } from 'common/utils/utils';
+// ray test touch <
 import { ReactComponent as PolkaBTCLogoIcon } from 'assets/img/polkabtc/PolkaBTCLogo.svg';
-// TODO: should use SVG
-import polkadotLogo from 'assets/img/small-polkadot-logo.png';
+// ray test touch >
+import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
 interface Props {
   balancePolkaBTC?: string;
@@ -43,11 +44,9 @@ const Balances = ({
           'items-center',
           'space-x-1'
         )}>
-        <img
-          src={polkadotLogo}
-          width='20px'
-          height='20px'
-          alt='polkadot logo' />
+        <PolkadotLogoIcon
+          width={20}
+          height={20} />
         <span className='font-bold'>{roundedBalanceDot ?? '0'}</span>
         <span>DOT</span>
       </div>

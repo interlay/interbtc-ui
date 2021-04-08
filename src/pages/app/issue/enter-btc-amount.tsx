@@ -39,7 +39,7 @@ import {
 } from 'common/utils/utils';
 import { parachainToUIIssueRequest } from 'common/utils/requests';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import polkadotLogo from 'assets/img/small-polkadot-logo.png';
+import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 import ParachainStatusInfo from 'components/ParachainStatusInfo';
 
@@ -301,12 +301,9 @@ function EnterBTCAmount() {
                     'justify-center',
                     'space-x-1'
                   )}>
-                  <img
-                    src={polkadotLogo}
-                    width='20px'
-                    height='20px'
-                    alt='polkadot logo'>
-                  </img>
+                  <PolkadotLogoIcon
+                    width={20}
+                    height={20} />
                   <span className='fee-btc'>{deposit}</span>
                   <span>DOT</span>
                 </div>

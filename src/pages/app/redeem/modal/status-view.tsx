@@ -7,7 +7,7 @@ import * as constants from '../../../../constants';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../../common/types/util.types';
 import Big from 'big.js';
-import PolkadotLogo from '../../../../assets/img/small-polkadot-logo.png';
+import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import InterlayLink from 'components/UI/InterlayLink';
 
 type StatusViewProps = {
@@ -149,13 +149,10 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           <div className='step-item row'>
             <div className='col-6'>{t('redeem_page.compensation_burn')}</div>
             <div className='col-6'>
-              <img
+              <PolkadotLogoIcon
                 className='inline-block'
-                src={PolkadotLogo}
-                width='23px'
-                height='23px'
-                alt='polkadot logo'>
-              </img> &nbsp;
+                width={23}
+                height={23} /> &nbsp;
               {burnAmountDOT.toString()} DOT
               <div className='send-price'>
                 {'~ $' + getUsdAmount(burnAmountDOT.toString(), prices.polkadot.usd)}
@@ -165,13 +162,10 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           <div className='step-item row'>
             <div className='col-6'>{t('redeem_page.compensation_payment')}</div>
             <div className='col-6'>
-              <img
+              <PolkadotLogoIcon
                 className='inline-block'
-                src={PolkadotLogo}
-                width='23px'
-                height='23px'
-                alt='polkadot logo'>
-              </img> &nbsp;
+                width={23}
+                height={23} /> &nbsp;
               {punishmentDOT.toString()} DOT
               <div className='send-price'>
                 {'~ $' + getUsdAmount(punishmentDOT.toString(), prices.polkadot.usd)}
@@ -182,13 +176,10 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           <div className='step-item row'>
             <div className='col-6 total-amount text-green'>{t('you_received')}</div>
             <div className='col-6 total-amount'>
-              <img
+              <PolkadotLogoIcon
                 className='inline-block'
-                src={PolkadotLogo}
-                width='23px'
-                height='23px'
-                alt='bitcoin logo'>
-              </img>
+                width={23}
+                height={23} />
               &nbsp;
               {amountDOT.toString()} DOT
               <div className='send-price'>
@@ -227,13 +218,10 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           <div className='step-item row'>
             <div className='col-6'>{t('redeem_page.compensation_payment')}</div>
             <div className='col-6'>
-              <img
+              <PolkadotLogoIcon
                 className='inline-block'
-                src={PolkadotLogo}
-                width='23px'
-                height='23px'
-                alt='polkadot logo'>
-              </img> &nbsp;
+                width={23}
+                height={23} /> &nbsp;
               {punishmentDOT.toString()} DOT
               <div className='send-price'>
                 {'~ $' + getUsdAmount(punishmentDOT.toString(), prices.polkadot.usd)}
@@ -244,13 +232,10 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           <div className='step-item row'>
             <div className='col-6 total-amount text-green'>{t('you_received')}</div>
             <div className='col-6 total-amount'>
-              <img
+              <PolkadotLogoIcon
                 className='inline-block'
-                src={PolkadotLogo}
-                width='23px'
-                height='23px'
-                alt='bitcoin logo'>
-              </img>
+                width={23}
+                height={23} />
               &nbsp;
               {punishmentDOT.toString()} DOT
               <div className='send-price'>
