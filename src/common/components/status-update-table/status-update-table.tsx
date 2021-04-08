@@ -144,6 +144,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
         statusUpdate={statusUpdate!} />
       <div>
         <p
+          className='mb-4'
           style={{
             fontWeight: 700,
             fontSize: '26px'

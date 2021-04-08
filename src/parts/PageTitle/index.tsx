@@ -33,7 +33,8 @@ const PageTitle = ({
       <p
         className={clsx(
           'text-xs',
-          'xl:text-sm'
+          'xl:text-sm',
+          'mb-4'
         )}>
         {subTitle}
       </p>

@@ -56,7 +56,7 @@ function AccountModal({
           <>
             {/* Create a new account when no accounts are available */}
             {!accounts?.length && (
-              <p>
+              <p className='mb-4'>
                 {t('no_account')}
                 <InterlayLink
                   href={POLKADOT_EXTENSION}
@@ -84,7 +84,7 @@ function AccountModal({
           </>
         ) : (
           <>
-            <p>
+            <p className='mb-4'>
               {t('install_supported_wallets')}
             </p>
             <InterlayLink

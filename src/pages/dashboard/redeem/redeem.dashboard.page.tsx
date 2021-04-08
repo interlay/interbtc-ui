@@ -284,6 +284,7 @@ function RedeemDashboard() {
             <div style={{ margin: '40px 0px' }}>
               <div>
                 <p
+                  className='mb-4'
                   style={{
                     fontWeight: 700,
                     fontSize: '26px'
