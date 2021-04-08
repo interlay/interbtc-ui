@@ -11,7 +11,7 @@ import WhoopsView from './whoops-view';
 import { getUsdAmount, shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { IssueRequestStatus, IssueRequest } from 'common/types/issue.types';
-import BitcoinLogo from 'assets/img/small-bitcoin-logo.png';
+import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 
 type IssueModalProps = {
   show: boolean;
@@ -75,12 +75,10 @@ function IssueModal(props: IssueModalProps): ReactElement {
                 <div className='step-item row'>
                   <div className='col-6 temp-text-left'>{t('bridge_fee')}</div>
                   <div className='col-6 right-text'>
-                    <img
+                    <BitcoinLogoIcon
                       className='inline-block'
-                      src={BitcoinLogo}
-                      width='23px'
-                      height='23px'
-                      alt='bitcoin logo' />
+                      width={23}
+                      height={23} />
                     {' '}
                     &nbsp;
                     {parseFloat(Number(request.fee).toFixed(5))} BTC
@@ -93,12 +91,10 @@ function IssueModal(props: IssueModalProps): ReactElement {
                 <div className='step-item row'>
                   <div className='col-6 total-added-value temp-text-left'>{t('total_deposit')}</div>
                   <div className='col-6 total-amount right-text'>
-                    <img
+                    <BitcoinLogoIcon
                       className='inline-block'
-                      src={BitcoinLogo}
-                      width='23px'
-                      height='23px'
-                      alt='bitcoin logo' />
+                      width={23}
+                      height={23} />
                     {' '}
                     &nbsp;
                     {parseFloat(

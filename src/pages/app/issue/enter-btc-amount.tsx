@@ -38,7 +38,7 @@ import {
   getUsdAmount
 } from 'common/utils/utils';
 import { parachainToUIIssueRequest } from 'common/utils/requests';
-import bitcoinLogo from 'assets/img/small-bitcoin-logo.png';
+import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import polkadotLogo from 'assets/img/small-polkadot-logo.png';
 import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 import ParachainStatusInfo from 'components/ParachainStatusInfo';
@@ -277,12 +277,9 @@ function EnterBTCAmount() {
                     'justify-center',
                     'space-x-1'
                   )}>
-                  <img
-                    src={bitcoinLogo}
-                    width='23px'
-                    height='23px'
-                    alt='bitcoin logo'>
-                  </img>
+                  <BitcoinLogoIcon
+                    width={23}
+                    height={23} />
                   <span className='fee-btc'>{displayBtcAmount(fee)}</span>
                   <span>BTC</span>
                 </div>
@@ -334,12 +331,9 @@ function EnterBTCAmount() {
                     'justify-center',
                     'space-x-1'
                   )}>
-                  <img
-                    src={bitcoinLogo}
-                    width='23px'
-                    height='23px'
-                    alt='bitcoin logo'>
-                  </img>
+                  <BitcoinLogoIcon
+                    width={23}
+                    height={23} />
                   <span className='fee-btc'>
                     {displayBtcAmount(amountBTC)}
                   </span>

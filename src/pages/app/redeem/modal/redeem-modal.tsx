@@ -9,7 +9,7 @@ import ReimburseView from './reimburse-view';
 import { getUsdAmount, shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { RedeemRequestStatus } from 'common/types/redeem.types';
-import BitcoinLogo from 'assets/img/small-bitcoin-logo.png';
+import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 
 type RedeemModalProps = {
   show: boolean;
@@ -50,12 +50,10 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
                 <div className='step-item row'>
                   <div className='col-6 temp-text-left'>{t('bridge_fee')}</div>
                   <div className='col-6'>
-                    <img
+                    <BitcoinLogoIcon
                       className='inline-block'
-                      src={BitcoinLogo}
-                      width='23px'
-                      height='23px'
-                      alt='bitcoin logo' />
+                      width={23}
+                      height={23} />
                     {' '}
                     &nbsp;
                     {request.fee} BTC
@@ -68,12 +66,10 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
                 <div className='step-item row'>
                   <div className='col-6 total-amount temp-text-left total-added-value'>{t('you_will_receive')}</div>
                   <div className='col-6 total-amount'>
-                    <img
+                    <BitcoinLogoIcon
                       className='inline-block'
-                      src={BitcoinLogo}
-                      width='23px'
-                      height='23px'
-                      alt='bitcoin logo' />
+                      width={23}
+                      height={23} />
                       &nbsp;
                     {request.amountBTC} BTC
                     <div className='send-price'>
