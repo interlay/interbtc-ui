@@ -2,9 +2,7 @@
 import clsx from 'clsx';
 
 import { safeRoundFiveDecimals } from 'common/utils/utils';
-// ray test touch <
 import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc/polkabtc-logo.svg';
-// ray test touch >
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
 interface Props {
