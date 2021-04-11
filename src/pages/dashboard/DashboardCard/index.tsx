@@ -6,13 +6,16 @@ const DashboardCard = ({
   ...rest
 }: React.ComponentPropsWithRef<'div'>) => (
   <div
+    // TODO: hardcoded
+    style={{
+      minHeight: 384
+    }}
     className={clsx(
       'dashboard-card', // TODO: should remove this global CSS class
-      'h-96',
       'px-5',
       'py-4',
       'xl:py-7',
-      'shadow-md',
+      'shadow',
       // MEMO: bootstrap card style
       'relative',
       'flex',
