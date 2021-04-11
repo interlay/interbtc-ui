@@ -5,9 +5,30 @@ const plugin = require('tailwindcss/plugin');
 
 const colors = require('tailwindcss/colors');
 
-const BASE_COLORS = Object.freeze({
-  polkadotPink: '#e6007a', // MEMO: polkadot's branding pink
-  bitcoinColor: '#f7931a' // MEMO: bitcoin color
+// MEMO: inspired by https://javisperez.github.io/tailwindcolorshades
+const INTERLAY_ROSE = Object.freeze({
+  50: '#fef2f8',
+  100: '#fde6f2',
+  200: '#f9bfde',
+  300: '#f599ca',
+  400: '#ee4da2',
+  500: '#e6007a', // MEMO: polkadot's branding pink
+  600: '#cf006e',
+  700: '#ad005c',
+  800: '#8a0049',
+  900: '#71003c'
+});
+const INTERLAY_TREE_POPPY = Object.freeze({
+  50: '#fffaf4',
+  100: '#fef4e8',
+  200: '#fde4c6',
+  300: '#fcd4a3',
+  400: '#f9b35f',
+  500: '#f7931a', // MEMO: bitcoin color
+  600: '#de8417',
+  700: '#b96e14',
+  800: '#945810',
+  900: '#79480d'
 });
 
 module.exports = {
@@ -20,11 +41,11 @@ module.exports = {
     extend: {
       colors: {
         interlayPink: {
-          DEFAULT: BASE_COLORS.polkadotPink
+          DEFAULT: INTERLAY_ROSE[500]
         },
         interlayYellow: {
           light: '#ff9900',
-          DEFAULT: BASE_COLORS.bitcoinColor
+          DEFAULT: INTERLAY_TREE_POPPY[500]
         },
         interlayBlue: {
           DEFAULT: '#1c86ee'
@@ -45,24 +66,24 @@ module.exports = {
           DEFAULT: '#a9a9a9'
         },
         primary: {
-          lightest: '#ff70bc',
-          lighter: '#ff47a9',
-          light: '#ff1f96',
-          DEFAULT: BASE_COLORS.polkadotPink,
-          dark: '#cc006d',
-          darker: '#a30057',
-          darkest: '#7a0041',
+          lightest: INTERLAY_ROSE[200],
+          lighter: INTERLAY_ROSE[300],
+          light: INTERLAY_ROSE[400],
+          DEFAULT: INTERLAY_ROSE[500],
+          dark: INTERLAY_ROSE[600],
+          darker: INTERLAY_ROSE[700],
+          darkest: INTERLAY_ROSE[800],
           contrastText: colors.white
         },
         secondary: {
-          lightest: '#fbd19d',
-          lighter: '#fabe75',
-          light: '#f9ac4e',
-          DEFAULT: BASE_COLORS.bitcoinColor,
-          dark: '#ec8609',
-          darker: '#c56f07',
-          darkest: '#9d5906',
-          contrastText: colors.white
+          lightest: INTERLAY_TREE_POPPY[200],
+          lighter: INTERLAY_TREE_POPPY[300],
+          light: INTERLAY_TREE_POPPY[400],
+          DEFAULT: INTERLAY_TREE_POPPY[500],
+          dark: INTERLAY_TREE_POPPY[600],
+          darker: INTERLAY_TREE_POPPY[700],
+          darkest: INTERLAY_TREE_POPPY[800],
+          contrastText: '#333333'
         }
       },
       textColor: theme => ({
