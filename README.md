@@ -189,6 +189,14 @@ Test the project.
 yarn test
 ```
 
+### Design System
+
+Visualize the Tailwindcss configuration.
+
+```bash
+yarn tailwind-config-viewer
+```
+
 ## Help
 
 ### Bitcoin Regtest
