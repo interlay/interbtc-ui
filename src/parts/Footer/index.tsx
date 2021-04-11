@@ -1,4 +1,5 @@
 
+import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import {
@@ -211,14 +212,23 @@ const ColumnListItem = (props: React.ComponentPropsWithRef<'li'>) => (
   <li {...props} />
 );
 
-const Footer = () => {
+type Ref = HTMLDivElement;
+type Props = React.ComponentPropsWithRef<'footer'>;
+
+const Footer = React.forwardRef<Ref, Props>(({
+  className,
+  ...rest
+}, ref) => {
   const { t } = useTranslation();
 
   return (
     <footer
+      ref={ref}
       className={clsx(
-        'bg-default'
-      )}>
+        'bg-default',
+        className
+      )}
+      {...rest}>
       <div
         className={clsx(
           'container',
@@ -341,6 +351,6 @@ const Footer = () => {
       </div>
     </footer>
   );
-};
+});
 
 export default Footer;

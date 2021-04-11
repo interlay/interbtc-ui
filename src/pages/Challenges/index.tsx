@@ -139,7 +139,7 @@ function Challenges() {
 
   return (
     <MainContainer>
-      <div className='dashboard-container dashboard-fade-in-animation dashboard-min-height'>
+      <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <PageTitle mainTitle={t('leaderboard.challenges_title')} />
           <CardList>
