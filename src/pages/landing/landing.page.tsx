@@ -37,176 +37,183 @@ export default function LandingPage(): JSX.Element {
   };
 
   return (
-    <div>
-      <section className='jumbotron text-center transparent-background'>
-        <div
+    <section
+      className={clsx(
+        'text-center',
+        'px-8',
+        'py-16',
+        // TODO: could be better
+        'grid',
+        'place-items-center',
+        'min-h-screen',
+        '-mt-20'
+      )}>
+      <div
+        className={clsx(
+          'container',
+          'mx-auto'
+        )}>
+        <InterlayRouterLink
+          style={{ display: 'inline-block' }}
+          to={PAGES.HOME}>
+          <PolkabtcLogoIcon
+            fill='currentColor'
+            className='text-white'
+            width={256}
+            height={150.84} />
+        </InterlayRouterLink>
+        <h1
           className={clsx(
-            'container',
+            'text-white',
             'mt-12',
-            'mx-auto'
+            'mb-2',
+            'text-4xl'
           )}>
-          <InterlayRouterLink
-            style={{ display: 'inline-block' }}
-            to={PAGES.HOME}>
-            <PolkabtcLogoIcon
-              fill='currentColor'
-              className='text-white'
-              width={256}
-              height={150.84} />
-          </InterlayRouterLink>
-          <h1
-            className={clsx(
-              'text-white',
-              'mt-12',
-              'mb-2',
-              'text-4xl'
-            )}>
-            PolkaBTC
-          </h1>
-          <h2
-            className={clsx(
-              'text-white',
-              'mb-2',
-              'text-3xl'
-            )}>
-            {t('landing.defi_ecosystem')}
-          </h2>
+          PolkaBTC
+        </h1>
+        <h2
+          className={clsx(
+            'text-white',
+            'mb-2',
+            'text-3xl'
+          )}>
+          {t('landing.defi_ecosystem')}
+        </h2>
 
-          {checkStaticPage() ? (
-            <div>
-              <h4
-                className={clsx(
-                  'text-white',
-                  'mt-12',
-                  'mb-2',
-                  'text-2xl'
-                )}>
-                {t('landing.beta_coming')}
-              </h4>
-              <h1
-                className={clsx(
-                  'text-white',
-                  'mt-12',
-                  'mb-2',
-                  'text-4xl'
-                )}>
-                <Timer seconds={secondsUntilBeta}></Timer>
-              </h1>
+        {checkStaticPage() ? (
+          <div>
+            <h4
+              className={clsx(
+                'text-white',
+                'mt-12',
+                'mb-2',
+                'text-2xl'
+              )}>
+              {t('landing.beta_coming')}
+            </h4>
+            <h1
+              className={clsx(
+                'text-white',
+                'mt-12',
+                'mb-2',
+                'text-4xl'
+              )}>
+              <Timer seconds={secondsUntilBeta}></Timer>
+            </h1>
+            <Row className={clsx('mt-12')}>
+              <Col
+                className='mt-2'
+                xs='12'
+                sm={{ span: 4, offset: 2 }}>
+                <InterlayLink
+                  style={{
+                    textDecoration: 'none'
+                  }}
+                  href='https://docs.polkabtc.io/#/'
+                  target='_bank'
+                  rel='noopener noreferrer'>
+                  <Button
+                    variant='outline-bitcoin'
+                    size='lg'
+                    block>
+                    {t('landing.docs')}
+                  </Button>
+                </InterlayLink>
+              </Col>
+              <Col
+                className='mt-2'
+                xs='12'
+                sm={{ span: 4, offset: 0 }}>
+                <InterlayLink
+                  style={{
+                    textDecoration: 'none'
+                  }}
+                  href='https://discord.gg/KgCYK3MKSf'
+                  target='_blank'
+                  rel='noopener noreferrer'>
+                  <Button
+                    variant='outline-bitcoin'
+                    size='lg'
+                    block>
+                    {t('landing.discord')}
+                  </Button>
+                </InterlayLink>
+              </Col>
+            </Row>
+          </div>
+        ) : (
+          <div>
+            <Row className={clsx('mt-6')}>
+              <Col
+                xs='12'
+                sm={{ span: 6, offset: 3 }}>
+                <h5
+                  className={clsx(
+                    'text-white',
+                    'mb-2',
+                    'text-xl'
+                  )}>
+                  {t('landing.issued')} {totalPolkaBTC} PolkaBTC
+                </h5>
+              </Col>
+            </Row>
+            <Row className='mt-1'>
+              <Col
+                xs='12'
+                sm={{ span: 6, offset: 3 }}>
+                <h5
+                  className={clsx(
+                    'text-white',
+                    'mb-2',
+                    'text-xl'
+                  )}>
+                  {t('locked')} {totalLockedDOT} DOT
+                </h5>
+              </Col>
+            </Row>
+            {polkaBtcLoaded && (
               <Row className={clsx('mt-12')}>
                 <Col
                   className='mt-2'
                   xs='12'
                   sm={{ span: 4, offset: 2 }}>
-                  <InterlayLink
+                  <InterlayRouterLink
                     style={{
                       textDecoration: 'none'
                     }}
-                    href='https://docs.polkabtc.io/#/'
-                    target='_bank'
-                    rel='noopener noreferrer'>
+                    to={PAGES.APPLICATION}>
                     <Button
-                      variant='outline-bitcoin'
+                      variant='outline-dark'
                       size='lg'
-                      block>
-                      {t('landing.docs')}
+                      block
+                      onClick={checkWalletAndAccount}>
+                      {t('app')}
                     </Button>
-                  </InterlayLink>
+                  </InterlayRouterLink>
                 </Col>
                 <Col
                   className='mt-2'
                   xs='12'
-                  sm={{ span: 4, offset: 0 }}>
-                  <InterlayLink
+                  sm={{ span: 4 }}>
+                  <InterlayRouterLink
                     style={{
                       textDecoration: 'none'
                     }}
-                    href='https://discord.gg/KgCYK3MKSf'
-                    target='_blank'
-                    rel='noopener noreferrer'>
+                    to={PAGES.DASHBOARD}>
                     <Button
-                      variant='outline-bitcoin'
+                      variant='outline-dark'
                       size='lg'
-                      block>
-                      {t('landing.discord')}
+                      block
+                      onClick={checkWalletAndAccount}>
+                      {t('nav_dashboard')}
                     </Button>
-                  </InterlayLink>
+                  </InterlayRouterLink>
                 </Col>
               </Row>
-            </div>
-          ) : (
-            <div>
-              <Row className={clsx('mt-6')}>
-                <Col
-                  xs='12'
-                  sm={{ span: 6, offset: 3 }}>
-                  <h5
-                    className={clsx(
-                      'text-white',
-                      'mb-2',
-                      'text-xl'
-                    )}>
-                    {t('landing.issued')} {totalPolkaBTC} PolkaBTC
-                  </h5>
-                </Col>
-              </Row>
-              <Row className='mt-1'>
-                <Col
-                  xs='12'
-                  sm={{ span: 6, offset: 3 }}>
-                  <h5
-                    className={clsx(
-                      'text-white',
-                      'mb-2',
-                      'text-xl'
-                    )}>
-                    {t('locked')} {totalLockedDOT} DOT
-                  </h5>
-                </Col>
-              </Row>
-              {polkaBtcLoaded && (
-                <Row className={clsx('mt-12')}>
-                  <Col
-                    className='mt-2'
-                    xs='12'
-                    sm={{ span: 4, offset: 2 }}>
-                    <InterlayRouterLink
-                      style={{
-                        textDecoration: 'none'
-                      }}
-                      to={PAGES.APPLICATION}>
-                      <Button
-                        variant='outline-dark'
-                        size='lg'
-                        block
-                        onClick={checkWalletAndAccount}>
-                        {t('app')}
-                      </Button>
-                    </InterlayRouterLink>
-                  </Col>
-                  <Col
-                    className='mt-2'
-                    xs='12'
-                    sm={{ span: 4 }}>
-                    <InterlayRouterLink
-                      style={{
-                        textDecoration: 'none'
-                      }}
-                      to={PAGES.DASHBOARD}>
-                      <Button
-                        variant='outline-dark'
-                        size='lg'
-                        block
-                        onClick={checkWalletAndAccount}>
-                        {t('nav_dashboard')}
-                      </Button>
-                    </InterlayRouterLink>
-                  </Col>
-                </Row>
-              )}
-            </div>
-          )}
-        </div>
-      </section>
-    </div>
+            )}
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
