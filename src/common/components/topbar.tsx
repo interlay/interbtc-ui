@@ -97,6 +97,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
               }}
               to={PAGES.HOME}>
               <PolkabtcLogoIcon
+                fill='currentColor'
                 width={90}
                 height={53} />
             </InterlayRouterLink>

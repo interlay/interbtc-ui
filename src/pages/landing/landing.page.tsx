@@ -38,7 +38,7 @@ export default function LandingPage(): JSX.Element {
 
   return (
     <div>
-      <section className='jumbotron min-vh-90 text-center transparent-background'>
+      <section className='jumbotron text-center transparent-background'>
         <div
           className={clsx(
             'container',
@@ -49,6 +49,7 @@ export default function LandingPage(): JSX.Element {
             style={{ display: 'inline-block' }}
             to={PAGES.HOME}>
             <PolkabtcLogoIcon
+              fill='currentColor'
               className='text-white'
               width={256}
               height={150.84} />

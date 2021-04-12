@@ -31,6 +31,7 @@ const Balances = ({
           'space-x-2'
         )}>
         <PolkabtcLogoIcon
+          fill='currentColor'
           width={50}
           height={30} />
         <span className='font-bold'>{balancePolkaBTC || '0'}</span>
