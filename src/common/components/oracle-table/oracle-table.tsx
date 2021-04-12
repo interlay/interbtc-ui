@@ -52,6 +52,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
       className={(new BN(props.planckLocked) <= new BN(0) ? 'oracle-space' : '')}>
       <div>
         <p
+          className='mb-4'
           style={{
             fontWeight: 700,
             fontSize: '26px'

@@ -35,6 +35,7 @@ function Dashboard() {
           'lg:gap-10',
           'xl:grid-cols-3'
         )}>
+        {/* TODO: could remove linkButton */}
         <PolkaBTC linkButton />
         <CollateralLocked linkButton />
         <Collateralization linkButton />

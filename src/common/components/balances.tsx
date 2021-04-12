@@ -1,7 +1,9 @@
 
+import clsx from 'clsx';
+
 import { safeRoundFiveDecimals } from 'common/utils/utils';
-import polkaBTCLogo from 'assets/img/polkabtc/PolkaBTC_black.svg';
-import polkadotLogo from 'assets/img/small-polkadot-logo.png';
+import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc/polkabtc-logo.svg';
+import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
 interface Props {
   balancePolkaBTC?: string;
@@ -15,31 +17,38 @@ const Balances = ({
   const roundedBalanceDot = safeRoundFiveDecimals(balanceDOT);
 
   return (
-    <div>
-      <span className='btc-balance-wrapper'>
-        <span className=''>
-          <img
-            src={polkaBTCLogo}
-            width='50px'
-            height='30px'
-            alt='polka bitcoin logo'
-            className='mr-1' />
-          <b>{balancePolkaBTC || '0'}</b>
-        </span>{' '}
-        PolkaBTC
-      </span>
-      <span className='dot-balance-wrapper'>
-        <img
-          src={polkadotLogo}
-          width='20px'
-          height='20px'
-          alt='polkadot logo'
-          className='mr-1' />
-        <span className=''>
-          <b>{roundedBalanceDot ?? '0'}</b>
-        </span>{' '}
-        DOT
-      </span>
+    <div
+      className={clsx(
+        'flex',
+        'flex-wrap',
+        'space-x-2',
+        'mx-2' // TODO: should use space-x-{number} at upper level
+      )}>
+      <div
+        className={clsx(
+          'flex',
+          'items-center',
+          'space-x-2'
+        )}>
+        <PolkabtcLogoIcon
+          fill='currentColor'
+          width={50}
+          height={30} />
+        <span className='font-bold'>{balancePolkaBTC || '0'}</span>
+        <span>PolkaBTC</span>
+      </div>
+      <div
+        className={clsx(
+          'flex',
+          'items-center',
+          'space-x-1'
+        )}>
+        <PolkadotLogoIcon
+          width={20}
+          height={20} />
+        <span className='font-bold'>{roundedBalanceDot ?? '0'}</span>
+        <span>DOT</span>
+      </div>
     </div>
   );
 };

@@ -10,6 +10,7 @@ const BoldParagraph = ({
       'text-xs',
       'xl:text-sm',
       'font-bold',
+      'mb-4',
       className
     )}
     {...rest} />

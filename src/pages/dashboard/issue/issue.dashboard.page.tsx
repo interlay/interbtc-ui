@@ -7,8 +7,12 @@ import {
 } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 import { satToBTC } from '@interlay/polkabtc';
-import { BtcNetworkName, IssueColumns } from '@interlay/polkabtc-stats';
+import {
+  BtcNetworkName,
+  IssueColumns
+} from '@interlay/polkabtc-stats';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -169,19 +173,51 @@ function IssueDashboard() {
             <div className='table-top-data-container'>
               <div className='values-container'>
                 <div>
-                  <h2 style={{ color: getAccents('d_pink').color }}>
+                  <h2
+                    style={{ color: getAccents('d_pink').color }}
+                    className={clsx(
+                      'mb-2',
+                      'text-base',
+                      'font-normal'
+                    )}>
                     {t('dashboard.issue.issued')}
                   </h2>
-                  <h1>{t('dashboard.issue.total_polkabtc', { amount: totalPolkaBTC })}</h1>
-                  <h1 className='h1-price-opacity'>
+                  <h1
+                    className={clsx(
+                      'mb-2',
+                      'text-xl',
+                      'font-bold'
+                    )}>
+                    {t('dashboard.issue.total_polkabtc', { amount: totalPolkaBTC })}
+                  </h1>
+                  <h1
+                    className={clsx(
+                      'opacity-50',
+                      'mb-2',
+                      'text-xl',
+                      'font-bold'
+                    )}>
                     ${(prices.bitcoin.usd * parseFloat(totalPolkaBTC)).toLocaleString()}
                   </h1>
                 </div>
                 <div>
-                  <h2 style={{ color: getAccents('d_green').color }}>
+                  <h2
+                    style={{ color: getAccents('d_green').color }}
+                    className={clsx(
+                      'mb-2',
+                      'text-base',
+                      'font-normal'
+                    )}>
                     {t('dashboard.issue.issue_requests')}
                   </h2>
-                  <h1>{totalSuccessfulIssues === '-' ? t('no_data') : totalSuccessfulIssues}</h1>
+                  <h1
+                    className={clsx(
+                      'mb-2',
+                      'text-xl',
+                      'font-bold'
+                    )}>
+                    {totalSuccessfulIssues === '-' ? t('no_data') : totalSuccessfulIssues}
+                  </h1>
                 </div>
               </div>
               <div className='card'>
@@ -213,6 +249,7 @@ function IssueDashboard() {
             <div style={{ margin: '40px 0px' }}>
               <div>
                 <p
+                  className='mb-4'
                   style={{
                     fontWeight: 700,
                     fontSize: '26px'

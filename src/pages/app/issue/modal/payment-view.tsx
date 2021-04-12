@@ -80,7 +80,9 @@ export default function PaymentView(props: PaymentViewProps): ReactElement {
         </div>
         <div className='row'>
           <div className='col qr-code-item'>
-            <QRCode value={'bitcoin:' + props.request.vaultBTCAddress + '?amount=' + amount} />
+            <QRCode
+              className='inline-block'
+              value={'bitcoin:' + props.request.vaultBTCAddress + '?amount=' + amount} />
           </div>
         </div>
         <div className='row justify-content-center'>

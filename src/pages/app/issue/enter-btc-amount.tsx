@@ -38,8 +38,8 @@ import {
   getUsdAmount
 } from 'common/utils/utils';
 import { parachainToUIIssueRequest } from 'common/utils/requests';
-import bitcoinLogo from 'assets/img/small-bitcoin-logo.png';
-import polkadotLogo from 'assets/img/small-polkadot-logo.png';
+import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
+import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 import ParachainStatusInfo from 'components/ParachainStatusInfo';
 
@@ -271,14 +271,17 @@ function EnterBTCAmount() {
             <div className='row'>
               <div className='col-6 temp-text-left'>{t('bridge_fee')}</div>
               <div className='col fee-number'>
-                <div>
-                  <img
-                    src={bitcoinLogo}
-                    width='23px'
-                    height='23px'
-                    alt='bitcoin logo'>
-                  </img> &nbsp;
-                  <span className='fee-btc'>{displayBtcAmount(fee)}</span> BTC
+                <div
+                  className={clsx(
+                    'flex',
+                    'justify-center',
+                    'space-x-1'
+                  )}>
+                  <BitcoinLogoIcon
+                    width={23}
+                    height={23} />
+                  <span className='fee-btc'>{displayBtcAmount(fee)}</span>
+                  <span>BTC</span>
                 </div>
                 <div>{'~ $' + getUsdAmount(fee, prices.bitcoin.usd)}</div>
               </div>
@@ -292,15 +295,17 @@ function EnterBTCAmount() {
             <div className='row'>
               <div className='col-6 temp-text-left'>{t('issue_page.security_deposit')}</div>
               <div className='col fee-number'>
-                <div>
-                  <img
-                    src={polkadotLogo}
-                    width='20px'
-                    height='20px'
-                    style={{ marginRight: '5px' }}
-                    alt='polkadot logo'>
-                  </img>
-                  <span className='fee-btc'>{deposit}</span> DOT
+                <div
+                  className={clsx(
+                    'flex',
+                    'justify-center',
+                    'space-x-1'
+                  )}>
+                  <PolkadotLogoIcon
+                    width={20}
+                    height={20} />
+                  <span className='fee-btc'>{deposit}</span>
+                  <span>DOT</span>
                 </div>
                 <div>{'~ $' + getUsdAmount(deposit, prices.polkadot.usd)}</div>
               </div>
@@ -317,22 +322,22 @@ function EnterBTCAmount() {
             <div className='row justify-content-center'>
               <div className='col-6 temp-text-left total-added-value'>{t('total_deposit')}</div>
               <div className='col fee-number'>
-                <div>
-                  <img
-                    src={bitcoinLogo}
-                    width='23px'
-                    height='23px'
-                    alt='bitcoin logo'>
-                  </img>
-                  &nbsp;&nbsp;
+                <div
+                  className={clsx(
+                    'flex',
+                    'justify-center',
+                    'space-x-1'
+                  )}>
+                  <BitcoinLogoIcon
+                    width={23}
+                    height={23} />
                   <span className='fee-btc'>
                     {displayBtcAmount(amountBTC)}
-                  </span>{' '}
-                  BTC
+                  </span>
+                  <span>BTC</span>
                 </div>
                 <div>
-                  {'~ $' +
-                    getUsdAmount(amountBTC, prices.bitcoin.usd)}
+                  {'~ $' + getUsdAmount(amountBTC, prices.bitcoin.usd)}
                 </div>
               </div>
             </div>

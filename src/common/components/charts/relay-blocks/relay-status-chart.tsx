@@ -54,8 +54,8 @@ export default function RelayStatusChart(props: RelayStatusChartProps): ReactEle
   return (
     <>
       <div>
-        <p>
-                    Placeholder. Latest block: {latestRelayBlock.height} with hash {latestRelayBlock.hash}. Status:{' '}
+        <p className='mb-4'>
+          Placeholder. Latest block: {latestRelayBlock.height} with hash {latestRelayBlock.hash}. Status:{' '}
           {(() => {
             switch (relayStatus) {
             case Status.Online:

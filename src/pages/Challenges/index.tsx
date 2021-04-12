@@ -21,9 +21,9 @@ import InterlayToggleButtonGroup, {
   InterlayToggleButtonGroupProps
 } from 'components/UI/InterlayToggleButtonGroup';
 import {
-  POLKA_BTC_DOC_TREASURE_HUNT,
-  POLKA_BTC_DOC_TREASURE_HUNT_VAULT,
-  POLKA_BTC_DOC_TREASURE_HUNT_RELAYER
+  POLKA_BTC_DOC_START_TREASURE_HUNT,
+  POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT,
+  POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER
 } from 'config/links';
 import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
 import { CHALLENGE_CUT_OFFS } from 'config/challenges';
@@ -68,7 +68,7 @@ const CHALLENGE_ITEMS = [
   {
     title: 'leaderboard.challenges.treasure_hunt',
     content: 'leaderboard.challenges.treasure_hunt_desc',
-    contentLink: POLKA_BTC_DOC_TREASURE_HUNT
+    contentLink: POLKA_BTC_DOC_START_TREASURE_HUNT
   },
   {
     title: 'leaderboard.challenges.vault_treasure_hunt',
@@ -78,7 +78,7 @@ const CHALLENGE_ITEMS = [
         height={20} />
     ),
     content: 'leaderboard.challenges.vault_treasure_hunt_desc',
-    contentLink: POLKA_BTC_DOC_TREASURE_HUNT_VAULT
+    contentLink: POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT
   },
   {
     title: 'leaderboard.challenges.relayer_treasure_hunt',
@@ -88,7 +88,7 @@ const CHALLENGE_ITEMS = [
         height={20} />
     ),
     content: 'leaderboard.challenges.relayer_treasure_hunt_desc',
-    contentLink: POLKA_BTC_DOC_TREASURE_HUNT_RELAYER
+    contentLink: POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER
   },
   {
     title: 'leaderboard.challenges.vaults_relayers',
@@ -139,26 +139,30 @@ function Challenges() {
 
   return (
     <MainContainer>
-      <div className='dashboard-container dashboard-fade-in-animation dashboard-min-height'>
+      <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
           <PageTitle mainTitle={t('leaderboard.challenges_title')} />
           <CardList>
-            {CHALLENGE_ITEMS.map(cardItem => (
-              <Card key={cardItem.title}>
-                <CardHeader>
-                  {t(cardItem.title)}
-                  {cardItem.titleIcon}
+            {CHALLENGE_ITEMS.map(challengeItem => (
+              <Card key={challengeItem.title}>
+                <CardHeader className='flex'>
+                  {t(challengeItem.title)}
+                  {challengeItem.titleIcon}
                 </CardHeader>
                 <CardContent>
-                  {t(cardItem.content)}
-                  {cardItem.contentLink && (
+                  {t(challengeItem.content)}
+                  {challengeItem.contentLink && (
                     <InterlayLink
-                      href={cardItem.contentLink}
+                      className={clsx(
+                        'inline-flex',
+                        'items-center',
+                        'space-x-1',
+                        'ml-1'
+                      )}
+                      href={challengeItem.contentLink}
                       target='_blank'
                       rel='noopener noreferrer'>
-                      &nbsp;
-                      {t('leaderboard.more_info')}
-                      &nbsp;
+                      <span>{t('leaderboard.more_info')}</span>
                       <FaExternalLinkAlt />
                     </InterlayLink>
                   )}

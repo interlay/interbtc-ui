@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { safeRoundTwoDecimals } from '../../../common/utils/utils';
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
+import clsx from 'clsx';
 
 type CollateralizationProps = {
   linkButton?: boolean;
@@ -86,7 +87,13 @@ export default function Collateralization({ linkButton }: CollateralizationProps
         <div
           className='status-circle border-interlayBlue'
           id='relay-circle'>
-          <h1 className='h1-xl-text-center text-interlayBlue'>
+          <h1
+            className={clsx(
+              'h1-xl',
+              'text-3xl',
+              'text-interlayBlue',
+              'text-center'
+            )}>
             {failed ? t('no_data') :
               [
                 issuablePolkaBTC === '0' ? t('loading') : safeRoundTwoDecimals(issuablePolkaBTC) + ' PolkaBTC',

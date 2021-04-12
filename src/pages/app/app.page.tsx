@@ -38,7 +38,7 @@ function Application() {
   useUpdateRedeemRequests(0, 100, 10000);
 
   return (
-    <MainContainer className='text-center white-background min-vh-100 app-page'>
+    <MainContainer className='text-center white-background app-page'>
       <div
         className={clsx(
           'container',

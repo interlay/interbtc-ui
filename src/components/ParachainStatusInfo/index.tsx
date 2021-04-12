@@ -13,7 +13,9 @@ const ParachainStatusInfo = ({ status }: Props) => {
   case ParachainStatus.Loading:
     return (
       <div className='wizard-input-info'>
-        <p style={{ fontSize: '16px' }}>
+        <p
+          className='mb-4'
+          style={{ fontSize: '16px' }}>
           {t('polkabtc_bridge_loading')}
         </p>
       </div>
@@ -31,7 +33,9 @@ const ParachainStatusInfo = ({ status }: Props) => {
           }}>
           {t('issue_redeem_disabled')}
         </p>
-        <p style={{ fontSize: '16px' }}>
+        <p
+          className='mb-4'
+          style={{ fontSize: '16px' }}>
           {t('polkabtc_bridge_recovery_mode')}
         </p>
       </div>

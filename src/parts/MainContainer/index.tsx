@@ -8,7 +8,6 @@ const MainContainer = ({
 }: React.ComponentPropsWithRef<'div'>) => (
   <div
     className={clsx(
-      'min-h-screen',
       'py-7',
       'xl:py-10',
       className
