@@ -6,7 +6,7 @@ import {
 
 import { Button, ButtonProps } from './Button';
 
-const Template: Story<ButtonProps> = (args: ButtonProps) => <Button {...args} />;
+const Template: Story<ButtonProps> = args => <Button {...args} />;
 
 const Primary = Template.bind({});
 Primary.args = {

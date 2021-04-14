@@ -7,7 +7,7 @@ import {
 import { Page, PageProps } from './Page';
 import * as HeaderStories from './Header.stories';
 
-const Template: Story<PageProps> = (args: PageProps) => <Page {...args} />;
+const Template: Story<PageProps> = args => <Page {...args} />;
 
 const LoggedIn = Template.bind({});
 LoggedIn.args = {

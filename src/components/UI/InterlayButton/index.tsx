@@ -17,17 +17,18 @@ const COLORS = Object.freeze({
 const COLOR_VALUES = Object.values(COLORS);
 const VARIANT_VALUES = Object.values(VARIANTS);
 
-interface Props {
+interface CustomProps {
   variant?: typeof VARIANT_VALUES[number];
   color?: typeof COLOR_VALUES[number];
 }
 
 const InterlayButton = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   variant = VARIANTS.text, // TODO: should add variant based behaviors
   color = COLORS.default,
   className,
   ...rest
-}: Props & React.ComponentPropsWithRef<'button'>): JSX.Element => (
+}: CustomProps & React.ComponentPropsWithRef<'button'>): JSX.Element => (
   <button
     type='button'
     className={clsx(
@@ -56,5 +57,7 @@ const InterlayButton = ({
     )}
     {...rest} />
 );
+
+export type Props = CustomProps & React.ComponentPropsWithRef<'button'>;
 
 export default InterlayButton;

@@ -6,7 +6,7 @@ import {
 
 import { Header, HeaderProps } from './Header';
 
-const Template: Story<HeaderProps> = (args: HeaderProps) => <Header {...args} />;
+const Template: Story<HeaderProps> = args => <Header {...args} />;
 
 const LoggedIn = Template.bind({});
 LoggedIn.args = {
