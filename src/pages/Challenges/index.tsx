@@ -116,7 +116,7 @@ const TAB_KEYS = Object.freeze({
   STAKED_RELAYER: 'staked-relayer'
 });
 
-function Challenges() {
+function Challenges(): JSX.Element {
   // TODO: should be persisted using query parameters
   const [challengeId, setChallengeId] = useState(challengeCutOffs[0].id ?? null);
   // TODO: should be persisted using query parameters

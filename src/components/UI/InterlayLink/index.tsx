@@ -8,7 +8,7 @@ const InterlayLink = ({
   className,
   children,
   ...rest
-}: React.ComponentPropsWithRef<'a'>) => (
+}: React.ComponentPropsWithRef<'a'>): JSX.Element => (
   <a
     className={clsx(
       styles['interlay-link'],

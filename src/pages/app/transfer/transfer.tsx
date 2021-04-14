@@ -20,7 +20,7 @@ type TransferForm = {
     address: string;
 };
 
-export default function Transfer() {
+export default function Transfer(): JSX.Element {
   const { t } = useTranslation();
   const senderAddress = useSelector((state: StoreType) => state.general.address);
   const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
@@ -169,6 +169,7 @@ export default function Transfer() {
             { img: PlasmLogo, text: 'Plasm' }
           ].map(data =>
             <Button
+              key={data.text}
               variant='light'
               className={clsx(
                 'flex',

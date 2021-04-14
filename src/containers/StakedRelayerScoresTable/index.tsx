@@ -1,5 +1,6 @@
 
 // TODO: should type properly
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import {
   useMemo,
@@ -51,7 +52,7 @@ interface PatchedRelayerData extends Omit<RelayerData, 'lifetime_sla'> {
 
 const StakedRelayerScoresTable = ({
   challengeTime
-}: Props) => {
+}: Props): JSX.Element => {
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
   const statsApi = usePolkabtcStats();
   const [data, setData] = useState<(PatchedRelayerData)[]>([]);
@@ -162,8 +163,10 @@ const StakedRelayerScoresTable = ({
         <InterlayTable {...getTableProps()}>
           <InterlayThead>
             {headerGroups.map(headerGroup => (
+              // eslint-disable-next-line react/jsx-key
               <InterlayTr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => (
+                  // eslint-disable-next-line react/jsx-key
                   <InterlayTh
                     {...column.getHeaderProps([
                       {
@@ -191,9 +194,11 @@ const StakedRelayerScoresTable = ({
               prepareRow(row);
 
               return (
+                // eslint-disable-next-line react/jsx-key
                 <InterlayTr {...row.getRowProps()}>
                   {row.cells.map(cell => {
                     return (
+                      // eslint-disable-next-line react/jsx-key
                       <InterlayTd
                         {...cell.getCellProps([
                           {

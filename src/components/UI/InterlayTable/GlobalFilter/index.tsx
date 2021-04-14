@@ -1,6 +1,8 @@
-
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 // TODO: should type properly
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+
 import * as React from 'react';
 import { useAsyncDebounce } from 'react-table';
 import clsx from 'clsx';

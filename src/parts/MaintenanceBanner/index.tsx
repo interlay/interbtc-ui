@@ -15,7 +15,7 @@ interface Message {
 }
 
 // TODO: make this easily modifiable by having a list of maintenance elements somewhere else
-function MaintenanceBanner() {
+function MaintenanceBanner(): JSX.Element | null {
   const { t } = useTranslation();
   const now = Date.now();
 

@@ -10,7 +10,7 @@ interface Props {
 const Card = ({
   twStyle,
   ...rest
-}: Props & React.ComponentPropsWithRef<'li'>) => (
+}: Props & React.ComponentPropsWithRef<'li'>): JSX.Element => (
   <li
     // TODO: hardcoded
     style={{ minHeight: 128 }}
@@ -38,7 +38,7 @@ const CardHeader = ({
   className,
   children,
   ...rest
-}: React.ComponentPropsWithRef<'h2'>) => (
+}: React.ComponentPropsWithRef<'h2'>): JSX.Element => (
   <h6
     className={clsx(
       'text-base',
@@ -51,14 +51,14 @@ const CardHeader = ({
   </h6>
 );
 
-const CardContent = (props: React.ComponentPropsWithRef<'div'>) => (
+const CardContent = (props: React.ComponentPropsWithRef<'div'>): JSX.Element => (
   <div {...props} />
 );
 
 const CardList = ({
   className,
   ...rest
-}: React.ComponentPropsWithRef<'ul'>) => (
+}: React.ComponentPropsWithRef<'ul'>): JSX.Element => (
   <ul
     className={clsx(
       'lg:flex',

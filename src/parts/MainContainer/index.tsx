@@ -5,7 +5,7 @@ import clsx from 'clsx';
 const MainContainer = ({
   className,
   ...rest
-}: React.ComponentPropsWithRef<'div'>) => (
+}: React.ComponentPropsWithRef<'div'>): JSX.Element => (
   <div
     className={clsx(
       'py-7',

@@ -12,7 +12,7 @@ const InterlayRouterLink = ({
   className,
   children,
   ...rest
-}: LinkProps) => (
+}: LinkProps): JSX.Element => (
   <Link
     className={clsx(
       styles['interlay-link'],

@@ -19,7 +19,7 @@ const Tab = ({
   tabType,
   selectedTabType,
   children
-}: TabProps) => {
+}: TabProps): JSX.Element => {
   const dispatch = useDispatch();
 
   // TODO: should use query parameter instead of redux
@@ -55,7 +55,7 @@ interface HorizontalLineProps {
   selectedTabType: TabTypes;
 }
 
-const HorizontalLine = ({ selectedTabType }: HorizontalLineProps) => (
+const HorizontalLine = ({ selectedTabType }: HorizontalLineProps): JSX.Element => (
   <hr
     className={clsx(
       'border-t-2',
@@ -67,7 +67,7 @@ const HorizontalLine = ({ selectedTabType }: HorizontalLineProps) => (
 );
 
 // TODO: could be simpler using a library
-const Tabs = ({ children }: Props) => (
+const Tabs = ({ children }: Props): JSX.Element => (
   <div
     className={clsx(
       'flex',

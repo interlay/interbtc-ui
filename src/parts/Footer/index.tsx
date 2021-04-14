@@ -45,6 +45,7 @@ import {
 } from 'assets/img/polkabtc/web3-foundation-grants-badge.svg';
 import styles from './footer.module.css';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJson = require('../../../package.json');
 
 const FOOTER_COLUMNS = [
@@ -215,6 +216,7 @@ const ColumnListItem = (props: React.ComponentPropsWithRef<'li'>) => (
 type Ref = HTMLDivElement;
 type Props = React.ComponentPropsWithRef<'footer'>;
 
+// eslint-disable-next-line react/display-name
 const Footer = React.forwardRef<Ref, Props>(({
   className,
   ...rest
@@ -248,13 +250,15 @@ const Footer = React.forwardRef<Ref, Props>(({
             const columnListItems = footerColumn.listItems;
 
             return (
-              <Column className='space-y-3.5'>
+              <Column
+                key={columnTitle}
+                className='space-y-3.5'>
                 <ColumnTitle>
                   {t(columnTitle)}
                 </ColumnTitle>
                 <ColumnList className='space-y-3.5'>
                   {columnListItems.map(columnListItem => (
-                    <ColumnListItem>
+                    <ColumnListItem key={columnListItem.title}>
                       <InterlayLink
                         href={columnListItem.link}
                         target='_blank'
@@ -275,6 +279,7 @@ const Footer = React.forwardRef<Ref, Props>(({
               )}>
               {SOCIAL_PLATFORM_ITEMS.map(socialPlatformItem => (
                 <InterlayLink
+                  key={socialPlatformItem.link}
                   className={clsx(
                     'border',
                     'border-black',
@@ -327,6 +332,7 @@ const Footer = React.forwardRef<Ref, Props>(({
             )}>
             {FOOTER_BOTTOM_ITEMS.map(footerBottomItem => (
               <li
+                key={footerBottomItem.title}
                 className={clsx(
                   styles['footer-bottom-item'],
                   'text-sm'

@@ -13,7 +13,7 @@ interface Props {
 const Balances = ({
   balancePolkaBTC,
   balanceDOT
-}: Props) => {
+}: Props): JSX.Element => {
   const roundedBalanceDot = safeRoundFiveDecimals(balanceDOT);
 
   return (

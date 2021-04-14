@@ -37,7 +37,7 @@ import LineChartComponent from '../components/line-chart-component';
 import '../dashboard.page.scss';
 import '../dashboard-subpage.scss';
 
-function RedeemDashboard() {
+function RedeemDashboard(): JSX.Element {
   const {
     polkaBtcLoaded,
     prices
@@ -71,21 +71,22 @@ function RedeemDashboard() {
   ]);
 
   const tableHeadings: ReactElement[] = [
-    <h1>{t('date')}</h1>,
-    <h1>{t('redeem_page.amount')}</h1>,
-    <h1>{t('parachainblock')}</h1>,
-    <h1>{t('issue_page.vault_dot_address')}</h1>,
-    <h1>{t('redeem_page.output_BTC_address')}</h1>,
-    <h1>{t('status')}</h1>
+    <h1 key={1}>{t('date')}</h1>,
+    <h1 key={2}>{t('redeem_page.amount')}</h1>,
+    <h1 key={3}>{t('parachainblock')}</h1>,
+    <h1 key={4}>{t('issue_page.vault_dot_address')}</h1>,
+    <h1 key={5}>{t('redeem_page.output_BTC_address')}</h1>,
+    <h1 key={6}>{t('status')}</h1>
   ];
 
   const tableRedeemRequestRow = useMemo(
     () => (rreq: DashboardRequestInfo): ReactElement[] => [
-      <p>{formatDateTimePrecise(new Date(rreq.timestamp))}</p>,
-      <p>{rreq.amountPolkaBTC}</p>,
-      <p>{rreq.creation}</p>,
-      <p>{shortAddress(rreq.vaultDotAddress)}</p>,
+      <p key={1}>{formatDateTimePrecise(new Date(rreq.timestamp))}</p>,
+      <p key={2}>{rreq.amountPolkaBTC}</p>,
+      <p key={3}>{rreq.creation}</p>,
+      <p key={4}>{shortAddress(rreq.vaultDotAddress)}</p>,
       <StyledLinkData
+        key={5}
         data={shortAddress(rreq.btcAddress)}
         target={
           (constants.BTC_MAINNET ?
@@ -94,6 +95,7 @@ function RedeemDashboard() {
         }
         newTab={true} />,
       <StatusComponent
+        key={6}
         {...(rreq.completed ?
           { text: t('completed'), category: StatusCategories.Ok } :
           rreq.cancelled ?

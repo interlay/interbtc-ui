@@ -17,7 +17,7 @@ const InterlayInput = ({
   color = COLORS.primary,
   className,
   ...rest
-}: Props & React.ComponentPropsWithRef<'input'>) => (
+}: Props & React.ComponentPropsWithRef<'input'>): JSX.Element => (
   <input
     type='text'
     className={clsx(

@@ -47,7 +47,7 @@ type EnterBTCForm = {
   amountPolkaBTC: string;
 }
 
-function EnterBTCAmount() {
+function EnterBTCAmount(): JSX.Element {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 

@@ -3,7 +3,7 @@ import RedeemInfo from './redeem-info';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
 
-export default function RedeemSteps() {
+export default function RedeemSteps(): JSX.Element {
   const step = useSelector((state: StoreType) => state.redeem.step);
 
   return (

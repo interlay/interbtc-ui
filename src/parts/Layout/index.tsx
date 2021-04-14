@@ -18,7 +18,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const Layout = ({ children }: Props) => {
+const Layout = ({ children }: Props): JSX.Element => {
   const address = useSelector((state: StoreType) => state.general.address);
   const location = useLocation();
   const [ref, { height: footerHeight }] = useMeasure<HTMLDivElement>();

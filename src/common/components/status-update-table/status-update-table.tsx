@@ -141,6 +141,7 @@ export default function StatusUpdateTable(props: StatusUpdateTableProps): ReactE
       <MessageModal
         show={showMessageModal}
         onClose={handleClose}
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         statusUpdate={statusUpdate!} />
       <div>
         <p
