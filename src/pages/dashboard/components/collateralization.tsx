@@ -97,6 +97,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
             {failed ? t('no_data') :
               [
                 issuablePolkaBTC === '0' ? t('loading') : safeRoundTwoDecimals(issuablePolkaBTC) + ' PolkaBTC',
+                // eslint-disable-next-line react/jsx-key
                 <br />, t('dashboard.vault.capacity')
               ]
             }

@@ -16,7 +16,7 @@ import ActiveStakedRelayers from './components/active-staked-relayers';
 import ActiveCollators from './components/active-collators';
 import './dashboard.page.scss';
 
-function Dashboard() {
+function Dashboard(): JSX.Element {
   const { t } = useTranslation();
 
   return (

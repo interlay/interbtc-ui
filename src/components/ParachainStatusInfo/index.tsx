@@ -6,7 +6,7 @@ interface Props {
   status: ParachainStatus
 }
 
-const ParachainStatusInfo = ({ status }: Props) => {
+const ParachainStatusInfo = ({ status }: Props): JSX.Element => {
   const { t } = useTranslation();
 
   switch (status) {

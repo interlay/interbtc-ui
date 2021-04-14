@@ -37,7 +37,7 @@ import * as constants from '../../../constants';
 import '../dashboard.page.scss';
 import '../dashboard-subpage.scss';
 
-function IssueDashboard() {
+function IssueDashboard(): JSX.Element {
   const {
     totalPolkaBTC,
     prices
@@ -93,21 +93,22 @@ function IssueDashboard() {
   );
 
   const tableHeadings = [
-    <h1>{t('date')}</h1>,
-    <h1>{t('issue_page.amount')}</h1>,
-    <h1>{t('issue_page.parachain_block')}</h1>,
-    <h1>{t('issue_page.vault_dot_address')}</h1>,
-    <h1>{t('issue_page.vault_btc_address')}</h1>,
-    <h1>{t('status')}</h1>
+    <h1 key={1}>{t('date')}</h1>,
+    <h1 key={2}>{t('issue_page.amount')}</h1>,
+    <h1 key={3}>{t('issue_page.parachain_block')}</h1>,
+    <h1 key={4}>{t('issue_page.vault_dot_address')}</h1>,
+    <h1 key={5}>{t('issue_page.vault_btc_address')}</h1>,
+    <h1 key={6}>{t('status')}</h1>
   ];
 
   const tableIssueRequestRow = useMemo(
     () => (ireq: DashboardIssueInfo): ReactElement[] => [
-      <p>{formatDateTimePrecise(new Date(ireq.timestamp))}</p>,
-      <p>{ireq.amountBTC}</p>,
-      <p>{ireq.creation}</p>,
-      <p>{shortAddress(ireq.vaultDOTAddress)}</p>,
+      <p key={1}>{formatDateTimePrecise(new Date(ireq.timestamp))}</p>,
+      <p key={2}>{ireq.amountBTC}</p>,
+      <p key={3}>{ireq.creation}</p>,
+      <p key={4}>{shortAddress(ireq.vaultDOTAddress)}</p>,
       <StyledLinkData
+        key={5}
         data={shortAddress(ireq.vaultBTCAddress)}
         target={
           (constants.BTC_MAINNET ?
@@ -116,6 +117,7 @@ function IssueDashboard() {
         }
         newTab={true} />,
       <StatusComponent
+        key={6}
         {...(ireq.completed ?
           { text: t('completed'), category: StatusCategories.Ok } :
           ireq.cancelled ?

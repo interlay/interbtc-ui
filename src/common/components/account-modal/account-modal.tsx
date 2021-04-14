@@ -1,5 +1,4 @@
 
-import { ReactElement } from 'react';
 import {
   Button,
   Modal
@@ -26,7 +25,7 @@ const POLKADOT_EXTENSION = 'https://polkadot.js.org/extension/';
 function AccountModal({
   selectAccount,
   selectedAccount
-}: Props): ReactElement {
+}: Props): JSX.Element {
   const {
     showAccountModal,
     accounts,

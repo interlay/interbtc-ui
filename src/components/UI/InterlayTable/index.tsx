@@ -6,7 +6,7 @@ import clsx from 'clsx';
 const InterlayTableContainer = ({
   className,
   ...rest
-}: React.ComponentPropsWithRef<'div'>) => (
+}: React.ComponentPropsWithRef<'div'>): JSX.Element => (
   <div
     className={clsx(
       'overflow-x-auto',
@@ -18,7 +18,7 @@ const InterlayTableContainer = ({
 const InterlayTable = ({
   className,
   ...rest
-}: React.ComponentPropsWithRef<'table'>) => (
+}: React.ComponentPropsWithRef<'table'>): JSX.Element => (
   <table
     className={clsx(
       'w-full',
@@ -27,18 +27,18 @@ const InterlayTable = ({
     {...rest} />
 );
 
-const InterlayThead = (props: React.ComponentPropsWithRef<'thead'>) => (
+const InterlayThead = (props: React.ComponentPropsWithRef<'thead'>): JSX.Element => (
   <thead {...props} />
 );
 
-const InterlayTbody = (props: React.ComponentPropsWithRef<'tbody'>) => (
+const InterlayTbody = (props: React.ComponentPropsWithRef<'tbody'>): JSX.Element => (
   <tbody {...props} />
 );
 
 const InterlayTr = ({
   className,
   ...rest
-}: React.ComponentPropsWithRef<'tr'>) => (
+}: React.ComponentPropsWithRef<'tr'>): JSX.Element => (
   <tr
     className={clsx(
       'border-b',
@@ -56,7 +56,7 @@ const InterlayTr = ({
 const InterlayTh = ({
   className,
   ...rest
-}: React.ComponentPropsWithRef<'th'>) => (
+}: React.ComponentPropsWithRef<'th'>): JSX.Element => (
   <th
     className={clsx(
       'text-textSecondary',
@@ -70,7 +70,7 @@ const InterlayTh = ({
 const InterlayTd = ({
   className,
   ...rest
-}: React.ComponentPropsWithRef<'td'>) => (
+}: React.ComponentPropsWithRef<'td'>): JSX.Element => (
   <td
     className={clsx(
       'h-12',

@@ -11,7 +11,7 @@ const ButtonMaybePending = ({
   disabled,
   children,
   ...rest
-}: Props & ButtonProps) => (
+}: Props & ButtonProps): JSX.Element => (
   <Button
     disabled={isPending || disabled}
     {...rest}>

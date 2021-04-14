@@ -46,7 +46,7 @@ const FEEDBACK_ITEMS = [
   }
 ];
 
-const Feedback = () => (
+const Feedback = (): JSX.Element => (
   <>
     {/* TODO: should use footer layout pattern */}
     <MainContainer>

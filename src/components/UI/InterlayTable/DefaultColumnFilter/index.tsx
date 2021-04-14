@@ -1,14 +1,16 @@
-
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 // TODO: should type properly
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-function DefaultColumnFilter({
+
+const DefaultColumnFilter = ({
   column: {
     filterValue,
     preFilteredRows,
     setFilter
   },
   placeholder
-}) {
+}): JSX.Element => {
   const count = preFilteredRows.length;
 
   return (
@@ -22,6 +24,6 @@ function DefaultColumnFilter({
       }}
       placeholder={placeholder || `Search ${count} records...`} />
   );
-}
+};
 
 export default DefaultColumnFilter;

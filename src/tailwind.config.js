@@ -1,8 +1,11 @@
 // TODO: should type properly
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const plugin = require('tailwindcss/plugin');
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const colors = require('tailwindcss/colors');
 
 // MEMO: inspired by https://javisperez.github.io/tailwindcolorshades

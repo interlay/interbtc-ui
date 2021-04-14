@@ -21,7 +21,7 @@ type RequestReplacementProps = {
   show: boolean;
 };
 
-export default function RequestReplacementModal(props: RequestReplacementProps) {
+export default function RequestReplacementModal(props: RequestReplacementProps): JSX.Element {
   const { register, handleSubmit, errors } = useForm<RequestReplacementForm>();
   const dispatch = useDispatch();
   const { address } = useSelector((state: StoreType) => state.general);

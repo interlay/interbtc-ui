@@ -143,7 +143,7 @@ const requestsInStore = (
   return inStore;
 };
 
-const copyToClipboard = (text: string) => {
+const copyToClipboard = (text: string): void => {
   navigator.clipboard.writeText(text);
 };
 

@@ -1,37 +1,33 @@
 module.exports = {
+  parser: '@typescript-eslint/parser',
+  plugins: [
+    '@typescript-eslint',
+    'react',
+    'import'
+    // "prettier"
+  ],
+  extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended',
+    // TODO: double-check
+    // "plugin:prettier/recommended",
+    // "prettier"
+    'react-app',
+    'react-app/jest',
+    'google'
+  ],
   env: {
     browser: true,
     es2020: true,
     jest: true,
     node: true
   },
-  extends: [
-    'eslint:recommended',
-    'react-app',
-    'react-app/jest',
-    'google'
-    // TODO: double-check
-    // "plugin:@typescript-eslint/recommended",
-    // "plugin:prettier/recommended",
-    // "prettier"
-  ],
-  // TODO: double-check
-  // "parser": "@typescript-eslint/parser",
-  parserOptions: {
-    ecmaVersion: 11,
-    sourceType: 'module',
-    parser: 'babel-eslint',
-    ecmaFeatures: {
-      jsx: true
+  settings: {
+    react: {
+      version: 'detect'
     }
   },
-  plugins: [
-    'react',
-    'import'
-    // TODO: double-check
-    // "@typescript-eslint",
-    // "prettier"
-  ],
   rules: {
     // ESLinting rules
     'comma-dangle': [
@@ -113,6 +109,8 @@ module.exports = {
     ],
 
     // React ESLinting rules
+    'react/jsx-uses-react': 'off',
+    'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
     'react/jsx-first-prop-new-line': [
       'error',

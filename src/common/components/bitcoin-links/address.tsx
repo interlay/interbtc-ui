@@ -7,7 +7,7 @@ export default class BitcoinAddress extends React.Component<{
   btcAddress: string;
   shorten?: boolean;
 }> {
-  render() {
+  render(): JSX.Element {
     return (
       <InterlayLink
         href={

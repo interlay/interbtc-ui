@@ -144,9 +144,9 @@ export default function VaultTable(): ReactElement {
   ]);
 
   const tableHeadings: ReactElement[] = [
-    <h1>{t('account_id')}</h1>,
-    <h1>{t('locked_dot')}</h1>,
-    <h1>{t('locked_btc')}</h1>,
+    <h1 key={1}>{t('account_id')}</h1>,
+    <h1 key={2}>{t('locked_dot')}</h1>,
+    <h1 key={3}>{t('locked_btc')}</h1>,
     <>
       <h1>{t('pending_btc')}</h1> &nbsp;
       <InterlayTooltip overlay={t('vault.tip_pending_btc')}>
@@ -159,7 +159,7 @@ export default function VaultTable(): ReactElement {
         <i className='far fa-question-circle' />
       </InterlayTooltip>
     </>,
-    <h1>{t('status')}</h1>
+    <h1 key={4}>{t('status')}</h1>
   ];
 
   const tableVaultRow = useMemo(() => {
@@ -218,12 +218,16 @@ export default function VaultTable(): ReactElement {
     };
 
     return (vault: Vault): ReactElement[] => [
-      <p>{shortAddress(vault.vaultId)}</p>,
-      <p>{vault.lockedDOT}</p>,
-      <p>{vault.lockedBTC}</p>,
-      <p>{vault.pendingBTC}</p>,
-      <p>{showCollateralizations(vault)}</p>,
-      <p className={getStatusColor(vault.status)}>{vault.status}</p>
+      <p key={1}>{shortAddress(vault.vaultId)}</p>,
+      <p key={2}>{vault.lockedDOT}</p>,
+      <p key={3}>{vault.lockedBTC}</p>,
+      <p key={4}>{vault.pendingBTC}</p>,
+      <p key={5}>{showCollateralizations(vault)}</p>,
+      <p
+        key={6}
+        className={getStatusColor(vault.status)}>
+        {vault.status}
+      </p>
     ];
   }, [auctionCollateralThreshold, secureCollateralThreshold, t]);
 

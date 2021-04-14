@@ -9,7 +9,7 @@ interface Props {
 }
 
 // TODO: should add validation & UX
-const SubscribeForm = ({ endpoint }: Props) => (
+const SubscribeForm = ({ endpoint }: Props): JSX.Element => (
   <form
     className={clsx(
       'flex',

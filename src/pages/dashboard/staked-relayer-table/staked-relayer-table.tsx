@@ -30,12 +30,21 @@ export default function StakedRelayerTable(): ReactElement {
     })();
   }, [statsApi]);
 
-  const tableHeadings = [<h1>{t('account_id')}</h1>, <h1>{t('locked_dot')}</h1>, <h1>{t('status')}</h1>];
+  const tableHeadings = [
+    <h1 key={1}>{t('account_id')}</h1>,
+    <h1 key={2}>{t('locked_dot')}</h1>,
+    <h1 key={3}>{t('status')}</h1>
+  ];
 
   const relayersTableRow = (relayer: StakedRelayer): ReactElement[] => [
-    <p className='break-words'>{relayer.id}</p>,
-    <p>{relayer.stake}</p>,
+    <p
+      key={1}
+      className='break-words'>
+      {relayer.id}
+    </p>,
+    <p key={2}>{relayer.stake}</p>,
     <StatusComponent
+      key={3}
       {...(relayer.slashed ?
         { text: t('dashboard.parachain.slashed'), category: StatusCategories.Bad } :
         relayer.bonded ?

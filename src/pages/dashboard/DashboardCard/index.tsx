@@ -4,7 +4,7 @@ import clsx from 'clsx';
 const DashboardCard = ({
   className,
   ...rest
-}: React.ComponentPropsWithRef<'div'>) => (
+}: React.ComponentPropsWithRef<'div'>): JSX.Element => (
   <div
     // TODO: hardcoded
     style={{

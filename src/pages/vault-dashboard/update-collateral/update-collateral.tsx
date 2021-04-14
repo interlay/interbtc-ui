@@ -32,7 +32,7 @@ type UpdateCollateralProps = {
   status: CollateralUpdateStatus;
 };
 
-export default function UpdateCollateralModal(props: UpdateCollateralProps) {
+export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX.Element {
   const { polkaBtcLoaded, vaultClientLoaded, address } = useSelector((state: StoreType) => state.general);
   const { register, handleSubmit, errors } = useForm<UpdateCollateralForm>();
   // denoted in DOT

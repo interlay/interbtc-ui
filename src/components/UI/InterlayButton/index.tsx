@@ -27,7 +27,7 @@ const InterlayButton = ({
   color = COLORS.default,
   className,
   ...rest
-}: Props & React.ComponentPropsWithRef<'button'>) => (
+}: Props & React.ComponentPropsWithRef<'button'>): JSX.Element => (
   <button
     type='button'
     className={clsx(
