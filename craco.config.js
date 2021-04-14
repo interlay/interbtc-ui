@@ -1,5 +1,6 @@
 
 module.exports = {
+  // TODO: only for app
   style: {
     postcss: {
       plugins: [

@@ -197,6 +197,13 @@ Visualize the Tailwindcss configuration.
 yarn tailwind-config-viewer
 ```
 
+Locally Run or build Storybook.
+
+```bash
+yarn storybook # locally run
+yarn build-storybook # build
+```
+
 ## Help
 
 ### Bitcoin Regtest
