@@ -7,35 +7,18 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
-    // ray test touch <
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
-    // ray test touch >
     // TODO: double-check
-    // "plugin:@typescript-eslint/recommended",
     // "plugin:prettier/recommended",
     // "prettier"
     'react-app',
     'react-app/jest',
     'google'
   ],
-  // ray test touch <
-  // TODO: double-check
   parser: '@typescript-eslint/parser',
-  // parserOptions: {
-  //   ecmaVersion: 11,
-  //   sourceType: 'module',
-  //   parser: 'babel-eslint',
-  //   ecmaFeatures: {
-  //     jsx: true
-  //   }
-  // },
-  // ray test touch >
   plugins: [
-    // ray test touch <
-    // TODO: double-check
     '@typescript-eslint',
-    // ray test touch >
     'react',
     'import'
     // "prettier"
@@ -121,10 +104,8 @@ module.exports = {
     ],
 
     // React ESLinting rules
-    // ray test touch <
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
-    // ray test touch >
     'react/prop-types': 'off',
     'react/jsx-first-prop-new-line': [
       'error',
