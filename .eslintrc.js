@@ -1,10 +1,11 @@
 module.exports = {
-  env: {
-    browser: true,
-    es2020: true,
-    jest: true,
-    node: true
-  },
+  parser: '@typescript-eslint/parser',
+  plugins: [
+    '@typescript-eslint',
+    'react',
+    'import'
+    // "prettier"
+  ],
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
@@ -16,13 +17,17 @@ module.exports = {
     'react-app/jest',
     'google'
   ],
-  parser: '@typescript-eslint/parser',
-  plugins: [
-    '@typescript-eslint',
-    'react',
-    'import'
-    // "prettier"
-  ],
+  env: {
+    browser: true,
+    es2020: true,
+    jest: true,
+    node: true
+  },
+  settings: {
+    react: {
+      version: 'detect'
+    }
+  },
   rules: {
     // ESLinting rules
     'comma-dangle': [
