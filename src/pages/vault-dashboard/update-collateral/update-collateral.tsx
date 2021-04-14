@@ -12,14 +12,11 @@ import { useTranslation } from 'react-i18next';
 import { DOT } from '@interlay/polkabtc/build/interfaces';
 import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 
-// Commenting because moving this to last line casues 3 "used before it was defined" warnings
+// Commenting because moving this to last line causes 3 "used before it was defined" warnings
 // eslint-disable-next-line import/exports-last
 export enum CollateralUpdateStatus {
-  // eslint-disable-next-line no-unused-vars
   Hidden,
-  // eslint-disable-next-line no-unused-vars
   Increase,
-  // eslint-disable-next-line no-unused-vars
   Decrease
 }
 

@@ -43,14 +43,10 @@ import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg
 import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 import ParachainStatusInfo from 'components/ParachainStatusInfo';
 
-// eslint-disable-next-line no-unused-vars
 enum IssueState {
-  // eslint-disable-next-line no-unused-vars
   LOADING,
-  // eslint-disable-next-line no-unused-vars
   SUCCESS,
-  // eslint-disable-next-line no-unused-vars
-  ERROR,
+  ERROR
 }
 
 type EnterBTCForm = {

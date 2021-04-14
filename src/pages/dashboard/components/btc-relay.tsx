@@ -10,14 +10,10 @@ import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
 import clsx from 'clsx';
 
-// eslint-disable-next-line no-unused-vars
 enum Status {
-  // eslint-disable-next-line no-unused-vars
   Loading,
-  // eslint-disable-next-line no-unused-vars
   Ok,
-  // eslint-disable-next-line no-unused-vars
-  Failure,
+  Failure
 }
 
 type BtcRelayProps = {

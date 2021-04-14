@@ -4,14 +4,10 @@ import usePolkabtcStats from '../../../hooks/use-polkabtc-stats';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../types/util.types';
 
-// eslint-disable-next-line no-unused-vars
 enum Status {
-  // eslint-disable-next-line no-unused-vars
   Online,
-  // eslint-disable-next-line no-unused-vars
   Behind,
-  // eslint-disable-next-line no-unused-vars
-  NoData,
+  NoData
 }
 
 type RelayStatusChartProps = {
