@@ -1,6 +1,6 @@
 {
   "name": "polkabtc-ui",
-  "version": "1.7.2",
+  "version": "1.8.0",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.1",
