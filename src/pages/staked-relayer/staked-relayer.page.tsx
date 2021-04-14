@@ -5,7 +5,6 @@ import React, {
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import {
-  satToBTC,
   planckToDOT
 } from '@interlay/polkabtc';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +31,7 @@ import './staked-relayer.page.scss';
 // TODO: should fix by scoping only necessary CSS into a component
 import '../dashboard/dashboard-subpage.scss';
 
-function StakedRelayer() {
+function StakedRelayer(): JSX.Element {
   const [isDeregisterPending, setDeregisterPending] = useState(false);
   const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState('0');
   const [feesEarnedDOT, setFeesEarnedDOT] = useState('0');
@@ -88,13 +87,13 @@ function StakedRelayer() {
         const apyScore = await window.polkaBTC.stakedRelayer.getAPY(stakedRelayerId);
         setAPY(apyScore);
 
-        const feesPolkaSAT = await window.polkaBTC.stakedRelayer.getFeesPolkaBTC(
+        const feesPolkaBTC = await window.polkaBTC.stakedRelayer.getFeesPolkaBTC(
           stakedRelayerId
         );
-        setFeesEarnedPolkaBTC(satToBTC(feesPolkaSAT));
+        setFeesEarnedPolkaBTC(feesPolkaBTC.toString());
 
-        const feesPlanck = await window.polkaBTC.stakedRelayer.getFeesDOT(stakedRelayerId);
-        setFeesEarnedDOT(planckToDOT(feesPlanck));
+        const feesDOT = await window.polkaBTC.stakedRelayer.getFeesDOT(stakedRelayerId);
+        setFeesEarnedDOT(feesDOT.toString());
 
         setDotLocked(lockedDOT);
         setPlanckLocked(lockedPlanck);
@@ -138,7 +137,7 @@ function StakedRelayer() {
 
   return (
     <MainContainer className='staked-relayer-page'>
-      <div className='staked-container dashboard-fade-in-animation dashboard-min-height'>
+      <div className='staked-container dashboard-fade-in-animation'>
         <div className='stacked-wrapper'>
           <PageTitle
             mainTitle={t('relayer.staked_relayer_dashboard')}

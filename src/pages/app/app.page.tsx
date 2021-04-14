@@ -19,7 +19,7 @@ import { StoreType } from 'common/types/util.types';
 import { TabTypes } from 'utils/enums/tab-types';
 import './app.page.scss';
 
-function Application() {
+function Application(): JSX.Element {
   // TODO: should avoid getting the store bloated
   const { selectedTabType } = useSelector((state: StoreType) => state.general);
   const issueStep = useSelector((state: StoreType) => state.issue.step);
@@ -38,7 +38,7 @@ function Application() {
   useUpdateRedeemRequests(0, 100, 10000);
 
   return (
-    <MainContainer className='text-center white-background min-vh-100 app-page'>
+    <MainContainer className='text-center white-background app-page'>
       <div
         className={clsx(
           'container',

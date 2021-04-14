@@ -4,15 +4,18 @@ import clsx from 'clsx';
 const DashboardCard = ({
   className,
   ...rest
-}: React.ComponentPropsWithRef<'div'>) => (
+}: React.ComponentPropsWithRef<'div'>): JSX.Element => (
   <div
+    // TODO: hardcoded
+    style={{
+      minHeight: 384
+    }}
     className={clsx(
-      'dashboard-card',
-      'h-96',
+      'dashboard-card', // TODO: should remove this global CSS class
       'px-5',
       'py-4',
       'xl:py-7',
-      'shadow-md',
+      'shadow',
       // MEMO: bootstrap card style
       'relative',
       'flex',

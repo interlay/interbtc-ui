@@ -10,7 +10,7 @@ interface Props {
 const SortByContainer = ({
   className,
   ...rest
-}: React.ComponentPropsWithRef<'div'>) => (
+}: React.ComponentPropsWithRef<'div'>): JSX.Element => (
   <div
     className={clsx(
       'flex',
@@ -23,7 +23,7 @@ const SortByContainer = ({
 const SortBy = ({
   isSorted,
   isSortedDesc
-}: Props) => (
+}: Props): JSX.Element => (
   <span
     // TODO: could extend `before` & `after` variants in the tailwindcss theme
     className={clsx(

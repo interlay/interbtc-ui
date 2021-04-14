@@ -35,7 +35,7 @@ function IssueRequests(): ReactElement {
     switch (status) {
     case IssueRequestStatus.RequestedRefund:
     case IssueRequestStatus.Completed: {
-      return <FaCheck></FaCheck>;
+      return <FaCheck />;
     }
     case IssueRequestStatus.Cancelled:
     case IssueRequestStatus.Expired: {
@@ -48,7 +48,7 @@ function IssueRequests(): ReactElement {
       );
     }
     default: {
-      return <FaHourglass></FaHourglass>;
+      return <FaHourglass />;
     }
     }
   };
@@ -67,8 +67,17 @@ function IssueRequests(): ReactElement {
       )}>
       {issueRequests?.length > 0 && (
         <>
-          <h5>{t('issue_requests')}</h5>
-          <p>{t('issue_page.click_on_issue_request')}</p>
+          <h5
+            className={clsx(
+              'font-bold',
+              'text-xl',
+              'mb-2'
+            )}>
+            {t('issue_requests')}
+          </h5>
+          <p className='mb-4'>
+            {t('issue_page.click_on_issue_request')}
+          </p>
           <Table
             hover
             responsive

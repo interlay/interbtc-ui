@@ -17,10 +17,10 @@ import { StoreType } from 'common/types/util.types';
 import * as constants from '../constants';
 
 const useUpdateRedeemRequests = (
-  page: number = 0,
-  limit: number = 15,
-  delay: number = 10000
-) => {
+  page = 0,
+  limit = 15,
+  delay = 10000
+): void => {
   const {
     address,
     bitcoinHeight,

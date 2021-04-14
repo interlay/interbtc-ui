@@ -5,7 +5,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const InterlayContainer = ({ children }: Props) => (
+const InterlayContainer = ({ children }: Props): JSX.Element => (
   <div
     className={clsx(
       'w-full',

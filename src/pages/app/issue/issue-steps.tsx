@@ -3,7 +3,7 @@ import BTCPayment from './btc-payment';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
 
-export default function IssueSteps() {
+export default function IssueSteps(): JSX.Element {
   const step = useSelector((state: StoreType) => state.issue.step);
 
   return (

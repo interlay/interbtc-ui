@@ -28,19 +28,20 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
   }, [statsApi]);
 
   const tableHeadings = [
-    <h1>{t('source')}</h1>,
-    <h1>{t('feed')}</h1>,
-    <h1>{t('last_update')}</h1>,
-    <h1>{t('exchange_rate')}</h1>,
-    <h1>{t('status')}</h1>
+    <h1 key={1}>{t('source')}</h1>,
+    <h1 key={2}>{t('feed')}</h1>,
+    <h1 key={3}>{t('last_update')}</h1>,
+    <h1 key={4}>{t('exchange_rate')}</h1>,
+    <h1 key={5}>{t('status')}</h1>
   ];
 
   const oracleTableRow = (oracle: OracleStatus): ReactElement[] => [
-    <p>{oracle.source}</p>,
-    <p>{oracle.feed}</p>,
-    <p>{oracle.lastUpdate}</p>,
-    <p> 1 BTC = {new Big(oracle.exchangeRate).toFixed(5)} DOT</p>,
+    <p key={1}>{oracle.source}</p>,
+    <p key={2}>{oracle.feed}</p>,
+    <p key={3}>{oracle.lastUpdate}</p>,
+    <p key={4}> 1 BTC = {new Big(oracle.exchangeRate).toFixed(5)} DOT</p>,
     <StatusComponent
+      key={5}
       {...(oracle.online ?
         { text: t('online'), category: StatusCategories.Ok } :
         { text: t('offline'), category: StatusCategories.Bad })} />
@@ -52,6 +53,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
       className={(new BN(props.planckLocked) <= new BN(0) ? 'oracle-space' : '')}>
       <div>
         <p
+          className='mb-4'
           style={{
             fontWeight: 700,
             fontSize: '26px'

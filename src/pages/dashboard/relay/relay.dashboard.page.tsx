@@ -44,22 +44,23 @@ export default function RelayDashboard(): ReactElement {
   );
 
   const tableHeadings = [
-    <h1>{t('dashboard.relay.block_height')}</h1>,
-    <h1>{t('dashboard.relay.block_hash')}</h1>,
-    <h1>{t('dashboard.relay.timestamp')}</h1>
+    <h1 key={1}>{t('dashboard.relay.block_height')}</h1>,
+    <h1 key={2}>{t('dashboard.relay.block_hash')}</h1>,
+    <h1 key={3}>{t('dashboard.relay.timestamp')}</h1>
   ];
 
   const tableBlockRow = useMemo(
     () => (block: RelayedBlock): ReactElement[] => [
-      <p>{block.height}</p>,
+      <p key={1}>{block.height}</p>,
       <StyledLinkData
+        key={2}
         data={block.hash}
         target={
           (constants.BTC_MAINNET ? constants.BTC_EXPLORER_BLOCK_API : constants.BTC_TEST_EXPLORER_BLOCK_API) +
                     block.hash
         }
         newTab={true} />,
-      <p>{formatDateTimePrecise(new Date(block.relay_ts))}</p>
+      <p key={3}>{formatDateTimePrecise(new Date(block.relay_ts))}</p>
     ],
     []
   );
@@ -87,6 +88,7 @@ export default function RelayDashboard(): ReactElement {
             <div style={{ margin: '40px 0px' }}>
               <div>
                 <p
+                  className='mb-4'
                   style={{
                     fontWeight: 700,
                     fontSize: '26px'

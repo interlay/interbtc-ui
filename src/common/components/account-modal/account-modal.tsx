@@ -1,5 +1,4 @@
 
-import { ReactElement } from 'react';
 import {
   Button,
   Modal
@@ -26,7 +25,7 @@ const POLKADOT_EXTENSION = 'https://polkadot.js.org/extension/';
 function AccountModal({
   selectAccount,
   selectedAccount
-}: Props): ReactElement {
+}: Props): JSX.Element {
   const {
     showAccountModal,
     accounts,
@@ -56,7 +55,7 @@ function AccountModal({
           <>
             {/* Create a new account when no accounts are available */}
             {!accounts?.length && (
-              <p>
+              <p className='mb-4'>
                 {t('no_account')}
                 <InterlayLink
                   href={POLKADOT_EXTENSION}
@@ -84,7 +83,7 @@ function AccountModal({
           </>
         ) : (
           <>
-            <p>
+            <p className='mb-4'>
               {t('install_supported_wallets')}
             </p>
             <InterlayLink

@@ -1,6 +1,7 @@
 import { useState, useEffect, ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
+import clsx from 'clsx';
 
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
@@ -93,7 +94,11 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
             style={{ borderColor: getAccents('d_green').color }}
             id='oracle-circle'>
             <h1
-              className='h1-xl-text-center'
+              className={clsx(
+                'h1-xl',
+                'text-3xl',
+                'text-center'
+              )}
               style={{ color: getAccents('d_green').color }}
               id='oracle-circle-text'>
               {t('online')}
@@ -106,7 +111,11 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
             style={{ borderColor: getAccents('d_red').color }}
             id='oracle-circle'>
             <h1
-              className='h1-xl-text-center'
+              className={clsx(
+                'h1-xl',
+                'text-3xl',
+                'text-center'
+              )}
               style={{ color: getAccents('d_red').color }}
               id='oracle-circle-text'>
               {t('offline')}
@@ -119,7 +128,11 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
             style={{ borderColor: getAccents('d_grey').color }}
             id='oracle-circle'>
             <h1
-              className='h1-xl-text-center'
+              className={clsx(
+                'h1-xl',
+                'text-3xl',
+                'text-center'
+              )}
               style={{ color: getAccents('d_grey').color }}
               id='oracle-circle-text'>
               {t('no_data')}
@@ -132,7 +145,11 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
             style={{ borderColor: getAccents('d_grey').color }}
             id='oracle-circle'>
             <h1
-              className='h1-xl-text-center'
+              className={clsx(
+                'h1-xl',
+                'text-3xl',
+                'text-center'
+              )}
               style={{ color: getAccents('d_grey').color }}
               id='oracle-circle-text'>
               {t('loading')}

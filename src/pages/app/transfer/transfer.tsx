@@ -7,7 +7,7 @@ import ButtonMaybePending from '../../../common/components/pending-button';
 import { getUsdAmount, updateBalances } from '../../../common/utils/utils';
 import { btcToSat } from '@interlay/polkabtc';
 import { updateBalancePolkaBTCAction } from '../../../common/actions/general.actions';
-import PolkaBTCLogo from '../../../assets/img/polkabtc/PolkaBTC_black.svg';
+import PolkaBTCLogo from '../../../assets/img/polkabtc/PolkaBTC_black.svg'; // TODO: should use as a component
 import AcalaLogo from '../../../assets/img/acala-logo-cropped.png';
 import PlasmLogo from '../../../assets/img/plasm-logo.png';
 import Big from 'big.js';
@@ -20,7 +20,7 @@ type TransferForm = {
     address: string;
 };
 
-export default function Transfer() {
+export default function Transfer(): JSX.Element {
   const { t } = useTranslation();
   const senderAddress = useSelector((state: StoreType) => state.general.address);
   const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
@@ -115,14 +115,21 @@ export default function Transfer() {
               </div>
               <Button
                 variant='outline-primary'
-                className='col-xs-3 mx-1'
+                className={clsx(
+                  'flex',
+                  'items-center',
+                  'space-x-1',
+                  'w-1/4',
+                  'ml-2'
+                )}
                 onClick={() => setDisplayNetworkModal(true)}>
                 <img
                   src={networkImage}
                   width='23px'
                   height='23px'
                   alt={`${networkName} logo`}>
-                </img>&nbsp;{networkName}
+                </img>
+                <span>{networkName}</span>
               </Button>
             </div>
           </div>
@@ -151,35 +158,45 @@ export default function Transfer() {
         <Modal.Header>
           <Modal.Title>Select a network:</Modal.Title>
         </Modal.Header>
-        <Modal.Body className='pb-4'>
+        <Modal.Body
+          className={clsx(
+            'space-y-4',
+            'py-8'
+          )}>
           {[
             { img: PolkaBTCLogo, text: 'PolkaBTC' },
             { img: AcalaLogo, text: 'Acala' },
             { img: PlasmLogo, text: 'Plasm' }
           ].map(data =>
-            <div className='row justify-content-md-center'>
-              <Button
-                variant='light'
-                className='col-8 m-2'
-                onClick={() => {
-                  setNetworkName(data.text);
-                  setNetworkImage(data.img);
-                  setDisplayNetworkModal(false);
-                  if (data.text === 'PolkaBTC') {
-                    setIsDisabled(false);
-                  } else {
-                    setIsDisabled(true);
-                  }
+            <Button
+              key={data.text}
+              variant='light'
+              className={clsx(
+                'flex',
+                'justify-center',
+                'items-center',
+                'space-x-2',
+                'w-2/3',
+                'mx-auto'
+              )}
+              onClick={() => {
+                setNetworkName(data.text);
+                setNetworkImage(data.img);
+                setDisplayNetworkModal(false);
+                if (data.text === 'PolkaBTC') {
+                  setIsDisabled(false);
+                } else {
+                  setIsDisabled(true);
                 }
-                }>
-                <img
-                  src={data.img}
-                  width='23px'
-                  height='23px'
-                  alt='logo'>
-                </img>&nbsp;{data.text}
-              </Button>
-            </div>
+              }}>
+              <img
+                src={data.img}
+                width='23px'
+                height='23px'
+                alt='logo'>
+              </img>
+              <span>{data.text}</span>
+            </Button>
           )}
         </Modal.Body>
       </Modal>

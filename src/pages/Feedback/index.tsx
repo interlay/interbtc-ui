@@ -46,7 +46,7 @@ const FEEDBACK_ITEMS = [
   }
 ];
 
-const Feedback = () => (
+const Feedback = (): JSX.Element => (
   <>
     {/* TODO: should use footer layout pattern */}
     <MainContainer>
@@ -59,10 +59,13 @@ const Feedback = () => (
               target='_blank'
               rel='noopener noreferrer'
               className={clsx(
-                'block',
-                'font-bold'
+                'font-bold',
+                'flex',
+                'items-center',
+                'space-x-1'
               )}>
-              {feedbackType.title}&nbsp;{feedbackType.icon}
+              <span>{feedbackType.title}</span>
+              {feedbackType.icon}
             </InterlayLink>
           </Card>
         ))}

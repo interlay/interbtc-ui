@@ -1,20 +1,31 @@
-import React, { ReactElement, useEffect, useState } from 'react';
-import polkaBTCLogo from '../../assets/img/polkabtc/PolkaBTC_black.png';
-import { Navbar, Nav, Image, Button } from 'react-bootstrap';
-import { useSelector, useDispatch } from 'react-redux';
-import { StoreType } from '../types/util.types';
-import ButtonMaybePending from './pending-button';
-import { planckToDOT } from '@interlay/polkabtc';
-import { updateBalanceDOTAction, showAccountModalAction } from '../actions/general.actions';
-import { shortAddress, updateBalances } from '../utils/utils';
+import React, {
+  ReactElement,
+  useEffect,
+  useState
+} from 'react';
+import {
+  Navbar,
+  Nav,
+  Button
+} from 'react-bootstrap';
+import {
+  useSelector,
+  useDispatch
+} from 'react-redux';
+import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import Balances from './balances';
-import { PAGES } from 'utils/constants/links';
-import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
-import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
+
 import InterlayLink from 'components/UI/InterlayLink';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
-import clsx from 'clsx';
+import ButtonMaybePending from './pending-button';
+import { updateBalanceDOTAction, showAccountModalAction } from 'common/actions/general.actions';
+import { shortAddress, updateBalances } from 'common/utils/utils';
+import { StoreType } from 'common/types/util.types';
+import Balances from './balances';
+import { PAGES } from 'utils/constants/links';
+import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
+import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc/polkabtc-logo.svg';
+import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
 
 type TopbarProps = {
   address?: string;
@@ -50,9 +61,8 @@ export default function Topbar(props: TopbarProps): ReactElement {
     try {
       await props.requestDOT();
       const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
-      const balanceDOT = planckToDOT(balancePLANCK.toString());
-      dispatch(updateBalanceDOTAction(balanceDOT));
+      const balanceDOT = await window.polkaBTC.collateral.balance(accountId);
+      dispatch(updateBalanceDOTAction(balanceDOT.toString()));
     } catch (error) {
       console.log(error);
     }
@@ -70,11 +80,12 @@ export default function Topbar(props: TopbarProps): ReactElement {
   return (
     <Navbar
       id='pbtc-topbar'
-      bg='light'
       expand='lg'
       className={clsx(
-        'border-bottom top-bar',
-        'shadow'
+        'top-bar',
+        'border-bottom',
+        'shadow',
+        'bg-default'
       )}>
       {polkaBtcLoaded && (
         <React.Fragment>
@@ -85,12 +96,10 @@ export default function Topbar(props: TopbarProps): ReactElement {
                 textDecoration: 'none'
               }}
               to={PAGES.HOME}>
-              <Image
-                src={polkaBTCLogo}
-                width='90'
-                className='d-inline-block align-top'
-                height='30'
-                fluid />
+              <PolkabtcLogoIcon
+                fill='currentColor'
+                width={90}
+                height={53} />
             </InterlayRouterLink>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
@@ -146,6 +155,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                   to={PAGES.CHALLENGES}>
                   {t('nav_challenges')}
                   <NewMarkIcon
+                    className='inline-block'
                     width={20}
                     height={20} />
                 </InterlayRouterLink>

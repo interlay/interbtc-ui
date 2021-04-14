@@ -3,14 +3,12 @@
 
 .dashboard-card {
   h1 {
-    color: black;
     font-weight: 400;
-    font-size: 13px;
+    font-size: 14px;
     margin-bottom: 0.3rem;
   }
 
   h2 {
-    color: black;
     font-size: 16px;
     font-weight: 700;
     margin-bottom: 0.2rem;
@@ -32,26 +30,11 @@
     padding: 0px 5px;
   }
 
-  .h1-xl-text-left {
-    color: black;
-    font-size: 34px;
-    text-align: left;
+  .h1-xl {
+    font-size: 30px;
     font-weight: 700;
   }
-
-  .h1-xl-text-center {
-    color: black;
-    font-size: 34px;
-    font-weight: 700;
-    text-align: center;
-  }
-
-  .h1-l-text {
-    color: black;
-    font-size: 28px;
-    font-weight: 700;
-  }
-
+  
   .parachain-content-container {
     height: 250px;
     padding-left: 20px;
@@ -65,7 +48,7 @@
     margin-top: 10px;
   }
 
-  button {
+  button.temp-dashboard-button {
     background-color: white;
     border-radius: 8px;
     width: 130px;
@@ -121,9 +104,10 @@
         width: 70%;
         padding-left: 30px;
     }
-    button {
-        width: 160px;
-        padding: 12px 12px;
+    
+    button.temp-dashboard-button {
+      width: 160px;
+      padding: 12px 12px;
     }
   }
   
@@ -139,7 +123,7 @@
     padding-left: 30px;
   }
 
-  button {
+  button.temp-dashboard-button {
     width: 160px;
     padding: 12px 12px;
   }

@@ -1,6 +1,8 @@
-
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 // TODO: should type properly
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+
 import * as React from 'react';
 import clsx from 'clsx';
 
@@ -18,6 +20,7 @@ function NumberRangeColumnFilter({
   ] = React.useMemo(() => {
     let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
     let max = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     preFilteredRows.forEach((row: any) => {
       min = Math.min(row.values[id], min);
       max = Math.max(row.values[id], max);

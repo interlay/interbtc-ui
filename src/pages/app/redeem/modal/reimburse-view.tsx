@@ -82,7 +82,7 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
     <React.Fragment>
       <div className='row mt-3'>
         <div className='col reimburse-title'>
-          <p>
+          <p className='mb-4'>
             <i className='fas fa-exclamation-circle'></i> &nbsp;
             {t('redeem_page.sorry_redeem_failed')}
           </p>
@@ -98,7 +98,7 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
       </div>
       <div className='row justify-content-center'>
         <div className='col-9 to-redeem'>
-          <p>{t('redeem_page.to_redeem_polkabtc')}</p>
+          <p className='mb-4'>{t('redeem_page.to_redeem_polkabtc')}</p>
         </div>
       </div>
       <div className='row justify-content-center'>

@@ -32,10 +32,10 @@ export default function RedeemRequests(): ReactElement {
       return <div>{t('redeem_page.retried')}</div>;
     }
     case RedeemRequestStatus.Completed: {
-      return <FaCheck></FaCheck>;
+      return <FaCheck />;
     }
     default: {
-      return <FaHourglass></FaHourglass>;
+      return <FaHourglass />;
     }
     }
   };
@@ -53,8 +53,15 @@ export default function RedeemRequests(): ReactElement {
         'mx-auto'
       )}>
       {redeemRequests && redeemRequests.length > 0 && (
-        <React.Fragment>
-          <h5>{t('redeem_requests')}</h5>
+        <>
+          <h5
+            className={clsx(
+              'font-bold',
+              'text-xl',
+              'mb-2'
+            )}>
+            {t('redeem_requests')}
+          </h5>
           <Table
             hover
             responsive
@@ -102,7 +109,7 @@ export default function RedeemRequests(): ReactElement {
                 })}
             </tbody>
           </Table>
-        </React.Fragment>
+        </>
       )}
       <RedeemModal
         show={showModal}

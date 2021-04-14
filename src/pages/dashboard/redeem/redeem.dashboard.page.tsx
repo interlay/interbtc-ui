@@ -7,6 +7,7 @@ import {
 } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 import { satToBTC } from '@interlay/polkabtc';
 import {
   BtcNetworkName,
@@ -36,7 +37,7 @@ import LineChartComponent from '../components/line-chart-component';
 import '../dashboard.page.scss';
 import '../dashboard-subpage.scss';
 
-function RedeemDashboard() {
+function RedeemDashboard(): JSX.Element {
   const {
     polkaBtcLoaded,
     prices
@@ -70,21 +71,22 @@ function RedeemDashboard() {
   ]);
 
   const tableHeadings: ReactElement[] = [
-    <h1>{t('date')}</h1>,
-    <h1>{t('redeem_page.amount')}</h1>,
-    <h1>{t('parachainblock')}</h1>,
-    <h1>{t('issue_page.vault_dot_address')}</h1>,
-    <h1>{t('redeem_page.output_BTC_address')}</h1>,
-    <h1>{t('status')}</h1>
+    <h1 key={1}>{t('date')}</h1>,
+    <h1 key={2}>{t('redeem_page.amount')}</h1>,
+    <h1 key={3}>{t('parachainblock')}</h1>,
+    <h1 key={4}>{t('issue_page.vault_dot_address')}</h1>,
+    <h1 key={5}>{t('redeem_page.output_BTC_address')}</h1>,
+    <h1 key={6}>{t('status')}</h1>
   ];
 
   const tableRedeemRequestRow = useMemo(
     () => (rreq: DashboardRequestInfo): ReactElement[] => [
-      <p>{formatDateTimePrecise(new Date(rreq.timestamp))}</p>,
-      <p>{rreq.amountPolkaBTC}</p>,
-      <p>{rreq.creation}</p>,
-      <p>{shortAddress(rreq.vaultDotAddress)}</p>,
+      <p key={1}>{formatDateTimePrecise(new Date(rreq.timestamp))}</p>,
+      <p key={2}>{rreq.amountPolkaBTC}</p>,
+      <p key={3}>{rreq.creation}</p>,
+      <p key={4}>{shortAddress(rreq.vaultDotAddress)}</p>,
       <StyledLinkData
+        key={5}
         data={shortAddress(rreq.btcAddress)}
         target={
           (constants.BTC_MAINNET ?
@@ -93,6 +95,7 @@ function RedeemDashboard() {
         }
         newTab={true} />,
       <StatusComponent
+        key={6}
         {...(rreq.completed ?
           { text: t('completed'), category: StatusCategories.Ok } :
           rreq.cancelled ?
@@ -187,33 +190,74 @@ function RedeemDashboard() {
             <div className='table-top-data-container'>
               <div className='values-container redeem-page'>
                 <div>
-                  <h2 style={{ color: `${getAccents('d_yellow').color}` }}>
+                  <h2
+                    style={{ color: `${getAccents('d_yellow').color}` }}
+                    className={clsx(
+                      'mb-2',
+                      'text-base',
+                      'font-normal'
+                    )}>
                     {t('dashboard.redeem.total_redeemed')}
                   </h2>
-                  <h1>
+                  <h1
+                    className={clsx(
+                      'mb-2',
+                      'text-xl',
+                      'font-bold'
+                    )}>
                     {totalRedeemedAmount === '-' ? t('no_data') : satToBTC(totalRedeemedAmount)}
                     &nbsp;BTC
                   </h1>
                   {totalRedeemedAmount === '-' ? (
                     ''
                   ) : (
-                    <h1 className='h1-price-opacity'>
+                    <h1
+                      className={clsx(
+                        'opacity-50',
+                        'mb-2',
+                        'text-xl',
+                        'font-bold'
+                      )}>
                       $
                       {(prices.bitcoin.usd * parseFloat(satToBTC(totalRedeemedAmount))).toLocaleString()}
                     </h1>
                   )}
                 </div>
                 <div>
-                  <h2 style={{ color: getAccents('d_green').color }}>
+                  <h2
+                    style={{ color: getAccents('d_green').color }}
+                    className={clsx(
+                      'mb-2',
+                      'text-base',
+                      'font-normal'
+                    )}>
                     {t('dashboard.redeem.total_redeems')}
                   </h2>
-                  <h1>{totalSuccessfulRedeems === '-' ? t('no_data') : totalSuccessfulRedeems}</h1>
+                  <h1
+                    className={clsx(
+                      'mb-2',
+                      'text-xl',
+                      'font-bold'
+                    )}>
+                    {totalSuccessfulRedeems === '-' ? t('no_data') : totalSuccessfulRedeems}
+                  </h1>
                 </div>
                 <div>
-                  <h2 style={{ color: getAccents('d_green').color }}>
+                  <h2
+                    style={{ color: getAccents('d_green').color }}
+                    className={clsx(
+                      'mb-2',
+                      'text-base',
+                      'font-normal'
+                    )}>
                     {t('dashboard.redeem.success_rate')}
                   </h2>
-                  <h1>
+                  <h1
+                    className={clsx(
+                      'mb-2',
+                      'text-xl',
+                      'font-bold'
+                    )}>
                     {totalRedeems === '-' ? t('no_data') : (redeemSuccessRate * 100).toFixed(2) + '%'}
                   </h1>
                 </div>
@@ -242,6 +286,7 @@ function RedeemDashboard() {
             <div style={{ margin: '40px 0px' }}>
               <div>
                 <p
+                  className='mb-4'
                   style={{
                     fontWeight: 700,
                     fontSize: '26px'
