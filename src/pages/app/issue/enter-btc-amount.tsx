@@ -43,6 +43,12 @@ import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg
 import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 import ParachainStatusInfo from 'components/ParachainStatusInfo';
 
+enum IssueState {
+  Loading,
+  Resolved,
+  Rejected
+}
+
 type EnterBTCForm = {
   amountPolkaBTC: string;
 }
@@ -50,6 +56,8 @@ type EnterBTCForm = {
 function EnterBTCAmount(): JSX.Element {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  const [issueState, setIssueState] = useState(IssueState.Loading);
 
   const {
     polkaBtcLoaded,
@@ -71,9 +79,10 @@ function EnterBTCAmount(): JSX.Element {
   } = useForm<EnterBTCForm>(defaultValues);
 
   // Additional info: bridge fee, security deposit, amount BTC
-  const [feeRate, setFeeRate] = useState(new Big(0));
+  // Current fee model specification taken from: https://interlay.gitlab.io/polkabtc-spec/spec/fee.html
+  const [feeRate, setFeeRate] = useState(new Big(0.005)); // set default to 0.5%
   const [fee, setFee] = useState('0');
-  const [depositRate, setDepositRate] = useState(new Big(0));
+  const [depositRate, setDepositRate] = useState(new Big(0.00005)); // set default to 0.005%
   const [deposit, setDeposit] = useState('0');
   const [amountBTC, setAmountBTC] = useState('0');
   const [btcToDotRate, setBtcToDotRate] = useState(new Big(0));
@@ -91,7 +100,10 @@ function EnterBTCAmount(): JSX.Element {
 
   // Load issue related data
   useEffect(() => {
-    const fetchData = async () => {
+    // Loading this data is not strictly required as long as the constantly set values did
+    // not change. However, you will not see the correct value for the security deposit.
+    // But not having this data will NOT block the requestIssue
+    const fetchFeeData = async () => {
       if (!polkaBtcLoaded) return;
 
       try {
@@ -100,14 +112,12 @@ function EnterBTCAmount(): JSX.Element {
           depositRate,
           issuePeriodInBlocks,
           dustValueAsSatoshi,
-          vaultsMap,
           btcToDot
         ] = await Promise.all([
           window.polkaBTC.issue.getFeeRate(),
           window.polkaBTC.fee.getIssueGriefingCollateralRate(),
           window.polkaBTC.issue.getIssuePeriod(),
           window.polkaBTC.redeem.getDustValue(),
-          window.polkaBTC.vaults.getVaultsWithIssuableTokens(),
           window.polkaBTC.oracle.getExchangeRate()
         ]);
         // Set bridge fee rate
@@ -120,21 +130,36 @@ function EnterBTCAmount(): JSX.Element {
         // Set dust value (minimum amount)
         const dustValueBtc = satToBTC(dustValueAsSatoshi.toString());
         setDustValue(dustValueBtc);
-        // Set the vault maximum
-        let maxVaultAmount = new BN(0);
-        for (const issuableTokens of vaultsMap.values()) {
-          maxVaultAmount = issuableTokens.toBn();
-          break;
-        }
-        setVaultMaxAmount(satToBTC(maxVaultAmount.toString()));
-        setVaults(vaultsMap);
         // Set exchange rate
         setBtcToDotRate(btcToDot);
       } catch (error) {
         console.log('[EnterBtcAmount useEffect] error.message => ', error.message);
       }
     };
-    fetchData();
+
+    // This data (the vaults) is strictly required to request issue
+    const fetchVaultData = async () => {
+      if (!polkaBtcLoaded) return;
+
+      try {
+        const vaultsMap = await window.polkaBTC.vaults.getVaultsWithIssuableTokens();
+        // Set the vault maximum
+        let maxVaultAmount = new BN(0);
+        // first item in the ma is the vault with the largest capacity
+        for (const issuableTokens of vaultsMap.values()) {
+          maxVaultAmount = issuableTokens.toBn();
+          break;
+        }
+        setVaultMaxAmount(satToBTC(maxVaultAmount.toString()));
+        setVaults(vaultsMap);
+        setIssueState(IssueState.Resolved);
+      } catch (error) {
+        console.log('[EnterBtcAmount useEffect] error.message => ', error.message);
+        setIssueState(IssueState.Rejected);
+      }
+    };
+    fetchFeeData();
+    fetchVaultData();
   }, [
     polkaBtcLoaded,
     dispatch
@@ -153,7 +178,7 @@ function EnterBTCAmount(): JSX.Element {
       setFee(fee.toString());
       // Update security deposit
       const deposit = amountPolkaBTC.mul(btcToDotRate).mul(depositRate);
-      setDeposit(deposit.toString());
+      setDeposit(deposit.round(8).toString());
       // Update total BTC
       const amountBTC = amountPolkaBTC.add(fee);
       setAmountBTC(amountBTC.toString());
@@ -346,7 +371,11 @@ function EnterBTCAmount(): JSX.Element {
       </div>
       <ButtonMaybePending
         className='btn green-button app-btn'
-        disabled={parachainStatus !== ParachainStatus.Running || !address}
+        disabled={
+          parachainStatus !== ParachainStatus.Running ||
+          !address ||
+          issueState !== IssueState.Resolved
+        }
         isPending={isRequestPending}
         onClick={onSubmit}>
         {t('confirm')}

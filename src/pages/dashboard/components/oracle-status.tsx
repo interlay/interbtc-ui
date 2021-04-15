@@ -9,16 +9,11 @@ import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import ButtonComponent from './button-component';
 import { getAccents } from '../dashboardcolors';
 
-// eslint-disable-next-line no-unused-vars
 enum Status {
-  // eslint-disable-next-line no-unused-vars
   Loading,
-  // eslint-disable-next-line no-unused-vars
   Online,
-  // eslint-disable-next-line no-unused-vars
   Offline,
-  // eslint-disable-next-line no-unused-vars
-  NoData,
+  NoData
 }
 
 type OracleStatusProps = {
