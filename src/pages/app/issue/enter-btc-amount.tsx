@@ -44,9 +44,9 @@ import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 import ParachainStatusInfo from 'components/ParachainStatusInfo';
 
 enum IssueState {
-  LOADING,
-  SUCCESS,
-  ERROR
+  Loading,
+  Resolved,
+  Rejected
 }
 
 type EnterBTCForm = {
@@ -57,8 +57,7 @@ function EnterBTCAmount(): JSX.Element {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  // status
-  const [issueState, setIssueState] = useState(IssueState.LOADING);
+  const [issueState, setIssueState] = useState(IssueState.Loading);
 
   const {
     polkaBtcLoaded,
@@ -137,6 +136,7 @@ function EnterBTCAmount(): JSX.Element {
         console.log('[EnterBtcAmount useEffect] error.message => ', error.message);
       }
     };
+
     // This data (the vaults) is strictly required to request issue
     const fetchVaultData = async () => {
       if (!polkaBtcLoaded) return;
@@ -152,10 +152,10 @@ function EnterBTCAmount(): JSX.Element {
         }
         setVaultMaxAmount(satToBTC(maxVaultAmount.toString()));
         setVaults(vaultsMap);
-        setIssueState(IssueState.SUCCESS);
+        setIssueState(IssueState.Resolved);
       } catch (error) {
         console.log('[EnterBtcAmount useEffect] error.message => ', error.message);
-        setIssueState(IssueState.ERROR);
+        setIssueState(IssueState.Rejected);
       }
     };
     fetchFeeData();
@@ -374,7 +374,7 @@ function EnterBTCAmount(): JSX.Element {
         disabled={
           parachainStatus !== ParachainStatus.Running ||
           !address ||
-          issueState !== IssueState.SUCCESS
+          issueState !== IssueState.Resolved
         }
         isPending={isRequestPending}
         onClick={onSubmit}>

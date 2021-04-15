@@ -23,7 +23,7 @@ export default function BTCPayment(): ReactElement {
     <React.Fragment>
       <FormGroup>{request && <PaymentView request={request}></PaymentView>}</FormGroup>
       <button
-        className='btn green-button app-btn '
+        className='btn green-button app-btn'
         onClick={submit}>
         {t('issue_page.made_payment')}
       </button>
