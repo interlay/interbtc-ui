@@ -43,17 +43,13 @@ function StyledLinkData(props: StyledLinkDataProps): ReactElement {
 /**
  * Helper component to display status text, with appropriate colour and status icon
  **/
-// eslint-disable-next-line no-unused-vars
 enum StatusCategories {
-  // eslint-disable-next-line no-unused-vars
   Bad,
-  // eslint-disable-next-line no-unused-vars
   Warning,
-  // eslint-disable-next-line no-unused-vars
   Ok,
-  // eslint-disable-next-line no-unused-vars
-  Neutral,
+  Neutral
 }
+
 type StatusComponentProps = {
     text: string;
     category: StatusCategories;

@@ -14,22 +14,14 @@ export interface RedeemRequest {
 }
 
 export enum RedeemRequestStatus {
-  // eslint-disable-next-line no-unused-vars
   Completed,
-  // eslint-disable-next-line no-unused-vars
   Expired,
-  // eslint-disable-next-line no-unused-vars
   Reimbursed,
-  // eslint-disable-next-line no-unused-vars
   Retried,
-  // eslint-disable-next-line no-unused-vars
   PendingWithBtcTxNotFound,
-  // eslint-disable-next-line no-unused-vars
   PendingWithBtcTxNotIncluded,
-  // eslint-disable-next-line no-unused-vars
   PendingWithTooFewConfirmations,
-  // eslint-disable-next-line no-unused-vars
-  PendingWithEnoughConfirmations,
+  PendingWithEnoughConfirmations
 }
 
 export type DashboardRequestInfo = {

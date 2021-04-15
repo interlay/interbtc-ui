@@ -38,14 +38,10 @@ export interface DashboardStatusUpdateInfo {
 }
 
 export enum ParachainStatus {
-  // eslint-disable-next-line no-unused-vars
   Loading,
-  // eslint-disable-next-line no-unused-vars
   Error,
-  // eslint-disable-next-line no-unused-vars
   Running,
-  // eslint-disable-next-line no-unused-vars
-  Shutdown,
+  Shutdown
 }
 
 export type Prices = {
