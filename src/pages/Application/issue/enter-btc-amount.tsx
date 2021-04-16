@@ -237,7 +237,9 @@ function EnterBTCAmount(): JSX.Element {
       const id = stripHexPrefix(requestResult.id.toString());
       dispatch(changeIssueIdAction(id));
 
+      // ray test touch <
       const issueRequest = await parachainToUIIssueRequest(requestResult.id, requestResult.issueRequest);
+      // ray test touch >
 
       // update the issue status
       dispatch(addIssueRequestAction(issueRequest));

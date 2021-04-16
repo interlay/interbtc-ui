@@ -79,7 +79,7 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
                 buttonName='view BTC Relay'
                 propsButtonColor='d_green'
                 buttonId='btc-relay'
-                buttonLink={PAGES.RELAY} />
+                buttonLink={PAGES.relay} />
             </div>
           )}
         </div>

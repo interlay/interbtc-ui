@@ -37,10 +37,15 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
 
   const fetchCollateralLastDays = useMemo(
     () => async () => {
-      const res = await statsApi.getRecentDailyCollateralLocked(6);
-      setCumulativeCollateralPerDay(res.data);
+      try {
+        const res = await statsApi.getRecentDailyCollateralLocked(6);
+        setCumulativeCollateralPerDay(res.data);
+      } catch (error) {
+        console.log('Error fetching daily locked collateral.');
+        console.log('error.message => ', error.message);
+      }
     },
-    [statsApi] // to silence the compiler
+    [statsApi]
   );
 
   useEffect(() => {
@@ -61,7 +66,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
               buttonName='view all vaults'
               propsButtonColor='d_pink'
               buttonId='collateral-locked'
-              buttonLink={PAGES.VAULTS} />
+              buttonLink={PAGES.vaults} />
           </div>
         )}
       </div>

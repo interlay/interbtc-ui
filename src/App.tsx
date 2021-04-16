@@ -1,7 +1,6 @@
 
 import React, {
   useState,
-  ReactElement,
   useEffect,
   useCallback
 } from 'react';
@@ -32,9 +31,11 @@ import {
   createPolkabtcAPI,
   PolkaBTCAPI
 } from '@interlay/polkabtc';
+import { StatusCode } from '@interlay/polkabtc/build/interfaces';
+import Big from 'big.js';
 
 import Layout from 'parts/Layout';
-import ApplicationPage from 'pages/app/app.page';
+import Application from 'pages/Application';
 import Dashboard from 'pages/dashboard/dashboard.page';
 import VaultDashboard from 'pages/vault-dashboard/vault-dashboard.page';
 import StakedRelayer from 'pages/staked-relayer/staked-relayer.page';
@@ -76,11 +77,10 @@ import {
 import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import { ACCOUNT_ID_TYPE_NAME } from './constants';
-import { StatusCode } from '@interlay/polkabtc/build/interfaces';
 
 // TODO: block code-splitting for now
-// const ApplicationPage = React.lazy(() =>
-//   import(/* webpackChunkName: 'application' */ 'pages/app/app.page')
+// const Application = React.lazy(() =>
+//   import(/* webpackChunkName: 'application' */ 'pages/Application')
 // );
 // const DashboardPage = React.lazy(() =>
 //   import(/* webpackChunkName: 'dashboard' */ 'pages/dashboard/dashboard.page')
@@ -126,7 +126,7 @@ function connectToParachain(): Promise<PolkaBTCAPI> {
   );
 }
 
-function App(): ReactElement {
+function App(): JSX.Element {
   const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
   const address = useSelector((state: StoreType) => state.general.address);
   const [isLoading, setIsLoading] = useState(true);
@@ -394,23 +394,23 @@ function App(): ReactElement {
             render={({ location }) => {
               if (checkStaticPage()) {
                 const pageURLs = [
-                  PAGES.STAKED_RELAYER,
-                  PAGES.VAULTS,
-                  PAGES.CHALLENGES,
-                  PAGES.PARACHAIN,
-                  PAGES.ORACLES,
-                  PAGES.ISSUE,
-                  PAGES.REDEEM,
-                  PAGES.RELAY,
-                  PAGES.DASHBOARD,
-                  PAGES.VAULT,
-                  PAGES.FEEDBACK,
-                  PAGES.APPLICATION
+                  PAGES.stakedRelayer,
+                  PAGES.vaults,
+                  PAGES.challenges,
+                  PAGES.parachain,
+                  PAGES.oracles,
+                  PAGES.issue,
+                  PAGES.redeem,
+                  PAGES.relay,
+                  PAGES.dashboard,
+                  PAGES.vault,
+                  PAGES.feedback,
+                  PAGES.application
                 ];
 
                 for (const pageURL of pageURLs) {
                   if (matchPath(location.pathname, { path: pageURL })) {
-                    return <Redirect to={PAGES.HOME} />;
+                    return <Redirect to={PAGES.home} />;
                   }
                 }
               }
@@ -421,46 +421,46 @@ function App(): ReactElement {
                 // TODO: should use loading spinner instead of `Loading...`
                 <React.Suspense fallback={<div>Loading...</div>}>
                   <Switch location={location}>
-                    <Route path={PAGES.STAKED_RELAYER}>
+                    <Route path={PAGES.stakedRelayer}>
                       <StakedRelayer />
                     </Route>
-                    <Route path={PAGES.VAULTS}>
+                    <Route path={PAGES.vaults}>
                       <VaultsDashboard />
                     </Route>
-                    <Route path={PAGES.CHALLENGES}>
+                    <Route path={PAGES.challenges}>
                       <Challenges />
                     </Route>
-                    <Route path={PAGES.PARACHAIN}>
+                    <Route path={PAGES.parachain}>
                       <ParachainDashboard />
                     </Route>
-                    <Route path={PAGES.ORACLES}>
+                    <Route path={PAGES.oracles}>
                       <OraclesDashboard />
                     </Route>
-                    <Route path={PAGES.ISSUE}>
+                    <Route path={PAGES.issue}>
                       <IssueDashboard />
                     </Route>
-                    <Route path={PAGES.REDEEM}>
+                    <Route path={PAGES.redeem}>
                       <RedeemDashboard />
                     </Route>
-                    <Route path={PAGES.RELAY}>
+                    <Route path={PAGES.relay}>
                       <RelayDashboard />
                     </Route>
-                    <Route path={PAGES.DASHBOARD}>
+                    <Route path={PAGES.dashboard}>
                       <Dashboard />
                     </Route>
-                    <Route path={PAGES.VAULT}>
+                    <Route path={PAGES.vault}>
                       <VaultDashboard />
                     </Route>
-                    <Route path={PAGES.FEEDBACK}>
+                    <Route path={PAGES.feedback}>
                       <Feedback />
                     </Route>
                     <Route
                       exact
-                      path={PAGES.APPLICATION}>
-                      <ApplicationPage />
+                      path={PAGES.application}>
+                      <Application />
                     </Route>
                     <Route
-                      path={PAGES.HOME}
+                      path={PAGES.home}
                       exact>
                       <LandingPage />
                     </Route>

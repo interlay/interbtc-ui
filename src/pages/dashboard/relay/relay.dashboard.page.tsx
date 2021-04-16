@@ -36,8 +36,9 @@ export default function RelayDashboard(): ReactElement {
         ]);
         setBlocks(blocks.data);
         setTotalRelayedBlocks(Number(totalRelayedBlocks.data));
-      } catch (e) {
-        console.error(e);
+      } catch (error) {
+        console.log('Error fetching btc-relay data.');
+        console.log('error.message => ', error.message);
       }
     },
     [tableParams, statsApi]
@@ -57,7 +58,7 @@ export default function RelayDashboard(): ReactElement {
         data={block.hash}
         target={
           (constants.BTC_MAINNET ? constants.BTC_EXPLORER_BLOCK_API : constants.BTC_TEST_EXPLORER_BLOCK_API) +
-                    block.hash
+          block.hash
         }
         newTab={true} />,
       <p key={3}>{formatDateTimePrecise(new Date(block.relay_ts))}</p>

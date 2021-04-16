@@ -8,12 +8,12 @@ import {
   useSelector
 } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
 import InterlayLink from 'components/UI/InterlayLink';
 import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
-import './account-modal.scss';
 
 type Props = {
   selectAccount: (account: string) => void | Promise<void>;
@@ -67,11 +67,21 @@ function AccountModal({
               </p>
             )}
             {/* List all available accounts */}
-            <ul>
+            <ul className='space-y-4'>
               {accounts?.map((account: string) => (
                 <li
                   key={account}
-                  className='account-item'
+                  className={clsx(
+                    'font-bold',
+                    'p-4',
+                    'rounded',
+                    'border',
+                    'border-solid',
+                    'shadow-sm',
+                    'cursor-pointer',
+                    'hover:bg-interlayPink',
+                    'hover:text-white'
+                  )}
                   // TODO: should use a button for semantic HTML usage
                   onClick={handleAccountSelect(account)}>
                   {account}
@@ -87,7 +97,18 @@ function AccountModal({
               {t('install_supported_wallets')}
             </p>
             <InterlayLink
-              className='polkadot-extension-link'
+              className={clsx(
+                'flex',
+                'items-center',
+                'px-4',
+                'py-2.5',
+                'rounded',
+                'shadow-sm',
+                'border',
+                'border-solid',
+                'border-interlayPink',
+                'w-1/2'
+              )}
               href={POLKADOT_EXTENSION}
               target='_blank'
               rel='noopener noreferrer'>

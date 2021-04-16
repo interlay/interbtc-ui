@@ -1,5 +1,4 @@
 import { ReactElement, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import DashboardTable, {
   StatusComponent,
@@ -25,7 +24,8 @@ export default function StakedRelayerTable(): ReactElement {
         const res = await statsApi.getRelayers(0);
         setRelayers(res.data);
       } catch (error) {
-        toast.error(error.toString());
+        console.log('Error fetching staked relayers data.');
+        console.log('error.message => ', error.message);
       }
     })();
   }, [statsApi]);

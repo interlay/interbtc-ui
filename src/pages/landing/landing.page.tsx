@@ -15,11 +15,17 @@ import Timer from 'common/components/timer';
 import InterlayLink from 'components/UI/InterlayLink';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import checkStaticPage from 'config/check-static-page';
-import { PAGES } from 'utils/constants/links';
+import {
+  PAGES,
+  QUERY_PARAMETERS
+} from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import * as constants from '../../constants';
+import TAB_TYPES from 'utils/constants/tab-types';
 import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc/polkabtc-logo.svg';
+
+const queryString = require('query-string');
 
 export default function LandingPage(): JSX.Element {
   const { totalPolkaBTC, totalLockedDOT, polkaBtcLoaded, address, extensions } = useSelector(
@@ -55,7 +61,7 @@ export default function LandingPage(): JSX.Element {
         )}>
         <InterlayRouterLink
           style={{ display: 'inline-block' }}
-          to={PAGES.HOME}>
+          to={PAGES.home}>
           <PolkabtcLogoIcon
             fill='currentColor'
             className='text-white'
@@ -181,7 +187,12 @@ export default function LandingPage(): JSX.Element {
                     style={{
                       textDecoration: 'none'
                     }}
-                    to={PAGES.APPLICATION}>
+                    to={{
+                      pathname: PAGES.application,
+                      search: queryString.stringify({
+                        [QUERY_PARAMETERS.type]: TAB_TYPES.issue
+                      })
+                    }}>
                     <Button
                       variant='outline-dark'
                       size='lg'
@@ -199,7 +210,7 @@ export default function LandingPage(): JSX.Element {
                     style={{
                       textDecoration: 'none'
                     }}
-                    to={PAGES.DASHBOARD}>
+                    to={PAGES.dashboard}>
                     <Button
                       variant='outline-dark'
                       size='lg'

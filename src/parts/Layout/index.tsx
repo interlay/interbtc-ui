@@ -40,7 +40,7 @@ const Layout = ({ children }: Props): JSX.Element => {
    * TODO: a hack for now.
    * - Should apply the gradient on the landing page
    */
-  const isHomePage = location.pathname === PAGES.HOME;
+  const isHomePage = location.pathname === PAGES.home;
 
   return (
     <div
