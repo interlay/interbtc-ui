@@ -26,14 +26,6 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
     // eslint-disable-next-line no-array-constructor
     new Array<{ date: number; amount: number }>()
   );
-  const pointCollateralPerDay = useMemo(
-    () =>
-      cumulativeCollateralPerDay.map((dataPoint, i) => {
-        if (i === 0) return 0;
-        return dataPoint.amount - cumulativeCollateralPerDay[i - 1].amount;
-      }),
-    [cumulativeCollateralPerDay]
-  );
 
   const fetchCollateralLastDays = useMemo(
     () => async () => {
@@ -67,19 +59,17 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
       </div>
       <div className='chart-container'>
         <LineChartComponent
-          color={['d_pink', 'd_grey']}
-          label={[t('dashboard.vault.total_collateral_locked'), t('dashboard.vault.perday_collateral_locked')]}
+          color='d_pink'
+          label={t('dashboard.vault.total_collateral_locked') as string}
           yLabels={cumulativeCollateralPerDay
             .slice(1)
             .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}
           yAxisProps={[
-            { beginAtZero: true, position: 'left', maxTicksLimit: 6 },
-            { position: 'right', maxTicksLimit: 5 }
+            { beginAtZero: true, precision: 0 }
           ]}
-          data={[
-            cumulativeCollateralPerDay.slice(1).map(dataPoint => Number(planckToDOT(dataPoint.amount.toString()))),
-            pointCollateralPerDay.slice(1).map(amount => Number(planckToDOT(amount.toString())))
-          ]} />
+          data={
+            cumulativeCollateralPerDay.slice(1).map(dataPoint => Number(planckToDOT(dataPoint.amount.toString())))
+          } />
       </div>
     </DashboardCard>
   );

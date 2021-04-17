@@ -215,6 +215,7 @@
     "synced": "Synced",
     "out_of_sync": "Out of Sync",
     "capacity": "Capacity",
+    "total_value_locked":"Total Value Locked",
     "collators": {
       "total_collators_chart": "Total active collators",
       "active_collators": "Active Collators"

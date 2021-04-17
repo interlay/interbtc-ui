@@ -35,7 +35,8 @@ import {
 import {
   displayBtcAmount,
   getRandomVaultIdWithCapacity,
-  getUsdAmount
+  getUsdAmount,
+  safeRoundFiveDecimals
 } from 'common/utils/utils';
 import { parachainToUIIssueRequest } from 'common/utils/requests';
 import bitcoinLogo from 'assets/img/small-bitcoin-logo.png';
@@ -301,7 +302,8 @@ function EnterBTCAmount() {
                     style={{ marginRight: '5px' }}
                     alt='polkadot logo'>
                   </img>
-                  <span className='fee-btc'>{parseFloat(deposit).toFixed(5)}</span> DOT
+                  <span className='fee-btc'>{safeRoundFiveDecimals(deposit)}
+                  </span> DOT
                 </div>
                 <div>{'~ $' + getUsdAmount(deposit, prices.polkadot.usd)}</div>
               </div>
