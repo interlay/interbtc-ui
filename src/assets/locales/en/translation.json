@@ -532,5 +532,32 @@
       "chain": "The chain will be upgraded."
     },
     "info": "More info here."
+  },
+  "footer": {
+    "contact": "Contact",
+    "challenges": "Challenges",
+    "treasure_hunt": "Treasure Hunt",
+    "vault_treasure": "Vault Treasure",
+    "relayer_treasure": "Relayer Treasure",
+    "king_of_the_hill": "King of the Hill",
+    "lottery": "Lottery",
+    "feedback": "Feedback",
+    "user_feedback_form": "User Feedback Form",
+    "vault_feedback_form": "Vault Feedback Form",
+    "relayer_feedback_form": "Relayer Feedback Form",
+    "open_an_issue_on_github": "Open an issue on Github",
+    "discuss_on_discord": "Discuss on Discord",
+    "docs": "Docs",
+    "getting_started": "Getting Started",
+    "vaults": "Vaults",
+    "relayers": "Relayers",
+    "developers": "Developers",
+    "roadmap": "Roadmap",
+    "follow_us_on": "Follow us on",
+    "newsletter": "Newsletter",
+    "subscribe": "Subscribe",
+    "join_newsletter_description": "Join our newsletter to get updates about upcoming challenges and PolkaBTC news!",
+    "all_rights_reserved": "All Rights Reserved",
+    "privacy":"Privacy"
   }
 }

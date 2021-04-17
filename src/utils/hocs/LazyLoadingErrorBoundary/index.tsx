@@ -22,12 +22,14 @@ class LazyLoadingErrorBoundary extends React.Component<Props, State> {
   }
 
   // eslint-disable-next-line require-jsdoc
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // eslint-disable-next-line no-console
     console.error('Uncaught error:', error, errorInfo);
   }
 
   // eslint-disable-next-line require-jsdoc
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public render() {
     if (this.state.hasError) {
       return (

@@ -2,7 +2,6 @@ import { RedeemRequest } from '../types/redeem.types';
 import { IssueRequest } from '../types/issue.types';
 import {
   satToBTC,
-  planckToDOT,
   uint8ArrayToString,
   bitcoin,
   reverseEndianness,
@@ -111,12 +110,11 @@ const updateBalances = async (
 ): Promise<void> => {
   const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
   const balancePolkaSAT = await window.polkaBTC.treasury.balancePolkaBTC(accountId);
-  const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
+  const balanceDOT = await window.polkaBTC.collateral.balance(accountId);
   const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
-  const balanceDOT = planckToDOT(balancePLANCK.toString());
 
-  if (currentBalanceDOT !== balanceDOT) {
-    dispatch(updateBalanceDOTAction(balanceDOT));
+  if (currentBalanceDOT !== balanceDOT.toString()) {
+    dispatch(updateBalanceDOTAction(balanceDOT.toString()));
   }
 
   if (currentBalancePolkaBTC !== balancePolkaBTC) {
@@ -145,7 +143,7 @@ const requestsInStore = (
   return inStore;
 };
 
-const copyToClipboard = (text: string) => {
+const copyToClipboard = (text: string): void => {
   navigator.clipboard.writeText(text);
 };
 

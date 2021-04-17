@@ -1,12 +1,12 @@
 {
   "name": "polkabtc-ui",
-  "version": "1.7.2",
+  "version": "1.8.0",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.1",
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.1.5",
-    "@interlay/polkabtc": "^0.11.2",
+    "@interlay/polkabtc": "^0.12.0",
     "@interlay/polkabtc-stats": "0.1.21",
     "@polkadot/extension-dapp": "0.36.1",
     "@polkadot/ui-keyring": "0.67.1",
@@ -51,6 +51,7 @@
     "react-toastify": "^6.0.5",
     "react-toggle": "^4.1.1",
     "react-transition-group": "^4.4.1",
+    "react-use": "^17.2.3",
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "twin.macro": "^2.3.0",
@@ -59,6 +60,12 @@
   },
   "devDependencies": {
     "@polkadot/typegen": "3.9.3",
+    "@storybook/addon-actions": "^6.2.8",
+    "@storybook/addon-essentials": "^6.2.8",
+    "@storybook/addon-links": "^6.2.8",
+    "@storybook/node-logger": "^6.2.8",
+    "@storybook/preset-create-react-app": "^3.1.7",
+    "@storybook/react": "^6.2.8",
     "@tailwindcss/postcss7-compat": "^2.0.3",
     "autoprefixer": "9",
     "cross-env": "^7.0.3",
@@ -81,8 +88,8 @@
     "start-testnet": "cross-env REACT_APP_BITCOIN_NETWORK=testnet yarn start",
     "generate:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package sample-polkadotjs-typegen/interfaces --input ./src/interfaces",
     "generate:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package sample-polkadotjs-typegen/interfaces --endpoint btc-parachain.json --output ./src/interfaces",
-    "lint": "eslint ./src/**/*.{ts,tsx} --ignore-path .eslintignore .",
-    "lint-fix": "eslint --fix ./src/**/*.{ts,tsx} --ignore-path .eslintignore .",
+    "lint": "eslint ./src/**/*.{ts,tsx,js,jsx} --ignore-path .eslintignore .",
+    "lint-fix": "eslint --fix ./src/**/*.{ts,tsx,js,jsx} --ignore-path .eslintignore .",
     "format": "prettier --config .prettierrc --write .",
     "setup": "yarn generate:defs && yarn generate:meta",
     "build": "craco build",
@@ -94,7 +101,9 @@
     "eject": "react-scripts eject",
     "compose:regtest": "docker-compose up",
     "compose:testnet": "docker-compose -f ./docker-compose.testnet.yml up",
-    "compose:down": "docker-compose down --remove-orphans -v"
+    "compose:down": "docker-compose down --remove-orphans -v",
+    "storybook": "start-storybook -p 6006 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "homepage": "",
   "browserslist": {
@@ -113,5 +122,20 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "eslintConfig": {
+    "overrides": [
+      {
+        "files": [
+          "**/*.stories.*"
+        ],
+        "rules": {
+          "import/no-anonymous-default-export": "off"
+        }
+      }
+    ]
+  },
+  "resolutions": {
+    "babel-loader": "8.1.0"
   }
 }

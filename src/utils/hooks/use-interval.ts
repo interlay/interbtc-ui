@@ -7,8 +7,8 @@ import {
 function useInterval(
   callback: () => void,
   delay: number | null,
-  shouldRunInitially: boolean = false
-) {
+  shouldRunInitially = false
+): void {
   const savedCallback = useRef<() => void>();
 
   // Remember the latest callback

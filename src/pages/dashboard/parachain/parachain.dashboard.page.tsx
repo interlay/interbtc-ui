@@ -70,29 +70,30 @@ export default function ParachainDashboard(): ReactElement {
   }, [fetchTotalStatusUpdates]);
 
   const tableHeadings = [
-    <h1>{t('id')}</h1>,
-    <h1>{t('timestamp')}</h1>,
-    <h1>{t('proposed_status')}</h1>,
-    <h1>{t('proposed_changes')}</h1>,
-    <h1>{t('btc_block_hash')}</h1>,
-    <h1>{t('votes_yes_no')}</h1>,
-    <h1>{t('result')}</h1>
+    <h1 key={1}>{t('id')}</h1>,
+    <h1 key={2}>{t('timestamp')}</h1>,
+    <h1 key={3}>{t('proposed_status')}</h1>,
+    <h1 key={4}>{t('proposed_changes')}</h1>,
+    <h1 key={5}>{t('btc_block_hash')}</h1>,
+    <h1 key={6}>{t('votes_yes_no')}</h1>,
+    <h1 key={7}>{t('result')}</h1>
   ];
 
   const tableStatusUpdateRow = useMemo(
     () => (updt: DashboardStatusUpdateInfo): ReactElement[] => [
-      <p>{updt.id}</p>,
-      <p>{formatDateTimePrecise(new Date(updt.timestamp))}</p>,
-      <p>
+      <p key={1}>{updt.id}</p>,
+      <p key={2}>{formatDateTimePrecise(new Date(updt.timestamp))}</p>,
+      <p key={3}>
         {updt.addError ?
           [t('dashboard.parachain.add_error', { error: updt.addError }), updt.removeError ? <br /> : ''] :
           updt.removeError ?
             t('dashboard.parachain.remove_error', { error: updt.removeError }) :
             t('dashboard.parachain.no_change')}
       </p>,
-      <p>{updt.btc_block_hash}</p>,
-      <p>{t('dashboard.parachain.votes', { yeas: updt.yeas, nays: updt.nays })}</p>,
+      <p key={4}>{updt.btc_block_hash}</p>,
+      <p key={5}>{t('dashboard.parachain.votes', { yeas: updt.yeas, nays: updt.nays })}</p>,
       <StatusComponent
+        key={6}
         {...(updt.executed ?
           { text: t('dashboard.parachain.executed'), category: StatusCategories.Ok } :
           updt.forced ?
@@ -122,6 +123,7 @@ export default function ParachainDashboard(): ReactElement {
             <div style={{ margin: '40px 0px' }}>
               <div>
                 <p
+                  className='mb-4'
                   style={{
                     fontWeight: 700,
                     fontSize: '26px'

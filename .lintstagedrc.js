@@ -1,6 +1,6 @@
 
 module.exports = {
-  './src/**/*.{ts,tsx}': 'eslint --fix ./src/**/*.{ts,tsx} --ignore-path .eslintignore .',
+  './src/**/*.{ts,tsx,js,jsx}': 'yarn lint-fix',
   // TODO: double-check
-  // './src/**/*.{ts,tsx,scss}': 'prettier --config .prettierrc --write'
+  // './src/**/*.{ts,tsx,js,jsx,scss}': 'yarn format'
 };

@@ -20,7 +20,7 @@ interface Props {
 const TransitionWrapper = ({
   location,
   children
-}: Props) => (
+}: Props): JSX.Element => (
   <TransitionGroup>
     <CSSTransition
       key={location.key}

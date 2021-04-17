@@ -1,4 +1,5 @@
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import * as React from 'react';
 import { useSelector } from 'react-redux';
@@ -49,7 +50,7 @@ interface PatchedVaultData extends Omit<VaultData, 'lifetime_sla'> {
 // TODO: should be paginated
 const VaultScoresTable = ({
   challengeTime
-}: Props) => {
+}: Props): JSX.Element => {
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
   const statsApi = usePolkabtcStats();
   const [data, setData] = React.useState<(PatchedVaultData)[]>([]);
@@ -184,8 +185,10 @@ const VaultScoresTable = ({
         <InterlayTable {...getTableProps()}>
           <InterlayThead>
             {headerGroups.map(headerGroup => (
+              // eslint-disable-next-line react/jsx-key
               <InterlayTr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => (
+                  // eslint-disable-next-line react/jsx-key
                   <InterlayTh
                     {...column.getHeaderProps([
                       {
@@ -213,9 +216,11 @@ const VaultScoresTable = ({
               prepareRow(row);
 
               return (
+                // eslint-disable-next-line react/jsx-key
                 <InterlayTr {...row.getRowProps()}>
                   {row.cells.map(cell => {
                     return (
+                      // eslint-disable-next-line react/jsx-key
                       <InterlayTd
                         {...cell.getCellProps([
                           {

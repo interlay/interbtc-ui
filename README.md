@@ -189,6 +189,21 @@ Test the project.
 yarn test
 ```
 
+### Design System
+
+Visualize the Tailwindcss configuration.
+
+```bash
+yarn tailwind-config-viewer
+```
+
+Locally Run or build Storybook.
+
+```bash
+yarn storybook # locally run
+yarn build-storybook # build
+```
+
 ## Help
 
 ### Bitcoin Regtest

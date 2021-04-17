@@ -14,8 +14,6 @@ const requestDotMocked = async (): Promise<void> => {
 };
 
 describe('Component: Topbar', () => {
-  before(() => {});
-
   it('1. Hide Topbar if is loading', done => {
     const store = mockStore({
       general: {

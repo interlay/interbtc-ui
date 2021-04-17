@@ -7,11 +7,11 @@ import {
 } from 'react-bootstrap';
 
 // TODO: should use a tailwindcss Tabs component
-const InterlayTabs = (props: TabsProps) => (
+const InterlayTabs = (props: TabsProps): JSX.Element => (
   <Tabs {...props} />
 );
 
-const InterlayTab = (props: TabProps) => (
+const InterlayTab = (props: TabProps): JSX.Element => (
   <Tab {...props} />
 );
 

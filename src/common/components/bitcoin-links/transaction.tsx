@@ -7,7 +7,7 @@ export default class BitcoinTransaction extends React.Component<{
   txId: string;
   shorten?: boolean;
 }> {
-  render() {
+  render(): JSX.Element {
     return (
       <div>
         {this.props.txId ? (

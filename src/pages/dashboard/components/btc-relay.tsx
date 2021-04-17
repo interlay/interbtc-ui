@@ -8,15 +8,12 @@ import { StyledLinkData } from '../../../common/components/dashboard-table/dashb
 import * as constants from '../../../constants';
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
+import clsx from 'clsx';
 
-// eslint-disable-next-line no-unused-vars
 enum Status {
-  // eslint-disable-next-line no-unused-vars
   Loading,
-  // eslint-disable-next-line no-unused-vars
   Ok,
-  // eslint-disable-next-line no-unused-vars
-  Failure,
+  Failure
 }
 
 type BtcRelayProps = {
@@ -92,7 +89,11 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
             style={{ borderColor: getAccents(statusColor).color }}
             id='relay-circle'>
             <h1
-              className='h1-xl-text-center'
+              className={clsx(
+                'h1-xl',
+                'text-3xl',
+                'text-center'
+              )}
               style={{ color: getAccents(statusColor).color }}
               id='relay-circle-text'>
               {graphText}
@@ -126,7 +127,12 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
               className='status-circle border-interlayBlue'
               id='relay-circle'>
               <h1
-                className='h1-xl-text-center text-interlayBlue'
+                className={clsx(
+                  'h1-xl',
+                  'text-3xl',
+                  'text-interlayBlue',
+                  'text-center'
+                )}
                 id='relay-circle-text'>
                 {t('blockstream')}
               </h1>

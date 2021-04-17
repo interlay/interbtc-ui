@@ -11,7 +11,7 @@ interface Props {
 const EllipsisLoader = ({
   className,
   dotClassName
-}: Props) => (
+}: Props): JSX.Element => (
   <div className={clsx(styles['lds-ellipsis'], className)}>
     {Array<number>(4)
       .fill(0)

@@ -2,7 +2,7 @@
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-function TestnetBanner() {
+function TestnetBanner(): JSX.Element {
   const { t } = useTranslation();
 
   return (

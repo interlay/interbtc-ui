@@ -43,17 +43,13 @@ function StyledLinkData(props: StyledLinkDataProps): ReactElement {
 /**
  * Helper component to display status text, with appropriate colour and status icon
  **/
-// eslint-disable-next-line no-unused-vars
 enum StatusCategories {
-  // eslint-disable-next-line no-unused-vars
   Bad,
-  // eslint-disable-next-line no-unused-vars
   Warning,
-  // eslint-disable-next-line no-unused-vars
   Ok,
-  // eslint-disable-next-line no-unused-vars
-  Neutral,
+  Neutral
 }
+
 type StatusComponentProps = {
     text: string;
     category: StatusCategories;
@@ -130,14 +126,16 @@ function DashboardTable<D extends DataWithID, C>(props: DashboardTableProps<D, C
   return props.pageData.length > 0 ? (
     <div className='dashboard-table'>
       <div className='dashboard-table-grid'>
-        {props.headings.map((heading, i) => (
-          <div style={{ gridColumn: i + 1 }}>
+        {props.headings.map((heading, index) => (
+          <div
+            key={index}
+            style={{ gridColumn: index + 1 }}>
             <div className='line'></div>
             <div className='data-container'>{heading}</div>
             <div className='line'></div>
-            {props.pageData.map(point => (
-              <div>
-                <div className='data-container'>{props.dataPointDisplayer(point)[i]}</div>
+            {props.pageData.map((point, index) => (
+              <div key={index}>
+                <div className='data-container'>{props.dataPointDisplayer(point)[index]}</div>
                 <div className='line'></div>
               </div>
             ))}

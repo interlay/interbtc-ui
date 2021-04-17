@@ -3,7 +3,7 @@
 const InterlayImage = ({
   alt,
   ...rest
-}: React.ComponentPropsWithRef<'img'>) => (
+}: React.ComponentPropsWithRef<'img'>): JSX.Element => (
   <img
     alt={alt}
     {...rest} />

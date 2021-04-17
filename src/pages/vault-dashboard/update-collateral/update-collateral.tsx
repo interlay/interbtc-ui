@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateCollateralAction, updateCollateralizationAction } from '../../../common/actions/vault.actions';
-import { planckToDOT, dotToPlanck, roundTwoDecimals } from '@interlay/polkabtc';
+import { dotToPlanck, roundTwoDecimals } from '@interlay/polkabtc';
 import { StoreType } from '../../../common/types/util.types';
 import Big from 'big.js';
 import ButtonMaybePending from '../../../common/components/pending-button';
@@ -12,14 +12,11 @@ import { useTranslation } from 'react-i18next';
 import { DOT } from '@interlay/polkabtc/build/interfaces';
 import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
 
-// Commenting because moving this to last line casues 3 "used before it was defined" warnings
+// Commenting because moving this to last line causes 3 "used before it was defined" warnings
 // eslint-disable-next-line import/exports-last
 export enum CollateralUpdateStatus {
-  // eslint-disable-next-line no-unused-vars
   Hidden,
-  // eslint-disable-next-line no-unused-vars
   Increase,
-  // eslint-disable-next-line no-unused-vars
   Decrease
 }
 
@@ -32,7 +29,7 @@ type UpdateCollateralProps = {
   status: CollateralUpdateStatus;
 };
 
-export default function UpdateCollateralModal(props: UpdateCollateralProps) {
+export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX.Element {
   const { polkaBtcLoaded, vaultClientLoaded, address } = useSelector((state: StoreType) => state.general);
   const { register, handleSubmit, errors } = useForm<UpdateCollateralForm>();
   // denoted in DOT
@@ -73,10 +70,8 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps) {
       }
 
       const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const balanceLockedDOT = await window.polkaBTC.collateral.balanceLockedDOT(vaultId);
-      const collateralDotString = planckToDOT(balanceLockedDOT.toString());
-
-      dispatch(updateCollateralAction(collateralDotString));
+      const balanceLockedDOT = await window.polkaBTC.collateral.balanceLocked(vaultId);
+      dispatch(updateCollateralAction(balanceLockedDOT.toString()));
       let collateralization;
       try {
         collateralization = new Big(parseFloat(newCollateralization) / 100);

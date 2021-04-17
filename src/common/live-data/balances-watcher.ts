@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from '../actions/general.actions';
 import { StoreState } from '../types/util.types';
-import { planckToDOT, satToBTC } from '@interlay/polkabtc';
+import { satToBTC } from '@interlay/polkabtc';
 import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
 
 export default async function fetchBalances(dispatch: Dispatch, store: StoreState): Promise<void> {
@@ -12,13 +12,12 @@ export default async function fetchBalances(dispatch: Dispatch, store: StoreStat
   try {
     const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
     const balancePolkaSAT = await window.polkaBTC.treasury.balancePolkaBTC(accountId);
-    const balancePLANCK = await window.polkaBTC.collateral.balanceDOT(accountId);
+    const latestBalanceDOT = await window.polkaBTC.collateral.balance(accountId);
     const latestBalancePolkaBTC = satToBTC(balancePolkaSAT.toString());
-    const latestBalanceDOT = planckToDOT(balancePLANCK.toString());
 
     // update store only if there is a difference between balances
-    if (latestBalanceDOT !== balanceDOT) {
-      dispatch(updateBalanceDOTAction(latestBalanceDOT));
+    if (latestBalanceDOT.toString() !== balanceDOT) {
+      dispatch(updateBalanceDOTAction(latestBalanceDOT.toString()));
     }
 
     if (latestBalancePolkaBTC !== balancePolkaBTC) {

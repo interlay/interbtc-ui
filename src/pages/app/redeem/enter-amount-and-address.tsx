@@ -47,8 +47,8 @@ import {
   displayBtcAmount,
   getUsdAmount
 } from 'common/utils/utils';
-import bitcoinLogo from 'assets/img/small-bitcoin-logo.png';
-import polkadotLogo from 'assets/img/small-polkadot-logo.png';
+import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
+import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import ParachainStatusInfo from 'components/ParachainStatusInfo';
 import { parachainToUIRedeemRequest } from 'common/utils/requests';
 
@@ -334,12 +334,10 @@ function EnterAmountAndAddress(): ReactElement {
               <div className='col-6 temp-text-left'>{t('bridge_fee')}</div>
               <div className='col fee-number'>
                 <div>
-                  <img
-                    src={bitcoinLogo}
-                    width='23px'
-                    height='23px'
-                    alt='bitcoin logo'>
-                  </img> &nbsp;
+                  <BitcoinLogoIcon
+                    className='inline-block'
+                    width={23}
+                    height={23} /> &nbsp;
                   <span className='fee-btc'>{displayBtcAmount(redeemFee)}</span> BTC
                 </div>
                 <div>{'~ $' + getUsdAmount(redeemFee, prices.bitcoin.usd)}</div>
@@ -372,12 +370,10 @@ function EnterAmountAndAddress(): ReactElement {
             <div className='row'>
               <div className='col-6 temp-text-left total-added-value'>{t('you_will_receive')}</div>
               <div className='col-6'>
-                <img
-                  src={bitcoinLogo}
-                  width='23px'
-                  height='23px'
-                  alt='bitcoin logo'>
-                </img> &nbsp;&nbsp;
+                <BitcoinLogoIcon
+                  className='inline-block'
+                  width={23}
+                  height={23} /> &nbsp;&nbsp;
                 {calculateTotalBTC()} BTC
                 <div className='send-price'>
                   {'~ $' + getUsdAmount(calculateTotalBTC(), prices.bitcoin.usd)}
@@ -388,12 +384,10 @@ function EnterAmountAndAddress(): ReactElement {
               <div className='row mt-4'>
                 <div className='col-6 temp-text-left green-text'>{t('redeem_page.earned_premium')}</div>
                 <div className='col-6'>
-                  <img
-                    src={polkadotLogo}
-                    width='23px'
-                    height='23px'
-                    alt='polkadot logo'>
-                  </img> &nbsp;
+                  <PolkadotLogoIcon
+                    className='inline-block'
+                    width={23}
+                    height={23} /> &nbsp;
                   {calculateTotalDOT()} DOT
                   <div className='send-price'>
                     {'~ $' + getUsdAmount(calculateTotalDOT(), prices.polkadot.usd)}

@@ -5,7 +5,7 @@ import InterlayLink from 'components/UI/InterlayLink';
 export default class BitcoinBlockHash extends React.Component<{
   blockHash: string;
 }> {
-  render() {
+  render(): JSX.Element {
     return (
       <InterlayLink
         href={

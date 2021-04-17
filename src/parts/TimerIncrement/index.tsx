@@ -10,7 +10,7 @@ const formatTime = (seconds: number): string => {
   return `Last updated ${seconds} seconds ago`;
 };
 
-function TimerIncrement() {
+function TimerIncrement(): JSX.Element {
   const [seconds, setSeconds] = useState(0);
 
   useInterval(() => {

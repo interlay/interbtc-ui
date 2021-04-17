@@ -1,39 +1,52 @@
 module.exports = {
+  parser: '@typescript-eslint/parser',
+  plugins: [
+    '@typescript-eslint',
+    'react',
+    'import'
+    // "prettier"
+  ],
+  extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended',
+    // TODO: double-check
+    // "plugin:prettier/recommended",
+    // "prettier"
+    'react-app',
+    'react-app/jest',
+    'google'
+  ],
   env: {
     browser: true,
     es2020: true,
     jest: true,
     node: true
   },
-  extends: [
-    'eslint:recommended',
-    'react-app',
-    'react-app/jest',
-    'google'
-    // TODO: double-check
-    // "plugin:@typescript-eslint/recommended",
-    // "plugin:prettier/recommended",
-    // "prettier"
-  ],
-  // TODO: double-check
-  // "parser": "@typescript-eslint/parser",
-  parserOptions: {
-    ecmaVersion: 11,
-    sourceType: 'module',
-    parser: 'babel-eslint',
-    ecmaFeatures: {
-      jsx: true
+  settings: {
+    react: {
+      version: 'detect'
     }
   },
-  plugins: [
-    'react',
-    'import'
-    // TODO: double-check
-    // "@typescript-eslint",
-    // "prettier"
-  ],
   rules: {
-    // ESLinting rules
+    // TS ESLinting rules
+    '@typescript-eslint/explicit-function-return-type': 0,
+    '@typescript-eslint/explicit-member-accessibility': 0,
+    '@typescript-eslint/indent': 0,
+    '@typescript-eslint/member-delimiter-style': 0,
+    '@typescript-eslint/no-explicit-any': 0,
+    '@typescript-eslint/no-var-requires': 0,
+    '@typescript-eslint/no-use-before-define': 0,
+    // MEMO: inspired by https://github.com/typescript-eslint/typescript-eslint/issues/2621#issuecomment-701970389
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      2,
+      {
+        argsIgnorePattern: '^_'
+      }
+    ],
+
+    // JS ESLinting rules
     'comma-dangle': [
       'error',
       'never'
@@ -113,6 +126,8 @@ module.exports = {
     ],
 
     // React ESLinting rules
+    'react/jsx-uses-react': 'off',
+    'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
     'react/jsx-first-prop-new-line': [
       'error',

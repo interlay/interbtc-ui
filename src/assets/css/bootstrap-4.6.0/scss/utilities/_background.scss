@@ -1,8 +1,9 @@
 // stylelint-disable declaration-no-important
 
-@each $color, $value in $theme-colors {
-  @include bg-variant(".bg-#{$color}", $value, true);
-}
+// MEMO: opt in to use tailwindcss
+// @each $color, $value in $theme-colors {
+//   @include bg-variant(".bg-#{$color}", $value, true);
+// }
 
 @if $enable-gradients {
   @each $color, $value in $theme-colors {

@@ -11,7 +11,7 @@ import {
 import RedeemModal from './modal/redeem-modal';
 import { getUsdAmount } from '../../../common/utils/utils';
 
-export default function RedeemInfo() {
+export default function RedeemInfo(): JSX.Element {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { address, prices } = useSelector((state: StoreType) => state.general);

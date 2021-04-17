@@ -6,11 +6,11 @@ import {
   ToggleButtonGroupProps
 } from 'react-bootstrap';
 
-const InterlayToggleButtonGroup = (props: ToggleButtonGroupProps<number>) => (
+const InterlayToggleButtonGroup = (props: ToggleButtonGroupProps<number>): JSX.Element => (
   <ToggleButtonGroup {...props} />
 );
 
-const InterlayToggleButton = (props: ToggleButtonProps) => (
+const InterlayToggleButton = (props: ToggleButtonProps): JSX.Element => (
   <ToggleButton {...props} />
 );
 

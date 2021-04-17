@@ -1,4 +1,5 @@
 
+// TODO: could use tailwindcss
 import Tooltip from 'rc-tooltip';
 import { TooltipProps } from 'rc-tooltip/lib/Tooltip';
 import 'rc-tooltip/assets/bootstrap.css';
@@ -6,7 +7,7 @@ import 'rc-tooltip/assets/bootstrap.css';
 const InterlayTooltip = ({
   children,
   ...rest
-}: TooltipProps) => (
+}: TooltipProps): JSX.Element => (
   <Tooltip
     placement='top'
     {...rest}>

@@ -1,6 +1,6 @@
 
 // Set to true to show only the static landing page
-const checkStaticPage = () => {
+const checkStaticPage = (): boolean => {
   if (process.env.REACT_APP_STATIC_PAGE_ONLY !== undefined) {
     if (process.env.REACT_APP_STATIC_PAGE_ONLY === 'true') {
       return true;
