@@ -14,9 +14,6 @@ import { BlockColumns } from '@interlay/polkabtc-stats';
 import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
-// TODO: should fix by scoping only necessary CSS into a component
-import '../dashboard.page.scss';
-import '../dashboard-subpage.scss';
 
 export default function RelayDashboard(): ReactElement {
   const statsApi = usePolkabtcStats();

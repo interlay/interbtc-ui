@@ -33,9 +33,6 @@ import {
   formatDateTimePrecise
 } from 'common/utils/utils';
 import * as constants from '../../../constants';
-// TODO: should fix by scoping only necessary CSS into a component
-import '../dashboard.page.scss';
-import '../dashboard-subpage.scss';
 
 function IssueDashboard(): JSX.Element {
   const {

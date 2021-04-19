@@ -33,9 +33,6 @@ import {
   formatDateTimePrecise
 } from 'common/utils/utils';
 import LineChartComponent from '../components/line-chart-component';
-// TODO: should fix by scoping only necessary CSS into a component
-import '../dashboard.page.scss';
-import '../dashboard-subpage.scss';
 
 function RedeemDashboard(): JSX.Element {
   const {
