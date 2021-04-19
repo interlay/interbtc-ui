@@ -41,7 +41,7 @@ import VaultDashboard from 'pages/vault-dashboard/vault-dashboard.page';
 import StakedRelayer from 'pages/staked-relayer/staked-relayer.page';
 import Challenges from 'pages/Challenges';
 import VaultsDashboard from 'pages/dashboard/vaults/vaults.dashboard.page';
-import IssueDashboard from 'pages/dashboard/issue/issue.dashboard.page';
+import IssueDashboard from 'pages/dashboard/IssueDashboard';
 import RedeemDashboard from 'pages/dashboard/redeem/redeem.dashboard.page';
 import LandingPage from 'pages/landing/landing.page';
 import RelayDashboard from 'pages/dashboard/relay/relay.dashboard.page';
