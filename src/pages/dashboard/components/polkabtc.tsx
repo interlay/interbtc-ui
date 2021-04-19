@@ -24,6 +24,14 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
 
   // eslint-disable-next-line no-array-constructor
   const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number }>());
+  const pointIssuesPerDay = useMemo(
+    () =>
+      cumulativeIssuesPerDay.map((dataPoint, i) => {
+        if (i === 0) return 0;
+        return dataPoint.sat - cumulativeIssuesPerDay[i - 1].sat;
+      }),
+    [cumulativeIssuesPerDay]
+  );
 
   const fetchIssuesLastDays = useMemo(
     () => async () => {
@@ -41,7 +49,7 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
     <DashboardCard>
       <div className='card-top-content'>
         <div className='values-container'>
-          <h1 style={{ color: getAccents('d_yellow').color }}>{t('dashboard.total_value_locked')}</h1>
+          <h1 style={{ color: getAccents('d_pink').color }}>{t('dashboard.issue.issued')}</h1>
           <h2>{t('dashboard.issue.total_polkabtc', { amount: totalPolkaBTC })}</h2>
           {/* TODO: add the price API */}
           <h2>${getUsdAmount(totalPolkaBTC, prices.bitcoin.usd)}</h2>
@@ -69,17 +77,19 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
       </div>
       <div className='chart-container'>
         <LineChartComponent
-          color='d_yellow'
-          label={t('dashboard.total_issued_chart') as string}
+          color={['d_yellow', 'd_grey']}
+          label={[t('dashboard.issue.total_issued_chart'), t('dashboard.issue.perday_issued_chart')]}
           yLabels={cumulativeIssuesPerDay
             .slice(1)
             .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}
-          yAxisProps={
-            { beginAtZero: true, position: 'left' }
-          }
-          data={
-            cumulativeIssuesPerDay.slice(1).map(dataPoint => Number(satToBTC(dataPoint.sat.toString())))
-          } />
+          yAxisProps={[
+            { beginAtZero: true, position: 'left', maxTicksLimit: 6 },
+            { position: 'right', maxTicksLimit: 6 }
+          ]}
+          data={[
+            cumulativeIssuesPerDay.slice(1).map(dataPoint => Number(satToBTC(dataPoint.sat.toString()))),
+            pointIssuesPerDay.slice(1).map(sat => Number(satToBTC(sat.toString())))
+          ]} />
       </div>
     </DashboardCard>
   );
