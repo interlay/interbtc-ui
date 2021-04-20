@@ -161,110 +161,99 @@ function IssueDashboard(): JSX.Element {
     <MainContainer>
       <div className='dashboard-container dashboard-fade-in-animation'>
         <div className='dashboard-wrapper'>
-          <div>
-            <PageTitle
-              mainTitle={t('issue_page.issue_requests')}
-              subTitle={<TimerIncrement />} />
-            {/* TODO: should use hr or pseudo element */}
-            <div
-              style={{ backgroundColor: getAccents('d_yellow').color }}
-              className='title-line' />
-            <div className='table-top-data-container'>
-              <div className='values-container'>
-                <div>
-                  <h2
-                    style={{ color: getAccents('d_pink').color }}
-                    className={clsx(
-                      'mb-2',
-                      'text-base',
-                      'font-normal'
-                    )}>
-                    {t('dashboard.issue.issued')}
-                  </h2>
-                  <h1
-                    className={clsx(
-                      'mb-2',
-                      'text-xl',
-                      'font-bold'
-                    )}>
-                    {t('dashboard.issue.total_polkabtc', { amount: totalPolkaBTC })}
-                  </h1>
-                  <h1
-                    className={clsx(
-                      'opacity-50',
-                      'mb-2',
-                      'text-xl',
-                      'font-bold'
-                    )}>
-                    ${(prices.bitcoin.usd * parseFloat(totalPolkaBTC)).toLocaleString()}
-                  </h1>
-                </div>
-                <div>
-                  <h2
-                    style={{ color: getAccents('d_green').color }}
-                    className={clsx(
-                      'mb-2',
-                      'text-base',
-                      'font-normal'
-                    )}>
-                    {t('dashboard.issue.issue_requests')}
-                  </h2>
-                  <h1
-                    className={clsx(
-                      'mb-2',
-                      'text-xl',
-                      'font-bold'
-                    )}>
-                    {totalSuccessfulIssues === '-' ? t('no_data') : totalSuccessfulIssues}
-                  </h1>
-                </div>
-              </div>
-              <div className='card'>
-                <div className='chart-container'>
-                  <LineChartComponent
-                    color={['d_pink', 'd_grey']}
-                    label={[
-                      t('dashboard.issue.total_issued_chart'),
-                      t('dashboard.issue.perday_issued_chart')
-                    ]}
-                    yLabels={cumulativeIssuesPerDay
+          <PageTitle
+            mainTitle={t('issue_page.issue_requests')}
+            subTitle={<TimerIncrement />} />
+          <hr className={clsx('border-interlayYellow')} />
+          <div className='table-top-data-container'>
+            <div className='values-container'>
+              <h2
+                style={{ color: getAccents('d_pink').color }}
+                className={clsx(
+                  'mb-2',
+                  'text-base',
+                  'font-normal'
+                )}>
+                {t('dashboard.issue.issued')}
+              </h2>
+              <h1
+                className={clsx(
+                  'mb-2',
+                  'text-xl',
+                  'font-bold'
+                )}>
+                {t('dashboard.issue.total_polkabtc', { amount: totalPolkaBTC })}
+              </h1>
+              <h1
+                className={clsx(
+                  'opacity-50',
+                  'mb-2',
+                  'text-xl',
+                  'font-bold'
+                )}>
+                ${(prices.bitcoin.usd * parseFloat(totalPolkaBTC)).toLocaleString()}
+              </h1>
+              <h2
+                style={{ color: getAccents('d_green').color }}
+                className={clsx(
+                  'mb-2',
+                  'text-base',
+                  'font-normal'
+                )}>
+                {t('dashboard.issue.issue_requests')}
+              </h2>
+              <h1
+                className={clsx(
+                  'mb-2',
+                  'text-xl',
+                  'font-bold'
+                )}>
+                {totalSuccessfulIssues === '-' ? t('no_data') : totalSuccessfulIssues}
+              </h1>
+            </div>
+            <div className='card'>
+              <div className='chart-container'>
+                <LineChartComponent
+                  color={['d_pink', 'd_grey']}
+                  label={[
+                    t('dashboard.issue.total_issued_chart'),
+                    t('dashboard.issue.perday_issued_chart')
+                  ]}
+                  yLabels={cumulativeIssuesPerDay
+                    .slice(1)
+                    .map(dataPoint =>
+                      new Date(dataPoint.date).toISOString().substring(0, 10)
+                    )}
+                  yAxisProps={[
+                    { beginAtZero: true, position: 'left', maxTicksLimit: 6 },
+                    { position: 'right', maxTicksLimit: 6 }
+                  ]}
+                  data={[
+                    cumulativeIssuesPerDay
                       .slice(1)
-                      .map(dataPoint =>
-                        new Date(dataPoint.date).toISOString().substring(0, 10)
-                      )}
-                    yAxisProps={[
-                      { beginAtZero: true, position: 'left', maxTicksLimit: 6 },
-                      { position: 'right', maxTicksLimit: 6 }
-                    ]}
-                    data={[
-                      cumulativeIssuesPerDay
-                        .slice(1)
-                        .map(dataPoint => Number(satToBTC(dataPoint.sat.toString()))),
-                      pointIssuesPerDay.slice(1).map(sat => Number(satToBTC(sat.toString())))
-                    ]} />
-                </div>
+                      .map(dataPoint => Number(satToBTC(dataPoint.sat.toString()))),
+                    pointIssuesPerDay.slice(1).map(sat => Number(satToBTC(sat.toString())))
+                  ]} />
               </div>
             </div>
-            <div style={{ margin: '40px 0px' }}>
-              <div>
-                <p
-                  className='mb-4'
-                  style={{
-                    fontWeight: 700,
-                    fontSize: '26px'
-                  }}>
-                  {t('issue_page.recent_requests')}
-                </p>
-              </div>
-              <DashboardTable
-                richTable={true}
-                pageData={issueRequests}
-                totalPages={Math.ceil(Number(totalIssues) / tableParams.perPage)}
-                tableParams={tableParams}
-                setTableParams={setTableParams}
-                headings={tableHeadings}
-                dataPointDisplayer={tableIssueRequestRow} />
-            </div>
+          </div>
+          <div style={{ margin: '40px 0px' }}>
+            <p
+              className='mb-4'
+              style={{
+                fontWeight: 700,
+                fontSize: '26px'
+              }}>
+              {t('issue_page.recent_requests')}
+            </p>
+            <DashboardTable
+              richTable={true}
+              pageData={issueRequests}
+              totalPages={Math.ceil(Number(totalIssues) / tableParams.perPage)}
+              tableParams={tableParams}
+              setTableParams={setTableParams}
+              headings={tableHeadings}
+              dataPointDisplayer={tableIssueRequestRow} />
           </div>
         </div>
       </div>
