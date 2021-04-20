@@ -258,7 +258,6 @@ function IssueDashboard(): JSX.Element {
         <div>
           <h2
             className={clsx(
-              'mb-4',
               'text-2xl',
               'font-bold'
             )}>

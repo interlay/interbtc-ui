@@ -59,29 +59,6 @@
   }
 }
 
-// ray test touch <
-.table-top-data-container {
-  display: grid;
-  grid-template-columns: 0.8fr 1fr;
-  column-gap: 50px;
-  margin-top: 40px;
-  padding: 0px 10%;
-
-  .values-container {
-    padding: 10% 0px;
-    display: grid;
-    grid-template-rows: 0.5fr 0.5fr;
-    justify-items: start;
-    align-items: center;
-  }
-
-  .values-container.redeem-page {
-    grid-template-rows: repeat(3, 0.3fr);
-    row-gap: 20px;
-  }
-}
-// ray test touch >
-
 .dashboard-graphs-container {
   margin-top: 40px;
 }
