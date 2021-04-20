@@ -6,7 +6,6 @@ import ParachainSecurity from '../components/parachain-security';
 import ActiveStakedRelayers from '../components/active-staked-relayers';
 import StakedRelayerTable from '../staked-relayer-table/staked-relayer-table';
 import { DashboardStatusUpdateInfo } from '../../../common/types/util.types';
-import { getAccents } from '../dashboard-colors';
 import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
 import { defaultTableDisplayParams, formatDateTimePrecise } from '../../../common/utils/utils';
 import DashboardTable, {
@@ -114,9 +113,7 @@ export default function ParachainDashboard(): ReactElement {
           <PageTitle
             mainTitle={t('dashboard.parachain.parachain')}
             subTitle={<TimerIncrement />} />
-          <div
-            style={{ backgroundColor: getAccents('d_pink').color }}
-            className='title-line' />
+          <hr className='border-interlayRose' />
           <div className='parachain-graphs-container dashboard-graphs-container'>
             <ParachainSecurity />
             <ActiveStakedRelayers />

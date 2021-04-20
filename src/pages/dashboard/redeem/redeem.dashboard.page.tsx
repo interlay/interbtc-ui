@@ -185,9 +185,7 @@ function RedeemDashboard(): JSX.Element {
           <PageTitle
             mainTitle={t('dashboard.redeem.redeem')}
             subTitle={<TimerIncrement />} />
-          <div
-            style={{ backgroundColor: getAccents('d_pink').color }}
-            className='title-line' />
+          <hr className='border-interlayRose' />
           <div className='table-top-data-container'>
             <div className='values-container redeem-page'>
               <div>

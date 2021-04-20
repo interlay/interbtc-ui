@@ -7,7 +7,6 @@ import { defaultTableDisplayParams, formatDateTimePrecise } from '../../../commo
 import { RelayedBlock } from '../../../common/types/util.types';
 import DashboardTable, { StyledLinkData } from '../../../common/components/dashboard-table/dashboard-table';
 import * as constants from '../../../constants';
-import { getAccents } from '../dashboard-colors';
 import BtcRelay from '../components/btc-relay';
 import { reverseEndiannessHex, stripHexPrefix } from '@interlay/polkabtc';
 import { BlockColumns } from '@interlay/polkabtc-stats';
@@ -79,9 +78,7 @@ export default function RelayDashboard(): ReactElement {
           <PageTitle
             mainTitle={t('dashboard.relay.btcrelay')}
             subTitle={<TimerIncrement />} />
-          <div
-            style={{ backgroundColor: getAccents('d_yellow').color }}
-            className='title-line' />
+          <hr className='border-interlayTreePoppy' />
           <div className='dashboard-graphs-container'>
             <div className='relay-grid-container'>
               <BtcRelay displayBlockstreamData={true} />

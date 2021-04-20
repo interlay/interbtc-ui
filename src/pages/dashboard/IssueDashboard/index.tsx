@@ -172,7 +172,7 @@ function IssueDashboard(): JSX.Element {
           <PageTitle
             mainTitle={t('issue_page.issue_requests')}
             subTitle={<TimerIncrement />} />
-          <hr className={clsx('border-interlayTreePoppy')} />
+          <hr className='border-interlayTreePoppy' />
         </div>
         <div
           className={clsx(
