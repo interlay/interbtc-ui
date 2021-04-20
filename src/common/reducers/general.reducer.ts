@@ -11,13 +11,11 @@ import {
   SET_INSTALLED_EXTENSION,
   SHOW_ACCOUNT_MODAL,
   UPDATE_ACCOUNTS,
-  SET_ACTIVE_TAB,
   UPDATE_OF_PRICES,
   UPDATE_HEIGHTS,
   UPDATE_TOTALS
 } from '../types/actions.types';
 import { GeneralState, ParachainStatus } from '../types/util.types';
-import { TabTypes } from 'utils/enums/tab-types';
 
 const initialState = {
   polkaBtcLoaded: false,
@@ -35,7 +33,6 @@ const initialState = {
   btcRelayHeight: 0,
   bitcoinHeight: 0,
   parachainStatus: ParachainStatus.Loading,
-  selectedTabType: TabTypes.Issue,
   prices: { bitcoin: { usd: 0 }, polkadot: { usd: 0 } }
 };
 
@@ -47,8 +44,6 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
     return { ...state, btcRelayHeight: action.btcRelayHeight, bitcoinHeight: action.bitcoinHeight };
   case UPDATE_OF_PRICES:
     return { ...state, prices: action.prices };
-  case SET_ACTIVE_TAB:
-    return { ...state, selectedTabType: action.selectedTabType };
   case IS_POLKA_BTC_LOADED:
     return { ...state, polkaBtcLoaded: action.isLoaded };
   case IS_STAKED_RELAYER_LOADED:
@@ -63,8 +58,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       vaultClientLoaded: false,
       showAccountModal: false,
       extensions: [],
-      accounts: [],
-      selectedTabType: TabTypes.Issue
+      accounts: []
     };
   case INIT_GENERAL_DATA_ACTION:
     return {

@@ -36,7 +36,7 @@ const ActiveCollators = (): ReactElement => {
               buttonName='view collators'
               propsButtonColor='d_blue'
               buttonId='active-collators'
-              buttonLink={PAGES.HOME} />
+              buttonLink={PAGES.home} />
           </div>
         )}
       </div>

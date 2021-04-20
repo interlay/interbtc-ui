@@ -84,7 +84,7 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
                 buttonName='Status Updates'
                 propsButtonColor='d_green'
                 buttonId='parachain-security'
-                buttonLink={PAGES.PARACHAIN} />
+                buttonLink={PAGES.parachain} />
             </div>
           )}
         </div>

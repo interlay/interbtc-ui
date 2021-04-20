@@ -1,5 +1,5 @@
 
-import { useState, ReactElement } from 'react';
+import { useState } from 'react';
 import { Table, Badge } from 'react-bootstrap';
 import { FaCheck, FaHourglass } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
@@ -14,7 +14,7 @@ import { formatDateTimePrecise } from 'common/utils/utils';
 import { changeIssueIdAction } from 'common/actions/issue.actions';
 import { showAccountModalAction } from 'common/actions/general.actions';
 
-function IssueRequests(): ReactElement {
+function IssueRequests(): JSX.Element {
   const { address, extensions } = useSelector((state: StoreType) => state.general);
   const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address) || [];
   const [showModal, setShowModal] = useState(false);
