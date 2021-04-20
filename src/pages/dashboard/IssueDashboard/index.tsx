@@ -163,11 +163,17 @@ function IssueDashboard(): JSX.Element {
         'justify-center',
         'fade-in-animation'
       )}>
-      <div className='w-3/4'>
-        <PageTitle
-          mainTitle={t('issue_page.issue_requests')}
-          subTitle={<TimerIncrement />} />
-        <hr className={clsx('border-interlayTreePoppy')} />
+      <div
+        className={clsx(
+          'w-3/4',
+          'space-y-10'
+        )}>
+        <div>
+          <PageTitle
+            mainTitle={t('issue_page.issue_requests')}
+            subTitle={<TimerIncrement />} />
+          <hr className={clsx('border-interlayTreePoppy')} />
+        </div>
         <div
           className={clsx(
             'sm:flex',
@@ -213,7 +219,7 @@ function IssueDashboard(): JSX.Element {
             className={clsx(
               'border',
               'rounded',
-              'flex-1',
+              'sm:flex-1',
               'mx-6'
             )}>
             <LineChartComponent
@@ -249,22 +255,24 @@ function IssueDashboard(): JSX.Element {
               ]} />
           </div>
         </div>
-        <h2
-          className={clsx(
-            'mb-4',
-            'text-2xl',
-            'font-bold'
-          )}>
-          {t('issue_page.recent_requests')}
-        </h2>
-        <DashboardTable
-          richTable={true}
-          pageData={issueRequests}
-          totalPages={Math.ceil(Number(totalIssues) / tableParams.perPage)}
-          tableParams={tableParams}
-          setTableParams={setTableParams}
-          headings={tableHeadings}
-          dataPointDisplayer={tableIssueRequestRow} />
+        <div>
+          <h2
+            className={clsx(
+              'mb-4',
+              'text-2xl',
+              'font-bold'
+            )}>
+            {t('issue_page.recent_requests')}
+          </h2>
+          <DashboardTable
+            richTable={true}
+            pageData={issueRequests}
+            totalPages={Math.ceil(Number(totalIssues) / tableParams.perPage)}
+            tableParams={tableParams}
+            setTableParams={setTableParams}
+            headings={tableHeadings}
+            dataPointDisplayer={tableIssueRequestRow} />
+        </div>
       </div>
     </MainContainer>
   );
