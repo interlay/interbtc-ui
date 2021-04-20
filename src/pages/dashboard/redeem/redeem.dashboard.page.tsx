@@ -174,132 +174,135 @@ function RedeemDashboard(): JSX.Element {
   ]);
 
   return (
-    <MainContainer>
-      <div className='dashboard-container dashboard-fade-in-animation'>
-        <div className='dashboard-wrapper'>
-          <div>
-            <PageTitle
-              mainTitle={t('dashboard.redeem.redeem')}
-              subTitle={<TimerIncrement />} />
-            <div
-              style={{ backgroundColor: getAccents('d_pink').color }}
-              className='title-line' />
-            <div className='table-top-data-container'>
-              <div className='values-container redeem-page'>
-                <div>
-                  <h2
-                    style={{ color: `${getAccents('d_yellow').color}` }}
-                    className={clsx(
-                      'mb-2',
-                      'text-base',
-                      'font-normal'
-                    )}>
-                    {t('dashboard.redeem.total_redeemed')}
-                  </h2>
-                  <h1
-                    className={clsx(
-                      'mb-2',
-                      'text-xl',
-                      'font-bold'
-                    )}>
-                    {totalRedeemedAmount === '-' ? t('no_data') : satToBTC(totalRedeemedAmount)}
-                    &nbsp;BTC
-                  </h1>
-                  {totalRedeemedAmount === '-' ? (
-                    ''
-                  ) : (
-                    <h1
-                      className={clsx(
-                        'opacity-50',
-                        'mb-2',
-                        'text-xl',
-                        'font-bold'
-                      )}>
-                      $
-                      {(prices.bitcoin.usd * parseFloat(satToBTC(totalRedeemedAmount))).toLocaleString()}
-                    </h1>
-                  )}
-                </div>
-                <div>
-                  <h2
-                    style={{ color: getAccents('d_green').color }}
-                    className={clsx(
-                      'mb-2',
-                      'text-base',
-                      'font-normal'
-                    )}>
-                    {t('dashboard.redeem.total_redeems')}
-                  </h2>
-                  <h1
-                    className={clsx(
-                      'mb-2',
-                      'text-xl',
-                      'font-bold'
-                    )}>
-                    {totalSuccessfulRedeems === '-' ? t('no_data') : totalSuccessfulRedeems}
-                  </h1>
-                </div>
-                <div>
-                  <h2
-                    style={{ color: getAccents('d_green').color }}
-                    className={clsx(
-                      'mb-2',
-                      'text-base',
-                      'font-normal'
-                    )}>
-                    {t('dashboard.redeem.success_rate')}
-                  </h2>
-                  <h1
-                    className={clsx(
-                      'mb-2',
-                      'text-xl',
-                      'font-bold'
-                    )}>
-                    {totalRedeems === '-' ? t('no_data') : (redeemSuccessRate * 100).toFixed(2) + '%'}
-                  </h1>
-                </div>
-              </div>
-              <div className='card'>
-                <div className='chart-container'>
-                  <LineChartComponent
-                    color={['d_yellow', 'd_grey']}
-                    label={[
-                      t('dashboard.redeem.total_redeemed_chart'),
-                      t('dashboard.redeem.perday_redeemed_chart')
-                    ]}
-                    yLabels={cumulativeRedeemsPerDay.map(dataPoint =>
-                      new Date(dataPoint.date).toLocaleDateString()
-                    )}
-                    yAxisProps={[{ beginAtZero: true, position: 'left' }, { position: 'right' }]}
-                    data={[
-                      cumulativeRedeemsPerDay.map(dataPoint =>
-                        Number(satToBTC(dataPoint.sat.toString()))
-                      ),
-                      pointRedeemsPerDay.map(amount => Number(satToBTC(amount.toString())))
-                    ]} />
-                </div>
-              </div>
-            </div>
-            <div style={{ margin: '40px 0px' }}>
+    <MainContainer
+      className={clsx(
+        'flex',
+        'justify-center',
+        'fade-in-animation'
+      )}>
+      <div className='w-3/4'>
+        <div>
+          <PageTitle
+            mainTitle={t('dashboard.redeem.redeem')}
+            subTitle={<TimerIncrement />} />
+          <div
+            style={{ backgroundColor: getAccents('d_pink').color }}
+            className='title-line' />
+          <div className='table-top-data-container'>
+            <div className='values-container redeem-page'>
               <div>
-                <p
-                  className='mb-4'
-                  style={{
-                    fontWeight: 700,
-                    fontSize: '26px'
-                  }}>
-                  {t('issue_page.recent_requests')}
-                </p>
+                <h2
+                  style={{ color: `${getAccents('d_yellow').color}` }}
+                  className={clsx(
+                    'mb-2',
+                    'text-base',
+                    'font-normal'
+                  )}>
+                  {t('dashboard.redeem.total_redeemed')}
+                </h2>
+                <h1
+                  className={clsx(
+                    'mb-2',
+                    'text-xl',
+                    'font-bold'
+                  )}>
+                  {totalRedeemedAmount === '-' ? t('no_data') : satToBTC(totalRedeemedAmount)}
+                  &nbsp;BTC
+                </h1>
+                {totalRedeemedAmount === '-' ? (
+                  ''
+                ) : (
+                  <h1
+                    className={clsx(
+                      'opacity-50',
+                      'mb-2',
+                      'text-xl',
+                      'font-bold'
+                    )}>
+                    $
+                    {(prices.bitcoin.usd * parseFloat(satToBTC(totalRedeemedAmount))).toLocaleString()}
+                  </h1>
+                )}
               </div>
-              <DashboardTable
-                richTable={true}
-                pageData={redeemRequests}
-                totalPages={Math.ceil(Number(totalRedeems) / tableParams.perPage)}
-                tableParams={tableParams}
-                setTableParams={setTableParams}
-                headings={tableHeadings}
-                dataPointDisplayer={tableRedeemRequestRow} />
+              <div>
+                <h2
+                  style={{ color: getAccents('d_green').color }}
+                  className={clsx(
+                    'mb-2',
+                    'text-base',
+                    'font-normal'
+                  )}>
+                  {t('dashboard.redeem.total_redeems')}
+                </h2>
+                <h1
+                  className={clsx(
+                    'mb-2',
+                    'text-xl',
+                    'font-bold'
+                  )}>
+                  {totalSuccessfulRedeems === '-' ? t('no_data') : totalSuccessfulRedeems}
+                </h1>
+              </div>
+              <div>
+                <h2
+                  style={{ color: getAccents('d_green').color }}
+                  className={clsx(
+                    'mb-2',
+                    'text-base',
+                    'font-normal'
+                  )}>
+                  {t('dashboard.redeem.success_rate')}
+                </h2>
+                <h1
+                  className={clsx(
+                    'mb-2',
+                    'text-xl',
+                    'font-bold'
+                  )}>
+                  {totalRedeems === '-' ? t('no_data') : (redeemSuccessRate * 100).toFixed(2) + '%'}
+                </h1>
+              </div>
             </div>
+            <div className='card'>
+              <div className='chart-container'>
+                <LineChartComponent
+                  color={['d_yellow', 'd_grey']}
+                  label={[
+                    t('dashboard.redeem.total_redeemed_chart'),
+                    t('dashboard.redeem.perday_redeemed_chart')
+                  ]}
+                  yLabels={cumulativeRedeemsPerDay.map(dataPoint =>
+                    new Date(dataPoint.date).toLocaleDateString()
+                  )}
+                  yAxisProps={[{ beginAtZero: true, position: 'left' }, { position: 'right' }]}
+                  data={[
+                    cumulativeRedeemsPerDay.map(dataPoint =>
+                      Number(satToBTC(dataPoint.sat.toString()))
+                    ),
+                    pointRedeemsPerDay.map(amount => Number(satToBTC(amount.toString())))
+                  ]} />
+              </div>
+            </div>
+          </div>
+          <div style={{ margin: '40px 0px' }}>
+            <div>
+              <p
+                className='mb-4'
+                style={{
+                  fontWeight: 700,
+                  fontSize: '26px'
+                }}>
+                {t('issue_page.recent_requests')}
+              </p>
+            </div>
+            <DashboardTable
+              richTable={true}
+              pageData={redeemRequests}
+              totalPages={Math.ceil(Number(totalRedeems) / tableParams.perPage)}
+              tableParams={tableParams}
+              setTableParams={setTableParams}
+              headings={tableHeadings}
+              dataPointDisplayer={tableRedeemRequestRow} />
           </div>
         </div>
       </div>

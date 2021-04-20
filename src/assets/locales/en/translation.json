@@ -227,7 +227,7 @@
       "total_issued": "{{amount}} PolkaBTC issued",
       "total_issues": "{{amount}} successful issues",
       "total_issued_chart": "Total PolkaBTC issued",
-      "perday_issued_chart": "PolkaBTC issued per day"
+      "per_day_issued_chart": "PolkaBTC issued per day"
     },
     "redeem": {
       "redeem": "Redeem Requests",

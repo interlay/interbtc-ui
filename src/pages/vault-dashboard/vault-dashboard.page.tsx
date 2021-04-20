@@ -179,7 +179,7 @@ function VaultDashboard(): JSX.Element {
 
   return (
     <MainContainer className='vault-dashboard-page'>
-      <div className='vault-container dashboard-fade-in-animation'>
+      <div className='vault-container fade-in-animation'>
         <div className='stacked-wrapper'>
           <PageTitle
             mainTitle={t('vault.vault_dashboard')}

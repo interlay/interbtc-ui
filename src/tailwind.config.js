@@ -33,6 +33,18 @@ const INTERLAY_TREE_POPPY = Object.freeze({
   800: '#945810',
   900: '#79480d'
 });
+const INTERLAY_MALACHITE = Object.freeze({
+  50: '#f6fcf6',
+  100: '#edfaed',
+  200: '#d2f2d1',
+  300: '#b7e9b6',
+  400: '#80d97f',
+  500: '#4ac948',
+  600: '#43b541',
+  700: '#389736',
+  800: '#2c792b',
+  900: '#246223'
+});
 
 module.exports = {
   purge: [
@@ -56,9 +68,6 @@ module.exports = {
         interlayOrange: {
           DEFAULT: '#f95738'
         },
-        interlayGreen: {
-          DEFAULT: '#4ac948'
-        },
         interlayRed: {
           light: '#ed3855',
           DEFAULT: '#f32013'
@@ -67,6 +76,15 @@ module.exports = {
         interlayGrey: {
           light: '#e9ecef', // TODO: could be gray-200 in the default theme
           DEFAULT: '#a9a9a9'
+        },
+        interlayRose: {
+          DEFAULT: INTERLAY_ROSE[500]
+        },
+        interlayMalachite: {
+          DEFAULT: INTERLAY_MALACHITE[500]
+        },
+        interlayTreePoppy: {
+          DEFAULT: INTERLAY_TREE_POPPY[500]
         },
         primary: {
           lightest: INTERLAY_ROSE[200],

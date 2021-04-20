@@ -68,7 +68,7 @@ function StatusComponent({ text, category }: StatusComponentProps): ReactElement
         <Icon
           className={clsx(
             'ml-1',
-            { 'text-interlayGreen': category === StatusCategories.Ok },
+            { 'text-interlayMalachite': category === StatusCategories.Ok },
             { 'text-interlayRed': category === StatusCategories.Bad },
             { 'text-interlayYellow': category !== StatusCategories.Ok && category !== StatusCategories.Bad }
           )}
@@ -79,7 +79,7 @@ function StatusComponent({ text, category }: StatusComponentProps): ReactElement
         className={clsx(
           'ml-1',
           'font-bold',
-          { 'text-interlayGreen': category === StatusCategories.Ok },
+          { 'text-interlayMalachite': category === StatusCategories.Ok },
           { 'text-interlayRed': category === StatusCategories.Bad },
           {
             'text-interlayYellow':

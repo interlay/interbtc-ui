@@ -135,7 +135,7 @@ function StakedRelayer(): JSX.Element {
 
   return (
     <MainContainer className='staked-relayer-page'>
-      <div className='staked-container dashboard-fade-in-animation'>
+      <div className='staked-container fade-in-animation'>
         <div className='stacked-wrapper'>
           <PageTitle
             mainTitle={t('relayer.staked_relayer_dashboard')}

@@ -1,9 +1,9 @@
 import { ReactElement, useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
 import ParachainSecurity from '../components/parachain-security';
 import ActiveStakedRelayers from '../components/active-staked-relayers';
-
 import StakedRelayerTable from '../staked-relayer-table/staked-relayer-table';
 import { DashboardStatusUpdateInfo } from '../../../common/types/util.types';
 import { getAccents } from '../dashboard-colors';
@@ -103,42 +103,45 @@ export default function ParachainDashboard(): ReactElement {
   );
 
   return (
-    <MainContainer>
-      <div className='dashboard-container dashboard-fade-in-animation'>
-        <div className='dashboard-wrapper'>
-          <div>
-            <PageTitle
-              mainTitle={t('dashboard.parachain.parachain')}
-              subTitle={<TimerIncrement />} />
-            <div
-              style={{ backgroundColor: getAccents('d_pink').color }}
-              className='title-line' />
-            <div className='parachain-graphs-container dashboard-graphs-container'>
-              <ParachainSecurity />
-              <ActiveStakedRelayers />
-            </div>
-            <div style={{ margin: '40px 0px' }}>
-              <div>
-                <p
-                  className='mb-4'
-                  style={{
-                    fontWeight: 700,
-                    fontSize: '26px'
-                  }}>
-                  {t('dashboard.parachain.status_updates')}
-                </p>
-              </div>
-              <DashboardTable
-                richTable={true}
-                pageData={statusUpdates}
-                totalPages={Math.ceil(Number(totalStatusUpdates) / tableParams.perPage)}
-                tableParams={tableParams}
-                setTableParams={setTableParams}
-                headings={tableHeadings}
-                dataPointDisplayer={tableStatusUpdateRow} />
-            </div>
-            <StakedRelayerTable />
+    <MainContainer
+      className={clsx(
+        'flex',
+        'justify-center',
+        'fade-in-animation'
+      )}>
+      <div className='w-3/4'>
+        <div>
+          <PageTitle
+            mainTitle={t('dashboard.parachain.parachain')}
+            subTitle={<TimerIncrement />} />
+          <div
+            style={{ backgroundColor: getAccents('d_pink').color }}
+            className='title-line' />
+          <div className='parachain-graphs-container dashboard-graphs-container'>
+            <ParachainSecurity />
+            <ActiveStakedRelayers />
           </div>
+          <div style={{ margin: '40px 0px' }}>
+            <div>
+              <p
+                className='mb-4'
+                style={{
+                  fontWeight: 700,
+                  fontSize: '26px'
+                }}>
+                {t('dashboard.parachain.status_updates')}
+              </p>
+            </div>
+            <DashboardTable
+              richTable={true}
+              pageData={statusUpdates}
+              totalPages={Math.ceil(Number(totalStatusUpdates) / tableParams.perPage)}
+              tableParams={tableParams}
+              setTableParams={setTableParams}
+              headings={tableHeadings}
+              dataPointDisplayer={tableStatusUpdateRow} />
+          </div>
+          <StakedRelayerTable />
         </div>
       </div>
     </MainContainer>

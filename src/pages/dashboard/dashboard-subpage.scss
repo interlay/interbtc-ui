@@ -16,7 +16,9 @@
   .data-container {
     padding: 15px 20px;
     height: 50px;
-    @include flexCenter();
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   h1 {
@@ -35,17 +37,10 @@
   }
 
   .status-container {
-    @include flexCenter();
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-}
-
-.dashboard-container {
-  background-color: #fff;
-  @include justifyCenter();
-}
-
-.dashboard-wrapper {
-  width: 70%;
 }
 
 // ray test touch <
@@ -60,7 +55,9 @@
   width: 155px;
   height: 39px;
   border-radius: 8px;
-  @include flexCenter();
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   h1 {
     font-weight: 400;
@@ -70,6 +67,7 @@
   }
 }
 
+// ray test touch <
 .table-top-data-container {
   display: grid;
   grid-template-columns: 0.8fr 1fr;
@@ -90,6 +88,7 @@
     row-gap: 20px;
   }
 }
+// ray test touch >
 
 .dashboard-graphs-container {
   margin-top: 40px;
