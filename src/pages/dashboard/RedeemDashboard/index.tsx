@@ -66,15 +66,18 @@ function RedeemDashboard(): JSX.Element {
     totalRedeems
   ]);
 
+  // ray test touch <
   const tableHeadings: ReactElement[] = [
     <h1 key={1}>{t('date')}</h1>,
     <h1 key={2}>{t('redeem_page.amount')}</h1>,
-    <h1 key={3}>{t('parachainblock')}</h1>,
+    <h1 key={3}>{t('parachain_block')}</h1>,
     <h1 key={4}>{t('issue_page.vault_dot_address')}</h1>,
     <h1 key={5}>{t('redeem_page.output_BTC_address')}</h1>,
     <h1 key={6}>{t('status')}</h1>
   ];
+  // ray test touch >
 
+  // ray test touch <
   const tableRedeemRequestRow = useMemo(
     () => (rreq: DashboardRequestInfo): ReactElement[] => [
       <p key={1}>{formatDateTimePrecise(new Date(rreq.timestamp))}</p>,
@@ -104,6 +107,7 @@ function RedeemDashboard(): JSX.Element {
     ],
     [t]
   );
+  // ray test touch >
 
   const fetchRedeemRequests = useMemo(
     () => async () => {
@@ -273,6 +277,7 @@ function RedeemDashboard(): JSX.Element {
               ]} />
           </div>
         </div>
+        {/* ray test touch < */}
         <div>
           <h2
             className={clsx(
@@ -290,6 +295,7 @@ function RedeemDashboard(): JSX.Element {
             headings={tableHeadings}
             dataPointDisplayer={tableRedeemRequestRow} />
         </div>
+        {/* ray test touch > */}
       </div>
     </MainContainer>
   );

@@ -35,7 +35,7 @@
   "expiration": "Expiration",
   "proposed_status": "Proposed Status",
   "current_status": "Current Status",
-  "parachainblock": "Parachain Block",
+  "parachain_block": "Parachain Block",
   "proposed_changes": "Proposed Changes",
   "user": "User",
   "account_id": "AccountID",
