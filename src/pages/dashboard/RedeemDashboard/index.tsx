@@ -98,10 +98,12 @@ function RedeemDashboard(): JSX.Element {
           'w-3/4',
           'space-y-10'
         )}>
-        <PageTitle
-          mainTitle={t('dashboard.redeem.redeem')}
-          subTitle={<TimerIncrement />} />
-        <hr className='border-interlayRose' />
+        <div>
+          <PageTitle
+            mainTitle={t('dashboard.redeem.redeem')}
+            subTitle={<TimerIncrement />} />
+          <hr className='border-interlayRose' />
+        </div>
         <div
           className={clsx(
             'sm:flex',
