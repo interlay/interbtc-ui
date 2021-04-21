@@ -55,6 +55,7 @@ type StatusComponentProps = {
     category: StatusCategories;
 };
 
+// ray test touch <
 function StatusComponent({ text, category }: StatusComponentProps): ReactElement {
   const Icon =
     category === StatusCategories.Ok ?
@@ -93,6 +94,7 @@ function StatusComponent({ text, category }: StatusComponentProps): ReactElement
     </div>
   );
 }
+// ray test touch >
 
 type DataWithID = { id: string };
 type SimpleDashboardTableProps<D extends DataWithID> = {

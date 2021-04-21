@@ -170,7 +170,7 @@ const StakedRelayerScoresTable = ({
                   <InterlayTh
                     {...column.getHeaderProps([
                       {
-                        className: clsx(...column.classNames),
+                        className: clsx(column.classNames),
                         style: column.style
                       },
                       column.getSortByToggleProps()
@@ -202,7 +202,7 @@ const StakedRelayerScoresTable = ({
                       <InterlayTd
                         {...cell.getCellProps([
                           {
-                            className: clsx(...cell.column.classNames),
+                            className: clsx(cell.column.classNames),
                             style: cell.column.style
                           }
                         ])}>

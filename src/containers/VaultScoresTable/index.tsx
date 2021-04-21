@@ -53,7 +53,7 @@ const VaultScoresTable = ({
 }: Props): JSX.Element => {
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
   const statsApi = usePolkabtcStats();
-  const [data, setData] = React.useState<(PatchedVaultData)[]>([]);
+  const [data, setData] = React.useState<PatchedVaultData[]>([]);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [error, setError] = React.useState<Error | null>(null);
   const { t } = useTranslation();
@@ -192,7 +192,7 @@ const VaultScoresTable = ({
                   <InterlayTh
                     {...column.getHeaderProps([
                       {
-                        className: clsx(...column.classNames),
+                        className: clsx(column.classNames),
                         style: column.style
                       },
                       column.getSortByToggleProps()
@@ -224,7 +224,7 @@ const VaultScoresTable = ({
                       <InterlayTd
                         {...cell.getCellProps([
                           {
-                            className: clsx(...cell.column.classNames),
+                            className: clsx(cell.column.classNames),
                             style: cell.column.style
                           }
                         ])}>

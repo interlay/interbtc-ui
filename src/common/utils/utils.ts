@@ -95,12 +95,15 @@ function defaultBlockData(): RelayedBlock {
   };
 }
 
+// ray test touch <
+// TODO: should double-check
 function defaultTableDisplayParams<Column>(): TableDisplayParams<Column> {
   return {
     page: 0,
     perPage: 20
   };
 }
+// ray test touch >
 
 const updateBalances = async (
   dispatch: Dispatch,
