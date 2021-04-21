@@ -9,7 +9,8 @@ import {
   FaRegClock,
   FaRegTimesCircle,
   FaUserClock,
-  FaClipboardCheck
+  FaClipboardCheck,
+  FaExternalLinkAlt
 } from 'react-icons/fa';
 import clsx from 'clsx';
 import { BtcNetworkName } from '@interlay/polkabtc-stats';
@@ -22,7 +23,7 @@ import InterlayTable, {
   InterlayTh,
   InterlayTd
 } from 'components/UI/InterlayTable';
-import { StyledLinkData } from 'common/components/dashboard-table/dashboard-table';
+import InterlayLink from 'components/UI/InterlayLink';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import {
   shortAddress,
@@ -109,20 +110,25 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: [
           'text-left'
         ],
-        // ray test touch <
         Cell: function FormattedCell({ value }) {
           return (
-            <StyledLinkData
-              data={shortAddress(value)}
-              target={
-                (constants.BTC_MAINNET ?
-                  constants.BTC_EXPLORER_ADDRESS_API :
-                  constants.BTC_TEST_EXPLORER_ADDRESS_API) + value
-              }
-              newTab={true} />
+            <InterlayLink
+              className={clsx(
+                'text-interlayDodgerBlue',
+                'space-x-1.5',
+                'flex',
+                'items-center'
+              )}
+              // TODO: should define such variables in `config`
+              // eslint-disable-next-line max-len
+              href={`${constants.BTC_MAINNET ? constants.BTC_EXPLORER_ADDRESS_API : constants.BTC_TEST_EXPLORER_ADDRESS_API}${value}`}
+              target='_blank'
+              rel='noopener noreferrer'>
+              <span>{shortAddress(value)}</span>
+              <FaExternalLinkAlt />
+            </InterlayLink>
           );
         }
-        // ray test touch >
       },
       {
         Header: t('status'),
@@ -130,6 +136,7 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: [
           'text-left'
         ],
+        // TODO: should be reusable (progressively)
         Cell: function FormattedCell(props) {
           // TODO: should double-check with the designer
           let icon;

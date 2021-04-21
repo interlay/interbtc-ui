@@ -23,6 +23,7 @@ type StyledLinkDataProps = {
   newTab?: boolean;
 };
 
+// TODO: should not use as it's too implicit
 function StyledLinkData(props: StyledLinkDataProps): ReactElement {
   // TODO: make into actual hyperlink
   return (
@@ -55,7 +56,6 @@ type StatusComponentProps = {
     category: StatusCategories;
 };
 
-// ray test touch <
 // TODO: should drop it with `StatusCategories` as it's too implicit
 function StatusComponent({
   text,
@@ -104,7 +104,6 @@ function StatusComponent({
     </div>
   );
 }
-// ray test touch >
 
 type DataWithID = { id: string };
 type SimpleDashboardTableProps<D extends DataWithID> = {

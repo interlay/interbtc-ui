@@ -48,12 +48,10 @@ function formatDateTime(date: Date): string {
   return date.toDateString().substring(4) + ' ' + date.toTimeString().substring(0, 5);
 }
 
-// ray test touch <
 // TODO: should use a package like `date-fns`
 function formatDateTimePrecise(date: Date): string {
   return date.toDateString().substring(4) + ' ' + date.toTimeString().substring(0, 8);
 }
-// ray test touch >
 
 // always round USD amounts to two decimals
 function getUsdAmount(amount: string, rate: number): string {
@@ -98,7 +96,6 @@ function defaultBlockData(): RelayedBlock {
   };
 }
 
-// ray test touch <
 // TODO: should double-check
 function defaultTableDisplayParams<Column>(): TableDisplayParams<Column> {
   return {
@@ -106,7 +103,6 @@ function defaultTableDisplayParams<Column>(): TableDisplayParams<Column> {
     perPage: 20
   };
 }
-// ray test touch >
 
 const updateBalances = async (
   dispatch: Dispatch,
