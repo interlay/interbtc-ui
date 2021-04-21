@@ -27,7 +27,7 @@ const ActiveCollators = (): ReactElement => {
     <DashboardCard>
       <div className='card-top-content'>
         <div className='values-container'>
-          <h1 className='text-interlayBlue'>{t('dashboard.collators.active_collators')}</h1>
+          <h1 className='text-interlayDodgerBlue'>{t('dashboard.collators.active_collators')}</h1>
           <h2>3</h2>
         </div>
         {displayLinkBtn && (

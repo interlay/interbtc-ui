@@ -256,7 +256,7 @@ function EnterBTCAmount(): JSX.Element {
         <div
           className={clsx(
             'col-12 wizard-header-text',
-            'text-interlayPink'
+            'text-interlayRose'
           )}>
           {t('issue_page.mint_polka_by_wrapping')}
         </div>

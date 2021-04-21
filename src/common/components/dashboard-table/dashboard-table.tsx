@@ -27,7 +27,7 @@ function StyledLinkData(props: StyledLinkDataProps): ReactElement {
   // TODO: make into actual hyperlink
   return (
     <InterlayLink
-      className='text-interlayBlue'
+      className='text-interlayDodgerBlue'
       href={props.target}
       target={props.newTab ? '_blank' : ''}
       rel='noopener noreferrer'>
@@ -56,22 +56,32 @@ type StatusComponentProps = {
 };
 
 // ray test touch <
-function StatusComponent({ text, category }: StatusComponentProps): ReactElement {
+// TODO: should drop it with `StatusCategories` as it's too implicit
+function StatusComponent({
+  text,
+  category
+}: StatusComponentProps): ReactElement {
   const Icon =
     category === StatusCategories.Ok ?
       CheckCircleIcon :
       category === StatusCategories.Bad ?
         CancelIcon :
         ErrorIcon;
+
   return (
-    <div className='status-container'>
+    <div
+      className={clsx(
+        'flex',
+        'justify-center',
+        'items-center'
+      )}>
       {category === StatusCategories.Neutral ? '' : (
         <Icon
           className={clsx(
             'ml-1',
             { 'text-interlayMalachite': category === StatusCategories.Ok },
-            { 'text-interlayRed': category === StatusCategories.Bad },
-            { 'text-interlayYellow': category !== StatusCategories.Ok && category !== StatusCategories.Bad }
+            { 'text-interlayScarlet': category === StatusCategories.Bad },
+            { 'text-interlayTreePoppy': category !== StatusCategories.Ok && category !== StatusCategories.Bad }
           )}
           width={14}
           height={14} />
@@ -81,9 +91,9 @@ function StatusComponent({ text, category }: StatusComponentProps): ReactElement
           'ml-1',
           'font-bold',
           { 'text-interlayMalachite': category === StatusCategories.Ok },
-          { 'text-interlayRed': category === StatusCategories.Bad },
+          { 'text-interlayScarlet': category === StatusCategories.Bad },
           {
-            'text-interlayYellow':
+            'text-interlayTreePoppy':
               category !== StatusCategories.Ok &&
               category !== StatusCategories.Bad &&
               category !== StatusCategories.Neutral

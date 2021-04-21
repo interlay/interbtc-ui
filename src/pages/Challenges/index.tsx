@@ -50,8 +50,8 @@ function ChallengeSelector(props: InterlayToggleButtonGroupProps) {
           // TODO: should use tailwindcss
           variant='outline-polkadot'
           // className={clsx(
-          //   'border-interlayRed-light',
-          //   'bg-interlayRed-light'
+          //   'border-interlayScarlet-light',
+          //   'bg-interlayScarlet-light'
           // )}
           key={challengeCutOff.id}
           value={challengeCutOff.id}>

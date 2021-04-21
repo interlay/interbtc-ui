@@ -4,6 +4,13 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTable } from 'react-table';
+import {
+  FaRegCheckCircle,
+  FaRegClock,
+  FaRegTimesCircle,
+  FaUserClock,
+  FaClipboardCheck
+} from 'react-icons/fa';
 import clsx from 'clsx';
 import { BtcNetworkName } from '@interlay/polkabtc-stats';
 
@@ -15,11 +22,7 @@ import InterlayTable, {
   InterlayTh,
   InterlayTd
 } from 'components/UI/InterlayTable';
-import {
-  StyledLinkData,
-  StatusComponent,
-  StatusCategories
-} from 'common/components/dashboard-table/dashboard-table';
+import { StyledLinkData } from 'common/components/dashboard-table/dashboard-table';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import {
   shortAddress,
@@ -49,16 +52,7 @@ const RedeemRequestsTable = (): JSX.Element => {
           // TODO: should double-check
           constants.BITCOIN_NETWORK as BtcNetworkName
         );
-        const transformedRedeemRequests = response.data.map(item => ({
-          ...item,
-          [STATUS]: {
-            completed: item.completed,
-            cancelled: item.cancelled,
-            isExpired: item.isExpired,
-            reimbursed: item.reimbursed
-          }
-        }));
-        setData(transformedRedeemRequests);
+        setData(response.data);
       })();
     } catch (error) {
       console.error('[RedeemDashboard useEffect] error.message => ', error.message);
@@ -136,22 +130,54 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: [
           'text-left'
         ],
-        // ray test touch <
-        Cell: function FormattedCell({ value }) {
+        Cell: function FormattedCell(props) {
+          // TODO: should double-check with the designer
+          let icon;
+          let notice;
+          let colorClassName;
+          switch (true) {
+          case props.row.original.completed:
+            icon = <FaRegCheckCircle />;
+            notice = t('completed');
+            colorClassName = 'text-interlayMalachite';
+            break;
+          case props.row.original.cancelled:
+            icon = <FaRegTimesCircle />;
+            notice = t('cancelled');
+            colorClassName = 'text-interlayScarlet';
+            break;
+          case props.row.original.isExpired:
+            icon = <FaUserClock />;
+            notice = t('expired');
+            colorClassName = 'text-interlayScarlet';
+            break;
+          case props.row.original.reimbursed:
+            icon = <FaClipboardCheck />;
+            notice = t('reimbursed');
+            colorClassName = 'text-interlayMalachite';
+            break;
+          default:
+            icon = <FaRegClock />;
+            notice = t('pending');
+            colorClassName = 'text-interlayTreePoppy';
+            break;
+          }
+
           return (
-            <StatusComponent
-              {...(value.completed ?
-                { text: t('completed'), category: StatusCategories.Ok } :
-                value.cancelled ?
-                  { text: t('cancelled'), category: StatusCategories.Bad } :
-                  value.isExpired ?
-                    { text: t('expired'), category: StatusCategories.Bad } :
-                    value.reimbursed ?
-                      { text: t('reimbursed'), category: StatusCategories.Ok } :
-                      { text: t('pending'), category: StatusCategories.Warning })} />
+            <div
+              className={clsx(
+                'flex',
+                'items-center',
+                'space-x-1.5',
+                colorClassName
+              )}>
+              {icon}
+              <span>
+                {notice}
+              </span>
+            </div>
           );
         }
-        // ray test touch >
       }
     ],
     [t]
@@ -170,6 +196,9 @@ const RedeemRequestsTable = (): JSX.Element => {
     }
   );
 
+  // ray test touch <
+  // PAGINATION
+  // ray test touch >
   return (
     <InterlayTableContainer>
       <h2

@@ -38,9 +38,9 @@ const Tab = ({
         'uppercase',
         'cursor-pointer',
         { 'rounded-lg text-white transition-all duration-200 ease-in-out': selectedTabType === tabType },
-        { 'bg-interlayPink': tabType === TAB_TYPES.issue && selectedTabType === TAB_TYPES.issue },
-        { 'bg-interlayYellow': tabType === TAB_TYPES.redeem && selectedTabType === TAB_TYPES.redeem },
-        { 'bg-interlayBlue': tabType === TAB_TYPES.transfer && selectedTabType === TAB_TYPES.transfer },
+        { 'bg-interlayRose': tabType === TAB_TYPES.issue && selectedTabType === TAB_TYPES.issue },
+        { 'bg-interlayTreePoppy': tabType === TAB_TYPES.redeem && selectedTabType === TAB_TYPES.redeem },
+        { 'bg-interlayDodgerBlue': tabType === TAB_TYPES.transfer && selectedTabType === TAB_TYPES.transfer },
         { 'opacity-30': selectedTabType !== tabType }
       )}
       onClick={handleChange(tabType)}>
@@ -58,9 +58,9 @@ const HorizontalLine = ({ selectedTabType }: HorizontalLineProps): JSX.Element =
     className={clsx(
       'border-t-2',
       'my-2',
-      { 'border-interlayPink': selectedTabType === TAB_TYPES.issue },
-      { 'border-interlayYellow': selectedTabType === TAB_TYPES.redeem },
-      { 'border-interlayBlue': selectedTabType === TAB_TYPES.transfer }
+      { 'border-interlayRose': selectedTabType === TAB_TYPES.issue },
+      { 'border-interlayTreePoppy': selectedTabType === TAB_TYPES.redeem },
+      { 'border-interlayDodgerBlue': selectedTabType === TAB_TYPES.transfer }
     )} />
 );
 

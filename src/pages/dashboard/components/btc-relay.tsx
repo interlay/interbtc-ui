@@ -124,13 +124,13 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
           </div>
           <div className='circle-container'>
             <div
-              className='status-circle border-interlayBlue'
+              className='status-circle border-interlayDodgerBlue'
               id='relay-circle'>
               <h1
                 className={clsx(
                   'h1-xl',
                   'text-3xl',
-                  'text-interlayBlue',
+                  'text-interlayDodgerBlue',
                   'text-center'
                 )}
                 id='relay-circle-text'>

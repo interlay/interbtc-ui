@@ -57,7 +57,7 @@ export default function Transfer(): JSX.Element {
           <div
             className={clsx(
               'col-12 wizard-header-text',
-              'text-interlayBlue'
+              'text-interlayDodgerBlue'
             )}>
             {t('transfer_page.transfer_to')}
           </div>
