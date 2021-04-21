@@ -67,8 +67,8 @@ const StakedRelayerScoresTable = ({
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const stakedRelayers = (await statsApi.getRelayers(challengeTime)).data;
-        const sortedStakedRelayers = stakedRelayers.sort((a, b) => b.lifetime_sla - a.lifetime_sla);
+        const response = await statsApi.getRelayers(challengeTime);
+        const sortedStakedRelayers = response.data.sort((a, b) => b.lifetime_sla - a.lifetime_sla);
         const transformedStakedRelayers = sortedStakedRelayers.map(stakedRelayer => ({
           ...stakedRelayer,
           lifetime_sla: Number(stakedRelayer.lifetime_sla).toFixed(2)

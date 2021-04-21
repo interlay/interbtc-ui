@@ -48,9 +48,12 @@ function formatDateTime(date: Date): string {
   return date.toDateString().substring(4) + ' ' + date.toTimeString().substring(0, 5);
 }
 
+// ray test touch <
+// TODO: should use a package like `date-fns`
 function formatDateTimePrecise(date: Date): string {
   return date.toDateString().substring(4) + ' ' + date.toTimeString().substring(0, 8);
 }
+// ray test touch >
 
 // always round USD amounts to two decimals
 function getUsdAmount(amount: string, rate: number): string {

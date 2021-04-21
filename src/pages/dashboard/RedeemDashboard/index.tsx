@@ -8,35 +8,13 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { satToBTC } from '@interlay/polkabtc';
-// ray test touch <
-// import {
-//   BtcNetworkName,
-//   RedeemColumns
-// } from '@interlay/polkabtc-stats';
-// ray test touch >
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
-// ray test touch <
 import RedeemRequestsTable from 'containers/RedeemRequestsTable';
-// import DashboardTable, {
-//   StyledLinkData,
-//   StatusComponent,
-//   StatusCategories
-// } from 'common/components/dashboard-table/dashboard-table';
-// ray test touch >
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { StoreType } from 'common/types/util.types';
-// ray test touch <
-// import { DashboardRequestInfo } from 'common/types/redeem.types';
-// import * as constants from '../../../constants';
-// import {
-//   defaultTableDisplayParams,
-//   shortAddress,
-//   formatDateTimePrecise
-// } from 'common/utils/utils';
-// ray test touch >
 import LineChartComponent from '../components/line-chart-component';
 
 function RedeemDashboard(): JSX.Element {
@@ -50,11 +28,6 @@ function RedeemDashboard(): JSX.Element {
   const [totalSuccessfulRedeems, setTotalSuccessfulRedeems] = useState('-');
   const [totalRedeems, setTotalRedeems] = useState('-');
   const [totalRedeemedAmount, setTotalRedeemedAmount] = useState('-');
-  // ray test touch <
-  // eslint-disable-next-line no-array-constructor
-  // const [redeemRequests, setRedeemRequests] = useState(new Array<DashboardRequestInfo>());
-  // const [tableParams, setTableParams] = useState(defaultTableDisplayParams<RedeemColumns>());
-  // ray test touch >
   // eslint-disable-next-line no-array-constructor
   const [cumulativeRedeemsPerDay, setCumulativeRedeemsPerDay] = useState(new Array<{ date: number; sat: number }>());
   const pointRedeemsPerDay = useMemo(
@@ -73,76 +46,6 @@ function RedeemDashboard(): JSX.Element {
     totalSuccessfulRedeems,
     totalRedeems
   ]);
-
-  // ray test touch <
-  // const tableHeadings: ReactElement[] = [
-  //   <h1 key={1}>{t('date')}</h1>,
-  //   <h1 key={2}>{t('redeem_page.amount')}</h1>,
-  //   <h1 key={3}>{t('parachain_block')}</h1>,
-  //   <h1 key={4}>{t('issue_page.vault_dot_address')}</h1>,
-  //   <h1 key={5}>{t('redeem_page.output_BTC_address')}</h1>,
-  //   <h1 key={6}>{t('status')}</h1>
-  // ];
-  // ray test touch >
-
-  // ray test touch <
-  // const tableRedeemRequestRow = useMemo(
-  //   () => (rreq: DashboardRequestInfo): ReactElement[] => [
-  //     <p key={1}>{formatDateTimePrecise(new Date(rreq.timestamp))}</p>,
-  //     <p key={2}>{rreq.amountPolkaBTC}</p>,
-  //     <p key={3}>{rreq.creation}</p>,
-  //     <p key={4}>{shortAddress(rreq.vaultDotAddress)}</p>,
-  //     <StyledLinkData
-  //       key={5}
-  //       data={shortAddress(rreq.btcAddress)}
-  //       target={
-  //         (constants.BTC_MAINNET ?
-  //           constants.BTC_EXPLORER_ADDRESS_API :
-  //           constants.BTC_TEST_EXPLORER_ADDRESS_API) + rreq.btcAddress
-  //       }
-  //       newTab={true} />,
-  //     <StatusComponent
-  //       key={6}
-  //       {...(rreq.completed ?
-  //         { text: t('completed'), category: StatusCategories.Ok } :
-  //         rreq.cancelled ?
-  //           { text: t('cancelled'), category: StatusCategories.Bad } :
-  //           rreq.isExpired ?
-  //             { text: t('expired'), category: StatusCategories.Bad } :
-  //             rreq.reimbursed ?
-  //               { text: t('reimbursed'), category: StatusCategories.Ok } :
-  //               { text: t('pending'), category: StatusCategories.Warning })} />
-  //   ],
-  //   [t]
-  // );
-  // ray test touch >
-
-  // ray test touch <
-  // useEffect(() => {
-  //   if (!statsApi) return;
-  //   try {
-  //     (async () => {
-  //       const response = await statsApi.getRedeems(
-  //         tableParams.page,
-  //         tableParams.perPage,
-  //         tableParams.sortBy,
-  //         tableParams.sortAsc,
-  //         // TODO: should double-check
-  //         constants.BITCOIN_NETWORK as BtcNetworkName
-  //       );
-  //       setRedeemRequests(response.data);
-  //     })();
-  //   } catch (error) {
-  //     console.error('[RedeemDashboard useEffect] error.message => ', error.message);
-  //   }
-  // }, [
-  //   statsApi,
-  //   tableParams.page,
-  //   tableParams.perPage,
-  //   tableParams.sortBy,
-  //   tableParams.sortAsc
-  // ]);
-  // ray test touch >
 
   useEffect(() => {
     const fetchTotalSuccessfulRedeems = async () => {
@@ -284,26 +187,7 @@ function RedeemDashboard(): JSX.Element {
               ]} />
           </div>
         </div>
-        {/* ray test touch < */}
-        {/* <div>
-          <h2
-            className={clsx(
-              'text-2xl',
-              'font-bold'
-            )}>
-            {t('issue_page.recent_requests')}
-          </h2>
-          <DashboardTable
-            richTable={true}
-            pageData={redeemRequests}
-            totalPages={Math.ceil(Number(totalRedeems) / tableParams.perPage)}
-            tableParams={tableParams}
-            setTableParams={setTableParams}
-            headings={tableHeadings}
-            dataPointDisplayer={tableRedeemRequestRow} />
-        </div> */}
         <RedeemRequestsTable />
-        {/* ray test touch > */}
       </div>
     </MainContainer>
   );

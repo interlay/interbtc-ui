@@ -1,15 +1,11 @@
 
-// ray test touch <
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTable } from 'react-table';
 import clsx from 'clsx';
-import {
-  BtcNetworkName,
-  RedeemColumns
-} from '@interlay/polkabtc-stats';
+import { BtcNetworkName } from '@interlay/polkabtc-stats';
 
 import InterlayTable, {
   InterlayTableContainer,
@@ -19,20 +15,24 @@ import InterlayTable, {
   InterlayTh,
   InterlayTd
 } from 'components/UI/InterlayTable';
+import {
+  StyledLinkData,
+  StatusComponent,
+  StatusCategories
+} from 'common/components/dashboard-table/dashboard-table';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import {
-  defaultTableDisplayParams
-  // shortAddress,
-  // formatDateTimePrecise
+  shortAddress,
+  formatDateTimePrecise
 } from 'common/utils/utils';
 import { DashboardRequestInfo } from 'common/types/redeem.types';
 import * as constants from '../../constants';
 
+const STATUS = 'status';
+
 const RedeemRequestsTable = (): JSX.Element => {
   const statsApi = usePolkabtcStats();
   const [data, setData] = React.useState<DashboardRequestInfo[]>([]);
-  // TODO: should handle via query parameters
-  const [tableParams] = React.useState(defaultTableDisplayParams<RedeemColumns>());
   const { t } = useTranslation();
 
   React.useEffect(() => {
@@ -41,25 +41,29 @@ const RedeemRequestsTable = (): JSX.Element => {
     try {
       (async () => {
         const response = await statsApi.getRedeems(
-          tableParams.page,
-          tableParams.perPage,
-          tableParams.sortBy,
-          tableParams.sortAsc,
+          // TODO: should handle via query parameters
+          0,
+          20,
+          undefined,
+          undefined,
           // TODO: should double-check
           constants.BITCOIN_NETWORK as BtcNetworkName
         );
-        setData(response.data);
+        const transformedRedeemRequests = response.data.map(item => ({
+          ...item,
+          [STATUS]: {
+            completed: item.completed,
+            cancelled: item.cancelled,
+            isExpired: item.isExpired,
+            reimbursed: item.reimbursed
+          }
+        }));
+        setData(transformedRedeemRequests);
       })();
     } catch (error) {
       console.error('[RedeemDashboard useEffect] error.message => ', error.message);
     }
-  }, [
-    statsApi,
-    tableParams.page,
-    tableParams.perPage,
-    tableParams.sortBy,
-    tableParams.sortAsc
-  ]);
+  }, [statsApi]);
 
   const columns = React.useMemo(
     () => [
@@ -68,7 +72,14 @@ const RedeemRequestsTable = (): JSX.Element => {
         accessor: 'timestamp',
         classNames: [
           'text-left'
-        ]
+        ],
+        Cell: function FormattedCell({ value }) {
+          return (
+            <>
+              {formatDateTimePrecise(new Date(value))}
+            </>
+          );
+        }
       },
       {
         Header: t('redeem_page.amount'),
@@ -89,21 +100,58 @@ const RedeemRequestsTable = (): JSX.Element => {
         accessor: 'vaultDotAddress',
         classNames: [
           'text-left'
-        ]
+        ],
+        Cell: function FormattedCell({ value }) {
+          return (
+            <>
+              {shortAddress(value)}
+            </>
+          );
+        }
       },
       {
         Header: t('redeem_page.output_BTC_address'),
         accessor: 'btcAddress',
         classNames: [
           'text-left'
-        ]
+        ],
+        // ray test touch <
+        Cell: function FormattedCell({ value }) {
+          return (
+            <StyledLinkData
+              data={shortAddress(value)}
+              target={
+                (constants.BTC_MAINNET ?
+                  constants.BTC_EXPLORER_ADDRESS_API :
+                  constants.BTC_TEST_EXPLORER_ADDRESS_API) + value
+              }
+              newTab={true} />
+          );
+        }
+        // ray test touch >
       },
       {
         Header: t('status'),
-        accessor: 'completed',
+        accessor: STATUS,
         classNames: [
           'text-left'
-        ]
+        ],
+        // ray test touch <
+        Cell: function FormattedCell({ value }) {
+          return (
+            <StatusComponent
+              {...(value.completed ?
+                { text: t('completed'), category: StatusCategories.Ok } :
+                value.cancelled ?
+                  { text: t('cancelled'), category: StatusCategories.Bad } :
+                  value.isExpired ?
+                    { text: t('expired'), category: StatusCategories.Bad } :
+                    value.reimbursed ?
+                      { text: t('reimbursed'), category: StatusCategories.Ok } :
+                      { text: t('pending'), category: StatusCategories.Warning })} />
+          );
+        }
+        // ray test touch >
       }
     ],
     [t]
@@ -124,6 +172,13 @@ const RedeemRequestsTable = (): JSX.Element => {
 
   return (
     <InterlayTableContainer>
+      <h2
+        className={clsx(
+          'text-2xl',
+          'font-bold'
+        )}>
+        {t('issue_page.recent_requests')}
+      </h2>
       <InterlayTable {...getTableProps()}>
         <InterlayThead>
           {headerGroups.map(headerGroup => (
@@ -175,4 +230,3 @@ const RedeemRequestsTable = (): JSX.Element => {
 };
 
 export default RedeemRequestsTable;
-// ray test touch >
