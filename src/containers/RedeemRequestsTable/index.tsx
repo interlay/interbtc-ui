@@ -228,18 +228,6 @@ const RedeemRequestsTable = ({
     }
   );
 
-  if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
-    return (
-      <div
-        className={clsx(
-          'flex',
-          'justify-center'
-        )}>
-        <EllipsisLoader dotClassName='bg-interlayTreePoppy-light' />
-      </div>
-    );
-  }
-
   if (status === STATUSES.REJECTED) {
     return (
       <ErrorMessage message={error?.message} />
@@ -259,22 +247,31 @@ const RedeemRequestsTable = ({
   // CONFIGURATION
   // ray test touch >
 
-  if (status === STATUSES.RESOLVED) {
-    const handlePageChange = (newPage: number) => {
-      updateQueryParameters({
-        [QUERY_PARAMETERS.page]: newPage
-      });
-    };
+  const handlePageChange = (newPage: number) => {
+    updateQueryParameters({
+      [QUERY_PARAMETERS.page]: newPage
+    });
+  };
 
-    return (
-      <InterlayTableContainer className='space-y-6'>
-        <h2
+  return (
+    <InterlayTableContainer className='space-y-6'>
+      <h2
+        className={clsx(
+          'text-2xl',
+          'font-bold'
+        )}>
+        {t('issue_page.recent_requests')}
+      </h2>
+      {(status === STATUSES.IDLE || status === STATUSES.PENDING) && (
+        <div
           className={clsx(
-            'text-2xl',
-            'font-bold'
+            'flex',
+            'justify-center'
           )}>
-          {t('issue_page.recent_requests')}
-        </h2>
+          <EllipsisLoader dotClassName='bg-interlayTreePoppy-light' />
+        </div>
+      )}
+      {status === STATUSES.RESOLVED && (
         <InterlayTable {...getTableProps()}>
           <InterlayThead>
             {headerGroups.map(headerGroup => (
@@ -321,16 +318,16 @@ const RedeemRequestsTable = ({
             })}
           </InterlayTbody>
         </InterlayTable>
+      )}
+      {totalRedeemRequests > 0 && (
         <Pagination
-          current={selectedPage}
           pageSize={PAGE_SIZE}
           total={totalRedeemRequests}
+          current={selectedPage}
           onChange={handlePageChange} />
-      </InterlayTableContainer>
-    );
-  }
-
-  return null;
+      )}
+    </InterlayTableContainer>
+  );
 };
 
 export default RedeemRequestsTable;

@@ -25,8 +25,8 @@ const Template: Story<Props> = args => {
 const Default = Template.bind({});
 Default.args = {
   defaultCurrent: 3,
-  total: 450,
-  pageSize: 50
+  total: 860,
+  pageSize: 10
 };
 
 export {
