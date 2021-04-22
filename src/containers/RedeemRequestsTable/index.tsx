@@ -189,10 +189,6 @@ const RedeemRequestsTable = ({
     );
   }
 
-  // ray test touch <
-  // COMPONENTIZING
-  // ray test touch >
-
   const handlePageChange = (newPage: number) => {
     updateQueryParameters({
       [QUERY_PARAMETERS.page]: newPage
