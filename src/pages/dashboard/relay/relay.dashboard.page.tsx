@@ -6,7 +6,7 @@ import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
 import { defaultTableDisplayParams, formatDateTimePrecise } from '../../../common/utils/utils';
 import { RelayedBlock } from '../../../common/types/util.types';
 import DashboardTable, { StyledLinkData } from '../../../common/components/dashboard-table/dashboard-table';
-import * as constants from '../../../constants';
+import { BTC_ADDRESS_API } from 'config/blockchain';
 import BtcRelay from '../components/btc-relay';
 import { reverseEndiannessHex, stripHexPrefix } from '@interlay/polkabtc';
 import { BlockColumns } from '@interlay/polkabtc-stats';
@@ -52,10 +52,7 @@ export default function RelayDashboard(): ReactElement {
       <StyledLinkData
         key={2}
         data={block.hash}
-        target={
-          (constants.BTC_MAINNET ? constants.BTC_EXPLORER_BLOCK_API : constants.BTC_TEST_EXPLORER_BLOCK_API) +
-          block.hash
-        }
+        target={BTC_ADDRESS_API + block.hash}
         newTab={true} />,
       <p key={3}>{formatDateTimePrecise(new Date(block.relay_ts))}</p>
     ],

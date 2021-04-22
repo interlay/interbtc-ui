@@ -1,7 +1,7 @@
 import React from 'react';
-import * as constants from '../../../constants';
 import { shortTxId } from '../../../common/utils/utils';
 import InterlayLink from 'components/UI/InterlayLink';
+import { BTC_ADDRESS_API } from 'config/blockchain';
 
 export default class BitcoinTransaction extends React.Component<{
   txId: string;
@@ -12,11 +12,7 @@ export default class BitcoinTransaction extends React.Component<{
       <div>
         {this.props.txId ? (
           <InterlayLink
-            href={
-              (constants.BTC_MAINNET ?
-                constants.BTC_EXPLORER_TRANSACTION_API :
-                constants.BTC_TEST_EXPLORER_TRANSACTION_API) + this.props.txId
-            }
+            href={BTC_ADDRESS_API + this.props.txId}
             target='_blank'
             rel='noopener noreferrer'>
             {this.props.shorten ? shortTxId(this.props.txId) : this.props.txId}

@@ -36,6 +36,7 @@ import {
 } from 'common/utils/utils';
 import { DashboardRequestInfo } from 'common/types/redeem.types';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
+import { BTC_ADDRESS_API } from 'config/blockchain';
 import * as constants from '../../constants';
 import STATUSES from 'utils/constants/statuses';
 
@@ -49,7 +50,7 @@ const RedeemRequestsTable = ({
   totalRedeemRequests
 }: Props): JSX.Element | null => {
   const query = useQuery();
-  const selectedPage: number = query.get(QUERY_PARAMETERS.page);
+  const selectedPage: number = query.get(QUERY_PARAMETERS.page) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
   const statsApi = usePolkabtcStats();
   const [data, setData] = React.useState<DashboardRequestInfo[]>([]);
@@ -145,9 +146,7 @@ const RedeemRequestsTable = ({
                 'flex',
                 'items-center'
               )}
-              // TODO: should define such variables in `config`
-              // eslint-disable-next-line max-len
-              href={`${constants.BTC_MAINNET ? constants.BTC_EXPLORER_ADDRESS_API : constants.BTC_TEST_EXPLORER_ADDRESS_API}${value}`}
+              href={`${BTC_ADDRESS_API}${value}`}
               target='_blank'
               rel='noopener noreferrer'>
               <span>{shortAddress(value)}</span>
@@ -234,17 +233,8 @@ const RedeemRequestsTable = ({
     );
   }
 
-  if (!selectedPage) {
-    updateQueryParameters({
-      [QUERY_PARAMETERS.page]: 1
-    });
-
-    return null;
-  }
-
   // ray test touch <
   // COMPONENTIZING
-  // CONFIGURATION
   // ray test touch >
 
   const handlePageChange = (newPage: number) => {
@@ -320,6 +310,7 @@ const RedeemRequestsTable = ({
         </InterlayTable>
       )}
       {totalRedeemRequests > 0 && (
+        // TODO: error-prone in UI/UX
         <Pagination
           pageSize={PAGE_SIZE}
           total={totalRedeemRequests}

@@ -32,6 +32,7 @@ import {
   formatDateTimePrecise
 } from 'common/utils/utils';
 import * as constants from '../../../constants';
+import { BTC_ADDRESS_API } from 'config/blockchain';
 
 function IssueDashboard(): JSX.Element {
   const {
@@ -106,11 +107,7 @@ function IssueDashboard(): JSX.Element {
       <StyledLinkData
         key={5}
         data={shortAddress(ireq.vaultBTCAddress)}
-        target={
-          (constants.BTC_MAINNET ?
-            constants.BTC_EXPLORER_ADDRESS_API :
-            constants.BTC_TEST_EXPLORER_ADDRESS_API) + ireq.vaultBTCAddress
-        }
+        target={BTC_ADDRESS_API + ireq.vaultBTCAddress}
         newTab={true} />,
       <StatusComponent
         key={6}

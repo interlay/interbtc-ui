@@ -5,13 +5,13 @@ import BitcoinTransaction from '../../../../common/components/bitcoin-links/tran
 import ButtonMaybePending from '../../../../common/components/pending-button';
 import { useDispatch, useSelector } from 'react-redux';
 import { StoreType } from '../../../../common/types/util.types';
-import * as constants from '../../../../constants';
 import { toast } from 'react-toastify';
 import { updateIssueRequestAction } from '../../../../common/actions/issue.actions';
 import { updateBalancePolkaBTCAction } from '../../../../common/actions/general.actions';
 import { shortAddress } from '../../../../common/utils/utils';
 import Big from 'big.js';
 import InterlayLink from 'components/UI/InterlayLink';
+import { BTC_ADDRESS_API } from 'config/blockchain';
 
 type StatusViewProps = {
   request: IssueRequest;
@@ -149,11 +149,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             <div className='col'>
               <div className='btc-transaction'>
                 <InterlayLink
-                  href={
-                    (constants.BTC_MAINNET ?
-                      constants.BTC_EXPLORER_TRANSACTION_API :
-                      constants.BTC_TEST_EXPLORER_TRANSACTION_API) + props.request.btcTxId
-                  }
+                  href={BTC_ADDRESS_API + props.request.btcTxId}
                   target='_blank'
                   rel='noopener noreferrer'>
                   <button className='modal-btn-green'>
@@ -222,12 +218,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                   <div className='row mt-3'>
                     <div className='col text-center'>
                       <InterlayLink
-                        href={
-                          (constants.BTC_MAINNET ?
-                            constants.BTC_EXPLORER_TRANSACTION_API :
-                            constants.BTC_TEST_EXPLORER_TRANSACTION_API) +
-                            props.request.btcTxId
-                        }
+                        href={BTC_ADDRESS_API + props.request.btcTxId}
                         target='_blank'
                         rel='noopener noreferrer'>
                         <button className='btn green-button'>
@@ -273,12 +264,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                 <div className='col text-center'>
                   <InterlayLink
                     // TODO: use the transaction wrapper for this link
-                    href={
-                      (constants.BTC_MAINNET ?
-                        constants.BTC_EXPLORER_TRANSACTION_API :
-                        constants.BTC_TEST_EXPLORER_TRANSACTION_API) +
-                        props.request.btcTxId
-                    }
+                    href={BTC_ADDRESS_API + props.request.btcTxId}
                     target='_blank'
                     rel='noopener noreferrer'>
                     <button className='btn green-button'>
