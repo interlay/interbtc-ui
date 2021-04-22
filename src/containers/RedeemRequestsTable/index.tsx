@@ -4,14 +4,7 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTable } from 'react-table';
-import {
-  FaRegCheckCircle,
-  FaRegClock,
-  FaRegTimesCircle,
-  FaUserClock,
-  FaClipboardCheck,
-  FaExternalLinkAlt
-} from 'react-icons/fa';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
 import { BtcNetworkName } from '@interlay/polkabtc-stats';
 
@@ -26,6 +19,7 @@ import InterlayTable, {
   InterlayTh,
   InterlayTd
 } from 'components/UI/InterlayTable';
+import StatusCell from 'components/UI/InterlayTable/StatusCell';
 import InterlayLink from 'components/UI/InterlayLink';
 import useQuery from 'utils/hooks/use-query';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
@@ -160,53 +154,15 @@ const RedeemRequestsTable = ({
         classNames: [
           'text-left'
         ],
-        // TODO: should be reusable (progressively)
         Cell: function FormattedCell(props) {
-          // TODO: should double-check with the designer
-          let icon;
-          let notice;
-          let colorClassName;
-          switch (true) {
-          case props.row.original.completed:
-            icon = <FaRegCheckCircle />;
-            notice = t('completed');
-            colorClassName = 'text-interlayMalachite';
-            break;
-          case props.row.original.cancelled:
-            icon = <FaRegTimesCircle />;
-            notice = t('cancelled');
-            colorClassName = 'text-interlayScarlet';
-            break;
-          case props.row.original.isExpired:
-            icon = <FaUserClock />;
-            notice = t('expired');
-            colorClassName = 'text-interlayScarlet';
-            break;
-          case props.row.original.reimbursed:
-            icon = <FaClipboardCheck />;
-            notice = t('reimbursed');
-            colorClassName = 'text-interlayMalachite';
-            break;
-          default:
-            icon = <FaRegClock />;
-            notice = t('pending');
-            colorClassName = 'text-interlayTreePoppy';
-            break;
-          }
-
           return (
-            <div
-              className={clsx(
-                'flex',
-                'items-center',
-                'space-x-1.5',
-                colorClassName
-              )}>
-              {icon}
-              <span>
-                {notice}
-              </span>
-            </div>
+            <StatusCell
+              status={{
+                completed: props.row.original.completed,
+                cancelled: props.row.original.cancelled,
+                isExpired: props.row.original.isExpired,
+                reimbursed: props.row.original.reimbursed
+              }} />
           );
         }
       }
