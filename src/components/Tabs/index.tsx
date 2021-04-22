@@ -89,6 +89,7 @@ const TabPanel = ({
     {...rest} />
 );
 
+// TODO: not used for now
 const Tabs = ({
   className,
   ...rest
