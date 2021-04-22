@@ -15,6 +15,8 @@ import {
 import clsx from 'clsx';
 import { BtcNetworkName } from '@interlay/polkabtc-stats';
 
+import EllipsisLoader from 'components/EllipsisLoader';
+import ErrorMessage from 'components/ErrorMessage';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -31,12 +33,15 @@ import {
 } from 'common/utils/utils';
 import { DashboardRequestInfo } from 'common/types/redeem.types';
 import * as constants from '../../constants';
+import STATUSES from 'utils/constants/statuses';
 
 const STATUS = 'status';
 
-const RedeemRequestsTable = (): JSX.Element => {
+const RedeemRequestsTable = (): JSX.Element | null => {
   const statsApi = usePolkabtcStats();
   const [data, setData] = React.useState<DashboardRequestInfo[]>([]);
+  const [status, setStatus] = React.useState(STATUSES.IDLE);
+  const [error, setError] = React.useState<Error | null>(null);
   const { t } = useTranslation();
 
   React.useEffect(() => {
@@ -44,6 +49,7 @@ const RedeemRequestsTable = (): JSX.Element => {
 
     try {
       (async () => {
+        setStatus(STATUSES.PENDING);
         const response = await statsApi.getRedeems(
           // TODO: should handle via query parameters
           0,
@@ -53,10 +59,12 @@ const RedeemRequestsTable = (): JSX.Element => {
           // TODO: should double-check
           constants.BITCOIN_NETWORK as BtcNetworkName
         );
+        setStatus(STATUSES.RESOLVED);
         setData(response.data);
       })();
     } catch (error) {
-      console.error('[RedeemDashboard useEffect] error.message => ', error.message);
+      setStatus(STATUSES.REJECTED);
+      setError(error);
     }
   }, [statsApi]);
 
@@ -203,66 +211,91 @@ const RedeemRequestsTable = (): JSX.Element => {
     }
   );
 
+  if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
+    return (
+      <div
+        className={clsx(
+          'flex',
+          'justify-center'
+        )}>
+        <EllipsisLoader dotClassName='bg-interlayTreePoppy-light' />
+      </div>
+    );
+  }
+
+  if (status === STATUSES.REJECTED) {
+    return (
+      <ErrorMessage message={error?.message} />
+    );
+  }
+
   // ray test touch <
   // PAGINATION
+  // COMPONENTIZING
+  // CONFIGURATION
   // ray test touch >
-  return (
-    <InterlayTableContainer>
-      <h2
-        className={clsx(
-          'text-2xl',
-          'font-bold'
-        )}>
-        {t('issue_page.recent_requests')}
-      </h2>
-      <InterlayTable {...getTableProps()}>
-        <InterlayThead>
-          {headerGroups.map(headerGroup => (
-            // eslint-disable-next-line react/jsx-key
-            <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                // eslint-disable-next-line react/jsx-key
-                <InterlayTh
-                  {...column.getHeaderProps([
-                    {
-                      className: clsx(column.classNames),
-                      style: column.style
-                    }
-                  ])}>
-                  {column.render('Header')}
-                </InterlayTh>
-              ))}
-            </InterlayTr>
-          ))}
-        </InterlayThead>
-        <InterlayTbody {...getTableBodyProps()}>
-          {rows.map(row => {
-            prepareRow(row);
 
-            return (
+  if (status === STATUSES.RESOLVED) {
+    return (
+      <InterlayTableContainer>
+        <h2
+          className={clsx(
+            'text-2xl',
+            'font-bold'
+          )}>
+          {t('issue_page.recent_requests')}
+        </h2>
+        <InterlayTable {...getTableProps()}>
+          <InterlayThead>
+            {headerGroups.map(headerGroup => (
               // eslint-disable-next-line react/jsx-key
-              <InterlayTr {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  return (
-                    // eslint-disable-next-line react/jsx-key
-                    <InterlayTd
-                      {...cell.getCellProps([
-                        {
-                          className: clsx(cell.column.classNames),
-                          style: cell.column.style
-                        }
-                      ])}>
-                      {cell.render('Cell')}
-                    </InterlayTd>
-                  );
-                })}
+              <InterlayTr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map(column => (
+                  // eslint-disable-next-line react/jsx-key
+                  <InterlayTh
+                    {...column.getHeaderProps([
+                      {
+                        className: clsx(column.classNames),
+                        style: column.style
+                      }
+                    ])}>
+                    {column.render('Header')}
+                  </InterlayTh>
+                ))}
               </InterlayTr>
-            );
-          })}
-        </InterlayTbody>
-      </InterlayTable>
-    </InterlayTableContainer>
-  );
+            ))}
+          </InterlayThead>
+          <InterlayTbody {...getTableBodyProps()}>
+            {rows.map(row => {
+              prepareRow(row);
+
+              return (
+                // eslint-disable-next-line react/jsx-key
+                <InterlayTr {...row.getRowProps()}>
+                  {row.cells.map(cell => {
+                    return (
+                      // eslint-disable-next-line react/jsx-key
+                      <InterlayTd
+                        {...cell.getCellProps([
+                          {
+                            className: clsx(cell.column.classNames),
+                            style: cell.column.style
+                          }
+                        ])}>
+                        {cell.render('Cell')}
+                      </InterlayTd>
+                    );
+                  })}
+                </InterlayTr>
+              );
+            })}
+          </InterlayTbody>
+        </InterlayTable>
+      </InterlayTableContainer>
+    );
+  }
+
+  return null;
 };
 
 export default RedeemRequestsTable;
