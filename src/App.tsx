@@ -41,8 +41,8 @@ import VaultDashboard from 'pages/vault-dashboard/vault-dashboard.page';
 import StakedRelayer from 'pages/staked-relayer/staked-relayer.page';
 import Challenges from 'pages/Challenges';
 import VaultsDashboard from 'pages/dashboard/vaults/vaults.dashboard.page';
-import IssueDashboard from 'pages/dashboard/IssueDashboard';
-import RedeemDashboard from 'pages/dashboard/RedeemDashboard';
+import IssueRequests from 'pages/dashboard/IssueRequests';
+import RedeemRequests from 'pages/dashboard/RedeemRequests';
 import LandingPage from 'pages/landing/landing.page';
 import RelayDashboard from 'pages/dashboard/relay/relay.dashboard.page';
 import OraclesDashboard from 'pages/dashboard/oracles/oracles.dashboard.page';
@@ -82,7 +82,7 @@ import { ACCOUNT_ID_TYPE_NAME } from './constants';
 // const Application = React.lazy(() =>
 //   import(/* webpackChunkName: 'application' */ 'pages/Application')
 // );
-// const DashboardPage = React.lazy(() =>
+// const Dashboard = React.lazy(() =>
 //   import(/* webpackChunkName: 'dashboard' */ 'pages/dashboard/dashboard.page')
 // );
 // const VaultDashboardPage = React.lazy(() =>
@@ -97,11 +97,11 @@ import { ACCOUNT_ID_TYPE_NAME } from './constants';
 // const VaultsDashboard = React.lazy(() =>
 //   import(/* webpackChunkName: 'vaults' */ 'pages/dashboard/vaults/vaults.dashboard.page')
 // );
-// const IssueDashboard = React.lazy(() =>
-//   import(/* webpackChunkName: 'issue' */ 'pages/dashboard/issue/issue.dashboard.page')
+// const IssueRequests = React.lazy(() =>
+//   import(/* webpackChunkName: 'issue' */ 'pages/dashboard/IssueRequests')
 // );
-// const RedeemDashboard = React.lazy(() =>
-//   import(/* webpackChunkName: 'redeem' */ 'pages/dashboard/redeem/redeem.dashboard.page')
+// const RedeemRequests = React.lazy(() =>
+//   import(/* webpackChunkName: 'redeem' */ 'pages/dashboard/RedeemRequests')
 // );
 // const LandingPage = React.lazy(() =>
 //   import(/* webpackChunkName: 'landing' */ 'pages/landing/landing.page')
@@ -437,10 +437,10 @@ function App(): JSX.Element {
                       <OraclesDashboard />
                     </Route>
                     <Route path={PAGES.issue}>
-                      <IssueDashboard />
+                      <IssueRequests />
                     </Route>
                     <Route path={PAGES.redeem}>
-                      <RedeemDashboard />
+                      <RedeemRequests />
                     </Route>
                     <Route path={PAGES.relay}>
                       <RelayDashboard />

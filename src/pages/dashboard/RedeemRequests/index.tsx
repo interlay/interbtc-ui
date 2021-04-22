@@ -17,7 +17,7 @@ import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { StoreType } from 'common/types/util.types';
 import LineChartComponent from '../components/line-chart-component';
 
-function RedeemDashboard(): JSX.Element {
+function RedeemRequests(): JSX.Element {
   const {
     polkaBtcLoaded,
     prices
@@ -78,7 +78,7 @@ function RedeemDashboard(): JSX.Element {
           fetchRedeemsLastDays()
         ]);
       } catch (error) {
-        console.error('[RedeemDashboard useEffect] error.message => ', error.message);
+        console.error('[RedeemRequests useEffect] error.message => ', error.message);
       }
     })();
   }, [
@@ -195,4 +195,4 @@ function RedeemDashboard(): JSX.Element {
   );
 }
 
-export default RedeemDashboard;
+export default RedeemRequests;

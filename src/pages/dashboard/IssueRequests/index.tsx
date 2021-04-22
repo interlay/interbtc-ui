@@ -34,7 +34,7 @@ import {
 import * as constants from '../../../constants';
 import { BTC_ADDRESS_API } from 'config/blockchain';
 
-function IssueDashboard(): JSX.Element {
+function IssueRequests(): JSX.Element {
   const {
     totalPolkaBTC,
     prices
@@ -133,7 +133,7 @@ function IssueDashboard(): JSX.Element {
       fetchIssueRequests();
       fetchIssuesLastDays();
     } catch (error) {
-      console.error('[IssueDashboard useEffect] error.message => ', error.message);
+      console.error('[IssueRequests useEffect] error.message => ', error.message);
     }
   }, [
     fetchIssueRequests,
@@ -146,7 +146,7 @@ function IssueDashboard(): JSX.Element {
       fetchTotalSuccessfulIssues();
       fetchTotalIssues();
     } catch (error) {
-      console.error('[IssueDashboard useEffect] error.message => ', error.message);
+      console.error('[IssueRequests useEffect] error.message => ', error.message);
     }
   }, [
     fetchTotalSuccessfulIssues,
@@ -274,4 +274,4 @@ function IssueDashboard(): JSX.Element {
   );
 }
 
-export default IssueDashboard;
+export default IssueRequests;
