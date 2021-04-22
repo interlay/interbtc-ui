@@ -17,6 +17,7 @@ import { BtcNetworkName } from '@interlay/polkabtc-stats';
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorMessage from 'components/ErrorMessage';
+import Pagination from 'components/Pagination';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -26,18 +27,30 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import InterlayLink from 'components/UI/InterlayLink';
+import useQuery from 'utils/hooks/use-query';
+import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import {
   shortAddress,
   formatDateTimePrecise
 } from 'common/utils/utils';
 import { DashboardRequestInfo } from 'common/types/redeem.types';
+import { QUERY_PARAMETERS } from 'utils/constants/links';
 import * as constants from '../../constants';
 import STATUSES from 'utils/constants/statuses';
 
-const STATUS = 'status';
+const PAGE_SIZE = 20;
 
-const RedeemRequestsTable = (): JSX.Element | null => {
+interface Props {
+  totalRedeemRequests: number;
+}
+
+const RedeemRequestsTable = ({
+  totalRedeemRequests
+}: Props): JSX.Element | null => {
+  const query = useQuery();
+  const selectedPage: number = query.get(QUERY_PARAMETERS.page);
+  const updateQueryParameters = useUpdateQueryParameters();
   const statsApi = usePolkabtcStats();
   const [data, setData] = React.useState<DashboardRequestInfo[]>([]);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
@@ -46,14 +59,16 @@ const RedeemRequestsTable = (): JSX.Element | null => {
 
   React.useEffect(() => {
     if (!statsApi) return;
+    if (!selectedPage) return;
+
+    const selectedPageIndex = selectedPage - 1;
 
     try {
       (async () => {
         setStatus(STATUSES.PENDING);
         const response = await statsApi.getRedeems(
-          // TODO: should handle via query parameters
-          0,
-          20,
+          selectedPageIndex,
+          PAGE_SIZE,
           undefined,
           undefined,
           // TODO: should double-check
@@ -66,7 +81,10 @@ const RedeemRequestsTable = (): JSX.Element | null => {
       setStatus(STATUSES.REJECTED);
       setError(error);
     }
-  }, [statsApi]);
+  }, [
+    statsApi,
+    selectedPage
+  ]);
 
   const columns = React.useMemo(
     () => [
@@ -140,7 +158,6 @@ const RedeemRequestsTable = (): JSX.Element | null => {
       },
       {
         Header: t('status'),
-        accessor: STATUS,
         classNames: [
           'text-left'
         ],
@@ -229,15 +246,28 @@ const RedeemRequestsTable = (): JSX.Element | null => {
     );
   }
 
+  if (!selectedPage) {
+    updateQueryParameters({
+      [QUERY_PARAMETERS.page]: 1
+    });
+
+    return null;
+  }
+
   // ray test touch <
-  // PAGINATION
   // COMPONENTIZING
   // CONFIGURATION
   // ray test touch >
 
   if (status === STATUSES.RESOLVED) {
+    const handlePageChange = (newPage: number) => {
+      updateQueryParameters({
+        [QUERY_PARAMETERS.page]: newPage
+      });
+    };
+
     return (
-      <InterlayTableContainer>
+      <InterlayTableContainer className='space-y-6'>
         <h2
           className={clsx(
             'text-2xl',
@@ -291,6 +321,11 @@ const RedeemRequestsTable = (): JSX.Element | null => {
             })}
           </InterlayTbody>
         </InterlayTable>
+        <Pagination
+          current={selectedPage}
+          pageSize={PAGE_SIZE}
+          total={totalRedeemRequests}
+          onChange={handlePageChange} />
       </InterlayTableContainer>
     );
   }

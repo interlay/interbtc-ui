@@ -26,7 +26,7 @@ function RedeemDashboard(): JSX.Element {
   const statsApi = usePolkabtcStats();
 
   const [totalSuccessfulRedeems, setTotalSuccessfulRedeems] = useState('-');
-  const [totalRedeems, setTotalRedeems] = useState('-');
+  const [totalRedeemRequests, setTotalRedeemRequests] = useState(0);
   const [totalRedeemedAmount, setTotalRedeemedAmount] = useState('-');
   // eslint-disable-next-line no-array-constructor
   const [cumulativeRedeemsPerDay, setCumulativeRedeemsPerDay] = useState(new Array<{ date: number; sat: number }>());
@@ -42,9 +42,9 @@ function RedeemDashboard(): JSX.Element {
    * TODO: should not use `useMemo` as it's not the case like expensive array calculation.
    * - should double-check `useMemo` and `useCallback` cases
    */
-  const redeemSuccessRate = useMemo(() => Number(totalSuccessfulRedeems) / Number(totalRedeems) || 0, [
+  const redeemSuccessRate = useMemo(() => Number(totalSuccessfulRedeems) / totalRedeemRequests || 0, [
     totalSuccessfulRedeems,
-    totalRedeems
+    totalRedeemRequests
   ]);
 
   useEffect(() => {
@@ -55,7 +55,7 @@ function RedeemDashboard(): JSX.Element {
 
     const fetchTotalFailedRedeems = async () => {
       const res = await statsApi.getTotalRedeems();
-      setTotalRedeems(res.data);
+      setTotalRedeemRequests(Number(res.data));
     };
 
     const fetchTotalRedeemedAmount = async () => {
@@ -161,7 +161,7 @@ function RedeemDashboard(): JSX.Element {
               {t('dashboard.redeem.success_rate')}
             </h5>
             <h5>
-              {totalRedeems === '-' ? t('no_data') : (redeemSuccessRate * 100).toFixed(2) + '%'}
+              {totalRedeemRequests ? (redeemSuccessRate * 100).toFixed(2) + '%' : t('no_data')}
             </h5>
           </div>
           <div
@@ -189,7 +189,7 @@ function RedeemDashboard(): JSX.Element {
               ]} />
           </div>
         </div>
-        <RedeemRequestsTable />
+        <RedeemRequestsTable totalRedeemRequests={totalRedeemRequests} />
       </div>
     </MainContainer>
   );

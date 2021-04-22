@@ -16,7 +16,8 @@ const PAGES = Object.freeze({
 });
 
 const QUERY_PARAMETERS = Object.freeze({
-  type: 'type'
+  type: 'type',
+  page: 'page'
 });
 
 export {

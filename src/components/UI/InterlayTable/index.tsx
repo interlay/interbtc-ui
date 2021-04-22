@@ -10,6 +10,7 @@ const InterlayTableContainer = ({
   <div
     className={clsx(
       'overflow-x-auto',
+      'overflow-y-hidden',
       className
     )}
     {...rest} />
