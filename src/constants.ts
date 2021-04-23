@@ -41,12 +41,6 @@ export const FAUCET_URL = process.env.REACT_APP_FAUCET_URL || 'http://localhost:
 
 export const STATS_URL = process.env.REACT_APP_STATS_SERVER_URL || 'http://localhost:3007';
 
-export const BTC_EXPLORER_BLOCK_API = 'https://blockstream.info/block/';
-export const BTC_TEST_EXPLORER_BLOCK_API = 'https://blockstream.info/testnet/block/';
-
-export const BTC_EXPLORER_TRANSACTION_API = 'https://blockstream.info/tx/';
-export const BTC_TEST_EXPLORER_TRANSACTION_API = 'https://blockstream.info/testnet/tx/';
-
 export const FEEDBACK_URL = 'https://forms.gle/2eKFnq4j1fkBgejW7';
 
 export const ACCOUNT_ID_TYPE_NAME = 'AccountId';

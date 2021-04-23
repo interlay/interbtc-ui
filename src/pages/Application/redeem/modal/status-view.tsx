@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { RedeemRequest, RedeemRequestStatus } from '../../../../common/types/redeem.types';
 import BitcoinTransaction from '../../../../common/components/bitcoin-links/transaction';
 import { getUsdAmount, shortAddress } from '../../../../common/utils/utils';
-import { BTC_ADDRESS_API } from 'config/blockchain';
+import { BTC_TRANSACTION_API } from 'config/blockchain';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../../common/types/util.types';
 import Big from 'big.js';
@@ -91,7 +91,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             <div className='col'>
               <div className='btc-transaction'>
                 <InterlayLink
-                  href={BTC_ADDRESS_API + props.request.btcTxId}
+                  href={BTC_TRANSACTION_API + props.request.btcTxId}
                   target='_blank'
                   rel='noopener noreferrer'>
                   <button className='modal-btn-green'>

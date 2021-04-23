@@ -11,7 +11,7 @@ import { updateBalancePolkaBTCAction } from '../../../../common/actions/general.
 import { shortAddress } from '../../../../common/utils/utils';
 import Big from 'big.js';
 import InterlayLink from 'components/UI/InterlayLink';
-import { BTC_ADDRESS_API } from 'config/blockchain';
+import { BTC_TRANSACTION_API } from 'config/blockchain';
 
 type StatusViewProps = {
   request: IssueRequest;
@@ -149,7 +149,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             <div className='col'>
               <div className='btc-transaction'>
                 <InterlayLink
-                  href={BTC_ADDRESS_API + props.request.btcTxId}
+                  href={BTC_TRANSACTION_API + props.request.btcTxId}
                   target='_blank'
                   rel='noopener noreferrer'>
                   <button className='modal-btn-green'>
@@ -218,7 +218,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                   <div className='row mt-3'>
                     <div className='col text-center'>
                       <InterlayLink
-                        href={BTC_ADDRESS_API + props.request.btcTxId}
+                        href={BTC_TRANSACTION_API + props.request.btcTxId}
                         target='_blank'
                         rel='noopener noreferrer'>
                         <button className='btn green-button'>
@@ -264,7 +264,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                 <div className='col text-center'>
                   <InterlayLink
                     // TODO: use the transaction wrapper for this link
-                    href={BTC_ADDRESS_API + props.request.btcTxId}
+                    href={BTC_TRANSACTION_API + props.request.btcTxId}
                     target='_blank'
                     rel='noopener noreferrer'>
                     <button className='btn green-button'>
