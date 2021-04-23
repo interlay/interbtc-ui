@@ -144,8 +144,8 @@ function DashboardTable<D extends DataWithID, C>(props: DashboardTableProps<D, C
             <div className='line'></div>
             <div className='data-container'>{heading}</div>
             <div className='line'></div>
-            {props.pageData.map((point, index) => (
-              <div key={index}>
+            {props.pageData.map((point, subIndex) => (
+              <div key={subIndex}>
                 <div className='data-container'>{props.dataPointDisplayer(point)[index]}</div>
                 <div className='line'></div>
               </div>
