@@ -15,6 +15,7 @@ import ActiveVaults from './components/active-vaults';
 import ActiveStakedRelayers from './components/active-staked-relayers';
 import ActiveCollators from './components/active-collators';
 import './dashboard.page.scss';
+import './dashboard-sub-page.scss';
 
 function Dashboard(): JSX.Element {
   const { t } = useTranslation();

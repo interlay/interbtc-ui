@@ -10,7 +10,6 @@ import {
   SET_INSTALLED_EXTENSION,
   SHOW_ACCOUNT_MODAL,
   UPDATE_ACCOUNTS,
-  SET_ACTIVE_TAB,
   UPDATE_OF_PRICES,
   IS_FAUCET_LOADED,
   UPDATE_HEIGHTS,
@@ -26,23 +25,16 @@ import {
   SetInstalledExtension,
   ShowAccountModal,
   UpdateAccounts,
-  SetActiveTab,
   IsFaucetLoaded,
   UpdateOfPrices,
   UpdateHeights,
   UpdateTotals
 } from '../types/actions.types';
 import { StoreType, ParachainStatus, Prices } from '../types/util.types';
-import { TabTypes } from 'utils/enums/tab-types';
 
 export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
   type: IS_POLKA_BTC_LOADED,
   isLoaded
-});
-
-export const setActiveTabAction = (selectedTabType: TabTypes): SetActiveTab => ({
-  type: SET_ACTIVE_TAB,
-  selectedTabType
 });
 
 export const isStakedRelayerLoaded = (isLoaded = false): IsStakedRelayerLoaded => ({

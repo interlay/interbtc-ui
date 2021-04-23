@@ -62,14 +62,14 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
                   buttonName='view all issued'
                   propsButtonColor='d_pink'
                   buttonId='issuebtn'
-                  buttonLink={PAGES.ISSUE} />
+                  buttonLink={PAGES.issue} />
               </div>
               <div className='button-container'>
                 <ButtonComponent
                   buttonName='view all redeemed'
                   propsButtonColor='d_yellow'
                   buttonId='redeembtn'
-                  buttonLink={PAGES.REDEEM} />
+                  buttonLink={PAGES.redeem} />
               </div>
             </div>
           </>
@@ -78,7 +78,7 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
       <div className='chart-container'>
         <LineChartComponent
           color={['d_yellow', 'd_grey']}
-          label={[t('dashboard.issue.total_issued_chart'), t('dashboard.issue.perday_issued_chart')]}
+          label={[t('dashboard.issue.total_issued_chart'), t('dashboard.issue.per_day_issued_chart')]}
           yLabels={cumulativeIssuesPerDay
             .slice(1)
             .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}

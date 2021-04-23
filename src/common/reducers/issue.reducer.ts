@@ -59,11 +59,13 @@ export const issueReducer = (state: IssueState = initialState, action: IssueActi
   }
   case INIT_STATE:
     return { ...state, step: 'ENTER_BTC_AMOUNT' };
+  // ray test touch <
   case UPDATE_ALL_ISSUE_REQUESTS: {
     const newRequests = new Map(state.issueRequests);
     newRequests.set(action.userDotAddress, action.issueRequests);
     return { ...state, issueRequests: newRequests };
   }
+  // ray test touch >
   case UPDATE_ISSUE_PERIOD: {
     return { ...state, issuePeriod: action.period };
   }

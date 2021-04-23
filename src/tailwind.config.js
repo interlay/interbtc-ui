@@ -33,6 +33,42 @@ const INTERLAY_TREE_POPPY = Object.freeze({
   800: '#945810',
   900: '#79480d'
 });
+const INTERLAY_MALACHITE = Object.freeze({
+  50: '#f6fcf6',
+  100: '#edfaed',
+  200: '#d2f2d1',
+  300: '#b7e9b6',
+  400: '#80d97f',
+  500: '#4ac948',
+  600: '#43b541',
+  700: '#389736',
+  800: '#2c792b',
+  900: '#246223'
+});
+const INTERLAY_SCARLET = Object.freeze({
+  50: '#fef4f3',
+  100: '#fee9e7',
+  200: '#fcc7c4',
+  300: '#faa6a1',
+  400: '#f7635a',
+  500: '#f32013',
+  600: '#db1d11',
+  700: '#b6180e',
+  800: '#92130b',
+  900: '#771009'
+});
+const INTERLAY_DODGER_BLUE = Object.freeze({
+  50: '#f4f9fe',
+  100: '#e8f3fd',
+  200: '#c6e1fb',
+  300: '#a4cff8',
+  400: '#60aaf3',
+  500: '#1c86ee',
+  600: '#1979d6',
+  700: '#1565b3',
+  800: '#11508f',
+  900: '#0e4275'
+});
 
 module.exports = {
   purge: [
@@ -43,30 +79,27 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        interlayPink: {
-          DEFAULT: INTERLAY_ROSE[500]
-        },
-        interlayYellow: {
-          light: '#ff9900',
+        interlayTreePoppy: {
+          light: INTERLAY_TREE_POPPY[400],
           DEFAULT: INTERLAY_TREE_POPPY[500]
         },
-        interlayBlue: {
-          DEFAULT: '#1c86ee'
+        interlayDodgerBlue: {
+          DEFAULT: INTERLAY_DODGER_BLUE[500]
         },
-        interlayOrange: {
-          DEFAULT: '#f95738'
-        },
-        interlayGreen: {
-          DEFAULT: '#4ac948'
-        },
-        interlayRed: {
-          light: '#ed3855',
-          DEFAULT: '#f32013'
+        interlayScarlet: {
+          light: INTERLAY_SCARLET[400],
+          DEFAULT: INTERLAY_SCARLET[500]
         },
         // TODO: could use `Gray` shades from https://tailwindcss.com/docs/customizing-colors
         interlayGrey: {
           light: '#e9ecef', // TODO: could be gray-200 in the default theme
           DEFAULT: '#a9a9a9'
+        },
+        interlayRose: {
+          DEFAULT: INTERLAY_ROSE[500]
+        },
+        interlayMalachite: {
+          DEFAULT: INTERLAY_MALACHITE[500]
         },
         primary: {
           lightest: INTERLAY_ROSE[200],

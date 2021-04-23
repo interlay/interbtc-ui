@@ -23,11 +23,12 @@ type StyledLinkDataProps = {
   newTab?: boolean;
 };
 
+// TODO: should not use as it's too implicit
 function StyledLinkData(props: StyledLinkDataProps): ReactElement {
   // TODO: make into actual hyperlink
   return (
     <InterlayLink
-      className='text-interlayBlue'
+      className='text-interlayDodgerBlue'
       href={props.target}
       target={props.newTab ? '_blank' : ''}
       rel='noopener noreferrer'>
@@ -55,22 +56,32 @@ type StatusComponentProps = {
     category: StatusCategories;
 };
 
-function StatusComponent({ text, category }: StatusComponentProps): ReactElement {
+// TODO: should drop it with `StatusCategories` as it's too implicit
+function StatusComponent({
+  text,
+  category
+}: StatusComponentProps): ReactElement {
   const Icon =
     category === StatusCategories.Ok ?
       CheckCircleIcon :
       category === StatusCategories.Bad ?
         CancelIcon :
         ErrorIcon;
+
   return (
-    <div className='status-container'>
+    <div
+      className={clsx(
+        'flex',
+        'justify-center',
+        'items-center'
+      )}>
       {category === StatusCategories.Neutral ? '' : (
         <Icon
           className={clsx(
             'ml-1',
-            { 'text-interlayGreen': category === StatusCategories.Ok },
-            { 'text-interlayRed': category === StatusCategories.Bad },
-            { 'text-interlayYellow': category !== StatusCategories.Ok && category !== StatusCategories.Bad }
+            { 'text-interlayMalachite': category === StatusCategories.Ok },
+            { 'text-interlayScarlet': category === StatusCategories.Bad },
+            { 'text-interlayTreePoppy': category !== StatusCategories.Ok && category !== StatusCategories.Bad }
           )}
           width={14}
           height={14} />
@@ -79,10 +90,10 @@ function StatusComponent({ text, category }: StatusComponentProps): ReactElement
         className={clsx(
           'ml-1',
           'font-bold',
-          { 'text-interlayGreen': category === StatusCategories.Ok },
-          { 'text-interlayRed': category === StatusCategories.Bad },
+          { 'text-interlayMalachite': category === StatusCategories.Ok },
+          { 'text-interlayScarlet': category === StatusCategories.Bad },
           {
-            'text-interlayYellow':
+            'text-interlayTreePoppy':
               category !== StatusCategories.Ok &&
               category !== StatusCategories.Bad &&
               category !== StatusCategories.Neutral
@@ -133,8 +144,8 @@ function DashboardTable<D extends DataWithID, C>(props: DashboardTableProps<D, C
             <div className='line'></div>
             <div className='data-container'>{heading}</div>
             <div className='line'></div>
-            {props.pageData.map((point, index) => (
-              <div key={index}>
+            {props.pageData.map((point, subIndex) => (
+              <div key={subIndex}>
                 <div className='data-container'>{props.dataPointDisplayer(point)[index]}</div>
                 <div className='line'></div>
               </div>

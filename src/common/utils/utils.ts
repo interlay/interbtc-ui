@@ -48,6 +48,7 @@ function formatDateTime(date: Date): string {
   return date.toDateString().substring(4) + ' ' + date.toTimeString().substring(0, 5);
 }
 
+// TODO: should use a package like `date-fns`
 function formatDateTimePrecise(date: Date): string {
   return date.toDateString().substring(4) + ' ' + date.toTimeString().substring(0, 8);
 }
@@ -95,6 +96,7 @@ function defaultBlockData(): RelayedBlock {
   };
 }
 
+// TODO: should double-check
 function defaultTableDisplayParams<Column>(): TableDisplayParams<Column> {
   return {
     page: 0,

@@ -40,8 +40,6 @@ import {
 } from 'common/actions/vault.actions';
 import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
 import './vault-dashboard.page.scss';
-// TODO: should fix by scoping only necessary CSS into a component
-import '../dashboard/dashboard-subpage.scss';
 
 function VaultDashboard(): JSX.Element {
   const [updateCollateralModalStatus, setUpdateCollateralModalStatus] = useState(CollateralUpdateStatus.Hidden);
@@ -181,7 +179,7 @@ function VaultDashboard(): JSX.Element {
 
   return (
     <MainContainer className='vault-dashboard-page'>
-      <div className='vault-container dashboard-fade-in-animation'>
+      <div className='vault-container fade-in-animation'>
         <div className='stacked-wrapper'>
           <PageTitle
             mainTitle={t('vault.vault_dashboard')}

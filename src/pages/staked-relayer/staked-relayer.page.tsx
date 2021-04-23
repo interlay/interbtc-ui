@@ -28,8 +28,6 @@ import { StoreType } from 'common/types/util.types';
 import { safeRoundTwoDecimals } from 'common/utils/utils';
 import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
 import './staked-relayer.page.scss';
-// TODO: should fix by scoping only necessary CSS into a component
-import '../dashboard/dashboard-subpage.scss';
 
 function StakedRelayer(): JSX.Element {
   const [isDeregisterPending, setDeregisterPending] = useState(false);
@@ -137,7 +135,7 @@ function StakedRelayer(): JSX.Element {
 
   return (
     <MainContainer className='staked-relayer-page'>
-      <div className='staked-container dashboard-fade-in-animation'>
+      <div className='staked-container fade-in-animation'>
         <div className='stacked-wrapper'>
           <PageTitle
             mainTitle={t('relayer.staked_relayer_dashboard')}

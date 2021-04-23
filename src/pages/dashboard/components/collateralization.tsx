@@ -63,7 +63,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
         <div className='values-container'>
           {!failed && (
             <>
-              <h1 className='text-interlayBlue'>{t('dashboard.vault.collateralization')}</h1>
+              <h1 className='text-interlayDodgerBlue'>{t('dashboard.vault.collateralization')}</h1>
               <h2>{safeRoundTwoDecimals(systemCollateralization)}%</h2>
               <h2>
                 {t('dashboard.vault.secure_threshold', {
@@ -79,19 +79,19 @@ export default function Collateralization({ linkButton }: CollateralizationProps
               buttonName='view vaults'
               propsButtonColor='d_blue'
               buttonId='collateralization'
-              buttonLink={PAGES.VAULTS} />
+              buttonLink={PAGES.vaults} />
           </div>
         )}
       </div>
       <div className='circle-container'>
         <div
-          className='status-circle border-interlayBlue'
+          className='status-circle border-interlayDodgerBlue'
           id='relay-circle'>
           <h1
             className={clsx(
               'h1-xl',
               'text-3xl',
-              'text-interlayBlue',
+              'text-interlayDodgerBlue',
               'text-center'
             )}>
             {failed ? t('no_data') :

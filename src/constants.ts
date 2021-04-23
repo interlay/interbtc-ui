@@ -7,9 +7,6 @@ export const BTC_DECIMALS = 8;
 // number of blocks before we prevent issue and redeem requests
 export const BLOCKS_BEHIND_LIMIT = 6;
 
-// Set to true is on mainnet.
-export const BTC_MAINNET = false;
-
 // regtest btc address validation regex
 export const BTC_REGTEST_REGEX = /\b([2mn][a-km-zA-HJ-NP-Z1-9]{25,34}|bcrt1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})\b/;
 // testnet btc address validation regex
@@ -43,15 +40,6 @@ export const PARACHAIN_URL = process.env.REACT_APP_PARACHAIN_URL || 'ws://127.0.
 export const FAUCET_URL = process.env.REACT_APP_FAUCET_URL || 'http://localhost:3035';
 
 export const STATS_URL = process.env.REACT_APP_STATS_SERVER_URL || 'http://localhost:3007';
-
-export const BTC_EXPLORER_BLOCK_API = 'https://blockstream.info/block/';
-export const BTC_TEST_EXPLORER_BLOCK_API = 'https://blockstream.info/testnet/block/';
-
-export const BTC_EXPLORER_ADDRESS_API = 'https://blockstream.info/address/';
-export const BTC_TEST_EXPLORER_ADDRESS_API = 'https://blockstream.info/testnet/address/';
-
-export const BTC_EXPLORER_TRANSACTION_API = 'https://blockstream.info/tx/';
-export const BTC_TEST_EXPLORER_TRANSACTION_API = 'https://blockstream.info/testnet/tx/';
 
 export const FEEDBACK_URL = 'https://forms.gle/2eKFnq4j1fkBgejW7';
 
