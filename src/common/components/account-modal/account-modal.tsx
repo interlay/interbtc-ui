@@ -79,7 +79,7 @@ function AccountModal({
                     'border-solid',
                     'shadow-sm',
                     'cursor-pointer',
-                    'hover:bg-interlayPink',
+                    'hover:bg-interlayRose',
                     'hover:text-white'
                   )}
                   // TODO: should use a button for semantic HTML usage
@@ -106,7 +106,7 @@ function AccountModal({
                 'shadow-sm',
                 'border',
                 'border-solid',
-                'border-interlayPink',
+                'border-interlayRose',
                 'w-1/2'
               )}
               href={POLKADOT_EXTENSION}

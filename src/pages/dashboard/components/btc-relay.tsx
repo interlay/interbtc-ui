@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
 import { StyledLinkData } from '../../../common/components/dashboard-table/dashboard-table';
-import * as constants from '../../../constants';
+import { BTC_BLOCK_API } from 'config/blockchain';
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
 import clsx from 'clsx';
@@ -112,11 +112,7 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
                 {blockstreamTip !== '-' && (
                   <StyledLinkData
                     data={t('dashboard.relay.blockstream_verify_link')}
-                    target={
-                      (constants.BTC_MAINNET ?
-                        constants.BTC_EXPLORER_BLOCK_API :
-                        constants.BTC_TEST_EXPLORER_BLOCK_API) + blockstreamTip
-                    }
+                    target={BTC_BLOCK_API + blockstreamTip}
                     newTab={true} />
                 )}
               </h1>
@@ -124,13 +120,13 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
           </div>
           <div className='circle-container'>
             <div
-              className='status-circle border-interlayBlue'
+              className='status-circle border-interlayDodgerBlue'
               id='relay-circle'>
               <h1
                 className={clsx(
                   'h1-xl',
                   'text-3xl',
-                  'text-interlayBlue',
+                  'text-interlayDodgerBlue',
                   'text-center'
                 )}
                 id='relay-circle-text'>

@@ -16,7 +16,9 @@
   .data-container {
     padding: 15px 20px;
     height: 50px;
-    @include flexCenter();
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   h1 {
@@ -33,59 +35,21 @@
     font-size: 15px;
     margin-bottom: 0rem;
   }
-
-  .status-container {
-    @include flexCenter();
-  }
-}
-
-.dashboard-container {
-  background-color: #fff;
-  @include justifyCenter();
-}
-
-.dashboard-wrapper {
-  width: 70%;
-}
-
-.title-line {
-  height: 1px;
-  margin-top: 0px;
-  width: 100%;
 }
 
 .issue-page-text-container {
   width: 155px;
   height: 39px;
   border-radius: 8px;
-  @include flexCenter();
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   h1 {
     font-weight: 400;
     font-size: 13px;
     color: white;
     text-transform: uppercase;
-  }
-}
-
-.table-top-data-container {
-  display: grid;
-  grid-template-columns: 0.8fr 1fr;
-  column-gap: 50px;
-  margin-top: 40px;
-  padding: 0px 10%;
-
-  .values-container {
-    padding: 10% 0px;
-    display: grid;
-    grid-template-rows: 0.5fr 0.5fr;
-    justify-items: start;
-    align-items: center;
-  }
-
-  .values-container.redeem-page {
-    grid-template-rows: repeat(3, 0.3fr);
-    row-gap: 20px;
   }
 }
 

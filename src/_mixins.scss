@@ -23,16 +23,3 @@
     @content;
   }
 }
-
-@mixin button-variant($background, $border, $hover-background, $hover-border, $active-background, $active-border) {}
-
-// Dashboard
-@mixin justifyCenter {
-  display: flex;
-  justify-content: center;
-}
-
-@mixin flexCenter {
-  @include justifyCenter();
-  align-items: center;
-}

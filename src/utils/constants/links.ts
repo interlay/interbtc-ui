@@ -6,8 +6,8 @@ const PAGES = Object.freeze({
   vaults: '/dashboard/vaults',
   parachain: '/dashboard/parachain',
   oracles: '/dashboard/oracles',
-  issue: '/dashboard/issue',
-  redeem: '/dashboard/redeem',
+  issue: '/dashboard/issue-requests',
+  redeem: '/dashboard/redeem-requests',
   relay: '/dashboard/relay',
   dashboard: '/dashboard',
   vault: '/vault',
@@ -16,7 +16,8 @@ const PAGES = Object.freeze({
 });
 
 const QUERY_PARAMETERS = Object.freeze({
-  type: 'type'
+  type: 'type',
+  page: 'page'
 });
 
 export {

@@ -243,7 +243,7 @@ function EnterAmountAndAddress(): ReactElement {
         <div
           className={clsx(
             'col-12 wizard-header-text',
-            'text-interlayYellow'
+            'text-interlayTreePoppy'
           )}>
           {t('redeem_page.you_will_receive')}
         </div>

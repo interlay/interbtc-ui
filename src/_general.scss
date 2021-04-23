@@ -723,3 +723,19 @@ input[type="number"] {
 .show>.btn-outline-bitcoin.dropdown-toggle:focus {
   box-shadow: 0 0 0 0.2rem rgba(230, 1, 122, 0.5);
 }
+
+.fade-in-animation {
+  animation: dashboard-fade 0.5s ease-in;
+}
+
+@keyframes dashboard-fade {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

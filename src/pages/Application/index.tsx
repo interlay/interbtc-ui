@@ -41,6 +41,7 @@ function Application(): JSX.Element | null {
 
   const tabTypeValues = Object.values(TAB_TYPES);
   if (selectedTabType === null || !tabTypeValues.includes(selectedTabType)) {
+    // TODO: error-prone
     updateQueryParameters({
       [QUERY_PARAMETERS.type]: TAB_TYPES.issue
     });

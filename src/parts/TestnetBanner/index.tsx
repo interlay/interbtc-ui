@@ -15,11 +15,11 @@ function TestnetBanner(): JSX.Element {
         'md:max-w-3xl',
         'border',
         'border-solid',
-        'border-interlayPink',
+        'border-interlayRose',
         'rounded',
         'text-center'
       )}>
-      <strong className='text-interlayPink'>
+      <strong className='text-interlayRose'>
         {t('testnet.warning')}
       </strong>
     </div>

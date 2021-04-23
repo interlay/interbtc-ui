@@ -38,7 +38,9 @@
   .parachain-content-container {
     height: 250px;
     padding-left: 20px;
-    @include flexCenter();
+    display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
   }
 
@@ -53,7 +55,9 @@
     border-radius: 8px;
     width: 130px;
     padding: 10px 15px;
-    @include flexCenter();
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .button-assets-container {
@@ -70,7 +74,9 @@
   }
 
   .circle-container {
-    @include flexCenter();
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-top: 25px;
   }
 
@@ -80,7 +86,9 @@
     height: 250px;
     border-radius: 50%;
     border: 3px solid grey;
-    @include flexCenter();
+    display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
   }
 }
