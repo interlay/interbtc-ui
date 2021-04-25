@@ -80,19 +80,19 @@ module.exports = {
     extend: {
       colors: {
         interlayTreePoppy: {
-          light: INTERLAY_TREE_POPPY[400],
+          400: INTERLAY_TREE_POPPY[400],
           DEFAULT: INTERLAY_TREE_POPPY[500]
         },
         interlayDodgerBlue: {
           DEFAULT: INTERLAY_DODGER_BLUE[500]
         },
         interlayScarlet: {
-          light: INTERLAY_SCARLET[400],
+          400: INTERLAY_SCARLET[400],
           DEFAULT: INTERLAY_SCARLET[500]
         },
         // TODO: could use `Gray` shades from https://tailwindcss.com/docs/customizing-colors
         interlayGrey: {
-          light: '#e9ecef', // TODO: could be gray-200 in the default theme
+          400: '#e9ecef', // TODO: could be gray-200 in the default theme
           DEFAULT: '#a9a9a9'
         },
         interlayRose: {
@@ -102,23 +102,27 @@ module.exports = {
           DEFAULT: INTERLAY_MALACHITE[500]
         },
         primary: {
-          lightest: INTERLAY_ROSE[200],
-          lighter: INTERLAY_ROSE[300],
-          light: INTERLAY_ROSE[400],
+          50: INTERLAY_ROSE[50],
+          100: INTERLAY_ROSE[100],
+          200: INTERLAY_ROSE[200],
+          300: INTERLAY_ROSE[300],
+          400: INTERLAY_ROSE[400],
           DEFAULT: INTERLAY_ROSE[500],
-          dark: INTERLAY_ROSE[600],
-          darker: INTERLAY_ROSE[700],
-          darkest: INTERLAY_ROSE[800],
+          600: INTERLAY_ROSE[600],
+          700: INTERLAY_ROSE[700],
+          800: INTERLAY_ROSE[800],
           contrastText: colors.white
         },
         secondary: {
-          lightest: INTERLAY_TREE_POPPY[200],
-          lighter: INTERLAY_TREE_POPPY[300],
-          light: INTERLAY_TREE_POPPY[400],
+          50: INTERLAY_TREE_POPPY[50],
+          100: INTERLAY_TREE_POPPY[100],
+          200: INTERLAY_TREE_POPPY[200],
+          300: INTERLAY_TREE_POPPY[300],
+          400: INTERLAY_TREE_POPPY[400],
           DEFAULT: INTERLAY_TREE_POPPY[500],
-          dark: INTERLAY_TREE_POPPY[600],
-          darker: INTERLAY_TREE_POPPY[700],
-          darkest: INTERLAY_TREE_POPPY[800],
+          600: INTERLAY_TREE_POPPY[600],
+          700: INTERLAY_TREE_POPPY[700],
+          800: INTERLAY_TREE_POPPY[800],
           contrastText: '#333333'
         }
       },

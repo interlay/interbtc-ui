@@ -12,7 +12,14 @@ module.exports = {
     '@storybook/preset-create-react-app'
   ],
   webpackFinal: config => {
-    // MEMO: https://github.com/storybookjs/storybook/issues/4038
+    // MEMO: inspired by https://github.com/storybookjs/storybook/issues/3916
+    config.resolve.modules = [
+      ...(config.resolve.modules || []),
+      path.resolve(__dirname, '../src'),
+      'node_modules'
+    ];
+
+    // MEMO: inspired by https://github.com/storybookjs/storybook/issues/4038
     return {
       ...config,
       module: {
