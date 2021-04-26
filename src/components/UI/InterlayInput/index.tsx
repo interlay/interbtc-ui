@@ -1,4 +1,3 @@
-
 import clsx from 'clsx';
 
 const COLORS = Object.freeze({
@@ -10,24 +9,15 @@ const COLOR_VALUES = Object.values(COLORS);
 
 interface Props {
   color?: typeof COLOR_VALUES[number];
-  id?:string;
-  type?:string;
-  name?:string;
 }
 
 // MEMO: inspired by https://www.tailwind-kit.com/components/inputtext
 const InterlayInput = ({
   color = COLORS.primary,
   className,
-  id,
-  type,
-  name,
   ...rest
 }: Props & React.ComponentPropsWithRef<'input'>): JSX.Element => (
   <input
-    type={type}
-    id={id}
-    name={name}
     className={clsx(
       'flex-1',
       'appearance-none',

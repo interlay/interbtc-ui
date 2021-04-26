@@ -1,4 +1,3 @@
-
 import clsx from 'clsx';
 
 const VARIANTS = Object.freeze({
@@ -20,8 +19,6 @@ const VARIANT_VALUES = Object.values(VARIANTS);
 interface CustomProps {
   variant?: typeof VARIANT_VALUES[number];
   color?: typeof COLOR_VALUES[number];
-  id?:string;
-  type?:string
 }
 
 const InterlayButton = ({
@@ -29,13 +26,9 @@ const InterlayButton = ({
   variant = VARIANTS.text, // TODO: should add variant based behaviors
   color = COLORS.default,
   className,
-  id,
-  type,
   ...rest
 }: CustomProps & React.ComponentPropsWithRef<'button'>): JSX.Element => (
   <button
-    id={id}
-    type={type || 'button'}
     className={clsx(
       'px-4',
       'py-2',
