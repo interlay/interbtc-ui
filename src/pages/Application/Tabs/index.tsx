@@ -70,7 +70,7 @@ const Tabs = ({ children }: Props): JSX.Element => (
     className={clsx(
       'flex',
       'rounded-lg',
-      'bg-interlayGrey-light'
+      'bg-interlayGrey-400'
     )}>
     {children}
   </div>

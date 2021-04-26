@@ -170,7 +170,7 @@ const VaultScoresTable = ({
           'flex',
           'justify-center'
         )}>
-        <EllipsisLoader dotClassName='bg-interlayTreePoppy-light' />
+        <EllipsisLoader dotClassName='bg-interlayTreePoppy-400' />
       </div>
     );
   }
