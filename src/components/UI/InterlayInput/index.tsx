@@ -8,41 +8,38 @@ const COLORS = Object.freeze({
 
 const COLOR_VALUES = Object.values(COLORS);
 
-interface Props {
+interface CustomProps {
   color?: typeof COLOR_VALUES[number];
 }
 
-// MEMO: inspired by https://www.tailwind-kit.com/components/inputtext
 const InterlayInput = ({
   color = COLORS.primary,
   className,
   ...rest
-}: Props & React.ComponentPropsWithRef<'input'>): JSX.Element => (
+}: Props): JSX.Element => (
   <input
     type='text'
     className={clsx(
-      'flex-1',
-      'appearance-none',
-      'border-transparent',
-      'border',
-      'border-gray-300',
-      'w-full',
-      'px-4',
-      'py-2',
-      'text-base',
+      'focus:ring',
+      { 'focus:border-primary-300': color === COLORS.primary },
+      { 'focus:ring-primary-200': color === COLORS.primary },
+      { 'focus:border-secondary-300': color === COLORS.secondary },
+      { 'focus:ring-secondary-200': color === COLORS.secondary },
+      'focus:ring-opacity-50',
       'text-textPrimary',
-      'placeholder-gray-400',
       'bg-paper',
-      'rounded-lg',
+      'block',
+      'w-full',
+      'text-base',
+      'border-gray-300',
       'shadow-sm',
-      'focus:outline-none',
-      'focus:ring-2',
-      { 'focus:ring-primary': color === COLORS.primary },
-      { 'focus:ring-secondary': color === COLORS.secondary },
-      'focus:border-transparent',
+      'rounded-md',
+      'placeholder-gray-400',
       className
     )}
     {...rest} />
 );
+
+export type Props = CustomProps & React.ComponentPropsWithRef<'input'>;
 
 export default InterlayInput;

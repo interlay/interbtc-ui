@@ -145,6 +145,7 @@ module.exports = {
     }
   },
   plugins: [
+    require('@tailwindcss/forms'),
     require('tailwindcss-pseudo-elements'),
     plugin(function ({ addUtilities }) {
       addUtilities(
