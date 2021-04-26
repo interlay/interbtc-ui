@@ -22,10 +22,16 @@ import { updateBalanceDOTAction, showAccountModalAction } from 'common/actions/g
 import { shortAddress, updateBalances } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import Balances from './balances';
-import { PAGES } from 'utils/constants/links';
+import {
+  PAGES,
+  QUERY_PARAMETERS
+} from 'utils/constants/links';
 import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
+import TAB_TYPES from 'utils/constants/tab-types';
 import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc/polkabtc-logo.svg';
 import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
+
+const queryString = require('query-string');
 
 type TopbarProps = {
   address?: string;
@@ -95,7 +101,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
               style={{
                 textDecoration: 'none'
               }}
-              to={PAGES.HOME}>
+              to={PAGES.home}>
               <PolkabtcLogoIcon
                 fill='currentColor'
                 width={90}
@@ -112,7 +118,12 @@ export default function Topbar(props: TopbarProps): ReactElement {
                     textDecoration: 'none'
                   }}
                   className='nav-link'
-                  to={PAGES.APPLICATION}>
+                  to={{
+                    pathname: PAGES.application,
+                    search: queryString.stringify({
+                      [QUERY_PARAMETERS.type]: TAB_TYPES.issue
+                    })
+                  }}>
                   {t('app')}
                 </InterlayRouterLink>
               )}
@@ -122,7 +133,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                     textDecoration: 'none'
                   }}
                   className='nav-link'
-                  to={PAGES.DASHBOARD}>
+                  to={PAGES.dashboard}>
                   {t('nav_dashboard')}
                 </InterlayRouterLink>
               )}
@@ -132,7 +143,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                     textDecoration: 'none'
                   }}
                   className='nav-link'
-                  to={PAGES.VAULT}>
+                  to={PAGES.vault}>
                   {t('nav_vault')}
                 </InterlayRouterLink>
               )}
@@ -142,7 +153,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                     textDecoration: 'none'
                   }}
                   className='nav-link'
-                  to={PAGES.STAKED_RELAYER}>
+                  to={PAGES.stakedRelayer}>
                   {t('nav_relayer')}
                 </InterlayRouterLink>
               )}
@@ -152,7 +163,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                     textDecoration: 'none'
                   }}
                   className='nav-link'
-                  to={PAGES.CHALLENGES}>
+                  to={PAGES.challenges}>
                   {t('nav_challenges')}
                   <NewMarkIcon
                     className='inline-block'
@@ -165,7 +176,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                   textDecoration: 'none'
                 }}
                 className='nav-link'
-                to={PAGES.FEEDBACK}>
+                to={PAGES.feedback}>
                 {t('feedback.feedback')}
               </InterlayRouterLink>
               <InterlayLink

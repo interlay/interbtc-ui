@@ -26,6 +26,7 @@ interface MultiAxisProps {
 }
 type ChartProps = SingleAxisProps | MultiAxisProps;
 
+// TODO: should refactor by using a better package
 export default function LineChartComponent(propsArg: ChartProps): React.ReactElement {
   const props =
     typeof propsArg.color === 'string' ? // meaning propsArg isn't SingleAxisProps

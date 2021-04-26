@@ -62,14 +62,14 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
                   buttonName='view all issued'
                   propsButtonColor='d_pink'
                   buttonId='issuebtn'
-                  buttonLink={PAGES.ISSUE} />
+                  buttonLink={PAGES.issue} />
               </div>
               <div className='button-container'>
                 <ButtonComponent
                   buttonName='view all redeemed'
                   propsButtonColor='d_yellow'
                   buttonId='redeembtn'
-                  buttonLink={PAGES.REDEEM} />
+                  buttonLink={PAGES.redeem} />
               </div>
             </div>
           </>

@@ -1,32 +1,33 @@
 import { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
 import OracleStatus from '../components/oracle-status';
 import OracleTable from '../../../common/components/oracle-table/oracle-table';
 import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
-// TODO: should fix by scoping only necessary CSS into a component
-import '../dashboard.page.scss';
-import '../dashboard-subpage.scss';
 
 export default function OraclesDashboard(): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <MainContainer>
-      <div className='dashboard-container dashboard-fade-in-animation'>
-        <div className='dashboard-wrapper'>
-          <div>
-            <PageTitle
-              mainTitle={t('dashboard.oracles.oracles')}
-              subTitle={<TimerIncrement />} />
-            <div className='title-line bg-interlayBlue' />
-            <div className='dashboard-graphs-container'>
-              <OracleStatus />
-            </div>
-            <OracleTable planckLocked='1' />
+    <MainContainer
+      className={clsx(
+        'flex',
+        'justify-center',
+        'fade-in-animation'
+      )}>
+      <div className='w-3/4'>
+        <div>
+          <PageTitle
+            mainTitle={t('dashboard.oracles.oracles')}
+            subTitle={<TimerIncrement />} />
+          <hr className='border-interlayDodgerBlue' />
+          <div className='dashboard-graphs-container'>
+            <OracleStatus />
           </div>
+          <OracleTable planckLocked='1' />
         </div>
       </div>
     </MainContainer>

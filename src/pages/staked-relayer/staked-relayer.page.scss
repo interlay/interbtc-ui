@@ -3,7 +3,8 @@
 
 .staked-relayer-page {
     text-align: center;
-    @include justifyCenter();
+    display: flex;
+    justify-content: center;
 
     .staked-container {
         max-width: calc(100vw - 30px);
@@ -99,20 +100,4 @@
 
 .vote-label {
     font-weight: 600;
-}
-
-.dashboard-fade-in-animation {
-    animation: dashboard-fade 0.5s ease-in;
-}
-
-@keyframes dashboard-fade {
-    0% {
-        opacity: 0;
-    }
-    20% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
 }

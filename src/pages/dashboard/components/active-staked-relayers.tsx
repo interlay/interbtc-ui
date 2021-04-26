@@ -43,7 +43,7 @@ const ActiveStakedRelayersComponent = ({ linkButton }: ActiveStakedRelayers): Re
               buttonName='view relayers'
               propsButtonColor='d_orange'
               buttonId='active-staked'
-              buttonLink={PAGES.PARACHAIN} />
+              buttonLink={PAGES.parachain} />
           </div>
         )}
       </div>

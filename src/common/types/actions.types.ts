@@ -2,7 +2,6 @@ import { IssueRequest } from './issue.types';
 import { RedeemRequest } from './redeem.types';
 import { VaultReplaceRequest } from './vault.types';
 import { StoreType, ParachainStatus, Prices } from './util.types';
-import { TabTypes } from 'utils/enums/tab-types';
 
 // GENERAL ACTIONS
 
@@ -18,7 +17,6 @@ export const UPDATE_BALANCE_DOT = 'UPDATE_BALANCE_DOT';
 export const SET_INSTALLED_EXTENSION = 'SET_INSTALLED_EXTENSION';
 export const SHOW_ACCOUNT_MODAL = 'SHOW_ACCOUNT_MODAL';
 export const UPDATE_ACCOUNTS = 'UPDATE_ACCOUNTS';
-export const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';
 export const UPDATE_OF_PRICES = 'UPDATE_OF_PRICES';
 export const UPDATE_HEIGHTS = 'UPDATE_HEIGHTS';
 export const UPDATE_TOTALS = 'UPDATE_TOTALS';
@@ -42,11 +40,6 @@ export interface UpdateOfPrices {
 export interface IsPolkaBtcLoaded {
     type: typeof IS_POLKA_BTC_LOADED;
     isLoaded: boolean;
-}
-
-export interface SetActiveTab {
-    type: typeof SET_ACTIVE_TAB;
-    selectedTabType: TabTypes;
 }
 
 export interface IsStakedRelayerLoaded {
@@ -120,7 +113,6 @@ export type GeneralActions =
     | SetInstalledExtension
     | ShowAccountModal
     | UpdateAccounts
-    | SetActiveTab
     | UpdateOfPrices
     | UpdateHeights
     | UpdateTotals;

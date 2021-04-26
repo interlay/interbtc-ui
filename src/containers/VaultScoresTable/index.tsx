@@ -53,7 +53,7 @@ const VaultScoresTable = ({
 }: Props): JSX.Element => {
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
   const statsApi = usePolkabtcStats();
-  const [data, setData] = React.useState<(PatchedVaultData)[]>([]);
+  const [data, setData] = React.useState<PatchedVaultData[]>([]);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [error, setError] = React.useState<Error | null>(null);
   const { t } = useTranslation();
@@ -68,9 +68,8 @@ const VaultScoresTable = ({
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const vaults = (await statsApi.getVaults(challengeTime)).data;
-        // TODO: should be done by table sort feature
-        const sortedVaults = vaults.sort((a, b) => b.lifetime_sla - a.lifetime_sla);
+        const response = await statsApi.getVaults(challengeTime);
+        const sortedVaults = response.data.sort((a, b) => b.lifetime_sla - a.lifetime_sla);
         const transformedVaults = sortedVaults.map(vault => ({
           ...vault,
           lifetime_sla: Number(vault.lifetime_sla).toFixed(2)
@@ -166,8 +165,12 @@ const VaultScoresTable = ({
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
     return (
-      <div className='flex justify-center'>
-        <EllipsisLoader dotClassName='bg-interlayYellow-light' />
+      <div
+        className={clsx(
+          'flex',
+          'justify-center'
+        )}>
+        <EllipsisLoader dotClassName='bg-interlayTreePoppy-light' />
       </div>
     );
   }
@@ -192,7 +195,7 @@ const VaultScoresTable = ({
                   <InterlayTh
                     {...column.getHeaderProps([
                       {
-                        className: clsx(...column.classNames),
+                        className: clsx(column.classNames),
                         style: column.style
                       },
                       column.getSortByToggleProps()
@@ -224,7 +227,7 @@ const VaultScoresTable = ({
                       <InterlayTd
                         {...cell.getCellProps([
                           {
-                            className: clsx(...cell.column.classNames),
+                            className: clsx(cell.column.classNames),
                             style: cell.column.style
                           }
                         ])}>
