@@ -29,6 +29,7 @@ const InterlayButton = ({
   ...rest
 }: CustomProps & React.ComponentPropsWithRef<'button'>): JSX.Element => (
   <button
+    type='button'
     className={clsx(
       'px-4',
       'py-2',

@@ -18,6 +18,7 @@ const InterlayInput = ({
   ...rest
 }: Props & React.ComponentPropsWithRef<'input'>): JSX.Element => (
   <input
+    type='text'
     className={clsx(
       'flex-1',
       'appearance-none',

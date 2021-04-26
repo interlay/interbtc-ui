@@ -324,7 +324,12 @@ function EnterBTCAmount(): JSX.Element {
             <div className='row'>
               <div className='col-6 temp-text-left'>{t('issue_page.security_deposit')}</div>
               <div className='col fee-number'>
-                <div>
+                <div
+                  className={clsx(
+                    'flex',
+                    'justify-center',
+                    'space-x-1'
+                  )}>
                   <PolkadotLogoIcon
                     width={20}
                     height={20} />
