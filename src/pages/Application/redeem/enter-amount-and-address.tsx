@@ -213,6 +213,7 @@ function EnterAmountAndAddress(): ReactElement {
     setRedeemFee(fee);
 
     if (Number(amount) <= Number(dustValue)) {
+      setAmountPolkaBTC('0.00');
       toast.warning(t('redeem_page.amount_greater') + dustValue + 'BTC)');
     }
   };
