@@ -107,7 +107,8 @@
     "compose:testnet": "docker-compose -f ./docker-compose.testnet.yml up",
     "compose:down": "docker-compose down --remove-orphans -v",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "chromatic": "chromatic --project-token"
   },
   "homepage": "",
   "browserslist": {
