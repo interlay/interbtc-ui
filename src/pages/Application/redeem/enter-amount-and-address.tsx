@@ -84,6 +84,7 @@ function EnterAmountAndAddress(): ReactElement {
   const [dustValue, setDustValue] = useState('0');
   const [usdAmount, setUsdAmount] = useState('');
   const [redeemFee, setRedeemFee] = useState('0');
+  const [showDustError, setShowDustError] = useState(false);
 
   // Premium redeem
   const [btcToDotRate, setBtcToDotRate] = useState(new Big(0));
@@ -213,8 +214,9 @@ function EnterAmountAndAddress(): ReactElement {
     setRedeemFee(fee);
 
     if (Number(amount) <= Number(dustValue)) {
-      setAmountPolkaBTC('0.00');
-      toast.warning(t('redeem_page.amount_greater') + dustValue + 'BTC)');
+      setShowDustError(true);
+    } else {
+      setShowDustError(false);
     }
   };
 
@@ -280,6 +282,13 @@ function EnterAmountAndAddress(): ReactElement {
       <div className='row usd-price'>
         <div className='col'>{'~ $' + usdAmount}</div>
       </div>
+      {showDustError &&
+        (
+          <div className='wizard-input-error'>
+            {t('redeem_page.amount_greater') + dustValue + 'BTC)'}
+          </div>
+        )
+      }
       {errors.amountPolkaBTC && (
         <div className='wizard-input-error'>
           {errors.amountPolkaBTC.type === 'required' ?
