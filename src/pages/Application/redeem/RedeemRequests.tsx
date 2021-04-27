@@ -1,4 +1,4 @@
-import React, { useState, ReactElement } from 'react';
+import { useState, ReactElement } from 'react';
 import { RedeemRequest, RedeemRequestStatus } from '../../../common/types/redeem.types';
 import { Table } from 'react-bootstrap';
 import { FaCheck, FaHourglass } from 'react-icons/fa';

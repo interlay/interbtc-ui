@@ -6,7 +6,7 @@ import { reverseHashEndianness } from '../../utils/utils';
 import { useTranslation } from 'react-i18next';
 import { Table } from 'react-bootstrap';
 import InterlayLink from 'components/UI/InterlayLink';
-import { BTC_BLOCK_API } from 'config/blockchain';
+import { BTC_BLOCK_API } from 'config/bitcoin';
 
 interface BlockInfo {
   source: string;
@@ -118,7 +118,7 @@ export default function BitcoinTable(): ReactElement {
             fontWeight: 700,
             fontSize: '26px'
           }}>
-          {t('dashboard.relay.btcrelay')}
+          {t('dashboard.relay.btc_relay')}
         </p>
         <div className='header'>
           {t('status_colon')} &nbsp; <div className={getCircle(relayStatus)}></div> &nbsp; {relayStatus}

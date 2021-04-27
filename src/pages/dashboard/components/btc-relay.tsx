@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
 import { StyledLinkData } from '../../../common/components/dashboard-table/dashboard-table';
-import { BTC_BLOCK_API } from 'config/blockchain';
+import { BTC_BLOCK_API } from 'config/bitcoin';
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
 import clsx from 'clsx';

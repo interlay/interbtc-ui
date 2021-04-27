@@ -1589,6 +1589,11 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
+"@headlessui/react@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.1.1.tgz#71ecb3444eb21947ceefe768a25efaba4f8eceb0"
+  integrity sha512-fxNKxRrjNXdNYNMhAVrv1nz0gIMX3JhFizTA9lNrEC8+aY3JR00GZTPhuG785RZGvnHXCdYCGHeAhqw9uRNRrA==
+
 "@interlay/esplora-btc-api@0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@interlay/esplora-btc-api/-/esplora-btc-api-0.4.0.tgz#1db5662ad3f843ca17e7bd4626c5b9041599f591"
@@ -14934,13 +14939,6 @@ react-toastify@^6.0.5:
     clsx "^1.1.1"
     prop-types "^15.7.2"
     react-transition-group "^4.4.1"
-
-react-toggle@^4.1.1:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/react-toggle/-/react-toggle-4.1.2.tgz#b00500832f925ad524356d909821821ae39f6c52"
-  integrity sha512-4Ohw31TuYQdhWfA6qlKafeXx3IOH7t4ZHhmRdwsm1fQREwOBGxJT+I22sgHqR/w8JRdk+AeMCJXPImEFSrNXow==
-  dependencies:
-    classnames "^2.2.5"
 
 react-transition-group@^4.4.1:
   version "4.4.1"

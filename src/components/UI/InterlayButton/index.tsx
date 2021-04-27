@@ -91,7 +91,6 @@ const InterlayButton = ({
       'ease-in',
       'duration-200',
       'text-sm',
-      'font-medium',
       'rounded',
       'capitalize',
       'space-x-1',
@@ -111,7 +110,7 @@ const InterlayButton = ({
         )} />
     )}
     {startIcon}
-    <span>
+    <span className='font-medium'>
       {children}
     </span>
     {endIcon}

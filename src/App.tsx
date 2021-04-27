@@ -35,7 +35,6 @@ import Application from 'pages/Application';
 import Dashboard from 'pages/dashboard/dashboard.page';
 import VaultDashboard from 'pages/vault-dashboard/vault-dashboard.page';
 import StakedRelayer from 'pages/staked-relayer/staked-relayer.page';
-import Challenges from 'pages/Challenges';
 import VaultsDashboard from 'pages/dashboard/vaults/vaults.dashboard.page';
 import IssueRequests from 'pages/dashboard/IssueRequests';
 import RedeemRequests from 'pages/dashboard/RedeemRequests';
@@ -43,7 +42,6 @@ import LandingPage from 'pages/landing/landing.page';
 import RelayDashboard from 'pages/dashboard/relay/relay.dashboard.page';
 import OraclesDashboard from 'pages/dashboard/oracles/oracles.dashboard.page';
 import ParachainDashboard from 'pages/dashboard/parachain/parachain.dashboard.page';
-import Feedback from 'pages/Feedback';
 // TODO: block for now
 // import TransitionWrapper from 'parts/TransitionWrapper';
 
@@ -70,7 +68,7 @@ import {
 // TODO: should clean up and move to scss
 import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
-import { ACCOUNT_ID_TYPE_NAME } from './constants';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
 // TODO: block code-splitting for now
 // const Application = React.lazy(() =>
@@ -85,9 +83,9 @@ import { ACCOUNT_ID_TYPE_NAME } from './constants';
 // const StakedRelayerPage = React.lazy(() =>
 //   import(/* webpackChunkName: 'staked-relayer' */ 'pages/staked-relayer/staked-relayer.page')
 // );
-// const Challenges = React.lazy(() =>
-//   import(/* webpackChunkName: 'challenges' */ 'pages/Challenges')
-// );
+const Challenges = React.lazy(() =>
+  import(/* webpackChunkName: 'challenges' */ 'pages/Challenges')
+);
 // const VaultsDashboard = React.lazy(() =>
 //   import(/* webpackChunkName: 'vaults' */ 'pages/dashboard/vaults/vaults.dashboard.page')
 // );
@@ -109,9 +107,12 @@ import { ACCOUNT_ID_TYPE_NAME } from './constants';
 // const ParachainDashboard = React.lazy(() =>
 //   import(/* webpackChunkName: 'parachain' */ 'pages/dashboard/parachain/parachain.dashboard.page')
 // );
-// const Feedback = React.lazy(() =>
-//   import(/* webpackChunkName: 'feedback' */ 'pages/Feedback')
-// );
+const Feedback = React.lazy(() =>
+  import(/* webpackChunkName: 'feedback' */ 'pages/Feedback')
+);
+const NoMatch = React.lazy(() =>
+  import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
+);
 
 function connectToParachain(): Promise<PolkaBTCAPI> {
   return createPolkabtcAPI(
@@ -401,6 +402,9 @@ function App(): JSX.Element {
                       path={PAGES.home}
                       exact>
                       <LandingPage />
+                    </Route>
+                    <Route path='*'>
+                      <NoMatch />
                     </Route>
                   </Switch>
                 </React.Suspense>

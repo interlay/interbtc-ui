@@ -5,7 +5,7 @@ import { Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 
-import PaymentView from './payment-view';
+import PaymentView from './PaymentView';
 import StatusView from './status-view';
 import WhoopsView from './whoops-view';
 import { getUsdAmount, shortAddress } from 'common/utils/utils';
@@ -57,7 +57,7 @@ function IssueModal(props: IssueModalProps): ReactElement {
           <div className='issue-modal-horizontal-line' />
           <Modal.Body>
             <div className='row'>
-              <div className='col-xl-6 col-lg-12 justify-content-center'>
+              <div className='col-xl-6 col-lg-12 justify-center'>
                 <div className='issue-amount'>
                   <span className='wizard-number'>
                     {request.issuedAmountBtc || request.requestedAmountPolkaBTC}
@@ -132,10 +132,10 @@ function IssueModal(props: IssueModalProps): ReactElement {
                   <div className='col-6 temp-text-left'>{t('issue_page.vault_btc_address')}</div>
                   <div className='col-6 right-text'>{shortAddress(request.vaultBTCAddress)}</div>
                 </div>
-                <div className='row justify-content-center mt-3'>
+                <div className='row justify-center mt-3'>
                   <div className='col-9 note-title'>{t('note')}:</div>
                 </div>
-                <div className='row justify-content-center'>
+                <div className='row justify-center'>
                   <div className='col-9 note-text'>{t('issue_page.fully_decentralized')}</div>
                 </div>
               </div>

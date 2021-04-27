@@ -2,7 +2,7 @@
 import clsx from 'clsx';
 
 import { safeRoundFiveDecimals } from 'common/utils/utils';
-import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc/polkabtc-logo.svg';
+import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
 interface Props {

@@ -135,9 +135,11 @@ body {
     margin-top: -1rem;
   }
 
+  // ray test touch <
   .error-borders {
     border-color: $error-color;
   }
+  // ray test touch >
 }
 
 textarea:hover,
@@ -277,10 +279,6 @@ input[type="number"] {
   background-color: transparent;
 }
 
-.white-background {
-  background-color: white;
-}
-
 .dropdown-menu {
   a {
     display: block;
@@ -349,6 +347,7 @@ input[type="number"] {
   }
 }
 
+// ray test touch <
 .green-button {
   border: 1px solid $d_green;
   color: $d_green;
@@ -367,6 +366,7 @@ input[type="number"] {
     border: 1px solid $d_pink !important;
   }
 }
+// ray test touch >
 
 .black-button {
   border: 1px solid $text-color;

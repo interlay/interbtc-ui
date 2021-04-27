@@ -20,7 +20,8 @@
     "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true,
     "baseUrl": "src",
-    "jsxImportSource": "@emotion/react" // for the css prop
+    // TODO: inspired by https://github.com/tailwindlabs/headlessui/issues/233
+    // "jsxImportSource": "@emotion/react" // for the css prop
   },
   "include": [
     "src",

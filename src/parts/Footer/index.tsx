@@ -42,7 +42,7 @@ import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg
 // TODO: should use a vivid-looking version
 import {
   ReactComponent as Web3FoundationGrantsBadgeIcon
-} from 'assets/img/polkabtc/web3-foundation-grants-badge.svg';
+} from 'assets/img/web3-foundation-grants-badge.svg';
 import styles from './footer.module.css';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires

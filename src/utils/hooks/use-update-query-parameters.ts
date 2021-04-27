@@ -3,10 +3,10 @@ import { useHistory } from 'react-router-dom';
 
 const queryString = require('query-string');
 
-const useUpdateQueryParameters = (): (newQueryParameters: Record<string, string>) => void => {
+const useUpdateQueryParameters = (): (newQueryParameters: QueryParameters) => void => {
   const history = useHistory();
 
-  const updateQueryParameters = (newQueryParameters: Record<string, string>) => {
+  const updateQueryParameters = (newQueryParameters: QueryParameters) => {
     const location = history.location;
     let queryParameters = queryString.parse(location.search);
     queryParameters = {
@@ -22,5 +22,7 @@ const useUpdateQueryParameters = (): (newQueryParameters: Record<string, string>
 
   return updateQueryParameters;
 };
+
+export type QueryParameters = Record<string, string>;
 
 export default useUpdateQueryParameters;

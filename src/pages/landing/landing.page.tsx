@@ -11,7 +11,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import Timer from 'common/components/timer';
+import Timer from 'components/Timer';
 import InterlayLink from 'components/UI/InterlayLink';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import checkStaticPage from 'config/check-static-page';
@@ -22,8 +22,8 @@ import {
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import * as constants from '../../constants';
-import TAB_TYPES from 'utils/constants/tab-types';
-import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc/polkabtc-logo.svg';
+import TAB_IDS from 'utils/constants/tab-ids';
+import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc-logo.svg';
 
 const queryString = require('query-string');
 
@@ -34,7 +34,7 @@ export default function LandingPage(): JSX.Element {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const nowInSeconds = Math.floor(Date.now() / 1000);
-  const secondsUntilBeta = constants.BETA_LAUNCH_DATE - nowInSeconds;
+  const initialLeftSecondsUntilBeta = constants.BETA_LAUNCH_DATE - nowInSeconds;
 
   const checkWalletAndAccount = () => {
     if (!extensions.length || !address) {
@@ -104,7 +104,7 @@ export default function LandingPage(): JSX.Element {
                 'mb-2',
                 'text-4xl'
               )}>
-              <Timer seconds={secondsUntilBeta}></Timer>
+              <Timer initialLeftSeconds={initialLeftSecondsUntilBeta} />
             </h1>
             <Row className={clsx('mt-12')}>
               <Col
@@ -190,7 +190,7 @@ export default function LandingPage(): JSX.Element {
                     to={{
                       pathname: PAGES.application,
                       search: queryString.stringify({
-                        [QUERY_PARAMETERS.type]: TAB_TYPES.issue
+                        [QUERY_PARAMETERS.tab]: TAB_IDS.issue
                       })
                     }}>
                     <Button

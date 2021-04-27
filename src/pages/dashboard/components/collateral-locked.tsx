@@ -64,8 +64,8 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
       </div>
       <div className='chart-container'>
         <LineChartComponent
-          color='d_pink'
-          label={t('dashboard.vault.total_collateral_locked') as string}
+          color={['d_pink', 'd_grey']}
+          label={[t('dashboard.vault.total_collateral_locked'), t('dashboard.vault.per_day_collateral_locked')]}
           yLabels={cumulativeCollateralPerDay
             .slice(1)
             .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}

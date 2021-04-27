@@ -7,7 +7,8 @@ import {
   reverseEndianness,
   roundTwoDecimals
 } from '@interlay/polkabtc';
-import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK, ACCOUNT_ID_TYPE_NAME } from '../../constants';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from '../../constants';
 import { Dispatch } from 'redux';
 import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from '../actions/general.actions';
 import Big from 'big.js';

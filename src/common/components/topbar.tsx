@@ -1,4 +1,9 @@
-import * as React from 'react';
+
+import React, {
+  ReactElement,
+  useEffect,
+  useState
+} from 'react';
 import {
   Navbar,
   Nav,
@@ -10,27 +15,21 @@ import {
 } from 'react-redux';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { web3Accounts } from '@polkadot/extension-dapp';
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
-import AccountModal from 'parts/AccountModal';
 import InterlayLink from 'components/UI/InterlayLink';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import ButtonMaybePending from './pending-button';
-import {
-  updateBalanceDOTAction,
-  showAccountModalAction
-} from 'common/actions/general.actions';
-import { updateBalances } from 'common/utils/utils';
+import { updateBalanceDOTAction, showAccountModalAction } from 'common/actions/general.actions';
+import { shortAddress, updateBalances } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import Balances from './balances';
 import {
   PAGES,
   QUERY_PARAMETERS
 } from 'utils/constants/links';
-import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
-import TAB_TYPES from 'utils/constants/tab-types';
-import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc/polkabtc-logo.svg';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import TAB_IDS from 'utils/constants/tab-ids';
+import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc-logo.svg';
 import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
 
 const queryString = require('query-string');
@@ -38,9 +37,9 @@ const queryString = require('query-string');
 type TopbarProps = {
   address?: string;
   requestDOT: () => Promise<void>;
-}
+};
 
-const Topbar = (props: TopbarProps): JSX.Element => {
+export default function Topbar(props: TopbarProps): ReactElement {
   const {
     extensions,
     address,
@@ -48,30 +47,13 @@ const Topbar = (props: TopbarProps): JSX.Element => {
     balanceDOT,
     balancePolkaBTC,
     vaultClientLoaded,
-    relayerLoaded,
-    showAccountModal
+    relayerLoaded
   } = useSelector((state: StoreType) => state.general);
+  const [isRequestPending, setIsRequestPending] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const [isRequestPending, setIsRequestPending] = React.useState(false);
-
-  const [accounts, setAccounts] = React.useState<InjectedAccountWithMeta[]>([]);
-  React.useEffect(() => {
-    if (!extensions.length) return;
-
-    (async () => {
-      try {
-        const theAccounts = await web3Accounts();
-        setAccounts(theAccounts);
-      } catch (error) {
-        // TODO: should add error handling properly
-        console.log('[Topbar] error.message => ', error.message);
-      }
-    })();
-  }, [extensions.length]);
-
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       if (!polkaBtcLoaded || address === '') return;
 
@@ -94,194 +76,176 @@ const Topbar = (props: TopbarProps): JSX.Element => {
     setIsRequestPending(false);
   };
 
-  const handleAccountModalOpen = () => {
-    dispatch(showAccountModalAction(true));
-  };
+  const getLabel = (): string => {
+    if (!extensions.length) return 'Connect Wallet';
 
-  const handleAccountModalClose = () => {
-    dispatch(showAccountModalAction(false));
-  };
+    if (!address) return 'Select Account';
 
-  let accountLabel;
-  if (!extensions.length) {
-    accountLabel = 'Connect Wallet';
-  } else if (address) {
-    // TODO: could memoize
-    const matchedAccount = accounts.find(account => account.address === address);
-    accountLabel = matchedAccount?.meta.name || address;
-  } else {
-    accountLabel = 'Select Account';
-  }
+    return shortAddress(address);
+  };
 
   return (
-    <>
-      <Navbar
-        id='pbtc-topbar'
-        expand='lg'
-        className={clsx(
-          'top-bar',
-          'border-bottom',
-          'shadow',
-          'bg-default'
-        )}>
-        {polkaBtcLoaded && (
-          <React.Fragment>
-            <Navbar.Brand>
-              <InterlayRouterLink
-                // TODO: hardcoded
-                style={{
-                  textDecoration: 'none'
-                }}
-                to={PAGES.home}>
-                <PolkabtcLogoIcon
-                  fill='currentColor'
-                  width={90}
-                  height={53} />
-              </InterlayRouterLink>
-            </Navbar.Brand>
-            <Navbar.Toggle aria-controls='basic-navbar-nav' />
-            <Navbar.Collapse id='basic-navbar-nav'>
-              <Nav className='mr-auto'>
-                {polkaBtcLoaded && (
-                  // TODO: should use https://reactrouter.com/web/api/NavLink with `activeClassName`
-                  <InterlayRouterLink
-                    style={{
-                      textDecoration: 'none'
-                    }}
-                    className='nav-link'
-                    to={{
-                      pathname: PAGES.application,
-                      search: queryString.stringify({
-                        [QUERY_PARAMETERS.type]: TAB_TYPES.issue
-                      })
-                    }}>
-                    {t('app')}
-                  </InterlayRouterLink>
-                )}
-                {polkaBtcLoaded && (
-                  <InterlayRouterLink
-                    style={{
-                      textDecoration: 'none'
-                    }}
-                    className='nav-link'
-                    to={PAGES.dashboard}>
-                    {t('nav_dashboard')}
-                  </InterlayRouterLink>
-                )}
-                {vaultClientLoaded && (
-                  <InterlayRouterLink
-                    style={{
-                      textDecoration: 'none'
-                    }}
-                    className='nav-link'
-                    to={PAGES.vault}>
-                    {t('nav_vault')}
-                  </InterlayRouterLink>
-                )}
-                {relayerLoaded && (
-                  <InterlayRouterLink
-                    style={{
-                      textDecoration: 'none'
-                    }}
-                    className='nav-link'
-                    to={PAGES.stakedRelayer}>
-                    {t('nav_relayer')}
-                  </InterlayRouterLink>
-                )}
-                {polkaBtcLoaded && (
-                  <InterlayRouterLink
-                    style={{
-                      textDecoration: 'none'
-                    }}
-                    className='nav-link'
-                    to={PAGES.challenges}>
-                    {t('nav_challenges')}
-                    <NewMarkIcon
-                      className='inline-block'
-                      width={20}
-                      height={20} />
-                  </InterlayRouterLink>
-                )}
+    <Navbar
+      id='pbtc-topbar'
+      expand='lg'
+      className={clsx(
+        'top-bar',
+        'border-bottom',
+        'shadow',
+        'bg-default'
+      )}>
+      {polkaBtcLoaded && (
+        <React.Fragment>
+          <Navbar.Brand>
+            <InterlayRouterLink
+              // TODO: hardcoded
+              style={{
+                textDecoration: 'none'
+              }}
+              to={PAGES.home}>
+              <PolkabtcLogoIcon
+                fill='currentColor'
+                width={90}
+                height={53} />
+            </InterlayRouterLink>
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls='basic-navbar-nav' />
+          <Navbar.Collapse id='basic-navbar-nav'>
+            <Nav className='mr-auto'>
+              {polkaBtcLoaded && (
+                // TODO: should use https://reactrouter.com/web/api/NavLink with `activeClassName`
                 <InterlayRouterLink
                   style={{
                     textDecoration: 'none'
                   }}
                   className='nav-link'
-                  to={PAGES.feedback}>
-                  {t('feedback.feedback')}
+                  to={{
+                    pathname: PAGES.application,
+                    search: queryString.stringify({
+                      [QUERY_PARAMETERS.tab]: TAB_IDS.issue
+                    })
+                  }}>
+                  {t('app')}
                 </InterlayRouterLink>
-                <InterlayLink
+              )}
+              {polkaBtcLoaded && (
+                <InterlayRouterLink
                   style={{
                     textDecoration: 'none'
                   }}
                   className='nav-link'
-                  href='https://docs.polkabtc.io/#/'
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  {t('nav_docs')}
-                </InterlayLink>
-              </Nav>
-              {props.address !== undefined && (
-                <>
-                  {address === '' ? (
+                  to={PAGES.dashboard}>
+                  {t('nav_dashboard')}
+                </InterlayRouterLink>
+              )}
+              {vaultClientLoaded && (
+                <InterlayRouterLink
+                  style={{
+                    textDecoration: 'none'
+                  }}
+                  className='nav-link'
+                  to={PAGES.vault}>
+                  {t('nav_vault')}
+                </InterlayRouterLink>
+              )}
+              {relayerLoaded && (
+                <InterlayRouterLink
+                  style={{
+                    textDecoration: 'none'
+                  }}
+                  className='nav-link'
+                  to={PAGES.stakedRelayer}>
+                  {t('nav_relayer')}
+                </InterlayRouterLink>
+              )}
+              {polkaBtcLoaded && (
+                <InterlayRouterLink
+                  style={{
+                    textDecoration: 'none'
+                  }}
+                  className='nav-link'
+                  to={PAGES.challenges}>
+                  {t('nav_challenges')}
+                  <NewMarkIcon
+                    className='inline-block'
+                    width={20}
+                    height={20} />
+                </InterlayRouterLink>
+              )}
+              <InterlayRouterLink
+                style={{
+                  textDecoration: 'none'
+                }}
+                className='nav-link'
+                to={PAGES.feedback}>
+                {t('feedback.feedback')}
+              </InterlayRouterLink>
+              <InterlayLink
+                style={{
+                  textDecoration: 'none'
+                }}
+                className='nav-link'
+                href='https://docs.polkabtc.io/#/'
+                target='_blank'
+                rel='noopener noreferrer'>
+                {t('nav_docs')}
+              </InterlayLink>
+            </Nav>
+            {props.address !== undefined && (
+              <React.Fragment>
+                {address === '' ? (
+                  <Nav
+                    id='account-button'
+                    className='d-inline'>
+                    <Button
+                      variant='outline-account-not-connected'
+                      className='nav-bar-button'
+                      onClick={() => dispatch(showAccountModalAction(true))}>
+                      {getLabel()}
+                    </Button>
+                  </Nav>
+                ) : (
+                  <>
+                    <Nav className='d-inline'>
+                      <InterlayLink
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        href='https://testnet-faucet.mempool.co/'
+                        style={{ textDecoration: 'none' }}>
+                        <Button
+                          variant='outline-bitcoin'
+                          className='nav-bar-button'>
+                          {t('request_btc')}
+                        </Button>
+                      </InterlayLink>
+                      <ButtonMaybePending
+                        variant='outline-polkadot'
+                        className='nav-bar-button'
+                        isPending={isRequestPending}
+                        onClick={requestDOT}>
+                        {t('request_dot')}
+                      </ButtonMaybePending>
+                    </Nav>
+                    <Balances
+                      balanceDOT={balanceDOT}
+                      balancePolkaBTC={balancePolkaBTC} />
                     <Nav
                       id='account-button'
                       className='d-inline'>
                       <Button
-                        variant='outline-account-not-connected'
+                        variant='outline-account'
                         className='nav-bar-button'
-                        onClick={handleAccountModalOpen}>
-                        {accountLabel}
+                        onClick={() => dispatch(showAccountModalAction(true))}>
+                        {getLabel()}
                       </Button>
                     </Nav>
-                  ) : (
-                    <>
-                      <Nav className='d-inline'>
-                        <InterlayLink
-                          target='_blank'
-                          rel='noopener noreferrer'
-                          href='https://testnet-faucet.mempool.co/'
-                          style={{ textDecoration: 'none' }}>
-                          <Button
-                            variant='outline-bitcoin'
-                            className='nav-bar-button'>
-                            {t('request_btc')}
-                          </Button>
-                        </InterlayLink>
-                        <ButtonMaybePending
-                          variant='outline-polkadot'
-                          className='nav-bar-button'
-                          isPending={isRequestPending}
-                          onClick={requestDOT}>
-                          {t('request_dot')}
-                        </ButtonMaybePending>
-                      </Nav>
-                      <Balances
-                        balanceDOT={balanceDOT}
-                        balancePolkaBTC={balancePolkaBTC} />
-                      <Nav
-                        id='account-button'
-                        className='d-inline'>
-                        <Button
-                          variant='outline-account'
-                          className='nav-bar-button'
-                          onClick={handleAccountModalOpen}>
-                          {accountLabel}
-                        </Button>
-                      </Nav>
-                    </>
-                  )}
-                </>
-              )}
-            </Navbar.Collapse>
-          </React.Fragment>
-        )}
-      </Navbar>
-      <AccountModal
-        open={showAccountModal}
-        onClose={handleAccountModalClose} />
-    </>
+                  </>
+                )}
+              </React.Fragment>
+            )}
+          </Navbar.Collapse>
+        </React.Fragment>
+      )}
+    </Navbar>
   );
-};
-
-export default Topbar;
+}
