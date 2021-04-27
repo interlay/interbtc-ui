@@ -211,6 +211,10 @@ function EnterAmountAndAddress(): ReactElement {
     setUsdAmount(getUsdAmount(amount, usdPrice));
     const fee = await window.polkaBTC.redeem.getFeesToPay(amount);
     setRedeemFee(fee);
+
+    if (Number(amount) <= Number(dustValue)) {
+      toast.warning(t('redeem_page.amount_greater') + dustValue + 'BTC)');
+    }
   };
 
   const checkAddress = () => {
