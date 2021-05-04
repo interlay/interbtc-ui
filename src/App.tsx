@@ -129,6 +129,7 @@ function connectToParachain(): Promise<PolkaBTCAPI> {
 function App(): JSX.Element {
   const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
   const address = useSelector((state: StoreType) => state.general.address);
+  const [names, setNames] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const extensions = useSelector((state: StoreType) => state.general.extensions);
   const dispatch = useDispatch();
@@ -310,6 +311,10 @@ function App(): JSX.Element {
       const addresses = accounts.map(({ address }) => address);
       dispatch(updateAddressesAction(addresses));
 
+      accounts.forEach(item => {
+        setNames(prev => [...prev, item.meta.name || '']);
+      });
+
       let newAddress: string | undefined = undefined;
       if (addresses.includes(address)) {
         newAddress = address;
@@ -346,7 +351,8 @@ function App(): JSX.Element {
     dispatch,
     extensions.length,
     maybeLoadVault,
-    maybeLoadStakedRelayer
+    maybeLoadStakedRelayer,
+    names
   ]);
 
   // Loads the PolkaBTC bridge and the faucet
@@ -387,7 +393,8 @@ function App(): JSX.Element {
       {/* TODO: should move into `Topbar` */}
       <AccountModal
         selectedAccount={address}
-        selectAccount={selectAccount} />
+        selectAccount={selectAccount}
+        accountNames={names} />
       <Layout>
         <LazyLoadingErrorBoundary>
           <Route

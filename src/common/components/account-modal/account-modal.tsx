@@ -14,17 +14,20 @@ import InterlayLink from 'components/UI/InterlayLink';
 import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
+import { shortAddress } from 'common/utils/utils';
 
 type Props = {
   selectAccount: (account: string) => void | Promise<void>;
   selectedAccount?: string;
+  accountNames:string[]
 };
 
 const POLKADOT_EXTENSION = 'https://polkadot.js.org/extension/';
 
 function AccountModal({
   selectAccount,
-  selectedAccount
+  selectedAccount,
+  accountNames
 }: Props): JSX.Element {
   const {
     showAccountModal,
@@ -40,6 +43,9 @@ function AccountModal({
     selectAccount(account);
   };
 
+  const accountDetails = accounts.map((x, index) => {
+    return { accountShortAddress: shortAddress(x), accountFullAddress: x, accountName: accountNames[index] };
+  });
   return (
     <Modal
       show={showAccountModal}
@@ -68,9 +74,9 @@ function AccountModal({
             )}
             {/* List all available accounts */}
             <ul className='space-y-4'>
-              {accounts?.map((account: string) => (
+              {accountDetails?.map((details, index) => (
                 <li
-                  key={account}
+                  key={index}
                   className={clsx(
                     'font-bold',
                     'p-4',
@@ -83,10 +89,14 @@ function AccountModal({
                     'hover:text-white'
                   )}
                   // TODO: should use a button for semantic HTML usage
-                  onClick={handleAccountSelect(account)}>
-                  {account}
+                  onClick={handleAccountSelect(details.accountFullAddress)}>
+                  {details.accountName}
                   &nbsp;
-                  {selectedAccount === account ? '(selected)' : ''}
+                  <span className='font-light'>
+                    {`(${details.accountShortAddress})`}
+                  </span>
+                  &nbsp;
+                  {selectedAccount === details.accountFullAddress ? 'selected' : ''}
                 </li>
               ))}
             </ul>
