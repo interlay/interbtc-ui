@@ -30,7 +30,7 @@ import {
   UpdateHeights,
   UpdateTotals
 } from '../types/actions.types';
-import { StoreType, ParachainStatus, Prices } from '../types/util.types';
+import { StoreType, ParachainStatus, Prices, AccountDetails } from '../types/util.types';
 
 export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
   type: IS_POLKA_BTC_LOADED,
@@ -102,9 +102,9 @@ export const setInstalledExtensionAction = (extensions: string[]): SetInstalledE
   extensions
 });
 
-export const updateAddressesAction = (accounts: string[]): UpdateAccounts => ({
+export const updateAccountsAction = (accountDetails: AccountDetails[]): UpdateAccounts => ({
   type: UPDATE_ACCOUNTS,
-  accounts
+  accountDetails
 });
 
 export const updateHeightsAction = (btcRelayHeight: number, bitcoinHeight: number): UpdateHeights => ({

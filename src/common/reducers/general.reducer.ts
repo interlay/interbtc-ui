@@ -29,7 +29,7 @@ const initialState = {
   balancePolkaBTC: '',
   balanceDOT: '',
   extensions: [],
-  accounts: [],
+  accountDetails: [{ accountName: '', accountAddress: '' }],
   btcRelayHeight: 0,
   bitcoinHeight: 0,
   parachainStatus: ParachainStatus.Loading,
@@ -57,8 +57,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       relayerLoaded: false,
       vaultClientLoaded: false,
       showAccountModal: false,
-      extensions: [],
-      accounts: []
+      extensions: []
     };
   case INIT_GENERAL_DATA_ACTION:
     return {
@@ -84,7 +83,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       address: action.extensions.length ? state.address : ''
     };
   case UPDATE_ACCOUNTS:
-    return { ...state, accounts: action.accounts };
+    return { ...state, accountDetails: action.accountDetails };
   default:
     return state;
   }

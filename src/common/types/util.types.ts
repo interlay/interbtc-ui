@@ -52,6 +52,11 @@ export type Prices = {
   };
 };
 
+export type AccountDetails = {
+  accountName: string,
+  accountAddress: string
+}
+
 export type GeneralState = {
   polkaBtcLoaded: boolean;
   relayerLoaded: boolean;
@@ -63,7 +68,7 @@ export type GeneralState = {
   balancePolkaBTC: string;
   balanceDOT: string;
   extensions: string[];
-  accounts: string[];
+  accountDetails: AccountDetails[];
   btcRelayHeight: number;
   bitcoinHeight: number;
   parachainStatus: ParachainStatus;

@@ -19,33 +19,29 @@ import { shortAddress } from 'common/utils/utils';
 type Props = {
   selectAccount: (account: string) => void | Promise<void>;
   selectedAccount?: string;
-  accountNames:string[]
 };
 
 const POLKADOT_EXTENSION = 'https://polkadot.js.org/extension/';
 
 function AccountModal({
   selectAccount,
-  selectedAccount,
-  accountNames
+  selectedAccount
 }: Props): JSX.Element {
   const {
     showAccountModal,
-    accounts,
+    accountDetails,
     extensions
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
+  console.log('Accounts are ', accountDetails);
   const handleClose = () => dispatch(showAccountModalAction(false));
 
   const handleAccountSelect = (account: string) => () => {
     selectAccount(account);
   };
 
-  const accountDetails = accounts.map((x, index) => {
-    return { accountShortAddress: shortAddress(x), accountFullAddress: x, accountName: accountNames[index] };
-  });
   return (
     <Modal
       show={showAccountModal}
@@ -60,7 +56,7 @@ function AccountModal({
         {extensions.length ? (
           <>
             {/* Create a new account when no accounts are available */}
-            {!accounts?.length && (
+            {!accountDetails?.length && (
               <p className='mb-4'>
                 {t('no_account')}
                 <InterlayLink
@@ -89,14 +85,14 @@ function AccountModal({
                     'hover:text-white'
                   )}
                   // TODO: should use a button for semantic HTML usage
-                  onClick={handleAccountSelect(details.accountFullAddress)}>
+                  onClick={handleAccountSelect(details.accountAddress)}>
                   {details.accountName}
                   &nbsp;
                   <span className='font-light'>
-                    {`(${details.accountShortAddress})`}
+                    {`(${shortAddress(details.accountAddress)})`}
                   </span>
                   &nbsp;
-                  {selectedAccount === details.accountFullAddress ? 'selected' : ''}
+                  {selectedAccount === details.accountAddress ? 'selected' : ''}
                 </li>
               ))}
             </ul>

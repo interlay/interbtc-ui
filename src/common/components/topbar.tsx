@@ -19,7 +19,7 @@ import InterlayLink from 'components/UI/InterlayLink';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import ButtonMaybePending from './pending-button';
 import { updateBalanceDOTAction, showAccountModalAction } from 'common/actions/general.actions';
-import { shortAddress, updateBalances } from 'common/utils/utils';
+import { updateBalances } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import Balances from './balances';
 import {
@@ -46,7 +46,8 @@ export default function Topbar(props: TopbarProps): ReactElement {
     balanceDOT,
     balancePolkaBTC,
     vaultClientLoaded,
-    relayerLoaded
+    relayerLoaded,
+    accountDetails
   } = useSelector((state: StoreType) => state.general);
   const [isRequestPending, setIsRequestPending] = useState(false);
   const dispatch = useDispatch();
@@ -75,14 +76,23 @@ export default function Topbar(props: TopbarProps): ReactElement {
     setIsRequestPending(false);
   };
 
+  const getName = (address: string):string => {
+    let accountName = 'None';
+    accountDetails.forEach(item => {
+      if (item.accountAddress === address) {
+        accountName = item.accountName;
+      }
+    });
+    return accountName;
+  };
+
   const getLabel = (): string => {
     if (!extensions.length) return 'Connect Wallet';
 
     if (!address) return 'Select Account';
 
-    return shortAddress(address);
+    return getName(address);
   };
-
   return (
     <Navbar
       id='pbtc-topbar'

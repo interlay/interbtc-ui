@@ -1,7 +1,7 @@
 import { IssueRequest } from './issue.types';
 import { RedeemRequest } from './redeem.types';
 import { VaultReplaceRequest } from './vault.types';
-import { StoreType, ParachainStatus, Prices } from './util.types';
+import { StoreType, ParachainStatus, Prices, AccountDetails } from './util.types';
 
 // GENERAL ACTIONS
 
@@ -98,7 +98,7 @@ export interface ShowAccountModal {
 
 export interface UpdateAccounts {
     type: typeof UPDATE_ACCOUNTS;
-    accounts: string[];
+    accountDetails: AccountDetails[];
 }
 
 export type GeneralActions =
