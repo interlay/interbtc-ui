@@ -42,10 +42,10 @@ function RedeemRequests(): JSX.Element {
    * TODO: should not use `useMemo` as it's not the case like expensive array calculation.
    * - should double-check `useMemo` and `useCallback` cases
    */
-  const redeemSuccessRate = useMemo(() => Number(totalSuccessfulRedeems) / totalRedeemRequests || 0, [
-    totalSuccessfulRedeems,
-    totalRedeemRequests
-  ]);
+  // const redeemSuccessRate = useMemo(() => Number(totalSuccessfulRedeems) / totalRedeemRequests || 0, [
+  //   totalSuccessfulRedeems,
+  //   totalRedeemRequests
+  // ]);
 
   useEffect(() => {
     const fetchTotalSuccessfulRedeems = async () => {
@@ -152,7 +152,8 @@ function RedeemRequests(): JSX.Element {
             <h5>
               {totalSuccessfulRedeems === '-' ? t('no_data') : totalSuccessfulRedeems}
             </h5>
-            <h5
+            {/* TODO: add this again when the network is stable */}
+            {/* <h5
               className={clsx(
                 'text-interlayMalachite',
                 'font-bold',
@@ -162,7 +163,7 @@ function RedeemRequests(): JSX.Element {
             </h5>
             <h5>
               {totalRedeemRequests ? (redeemSuccessRate * 100).toFixed(2) + '%' : t('no_data')}
-            </h5>
+            </h5> */}
           </div>
           <div
             className={clsx(

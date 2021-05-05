@@ -13,6 +13,20 @@ cache:
 variables:
   REACT_APP_STATIC_PAGE_ONLY: "false"
 
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH
+
+.only-refs: &only_refs
+  only:
+    - master
+    - prod
+    - dev
+    - rococo
+    - beta
+    - tags
+
 # Test and build on PRs
 test:
   stage: test
@@ -23,13 +37,6 @@ test:
     - yarn lint
     - yarn test
     - yarn build
-  only:
-    - merge_requests
-    - master
-    - prod
-    - dev
-    - rococo
-    - beta
 
 build:
   stage: build
@@ -44,12 +51,6 @@ build:
     expire_in: 1 day
     paths:
       - build
-  only:
-    - master
-    - prod
-    - dev
-    - rococo
-    - beta
 
 build_container:
   stage: deploy
@@ -64,12 +65,7 @@ build_container:
         --dockerfile $CI_PROJECT_DIR/DockerfileProd \
         --destination $CI_REGISTRY_IMAGE:${CI_COMMIT_BRANCH}-$CI_COMMIT_SHORT_SHA \
         --destination $CI_REGISTRY_IMAGE:${CI_COMMIT_BRANCH}
-  only:
-    - master
-    - prod
-    - dev
-    - rococo
-    - beta
+  <<: *only_refs
 
 github_changelog:
   stage: release
