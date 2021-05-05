@@ -129,7 +129,6 @@ function connectToParachain(): Promise<PolkaBTCAPI> {
 function App(): JSX.Element {
   const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
   const address = useSelector((state: StoreType) => state.general.address);
-  const [names, setNames] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const extensions = useSelector((state: StoreType) => state.general.extensions);
   const dispatch = useDispatch();
@@ -309,6 +308,7 @@ function App(): JSX.Element {
       }
 
       const addresses = accounts.map(({ address }) => address);
+<<<<<<< HEAD
 
       const accountDetails = accounts.map(item => {
         return { accountAddress: String(item.address), accountName: item.meta.name || '' };
@@ -316,10 +316,15 @@ function App(): JSX.Element {
 
       console.log('account details', accountDetails);
       dispatch(updateAccountsAction(accountDetails));
+=======
+>>>>>>> 0846c21 (feat: account name in the topbar)
 
-      accounts.forEach(item => {
-        setNames(prev => [...prev, item.meta.name || '']);
+      const accountDetails = accounts.map(item => {
+        return { accountAddress: String(item.address), accountName: item.meta.name || '' };
       });
+
+      console.log('account details', accountDetails);
+      dispatch(updateAccountsAction(accountDetails));
 
       let newAddress: string | undefined = undefined;
       if (addresses.includes(address)) {
@@ -357,8 +362,7 @@ function App(): JSX.Element {
     dispatch,
     extensions.length,
     maybeLoadVault,
-    maybeLoadStakedRelayer,
-    names
+    maybeLoadStakedRelayer
   ]);
 
   // Loads the PolkaBTC bridge and the faucet
@@ -399,8 +403,7 @@ function App(): JSX.Element {
       {/* TODO: should move into `Topbar` */}
       <AccountModal
         selectedAccount={address}
-        selectAccount={selectAccount}
-        accountNames={names} />
+        selectAccount={selectAccount} />
       <Layout>
         <LazyLoadingErrorBoundary>
           <Route
