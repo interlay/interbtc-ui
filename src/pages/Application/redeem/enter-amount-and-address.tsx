@@ -255,6 +255,7 @@ function EnterAmountAndAddress(): ReactElement {
             name='amountPolkaBTC'
             type='number'
             step='any'
+            autoFocus
             placeholder='0.00'
             className={'' + (errors.amountPolkaBTC ? ' error-borders' : '')}
             onChange={onAmountChange}

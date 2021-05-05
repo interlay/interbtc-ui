@@ -35,7 +35,8 @@ import {
 import {
   displayBtcAmount,
   getRandomVaultIdWithCapacity,
-  getUsdAmount
+  getUsdAmount,
+  safeRoundFiveDecimals
 } from 'common/utils/utils';
 import { parachainToUIIssueRequest } from 'common/utils/requests';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
@@ -268,6 +269,7 @@ function EnterBTCAmount(): JSX.Element {
             name='amountPolkaBTC'
             type='number'
             step='any'
+            autoFocus
             placeholder='0.00'
             className={'' + (errors.amountPolkaBTC ? ' error-borders' : '')}
             onChange={onValueChange}
@@ -331,7 +333,9 @@ function EnterBTCAmount(): JSX.Element {
                   <PolkadotLogoIcon
                     width={20}
                     height={20} />
-                  <span className='fee-btc'>{deposit}</span>
+                  <span className='fee-btc'>
+                    {safeRoundFiveDecimals(deposit)}
+                  </span>
                   <span>DOT</span>
                 </div>
                 <div>{'~ $' + getUsdAmount(deposit, prices.polkadot.usd)}</div>

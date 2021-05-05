@@ -1,6 +1,6 @@
 {
   "name": "polkabtc-ui",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.1",
@@ -10,6 +10,7 @@
     "@interlay/polkabtc-stats": "0.1.21",
     "@polkadot/extension-dapp": "0.36.1",
     "@polkadot/ui-keyring": "0.67.1",
+    "@tailwindcss/forms": "^0.3.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -70,6 +71,7 @@
     "@storybook/react": "^6.2.8",
     "@tailwindcss/postcss7-compat": "^2.0.3",
     "autoprefixer": "9",
+    "chromatic": "^5.6.2",
     "cross-env": "^7.0.3",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^6.12.0",
@@ -91,7 +93,7 @@
     "generate:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package sample-polkadotjs-typegen/interfaces --input ./src/interfaces",
     "generate:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package sample-polkadotjs-typegen/interfaces --endpoint btc-parachain.json --output ./src/interfaces",
     "lint": "eslint ./src/**/*.{ts,tsx,js,jsx} --ignore-path .eslintignore .",
-    "lint-fix": "eslint --fix ./src/**/*.{ts,tsx,js,jsx} --ignore-path .eslintignore .",
+    "lint-fix": "eslint --fix ./src/**/*.{ts,tsx,js} --ignore-path .eslintignore .",
     "format": "prettier --config .prettierrc --write .",
     "setup": "yarn generate:defs && yarn generate:meta",
     "build": "craco build",
@@ -105,7 +107,8 @@
     "compose:testnet": "docker-compose -f ./docker-compose.testnet.yml up",
     "compose:down": "docker-compose down --remove-orphans -v",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "chromatic": "chromatic --project-token"
   },
   "homepage": "",
   "browserslist": {
