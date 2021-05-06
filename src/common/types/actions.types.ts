@@ -1,7 +1,9 @@
 import { IssueRequest } from './issue.types';
 import { RedeemRequest } from './redeem.types';
 import { VaultReplaceRequest } from './vault.types';
+// ray test touch <
 import { StoreType, ParachainStatus, Prices, AccountDetails } from './util.types';
+// ray test touch >
 
 // GENERAL ACTIONS
 
@@ -98,7 +100,9 @@ export interface ShowAccountModal {
 
 export interface UpdateAccounts {
     type: typeof UPDATE_ACCOUNTS;
+    // ray test touch <
     accountDetails: AccountDetails[];
+    // ray test touch >
 }
 
 export type GeneralActions =

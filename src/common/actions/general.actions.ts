@@ -30,7 +30,9 @@ import {
   UpdateHeights,
   UpdateTotals
 } from '../types/actions.types';
+// ray test touch <
 import { StoreType, ParachainStatus, Prices, AccountDetails } from '../types/util.types';
+// ray test touch >
 
 export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
   type: IS_POLKA_BTC_LOADED,
@@ -102,10 +104,12 @@ export const setInstalledExtensionAction = (extensions: string[]): SetInstalledE
   extensions
 });
 
+// ray test touch <
 export const updateAccountsAction = (accountDetails: AccountDetails[]): UpdateAccounts => ({
   type: UPDATE_ACCOUNTS,
   accountDetails
 });
+// ray test touch >
 
 export const updateHeightsAction = (btcRelayHeight: number, bitcoinHeight: number): UpdateHeights => ({
   type: UPDATE_HEIGHTS,

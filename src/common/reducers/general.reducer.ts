@@ -29,7 +29,9 @@ const initialState = {
   balancePolkaBTC: '',
   balanceDOT: '',
   extensions: [],
+  // ray test touch <
   accountDetails: [{ accountName: '', accountAddress: '' }],
+  // ray test touch >
   btcRelayHeight: 0,
   bitcoinHeight: 0,
   parachainStatus: ParachainStatus.Loading,
@@ -83,7 +85,9 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       address: action.extensions.length ? state.address : ''
     };
   case UPDATE_ACCOUNTS:
+    // ray test touch <
     return { ...state, accountDetails: action.accountDetails };
+    // ray test touch >
   default:
     return state;
   }

@@ -52,10 +52,12 @@ export type Prices = {
   };
 };
 
+// ray test touch <
 export type AccountDetails = {
   accountName: string,
   accountAddress: string
 }
+// ray test touch >
 
 export type GeneralState = {
   polkaBtcLoaded: boolean;
@@ -68,7 +70,9 @@ export type GeneralState = {
   balancePolkaBTC: string;
   balanceDOT: string;
   extensions: string[];
+  // ray test touch <
   accountDetails: AccountDetails[];
+  // ray test touch >
   btcRelayHeight: number;
   bitcoinHeight: number;
   parachainStatus: ParachainStatus;

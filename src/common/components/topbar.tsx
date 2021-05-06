@@ -47,7 +47,9 @@ export default function Topbar(props: TopbarProps): ReactElement {
     balancePolkaBTC,
     vaultClientLoaded,
     relayerLoaded,
+    // ray test touch <
     accountDetails
+    // ray test touch >
   } = useSelector((state: StoreType) => state.general);
   const [isRequestPending, setIsRequestPending] = useState(false);
   const dispatch = useDispatch();
@@ -76,23 +78,23 @@ export default function Topbar(props: TopbarProps): ReactElement {
     setIsRequestPending(false);
   };
 
-  const getName = (address: string):string => {
-    let accountName = 'None';
-    accountDetails.forEach(item => {
-      if (item.accountAddress === address) {
-        accountName = item.accountName;
-      }
-    });
-    return accountName;
-  };
+  // ray test touch <
+  let accountLabel;
+  if (!extensions.length) {
+    accountLabel = 'Connect Wallet';
+  }
+  if (!address) {
+    accountLabel = 'Select Account';
+  }
+  let accountName;
+  accountDetails?.forEach(item => {
+    if (item.accountAddress === address) {
+      accountName = item.accountName;
+    }
+  });
+  accountLabel = accountName || address;
+  // ray test touch >
 
-  const getLabel = (): string => {
-    if (!extensions.length) return 'Connect Wallet';
-
-    if (!address) return 'Select Account';
-
-    return getName(address);
-  };
   return (
     <Navbar
       id='pbtc-topbar'
@@ -201,7 +203,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
               </InterlayLink>
             </Nav>
             {props.address !== undefined && (
-              <React.Fragment>
+              <>
                 {address === '' ? (
                   <Nav
                     id='account-button'
@@ -210,7 +212,7 @@ export default function Topbar(props: TopbarProps): ReactElement {
                       variant='outline-account-not-connected'
                       className='nav-bar-button'
                       onClick={() => dispatch(showAccountModalAction(true))}>
-                      {getLabel()}
+                      {accountLabel}
                     </Button>
                   </Nav>
                 ) : (
@@ -245,12 +247,12 @@ export default function Topbar(props: TopbarProps): ReactElement {
                         variant='outline-account'
                         className='nav-bar-button'
                         onClick={() => dispatch(showAccountModalAction(true))}>
-                        {getLabel()}
+                        {accountLabel}
                       </Button>
                     </Nav>
                   </>
                 )}
-              </React.Fragment>
+              </>
             )}
           </Navbar.Collapse>
         </React.Fragment>
