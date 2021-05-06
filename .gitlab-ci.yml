@@ -1,7 +1,6 @@
 image: node:15-buster
 
 stages:
-  - test
   - build
   - deploy
   - release
@@ -27,25 +26,14 @@ workflow:
     - beta
     - tags
 
-# Test and build on PRs
-test:
-  stage: test
+build:
+  stage: build
   script:
     - apt-get update && apt-get install -y libusb-1.0-0-dev libudev-dev
     - ln -s .env.${CI_COMMIT_BRANCH:dev} .env
     - yarn install
     - yarn lint
     - yarn test
-    - yarn build
-
-build:
-  stage: build
-  variables:
-    NODE_ENV: production
-  script:
-    - apt-get update && apt-get install -y libusb-1.0-0-dev libudev-dev
-    - ln -s .env.${CI_COMMIT_BRANCH:dev} .env
-    - yarn install
     - yarn build
   artifacts:
     expire_in: 1 day
