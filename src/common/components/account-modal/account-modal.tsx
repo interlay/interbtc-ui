@@ -86,13 +86,20 @@ function AccountModal({
                   )}
                   // TODO: should use a button for semantic HTML usage
                   onClick={handleAccountSelect(details.accountAddress)}>
+                  <span
+                    className={clsx(
+                      'rounded-full',
+                      'mr-2',
+                      'h-3',
+                      'w-3',
+                      'inline-block',
+                      selectedAccount === details.accountAddress ? 'bg-green-500' : 'bg-white-100')}>
+                  </span>
                   {details.accountName}
                   &nbsp;
                   <span className='font-light'>
                     {`(${shortAddress(details.accountAddress)})`}
                   </span>
-                  &nbsp;
-                  {selectedAccount === details.accountAddress ? 'selected' : ''}
                 </li>
               ))}
             </ul>
