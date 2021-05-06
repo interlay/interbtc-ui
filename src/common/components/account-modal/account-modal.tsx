@@ -89,7 +89,7 @@ function AccountModal({
                   <span
                     className={clsx(
                       'rounded-full',
-                      'mr-2',
+                      'mr-1.5',
                       'h-3',
                       'w-3',
                       'inline-block',
