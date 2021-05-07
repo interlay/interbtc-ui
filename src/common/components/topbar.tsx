@@ -14,11 +14,16 @@ import {
 } from 'react-redux';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
+import { web3Accounts } from '@polkadot/extension-dapp';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 import InterlayLink from 'components/UI/InterlayLink';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import ButtonMaybePending from './pending-button';
-import { updateBalanceDOTAction, showAccountModalAction } from 'common/actions/general.actions';
+import {
+  updateBalanceDOTAction,
+  showAccountModalAction
+} from 'common/actions/general.actions';
 import { updateBalances } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import Balances from './balances';
@@ -46,14 +51,26 @@ export default function Topbar(props: TopbarProps): ReactElement {
     balanceDOT,
     balancePolkaBTC,
     vaultClientLoaded,
-    relayerLoaded,
-    // ray test touch <
-    accountDetails
-    // ray test touch >
+    relayerLoaded
   } = useSelector((state: StoreType) => state.general);
   const [isRequestPending, setIsRequestPending] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  const [accounts, setAccounts] = React.useState<InjectedAccountWithMeta[]>([]);
+  React.useEffect(() => {
+    if (!extensions.length) return;
+
+    (async () => {
+      try {
+        const theAccounts = await web3Accounts();
+        setAccounts(theAccounts);
+      } catch (error) {
+        // TODO: should add error handling properly
+        console.log('[Topbar] error.message => ', error.message);
+      }
+    })();
+  }, [extensions.length]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -78,7 +95,6 @@ export default function Topbar(props: TopbarProps): ReactElement {
     setIsRequestPending(false);
   };
 
-  // ray test touch <
   let accountLabel;
   if (!extensions.length) {
     accountLabel = 'Connect Wallet';
@@ -86,14 +102,9 @@ export default function Topbar(props: TopbarProps): ReactElement {
   if (!address) {
     accountLabel = 'Select Account';
   }
-  let accountName;
-  accountDetails?.forEach(item => {
-    if (item.accountAddress === address) {
-      accountName = item.accountName;
-    }
-  });
-  accountLabel = accountName || address;
-  // ray test touch >
+  // TODO: could memoize
+  const matchedAccount = accounts.find(account => account.address === address);
+  accountLabel = matchedAccount?.meta.name || address;
 
   return (
     <Navbar
