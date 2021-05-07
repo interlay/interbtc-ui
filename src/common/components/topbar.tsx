@@ -13,10 +13,10 @@ import { useTranslation } from 'react-i18next';
 import { web3Accounts } from '@polkadot/extension-dapp';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
+import AccountModal from 'parts/AccountModal';
 import InterlayLink from 'components/UI/InterlayLink';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import ButtonMaybePending from './pending-button';
-import AccountModal from 'common/components/account-modal/account-modal';
 import {
   updateBalanceDOTAction,
   showAccountModalAction
