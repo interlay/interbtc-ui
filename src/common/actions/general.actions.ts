@@ -9,7 +9,6 @@ import {
   UPDATE_BALANCE_DOT,
   SET_INSTALLED_EXTENSION,
   SHOW_ACCOUNT_MODAL,
-  UPDATE_ACCOUNTS,
   UPDATE_OF_PRICES,
   IS_FAUCET_LOADED,
   UPDATE_HEIGHTS,
@@ -24,15 +23,12 @@ import {
   UpdateBalanceDOT,
   SetInstalledExtension,
   ShowAccountModal,
-  UpdateAccounts,
   IsFaucetLoaded,
   UpdateOfPrices,
   UpdateHeights,
   UpdateTotals
 } from '../types/actions.types';
-// ray test touch <
-import { StoreType, ParachainStatus, Prices, AccountDetails } from '../types/util.types';
-// ray test touch >
+import { StoreType, ParachainStatus, Prices } from '../types/util.types';
 
 export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
   type: IS_POLKA_BTC_LOADED,
@@ -103,13 +99,6 @@ export const setInstalledExtensionAction = (extensions: string[]): SetInstalledE
   type: SET_INSTALLED_EXTENSION,
   extensions
 });
-
-// ray test touch <
-export const updateAccountsAction = (accountDetails: AccountDetails[]): UpdateAccounts => ({
-  type: UPDATE_ACCOUNTS,
-  accountDetails
-});
-// ray test touch >
 
 export const updateHeightsAction = (btcRelayHeight: number, bitcoinHeight: number): UpdateHeights => ({
   type: UPDATE_HEIGHTS,

@@ -10,7 +10,6 @@ import {
   GeneralActions,
   SET_INSTALLED_EXTENSION,
   SHOW_ACCOUNT_MODAL,
-  UPDATE_ACCOUNTS,
   UPDATE_OF_PRICES,
   UPDATE_HEIGHTS,
   UPDATE_TOTALS
@@ -29,9 +28,6 @@ const initialState = {
   balancePolkaBTC: '',
   balanceDOT: '',
   extensions: [],
-  // ray test touch <
-  accountDetails: [{ accountName: '', accountAddress: '' }],
-  // ray test touch >
   btcRelayHeight: 0,
   bitcoinHeight: 0,
   parachainStatus: ParachainStatus.Loading,
@@ -84,10 +80,6 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       extensions: action.extensions,
       address: action.extensions.length ? state.address : ''
     };
-  case UPDATE_ACCOUNTS:
-    // ray test touch <
-    return { ...state, accountDetails: action.accountDetails };
-    // ray test touch >
   default:
     return state;
   }

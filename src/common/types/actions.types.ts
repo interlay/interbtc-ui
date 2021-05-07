@@ -1,9 +1,7 @@
 import { IssueRequest } from './issue.types';
 import { RedeemRequest } from './redeem.types';
 import { VaultReplaceRequest } from './vault.types';
-// ray test touch <
-import { StoreType, ParachainStatus, Prices, AccountDetails } from './util.types';
-// ray test touch >
+import { StoreType, ParachainStatus, Prices } from './util.types';
 
 // GENERAL ACTIONS
 
@@ -18,7 +16,6 @@ export const UPDATE_BALANCE_POLKA_BTC = 'UPDATE_BALANCE_POLKA_BTC';
 export const UPDATE_BALANCE_DOT = 'UPDATE_BALANCE_DOT';
 export const SET_INSTALLED_EXTENSION = 'SET_INSTALLED_EXTENSION';
 export const SHOW_ACCOUNT_MODAL = 'SHOW_ACCOUNT_MODAL';
-export const UPDATE_ACCOUNTS = 'UPDATE_ACCOUNTS';
 export const UPDATE_OF_PRICES = 'UPDATE_OF_PRICES';
 export const UPDATE_HEIGHTS = 'UPDATE_HEIGHTS';
 export const UPDATE_TOTALS = 'UPDATE_TOTALS';
@@ -98,13 +95,6 @@ export interface ShowAccountModal {
     showAccountModal: boolean;
 }
 
-export interface UpdateAccounts {
-    type: typeof UPDATE_ACCOUNTS;
-    // ray test touch <
-    accountDetails: AccountDetails[];
-    // ray test touch >
-}
-
 export type GeneralActions =
     | IsPolkaBtcLoaded
     | IsStakedRelayerLoaded
@@ -116,7 +106,6 @@ export type GeneralActions =
     | UpdateBalanceDOT
     | SetInstalledExtension
     | ShowAccountModal
-    | UpdateAccounts
     | UpdateOfPrices
     | UpdateHeights
     | UpdateTotals;
