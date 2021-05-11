@@ -1,4 +1,5 @@
 
+import * as React from 'react';
 import {
   Button,
   Modal
@@ -9,41 +10,73 @@ import {
 } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import {
+  web3Enable,
+  web3FromAddress,
+  web3Accounts
+} from '@polkadot/extension-dapp';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 import InterlayLink from 'components/UI/InterlayLink';
-import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
+import { APP_NAME } from 'config/general';
 import { StoreType } from 'common/types/util.types';
-import { showAccountModalAction } from 'common/actions/general.actions';
-
-type Props = {
-  selectAccount: (account: string) => void | Promise<void>;
-  selectedAccount?: string;
-};
+import { changeAddressAction } from 'common/actions/general.actions';
+import { shortAddress } from 'common/utils/utils';
+import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
 
 const POLKADOT_EXTENSION = 'https://polkadot.js.org/extension/';
 
-function AccountModal({
-  selectAccount,
-  selectedAccount
-}: Props): JSX.Element {
+interface Props {
+  open: boolean;
+  onClose: () => void;
+}
+
+const AccountModal = ({
+  open,
+  onClose
+}: Props): JSX.Element => {
   const {
-    showAccountModal,
-    accounts,
+    polkaBtcLoaded,
+    address,
     extensions
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const handleClose = () => dispatch(showAccountModalAction(false));
+  const [accounts, setAccounts] = React.useState<InjectedAccountWithMeta[]>();
 
-  const handleAccountSelect = (account: string) => () => {
-    selectAccount(account);
+  React.useEffect(() => {
+    if (!extensions.length) return;
+
+    (async () => {
+      try {
+        const theAccounts = await web3Accounts();
+        setAccounts(theAccounts);
+      } catch (error) {
+        // TODO: should add error handling properly
+        console.log('[AccountModal] error.message => ', error.message);
+      }
+    })();
+  }, [extensions.length]);
+
+  const handleAccountSelect = (newAddress: string) => async () => {
+    if (!polkaBtcLoaded) {
+      return;
+    }
+
+    // TODO: should check when the app being initialized (not check everywhere)
+    await web3Enable(APP_NAME);
+    const { signer } = await web3FromAddress(newAddress);
+    window.polkaBTC.setAccount(newAddress, signer);
+    dispatch(changeAddressAction(newAddress));
+
+    onClose();
   };
 
   return (
     <Modal
-      show={showAccountModal}
-      onHide={handleClose}
+      show={open}
+      onHide={onClose}
       size='lg'>
       <Modal.Header closeButton>
         <Modal.Title>
@@ -68,25 +101,40 @@ function AccountModal({
             )}
             {/* List all available accounts */}
             <ul className='space-y-4'>
-              {accounts?.map((account: string) => (
+              {accounts?.map(account => (
                 <li
-                  key={account}
+                  key={account.address}
                   className={clsx(
-                    'font-bold',
-                    'p-4',
                     'rounded',
                     'border',
                     'border-solid',
                     'shadow-sm',
-                    'cursor-pointer',
-                    'hover:bg-interlayRose',
-                    'hover:text-white'
-                  )}
-                  // TODO: should use a button for semantic HTML usage
-                  onClick={handleAccountSelect(account)}>
-                  {account}
-                  &nbsp;
-                  {selectedAccount === account ? '(selected)' : ''}
+                    'hover:bg-gray-100'
+                  )}>
+                  <button
+                    className={clsx(
+                      'p-4',
+                      'flex',
+                      'items-center',
+                      'space-x-1.5',
+                      'w-full'
+                    )}
+                    onClick={handleAccountSelect(account.address)}>
+                    <span
+                      className={clsx(
+                        'rounded-full',
+                        'h-3',
+                        'w-3',
+                        'inline-block',
+                        address === account.address ? 'bg-green-500' : 'bg-transparent'
+                      )} />
+                    <span className='font-medium'>
+                      {account.meta.name}
+                    </span>
+                    <span>
+                      {`(${shortAddress(account.address)})`}
+                    </span>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -123,12 +171,12 @@ function AccountModal({
       <Modal.Footer>
         <Button
           variant='secondary'
-          onClick={handleClose}>
+          onClick={onClose}>
           Close
         </Button>
       </Modal.Footer>
     </Modal>
   );
-}
+};
 
 export default AccountModal;

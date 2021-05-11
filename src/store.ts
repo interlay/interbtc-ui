@@ -29,7 +29,6 @@ export const getInitialState = (): StoreType => {
       balancePolkaBTC: '',
       balanceDOT: '',
       extensions: [],
-      accounts: [],
       btcRelayHeight: 0,
       bitcoinHeight: 0,
       parachainStatus: ParachainStatus.Loading,

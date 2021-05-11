@@ -1,9 +1,5 @@
 
-import React, {
-  useState,
-  useEffect,
-  useCallback
-} from 'react';
+import * as React from 'react';
 import {
   Switch,
   Route,
@@ -50,7 +46,7 @@ import ParachainDashboard from 'pages/dashboard/parachain/parachain.dashboard.pa
 import Feedback from 'pages/Feedback';
 // TODO: block for now
 // import TransitionWrapper from 'parts/TransitionWrapper';
-import AccountModal from 'common/components/account-modal/account-modal';
+
 import LazyLoadingErrorBoundary from 'utils/hocs/LazyLoadingErrorBoundary';
 import checkStaticPage from 'config/check-static-page';
 import { PAGES } from 'utils/constants/links';
@@ -59,21 +55,19 @@ import {
   changeAddressAction,
   initGeneralDataAction,
   setInstalledExtensionAction,
-  showAccountModalAction,
-  updateAddressesAction,
   isFaucetLoaded,
   isStakedRelayerLoaded,
   isVaultClientLoaded
 } from 'common/actions/general.actions';
 import './i18n';
+import { APP_NAME } from 'config/general';
 import * as constants from './constants';
 import startFetchingLiveData from 'common/live-data/live-data';
 import {
   StoreType,
   ParachainStatus
 } from 'common/types/util.types';
-// theme
-// FIXME: Clean-up and move to scss
+// TODO: should clean up and move to scss
 import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import { ACCOUNT_ID_TYPE_NAME } from './constants';
@@ -129,13 +123,12 @@ function connectToParachain(): Promise<PolkaBTCAPI> {
 function App(): JSX.Element {
   const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
   const address = useSelector((state: StoreType) => state.general.address);
-  const [isLoading, setIsLoading] = useState(true);
-  const extensions = useSelector((state: StoreType) => state.general.extensions);
+  const [isLoading, setIsLoading] = React.useState(true);
   const dispatch = useDispatch();
   const store = useStore();
 
   // Load the main PolkaBTC API - connection to the PolkaBTC bridge
-  const loadPolkaBTC = useCallback(async (): Promise<void> => {
+  const loadPolkaBTC = React.useCallback(async (): Promise<void> => {
     try {
       window.polkaBTC = await connectToParachain();
       dispatch(isPolkaBtcLoaded(true));
@@ -158,7 +151,7 @@ function App(): JSX.Element {
   ]);
 
   // Load the connection to the faucet - only for testnet purposes
-  const loadFaucet = useCallback(async (): Promise<void> => {
+  const loadFaucet = React.useCallback(async (): Promise<void> => {
     try {
       window.faucet = new FaucetClient(constants.FAUCET_URL);
       dispatch(isFaucetLoaded(true));
@@ -170,73 +163,50 @@ function App(): JSX.Element {
     dispatch
   ]);
 
-  // Maybe load the vault client - only if the current address is also registered as a vault
-  const maybeLoadVault = useCallback(async (newAddress: string): Promise<void> => {
-    const id = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, newAddress);
-    let vaultLoaded = false;
-    try {
-      const vault = await window.polkaBTC.vaults.get(id);
-      vaultLoaded = vault !== undefined;
-    } catch (error) {
-      console.log('No PolkaBTC vault found for the account in the connected Polkadot wallet.');
-      console.log('error.message => ', error.message);
-    } finally {
-      dispatch(isVaultClientLoaded(vaultLoaded));
-    }
-  }, [
-    dispatch
-  ]);
+  React.useEffect(() => {
+    if (!polkaBtcLoaded) return;
+    if (!address) return;
 
-  // Maybe load the staked relayer client - only if the current address is also registered as a vault
-  const maybeLoadStakedRelayer = useCallback(async (newAddress: string): Promise<void> => {
-    const id = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, newAddress);
-    let relayerLoaded = false;
-    try {
-      const [isActive, isInactive] = await Promise.all([
-        window.polkaBTC.stakedRelayer.isStakedRelayerActive(id),
-        window.polkaBTC.stakedRelayer.isStakedRelayerInactive(id)
-      ]);
-      relayerLoaded = isActive || isInactive;
-    } catch (error) {
-      console.log('No PolkaBTC staked relayer found for the account in the connected Polkadot wallet.');
-      console.log('error.message => ', error.message);
-    } finally {
-      dispatch(isStakedRelayerLoaded(relayerLoaded));
-    }
-  }, [
-    dispatch
-  ]);
+    const id = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
 
-  const selectAccount = useCallback(
-    async (newAddress: string): Promise<void> => {
-      if (!polkaBtcLoaded || !newAddress) {
-        return;
+    // Maybe load the vault client - only if the current address is also registered as a vault
+    (async () => {
+      try {
+        dispatch(isVaultClientLoaded(false));
+        const vault = await window.polkaBTC.vaults.get(id);
+        dispatch(isVaultClientLoaded(!!vault));
+      } catch (error) {
+        // TODO: should add error handling
+        console.log('No PolkaBTC vault found for the account in the connected Polkadot wallet.');
+        console.log('error.message => ', error.message);
       }
+    })();
 
-      await web3Enable(constants.APP_NAME);
-      const { signer } = await web3FromAddress(newAddress);
-      window.polkaBTC.setAccount(newAddress, signer);
+    // Maybe load the staked relayer client - only if the current address is also registered as a vault
+    (async () => {
+      try {
+        dispatch(isStakedRelayerLoaded(false));
+        const [
+          isActive,
+          isInactive
+        ] = await Promise.all([
+          window.polkaBTC.stakedRelayer.isStakedRelayerActive(id),
+          window.polkaBTC.stakedRelayer.isStakedRelayerInactive(id)
+        ]);
+        dispatch(isStakedRelayerLoaded(isActive || isInactive));
+      } catch (error) {
+        // TODO: should add error handling
+        console.log('No PolkaBTC staked relayer found for the account in the connected Polkadot wallet.');
+        console.log('error.message => ', error.message);
+      }
+    })();
+  }, [
+    polkaBtcLoaded,
+    address,
+    dispatch
+  ]);
 
-      dispatch(showAccountModalAction(false));
-      dispatch(changeAddressAction(newAddress));
-      // reset the staked relayer and vault
-      dispatch(isVaultClientLoaded(false));
-      dispatch(isStakedRelayerLoaded(false));
-      // possibly load vault and relayer if account is set
-      await Promise.allSettled([
-        maybeLoadVault(newAddress),
-        maybeLoadStakedRelayer(newAddress)
-      ]);
-    },
-    [
-      polkaBtcLoaded,
-      dispatch,
-      maybeLoadStakedRelayer,
-      maybeLoadVault
-    ]
-  );
-
-  useEffect(() => {
+  React.useEffect(() => {
     // Do not load data if showing static landing page only
     if (checkStaticPage()) return;
     if (!polkaBtcLoaded) return;
@@ -291,66 +261,38 @@ function App(): JSX.Element {
   ]);
 
   // Loads the address for the currently select account and maybe loads the vault and staked relayer dashboards
-  useEffect(() => {
-    // Do not load data if showing static landing page only
-    if (checkStaticPage()) return;
+  React.useEffect(() => {
+    if (checkStaticPage()) return; // Do not load data if showing static landing page only
+    if (!polkaBtcLoaded) return;
 
-    const loadAccountData = async () => {
-      if (!polkaBtcLoaded || extensions.length) return false;
+    (async () => {
+      const theExtensions = await web3Enable(APP_NAME);
+      if (theExtensions.length === 0) return;
 
-      const browserExtensions = await web3Enable(constants.APP_NAME);
-      dispatch(setInstalledExtensionAction(browserExtensions.map(ext => ext.name)));
+      dispatch(setInstalledExtensionAction(theExtensions.map(extension => extension.name)));
 
       const accounts = await web3Accounts();
       if (accounts.length === 0) {
         dispatch(changeAddressAction(''));
-        return false;
+        return;
       }
 
-      const addresses = accounts.map(({ address }) => address);
-      dispatch(updateAddressesAction(addresses));
+      const matchedAccount = accounts.find(account => account.address === address);
+      const newAddress = matchedAccount ? address : accounts[0].address;
 
-      let newAddress: string | undefined = undefined;
-      if (addresses.includes(address)) {
-        newAddress = address;
-      } else if (addresses.length === 1) {
-        newAddress = addresses[0];
-      }
-
-      if (newAddress) {
-        const { signer } = await web3FromAddress(newAddress);
-        window.polkaBTC.setAccount(newAddress, signer);
-        dispatch(changeAddressAction(newAddress));
-      } else {
-        dispatch(changeAddressAction(''));
-        return false;
-      }
-
-      return true;
-    };
-
-    const id = setTimeout(async () => {
-      const accountsLoaded = await loadAccountData();
-      if (accountsLoaded) {
-        clearInterval(id);
-        // possibly load vault and relayer if account is set
-        await Promise.allSettled([
-          maybeLoadVault(address),
-          maybeLoadStakedRelayer(address)
-        ]);
-      }
-    }, 1000);
+      const { signer } = await web3FromAddress(newAddress);
+      // TODO: could store the active address just in one place (either in `window` object or in redux)
+      window.polkaBTC.setAccount(newAddress, signer);
+      dispatch(changeAddressAction(newAddress));
+    })();
   }, [
     address,
     polkaBtcLoaded,
-    dispatch,
-    extensions.length,
-    maybeLoadVault,
-    maybeLoadStakedRelayer
+    dispatch
   ]);
 
   // Loads the PolkaBTC bridge and the faucet
-  useEffect(() => {
+  React.useEffect(() => {
     // Do not load data if showing static landing page only
     if (checkStaticPage()) return;
     if (polkaBtcLoaded) return;
@@ -384,10 +326,6 @@ function App(): JSX.Element {
         position='top-right'
         autoClose={5000}
         hideProgressBar={false} />
-      {/* TODO: should move into `Topbar` */}
-      <AccountModal
-        selectedAccount={address}
-        selectAccount={selectAccount} />
       <Layout>
         <LazyLoadingErrorBoundary>
           <Route

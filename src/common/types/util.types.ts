@@ -63,7 +63,6 @@ export type GeneralState = {
   balancePolkaBTC: string;
   balanceDOT: string;
   extensions: string[];
-  accounts: string[];
   btcRelayHeight: number;
   bitcoinHeight: number;
   parachainStatus: ParachainStatus;
