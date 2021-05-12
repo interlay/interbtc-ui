@@ -58,7 +58,7 @@ pipeline {
         }
         stage('Build') {
           steps {
-            sh 'yarn build --production'
+            sh 'yarn build'
             stash(name: 'yarn_build', includes: 'DockerfileProd, nginx.conf, build/')
           }
         }

@@ -1,5 +1,3 @@
-const APP_NAME = 'PolkaBTC';
-
 export const BALANCE_MAX_INTEGER_LENGTH = 13;
 
 export const BTC_DECIMALS = 8;
@@ -73,7 +71,3 @@ export const BTC_RELAY_DELAY_CRITICAL = 12;
 // #######################################
 // Beta
 export const BETA_LAUNCH_DATE = 1614675600; // Tue Mar 02 2021 09:00:00 GMT+0000
-
-export {
-  APP_NAME
-};

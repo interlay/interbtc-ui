@@ -9,7 +9,6 @@ import {
   UPDATE_BALANCE_DOT,
   SET_INSTALLED_EXTENSION,
   SHOW_ACCOUNT_MODAL,
-  UPDATE_ACCOUNTS,
   UPDATE_OF_PRICES,
   IS_FAUCET_LOADED,
   UPDATE_HEIGHTS,
@@ -24,7 +23,6 @@ import {
   UpdateBalanceDOT,
   SetInstalledExtension,
   ShowAccountModal,
-  UpdateAccounts,
   IsFaucetLoaded,
   UpdateOfPrices,
   UpdateHeights,
@@ -100,11 +98,6 @@ export const showAccountModalAction = (showAccountModal: boolean): ShowAccountMo
 export const setInstalledExtensionAction = (extensions: string[]): SetInstalledExtension => ({
   type: SET_INSTALLED_EXTENSION,
   extensions
-});
-
-export const updateAddressesAction = (accounts: string[]): UpdateAccounts => ({
-  type: UPDATE_ACCOUNTS,
-  accounts
 });
 
 export const updateHeightsAction = (btcRelayHeight: number, bitcoinHeight: number): UpdateHeights => ({
