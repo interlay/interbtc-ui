@@ -32,7 +32,7 @@ const Layout = ({ children }: Props): JSX.Element => {
       await window.faucet.fundAccount(receiverId);
       toast.success('Your account has been funded.');
     } catch (error) {
-      toast.error(`Funding failed. ${error}`);
+      toast.error(`Funding failed. ${error.message}`);
     }
   };
 
