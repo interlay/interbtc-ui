@@ -18,10 +18,10 @@ import {
   stripHexPrefix
 } from '@interlay/polkabtc';
 
+import PolkaBTCField from '../PolkaBTCField';
 import PriceInfo from '../PriceInfo';
 import ParachainStatusInfo from '../ParachainStatusInfo';
 import Tooltip from 'components/Tooltip';
-import TextField from 'components/TextField';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorHandler from 'components/ErrorHandler';
 import InterlayButton from 'components/UI/InterlayButton';
@@ -274,35 +274,25 @@ const EnterBTCAmount = (): JSX.Element | null => {
           )}>
           {t('issue_page.mint_polka_by_wrapping')}
         </h4>
-        <div>
-          <TextField
-            id='polka-btc-amount'
-            type='number'
-            label='PolkaBTC'
-            step='any'
-            placeholder='0.00'
-            min={0}
-            name={POLKA_BTC_AMOUNT}
-            ref={register({
-              required: {
-                value: true,
-                message: t('issue_page.enter_valid_amount')
-              },
-              validate: value => validatePolkaBTCAmount(value)
-            })}
-            required
-            error={!!errors[POLKA_BTC_AMOUNT]}
-            helperText={errors[POLKA_BTC_AMOUNT]?.message} />
-          <span
-            className={clsx(
-              'block',
-              'text-xl',
-              'text-textSecondary',
-              'text-right'
-            )}>
-            {`≈ $ ${getUsdAmount(polkaBTCAmount || '0', prices.bitcoin.usd)}`}
-          </span>
-        </div>
+        <PolkaBTCField
+          id='polka-btc-amount'
+          name={POLKA_BTC_AMOUNT}
+          type='number'
+          label='PolkaBTC'
+          step='any'
+          placeholder='0.00'
+          min={0}
+          ref={register({
+            required: {
+              value: true,
+              message: t('issue_page.enter_valid_amount')
+            },
+            validate: value => validatePolkaBTCAmount(value)
+          })}
+          usdText={`≈ $ ${getUsdAmount(polkaBTCAmount || '0', prices.bitcoin.usd)}`}
+          error={!!errors[POLKA_BTC_AMOUNT]}
+          required
+          helperText={errors[POLKA_BTC_AMOUNT]?.message} />
         <ParachainStatusInfo status={parachainStatus} />
         <PriceInfo
           title={
