@@ -22,7 +22,7 @@ const TextField = React.forwardRef<Ref, Props>(({
   required,
   ...rest
 }: Props, ref): JSX.Element => (
-  <div>
+  <TextFieldContainer>
     {label && (
       <TextFieldLabel
         htmlFor={id}
@@ -43,8 +43,12 @@ const TextField = React.forwardRef<Ref, Props>(({
         {helperText}
       </TextFieldHelperText>
     )}
-  </div>
+  </TextFieldContainer>
 ));
+
+const TextFieldContainer = (props: React.ComponentPropsWithRef<'div'>): JSX.Element => (
+  <div {...props} />
+);
 
 interface CustomTextFieldLabelProps {
   required?: boolean;
@@ -91,7 +95,8 @@ const TextFieldHelperText = ({
 
 export {
   TextFieldLabel,
-  TextFieldHelperText
+  TextFieldHelperText,
+  TextFieldContainer
 };
 
 export type Props = CustomTextFieldProps & InterlayInputProps;
