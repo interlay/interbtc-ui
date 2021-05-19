@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import InterlayInput, { Props as InterlayInputProps } from 'components/UI/InterlayInput';
 
-interface CustomProps {
+interface CustomTextFieldProps {
   label?: JSX.Element | string;
   error?: boolean;
   helperText?: JSX.Element | string;
@@ -24,17 +24,12 @@ const TextField = React.forwardRef<Ref, Props>(({
 }: Props, ref): JSX.Element => (
   <div>
     {label && (
-      <label
+      <TextFieldLabel
         htmlFor={id}
-        className={clsx(
-          'top-0',
-          'left-0',
-          'text-sm',
-          { 'text-interlayScarlet': error }
-        )}>
+        required={required}
+        error={error}>
         {label}
-        {required && <span className='ml-0.5'>*</span>}
-      </label>
+      </TextFieldLabel>
     )}
     <InterlayInput
       ref={ref}
@@ -55,6 +50,35 @@ const TextField = React.forwardRef<Ref, Props>(({
   </div>
 ));
 
-export type Props = CustomProps & InterlayInputProps;
+interface CustomTextFieldLabelProps {
+  required?: boolean;
+  error?: boolean;
+}
+
+const TextFieldLabel = ({
+  children,
+  required,
+  className,
+  error,
+  ...rest
+}: CustomTextFieldLabelProps & React.ComponentPropsWithRef<'label'>): JSX.Element => (
+  <label
+    className={clsx(
+      'text-sm',
+      'space-x-0.5',
+      { 'text-interlayScarlet': error },
+      className
+    )}
+    {...rest}>
+    <span>{children}</span>
+    {required && <span>*</span>}
+  </label>
+);
+
+export {
+  TextFieldLabel
+};
+
+export type Props = CustomTextFieldProps & InterlayInputProps;
 
 export default TextField;

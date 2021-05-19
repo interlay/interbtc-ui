@@ -1,5 +1,4 @@
 
-// ray test touch <
 // TODO: (https://github.com/interlay/polkabtc-ui/pull/212#discussion_r619005713)
 const BTC_MAINNET = false;
 
@@ -21,4 +20,3 @@ export {
   BTC_ADDRESS_API,
   BTC_TRANSACTION_API
 };
-// ray test touch >
