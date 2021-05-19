@@ -8,7 +8,7 @@ const ModalTitle = (props: PropsOf<typeof Dialog.Title>): JSX.Element => (
   <Dialog.Title {...props} />
 );
 
-const ModalContent = ({
+const ModalInnerWrapper = ({
   className,
   ...rest
 }: React.ComponentPropsWithRef<'div'>): JSX.Element => (
@@ -77,7 +77,7 @@ const Modal = ({
 
 export {
   ModalTitle,
-  ModalContent
+  ModalInnerWrapper
 };
 
 export interface Props {

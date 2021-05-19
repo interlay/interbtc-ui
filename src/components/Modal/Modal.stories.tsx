@@ -8,7 +8,7 @@ import clsx from 'clsx';
 
 import Modal, {
   ModalTitle,
-  ModalContent,
+  ModalInnerWrapper,
   Props
 } from './';
 
@@ -32,7 +32,7 @@ const Template: Story<Props> = args => {
         {...args}
         open={open}
         onClose={handleClose}>
-        <ModalContent className='max-w-lg'>
+        <ModalInnerWrapper className='max-w-lg'>
           <ModalTitle
             as='h3'
             className={clsx(
@@ -76,7 +76,7 @@ const Template: Story<Props> = args => {
               Got it, thanks!
             </button>
           </div>
-        </ModalContent>
+        </ModalInnerWrapper>
       </Modal>
     </>
   );

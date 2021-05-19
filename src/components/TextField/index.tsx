@@ -21,13 +21,15 @@ const TextField = React.forwardRef<Ref, Props>(({
   helperText,
   required,
   ...rest
-}: Props, ref): JSX.Element => (
+}, ref): JSX.Element => (
   <TextFieldContainer>
     {label && (
       <TextFieldLabel
         htmlFor={id}
         required={required}
-        error={error}>
+        className={clsx(
+          { 'text-interlayScarlet': error }
+        )}>
         {label}
       </TextFieldLabel>
     )}
@@ -39,7 +41,10 @@ const TextField = React.forwardRef<Ref, Props>(({
       )}
       {...rest} />
     {helperText && (
-      <TextFieldHelperText error={error}>
+      <TextFieldHelperText
+        className={clsx(
+          { 'text-interlayScarlet': error }
+        )}>
         {helperText}
       </TextFieldHelperText>
     )}
@@ -52,21 +57,18 @@ const TextFieldContainer = (props: React.ComponentPropsWithRef<'div'>): JSX.Elem
 
 interface CustomTextFieldLabelProps {
   required?: boolean;
-  error?: boolean;
 }
 
 const TextFieldLabel = ({
   children,
   required,
   className,
-  error,
   ...rest
 }: CustomTextFieldLabelProps & React.ComponentPropsWithRef<'label'>): JSX.Element => (
   <label
     className={clsx(
       'text-sm',
       'space-x-0.5',
-      { 'text-interlayScarlet': error },
       className
     )}
     {...rest}>
@@ -75,19 +77,13 @@ const TextFieldLabel = ({
   </label>
 );
 
-interface CustomTextFieldHelperTextProps {
-  error?: boolean;
-}
-
 const TextFieldHelperText = ({
   className,
-  error,
   ...rest
-}: CustomTextFieldHelperTextProps & React.ComponentPropsWithRef<'p'>): JSX.Element => (
+}: React.ComponentPropsWithRef<'p'>): JSX.Element => (
   <p
     className={clsx(
       'text-sm',
-      { 'text-interlayScarlet': error },
       className
     )}
     {...rest} />

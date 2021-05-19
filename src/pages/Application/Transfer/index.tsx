@@ -11,10 +11,11 @@ import { btcToSat } from '@interlay/polkabtc';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
 
+import PolkaBTCField from '../PolkaBTCField';
 import TextField from 'components/TextField';
 import Modal, {
   ModalTitle,
-  ModalContent
+  ModalInnerWrapper
 } from 'components/Modal';
 import InterlayButton from 'components/UI/InterlayButton';
 import ErrorHandler from 'components/ErrorHandler';
@@ -171,34 +172,24 @@ const Transfer = (): JSX.Element => {
           )}>
           {t('transfer_page.transfer_polkabtc')}
         </h4>
-        <div>
-          <TextField
-            id='polka-btc-amount'
-            type='number'
-            label='PolkaBTC'
-            step='any'
-            placeholder='0.00'
-            name={POLKA_BTC_AMOUNT}
-            ref={register({
-              required: {
-                value: true,
-                message: t('redeem_page.please_enter_amount')
-              },
-              validate: value => validatePolkaBTCAmount(value)
-            })}
-            required
-            error={!!errors[POLKA_BTC_AMOUNT]}
-            helperText={errors[POLKA_BTC_AMOUNT]?.message} />
-          <span
-            className={clsx(
-              'block',
-              'text-xl',
-              'text-textSecondary',
-              'text-right'
-            )}>
-            {`≈ $ ${getUsdAmount(polkaBTCAmount || '0.00', usdPrice)}`}
-          </span>
-        </div>
+        <PolkaBTCField
+          id='polka-btc-amount'
+          name={POLKA_BTC_AMOUNT}
+          type='number'
+          label='PolkaBTC'
+          step='any'
+          placeholder='0.00'
+          ref={register({
+            required: {
+              value: true,
+              message: t('redeem_page.please_enter_amount')
+            },
+            validate: value => validatePolkaBTCAmount(value)
+          })}
+          usdText={`≈ $ ${getUsdAmount(polkaBTCAmount || '0.00', usdPrice)}`}
+          error={!!errors[POLKA_BTC_AMOUNT]}
+          required
+          helperText={errors[POLKA_BTC_AMOUNT]?.message} />
         <div>
           <TextField
             id='dot-address'
@@ -244,7 +235,7 @@ const Transfer = (): JSX.Element => {
       <Modal
         open={networkModalOpen}
         onClose={handleNetworkModalClose}>
-        <ModalContent
+        <ModalInnerWrapper
           className={clsx(
             'max-w-sm',
             'space-y-4'
@@ -273,7 +264,7 @@ const Transfer = (): JSX.Element => {
               </InterlayButton>
             ))}
           </div>
-        </ModalContent>
+        </ModalInnerWrapper>
       </Modal>
     </>
   );

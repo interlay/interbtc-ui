@@ -1,7 +1,15 @@
 
+import clsx from 'clsx';
+
+import InterlayLink from 'components/UI/InterlayLink';
+
 interface Props {
   error: Error | string;
 }
+
+const handleRefresh = () => {
+  window.location.reload();
+};
 
 const ErrorHandler = ({ error }: Props): JSX.Element => {
   let message;
@@ -14,8 +22,21 @@ const ErrorHandler = ({ error }: Props): JSX.Element => {
   }
 
   return (
-    <p className='text-interlayScarlet'>
-      Error: {message}
+    <p
+      className={clsx(
+        'text-interlayScarlet',
+        'space-x-1'
+      )}>
+      <span>Error: {message}.</span>
+      <span>
+        Please&nbsp;
+        <InterlayLink
+          href='#'
+          onClick={handleRefresh}
+          style={{ textDecoration: 'underline' }}>
+          refresh
+        </InterlayLink>.
+      </span>
     </p>
   );
 };
