@@ -18,6 +18,7 @@ import {
 } from '@interlay/polkabtc';
 import { PolkaBTC } from '@interlay/polkabtc/build/interfaces';
 
+import PolkaBTCField from '../PolkaBTCField';
 import PriceInfo from '../PriceInfo';
 import ParachainStatusInfo from '../ParachainStatusInfo';
 import Tooltip from 'components/Tooltip';
@@ -310,35 +311,25 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
           )}>
           {t('redeem_page.you_will_receive')}
         </h4>
-        <div>
-          <TextField
-            id='polka-btc-amount'
-            type='number'
-            label='PolkaBTC'
-            step='any'
-            placeholder='0.00'
-            min={0}
-            name={POLKA_BTC_AMOUNT}
-            ref={register({
-              required: {
-                value: true,
-                message: t('redeem_page.please_enter_amount')
-              },
-              validate: value => validatePolkaBTCAmount(value)
-            })}
-            required
-            error={!!errors[POLKA_BTC_AMOUNT]}
-            helperText={errors[POLKA_BTC_AMOUNT]?.message} />
-          <span
-            className={clsx(
-              'block',
-              'text-xl',
-              'text-textSecondary',
-              'text-right'
-            )}>
-            {`≈ $ ${getUsdAmount(polkaBTCAmount || '0', usdPrice)}`}
-          </span>
-        </div>
+        <PolkaBTCField
+          id='polka-btc-amount'
+          name={POLKA_BTC_AMOUNT}
+          type='number'
+          label='PolkaBTC'
+          step='any'
+          placeholder='0.00'
+          min={0}
+          ref={register({
+            required: {
+              value: true,
+              message: t('redeem_page.please_enter_amount')
+            },
+            validate: value => validatePolkaBTCAmount(value)
+          })}
+          approxUSD={`≈ $ ${getUsdAmount(polkaBTCAmount || '0', usdPrice)}`}
+          error={!!errors[POLKA_BTC_AMOUNT]}
+          required
+          helperText={errors[POLKA_BTC_AMOUNT]?.message} />
         <ParachainStatusInfo status={parachainStatus} />
         <TextField
           id='btc-address'
