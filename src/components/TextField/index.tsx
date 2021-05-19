@@ -39,13 +39,9 @@ const TextField = React.forwardRef<Ref, Props>(({
       )}
       {...rest} />
     {helperText && (
-      <p
-        className={clsx(
-          'text-sm',
-          { 'text-interlayScarlet': error }
-        )}>
+      <TextFieldHelperText error={error}>
         {helperText}
-      </p>
+      </TextFieldHelperText>
     )}
   </div>
 ));
@@ -75,8 +71,27 @@ const TextFieldLabel = ({
   </label>
 );
 
+interface CustomTextFieldHelperTextProps {
+  error?: boolean;
+}
+
+const TextFieldHelperText = ({
+  className,
+  error,
+  ...rest
+}: CustomTextFieldHelperTextProps & React.ComponentPropsWithRef<'p'>): JSX.Element => (
+  <p
+    className={clsx(
+      'text-sm',
+      { 'text-interlayScarlet': error },
+      className
+    )}
+    {...rest} />
+);
+
 export {
-  TextFieldLabel
+  TextFieldLabel,
+  TextFieldHelperText
 };
 
 export type Props = CustomTextFieldProps & InterlayInputProps;
