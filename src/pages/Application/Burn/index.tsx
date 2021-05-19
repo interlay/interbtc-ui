@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import { btcToSat } from '@interlay/polkabtc';
 
 import PriceInfo from '../PriceInfo';
-import TextField from 'components/TextField';
+import PolkaBTCField from '../PolkaBTCField';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorHandler from 'components/ErrorHandler';
 import InterlayButton from 'components/UI/InterlayButton';
@@ -167,35 +167,24 @@ const Burn = (): JSX.Element | null => {
           )}>
           {t('burn_page.burn_polkabtc')}
         </h4>
-        <div>
-          <TextField
-            id='polka-btc-amount'
-            type='number'
-            label='PolkaBTC'
-            step='any'
-            placeholder='0.00'
-            min={0}
-            name={POLKA_BTC_AMOUNT}
-            ref={register({
-              required: {
-                value: true,
-                message: t('burn_page.please_enter_the_amount')
-              },
-              validate: value => validatePolkaBTCAmount(value)
-            })}
-            required
-            error={!!errors[POLKA_BTC_AMOUNT]}
-            helperText={errors[POLKA_BTC_AMOUNT]?.message} />
-          <span
-            className={clsx(
-              'block',
-              'text-xl',
-              'text-textSecondary',
-              'text-right'
-            )}>
-            {`≈ $ ${getUsdAmount(polkaBTCAmount || '0', prices.bitcoin.usd)}`}
-          </span>
-        </div>
+        <PolkaBTCField
+          id='polka-btc-amount'
+          name={POLKA_BTC_AMOUNT}
+          type='number'
+          label='PolkaBTC'
+          step='any'
+          placeholder='0.00'
+          ref={register({
+            required: {
+              value: true,
+              message: t('burn_page.please_enter_the_amount')
+            },
+            validate: value => validatePolkaBTCAmount(value)
+          })}
+          usdText={`≈ $ ${getUsdAmount(polkaBTCAmount || '0', prices.bitcoin.usd)}`}
+          error={!!errors[POLKA_BTC_AMOUNT]}
+          required
+          helperText={errors[POLKA_BTC_AMOUNT]?.message} />
         <PriceInfo
           title={
             <h5 className='text-textSecondary'>
