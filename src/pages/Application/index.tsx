@@ -9,7 +9,7 @@ import IssueSteps from './issue/issue-steps';
 import IssueRequests from './issue/IssueRequests';
 import RedeemSteps from './redeem/redeem-steps';
 import RedeemRequests from './redeem/RedeemRequests';
-import Transfer from './Transfer';
+import Transfer from './transfer';
 import Burn from './Burn';
 import MainContainer from 'parts/MainContainer';
 import Tabs, {
