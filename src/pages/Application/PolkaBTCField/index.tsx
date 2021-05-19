@@ -14,7 +14,7 @@ interface CustomPolkaBTCFieldProps {
   error?: boolean;
   helperText?: JSX.Element | string;
   required?: boolean;
-  usdText: string;
+  approxUSD: string;
 }
 
 type Ref = HTMLInputElement;
@@ -26,7 +26,7 @@ const PolkaBTCField = React.forwardRef<Ref, CustomPolkaBTCFieldProps & InterlayI
   error,
   helperText,
   required,
-  usdText,
+  approxUSD,
   ...rest
 }, ref): JSX.Element => {
   return (
@@ -63,7 +63,7 @@ const PolkaBTCField = React.forwardRef<Ref, CustomPolkaBTCFieldProps & InterlayI
             'right-4',
             'bottom-2'
           )}>
-          {usdText}
+          {approxUSD}
         </span>
       </TextFieldContainer>
       <TextFieldHelperText

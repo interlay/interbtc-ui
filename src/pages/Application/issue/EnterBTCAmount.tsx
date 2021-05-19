@@ -289,7 +289,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
             },
             validate: value => validatePolkaBTCAmount(value)
           })}
-          usdText={`≈ $ ${getUsdAmount(polkaBTCAmount || '0', prices.bitcoin.usd)}`}
+          approxUSD={`≈ $ ${getUsdAmount(polkaBTCAmount || '0', prices.bitcoin.usd)}`}
           error={!!errors[POLKA_BTC_AMOUNT]}
           required
           helperText={errors[POLKA_BTC_AMOUNT]?.message} />

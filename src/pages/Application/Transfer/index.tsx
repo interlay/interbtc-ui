@@ -186,7 +186,7 @@ const Transfer = (): JSX.Element => {
             },
             validate: value => validatePolkaBTCAmount(value)
           })}
-          usdText={`≈ $ ${getUsdAmount(polkaBTCAmount || '0.00', usdPrice)}`}
+          approxUSD={`≈ $ ${getUsdAmount(polkaBTCAmount || '0.00', usdPrice)}`}
           error={!!errors[POLKA_BTC_AMOUNT]}
           required
           helperText={errors[POLKA_BTC_AMOUNT]?.message} />
