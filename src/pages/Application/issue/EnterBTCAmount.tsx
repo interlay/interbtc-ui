@@ -23,6 +23,7 @@ import PriceInfo from '../PriceInfo';
 import ParachainStatusInfo from '../ParachainStatusInfo';
 import Tooltip from 'components/Tooltip';
 import EllipsisLoader from 'components/EllipsisLoader';
+import ErrorModal from 'components/ErrorModal';
 import ErrorHandler from 'components/ErrorHandler';
 import InterlayButton from 'components/UI/InterlayButton';
 import {
@@ -184,11 +185,6 @@ const EnterBTCAmount = (): JSX.Element | null => {
       <ErrorHandler error={error} />
     );
   }
-  if (submitStatus === STATUSES.REJECTED && submitError) {
-    return (
-      <ErrorHandler error={submitError} />
-    );
-  }
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
     return (
@@ -263,108 +259,124 @@ const EnterBTCAmount = (): JSX.Element | null => {
 
   if (status === STATUSES.RESOLVED) {
     return (
-      <form
-        className='space-y-8'
-        onSubmit={handleSubmit(onSubmit)}>
-        <h4
-          className={clsx(
-            'font-medium',
-            'text-center',
-            'text-interlayRose'
-          )}>
-          {t('issue_page.mint_polka_by_wrapping')}
-        </h4>
-        <PolkaBTCField
-          id='polka-btc-amount'
-          name={POLKA_BTC_AMOUNT}
-          type='number'
-          label='PolkaBTC'
-          step='any'
-          placeholder='0.00'
-          min={0}
-          ref={register({
-            required: {
-              value: true,
-              message: t('issue_page.enter_valid_amount')
-            },
-            validate: value => validatePolkaBTCAmount(value)
-          })}
-          approxUSD={`≈ $ ${getUsdAmount(polkaBTCAmount || '0', prices.bitcoin.usd)}`}
-          error={!!errors[POLKA_BTC_AMOUNT]}
-          helperText={errors[POLKA_BTC_AMOUNT]?.message} />
-        <ParachainStatusInfo status={parachainStatus} />
-        <PriceInfo
-          title={
-            <h5 className='text-textSecondary'>
-              {t('bridge_fee')}
-            </h5>
-          }
-          unitIcon={
-            <BitcoinLogoIcon
-              width={23}
-              height={23} />
-          }
-          value={displayBtcAmount(bridgeFee)}
-          unitName='BTC'
-          approxUSD={getUsdAmount(bridgeFee, prices.bitcoin.usd)}
-          tooltip={
-            <Tooltip overlay='Bridge Fee'>
-              <HiOutlineExclamationCircle className='text-textSecondary' />
-            </Tooltip>
-          } />
-        <PriceInfo
-          title={
-            <h5 className='text-textSecondary'>
-              {t('issue_page.security_deposit')}
-            </h5>
-          }
-          unitIcon={
-            <PolkadotLogoIcon
-              width={20}
-              height={20} />
-          }
-          value={securityDeposit}
-          unitName='DOT'
-          approxUSD={getUsdAmount(securityDeposit, prices.polkadot.usd)}
-          tooltip={
-            <Tooltip overlay='Security Deposit'>
-              <HiOutlineExclamationCircle className='text-textSecondary' />
-            </Tooltip>
-          } />
-        <hr
-          className={clsx(
-            'border-t-2',
-            'my-2.5',
-            'border-textSecondary'
-          )} />
-        <PriceInfo
-          title={
-            <h5 className='text-textPrimary'>
-              {t('total_deposit')}
-            </h5>
-          }
-          unitIcon={
-            <BitcoinLogoIcon
-              width={23}
-              height={23} />
-          }
-          value={displayBtcAmount(polkaBTCAmount || '0')}
-          unitName='BTC'
-          approxUSD={getUsdAmount(polkaBTCAmount || '0', prices.bitcoin.usd)} />
-        <InterlayButton
-          type='submit'
-          className='mx-auto'
-          variant='contained'
-          color='primary'
-          disabled={
-            // TODO: `parachainStatus` and `address` should be checked at upper levels
-            parachainStatus !== ParachainStatus.Running ||
-            !address
-          }
-          pending={submitStatus === STATUSES.PENDING}>
-          {t('confirm')}
-        </InterlayButton>
-      </form>
+      <>
+        <form
+          className='space-y-8'
+          onSubmit={handleSubmit(onSubmit)}>
+          <h4
+            className={clsx(
+              'font-medium',
+              'text-center',
+              'text-interlayRose'
+            )}>
+            {t('issue_page.mint_polka_by_wrapping')}
+          </h4>
+          <PolkaBTCField
+            id='polka-btc-amount'
+            name={POLKA_BTC_AMOUNT}
+            type='number'
+            label='PolkaBTC'
+            step='any'
+            placeholder='0.00'
+            min={0}
+            ref={register({
+              required: {
+                value: true,
+                message: t('issue_page.enter_valid_amount')
+              },
+              validate: value => validatePolkaBTCAmount(value)
+            })}
+            approxUSD={`≈ $ ${getUsdAmount(polkaBTCAmount || '0', prices.bitcoin.usd)}`}
+            error={!!errors[POLKA_BTC_AMOUNT]}
+            helperText={errors[POLKA_BTC_AMOUNT]?.message} />
+          <ParachainStatusInfo status={parachainStatus} />
+          <PriceInfo
+            title={
+              <h5 className='text-textSecondary'>
+                {t('bridge_fee')}
+              </h5>
+            }
+            unitIcon={
+              <BitcoinLogoIcon
+                width={23}
+                height={23} />
+            }
+            value={displayBtcAmount(bridgeFee)}
+            unitName='BTC'
+            approxUSD={getUsdAmount(bridgeFee, prices.bitcoin.usd)}
+            tooltip={
+              <Tooltip overlay='Bridge Fee'>
+                <HiOutlineExclamationCircle className='text-textSecondary' />
+              </Tooltip>
+            } />
+          <PriceInfo
+            title={
+              <h5 className='text-textSecondary'>
+                {t('issue_page.security_deposit')}
+              </h5>
+            }
+            unitIcon={
+              <PolkadotLogoIcon
+                width={20}
+                height={20} />
+            }
+            value={securityDeposit}
+            unitName='DOT'
+            approxUSD={getUsdAmount(securityDeposit, prices.polkadot.usd)}
+            tooltip={
+              <Tooltip overlay='Security Deposit'>
+                <HiOutlineExclamationCircle className='text-textSecondary' />
+              </Tooltip>
+            } />
+          <hr
+            className={clsx(
+              'border-t-2',
+              'my-2.5',
+              'border-textSecondary'
+            )} />
+          <PriceInfo
+            title={
+              <h5 className='text-textPrimary'>
+                {t('total_deposit')}
+              </h5>
+            }
+            unitIcon={
+              <BitcoinLogoIcon
+                width={23}
+                height={23} />
+            }
+            value={displayBtcAmount(polkaBTCAmount || '0')}
+            unitName='BTC'
+            approxUSD={getUsdAmount(polkaBTCAmount || '0', prices.bitcoin.usd)} />
+          <InterlayButton
+            type='submit'
+            className='mx-auto'
+            variant='contained'
+            color='primary'
+            disabled={
+              // TODO: `parachainStatus` and `address` should be checked at upper levels
+              parachainStatus !== ParachainStatus.Running ||
+              !address
+            }
+            pending={submitStatus === STATUSES.PENDING}>
+            {t('confirm')}
+          </InterlayButton>
+        </form>
+        {(submitStatus === STATUSES.REJECTED && submitError) && (
+          <ErrorModal
+            open={!!submitError}
+            onClose={() => {
+              setSubmitStatus(STATUSES.IDLE);
+              setSubmitError(null);
+            }}
+            title='Error'
+            description={
+              typeof submitError === 'string' ?
+                submitError :
+                submitError.message
+            } />
+        )}
+      </>
     );
   }
 
