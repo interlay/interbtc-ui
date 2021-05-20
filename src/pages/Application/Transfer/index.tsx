@@ -14,8 +14,8 @@ import { toast } from 'react-toastify';
 import PolkaBTCField from '../PolkaBTCField';
 import TextField from 'components/TextField';
 import InterlayModal, {
-  ModalTitle,
-  ModalInnerWrapper
+  InterlayModalTitle,
+  InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
 import InterlayButton from 'components/UI/InterlayButton';
 import ErrorHandler from 'components/ErrorHandler';
@@ -233,19 +233,19 @@ const Transfer = (): JSX.Element => {
       <InterlayModal
         open={networkModalOpen}
         onClose={handleNetworkModalClose}>
-        <ModalInnerWrapper
+        <InterlayModalInnerWrapper
           className={clsx(
             'max-w-sm',
             'space-y-4'
           )}>
-          <ModalTitle
+          <InterlayModalTitle
             as='h3'
             className={clsx(
               'text-md',
               'font-medium'
             )}>
             Select a network
-          </ModalTitle>
+          </InterlayModalTitle>
           <div className='space-y-2'>
             {NETWORK_ITEMS.map(networkItem => (
               <InterlayButton
@@ -262,7 +262,7 @@ const Transfer = (): JSX.Element => {
               </InterlayButton>
             ))}
           </div>
-        </ModalInnerWrapper>
+        </InterlayModalInnerWrapper>
       </InterlayModal>
     </>
   );

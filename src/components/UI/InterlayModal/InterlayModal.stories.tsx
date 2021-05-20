@@ -7,15 +7,15 @@ import {
 import clsx from 'clsx';
 
 import InterlayModal, {
-  ModalTitle,
-  ModalInnerWrapper,
+  InterlayModalTitle,
+  InterlayModalInnerWrapper,
   Props
 } from '.';
 
 const Template: Story<Props> = args => {
   const [open, setOpen] = React.useState(false);
 
-  const handleClick = () => {
+  const handleOpen = () => {
     setOpen(true);
   };
 
@@ -25,22 +25,22 @@ const Template: Story<Props> = args => {
 
   return (
     <>
-      <button onClick={handleClick}>
+      <button onClick={handleOpen}>
         Open
       </button>
       <InterlayModal
         {...args}
         open={open}
         onClose={handleClose}>
-        <ModalInnerWrapper className='max-w-lg'>
-          <ModalTitle
+        <InterlayModalInnerWrapper className='max-w-lg'>
+          <InterlayModalTitle
             as='h3'
             className={clsx(
               'text-lg',
               'font-medium'
             )}>
             Payment successful
-          </ModalTitle>
+          </InterlayModalTitle>
           <div className='mt-2'>
             <p
               className={clsx(
@@ -76,7 +76,7 @@ const Template: Story<Props> = args => {
               Got it, thanks!
             </button>
           </div>
-        </ModalInnerWrapper>
+        </InterlayModalInnerWrapper>
       </InterlayModal>
     </>
   );

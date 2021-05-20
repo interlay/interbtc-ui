@@ -4,11 +4,11 @@ import { Dialog } from '@headlessui/react';
 import { PropsOf } from '@headlessui/react/dist/types';
 import clsx from 'clsx';
 
-const ModalTitle = (props: PropsOf<typeof Dialog.Title>): JSX.Element => (
+const InterlayModalTitle = (props: PropsOf<typeof Dialog.Title>): JSX.Element => (
   <Dialog.Title {...props} />
 );
 
-const ModalInnerWrapper = ({
+const InterlayModalInnerWrapper = ({
   className,
   ...rest
 }: React.ComponentPropsWithRef<'div'>): JSX.Element => (
@@ -33,7 +33,8 @@ const ModalInnerWrapper = ({
 const InterlayModal = ({
   open = false,
   onClose,
-  children
+  children,
+  initialFocus
 }: Props): JSX.Element => {
   return (
     <Dialog
@@ -44,7 +45,8 @@ const InterlayModal = ({
         'overflow-y-auto'
       )}
       open={open}
-      onClose={onClose}>
+      onClose={onClose}
+      initialFocus={initialFocus}>
       <div
         className={clsx(
           'px-4',
@@ -76,14 +78,16 @@ const InterlayModal = ({
 };
 
 export {
-  ModalTitle,
-  ModalInnerWrapper
+  InterlayModalTitle,
+  InterlayModalInnerWrapper
 };
 
+// TODO: should use types from @headlessui/react
 export interface Props {
   open: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  initialFocus?: React.MutableRefObject<HTMLElement | null> | undefined;
 }
 
 export default InterlayModal;
