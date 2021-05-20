@@ -25,6 +25,7 @@ import Tooltip from 'components/Tooltip';
 import Toggle from 'components/Toggle';
 import TextField from 'components/TextField';
 import EllipsisLoader from 'components/EllipsisLoader';
+import ErrorModal from 'components/ErrorModal';
 import ErrorHandler from 'components/ErrorHandler';
 import InterlayButton from 'components/UI/InterlayButton';
 import {
@@ -169,11 +170,6 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
       <ErrorHandler error={error} />
     );
   }
-  if (submitStatus === STATUSES.REJECTED && submitError) {
-    return (
-      <ErrorHandler error={submitError} />
-    );
-  }
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
     return (
@@ -300,138 +296,154 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
 
   if (status === STATUSES.RESOLVED) {
     return (
-      <form
-        className='space-y-8'
-        onSubmit={handleSubmit(onSubmit)}>
-        <h4
-          className={clsx(
-            'font-medium',
-            'text-center',
-            'text-interlayTreePoppy'
-          )}>
-          {t('redeem_page.you_will_receive')}
-        </h4>
-        <PolkaBTCField
-          id='polka-btc-amount'
-          name={POLKA_BTC_AMOUNT}
-          type='number'
-          label='PolkaBTC'
-          step='any'
-          placeholder='0.00'
-          min={0}
-          ref={register({
-            required: {
-              value: true,
-              message: t('redeem_page.please_enter_amount')
-            },
-            validate: value => validatePolkaBTCAmount(value)
-          })}
-          approxUSD={`≈ $ ${getUsdAmount(polkaBTCAmount || '0', usdPrice)}`}
-          error={!!errors[POLKA_BTC_AMOUNT]}
-          helperText={errors[POLKA_BTC_AMOUNT]?.message} />
-        <ParachainStatusInfo status={parachainStatus} />
-        <TextField
-          id='btc-address'
-          name={BTC_ADDRESS}
-          type='text'
-          label='BTC Address'
-          placeholder={t('enter_btc_address')}
-          ref={register({
-            required: {
-              value: true,
-              message: t('redeem_page.enter_btc')
-            },
-            pattern: {
-              value: BTC_ADDRESS_REGEX, // TODO: regex need to depend on global mainnet | testnet parameter
-              message: t('redeem_page.valid_btc_address')
-            }
-          })}
-          error={!!errors[BTC_ADDRESS]}
-          helperText={errors[BTC_ADDRESS]?.message} />
-        {premiumRedeemVaults.size > 0 && (
-          <div
+      <>
+        <form
+          className='space-y-8'
+          onSubmit={handleSubmit(onSubmit)}>
+          <h4
             className={clsx(
-              'flex',
-              'justify-center',
-              'items-center',
-              'space-x-4'
+              'font-medium',
+              'text-center',
+              'text-interlayTreePoppy'
             )}>
+            {t('redeem_page.you_will_receive')}
+          </h4>
+          <PolkaBTCField
+            id='polka-btc-amount'
+            name={POLKA_BTC_AMOUNT}
+            type='number'
+            label='PolkaBTC'
+            step='any'
+            placeholder='0.00'
+            min={0}
+            ref={register({
+              required: {
+                value: true,
+                message: t('redeem_page.please_enter_amount')
+              },
+              validate: value => validatePolkaBTCAmount(value)
+            })}
+            approxUSD={`≈ $ ${getUsdAmount(polkaBTCAmount || '0', usdPrice)}`}
+            error={!!errors[POLKA_BTC_AMOUNT]}
+            helperText={errors[POLKA_BTC_AMOUNT]?.message} />
+          <ParachainStatusInfo status={parachainStatus} />
+          <TextField
+            id='btc-address'
+            name={BTC_ADDRESS}
+            type='text'
+            label='BTC Address'
+            placeholder={t('enter_btc_address')}
+            ref={register({
+              required: {
+                value: true,
+                message: t('redeem_page.enter_btc')
+              },
+              pattern: {
+                value: BTC_ADDRESS_REGEX, // TODO: regex need to depend on global mainnet | testnet parameter
+                message: t('redeem_page.valid_btc_address')
+              }
+            })}
+            error={!!errors[BTC_ADDRESS]}
+            helperText={errors[BTC_ADDRESS]?.message} />
+          {premiumRedeemVaults.size > 0 && (
             <div
               className={clsx(
                 'flex',
+                'justify-center',
                 'items-center',
-                'space-x-1'
+                'space-x-4'
               )}>
-              <span>{t('redeem_page.premium_redeem')}</span>
-              <Tooltip overlay={t('redeem_page.premium_redeem_info')}>
-                <FaExclamationCircle />
-              </Tooltip>
+              <div
+                className={clsx(
+                  'flex',
+                  'items-center',
+                  'space-x-1'
+                )}>
+                <span>{t('redeem_page.premium_redeem')}</span>
+                <Tooltip overlay={t('redeem_page.premium_redeem_info')}>
+                  <FaExclamationCircle />
+                </Tooltip>
+              </div>
+              <Toggle
+                checked={premiumRedeemSelected}
+                onChange={handlePremiumRedeemToggle} />
             </div>
-            <Toggle
-              checked={premiumRedeemSelected}
-              onChange={handlePremiumRedeemToggle} />
-          </div>
-        )}
-        <PriceInfo
-          title={
-            <h5 className='text-textSecondary'>
-              {t('bridge_fee')}
-            </h5>
-          }
-          unitIcon={
-            <BitcoinLogoIcon
-              width={23}
-              height={23} />
-          }
-          value={redeemFeeInBTC}
-          unitName='BTC'
-          approxUSD={redeemFeeInUSD} />
-        <hr
-          className={clsx(
-            'border-t-2',
-            'my-2.5',
-            'border-textSecondary'
-          )} />
-        <PriceInfo
-          title={
-            <h5 className='text-textPrimary'>
-              {t('you_will_receive')}
-            </h5>
-          }
-          unitIcon={
-            <BitcoinLogoIcon
-              width={23}
-              height={23} />
-          }
-          value={totalBTC}
-          unitName='BTC'
-          approxUSD={totalBTCInUSD} />
-        {premiumRedeemSelected && (
+          )}
           <PriceInfo
             title={
-              <h5 className='text-interlayMalachite'>
-                {t('redeem_page.earned_premium')}
+              <h5 className='text-textSecondary'>
+                {t('bridge_fee')}
               </h5>
             }
             unitIcon={
-              <PolkadotLogoIcon
+              <BitcoinLogoIcon
                 width={23}
                 height={23} />
             }
-            value={totalDOT}
-            unitName='DOT'
-            approxUSD={totalDOTInUSD} />
+            value={redeemFeeInBTC}
+            unitName='BTC'
+            approxUSD={redeemFeeInUSD} />
+          <hr
+            className={clsx(
+              'border-t-2',
+              'my-2.5',
+              'border-textSecondary'
+            )} />
+          <PriceInfo
+            title={
+              <h5 className='text-textPrimary'>
+                {t('you_will_receive')}
+              </h5>
+            }
+            unitIcon={
+              <BitcoinLogoIcon
+                width={23}
+                height={23} />
+            }
+            value={totalBTC}
+            unitName='BTC'
+            approxUSD={totalBTCInUSD} />
+          {premiumRedeemSelected && (
+            <PriceInfo
+              title={
+                <h5 className='text-interlayMalachite'>
+                  {t('redeem_page.earned_premium')}
+                </h5>
+              }
+              unitIcon={
+                <PolkadotLogoIcon
+                  width={23}
+                  height={23} />
+              }
+              value={totalDOT}
+              unitName='DOT'
+              approxUSD={totalDOTInUSD} />
+          )}
+          <InterlayButton
+            type='submit'
+            className='mx-auto'
+            variant='contained'
+            color='primary'
+            disabled={parachainStatus !== ParachainStatus.Running}
+            pending={submitStatus === STATUSES.PENDING}>
+            {t('confirm')}
+          </InterlayButton>
+        </form>
+        {(submitStatus === STATUSES.REJECTED && submitError) && (
+          <ErrorModal
+            open={!!submitError}
+            onClose={() => {
+              setSubmitStatus(STATUSES.IDLE);
+              setSubmitError(null);
+            }}
+            title='Error'
+            description={
+              typeof submitError === 'string' ?
+                submitError :
+                submitError.message
+            } />
         )}
-        <InterlayButton
-          type='submit'
-          className='mx-auto'
-          variant='contained'
-          color='primary'
-          disabled={parachainStatus !== ParachainStatus.Running}
-          pending={submitStatus === STATUSES.PENDING}>
-          {t('confirm')}
-        </InterlayButton>
-      </form>
+      </>
     );
   }
 
