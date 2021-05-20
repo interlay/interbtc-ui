@@ -13,10 +13,10 @@ import { toast } from 'react-toastify';
 
 import PolkaBTCField from '../PolkaBTCField';
 import TextField from 'components/TextField';
-import Modal, {
+import InterlayModal, {
   ModalTitle,
   ModalInnerWrapper
-} from 'components/Modal';
+} from 'components/UI/InterlayModal';
 import InterlayButton from 'components/UI/InterlayButton';
 import ErrorHandler from 'components/ErrorHandler';
 import {
@@ -232,7 +232,7 @@ const Transfer = (): JSX.Element => {
           {selectedNetworkItem.disabled ? t('coming_soon') : t('transfer')}
         </InterlayButton>
       </form>
-      <Modal
+      <InterlayModal
         open={networkModalOpen}
         onClose={handleNetworkModalClose}>
         <ModalInnerWrapper
@@ -265,7 +265,7 @@ const Transfer = (): JSX.Element => {
             ))}
           </div>
         </ModalInnerWrapper>
-      </Modal>
+      </InterlayModal>
     </>
   );
 };

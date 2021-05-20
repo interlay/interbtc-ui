@@ -30,7 +30,7 @@ const ModalInnerWrapper = ({
     {...rest} />
 );
 
-const Modal = ({
+const InterlayModal = ({
   open = false,
   onClose,
   children
@@ -86,4 +86,4 @@ export interface Props {
   children: React.ReactNode;
 }
 
-export default Modal;
+export default InterlayModal;

@@ -6,11 +6,11 @@ import {
 } from '@storybook/react';
 import clsx from 'clsx';
 
-import Modal, {
+import InterlayModal, {
   ModalTitle,
   ModalInnerWrapper,
   Props
-} from './';
+} from '.';
 
 const Template: Story<Props> = args => {
   const [open, setOpen] = React.useState(false);
@@ -28,7 +28,7 @@ const Template: Story<Props> = args => {
       <button onClick={handleClick}>
         Open
       </button>
-      <Modal
+      <InterlayModal
         {...args}
         open={open}
         onClose={handleClose}>
@@ -77,7 +77,7 @@ const Template: Story<Props> = args => {
             </button>
           </div>
         </ModalInnerWrapper>
-      </Modal>
+      </InterlayModal>
     </>
   );
 };
@@ -90,6 +90,6 @@ export {
 };
 
 export default {
-  title: 'Modal',
-  component: Modal
+  title: 'UI/InterlayModal',
+  component: InterlayModal
 } as Meta;
