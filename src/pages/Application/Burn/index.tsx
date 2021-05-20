@@ -14,6 +14,7 @@ import { btcToSat } from '@interlay/polkabtc';
 import PriceInfo from '../PriceInfo';
 import PolkaBTCField from '../PolkaBTCField';
 import EllipsisLoader from 'components/EllipsisLoader';
+import ErrorModal from 'components/ErrorModal';
 import ErrorHandler from 'components/ErrorHandler';
 import InterlayButton from 'components/UI/InterlayButton';
 import { getUsdAmount } from 'common/utils/utils';
@@ -87,11 +88,6 @@ const Burn = (): JSX.Element | null => {
       <ErrorHandler error={error} />
     );
   }
-  if (submitStatus === STATUSES.REJECTED && submitError) {
-    return (
-      <ErrorHandler error={submitError} />
-    );
-  }
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
     return (
@@ -156,83 +152,99 @@ const Burn = (): JSX.Element | null => {
 
   if (status === STATUSES.RESOLVED) {
     return (
-      <form
-        className='space-y-8'
-        onSubmit={handleSubmit(onSubmit)}>
-        <h4
-          className={clsx(
-            'font-medium',
-            'text-center',
-            'text-interlayPomegranate'
-          )}>
-          {t('burn_page.burn_polkabtc')}
-        </h4>
-        <PolkaBTCField
-          id='polka-btc-amount'
-          name={POLKA_BTC_AMOUNT}
-          type='number'
-          label='PolkaBTC'
-          step='any'
-          placeholder='0.00'
-          ref={register({
-            required: {
-              value: true,
-              message: t('burn_page.please_enter_the_amount')
-            },
-            validate: value => validatePolkaBTCAmount(value)
-          })}
-          approxUSD={`≈ $ ${getUsdAmount(polkaBTCAmount || '0', prices.bitcoin.usd)}`}
-          error={!!errors[POLKA_BTC_AMOUNT]}
-          helperText={errors[POLKA_BTC_AMOUNT]?.message} />
-        <PriceInfo
-          title={
-            <h5 className='text-textSecondary'>
-              {t('burn_page.dot_earned')}
-            </h5>
-          }
-          unitIcon={
-            <PolkadotLogoIcon
-              width={20}
-              height={20} />
-          }
-          value={earnedDOT}
-          unitName='DOT'
-          approxUSD={getUsdAmount(earnedDOT, prices.polkadot.usd)} />
-        {/* TODO: could be a reusable component */}
-        <hr
-          className={clsx(
-            'border-t-2',
-            'my-2.5',
-            'border-textSecondary'
-          )} />
-        <PriceInfo
-          title={
-            <h5 className='text-textPrimary'>
-              {t('you_will_receive')}
-            </h5>
-          }
-          unitIcon={
-            <PolkadotLogoIcon
-              width={20}
-              height={20} />
-          }
-          value={earnedDOT}
-          unitName='DOT'
-          approxUSD={getUsdAmount(earnedDOT, prices.polkadot.usd)} />
-        <InterlayButton
-          type='submit'
-          className='mx-auto'
-          variant='contained'
-          color='primary'
-          // TODO: should not check everywhere like this
-          disabled={
-            parachainStatus === ParachainStatus.Loading ||
-            parachainStatus === ParachainStatus.Shutdown
-          }
-          pending={submitStatus === STATUSES.PENDING}>
-          {t('burn')}
-        </InterlayButton>
-      </form>
+      <>
+        <form
+          className='space-y-8'
+          onSubmit={handleSubmit(onSubmit)}>
+          <h4
+            className={clsx(
+              'font-medium',
+              'text-center',
+              'text-interlayPomegranate'
+            )}>
+            {t('burn_page.burn_polkabtc')}
+          </h4>
+          <PolkaBTCField
+            id='polka-btc-amount'
+            name={POLKA_BTC_AMOUNT}
+            type='number'
+            label='PolkaBTC'
+            step='any'
+            placeholder='0.00'
+            ref={register({
+              required: {
+                value: true,
+                message: t('burn_page.please_enter_the_amount')
+              },
+              validate: value => validatePolkaBTCAmount(value)
+            })}
+            approxUSD={`≈ $ ${getUsdAmount(polkaBTCAmount || '0', prices.bitcoin.usd)}`}
+            error={!!errors[POLKA_BTC_AMOUNT]}
+            helperText={errors[POLKA_BTC_AMOUNT]?.message} />
+          <PriceInfo
+            title={
+              <h5 className='text-textSecondary'>
+                {t('burn_page.dot_earned')}
+              </h5>
+            }
+            unitIcon={
+              <PolkadotLogoIcon
+                width={20}
+                height={20} />
+            }
+            value={earnedDOT}
+            unitName='DOT'
+            approxUSD={getUsdAmount(earnedDOT, prices.polkadot.usd)} />
+          {/* TODO: could be a reusable component */}
+          <hr
+            className={clsx(
+              'border-t-2',
+              'my-2.5',
+              'border-textSecondary'
+            )} />
+          <PriceInfo
+            title={
+              <h5 className='text-textPrimary'>
+                {t('you_will_receive')}
+              </h5>
+            }
+            unitIcon={
+              <PolkadotLogoIcon
+                width={20}
+                height={20} />
+            }
+            value={earnedDOT}
+            unitName='DOT'
+            approxUSD={getUsdAmount(earnedDOT, prices.polkadot.usd)} />
+          <InterlayButton
+            type='submit'
+            className='mx-auto'
+            variant='contained'
+            color='primary'
+            // TODO: should not check everywhere like this
+            disabled={
+              parachainStatus === ParachainStatus.Loading ||
+              parachainStatus === ParachainStatus.Shutdown
+            }
+            pending={submitStatus === STATUSES.PENDING}>
+            {t('burn')}
+          </InterlayButton>
+        </form>
+        {(submitStatus === STATUSES.REJECTED && submitError) && (
+          <ErrorModal
+            open={!!submitError}
+            onClose={() => {
+              setSubmitStatus(STATUSES.IDLE);
+              setSubmitError(null);
+            }}
+            title='Error'
+            description={
+              typeof submitError === 'string' ?
+                submitError :
+                submitError.message
+            } />
+        )}
+      </>
     );
   }
 
