@@ -18,7 +18,7 @@ import InterlayModal, {
   InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
 import InterlayButton from 'components/UI/InterlayButton';
-import ErrorHandler from 'components/ErrorHandler';
+import ErrorModal from 'components/ErrorModal';
 import {
   ParachainStatus,
   StoreType
@@ -104,12 +104,6 @@ const Transfer = (): JSX.Element => {
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
-
-  if (submitStatus === STATUSES.REJECTED && submitError) {
-    return (
-      <ErrorHandler error={submitError} />
-    );
-  }
 
   const handleNetworkModalOpen = () => {
     setNetworkModalOpen(true);
@@ -264,6 +258,20 @@ const Transfer = (): JSX.Element => {
           </div>
         </InterlayModalInnerWrapper>
       </InterlayModal>
+      {(submitStatus === STATUSES.REJECTED && submitError) && (
+        <ErrorModal
+          open={!!submitError}
+          onClose={() => {
+            setSubmitStatus(STATUSES.IDLE);
+            setSubmitError(null);
+          }}
+          title='Error'
+          description={
+            typeof submitError === 'string' ?
+              submitError :
+              submitError.message
+          } />
+      )}
     </>
   );
 };
