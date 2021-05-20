@@ -183,7 +183,6 @@ const Burn = (): JSX.Element | null => {
           })}
           approxUSD={`≈ $ ${getUsdAmount(polkaBTCAmount || '0', prices.bitcoin.usd)}`}
           error={!!errors[POLKA_BTC_AMOUNT]}
-          required
           helperText={errors[POLKA_BTC_AMOUNT]?.message} />
         <PriceInfo
           title={

@@ -328,7 +328,6 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
           })}
           approxUSD={`≈ $ ${getUsdAmount(polkaBTCAmount || '0', usdPrice)}`}
           error={!!errors[POLKA_BTC_AMOUNT]}
-          required
           helperText={errors[POLKA_BTC_AMOUNT]?.message} />
         <ParachainStatusInfo status={parachainStatus} />
         <TextField
@@ -347,7 +346,6 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
               message: t('redeem_page.valid_btc_address')
             }
           })}
-          required
           error={!!errors[BTC_ADDRESS]}
           helperText={errors[BTC_ADDRESS]?.message} />
         {premiumRedeemVaults.size > 0 && (

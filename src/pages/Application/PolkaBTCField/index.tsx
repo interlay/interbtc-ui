@@ -38,6 +38,7 @@ const PolkaBTCField = React.forwardRef<Ref, CustomPolkaBTCFieldProps & InterlayI
           className={clsx(
             'text-5xl',
             'pr-36',
+            'text-right',
             { 'border-interlayScarlet text-interlayScarlet': error }
           )}
           {...rest} />

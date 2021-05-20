@@ -188,7 +188,6 @@ const Transfer = (): JSX.Element => {
           })}
           approxUSD={`≈ $ ${getUsdAmount(polkaBTCAmount || '0.00', usdPrice)}`}
           error={!!errors[POLKA_BTC_AMOUNT]}
-          required
           helperText={errors[POLKA_BTC_AMOUNT]?.message} />
         <div>
           <TextField
@@ -203,7 +202,6 @@ const Transfer = (): JSX.Element => {
                 message: t('enter_recipient_address')
               }
             })}
-            required
             error={!!errors[DOT_ADDRESS]}
             helperText={errors[DOT_ADDRESS]?.message} />
           {/* TODO: should be a drop-down */}
