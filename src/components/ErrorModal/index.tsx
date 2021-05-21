@@ -57,7 +57,7 @@ const ErrorModal = ({
             height={18}
             className='text-textSecondary' />
         </IconButton>
-        <p className='text-lg'>
+        <p className='text-base'>
           {description}
         </p>
       </InterlayModalInnerWrapper>

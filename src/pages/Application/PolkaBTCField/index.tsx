@@ -19,7 +19,6 @@ interface CustomPolkaBTCFieldProps {
 
 type Ref = HTMLInputElement;
 
-// eslint-disable-next-line react/display-name
 const PolkaBTCField = React.forwardRef<Ref, CustomPolkaBTCFieldProps & InterlayInputProps>(({
   id,
   label,
@@ -75,5 +74,6 @@ const PolkaBTCField = React.forwardRef<Ref, CustomPolkaBTCFieldProps & InterlayI
     </div>
   );
 });
+PolkaBTCField.displayName = 'PolkaBTCField';
 
 export default PolkaBTCField;

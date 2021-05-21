@@ -18,7 +18,7 @@ Default.args = {
   ),
   children: (
     <CloseIcon
-      className='text-textSecondary'
+      className='text-currentColor'
       width={18}
       height={18} />
   )

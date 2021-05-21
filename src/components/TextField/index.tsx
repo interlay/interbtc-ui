@@ -13,7 +13,6 @@ interface CustomTextFieldProps {
 
 type Ref = HTMLInputElement;
 
-// eslint-disable-next-line react/display-name
 const TextField = React.forwardRef<Ref, Props>(({
   id,
   label,
@@ -50,6 +49,7 @@ const TextField = React.forwardRef<Ref, Props>(({
     )}
   </TextFieldContainer>
 ));
+TextField.displayName = 'TextField';
 
 const TextFieldContainer = (props: React.ComponentPropsWithRef<'div'>): JSX.Element => (
   <div {...props} />

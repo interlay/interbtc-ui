@@ -216,7 +216,6 @@ const ColumnListItem = (props: React.ComponentPropsWithRef<'li'>) => (
 type Ref = HTMLDivElement;
 type Props = React.ComponentPropsWithRef<'footer'>;
 
-// eslint-disable-next-line react/display-name
 const Footer = React.forwardRef<Ref, Props>(({
   className,
   ...rest
@@ -358,5 +357,6 @@ const Footer = React.forwardRef<Ref, Props>(({
     </footer>
   );
 });
+Footer.displayName = 'Footer';
 
 export default Footer;

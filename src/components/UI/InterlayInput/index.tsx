@@ -15,7 +15,6 @@ interface CustomProps {
 
 type Ref = HTMLInputElement;
 
-// eslint-disable-next-line react/display-name
 const InterlayInput = React.forwardRef<Ref, Props>(({
   color = COLORS.primary,
   className,
@@ -44,6 +43,7 @@ const InterlayInput = React.forwardRef<Ref, Props>(({
     )}
     {...rest} />
 ));
+InterlayInput.displayName = 'InterlayInput';
 
 export type Props = CustomProps & React.ComponentPropsWithRef<'input'>;
 
