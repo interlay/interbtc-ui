@@ -421,6 +421,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
           )}
           <InterlayButton
             type='submit'
+            style={{ display: 'flex' }}
             className='mx-auto'
             variant='contained'
             color='primary'

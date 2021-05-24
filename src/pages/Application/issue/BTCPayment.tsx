@@ -33,6 +33,7 @@ const BTCPayment = (): JSX.Element => {
     <>
       {request && <PaymentView request={request} />}
       <InterlayButton
+        style={{ display: 'flex' }}
         className={clsx(
           'mx-auto',
           'mt-8'

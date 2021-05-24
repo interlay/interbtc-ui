@@ -213,6 +213,7 @@ const Transfer = (): JSX.Element => {
         </div>
         <InterlayButton
           type='submit'
+          style={{ display: 'flex' }}
           className='mx-auto'
           variant='contained'
           color='primary'

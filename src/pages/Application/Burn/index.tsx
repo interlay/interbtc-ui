@@ -218,6 +218,7 @@ const Burn = (): JSX.Element | null => {
             approxUSD={getUsdAmount(earnedDOT, prices.polkadot.usd)} />
           <InterlayButton
             type='submit'
+            style={{ display: 'flex' }}
             className='mx-auto'
             variant='contained'
             color='primary'

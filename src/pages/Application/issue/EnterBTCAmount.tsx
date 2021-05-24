@@ -350,6 +350,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
             approxUSD={getUsdAmount(polkaBTCAmount || '0', prices.bitcoin.usd)} />
           <InterlayButton
             type='submit'
+            style={{ display: 'flex' }}
             className='mx-auto'
             variant='contained'
             color='primary'
