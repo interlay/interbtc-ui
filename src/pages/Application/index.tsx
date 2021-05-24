@@ -224,10 +224,8 @@ const Application = (): JSX.Element | null => {
           )}
         </div>
       </div>
-      <div className='text-center'>
-        {selectedTabId === TAB_IDS.issue && <IssueRequests />}
-        {selectedTabId === TAB_IDS.redeem && <RedeemRequests />}
-      </div>
+      {selectedTabId === TAB_IDS.issue && <IssueRequests />}
+      {selectedTabId === TAB_IDS.redeem && <RedeemRequests />}
     </MainContainer>
   );
 };
