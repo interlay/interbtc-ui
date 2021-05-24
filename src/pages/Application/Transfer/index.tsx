@@ -200,6 +200,7 @@ const Transfer = (): JSX.Element => {
             helperText={errors[DOT_ADDRESS]?.message} />
           {/* TODO: should be a drop-down */}
           <InterlayButton
+            style={{ display: 'flex' }}
             className={clsx(
               'ml-auto',
               'mt-2'
@@ -245,7 +246,7 @@ const Transfer = (): JSX.Element => {
             {NETWORK_ITEMS.map(networkItem => (
               <InterlayButton
                 key={networkItem.type}
-                variant='contained'
+                variant='outlined'
                 color='default'
                 className='w-full'
                 startIcon={networkItem.icon}
