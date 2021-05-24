@@ -20,7 +20,7 @@ const InterlayButtonBase = ({
       'focus:ring-primary-200',
       'focus:ring-opacity-50',
       'transition-colors',
-      'flex',
+      'inline-flex',
       'items-center',
       'text-center',
       { 'text-black text-opacity-25 dark:text-white dark:text-opacity-30 pointer-events-none':
