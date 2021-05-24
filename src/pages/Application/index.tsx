@@ -148,9 +148,11 @@ const Application = (): JSX.Element | null => {
           {tabsHidden ? (
             <h4
               className={clsx(
-                'text-xl',
+                'text-2xl',
                 'text-interlayTreePoppy',
-                'font-medium'
+                'font-medium',
+                'text-center',
+                'my-3'
               )}>
               {t('issue_page.deposit')}
             </h4>

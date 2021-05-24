@@ -50,13 +50,10 @@ const PaymentView = ({
           'items-center'
         )}>
         <div
-          className={clsx(
-            'text-xl',
-            'space-x-1'
-          )}>
-          <span>{t('send')}</span>
-          <span className='text-interlayTreePoppy'>{request.totalAmount}</span>
-          <span>BTC</span>
+          className='text-xl'>
+          {t('send')}
+          <span className='text-interlayTreePoppy'>&nbsp;{request.totalAmount}&nbsp;</span>
+          BTC
         </div>
         <span
           className={clsx(
@@ -67,7 +64,11 @@ const PaymentView = ({
         </span>
       </div>
       <div>
-        <p className='text-textSecondary'>
+        <p
+          className={clsx(
+            'text-center',
+            'text-textSecondary'
+          )}>
           {t('issue_page.single_transaction')}
         </p>
         {/* TODO: should improve the UX */}
@@ -89,7 +90,7 @@ const PaymentView = ({
         <p
           className={clsx(
             'flex',
-            'justify-end',
+            'justify-center',
             'items-center',
             'space-x-1'
           )}>
