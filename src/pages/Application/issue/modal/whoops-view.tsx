@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { IssueRequest } from '../../../../common/types/issue.types';
 import { StoreType } from '../../../../common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import InterlayTooltip from 'components/UI/InterlayTooltip';
+import Tooltip from 'components/Tooltip';
 import { copyToClipboard, getUsdAmount, safeRoundEightDecimals } from '../../../../common/utils/utils';
 
 type WhoopsViewProps = {
@@ -103,13 +103,13 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
         </div>
         <div className='row mt-2'>
           <div className='col payment-address'>
-            <InterlayTooltip overlay={t('click_to_copy')}>
+            <Tooltip overlay={t('click_to_copy')}>
               <span
                 className='copy-address'
                 onClick={() => copyToClipboard('1')}>
                 {props.request.refundBtcAddress}
               </span>
-            </InterlayTooltip>
+            </Tooltip>
           </div>
         </div>
       </React.Fragment>

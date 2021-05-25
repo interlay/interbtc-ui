@@ -12,7 +12,7 @@ import Topbar from 'common/components/topbar';
 import checkStaticPage from 'config/check-static-page';
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
-import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
 interface Props {
   children: React.ReactNode;
@@ -32,7 +32,7 @@ const Layout = ({ children }: Props): JSX.Element => {
       await window.faucet.fundAccount(receiverId);
       toast.success('Your account has been funded.');
     } catch (error) {
-      toast.error(`Funding failed. You can only use the faucet once every 6 hours. ${error}`);
+      toast.error(`Funding failed. ${error.message}`);
     }
   };
 
@@ -76,7 +76,9 @@ const Layout = ({ children }: Props): JSX.Element => {
         className={clsx(
           'absolute',
           'bottom-0',
-          'w-full'
+          'w-full',
+          'shadow',
+          'border-t'
         )} />
     </div>
   );

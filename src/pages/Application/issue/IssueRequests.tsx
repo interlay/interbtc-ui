@@ -35,7 +35,7 @@ function IssueRequests(): JSX.Element {
     switch (status) {
     case IssueRequestStatus.RequestedRefund:
     case IssueRequestStatus.Completed: {
-      return <FaCheck />;
+      return <FaCheck className='inline-block' />;
     }
     case IssueRequestStatus.Cancelled:
     case IssueRequestStatus.Expired: {
@@ -48,7 +48,7 @@ function IssueRequests(): JSX.Element {
       );
     }
     default: {
-      return <FaHourglass />;
+      return <FaHourglass className='inline-block' />;
     }
     }
   };
@@ -63,7 +63,8 @@ function IssueRequests(): JSX.Element {
       className={clsx(
         'container',
         'mt-12',
-        'mx-auto'
+        'mx-auto',
+        'text-center'
       )}>
       {issueRequests?.length > 0 && (
         <>

@@ -69,6 +69,10 @@ const INTERLAY_DODGER_BLUE = Object.freeze({
   800: '#11508f',
   900: '#0e4275'
 });
+const INTERLAY_POMEGRANATE = Object.freeze({
+  400: '#fa7b63',
+  500: '#f84320'
+});
 
 module.exports = {
   purge: [
@@ -87,8 +91,16 @@ module.exports = {
           DEFAULT: INTERLAY_DODGER_BLUE[500]
         },
         interlayScarlet: {
+          50: INTERLAY_SCARLET[50],
+          100: INTERLAY_SCARLET[100],
+          200: INTERLAY_SCARLET[200],
+          300: INTERLAY_SCARLET[300],
           400: INTERLAY_SCARLET[400],
-          DEFAULT: INTERLAY_SCARLET[500]
+          DEFAULT: INTERLAY_SCARLET[500],
+          600: INTERLAY_SCARLET[600],
+          700: INTERLAY_SCARLET[700],
+          800: INTERLAY_SCARLET[800],
+          900: INTERLAY_SCARLET[900]
         },
         // TODO: could use `Gray` shades from https://tailwindcss.com/docs/customizing-colors
         interlayGrey: {
@@ -96,10 +108,15 @@ module.exports = {
           DEFAULT: '#a9a9a9'
         },
         interlayRose: {
+          400: INTERLAY_ROSE[400],
           DEFAULT: INTERLAY_ROSE[500]
         },
         interlayMalachite: {
           DEFAULT: INTERLAY_MALACHITE[500]
+        },
+        interlayPomegranate: {
+          400: INTERLAY_POMEGRANATE[400],
+          DEFAULT: INTERLAY_POMEGRANATE[500]
         },
         primary: {
           50: INTERLAY_ROSE[50],
@@ -133,7 +150,17 @@ module.exports = {
       backgroundColor: theme => ({
         paper: theme('colors.white'),
         default: theme('colors.gray.50')
-      })
+      }),
+      // MEMO: inspired by https://material-ui.com/customization/default-theme/
+      zIndex: {
+        interlayMobileStepper: 1000,
+        interlaySpeedDial: 1050,
+        interlayAppBar: 1100,
+        interlayDrawer: 1200,
+        interlayModal: 1300,
+        interlaySnackbar: 1400,
+        interlayTooltip: 1500
+      }
     }
   },
   variants: {

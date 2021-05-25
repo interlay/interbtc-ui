@@ -6,7 +6,7 @@ import BitcoinAddress from '../../../common/components/bitcoin-links/address';
 import { FaCheck, FaHourglass } from 'react-icons/fa';
 import { Badge, Table } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { IssueRequest, IssueRequestStatus } from 'common/types/issue.types';
 import { parachainToUIIssueRequest } from 'common/utils/requests';
 

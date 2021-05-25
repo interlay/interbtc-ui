@@ -1,7 +1,7 @@
 import React from 'react';
 import { shortAddress } from '../../../common/utils/utils';
 import InterlayLink from 'components/UI/InterlayLink';
-import { BTC_ADDRESS_API } from 'config/blockchain';
+import { BTC_ADDRESS_API } from 'config/bitcoin';
 
 export default class BitcoinAddress extends React.Component<{
   btcAddress: string;

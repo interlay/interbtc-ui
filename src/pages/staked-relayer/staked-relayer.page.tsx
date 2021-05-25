@@ -26,7 +26,7 @@ import OracleTable from 'common/components/oracle-table/oracle-table';
 import ButtonMaybePending from 'common/components/pending-button';
 import { StoreType } from 'common/types/util.types';
 import { safeRoundTwoDecimals } from 'common/utils/utils';
-import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import './staked-relayer.page.scss';
 
 function StakedRelayer(): JSX.Element {

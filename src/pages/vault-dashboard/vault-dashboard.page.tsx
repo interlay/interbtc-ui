@@ -38,7 +38,7 @@ import {
   updateSLAAction,
   updateAPYAction
 } from 'common/actions/vault.actions';
-import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import './vault-dashboard.page.scss';
 
 function VaultDashboard(): JSX.Element {

@@ -1,4 +1,5 @@
 
+import * as React from 'react';
 import clsx from 'clsx';
 
 const COLORS = Object.freeze({
@@ -12,12 +13,15 @@ interface CustomProps {
   color?: typeof COLOR_VALUES[number];
 }
 
-const InterlayInput = ({
+type Ref = HTMLInputElement;
+
+const InterlayInput = React.forwardRef<Ref, Props>(({
   color = COLORS.primary,
   className,
   ...rest
-}: Props): JSX.Element => (
+}: Props, ref): JSX.Element => (
   <input
+    ref={ref}
     type='text'
     className={clsx(
       'focus:ring',
@@ -38,7 +42,8 @@ const InterlayInput = ({
       className
     )}
     {...rest} />
-);
+));
+InterlayInput.displayName = 'InterlayInput';
 
 export type Props = CustomProps & React.ComponentPropsWithRef<'input'>;
 

@@ -1,5 +1,5 @@
-import EnterBTCAmount from './enter-btc-amount';
-import BTCPayment from './btc-payment';
+import EnterBTCAmount from './EnterBTCAmount';
+import BTCPayment from './BTCPayment';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
 

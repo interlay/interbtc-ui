@@ -1,4 +1,4 @@
-import EnterAmountAndAddress from './enter-amount-and-address';
+import EnterAmountAndAddress from './EnterAmountAndAddress';
 import RedeemInfo from './redeem-info';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';

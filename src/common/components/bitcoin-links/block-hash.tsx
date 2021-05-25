@@ -1,6 +1,6 @@
 import React from 'react';
 import InterlayLink from 'components/UI/InterlayLink';
-import { BTC_BLOCK_API } from 'config/blockchain';
+import { BTC_BLOCK_API } from 'config/bitcoin';
 
 export default class BitcoinBlockHash extends React.Component<{
   blockHash: string;

@@ -6,7 +6,7 @@ import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
 import { defaultTableDisplayParams, formatDateTimePrecise } from '../../../common/utils/utils';
 import { RelayedBlock } from '../../../common/types/util.types';
 import DashboardTable, { StyledLinkData } from '../../../common/components/dashboard-table/dashboard-table';
-import { BTC_BLOCK_API } from 'config/blockchain';
+import { BTC_BLOCK_API } from 'config/bitcoin';
 import BtcRelay from '../components/btc-relay';
 import { reverseEndiannessHex, stripHexPrefix } from '@interlay/polkabtc';
 import { BlockColumns } from '@interlay/polkabtc-stats';
@@ -73,7 +73,7 @@ export default function RelayDashboard(): ReactElement {
       <div className='w-3/4'>
         <div>
           <PageTitle
-            mainTitle={t('dashboard.relay.btcrelay')}
+            mainTitle={t('dashboard.relay.btc_relay')}
             subTitle={<TimerIncrement />} />
           <hr className='border-interlayTreePoppy' />
           <div className='dashboard-graphs-container'>
