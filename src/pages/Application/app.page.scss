@@ -377,22 +377,13 @@
   color: $d_red;
 }
 
+// ray test touch <
 .issue-modal {
   .issue-modal-horizontal-line {
     border: 1px solid $d_pink;
     width: 95%;
     margin: auto;
     margin-top: 10px;
-  }
-
-  .issue-modal-title {
-    text-align: center;
-    color: $d_pink;
-    font-size: 1rem;
-    width: 100%;
-    text-transform: uppercase;
-    word-wrap: break-word;
-    font-weight: 700;
   }
 
   .close-icon {
@@ -405,6 +396,7 @@
     cursor: pointer;
   }
 }
+// ray test touch >
 
 .redeem-modal {
   .redeem-modal-horizontal-line {
