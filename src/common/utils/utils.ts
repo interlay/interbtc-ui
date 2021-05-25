@@ -52,13 +52,18 @@ function formatDateTimePrecise(date: Date): string {
   return date.toDateString().substring(4) + ' ' + date.toTimeString().substring(0, 8);
 }
 
+// TODO: replace these functions with internationalization functions
 // always round USD amounts to two decimals
-function getUsdAmount(amount: string, rate: number): string {
+function getUsdAmount(amount: string | Big, rate: number): string {
   return new Big(amount).mul(new Big(rate)).toFixed(2).toString();
 }
 
-function displayBtcAmount(amount: string | number): string {
+function displayBtcAmount(amount: string | number | Big): string {
   return new Big(amount).round(8).toString();
+}
+
+function displayDotAmount(amount: string | number | Big): string {
+  return new Big(amount).round(5).toString();
 }
 
 /**
@@ -166,6 +171,7 @@ export {
   formatDateTimePrecise,
   getUsdAmount,
   displayBtcAmount,
+  displayDotAmount,
   isPositiveNumeric,
   range,
   BtcNetwork,

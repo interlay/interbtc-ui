@@ -40,6 +40,7 @@ import {
 } from 'common/actions/issue.actions';
 import {
   displayBtcAmount,
+  displayDotAmount,
   getRandomVaultIdWithCapacity,
   getUsdAmount
 } from 'common/utils/utils';
@@ -47,11 +48,12 @@ import { parachainToUIIssueRequest } from 'common/utils/requests';
 import STATUSES from 'utils/constants/statuses';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
+import { ReactComponent as PolkaBTCLogoIcon } from 'assets/img/polkabtc-logo.svg';
 
-const POLKA_BTC_AMOUNT = 'polka-btc-amount';
+const BTC_AMOUNT = 'btc-amount';
 
 type IssueForm = {
-  [POLKA_BTC_AMOUNT]: string;
+  [BTC_AMOUNT]: string;
 }
 
 const EnterBTCAmount = (): JSX.Element | null => {
@@ -78,16 +80,16 @@ const EnterBTCAmount = (): JSX.Element | null => {
   } = useForm<IssueForm>({
     mode: 'onChange' // 'onBlur'
   });
-  const polkaBTCAmount = watch(POLKA_BTC_AMOUNT);
+  const btcAmount = watch(BTC_AMOUNT);
 
   // Additional info: bridge fee, security deposit, amount BTC
   // Current fee model specification taken from: https://interlay.gitlab.io/polkabtc-spec/spec/fee.html
   const [feeRate, setFeeRate] = React.useState(new Big(0.005)); // Set default to 0.5%
   const [depositRate, setDepositRate] = React.useState(new Big(0.00005)); // Set default to 0.005%
   const [btcToDotRate, setBtcToDotRate] = React.useState(new Big(0));
-  // TODO: could use number as it's more natural
-  const [bridgeFee, setBridgeFee] = React.useState('0');
-  const [securityDeposit, setSecurityDeposit] = React.useState('0');
+  const [bridgeFee, setBridgeFee] = React.useState(new Big(0));
+  const [polkaBtcAmount, setPolkaBtcAmount] = React.useState(new Big(0));
+  const [securityDeposit, setSecurityDeposit] = React.useState(new Big(0));
   const [vaults, setVaults] = React.useState<Map<AccountId, Big>>();
   const [vaultId, setVaultId] = React.useState('');
   const [dustValue, setDustValue] = React.useState('0');
@@ -97,23 +99,26 @@ const EnterBTCAmount = (): JSX.Element | null => {
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
 
   React.useEffect(() => {
-    if (!polkaBTCAmount) return;
+    if (!btcAmount) return;
     if (!btcToDotRate) return;
     if (!depositRate) return;
     if (!feeRate) return;
     if (!vaults) return;
 
-    const bigPolkaBTCAmount = new Big(polkaBTCAmount);
+    const bigPolkaBTCAmount = new Big(btcAmount);
     const theBridgeFee = bigPolkaBTCAmount.mul(feeRate);
-    setBridgeFee(theBridgeFee.toString());
+    setBridgeFee(theBridgeFee);
 
     const theSecurityDeposit = bigPolkaBTCAmount.mul(btcToDotRate).mul(depositRate);
-    setSecurityDeposit(theSecurityDeposit.round(8).toString());
+    setSecurityDeposit(theSecurityDeposit);
 
     const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), bigPolkaBTCAmount);
     setVaultId(vaultId ?? '');
+
+    const thePolkaBtcAmount = new Big(btcAmount).sub(theBridgeFee);
+    setPolkaBtcAmount(thePolkaBtcAmount);
   }, [
-    polkaBTCAmount,
+    btcAmount,
     btcToDotRate,
     depositRate,
     feeRate,
@@ -193,7 +198,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
     );
   }
 
-  const validatePolkaBTCAmount = (value: number): string | undefined => {
+  const validateBTCAmount = (value: number): string | undefined => {
     if (value > 1) {
       return t('issue_page.validation_max_value');
       // TODO: should be `big` type other than `Number`
@@ -227,7 +232,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
 
   const onSubmit = async (data: IssueForm) => {
     try {
-      const polkaBTCAmount = new Big(data[POLKA_BTC_AMOUNT]);
+      const polkaBTCAmount = new Big(data[BTC_AMOUNT]);
       const vaultAccountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vaultId);
       setSubmitStatus(STATUSES.PENDING);
       const result = await window.polkaBTC.issue.request(polkaBTCAmount, vaultAccountId);
@@ -264,10 +269,10 @@ const EnterBTCAmount = (): JSX.Element | null => {
             {t('issue_page.mint_polka_by_wrapping')}
           </h4>
           <PolkaBTCField
-            id='polka-btc-amount'
-            name={POLKA_BTC_AMOUNT}
+            id='btc-amount'
+            name={BTC_AMOUNT}
             type='number'
-            label='PolkaBTC'
+            label='BTC'
             step='any'
             placeholder='0.00'
             min={0}
@@ -276,11 +281,11 @@ const EnterBTCAmount = (): JSX.Element | null => {
                 value: true,
                 message: t('issue_page.enter_valid_amount')
               },
-              validate: value => validatePolkaBTCAmount(value)
+              validate: value => validateBTCAmount(value)
             })}
-            approxUSD={`≈ $ ${getUsdAmount(polkaBTCAmount || '0', prices.bitcoin.usd)}`}
-            error={!!errors[POLKA_BTC_AMOUNT]}
-            helperText={errors[POLKA_BTC_AMOUNT]?.message} />
+            approxUSD={`≈ $ ${getUsdAmount(btcAmount || '0', prices.bitcoin.usd)}`}
+            error={!!errors[BTC_AMOUNT]}
+            helperText={errors[BTC_AMOUNT]?.message} />
           <ParachainStatusInfo status={parachainStatus} />
           <PriceInfo
             title={
@@ -297,7 +302,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
             unitName='BTC'
             approxUSD={getUsdAmount(bridgeFee, prices.bitcoin.usd)}
             tooltip={
-              <Tooltip overlay='Bridge Fee'>
+              <Tooltip overlay={t('issue_page.tooltip_bridge_fee')}>
                 <HiOutlineExclamationCircle className='text-textSecondary' />
               </Tooltip>
             } />
@@ -312,11 +317,11 @@ const EnterBTCAmount = (): JSX.Element | null => {
                 width={20}
                 height={20} />
             }
-            value={securityDeposit}
+            value={displayDotAmount(securityDeposit)}
             unitName='DOT'
             approxUSD={getUsdAmount(securityDeposit, prices.polkadot.usd)}
             tooltip={
-              <Tooltip overlay='Security Deposit'>
+              <Tooltip overlay={t('issue_page.tooltip_security_deposit')}>
                 <HiOutlineExclamationCircle className='text-textSecondary' />
               </Tooltip>
             } />
@@ -329,17 +334,17 @@ const EnterBTCAmount = (): JSX.Element | null => {
           <PriceInfo
             title={
               <h5 className='text-textPrimary'>
-                {t('total_deposit')}
+                {t('you_will_receive')}
               </h5>
             }
             unitIcon={
-              <BitcoinLogoIcon
+              <PolkaBTCLogoIcon
                 width={23}
                 height={23} />
             }
-            value={displayBtcAmount(polkaBTCAmount || '0')}
-            unitName='BTC'
-            approxUSD={getUsdAmount(polkaBTCAmount || '0', prices.bitcoin.usd)} />
+            value={displayBtcAmount(polkaBtcAmount || '0')}
+            unitName='PolkaBTC'
+            approxUSD={getUsdAmount(polkaBtcAmount || '0', prices.bitcoin.usd)} />
           <InterlayButton
             type='submit'
             style={{ display: 'flex' }}
