@@ -52,7 +52,6 @@ const Application = (): JSX.Element | null => {
   const { t } = useTranslation();
 
   const issueStep = useSelector((state: StoreType) => state.issue.step);
-  const premiumRedeemSelected = useSelector((state: StoreType) => state.redeem.premiumRedeem);
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
 
   const query = useQuery();
@@ -142,8 +141,7 @@ const Application = (): JSX.Element | null => {
             'md:max-w-xl',
             'shadow',
             'p-10',
-            'rounded-lg',
-            { 'bg-gradient-to-b from-transparent to-primary-100': premiumRedeemSelected }
+            'rounded-lg'
           )}>
           {tabsHidden ? (
             <h4
