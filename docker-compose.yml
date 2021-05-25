@@ -143,14 +143,14 @@ services:
     ports:
       - '3033:3033'
   postgres:
-    image: 'postgres:11'
+    image: 'postgres:13'
     environment:
       POSTGRES_USER: 'user'
       POSTGRES_PASSWORD: 'password'
     ports:
       - '5432:5432'
   polkabtc_stats:
-    image: 'registry.gitlab.com/interlay/polkabtc-stats:0.1.21'
+    image: 'registry.gitlab.com/interlay/polkabtc-stats:0.3.1'
     restart: always
     depends_on:
       - postgres
