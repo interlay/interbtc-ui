@@ -29,7 +29,7 @@ module.exports = {
         'fs',
         'mv',
         'os',
-        'source-map-support',
+        'source-map-support'
       ];
 
       return webpackConfig;
