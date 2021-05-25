@@ -88,7 +88,7 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
           </p>
         </div>
       </div>
-      <div className='row justify-content-center mt-4'>
+      <div className='row justify-center mt-4'>
         <div className='col-9 reimburse-send'>
           {t('redeem_page.vault_did_not_send')}
           <span>{punishmentDOT.toFixed(2).toString()} DOT </span>&nbsp; (~${' '}
@@ -96,21 +96,21 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
           {t('redeem_page.compensation')}
         </div>
       </div>
-      <div className='row justify-content-center'>
+      <div className='row justify-center'>
         <div className='col-9 to-redeem'>
           <p className='mb-4'>{t('redeem_page.to_redeem_polkabtc')}</p>
         </div>
       </div>
-      <div className='row justify-content-center'>
+      <div className='row justify-center'>
         <div className='col-9 receive-compensation'>
           {t('redeem_page.receive_compensation')}
           <span>{punishmentDOT.toFixed(2)} DOT</span> &nbsp;
-          {t('redeem_page.retrh_with_another', {
+          {t('redeem_page.retry_with_another', {
             compensationPrice: getUsdAmount(punishmentDOT.toString(), prices.polkadot.usd)
           })}
         </div>
       </div>
-      <div className='row justify-content-center'>
+      <div className='row justify-center'>
         <div className='col-6 retry'>
           <ButtonMaybePending
             className='btn green-button app-btn'
@@ -122,7 +122,7 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
         </div>
       </div>
 
-      <div className='row justify-content-center mt-4'>
+      <div className='row justify-center mt-4'>
         <div className='col-10 burn-desc'>
           {t('redeem_page.burn_polkabtc')}
           <span>{amountDOT.toFixed(5).toString()} DOT</span> &nbsp;
@@ -136,7 +136,7 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
         </div>
       </div>
 
-      <div className='row justify-content-center'>
+      <div className='row justify-center'>
         <div className='col-6 burn'>
           <Button
             variant='btn red-button app-btn'

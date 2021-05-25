@@ -1,4 +1,4 @@
-import React, { useState, ReactElement } from 'react';
+import { useState, ReactElement } from 'react';
 import { RedeemRequest, RedeemRequestStatus } from '../../../common/types/redeem.types';
 import { Table } from 'react-bootstrap';
 import { FaCheck, FaHourglass } from 'react-icons/fa';
@@ -32,10 +32,10 @@ export default function RedeemRequests(): ReactElement {
       return <div>{t('redeem_page.retried')}</div>;
     }
     case RedeemRequestStatus.Completed: {
-      return <FaCheck />;
+      return <FaCheck className='inline-block' />;
     }
     default: {
-      return <FaHourglass />;
+      return <FaHourglass className='inline-block' />;
     }
     }
   };
@@ -50,7 +50,8 @@ export default function RedeemRequests(): ReactElement {
       className={clsx(
         'container',
         'mt-12',
-        'mx-auto'
+        'mx-auto',
+        'text-center'
       )}>
       {redeemRequests && redeemRequests.length > 0 && (
         <>

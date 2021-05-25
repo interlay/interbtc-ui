@@ -9,7 +9,7 @@ import Big from 'big.js';
 import { StoreType } from '../../../common/types/util.types';
 import DashboardTable from '../dashboard-table/dashboard-table';
 import { VaultExt } from '@interlay/polkabtc/build/parachain/vaults';
-import InterlayTooltip from 'components/UI/InterlayTooltip';
+import Tooltip from 'components/Tooltip';
 
 export default function VaultTable(): ReactElement {
   const [vaults, setVaults] = useState<Array<Vault>>([]);
@@ -149,15 +149,15 @@ export default function VaultTable(): ReactElement {
     <h1 key={3}>{t('locked_btc')}</h1>,
     <>
       <h1>{t('pending_btc')}</h1> &nbsp;
-      <InterlayTooltip overlay={t('vault.tip_pending_btc')}>
+      <Tooltip overlay={t('vault.tip_pending_btc')}>
         <i className='far fa-question-circle' />
-      </InterlayTooltip>
+      </Tooltip>
     </>,
     <>
       <h1>{t('collateralization')}</h1> &nbsp;
-      <InterlayTooltip overlay={t('vault.tip_collateralization')}>
+      <Tooltip overlay={t('vault.tip_collateralization')}>
         <i className='far fa-question-circle' />
-      </InterlayTooltip>
+      </Tooltip>
     </>,
     <h1 key={4}>{t('status')}</h1>
   ];

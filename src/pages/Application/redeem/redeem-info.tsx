@@ -34,7 +34,7 @@ export default function RedeemInfo(): JSX.Element {
 
   return (
     <React.Fragment>
-      <FormGroup>
+      <FormGroup className='text-center'>
         {request && (
           <React.Fragment>
             <div className='wizard-redeem-title'>
@@ -71,7 +71,7 @@ export default function RedeemInfo(): JSX.Element {
         )}
       </FormGroup>
       <div className='row'>
-        <div className='col'>
+        <div className='col text-center'>
           <button
             className='btn black-button app-btn'
             onClick={openModal}>
@@ -80,7 +80,7 @@ export default function RedeemInfo(): JSX.Element {
         </div>
       </div>
       <div className='row'>
-        <div className='col'>
+        <div className='col text-center'>
           <button
             className='btn green-button mt-5 app-btn'
             onClick={onClose}>

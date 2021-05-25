@@ -7,7 +7,7 @@ import { parachainToUIReplaceRequests } from 'common/utils/requests';
 import BN from 'bn.js';
 import { shortAddress } from 'common/utils/utils';
 import { useTranslation } from 'react-i18next';
-import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
 type ReplaceTableProps = {
   openModal: (show: boolean) => void;

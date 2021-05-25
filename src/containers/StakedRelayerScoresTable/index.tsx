@@ -19,7 +19,7 @@ import clsx from 'clsx';
 import { RelayerData } from '@interlay/polkabtc-stats';
 
 import EllipsisLoader from 'components/EllipsisLoader';
-import ErrorMessage from 'components/ErrorMessage';
+import ErrorHandler from 'components/ErrorHandler';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -155,9 +155,9 @@ const StakedRelayerScoresTable = ({
     );
   }
 
-  if (status === STATUSES.REJECTED) {
+  if (status === STATUSES.REJECTED && error) {
     return (
-      <ErrorMessage message={error?.message} />
+      <ErrorHandler error={error} />
     );
   }
 

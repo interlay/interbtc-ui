@@ -2,9 +2,6 @@ export const BALANCE_MAX_INTEGER_LENGTH = 13;
 
 export const BTC_DECIMALS = 8;
 
-// number of blocks before we prevent issue and redeem requests
-export const BLOCKS_BEHIND_LIMIT = 6;
-
 // regtest btc address validation regex
 export const BTC_REGTEST_REGEX = /\b([2mn][a-km-zA-HJ-NP-Z1-9]{25,34}|bcrt1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})\b/;
 // testnet btc address validation regex
@@ -25,8 +22,6 @@ export const BITCOIN_REGTEST_URL = process.env.REACT_APP_BITCOIN_REGTEST_URL || 
 
 export const STORE_NAME = 'pbtc-store-2';
 
-export const BLOCK_TIME = 6; // seconds
-
 export const BTC_ADDRESS_REGEX =
     BITCOIN_NETWORK === 'mainnet' ?
       BTC_MAINNET_REGEX :
@@ -40,8 +35,6 @@ export const FAUCET_URL = process.env.REACT_APP_FAUCET_URL || 'http://localhost:
 export const STATS_URL = process.env.REACT_APP_STATS_SERVER_URL || 'http://localhost:3007';
 
 export const FEEDBACK_URL = 'https://forms.gle/2eKFnq4j1fkBgejW7';
-
-export const ACCOUNT_ID_TYPE_NAME = 'AccountId';
 
 // ######################################
 // STAKED RELAYER

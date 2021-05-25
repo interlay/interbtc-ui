@@ -99,7 +99,7 @@ export const loadState = (): StoreType => {
 
 export const saveState = (store: AppState): void => {
   try {
-    const preperedState = {
+    const preparedState = {
       ...store,
       issue: {
         ...store.issue,
@@ -110,7 +110,7 @@ export const saveState = (store: AppState): void => {
         redeemRequests: mapToArray(store.redeem.redeemRequests)
       }
     };
-    const serializedState = JSON.stringify(preperedState);
+    const serializedState = JSON.stringify(preparedState);
     localStorage.setItem(constants.STORE_NAME, serializedState);
   } catch (error) {
     setTimeout(

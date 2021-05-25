@@ -2,7 +2,7 @@ import { Dispatch } from 'redux';
 import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from '../actions/general.actions';
 import { StoreState } from '../types/util.types';
 import { satToBTC } from '@interlay/polkabtc';
-import { ACCOUNT_ID_TYPE_NAME } from '../../constants';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
 export default async function fetchBalances(dispatch: Dispatch, store: StoreState): Promise<void> {
   const state = store.getState();

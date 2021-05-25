@@ -10,7 +10,7 @@ import { btcToSat, satToBTC } from '@interlay/polkabtc';
 import { parachainToUIReplaceRequests } from 'common/utils/requests';
 import { useTranslation } from 'react-i18next';
 import { PolkaBTC } from '@interlay/polkabtc/build/interfaces';
-import { ACCOUNT_ID_TYPE_NAME } from '../../../constants';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
 type RequestReplacementForm = {
   amount: number;

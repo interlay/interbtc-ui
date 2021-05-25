@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { RedeemRequest, RedeemRequestStatus } from '../../../../common/types/redeem.types';
 import BitcoinTransaction from '../../../../common/components/bitcoin-links/transaction';
 import { getUsdAmount, shortAddress } from '../../../../common/utils/utils';
-import { BTC_TRANSACTION_API } from 'config/blockchain';
+import { BTC_TRANSACTION_API } from 'config/bitcoin';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../../common/types/util.types';
 import Big from 'big.js';
@@ -249,13 +249,13 @@ export default function StatusView(props: StatusViewProps): ReactElement {
               </InterlayLink>
             </div>
           </div>
-          <div className='row justify-content-center'>
+          <div className='row justify-center'>
             <div className='col-9 note-title'>
               {t('note')}&nbsp;
               <i className='fas fa-exclamation-circle'></i>
             </div>
           </div>
-          <div className='row justify-content-center'>
+          <div className='row justify-center'>
             <div className='col-9 note-text'>{t('redeem_page.retry_new_redeem')}</div>
           </div>
         </React.Fragment>

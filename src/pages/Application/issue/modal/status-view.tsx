@@ -11,7 +11,7 @@ import { updateBalancePolkaBTCAction } from '../../../../common/actions/general.
 import { shortAddress } from '../../../../common/utils/utils';
 import Big from 'big.js';
 import InterlayLink from 'components/UI/InterlayLink';
-import { BTC_TRANSACTION_API } from 'config/blockchain';
+import { BTC_TRANSACTION_API } from 'config/bitcoin';
 
 type StatusViewProps = {
   request: IssueRequest;
@@ -171,16 +171,16 @@ export default function StatusView(props: StatusViewProps): ReactElement {
               <i className='fas fa-times-circle canceled-circle'></i>
             </div>
           </div>
-          <div className='row justify-content-center mt-4'>
+          <div className='row justify-center mt-4'>
             <div className='col-9 status-description'>{t('issue_page.you_did_not_send')}</div>
           </div>
-          <div className='row justify-content-center mt-5'>
+          <div className='row justify-center mt-5'>
             <div className='col-9 note-title'>
               {t('note')}&nbsp;
               <i className='fas fa-exclamation-circle'></i>
             </div>
           </div>
-          <div className='row justify-content-center'>
+          <div className='row justify-center'>
             <div className='col-9 note-text'>{t('issue_page.contact_team')}</div>
           </div>
         </>
@@ -273,10 +273,10 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                   </InterlayLink>
                 </div>
               </div>
-              <div className='row mt-5 justify-content-center'>
+              <div className='row mt-5 justify-center'>
                 <div className='col-10'>{t('issue_page.receive_polkabtc_tokens')}</div>
               </div>
-              <div className='row mt-3 justify-content-center'>
+              <div className='row mt-3 justify-center'>
                 <div className='col-6 text-center'>
                   <ButtonMaybePending
                     isPending={executePending}

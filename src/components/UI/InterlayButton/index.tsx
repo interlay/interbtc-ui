@@ -1,6 +1,7 @@
 
 import clsx from 'clsx';
 
+import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
 const VARIANTS = Object.freeze({
@@ -24,10 +25,10 @@ interface CustomProps {
   color?: typeof COLOR_VALUES[number];
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
-  disabled?: boolean;
   pending?: boolean;
 }
 
+// MEMO: inspired by https://material-ui.com/components/buttons/
 const InterlayButton = ({
   variant = VARIANTS.text,
   color = COLORS.default,
@@ -38,87 +39,74 @@ const InterlayButton = ({
   disabled = false,
   pending = false,
   ...rest
-}: Props): JSX.Element => (
-  <button
-    type='button'
-    style={{
-      minHeight: 36
-    }}
-    className={clsx(
-      { 'bg-gray-300 hover:bg-gray-400 text-textPrimary': // palette.text.primary
-        variant === VARIANTS.contained && color === COLORS.default && !disabled },
-      { 'bg-primary hover:bg-primary-600 text-primary-contrastText':
-        variant === VARIANTS.contained && color === COLORS.primary && !disabled },
-      { 'bg-secondary hover:bg-secondary-600 text-secondary-contrastText':
-        variant === VARIANTS.contained && color === COLORS.secondary && !disabled },
-      { 'bg-black bg-opacity-10 text-black text-opacity-25': // palette.action.disabled
-        variant === VARIANTS.contained && disabled },
-      { 'shadow-sm': variant === VARIANTS.contained && !disabled },
+}: Props): JSX.Element => {
+  const disabledOrPending = disabled || pending;
 
-      { 'bg-transparent': variant === VARIANTS.text },
-      { 'text-textPrimary hover:bg-black hover:bg-opacity-5':
-        variant === VARIANTS.text && color === COLORS.default && !disabled },
-      { 'text-primary hover:bg-primary hover:bg-opacity-5':
-        variant === VARIANTS.text && color === COLORS.primary && !disabled },
-      { 'text-secondary hover:bg-secondary hover:bg-opacity-5':
-        variant === VARIANTS.text && color === COLORS.secondary && !disabled },
+  return (
+    <InterlayButtonBase
+      type='button'
+      style={{
+        minHeight: 36
+      }}
+      className={clsx(
+        { 'bg-gray-300 hover:bg-gray-400 text-textPrimary': // palette.text.primary
+          variant === VARIANTS.contained && color === COLORS.default && !disabledOrPending },
+        { 'bg-primary hover:bg-primary-600 text-primary-contrastText':
+          variant === VARIANTS.contained && color === COLORS.primary && !disabledOrPending },
+        { 'bg-secondary hover:bg-secondary-600 text-secondary-contrastText':
+          variant === VARIANTS.contained && color === COLORS.secondary && !disabledOrPending },
+        { 'bg-black bg-opacity-10 text-black text-opacity-25': // palette.action.disabled
+          variant === VARIANTS.contained && disabledOrPending },
+        { 'shadow-sm': variant === VARIANTS.contained && !disabledOrPending },
 
-      { 'border border-solid':
-        variant === VARIANTS.outlined },
-      { 'text-textPrimary border-black border-opacity-25 hover:bg-black hover:bg-opacity-5':
-        variant === VARIANTS.outlined && color === COLORS.default && !disabled },
-      { 'text-primary border-primary border-opacity-50 hover:border-opacity-100 hover:bg-primary hover:bg-opacity-5':
-        variant === VARIANTS.outlined && color === COLORS.primary && !disabled },
-      // eslint-disable-next-line max-len
-      { 'text-secondary border-secondary border-opacity-50 hover:border-opacity-100 hover:bg-secondary hover:bg-opacity-5':
-        variant === VARIANTS.outlined && color === COLORS.secondary && !disabled },
-      { 'border-opacity-25': variant === VARIANTS.outlined && disabled },
+        { 'bg-transparent': variant === VARIANTS.text },
+        { 'text-textPrimary hover:bg-black hover:bg-opacity-5':
+          variant === VARIANTS.text && color === COLORS.default && !disabledOrPending },
+        { 'text-primary hover:bg-primary hover:bg-opacity-5':
+          variant === VARIANTS.text && color === COLORS.primary && !disabledOrPending },
+        { 'text-secondary hover:bg-secondary hover:bg-opacity-5':
+          variant === VARIANTS.text && color === COLORS.secondary && !disabledOrPending },
 
-      { 'text-black text-opacity-25 pointer-events-none':
-        disabled },
+        { 'border border-solid':
+          variant === VARIANTS.outlined },
+        { 'text-textPrimary border-black border-opacity-25 hover:bg-black hover:bg-opacity-5':
+          variant === VARIANTS.outlined && color === COLORS.default && !disabledOrPending },
+        { 'text-primary border-primary border-opacity-50 hover:border-opacity-100 hover:bg-primary hover:bg-opacity-5':
+          variant === VARIANTS.outlined && color === COLORS.primary && !disabledOrPending },
+        // eslint-disable-next-line max-len
+        { 'text-secondary border-secondary border-opacity-50 hover:border-opacity-100 hover:bg-secondary hover:bg-opacity-5':
+          variant === VARIANTS.outlined && color === COLORS.secondary && !disabledOrPending },
+        { 'border-opacity-25': variant === VARIANTS.outlined && disabledOrPending },
 
-      { 'cursor-wait pointer-events-none':
-        pending },
-      'select-none',
-      'px-4',
-      'py-2',
-      'focus:outline-none',
-      'focus:ring',
-      'focus:border-primary-300',
-      'focus:ring-primary-200',
-      'focus:ring-opacity-50',
-      'transition',
-      'ease-in',
-      'duration-200',
-      'text-sm',
-      'font-medium',
-      'rounded',
-      'capitalize',
-      'space-x-1',
-      'flex',
-      'items-center',
-      'justify-center',
-      className
-    )}
-    {...rest}>
-    {pending && (
-      <SpinIcon
-        className={clsx(
-          'animate-spin',
-          'w-5',
-          'h-5',
-          'mr-3'
-        )} />
-    )}
-    {startIcon}
-    <span>
-      {children}
-    </span>
-    {endIcon}
-  </button>
-);
+        'rounded',
+        'px-4',
+        'py-2',
+        'text-sm',
+        'space-x-1',
+        'justify-center',
+        className
+      )}
+      disabled={disabledOrPending}
+      {...rest}>
+      {pending && (
+        <SpinIcon
+          className={clsx(
+            'animate-spin',
+            'w-5',
+            'h-5',
+            'mr-3'
+          )} />
+      )}
+      {startIcon}
+      <span className='font-medium'>
+        {children}
+      </span>
+      {endIcon}
+    </InterlayButtonBase>
+  );
+};
 
-export type Props = CustomProps & React.ComponentPropsWithRef<'button'>;
+export type Props = CustomProps & InterlayButtonBaseProps;
 
 export {
   COLOR_VALUES,

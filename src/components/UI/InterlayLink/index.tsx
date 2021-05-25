@@ -12,7 +12,6 @@ const InterlayLink = ({
   <a
     className={clsx(
       styles['interlay-link'],
-      'text-black', // TODO: should double-check the necessity after removing bootstrap's `reboot`
       className
     )}
     {...rest}>
