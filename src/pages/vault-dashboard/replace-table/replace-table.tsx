@@ -4,7 +4,6 @@ import { StoreType } from 'common/types/util.types';
 import { addReplaceRequestsAction } from 'common/actions/vault.actions';
 import { Button, Table } from 'react-bootstrap';
 import { parachainToUIReplaceRequests } from 'common/utils/requests';
-import BN from 'bn.js';
 import { shortAddress } from 'common/utils/utils';
 import { useTranslation } from 'react-i18next';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
@@ -17,7 +16,7 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
   const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
   const replaceRequests = useSelector((state: StoreType) => state.vault.requests);
-  const [polkaBTCAmount, setPolkaBTCamount] = useState(new BN('0'));
+  const [polkaBTCAmount, setPolkaBTCamount] = useState(new Big(0));
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -26,8 +25,8 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
 
       try {
         const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-        const issuedPolkaBTCAmount = await window.polkaBTC.vaults.getIssuedPolkaBTCAmount(vaultId);
-        setPolkaBTCamount(issuedPolkaBTCAmount.toBn());
+        const issuedPolkaBTCAmount = await window.polkaBTC.vaults.getIssuedAmount(vaultId);
+        setPolkaBTCamount(issuedPolkaBTCAmount);
         const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
         if (!requests) return;
 
@@ -93,7 +92,7 @@ export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
       )}
       <div className='row'>
         <div className='col-12'>
-          {polkaBTCAmount.gt(new BN(0)) ? (
+          {polkaBTCAmount.gt(new Big(0)) ? (
             <Button
               variant='outline-danger'
               className='vault-dashboard-button'

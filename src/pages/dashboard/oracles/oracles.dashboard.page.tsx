@@ -27,7 +27,7 @@ export default function OraclesDashboard(): ReactElement {
           <div className='dashboard-graphs-container'>
             <OracleStatus />
           </div>
-          <OracleTable planckLocked='1' />
+          <OracleTable dotLocked='1' />
         </div>
       </div>
     </MainContainer>

@@ -6,15 +6,12 @@ import {
 } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import BN from 'bn.js';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import { PolkaBTC } from '@interlay/polkabtc/build/interfaces/default';
 import { AccountId } from '@polkadot/types/interfaces';
 import {
   btcToSat,
-  satToBTC,
   stripHexPrefix
 } from '@interlay/polkabtc';
 
@@ -91,7 +88,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
   // TODO: could use number as it's more natural
   const [bridgeFee, setBridgeFee] = React.useState('0');
   const [securityDeposit, setSecurityDeposit] = React.useState('0');
-  const [vaults, setVaults] = React.useState<Map<AccountId, PolkaBTC>>();
+  const [vaults, setVaults] = React.useState<Map<AccountId, Big>>();
   const [vaultId, setVaultId] = React.useState('');
   const [dustValue, setDustValue] = React.useState('0');
   const [vaultMaxAmount, setVaultMaxAmount] = React.useState('');
@@ -113,8 +110,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
     const theSecurityDeposit = bigPolkaBTCAmount.mul(btcToDotRate).mul(depositRate);
     setSecurityDeposit(theSecurityDeposit.round(8).toString());
 
-    const polkaBTCAmountInSatoshi = btcToSat(polkaBTCAmount);
-    const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), new BN(polkaBTCAmountInSatoshi));
+    const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), bigPolkaBTCAmount);
     setVaultId(vaultId ?? '');
   }, [
     polkaBTCAmount,
@@ -134,7 +130,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
           theFeeRate,
           theDepositRate,
           issuePeriodInBlocks,
-          dustValueAsSatoshi,
+          theDustValue,
           btcToDot,
           theVaults
         ] = await Promise.all([
@@ -153,22 +149,21 @@ const EnterBTCAmount = (): JSX.Element | null => {
 
         setFeeRate(theFeeRate);
         setDepositRate(theDepositRate);
-        const issuePeriod = new BN(issuePeriodInBlocks.toString()).mul(new BN(BLOCK_TIME)).toNumber();
+        const issuePeriod = issuePeriodInBlocks * BLOCK_TIME;
         dispatch(updateIssuePeriodAction(issuePeriod));
-        const theDustValue = satToBTC(dustValueAsSatoshi.toString());
-        setDustValue(theDustValue);
+        setDustValue(theDustValue.toString());
         setBtcToDotRate(btcToDot);
 
         // ray test touch <
-        let theVaultMaxAmount = new BN(0);
+        let theVaultMaxAmount = new Big(0);
         // TODO: double-check
         // The first item is the vault with the largest capacity
         for (const issuableTokens of theVaults.values()) {
-          theVaultMaxAmount = issuableTokens.toBn();
+          theVaultMaxAmount = issuableTokens;
           break;
         }
         // ray test touch >
-        setVaultMaxAmount(satToBTC(theVaultMaxAmount.toString()));
+        setVaultMaxAmount(theVaultMaxAmount.toString());
         setVaults(theVaults);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
@@ -223,8 +218,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
       return 'PolkaBTC must be loaded!';
     }
 
-    const amountInSatoshi = btcToSat(value.toString());
-    if (amountInSatoshi === undefined) {
+    if (btcToSat(value.toString()) === undefined) {
       return 'Invalid BTC amount input!';
     }
 
@@ -233,12 +227,10 @@ const EnterBTCAmount = (): JSX.Element | null => {
 
   const onSubmit = async (data: IssueForm) => {
     try {
-      const polkaBTCAmountInSatoshi = btcToSat(data[POLKA_BTC_AMOUNT]);
-      // TODO: `Balance` is hardcoded
-      const amountInSatoshi = window.polkaBTC.api.createType('Balance', polkaBTCAmountInSatoshi);
+      const polkaBTCAmount = new Big(data[POLKA_BTC_AMOUNT]);
       const vaultAccountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vaultId);
       setSubmitStatus(STATUSES.PENDING);
-      const result = await window.polkaBTC.issue.request(amountInSatoshi as PolkaBTC, vaultAccountId);
+      const result = await window.polkaBTC.issue.request(polkaBTCAmount, vaultAccountId);
       // ray test touch <
       const issueRequest = await parachainToUIIssueRequest(result.id, result.issueRequest);
       // ray test touch >

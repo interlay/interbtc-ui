@@ -1,7 +1,6 @@
 import { RedeemRequest } from '../types/redeem.types';
 import { IssueRequest } from '../types/issue.types';
 import {
-  satToBTC,
   uint8ArrayToString,
   bitcoin,
   reverseEndianness,
@@ -13,8 +12,7 @@ import { Dispatch } from 'redux';
 import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from '../actions/general.actions';
 import Big from 'big.js';
 import { TableDisplayParams, RelayedBlock } from '../types/util.types';
-import { AccountId, Balance } from '@polkadot/types/interfaces/runtime';
-import BN from 'bn.js';
+import { AccountId } from '@polkadot/types/interfaces/runtime';
 
 // TODO: should be one module
 function safeRoundTwoDecimals(input: string | number | undefined, defaultValue = '0'): string {
@@ -112,12 +110,11 @@ const updateBalances = async (
   currentBalancePolkaBTC: string
 ): Promise<void> => {
   const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-  const balancePolkaSAT = await window.polkaBTC.treasury.balancePolkaBTC(accountId);
-  const balanceDOT = await window.polkaBTC.collateral.balance(accountId);
-  const balancePolkaBTC = satToBTC(balancePolkaSAT.toString());
+  const balancePolkaBTC = (await window.polkaBTC.treasury.balance(accountId)).toString();
+  const balanceDOT = (await window.polkaBTC.collateral.balance(accountId)).toString();
 
-  if (currentBalanceDOT !== balanceDOT.toString()) {
-    dispatch(updateBalanceDOTAction(balanceDOT.toString()));
+  if (currentBalanceDOT !== balanceDOT) {
+    dispatch(updateBalanceDOTAction(balanceDOT));
   }
 
   if (currentBalancePolkaBTC !== balancePolkaBTC) {
@@ -150,7 +147,7 @@ const copyToClipboard = (text: string): void => {
   navigator.clipboard.writeText(text);
 };
 
-const getRandomVaultIdWithCapacity = (vaults: [AccountId, Balance][], requiredCapacity: BN): string => {
+const getRandomVaultIdWithCapacity = (vaults: [AccountId, Big][], requiredCapacity: Big): string => {
   const filteredVaults = vaults.filter(vault => vault[1].gte(requiredCapacity));
   return filteredVaults.length > 0 ? getRandomArrayElement(filteredVaults)[0].toString() : '';
 };

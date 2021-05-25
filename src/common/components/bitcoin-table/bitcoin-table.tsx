@@ -57,8 +57,8 @@ export default function BitcoinTable(): ReactElement {
 
       try {
         // Returns a big endian encoded block hash
-        bestBitcoinBlock = await window.polkaBTC.btcCore.getLatestBlock();
-        bestBitcoinHeight = await window.polkaBTC.btcCore.getLatestBlockHeight();
+        bestBitcoinBlock = await window.polkaBTC.electrsAPI.getLatestBlock();
+        bestBitcoinHeight = await window.polkaBTC.electrsAPI.getLatestBlockHeight();
       } catch (error) {
         // network error
       }

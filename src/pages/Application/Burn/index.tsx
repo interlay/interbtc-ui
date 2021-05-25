@@ -135,8 +135,7 @@ const Burn = (): JSX.Element | null => {
       return 'PolkaBTC must be loaded!';
     }
 
-    const polkaBTCAmountInSatoshi = btcToSat(value.toString());
-    if (polkaBTCAmountInSatoshi === undefined) {
+    if (btcToSat(value.toString()) === undefined) {
       return 'Invalid PolkaBTC amount input!'; // TODO: should translate
     }
 
