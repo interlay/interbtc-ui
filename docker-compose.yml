@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   polkabtc:
-    image: 'registry.gitlab.com/interlay/btc-parachain:master-3585aaed-1621264843'
+    image: 'registry.gitlab.com/interlay/btc-parachain:0-7-2-a06ada7d-1622023912'
     command:
       - btc-parachain
       - --unsafe-rpc-external
@@ -60,15 +60,15 @@ services:
       - '3002:3002'
   staked_relayer:
     # only start staked relayer after mining to prevent long catch-up
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:acfcc599'
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:0-7-2'
     command:
       - staked-relayer
       - --keyring
       - eve
-      - --polka-btc-url
+      - --btc-parachain-url
       - "ws://polkabtc:9944"
-      - --auto-register-with-stake
-      - "100"
+      - --auto-fund-with-faucet-url
+      - "[::0]:3035"
     environment: &client-env
       BITCOIN_RPC_URL: http://bitcoind:18443
       BITCOIN_RPC_USER: rpcuser
@@ -76,23 +76,23 @@ services:
       RUST_LOG: info
     restart: unless-stopped
   oracle:
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/oracle:acfcc599'
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/oracle:0-7-2'
     command:
       - oracle
       - --keyring
       - bob
-      - --polka-btc-url
+      - --btc-parachain-url
       - "ws://polkabtc:9944"
     environment:
       RUST_LOG: info
     restart: unless-stopped
   faucet:
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/faucet:acfcc599'
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/faucet:0-7-2'
     command:
       - faucet
       - --keyring
       - ferdie
-      - --polka-btc-url
+      - --btc-parachain-url
       - "ws://polkabtc:9944"
       - --user-allowance
       - "1"
@@ -106,7 +106,7 @@ services:
       - '3035:3035'
     restart: unless-stopped
   vault:
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/vault:acfcc599'
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/vault:0-7-2'
     command:
       - /bin/sh
       - -c
@@ -115,29 +115,29 @@ services:
         # sleep for 10s to wait for bitcoin to create the Dave wallet
         # and also to ensure that the issue period and redeem period are set
         sleep 10
-        vault --keyring=charlie --auto-register-with-collateral 100000000000000 --polka-btc-url 'ws://polkabtc:9944'
+        vault --keyring=charlie --auto-register-with-collateral 100000000000000 --btc-parachain-url 'ws://polkabtc:9944'
     environment:
       <<: *client-env
     restart: unless-stopped
   testdata_gen:
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/testdata-gen:acfcc599'
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/testdata-gen:0-7-2'
     command:
       - /bin/sh
       - -c
       - |
         echo "Sleeping..."
         sleep 3
-        testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice set-issue-period --period=2000
-        testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice set-redeem-period --period=2000
+        testdata-gen --btc-parachain-url 'ws://polkabtc:9944' --keyring=alice set-issue-period --period=2000
+        testdata-gen --btc-parachain-url 'ws://polkabtc:9944' --keyring=alice set-redeem-period --period=2000
 
         # wait for the vault to register
         sleep 9
         # NOTE: bitcoin-cli not installed on image
         ALICE_ADDRESS="bcrt1q56l7a4g3hluklqmxs89wj8dkpazemfykwfkz4x"
-        testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=bob set-exchange-rate --exchange-rate=385523187
-        testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice request-issue --issue-amount=10000000 --vault=dave
-        REDEEM_ID=$$(testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice request-redeem --redeem-amount=1000000 --btc-address=$${ALICE_ADDRESS} --vault=dave)
-        # testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice execute-redeem --redeem-id=$${REDEEM_ID}
+        testdata-gen --btc-parachain-url 'ws://polkabtc:9944' --keyring=bob set-exchange-rate --exchange-rate=385523187
+        testdata-gen --btc-parachain-url 'ws://polkabtc:9944' --keyring=alice request-issue --issue-amount=10000000 --vault=dave
+        REDEEM_ID=$$(testdata-gen --btc-parachain-url 'ws://polkabtc:9944' --keyring=alice request-redeem --redeem-amount=1000000 --btc-address=$${ALICE_ADDRESS} --vault=dave)
+        # testdata-gen --btc-parachain-url 'ws://polkabtc:9944' --keyring=alice execute-redeem --redeem-id=$${REDEEM_ID}
     environment:
       <<: *client-env
     ports:

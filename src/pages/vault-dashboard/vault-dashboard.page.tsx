@@ -123,7 +123,9 @@ function VaultDashboard(): JSX.Element {
           setTotalRedeemRequests(totalRedeemRequests.value.data);
         }
 
-        dispatch(updateLockedBTCAction(lockedAmountBTC.toString()));
+        if (lockedAmountBTC.status === 'fulfilled') {
+          dispatch(updateLockedBTCAction(lockedAmountBTC.value.toString()));
+        }
 
         if (collateralization.status === 'fulfilled') {
           dispatch(updateCollateralizationAction(collateralization.value?.mul(100).toString()));
