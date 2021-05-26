@@ -31,8 +31,8 @@ export default function RelayStatusChart(props: RelayStatusChartProps): ReactEle
 
   const fetchLatestBlockstreamBlock = useMemo(
     () => async () => {
-      const height = await window.polkaBTC.btcCore.getLatestBlockHeight();
-      const hash = await window.polkaBTC.btcCore.getLatestBlock();
+      const height = await window.polkaBTC.electrsAPI.getLatestBlockHeight();
+      const hash = await window.polkaBTC.electrsAPI.getLatestBlock();
       setLatestBlockstreamBlock({ height, hash });
     },
     []

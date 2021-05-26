@@ -23,7 +23,6 @@ import {
 import keyring from '@polkadot/ui-keyring';
 import {
   FaucetClient,
-  satToBTC,
   createPolkabtcAPI,
   PolkaBTCAPI
 } from '@interlay/polkabtc';
@@ -187,14 +186,8 @@ function App(): JSX.Element {
     (async () => {
       try {
         dispatch(isStakedRelayerLoaded(false));
-        const [
-          isActive,
-          isInactive
-        ] = await Promise.all([
-          window.polkaBTC.stakedRelayer.isStakedRelayerActive(id),
-          window.polkaBTC.stakedRelayer.isStakedRelayerInactive(id)
-        ]);
-        dispatch(isStakedRelayerLoaded(isActive || isInactive));
+        const stake = await window.polkaBTC.stakedRelayer.getStakedCollateral(id);
+        dispatch(isStakedRelayerLoaded(stake > new Big(0)));
       } catch (error) {
         // TODO: should add error handling
         console.log('No PolkaBTC staked relayer found for the account in the connected Polkadot wallet.');
@@ -216,19 +209,18 @@ function App(): JSX.Element {
     (async () => {
       try {
         const [
-          totalPolkaSAT,
+          totalPolkaBTC,
           totalLockedDOT,
           btcRelayHeight,
           bitcoinHeight,
           state
         ] = await Promise.all([
-          window.polkaBTC.treasury.totalPolkaBTC(),
+          window.polkaBTC.treasury.total(),
           window.polkaBTC.collateral.totalLocked(),
           window.polkaBTC.btcRelay.getLatestBlockHeight(),
-          window.polkaBTC.btcCore.getLatestBlockHeight(),
+          window.polkaBTC.electrsAPI.getLatestBlockHeight(),
           window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain()
         ]);
-        const totalPolkaBTC = new Big(satToBTC(totalPolkaSAT.toString())).round(3).toString();
 
         const parachainStatus = (state: StatusCode) => {
           if (state.isError) {
@@ -244,7 +236,7 @@ function App(): JSX.Element {
 
         dispatch(
           initGeneralDataAction(
-            totalPolkaBTC,
+            totalPolkaBTC.round(3).toString(),
             totalLockedDOT.round(3).toString(),
             Number(btcRelayHeight),
             bitcoinHeight,

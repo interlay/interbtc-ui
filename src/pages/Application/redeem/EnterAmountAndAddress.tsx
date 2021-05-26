@@ -7,16 +7,13 @@ import {
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
-import BN from 'bn.js';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
 import {
   btcToSat,
-  satToBTC,
   stripHexPrefix
 } from '@interlay/polkabtc';
-import { PolkaBTC } from '@interlay/polkabtc/build/interfaces';
 
 import PolkaBTCField from '../PolkaBTCField';
 import PriceInfo from '../PriceInfo';
@@ -96,7 +93,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
   const [redeemFee, setRedeemFee] = React.useState('0');
   const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(0.005));
   const [btcToDotRate, setBtcToDotRate] = React.useState(new Big(0));
-  const [premiumRedeemVaults, setPremiumRedeemVaults] = React.useState<Map<AccountId, PolkaBTC>>(new Map());
+  const [premiumRedeemVaults, setPremiumRedeemVaults] = React.useState<Map<AccountId, Big>>(new Map());
   const [premiumRedeemFee, setPremiumRedeemFee] = React.useState(new Big(0));
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
@@ -123,7 +120,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
       try {
         setStatus(STATUSES.PENDING);
         const [
-          dustValueInSatoshiResult,
+          theDustValue,
           premiumRedeemVaultsResult,
           premiumRedeemFeeResult,
           btcToDotRateResult,
@@ -136,8 +133,8 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
           window.polkaBTC.redeem.getFeeRate()
         ]);
 
-        if (dustValueInSatoshiResult.status === 'rejected') {
-          throw new Error(dustValueInSatoshiResult.reason);
+        if (theDustValue.status === 'rejected') {
+          throw new Error(theDustValue.reason);
         }
         if (premiumRedeemFeeResult.status === 'rejected') {
           throw new Error(premiumRedeemFeeResult.reason);
@@ -152,8 +149,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
           setPremiumRedeemVaults(premiumRedeemVaultsResult.value);
         }
 
-        const theDustValue = satToBTC(dustValueInSatoshiResult.value.toString());
-        setDustValue(theDustValue);
+        setDustValue(theDustValue.value.toString());
         setPremiumRedeemFee(new Big(premiumRedeemFeeResult.value));
         setBtcToDotRate(btcToDotRateResult.value);
         setRedeemFeeRate(theRedeemFeeRateResult.value);
@@ -186,32 +182,28 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
   const onSubmit = async (data: RedeemForm) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
-      const polkaBTCAmountInSatoshi = btcToSat(data[POLKA_BTC_AMOUNT]);
-      const amountInSatoshi = window.polkaBTC.api.createType('Balance', polkaBTCAmountInSatoshi);
+      const polkaBTCAmount = new Big(data[POLKA_BTC_AMOUNT]);
 
       // Differentiate between premium and regular redeem
       let vaultId;
       if (premiumRedeemSelected) {
         // Select a vault from the premium redeem vault list
         for (const [id, redeemableTokens] of premiumRedeemVaults) {
-          const redeemable = redeemableTokens.toBn();
-          if (redeemable.gte(new BN(polkaBTCAmountInSatoshi))) {
+          if (redeemableTokens >= polkaBTCAmount) {
             vaultId = id;
             break;
           }
         }
         if (vaultId === undefined) {
-          let maxAmount = new BN(0);
+          let maxAmount = new Big(0);
           for (const redeemableTokens of premiumRedeemVaults.values()) {
-            const redeemable = redeemableTokens.toBn();
-            if (maxAmount.lt(redeemable)) {
-              maxAmount = redeemable;
+            if (maxAmount < redeemableTokens) {
+              maxAmount = redeemableTokens;
             }
           }
-          const maxPremiumRedeem = satToBTC(maxAmount.toString());
           setFormError(POLKA_BTC_AMOUNT, {
             type: 'manual',
-            message: t('redeem_page.error_max_premium_redeem', { maxPremiumRedeem: maxPremiumRedeem.toString() })
+            message: t('redeem_page.error_max_premium_redeem', { maxPremiumRedeem: maxAmount.toString() })
           });
 
           return;
@@ -219,11 +211,11 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
       } else {
         // Select a random vault
         // TODO: should use a list of vaults directly from the parachain
-        vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(amountInSatoshi);
+        vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(polkaBTCAmount);
       }
 
       const vaultAccountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vaultId.toString());
-      const result = await window.polkaBTC.redeem.request(amountInSatoshi, data[BTC_ADDRESS], vaultAccountId);
+      const result = await window.polkaBTC.redeem.request(polkaBTCAmount, data[BTC_ADDRESS], vaultAccountId);
       const redeemRequest = await parachainToUIRedeemRequest(result.id);
       setSubmitStatus(STATUSES.RESOLVED);
 
@@ -261,8 +253,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
       return t('issue_page.error_more_than_6_blocks_behind');
     }
 
-    const polkaBTCAmountInSatoshi = btcToSat(value.toString());
-    if (polkaBTCAmountInSatoshi === undefined) {
+    if (btcToSat(value.toString()) === undefined) {
       return 'Invalid PolkaBTC amount input!';
     }
 
