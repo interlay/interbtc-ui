@@ -24,7 +24,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
 
   const [cumulativeCollateralPerDay, setCumulativeCollateralPerDay] = useState(
     // eslint-disable-next-line no-array-constructor
-    new Array<{ date: number; amount: number }>()
+    new Array<{ date: number; amount: string }>()
   );
 
   const fetchCollateralLastDays = useMemo(
