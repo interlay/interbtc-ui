@@ -9,6 +9,8 @@ import { StoreType } from '../../../../common/types/util.types';
 import Big from 'big.js';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import InterlayLink from 'components/UI/InterlayLink';
+import Timer from 'components/Timer';
+import clsx from 'clsx';
 
 type StatusViewProps = {
   request: RedeemRequest;
@@ -21,16 +23,18 @@ export default function StatusView(props: StatusViewProps): ReactElement {
   const [punishmentDOT, setPunishmentDOT] = useState(new Big(0));
   const [burnAmountDOT, setBurnAmountDOT] = useState(new Big(0));
   const [amountDOT, setAmountDOT] = useState(new Big(0));
+  const [initialLeftSeconds, setInitialLeftSeconds] = React.useState<number>();
 
   useEffect(() => {
     if (!polkaBtcLoaded) return;
 
     const fetchData = async () => {
       try {
-        const [punishment, btcDotRate, btcConfs] = await Promise.all([
+        const [punishment, btcDotRate, btcConfs, redeemPeriod] = await Promise.all([
           window.polkaBTC.vaults.getPunishmentFee(),
           window.polkaBTC.oracle.getExchangeRate(),
-          window.polkaBTC.btcRelay.getStableBitcoinConfirmations()
+          window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
+          window.polkaBTC.redeem.getRedeemPeriod()
         ]);
         const amountPolkaBTC = props.request ? new Big(props.request.amountPolkaBTC) : new Big(0);
         const burned = amountPolkaBTC.mul(btcDotRate);
@@ -39,6 +43,10 @@ export default function StatusView(props: StatusViewProps): ReactElement {
         setPunishmentDOT(punished);
         setAmountDOT(burned.add(punished));
         setStableBitcoinConfirmations(btcConfs);
+
+        const requestTimestamp = Math.floor(new Date(props.request.timestamp).getTime() / 1000);
+        const theInitialLeftSeconds = requestTimestamp + redeemPeriod - Math.floor(Date.now() / 1000);
+        setInitialLeftSeconds(theInitialLeftSeconds);
       } catch (error) {
         console.log(error);
       }
@@ -107,6 +115,18 @@ export default function StatusView(props: StatusViewProps): ReactElement {
       return (
         <React.Fragment>
           <div className='status-title'>{t('pending')}</div>
+          <p
+            className={clsx(
+              'flex',
+              'justify-center',
+              'items-center',
+              'space-x-1'
+            )}>
+            <span className='text-textSecondary'>
+              {t('redeem_page.vault_has_time_to_complete')}
+              {initialLeftSeconds && <Timer initialLeftSeconds={initialLeftSeconds} />}
+            </span>
+          </p>
           <div className='row mt-5'>
             <div className='col'>
               <div className='pending-circle'>
