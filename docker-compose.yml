@@ -65,10 +65,10 @@ services:
       - staked-relayer
       - --keyring
       - eve
-      - --polka-btc-url
+      - --btc-parachain-url
       - "ws://polkabtc:9944"
-      - --auto-register-with-stake
-      - "100"
+      - --auto-fund-with-faucet-url
+      - "[::0]:3035"
     environment: &client-env
       BITCOIN_RPC_URL: http://bitcoind:18443
       BITCOIN_RPC_USER: rpcuser
@@ -81,7 +81,7 @@ services:
       - oracle
       - --keyring
       - bob
-      - --polka-btc-url
+      - --btc-parachain-url
       - "ws://polkabtc:9944"
     environment:
       RUST_LOG: info
@@ -92,7 +92,7 @@ services:
       - faucet
       - --keyring
       - ferdie
-      - --polka-btc-url
+      - --btc-parachain-url
       - "ws://polkabtc:9944"
       - --user-allowance
       - "1"
@@ -115,7 +115,7 @@ services:
         # sleep for 10s to wait for bitcoin to create the Dave wallet
         # and also to ensure that the issue period and redeem period are set
         sleep 10
-        vault --keyring=charlie --auto-register-with-collateral 100000000000000 --polka-btc-url 'ws://polkabtc:9944'
+        vault --keyring=charlie --auto-register-with-collateral 100000000000000 --btc-parachain-url 'ws://polkabtc:9944'
     environment:
       <<: *client-env
     restart: unless-stopped
@@ -127,17 +127,17 @@ services:
       - |
         echo "Sleeping..."
         sleep 3
-        testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice set-issue-period --period=2000
-        testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice set-redeem-period --period=2000
+        testdata-gen --btc-parachain-url 'ws://polkabtc:9944' --keyring=alice set-issue-period --period=2000
+        testdata-gen --btc-parachain-url 'ws://polkabtc:9944' --keyring=alice set-redeem-period --period=2000
 
         # wait for the vault to register
         sleep 9
         # NOTE: bitcoin-cli not installed on image
         ALICE_ADDRESS="bcrt1q56l7a4g3hluklqmxs89wj8dkpazemfykwfkz4x"
-        testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=bob set-exchange-rate --exchange-rate=385523187
-        testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice request-issue --issue-amount=10000000 --vault=dave
-        REDEEM_ID=$$(testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice request-redeem --redeem-amount=1000000 --btc-address=$${ALICE_ADDRESS} --vault=dave)
-        # testdata-gen --polka-btc-url 'ws://polkabtc:9944' --keyring=alice execute-redeem --redeem-id=$${REDEEM_ID}
+        testdata-gen --btc-parachain-url 'ws://polkabtc:9944' --keyring=bob set-exchange-rate --exchange-rate=385523187
+        testdata-gen --btc-parachain-url 'ws://polkabtc:9944' --keyring=alice request-issue --issue-amount=10000000 --vault=dave
+        REDEEM_ID=$$(testdata-gen --btc-parachain-url 'ws://polkabtc:9944' --keyring=alice request-redeem --redeem-amount=1000000 --btc-address=$${ALICE_ADDRESS} --vault=dave)
+        # testdata-gen --btc-parachain-url 'ws://polkabtc:9944' --keyring=alice execute-redeem --redeem-id=$${REDEEM_ID}
     environment:
       <<: *client-env
     ports:
