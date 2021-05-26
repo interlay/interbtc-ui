@@ -67,7 +67,10 @@ import {
 import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { displayBtcAmount, displayDotAmount } from 'common/utils/utils';
+import {
+  displayBtcAmount,
+  displayDotAmount
+} from 'common/utils/utils';
 
 // TODO: block code-splitting for now
 // const Application = React.lazy(() =>
