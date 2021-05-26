@@ -105,7 +105,7 @@ export default function IssueTable(): ReactElement {
                         btcAddress={issue.vaultBTCAddress}
                         shorten />
                     </td>
-                    <td>{issue.totalAmount}</td>
+                    <td>{issue.requestedAmountPolkaBTC}</td>
                     <td>{issue.griefingCollateral}</td>
                     <td>{showStatus(issue.status)}</td>
                   </tr>
