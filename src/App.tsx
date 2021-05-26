@@ -67,6 +67,7 @@ import {
 import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import { displayBtcAmount, displayDotAmount } from 'common/utils/utils';
 
 // TODO: block code-splitting for now
 // const Application = React.lazy(() =>
@@ -235,8 +236,8 @@ function App(): JSX.Element {
 
         dispatch(
           initGeneralDataAction(
-            totalPolkaBTC.round(3).toString(),
-            totalLockedDOT.round(3).toString(),
+            displayBtcAmount(totalPolkaBTC),
+            displayDotAmount(totalLockedDOT),
             Number(btcRelayHeight),
             bitcoinHeight,
             parachainStatus(state)

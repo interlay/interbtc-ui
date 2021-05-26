@@ -2,7 +2,7 @@ export interface IssueRequest {
   id: string;
   requestedAmountPolkaBTC: string;
   timestamp?: string;
-  totalAmount: string;
+  amountBTC: string;
   creation: string;
   vaultBTCAddress: string;
   vaultDOTAddress: string;
