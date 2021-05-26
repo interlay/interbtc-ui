@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   polkabtc:
-    image: 'registry.gitlab.com/interlay/btc-parachain:master-3585aaed-1621264843'
+    image: 'registry.gitlab.com/interlay/btc-parachain:0-7-2-a06ada7d-1622023912'
     command:
       - btc-parachain
       - --unsafe-rpc-external
@@ -60,7 +60,7 @@ services:
       - '3002:3002'
   staked_relayer:
     # only start staked relayer after mining to prevent long catch-up
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:acfcc599'
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:0-7-2'
     command:
       - staked-relayer
       - --keyring
@@ -76,7 +76,7 @@ services:
       RUST_LOG: info
     restart: unless-stopped
   oracle:
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/oracle:acfcc599'
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/oracle:0-7-2'
     command:
       - oracle
       - --keyring
@@ -87,7 +87,7 @@ services:
       RUST_LOG: info
     restart: unless-stopped
   faucet:
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/faucet:acfcc599'
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/faucet:0-7-2'
     command:
       - faucet
       - --keyring
@@ -106,7 +106,7 @@ services:
       - '3035:3035'
     restart: unless-stopped
   vault:
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/vault:acfcc599'
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/vault:0-7-2'
     command:
       - /bin/sh
       - -c
@@ -120,7 +120,7 @@ services:
       <<: *client-env
     restart: unless-stopped
   testdata_gen:
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/testdata-gen:acfcc599'
+    image: 'registry.gitlab.com/interlay/polkabtc-clients/testdata-gen:0-7-2'
     command:
       - /bin/sh
       - -c

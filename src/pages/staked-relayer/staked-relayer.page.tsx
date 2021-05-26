@@ -18,7 +18,6 @@ import CardList, {
 import BoldParagraph from 'components/BoldParagraph';
 import BitcoinTable from 'common/components/bitcoin-table/bitcoin-table';
 import VaultTable from 'common/components/vault-table/vault-table';
-import OracleTable from 'common/components/oracle-table/oracle-table';
 import ButtonMaybePending from 'common/components/pending-button';
 import { StoreType } from 'common/types/util.types';
 import { safeRoundTwoDecimals } from 'common/utils/utils';
@@ -29,7 +28,6 @@ function StakedRelayer(): JSX.Element {
   const [isDeregisterPending, setDeregisterPending] = useState(false);
   const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState('0');
   const [feesEarnedDOT, setFeesEarnedDOT] = useState('0');
-  const [dotLocked, setDotLocked] = useState('0');
   const [relayerInactive, setRelayerInactive] = useState(false);
   const [sla, setSLA] = useState(0);
   const [apy, setAPY] = useState('0');
@@ -64,10 +62,6 @@ function StakedRelayer(): JSX.Element {
       try {
         const stakedRelayerId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
 
-        const lockedDOT = (
-          await window.polkaBTC.stakedRelayer.getStakedCollateral(stakedRelayerId)
-        ).toString();
-
         const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId);
         setSLA(slaScore);
 
@@ -81,8 +75,6 @@ function StakedRelayer(): JSX.Element {
 
         const feesDOT = await window.polkaBTC.stakedRelayer.getCollateralFees(stakedRelayerId);
         setFeesEarnedDOT(feesDOT.toString());
-
-        setDotLocked(lockedDOT);
       } catch (error) {
         console.log('[StakedRelayerPage useEffect] error.message => ', error.message);
       }
@@ -95,11 +87,6 @@ function StakedRelayer(): JSX.Element {
   ]);
 
   const STAKED_RELAYER_ITEMS = [
-    {
-      title: t('relayer.stake_locked'),
-      value: dotLocked.toString(),
-      unit: 'DOT'
-    },
     {
       title: t('fees_earned'),
       value: feesEarnedPolkaBTC,
@@ -152,7 +139,6 @@ function StakedRelayer(): JSX.Element {
           )}
           <BitcoinTable />
           <VaultTable />
-          <OracleTable dotLocked={dotLocked} />
           {relayerLoaded && (
             <>
               <ButtonMaybePending

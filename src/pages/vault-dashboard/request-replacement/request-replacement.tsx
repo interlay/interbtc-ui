@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import ButtonMaybePending from 'common/components/pending-button';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { addReplaceRequestsAction } from 'common/actions/vault.actions';
-import { useDispatch, useSelector } from 'react-redux';
-import { StoreType } from 'common/types/util.types';
-import { btcToSat } from '@interlay/polkabtc';
-import { parachainToUIReplaceRequests } from 'common/utils/requests';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { btcToSat } from '@interlay/polkabtc';
+import Big from 'big.js';
+
+import ButtonMaybePending from 'common/components/pending-button';
+import { addReplaceRequestsAction } from 'common/actions/vault.actions';
+import { StoreType } from 'common/types/util.types';
+import { parachainToUIReplaceRequests } from 'common/utils/requests';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
 type RequestReplacementForm = {

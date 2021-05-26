@@ -28,7 +28,6 @@ module.exports = {
         'dtrace-provider'
       ];
 
-
       return webpackConfig;
     }
   }
