@@ -1,4 +1,7 @@
-import { displayBtcAmount, displayDotAmount } from 'common/utils/utils';
+import {
+  displayBtcAmount,
+  displayDotAmount
+} from 'common/utils/utils';
 import { Dispatch } from 'redux';
 import { updateTotalsAction } from '../actions/general.actions';
 import { StoreState } from '../types/util.types';
