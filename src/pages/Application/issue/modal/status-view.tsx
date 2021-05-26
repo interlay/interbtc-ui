@@ -35,53 +35,17 @@ export default function StatusView(props: StatusViewProps): ReactElement {
     if (!polkaBtcLoaded) return;
     setExecutePending(true);
 
-    let [merkleProof, rawTx] = [request.merkleProof, request.rawTransaction];
-    let transactionData = false;
-    let txId = request.btcTxId;
     try {
-      // Get proof data from bitcoin
-      if (txId === '') {
-        txId = await window.polkaBTC.electrsAPI.getTxIdByRecipientAddress(
-          request.vaultBTCAddress,
-          new Big(request.requestedAmountPolkaBTC)
-        );
-      }
-      [merkleProof, rawTx] = await Promise.all([
-        window.polkaBTC.electrsAPI.getMerkleProof(txId),
-        window.polkaBTC.electrsAPI.getRawTransaction(txId)
-      ]);
-      transactionData = true;
-    } catch (err) {
-      toast.error(t('issue_page.transaction_not_included'));
-      setExecutePending(false);
-    }
-
-    if (!transactionData) return;
-    try {
-      const provenReq = request;
-      provenReq.merkleProof = merkleProof;
-      provenReq.rawTransaction = rawTx;
-      dispatch(updateIssueRequestAction(provenReq));
-
-      // Prepare types for polkadot
-      const parsedMerkleProof = window.polkaBTC.api.createType('Bytes', '0x' + merkleProof);
-      const parsedRawTx = window.polkaBTC.api.createType('Bytes', rawTx);
-
       // Execute issue
-      await window.polkaBTC.issue.execute(
-        provenReq.id,
-        txId,
-        parsedMerkleProof,
-        parsedRawTx
-      );
+      await window.polkaBTC.issue.execute(request.id, request.btcTxId);
 
-      const completedReq = provenReq;
+      const completedReq = request;
       completedReq.status = IssueRequestStatus.Completed;
 
       dispatch(
         updateBalancePolkaBTCAction(
           new Big(balancePolkaBTC)
-            .add(new Big(provenReq.issuedAmountBtc || provenReq.requestedAmountPolkaBTC))
+            .add(new Big(request.issuedAmountBtc || request.requestedAmountPolkaBTC))
             .toString()
         )
       );
