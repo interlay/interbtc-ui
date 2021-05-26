@@ -4,9 +4,6 @@ import React, {
 } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import {
-  planckToDOT
-} from '@interlay/polkabtc';
 import { useTranslation } from 'react-i18next';
 import tw from 'twin.macro';
 
@@ -20,7 +17,6 @@ import CardList, {
 } from 'components/CardList';
 import BoldParagraph from 'components/BoldParagraph';
 import BitcoinTable from 'common/components/bitcoin-table/bitcoin-table';
-import StatusUpdateTable from 'common/components/status-update-table/status-update-table';
 import VaultTable from 'common/components/vault-table/vault-table';
 import OracleTable from 'common/components/oracle-table/oracle-table';
 import ButtonMaybePending from 'common/components/pending-button';
@@ -34,8 +30,6 @@ function StakedRelayer(): JSX.Element {
   const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState('0');
   const [feesEarnedDOT, setFeesEarnedDOT] = useState('0');
   const [dotLocked, setDotLocked] = useState('0');
-  const [planckLocked, setPlanckLocked] = useState('0');
-  const [stakedRelayerAddress, setStakedRelayerAddress] = useState('');
   const [relayerInactive, setRelayerInactive] = useState(false);
   const [sla, setSLA] = useState(0);
   const [apy, setAPY] = useState('0');
@@ -70,14 +64,9 @@ function StakedRelayer(): JSX.Element {
       try {
         const stakedRelayerId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
 
-        const isInactive = await window.polkaBTC.stakedRelayer.isStakedRelayerInactive(stakedRelayerId);
-        setRelayerInactive(isInactive);
-        setStakedRelayerAddress(address);
-
-        const lockedPlanck = (
-          await window.polkaBTC.stakedRelayer.getStakedDOTAmount(stakedRelayerId)
+        const lockedDOT = (
+          await window.polkaBTC.stakedRelayer.getStakedCollateral(stakedRelayerId)
         ).toString();
-        const lockedDOT = planckToDOT(lockedPlanck);
 
         const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId);
         setSLA(slaScore);
@@ -85,16 +74,15 @@ function StakedRelayer(): JSX.Element {
         const apyScore = await window.polkaBTC.stakedRelayer.getAPY(stakedRelayerId);
         setAPY(apyScore);
 
-        const feesPolkaBTC = await window.polkaBTC.stakedRelayer.getFeesPolkaBTC(
+        const feesPolkaBTC = await window.polkaBTC.stakedRelayer.getWrappingFees(
           stakedRelayerId
         );
         setFeesEarnedPolkaBTC(feesPolkaBTC.toString());
 
-        const feesDOT = await window.polkaBTC.stakedRelayer.getFeesDOT(stakedRelayerId);
+        const feesDOT = await window.polkaBTC.stakedRelayer.getCollateralFees(stakedRelayerId);
         setFeesEarnedDOT(feesDOT.toString());
 
         setDotLocked(lockedDOT);
-        setPlanckLocked(lockedPlanck);
       } catch (error) {
         console.log('[StakedRelayerPage useEffect] error.message => ', error.message);
       }
@@ -163,12 +151,8 @@ function StakedRelayer(): JSX.Element {
             </CardList>
           )}
           <BitcoinTable />
-          <StatusUpdateTable
-            dotLocked={dotLocked}
-            planckLocked={planckLocked}
-            stakedRelayerAddress={stakedRelayerAddress} />
           <VaultTable />
-          <OracleTable planckLocked={planckLocked} />
+          <OracleTable dotLocked={dotLocked} />
           {relayerLoaded && (
             <>
               <ButtonMaybePending

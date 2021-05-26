@@ -1,6 +1,6 @@
 import { RedeemRequest, RedeemRequestStatus } from '../types/redeem.types';
 import { IssueRequest, IssueRequestStatus } from '../types/issue.types';
-import { DOT, PolkaBTC } from '@interlay/polkabtc/build/interfaces/default';
+import { DOT, PolkaBTC, ReplaceRequestStatus } from '@interlay/polkabtc/build/interfaces/default';
 import { VaultReplaceRequest } from '../types/vault.types';
 import { H256, BlockNumber } from '@polkadot/types/interfaces';
 import {
@@ -32,7 +32,7 @@ async function parachainToUIIssueRequest(
   id: H256,
   parachainIssueRequest: ParachainIssueRequest,
   parachainHeight?: BlockNumber,
-  issuePeriod?: BlockNumber,
+  issuePeriod?: number,
   requiredBtcConfirmations?: number
 ): Promise<IssueRequest> {
   if (!parachainHeight || !issuePeriod || !requiredBtcConfirmations) {
@@ -77,7 +77,7 @@ const statsToUIIssueRequest = async (
   statsIssue: Issue,
   currentBTCHeight: number,
   parachainHeight: BlockNumber,
-  issuePeriod: BlockNumber,
+  issuePeriod: number,
   requiredBtcConfirmations: number
 ): Promise<IssueRequest> => ({
   id: statsIssue.id,
@@ -116,7 +116,7 @@ const statsToUIIssueRequest = async (
     new Big(statsIssue.executedAmountBTC).sub(new Big(statsIssue.feePolkabtc)).toString() :
     '',
   btcAmountSubmittedByUser: satToBTC(
-    (await window.polkaBTC.btcCore.getUtxoAmount(statsIssue.btcTxId, statsIssue.vaultBTCAddress)).toString()
+    (await window.polkaBTC.electrsAPI.getUtxoAmount(statsIssue.btcTxId, statsIssue.vaultBTCAddress)).toString()
   )
 });
 
@@ -137,7 +137,7 @@ function computeIssueRequestStatus(
   cancelled: boolean,
   creationBlock: BlockNumber,
   parachainHeight: BlockNumber,
-  issuePeriod: BlockNumber,
+  issuePeriod: number,
   requiredBtcConfirmations: number,
   requestedRefund = false,
   btcTxId = '',
@@ -152,7 +152,9 @@ function computeIssueRequestStatus(
   if (cancelled) {
     return IssueRequestStatus.Cancelled;
   }
-  if (creationBlock.add(issuePeriod).lte(parachainHeight)) {
+  const creationBlockAsNumber = creationBlock.toNumber();
+  const parachainHeightAsNumber = parachainHeight.toNumber();
+  if (creationBlockAsNumber + issuePeriod <= parachainHeightAsNumber) {
     return IssueRequestStatus.Expired;
   }
 
@@ -183,7 +185,7 @@ async function parachainToUIRedeemRequest(
   id: H256,
   parachainRedeemRequest?: ParachainRedeemRequest,
   parachainHeight?: BlockNumber,
-  redeemPeriod?: BlockNumber,
+  redeemPeriod?: number,
   requiredBtcConfirmations?: number
 ): Promise<RedeemRequest> {
   if (!parachainRedeemRequest || !parachainHeight || !redeemPeriod || !requiredBtcConfirmations) {
@@ -226,7 +228,7 @@ const statsToUIRedeemRequest = (
   statsRedeem: Redeem,
   currentBTCHeight: number,
   parachainHeight: BlockNumber,
-  redeemPeriod: BlockNumber,
+  redeemPeriod: number,
   requiredBtcConfirmations: number
 ): RedeemRequest => ({
   id: statsRedeem.id,
@@ -279,7 +281,7 @@ function computeRedeemRequestStatus(
   reimbursed: boolean,
   creationBlock: BlockNumber,
   parachainHeight: BlockNumber,
-  redeemPeriod: BlockNumber,
+  redeemPeriod: number,
   requiredBtcConfirmations: number,
   btcTxId = '',
   confirmations = 0
@@ -293,7 +295,9 @@ function computeRedeemRequestStatus(
   if (retried) {
     return RedeemRequestStatus.Retried;
   }
-  if (creationBlock.add(redeemPeriod).lte(parachainHeight)) {
+  const creationBlockAsNumber = creationBlock.toNumber();
+  const parachainHeightAsNumber = parachainHeight.toNumber();
+  if (creationBlockAsNumber + redeemPeriod <= parachainHeightAsNumber) {
     return RedeemRequestStatus.Expired;
   }
   if (btcTxId === '') {
@@ -315,16 +319,27 @@ const parachainToUIReplaceRequests = (requests: Map<H256, ParachainReplaceReques
     const [btcAddress, polkaBTC, lockedDOT] = convertParachainTypes(request);
     replaceRequests.push({
       id: stripHexPrefix(requestId.toString()),
-      timestamp: request.open_time.toString(),
+      timestamp: request.btc_height.toString(),
       newVault: request.new_vault.toString(),
       oldVault: request.old_vault.toString(),
       btcAddress: btcAddress,
       polkaBTC: polkaBTC,
       lockedDOT: lockedDOT,
-      status: request.accept_time.isSome ? 'Accepted' : 'Pending'
+      status: parseReplaceRequestStatus(request.status)
     });
   });
   return replaceRequests;
+};
+
+const parseReplaceRequestStatus = (status: ReplaceRequestStatus): string => {
+  if (status.isPending) {
+    return 'Pending';
+  } else if (status.isCompleted) {
+    return 'Completed';
+  } else if (status.isCancelled) {
+    return 'Cancelled';
+  }
+  return '';
 };
 
 interface DynamicObject {

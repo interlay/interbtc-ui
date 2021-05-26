@@ -1,5 +1,4 @@
 import { ReactElement, useEffect, useState } from 'react';
-import BN from 'bn.js';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
 import { OracleStatus } from '@interlay/polkabtc-stats';
@@ -8,7 +7,7 @@ import DashboardTable, { StatusComponent, StatusCategories } from '../dashboard-
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 
 type OracleTableProps = {
-  planckLocked: string;
+  dotLocked: string;
 };
 
 export default function OracleTable(props: OracleTableProps): ReactElement {
@@ -50,7 +49,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
   return (
     <div
       style={{ margin: '40px 0px' }}
-      className={(new BN(props.planckLocked) <= new BN(0) ? 'oracle-space' : '')}>
+      className={(new Big(props.dotLocked) <= new Big(0) ? 'oracle-space' : '')}>
       <div>
         <p
           className='mb-4'
