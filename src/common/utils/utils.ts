@@ -59,6 +59,7 @@ function getUsdAmount(amount: string | Big, rate: number): string {
 }
 
 function displayBtcAmount(amount: string | number | Big): string {
+  Big.NE = -10;
   return new Big(amount).round(8).toString();
 }
 
