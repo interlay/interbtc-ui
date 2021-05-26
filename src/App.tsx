@@ -27,7 +27,6 @@ import {
   PolkaBTCAPI
 } from '@interlay/polkabtc';
 import { StatusCode } from '@interlay/polkabtc/build/interfaces';
-import Big from 'big.js';
 
 import Layout from 'parts/Layout';
 import Application from 'pages/Application';
@@ -186,8 +185,8 @@ function App(): JSX.Element {
     (async () => {
       try {
         dispatch(isStakedRelayerLoaded(false));
-        const stake = await window.polkaBTC.stakedRelayer.getStakedCollateral(id);
-        dispatch(isStakedRelayerLoaded(stake > new Big(0)));
+        const stakedRelayers = await window.polkaBTC.stakedRelayer.list();
+        dispatch(isStakedRelayerLoaded(stakedRelayers.includes(id)));
       } catch (error) {
         // TODO: should add error handling
         console.log('No PolkaBTC staked relayer found for the account in the connected Polkadot wallet.');
