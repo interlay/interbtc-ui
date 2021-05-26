@@ -1,24 +1,31 @@
 
-import { ReactElement } from 'react';
+// ray test touch <
 import { useSelector } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
+import clsx from 'clsx';
 
 import PaymentView from './PaymentView';
 import StatusView from './status-view';
 import WhoopsView from './whoops-view';
-import { getUsdAmount, shortAddress } from 'common/utils/utils';
+import {
+  getUsdAmount,
+  shortAddress
+} from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import { IssueRequestStatus, IssueRequest } from 'common/types/issue.types';
+import {
+  IssueRequestStatus,
+  IssueRequest
+} from 'common/types/issue.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 
 type IssueModalProps = {
-  show: boolean;
+  open: boolean;
   onClose: () => void;
 };
 
-function IssueModal(props: IssueModalProps): ReactElement {
+const IssueModal = (props: IssueModalProps): JSX.Element => {
   const { address, prices } = useSelector((state: StoreType) => state.general);
   const selectedIdRequest = useSelector((state: StoreType) => state.issue.id);
   const userIssueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address) || [];
@@ -42,18 +49,28 @@ function IssueModal(props: IssueModalProps): ReactElement {
   return (
     <Modal
       className='issue-modal'
-      show={props.show}
+      show={props.open}
       onHide={props.onClose}
       size='xl'>
       {request && (
         <>
-          <div className='issue-modal-title'>
+          <h4
+            className={clsx(
+              'break-words',
+              'font-medium',
+              'text-base',
+              'text-interlayRose',
+              'text-center',
+              'uppercase'
+            )}>
             {t('issue_page.request', { id: request.id })}
-          </div>
+          </h4>
+          {/* ray test touch < */}
           {/* TODO: could be a component */}
           <i
             className='fas fa-times close-icon'
             onClick={props.onClose} />
+          {/* ray test touch > */}
           <div className='issue-modal-horizontal-line' />
           <Modal.Body>
             <div className='row'>
@@ -146,6 +163,7 @@ function IssueModal(props: IssueModalProps): ReactElement {
       )}
     </Modal>
   );
-}
+};
 
 export default IssueModal;
+// ray test touch >
