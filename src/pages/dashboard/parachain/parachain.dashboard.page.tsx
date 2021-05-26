@@ -78,7 +78,7 @@ export default function ParachainDashboard(): ReactElement {
   const tableStatusUpdateRow = useMemo(
     () => (updt: DashboardStatusUpdateInfo): ReactElement[] => [
       <p key={1}>{updt.id}</p>,
-      <p key={2}>{formatDateTimePrecise(new Date(updt.timestamp))}</p>,
+      <p key={2}>{formatDateTimePrecise(new Date(Number(updt.timestamp)))}</p>,
       <p key={3}>
         {updt.addError ?
           [t('dashboard.parachain.add_error', { error: updt.addError }), updt.removeError ? <br /> : ''] :

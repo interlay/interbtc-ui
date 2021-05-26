@@ -32,7 +32,7 @@ const PaymentView = ({
   React.useEffect(() => {
     if (!request.timestamp) return;
 
-    const requestTimestamp = Math.floor(new Date(request.timestamp).getTime() / 1000);
+    const requestTimestamp = Math.floor(new Date(Number(request.timestamp)).getTime() / 1000);
     const theInitialLeftSeconds = requestTimestamp + issuePeriod - Math.floor(Date.now() / 1000);
     setInitialLeftSeconds(theInitialLeftSeconds);
   }, [
