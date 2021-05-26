@@ -25,8 +25,6 @@ import CardList, {
 import BoldParagraph from 'components/BoldParagraph';
 import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
 import RequestReplacementModal from './request-replacement/request-replacement';
-import IssueTable from './issue-table/issue-table';
-import RedeemTable from './redeem-table/redeem-table';
 import ReplaceTable from './replace-table/replace-table';
 import { StoreType } from 'common/types/util.types';
 import { safeRoundTwoDecimals } from 'common/utils/utils';
@@ -39,6 +37,10 @@ import {
 } from 'common/actions/vault.actions';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import './vault-dashboard.page.scss';
+import VaultIssueRequestsTable from 'containers/VaultIssueRequestTable';
+import VaultRedeemRequestsTable from 'containers/VaultRedeemRequestTable';
+import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import { IssueColumns, RedeemColumns } from '@interlay/polkabtc-stats';
 
 function VaultDashboard(): JSX.Element {
   const [updateCollateralModalStatus, setUpdateCollateralModalStatus] = useState(CollateralUpdateStatus.Hidden);
@@ -58,8 +60,11 @@ function VaultDashboard(): JSX.Element {
   const [capacity, setCapacity] = useState('0');
   const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState('0');
   const [feesEarnedDOT, setFeesEarnedDOT] = useState('0');
+  const [totalIssueRequests, setTotalIssueRequests] = useState(0);
+  const [totalRedeemRequests, setTotalRedeemRequests] = useState(0);
 
   const dispatch = useDispatch();
+  const stats = usePolkabtcStats();
   const { t } = useTranslation();
 
   const closeUpdateCollateralModal = () => setUpdateCollateralModalStatus(CollateralUpdateStatus.Hidden);
@@ -81,7 +86,9 @@ function VaultDashboard(): JSX.Element {
           collateralization,
           slaScore,
           apyScore,
-          issuablePolkaBTC
+          issuablePolkaBTC,
+          totalIssueRequests,
+          totalRedeemRequests
         ] = await Promise.allSettled([
           window.polkaBTC.vaults.get(vaultId),
           window.polkaBTC.vaults.getFeesWrapped(vaultId),
@@ -90,7 +97,9 @@ function VaultDashboard(): JSX.Element {
           window.polkaBTC.vaults.getVaultCollateralization(vaultId),
           window.polkaBTC.vaults.getSLA(vaultId),
           window.polkaBTC.vaults.getAPY(vaultId),
-          window.polkaBTC.vaults.getIssuablePolkaBTC()
+          window.polkaBTC.vaults.getIssuablePolkaBTC(),
+          stats.getFilteredTotalIssues([{ column: IssueColumns.VaultId, value: address }]),
+          stats.getFilteredTotalRedeems([{ column: RedeemColumns.VaultId, value: address }])
         ]);
 
         if (vault.status === 'fulfilled') {
@@ -104,6 +113,14 @@ function VaultDashboard(): JSX.Element {
 
         if (feesDOT.status === 'fulfilled') {
           setFeesEarnedDOT(feesDOT.value.toString());
+        }
+
+        if (totalIssueRequests.status === 'fulfilled') {
+          setTotalIssueRequests(totalIssueRequests.value.data);
+        }
+
+        if (totalRedeemRequests.status === 'fulfilled') {
+          setTotalRedeemRequests(totalRedeemRequests.value.data);
         }
 
         dispatch(updateLockedBTCAction(lockedAmountBTC.toString()));
@@ -131,7 +148,8 @@ function VaultDashboard(): JSX.Element {
     polkaBtcLoaded,
     vaultClientLoaded,
     dispatch,
-    address
+    address,
+    stats
   ]);
 
   const VAULT_ITEMS = [
@@ -218,8 +236,12 @@ function VaultDashboard(): JSX.Element {
             </Button>
           </div>
         </>
-        <IssueTable />
-        <RedeemTable />
+        <VaultIssueRequestsTable
+          totalIssueRequests={totalIssueRequests}
+          vaultAddress={address} />
+        <VaultRedeemRequestsTable
+          totalRedeemRequests={totalRedeemRequests}
+          vaultAddress={address} />
         <ReplaceTable openModal={setShowRequestReplacementModal} />
         <UpdateCollateralModal
           onClose={closeUpdateCollateralModal}
