@@ -361,7 +361,6 @@
     "validation_max_value": "The maximum amount you can issue (per request) during the beta testnet is 1.0 PolkaBTC. There will be NO restrictions on mainnet. Please enter a lower amount.",
     "validation_min_value": "Please enter an amount greater than Bitcoin dust limit (",
     "enter_valid_amount": "Please enter a valid amount.",
-    "transaction_not_included": "Transaction not yet included in Bitcoin.",
     "proof_data": "Fetching proof data for Bitcoin transaction: {{txId}}",
     "executing": "Executing issue request: {{id}}",
     "execute_failed": "Execute failed.",
