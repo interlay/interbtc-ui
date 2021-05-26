@@ -7,7 +7,6 @@ import {
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
-import { btcToSat } from '@interlay/polkabtc';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
 
@@ -140,7 +139,7 @@ const Transfer = (): JSX.Element => {
   const onSubmit = async (data: TransferForm) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
-      await window.polkaBTC.treasury.transfer(data[DOT_ADDRESS], btcToSat(data[POLKA_BTC_AMOUNT]));
+      await window.polkaBTC.treasury.transfer(data[DOT_ADDRESS], new Big(data[POLKA_BTC_AMOUNT]));
       // TODO: should be managed by a dedicated cache mechanism
       dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(data[POLKA_BTC_AMOUNT])).toString()));
       updateBalances(dispatch, data[DOT_ADDRESS], balanceDOT, balancePolkaBTC);

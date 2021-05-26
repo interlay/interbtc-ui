@@ -15,7 +15,6 @@ export default function VaultTable(): ReactElement {
   const [vaults, setVaults] = useState<Array<Vault>>([]);
   const [vaultsExt, setVaultsExt] = useState<Array<VaultExt>>([]);
   const [liquidationThreshold, setLiquidationThreshold] = useState(new Big(0));
-  const [auctionCollateralThreshold, setAuctionCollateralThreshold] = useState(new Big(0));
   const [secureCollateralThreshold, setSecureCollateralThreshold] = useState(new Big(0));
   const [btcToDotRate, setBtcToDotRate] = useState(new Big(0));
   const { t } = useTranslation();
@@ -27,20 +26,17 @@ export default function VaultTable(): ReactElement {
 
       try {
         const [
-          auction,
           secure,
           liquidation,
           btcToDot,
           vaultsExt
         ] = await Promise.all([
-          window.polkaBTC.vaults.getAuctionCollateralThreshold(),
           window.polkaBTC.vaults.getSecureCollateralThreshold(),
           window.polkaBTC.vaults.getLiquidationCollateralThreshold(),
           window.polkaBTC.oracle.getExchangeRate(),
           window.polkaBTC.vaults.list()
         ]);
 
-        setAuctionCollateralThreshold(auction);
         setSecureCollateralThreshold(secure);
         setLiquidationThreshold(liquidation);
         setBtcToDotRate(btcToDot);
@@ -68,9 +64,6 @@ export default function VaultTable(): ReactElement {
         if (collateralization.lt(liquidationThreshold)) {
           return constants.VAULT_STATUS_LIQUIDATION;
         }
-        if (collateralization.lt(auctionCollateralThreshold)) {
-          return constants.VAULT_STATUS_AUCTION;
-        }
         if (collateralization.lt(secureCollateralThreshold)) {
           return constants.VAULT_STATUS_UNDER_COLLATERALIZED;
         }
@@ -80,7 +73,6 @@ export default function VaultTable(): ReactElement {
       }
       return constants.VAULT_STATUS_ACTIVE;
     }, [
-      auctionCollateralThreshold,
       liquidationThreshold,
       secureCollateralThreshold,
       t
@@ -185,9 +177,6 @@ export default function VaultTable(): ReactElement {
         if (new Big(collateralization).gte(secureCollateralThreshold)) {
           return 'green-text';
         }
-        if (new Big(collateralization).gte(auctionCollateralThreshold)) {
-          return 'orange-text';
-        }
         // Liquidation
         return 'red-text';
       }
@@ -229,7 +218,7 @@ export default function VaultTable(): ReactElement {
         {vault.status}
       </p>
     ];
-  }, [auctionCollateralThreshold, secureCollateralThreshold, t]);
+  }, [secureCollateralThreshold, t]);
 
   return (
     <div style={{ margin: '40px 0px' }}>

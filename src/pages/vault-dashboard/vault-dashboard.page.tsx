@@ -9,7 +9,6 @@ import {
   useDispatch
 } from 'react-redux';
 import {
-  satToBTC,
   planckToDOT
 } from '@interlay/polkabtc';
 import { useTranslation } from 'react-i18next';
@@ -78,16 +77,16 @@ function VaultDashboard(): JSX.Element {
           vault,
           feesPolkaBTC,
           feesDOT,
-          totalPolkaSAT,
+          lockedAmountBTC,
           collateralization,
           slaScore,
           apyScore,
           issuablePolkaBTC
         ] = await Promise.allSettled([
           window.polkaBTC.vaults.get(vaultId),
-          window.polkaBTC.vaults.getFeesPolkaBTC(vaultId),
-          window.polkaBTC.vaults.getFeesDOT(vaultId),
-          window.polkaBTC.vaults.getIssuedPolkaBTCAmount(vaultId),
+          window.polkaBTC.vaults.getFeesWrapped(vaultId),
+          window.polkaBTC.vaults.getFeesCollateral(vaultId),
+          window.polkaBTC.vaults.getIssuedAmount(vaultId),
           window.polkaBTC.vaults.getVaultCollateralization(vaultId),
           window.polkaBTC.vaults.getSLA(vaultId),
           window.polkaBTC.vaults.getAPY(vaultId),
@@ -107,8 +106,7 @@ function VaultDashboard(): JSX.Element {
           setFeesEarnedDOT(feesDOT.value.toString());
         }
 
-        const lockedAmountBTC = satToBTC(totalPolkaSAT.toString());
-        dispatch(updateLockedBTCAction(lockedAmountBTC));
+        dispatch(updateLockedBTCAction(lockedAmountBTC.toString()));
 
         if (collateralization.status === 'fulfilled') {
           dispatch(updateCollateralizationAction(collateralization.value?.mul(100).toString()));

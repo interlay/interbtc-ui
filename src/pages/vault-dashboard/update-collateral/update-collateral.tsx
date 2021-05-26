@@ -9,7 +9,6 @@ import { StoreType } from '../../../common/types/util.types';
 import Big from 'big.js';
 import ButtonMaybePending from '../../../common/components/pending-button';
 import { useTranslation } from 'react-i18next';
-import { DOT } from '@interlay/polkabtc/build/interfaces';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
 // Commenting because moving this to last line causes 3 "used before it was defined" warnings
@@ -34,9 +33,9 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
   const { register, handleSubmit, errors } = useForm<UpdateCollateralForm>();
   // denoted in DOT
   const currentDOTCollateral = useSelector((state: StoreType) => state.vault.collateral);
-  // denoted in planck
+  // denoted in DOT
   const [newCollateral, setNewCollateral] = useState('');
-  // denoted in planck
+  // denoted in DOT
   const [currentCollateral, setCurrentCollateral] = useState('');
   const [newCollateralization, setNewCollateralization] = useState('∞');
 
@@ -53,17 +52,15 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
 
     setUpdatePending(true);
     try {
-      const newCollateralBN = new Big(newCollateral);
-      const currentCollateralBN = new Big(currentCollateral);
+      const newCollateralBig = new Big(newCollateral);
+      const currentCollateralBig = new Big(currentCollateral);
 
-      if (currentCollateralBN.gt(newCollateralBN)) {
-        const withdrawAmount = currentCollateralBN.sub(newCollateralBN);
-        const planckToWithraw = window.polkaBTC.api.createType('Balance', withdrawAmount.toString()) as DOT;
-        await window.polkaBTC.vaults.withdrawCollateral(planckToWithraw);
-      } else if (currentCollateralBN.lt(newCollateralBN)) {
-        const depositAmount = newCollateralBN.sub(currentCollateralBN);
-        const planckToDeposit = window.polkaBTC.api.createType('Balance', depositAmount.toString()) as DOT;
-        await window.polkaBTC.vaults.lockAdditionalCollateral(planckToDeposit);
+      if (currentCollateralBig.gt(newCollateralBig)) {
+        const withdrawAmount = currentCollateralBig.sub(newCollateralBig);
+        await window.polkaBTC.vaults.withdrawCollateral(withdrawAmount);
+      } else if (currentCollateralBig.lt(newCollateralBig)) {
+        const depositAmount = newCollateralBig.sub(currentCollateralBig);
+        await window.polkaBTC.vaults.lockAdditionalCollateral(depositAmount);
       } else {
         closeModal();
         return;
@@ -101,23 +98,21 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
         return;
       }
 
-      const collateralChange = dotToPlanck(value);
-      if (!collateralChange) {
+      if (!dotToPlanck(value)) {
         throw new Error('Please enter an amount greater than 1 Planck');
       }
 
       // decide if we withdraw or add collateral
-      const currentCollateral = dotToPlanck(currentDOTCollateral);
-      if (!currentCollateral) {
+      if (!currentDOTCollateral) {
         throw new Error('Couldn\'t fetch current vault collateral');
       }
-      setCurrentCollateral(currentCollateral);
+      setCurrentCollateral(currentDOTCollateral);
 
-      let newCollateral = new Big(currentCollateral);
+      let newCollateral = new Big(currentDOTCollateral);
       if (props.status === CollateralUpdateStatus.Increase) {
-        newCollateral = newCollateral.add(new Big(collateralChange));
+        newCollateral = newCollateral.add(new Big(value));
       } else if (props.status === CollateralUpdateStatus.Decrease) {
-        newCollateral = newCollateral.sub(new Big(collateralChange));
+        newCollateral = newCollateral.sub(new Big(value));
       }
       setNewCollateral(newCollateral.toString());
 
@@ -129,8 +124,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
       setCollateralUpdateAllowed(allowed);
 
       // get the updated collateralization
-      const newCollateralAsU128 = window.polkaBTC.api.createType('u128', newCollateral.toString());
-      const newCollateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId, newCollateralAsU128);
+      const newCollateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId, newCollateral);
       if (newCollateralization === undefined) {
         setNewCollateralization('∞');
       } else {

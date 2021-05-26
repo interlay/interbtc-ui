@@ -41,14 +41,14 @@ export default function StatusView(props: StatusViewProps): ReactElement {
     try {
       // Get proof data from bitcoin
       if (txId === '') {
-        txId = await window.polkaBTC.btcCore.getTxIdByRecipientAddress(
+        txId = await window.polkaBTC.electrsAPI.getTxIdByRecipientAddress(
           request.vaultBTCAddress,
-          request.requestedAmountPolkaBTC
+          new Big(request.requestedAmountPolkaBTC)
         );
       }
       [merkleProof, rawTx] = await Promise.all([
-        window.polkaBTC.btcCore.getMerkleProof(txId),
-        window.polkaBTC.btcCore.getRawTransaction(txId)
+        window.polkaBTC.electrsAPI.getMerkleProof(txId),
+        window.polkaBTC.electrsAPI.getRawTransaction(txId)
       ]);
       transactionData = true;
     } catch (err) {
@@ -63,18 +63,14 @@ export default function StatusView(props: StatusViewProps): ReactElement {
       provenReq.rawTransaction = rawTx;
       dispatch(updateIssueRequestAction(provenReq));
 
-      const txIdBuffer = Buffer.from(txId, 'hex').reverse();
-
       // Prepare types for polkadot
-      const parsedIssuedId = window.polkaBTC.api.createType('H256', '0x' + provenReq.id);
-      const parsedTxId = window.polkaBTC.api.createType('H256', txIdBuffer);
       const parsedMerkleProof = window.polkaBTC.api.createType('Bytes', '0x' + merkleProof);
       const parsedRawTx = window.polkaBTC.api.createType('Bytes', rawTx);
 
       // Execute issue
       await window.polkaBTC.issue.execute(
-        parsedIssuedId,
-        parsedTxId,
+        provenReq.id,
+        txId,
         parsedMerkleProof,
         parsedRawTx
       );

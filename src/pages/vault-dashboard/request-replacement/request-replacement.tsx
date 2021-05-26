@@ -6,10 +6,9 @@ import { toast } from 'react-toastify';
 import { addReplaceRequestsAction } from 'common/actions/vault.actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { StoreType } from 'common/types/util.types';
-import { btcToSat, satToBTC } from '@interlay/polkabtc';
+import { btcToSat } from '@interlay/polkabtc';
 import { parachainToUIReplaceRequests } from 'common/utils/requests';
 import { useTranslation } from 'react-i18next';
-import { PolkaBTC } from '@interlay/polkabtc/build/interfaces';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
 type RequestReplacementForm = {
@@ -33,18 +32,15 @@ export default function RequestReplacementModal(props: RequestReplacementProps):
   const onSubmit = handleSubmit(async ({ amount }) => {
     setRequestPending(true);
     try {
-      const amountAsSatoshisString = btcToSat(amount.toString());
-      if (amountAsSatoshisString === undefined) {
+      if (btcToSat(amount.toString()) === undefined) {
         throw new Error('Amount to convert is less than 1 satoshi.');
       }
-      const dustValueAsSatoshi = await window.polkaBTC.redeem.getDustValue();
-      const amountAsSatoshi = window.polkaBTC.api.createType('Balance', amountAsSatoshisString);
-      if (amountAsSatoshi.lte(dustValueAsSatoshi)) {
-        const dustValue = satToBTC(dustValueAsSatoshi.toString());
-        throw new Error(`Please enter an amount greater than Bitcoin dust (${dustValue} BTC)`);
+      const dustValue = await window.polkaBTC.redeem.getDustValue();
+      const amountPolkaBtc = new Big(amount);
+      if (amountPolkaBtc <= dustValue) {
+        throw new Error(`Please enter an amount greater than Bitcoin dust (${dustValue.toString()} BTC)`);
       }
-      const amountAsSatoshis = window.polkaBTC.api.createType('Balance', amountAsSatoshisString) as PolkaBTC;
-      await window.polkaBTC.replace.request(amountAsSatoshis);
+      await window.polkaBTC.replace.request(amountPolkaBtc);
 
       const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
       const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
