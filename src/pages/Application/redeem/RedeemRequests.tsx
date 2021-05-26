@@ -86,7 +86,7 @@ export default function RedeemRequests(): ReactElement {
                       className='table-row-opens-modal'>
                       <td>
                         {request.timestamp ?
-                          formatDateTimePrecise(new Date(request.timestamp)) :
+                          formatDateTimePrecise(new Date(Number(request.timestamp))) :
                           t('pending')}
                       </td>
                       <td>{request.amountPolkaBTC} BTC</td>
