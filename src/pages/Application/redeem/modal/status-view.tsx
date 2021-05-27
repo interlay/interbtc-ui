@@ -44,7 +44,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
         setAmountDOT(burned.add(punished));
         setStableBitcoinConfirmations(btcConfs);
 
-        const requestTimestamp = Math.floor(new Date(props.request.timestamp).getTime() / 1000);
+        const requestTimestamp = Math.floor(new Date(Number(props.request.timestamp)).getTime() / 1000);
         const theInitialLeftSeconds = requestTimestamp + redeemPeriod - Math.floor(Date.now() / 1000);
         setInitialLeftSeconds(theInitialLeftSeconds);
       } catch (error) {

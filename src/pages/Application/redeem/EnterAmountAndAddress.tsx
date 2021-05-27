@@ -245,7 +245,9 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
     if (value > Number(balancePolkaBTC)) {
       return `${t('redeem_page.current_balance')}${balancePolkaBTC}`;
     } else if (value < Number(dustValue)) {
-      return `${t('redeem_page.amount_greater')}${dustValue}BTC).`;
+      return `${t('redeem_page.amount_greater_dust')}${dustValue} BTC).`;
+    } else if (new Big(value).lte(currentInclusionFee)) {
+      return `${t('redeem_page.amount_greater_inclusion_fee')}${displayBtcAmount(currentInclusionFee)} BTC).`;
     }
 
     if (!address) {
@@ -282,7 +284,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
 
   const totalBTC =
       polkaBTCAmount ?
-        new Big(polkaBTCAmount).sub(new Big(redeemFee)).round(8).toString() :
+        displayBtcAmount(new Big(polkaBTCAmount).sub(new Big(redeemFee)).sub(currentInclusionFee)) :
         '0';
   const totalBTCInUSD = getUsdAmount(totalBTC, prices.bitcoin.usd);
 

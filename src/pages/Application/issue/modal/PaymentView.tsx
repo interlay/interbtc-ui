@@ -108,7 +108,7 @@ const PaymentView = ({
           {t('issue_page.warning_mbtc_wallets')}
         </span>
         <span className='text-interlayTreePoppy'>
-          {displayBtcAmount(request.amountBTC)}&nbsp;mBTC
+          {displayBtcAmount(new Big(request.amountBTC).mul(1000).toString())}&nbsp;mBTC
         </span>
       </p>
       <QRCode
