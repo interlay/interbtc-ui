@@ -149,8 +149,19 @@ services:
       POSTGRES_PASSWORD: 'password'
     ports:
       - '5432:5432'
+  flyway:
+    image: 'flyway/flyway:7'
+    command: 'migrate'
+    environment:
+      FLYWAY_USER: 'user'
+      FLYWAY_PASSWORD: 'password'
+      FLYWAY_URL: 'jdbc:postgresql://postgres:5432/postgres'
+    volumes:
+      - ${PWD}/node_modules/@interlay/polkabtc-stats/sql:/flyway/sql
+    depends_on:
+      - postgres
   polkabtc_stats:
-    image: 'registry.gitlab.com/interlay/polkabtc-stats:0.3.1'
+    image: 'registry.gitlab.com/interlay/polkabtc-stats:0-3-3'
     restart: always
     depends_on:
       - postgres
