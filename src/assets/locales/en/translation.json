@@ -197,7 +197,7 @@
     "compensation_burn": "Received for burning PolkaBTC",
     "retry_new_redeem": "You can now create a new redeem request with another vault.",
     "premium_redeem_info": "If you select premium redeem, you will try to redeem with a vault that is below the secure collateral threshold. This operation has a higher risk since the vault might be liquidated. For this higher risk, you will receive a compensation.",
-    "vault_has_time_to_complete": "Time until the Vault has to complete the transaction: "
+    "vault_has_time_to_complete": "The Vault has to complete the transaction in: "
   },
   "transfer_page": {
     "successfully_transferred": "Successfully transferred.",

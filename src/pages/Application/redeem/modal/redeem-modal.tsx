@@ -73,7 +73,7 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
                     &nbsp;
                     {request.btcTransferFee} BTC
                     <div className='send-price'>
-                      {'~ $' + getUsdAmount(request.fee, prices.bitcoin.usd)}
+                      {'~ $' + getUsdAmount(request.btcTransferFee, prices.bitcoin.usd)}
                     </div>
                   </div>
                 </div>
