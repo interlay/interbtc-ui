@@ -62,7 +62,6 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
                     </div>
                   </div>
                 </div>
-                {/* FIXME: need to get the network fee from the request in stats */}
                 <div className='step-item row'>
                   <div className='col-6 temp-text-left'>{t('bitcoin_network_fee')}</div>
                   <div className='col-6'>
