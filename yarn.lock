@@ -1692,10 +1692,10 @@
     sinon "^9.0.3"
     ts-mock-imports "^1.3.0"
 
-"@interlay/polkabtc@0.15.6":
-  version "0.15.6"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.15.6.tgz#ef149e449149f5bd6053490e11a0c18872b6788c"
-  integrity sha512-v1BD3XSQXewZprupgyLYMMKAkku/HWVBarnqcrKEfwxapzpz+qcQlBgvss/B2AmqlYiNlNqNXkmAmIyX9KSl7g==
+"@interlay/polkabtc@0.16.2":
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.16.2.tgz#cc31f2b58d28c6e06d232ba58526e534400fff4f"
+  integrity sha512-WTvdmw8b2vZZdR126jjEFaHEMGehNkB141Mjjg2a3MwHNTG7/A4fExp9Pjo1eO6ZvWsWV4WFS/i/Yu3xTC3zjg==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
     "@interlay/polkabtc-types" "0.7.3"
@@ -8382,13 +8382,6 @@ figures@^2.0.0:
   dependencies:
     escape-string-regexp "^1.0.5"
 
-figures@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/figures/-/figures-3.2.0.tgz#625c18bd293c604dc4a8ddb2febf0c88341746af"
-  integrity sha512-yaduQFRKLXYOGgEn6AZau90j3ggSOyiqXU0F9JZfeXYhNa+Jk4X+s45A2zg5jns87GAFa34BBm2kXw4XpNcbdg==
-  dependencies:
-    escape-string-regexp "^1.0.5"
-
 file-entry-cache@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/file-entry-cache/-/file-entry-cache-6.0.1.tgz#211b2dd9659cb0394b073e7323ac3c933d522027"
@@ -11336,14 +11329,12 @@ listr-verbose-renderer@^0.5.0:
     figures "^2.0.0"
 
 listr2@^3.2.2:
-  version "3.8.4"
-  resolved "https://registry.yarnpkg.com/listr2/-/listr2-3.8.4.tgz#58ef278a430509d072c568d96d87a4357813638b"
-  integrity sha512-DX+iKRcxaGbBjoLJBQlGceZoqdhV6Z54wpsvIVoVKNJ/lEXK8KhGhLaZnIGKRQmDmtJOtyNSnnKFUS1qn+jqsw==
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/listr2/-/listr2-3.9.0.tgz#27f23c91ba4fdf513b0682bf604bc6b0ab36b6c1"
+  integrity sha512-+JxQt7Vi4WEWgJsxmOEX9lDbCumrb3mrEYIeE1VI7I4lf2rXE4v9pq3RMVNp+a9s6mCgc/IsF0ppHsLrx2BEAw==
   dependencies:
     cli-truncate "^2.1.0"
     colorette "^1.2.2"
-    figures "^3.2.0"
-    indent-string "^4.0.0"
     log-update "^4.0.0"
     p-map "^4.0.0"
     rxjs "^6.6.7"
