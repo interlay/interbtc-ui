@@ -135,7 +135,7 @@ const IssueModal = (props: IssueModalProps): JSX.Element => {
                   <div className='col-6 right-text'>{request.creation}</div>
                 </div>
                 <div className='step-item row'>
-                  <div className='col-6 temp-text-left'>{t('issue_page.vault_dot_address_modal')}</div>
+                  <div className='col-6 temp-text-left'>{t('issue_page.vault_dot_address')}</div>
                   <div className='col-6 right-text'>{shortAddress(request.vaultDOTAddress)}</div>
                 </div>
                 <div className='step-item row'>
