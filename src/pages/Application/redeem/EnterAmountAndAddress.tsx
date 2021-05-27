@@ -241,13 +241,12 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
   };
 
   const validatePolkaBTCAmount = (value: number): string | undefined => {
-    // TODO: should be `big` type other than `Number`
-    if (value > Number(balancePolkaBTC)) {
+    const bigValue = new Big(value);
+    const minValue = new Big(dustValue).add(currentInclusionFee).add(new Big(redeemFee));
+    if (bigValue.gt(new Big(balancePolkaBTC))) {
       return `${t('redeem_page.current_balance')}${balancePolkaBTC}`;
-    } else if (value < Number(dustValue)) {
-      return `${t('redeem_page.amount_greater_dust')}${dustValue} BTC).`;
-    } else if (new Big(value).lte(currentInclusionFee)) {
-      return `${t('redeem_page.amount_greater_inclusion_fee')}${displayBtcAmount(currentInclusionFee)} BTC).`;
+    } else if (bigValue.lte(minValue)) {
+      return `${t('redeem_page.amount_greater_dust_inclusion')}${minValue} BTC).`;
     }
 
     if (!address) {
