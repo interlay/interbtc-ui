@@ -65,18 +65,11 @@ const TabPanel = ({
   );
 };
 
-const Tabs = ({
-  className,
-  ...rest
-}: TabsProps): JSX.Element => {
+const Tabs = (props: TabsProps): JSX.Element => {
   return (
     <ul
-      className={clsx(
-        'flex',
-        className
-      )}
       role='tablist'
-      {...rest} />
+      {...props} />
   );
 };
 
