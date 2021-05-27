@@ -13,6 +13,7 @@ import { IssueRequest } from 'common/types/issue.types';
 import { StoreType } from 'common/types/util.types';
 import {
   copyToClipboard,
+  displayBtcAmount,
   getUsdAmount
 } from 'common/utils/utils';
 
@@ -32,7 +33,7 @@ const PaymentView = ({
   React.useEffect(() => {
     if (!request.timestamp) return;
 
-    const requestTimestamp = Math.floor(new Date(request.timestamp).getTime() / 1000);
+    const requestTimestamp = Math.floor(new Date(Number(request.timestamp)).getTime() / 1000);
     const theInitialLeftSeconds = requestTimestamp + issuePeriod - Math.floor(Date.now() / 1000);
     setInitialLeftSeconds(theInitialLeftSeconds);
   }, [
@@ -52,7 +53,7 @@ const PaymentView = ({
         <div
           className='text-xl'>
           {t('send')}
-          <span className='text-interlayTreePoppy'>&nbsp;{request.totalAmount}&nbsp;</span>
+          <span className='text-interlayTreePoppy'>&nbsp;{request.amountBTC}&nbsp;</span>
           BTC
         </div>
         <span
@@ -60,7 +61,7 @@ const PaymentView = ({
             'text-textSecondary',
             'block'
           )}>
-          {`≈ $ ${getUsdAmount(request.totalAmount, prices.bitcoin.usd)}`}
+          {`≈ $ ${getUsdAmount(request.amountBTC, prices.bitcoin.usd)}`}
         </span>
       </div>
       <div>
@@ -107,7 +108,7 @@ const PaymentView = ({
           {t('issue_page.warning_mbtc_wallets')}
         </span>
         <span className='text-interlayTreePoppy'>
-          {new Big(request.totalAmount).mul(1000).round(5).toString()}&nbsp;mBTC
+          {displayBtcAmount(new Big(request.amountBTC).mul(1000).toString())}&nbsp;mBTC
         </span>
       </p>
       <QRCode

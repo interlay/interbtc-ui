@@ -86,10 +86,13 @@ export default function RedeemRequests(): ReactElement {
                       className='table-row-opens-modal'>
                       <td>
                         {request.timestamp ?
-                          formatDateTimePrecise(new Date(request.timestamp)) :
+                          formatDateTimePrecise(new Date(Number(request.timestamp))) :
                           t('pending')}
                       </td>
-                      <td>{request.amountPolkaBTC} BTC</td>
+                      <td>
+                        {request.amountPolkaBTC}{' '}
+                        <span className='grey-text'>PolkaBTC</span>
+                      </td>
                       <td>
                         {request.status === RedeemRequestStatus.Expired ? (
                           <div>{t('redeem_page.failed')}</div>

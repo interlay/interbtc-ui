@@ -141,7 +141,6 @@ const EnterBTCAmount = (): JSX.Element | null => {
         ] = await Promise.all([
           // Loading this data is not strictly required as long as the constantly set values did
           // not change. However, you will not see the correct value for the security deposit.
-          // But not having this data will NOT block the requestIssue
           window.polkaBTC.issue.getFeeRate(),
           window.polkaBTC.fee.getIssueGriefingCollateralRate(),
           window.polkaBTC.issue.getIssuePeriod(),
@@ -159,15 +158,10 @@ const EnterBTCAmount = (): JSX.Element | null => {
         setDustValue(theDustValue.toString());
         setBtcToDotRate(btcToDot);
 
-        // ray test touch <
         let theVaultMaxAmount = new Big(0);
-        // TODO: double-check
         // The first item is the vault with the largest capacity
-        for (const issuableTokens of theVaults.values()) {
-          theVaultMaxAmount = issuableTokens;
-          break;
-        }
-        // ray test touch >
+        theVaultMaxAmount = theVaults.values().next().value;
+
         setVaultMaxAmount(theVaultMaxAmount.toString());
         setVaults(theVaults);
       } catch (error) {
@@ -203,7 +197,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
       return t('issue_page.validation_max_value');
       // TODO: should be `big` type other than `Number`
     } else if (value < Number(dustValue)) {
-      return `${t('issue_page.validation_min_value')}${dustValue}BTC).`;
+      return `${t('issue_page.validation_min_value')}${dustValue} BTC).`;
     }
 
     // ray test touch <

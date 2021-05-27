@@ -42,7 +42,7 @@ async function parachainToUIIssueRequest(
       window.polkaBTC.btcRelay.getStableBitcoinConfirmations()
     ]);
   }
-  const amountBTC = satToBTC(parachainIssueRequest.amount.toString());
+  const amountPolkaBTC = satToBTC(parachainIssueRequest.amount.toString());
   const fee = satToBTC(parachainIssueRequest.fee.toString());
   const status = computeIssueRequestStatus(
     parachainIssueRequest.status.isCompleted,
@@ -54,7 +54,7 @@ async function parachainToUIIssueRequest(
   );
   return {
     id: stripHexPrefix(id.toString()),
-    requestedAmountPolkaBTC: amountBTC,
+    requestedAmountPolkaBTC: amountPolkaBTC,
     timestamp: formatDateTimePrecise(new Date(Date.now())),
     creation: parachainIssueRequest.opentime.toString(),
     vaultBTCAddress: parachainIssueRequest.btc_address,
@@ -62,7 +62,7 @@ async function parachainToUIIssueRequest(
     userDOTAddress: parachainIssueRequest.requester.toString(),
     btcTxId: '',
     fee,
-    totalAmount: new Big(amountBTC).add(fee).toString(),
+    amountBTC: new Big(amountPolkaBTC).add(fee).toString(),
     griefingCollateral: planckToDOT(parachainIssueRequest.griefing_collateral.toString()),
     confirmations: 0,
     status,
@@ -81,9 +81,9 @@ const statsToUIIssueRequest = async (
   requiredBtcConfirmations: number
 ): Promise<IssueRequest> => ({
   id: statsIssue.id,
-  requestedAmountPolkaBTC: new Big(statsIssue.amountBTC).sub(new Big(statsIssue.feePolkabtc)).toString(),
+  requestedAmountPolkaBTC: statsIssue.amountBTC,
   timestamp: statsIssue.timestamp,
-  totalAmount: statsIssue.amountBTC,
+  amountBTC: new Big(statsIssue.amountBTC).add(new Big(statsIssue.feePolkabtc)).toString(),
   creation: statsIssue.creation.toString(),
   vaultBTCAddress: statsIssue.vaultBTCAddress,
   vaultDOTAddress: statsIssue.vaultDOTAddress,

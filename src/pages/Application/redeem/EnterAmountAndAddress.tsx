@@ -44,7 +44,8 @@ import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   displayBtcAmount,
-  getUsdAmount
+  getUsdAmount,
+  getRandomVaultIdWithCapacity
 } from 'common/utils/utils';
 import { parachainToUIRedeemRequest } from 'common/utils/requests';
 import STATUSES from 'utils/constants/statuses';
@@ -95,6 +96,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
   const [btcToDotRate, setBtcToDotRate] = React.useState(new Big(0));
   const [premiumRedeemVaults, setPremiumRedeemVaults] = React.useState<Map<AccountId, Big>>(new Map());
   const [premiumRedeemFee, setPremiumRedeemFee] = React.useState(new Big(0));
+  const [currentInclusionFee, setCurrentInclusionFee] = React.useState(new Big(0));
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
@@ -120,21 +122,23 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
       try {
         setStatus(STATUSES.PENDING);
         const [
-          theDustValue,
+          dustValueResult,
           premiumRedeemVaultsResult,
           premiumRedeemFeeResult,
           btcToDotRateResult,
-          theRedeemFeeRateResult
+          redeemFeeRateResult,
+          currentInclusionFeeResult
         ] = await Promise.allSettled([
           window.polkaBTC.redeem.getDustValue(),
           window.polkaBTC.vaults.getPremiumRedeemVaults(),
           window.polkaBTC.redeem.getPremiumRedeemFee(),
           window.polkaBTC.oracle.getExchangeRate(),
-          window.polkaBTC.redeem.getFeeRate()
+          window.polkaBTC.redeem.getFeeRate(),
+          window.polkaBTC.redeem.getCurrentInclusionFee()
         ]);
 
-        if (theDustValue.status === 'rejected') {
-          throw new Error(theDustValue.reason);
+        if (dustValueResult.status === 'rejected') {
+          throw new Error(dustValueResult.reason);
         }
         if (premiumRedeemFeeResult.status === 'rejected') {
           throw new Error(premiumRedeemFeeResult.reason);
@@ -142,17 +146,21 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
         if (btcToDotRateResult.status === 'rejected') {
           throw new Error(btcToDotRateResult.reason);
         }
-        if (theRedeemFeeRateResult.status === 'rejected') {
-          throw new Error(theRedeemFeeRateResult.reason);
+        if (redeemFeeRateResult.status === 'rejected') {
+          throw new Error(redeemFeeRateResult.reason);
+        }
+        if (currentInclusionFeeResult.status === 'rejected') {
+          throw new Error(currentInclusionFeeResult.reason);
         }
         if (premiumRedeemVaultsResult.status === 'fulfilled') {
           setPremiumRedeemVaults(premiumRedeemVaultsResult.value);
         }
 
-        setDustValue(theDustValue.value.toString());
+        setDustValue(dustValueResult.value.toString());
         setPremiumRedeemFee(new Big(premiumRedeemFeeResult.value));
         setBtcToDotRate(btcToDotRateResult.value);
-        setRedeemFeeRate(theRedeemFeeRateResult.value);
+        setRedeemFeeRate(redeemFeeRateResult.value);
+        setCurrentInclusionFee(currentInclusionFeeResult.value);
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
@@ -209,9 +217,8 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
           return;
         }
       } else {
-        // Select a random vault
-        // TODO: should use a list of vaults directly from the parachain
-        vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(polkaBTCAmount);
+        const vaults = await window.polkaBTC.vaults.getVaultsWithRedeemableTokens();
+        vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), polkaBTCAmount);
       }
 
       const vaultAccountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vaultId.toString());
@@ -234,11 +241,12 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
   };
 
   const validatePolkaBTCAmount = (value: number): string | undefined => {
-    // TODO: should be `big` type other than `Number`
-    if (value > Number(balancePolkaBTC)) {
+    const bigValue = new Big(value);
+    const minValue = new Big(dustValue).add(currentInclusionFee).add(new Big(redeemFee));
+    if (bigValue.gt(new Big(balancePolkaBTC))) {
       return `${t('redeem_page.current_balance')}${balancePolkaBTC}`;
-    } else if (value < Number(dustValue)) {
-      return `${t('redeem_page.amount_greater')}${dustValue}BTC).`;
+    } else if (bigValue.lte(minValue)) {
+      return `${t('redeem_page.amount_greater_dust_inclusion')}${minValue} BTC).`;
     }
 
     if (!address) {
@@ -275,7 +283,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
 
   const totalBTC =
       polkaBTCAmount ?
-        new Big(polkaBTCAmount).sub(new Big(redeemFee)).round(8).toString() :
+        displayBtcAmount(new Big(polkaBTCAmount).sub(new Big(redeemFee)).sub(currentInclusionFee)) :
         '0';
   const totalBTCInUSD = getUsdAmount(totalBTC, prices.bitcoin.usd);
 
@@ -284,6 +292,9 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
       new Big(polkaBTCAmount).mul(btcToDotRate).mul(premiumRedeemFee).toString() :
       '0';
   const totalDOTInUSD = getUsdAmount(totalDOT, prices.polkadot.usd);
+
+  const bitcoinNetworkFeeInBTC = displayBtcAmount(currentInclusionFee);
+  const bitcoinNetworkFeeInUSD = getUsdAmount(currentInclusionFee, prices.bitcoin.usd);
 
   if (status === STATUSES.RESOLVED) {
     return (
@@ -374,6 +385,20 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
             value={redeemFeeInBTC}
             unitName='BTC'
             approxUSD={redeemFeeInUSD} />
+          <PriceInfo
+            title={
+              <h5 className='text-textSecondary'>
+                {t('bitcoin_network_fee')}
+              </h5>
+            }
+            unitIcon={
+              <BitcoinLogoIcon
+                width={23}
+                height={23} />
+            }
+            value={bitcoinNetworkFeeInBTC}
+            unitName='BTC'
+            approxUSD={bitcoinNetworkFeeInUSD} />
           <hr
             className={clsx(
               'border-t-2',

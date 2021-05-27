@@ -3,13 +3,13 @@
 import { useSelector } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import Big from 'big.js';
 import clsx from 'clsx';
 
 import PaymentView from './PaymentView';
 import StatusView from './status-view';
 import WhoopsView from './whoops-view';
 import {
+  displayBtcAmount,
   getUsdAmount,
   shortAddress
 } from 'common/utils/utils';
@@ -98,7 +98,7 @@ const IssueModal = (props: IssueModalProps): JSX.Element => {
                       height={23} />
                     {' '}
                     &nbsp;
-                    {parseFloat(Number(request.fee).toFixed(5))} BTC
+                    {displayBtcAmount(request.fee)} BTC
                     <div className='send-price'>
                       {'~ $' + getUsdAmount(request.fee, prices.bitcoin.usd)}
                     </div>
@@ -114,14 +114,7 @@ const IssueModal = (props: IssueModalProps): JSX.Element => {
                       height={23} />
                     {' '}
                     &nbsp;
-                    {parseFloat(
-                      new Big(request.fee)
-                        .add(
-                          new Big(request.issuedAmountBtc || request.requestedAmountPolkaBTC)
-                        )
-                        .round(5)
-                        .toString()
-                    )}
+                    {displayBtcAmount(request.amountBTC)}
                     {' '}
                     BTC
                     <div className='send-price'>
@@ -142,7 +135,7 @@ const IssueModal = (props: IssueModalProps): JSX.Element => {
                   <div className='col-6 right-text'>{request.creation}</div>
                 </div>
                 <div className='step-item row'>
-                  <div className='col-6 temp-text-left'>{t('issue_page.vault_dot_address_modal')}</div>
+                  <div className='col-6 temp-text-left'>{t('issue_page.vault_dot_address')}</div>
                   <div className='col-6 right-text'>{shortAddress(request.vaultDOTAddress)}</div>
                 </div>
                 <div className='step-item row'>

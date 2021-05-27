@@ -92,7 +92,7 @@ const RedeemRequestsTable = ({
         Cell: function FormattedCell({ value }) {
           return (
             <>
-              {formatDateTimePrecise(new Date(value))}
+              {formatDateTimePrecise(new Date(Number(value)))}
             </>
           );
         }
