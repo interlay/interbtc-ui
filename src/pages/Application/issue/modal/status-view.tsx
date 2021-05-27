@@ -21,12 +21,21 @@ export default function StatusView(props: StatusViewProps): ReactElement {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { polkaBtcLoaded, balancePolkaBTC } = useSelector((state: StoreType) => state.general);
-  const [stableBitcoinConfirmations, setStableBitcoinConfirmations] = useState(0);
+  const [stableBitcoinConfirmations, setStableBitcoinConfirmations] = useState(1);
+  const [stableParachainConfirmations, setStableParachainConfirmations] = useState(100);
+  const [requestConfirmations, setRequestConfirmations] = useState(0);
   const [executePending, setExecutePending] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      setStableBitcoinConfirmations(await window.polkaBTC.btcRelay.getStableBitcoinConfirmations());
+      const [btcConf, paraConf, paraHeight] = await Promise.all([
+        await window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
+        await window.polkaBTC.btcRelay.getStableParachainConfirmations(),
+        await window.polkaBTC.system.getCurrentActiveBlockNumber()
+      ]);
+      setStableBitcoinConfirmations(btcConf);
+      setStableParachainConfirmations(paraConf);
+      setRequestConfirmations(paraHeight - Number(props.request.creation));
     };
     fetchData();
   });
@@ -158,7 +167,10 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                 <div>{t('issue_page.waiting_for')}</div>
                 <div>{t('confirmations')}</div>
                 <div className='number-of-confirmations'>
-                  {props.request.confirmations + '/' + stableBitcoinConfirmations}
+                  {`${props.request.confirmations}/${stableBitcoinConfirmations}`}
+                </div>
+                <div className='number-of-confirmations'>
+                  {`${requestConfirmations}/${stableParachainConfirmations}`}
                 </div>
               </div>
               <div className='row btc-transaction-wrapper'>

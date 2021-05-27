@@ -39,11 +39,13 @@ const useUpdateIssueRequests = (
       const [
         parachainHeight,
         issuePeriod,
-        requiredBtcConfirmations
+        requiredBtcConfirmations,
+        requiredParachainConfirmations
       ] = await Promise.all([
-        window.polkaBTC.system.getCurrentBlockNumber(),
+        window.polkaBTC.system.getCurrentActiveBlockNumber(),
         window.polkaBTC.issue.getIssuePeriod(),
-        window.polkaBTC.btcRelay.getStableBitcoinConfirmations()
+        window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
+        window.polkaBTC.btcRelay.getStableParachainConfirmations()
       ]);
 
       const databaseRequests: IssueRequest[] = await Promise.all((
@@ -62,7 +64,8 @@ const useUpdateIssueRequests = (
             bitcoinHeight,
             parachainHeight,
             issuePeriod,
-            requiredBtcConfirmations
+            requiredBtcConfirmations,
+            requiredParachainConfirmations
           )
       ));
 
