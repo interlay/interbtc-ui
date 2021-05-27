@@ -25,7 +25,7 @@ import {
   POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT,
   POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER
 } from 'config/links';
-import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
+// import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
 import { CHALLENGE_CUT_OFFS } from 'config/challenges';
 
 const challengeCutOffs = Object.values(CHALLENGE_CUT_OFFS);
@@ -70,21 +70,11 @@ const CHALLENGE_ITEMS = [
   },
   {
     title: 'leaderboard.challenges.vault_treasure_hunt',
-    titleIcon: (
-      <NewMarkIcon
-        width={20}
-        height={20} />
-    ),
     content: 'leaderboard.challenges.vault_treasure_hunt_desc',
     contentLink: POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT
   },
   {
     title: 'leaderboard.challenges.relayer_treasure_hunt',
-    titleIcon: (
-      <NewMarkIcon
-        width={20}
-        height={20} />
-    ),
     content: 'leaderboard.challenges.relayer_treasure_hunt_desc',
     contentLink: POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER
   },
@@ -149,7 +139,7 @@ function Challenges(): JSX.Element {
             <Card key={challengeItem.title}>
               <CardHeader className='flex'>
                 {t(challengeItem.title)}
-                {challengeItem.titleIcon}
+                {/* {challengeItem.titleIcon} */}
               </CardHeader>
               <CardContent>
                 {t(challengeItem.content)}
