@@ -11,6 +11,7 @@ import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg
 import InterlayLink from 'components/UI/InterlayLink';
 import Timer from 'components/Timer';
 import clsx from 'clsx';
+import { BLOCK_TIME } from 'config/parachain';
 
 type StatusViewProps = {
   request: RedeemRequest;
@@ -45,7 +46,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
         setStableBitcoinConfirmations(btcConfs);
 
         const requestTimestamp = Math.floor(new Date(Number(props.request.timestamp)).getTime() / 1000);
-        const theInitialLeftSeconds = requestTimestamp + redeemPeriod - Math.floor(Date.now() / 1000);
+        const theInitialLeftSeconds = requestTimestamp + (redeemPeriod * BLOCK_TIME) - Math.floor(Date.now() / 1000);
         setInitialLeftSeconds(theInitialLeftSeconds);
       } catch (error) {
         console.log(error);
@@ -124,8 +125,8 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             )}>
             <span className='text-textSecondary'>
               {t('redeem_page.vault_has_time_to_complete')}
-              {initialLeftSeconds && <Timer initialLeftSeconds={initialLeftSeconds} />}
             </span>
+            {initialLeftSeconds && <Timer initialLeftSeconds={initialLeftSeconds} />}
           </p>
           <div className='row mt-5'>
             <div className='col'>
