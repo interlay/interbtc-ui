@@ -68,7 +68,7 @@ const VaultScoresTable = ({
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const response = await statsApi.getVaults(challengeTime);
+        const response = await statsApi.getChallengeVaults(challengeTime);
         const sortedVaults = response.data.sort((a, b) => b.lifetime_sla - a.lifetime_sla);
         const transformedVaults = sortedVaults.map(vault => ({
           ...vault,
