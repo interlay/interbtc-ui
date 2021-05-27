@@ -96,6 +96,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
   const [btcToDotRate, setBtcToDotRate] = React.useState(new Big(0));
   const [premiumRedeemVaults, setPremiumRedeemVaults] = React.useState<Map<AccountId, Big>>(new Map());
   const [premiumRedeemFee, setPremiumRedeemFee] = React.useState(new Big(0));
+  const [currentInclusionFee, setCurrentInclusionFee] = React.useState(new Big(0));
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
@@ -121,21 +122,23 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
       try {
         setStatus(STATUSES.PENDING);
         const [
-          theDustValue,
+          dustValueResult,
           premiumRedeemVaultsResult,
           premiumRedeemFeeResult,
           btcToDotRateResult,
-          theRedeemFeeRateResult
+          redeemFeeRateResult,
+          currentInclusionFeeResult
         ] = await Promise.allSettled([
           window.polkaBTC.redeem.getDustValue(),
           window.polkaBTC.vaults.getPremiumRedeemVaults(),
           window.polkaBTC.redeem.getPremiumRedeemFee(),
           window.polkaBTC.oracle.getExchangeRate(),
-          window.polkaBTC.redeem.getFeeRate()
+          window.polkaBTC.redeem.getFeeRate(),
+          window.polkaBTC.redeem.getCurrentInclusionFee()
         ]);
 
-        if (theDustValue.status === 'rejected') {
-          throw new Error(theDustValue.reason);
+        if (dustValueResult.status === 'rejected') {
+          throw new Error(dustValueResult.reason);
         }
         if (premiumRedeemFeeResult.status === 'rejected') {
           throw new Error(premiumRedeemFeeResult.reason);
@@ -143,17 +146,21 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
         if (btcToDotRateResult.status === 'rejected') {
           throw new Error(btcToDotRateResult.reason);
         }
-        if (theRedeemFeeRateResult.status === 'rejected') {
-          throw new Error(theRedeemFeeRateResult.reason);
+        if (redeemFeeRateResult.status === 'rejected') {
+          throw new Error(redeemFeeRateResult.reason);
+        }
+        if (currentInclusionFeeResult.status === 'rejected') {
+          throw new Error(currentInclusionFeeResult.reason);
         }
         if (premiumRedeemVaultsResult.status === 'fulfilled') {
           setPremiumRedeemVaults(premiumRedeemVaultsResult.value);
         }
 
-        setDustValue(theDustValue.value.toString());
+        setDustValue(dustValueResult.value.toString());
         setPremiumRedeemFee(new Big(premiumRedeemFeeResult.value));
         setBtcToDotRate(btcToDotRateResult.value);
-        setRedeemFeeRate(theRedeemFeeRateResult.value);
+        setRedeemFeeRate(redeemFeeRateResult.value);
+        setCurrentInclusionFee(currentInclusionFeeResult.value);
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
@@ -285,6 +292,9 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
       '0';
   const totalDOTInUSD = getUsdAmount(totalDOT, prices.polkadot.usd);
 
+  const bitcoinNetworkFeeInBTC = displayBtcAmount(currentInclusionFee);
+  const bitcoinNetworkFeeInUSD = getUsdAmount(currentInclusionFee, prices.bitcoin.usd);
+
   if (status === STATUSES.RESOLVED) {
     return (
       <>
@@ -374,6 +384,20 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
             value={redeemFeeInBTC}
             unitName='BTC'
             approxUSD={redeemFeeInUSD} />
+          <PriceInfo
+            title={
+              <h5 className='text-textSecondary'>
+                {t('bitcoin_network_fee')}
+              </h5>
+            }
+            unitIcon={
+              <BitcoinLogoIcon
+                width={23}
+                height={23} />
+            }
+            value={bitcoinNetworkFeeInBTC}
+            unitName='BTC'
+            approxUSD={bitcoinNetworkFeeInUSD} />
           <hr
             className={clsx(
               'border-t-2',

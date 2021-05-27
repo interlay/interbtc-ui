@@ -159,7 +159,8 @@ const Application = (): JSX.Element | null => {
               <Tabs
                 className={clsx(
                   'grid',
-                  `grid-cols-${TAB_ITEMS.length}`,
+                  { 'grid-cols-3': TAB_ITEMS.length === 3 },
+                  { 'grid-cols-4': TAB_ITEMS.length === 4 },
                   'rounded-lg',
                   'bg-interlayGrey-400'
                 )}>
