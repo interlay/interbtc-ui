@@ -219,6 +219,7 @@ async function parachainToUIRedeemRequest(
     vaultDOTAddress: parachainRedeemRequest.vault.toString(),
     btcTxId: '',
     fee,
+    btcTransferFee: '0', // FIXME if necessary - not sure this is actually going to be used anywhere
     confirmations: 0,
     status
   };
@@ -232,10 +233,14 @@ const statsToUIRedeemRequest = (
   requiredBtcConfirmations: number
 ): RedeemRequest => ({
   id: statsRedeem.id,
-  amountPolkaBTC: new Big(statsRedeem.amountPolkaBTC).add(new Big(statsRedeem.feePolkabtc)).toString(),
+  amountPolkaBTC: new Big(statsRedeem.amountPolkaBTC)
+    .add(new Big(statsRedeem.feePolkabtc))
+    .add(new Big(statsRedeem.btcTransferFee))
+    .toString(),
   // FIXME: naming of vars
   amountBTC: statsRedeem.amountPolkaBTC,
   fee: statsRedeem.feePolkabtc,
+  btcTransferFee: statsRedeem.btcTransferFee,
   timestamp: statsRedeem.timestamp,
   creation: statsRedeem.creation.toString(),
   userBTCAddress: statsRedeem.btcAddress,
