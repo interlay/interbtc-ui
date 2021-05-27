@@ -158,12 +158,10 @@ const EnterBTCAmount = (): JSX.Element | null => {
         setDustValue(theDustValue.toString());
         setBtcToDotRate(btcToDot);
 
-        // ray test touch <
         let theVaultMaxAmount = new Big(0);
         // The first item is the vault with the largest capacity
         theVaultMaxAmount = theVaults.values().next().value;
 
-        // ray test touch >
         setVaultMaxAmount(theVaultMaxAmount.toString());
         setVaults(theVaults);
       } catch (error) {

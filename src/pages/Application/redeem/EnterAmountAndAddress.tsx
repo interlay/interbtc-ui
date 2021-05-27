@@ -44,7 +44,8 @@ import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   displayBtcAmount,
-  getUsdAmount
+  getUsdAmount,
+  getRandomVaultIdWithCapacity
 } from 'common/utils/utils';
 import { parachainToUIRedeemRequest } from 'common/utils/requests';
 import STATUSES from 'utils/constants/statuses';
@@ -209,9 +210,8 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
           return;
         }
       } else {
-        // Select a random vault
-        // TODO: should use a list of vaults directly from the parachain
-        vaultId = await window.polkaBTC.vaults.selectRandomVaultRedeem(polkaBTCAmount);
+        const vaults = await window.polkaBTC.vaults.getVaultsWithRedeemableTokens();
+        vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), polkaBTCAmount);
       }
 
       const vaultAccountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vaultId.toString());
