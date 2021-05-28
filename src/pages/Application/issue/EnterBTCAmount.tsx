@@ -52,6 +52,9 @@ import { ReactComponent as PolkaBTCLogoIcon } from 'assets/img/polkabtc-logo.svg
 
 const BTC_AMOUNT = 'btc-amount';
 
+// TODO: should handle correctly
+const REQUIRED_MINIMUM_DOT_AMOUNT = 0;
+
 type IssueForm = {
   [BTC_AMOUNT]: string;
 }
@@ -69,7 +72,8 @@ const EnterBTCAmount = (): JSX.Element | null => {
     bitcoinHeight,
     btcRelayHeight,
     prices,
-    parachainStatus
+    parachainStatus,
+    balanceDOT
   } = useSelector((state: StoreType) => state.general);
 
   const {
@@ -193,6 +197,10 @@ const EnterBTCAmount = (): JSX.Element | null => {
   }
 
   const validateBTCAmount = (value: number): string | undefined => {
+    if (Number(balanceDOT) <= REQUIRED_MINIMUM_DOT_AMOUNT) {
+      return t('insufficient_funds_dot');
+    }
+
     if (value > 1) {
       return t('issue_page.validation_max_value');
       // TODO: should be `big` type other than `Number`
