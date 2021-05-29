@@ -55,8 +55,16 @@ const InterlayButton = ({
           variant === VARIANTS.contained && color === COLORS.primary && !disabledOrPending },
         { 'bg-secondary hover:bg-secondary-600 text-secondary-contrastText':
           variant === VARIANTS.contained && color === COLORS.secondary && !disabledOrPending },
-        { 'bg-black bg-opacity-10 text-black text-opacity-25': // palette.action.disabled
-          variant === VARIANTS.contained && disabledOrPending },
+        {
+          [clsx(
+            'bg-black',
+            'bg-opacity-10',
+            'text-black',
+            'text-opacity-25',
+            'dark:text-white',
+            'dark:text-opacity-30'
+          )]: variant === VARIANTS.contained && disabledOrPending
+        },
         { 'shadow-sm': variant === VARIANTS.contained && !disabledOrPending },
 
         { 'bg-transparent': variant === VARIANTS.text },
