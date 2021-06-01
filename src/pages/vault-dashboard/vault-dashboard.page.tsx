@@ -13,6 +13,7 @@ import {
 } from '@interlay/polkabtc';
 import { useTranslation } from 'react-i18next';
 import tw from 'twin.macro';
+import { IssueColumns, RedeemColumns } from '@interlay/polkabtc-stats';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -27,7 +28,6 @@ import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collater
 import RequestReplacementModal from './request-replacement/request-replacement';
 import ReplaceTable from './replace-table/replace-table';
 import { StoreType } from 'common/types/util.types';
-import { safeRoundFiveDecimals, safeRoundTwoDecimals } from 'common/utils/utils';
 import {
   updateCollateralizationAction,
   updateCollateralAction,
@@ -40,7 +40,7 @@ import './vault-dashboard.page.scss';
 import VaultIssueRequestsTable from 'containers/VaultIssueRequestTable';
 import VaultRedeemRequestsTable from 'containers/VaultRedeemRequestTable';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
-import { IssueColumns, RedeemColumns } from '@interlay/polkabtc-stats';
+import { displayBtcAmount, displayDotAmount, safeRoundTwoDecimals } from 'common/utils/utils';
 
 function VaultDashboard(): JSX.Element {
   const [updateCollateralModalStatus, setUpdateCollateralModalStatus] = useState(CollateralUpdateStatus.Hidden);
@@ -112,7 +112,6 @@ function VaultDashboard(): JSX.Element {
         }
 
         if (feesDOT.status === 'fulfilled') {
-          console.log(`dot fees: ${feesDOT.value.toString()}`);
           setFeesEarnedDOT(feesDOT.value.toString());
         }
 
@@ -158,31 +157,31 @@ function VaultDashboard(): JSX.Element {
   const VAULT_ITEMS = [
     {
       title: t('vault.locked_collateral'),
-      value: safeRoundTwoDecimals(collateral),
+      value: displayDotAmount(collateral),
       unit: 'DOT'
     },
     {
       title: t('locked_btc'),
-      value: safeRoundFiveDecimals(lockedBTC),
+      value: displayBtcAmount(lockedBTC),
       unit: 'BTC'
     },
     {
       title: t('collateralization'),
-      value: `${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`
+      value: `${displayDotAmount(collateralization?.toString(), '∞')}%`
     },
     {
       title: t('vault.capacity'),
-      value: `~${safeRoundTwoDecimals(capacity)}`,
+      value: `~${displayDotAmount(capacity)}`,
       unit: 'PolkaBTC'
     },
     {
       title: t('fees_earned'),
-      value: safeRoundFiveDecimals(feesEarnedPolkaBTC.toString()),
+      value: displayBtcAmount(feesEarnedPolkaBTC.toString()),
       unit: 'PolkaBTC'
     },
     {
       title: t('fees_earned'),
-      value: safeRoundTwoDecimals(feesEarnedDOT.toString()),
+      value: displayDotAmount(feesEarnedDOT.toString()),
       unit: 'DOT'
     },
     {

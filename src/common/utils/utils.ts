@@ -58,7 +58,8 @@ function getUsdAmount(amount: string | Big, rate: number): string {
   return new Big(amount).mul(new Big(rate)).toFixed(2).toString();
 }
 
-function displayBtcAmount(amount: string | number | Big): string {
+function displayBtcAmount(amount: string | number | Big, defaultValue = '0.00'): string {
+  if (amount === undefined) return defaultValue;
   // FIXME: hotfix workaround
   try {
     Big.NE = -10;
@@ -66,18 +67,19 @@ function displayBtcAmount(amount: string | number | Big): string {
     if (bigAmount.gte('0')) {
       return new Big(amount).round(8).toString();
     }
-    return '0.00';
+    return defaultValue;
   } catch {
-    return '0.00';
+    return defaultValue;
   }
 }
 
-function displayDotAmount(amount: string | number | Big): string {
+function displayDotAmount(amount: string | number | Big | undefined, defaultValue = '0.00'): string {
+  if (amount === undefined) return defaultValue;
   const bigAmount = new Big(amount);
   if (bigAmount.gte('0')) {
     return new Big(amount).round(5).toString();
   }
-  return '0.00';
+  return defaultValue;
 }
 
 /**
