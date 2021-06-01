@@ -38,11 +38,13 @@ const useUpdateRedeemRequests = (
       const [
         parachainHeight,
         redeemPeriod,
-        requiredBtcConfirmations
+        requiredBtcConfirmations,
+        requiredParachainConfirmations
       ] = await Promise.all([
-        window.polkaBTC.system.getCurrentBlockNumber(), // TODO: should avoid as it's called for issue
+        window.polkaBTC.system.getCurrentActiveBlockNumber(), // TODO: should avoid as it's called for issue
         window.polkaBTC.redeem.getRedeemPeriod(),
-        window.polkaBTC.btcRelay.getStableBitcoinConfirmations() // TODO: should avoid as it's called for issue
+        window.polkaBTC.btcRelay.getStableBitcoinConfirmations(), // TODO: should avoid as it's called for issue
+        window.polkaBTC.btcRelay.getStableParachainConfirmations()
       ]);
 
       const databaseRequests: RedeemRequest[] = (
@@ -60,7 +62,8 @@ const useUpdateRedeemRequests = (
           bitcoinHeight,
           parachainHeight,
           redeemPeriod,
-          requiredBtcConfirmations
+          requiredBtcConfirmations,
+          requiredParachainConfirmations
         )
       );
 

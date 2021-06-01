@@ -33,13 +33,15 @@ async function parachainToUIIssueRequest(
   parachainIssueRequest: ParachainIssueRequest,
   parachainHeight?: number,
   issuePeriod?: number,
-  requiredBtcConfirmations?: number
+  requiredBtcConfirmations?: number,
+  requiredParachainConfirmations?: number
 ): Promise<IssueRequest> {
-  if (!parachainHeight || !issuePeriod || !requiredBtcConfirmations) {
-    [parachainHeight, issuePeriod, requiredBtcConfirmations] = await Promise.all([
-      window.polkaBTC.system.getCurrentBlockNumber(),
+  if (!parachainHeight || !issuePeriod || !requiredBtcConfirmations || !requiredParachainConfirmations) {
+    [parachainHeight, issuePeriod, requiredBtcConfirmations, requiredParachainConfirmations] = await Promise.all([
+      window.polkaBTC.system.getCurrentActiveBlockNumber(),
       window.polkaBTC.issue.getIssuePeriod(),
-      window.polkaBTC.btcRelay.getStableBitcoinConfirmations()
+      window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
+      window.polkaBTC.btcRelay.getStableParachainConfirmations()
     ]);
   }
   const amountPolkaBTC = satToBTC(parachainIssueRequest.amount.toString());
@@ -50,7 +52,8 @@ async function parachainToUIIssueRequest(
     parachainIssueRequest.opentime,
     parachainHeight,
     issuePeriod,
-    requiredBtcConfirmations
+    requiredBtcConfirmations,
+    requiredParachainConfirmations
   );
   return {
     id: stripHexPrefix(id.toString()),
@@ -78,7 +81,8 @@ const statsToUIIssueRequest = async (
   currentBTCHeight: number,
   parachainHeight: number,
   issuePeriod: number,
-  requiredBtcConfirmations: number
+  requiredBtcConfirmations: number,
+  requiredParachainConfirmations: number
 ): Promise<IssueRequest> => ({
   id: statsIssue.id,
   requestedAmountPolkaBTC: statsIssue.amountBTC,
@@ -104,6 +108,7 @@ const statsToUIIssueRequest = async (
     parachainHeight,
     issuePeriod,
     requiredBtcConfirmations,
+    requiredParachainConfirmations,
     statsIssue.requestedRefund,
     statsIssue.btcTxId,
     statsIssue.confirmations
@@ -139,6 +144,7 @@ function computeIssueRequestStatus(
   parachainHeight: number,
   issuePeriod: number,
   requiredBtcConfirmations: number,
+  requiredParachainConfirmations: number,
   requestedRefund = false,
   btcTxId = '',
   confirmations = 0
@@ -152,9 +158,10 @@ function computeIssueRequestStatus(
   if (cancelled) {
     return IssueRequestStatus.Cancelled;
   }
+
   const creationBlockAsNumber = creationBlock.toNumber();
-  const parachainHeightAsNumber = parachainHeight;
-  if (creationBlockAsNumber + issuePeriod <= parachainHeightAsNumber) {
+
+  if (creationBlockAsNumber + issuePeriod <= parachainHeight) {
     return IssueRequestStatus.Expired;
   }
 
@@ -165,6 +172,10 @@ function computeIssueRequestStatus(
     return IssueRequestStatus.PendingWithBtcTxNotIncluded;
   }
   if (confirmations < requiredBtcConfirmations) {
+    return IssueRequestStatus.PendingWithTooFewConfirmations;
+  }
+
+  if (creationBlockAsNumber + requiredParachainConfirmations >= parachainHeight) {
     return IssueRequestStatus.PendingWithTooFewConfirmations;
   }
 
@@ -186,14 +197,28 @@ async function parachainToUIRedeemRequest(
   parachainRedeemRequest?: ParachainRedeemRequest,
   parachainHeight?: number,
   redeemPeriod?: number,
-  requiredBtcConfirmations?: number
+  requiredBtcConfirmations?: number,
+  requiredParachainConfirmations?: number
 ): Promise<RedeemRequest> {
-  if (!parachainRedeemRequest || !parachainHeight || !redeemPeriod || !requiredBtcConfirmations) {
-    [parachainRedeemRequest, parachainHeight, redeemPeriod, requiredBtcConfirmations] = await Promise.all([
+  if (
+    !parachainRedeemRequest ||
+    !parachainHeight ||
+    !redeemPeriod ||
+    !requiredBtcConfirmations ||
+    !requiredParachainConfirmations
+  ) {
+    [
+      parachainRedeemRequest,
+      parachainHeight,
+      redeemPeriod,
+      requiredBtcConfirmations,
+      requiredParachainConfirmations
+    ] = await Promise.all([
       window.polkaBTC.redeem.getRequestById(id),
-      window.polkaBTC.system.getCurrentBlockNumber(),
+      window.polkaBTC.system.getCurrentActiveBlockNumber(),
       window.polkaBTC.redeem.getRedeemPeriod(),
-      window.polkaBTC.btcRelay.getStableBitcoinConfirmations()
+      window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
+      window.polkaBTC.btcRelay.getStableParachainConfirmations()
     ]);
   }
   const amountBTC = satToBTC(parachainRedeemRequest.amount_btc.toString());
@@ -206,7 +231,8 @@ async function parachainToUIRedeemRequest(
     parachainRedeemRequest.opentime,
     parachainHeight,
     redeemPeriod,
-    requiredBtcConfirmations
+    requiredBtcConfirmations,
+    requiredParachainConfirmations
   );
   return {
     id: stripHexPrefix(id.toString()),
@@ -219,6 +245,7 @@ async function parachainToUIRedeemRequest(
     vaultDOTAddress: parachainRedeemRequest.vault.toString(),
     btcTxId: '',
     fee,
+    btcTransferFee: '0', // FIXME if necessary - not sure this is actually going to be used anywhere
     confirmations: 0,
     status
   };
@@ -229,13 +256,18 @@ const statsToUIRedeemRequest = (
   currentBTCHeight: number,
   parachainHeight: number,
   redeemPeriod: number,
-  requiredBtcConfirmations: number
+  requiredBtcConfirmations: number,
+  requiredParachainConfirmations: number
 ): RedeemRequest => ({
   id: statsRedeem.id,
-  amountPolkaBTC: new Big(statsRedeem.amountPolkaBTC).add(new Big(statsRedeem.feePolkabtc)).toString(),
+  amountPolkaBTC: new Big(statsRedeem.amountPolkaBTC)
+    .add(new Big(statsRedeem.feePolkabtc))
+    .add(new Big(statsRedeem.btcTransferFee))
+    .toString(),
   // FIXME: naming of vars
   amountBTC: statsRedeem.amountPolkaBTC,
   fee: statsRedeem.feePolkabtc,
+  btcTransferFee: statsRedeem.btcTransferFee,
   timestamp: statsRedeem.timestamp,
   creation: statsRedeem.creation.toString(),
   userBTCAddress: statsRedeem.btcAddress,
@@ -257,6 +289,7 @@ const statsToUIRedeemRequest = (
     parachainHeight,
     redeemPeriod,
     requiredBtcConfirmations,
+    requiredParachainConfirmations,
     statsRedeem.btcTxId,
     statsRedeem.confirmations
   )
@@ -283,6 +316,7 @@ function computeRedeemRequestStatus(
   parachainHeight: number,
   redeemPeriod: number,
   requiredBtcConfirmations: number,
+  requiredParachainConfirmations: number,
   btcTxId = '',
   confirmations = 0
 ): RedeemRequestStatus {
@@ -296,8 +330,7 @@ function computeRedeemRequestStatus(
     return RedeemRequestStatus.Retried;
   }
   const creationBlockAsNumber = creationBlock.toNumber();
-  const parachainHeightAsNumber = parachainHeight;
-  if (creationBlockAsNumber + redeemPeriod <= parachainHeightAsNumber) {
+  if (creationBlockAsNumber + redeemPeriod <= parachainHeight) {
     return RedeemRequestStatus.Expired;
   }
   if (btcTxId === '') {
@@ -307,6 +340,10 @@ function computeRedeemRequestStatus(
     return RedeemRequestStatus.PendingWithBtcTxNotIncluded;
   }
   if (confirmations < requiredBtcConfirmations) {
+    return RedeemRequestStatus.PendingWithTooFewConfirmations;
+  }
+
+  if (creationBlockAsNumber + requiredParachainConfirmations <= parachainHeight) {
     return RedeemRequestStatus.PendingWithTooFewConfirmations;
   }
 

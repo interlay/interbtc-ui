@@ -59,12 +59,17 @@ function getUsdAmount(amount: string | Big, rate: number): string {
 }
 
 function displayBtcAmount(amount: string | number | Big): string {
-  Big.NE = -10;
-  const bigAmount = new Big(amount);
-  if (bigAmount.gte('0')) {
-    return new Big(amount).round(8).toString();
+  // FIXME: hotfix workaround
+  try {
+    Big.NE = -10;
+    const bigAmount = new Big(amount);
+    if (bigAmount.gte('0')) {
+      return new Big(amount).round(8).toString();
+    }
+    return '0.00';
+  } catch {
+    return '0.00';
   }
-  return '0.00';
 }
 
 function displayDotAmount(amount: string | number | Big): string {
