@@ -1,13 +1,13 @@
 {
   "name": "polkabtc-ui",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.1",
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.1.5",
     "@headlessui/react": "^1.1.1",
-    "@interlay/polkabtc": "0.15.5",
+    "@interlay/polkabtc": "0.16.3",
     "@interlay/polkabtc-stats": "0.3.1",
     "@polkadot/extension-dapp": "0.38.1",
     "@polkadot/types": "4.8.1",

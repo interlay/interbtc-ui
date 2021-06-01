@@ -27,7 +27,7 @@ import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collater
 import RequestReplacementModal from './request-replacement/request-replacement';
 import ReplaceTable from './replace-table/replace-table';
 import { StoreType } from 'common/types/util.types';
-import { safeRoundTwoDecimals } from 'common/utils/utils';
+import { safeRoundFiveDecimals, safeRoundTwoDecimals } from 'common/utils/utils';
 import {
   updateCollateralizationAction,
   updateCollateralAction,
@@ -97,7 +97,7 @@ function VaultDashboard(): JSX.Element {
           window.polkaBTC.vaults.getVaultCollateralization(vaultId),
           window.polkaBTC.vaults.getSLA(vaultId),
           window.polkaBTC.vaults.getAPY(vaultId),
-          window.polkaBTC.vaults.getIssuablePolkaBTC(),
+          window.polkaBTC.vaults.getIssuableAmount(vaultId),
           stats.getFilteredTotalIssues([{ column: IssueColumns.VaultId, value: address }]),
           stats.getFilteredTotalRedeems([{ column: RedeemColumns.VaultId, value: address }])
         ]);
@@ -112,6 +112,7 @@ function VaultDashboard(): JSX.Element {
         }
 
         if (feesDOT.status === 'fulfilled') {
+          console.log(`dot fees: ${feesDOT.value.toString()}`);
           setFeesEarnedDOT(feesDOT.value.toString());
         }
 
@@ -140,7 +141,7 @@ function VaultDashboard(): JSX.Element {
         }
 
         if (issuablePolkaBTC.status === 'fulfilled') {
-          setCapacity(issuablePolkaBTC.value);
+          setCapacity(issuablePolkaBTC.value.toString());
         }
       } catch (error) {
         console.log('[VaultDashboard useEffect] error.message => ', error.message);
@@ -157,12 +158,12 @@ function VaultDashboard(): JSX.Element {
   const VAULT_ITEMS = [
     {
       title: t('vault.locked_collateral'),
-      value: collateral,
+      value: safeRoundTwoDecimals(collateral),
       unit: 'DOT'
     },
     {
       title: t('locked_btc'),
-      value: lockedBTC,
+      value: safeRoundFiveDecimals(lockedBTC),
       unit: 'BTC'
     },
     {
@@ -176,12 +177,12 @@ function VaultDashboard(): JSX.Element {
     },
     {
       title: t('fees_earned'),
-      value: feesEarnedPolkaBTC.toString(),
+      value: safeRoundFiveDecimals(feesEarnedPolkaBTC.toString()),
       unit: 'PolkaBTC'
     },
     {
       title: t('fees_earned'),
-      value: feesEarnedDOT.toString(),
+      value: safeRoundTwoDecimals(feesEarnedDOT.toString()),
       unit: 'DOT'
     },
     {

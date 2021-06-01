@@ -1669,10 +1669,10 @@
   resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.6.2.tgz#0eeef460850e4b82abd58aa2ebbd8b92497d7e7a"
   integrity sha512-uhlzcp9rcwGtsEWStzcWrKWVIQtmnQTVgpXL2RdWSF2Ed4cF+Y2fQe5SsKBSR56T6GImHTYds0Psare+HzI0vw==
 
-"@interlay/polkabtc-types@0.7.2":
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.7.2.tgz#6b4e3845b03a73987fc40b8f0e4d2cf82c266e16"
-  integrity sha512-eGasKq3xgpBIBKTO9l/eWOA2i8TwjTqOXduNjZ/j086DLp+DQ3m5/YgpWXZbVo7I6AJgClQ8r+xEjndcw7QHXA==
+"@interlay/polkabtc-types@0.7.3":
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.7.3.tgz#5fcbffe9792cc61ac50701cbce615e85696124d3"
+  integrity sha512-QYrHiUtpZzkiy9vXwq5cMT8JlaIhIjXVDc9h5OmNOfAfNwyHGn3vm/c7jHD7QH2QIRXRqcjoY1Mv+DnjigfDsg==
 
 "@interlay/polkabtc@0.14.4":
   version "0.14.4"
@@ -1692,13 +1692,13 @@
     sinon "^9.0.3"
     ts-mock-imports "^1.3.0"
 
-"@interlay/polkabtc@0.15.5":
-  version "0.15.5"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.15.5.tgz#5eeb35a091506e54d2d1034af41dac818391cbc9"
-  integrity sha512-KELTxomx3BZkimsrtAg2iWufs3aggCvouRXOV7+D3yI/+EaEBV1myc7eHLBhsgmUTgchpTl9vz6tFV/spUXZFg==
+"@interlay/polkabtc@0.16.3":
+  version "0.16.3"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.16.3.tgz#7ef9c1ea40ef4d717d741964f59879acd91e197b"
+  integrity sha512-ytV0ktB4HUn8evZeqSVSNnmWxTBBH0ni0tk3SOtbxH+7WKQ4dayx+dCCPLQSZQLPVDaHSMbLNKmWXcUt7XgyHw==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
-    "@interlay/polkabtc-types" "0.7.2"
+    "@interlay/polkabtc-types" "0.7.3"
     "@polkadot/api" "4.8.1"
     "@polkadot/typegen" "4.8.1"
     "@types/big.js" "6.0.2"

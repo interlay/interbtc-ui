@@ -31,7 +31,7 @@ import { formatDateTimePrecise } from './utils';
 async function parachainToUIIssueRequest(
   id: H256,
   parachainIssueRequest: ParachainIssueRequest,
-  parachainHeight?: BlockNumber,
+  parachainHeight?: number,
   issuePeriod?: number,
   requiredBtcConfirmations?: number
 ): Promise<IssueRequest> {
@@ -76,7 +76,7 @@ async function parachainToUIIssueRequest(
 const statsToUIIssueRequest = async (
   statsIssue: Issue,
   currentBTCHeight: number,
-  parachainHeight: BlockNumber,
+  parachainHeight: number,
   issuePeriod: number,
   requiredBtcConfirmations: number
 ): Promise<IssueRequest> => ({
@@ -136,7 +136,7 @@ function computeIssueRequestStatus(
   completed: boolean,
   cancelled: boolean,
   creationBlock: BlockNumber,
-  parachainHeight: BlockNumber,
+  parachainHeight: number,
   issuePeriod: number,
   requiredBtcConfirmations: number,
   requestedRefund = false,
@@ -153,7 +153,7 @@ function computeIssueRequestStatus(
     return IssueRequestStatus.Cancelled;
   }
   const creationBlockAsNumber = creationBlock.toNumber();
-  const parachainHeightAsNumber = parachainHeight.toNumber();
+  const parachainHeightAsNumber = parachainHeight;
   if (creationBlockAsNumber + issuePeriod <= parachainHeightAsNumber) {
     return IssueRequestStatus.Expired;
   }
@@ -184,7 +184,7 @@ function computeIssueRequestStatus(
 async function parachainToUIRedeemRequest(
   id: H256,
   parachainRedeemRequest?: ParachainRedeemRequest,
-  parachainHeight?: BlockNumber,
+  parachainHeight?: number,
   redeemPeriod?: number,
   requiredBtcConfirmations?: number
 ): Promise<RedeemRequest> {
@@ -227,7 +227,7 @@ async function parachainToUIRedeemRequest(
 const statsToUIRedeemRequest = (
   statsRedeem: Redeem,
   currentBTCHeight: number,
-  parachainHeight: BlockNumber,
+  parachainHeight: number,
   redeemPeriod: number,
   requiredBtcConfirmations: number
 ): RedeemRequest => ({
@@ -280,7 +280,7 @@ function computeRedeemRequestStatus(
   retried: boolean,
   reimbursed: boolean,
   creationBlock: BlockNumber,
-  parachainHeight: BlockNumber,
+  parachainHeight: number,
   redeemPeriod: number,
   requiredBtcConfirmations: number,
   btcTxId = '',
@@ -296,7 +296,7 @@ function computeRedeemRequestStatus(
     return RedeemRequestStatus.Retried;
   }
   const creationBlockAsNumber = creationBlock.toNumber();
-  const parachainHeightAsNumber = parachainHeight.toNumber();
+  const parachainHeightAsNumber = parachainHeight;
   if (creationBlockAsNumber + redeemPeriod <= parachainHeightAsNumber) {
     return RedeemRequestStatus.Expired;
   }
