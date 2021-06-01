@@ -1,6 +1,6 @@
 {
   "name": "polkabtc-ui",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.1",
@@ -8,7 +8,7 @@
     "@emotion/styled": "^11.1.5",
     "@headlessui/react": "^1.1.1",
     "@interlay/polkabtc-stats": "0.3.3",
-    "@interlay/polkabtc": "0.16.2",
+    "@interlay/polkabtc": "0.16.3",
     "@polkadot/extension-dapp": "0.38.1",
     "@polkadot/types": "4.8.1",
     "@polkadot/api": "4.8.1",
@@ -61,7 +61,7 @@
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "twin.macro": "^2.3.0",
-    "typescript": "^4.1.2",
+    "typescript": "4.2.2",
     "web-vitals": "^1.0.1"
   },
   "devDependencies": {
