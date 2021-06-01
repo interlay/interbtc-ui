@@ -49,7 +49,7 @@ const InterlayButton = ({
         minHeight: 36
       }}
       className={clsx(
-        { 'bg-gray-300 hover:bg-gray-400 text-textPrimary': // palette.text.primary
+        { 'bg-gray-300 hover:bg-gray-400 text-textPrimary':
           variant === VARIANTS.contained && color === COLORS.default && !disabledOrPending },
         { 'bg-primary hover:bg-primary-600 text-primary-contrastText':
           variant === VARIANTS.contained && color === COLORS.primary && !disabledOrPending },
@@ -58,12 +58,16 @@ const InterlayButton = ({
         {
           [clsx(
             'bg-black',
-            'bg-opacity-10',
+            'bg-opacity-10'
+          )]: variant === VARIANTS.contained && disabledOrPending
+        },
+        {
+          [clsx(
             'text-black',
             'text-opacity-25',
             'dark:text-white',
             'dark:text-opacity-30'
-          )]: variant === VARIANTS.contained && disabledOrPending
+          )]: disabledOrPending
         },
         { 'shadow-sm': variant === VARIANTS.contained && !disabledOrPending },
 
