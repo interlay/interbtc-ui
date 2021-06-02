@@ -464,17 +464,17 @@
     "lifetime_sla": "Lifetime SLA Score",
     "more_info": "More info",
     "challenge_buttons": [
-      "Challenges 2 & 3",
       "Challenge 4",
+      "Challenges 2 & 3",
       "All-time"
     ],
     "challenges": {
       "treasure_hunt": "Challenge 1: Treasure Hunt",
       "treasure_hunt_desc": "Issue & redeem to claim reward.",
       "vaults_relayers": "Challenge 4: King of the Hill",
-      "vaults_relayers_desc": "Stay tuned, coming soon!",
+      "vaults_relayers_desc": "Maximize your Vault and Relayer SLA score to win DOT.",
       "lottery": "Challenge 5: Lottery",
-      "lottery_desc": "Stay tuned, coming soon!",
+      "lottery_desc": "Create issue, redeem, and replace requests to win DOT.",
       "vault_treasure_hunt": "Challenge 2: Vault Treasure",
       "vault_treasure_hunt_desc": "Run a Vault client to fulfill issue and redeem requests.",
       "relayer_treasure_hunt": "Challenge 3: Relayer Treasure",
