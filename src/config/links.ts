@@ -21,6 +21,10 @@ const POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT =
   'https://docs.polkabtc.io/#/start/beta?id=vault-award-4-dot-for-the-first-50-200-dot-in-total';
 const POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER =
   'https://docs.polkabtc.io/#/start/beta?id=staked-relayer-award-4-dot-for-the-first-50-200-dot-in-total';
+const POLKA_BTC_DOC_KING_OF_THE_HILL =
+  'https://docs.polkabtc.io/#/start/beta?id=king-of-the-hill-vaults-and-relayers-200-dot';
+const POLKA_BTC_DOC_LOTTERY =
+  'https://docs.polkabtc.io/#/start/beta?id=lottery-200-dot';
 const POLKA_BTC_DOC_START_OVERVIEW = 'https://docs.polkabtc.io/#/start/overview';
 const POLKA_BTC_DOC_VAULTS_OVERVIEW = 'https://docs.polkabtc.io/#/vault/overview';
 const POLKA_BTC_DOC_RELAYERS_OVERVIEW = 'https://docs.polkabtc.io/#/relayer/overview';
@@ -48,6 +52,8 @@ export {
   POLKA_BTC_DOC_START_TREASURE_HUNT,
   POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT,
   POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER,
+  POLKA_BTC_DOC_KING_OF_THE_HILL,
+  POLKA_BTC_DOC_LOTTERY,
   POLKA_BTC_DOC_START_OVERVIEW,
   POLKA_BTC_DOC_VAULTS_OVERVIEW,
   POLKA_BTC_DOC_RELAYERS_OVERVIEW,
