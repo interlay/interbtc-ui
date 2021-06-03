@@ -46,7 +46,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
 
     try {
       // Execute issue
-      await window.polkaBTC.issue.execute(request.id, request.btcTxId);
+      await window.polkaBTC.issue.execute('0x' + request.id, request.btcTxId);
 
       const completedReq = request;
       completedReq.status = IssueRequestStatus.Completed;

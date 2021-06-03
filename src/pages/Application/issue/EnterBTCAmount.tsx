@@ -31,7 +31,6 @@ import {
   BLOCK_TIME,
   BLOCKS_BEHIND_LIMIT
 } from 'config/parachain';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   changeIssueStepAction,
   changeIssueIdAction,
@@ -235,16 +234,16 @@ const EnterBTCAmount = (): JSX.Element | null => {
   const onSubmit = async (data: IssueForm) => {
     try {
       const polkaBTCAmount = new Big(data[BTC_AMOUNT]);
-      const vaultAccountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vaultId);
       setSubmitStatus(STATUSES.PENDING);
-      const result = await window.polkaBTC.issue.request(polkaBTCAmount, vaultAccountId);
+      const result = await window.polkaBTC.issue.request(polkaBTCAmount);
       // ray test touch <
-      const issueRequest = await parachainToUIIssueRequest(result.id, result.issueRequest);
+      // TODO: handle issue aggregation
+      const issueRequest = await parachainToUIIssueRequest(result[0].id, result[0].issueRequest);
       // ray test touch >
       setSubmitStatus(STATUSES.RESOLVED);
 
       // Get the issue ID from the request issue event
-      const issueId = stripHexPrefix(result.id.toString());
+      const issueId = stripHexPrefix(result[0].id.toString());
       dispatch(changeIssueIdAction(issueId));
 
       // Update the issue status
