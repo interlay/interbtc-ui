@@ -20,7 +20,7 @@ type StatusViewProps = {
 export default function StatusView(props: StatusViewProps): ReactElement {
   const { t } = useTranslation();
   const { polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
-  const [stableBitcoinConfirmations, setStableBitcoinConfirmations] = useState(0);
+  const [stableBitcoinConfirmations, setStableBitcoinConfirmations] = useState(1);
   const [punishmentDOT, setPunishmentDOT] = useState(new Big(0));
   const [burnAmountDOT, setBurnAmountDOT] = useState(new Big(0));
   const [amountDOT, setAmountDOT] = useState(new Big(0));

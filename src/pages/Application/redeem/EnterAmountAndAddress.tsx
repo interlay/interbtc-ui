@@ -41,7 +41,6 @@ import {
   BTC_ADDRESS_REGEX
 } from '../../../constants';
 import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   displayBtcAmount,
   getUsdAmount,
@@ -51,6 +50,7 @@ import { parachainToUIRedeemRequest } from 'common/utils/requests';
 import STATUSES from 'utils/constants/statuses';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
 const POLKA_BTC_AMOUNT = 'polka-btc-amount';
 const BTC_ADDRESS = 'btc-address';
@@ -221,13 +221,18 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
         vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), polkaBTCAmount);
       }
 
-      const vaultAccountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vaultId.toString());
-      const result = await window.polkaBTC.redeem.request(polkaBTCAmount, data[BTC_ADDRESS], vaultAccountId);
-      const redeemRequest = await parachainToUIRedeemRequest(result.id);
+      // FIXME: workaround to make premium redeem still possible
+      const relevantVaults = new Map<AccountId, Big>();
+      const id = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vaultId);
+      // FIXME: a bit of a dirty workaround with the capacity
+      relevantVaults.set(id, polkaBTCAmount.mul(2));
+      const result = await window.polkaBTC.redeem.request(polkaBTCAmount, data[BTC_ADDRESS], true, 0, relevantVaults);
+      // TODO: handle redeem aggregator
+      const redeemRequest = await parachainToUIRedeemRequest(result[0].id, result[0].redeemRequest);
       setSubmitStatus(STATUSES.RESOLVED);
 
       // Get the redeem id from the request redeem event
-      const redeemId = stripHexPrefix(result.id.toString());
+      const redeemId = stripHexPrefix(result[0].id.toString());
       dispatch(changeRedeemIdAction(redeemId));
 
       // Update the redeem status
