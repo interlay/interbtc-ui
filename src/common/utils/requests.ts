@@ -38,7 +38,7 @@ async function parachainToUIIssueRequest(
 ): Promise<IssueRequest> {
   if (!parachainHeight || !issuePeriod || !requiredBtcConfirmations || !requiredParachainConfirmations) {
     [parachainHeight, issuePeriod, requiredBtcConfirmations, requiredParachainConfirmations] = await Promise.all([
-      window.polkaBTC.system.getCurrentActiveBlockNumber(),
+      window.polkaBTC.system.getCurrentBlockNumber(),
       window.polkaBTC.issue.getIssuePeriod(),
       window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
       window.polkaBTC.btcRelay.getStableParachainConfirmations()
@@ -215,7 +215,7 @@ async function parachainToUIRedeemRequest(
       requiredParachainConfirmations
     ] = await Promise.all([
       window.polkaBTC.redeem.getRequestById(id),
-      window.polkaBTC.system.getCurrentActiveBlockNumber(),
+      window.polkaBTC.system.getCurrentBlockNumber(),
       window.polkaBTC.redeem.getRedeemPeriod(),
       window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
       window.polkaBTC.btcRelay.getStableParachainConfirmations()
