@@ -9,7 +9,7 @@ import {
   changeRedeemIdAction
 } from '../../../common/actions/redeem.actions';
 import RedeemModal from './modal/redeem-modal';
-import { getUsdAmount } from '../../../common/utils/utils';
+import { displayBtcAmount, getUsdAmount } from '../../../common/utils/utils';
 
 export default function RedeemInfo(): JSX.Element {
   const { t } = useTranslation();
@@ -43,7 +43,7 @@ export default function RedeemInfo(): JSX.Element {
             </div>
             <div className='row'>
               <div className='col-12 info-redeem-title'>
-                <span>{t('redeem_page.will_receive_BTC')}&nbsp;</span> {request.amountPolkaBTC} BTC
+                <span>{t('redeem_page.will_receive_BTC')}&nbsp;</span> {displayBtcAmount(request.amountBTC)} BTC
               </div>
             </div>
             <div className='row'>
