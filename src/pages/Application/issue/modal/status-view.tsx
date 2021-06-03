@@ -31,7 +31,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
       const [btcConf, paraConf, paraHeight] = await Promise.all([
         await window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
         await window.polkaBTC.btcRelay.getStableParachainConfirmations(),
-        await window.polkaBTC.system.getCurrentActiveBlockNumber()
+        await window.polkaBTC.system.getCurrentBlockNumber()
       ]);
       setStableBitcoinConfirmations(btcConf);
       setStableParachainConfirmations(paraConf);

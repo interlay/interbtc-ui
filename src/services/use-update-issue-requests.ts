@@ -42,7 +42,7 @@ const useUpdateIssueRequests = (
         requiredBtcConfirmations,
         requiredParachainConfirmations
       ] = await Promise.all([
-        window.polkaBTC.system.getCurrentActiveBlockNumber(),
+        window.polkaBTC.system.getCurrentBlockNumber(),
         window.polkaBTC.issue.getIssuePeriod(),
         window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
         window.polkaBTC.btcRelay.getStableParachainConfirmations()

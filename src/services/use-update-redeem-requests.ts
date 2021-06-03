@@ -41,7 +41,7 @@ const useUpdateRedeemRequests = (
         requiredBtcConfirmations,
         requiredParachainConfirmations
       ] = await Promise.all([
-        window.polkaBTC.system.getCurrentActiveBlockNumber(), // TODO: should avoid as it's called for issue
+        window.polkaBTC.system.getCurrentBlockNumber(), // TODO: should avoid as it's called for issue
         window.polkaBTC.redeem.getRedeemPeriod(),
         window.polkaBTC.btcRelay.getStableBitcoinConfirmations(), // TODO: should avoid as it's called for issue
         window.polkaBTC.btcRelay.getStableParachainConfirmations()
