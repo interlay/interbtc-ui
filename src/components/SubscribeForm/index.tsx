@@ -45,7 +45,7 @@ const SubscribeForm = ({ endpoint }: Props): JSX.Element => (
           type='text'
           name='b_4c3c3f21d3ec4c3ed94ea7353_ad217abce9'
           tabIndex={-1}
-          value=''
+          defaultValue=''
           hidden
           aria-hidden='true' />
       </div>
