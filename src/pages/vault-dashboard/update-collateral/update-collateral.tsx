@@ -230,7 +230,8 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
             color={getButtonVariant(props.status)}
             disabled={!isCollateralUpdateAllowed}
             pending={isUpdatePending}>
-            {props.status === CollateralUpdateStatus.Increase ? t('vault.deposit_collateral') : t('vault.withdraw_collateral')}
+            {props.status === CollateralUpdateStatus.Increase ?
+              t('vault.deposit_collateral') : t('vault.withdraw_collateral')}
           </InterlayButton>
         </Modal.Footer>
       </form>
