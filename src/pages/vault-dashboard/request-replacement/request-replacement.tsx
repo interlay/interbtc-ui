@@ -67,11 +67,10 @@ export default function RequestReplacementModal(props: RequestReplacementProps):
         </Modal.Header>
         <Modal.Body>
           <div className='row'>
-            <div className='col-12 request-header'>{t('vault.withdraw_your_collateral')}</div>
-            <div className='col-12'>{t('vault.your_have')}</div>
-            <div className='col-12'> {lockedDot} DOT</div>
+            <div className='col-12 vault-empty-space'>{t('vault.withdraw_your_collateral')}</div>
+            <div className='col-12'>{t('vault.locked_collateral')} {lockedDot} DOT</div>
             <div className='col-12 vault-empty-space'>
-              {t('locked')} {lockedBtc} BTC
+              {t('locked_btc')} {lockedBtc} BTC
             </div>
             <div className='col-12 vault-empty-space'>{t('vault.replace_amount')}</div>
             <div className='col-12'>

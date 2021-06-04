@@ -1692,10 +1692,10 @@
     sinon "^9.0.3"
     ts-mock-imports "^1.3.0"
 
-"@interlay/polkabtc@0.17.0":
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.17.0.tgz#442f29350a505c79b69abfc55822365ac7d4b5f8"
-  integrity sha512-gUTXCDnouhcYdLad1LaNuLuWijm10D9YPfVGEB/sC2f8X0680U6G97EDy/GkWbEKwg47C4TMWAdjgaskQdruUQ==
+"@interlay/polkabtc@0.17.1":
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.17.1.tgz#de25b447103ece5d4231a04a0c22d012ad264411"
+  integrity sha512-ha76/R9Tq7/I2oU/p1IcveV2z2dYkTWmARyMKCSEmZTddcB2h3NOhIDmt1TGFzgz6vo5zvopOmCZp+dUt9HeZQ==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
     "@interlay/polkabtc-types" "0.7.3"
