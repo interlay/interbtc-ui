@@ -3,7 +3,6 @@ import React, {
   useState,
   useEffect
 } from 'react';
-import { Button } from 'react-bootstrap';
 import {
   useSelector,
   useDispatch
@@ -14,6 +13,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import tw from 'twin.macro';
 import { IssueColumns, RedeemColumns } from '@interlay/polkabtc-stats';
+import Big from 'big.js';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -41,6 +41,8 @@ import VaultIssueRequestsTable from 'containers/VaultIssueRequestTable';
 import VaultRedeemRequestsTable from 'containers/VaultRedeemRequestTable';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
 import { displayBtcAmount, displayDotAmount, safeRoundTwoDecimals } from 'common/utils/utils';
+import InterlayButton from 'components/UI/InterlayButton';
+import clsx from 'clsx';
 
 function VaultDashboard(): JSX.Element {
   const [updateCollateralModalStatus, setUpdateCollateralModalStatus] = useState(CollateralUpdateStatus.Hidden);
@@ -167,7 +169,7 @@ function VaultDashboard(): JSX.Element {
     },
     {
       title: t('collateralization'),
-      value: `${displayDotAmount(collateralization?.toString(), '∞')}%`
+      value: `${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`
     },
     {
       title: t('vault.capacity'),
@@ -224,18 +226,47 @@ function VaultDashboard(): JSX.Element {
               </Card>
             ))}
           </CardList>
-          <div className='flex justify-center space-x-4 mt-3'>
-            <Button
-              variant='outline-success'
+          <div
+            className={clsx(
+              'md:max-w-xl',
+              'mx-auto',
+              'grid',
+              'grid-cols-3',
+              'mt-3',
+              'mb-3'
+            )}>
+            <InterlayButton
+              type='submit'
+              style={{ display: 'flex' }}
+              className='mx-auto'
+              variant='contained'
+              color='primary'
               // TODO: should not use inlined functions
               onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Increase)}>
-              {t('vault.increase_collateral')}
-            </Button>
-            <Button
-              variant='outline-danger'
+              {t('vault.deposit_collateral')}
+            </InterlayButton>
+            <InterlayButton
+              type='submit'
+              style={{ display: 'flex' }}
+              className='mx-auto'
+              variant='contained'
+              color='default'
               onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Decrease)}>
               {t('vault.withdraw_collateral')}
-            </Button>
+            </InterlayButton>
+            {new Big(lockedBTC).gt(new Big(0)) ? (
+              <InterlayButton
+                type='submit'
+                style={{ display: 'flex' }}
+                className='mx-auto'
+                variant='contained'
+                color='secondary'
+                onClick={() => setShowRequestReplacementModal(true)}>
+                {t('vault.replace_vault')}
+              </InterlayButton>
+            ) : (
+              ''
+            )}
           </div>
         </>
         <VaultIssueRequestsTable
@@ -244,7 +275,7 @@ function VaultDashboard(): JSX.Element {
         <VaultRedeemRequestsTable
           totalRedeemRequests={totalRedeemRequests}
           vaultAddress={address} />
-        <ReplaceTable openModal={setShowRequestReplacementModal} />
+        <ReplaceTable />
         <UpdateCollateralModal
           onClose={closeUpdateCollateralModal}
           status={updateCollateralModalStatus} />
