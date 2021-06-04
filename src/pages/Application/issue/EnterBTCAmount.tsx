@@ -51,8 +51,9 @@ import { ReactComponent as PolkaBTCLogoIcon } from 'assets/img/polkabtc-logo.svg
 
 const BTC_AMOUNT = 'btc-amount';
 
-// TODO: should handle correctly
-const REQUIRED_MINIMUM_DOT_AMOUNT = 0;
+// TODO: should handle correctly later
+const EXTRA_REQUIRED_DOT_AMOUNT = 0.2;
+const MAXIMUM_ISSUABLE_POLKA_BTC_AMOUNT = 1;
 
 type IssueForm = {
   [BTC_AMOUNT]: string;
@@ -89,44 +90,13 @@ const EnterBTCAmount = (): JSX.Element | null => {
   // Current fee model specification taken from: https://interlay.gitlab.io/polkabtc-spec/spec/fee.html
   const [feeRate, setFeeRate] = React.useState(new Big(0.005)); // Set default to 0.5%
   const [depositRate, setDepositRate] = React.useState(new Big(0.00005)); // Set default to 0.005%
-  const [btcToDotRate, setBtcToDotRate] = React.useState(new Big(0));
-  const [bridgeFee, setBridgeFee] = React.useState(new Big(0));
-  const [polkaBtcAmount, setPolkaBtcAmount] = React.useState(new Big(0));
-  const [securityDeposit, setSecurityDeposit] = React.useState(new Big(0));
+  const [btcToDOTRate, setBTCToDOTRate] = React.useState(new Big(0));
   const [vaults, setVaults] = React.useState<Map<AccountId, Big>>();
-  const [vaultId, setVaultId] = React.useState('');
   const [dustValue, setDustValue] = React.useState('0');
   const [vaultMaxAmount, setVaultMaxAmount] = React.useState('');
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
-
-  React.useEffect(() => {
-    if (!btcAmount) return;
-    if (!btcToDotRate) return;
-    if (!depositRate) return;
-    if (!feeRate) return;
-    if (!vaults) return;
-
-    const bigPolkaBTCAmount = new Big(btcAmount);
-    const theBridgeFee = bigPolkaBTCAmount.mul(feeRate);
-    setBridgeFee(theBridgeFee);
-
-    const theSecurityDeposit = bigPolkaBTCAmount.mul(btcToDotRate).mul(depositRate);
-    setSecurityDeposit(theSecurityDeposit);
-
-    const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), bigPolkaBTCAmount);
-    setVaultId(vaultId ?? '');
-
-    const thePolkaBtcAmount = new Big(btcAmount).sub(theBridgeFee);
-    setPolkaBtcAmount(thePolkaBtcAmount);
-  }, [
-    btcAmount,
-    btcToDotRate,
-    depositRate,
-    feeRate,
-    vaults
-  ]);
 
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
@@ -159,7 +129,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
         const issuePeriod = issuePeriodInBlocks * BLOCK_TIME;
         dispatch(updateIssuePeriodAction(issuePeriod));
         setDustValue(theDustValue.toString());
-        setBtcToDotRate(btcToDot);
+        setBTCToDOTRate(btcToDot);
 
         let theVaultMaxAmount = new Big(0);
         // The first item is the vault with the largest capacity
@@ -195,26 +165,27 @@ const EnterBTCAmount = (): JSX.Element | null => {
     );
   }
 
-  const validateBTCAmount = (value: number): string | undefined => {
-    if (Number(balanceDOT) <= REQUIRED_MINIMUM_DOT_AMOUNT) {
+  const validateBTCAmount = (value = 0): string | undefined => {
+    const bigBTCAmount = new Big(value);
+
+    const securityDeposit = bigBTCAmount.mul(btcToDOTRate).mul(depositRate);
+    const minimumRequiredDOTAmount = new Big(EXTRA_REQUIRED_DOT_AMOUNT).add(securityDeposit);
+    if (new Big(balanceDOT) <= minimumRequiredDOTAmount) {
       return t('insufficient_funds_dot');
     }
 
-    if (value > 1) {
+    if (value > MAXIMUM_ISSUABLE_POLKA_BTC_AMOUNT) {
       return t('issue_page.validation_max_value');
-      // TODO: should be `big` type other than `Number`
-    } else if (value < Number(dustValue)) {
+    } else if (bigBTCAmount < new Big(dustValue)) {
       return `${t('issue_page.validation_min_value')}${dustValue} BTC).`;
     }
 
-    // ray test touch <
-    // TODO: error-prone
+    const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), bigBTCAmount);
     if (!vaultId) {
       return t('issue_page.maximum_in_single_request', {
         maxAmount: parseFloat(Number(vaultMaxAmount).toFixed(5))
       });
     }
-    // ray test touch >
 
     if (bitcoinHeight - btcRelayHeight > BLOCKS_BEHIND_LIMIT) {
       return t('issue_page.error_more_than_6_blocks_behind');
@@ -256,6 +227,11 @@ const EnterBTCAmount = (): JSX.Element | null => {
   };
 
   if (status === STATUSES.RESOLVED) {
+    const bigBTCAmount = new Big(btcAmount || 0);
+    const bridgeFee = bigBTCAmount.mul(feeRate);
+    const securityDeposit = bigBTCAmount.mul(btcToDOTRate).mul(depositRate);
+    const polkaBTCAmount = bigBTCAmount.sub(bridgeFee);
+
     return (
       <>
         <form
@@ -343,9 +319,9 @@ const EnterBTCAmount = (): JSX.Element | null => {
                 width={23}
                 height={23} />
             }
-            value={displayBtcAmount(polkaBtcAmount || '0')}
+            value={displayBtcAmount(polkaBTCAmount)}
             unitName='PolkaBTC'
-            approxUSD={getUsdAmount(polkaBtcAmount || '0', prices.bitcoin.usd)} />
+            approxUSD={getUsdAmount(polkaBTCAmount, prices.bitcoin.usd)} />
           <InterlayButton
             type='submit'
             style={{ display: 'flex' }}
