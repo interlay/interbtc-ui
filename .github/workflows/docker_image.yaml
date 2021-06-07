@@ -80,6 +80,7 @@ jobs:
           password: ${{ secrets.GITLAB_PASSWORD }}
 
       - uses: actions/download-artifact@v2
+        id: download
         with:
           name: build-ui
           path: ./build/
@@ -101,6 +102,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
+          context: .
           file: ./DockerfileProd
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
