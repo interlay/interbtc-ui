@@ -1,49 +1,33 @@
-/** @jsxImportSource @emotion/react */
 
 import clsx from 'clsx';
-import tw, { TwStyle } from 'twin.macro';
 
-interface Props {
-  twStyle?: TwStyle;
-}
-
-const Card = ({
-  twStyle,
+const CardListItem = ({
+  className,
   ...rest
-}: Props & React.ComponentPropsWithRef<'li'>): JSX.Element => (
+}: React.ComponentPropsWithRef<'li'>): JSX.Element => (
   <li
-    // TODO: hardcoded
-    style={{ minHeight: 128 }}
-    css={[
-      tw`flex`,
-      tw`flex-col`,
-      tw `justify-center`,
-      tw`items-center`,
-      tw`lg:w-80`,
-      tw`px-4`,
-      tw`py-8`,
-      tw`my-4`,
-      tw`lg:m-2`,
-      tw`rounded`,
-      tw`border`,
-      tw`border-solid`,
-      tw`border-gray-300`,
-      tw`shadow-sm`,
-      twStyle
-    ]}
+    style={{ minHeight: 90 }}
+    className={clsx(
+      'flex',
+      'flex-col',
+      'p-5',
+      'rounded-lg',
+      'bg-gray-100',
+      'space-y-2',
+      className
+    )}
     {...rest} />
 );
 
-const CardHeader = ({
+const CardListItemHeader = ({
   className,
   children,
   ...rest
 }: React.ComponentPropsWithRef<'h2'>): JSX.Element => (
   <h6
     className={clsx(
-      'text-base',
-      'font-bold',
-      'mb-2',
+      'text-sm',
+      'font-medium',
       className
     )}
     {...rest}>
@@ -51,8 +35,25 @@ const CardHeader = ({
   </h6>
 );
 
-const CardContent = (props: React.ComponentPropsWithRef<'div'>): JSX.Element => (
+const CardListItemContent = (props: React.ComponentPropsWithRef<'div'>): JSX.Element => (
   <div {...props} />
+);
+
+const CardListHeader = ({
+  className,
+  children,
+  ...rest
+}: React.ComponentPropsWithRef<'h2'>): JSX.Element => (
+  <h2
+    className={clsx(
+      'text-2xl',
+      'text-gray-400',
+      'font-medium',
+      className
+    )}
+    {...rest}>
+    {children}
+  </h2>
 );
 
 const CardList = ({
@@ -61,18 +62,33 @@ const CardList = ({
 }: React.ComponentPropsWithRef<'ul'>): JSX.Element => (
   <ul
     className={clsx(
-      'lg:flex',
-      'lg:justify-center',
-      'lg:flex-wrap',
+      'grid',
+      className
+    )}
+    {...rest}>
+  </ul>
+);
+
+const CardListContainer = ({
+  className,
+  ...rest
+}: React.ComponentPropsWithRef<'div'>): JSX.Element => (
+  <div
+    className={clsx(
+      'space-y-5',
       className
     )}
     {...rest} />
 );
 
+export type CardListContainerProps = React.ComponentPropsWithRef<'div'>;
+
 export {
-  Card,
-  CardHeader,
-  CardContent
+  CardListHeader,
+  CardListItem,
+  CardListItemHeader,
+  CardListItemContent,
+  CardListContainer
 };
 
 export default CardList;

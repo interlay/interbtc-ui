@@ -7,9 +7,9 @@ import { updateCollateralAction, updateCollateralizationAction } from '../../../
 import { dotToPlanck, roundTwoDecimals } from '@interlay/polkabtc';
 import { StoreType } from '../../../common/types/util.types';
 import Big from 'big.js';
+import ButtonMaybePending from '../../../common/components/pending-button';
 import { useTranslation } from 'react-i18next';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import InterlayButton from 'components/UI/InterlayButton';
 
 // Commenting because moving this to last line causes 3 "used before it was defined" warnings
 // eslint-disable-next-line import/exports-last
@@ -32,10 +32,11 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
   const { polkaBtcLoaded, vaultClientLoaded, address } = useSelector((state: StoreType) => state.general);
   const { register, handleSubmit, errors } = useForm<UpdateCollateralForm>();
   // denoted in DOT
-  const currentCollateral = useSelector((state: StoreType) => state.vault.collateral);
+  const currentDOTCollateral = useSelector((state: StoreType) => state.vault.collateral);
   // denoted in DOT
-  const [newCollateral, setNewCollateral] = useState(currentCollateral);
+  const [newCollateral, setNewCollateral] = useState('');
   // denoted in DOT
+  const [currentCollateral, setCurrentCollateral] = useState('');
   const [newCollateralization, setNewCollateralization] = useState('∞');
 
   const [currentButtonText, setCurrentButtonText] = useState('');
@@ -92,7 +93,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
   const onChange = async (obj: SyntheticEvent) => {
     try {
       const value = (obj.target as HTMLInputElement).value;
-      if (value === '' || !polkaBtcLoaded || Number(value) <= 0 || isNaN(Number(value))) {
+      if (value === '' || !polkaBtcLoaded || Number(value) <= 0 || isNaN(Number(value)) || !vaultClientLoaded) {
         setCollateralUpdateAllowed(false);
         return;
       }
@@ -102,11 +103,12 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
       }
 
       // decide if we withdraw or add collateral
-      if (!currentCollateral) {
+      if (!currentDOTCollateral) {
         throw new Error('Couldn\'t fetch current vault collateral');
       }
+      setCurrentCollateral(currentDOTCollateral);
 
-      let newCollateral = new Big(currentCollateral);
+      let newCollateral = new Big(currentDOTCollateral);
       if (props.status === CollateralUpdateStatus.Increase) {
         newCollateral = newCollateral.add(new Big(value));
       } else if (props.status === CollateralUpdateStatus.Decrease) {
@@ -137,9 +139,9 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
   const getButtonVariant = (status: CollateralUpdateStatus): string => {
     switch (status) {
     case CollateralUpdateStatus.Increase:
-      return 'primary';
+      return 'outline-success';
     case CollateralUpdateStatus.Decrease:
-      return 'default';
+      return 'outline-danger';
     default:
       return '';
     }
@@ -173,10 +175,10 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
         <Modal.Body>
           <div className='row'>
             <div className='col-12 current-collateral'>
-              {t('vault.current_total_collateral', { currentCollateral })}
+              {t('vault.current_total_collateral', { currentDOTCollateral })}
             </div>
-            <div className='col-12 current-collateral'>
-              {t('vault.new_total_collateral', { newCollateral })}
+            <div className='col-12'>
+              {t('vault.update_collateral')}
             </div>
             <div className='col-12 basic-addon'>
               <div className='input-group'>
@@ -222,17 +224,13 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
           </div>
         </Modal.Body>
         <Modal.Footer className='row justify-center'>
-          <InterlayButton
+          <ButtonMaybePending
+            variant={getButtonVariant(props.status)}
+            isPending={isUpdatePending}
             type='submit'
-            style={{ display: 'flex' }}
-            className='mx-auto'
-            variant='contained'
-            color={getButtonVariant(props.status)}
-            disabled={!isCollateralUpdateAllowed}
-            pending={isUpdatePending}>
-            {props.status === CollateralUpdateStatus.Increase ?
-              t('vault.deposit_collateral') : t('vault.withdraw_collateral')}
-          </InterlayButton>
+            disabled={!isCollateralUpdateAllowed}>
+            {getStatusText(props.status)}
+          </ButtonMaybePending>
         </Modal.Footer>
       </form>
     </Modal>

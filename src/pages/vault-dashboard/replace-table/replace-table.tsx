@@ -1,6 +1,7 @@
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Table } from 'react-bootstrap';
+import Big from 'big.js';
+import { Button, Table } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 import { StoreType } from 'common/types/util.types';
@@ -9,10 +10,15 @@ import { parachainToUIReplaceRequests } from 'common/utils/requests';
 import { shortAddress } from 'common/utils/utils';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
-export default function ReplaceTable(): ReactElement {
+type ReplaceTableProps = {
+  openModal: (show: boolean) => void;
+};
+
+export default function ReplaceTable(props: ReplaceTableProps): ReactElement {
   const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
   const replaceRequests = useSelector((state: StoreType) => state.vault.requests);
+  const [polkaBTCAmount, setPolkaBTCamount] = useState(new Big(0));
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -21,6 +27,8 @@ export default function ReplaceTable(): ReactElement {
 
       try {
         const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
+        const issuedPolkaBTCAmount = await window.polkaBTC.vaults.getIssuedAmount(vaultId);
+        setPolkaBTCamount(issuedPolkaBTCAmount);
         const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
         if (!requests) return;
 
@@ -84,6 +92,20 @@ export default function ReplaceTable(): ReactElement {
       ) : (
         <React.Fragment>{t('empty_data')}</React.Fragment>
       )}
+      <div className='row'>
+        <div className='col-12'>
+          {polkaBTCAmount.gt(new Big(0)) ? (
+            <Button
+              variant='outline-danger'
+              className='vault-dashboard-button'
+              onClick={() => props.openModal(true)}>
+              {t('vault.replace_vault')}
+            </Button>
+          ) : (
+            ''
+          )}
+        </div>
+      </div>
     </div>
   );
 }

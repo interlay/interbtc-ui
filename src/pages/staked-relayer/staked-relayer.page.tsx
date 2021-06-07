@@ -1,26 +1,31 @@
-import React, {
+import {
   useState,
   useEffect
 } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import tw from 'twin.macro';
+import clsx from 'clsx';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import CardList, {
-  Card,
-  CardHeader,
-  CardContent
+  CardListItem,
+  CardListItemHeader,
+  CardListItemContent,
+  CardListHeader,
+  CardListContainer
 } from 'components/CardList';
 import BoldParagraph from 'components/BoldParagraph';
-import BitcoinTable from 'common/components/bitcoin-table/bitcoin-table';
-import VaultTable from 'common/components/vault-table/vault-table';
+import NetworkActivity from 'common/components/network-activity/network-activity';
 import ButtonMaybePending from 'common/components/pending-button';
 import { StoreType } from 'common/types/util.types';
-import { safeRoundTwoDecimals } from 'common/utils/utils';
+import {
+  displayBtcAmount,
+  safeRoundFiveDecimals,
+  safeRoundTwoDecimals
+} from 'common/utils/utils';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import './staked-relayer.page.scss';
 
@@ -88,57 +93,62 @@ function StakedRelayer(): JSX.Element {
 
   const STAKED_RELAYER_ITEMS = [
     {
-      title: t('fees_earned'),
-      value: feesEarnedPolkaBTC,
-      unit: 'PolkaBTC'
-    },
-    {
-      title: t('fees_earned'),
-      value: feesEarnedDOT,
-      unit: 'DOT'
-    },
-    {
       title: t('sla_score'),
-      value: safeRoundTwoDecimals(sla)
+      value: safeRoundTwoDecimals(sla),
+      color: 'text-interlayDodgerBlue-800'
+    },
+    {
+      title: t('vault.fees_earned_polkabtc'),
+      value: displayBtcAmount(feesEarnedPolkaBTC),
+      color: 'text-interlayRose-800'
+    },
+    {
+      title: t('vault.fees_earned_dot'),
+      value: safeRoundFiveDecimals(feesEarnedDOT),
+      color: 'text-interlayRose-800'
     },
     {
       title: t('apy'),
       value: `~${safeRoundTwoDecimals(apy)}`,
-      unit: '%'
+      color: 'text-interlayDodgerBlue-800'
     }
   ];
 
   return (
     <MainContainer className='staked-relayer-page'>
-      <div className='staked-container fade-in-animation'>
+      <div className='staked-container'>
         <div className='stacked-wrapper'>
           <PageTitle
             mainTitle={t('relayer.staked_relayer_dashboard')}
             subTitle={<TimerIncrement />} />
-          <BoldParagraph>{address}</BoldParagraph>
-          {relayerLoaded && polkaBtcLoaded && (
-            <CardList>
+          <BoldParagraph className='text-center'>
+            {address}
+          </BoldParagraph>
+          <CardListContainer>
+            <CardListHeader>Relayer Stats</CardListHeader>
+            <CardList
+              className={clsx(
+                'md:grid-cols-2',
+                'xl:grid-cols-4',
+                'gap-5'
+              )}>
               {STAKED_RELAYER_ITEMS.map(stakedRelayerItem => (
-                <Card
-                  key={`${stakedRelayerItem.title}-${stakedRelayerItem?.unit}`}
-                  twStyle={tw`lg:w-56`}>
-                  <CardHeader>
+                <CardListItem
+                  key={stakedRelayerItem.title}>
+                  <CardListItemHeader className={stakedRelayerItem.color}>
                     {stakedRelayerItem.title}
-                  </CardHeader>
-                  <CardContent>
-                    <div className='text-4xl'>
-                      {stakedRelayerItem.value}
-                    </div>
-                    <div>
-                      {stakedRelayerItem.unit}
-                    </div>
-                  </CardContent>
-                </Card>
+                  </CardListItemHeader>
+                  <CardListItemContent
+                    className={clsx(
+                      'text-2xl',
+                      'font-medium')}>
+                    {stakedRelayerItem.value}
+                  </CardListItemContent>
+                </CardListItem>
               ))}
             </CardList>
-          )}
-          <BitcoinTable />
-          <VaultTable />
+          </CardListContainer>
+          <NetworkActivity className='mt-20' />
           {relayerLoaded && (
             <>
               <ButtonMaybePending
