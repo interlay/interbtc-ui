@@ -54,6 +54,7 @@ jobs:
 
   build_docker:
     runs-on: [self-hosted, linux]
+    needs: [build_ui]
     steps:
       - uses: actions/checkout@v2
       - name: Prepare
