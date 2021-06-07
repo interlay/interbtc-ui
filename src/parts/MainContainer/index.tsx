@@ -8,8 +8,8 @@ const MainContainer = ({
 }: React.ComponentPropsWithRef<'div'>): JSX.Element => (
   <div
     className={clsx(
-      'py-7',
-      'xl:py-10',
+      'pb-7',
+      'xl:pb-10',
       className
     )}
     {...rest} />

@@ -2,59 +2,17 @@
 @import "../../mixins";
 
 .staked-relayer-page {
-    text-align: center;
     display: flex;
     justify-content: center;
 
     .staked-container {
         max-width: calc(100vw - 30px);
         width: 70%;
-        overflow-x: scroll;
         padding: 0px 15px;
     }
 
     .staked-button {
         margin-top: 20px;
-    }
-
-    .title {
-        width: 100%;
-        text-align: center;
-        font-size: 2rem;
-        margin-top: 2rem;
-        font-weight: 600;
-    }
-
-    .table-wrapper {
-        width: 100%;
-        table {
-            table-layout: auto;
-            width: 1200px;
-            margin: auto;
-            overflow: scroll;
-            text-align: center;
-        }
-
-        th,
-        td {
-            padding: 5px 10px;
-            border: 1px solid #ddd;
-
-            i {
-                color: rgba(0, 0, 0, 0.5);
-            }
-            p {
-                margin: 0px;
-            }
-        }
-
-        td.break-words {
-            word-break: break-all;
-        }
-
-        thead {
-            background-color: #eaeaea;
-        }
     }
 
     .header {

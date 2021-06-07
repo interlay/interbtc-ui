@@ -8,7 +8,7 @@ import clsx from 'clsx';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
-import CardList, { Card } from 'components/CardList';
+import CardList, { CardListItem } from 'components/CardList';
 import InterlayLink from 'components/UI/InterlayLink';
 import {
   USER_FEEDBACK_FORM,
@@ -51,9 +51,21 @@ const Feedback = (): JSX.Element => (
     {/* TODO: should use footer layout pattern */}
     <MainContainer>
       <PageTitle mainTitle='Feedback' />
-      <CardList>
+      <CardList
+        className={clsx(
+          'max-w-max',
+          'm-auto',
+          'md:grid-cols-3',
+          '2xl:grid-cols-5',
+          'gap-5'
+        )}>
         {FEEDBACK_ITEMS.map(feedbackType => (
-          <Card key={feedbackType.title}>
+          <CardListItem
+            key={feedbackType.title}
+            className={clsx(
+              'justify-center',
+              'items-center'
+            )}>
             <InterlayLink
               href={feedbackType.link}
               target='_blank'
@@ -67,7 +79,7 @@ const Feedback = (): JSX.Element => (
               <span>{feedbackType.title}</span>
               {feedbackType.icon}
             </InterlayLink>
-          </Card>
+          </CardListItem>
         ))}
       </CardList>
     </MainContainer>
