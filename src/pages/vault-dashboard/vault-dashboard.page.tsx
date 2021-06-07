@@ -285,7 +285,7 @@ function VaultDashboard(): JSX.Element {
           <VaultRedeemRequestsTable
             totalRedeemRequests={totalRedeemRequests}
             vaultAddress={address} />
-          <ReplaceTable openModal={setShowRequestReplacementModal} />
+          <ReplaceTable />
           <UpdateCollateralModal
             onClose={closeUpdateCollateralModal}
             status={updateCollateralModalStatus} />
