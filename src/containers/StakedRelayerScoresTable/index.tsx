@@ -98,16 +98,6 @@ const StakedRelayerScoresTable = ({
         ]
       },
       {
-        Header: `${t('leaderboard.stake')} (DOT)`,
-        accessor: 'stake',
-        classNames: [
-          'text-right'
-        ],
-        style: {
-          minWidth: 120
-        }
-      },
-      {
         Header: t('leaderboard.block_count'),
         accessor: 'block_count',
         classNames: [
