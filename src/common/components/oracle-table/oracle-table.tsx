@@ -1,17 +1,17 @@
 import { ReactElement, useEffect, useState } from 'react';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
-import { OracleStatus } from '@interlay/polkabtc-stats';
+import { OracleStatus } from '@interlay/interbtc-stats';
 
 import DashboardTable, { StatusComponent, StatusCategories } from '../dashboard-table/dashboard-table';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import useInterbtcStats from 'common/hooks/use-interbtc-stats';
 
 type OracleTableProps = {
   dotLocked: string;
 };
 
 export default function OracleTable(props: OracleTableProps): ReactElement {
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcStats();
   const [oracles, setOracles] = useState<Array<OracleStatus>>([]);
   const { t } = useTranslation();
 

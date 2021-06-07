@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useTable } from 'react-table';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
-import { BtcNetworkName } from '@interlay/polkabtc-stats';
+import { BtcNetworkName } from '@interlay/interbtc-stats';
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorHandler from 'components/ErrorHandler';
@@ -22,7 +22,7 @@ import StatusCell from 'components/UI/InterlayTable/StatusCell';
 import InterlayLink from 'components/UI/InterlayLink';
 import useQuery from 'utils/hooks/use-query';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import useInterbtcStats from 'common/hooks/use-interbtc-stats';
 import {
   shortAddress,
   formatDateTimePrecise
@@ -30,7 +30,7 @@ import {
 import { DashboardRequestInfo } from 'common/types/redeem.types';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
-import { RedeemColumns } from '@interlay/polkabtc-stats';
+import { RedeemColumns } from '@interlay/interbtc-stats';
 import * as constants from '../../constants';
 import STATUSES from 'utils/constants/statuses';
 
@@ -48,7 +48,7 @@ const VaultRedeemRequestsTable = ({
   const query = useQuery();
   const selectedPage: number = query.get(QUERY_PARAMETERS.page) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcStats();
   const [data, setData] = React.useState<DashboardRequestInfo[]>([]);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [error, setError] = React.useState<Error | null>(null);
@@ -135,7 +135,7 @@ const VaultRedeemRequestsTable = ({
       },
       {
         Header: t('issue_page.amount'),
-        accessor: 'amountPolkaBTC',
+        accessor: 'amountInterBTC',
         classNames: [
           'text-right'
         ]

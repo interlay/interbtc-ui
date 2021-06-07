@@ -2,13 +2,13 @@ import { ReactElement, useState, useEffect, useMemo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Vault } from '../../types/vault.types';
 import * as constants from '../../../constants';
-import { planckToDOT, satToBTC, roundTwoDecimals } from '@interlay/polkabtc';
+import { planckToDOT, satToBTC, roundTwoDecimals } from '@interlay/interbtc';
 import { shortAddress } from '../../utils/utils';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import { StoreType } from '../../../common/types/util.types';
 import DashboardTable from '../dashboard-table/dashboard-table';
-import { VaultExt } from '@interlay/polkabtc/build/parachain/vaults';
+import { VaultExt } from '@interlay/interbtc/build/parachain/vaults';
 import Tooltip from 'components/Tooltip';
 
 export default function VaultTable(): ReactElement {
@@ -18,11 +18,11 @@ export default function VaultTable(): ReactElement {
   const [secureCollateralThreshold, setSecureCollateralThreshold] = useState(new Big(0));
   const [btcToDotRate, setBtcToDotRate] = useState(new Big(0));
   const { t } = useTranslation();
-  const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+  const { interBtcLoaded } = useSelector((state: StoreType) => state.general);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!polkaBtcLoaded) return;
+      if (!interBtcLoaded) return;
 
       try {
         const [
@@ -31,10 +31,10 @@ export default function VaultTable(): ReactElement {
           btcToDot,
           vaultsExt
         ] = await Promise.all([
-          window.polkaBTC.vaults.getSecureCollateralThreshold(),
-          window.polkaBTC.vaults.getLiquidationCollateralThreshold(),
-          window.polkaBTC.oracle.getExchangeRate(),
-          window.polkaBTC.vaults.list()
+          window.interBTC.vaults.getSecureCollateralThreshold(),
+          window.interBTC.vaults.getLiquidationCollateralThreshold(),
+          window.interBTC.oracle.getExchangeRate(),
+          window.interBTC.vaults.list()
         ]);
 
         setSecureCollateralThreshold(secure);
@@ -46,7 +46,7 @@ export default function VaultTable(): ReactElement {
       }
     };
     fetchData();
-  }, [polkaBtcLoaded]);
+  }, [interBtcLoaded]);
 
   const checkVaultStatus = useCallback(
     (

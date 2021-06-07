@@ -31,7 +31,7 @@ import {
 } from 'utils/constants/links';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import TAB_IDS from 'utils/constants/tab-ids';
-import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc-logo.svg';
+import { ReactComponent as InterbtcLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
 
 const queryString = require('query-string');
@@ -45,9 +45,9 @@ const Topbar = (props: TopbarProps): JSX.Element => {
   const {
     extensions,
     address,
-    polkaBtcLoaded,
+    interBtcLoaded,
     balanceDOT,
-    balancePolkaBTC,
+    balanceInterBTC,
     vaultClientLoaded,
     relayerLoaded,
     showAccountModal
@@ -74,20 +74,20 @@ const Topbar = (props: TopbarProps): JSX.Element => {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      if (!polkaBtcLoaded || address === '') return;
+      if (!interBtcLoaded || address === '') return;
 
-      updateBalances(dispatch, address, balanceDOT, balancePolkaBTC);
+      updateBalances(dispatch, address, balanceDOT, balanceInterBTC);
     };
     fetchData();
-  }, [address, polkaBtcLoaded, dispatch, balanceDOT, balancePolkaBTC]);
+  }, [address, interBtcLoaded, dispatch, balanceDOT, balanceInterBTC]);
 
   const requestDOT = async () => {
-    if (!polkaBtcLoaded) return;
+    if (!interBtcLoaded) return;
     setIsRequestPending(true);
     try {
       await props.requestDOT();
-      const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const balanceDOT = await window.polkaBTC.collateral.balance(accountId);
+      const accountId = window.interBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
+      const balanceDOT = await window.interBTC.collateral.balance(accountId);
       dispatch(updateBalanceDOTAction(balanceDOT.toString()));
     } catch (error) {
       console.log(error);
@@ -125,7 +125,7 @@ const Topbar = (props: TopbarProps): JSX.Element => {
           'shadow',
           'bg-default'
         )}>
-        {polkaBtcLoaded && (
+        {interBtcLoaded && (
           <React.Fragment>
             <Navbar.Brand>
               <InterlayRouterLink
@@ -134,7 +134,7 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                   textDecoration: 'none'
                 }}
                 to={PAGES.home}>
-                <PolkabtcLogoIcon
+                <InterbtcLogoIcon
                   fill='currentColor'
                   width={90}
                   height={53} />
@@ -143,7 +143,7 @@ const Topbar = (props: TopbarProps): JSX.Element => {
             <Navbar.Toggle aria-controls='basic-navbar-nav' />
             <Navbar.Collapse id='basic-navbar-nav'>
               <Nav className='mr-auto'>
-                {polkaBtcLoaded && (
+                {interBtcLoaded && (
                   // TODO: should use https://reactrouter.com/web/api/NavLink with `activeClassName`
                   <InterlayRouterLink
                     style={{
@@ -159,7 +159,7 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                     {t('app')}
                   </InterlayRouterLink>
                 )}
-                {polkaBtcLoaded && (
+                {interBtcLoaded && (
                   <InterlayRouterLink
                     style={{
                       textDecoration: 'none'
@@ -189,7 +189,7 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                     {t('nav_relayer')}
                   </InterlayRouterLink>
                 )}
-                {polkaBtcLoaded && (
+                {interBtcLoaded && (
                   <InterlayRouterLink
                     style={{
                       textDecoration: 'none'
@@ -216,7 +216,7 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                     textDecoration: 'none'
                   }}
                   className='nav-link'
-                  href='https://docs.polkabtc.io/#/'
+                  href='https://docs.interbtc.io/#/'
                   target='_blank'
                   rel='noopener noreferrer'>
                   {t('nav_docs')}
@@ -259,7 +259,7 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                       </Nav>
                       <Balances
                         balanceDOT={balanceDOT}
-                        balancePolkaBTC={balancePolkaBTC} />
+                        balanceInterBTC={balanceInterBTC} />
                       <Nav
                         id='account-button'
                         className='d-inline'>

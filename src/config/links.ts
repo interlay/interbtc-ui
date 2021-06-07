@@ -1,11 +1,11 @@
 
-const POLKA_BTC_UI_GITHUB = 'https://github.com/interlay/polkabtc-ui';
+const POLKA_BTC_UI_GITHUB = 'https://github.com/interlay/interbtc-ui';
 const POLKA_BTC_UI_GITHUB_ISSUES = `${POLKA_BTC_UI_GITHUB}/issues`;
 
 const WEB3_FOUNDATION = 'https://web3.foundation';
 
 const INTERLAY_COMPANY = 'https://www.interlay.io';
-const INTERLAY_EMAIL = 'mailto:polkabtc@interlay.io';
+const INTERLAY_EMAIL = 'mailto:interbtc@interlay.io';
 const INTERLAY_DISCORD = 'https://discord.gg/KgCYK3MKSf';
 const INTERLAY_GITHUB = 'https://github.com/interlay';
 const INTERLAY_TWITTER = 'https://twitter.com/interlayHQ';
@@ -16,20 +16,20 @@ const USER_FEEDBACK_FORM = 'https://forms.gle/JXBoRdspbG8pMs3k6';
 const VAULT_FEEDBACK_FORM = 'https://forms.gle/zzKhaEzttCKksjej7';
 const RELAYER_FEEDBACK_FORM = 'https://forms.gle/hriZNJ6pSEKHzwpS7';
 
-const POLKA_BTC_DOC_START_TREASURE_HUNT = 'https://docs.polkabtc.io/#/start/beta?id=treasure-hunt-900-dot';
+const POLKA_BTC_DOC_START_TREASURE_HUNT = 'https://docs.interbtc.io/#/start/beta?id=treasure-hunt-900-dot';
 const POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT =
-  'https://docs.polkabtc.io/#/start/beta?id=vault-award-4-dot-for-the-first-50-200-dot-in-total';
+  'https://docs.interbtc.io/#/start/beta?id=vault-award-4-dot-for-the-first-50-200-dot-in-total';
 const POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER =
-  'https://docs.polkabtc.io/#/start/beta?id=staked-relayer-award-4-dot-for-the-first-50-200-dot-in-total';
+  'https://docs.interbtc.io/#/start/beta?id=staked-relayer-award-4-dot-for-the-first-50-200-dot-in-total';
 const POLKA_BTC_DOC_KING_OF_THE_HILL =
-  'https://docs.polkabtc.io/#/start/beta?id=king-of-the-hill-vaults-and-relayers-200-dot';
+  'https://docs.interbtc.io/#/start/beta?id=king-of-the-hill-vaults-and-relayers-200-dot';
 const POLKA_BTC_DOC_LOTTERY =
-  'https://docs.polkabtc.io/#/start/beta?id=lottery-200-dot';
-const POLKA_BTC_DOC_START_OVERVIEW = 'https://docs.polkabtc.io/#/start/overview';
-const POLKA_BTC_DOC_VAULTS_OVERVIEW = 'https://docs.polkabtc.io/#/vault/overview';
-const POLKA_BTC_DOC_RELAYERS_OVERVIEW = 'https://docs.polkabtc.io/#/relayer/overview';
-const POLKA_BTC_DOC_DEVELOPERS_INTEGRATION = 'https://docs.polkabtc.io/#/developers/integration';
-const POLKA_BTC_DOC_ABOUT_ROADMAP = 'https://docs.polkabtc.io/#/about/roadmap';
+  'https://docs.interbtc.io/#/start/beta?id=lottery-200-dot';
+const POLKA_BTC_DOC_START_OVERVIEW = 'https://docs.interbtc.io/#/start/overview';
+const POLKA_BTC_DOC_VAULTS_OVERVIEW = 'https://docs.interbtc.io/#/vault/overview';
+const POLKA_BTC_DOC_RELAYERS_OVERVIEW = 'https://docs.interbtc.io/#/relayer/overview';
+const POLKA_BTC_DOC_DEVELOPERS_INTEGRATION = 'https://docs.interbtc.io/#/developers/integration';
+const POLKA_BTC_DOC_ABOUT_ROADMAP = 'https://docs.interbtc.io/#/about/roadmap';
 
 const PRIVACY_POLICY = 'https://www.interlay.io/docs/privacy-policy.pdf';
 const NEWS_LETTER_SUBSCRIPTION_ENDPOINT =

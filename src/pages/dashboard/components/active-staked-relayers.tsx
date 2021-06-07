@@ -1,7 +1,7 @@
 import { ReactElement, useState, useMemo, useEffect } from 'react';
 import ButtonComponent from './button-component';
 import { getAccents } from '../dashboard-colors';
-import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
+import useInterbtcStats from '../../../common/hooks/use-interbtc-stats';
 import LineChartComponent from './line-chart-component';
 import { useTranslation } from 'react-i18next';
 import { PAGES } from 'utils/constants/links';
@@ -13,7 +13,7 @@ type ActiveStakedRelayers = {
 
 // TODO: should rename `ActiveStakedRelayersComponent`
 const ActiveStakedRelayersComponent = ({ linkButton }: ActiveStakedRelayers): ReactElement => {
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcStats();
   const { t } = useTranslation();
 
   // eslint-disable-next-line no-array-constructor

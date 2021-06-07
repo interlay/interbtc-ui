@@ -23,10 +23,10 @@ import {
 import keyring from '@polkadot/ui-keyring';
 import {
   FaucetClient,
-  createPolkabtcAPI,
-  PolkaBTCAPI
-} from '@interlay/polkabtc';
-import { StatusCode } from '@interlay/polkabtc/build/interfaces';
+  createInterbtcAPI,
+  InterBTCAPI
+} from '@interlay/interbtc';
+import { StatusCode } from '@interlay/interbtc/build/interfaces';
 
 import Layout from 'parts/Layout';
 import Application from 'pages/Application';
@@ -47,7 +47,7 @@ import LazyLoadingErrorBoundary from 'utils/hocs/LazyLoadingErrorBoundary';
 import checkStaticPage from 'config/check-static-page';
 import { PAGES } from 'utils/constants/links';
 import {
-  isPolkaBtcLoaded,
+  isInterBtcLoaded,
   changeAddressAction,
   initGeneralDataAction,
   setInstalledExtensionAction,
@@ -116,25 +116,25 @@ const NoMatch = React.lazy(() =>
   import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
 );
 
-function connectToParachain(): Promise<PolkaBTCAPI> {
-  return createPolkabtcAPI(
+function connectToParachain(): Promise<InterBTCAPI> {
+  return createInterbtcAPI(
     constants.PARACHAIN_URL,
     constants.BITCOIN_NETWORK === 'regtest' ? constants.BITCOIN_REGTEST_URL : constants.BITCOIN_NETWORK
   );
 }
 
 function App(): JSX.Element {
-  const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+  const interBtcLoaded = useSelector((state: StoreType) => state.general.interBtcLoaded);
   const address = useSelector((state: StoreType) => state.general.address);
   const [isLoading, setIsLoading] = React.useState(true);
   const dispatch = useDispatch();
   const store = useStore();
 
-  // Load the main PolkaBTC API - connection to the PolkaBTC bridge
-  const loadPolkaBTC = React.useCallback(async (): Promise<void> => {
+  // Load the main InterBTC API - connection to the InterBTC bridge
+  const loadInterBTC = React.useCallback(async (): Promise<void> => {
     try {
-      window.polkaBTC = await connectToParachain();
-      dispatch(isPolkaBtcLoaded(true));
+      window.interBTC = await connectToParachain();
+      dispatch(isInterBtcLoaded(true));
       setIsLoading(false);
     } catch (error) {
       toast.warn('Unable to connect to the BTC-Parachain.');
@@ -167,20 +167,20 @@ function App(): JSX.Element {
   ]);
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!interBtcLoaded) return;
     if (!address) return;
 
-    const id = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
+    const id = window.interBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
 
     // Maybe load the vault client - only if the current address is also registered as a vault
     (async () => {
       try {
         dispatch(isVaultClientLoaded(false));
-        const vault = await window.polkaBTC.vaults.get(id);
+        const vault = await window.interBTC.vaults.get(id);
         dispatch(isVaultClientLoaded(!!vault));
       } catch (error) {
         // TODO: should add error handling
-        console.log('No PolkaBTC vault found for the account in the connected Polkadot wallet.');
+        console.log('No InterBTC vault found for the account in the connected Polkadot wallet.');
         console.log('error.message => ', error.message);
       }
     })();
@@ -189,16 +189,16 @@ function App(): JSX.Element {
     (async () => {
       try {
         dispatch(isStakedRelayerLoaded(false));
-        const stakedRelayers = await window.polkaBTC.stakedRelayer.list();
+        const stakedRelayers = await window.interBTC.stakedRelayer.list();
         dispatch(isStakedRelayerLoaded(stakedRelayers.includes(id)));
       } catch (error) {
         // TODO: should add error handling
-        console.log('No PolkaBTC staked relayer found for the account in the connected Polkadot wallet.');
+        console.log('No InterBTC staked relayer found for the account in the connected Polkadot wallet.');
         console.log('error.message => ', error.message);
       }
     })();
   }, [
-    polkaBtcLoaded,
+    interBtcLoaded,
     address,
     dispatch
   ]);
@@ -206,23 +206,23 @@ function App(): JSX.Element {
   React.useEffect(() => {
     // Do not load data if showing static landing page only
     if (checkStaticPage()) return;
-    if (!polkaBtcLoaded) return;
+    if (!interBtcLoaded) return;
 
     // Initialize data on app bootstrap
     (async () => {
       try {
         const [
-          totalPolkaBTC,
+          totalInterBTC,
           totalLockedDOT,
           btcRelayHeight,
           bitcoinHeight,
           state
         ] = await Promise.all([
-          window.polkaBTC.treasury.total(),
-          window.polkaBTC.collateral.totalLocked(),
-          window.polkaBTC.btcRelay.getLatestBlockHeight(),
-          window.polkaBTC.electrsAPI.getLatestBlockHeight(),
-          window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain()
+          window.interBTC.treasury.total(),
+          window.interBTC.collateral.totalLocked(),
+          window.interBTC.btcRelay.getLatestBlockHeight(),
+          window.interBTC.electrsAPI.getLatestBlockHeight(),
+          window.interBTC.stakedRelayer.getCurrentStateOfBTCParachain()
         ]);
 
         const parachainStatus = (state: StatusCode) => {
@@ -239,7 +239,7 @@ function App(): JSX.Element {
 
         dispatch(
           initGeneralDataAction(
-            displayBtcAmount(totalPolkaBTC),
+            displayBtcAmount(totalInterBTC),
             displayDotAmount(totalLockedDOT),
             Number(btcRelayHeight),
             bitcoinHeight,
@@ -253,13 +253,13 @@ function App(): JSX.Element {
     })();
   }, [
     dispatch,
-    polkaBtcLoaded
+    interBtcLoaded
   ]);
 
   // Loads the address for the currently select account and maybe loads the vault and staked relayer dashboards
   React.useEffect(() => {
     if (checkStaticPage()) return; // Do not load data if showing static landing page only
-    if (!polkaBtcLoaded) return;
+    if (!interBtcLoaded) return;
 
     (async () => {
       const theExtensions = await web3Enable(APP_NAME);
@@ -278,20 +278,20 @@ function App(): JSX.Element {
 
       const { signer } = await web3FromAddress(newAddress);
       // TODO: could store the active address just in one place (either in `window` object or in redux)
-      window.polkaBTC.setAccount(newAddress, signer);
+      window.interBTC.setAccount(newAddress, signer);
       dispatch(changeAddressAction(newAddress));
     })();
   }, [
     address,
-    polkaBtcLoaded,
+    interBtcLoaded,
     dispatch
   ]);
 
-  // Loads the PolkaBTC bridge and the faucet
+  // Loads the InterBTC bridge and the faucet
   React.useEffect(() => {
     // Do not load data if showing static landing page only
     if (checkStaticPage()) return;
-    if (polkaBtcLoaded) return;
+    if (interBtcLoaded) return;
 
     (async () => {
       try {
@@ -299,7 +299,7 @@ function App(): JSX.Element {
         setTimeout(() => {
           if (isLoading) setIsLoading(false);
         }, 3000);
-        await loadPolkaBTC();
+        await loadInterBTC();
         await loadFaucet();
         keyring.loadAll({});
       } catch (error) {
@@ -308,10 +308,10 @@ function App(): JSX.Element {
     })();
     startFetchingLiveData(dispatch, store);
   }, [
-    loadPolkaBTC,
+    loadInterBTC,
     loadFaucet,
     isLoading,
-    polkaBtcLoaded,
+    interBtcLoaded,
     dispatch,
     store
   ]);

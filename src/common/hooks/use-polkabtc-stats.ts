@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
-import * as polkabtcStats from '@interlay/polkabtc-stats';
+import * as interbtcStats from '@interlay/interbtc-stats';
 import { STATS_URL } from '../../constants';
 
-export default function usePolkabtcStats(): polkabtcStats.StatsApi {
+export default function useInterbtcStats(): interbtcStats.StatsApi {
   const statsApi = useMemo(
-    () => new polkabtcStats.StatsApi(new polkabtcStats.Configuration({ basePath: STATS_URL })),
+    () => new interbtcStats.StatsApi(new interbtcStats.Configuration({ basePath: STATS_URL })),
     []
   );
 

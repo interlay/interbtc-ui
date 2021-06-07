@@ -52,7 +52,7 @@ const Application = (): JSX.Element | null => {
   const { t } = useTranslation();
 
   const issueStep = useSelector((state: StoreType) => state.issue.step);
-  const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+  const { interBtcLoaded } = useSelector((state: StoreType) => state.general);
 
   const query = useQuery();
   const selectedTabId = query.get(QUERY_PARAMETERS.tab);
@@ -92,17 +92,17 @@ const Application = (): JSX.Element | null => {
   ]);
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!interBtcLoaded) return;
     (async () => {
       try {
-        const maxBurnableTokens = await window.polkaBTC.redeem.getMaxBurnableTokens();
+        const maxBurnableTokens = await window.interBTC.redeem.getMaxBurnableTokens();
         setBurnable(maxBurnableTokens > new Big(0));
       } catch (error) {
         // TODO: should add error handling
         console.log('[Application] error.message => ', error.message);
       }
     })();
-  }, [polkaBtcLoaded]);
+  }, [interBtcLoaded]);
 
   if (selectedTabId === null) {
     return null;

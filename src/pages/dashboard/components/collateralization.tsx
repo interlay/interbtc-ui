@@ -16,16 +16,16 @@ export default function Collateralization({ linkButton }: CollateralizationProps
   const { t } = useTranslation();
 
   const [systemCollateralization, setSystemCollateralization] = useState('0');
-  const [issuablePolkaBTC, setIssuablePolkaBTC] = useState('0');
+  const [issuableInterBTC, setIssuableInterBTC] = useState('0');
   const [secureCollateralThreshold, setSecureCollateralThreshold] = useState('150');
   const [failed, setFailed] = useState(false);
-  const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+  const interBtcLoaded = useSelector((state: StoreType) => state.general.interBtcLoaded);
 
   useEffect(() => {
     const fetchSystemCollateralization = async () => {
-      if (!polkaBtcLoaded) return;
+      if (!interBtcLoaded) return;
       try {
-        const systemCollateralization = await window.polkaBTC.vaults.getSystemCollateralization();
+        const systemCollateralization = await window.interBTC.vaults.getSystemCollateralization();
         setSystemCollateralization(systemCollateralization?.mul(100).toString() || '0');
       } catch (error) {
         console.log('[Collateralization useEffect] error.message => ', error.message);
@@ -33,19 +33,19 @@ export default function Collateralization({ linkButton }: CollateralizationProps
       }
     };
     const fetchIssuableTokens = async () => {
-      if (!polkaBtcLoaded) return;
+      if (!interBtcLoaded) return;
       try {
-        const issuablePolkaBTC = await window.polkaBTC.vaults.getTotalIssuableAmount();
-        setIssuablePolkaBTC(issuablePolkaBTC?.toString() || '0');
+        const issuableInterBTC = await window.interBTC.vaults.getTotalIssuableAmount();
+        setIssuableInterBTC(issuableInterBTC?.toString() || '0');
       } catch (error) {
         console.log('[Collateralization useEffect] error.message => ', error.message);
         setFailed(true);
       }
     };
     const fetchSecureCollateralThreshold = async () => {
-      if (!polkaBtcLoaded) return;
+      if (!interBtcLoaded) return;
       try {
-        const secureCollateralThreshold = await window.polkaBTC.vaults.getSecureCollateralThreshold();
+        const secureCollateralThreshold = await window.interBTC.vaults.getSecureCollateralThreshold();
         setSecureCollateralThreshold(secureCollateralThreshold?.mul(100).toString() || '150');
       } catch (error) {
         console.log('[Collateralization useEffect] error.message => ', error.message);
@@ -96,7 +96,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
             )}>
             {failed ? t('no_data') :
               [
-                issuablePolkaBTC === '0' ? t('loading') : safeRoundTwoDecimals(issuablePolkaBTC) + ' PolkaBTC',
+                issuableInterBTC === '0' ? t('loading') : safeRoundTwoDecimals(issuableInterBTC) + ' InterBTC',
                 // eslint-disable-next-line react/jsx-key
                 <br />, t('dashboard.vault.capacity')
               ]

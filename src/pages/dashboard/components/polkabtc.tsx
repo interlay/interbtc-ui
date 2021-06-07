@@ -1,26 +1,26 @@
 import { useEffect, useMemo, useState } from 'react';
 import ButtonComponent from './button-component';
 import { getAccents } from '../dashboard-colors';
-import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
+import useInterbtcStats from '../../../common/hooks/use-interbtc-stats';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
-import { satToBTC } from '@interlay/polkabtc';
+import { satToBTC } from '@interlay/interbtc';
 import LineChartComponent from './line-chart-component';
 import { useTranslation } from 'react-i18next';
 import { getUsdAmount } from '../../../common/utils/utils';
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
 
-type PolkaBTCProps = {
+type InterBTCProps = {
   linkButton?: boolean;
 };
 
-const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
+const InterBTC = ({ linkButton }: InterBTCProps): React.ReactElement => {
   const { prices } = useSelector((state: StoreType) => state.general);
-  const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
+  const totalInterBTC = useSelector((state: StoreType) => state.general.totalInterBTC);
 
   const { t } = useTranslation();
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcStats();
 
   // eslint-disable-next-line no-array-constructor
   const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number }>());
@@ -50,9 +50,9 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
       <div className='card-top-content'>
         <div className='values-container'>
           <h1 style={{ color: getAccents('d_pink').color }}>{t('dashboard.issue.issued')}</h1>
-          <h2>{t('dashboard.issue.total_polkabtc', { amount: totalPolkaBTC })}</h2>
+          <h2>{t('dashboard.issue.total_interbtc', { amount: totalInterBTC })}</h2>
           {/* TODO: add the price API */}
-          <h2>${getUsdAmount(totalPolkaBTC, prices.bitcoin.usd)}</h2>
+          <h2>${getUsdAmount(totalInterBTC, prices.bitcoin.usd)}</h2>
         </div>
         {linkButton && (
           <>
@@ -95,4 +95,4 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
   );
 };
 
-export default PolkaBTC;
+export default InterBTC;

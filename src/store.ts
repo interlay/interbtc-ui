@@ -4,13 +4,13 @@ import { AppState, StoreType, StoreState, ParachainStatus } from './common/types
 import { createLogger } from 'redux-logger';
 import { applyMiddleware, createStore } from 'redux';
 import { initializeState } from './common/actions/general.actions';
-import { FaucetClient, PolkaBTCAPI } from '@interlay/polkabtc';
+import { FaucetClient, InterBTCAPI } from '@interlay/interbtc';
 import { mapToArray, arrayToMap } from './common/utils/requests';
 import * as constants from './constants';
 
 declare global {
     interface Window {
-        polkaBTC: PolkaBTCAPI;
+        interBTC: InterBTCAPI;
         faucet: FaucetClient;
         isFetchingActive: boolean;
     }
@@ -19,14 +19,14 @@ declare global {
 export const getInitialState = (): StoreType => {
   const emptyStore: StoreType = {
     general: {
-      polkaBtcLoaded: false,
+      interBtcLoaded: false,
       relayerLoaded: false,
       vaultClientLoaded: false,
       showAccountModal: false,
       address: '',
       totalLockedDOT: '',
-      totalPolkaBTC: '',
-      balancePolkaBTC: '',
+      totalInterBTC: '',
+      balanceInterBTC: '',
       balanceDOT: '',
       extensions: [],
       btcRelayHeight: 0,
@@ -72,7 +72,7 @@ export const loadState = (): StoreType => {
       ...rawStore,
       general: {
         ...rawStore.general,
-        polkaBtcLoaded: false,
+        interBtcLoaded: false,
         relayerLoaded: false
       }
     };

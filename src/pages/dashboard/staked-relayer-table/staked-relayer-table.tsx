@@ -4,7 +4,7 @@ import DashboardTable, {
   StatusComponent,
   StatusCategories
 } from '../../../common/components/dashboard-table/dashboard-table';
-import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
+import useInterbtcStats from '../../../common/hooks/use-interbtc-stats';
 
 type StakedRelayer = {
   id: string;
@@ -15,7 +15,7 @@ type StakedRelayer = {
 
 export default function StakedRelayerTable(): ReactElement {
   const { t } = useTranslation();
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcStats();
   const [relayers, setRelayers] = useState<Array<StakedRelayer>>([]);
 
   useEffect(() => {

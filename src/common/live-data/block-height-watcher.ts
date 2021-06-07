@@ -4,12 +4,12 @@ import { StoreState } from '../types/util.types';
 
 export default async function fetchBtcRelayAndBitcoinHeight(dispatch: Dispatch, store: StoreState): Promise<void> {
   const state = store.getState();
-  const { btcRelayHeight, bitcoinHeight, polkaBtcLoaded } = state.general;
-  if (!polkaBtcLoaded) return;
+  const { btcRelayHeight, bitcoinHeight, interBtcLoaded } = state.general;
+  if (!interBtcLoaded) return;
 
   try {
-    const latestBtcRelayHeight = Number(await window.polkaBTC.btcRelay.getLatestBlockHeight());
-    const latestBitcoinHeight = await window.polkaBTC.electrsAPI.getLatestBlockHeight();
+    const latestBtcRelayHeight = Number(await window.interBTC.btcRelay.getLatestBlockHeight());
+    const latestBitcoinHeight = await window.interBTC.electrsAPI.getLatestBlockHeight();
 
     // update store only if there is a difference between the latest heights and current heights
     if (btcRelayHeight !== latestBtcRelayHeight || bitcoinHeight !== latestBitcoinHeight) {

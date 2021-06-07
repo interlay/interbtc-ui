@@ -9,10 +9,10 @@ import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
-import { btcToSat } from '@interlay/polkabtc';
+import { btcToSat } from '@interlay/interbtc';
 
 import PriceInfo from '../PriceInfo';
-import PolkaBTCField from '../PolkaBTCField';
+import InterBTCField from '../InterBTCField';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorHandler from 'components/ErrorHandler';
@@ -23,7 +23,7 @@ import {
   ParachainStatus
 } from 'common/types/util.types';
 import {
-  updateBalancePolkaBTCAction,
+  updateBalanceInterBTCAction,
   updateBalanceDOTAction
 } from 'common/actions/general.actions';
 import STATUSES from 'utils/constants/statuses';
@@ -45,8 +45,8 @@ const Burn = (): JSX.Element | null => {
 
   const {
     prices,
-    polkaBtcLoaded,
-    balancePolkaBTC,
+    interBtcLoaded,
+    balanceInterBTC,
     balanceDOT,
     parachainStatus
   } = useSelector((state: StoreType) => state.general);
@@ -60,7 +60,7 @@ const Burn = (): JSX.Element | null => {
   } = useForm<BurnForm>({
     mode: 'onChange'
   });
-  const polkaBTCAmount = watch(POLKA_BTC_AMOUNT);
+  const interBTCAmount = watch(POLKA_BTC_AMOUNT);
 
   const [burnRate, setBurnRate] = React.useState<Big>();
 
@@ -68,12 +68,12 @@ const Burn = (): JSX.Element | null => {
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!interBtcLoaded) return;
 
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const theBurnRate = await window.polkaBTC.redeem.getBurnExchangeRate();
+        const theBurnRate = await window.interBTC.redeem.getBurnExchangeRate();
         setBurnRate(theBurnRate);
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
@@ -81,7 +81,7 @@ const Burn = (): JSX.Element | null => {
         setError(error);
       }
     })();
-  }, [polkaBtcLoaded]);
+  }, [interBtcLoaded]);
 
   if (status === STATUSES.REJECTED && error) {
     return (
@@ -108,10 +108,10 @@ const Burn = (): JSX.Element | null => {
   const onSubmit = async (data: BurnForm) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
-      await window.polkaBTC.redeem.burn(new Big(data[POLKA_BTC_AMOUNT]));
+      await window.interBTC.redeem.burn(new Big(data[POLKA_BTC_AMOUNT]));
       // TODO: should not manually update the balances everywhere
       // - Should be able to watch the balances in one place and update the context accordingly.
-      dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(data[POLKA_BTC_AMOUNT])).toString()));
+      dispatch(updateBalanceInterBTCAction(new Big(balanceInterBTC).sub(new Big(data[POLKA_BTC_AMOUNT])).toString()));
       const earnedDOT = burnRate.times(data[POLKA_BTC_AMOUNT] || '0').toString();
       dispatch(updateBalanceDOTAction(new Big(balanceDOT).add(new Big(earnedDOT)).toString()));
       toast.success(t('burn_page.successfully_burned'));
@@ -125,29 +125,29 @@ const Burn = (): JSX.Element | null => {
     }
   };
 
-  const validatePolkaBTCAmount = (value: number): string | undefined => {
+  const validateInterBTCAmount = (value: number): string | undefined => {
     // TODO: should be `big` type other than `Number`
-    if (value > Number(balancePolkaBTC)) {
-      return `${t('redeem_page.current_balance')}${balancePolkaBTC}`;
+    if (value > Number(balanceInterBTC)) {
+      return `${t('redeem_page.current_balance')}${balanceInterBTC}`;
     }
 
-    if (!polkaBtcLoaded) {
-      return 'PolkaBTC must be loaded!';
+    if (!interBtcLoaded) {
+      return 'InterBTC must be loaded!';
     }
 
     if (btcToSat(value.toString()) === undefined) {
-      return 'Invalid PolkaBTC amount input!'; // TODO: should translate
+      return 'Invalid InterBTC amount input!'; // TODO: should translate
     }
 
-    const polkaBTCAmountInteger = value.toString().split('.')[0];
-    if (polkaBTCAmountInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
+    const interBTCAmountInteger = value.toString().split('.')[0];
+    if (interBTCAmountInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
       return 'Input value is too high!'; // TODO: should translate
     }
 
     return undefined;
   };
 
-  const earnedDOT = burnRate.times(polkaBTCAmount || '0').toString();
+  const earnedDOT = burnRate.times(interBTCAmount || '0').toString();
 
   if (status === STATUSES.RESOLVED) {
     return (
@@ -161,13 +161,13 @@ const Burn = (): JSX.Element | null => {
               'text-center',
               'text-interlayPomegranate'
             )}>
-            {t('burn_page.burn_polkabtc')}
+            {t('burn_page.burn_interbtc')}
           </h4>
-          <PolkaBTCField
+          <InterBTCField
             id='polka-btc-amount'
             name={POLKA_BTC_AMOUNT}
             type='number'
-            label='PolkaBTC'
+            label='InterBTC'
             step='any'
             placeholder='0.00'
             ref={register({
@@ -175,9 +175,9 @@ const Burn = (): JSX.Element | null => {
                 value: true,
                 message: t('burn_page.please_enter_the_amount')
               },
-              validate: value => validatePolkaBTCAmount(value)
+              validate: value => validateInterBTCAmount(value)
             })}
-            approxUSD={`≈ $ ${getUsdAmount(polkaBTCAmount || '0', prices.bitcoin.usd)}`}
+            approxUSD={`≈ $ ${getUsdAmount(interBTCAmount || '0', prices.bitcoin.usd)}`}
             error={!!errors[POLKA_BTC_AMOUNT]}
             helperText={errors[POLKA_BTC_AMOUNT]?.message} />
           <PriceInfo

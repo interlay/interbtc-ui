@@ -23,7 +23,7 @@ export const UPDATE_TOTALS = 'UPDATE_TOTALS';
 export interface UpdateTotals {
     type: typeof UPDATE_TOTALS;
     totalLockedDOT: string;
-    totalPolkaBTC: string;
+    totalInterBTC: string;
 }
 
 export interface UpdateHeights {
@@ -36,7 +36,7 @@ export interface UpdateOfPrices {
     type: typeof UPDATE_OF_PRICES;
     prices: Prices;
 }
-export interface IsPolkaBtcLoaded {
+export interface IsInterBtcLoaded {
     type: typeof IS_POLKA_BTC_LOADED;
     isLoaded: boolean;
 }
@@ -68,16 +68,16 @@ export interface InitState {
 
 export interface InitGeneralDataAction {
     type: typeof INIT_GENERAL_DATA_ACTION;
-    totalPolkaBTC: string;
+    totalInterBTC: string;
     totalLockedDOT: string;
     btcRelayHeight: number;
     bitcoinHeight: number;
     parachainStatus: ParachainStatus;
 }
 
-export interface UpdateBalancePolkaBTC {
+export interface UpdateBalanceInterBTC {
     type: typeof UPDATE_BALANCE_POLKA_BTC;
-    balancePolkaBTC: string;
+    balanceInterBTC: string;
 }
 
 export interface UpdateBalanceDOT {
@@ -96,13 +96,13 @@ export interface ShowAccountModal {
 }
 
 export type GeneralActions =
-    | IsPolkaBtcLoaded
+    | IsInterBtcLoaded
     | IsStakedRelayerLoaded
     | ChangeAddress
     | InitState
     | InitGeneralDataAction
     | IsVaultClientLoaded
-    | UpdateBalancePolkaBTC
+    | UpdateBalanceInterBTC
     | UpdateBalanceDOT
     | SetInstalledExtension
     | ShowAccountModal

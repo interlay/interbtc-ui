@@ -10,7 +10,7 @@ import Big from 'big.js';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
 
-import PolkaBTCField from '../PolkaBTCField';
+import InterBTCField from '../InterBTCField';
 import TextField from 'components/TextField';
 import InterlayModal, {
   InterlayModalTitle,
@@ -26,9 +26,9 @@ import {
   getUsdAmount,
   updateBalances
 } from 'common/utils/utils';
-import { updateBalancePolkaBTCAction } from 'common/actions/general.actions';
+import { updateBalanceInterBTCAction } from 'common/actions/general.actions';
 import STATUSES from 'utils/constants/statuses';
-import { ReactComponent as PolkaBTCLogoIcon } from 'assets/img/polkabtc-logo.svg';
+import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as AcalaLogoIcon } from 'assets/img/acala-logo.svg';
 import { ReactComponent as PlasmLogoIcon } from 'assets/img/plasm-logo.svg';
 import { ReactComponent as EthereumLogoIcon } from 'assets/img/ethereum-logo.svg';
@@ -43,7 +43,7 @@ type TransferForm = {
 }
 
 const NETWORK_TYPES = Object.freeze({
-  polkaBTC: 'polka-btc',
+  interBTC: 'polka-btc',
   acala: 'acala',
   plasm: 'plasm',
   ethereum: 'ethereum',
@@ -52,11 +52,11 @@ const NETWORK_TYPES = Object.freeze({
 
 const NETWORK_ITEMS = [
   {
-    type: NETWORK_TYPES.polkaBTC,
+    type: NETWORK_TYPES.interBTC,
     icon: (
-      <PolkaBTCLogoIcon width={24} />
+      <InterBTCLogoIcon width={24} />
     ),
-    title: 'PolkaBTC'
+    title: 'InterBTC'
   },
   {
     type: NETWORK_TYPES.acala,
@@ -106,7 +106,7 @@ const Transfer = (): JSX.Element => {
 
   const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
   const {
-    balancePolkaBTC,
+    balanceInterBTC,
     balanceDOT,
     parachainStatus
   } = useSelector((state: StoreType) => state.general);
@@ -120,10 +120,10 @@ const Transfer = (): JSX.Element => {
   } = useForm<TransferForm>({
     mode: 'onChange'
   });
-  const polkaBTCAmount = watch(POLKA_BTC_AMOUNT);
+  const interBTCAmount = watch(POLKA_BTC_AMOUNT);
 
   const [networkModalOpen, setNetworkModalOpen] = React.useState(false);
-  const [selectedNetworkType, setSelectedNetworkType] = React.useState(NETWORK_TYPES.polkaBTC);
+  const [selectedNetworkType, setSelectedNetworkType] = React.useState(NETWORK_TYPES.interBTC);
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
@@ -139,10 +139,10 @@ const Transfer = (): JSX.Element => {
   const onSubmit = async (data: TransferForm) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
-      await window.polkaBTC.treasury.transfer(data[DOT_ADDRESS], new Big(data[POLKA_BTC_AMOUNT]));
+      await window.interBTC.treasury.transfer(data[DOT_ADDRESS], new Big(data[POLKA_BTC_AMOUNT]));
       // TODO: should be managed by a dedicated cache mechanism
-      dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(data[POLKA_BTC_AMOUNT])).toString()));
-      updateBalances(dispatch, data[DOT_ADDRESS], balanceDOT, balancePolkaBTC);
+      dispatch(updateBalanceInterBTCAction(new Big(balanceInterBTC).sub(new Big(data[POLKA_BTC_AMOUNT])).toString()));
+      updateBalances(dispatch, data[DOT_ADDRESS], balanceDOT, balanceInterBTC);
       setSubmitStatus(STATUSES.RESOLVED);
       toast.success(t('transfer_page.successfully_transferred'));
       reset({
@@ -155,8 +155,8 @@ const Transfer = (): JSX.Element => {
     }
   };
 
-  const validatePolkaBTCAmount = (value: number): string | undefined => {
-    if (Number(balancePolkaBTC) === 0) {
+  const validateInterBTCAmount = (value: number): string | undefined => {
+    if (Number(balanceInterBTC) === 0) {
       return t('insufficient_funds');
     }
 
@@ -164,8 +164,8 @@ const Transfer = (): JSX.Element => {
       return t('insufficient_funds_dot');
     }
 
-    if (value > Number(balancePolkaBTC)) {
-      return `${t('redeem_page.current_balance')}${balancePolkaBTC}`;
+    if (value > Number(balanceInterBTC)) {
+      return `${t('redeem_page.current_balance')}${balanceInterBTC}`;
     }
 
     return undefined;
@@ -187,13 +187,13 @@ const Transfer = (): JSX.Element => {
             'text-center',
             'text-interlayDodgerBlue'
           )}>
-          {t('transfer_page.transfer_polkabtc')}
+          {t('transfer_page.transfer_interbtc')}
         </h4>
-        <PolkaBTCField
+        <InterBTCField
           id='polka-btc-amount'
           name={POLKA_BTC_AMOUNT}
           type='number'
-          label='PolkaBTC'
+          label='InterBTC'
           step='any'
           placeholder='0.00'
           ref={register({
@@ -201,9 +201,9 @@ const Transfer = (): JSX.Element => {
               value: true,
               message: t('redeem_page.please_enter_amount')
             },
-            validate: value => validatePolkaBTCAmount(value)
+            validate: value => validateInterBTCAmount(value)
           })}
-          approxUSD={`≈ $ ${getUsdAmount(polkaBTCAmount || '0.00', usdPrice)}`}
+          approxUSD={`≈ $ ${getUsdAmount(interBTCAmount || '0.00', usdPrice)}`}
           error={!!errors[POLKA_BTC_AMOUNT]}
           helperText={errors[POLKA_BTC_AMOUNT]?.message} />
         <div>

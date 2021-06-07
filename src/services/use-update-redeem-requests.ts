@@ -3,11 +3,11 @@ import {
   useSelector,
   useDispatch
 } from 'react-redux';
-import * as polkabtcStats from '@interlay/polkabtc-stats';
+import * as interbtcStats from '@interlay/interbtc-stats';
 import {
   RedeemColumns,
   BtcNetworkName
-} from '@interlay/polkabtc-stats';
+} from '@interlay/interbtc-stats';
 
 import useInterval from 'utils/hooks/use-interval';
 import { updateAllRedeemRequestsAction } from 'common/actions/redeem.actions';
@@ -24,16 +24,16 @@ const useUpdateRedeemRequests = (
   const {
     address,
     bitcoinHeight,
-    polkaBtcLoaded
+    interBtcLoaded
   } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
 
-  const isRunning = address && polkaBtcLoaded;
+  const isRunning = address && interBtcLoaded;
 
   useInterval(async () => {
     try {
       // Temporary declaration pending refactor decision
-      const stats = new polkabtcStats.StatsApi(new polkabtcStats.Configuration({ basePath: constants.STATS_URL }));
+      const stats = new interbtcStats.StatsApi(new interbtcStats.Configuration({ basePath: constants.STATS_URL }));
 
       const [
         parachainHeight,
@@ -41,10 +41,10 @@ const useUpdateRedeemRequests = (
         requiredBtcConfirmations,
         requiredParachainConfirmations
       ] = await Promise.all([
-        window.polkaBTC.system.getCurrentBlockNumber(), // TODO: should avoid as it's called for issue
-        window.polkaBTC.redeem.getRedeemPeriod(),
-        window.polkaBTC.btcRelay.getStableBitcoinConfirmations(), // TODO: should avoid as it's called for issue
-        window.polkaBTC.btcRelay.getStableParachainConfirmations()
+        window.interBTC.system.getCurrentBlockNumber(), // TODO: should avoid as it's called for issue
+        window.interBTC.redeem.getRedeemPeriod(),
+        window.interBTC.btcRelay.getStableBitcoinConfirmations(), // TODO: should avoid as it's called for issue
+        window.interBTC.btcRelay.getStableParachainConfirmations()
       ]);
 
       const databaseRequests: RedeemRequest[] = (

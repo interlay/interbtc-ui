@@ -29,9 +29,9 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
               className='inline-block'
               width={23}
               height={23} /> &nbsp;
-            {props.request.requestedAmountPolkaBTC} PolkaBTC
+            {props.request.requestedAmountInterBTC} InterBTC
             <div className='send-price'>
-              {'~ $' + getUsdAmount(props.request.requestedAmountPolkaBTC, prices.bitcoin.usd)}
+              {'~ $' + getUsdAmount(props.request.requestedAmountInterBTC, prices.bitcoin.usd)}
             </div>
           </div>
         </div>
@@ -57,7 +57,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
               className='inline-block'
               width={23}
               height={23} /> &nbsp;
-            {props.request.issuedAmountBtc} PolkaBTC
+            {props.request.issuedAmountBtc} InterBTC
             <div className='send-price'>
               {'~ $' + getUsdAmount(props.request.issuedAmountBtc, prices.bitcoin.usd)}
             </div>

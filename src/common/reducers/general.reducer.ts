@@ -17,15 +17,15 @@ import {
 import { GeneralState, ParachainStatus } from '../types/util.types';
 
 const initialState = {
-  polkaBtcLoaded: false,
+  interBtcLoaded: false,
   relayerLoaded: false,
   vaultClientLoaded: false,
   hasFeedbackModalBeenDisplayed: false,
   showAccountModal: false,
   address: '',
-  totalPolkaBTC: '0',
+  totalInterBTC: '0',
   totalLockedDOT: '0',
-  balancePolkaBTC: '',
+  balanceInterBTC: '',
   balanceDOT: '',
   extensions: [],
   btcRelayHeight: 0,
@@ -37,13 +37,13 @@ const initialState = {
 export const generalReducer = (state: GeneralState = initialState, action: GeneralActions): GeneralState => {
   switch (action.type) {
   case UPDATE_TOTALS:
-    return { ...state, totalPolkaBTC: action.totalPolkaBTC, totalLockedDOT: action.totalLockedDOT };
+    return { ...state, totalInterBTC: action.totalInterBTC, totalLockedDOT: action.totalLockedDOT };
   case UPDATE_HEIGHTS:
     return { ...state, btcRelayHeight: action.btcRelayHeight, bitcoinHeight: action.bitcoinHeight };
   case UPDATE_OF_PRICES:
     return { ...state, prices: action.prices };
   case IS_POLKA_BTC_LOADED:
-    return { ...state, polkaBtcLoaded: action.isLoaded };
+    return { ...state, interBtcLoaded: action.isLoaded };
   case IS_STAKED_RELAYER_LOADED:
     return { ...state, relayerLoaded: action.isLoaded };
   case CHANGE_ADDRESS:
@@ -51,7 +51,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
   case INIT_STATE:
     return {
       ...state,
-      polkaBtcLoaded: false,
+      interBtcLoaded: false,
       relayerLoaded: false,
       vaultClientLoaded: false,
       showAccountModal: false,
@@ -61,7 +61,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
     return {
       ...state,
       totalLockedDOT: action.totalLockedDOT,
-      totalPolkaBTC: action.totalPolkaBTC,
+      totalInterBTC: action.totalInterBTC,
       btcRelayHeight: action.btcRelayHeight,
       bitcoinHeight: action.bitcoinHeight,
       parachainStatus: action.parachainStatus
@@ -71,7 +71,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
   case UPDATE_BALANCE_DOT:
     return { ...state, balanceDOT: action.balanceDOT };
   case UPDATE_BALANCE_POLKA_BTC:
-    return { ...state, balancePolkaBTC: action.balancePolkaBTC };
+    return { ...state, balanceInterBTC: action.balanceInterBTC };
   case SHOW_ACCOUNT_MODAL:
     return { ...state, showAccountModal: action.showAccountModal };
   case SET_INSTALLED_EXTENSION:

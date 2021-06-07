@@ -20,7 +20,7 @@ export default function BitcoinTable(): ReactElement {
   const [noData, setNoData] = useState(false);
   const [heightDiff, setHeightDiff] = useState(0);
   const [btcBlocks, setBlocks] = useState<Array<BlockInfo>>([]);
-  const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+  const interBtcLoaded = useSelector((state: StoreType) => state.general.interBtcLoaded);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -45,20 +45,20 @@ export default function BitcoinTable(): ReactElement {
     };
 
     const fetchData = async () => {
-      if (!polkaBtcLoaded) return;
+      if (!interBtcLoaded) return;
 
       // Returns a little endian encoded block hash
       // Converting to big endian for display
-      const bestParachainBlock = reverseHashEndianness(await window.polkaBTC.btcRelay.getLatestBlock());
-      const bestParachainHeight = Number(await window.polkaBTC.btcRelay.getLatestBlockHeight());
+      const bestParachainBlock = reverseHashEndianness(await window.interBTC.btcRelay.getLatestBlock());
+      const bestParachainHeight = Number(await window.interBTC.btcRelay.getLatestBlockHeight());
 
       let bestBitcoinBlock = '-';
       let bestBitcoinHeight = 0;
 
       try {
         // Returns a big endian encoded block hash
-        bestBitcoinBlock = await window.polkaBTC.electrsAPI.getLatestBlock();
-        bestBitcoinHeight = await window.polkaBTC.electrsAPI.getLatestBlockHeight();
+        bestBitcoinBlock = await window.interBTC.electrsAPI.getLatestBlock();
+        bestBitcoinHeight = await window.interBTC.electrsAPI.getLatestBlockHeight();
       } catch (error) {
         // network error
       }
@@ -87,7 +87,7 @@ export default function BitcoinTable(): ReactElement {
     };
 
     fetchData();
-  }, [polkaBtcLoaded, noData, fork, heightDiff]);
+  }, [interBtcLoaded, noData, fork, heightDiff]);
 
   const getCircle = (status: string): string => {
     if (status === 'Online') {

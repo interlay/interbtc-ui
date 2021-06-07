@@ -23,12 +23,12 @@ import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import * as constants from '../../constants';
 import TAB_IDS from 'utils/constants/tab-ids';
-import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc-logo.svg';
+import { ReactComponent as InterbtcLogoIcon } from 'assets/img/interbtc-logo.svg';
 
 const queryString = require('query-string');
 
 export default function LandingPage(): JSX.Element {
-  const { totalPolkaBTC, totalLockedDOT, polkaBtcLoaded, address, extensions } = useSelector(
+  const { totalInterBTC, totalLockedDOT, interBtcLoaded, address, extensions } = useSelector(
     (state: StoreType) => state.general
   );
   const dispatch = useDispatch();
@@ -62,7 +62,7 @@ export default function LandingPage(): JSX.Element {
         <InterlayRouterLink
           style={{ display: 'inline-block' }}
           to={PAGES.home}>
-          <PolkabtcLogoIcon
+          <InterbtcLogoIcon
             fill='currentColor'
             className='text-white'
             width={256}
@@ -75,7 +75,7 @@ export default function LandingPage(): JSX.Element {
             'mb-2',
             'text-4xl'
           )}>
-          PolkaBTC
+          InterBTC
         </h1>
         <h2
           className={clsx(
@@ -115,7 +115,7 @@ export default function LandingPage(): JSX.Element {
                   style={{
                     textDecoration: 'none'
                   }}
-                  href='https://docs.polkabtc.io/#/'
+                  href='https://docs.interbtc.io/#/'
                   target='_bank'
                   rel='noopener noreferrer'>
                   <Button
@@ -159,7 +159,7 @@ export default function LandingPage(): JSX.Element {
                     'mb-2',
                     'text-xl'
                   )}>
-                  {t('landing.issued')} {totalPolkaBTC} PolkaBTC
+                  {t('landing.issued')} {totalInterBTC} InterBTC
                 </h5>
               </Col>
             </Row>
@@ -177,7 +177,7 @@ export default function LandingPage(): JSX.Element {
                 </h5>
               </Col>
             </Row>
-            {polkaBtcLoaded && (
+            {interBtcLoaded && (
               <Row className={clsx('mt-12')}>
                 <Col
                   className='mt-2'

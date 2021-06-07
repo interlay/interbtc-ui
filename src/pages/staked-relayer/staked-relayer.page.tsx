@@ -26,13 +26,13 @@ import './staked-relayer.page.scss';
 
 function StakedRelayer(): JSX.Element {
   const [isDeregisterPending, setDeregisterPending] = useState(false);
-  const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState('0');
+  const [feesEarnedInterBTC, setFeesEarnedInterBTC] = useState('0');
   const [feesEarnedDOT, setFeesEarnedDOT] = useState('0');
   const [relayerInactive, setRelayerInactive] = useState(false);
   const [sla, setSLA] = useState(0);
   const [apy, setAPY] = useState('0');
   const {
-    polkaBtcLoaded,
+    interBtcLoaded,
     relayerLoaded,
     address
   } = useSelector((state: StoreType) => state.general);
@@ -44,7 +44,7 @@ function StakedRelayer(): JSX.Element {
 
     setDeregisterPending(true);
     try {
-      await window.polkaBTC.stakedRelayer.deregister();
+      await window.interBTC.stakedRelayer.deregister();
       toast.success('Successfully Deregistered');
     } catch (error) {
       toast.error(error.message);
@@ -55,32 +55,32 @@ function StakedRelayer(): JSX.Element {
 
   useEffect(() => {
     (async () => {
-      if (!polkaBtcLoaded) return;
+      if (!interBtcLoaded) return;
       if (!relayerLoaded) return;
       if (!address) return;
 
       try {
-        const stakedRelayerId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
+        const stakedRelayerId = window.interBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
 
-        const slaScore = await window.polkaBTC.stakedRelayer.getSLA(stakedRelayerId);
+        const slaScore = await window.interBTC.stakedRelayer.getSLA(stakedRelayerId);
         setSLA(slaScore);
 
-        const apyScore = await window.polkaBTC.stakedRelayer.getAPY(stakedRelayerId);
+        const apyScore = await window.interBTC.stakedRelayer.getAPY(stakedRelayerId);
         setAPY(apyScore);
 
-        const feesPolkaBTC = await window.polkaBTC.stakedRelayer.getWrappingFees(
+        const feesInterBTC = await window.interBTC.stakedRelayer.getWrappingFees(
           stakedRelayerId
         );
-        setFeesEarnedPolkaBTC(feesPolkaBTC.toString());
+        setFeesEarnedInterBTC(feesInterBTC.toString());
 
-        const feesDOT = await window.polkaBTC.stakedRelayer.getCollateralFees(stakedRelayerId);
+        const feesDOT = await window.interBTC.stakedRelayer.getCollateralFees(stakedRelayerId);
         setFeesEarnedDOT(feesDOT.toString());
       } catch (error) {
         console.log('[StakedRelayerPage useEffect] error.message => ', error.message);
       }
     })();
   }, [
-    polkaBtcLoaded,
+    interBtcLoaded,
     relayerLoaded,
     address,
     t // TODO: should double-check
@@ -89,8 +89,8 @@ function StakedRelayer(): JSX.Element {
   const STAKED_RELAYER_ITEMS = [
     {
       title: t('fees_earned'),
-      value: feesEarnedPolkaBTC,
-      unit: 'PolkaBTC'
+      value: feesEarnedInterBTC,
+      unit: 'InterBTC'
     },
     {
       title: t('fees_earned'),
@@ -116,7 +116,7 @@ function StakedRelayer(): JSX.Element {
             mainTitle={t('relayer.staked_relayer_dashboard')}
             subTitle={<TimerIncrement />} />
           <BoldParagraph>{address}</BoldParagraph>
-          {relayerLoaded && polkaBtcLoaded && (
+          {relayerLoaded && interBtcLoaded && (
             <CardList>
               {STAKED_RELAYER_ITEMS.map(stakedRelayerItem => (
                 <Card

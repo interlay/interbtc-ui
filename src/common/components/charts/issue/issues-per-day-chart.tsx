@@ -1,8 +1,8 @@
 import { useState, useEffect, ReactElement, useMemo } from 'react';
-import usePolkabtcStats from '../../../hooks/use-polkabtc-stats';
+import useInterbtcStats from '../../../hooks/use-interbtc-stats';
 
 export default function IssuesPerDayChart(): ReactElement {
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcStats();
 
   // eslint-disable-next-line no-array-constructor
   const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number }>());

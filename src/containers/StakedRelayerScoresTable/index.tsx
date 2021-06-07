@@ -16,7 +16,7 @@ import {
   useGlobalFilter
 } from 'react-table';
 import clsx from 'clsx';
-import { RelayerData } from '@interlay/polkabtc-stats';
+import { RelayerData } from '@interlay/interbtc-stats';
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorHandler from 'components/ErrorHandler';
@@ -31,7 +31,7 @@ import InterlayTable, {
 import DefaultColumnFilter from 'components/UI/InterlayTable/DefaultColumnFilter';
 import NumberRangeColumnFilter from 'components/UI/InterlayTable/NumberRangeColumnFilter';
 import SortBy, { SortByContainer } from 'components/UI/InterlayTable/SortBy';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import useInterbtcStats from 'common/hooks/use-interbtc-stats';
 import { StoreType } from 'common/types/util.types';
 import STATUSES from 'utils/constants/statuses';
 
@@ -53,15 +53,15 @@ interface PatchedRelayerData extends Omit<RelayerData, 'lifetime_sla'> {
 const StakedRelayerScoresTable = ({
   challengeTime
 }: Props): JSX.Element => {
-  const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
-  const statsApi = usePolkabtcStats();
+  const { interBtcLoaded } = useSelector((state: StoreType) => state.general);
+  const statsApi = useInterbtcStats();
   const [data, setData] = useState<(PatchedRelayerData)[]>([]);
   const [status, setStatus] = useState(STATUSES.IDLE);
   const [error, setError] = useState<Error | null>(null);
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!interBtcLoaded) return;
     if (!statsApi) return;
 
     (async () => {
@@ -82,7 +82,7 @@ const StakedRelayerScoresTable = ({
       }
     })();
   }, [
-    polkaBtcLoaded,
+    interBtcLoaded,
     challengeTime,
     statsApi
   ]);

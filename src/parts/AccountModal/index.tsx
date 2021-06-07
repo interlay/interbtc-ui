@@ -36,7 +36,7 @@ const AccountModal = ({
   onClose
 }: Props): JSX.Element => {
   const {
-    polkaBtcLoaded,
+    interBtcLoaded,
     address,
     extensions
   } = useSelector((state: StoreType) => state.general);
@@ -60,14 +60,14 @@ const AccountModal = ({
   }, [extensions.length]);
 
   const handleAccountSelect = (newAddress: string) => async () => {
-    if (!polkaBtcLoaded) {
+    if (!interBtcLoaded) {
       return;
     }
 
     // TODO: should check when the app being initialized (not check everywhere)
     await web3Enable(APP_NAME);
     const { signer } = await web3FromAddress(newAddress);
-    window.polkaBTC.setAccount(newAddress, signer);
+    window.interBTC.setAccount(newAddress, signer);
     dispatch(changeAddressAction(newAddress));
 
     onClose();

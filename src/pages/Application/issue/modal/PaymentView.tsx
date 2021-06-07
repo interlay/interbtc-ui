@@ -27,7 +27,7 @@ const PaymentView = ({
   const { t } = useTranslation();
   const { prices } = useSelector((state: StoreType) => state.general);
   const { issuePeriod } = useSelector((state: StoreType) => state.issue);
-  const amount = new Big(request.requestedAmountPolkaBTC).add(new Big(request.fee)).toString();
+  const amount = new Big(request.requestedAmountInterBTC).add(new Big(request.fee)).toString();
   const [initialLeftSeconds, setInitialLeftSeconds] = React.useState<number>();
 
   React.useEffect(() => {

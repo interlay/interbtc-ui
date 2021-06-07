@@ -3,8 +3,8 @@ import ButtonComponent from './button-component';
 import { getAccents } from '../dashboardcolors';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
-import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
-import { planckToDOT } from '@interlay/polkabtc';
+import useInterbtcStats from '../../../common/hooks/use-interbtc-stats';
+import { planckToDOT } from '@interlay/interbtc';
 import LineChartComponent from './line-chart-component';
 import { useTranslation } from 'react-i18next';
 import { getUsdAmount } from '../../../common/utils/utils';
@@ -20,7 +20,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
   const { prices } = useSelector((state: StoreType) => state.general);
 
   const { t } = useTranslation();
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcStats();
 
   const [cumulativeCollateralPerDay, setCumulativeCollateralPerDay] = useState(
     // eslint-disable-next-line no-array-constructor

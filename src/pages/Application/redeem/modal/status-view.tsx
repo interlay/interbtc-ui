@@ -19,7 +19,7 @@ type StatusViewProps = {
 
 export default function StatusView(props: StatusViewProps): ReactElement {
   const { t } = useTranslation();
-  const { polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
+  const { interBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
   const [stableBitcoinConfirmations, setStableBitcoinConfirmations] = useState(1);
   const [punishmentDOT, setPunishmentDOT] = useState(new Big(0));
   const [burnAmountDOT, setBurnAmountDOT] = useState(new Big(0));
@@ -27,18 +27,18 @@ export default function StatusView(props: StatusViewProps): ReactElement {
   const [initialLeftSeconds, setInitialLeftSeconds] = React.useState<number>();
 
   useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!interBtcLoaded) return;
 
     const fetchData = async () => {
       try {
         const [punishment, btcDotRate, btcConfs, redeemPeriod] = await Promise.all([
-          window.polkaBTC.vaults.getPunishmentFee(),
-          window.polkaBTC.oracle.getExchangeRate(),
-          window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
-          window.polkaBTC.redeem.getRedeemPeriod()
+          window.interBTC.vaults.getPunishmentFee(),
+          window.interBTC.oracle.getExchangeRate(),
+          window.interBTC.btcRelay.getStableBitcoinConfirmations(),
+          window.interBTC.redeem.getRedeemPeriod()
         ]);
-        const amountPolkaBTC = props.request ? new Big(props.request.amountPolkaBTC) : new Big(0);
-        const burned = amountPolkaBTC.mul(btcDotRate);
+        const amountInterBTC = props.request ? new Big(props.request.amountInterBTC) : new Big(0);
+        const burned = amountInterBTC.mul(btcDotRate);
         const punished = burned.mul(new Big(punishment));
         setBurnAmountDOT(burned);
         setPunishmentDOT(punished);
@@ -53,7 +53,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
       }
     };
     fetchData();
-  }, [props.request, polkaBtcLoaded]);
+  }, [props.request, interBtcLoaded]);
 
   function getStatus(status: RedeemRequestStatus): React.ReactFragment {
     switch (status) {
@@ -64,7 +64,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           <div className='row'>
             <div className='col text-center bold-text '>
               {t('issue_page.you_received')}{' '}
-              <span className='orange-amount bold-text'>{props.request.amountPolkaBTC + ' BTC'}</span>
+              <span className='orange-amount bold-text'>{props.request.amountInterBTC + ' BTC'}</span>
             </div>
           </div>
           <div className='row mt-4'>
@@ -148,9 +148,9 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           <div className='row mt-5'>
             <div className='col text-center bold-text '>
               <span className='orange-amount bold-text'>
-                {props.request.amountPolkaBTC + ' PolkaBTC '}
+                {props.request.amountInterBTC + ' InterBTC '}
               </span>
-                                (~ ${getUsdAmount(props.request.amountPolkaBTC, prices.bitcoin.usd)})
+                                (~ ${getUsdAmount(props.request.amountInterBTC, prices.bitcoin.usd)})
               <span className='orange-amount bold-text'>{t('redeem_page.burned')}</span>
             </div>
           </div>

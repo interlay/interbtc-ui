@@ -2,20 +2,20 @@ import { useState, useEffect, ReactElement, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
+import useInterbtcStats from '../../../common/hooks/use-interbtc-stats';
 import { defaultTableDisplayParams, formatDateTimePrecise } from '../../../common/utils/utils';
 import { RelayedBlock } from '../../../common/types/util.types';
 import DashboardTable, { StyledLinkData } from '../../../common/components/dashboard-table/dashboard-table';
 import { BTC_BLOCK_API } from 'config/bitcoin';
 import BtcRelay from '../components/btc-relay';
-import { reverseEndiannessHex, stripHexPrefix } from '@interlay/polkabtc';
-import { BlockColumns } from '@interlay/polkabtc-stats';
+import { reverseEndiannessHex, stripHexPrefix } from '@interlay/interbtc';
+import { BlockColumns } from '@interlay/interbtc-stats';
 import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 
 export default function RelayDashboard(): ReactElement {
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcStats();
   const { t } = useTranslation();
 
   // eslint-disable-next-line no-array-constructor

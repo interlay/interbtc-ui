@@ -53,14 +53,14 @@ export type Prices = {
 };
 
 export type GeneralState = {
-  polkaBtcLoaded: boolean;
+  interBtcLoaded: boolean;
   relayerLoaded: boolean;
   vaultClientLoaded: boolean;
   showAccountModal: boolean;
   address: string;
-  totalPolkaBTC: string;
+  totalInterBTC: string;
   totalLockedDOT: string;
-  balancePolkaBTC: string;
+  balanceInterBTC: string;
   balanceDOT: string;
   extensions: string[];
   btcRelayHeight: number;

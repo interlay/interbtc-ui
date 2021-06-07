@@ -7,23 +7,23 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { satToBTC } from '@interlay/polkabtc';
+import { satToBTC } from '@interlay/interbtc';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import IssueRequestsTable from 'containers/IssueRequestsTable';
 import LineChartComponent from '../components/line-chart-component';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import useInterbtcStats from 'common/hooks/use-interbtc-stats';
 import { StoreType } from 'common/types/util.types';
 
 function IssueRequests(): JSX.Element {
   const {
-    totalPolkaBTC,
+    totalInterBTC,
     prices
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcStats();
 
   const [totalSuccessfulIssues, setTotalSuccessfulIssues] = useState('-');
   const [totalIssueRequests, setTotalIssueRequests] = useState(0);
@@ -124,10 +124,10 @@ function IssueRequests(): JSX.Element {
               {t('dashboard.issue.issued')}
             </h5>
             <h5>
-              {t('dashboard.issue.total_polkabtc', { amount: totalPolkaBTC })}
+              {t('dashboard.issue.total_interbtc', { amount: totalInterBTC })}
             </h5>
             <h5 className='text-textSecondary'>
-              ${(prices.bitcoin.usd * parseFloat(totalPolkaBTC)).toLocaleString()}
+              ${(prices.bitcoin.usd * parseFloat(totalInterBTC)).toLocaleString()}
             </h5>
             <h5
               className={clsx(

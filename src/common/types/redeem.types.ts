@@ -1,6 +1,6 @@
 export interface RedeemRequest {
   id: string;
-  amountPolkaBTC: string;
+  amountInterBTC: string;
   amountBTC: string;
   fee: string;
   btcTransferFee: string;
@@ -28,7 +28,7 @@ export enum RedeemRequestStatus {
 export type DashboardRequestInfo = {
   id: string;
   timestamp: string;
-  amountPolkaBTC: string;
+  amountInterBTC: string;
   creation: string;
   vaultDotAddress: string;
   btcAddress: string;

@@ -13,9 +13,9 @@ import { AccountId } from '@polkadot/types/interfaces';
 import {
   btcToSat,
   stripHexPrefix
-} from '@interlay/polkabtc';
+} from '@interlay/interbtc';
 
-import PolkaBTCField from '../PolkaBTCField';
+import InterBTCField from '../InterBTCField';
 import PriceInfo from '../PriceInfo';
 import ParachainStatusInfo from '../ParachainStatusInfo';
 import Tooltip from 'components/Tooltip';
@@ -47,7 +47,7 @@ import { parachainToUIIssueRequest } from 'common/utils/requests';
 import STATUSES from 'utils/constants/statuses';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
-import { ReactComponent as PolkaBTCLogoIcon } from 'assets/img/polkabtc-logo.svg';
+import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 
 const BTC_AMOUNT = 'btc-amount';
 
@@ -67,7 +67,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
   const [error, setError] = React.useState<Error | null>(null);
 
   const {
-    polkaBtcLoaded,
+    interBtcLoaded,
     address,
     bitcoinHeight,
     btcRelayHeight,
@@ -87,7 +87,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
   const btcAmount = watch(BTC_AMOUNT);
 
   // Additional info: bridge fee, security deposit, amount BTC
-  // Current fee model specification taken from: https://interlay.gitlab.io/polkabtc-spec/spec/fee.html
+  // Current fee model specification taken from: https://interlay.gitlab.io/interbtc-spec/spec/fee.html
   const [feeRate, setFeeRate] = React.useState(new Big(0.005)); // Set default to 0.5%
   const [depositRate, setDepositRate] = React.useState(new Big(0.00005)); // Set default to 0.005%
   const [btcToDOTRate, setBTCToDOTRate] = React.useState(new Big(0));
@@ -99,7 +99,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!interBtcLoaded) return;
 
     (async () => {
       try {
@@ -114,13 +114,13 @@ const EnterBTCAmount = (): JSX.Element | null => {
         ] = await Promise.all([
           // Loading this data is not strictly required as long as the constantly set values did
           // not change. However, you will not see the correct value for the security deposit.
-          window.polkaBTC.issue.getFeeRate(),
-          window.polkaBTC.fee.getIssueGriefingCollateralRate(),
-          window.polkaBTC.issue.getIssuePeriod(),
-          window.polkaBTC.redeem.getDustValue(),
-          window.polkaBTC.oracle.getExchangeRate(),
+          window.interBTC.issue.getFeeRate(),
+          window.interBTC.fee.getIssueGriefingCollateralRate(),
+          window.interBTC.issue.getIssuePeriod(),
+          window.interBTC.redeem.getDustValue(),
+          window.interBTC.oracle.getExchangeRate(),
           // This data (the vaults) is strictly required to request issue
-          window.polkaBTC.vaults.getVaultsWithIssuableTokens()
+          window.interBTC.vaults.getVaultsWithIssuableTokens()
         ]);
         setStatus(STATUSES.RESOLVED);
 
@@ -143,7 +143,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
       }
     })();
   }, [
-    polkaBtcLoaded,
+    interBtcLoaded,
     dispatch
   ]);
 
@@ -191,8 +191,8 @@ const EnterBTCAmount = (): JSX.Element | null => {
       return t('issue_page.error_more_than_6_blocks_behind');
     }
 
-    if (!polkaBtcLoaded) {
-      return 'PolkaBTC must be loaded!';
+    if (!interBtcLoaded) {
+      return 'InterBTC must be loaded!';
     }
 
     if (btcToSat(value.toString()) === undefined) {
@@ -204,9 +204,9 @@ const EnterBTCAmount = (): JSX.Element | null => {
 
   const onSubmit = async (data: IssueForm) => {
     try {
-      const polkaBTCAmount = new Big(data[BTC_AMOUNT]);
+      const interBTCAmount = new Big(data[BTC_AMOUNT]);
       setSubmitStatus(STATUSES.PENDING);
-      const result = await window.polkaBTC.issue.request(polkaBTCAmount);
+      const result = await window.interBTC.issue.request(interBTCAmount);
       // ray test touch <
       // TODO: handle issue aggregation
       const issueRequest = await parachainToUIIssueRequest(result[0].id, result[0].issueRequest);
@@ -230,7 +230,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
     const bigBTCAmount = new Big(btcAmount || 0);
     const bridgeFee = bigBTCAmount.mul(feeRate);
     const securityDeposit = bigBTCAmount.mul(btcToDOTRate).mul(depositRate);
-    const polkaBTCAmount = bigBTCAmount.sub(bridgeFee);
+    const interBTCAmount = bigBTCAmount.sub(bridgeFee);
 
     return (
       <>
@@ -245,7 +245,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
             )}>
             {t('issue_page.mint_polka_by_wrapping')}
           </h4>
-          <PolkaBTCField
+          <InterBTCField
             id='btc-amount'
             name={BTC_AMOUNT}
             type='number'
@@ -315,13 +315,13 @@ const EnterBTCAmount = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={
-              <PolkaBTCLogoIcon
+              <InterBTCLogoIcon
                 width={23}
                 height={23} />
             }
-            value={displayBtcAmount(polkaBTCAmount)}
-            unitName='PolkaBTC'
-            approxUSD={getUsdAmount(polkaBTCAmount, prices.bitcoin.usd)} />
+            value={displayBtcAmount(interBTCAmount)}
+            unitName='InterBTC'
+            approxUSD={getUsdAmount(interBTCAmount, prices.bitcoin.usd)} />
           <InterlayButton
             type='submit'
             style={{ display: 'flex' }}

@@ -12,7 +12,7 @@ import {
 // eslint-disable-next-line max-len
 } from 'react-table'; // TODO: should type properly (Re:https://github.com/tannerlinsley/react-table/blob/master/TYPESCRIPT.md)
 import clsx from 'clsx';
-import { VaultData } from '@interlay/polkabtc-stats'; // TODO: should do tree-shaking
+import { VaultData } from '@interlay/interbtc-stats'; // TODO: should do tree-shaking
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorHandler from 'components/ErrorHandler';
@@ -27,7 +27,7 @@ import InterlayTable, {
 import DefaultColumnFilter from 'components/UI/InterlayTable/DefaultColumnFilter';
 import NumberRangeColumnFilter from 'components/UI/InterlayTable/NumberRangeColumnFilter';
 import SortBy, { SortByContainer } from 'components/UI/InterlayTable/SortBy';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import useInterbtcStats from 'common/hooks/use-interbtc-stats';
 import { StoreType } from 'common/types/util.types';
 import STATUSES from 'utils/constants/statuses';
 
@@ -51,8 +51,8 @@ interface PatchedVaultData extends Omit<VaultData, 'lifetime_sla'> {
 const VaultScoresTable = ({
   challengeTime
 }: Props): JSX.Element => {
-  const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
-  const statsApi = usePolkabtcStats();
+  const { interBtcLoaded } = useSelector((state: StoreType) => state.general);
+  const statsApi = useInterbtcStats();
   const [data, setData] = React.useState<PatchedVaultData[]>([]);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [error, setError] = React.useState<Error | null>(null);
@@ -62,7 +62,7 @@ const VaultScoresTable = ({
   React.useEffect(() => {
     // TODO: should follow `<AuthenticatedApp />` vs. `<UnauthenticatedApp />` approach
     // - (Re: https://kentcdodds.com/blog/authentication-in-react-applications)
-    if (!polkaBtcLoaded) return;
+    if (!interBtcLoaded) return;
     if (!statsApi) return;
 
     (async () => {
@@ -83,7 +83,7 @@ const VaultScoresTable = ({
       }
     })();
   }, [
-    polkaBtcLoaded,
+    interBtcLoaded,
     challengeTime,
     statsApi
   ]);

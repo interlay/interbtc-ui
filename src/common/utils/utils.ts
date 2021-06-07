@@ -5,11 +5,11 @@ import {
   bitcoin,
   reverseEndianness,
   roundTwoDecimals
-} from '@interlay/polkabtc';
+} from '@interlay/interbtc';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from '../../constants';
 import { Dispatch } from 'redux';
-import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from '../actions/general.actions';
+import { updateBalanceDOTAction, updateBalanceInterBTCAction } from '../actions/general.actions';
 import Big from 'big.js';
 import { TableDisplayParams, RelayedBlock } from '../types/util.types';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
@@ -128,18 +128,18 @@ const updateBalances = async (
   dispatch: Dispatch,
   address: string,
   currentBalanceDOT: string,
-  currentBalancePolkaBTC: string
+  currentBalanceInterBTC: string
 ): Promise<void> => {
-  const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-  const balancePolkaBTC = (await window.polkaBTC.treasury.balance(accountId)).toString();
-  const balanceDOT = (await window.polkaBTC.collateral.balance(accountId)).toString();
+  const accountId = window.interBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
+  const balanceInterBTC = (await window.interBTC.treasury.balance(accountId)).toString();
+  const balanceDOT = (await window.interBTC.collateral.balance(accountId)).toString();
 
   if (currentBalanceDOT !== balanceDOT) {
     dispatch(updateBalanceDOTAction(balanceDOT));
   }
 
-  if (currentBalancePolkaBTC !== balancePolkaBTC) {
-    dispatch(updateBalancePolkaBTCAction(balancePolkaBTC));
+  if (currentBalanceInterBTC !== balanceInterBTC) {
+    dispatch(updateBalanceInterBTCAction(balanceInterBTC));
   }
 };
 

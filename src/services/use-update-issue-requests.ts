@@ -4,11 +4,11 @@ import {
   useSelector,
   useDispatch
 } from 'react-redux';
-import * as polkabtcStats from '@interlay/polkabtc-stats';
+import * as interbtcStats from '@interlay/interbtc-stats';
 import {
   IssueColumns,
   BtcNetworkName
-} from '@interlay/polkabtc-stats';
+} from '@interlay/interbtc-stats';
 
 import useInterval from 'utils/hooks/use-interval';
 import { updateAllIssueRequestsAction } from 'common/actions/issue.actions';
@@ -25,16 +25,16 @@ const useUpdateIssueRequests = (
   const {
     address,
     bitcoinHeight,
-    polkaBtcLoaded
+    interBtcLoaded
   } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
 
-  const isRunning = address && polkaBtcLoaded;
+  const isRunning = address && interBtcLoaded;
 
   useInterval(async () => {
     try {
       // Temporary declaration pending refactor decision
-      const stats = new polkabtcStats.StatsApi(new polkabtcStats.Configuration({ basePath: constants.STATS_URL }));
+      const stats = new interbtcStats.StatsApi(new interbtcStats.Configuration({ basePath: constants.STATS_URL }));
 
       const [
         parachainHeight,
@@ -42,10 +42,10 @@ const useUpdateIssueRequests = (
         requiredBtcConfirmations,
         requiredParachainConfirmations
       ] = await Promise.all([
-        window.polkaBTC.system.getCurrentBlockNumber(),
-        window.polkaBTC.issue.getIssuePeriod(),
-        window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
-        window.polkaBTC.btcRelay.getStableParachainConfirmations()
+        window.interBTC.system.getCurrentBlockNumber(),
+        window.interBTC.issue.getIssuePeriod(),
+        window.interBTC.btcRelay.getStableBitcoinConfirmations(),
+        window.interBTC.btcRelay.getStableParachainConfirmations()
       ]);
 
       const databaseRequests: IssueRequest[] = await Promise.all((

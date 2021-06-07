@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import useInterbtcStats from 'common/hooks/use-interbtc-stats';
 import ButtonComponent from './button-component';
 import { getAccents } from '../dashboardcolors';
 
@@ -21,7 +21,7 @@ type OracleStatusProps = {
 };
 
 const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcStats();
   const { t } = useTranslation();
   // TODO: use translations for status
   const [oracleStatus, setOracleStatus] = useState(Status.Loading);

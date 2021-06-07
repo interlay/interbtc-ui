@@ -9,10 +9,10 @@ import {
 } from 'react-redux';
 import {
   planckToDOT
-} from '@interlay/polkabtc';
+} from '@interlay/interbtc';
 import { useTranslation } from 'react-i18next';
 import tw from 'twin.macro';
-import { IssueColumns, RedeemColumns } from '@interlay/polkabtc-stats';
+import { IssueColumns, RedeemColumns } from '@interlay/interbtc-stats';
 import Big from 'big.js';
 
 import MainContainer from 'parts/MainContainer';
@@ -39,7 +39,7 @@ import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import './vault-dashboard.page.scss';
 import VaultIssueRequestsTable from 'containers/VaultIssueRequestTable';
 import VaultRedeemRequestsTable from 'containers/VaultRedeemRequestTable';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import useInterbtcStats from 'common/hooks/use-interbtc-stats';
 import { displayBtcAmount, displayDotAmount, safeRoundTwoDecimals } from 'common/utils/utils';
 import InterlayButton from 'components/UI/InterlayButton';
 import clsx from 'clsx';
@@ -49,7 +49,7 @@ function VaultDashboard(): JSX.Element {
   const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
   const {
     vaultClientLoaded,
-    polkaBtcLoaded,
+    interBtcLoaded,
     address
   } = useSelector((state: StoreType) => state.general);
   const {
@@ -60,13 +60,13 @@ function VaultDashboard(): JSX.Element {
     apy
   } = useSelector((state: StoreType) => state.vault);
   const [capacity, setCapacity] = useState('0');
-  const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState('0');
+  const [feesEarnedInterBTC, setFeesEarnedInterBTC] = useState('0');
   const [feesEarnedDOT, setFeesEarnedDOT] = useState('0');
   const [totalIssueRequests, setTotalIssueRequests] = useState(0);
   const [totalRedeemRequests, setTotalRedeemRequests] = useState(0);
 
   const dispatch = useDispatch();
-  const stats = usePolkabtcStats();
+  const stats = useInterbtcStats();
   const { t } = useTranslation();
 
   const closeUpdateCollateralModal = () => setUpdateCollateralModalStatus(CollateralUpdateStatus.Hidden);
@@ -74,32 +74,32 @@ function VaultDashboard(): JSX.Element {
 
   useEffect(() => {
     (async () => {
-      if (!polkaBtcLoaded) return;
+      if (!interBtcLoaded) return;
       if (!vaultClientLoaded) return;
       if (!address) return;
 
       try {
-        const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
+        const vaultId = window.interBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
         const [
           vault,
-          feesPolkaBTC,
+          feesInterBTC,
           feesDOT,
           lockedAmountBTC,
           collateralization,
           slaScore,
           apyScore,
-          issuablePolkaBTC,
+          issuableInterBTC,
           totalIssueRequests,
           totalRedeemRequests
         ] = await Promise.allSettled([
-          window.polkaBTC.vaults.get(vaultId),
-          window.polkaBTC.vaults.getFeesWrapped(vaultId),
-          window.polkaBTC.vaults.getFeesCollateral(vaultId),
-          window.polkaBTC.vaults.getIssuedAmount(vaultId),
-          window.polkaBTC.vaults.getVaultCollateralization(vaultId),
-          window.polkaBTC.vaults.getSLA(vaultId),
-          window.polkaBTC.vaults.getAPY(vaultId),
-          window.polkaBTC.vaults.getIssuableAmount(vaultId),
+          window.interBTC.vaults.get(vaultId),
+          window.interBTC.vaults.getFeesWrapped(vaultId),
+          window.interBTC.vaults.getFeesCollateral(vaultId),
+          window.interBTC.vaults.getIssuedAmount(vaultId),
+          window.interBTC.vaults.getVaultCollateralization(vaultId),
+          window.interBTC.vaults.getSLA(vaultId),
+          window.interBTC.vaults.getAPY(vaultId),
+          window.interBTC.vaults.getIssuableAmount(vaultId),
           stats.getFilteredTotalIssues([{ column: IssueColumns.VaultId, value: address }]),
           stats.getFilteredTotalRedeems([{ column: RedeemColumns.VaultId, value: address }])
         ]);
@@ -109,8 +109,8 @@ function VaultDashboard(): JSX.Element {
           dispatch(updateCollateralAction(collateralDot));
         }
 
-        if (feesPolkaBTC.status === 'fulfilled') {
-          setFeesEarnedPolkaBTC(feesPolkaBTC.value.toString());
+        if (feesInterBTC.status === 'fulfilled') {
+          setFeesEarnedInterBTC(feesInterBTC.value.toString());
         }
 
         if (feesDOT.status === 'fulfilled') {
@@ -141,15 +141,15 @@ function VaultDashboard(): JSX.Element {
           dispatch(updateAPYAction(apyScore.value));
         }
 
-        if (issuablePolkaBTC.status === 'fulfilled') {
-          setCapacity(issuablePolkaBTC.value.toString());
+        if (issuableInterBTC.status === 'fulfilled') {
+          setCapacity(issuableInterBTC.value.toString());
         }
       } catch (error) {
         console.log('[VaultDashboard useEffect] error.message => ', error.message);
       }
     })();
   }, [
-    polkaBtcLoaded,
+    interBtcLoaded,
     vaultClientLoaded,
     dispatch,
     address,
@@ -174,12 +174,12 @@ function VaultDashboard(): JSX.Element {
     {
       title: t('vault.capacity'),
       value: `~${displayDotAmount(capacity)}`,
-      unit: 'PolkaBTC'
+      unit: 'InterBTC'
     },
     {
       title: t('fees_earned'),
-      value: displayBtcAmount(feesEarnedPolkaBTC.toString()),
-      unit: 'PolkaBTC'
+      value: displayBtcAmount(feesEarnedInterBTC.toString()),
+      unit: 'InterBTC'
     },
     {
       title: t('fees_earned'),

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { StoreType } from '../../../../common/types/util.types';
 import { toast } from 'react-toastify';
 import { updateIssueRequestAction } from '../../../../common/actions/issue.actions';
-import { updateBalancePolkaBTCAction } from '../../../../common/actions/general.actions';
+import { updateBalanceInterBTCAction } from '../../../../common/actions/general.actions';
 import { shortAddress } from '../../../../common/utils/utils';
 import Big from 'big.js';
 import InterlayLink from 'components/UI/InterlayLink';
@@ -20,7 +20,7 @@ type StatusViewProps = {
 export default function StatusView(props: StatusViewProps): ReactElement {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { polkaBtcLoaded, balancePolkaBTC } = useSelector((state: StoreType) => state.general);
+  const { interBtcLoaded, balanceInterBTC } = useSelector((state: StoreType) => state.general);
   const [stableBitcoinConfirmations, setStableBitcoinConfirmations] = useState(1);
   const [stableParachainConfirmations, setStableParachainConfirmations] = useState(100);
   const [requestConfirmations, setRequestConfirmations] = useState(0);
@@ -29,9 +29,9 @@ export default function StatusView(props: StatusViewProps): ReactElement {
   useEffect(() => {
     const fetchData = async () => {
       const [btcConf, paraConf, paraHeight] = await Promise.all([
-        await window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
-        await window.polkaBTC.btcRelay.getStableParachainConfirmations(),
-        await window.polkaBTC.system.getCurrentBlockNumber()
+        await window.interBTC.btcRelay.getStableBitcoinConfirmations(),
+        await window.interBTC.btcRelay.getStableParachainConfirmations(),
+        await window.interBTC.system.getCurrentBlockNumber()
       ]);
       setStableBitcoinConfirmations(btcConf);
       setStableParachainConfirmations(paraConf);
@@ -41,20 +41,20 @@ export default function StatusView(props: StatusViewProps): ReactElement {
   });
 
   const execute = async (request: IssueRequest) => {
-    if (!polkaBtcLoaded) return;
+    if (!interBtcLoaded) return;
     setExecutePending(true);
 
     try {
       // Execute issue
-      await window.polkaBTC.issue.execute('0x' + request.id, request.btcTxId);
+      await window.interBTC.issue.execute('0x' + request.id, request.btcTxId);
 
       const completedReq = request;
       completedReq.status = IssueRequestStatus.Completed;
 
       dispatch(
-        updateBalancePolkaBTCAction(
-          new Big(balancePolkaBTC)
-            .add(new Big(request.issuedAmountBtc || request.requestedAmountPolkaBTC))
+        updateBalanceInterBTCAction(
+          new Big(balanceInterBTC)
+            .add(new Big(request.issuedAmountBtc || request.requestedAmountInterBTC))
             .toString()
         )
       );
@@ -81,7 +81,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             <div className='col text-center bold-text '>
               {t('issue_page.you_received')}{' '}
               <span className='pink-amount bold-text'>
-                {props.request.issuedAmountBtc || props.request.requestedAmountPolkaBTC} PolkaBTC
+                {props.request.issuedAmountBtc || props.request.requestedAmountInterBTC} InterBTC
               </span>
             </div>
           </div>
@@ -246,7 +246,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                 </div>
               </div>
               <div className='row mt-5 justify-center'>
-                <div className='col-10'>{t('issue_page.receive_polkabtc_tokens')}</div>
+                <div className='col-10'>{t('issue_page.receive_interbtc_tokens')}</div>
               </div>
               <div className='row mt-3 justify-center'>
                 <div className='col-6 text-center'>
@@ -254,7 +254,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                     isPending={executePending}
                     className='pink-button'
                     onClick={() => execute(props.request)}>
-                    {t('issue_page.claim_polkabtc')}
+                    {t('issue_page.claim_interbtc')}
                   </ButtonMaybePending>
                 </div>
               </div>

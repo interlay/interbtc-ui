@@ -26,7 +26,7 @@ pipeline {
         projected:
           sources:
             - secret:
-                name: gitlab-polkabtc-ui-registry
+                name: gitlab-interbtc-ui-registry
                 items:
                   - key: .dockerconfigjson
                     path: config.json
@@ -67,7 +67,7 @@ pipeline {
                 PATH        = "/busybox:$PATH"
                 REGISTRY    = 'registry.gitlab.com' // Configure your own registry
                 REPOSITORY  = 'interlay'
-                IMAGE       = 'polkabtc-ui'
+                IMAGE       = 'interbtc-ui'
             }
             steps {
                 container(name: 'kaniko', shell: '/busybox/sh') {

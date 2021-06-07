@@ -1638,13 +1638,13 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/polkabtc-stats@0.3.3":
+"@interlay/interbtc-stats@0.3.3":
   version "0.3.3"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-stats/-/polkabtc-stats-0.3.3.tgz#fc9b185153a0797511e2722d6ff0e556bcee811b"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-stats/-/interbtc-stats-0.3.3.tgz#fc9b185153a0797511e2722d6ff0e556bcee811b"
   integrity sha512-ZULOxAmfM1ZSQKTfEZJ2hHBbRLZxcDD9FC8wGaeISFsCb+GfaHIK19XLioc2As83Euapsf5CzKxIO8vGnXDBSw==
   dependencies:
-    "@interlay/polkabtc" "0.15.5"
-    "@interlay/polkabtc-types" "0.7.2"
+    "@interlay/interbtc" "0.15.5"
+    "@interlay/interbtc-types" "0.7.2"
     "@supercharge/promise-pool" "^1.6.0"
     "@types/big.js" "^6.0.2"
     "@types/pg-format" "^1.0.1"
@@ -1664,23 +1664,23 @@
     tsoa "^3.4.0"
     typeorm "^0.2.30"
 
-"@interlay/polkabtc-types@0.7.2":
+"@interlay/interbtc-types@0.7.2":
   version "0.7.2"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.7.2.tgz#6b4e3845b03a73987fc40b8f0e4d2cf82c266e16"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-0.7.2.tgz#6b4e3845b03a73987fc40b8f0e4d2cf82c266e16"
   integrity sha512-eGasKq3xgpBIBKTO9l/eWOA2i8TwjTqOXduNjZ/j086DLp+DQ3m5/YgpWXZbVo7I6AJgClQ8r+xEjndcw7QHXA==
 
-"@interlay/polkabtc-types@0.7.3":
+"@interlay/interbtc-types@0.7.3":
   version "0.7.3"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc-types/-/polkabtc-types-0.7.3.tgz#5fcbffe9792cc61ac50701cbce615e85696124d3"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-0.7.3.tgz#5fcbffe9792cc61ac50701cbce615e85696124d3"
   integrity sha512-QYrHiUtpZzkiy9vXwq5cMT8JlaIhIjXVDc9h5OmNOfAfNwyHGn3vm/c7jHD7QH2QIRXRqcjoY1Mv+DnjigfDsg==
 
-"@interlay/polkabtc@0.15.5":
+"@interlay/interbtc@0.15.5":
   version "0.15.5"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.15.5.tgz#5eeb35a091506e54d2d1034af41dac818391cbc9"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-0.15.5.tgz#5eeb35a091506e54d2d1034af41dac818391cbc9"
   integrity sha512-KELTxomx3BZkimsrtAg2iWufs3aggCvouRXOV7+D3yI/+EaEBV1myc7eHLBhsgmUTgchpTl9vz6tFV/spUXZFg==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
-    "@interlay/polkabtc-types" "0.7.2"
+    "@interlay/interbtc-types" "0.7.2"
     "@polkadot/api" "4.8.1"
     "@polkadot/typegen" "4.8.1"
     "@types/big.js" "6.0.2"
@@ -1692,13 +1692,13 @@
     sinon "^9.0.3"
     ts-mock-imports "^1.3.0"
 
-"@interlay/polkabtc@0.17.1":
+"@interlay/interbtc@0.17.1":
   version "0.17.1"
-  resolved "https://registry.yarnpkg.com/@interlay/polkabtc/-/polkabtc-0.17.1.tgz#de25b447103ece5d4231a04a0c22d012ad264411"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-0.17.1.tgz#de25b447103ece5d4231a04a0c22d012ad264411"
   integrity sha512-ha76/R9Tq7/I2oU/p1IcveV2z2dYkTWmARyMKCSEmZTddcB2h3NOhIDmt1TGFzgz6vo5zvopOmCZp+dUt9HeZQ==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
-    "@interlay/polkabtc-types" "0.7.3"
+    "@interlay/interbtc-types" "0.7.3"
     "@polkadot/api" "4.12.1"
     "@polkadot/keyring" "6.6.2-6"
     "@polkadot/typegen" "4.12.1"

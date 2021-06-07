@@ -107,8 +107,8 @@ function IssueRequests(): JSX.Element {
                         t('pending')}
                     </td>
                     <td>
-                      {request.issuedAmountBtc || request.requestedAmountPolkaBTC}{' '}
-                      <span className='grey-text'>PolkaBTC</span>
+                      {request.issuedAmountBtc || request.requestedAmountInterBTC}{' '}
+                      <span className='grey-text'>InterBTC</span>
                     </td>
                     <td>
                       <BitcoinTransaction

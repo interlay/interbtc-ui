@@ -1,5 +1,5 @@
 
-// TODO: (https://github.com/interlay/polkabtc-ui/pull/212#discussion_r619005713)
+// TODO: (https://github.com/interlay/interbtc-ui/pull/212#discussion_r619005713)
 const BTC_MAINNET = false;
 
 const BTC_EXPLORER_BLOCK_API = 'https://blockstream.info/block/';

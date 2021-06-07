@@ -13,13 +13,13 @@ import {
   IS_FAUCET_LOADED,
   UPDATE_HEIGHTS,
   UPDATE_TOTALS,
-  IsPolkaBtcLoaded,
+  IsInterBtcLoaded,
   IsStakedRelayerLoaded,
   ChangeAddress,
   InitState,
   InitGeneralDataAction,
   IsVaultClientLoaded,
-  UpdateBalancePolkaBTC,
+  UpdateBalanceInterBTC,
   UpdateBalanceDOT,
   SetInstalledExtension,
   ShowAccountModal,
@@ -30,7 +30,7 @@ import {
 } from '../types/actions.types';
 import { StoreType, ParachainStatus, Prices } from '../types/util.types';
 
-export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
+export const isInterBtcLoaded = (isLoaded = false): IsInterBtcLoaded => ({
   type: IS_POLKA_BTC_LOADED,
   isLoaded
 });
@@ -60,9 +60,9 @@ export const initializeState = (state: StoreType): InitState => ({
   state
 });
 
-export const updateBalancePolkaBTCAction = (balancePolkaBTC: string): UpdateBalancePolkaBTC => ({
+export const updateBalanceInterBTCAction = (balanceInterBTC: string): UpdateBalanceInterBTC => ({
   type: UPDATE_BALANCE_POLKA_BTC,
-  balancePolkaBTC
+  balanceInterBTC
 });
 
 export const updateBalanceDOTAction = (balanceDOT: string): UpdateBalanceDOT => ({
@@ -76,7 +76,7 @@ export const updateOfPricesAction = (prices: Prices): UpdateOfPrices => ({
 });
 
 export const initGeneralDataAction = (
-  totalPolkaBTC: string,
+  totalInterBTC: string,
   totalLockedDOT: string,
   btcRelayHeight: number,
   bitcoinHeight: number,
@@ -85,7 +85,7 @@ export const initGeneralDataAction = (
   type: INIT_GENERAL_DATA_ACTION,
   btcRelayHeight,
   bitcoinHeight,
-  totalPolkaBTC,
+  totalInterBTC,
   totalLockedDOT,
   parachainStatus
 });
@@ -106,8 +106,8 @@ export const updateHeightsAction = (btcRelayHeight: number, bitcoinHeight: numbe
   bitcoinHeight
 });
 
-export const updateTotalsAction = (totalLockedDOT: string, totalPolkaBTC: string): UpdateTotals => ({
+export const updateTotalsAction = (totalLockedDOT: string, totalInterBTC: string): UpdateTotals => ({
   type: UPDATE_TOTALS,
   totalLockedDOT,
-  totalPolkaBTC
+  totalInterBTC
 });

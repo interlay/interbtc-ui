@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateCollateralAction, updateCollateralizationAction } from '../../../common/actions/vault.actions';
-import { dotToPlanck, roundTwoDecimals } from '@interlay/polkabtc';
+import { dotToPlanck, roundTwoDecimals } from '@interlay/interbtc';
 import { StoreType } from '../../../common/types/util.types';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
@@ -29,7 +29,7 @@ type UpdateCollateralProps = {
 };
 
 export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX.Element {
-  const { polkaBtcLoaded, vaultClientLoaded, address } = useSelector((state: StoreType) => state.general);
+  const { interBtcLoaded, vaultClientLoaded, address } = useSelector((state: StoreType) => state.general);
   const { register, handleSubmit, errors } = useForm<UpdateCollateralForm>();
   // denoted in DOT
   const currentCollateral = useSelector((state: StoreType) => state.vault.collateral);
@@ -46,7 +46,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
   const { t } = useTranslation();
 
   const onSubmit = handleSubmit(async () => {
-    if (!polkaBtcLoaded) return;
+    if (!interBtcLoaded) return;
     if (!vaultClientLoaded) return;
 
     setUpdatePending(true);
@@ -56,17 +56,17 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
 
       if (currentCollateralBig.gt(newCollateralBig)) {
         const withdrawAmount = currentCollateralBig.sub(newCollateralBig);
-        await window.polkaBTC.vaults.withdrawCollateral(withdrawAmount);
+        await window.interBTC.vaults.withdrawCollateral(withdrawAmount);
       } else if (currentCollateralBig.lt(newCollateralBig)) {
         const depositAmount = newCollateralBig.sub(currentCollateralBig);
-        await window.polkaBTC.vaults.lockAdditionalCollateral(depositAmount);
+        await window.interBTC.vaults.lockAdditionalCollateral(depositAmount);
       } else {
         closeModal();
         return;
       }
 
-      const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const balanceLockedDOT = await window.polkaBTC.collateral.balanceLocked(vaultId);
+      const vaultId = window.interBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
+      const balanceLockedDOT = await window.interBTC.collateral.balanceLocked(vaultId);
       dispatch(updateCollateralAction(balanceLockedDOT.toString()));
       let collateralization;
       try {
@@ -92,7 +92,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
   const onChange = async (obj: SyntheticEvent) => {
     try {
       const value = (obj.target as HTMLInputElement).value;
-      if (value === '' || !polkaBtcLoaded || Number(value) <= 0 || isNaN(Number(value))) {
+      if (value === '' || !interBtcLoaded || Number(value) <= 0 || isNaN(Number(value))) {
         setCollateralUpdateAllowed(false);
         return;
       }
@@ -114,15 +114,15 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
       }
       setNewCollateral(newCollateral.toString());
 
-      const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const requiredCollateral = (await window.polkaBTC.vaults.getRequiredCollateralForVault(vaultId)).toString();
+      const vaultId = window.interBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
+      const requiredCollateral = (await window.interBTC.vaults.getRequiredCollateralForVault(vaultId)).toString();
 
       // collateral update only allowed if above required collateral
       const allowed = newCollateral.gte(new Big(requiredCollateral));
       setCollateralUpdateAllowed(allowed);
 
       // get the updated collateralization
-      const newCollateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId, newCollateral);
+      const newCollateralization = await window.interBTC.vaults.getVaultCollateralization(vaultId, newCollateral);
       if (newCollateralization === undefined) {
         setNewCollateralization('∞');
       } else {

@@ -2,7 +2,7 @@ import { ReactElement, useState, useMemo, useEffect } from 'react';
 import ButtonComponent from './button-component';
 import { getAccents } from '../dashboard-colors';
 import LineChartComponent from './line-chart-component';
-import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
+import useInterbtcStats from '../../../common/hooks/use-interbtc-stats';
 import { useTranslation } from 'react-i18next';
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
@@ -12,7 +12,7 @@ type ActiveVaultsProps = {
 };
 
 const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcStats();
   const { t } = useTranslation();
 
   // eslint-disable-next-line no-array-constructor

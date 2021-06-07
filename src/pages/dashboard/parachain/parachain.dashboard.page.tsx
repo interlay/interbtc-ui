@@ -6,20 +6,20 @@ import ParachainSecurity from '../components/parachain-security';
 import ActiveStakedRelayers from '../components/active-staked-relayers';
 import StakedRelayerTable from '../staked-relayer-table/staked-relayer-table';
 import { DashboardStatusUpdateInfo } from '../../../common/types/util.types';
-import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
+import useInterbtcStats from '../../../common/hooks/use-interbtc-stats';
 import { defaultTableDisplayParams, formatDateTimePrecise } from '../../../common/utils/utils';
 import DashboardTable, {
   StatusComponent,
   StatusCategories
 } from '../../../common/components/dashboard-table/dashboard-table';
-import { StatusUpdateColumns } from '@interlay/polkabtc-stats';
+import { StatusUpdateColumns } from '@interlay/interbtc-stats';
 import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 
 export default function ParachainDashboard(): ReactElement {
   const { t } = useTranslation();
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcStats();
   // eslint-disable-next-line no-array-constructor
   const [statusUpdates, setStatusUpdates] = useState(new Array<DashboardStatusUpdateInfo>());
   const [tableParams, setTableParams] = useState({

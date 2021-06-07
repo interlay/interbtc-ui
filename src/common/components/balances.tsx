@@ -2,16 +2,16 @@
 import clsx from 'clsx';
 
 import { safeRoundFiveDecimals } from 'common/utils/utils';
-import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc-logo.svg';
+import { ReactComponent as InterbtcLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
 interface Props {
-  balancePolkaBTC?: string;
+  balanceInterBTC?: string;
   balanceDOT?: string;
 }
 
 const Balances = ({
-  balancePolkaBTC,
+  balanceInterBTC,
   balanceDOT
 }: Props): JSX.Element => {
   const roundedBalanceDot = safeRoundFiveDecimals(balanceDOT);
@@ -30,12 +30,12 @@ const Balances = ({
           'items-center',
           'space-x-2'
         )}>
-        <PolkabtcLogoIcon
+        <InterbtcLogoIcon
           fill='currentColor'
           width={50}
           height={30} />
-        <span className='font-bold'>{balancePolkaBTC || '0'}</span>
-        <span>PolkaBTC</span>
+        <span className='font-bold'>{balanceInterBTC || '0'}</span>
+        <span>InterBTC</span>
       </div>
       <div
         className={clsx(

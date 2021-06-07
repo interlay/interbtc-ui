@@ -1,6 +1,6 @@
 import { ReactElement, useState, useMemo, useEffect } from 'react';
 import { defaultBlockData } from '../../../utils/utils';
-import usePolkabtcStats from '../../../hooks/use-polkabtc-stats';
+import useInterbtcStats from '../../../hooks/use-interbtc-stats';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../types/util.types';
 
@@ -15,8 +15,8 @@ type RelayStatusChartProps = {
 };
 
 export default function RelayStatusChart(props: RelayStatusChartProps): ReactElement {
-  const statsApi = usePolkabtcStats();
-  const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+  const statsApi = useInterbtcStats();
+  const { interBtcLoaded } = useSelector((state: StoreType) => state.general);
   const [latestRelayBlock, setLatestRelayBlock] = useState(defaultBlockData());
   const [latestBlockstreamBlock, setLatestBlockstreamBlock] = useState({ height: 0, hash: '' });
   const [relayStatus, setRelayStatus] = useState(Status.Online);
@@ -31,8 +31,8 @@ export default function RelayStatusChart(props: RelayStatusChartProps): ReactEle
 
   const fetchLatestBlockstreamBlock = useMemo(
     () => async () => {
-      const height = await window.polkaBTC.electrsAPI.getLatestBlockHeight();
-      const hash = await window.polkaBTC.electrsAPI.getLatestBlock();
+      const height = await window.interBTC.electrsAPI.getLatestBlockHeight();
+      const hash = await window.interBTC.electrsAPI.getLatestBlock();
       setLatestBlockstreamBlock({ height, hash });
     },
     []
@@ -40,8 +40,8 @@ export default function RelayStatusChart(props: RelayStatusChartProps): ReactEle
 
   useEffect(() => {
     fetchLatestRelayBlock();
-    if (polkaBtcLoaded) fetchLatestBlockstreamBlock();
-  }, [polkaBtcLoaded, fetchLatestRelayBlock, fetchLatestBlockstreamBlock]);
+    if (interBtcLoaded) fetchLatestBlockstreamBlock();
+  }, [interBtcLoaded, fetchLatestRelayBlock, fetchLatestBlockstreamBlock]);
 
   useEffect(() => {
     setRelayStatus(Number(latestRelayBlock.height) < latestBlockstreamBlock.height ? Status.Behind : Status.Online);

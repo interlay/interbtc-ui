@@ -7,23 +7,23 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { satToBTC } from '@interlay/polkabtc';
+import { satToBTC } from '@interlay/interbtc';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import RedeemRequestsTable from 'containers/RedeemRequestsTable';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import useInterbtcStats from 'common/hooks/use-interbtc-stats';
 import { StoreType } from 'common/types/util.types';
 import LineChartComponent from '../components/line-chart-component';
 
 function RedeemRequests(): JSX.Element {
   const {
-    polkaBtcLoaded,
+    interBtcLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcStats();
 
   const [totalSuccessfulRedeems, setTotalSuccessfulRedeems] = useState('-');
   const [totalRedeemRequests, setTotalRedeemRequests] = useState(0);
@@ -69,7 +69,7 @@ function RedeemRequests(): JSX.Element {
     };
 
     (async () => {
-      if (!polkaBtcLoaded) return;
+      if (!interBtcLoaded) return;
       try {
         await Promise.all([
           fetchTotalSuccessfulRedeems(),
@@ -82,7 +82,7 @@ function RedeemRequests(): JSX.Element {
       }
     })();
   }, [
-    polkaBtcLoaded,
+    interBtcLoaded,
     statsApi
   ]);
 

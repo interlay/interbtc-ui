@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { btcToSat } from '@interlay/polkabtc';
+import { btcToSat } from '@interlay/interbtc';
 import Big from 'big.js';
 
 import ButtonMaybePending from 'common/components/pending-button';
@@ -37,15 +37,15 @@ export default function RequestReplacementModal(props: RequestReplacementProps):
       if (btcToSat(amount.toString()) === undefined) {
         throw new Error('Amount to convert is less than 1 satoshi.');
       }
-      const dustValue = await window.polkaBTC.redeem.getDustValue();
-      const amountPolkaBtc = new Big(amount);
-      if (amountPolkaBtc <= dustValue) {
+      const dustValue = await window.interBTC.redeem.getDustValue();
+      const amountInterBtc = new Big(amount);
+      if (amountInterBtc <= dustValue) {
         throw new Error(`Please enter an amount greater than Bitcoin dust (${dustValue.toString()} BTC)`);
       }
-      await window.polkaBTC.replace.request(amountPolkaBtc);
+      await window.interBTC.replace.request(amountInterBtc);
 
-      const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
+      const vaultId = window.interBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
+      const requests = await window.interBTC.vaults.mapReplaceRequests(vaultId);
       if (!requests) return;
 
       dispatch(addReplaceRequestsAction(parachainToUIReplaceRequests(requests)));
@@ -88,7 +88,7 @@ export default function RequestReplacementModal(props: RequestReplacementProps):
                   <span
                     className='input-group-text'
                     id='basic-addon2'>
-                                        PolkaBTC
+                                        InterBTC
                   </span>
                 </div>
                 {errors.amount && (

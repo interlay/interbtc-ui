@@ -90,8 +90,8 @@ export default function RedeemRequests(): ReactElement {
                           t('pending')}
                       </td>
                       <td>
-                        {request.amountPolkaBTC}{' '}
-                        <span className='grey-text'>PolkaBTC</span>
+                        {request.amountInterBTC}{' '}
+                        <span className='grey-text'>InterBTC</span>
                       </td>
                       <td>
                         {request.status === RedeemRequestStatus.Expired ? (

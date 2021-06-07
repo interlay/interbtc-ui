@@ -15,7 +15,7 @@ export interface VaultReplaceRequest {
     newVault: string;
     oldVault: string;
     btcAddress: string;
-    polkaBTC: string;
+    interBTC: string;
     lockedDOT: string;
     status: string;
 }

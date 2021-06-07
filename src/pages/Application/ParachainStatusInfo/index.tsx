@@ -25,7 +25,7 @@ const ParachainStatusInfo = ({
           'font-medium',
           className
         )}>
-        {t('polkabtc_bridge_loading')}
+        {t('interbtc_bridge_loading')}
       </p>
     );
   case ParachainStatus.Running:
@@ -44,7 +44,7 @@ const ParachainStatusInfo = ({
           {t('issue_redeem_disabled')}
         </p>
         <p>
-          {t('polkabtc_bridge_recovery_mode')}
+          {t('interbtc_bridge_recovery_mode')}
         </p>
       </div>
     );

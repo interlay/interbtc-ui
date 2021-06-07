@@ -77,14 +77,14 @@ const IssueModal = (props: IssueModalProps): JSX.Element => {
               <div className='col-xl-6 col-lg-12 justify-center'>
                 <div className='issue-amount'>
                   <span className='wizard-number'>
-                    {request.issuedAmountBtc || request.requestedAmountPolkaBTC}
+                    {request.issuedAmountBtc || request.requestedAmountInterBTC}
                   </span>
-                  &nbsp;PolkaBTC
+                  &nbsp;InterBTC
                 </div>
                 <div className='row usd-price-modal'>
                   <div className='col'>
                     {'~ $' + getUsdAmount(
-                      request.issuedAmountBtc || request.requestedAmountPolkaBTC || '0',
+                      request.issuedAmountBtc || request.requestedAmountInterBTC || '0',
                       prices.bitcoin.usd
                     )}
                   </div>
@@ -119,7 +119,7 @@ const IssueModal = (props: IssueModalProps): JSX.Element => {
                     BTC
                     <div className='send-price'>
                       {'~ $' + getUsdAmount(
-                        request.issuedAmountBtc || request.requestedAmountPolkaBTC,
+                        request.issuedAmountBtc || request.requestedAmountInterBTC,
                         prices.bitcoin.usd
                       )}
                     </div>

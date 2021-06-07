@@ -10,18 +10,18 @@ import { shortAddress } from 'common/utils/utils';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
 export default function ReplaceTable(): ReactElement {
-  const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
+  const { interBtcLoaded, address } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
   const replaceRequests = useSelector((state: StoreType) => state.vault.requests);
   const { t } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!polkaBtcLoaded || !address) return;
+      if (!interBtcLoaded || !address) return;
 
       try {
-        const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-        const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
+        const vaultId = window.interBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
+        const requests = await window.interBTC.vaults.mapReplaceRequests(vaultId);
         if (!requests) return;
 
         dispatch(addReplaceRequestsAction(parachainToUIReplaceRequests(requests)));
@@ -31,7 +31,7 @@ export default function ReplaceTable(): ReactElement {
     };
 
     fetchData();
-  }, [polkaBtcLoaded, dispatch, address]);
+  }, [interBtcLoaded, dispatch, address]);
 
   return (
     <div style={{ margin: '40px 0px' }}>
@@ -58,7 +58,7 @@ export default function ReplaceTable(): ReactElement {
                 <th>{t('vault.old_vault')}</th>
                 <th>{t('vault.new_vault')}</th>
                 <th>{t('btc_address')}</th>
-                <th>PolkaBTC</th>
+                <th>InterBTC</th>
                 <th>{t('griefing_collateral')}</th>
                 <th>{t('status')}</th>
               </tr>
@@ -72,7 +72,7 @@ export default function ReplaceTable(): ReactElement {
                     <td>{shortAddress(redeem.oldVault)}</td>
                     <td>{shortAddress(redeem.newVault)}</td>
                     <td>{shortAddress(redeem.btcAddress)}</td>
-                    <td>{redeem.polkaBTC}</td>
+                    <td>{redeem.interBTC}</td>
                     <td>{redeem.lockedDOT}</td>
                     <td>{redeem.status}</td>
                   </tr>

@@ -1,5 +1,5 @@
 {
-  "name": "polkabtc-ui",
+  "name": "interbtc-ui",
   "version": "1.10.2",
   "private": true,
   "dependencies": {
@@ -7,8 +7,8 @@
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.1.5",
     "@headlessui/react": "^1.1.1",
-    "@interlay/polkabtc-stats": "0.3.3",
-    "@interlay/polkabtc": "0.17.1",
+    "@interlay/interbtc-stats": "0.3.3",
+    "@interlay/interbtc": "0.17.1",
     "@polkadot/extension-dapp": "0.38.1",
     "@polkadot/types": "4.12.1",
     "@polkadot/api": "4.12.1",

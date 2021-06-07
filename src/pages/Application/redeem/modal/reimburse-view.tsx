@@ -19,7 +19,7 @@ type ReimburseViewProps = {
 export default function ReimburseView(props: ReimburseViewProps): ReactElement {
   const [isReimbursePending, setReimbursePending] = useState(false);
   const [isRetryPending, setRetryPending] = useState(false);
-  const { polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
+  const { interBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
   const [punishmentDOT, setPunishmentDOT] = useState(new Big(0));
   const [amountDOT, setAmountDOT] = useState(new Big(0));
   const dispatch = useDispatch();
@@ -28,30 +28,30 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!polkaBtcLoaded) return;
+      if (!interBtcLoaded) return;
       try {
         const [punishment, btcDotRate] = await Promise.all([
-          window.polkaBTC.vaults.getPunishmentFee(),
-          window.polkaBTC.oracle.getExchangeRate()
+          window.interBTC.vaults.getPunishmentFee(),
+          window.interBTC.oracle.getExchangeRate()
         ]);
-        const amountPolkaBTC = props.request ? new Big(props.request.amountPolkaBTC) : new Big(0);
-        setAmountDOT(amountPolkaBTC.mul(btcDotRate));
-        setPunishmentDOT(amountPolkaBTC.mul(btcDotRate).mul(new Big(punishment)));
+        const amountInterBTC = props.request ? new Big(props.request.amountInterBTC) : new Big(0);
+        setAmountDOT(amountInterBTC.mul(btcDotRate));
+        setPunishmentDOT(amountInterBTC.mul(btcDotRate).mul(new Big(punishment)));
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchData();
-  }, [props.request, polkaBtcLoaded]);
+  }, [props.request, interBtcLoaded]);
 
   const onRetry = async () => {
-    if (!polkaBtcLoaded) return;
+    if (!interBtcLoaded) return;
     setRetryPending(true);
     try {
       if (!props.request) return;
-      const redeemId = window.polkaBTC.api.createType('H256', '0x' + props.request.id);
-      await window.polkaBTC.redeem.cancel(redeemId, false);
+      const redeemId = window.interBTC.api.createType('H256', '0x' + props.request.id);
+      await window.interBTC.redeem.cancel(redeemId, false);
       dispatch(retryRedeemRequestAction(props.request.id));
       await fetchBalances(dispatch, store);
       props.onClose();
@@ -63,12 +63,12 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
   };
 
   const onBurn = async () => {
-    if (!polkaBtcLoaded) return;
+    if (!interBtcLoaded) return;
     setReimbursePending(true);
     try {
       if (!props.request) return;
-      const redeemId = window.polkaBTC.api.createType('H256', '0x' + props.request.id);
-      await window.polkaBTC.redeem.cancel(redeemId, true);
+      const redeemId = window.interBTC.api.createType('H256', '0x' + props.request.id);
+      await window.interBTC.redeem.cancel(redeemId, true);
       dispatch(reimburseRedeemRequestAction(props.request.id));
       await fetchBalances(dispatch, store);
       props.onClose();
@@ -98,7 +98,7 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
       </div>
       <div className='row justify-center'>
         <div className='col-9 to-redeem'>
-          <p className='mb-4'>{t('redeem_page.to_redeem_polkabtc')}</p>
+          <p className='mb-4'>{t('redeem_page.to_redeem_interbtc')}</p>
         </div>
       </div>
       <div className='row justify-center'>
@@ -124,7 +124,7 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
 
       <div className='row justify-center mt-4'>
         <div className='col-10 burn-desc'>
-          {t('redeem_page.burn_polkabtc')}
+          {t('redeem_page.burn_interbtc')}
           <span>{amountDOT.toFixed(5).toString()} DOT</span> &nbsp;
           {t('redeem_page.with_added', {
             amountPrice: getUsdAmount(amountDOT.toString(), prices.polkadot.usd)
