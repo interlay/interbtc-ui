@@ -89,7 +89,7 @@ export default function RequestReplacementModal(props: RequestReplacementProps):
                   <span
                     className='input-group-text'
                     id='basic-addon2'>
-                                        PolkaBTC
+                                        InterBTC
                   </span>
                 </div>
                 {errors.amount && (
