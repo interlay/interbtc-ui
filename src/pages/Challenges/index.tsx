@@ -23,7 +23,9 @@ import InterlayToggleButtonGroup, {
 import {
   POLKA_BTC_DOC_START_TREASURE_HUNT,
   POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT,
-  POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER
+  POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER,
+  POLKA_BTC_DOC_KING_OF_THE_HILL,
+  POLKA_BTC_DOC_LOTTERY
 } from 'config/links';
 // import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
 import { CHALLENGE_CUT_OFFS } from 'config/challenges';
@@ -80,11 +82,13 @@ const CHALLENGE_ITEMS = [
   },
   {
     title: 'leaderboard.challenges.vaults_relayers',
-    content: 'leaderboard.challenges.vaults_relayers_desc'
+    content: 'leaderboard.challenges.vaults_relayers_desc',
+    contentLink: POLKA_BTC_DOC_KING_OF_THE_HILL
   },
   {
     title: 'leaderboard.challenges.lottery',
-    content: 'leaderboard.challenges.lottery_desc'
+    content: 'leaderboard.challenges.lottery_desc',
+    contentLink: POLKA_BTC_DOC_LOTTERY
   }
 ];
 
