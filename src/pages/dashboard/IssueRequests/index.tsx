@@ -124,7 +124,7 @@ function IssueRequests(): JSX.Element {
               {t('dashboard.issue.issued')}
             </h5>
             <h5>
-              {t('dashboard.issue.total_polkabtc', { amount: totalPolkaBTC })}
+              {t('dashboard.issue.total_interbtc', { amount: totalPolkaBTC })}
             </h5>
             <h5 className='text-textSecondary'>
               ${(prices.bitcoin.usd * parseFloat(totalPolkaBTC)).toLocaleString()}

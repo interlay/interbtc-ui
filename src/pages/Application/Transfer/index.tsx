@@ -43,7 +43,7 @@ type TransferForm = {
 }
 
 const NETWORK_TYPES = Object.freeze({
-  polkaBTC: 'polka-btc',
+  polkaBTC: 'inter-btc',
   acala: 'acala',
   plasm: 'plasm',
   ethereum: 'ethereum',
@@ -56,7 +56,7 @@ const NETWORK_ITEMS = [
     icon: (
       <PolkaBTCLogoIcon width={24} />
     ),
-    title: 'PolkaBTC'
+    title: 'InterBTC'
   },
   {
     type: NETWORK_TYPES.acala,
@@ -187,13 +187,13 @@ const Transfer = (): JSX.Element => {
             'text-center',
             'text-interlayDodgerBlue'
           )}>
-          {t('transfer_page.transfer_polkabtc')}
+          {t('transfer_page.transfer_interbtc')}
         </h4>
         <PolkaBTCField
           id='polka-btc-amount'
           name={POLKA_BTC_AMOUNT}
           type='number'
-          label='PolkaBTC'
+          label='InterBTC'
           step='any'
           placeholder='0.00'
           ref={register({

@@ -259,7 +259,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
     }
 
     if (!polkaBtcLoaded) {
-      return 'PolkaBTC must be loaded!';
+      return 'InterBTC must be loaded!';
     }
 
     if (bitcoinHeight - btcRelayHeight > BLOCKS_BEHIND_LIMIT) {
@@ -267,7 +267,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
     }
 
     if (btcToSat(value.toString()) === undefined) {
-      return 'Invalid PolkaBTC amount input!';
+      return 'Invalid InterBTC amount input!';
     }
 
     const polkaBTCAmountInteger = value.toString().split('.')[0];
@@ -319,7 +319,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
             id='polka-btc-amount'
             name={POLKA_BTC_AMOUNT}
             type='number'
-            label='PolkaBTC'
+            label='InterBTC'
             step='any'
             placeholder='0.00'
             min={0}

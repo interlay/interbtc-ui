@@ -40,7 +40,7 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
             <div className='row'>
               <div className='col-xl-6 col-lg-12 justify-center'>
                 <div className='redeem-amount'>
-                  <span className='wizard-number'>{request.amountPolkaBTC}</span>&nbsp;PolkaBTC
+                  <span className='wizard-number'>{request.amountPolkaBTC}</span>&nbsp;InterBTC
                 </div>
                 <div className='row usd-price-modal'>
                   <div className='col'>

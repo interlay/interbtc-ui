@@ -246,7 +246,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                 </div>
               </div>
               <div className='row mt-5 justify-center'>
-                <div className='col-10'>{t('issue_page.receive_polkabtc_tokens')}</div>
+                <div className='col-10'>{t('issue_page.receive_interbtc_tokens')}</div>
               </div>
               <div className='row mt-3 justify-center'>
                 <div className='col-6 text-center'>
@@ -254,7 +254,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
                     isPending={executePending}
                     className='pink-button'
                     onClick={() => execute(props.request)}>
-                    {t('issue_page.claim_polkabtc')}
+                    {t('issue_page.claim_interbtc')}
                   </ButtonMaybePending>
                 </div>
               </div>

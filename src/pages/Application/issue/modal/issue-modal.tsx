@@ -79,7 +79,7 @@ const IssueModal = (props: IssueModalProps): JSX.Element => {
                   <span className='wizard-number'>
                     {request.issuedAmountBtc || request.requestedAmountPolkaBTC}
                   </span>
-                  &nbsp;PolkaBTC
+                  &nbsp;InterBTC
                 </div>
                 <div className='row usd-price-modal'>
                   <div className='col'>

@@ -320,7 +320,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
                 height={23} />
             }
             value={displayBtcAmount(polkaBTCAmount)}
-            unitName='PolkaBTC'
+            unitName='InterBTC'
             approxUSD={getUsdAmount(polkaBTCAmount, prices.bitcoin.usd)} />
           <InterlayButton
             type='submit'
