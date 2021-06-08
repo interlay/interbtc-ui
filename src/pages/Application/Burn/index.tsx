@@ -167,7 +167,7 @@ const Burn = (): JSX.Element | null => {
             id='polka-btc-amount'
             name={POLKA_BTC_AMOUNT}
             type='number'
-            label='PolkaBTC'
+            label='InterBTC'
             step='any'
             placeholder='0.00'
             ref={register({
