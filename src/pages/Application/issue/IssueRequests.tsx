@@ -108,7 +108,7 @@ function IssueRequests(): JSX.Element {
                     </td>
                     <td>
                       {request.issuedAmountBtc || request.requestedAmountPolkaBTC}{' '}
-                      <span className='grey-text'>PolkaBTC</span>
+                      <span className='grey-text'>InterBTC</span>
                     </td>
                     <td>
                       <BitcoinTransaction

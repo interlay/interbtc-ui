@@ -91,7 +91,7 @@ export default function RedeemRequests(): ReactElement {
                       </td>
                       <td>
                         {request.amountPolkaBTC}{' '}
-                        <span className='grey-text'>PolkaBTC</span>
+                        <span className='grey-text'>InterBTC</span>
                       </td>
                       <td>
                         {request.status === RedeemRequestStatus.Expired ? (
