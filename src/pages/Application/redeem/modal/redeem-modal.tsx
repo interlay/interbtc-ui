@@ -72,7 +72,7 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
                         'text-2xl',
                         'text-interlayRose'
                       )}>
-                      PolkaBTC
+                      InterBTC
                     </span>
                   </h4>
                   <span
