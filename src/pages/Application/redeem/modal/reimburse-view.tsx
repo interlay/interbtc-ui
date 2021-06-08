@@ -104,7 +104,7 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
       </div>
       <div className='row justify-center'>
         <div className='col-9 to-redeem'>
-          <p className='mb-4'>{t('redeem_page.to_redeem_polkabtc')}</p>
+          <p className='mb-4'>{t('redeem_page.to_redeem_interbtc')}</p>
         </div>
       </div>
       <div className='row justify-center'>
@@ -130,7 +130,7 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
 
       <div className='row justify-center mt-4'>
         <div className='col-10 burn-desc'>
-          {t('redeem_page.burn_polkabtc')}
+          {t('redeem_page.burn_interbtc')}
           <span>{amountDOT.toFixed(5).toString()} DOT</span> &nbsp;
           {t('redeem_page.with_added', {
             amountPrice: getUsdAmount(amountDOT.toString(), prices.polkadot.usd)

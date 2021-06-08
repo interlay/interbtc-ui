@@ -172,7 +172,7 @@ const Burn = (): JSX.Element | null => {
               'text-center',
               'text-interlayPomegranate'
             )}>
-            {t('burn_page.burn_polkabtc')}
+            {t('burn_page.burn_interbtc')}
           </h4>
           <PolkaBTCField
             id='polka-btc-amount'
