@@ -238,10 +238,10 @@ function VaultDashboard(): JSX.Element {
           </div>
           <div
             className={clsx(
-              'max-w-sm',
+              'max-w-xl',
               'mx-auto',
               'grid',
-              'grid-cols-2',
+              'grid-cols-3',
               'gap-10'
             )}>
             <InterlayButton
