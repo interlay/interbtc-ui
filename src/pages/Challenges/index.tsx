@@ -10,9 +10,9 @@ import TimerIncrement from 'parts/TimerIncrement';
 import VaultScoresTable from 'containers/VaultScoresTable';
 import StakedRelayerScoresTable from 'containers/StakedRelayerScoresTable';
 import CardList, {
-  Card,
-  CardHeader,
-  CardContent
+  CardListItem,
+  CardListItemHeader,
+  CardListItemContent
 } from 'components/CardList';
 import InterlayLink from 'components/UI/InterlayLink';
 import InterlayTabs, { InterlayTab } from 'components/UI/InterlayTabs';
@@ -23,11 +23,9 @@ import InterlayToggleButtonGroup, {
 import {
   POLKA_BTC_DOC_START_TREASURE_HUNT,
   POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT,
-  POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER,
-  POLKA_BTC_DOC_KING_OF_THE_HILL,
-  POLKA_BTC_DOC_LOTTERY
+  POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER
 } from 'config/links';
-import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
+// import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
 import { CHALLENGE_CUT_OFFS } from 'config/challenges';
 
 const challengeCutOffs = Object.values(CHALLENGE_CUT_OFFS);
@@ -82,23 +80,11 @@ const CHALLENGE_ITEMS = [
   },
   {
     title: 'leaderboard.challenges.vaults_relayers',
-    titleIcon: (
-      <NewMarkIcon
-        width={20}
-        height={20} />
-    ),
-    content: 'leaderboard.challenges.vaults_relayers_desc',
-    contentLink: POLKA_BTC_DOC_KING_OF_THE_HILL
+    content: 'leaderboard.challenges.vaults_relayers_desc'
   },
   {
     title: 'leaderboard.challenges.lottery',
-    titleIcon: (
-      <NewMarkIcon
-        width={20}
-        height={20} />
-    ),
-    content: 'leaderboard.challenges.lottery_desc',
-    contentLink: POLKA_BTC_DOC_LOTTERY
+    content: 'leaderboard.challenges.lottery_desc'
   }
 ];
 
@@ -142,20 +128,28 @@ function Challenges(): JSX.Element {
   return (
     <MainContainer
       className={clsx(
-        'flex',
-        'justify-center',
-        'fade-in-animation'
+        'px-14', // TODO: should set it within `MainContainer`
+        'fade-in-animation',
+        'space-y-20',
+        'max-w-screen-2xl',
+        'm-auto'
       )}>
-      <div className='w-3/4'>
+      <div>
         <PageTitle mainTitle={t('leaderboard.challenges_title')} />
-        <CardList>
+        <CardList
+          className= {clsx(
+            'max-w-max',
+            'md:grid-cols-3',
+            '2xl:grid-cols-5',
+            'gap-5'
+          )}>
           {CHALLENGE_ITEMS.map(challengeItem => (
-            <Card key={challengeItem.title}>
-              <CardHeader className='flex'>
+            <CardListItem key={challengeItem.title}>
+              <CardListItemHeader>
                 {t(challengeItem.title)}
-                {challengeItem.titleIcon}
-              </CardHeader>
-              <CardContent>
+                {/* {challengeItem.titleIcon} */}
+              </CardListItemHeader>
+              <CardListItemContent className='text-gray-500'>
                 {t(challengeItem.content)}
                 {challengeItem.contentLink && (
                   <InterlayLink
@@ -163,7 +157,8 @@ function Challenges(): JSX.Element {
                       'inline-flex',
                       'items-center',
                       'space-x-1',
-                      'ml-1'
+                      'ml-1',
+                      'text-interlayDodgerBlue'
                     )}
                     href={challengeItem.contentLink}
                     target='_blank'
@@ -172,19 +167,19 @@ function Challenges(): JSX.Element {
                     <FaExternalLinkAlt />
                   </InterlayLink>
                 )}
-              </CardContent>
-            </Card>
+              </CardListItemContent>
+            </CardListItem>
           ))}
         </CardList>
+      </div>
+      <div>
         <PageTitle
           mainTitle={t('leaderboard.title')}
           subTitle={<TimerIncrement />} />
         <div
           className={clsx(
             'text-right',
-            'px-4',
-            // TODO: hack for now
-            'mt-8'
+            'px-4'
           )}>
           <ChallengeSelector
             name='challenge'

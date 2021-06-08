@@ -85,10 +85,12 @@ module.exports = {
       colors: {
         interlayTreePoppy: {
           400: INTERLAY_TREE_POPPY[400],
-          DEFAULT: INTERLAY_TREE_POPPY[500]
+          DEFAULT: INTERLAY_TREE_POPPY[500],
+          700: INTERLAY_TREE_POPPY[700]
         },
         interlayDodgerBlue: {
-          DEFAULT: INTERLAY_DODGER_BLUE[500]
+          DEFAULT: INTERLAY_DODGER_BLUE[500],
+          800: INTERLAY_DODGER_BLUE[800]
         },
         interlayScarlet: {
           50: INTERLAY_SCARLET[50],
@@ -109,7 +111,8 @@ module.exports = {
         },
         interlayRose: {
           400: INTERLAY_ROSE[400],
-          DEFAULT: INTERLAY_ROSE[500]
+          DEFAULT: INTERLAY_ROSE[500],
+          800: INTERLAY_ROSE[800]
         },
         interlayMalachite: {
           DEFAULT: INTERLAY_MALACHITE[500]
