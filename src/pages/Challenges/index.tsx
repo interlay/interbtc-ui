@@ -132,10 +132,11 @@ function Challenges(): JSX.Element {
   return (
     <MainContainer
       className={clsx(
-        'px-14', // TODO: should set it within `MainContainer`
         'fade-in-animation',
         'space-y-20',
-        'max-w-screen-2xl',
+        // TODO: should set it within `MainContainer`
+        'px-6',
+        'container',
         'm-auto'
       )}>
       <div>
@@ -143,6 +144,7 @@ function Challenges(): JSX.Element {
         <CardList
           className= {clsx(
             'max-w-max',
+            'mx-auto',
             'md:grid-cols-3',
             '2xl:grid-cols-5',
             'gap-5'

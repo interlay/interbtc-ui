@@ -8,9 +8,12 @@ const InterlayTableContainer = ({
   ...rest
 }: React.ComponentPropsWithRef<'div'>): JSX.Element => (
   <div
+    id='InterlayTableContainer'
     className={clsx(
       'overflow-x-auto',
       'overflow-y-hidden',
+      'max-w-screen-xl',
+      'm-auto',
       className
     )}
     {...rest} />
