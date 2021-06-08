@@ -139,7 +139,6 @@ function Challenges(): JSX.Element {
         <CardList
           className= {clsx(
             'max-w-max',
-            'm-auto',
             'md:grid-cols-3',
             '2xl:grid-cols-5',
             'gap-5'
