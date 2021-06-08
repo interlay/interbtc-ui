@@ -130,7 +130,9 @@ function Challenges(): JSX.Element {
       className={clsx(
         'px-14', // TODO: should set it within `MainContainer`
         'fade-in-animation',
-        'space-y-20'
+        'space-y-20',
+        'max-w-screen-2xl',
+        'm-auto'
       )}>
       <div>
         <PageTitle mainTitle={t('leaderboard.challenges_title')} />
