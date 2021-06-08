@@ -198,7 +198,7 @@ function VaultDashboard(): JSX.Element {
     },
     {
       title: t('apy'),
-      value: `~${safeRoundTwoDecimals(apy)}`,
+      value: `~${safeRoundTwoDecimals(apy)}%`,
       color: 'text-interlayDodgerBlue-800'
     }
   ];

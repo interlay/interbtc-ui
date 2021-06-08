@@ -179,7 +179,6 @@ function Challenges(): JSX.Element {
           className={clsx(
             'text-right',
             'px-4'
-            // TODO: hack for now
           )}>
           <ChallengeSelector
             name='challenge'
