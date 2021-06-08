@@ -1,4 +1,3 @@
-
 // ray test touch <
 import { useSelector } from 'react-redux';
 import { Modal } from 'react-bootstrap';
@@ -14,11 +13,8 @@ import {
   shortAddress
 } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import {
-  IssueRequestStatus,
-  IssueRequest
-} from 'common/types/issue.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
+import { Issue, IssueStatus } from '@interlay/polkabtc';
 
 type IssueModalProps = {
   open: boolean;
@@ -32,12 +28,12 @@ const IssueModal = (props: IssueModalProps): JSX.Element => {
   const request = userIssueRequests.filter(request => request.id === selectedIdRequest)[0];
   const { t } = useTranslation();
 
-  const renderModalStatusPanel = (request: IssueRequest) => {
+  const renderModalStatusPanel = (request: Issue) => {
     switch (request.status) {
-    case IssueRequestStatus.PendingWithBtcTxNotFound: {
+    case IssueStatus.PendingWithBtcTxNotFound: {
       return <PaymentView request={request} />;
     }
-    case IssueRequestStatus.RequestedRefund: {
+    case IssueStatus.RequestedRefund: {
       return <WhoopsView request={request} />;
     }
     default: {
@@ -77,14 +73,14 @@ const IssueModal = (props: IssueModalProps): JSX.Element => {
               <div className='col-xl-6 col-lg-12 justify-center'>
                 <div className='issue-amount'>
                   <span className='wizard-number'>
-                    {request.issuedAmountBtc || request.requestedAmountPolkaBTC}
+                    {request.amountBTC}
                   </span>
                   &nbsp;PolkaBTC
                 </div>
                 <div className='row usd-price-modal'>
                   <div className='col'>
                     {'~ $' + getUsdAmount(
-                      request.issuedAmountBtc || request.requestedAmountPolkaBTC || '0',
+                      request.amountBTC,
                       prices.bitcoin.usd
                     )}
                   </div>
@@ -119,7 +115,7 @@ const IssueModal = (props: IssueModalProps): JSX.Element => {
                     BTC
                     <div className='send-price'>
                       {'~ $' + getUsdAmount(
-                        request.issuedAmountBtc || request.requestedAmountPolkaBTC,
+                        request.amountBTC,
                         prices.bitcoin.usd
                       )}
                     </div>
@@ -132,7 +128,7 @@ const IssueModal = (props: IssueModalProps): JSX.Element => {
                 </div>
                 <div className='step-item row'>
                   <div className='col-6 temp-text-left'>{t('issue_page.parachain_block')}</div>
-                  <div className='col-6 right-text'>{request.creation}</div>
+                  <div className='col-6 right-text'>{request.creationBlock}</div>
                 </div>
                 <div className='step-item row'>
                   <div className='col-6 temp-text-left'>{t('issue_page.vault_dot_address')}</div>

@@ -43,7 +43,6 @@ import {
   getRandomVaultIdWithCapacity,
   getUsdAmount
 } from 'common/utils/utils';
-import { parachainToUIIssueRequest } from 'common/utils/requests';
 import STATUSES from 'utils/constants/statuses';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
@@ -209,7 +208,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
       const result = await window.polkaBTC.issue.request(polkaBTCAmount);
       // ray test touch <
       // TODO: handle issue aggregation
-      const issueRequest = await parachainToUIIssueRequest(result[0].id, result[0].issueRequest);
+      const issueRequest = result[0];
       // ray test touch >
       setSubmitStatus(STATUSES.RESOLVED);
 

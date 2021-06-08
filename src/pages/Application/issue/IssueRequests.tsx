@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Table, Badge } from 'react-bootstrap';
 import { FaCheck, FaHourglass } from 'react-icons/fa';
@@ -8,14 +7,14 @@ import clsx from 'clsx';
 
 import IssueModal from './modal/issue-modal';
 import BitcoinTransaction from 'common/components/bitcoin-links/transaction';
-import { IssueRequest, IssueRequestStatus } from 'common/types/issue.types';
 import { StoreType } from 'common/types/util.types';
 import { formatDateTimePrecise } from 'common/utils/utils';
 import { changeIssueIdAction } from 'common/actions/issue.actions';
 import { showAccountModalAction } from 'common/actions/general.actions';
+import { Issue, IssueStatus } from '@interlay/polkabtc';
 
 function IssueRequests(): JSX.Element {
-  const { address, extensions } = useSelector((state: StoreType) => state.general);
+  const { address, extensions, bitcoinHeight } = useSelector((state: StoreType) => state.general);
   const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address) || [];
   const [issueModalOpen, setIssueModalOpen] = useState(false);
   const dispatch = useDispatch();
@@ -33,14 +32,14 @@ function IssueRequests(): JSX.Element {
     }
   };
 
-  const handleCompleted = (status: IssueRequestStatus) => {
+  const handleCompleted = (status: IssueStatus) => {
     switch (status) {
-    case IssueRequestStatus.RequestedRefund:
-    case IssueRequestStatus.Completed: {
+    case IssueStatus.RequestedRefund:
+    case IssueStatus.Completed: {
       return <FaCheck className='inline-block' />;
     }
-    case IssueRequestStatus.Cancelled:
-    case IssueRequestStatus.Expired: {
+    case IssueStatus.Cancelled:
+    case IssueStatus.Expired: {
       return (
         <Badge
           className='badge-style'
@@ -55,7 +54,7 @@ function IssueRequests(): JSX.Element {
     }
   };
 
-  const requestClicked = (request: IssueRequest): void => {
+  const requestClicked = (request: Issue): void => {
     dispatch(changeIssueIdAction(request.id));
     openWizard();
   };
@@ -95,19 +94,25 @@ function IssueRequests(): JSX.Element {
               </tr>
             </thead>
             <tbody>
-              {issueRequests.map((request: IssueRequest, index: number) => {
+              {issueRequests.map((request: Issue, index: number) => {
+                const confirmations = (() => {
+                  if (request.btcTxId === '') return t('not_applicable');
+                  if (request.confirmations !== undefined) return request.confirmations;
+                  if (request.btcBlockHeight !== undefined) return bitcoinHeight - request.btcBlockHeight;
+                  return 0;
+                })();
                 return (
                   <tr
                     key={index}
                     onClick={() => requestClicked(request)}
                     className='table-row-opens-modal'>
                     <td>
-                      {request.timestamp ?
-                        formatDateTimePrecise(new Date(Number(request.timestamp))) :
+                      {request.creationTimestamp ?
+                        formatDateTimePrecise(new Date(request.creationTimestamp)) :
                         t('pending')}
                     </td>
                     <td>
-                      {request.issuedAmountBtc || request.requestedAmountPolkaBTC}{' '}
+                      {request.amountBTC}{' '}
                       <span className='grey-text'>PolkaBTC</span>
                     </td>
                     <td>
@@ -116,9 +121,7 @@ function IssueRequests(): JSX.Element {
                         shorten />
                     </td>
                     <td>
-                      {request.btcTxId === '' ?
-                        t('not_applicable') :
-                        Math.max(request.confirmations, 0)}
+                      {confirmations}
                     </td>
                     <td>{handleCompleted(request.status)}</td>
                   </tr>

@@ -1,6 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { IssueRequest, IssueRequestStatus } from '../../../../common/types/issue.types';
 import BitcoinTransaction from '../../../../common/components/bitcoin-links/transaction';
 import ButtonMaybePending from '../../../../common/components/pending-button';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,9 +11,10 @@ import { shortAddress } from '../../../../common/utils/utils';
 import Big from 'big.js';
 import InterlayLink from 'components/UI/InterlayLink';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
+import { Issue, IssueStatus } from '@interlay/polkabtc';
 
 type StatusViewProps = {
-  request: IssueRequest;
+  request: Issue;
 };
 
 export default function StatusView(props: StatusViewProps): ReactElement {
@@ -35,12 +35,12 @@ export default function StatusView(props: StatusViewProps): ReactElement {
       ]);
       setStableBitcoinConfirmations(btcConf);
       setStableParachainConfirmations(paraConf);
-      setRequestConfirmations(paraHeight - Number(props.request.creation));
+      setRequestConfirmations(paraHeight - Number(props.request.creationBlock));
     };
     fetchData();
   });
 
-  const execute = async (request: IssueRequest) => {
+  const execute = async (request: Issue) => {
     if (!polkaBtcLoaded) return;
     setExecutePending(true);
 
@@ -49,12 +49,12 @@ export default function StatusView(props: StatusViewProps): ReactElement {
       await window.polkaBTC.issue.execute('0x' + request.id, request.btcTxId);
 
       const completedReq = request;
-      completedReq.status = IssueRequestStatus.Completed;
+      completedReq.status = IssueStatus.Completed;
 
       dispatch(
         updateBalancePolkaBTCAction(
           new Big(balancePolkaBTC)
-            .add(new Big(request.issuedAmountBtc || request.requestedAmountPolkaBTC))
+            .add(new Big(request.executedAmountBTC || request.amountBTC))
             .toString()
         )
       );
@@ -68,12 +68,12 @@ export default function StatusView(props: StatusViewProps): ReactElement {
     }
   };
 
-  function getStatus(status: IssueRequestStatus) {
+  function getStatus(status: IssueStatus) {
     // Note: the following states are handled already in issue-modal.tsx
     // IssueRequestStatus.RequestedRefund
     // IssueRequestStatus.PendingWithBtcTxNotFound
     switch (status) {
-    case IssueRequestStatus.Completed:
+    case IssueStatus.Completed:
       return (
         <>
           <div className='completed-status-title'>{t('completed')}</div>
@@ -81,7 +81,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             <div className='col text-center bold-text '>
               {t('issue_page.you_received')}{' '}
               <span className='pink-amount bold-text'>
-                {props.request.issuedAmountBtc || props.request.requestedAmountPolkaBTC} PolkaBTC
+                {props.request.executedAmountBTC || props.request.amountBTC} PolkaBTC
               </span>
             </div>
           </div>
@@ -89,7 +89,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             <div className='col'>
               <div className='completed-confirmations-circle'>
                 <div>{t('issue_page.in_parachain_block')}</div>
-                <div className='number-of-confirmations '>{props.request.creation}</div>
+                <div className='number-of-confirmations '>{props.request.creationBlock}</div>
               </div>
             </div>
           </div>
@@ -130,8 +130,8 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           </div>
         </>
       );
-    case IssueRequestStatus.Cancelled:
-    case IssueRequestStatus.Expired:
+    case IssueStatus.Cancelled:
+    case IssueStatus.Expired:
       return (
         <>
           <div className='cancel-status-title'>{t('cancelled')}</div>
@@ -154,8 +154,8 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           </div>
         </>
       );
-    case IssueRequestStatus.PendingWithBtcTxNotIncluded:
-    case IssueRequestStatus.PendingWithTooFewConfirmations:
+    case IssueStatus.PendingWithBtcTxNotIncluded:
+    case IssueStatus.PendingWithTooFewConfirmations:
       return (
         <>
           <div className='status-title'>
@@ -205,7 +205,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           </div>
         </>
       );
-    case IssueRequestStatus.PendingWithEnoughConfirmations:
+    case IssueStatus.PendingWithEnoughConfirmations:
       return (
         <>
           <div className='status-title'>

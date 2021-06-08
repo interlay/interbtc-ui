@@ -9,16 +9,16 @@ import { FaExclamationCircle } from 'react-icons/fa';
 
 import Tooltip from 'components/Tooltip';
 import Timer from 'components/Timer';
-import { IssueRequest } from 'common/types/issue.types';
 import { StoreType } from 'common/types/util.types';
 import {
   copyToClipboard,
   displayBtcAmount,
   getUsdAmount
 } from 'common/utils/utils';
+import { Issue } from '@interlay/polkabtc';
 
 interface Props {
-  request: IssueRequest;
+  request: Issue;
 }
 
 const PaymentView = ({
@@ -27,17 +27,17 @@ const PaymentView = ({
   const { t } = useTranslation();
   const { prices } = useSelector((state: StoreType) => state.general);
   const { issuePeriod } = useSelector((state: StoreType) => state.issue);
-  const amount = new Big(request.requestedAmountPolkaBTC).add(new Big(request.fee)).toString();
+  const amount = request.amountBTC;
   const [initialLeftSeconds, setInitialLeftSeconds] = React.useState<number>();
 
   React.useEffect(() => {
-    if (!request.timestamp) return;
+    if (!request.creationTimestamp) return;
 
-    const requestTimestamp = Math.floor(new Date(Number(request.timestamp)).getTime() / 1000);
+    const requestTimestamp = Math.floor(new Date(Number(request.creationTimestamp)).getTime() / 1000);
     const theInitialLeftSeconds = requestTimestamp + issuePeriod - Math.floor(Date.now() / 1000);
     setInitialLeftSeconds(theInitialLeftSeconds);
   }, [
-    request.timestamp,
+    request.creationTimestamp,
     issuePeriod
   ]);
 

@@ -1,36 +1,4 @@
-export interface IssueRequest {
-  id: string;
-  requestedAmountPolkaBTC: string;
-  timestamp?: string;
-  amountBTC: string;
-  creation: string;
-  vaultBTCAddress: string;
-  vaultDOTAddress: string;
-  userDOTAddress: string;
-  btcTxId: string;
-  confirmations: number;
-  status: IssueRequestStatus;
-  merkleProof?: string;
-  transactionBlockHeight?: number;
-  rawTransaction?: Uint8Array;
-  fee: string;
-  griefingCollateral: string;
-  refundBtcAddress: string;
-  refundAmountBtc: string;
-  issuedAmountBtc: string;
-  btcAmountSubmittedByUser: string;
-}
-
-export enum IssueRequestStatus {
-  Completed,
-  Cancelled,
-  RequestedRefund,
-  Expired,
-  PendingWithBtcTxNotFound,
-  PendingWithBtcTxNotIncluded,
-  PendingWithTooFewConfirmations,
-  PendingWithEnoughConfirmations
-}
+import { Issue } from '@interlay/polkabtc';
 
 export type DashboardIssueInfo = {
   id: string;
@@ -45,7 +13,7 @@ export type DashboardIssueInfo = {
 };
 
 export interface IssueMap {
-  [key: string]: IssueRequest[];
+  [key: string]: Issue[];
 }
 
 export interface IssueState {
@@ -56,7 +24,7 @@ export interface IssueState {
   // id of the current issue request
   id: string;
   // mapping of all issue requests
-  issueRequests: Map<string, IssueRequest[]>;
+  issueRequests: Map<string, Issue[]>;
   // issue period in seconds
   issuePeriod: number;
 }

@@ -1,5 +1,4 @@
 import { RedeemRequest, RedeemRequestStatus } from '../types/redeem.types';
-import { IssueRequest, IssueRequestStatus } from '../types/issue.types';
 import { DOT, PolkaBTC, ReplaceRequestStatus } from '@interlay/polkabtc/build/interfaces/default';
 import { VaultReplaceRequest } from '../types/vault.types';
 import { H256 } from '@polkadot/types/interfaces';
@@ -7,178 +6,15 @@ import {
   satToBTC,
   planckToDOT,
   stripHexPrefix,
-  IssueRequestExt as ParachainIssueRequest,
   RedeemRequestExt as ParachainRedeemRequest,
-  ReplaceRequestExt as ParachainReplaceRequest
+  ReplaceRequestExt as ParachainReplaceRequest,
+  Issue
 } from '@interlay/polkabtc';
 import Big from 'big.js';
-import { Issue, Redeem } from '@interlay/polkabtc-stats';
+import { Redeem } from '@interlay/polkabtc-stats';
 import { formatDateTimePrecise } from './utils';
 
 // TODO: move functions to lib
-
-/**
- * Converts an IssueRequest object retrieved from the parachain
- * to a UI IssueRequest object
- *
- * @param id H256, the key of the IssueRequest object in the parachain map storage object
- * @param parachainIssueRequest ParachainIssueRequest
- * @param parachainHeight parachainHeight data (queried from the parachain)
- * @param issuePeriod issuePeriod data (queried from the parachain)
- * @param requiredBtcConfirmations requiredBtcConfirmations data (queried from the parachain)
- */
-
-async function parachainToUIIssueRequest(
-  id: H256,
-  parachainIssueRequest: ParachainIssueRequest,
-  parachainHeight?: number,
-  issuePeriod?: number,
-  requiredBtcConfirmations?: number,
-  requiredParachainConfirmations?: number
-): Promise<IssueRequest> {
-  if (!parachainHeight || !issuePeriod || !requiredBtcConfirmations || !requiredParachainConfirmations) {
-    [parachainHeight, issuePeriod, requiredBtcConfirmations, requiredParachainConfirmations] = await Promise.all([
-      window.polkaBTC.system.getCurrentBlockNumber(),
-      window.polkaBTC.issue.getIssuePeriod(),
-      window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
-      window.polkaBTC.btcRelay.getStableParachainConfirmations()
-    ]);
-  }
-  const amountPolkaBTC = satToBTC(parachainIssueRequest.amount.toString());
-  const fee = satToBTC(parachainIssueRequest.fee.toString());
-  const status = computeIssueRequestStatus(
-    parachainIssueRequest.status.isCompleted,
-    parachainIssueRequest.status.isCancelled,
-    parachainIssueRequest.opentime.toNumber(),
-    parachainHeight,
-    issuePeriod,
-    requiredBtcConfirmations,
-    requiredParachainConfirmations
-  );
-  return {
-    id: stripHexPrefix(id.toString()),
-    requestedAmountPolkaBTC: amountPolkaBTC,
-    timestamp: formatDateTimePrecise(new Date(Date.now())),
-    creation: parachainIssueRequest.opentime.toString(),
-    vaultBTCAddress: parachainIssueRequest.btc_address,
-    vaultDOTAddress: parachainIssueRequest.vault.toString(),
-    userDOTAddress: parachainIssueRequest.requester.toString(),
-    btcTxId: '',
-    fee,
-    amountBTC: new Big(amountPolkaBTC).add(fee).toString(),
-    griefingCollateral: planckToDOT(parachainIssueRequest.griefing_collateral.toString()),
-    confirmations: 0,
-    status,
-    refundBtcAddress: '',
-    refundAmountBtc: '',
-    issuedAmountBtc: '',
-    btcAmountSubmittedByUser: ''
-  };
-}
-
-const statsToUIIssueRequest = async (
-  statsIssue: Issue,
-  currentBTCHeight: number,
-  parachainHeight: number,
-  issuePeriod: number,
-  requiredBtcConfirmations: number,
-  requiredParachainConfirmations: number
-): Promise<IssueRequest> => ({
-  id: statsIssue.id,
-  requestedAmountPolkaBTC: statsIssue.amountBTC,
-  timestamp: statsIssue.timestamp,
-  amountBTC: new Big(statsIssue.amountBTC).add(new Big(statsIssue.feePolkabtc)).toString(),
-  creation: statsIssue.creation.toString(),
-  vaultBTCAddress: statsIssue.vaultBTCAddress,
-  vaultDOTAddress: statsIssue.vaultDOTAddress,
-  userDOTAddress: statsIssue.requester,
-  btcTxId: statsIssue.btcTxId,
-  confirmations:
-    // eslint-disable-next-line no-negated-condition
-    statsIssue.confirmations !== undefined ?
-      statsIssue.confirmations :
-      statsIssue.btcBlockHeight ?
-        currentBTCHeight - statsIssue.btcBlockHeight + 1 :
-        0,
-  transactionBlockHeight: statsIssue.btcBlockHeight,
-  status: computeIssueRequestStatus(
-    statsIssue.completed,
-    statsIssue.cancelled,
-    statsIssue.creation,
-    parachainHeight,
-    issuePeriod,
-    requiredBtcConfirmations,
-    requiredParachainConfirmations,
-    statsIssue.requestedRefund,
-    statsIssue.btcTxId,
-    statsIssue.confirmations
-  ),
-  fee: statsIssue.feePolkabtc,
-  griefingCollateral: statsIssue.griefingCollateral,
-  refundBtcAddress: statsIssue.refundBtcAddress,
-  refundAmountBtc: statsIssue.refundAmountBTC,
-  issuedAmountBtc: statsIssue.executedAmountBTC ?
-    new Big(statsIssue.executedAmountBTC).sub(new Big(statsIssue.feePolkabtc)).toString() :
-    '',
-  btcAmountSubmittedByUser: satToBTC(
-    (await window.polkaBTC.electrsAPI.getUtxoAmount(statsIssue.btcTxId, statsIssue.vaultBTCAddress)).toString()
-  )
-});
-
-/**
- * Given parameters about an issue request, computes its status
- *
- * @param completed boolean
- * @param cancelled boolean
- * @param creationBlock The number of the block where this request was included
- * @param issuePeriod issuePeriod data (queried from the parachain)
- * @param requiredBtcConfirmations requiredBtcConfirmations data (queried from the parachain)
- * @param btcTxId (optional) Bitcoin transaction ID corresponding to this request
- * @param confirmations (optional) Confirmations of the given `btcTxId`
- */
-
-function computeIssueRequestStatus(
-  completed: boolean,
-  cancelled: boolean,
-  creationBlock: number,
-  parachainHeight: number,
-  issuePeriod: number,
-  requiredBtcConfirmations: number,
-  requiredParachainConfirmations: number,
-  requestedRefund = false,
-  btcTxId = '',
-  confirmations = 0
-): IssueRequestStatus {
-  if (requestedRefund) {
-    return IssueRequestStatus.RequestedRefund;
-  }
-  if (completed) {
-    return IssueRequestStatus.Completed;
-  }
-  if (cancelled) {
-    return IssueRequestStatus.Cancelled;
-  }
-
-  if (creationBlock + issuePeriod <= parachainHeight) {
-    return IssueRequestStatus.Expired;
-  }
-
-  if (btcTxId === '') {
-    return IssueRequestStatus.PendingWithBtcTxNotFound;
-  }
-  if (confirmations === 0) {
-    return IssueRequestStatus.PendingWithBtcTxNotIncluded;
-  }
-  if (confirmations < requiredBtcConfirmations) {
-    return IssueRequestStatus.PendingWithTooFewConfirmations;
-  }
-
-  if (creationBlock + requiredParachainConfirmations >= parachainHeight) {
-    return IssueRequestStatus.PendingWithTooFewConfirmations;
-  }
-
-  return IssueRequestStatus.PendingWithEnoughConfirmations;
-}
 
 /**
  * Converts an RedeemRequest object retrieved from the parachain
@@ -258,13 +94,13 @@ const statsToUIRedeemRequest = (
   requiredParachainConfirmations: number
 ): RedeemRequest => ({
   id: statsRedeem.id,
-  amountPolkaBTC: new Big(statsRedeem.amountPolkaBTC)
-    .add(new Big(statsRedeem.feePolkabtc))
+  amountPolkaBTC: new Big(statsRedeem.amountInterBTC)
+    .add(new Big(statsRedeem.feeInterbtc))
     .add(new Big(statsRedeem.btcTransferFee))
     .toString(),
   // FIXME: naming of vars
-  amountBTC: statsRedeem.amountPolkaBTC,
-  fee: statsRedeem.feePolkabtc,
+  amountBTC: statsRedeem.amountInterBTC,
+  fee: statsRedeem.feeInterbtc,
   btcTransferFee: statsRedeem.btcTransferFee,
   timestamp: statsRedeem.timestamp,
   creation: statsRedeem.creation.toString(),
@@ -275,10 +111,8 @@ const statsToUIRedeemRequest = (
   confirmations:
     // eslint-disable-next-line no-negated-condition
     statsRedeem.confirmations !== undefined ?
-      statsRedeem.confirmations :
-      statsRedeem.btcBlockHeight ?
-        currentBTCHeight - statsRedeem.btcBlockHeight + 1 :
-        0,
+      statsRedeem.confirmations : statsRedeem.btcBlockHeight ?
+        currentBTCHeight - statsRedeem.btcBlockHeight + 1 : 0,
   status: computeRedeemRequestStatus(
     statsRedeem.completed,
     statsRedeem.cancelled && !statsRedeem.reimbursed,
@@ -377,10 +211,10 @@ const parseReplaceRequestStatus = (status: ReplaceRequestStatus): string => {
 };
 
 interface DynamicObject {
-  [key: string]: IssueRequest[] | RedeemRequest[];
+  [key: string]: Issue[] | RedeemRequest[];
 }
 
-const mapToArray = (map: Map<string, IssueRequest[] | RedeemRequest[]>): DynamicObject => {
+const mapToArray = (map: Map<string, Issue[] | RedeemRequest[]>): DynamicObject => {
   const result: DynamicObject = {};
   map.forEach((value, key) => {
     result[key] = value;
@@ -388,7 +222,7 @@ const mapToArray = (map: Map<string, IssueRequest[] | RedeemRequest[]>): Dynamic
   return result;
 };
 
-const arrayToMap = (arr: IssueRequest[][] | RedeemRequest[][]): Map<string, IssueRequest[] | RedeemRequest[]> => {
+const arrayToMap = (arr: Issue[][] | RedeemRequest[][]): Map<string, Issue[] | RedeemRequest[]> => {
   const map = new Map();
   // eslint-disable-next-line guard-for-in
   for (const key in arr) {
@@ -443,12 +277,4 @@ function convertParachainTypes(parachainObject: ParsableParachainTypes): [string
   return [parachainObject.btc_address, parsedPolkaBTC, parsedDOT];
 }
 
-export {
-  parachainToUIIssueRequest,
-  statsToUIIssueRequest,
-  parachainToUIRedeemRequest,
-  statsToUIRedeemRequest,
-  parachainToUIReplaceRequests,
-  arrayToMap,
-  mapToArray
-};
+export { parachainToUIRedeemRequest, statsToUIRedeemRequest, parachainToUIReplaceRequests, arrayToMap, mapToArray };

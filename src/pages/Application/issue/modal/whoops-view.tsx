@@ -1,14 +1,14 @@
 import React, { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { IssueRequest } from '../../../../common/types/issue.types';
 import { StoreType } from '../../../../common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import Tooltip from 'components/Tooltip';
 import { copyToClipboard, getUsdAmount, safeRoundEightDecimals } from '../../../../common/utils/utils';
+import { Issue } from '@interlay/polkabtc';
 
 type WhoopsViewProps = {
-  request: IssueRequest;
+  request: Issue;
 };
 
 export default function WhoopsView(props: WhoopsViewProps): ReactElement {
@@ -29,9 +29,9 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
               className='inline-block'
               width={23}
               height={23} /> &nbsp;
-            {props.request.requestedAmountPolkaBTC} PolkaBTC
+            {props.request.amountBTC} PolkaBTC
             <div className='send-price'>
-              {'~ $' + getUsdAmount(props.request.requestedAmountPolkaBTC, prices.bitcoin.usd)}
+              {'~ $' + getUsdAmount(props.request.amountBTC, prices.bitcoin.usd)}
             </div>
           </div>
         </div>
@@ -46,7 +46,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
               height={23} /> &nbsp;
             {safeRoundEightDecimals(Number(props.request.btcAmountSubmittedByUser))} BTC
             <div className='send-price'>
-              {'~ $' + getUsdAmount(props.request.btcAmountSubmittedByUser, prices.bitcoin.usd)}
+              {'~ $' + getUsdAmount(props.request.btcAmountSubmittedByUser || '0', prices.bitcoin.usd)}
             </div>
           </div>
         </div>
@@ -57,9 +57,9 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
               className='inline-block'
               width={23}
               height={23} /> &nbsp;
-            {props.request.issuedAmountBtc} PolkaBTC
+            {props.request.executedAmountBTC} PolkaBTC
             <div className='send-price'>
-              {'~ $' + getUsdAmount(props.request.issuedAmountBtc, prices.bitcoin.usd)}
+              {'~ $' + getUsdAmount(props.request.executedAmountBTC, prices.bitcoin.usd)}
             </div>
           </div>
         </div>
@@ -72,7 +72,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
               width={23}
               height={23} /> &nbsp;
             {safeRoundEightDecimals(
-              Number(props.request.btcAmountSubmittedByUser) - Number(props.request.issuedAmountBtc)
+              Number(props.request.btcAmountSubmittedByUser) - Number(props.request.executedAmountBTC)
             )}{' '}
                         BTC
             <div className='send-price'>
@@ -80,7 +80,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
               getUsdAmount(
                 (
                   Number(props.request.btcAmountSubmittedByUser) -
-                      Number(props.request.issuedAmountBtc)
+                      Number(props.request.executedAmountBTC)
                 ).toString(),
                 prices.bitcoin.usd
               )}
@@ -96,7 +96,7 @@ export default function WhoopsView(props: WhoopsViewProps): ReactElement {
           <div className='col mt-1 text-center refund-subtitle'>
             {t('issue_page.refund_vault_to_return')}{' '}
             <span className='refund-amount'>
-              {safeRoundEightDecimals(props.request.refundAmountBtc)} &nbsp;BTC
+              {safeRoundEightDecimals(props.request.refundAmountBTC)} &nbsp;BTC
             </span>{' '}
             {t('issue_page.refund_vault_to_address')}{' '}
           </div>
