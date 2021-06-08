@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import IssueModal from './modal/issue-modal';
+import IssueModal from './modal/IssueModal';
 import BitcoinTransaction from 'common/components/bitcoin-links/transaction';
 import { IssueRequest, IssueRequestStatus } from 'common/types/issue.types';
 import { StoreType } from 'common/types/util.types';

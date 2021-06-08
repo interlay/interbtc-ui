@@ -22,10 +22,12 @@
 }
 // ray test touch >
 
+// ray test touch <
 // TODO: should be correctly descriptive
 .right-text {
   font-weight: 700;
 }
+// ray test touch >
 
 // ray test touch <
 .total-added-value {
@@ -54,57 +56,16 @@
   color: rgba(0, 0, 0, 0.5);
 }
 
-// ray test touch <
-.usd-price {
-  color: #998;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-// ray test touch >
-
 .bridge-fee {
   text-align: center;
   font-weight: 600;
   color: $d_grey;
 }
 
-.usd-price-modal {
-  text-align: center;
-  color: #998;
-  font-size: 1rem;
-  margin-bottom: 2rem;
-}
-
 .wizard-title {
   text-align: center;
   font-weight: 600;
   font-size: 1.3rem;
-}
-
-.issue-amount {
-  text-align: center;
-  font-size: 1.7rem;
-  color: $d_pink;
-  font-weight: 600;
-
-  .wizard-number {
-    color: $d_pink;
-    font-size: 3rem;
-    font-weight: 500;
-  }
-}
-
-.redeem-amount {
-  text-align: center;
-  font-size: 1.7rem;
-  color: $d_pink;
-  font-weight: 600;
-
-  .wizard-number {
-    color: black;
-    font-size: 3rem;
-    font-weight: 500;
-  }
 }
 
 .refund-title {
@@ -180,23 +141,29 @@
   color: $d_red;
 }
 
+// ray test touch <
 .total-amount {
   font-weight: 600;
 }
+// ray test touch >
 
 .grey-text {
   color: $d_grey;
   font-weight: 600;
 }
 
+// ray test touch <
 .step-item {
   padding: 0.7rem;
 }
+// ray test touch >
 
+// ray test touch <
 .total-divider {
   margin: 10px;
   border-top: 2px solid rgba(0, 0, 0, 0.1);
 }
+// ray test touch >
 
 // ray test touch <
 .copy-address {
@@ -273,6 +240,7 @@
   }
 }
 
+// ray test touch <
 .confirmation-circle {
   border-radius: 50%;
   padding-top: 54px;
@@ -281,12 +249,12 @@
   text-align: center;
   margin: auto;
 }
-
 .completed-confirmations-circle {
   @extend .confirmation-circle;
   border: 5px solid $d_green;
   padding-top: 72px;
 }
+// ray test touch >
 
 .pending-circle {
   @extend .confirmation-circle;
@@ -309,18 +277,22 @@
   border: 5px solid orange;
 }
 
+// ray test touch <
 .number-of-confirmations {
   font-size: 1.5rem;
   color: $d_green;
   font-weight: 600;
 }
+// ray test touch >
 
+// ray test touch <
 .status-title {
   font-size: 2rem;
   font-weight: 700;
   text-align: center;
   margin: 1rem;
 }
+// ray test touch >
 
 .status-description {
   font-weight: 700;
@@ -355,11 +327,13 @@
   margin-top: 1.5rem;
 }
 
+// ray test touch <
 .pink-amount {
   color: $d_pink;
   text-align: center;
   font-weight: 600;
 }
+// ray test touch >
 
 .orange-amount {
   color: $d_orange;
@@ -367,45 +341,14 @@
   font-weight: 600;
 }
 
+// ray test touch <
 .completed-status-title {
   @extend .status-title;
   color: $d_green;
 }
-
-.cancel-status-title {
-  @extend .status-title;
-  color: $d_red;
-}
-
-// ray test touch <
-.issue-modal {
-  .issue-modal-horizontal-line {
-    border: 1px solid $d_pink;
-    width: 95%;
-    margin: auto;
-    margin-top: 10px;
-  }
-
-  .close-icon {
-    color: $d_grey;
-    text-align: right;
-    font-size: 1.2rem;
-    position: absolute;
-    right: 2rem;
-    top: 1.5rem;
-    cursor: pointer;
-  }
-}
 // ray test touch >
 
 .redeem-modal {
-  .redeem-modal-horizontal-line {
-    border: 1px solid $d_yellow;
-    width: 95%;
-    margin: auto;
-    margin-top: 10px;
-  }
-
   .redeem-modal-title {
     text-align: center;
     color: $d_yellow;
@@ -415,18 +358,9 @@
     word-wrap: break-word;
     font-weight: 700;
   }
-
-  .close-icon {
-    color: $d_grey;
-    text-align: right;
-    font-size: 1.2rem;
-    position: absolute;
-    right: 2rem;
-    top: 1.5rem;
-    cursor: pointer;
-  }
 }
 
+// ray test touch <
 .modal-btn-green {
   width: fit-content;
   padding: 10px 15px;
@@ -437,7 +371,6 @@
   color: #4ac948;
   font-size: 15px;
 }
-
 .modal-btn-green::after {
   content: url("../../assets/img/icons/external-link.svg");
   height: 20px;
@@ -446,34 +379,45 @@
   color: $d_green;
   filter: brightness(0) saturate(100%) invert(68%) sepia(64%) saturate(530%) hue-rotate(66deg) brightness(89%) contrast(85%);
 }
+// ray test touch >
 
+// ray test touch <
 .btc-transaction-view {
   font-size: 1rem;
   width: fit-content;
   text-align: center;
   margin: auto;
 }
+// ray test touch >
 
+// ray test touch <
 .btc-transaction-id {
   @extend .btc-transaction-view;
   margin-top: .5rem;
   margin-bottom: 1rem;
   font-weight: 700;
 }
+// ray test touch >
 
+// ray test touch <
 .btc-transaction-title {
   @extend .btc-transaction-view;
   color: $d_grey;
 }
+// ray test touch >
 
+// ray test touch <
 .btc-transaction {
   @extend .btc-transaction-view;
   font-weight: 600;
 }
+// ray test touch >
 
+// ray test touch <
 .btc-transaction-wrapper {
   margin-top: 2rem;
 }
+// ray test touch >
 
 .redeem-step-title {
   display: inline;

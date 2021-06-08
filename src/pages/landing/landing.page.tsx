@@ -184,9 +184,6 @@ export default function LandingPage(): JSX.Element {
                   xs='12'
                   sm={{ span: 4, offset: 2 }}>
                   <InterlayRouterLink
-                    style={{
-                      textDecoration: 'none'
-                    }}
                     to={{
                       pathname: PAGES.application,
                       search: queryString.stringify({
@@ -207,9 +204,6 @@ export default function LandingPage(): JSX.Element {
                   xs='12'
                   sm={{ span: 4 }}>
                   <InterlayRouterLink
-                    style={{
-                      textDecoration: 'none'
-                    }}
                     to={PAGES.dashboard}>
                     <Button
                       variant='outline-dark'
