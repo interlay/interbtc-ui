@@ -1,9 +1,11 @@
+
+// ray test touch <<
 import React from 'react';
 import { shortTxId } from '../../../common/utils/utils';
 import InterlayLink from 'components/UI/InterlayLink';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
 
-export default class BitcoinTransaction extends React.Component<{
+class BitcoinTransaction extends React.Component<{
   txId: string;
   shorten?: boolean;
 }> {
@@ -24,3 +26,6 @@ export default class BitcoinTransaction extends React.Component<{
     );
   }
 }
+
+export default BitcoinTransaction;
+// ray test touch >>
