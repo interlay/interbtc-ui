@@ -1,3 +1,4 @@
+import { RedeemStatus } from '@interlay/polkabtc';
 import {
   CHANGE_REDEEM_STEP,
   RESET_REDEEM_WIZARD,
@@ -13,7 +14,7 @@ import {
   UPDATE_ALL_REDEEM_REQUESTS,
   TOGGLE_PREMIUM_REDEEM
 } from '../types/actions.types';
-import { RedeemRequestStatus, RedeemState } from '../types/redeem.types';
+import { RedeemState } from '../types/redeem.types';
 
 const initialState = {
   address: '',
@@ -64,8 +65,8 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
     const requestsToUpdate = currentRequests.map(request => {
       if (action.request.id !== request.id) return request;
       if (
-        action.request.status !== RedeemRequestStatus.Expired &&
-                    request.status === RedeemRequestStatus.Expired
+        action.request.status !== RedeemStatus.Expired &&
+                    request.status === RedeemStatus.Expired
       ) {
         updateStore = true;
       }
@@ -81,7 +82,7 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
     if (!allRequests) return state;
     const updatedRequests = allRequests.map(request => {
       if (request.id === action.id) {
-        return { ...request, status: RedeemRequestStatus.Retried };
+        return { ...request, status: RedeemStatus.Retried };
       }
       return request;
     });
@@ -94,7 +95,7 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
     if (!allCurrentRequests) return state;
     const allUpdatedRequests = allCurrentRequests.map(request => {
       if (request.id === action.id) {
-        return { ...request, status: RedeemRequestStatus.Reimbursed };
+        return { ...request, status: RedeemStatus.Reimbursed };
       }
       return request;
     });

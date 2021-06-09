@@ -1,4 +1,3 @@
-
 import { ReactElement } from 'react';
 import { useSelector } from 'react-redux';
 import { Modal } from 'react-bootstrap';
@@ -8,8 +7,8 @@ import StatusView from './status-view';
 import ReimburseView from './reimburse-view';
 import { getUsdAmount, shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import { RedeemRequestStatus } from 'common/types/redeem.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
+import { RedeemStatus } from '@interlay/polkabtc';
 
 type RedeemModalProps = {
   show: boolean;
@@ -40,11 +39,11 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
             <div className='row'>
               <div className='col-xl-6 col-lg-12 justify-center'>
                 <div className='redeem-amount'>
-                  <span className='wizard-number'>{request.amountPolkaBTC}</span>&nbsp;PolkaBTC
+                  <span className='wizard-number'>{request.amountBTC}</span>&nbsp;PolkaBTC
                 </div>
                 <div className='row usd-price-modal'>
                   <div className='col'>
-                    {'~ $' + getUsdAmount(request.amountPolkaBTC || '0', prices.bitcoin.usd)}
+                    {'~ $' + getUsdAmount(request.amountBTC || '0', prices.bitcoin.usd)}
                   </div>
                 </div>
                 <div className='step-item row'>
@@ -98,7 +97,7 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
                 </div>
                 <div className='step-item row'>
                   <div className='col-6 temp-text-left'>{t('issue_page.parachain_block')}</div>
-                  <div className='col-6 right-text'>{request.creation}</div>
+                  <div className='col-6 right-text'>{request.creationBlock}</div>
                 </div>
                 <div className='step-item row'>
                   <div className='col-6 temp-text-left'>{t('issue_page.vault_dot_address')}</div>
@@ -106,7 +105,7 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
                 </div>
               </div>
               <div className='col-xl-6 col-lg-12'>
-                {request.status === RedeemRequestStatus.Expired ? (
+                {request.status === RedeemStatus.Expired ? (
                   <ReimburseView
                     request={request}
                     onClose={props.onClose} />

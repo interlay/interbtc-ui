@@ -1,3 +1,4 @@
+import { Redeem } from '@interlay/polkabtc';
 import {
   CHANGE_REDEEM_STEP,
   RESET_REDEEM_WIZARD,
@@ -22,14 +23,13 @@ import {
   RedeemExpired,
   ReimburseRedeemRequest
 } from '../types/actions.types';
-import { RedeemRequest } from '../types/redeem.types';
 
 export const changeRedeemStepAction = (step: string): ChangeRedeemStep => ({
   type: CHANGE_REDEEM_STEP,
   step
 });
 
-export const setRedeemRequestsAction = (requests: RedeemRequest[]): SetRedeemRequests => ({
+export const setRedeemRequestsAction = (requests: Redeem[]): SetRedeemRequests => ({
   type: SET_REDEEM_REQUESTS,
   requests
 });
@@ -43,26 +43,26 @@ export const changeRedeemIdAction = (id: string): ChangeRedeemId => ({
   id
 });
 
-export const addRedeemRequestAction = (request: RedeemRequest): AddRedeemRequest => ({
+export const addRedeemRequestAction = (request: Redeem): AddRedeemRequest => ({
   type: ADD_REDEEM_REQUEST,
   request
 });
 
-export const updateRedeemRequestAction = (request: RedeemRequest): UpdateRedeemRequest => ({
+export const updateRedeemRequestAction = (request: Redeem): UpdateRedeemRequest => ({
   type: UPDATE_REDEEM_REQUEST,
   request
 });
 
 export const updateAllRedeemRequestsAction = (
   userDotAddress: string,
-  redeemRequests: RedeemRequest[]
+  redeemRequests: Redeem[]
 ): UpdateAllRedeemRequests => ({
   type: UPDATE_ALL_REDEEM_REQUESTS,
   userDotAddress,
   redeemRequests
 });
 
-export const redeemExpiredAction = (request: RedeemRequest): RedeemExpired => ({
+export const redeemExpiredAction = (request: Redeem): RedeemExpired => ({
   type: REDEEM_EXPIRED,
   request
 });

@@ -1,7 +1,6 @@
-import { RedeemRequest } from './redeem.types';
 import { VaultReplaceRequest } from './vault.types';
 import { StoreType, ParachainStatus, Prices } from './util.types';
-import { Issue } from '@interlay/polkabtc';
+import { Issue, Redeem } from '@interlay/polkabtc';
 
 // GENERAL ACTIONS
 
@@ -147,28 +146,28 @@ export interface ResetRedeemWizard {
 
 export interface SetRedeemRequests {
   type: typeof SET_REDEEM_REQUESTS;
-  requests: RedeemRequest[];
+  requests: Redeem[];
 }
 
 export interface StoreRedeemRequest {
   type: typeof STORE_REDEEM_REQUEST;
-  request: RedeemRequest;
+  request: Redeem;
 }
 
 export interface AddRedeemRequest {
   type: typeof ADD_REDEEM_REQUEST;
-  request: RedeemRequest;
+  request: Redeem;
 }
 
 export interface UpdateRedeemRequest {
   type: typeof UPDATE_REDEEM_REQUEST;
-  request: RedeemRequest;
+  request: Redeem;
 }
 
 export interface UpdateAllRedeemRequests {
   type: typeof UPDATE_ALL_REDEEM_REQUESTS;
   userDotAddress: string;
-  redeemRequests: RedeemRequest[];
+  redeemRequests: Redeem[];
 }
 
 export interface RetryRedeemRequest {
@@ -178,7 +177,7 @@ export interface RetryRedeemRequest {
 
 export interface RedeemExpired {
   type: typeof REDEEM_EXPIRED;
-  request: RedeemRequest;
+  request: Redeem;
 }
 
 export interface ReimburseRedeemRequest {

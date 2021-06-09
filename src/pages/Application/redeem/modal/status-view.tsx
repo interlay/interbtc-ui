@@ -1,6 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { RedeemRequest, RedeemRequestStatus } from '../../../../common/types/redeem.types';
 import BitcoinTransaction from '../../../../common/components/bitcoin-links/transaction';
 import { getUsdAmount, shortAddress } from '../../../../common/utils/utils';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
@@ -12,9 +11,10 @@ import InterlayLink from 'components/UI/InterlayLink';
 import Timer from 'components/Timer';
 import clsx from 'clsx';
 import { BLOCK_TIME } from 'config/parachain';
+import { Redeem, RedeemStatus } from '@interlay/polkabtc';
 
 type StatusViewProps = {
-  request: RedeemRequest;
+  request: Redeem;
 };
 
 export default function StatusView(props: StatusViewProps): ReactElement {
@@ -37,7 +37,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
           window.polkaBTC.redeem.getRedeemPeriod()
         ]);
-        const amountPolkaBTC = props.request ? new Big(props.request.amountPolkaBTC) : new Big(0);
+        const amountPolkaBTC = props.request ? new Big(props.request.amountBTC) : new Big(0);
         const burned = amountPolkaBTC.mul(btcDotRate);
         const punished = burned.mul(new Big(punishment));
         setBurnAmountDOT(burned);
@@ -45,7 +45,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
         setAmountDOT(burned.add(punished));
         setStableBitcoinConfirmations(btcConfs);
 
-        const requestTimestamp = Math.floor(new Date(Number(props.request.timestamp)).getTime() / 1000);
+        const requestTimestamp = Math.floor(new Date(Number(props.request.creationTimestamp)).getTime() / 1000);
         const theInitialLeftSeconds = requestTimestamp + (redeemPeriod * BLOCK_TIME) - Math.floor(Date.now() / 1000);
         setInitialLeftSeconds(theInitialLeftSeconds);
       } catch (error) {
@@ -55,23 +55,23 @@ export default function StatusView(props: StatusViewProps): ReactElement {
     fetchData();
   }, [props.request, polkaBtcLoaded]);
 
-  function getStatus(status: RedeemRequestStatus): React.ReactFragment {
+  function getStatus(status: RedeemStatus): React.ReactFragment {
     switch (status) {
-    case RedeemRequestStatus.Completed:
+    case RedeemStatus.Completed:
       return (
         <React.Fragment>
           <div className='completed-status-title'>{t('completed')}</div>
           <div className='row'>
             <div className='col text-center bold-text '>
               {t('issue_page.you_received')}{' '}
-              <span className='orange-amount bold-text'>{props.request.amountPolkaBTC + ' BTC'}</span>
+              <span className='orange-amount bold-text'>{props.request.amountBTC + ' BTC'}</span>
             </div>
           </div>
           <div className='row mt-4'>
             <div className='col'>
               <div className='completed-confirmations-circle'>
                 <div>{t('issue_page.in_parachain_block')}</div>
-                <div className='number-of-confirmations'>{props.request.creation}</div>
+                <div className='number-of-confirmations'>{props.request.creationBlock}</div>
               </div>
             </div>
           </div>
@@ -112,7 +112,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           </div>
         </React.Fragment>
       );
-    case RedeemRequestStatus.PendingWithBtcTxNotFound:
+    case RedeemStatus.PendingWithBtcTxNotFound:
       return (
         <React.Fragment>
           <div className='status-title'>{t('pending')}</div>
@@ -138,7 +138,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           </div>
         </React.Fragment>
       );
-    case RedeemRequestStatus.Reimbursed:
+    case RedeemStatus.Reimbursed:
       return (
         <React.Fragment>
           <div className='completed-status-title'>{t('redeem_page.burn_success')}</div>
@@ -148,9 +148,9 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           <div className='row mt-5'>
             <div className='col text-center bold-text '>
               <span className='orange-amount bold-text'>
-                {props.request.amountPolkaBTC + ' PolkaBTC '}
+                {props.request.amountBTC + ' PolkaBTC '}
               </span>
-                                (~ ${getUsdAmount(props.request.amountPolkaBTC, prices.bitcoin.usd)})
+                                (~ ${getUsdAmount(props.request.amountBTC, prices.bitcoin.usd)})
               <span className='orange-amount bold-text'>{t('redeem_page.burned')}</span>
             </div>
           </div>
@@ -216,7 +216,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
           </div>
         </React.Fragment>
       );
-    case RedeemRequestStatus.Retried:
+    case RedeemStatus.Retried:
       return (
         <React.Fragment>
           <div className='completed-status-title'>{t('redeem_page.compensation_success')}</div>

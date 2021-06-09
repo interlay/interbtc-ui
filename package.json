@@ -5,8 +5,8 @@
   "dependencies": {
     "@craco/craco": "^6.1.1",
     "@headlessui/react": "^1.1.1",
-    "@interlay/polkabtc": "link:../polkabtc-js",
-    "@interlay/polkabtc-stats": "link:../polkabtc-stats",
+    "@interlay/polkabtc": "0.19.0",
+    "@interlay/polkabtc-stats": "0.4.0",
     "@polkadot/api": "4.12.1",
     "@polkadot/extension-dapp": "0.38.1",
     "@polkadot/metadata": "4.12.1",

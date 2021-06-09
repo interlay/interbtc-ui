@@ -1,10 +1,10 @@
-import { RedeemRequest } from '../types/redeem.types';
 import {
   uint8ArrayToString,
   bitcoin,
   reverseEndianness,
   roundTwoDecimals,
-  Issue
+  Issue,
+  Redeem
 } from '@interlay/polkabtc';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from '../../constants';
@@ -144,15 +144,15 @@ const updateBalances = async (
 };
 
 const requestsInStore = (
-  storeRequests: Issue[] | RedeemRequest[],
-  parachainRequests: Issue[] | RedeemRequest[]
+  storeRequests: Issue[] | Redeem[],
+  parachainRequests: Issue[] | Redeem[]
 ): boolean => {
   if (storeRequests.length !== parachainRequests.length) return false;
   let inStore = true;
 
-  storeRequests.forEach((storeRequest: Issue | RedeemRequest) => {
+  storeRequests.forEach((storeRequest: Issue | Redeem) => {
     let found = false;
-    parachainRequests.forEach((parachainRequest: Issue | RedeemRequest) => {
+    parachainRequests.forEach((parachainRequest: Issue | Redeem) => {
       if (storeRequest.id === parachainRequest.id) {
         found = true;
       }

@@ -1,29 +1,4 @@
-export interface RedeemRequest {
-  id: string;
-  amountPolkaBTC: string;
-  amountBTC: string;
-  fee: string;
-  btcTransferFee: string;
-  timestamp: string;
-  creation: string;
-  userBTCAddress: string;
-  userDOTAddress: string;
-  vaultDOTAddress?: string;
-  btcTxId: string;
-  confirmations: number;
-  status: RedeemRequestStatus;
-}
-
-export enum RedeemRequestStatus {
-  Completed,
-  Expired,
-  Reimbursed,
-  Retried,
-  PendingWithBtcTxNotFound,
-  PendingWithBtcTxNotIncluded,
-  PendingWithTooFewConfirmations,
-  PendingWithEnoughConfirmations
-}
+import { Redeem } from '@interlay/polkabtc';
 
 export type DashboardRequestInfo = {
   id: string;
@@ -48,5 +23,5 @@ export interface RedeemState {
   // true if premium redeem is selected
   premiumRedeem: boolean;
   // mapping of all redeem requests
-  redeemRequests: Map<string, RedeemRequest[]>;
+  redeemRequests: Map<string, Redeem[]>;
 }

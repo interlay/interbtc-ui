@@ -1,4 +1,3 @@
-
 import {
   useSelector,
   useDispatch
@@ -11,21 +10,16 @@ import {
 
 import useInterval from 'utils/hooks/use-interval';
 import { updateAllRedeemRequestsAction } from 'common/actions/redeem.actions';
-import { statsToUIRedeemRequest } from 'common/utils/requests';
-import { RedeemRequest } from 'common/types/redeem.types';
 import { StoreType } from 'common/types/util.types';
 import * as constants from '../constants';
+import { Redeem } from '@interlay/polkabtc';
 
 const useUpdateRedeemRequests = (
   page = 0,
   limit = 15,
   delay = 10000
 ): void => {
-  const {
-    address,
-    bitcoinHeight,
-    polkaBtcLoaded
-  } = useSelector((state: StoreType) => state.general);
+  const { address, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
 
   const isRunning = address && polkaBtcLoaded;
@@ -35,19 +29,7 @@ const useUpdateRedeemRequests = (
       // Temporary declaration pending refactor decision
       const stats = new polkabtcStats.StatsApi(new polkabtcStats.Configuration({ basePath: constants.STATS_URL }));
 
-      const [
-        parachainHeight,
-        redeemPeriod,
-        requiredBtcConfirmations,
-        requiredParachainConfirmations
-      ] = await Promise.all([
-        window.polkaBTC.system.getCurrentBlockNumber(), // TODO: should avoid as it's called for issue
-        window.polkaBTC.redeem.getRedeemPeriod(),
-        window.polkaBTC.btcRelay.getStableBitcoinConfirmations(), // TODO: should avoid as it's called for issue
-        window.polkaBTC.btcRelay.getStableParachainConfirmations()
-      ]);
-
-      const databaseRequests: RedeemRequest[] = (
+      const databaseRequests: Redeem[] = (
         await stats.getFilteredRedeems(
           page, // Page 0 (i.e. first page)
           limit, // 15 per page (i.e. fetch 15 latest requests)
@@ -56,16 +38,7 @@ const useUpdateRedeemRequests = (
           constants.BITCOIN_NETWORK as BtcNetworkName,
           [{ column: RedeemColumns.Requester, value: address }] // Filter by requester == address
         )
-      ).data.map(statsRedeem =>
-        statsToUIRedeemRequest(
-          statsRedeem,
-          bitcoinHeight,
-          parachainHeight,
-          redeemPeriod,
-          requiredBtcConfirmations,
-          requiredParachainConfirmations
-        )
-      );
+      ).data;
 
       dispatch(updateAllRedeemRequestsAction(address, databaseRequests));
     } catch (error) {

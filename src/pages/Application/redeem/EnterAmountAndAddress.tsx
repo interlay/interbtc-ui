@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import {
   useSelector,
@@ -46,7 +45,6 @@ import {
   getUsdAmount,
   getRandomVaultIdWithCapacity
 } from 'common/utils/utils';
-import { parachainToUIRedeemRequest } from 'common/utils/requests';
 import STATUSES from 'utils/constants/statuses';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
@@ -228,7 +226,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
       relevantVaults.set(id, polkaBTCAmount.mul(2));
       const result = await window.polkaBTC.redeem.request(polkaBTCAmount, data[BTC_ADDRESS], true, 0, relevantVaults);
       // TODO: handle redeem aggregator
-      const redeemRequest = await parachainToUIRedeemRequest(result[0].id, result[0].redeemRequest);
+      const redeemRequest = result[0];
       setSubmitStatus(STATUSES.RESOLVED);
 
       // Get the redeem id from the request redeem event

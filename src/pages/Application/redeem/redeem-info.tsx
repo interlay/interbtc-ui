@@ -48,7 +48,7 @@ export default function RedeemInfo(): JSX.Element {
             </div>
             <div className='row'>
               <div className='col-12 info-redeem-price'>
-                                ~${getUsdAmount(request.amountPolkaBTC, prices.bitcoin.usd)}
+                                ~${getUsdAmount(request.amountBTC, prices.bitcoin.usd)}
               </div>
             </div>
             <div className='row'>

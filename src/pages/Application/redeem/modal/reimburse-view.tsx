@@ -5,15 +5,15 @@ import { useSelector, useDispatch, useStore } from 'react-redux';
 import { StoreType } from '../../../../common/types/util.types';
 import ButtonMaybePending from '../../../../common/components/pending-button';
 import { useTranslation } from 'react-i18next';
-import { RedeemRequest } from '../../../../common/types/redeem.types';
 import { retryRedeemRequestAction, reimburseRedeemRequestAction } from '../../../../common/actions/redeem.actions';
 import Big from 'big.js';
 import fetchBalances from '../../../../common/live-data/balances-watcher';
 import { getUsdAmount } from '../../../../common/utils/utils';
+import { Redeem } from '@interlay/polkabtc';
 
 type ReimburseViewProps = {
   onClose: () => void;
-  request: RedeemRequest | undefined;
+  request: Redeem | undefined;
 };
 
 export default function ReimburseView(props: ReimburseViewProps): ReactElement {
@@ -34,7 +34,7 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
           window.polkaBTC.vaults.getPunishmentFee(),
           window.polkaBTC.oracle.getExchangeRate()
         ]);
-        const amountPolkaBTC = props.request ? new Big(props.request.amountPolkaBTC) : new Big(0);
+        const amountPolkaBTC = props.request ? new Big(props.request.amountBTC) : new Big(0);
         setAmountDOT(amountPolkaBTC.mul(btcDotRate));
         setPunishmentDOT(amountPolkaBTC.mul(btcDotRate).mul(new Big(punishment)));
       } catch (error) {
