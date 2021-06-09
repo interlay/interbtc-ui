@@ -4,11 +4,11 @@ import {
   useSelector,
   useDispatch
 } from 'react-redux';
-import * as polkabtcStats from '@interlay/polkabtc-stats';
+import * as polkabtcStats from '@interlay/interbtc-stats-client';
 import {
   IssueColumns,
   BtcNetworkName
-} from '@interlay/polkabtc-stats';
+} from '@interlay/interbtc-stats-client';
 
 import useInterval from 'utils/hooks/use-interval';
 import { updateAllIssueRequestsAction } from 'common/actions/issue.actions';
@@ -49,15 +49,13 @@ const useUpdateIssueRequests = (
       ]);
 
       const databaseRequests: IssueRequest[] = await Promise.all((
-        await stats.getFilteredIssues(
-          page, // Page 0 (first page)
-          limit, // 15 per page
-          undefined, // Default sorting (= chronological)
-          undefined, // Default sorting order
-          constants.BITCOIN_NETWORK as BtcNetworkName,
-          [{ column: IssueColumns.Requester, value: address }] // Filter by requester == address
-        )
-      ).data.map(
+        await stats.getFilteredIssues({
+          page,
+          perPage: limit,
+          network: constants.BITCOIN_NETWORK as BtcNetworkName,
+          filterIssueColumns: [{ column: IssueColumns.Requester, value: address }] // Filter by requester == address
+        })
+      ).map(
         async statsIssue =>
           await statsToUIIssueRequest(
             statsIssue,

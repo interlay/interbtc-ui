@@ -112,7 +112,7 @@ function defaultBlockData(): RelayedBlock {
   return {
     height: '0',
     hash: '',
-    relay_ts: '0'
+    relayTs: '0'
   };
 }
 

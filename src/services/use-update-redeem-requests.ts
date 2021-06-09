@@ -3,11 +3,11 @@ import {
   useSelector,
   useDispatch
 } from 'react-redux';
-import * as polkabtcStats from '@interlay/polkabtc-stats';
+import * as polkabtcStats from '@interlay/interbtc-stats-client';
 import {
   RedeemColumns,
   BtcNetworkName
-} from '@interlay/polkabtc-stats';
+} from '@interlay/interbtc-stats-client';
 
 import useInterval from 'utils/hooks/use-interval';
 import { updateAllRedeemRequestsAction } from 'common/actions/redeem.actions';
@@ -48,15 +48,13 @@ const useUpdateRedeemRequests = (
       ]);
 
       const databaseRequests: RedeemRequest[] = (
-        await stats.getFilteredRedeems(
-          page, // Page 0 (i.e. first page)
-          limit, // 15 per page (i.e. fetch 15 latest requests)
-          undefined, // Default sorting
-          undefined, // Default sort order
-          constants.BITCOIN_NETWORK as BtcNetworkName,
-          [{ column: RedeemColumns.Requester, value: address }] // Filter by requester == address
-        )
-      ).data.map(statsRedeem =>
+        await stats.getFilteredRedeems({
+          page,
+          perPage: limit,
+          network: constants.BITCOIN_NETWORK as BtcNetworkName,
+          filterRedeemColumns: [{ column: RedeemColumns.Requester, value: address }] // Filter by requester == address
+        })
+      ).map(statsRedeem =>
         statsToUIRedeemRequest(
           statsRedeem,
           bitcoinHeight,

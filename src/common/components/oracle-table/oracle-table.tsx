@@ -1,7 +1,7 @@
 import { ReactElement, useEffect, useState } from 'react';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
-import { OracleStatus } from '@interlay/polkabtc-stats';
+import { OracleStatus } from '@interlay/interbtc-stats-client';
 
 import DashboardTable, { StatusComponent, StatusCategories } from '../dashboard-table/dashboard-table';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
@@ -19,7 +19,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
     (async () => {
       try {
         const oracleStatuses = await statsApi.getLatestSubmissionForEachOracle();
-        setOracles(oracleStatuses.data);
+        setOracles(oracleStatuses);
       } catch (error) {
         console.log('[OracleTable] error.message => ', error.message);
       }

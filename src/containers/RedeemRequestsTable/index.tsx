@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useTable } from 'react-table';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
-import { BtcNetworkName } from '@interlay/polkabtc-stats';
+import { BtcNetworkName } from '@interlay/interbtc-stats-client';
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorHandler from 'components/ErrorHandler';

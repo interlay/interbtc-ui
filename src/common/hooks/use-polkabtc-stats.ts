@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import * as polkabtcStats from '@interlay/polkabtc-stats';
+import * as polkabtcStats from '@interlay/interbtc-stats-client';
 import { STATS_URL } from '../../constants';
 
 export default function usePolkabtcStats(): polkabtcStats.StatsApi {

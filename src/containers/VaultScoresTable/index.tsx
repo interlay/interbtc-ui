@@ -12,7 +12,7 @@ import {
 // eslint-disable-next-line max-len
 } from 'react-table'; // TODO: should type properly (Re:https://github.com/tannerlinsley/react-table/blob/master/TYPESCRIPT.md)
 import clsx from 'clsx';
-import { VaultData } from '@interlay/polkabtc-stats'; // TODO: should do tree-shaking
+import { VaultData } from '@interlay/interbtc-stats-client'; // TODO: should do tree-shaking
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorHandler from 'components/ErrorHandler';

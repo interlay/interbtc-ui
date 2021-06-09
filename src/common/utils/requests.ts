@@ -12,7 +12,7 @@ import {
   ReplaceRequestExt as ParachainReplaceRequest
 } from '@interlay/polkabtc';
 import Big from 'big.js';
-import { Issue, Redeem } from '@interlay/polkabtc-stats';
+import { Issue, Redeem } from '@interlay/interbtc-stats-client';
 import { formatDateTimePrecise } from './utils';
 
 // TODO: move functions to lib

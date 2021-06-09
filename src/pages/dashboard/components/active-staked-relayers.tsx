@@ -20,8 +20,8 @@ const ActiveStakedRelayersComponent = ({ linkButton }: ActiveStakedRelayers): Re
   const [totalRelayersPerDay, setTotalRelayersPerDay] = useState(new Array<{ date: number; count: number }>());
   const fetchRelayersPerDay = useMemo(
     () => async () => {
-      const res = await statsApi.getRecentDailyRelayerCounts();
-      setTotalRelayersPerDay(res.data);
+      const res = await statsApi.getRecentDailyRelayerCounts({});
+      setTotalRelayersPerDay(res);
     },
     [statsApi] // to silence the compiler
   );
