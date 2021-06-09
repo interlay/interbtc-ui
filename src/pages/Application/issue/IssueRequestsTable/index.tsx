@@ -3,11 +3,11 @@
 // @ts-nocheck
 import * as React from 'react';
 import { useTable } from 'react-table';
-import { FaExternalLinkAlt } from 'react-icons/fa';
 import {
   FaCheck,
   FaRegTimesCircle,
-  FaRegClock
+  FaRegClock,
+  FaExternalLinkAlt
 } from 'react-icons/fa';
 import {
   useSelector,
