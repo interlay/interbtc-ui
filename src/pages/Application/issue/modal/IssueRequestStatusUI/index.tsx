@@ -8,10 +8,8 @@ import {
 import { toast } from 'react-toastify';
 import Big from 'big.js';
 
-// ray test touch <<
-// import CompletedIssueRequest from './CompletedIssueRequest';
+import CompletedIssueRequest from './CompletedIssueRequest';
 import CancelledIssueRequest from './CancelledIssueRequest';
-// ray test touch >>
 import ButtonMaybePending from 'common/components/pending-button';
 import InterlayLink from 'components/UI/InterlayLink';
 import BitcoinTransaction from 'common/components/bitcoin-links/transaction';
@@ -90,14 +88,10 @@ const IssueRequestStatusUI = (props: Props): JSX.Element => {
     // IssueRequestStatus.PendingWithBtcTxNotFound
     switch (status) {
     case IssueRequestStatus.Completed:
-      // ray test touch <<
-      // return <CompletedIssueRequest request={props.request} />;
-      // rya test touch >>
+      return <CompletedIssueRequest request={props.request} />;
     case IssueRequestStatus.Cancelled:
     case IssueRequestStatus.Expired:
-      // ray test touch <<
       return <CancelledIssueRequest />;
-      // ray test touch >>
     case IssueRequestStatus.PendingWithBtcTxNotIncluded:
     case IssueRequestStatus.PendingWithTooFewConfirmations:
       return (

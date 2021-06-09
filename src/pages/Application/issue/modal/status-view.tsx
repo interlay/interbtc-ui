@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react';
+import { ReactElement, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IssueRequest, IssueRequestStatus } from '../../../../common/types/issue.types';
 import BitcoinTransaction from '../../../../common/components/bitcoin-links/transaction';
@@ -12,6 +12,8 @@ import { shortAddress } from '../../../../common/utils/utils';
 import Big from 'big.js';
 import InterlayLink from 'components/UI/InterlayLink';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
+import { FaTimesCircle } from 'react-icons/fa';
+import clsx from 'clsx';
 
 type StatusViewProps = {
   request: IssueRequest;
@@ -135,11 +137,12 @@ export default function StatusView(props: StatusViewProps): ReactElement {
       return (
         <>
           <div className='cancel-status-title'>{t('cancelled')}</div>
-          <div className='row'>
-            <div className='col text-center'>
-              <i className='fas fa-times-circle canceled-circle'></i>
-            </div>
-          </div>
+          <FaTimesCircle
+            className={clsx(
+              'w-40',
+              'h-40',
+              'text-interlayScarlet'
+            )} />
           <div className='row justify-center mt-4'>
             <div className='col-9 status-description'>{t('issue_page.you_did_not_send')}</div>
           </div>
