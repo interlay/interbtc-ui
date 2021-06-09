@@ -1,26 +1,39 @@
-import { useState, ReactElement } from 'react';
-import { RedeemRequest, RedeemRequestStatus } from '../../../common/types/redeem.types';
+
+import * as React from 'react';
 import { Table } from 'react-bootstrap';
-import { FaCheck, FaHourglass } from 'react-icons/fa';
-import { useSelector, useDispatch } from 'react-redux';
-import { StoreType } from '../../../common/types/util.types';
-import { changeRedeemIdAction } from '../../../common/actions/redeem.actions';
-import BitcoinTransaction from '../../../common/components/bitcoin-links/transaction';
+import {
+  FaCheck,
+  FaHourglass
+} from 'react-icons/fa';
+import {
+  useSelector,
+  useDispatch
+} from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import RedeemModal from './modal/redeem-modal';
-import { formatDateTimePrecise } from '../../../common/utils/utils';
 import clsx from 'clsx';
 
-export default function RedeemRequests(): ReactElement {
-  const { address } = useSelector((state: StoreType) => state.general);
-  const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
-  const [showModal, setShowModal] = useState(false);
+import {
+  RedeemRequest,
+  RedeemRequestStatus
+} from 'common/types/redeem.types';
+import { StoreType } from 'common/types/util.types';
+import { changeRedeemIdAction } from 'common/actions/redeem.actions';
+import BitcoinTransaction from 'common/components/bitcoin-links/transaction';
+import RedeemModal from './modal/redeem-modal';
+import { formatDateTimePrecise } from 'common/utils/utils';
+
+const RedeemRequests = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const { address } = useSelector((state: StoreType) => state.general);
+  const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address);
+  const [redeemModalOpen, setRedeemModalOpen] = React.useState(false);
 
-  const closeModal = () => setShowModal(false);
+  const handleRedeemModalClose = () => {
+    setRedeemModalOpen(false);
+  };
 
-  const handleStatusColumn = (request: RedeemRequest) => {
+  const renderStatus = (request: RedeemRequest) => {
     switch (request.status) {
     case RedeemRequestStatus.Reimbursed: {
       return <div>{t('redeem_page.reimbursed')}</div>;
@@ -40,9 +53,9 @@ export default function RedeemRequests(): ReactElement {
     }
   };
 
-  const requestClicked = (request: RedeemRequest): void => {
+  const handleRowClick = (request: RedeemRequest): void => {
     dispatch(changeRedeemIdAction(request.id));
-    setShowModal(true);
+    setRedeemModalOpen(true);
   };
 
   return (
@@ -82,7 +95,7 @@ export default function RedeemRequests(): ReactElement {
                   return (
                     <tr
                       key={request.id}
-                      onClick={() => requestClicked(request)}
+                      onClick={() => handleRowClick(request)}
                       className='table-row-opens-modal'>
                       <td>
                         {request.timestamp ?
@@ -107,7 +120,7 @@ export default function RedeemRequests(): ReactElement {
                           t('not_applicable') :
                           Math.max(request.confirmations, 0)}
                       </td>
-                      <td>{handleStatusColumn(request)}</td>
+                      <td>{renderStatus(request)}</td>
                     </tr>
                   );
                 })}
@@ -116,8 +129,10 @@ export default function RedeemRequests(): ReactElement {
         </>
       )}
       <RedeemModal
-        show={showModal}
-        onClose={closeModal} />
+        show={redeemModalOpen}
+        onClose={handleRedeemModalClose} />
     </div>
   );
-}
+};
+
+export default RedeemRequests;
