@@ -4,12 +4,10 @@
 import * as React from 'react';
 import { useTable } from 'react-table';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-// ray test touch <<
-import { Badge } from 'react-bootstrap';
-// ray test touch >>
 import {
   FaCheck,
-  FaHourglass
+  FaRegTimesCircle,
+  FaRegClock
 } from 'react-icons/fa';
 import {
   useSelector,
@@ -35,30 +33,6 @@ import { changeIssueIdAction } from 'common/actions/issue.actions';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
 import { shortTxId } from 'common/utils/utils';
-
-// ray test touch <<
-const handleCompleted = (status: IssueRequestStatus) => {
-  switch (status) {
-  case IssueRequestStatus.RequestedRefund:
-  case IssueRequestStatus.Completed: {
-    return <FaCheck className='inline-block' />;
-  }
-  case IssueRequestStatus.Cancelled:
-  case IssueRequestStatus.Expired: {
-    return (
-      <Badge
-        className='badge-style'
-        variant='secondary'>
-        cancelled
-      </Badge>
-    );
-  }
-  default: {
-    return <FaHourglass className='inline-block' />;
-  }
-  }
-};
-// ray test touch >>
 
 const IssueRequests = (): JSX.Element => {
   const {
@@ -165,15 +139,49 @@ const IssueRequests = (): JSX.Element => {
         classNames: [
           'text-left'
         ],
-        // ray test touch <<
         Cell: function FormattedCell({ value }) {
+          let icon;
+          let notice;
+          let colorClassName;
+          switch (value) {
+          case IssueRequestStatus.RequestedRefund:
+          case IssueRequestStatus.Completed: {
+            icon = <FaCheck />;
+            notice = t('completed');
+            colorClassName = 'text-interlayMalachite';
+            break;
+          }
+          case IssueRequestStatus.Cancelled:
+          case IssueRequestStatus.Expired: {
+            icon = <FaRegTimesCircle />;
+            notice = t('cancelled');
+            colorClassName = 'text-interlayScarlet';
+            break;
+          }
+          default: {
+            icon = <FaRegClock />;
+            notice = t('pending');
+            colorClassName = 'text-interlayTreePoppy';
+            break;
+          }
+          }
+
+          // TODO: double-check with `src\components\UI\InterlayTable\StatusCell\index.tsx`
           return (
-            <>
-              {handleCompleted(value)}
-            </>
+            <div
+              className={clsx(
+                'inline-flex',
+                'items-center',
+                'space-x-1.5',
+                colorClassName
+              )}>
+              {icon}
+              <span>
+                {notice}
+              </span>
+            </div>
           );
         }
-        // ray test touch >>
       }
     ],
     [t]

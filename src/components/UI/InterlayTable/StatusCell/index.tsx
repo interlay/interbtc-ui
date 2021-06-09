@@ -58,7 +58,7 @@ const StatusCell = ({
   return (
     <div
       className={clsx(
-        'flex',
+        'inline-flex',
         'items-center',
         'space-x-1.5',
         colorClassName
