@@ -130,7 +130,7 @@ const Application = (): JSX.Element | null => {
       <div
         className={clsx(
           'container',
-          'mt-12',
+          'my-12',
           'mx-auto'
         )}>
         <div
