@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import React from 'react';
 import { shortTxId } from '../../../common/utils/utils';
 import InterlayLink from 'components/UI/InterlayLink';
@@ -28,4 +27,3 @@ class BitcoinTransaction extends React.Component<{
 }
 
 export default BitcoinTransaction;
-// ray test touch >>

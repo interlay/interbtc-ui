@@ -3,6 +3,7 @@
 // @ts-nocheck
 import * as React from 'react';
 import { useTable } from 'react-table';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 // ray test touch <<
 import { Badge } from 'react-bootstrap';
 // ray test touch >>
@@ -26,12 +27,14 @@ import InterlayTable, {
   InterlayTh,
   InterlayTd
 } from 'components/UI/InterlayTable';
-import BitcoinTransaction from 'common/components/bitcoin-links/transaction';
+import InterlayLink from 'components/UI/InterlayLink';
 import { IssueRequestStatus } from 'common/types/issue.types';
 import { StoreType } from 'common/types/util.types';
 import { formatDateTimePrecise } from 'common/utils/utils';
 import { changeIssueIdAction } from 'common/actions/issue.actions';
 import { showAccountModalAction } from 'common/actions/general.actions';
+import { BTC_TRANSACTION_API } from 'config/bitcoin';
+import { shortTxId } from 'common/utils/utils';
 
 // ray test touch <<
 const handleCompleted = (status: IssueRequestStatus) => {
@@ -114,13 +117,30 @@ const IssueRequests = (): JSX.Element => {
           'text-right'
         ],
         Cell: function FormattedCell({ value }) {
-          // ray test touch <<
           return (
-            <BitcoinTransaction
-              txId={value}
-              shorten />
+            <>
+              {value ? (
+                <InterlayLink
+                  className={clsx(
+                    'text-interlayDodgerBlue',
+                    'space-x-1.5',
+                    'inline-flex',
+                    'items-center'
+                  )}
+                  href={`${BTC_TRANSACTION_API}${value}`}
+                  onClick={event => {
+                    event.stopPropagation();
+                  }}
+                  target='_blank'
+                  rel='noopener noreferrer'>
+                  <span>{shortTxId(value)}</span>
+                  <FaExternalLinkAlt />
+                </InterlayLink>
+              ) : (
+                'Pending...' // TODO: should translate
+              )}
+            </>
           );
-          // ray test touch >>
         }
       },
       {
@@ -129,7 +149,6 @@ const IssueRequests = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
-        // ray test touch <<
         Cell: function FormattedCell(props) {
           return (
             <>
@@ -139,7 +158,6 @@ const IssueRequests = (): JSX.Element => {
             </>
           );
         }
-        // ray test touch >>
       },
       {
         Header: t('status'),
