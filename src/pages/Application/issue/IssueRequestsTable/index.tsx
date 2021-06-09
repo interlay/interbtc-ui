@@ -16,7 +16,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import IssueModal from './modal/IssueModal';
+import IssueModal from '../modal/IssueModal';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -34,7 +34,7 @@ import { showAccountModalAction } from 'common/actions/general.actions';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
 import { shortTxId } from 'common/utils/utils';
 
-const IssueRequests = (): JSX.Element => {
+const IssueRequestsTable = (): JSX.Element => {
   const {
     address,
     extensions
@@ -287,4 +287,4 @@ const IssueRequests = (): JSX.Element => {
   );
 };
 
-export default IssueRequests;
+export default IssueRequestsTable;
