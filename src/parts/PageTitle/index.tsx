@@ -13,6 +13,7 @@ const PageTitle = ({
   ...rest
 }: Props & React.ComponentPropsWithRef<'div'>): JSX.Element => (
   <div
+    id='PageTitle'
     className={clsx(
       'text-center',
       'mt-7',
