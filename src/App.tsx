@@ -42,10 +42,24 @@ import OraclesDashboard from 'pages/dashboard/oracles/oracles.dashboard.page';
 import ParachainDashboard from 'pages/dashboard/parachain/parachain.dashboard.page';
 // TODO: block for now
 // import TransitionWrapper from 'parts/TransitionWrapper';
-
 import LazyLoadingErrorBoundary from 'utils/hocs/LazyLoadingErrorBoundary';
+import {
+  APP_NAME,
+  ACCOUNT_ID_TYPE_NAME
+} from 'config/general';
 import checkStaticPage from 'config/check-static-page';
 import { PAGES } from 'utils/constants/links';
+import './i18n';
+import {
+  displayBtcAmount,
+  displayDotAmount
+} from 'common/utils/utils';
+import * as constants from './constants';
+import startFetchingLiveData from 'common/live-data/live-data';
+import {
+  StoreType,
+  ParachainStatus
+} from 'common/types/util.types';
 import {
   isPolkaBtcLoaded,
   changeAddressAction,
@@ -55,22 +69,9 @@ import {
   isStakedRelayerLoaded,
   isVaultClientLoaded
 } from 'common/actions/general.actions';
-import './i18n';
-import { APP_NAME } from 'config/general';
-import * as constants from './constants';
-import startFetchingLiveData from 'common/live-data/live-data';
-import {
-  StoreType,
-  ParachainStatus
-} from 'common/types/util.types';
-// TODO: should clean up and move to scss
+// TODO: should clean up
 import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import {
-  displayBtcAmount,
-  displayDotAmount
-} from 'common/utils/utils';
 
 // TODO: block code-splitting for now
 // const Application = React.lazy(() =>
@@ -138,15 +139,13 @@ function App(): JSX.Element {
       setIsLoading(false);
     } catch (error) {
       toast.warn('Unable to connect to the BTC-Parachain.');
-      console.log('Unable to connect to the BTC-Parachain.');
-      console.log('error.message => ', error.message);
+      console.log('[loadPolkaBTC] error.message => ', error.message);
     }
 
     try {
       startFetchingLiveData(dispatch, store);
     } catch (error) {
-      console.log('Error fetching live data.');
-      console.log('error.message => ', error.message);
+      console.log('[loadPolkaBTC] error.message => ', error.message);
     }
   }, [
     dispatch,
@@ -159,12 +158,9 @@ function App(): JSX.Element {
       window.faucet = new FaucetClient(constants.FAUCET_URL);
       dispatch(isFaucetLoaded(true));
     } catch (error) {
-      console.log('Unable to connect to the faucet.');
-      console.log('error.message => ', error.message);
+      console.log('[loadFaucet] error.message => ', error.message);
     }
-  }, [
-    dispatch
-  ]);
+  }, [dispatch]);
 
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
@@ -181,7 +177,7 @@ function App(): JSX.Element {
       } catch (error) {
         // TODO: should add error handling
         console.log('No PolkaBTC vault found for the account in the connected Polkadot wallet.');
-        console.log('error.message => ', error.message);
+        console.log('[App React.useEffect] error.message => ', error.message);
       }
     })();
 
@@ -194,7 +190,7 @@ function App(): JSX.Element {
       } catch (error) {
         // TODO: should add error handling
         console.log('No PolkaBTC staked relayer found for the account in the connected Polkadot wallet.');
-        console.log('error.message => ', error.message);
+        console.log('[App React.useEffect] error.message => ', error.message);
       }
     })();
   }, [
@@ -247,8 +243,8 @@ function App(): JSX.Element {
           )
         );
       } catch (error) {
-        // TODO: should have error handling instead of console
-        console.log(error);
+        // TODO: should add error handling
+        console.log('[App React.useEffect] error.message => ', error.message);
       }
     })();
   }, [
@@ -262,24 +258,29 @@ function App(): JSX.Element {
     if (!polkaBtcLoaded) return;
 
     (async () => {
-      const theExtensions = await web3Enable(APP_NAME);
-      if (theExtensions.length === 0) return;
+      try {
+        const theExtensions = await web3Enable(APP_NAME);
+        if (theExtensions.length === 0) return;
 
-      dispatch(setInstalledExtensionAction(theExtensions.map(extension => extension.name)));
+        dispatch(setInstalledExtensionAction(theExtensions.map(extension => extension.name)));
 
-      const accounts = await web3Accounts();
-      if (accounts.length === 0) {
-        dispatch(changeAddressAction(''));
-        return;
+        const accounts = await web3Accounts();
+        if (accounts.length === 0) {
+          dispatch(changeAddressAction(''));
+          return;
+        }
+
+        const matchedAccount = accounts.find(account => account.address === address);
+        const newAddress = matchedAccount ? address : accounts[0].address;
+
+        const { signer } = await web3FromAddress(newAddress);
+        // TODO: could store the active address just in one place (either in `window` object or in redux)
+        window.polkaBTC.setAccount(newAddress, signer);
+        dispatch(changeAddressAction(newAddress));
+      } catch (error) {
+        // TODO: should add error handling
+        console.log('[App React.useEffect] error.message => ', error.message);
       }
-
-      const matchedAccount = accounts.find(account => account.address === address);
-      const newAddress = matchedAccount ? address : accounts[0].address;
-
-      const { signer } = await web3FromAddress(newAddress);
-      // TODO: could store the active address just in one place (either in `window` object or in redux)
-      window.polkaBTC.setAccount(newAddress, signer);
-      dispatch(changeAddressAction(newAddress));
     })();
   }, [
     address,
