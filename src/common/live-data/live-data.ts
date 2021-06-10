@@ -24,7 +24,7 @@ function startFetchingLiveData(dispatch: Dispatch, store: StoreState): void {
   fetchTotals(dispatch, store);
   window.setInterval(() => fetchTotals(dispatch, store), 60000);
 
-  // FETCH BALANCES
+  // Fetch balances
   fetchBalances(dispatch, store);
   window.setInterval(() => fetchBalances(dispatch, store), 5000);
 }
