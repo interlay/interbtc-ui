@@ -28,7 +28,7 @@ export interface DashboardStatusUpdateInfo {
   addError: string;
   removeError: string;
   // eslint-disable-next-line camelcase
-  btc_block_hash: string;
+  btcBlockHash: string;
   yeas: number;
   nays: number;
   executed: boolean;
@@ -104,5 +104,5 @@ export type RelayedBlock = {
   height: string;
   hash: string;
   // eslint-disable-next-line camelcase
-  relay_ts: string;
+  relayTs: string;
 };

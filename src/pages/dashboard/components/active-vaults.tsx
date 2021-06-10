@@ -19,8 +19,8 @@ const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
   const [totalVaultsPerDay, setTotalVaultsPerDay] = useState(new Array<{ date: number; count: number }>());
   const fetchVaultsPerDay = useMemo(
     () => async () => {
-      const res = await statsApi.getRecentDailyVaultCounts();
-      setTotalVaultsPerDay(res.data);
+      const res = await statsApi.getRecentDailyVaultCounts({});
+      setTotalVaultsPerDay(res);
     },
     [statsApi] // to silence the compiler
   );

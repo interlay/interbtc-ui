@@ -16,7 +16,7 @@ import {
   useGlobalFilter
 } from 'react-table';
 import clsx from 'clsx';
-import { RelayerData } from '@interlay/polkabtc-stats';
+import { RelayerData } from '@interlay/interbtc-stats-client';
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorHandler from 'components/ErrorHandler';

@@ -30,8 +30,8 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
   const fetchCollateralLastDays = useMemo(
     () => async () => {
       try {
-        const res = await statsApi.getRecentDailyCollateralLocked(6);
-        setCumulativeCollateralPerDay(res.data);
+        const res = await statsApi.getRecentDailyCollateralLocked({ daysBack: 6 });
+        setCumulativeCollateralPerDay(res);
       } catch (error) {
         console.log('Error fetching daily locked collateral.');
         console.log('error.message => ', error.message);

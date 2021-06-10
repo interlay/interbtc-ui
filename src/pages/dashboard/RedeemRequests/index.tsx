@@ -1,4 +1,3 @@
-
 import {
   useState,
   useEffect,
@@ -50,22 +49,22 @@ function RedeemRequests(): JSX.Element {
   useEffect(() => {
     const fetchTotalSuccessfulRedeems = async () => {
       const res = await statsApi.getTotalSuccessfulRedeems();
-      setTotalSuccessfulRedeems(res.data);
+      setTotalSuccessfulRedeems(res);
     };
 
     const fetchTotalFailedRedeems = async () => {
       const res = await statsApi.getTotalRedeems();
-      setTotalRedeemRequests(Number(res.data));
+      setTotalRedeemRequests(Number(res));
     };
 
     const fetchTotalRedeemedAmount = async () => {
       const res = await statsApi.getTotalRedeemedAmount();
-      setTotalRedeemedAmount(res.data);
+      setTotalRedeemedAmount(res);
     };
 
     const fetchRedeemsLastDays = async () => {
-      const res = await statsApi.getRecentDailyRedeems(6);
-      setCumulativeRedeemsPerDay(res.data);
+      const res = await statsApi.getRecentDailyRedeems({ daysBack: 6 });
+      setCumulativeRedeemsPerDay(res);
     };
 
     (async () => {
