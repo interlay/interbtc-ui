@@ -15,6 +15,7 @@ import {
   useDispatch,
   useStore
 } from 'react-redux';
+import Big from 'big.js';
 import {
   web3Accounts,
   web3Enable,
@@ -67,7 +68,9 @@ import {
   setInstalledExtensionAction,
   isFaucetLoaded,
   isStakedRelayerLoaded,
-  isVaultClientLoaded
+  isVaultClientLoaded,
+  updateBalancePolkaBTCAction,
+  updateBalanceDOTAction
 } from 'common/actions/general.actions';
 // TODO: should clean up
 import './_general.scss';
@@ -125,8 +128,12 @@ function connectToParachain(): Promise<PolkaBTCAPI> {
 }
 
 function App(): JSX.Element {
-  const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
-  const address = useSelector((state: StoreType) => state.general.address);
+  const {
+    polkaBtcLoaded,
+    address,
+    balancePolkaBTC,
+    balanceDOT
+  } = useSelector((state: StoreType) => state.general);
   const [isLoading, setIsLoading] = React.useState(true);
   const dispatch = useDispatch();
   const store = useStore();
@@ -315,6 +322,57 @@ function App(): JSX.Element {
     polkaBtcLoaded,
     dispatch,
     store
+  ]);
+
+  React.useEffect(() => {
+    if (!dispatch) return;
+    if (!polkaBtcLoaded) return;
+    if (!address) return;
+
+    let unsubscribeFromCollateral: () => void;
+    let unsubscribeFromTreasury: () => void;
+    (async () => {
+      try {
+        unsubscribeFromCollateral =
+          await window.polkaBTC.collateral.subscribeToBalance(address, (_, balance: Big) => {
+            const newDOTBalance = balance.toString();
+            if (newDOTBalance !== balanceDOT) {
+              dispatch(updateBalanceDOTAction(newDOTBalance));
+            }
+          });
+      } catch (error) {
+        console.log('[App React.useEffect] error.message => ', error.message);
+      }
+    })();
+
+    (async () => {
+      try {
+        unsubscribeFromTreasury =
+          await window.polkaBTC.treasury.subscribeToBalance(address, (_, balance: Big) => {
+            const newPolkaBTCBalance = balance.toString();
+            if (newPolkaBTCBalance !== balancePolkaBTC) {
+              dispatch(updateBalancePolkaBTCAction(newPolkaBTCBalance));
+            }
+          });
+      } catch (error) {
+        console.log('[App React.useEffect] error.message => ', error.message);
+      }
+    })();
+
+    return () => {
+      if (unsubscribeFromCollateral) {
+        unsubscribeFromCollateral();
+      }
+      if (unsubscribeFromTreasury) {
+        unsubscribeFromTreasury();
+      }
+    };
+  }, [
+    dispatch,
+    polkaBtcLoaded,
+    address,
+    balancePolkaBTC,
+    balanceDOT
   ]);
 
   return (

@@ -8,7 +8,8 @@ import {
 import { StoreState } from 'common/types/util.types';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
-// ray test touch <<
+// ray test touch <
+// TODO: should drop after testing
 async function fetchBalances(dispatch: Dispatch, store: StoreState): Promise<void> {
   const state = store.getState();
   const {
@@ -21,15 +22,14 @@ async function fetchBalances(dispatch: Dispatch, store: StoreState): Promise<voi
 
   try {
     const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-    const latestBalancePolkaBTC = (await window.polkaBTC.treasury.balance(accountId)).toString();
-    const latestBalanceDOT = (await window.polkaBTC.collateral.balance(accountId)).toString();
+    const newPolkaBTCBalance = (await window.polkaBTC.treasury.balance(accountId)).toString();
+    const newDOTBalance = (await window.polkaBTC.collateral.balance(accountId)).toString();
 
-    // Update store only if there is a difference between balances
-    if (latestBalanceDOT !== balanceDOT) {
-      dispatch(updateBalanceDOTAction(latestBalanceDOT));
+    if (newDOTBalance !== balanceDOT) {
+      dispatch(updateBalanceDOTAction(newDOTBalance));
     }
-    if (latestBalancePolkaBTC !== balancePolkaBTC) {
-      dispatch(updateBalancePolkaBTCAction(latestBalancePolkaBTC));
+    if (newPolkaBTCBalance !== balancePolkaBTC) {
+      dispatch(updateBalancePolkaBTCAction(newPolkaBTCBalance));
     }
   } catch (error) {
     console.log('[fetchBalances] error.message => ', error.message);
@@ -37,4 +37,4 @@ async function fetchBalances(dispatch: Dispatch, store: StoreState): Promise<voi
 }
 
 export default fetchBalances;
-// ray test touch >>
+// ray test touch >
