@@ -105,7 +105,7 @@ const Topbar = (props: TopbarProps): JSX.Element => {
 
   let accountLabel;
   if (!extensions.length) {
-    accountLabel = 'Connect Wallet';
+    accountLabel = t('connect_wallet');
   } else if (address) {
     // TODO: could memoize
     const matchedAccount = accounts.find(account => account.address === address);

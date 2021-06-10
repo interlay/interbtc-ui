@@ -26,7 +26,10 @@ import {
   getUsdAmount,
   updateBalances
 } from 'common/utils/utils';
-import { updateBalancePolkaBTCAction } from 'common/actions/general.actions';
+import {
+  updateBalancePolkaBTCAction,
+  showAccountModalAction
+} from 'common/actions/general.actions';
 import STATUSES from 'utils/constants/statuses';
 import { ReactComponent as PolkaBTCLogoIcon } from 'assets/img/polkabtc-logo.svg';
 import { ReactComponent as AcalaLogoIcon } from 'assets/img/acala-logo.svg';
@@ -108,7 +111,8 @@ const Transfer = (): JSX.Element => {
   const {
     balancePolkaBTC,
     balanceDOT,
-    parachainStatus
+    parachainStatus,
+    extensions
   } = useSelector((state: StoreType) => state.general);
 
   const {
@@ -175,6 +179,15 @@ const Transfer = (): JSX.Element => {
   if (!selectedNetworkItem) {
     throw new Error('Something went wrong!'); // TODO: hardcoded
   }
+
+  const walletConnected = !!extensions.length;
+
+  const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!walletConnected) {
+      dispatch(showAccountModalAction(true));
+      event.preventDefault();
+    }
+  };
 
   return (
     <>
@@ -245,8 +258,13 @@ const Transfer = (): JSX.Element => {
             parachainStatus !== ParachainStatus.Running ||
             !!selectedNetworkItem.disabled
           }
-          pending={submitStatus === STATUSES.PENDING}>
-          {selectedNetworkItem.disabled ? t('coming_soon') : t('transfer')}
+          pending={submitStatus === STATUSES.PENDING}
+          onClick={handleConfirmClick}>
+          {walletConnected ? (
+            selectedNetworkItem.disabled ? t('coming_soon') : t('transfer')
+          ) : (
+            t('connect_wallet')
+          )}
         </InterlayButton>
       </form>
       <InterlayModal
