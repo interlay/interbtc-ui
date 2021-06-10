@@ -16,7 +16,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import RedeemModal from './modal/redeem-modal';
+import RedeemModal from '../modal/redeem-modal';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -31,7 +31,7 @@ import { StoreType } from 'common/types/util.types';
 import { changeRedeemIdAction } from 'common/actions/redeem.actions';
 import { formatDateTimePrecise } from 'common/utils/utils';
 
-const RedeemRequests = (): JSX.Element => {
+const RedeemRequestsTable = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { address } = useSelector((state: StoreType) => state.general);
@@ -289,4 +289,4 @@ const RedeemRequests = (): JSX.Element => {
   );
 };
 
-export default RedeemRequests;
+export default RedeemRequestsTable;
