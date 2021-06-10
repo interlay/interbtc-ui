@@ -72,17 +72,24 @@ const IssueRequestsTable = (): JSX.Element => {
         Cell: function FormattedCell({ value }) {
           return (
             <>
-              {formatDateTimePrecise(new Date(Number(value)))}
+              {value ? formatDateTimePrecise(new Date(Number(value))) : t('pending')}
             </>
           );
         }
       },
       {
-        Header: t('issue_page.amount'),
-        accessor: 'requestedAmountPolkaBTC',
+        Header: `${t('issue_page.amount')} (PolkaBTC)`,
+        accessor: 'issuedAmountBtc',
         classNames: [
           'text-right'
-        ]
+        ],
+        Cell: function FormattedCell(props) {
+          return (
+            <>
+              {props.row.original.issuedAmountBtc || props.row.original.requestedAmountPolkaBTC}
+            </>
+          );
+        }
       },
       {
         Header: t('issue_page.btc_transaction'),
