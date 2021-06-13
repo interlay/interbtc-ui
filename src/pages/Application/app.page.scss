@@ -278,6 +278,15 @@
 // ray test touch >
 
 // ray test touch <
+.status-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 1rem;
+}
+// ray test touch >
+
+// ray test touch <
 .status-description {
   font-weight: 700;
   text-align: center;
@@ -495,11 +504,6 @@
   span {
     color: $d_pink;
   }
-}
-
-.confirmed-tick {
-  font-size: 10rem;
-  color: $d_green;
 }
 
 .pending-text {

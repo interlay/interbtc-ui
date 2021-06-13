@@ -311,25 +311,6 @@ input[type="number"] {
   box-shadow: 0 0 0 0.2rem rgba(107, 39, 39, 0.5);
 }
 
-.pink-button {
-  border: 1px solid $d_pink;
-  color: $d_pink;
-  background-color: white;
-  font-weight: 600;
-
-  &:hover {
-    color: white;
-    background-color: $d_pink;
-    border: 1px solid $d_pink;
-  }
-
-  &:disabled {
-    color: white !important;
-    background-color: $d_pink !important;
-    border: 1px solid $d_pink !important;
-  }
-}
-
 .grey-button {
   border: 2px solid $d_grey;
   color: $d_grey;
