@@ -14,6 +14,7 @@ import {
 } from 'react-icons/fa';
 import clsx from 'clsx';
 
+import IssueRequestWrapper from '../IssueRequestWrapper';
 import ErrorModal from 'components/ErrorModal';
 import InterlayLink from 'components/UI/InterlayLink';
 import InterlayButton from 'components/UI/InterlayButton';
@@ -76,14 +77,7 @@ const ConfirmedIssueRequest = ({
 
   return (
     <>
-      <div
-        id='ConfirmedIssueRequest'
-        className={clsx(
-          'flex',
-          'flex-col',
-          'items-center',
-          'space-y-6'
-        )}>
+      <IssueRequestWrapper id='ConfirmedIssueRequest'>
         <h2
           className={clsx(
             'text-3xl',
@@ -133,7 +127,7 @@ const ConfirmedIssueRequest = ({
           onClick={handleExecute(request)}>
           {t('issue_page.claim_polkabtc')}
         </InterlayButton>
-      </div>
+      </IssueRequestWrapper>
       {(executeStatus === STATUSES.REJECTED && executeError) && (
         <ErrorModal
           open={!!executeError}

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 
+import IssueRequestWrapper from '../IssueRequestWrapper';
 import InterlayLink from 'components/UI/InterlayLink';
 import { shortAddress } from 'common/utils/utils';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
@@ -42,14 +43,7 @@ const ReceivedIssueRequest = ({
   }, [request.creation]);
 
   return (
-    <div
-      id='ReceivedIssueRequest'
-      className={clsx(
-        'flex',
-        'flex-col',
-        'items-center',
-        'space-y-6'
-      )}>
+    <IssueRequestWrapper id='ReceivedIssueRequest'>
       <h2
         className={clsx(
           'text-3xl',
@@ -108,7 +102,7 @@ const ReceivedIssueRequest = ({
         </span>
         <FaExternalLinkAlt />
       </InterlayLink>
-    </div>
+    </IssueRequestWrapper>
   );
 };
 

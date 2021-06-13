@@ -6,18 +6,13 @@ import {
   FaExclamationCircle
 } from 'react-icons/fa';
 
+import IssueRequestWrapper from '../IssueRequestWrapper';
+
 const CancelledIssueRequest = (): JSX.Element => {
   const { t } = useTranslation();
 
   return (
-    <div
-      id='CancelledIssueRequest'
-      className={clsx(
-        'flex',
-        'flex-col',
-        'items-center',
-        'space-y-6'
-      )}>
+    <IssueRequestWrapper id='CancelledIssueRequest'>
       <h2
         className={clsx(
           'text-3xl',
@@ -61,7 +56,7 @@ const CancelledIssueRequest = (): JSX.Element => {
           {t('issue_page.contact_team')}
         </p>
       </div>
-    </div>
+    </IssueRequestWrapper>
   );
 };
 
