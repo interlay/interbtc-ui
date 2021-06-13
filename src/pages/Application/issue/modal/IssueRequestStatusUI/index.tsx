@@ -10,9 +10,9 @@ import Big from 'big.js';
 
 import CompletedIssueRequest from './CompletedIssueRequest';
 import CancelledIssueRequest from './CancelledIssueRequest';
+import ReceivedIssueRequest from './ReceivedIssueRequest';
 import ButtonMaybePending from 'common/components/pending-button';
 import InterlayLink from 'components/UI/InterlayLink';
-import BitcoinTransaction from 'common/components/bitcoin-links/transaction';
 import { shortAddress } from 'common/utils/utils';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
 import {
@@ -34,25 +34,7 @@ const IssueRequestStatusUI = (props: Props): JSX.Element => {
     polkaBtcLoaded,
     balancePolkaBTC
   } = useSelector((state: StoreType) => state.general);
-  const [stableBitcoinConfirmations, setStableBitcoinConfirmations] = React.useState(1);
-  const [stableParachainConfirmations, setStableParachainConfirmations] = React.useState(100);
-  const [requestConfirmations, setRequestConfirmations] = React.useState(0);
   const [executePending, setExecutePending] = React.useState(false);
-
-  // TODO: should be executed on mount event
-  React.useEffect(() => {
-    const fetchData = async () => {
-      const [btcConf, paraConf, paraHeight] = await Promise.all([
-        await window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
-        await window.polkaBTC.btcRelay.getStableParachainConfirmations(),
-        await window.polkaBTC.system.getCurrentBlockNumber()
-      ]);
-      setStableBitcoinConfirmations(btcConf);
-      setStableParachainConfirmations(paraConf);
-      setRequestConfirmations(paraHeight - Number(props.request.creation));
-    };
-    fetchData();
-  });
 
   const execute = async (request: IssueRequest) => {
     if (!polkaBtcLoaded) return;
@@ -83,7 +65,7 @@ const IssueRequestStatusUI = (props: Props): JSX.Element => {
   };
 
   function getStatus(status: IssueRequestStatus) {
-    // Note: the following states are handled already in issue-modal.tsx
+    // Note: the following states are handled already in IssueModal.tsx
     // IssueRequestStatus.RequestedRefund
     // IssueRequestStatus.PendingWithBtcTxNotFound
     switch (status) {
@@ -94,56 +76,9 @@ const IssueRequestStatusUI = (props: Props): JSX.Element => {
       return <CancelledIssueRequest />;
     case IssueRequestStatus.PendingWithBtcTxNotIncluded:
     case IssueRequestStatus.PendingWithTooFewConfirmations:
-      return (
-        <>
-          <div className='status-title'>
-            {t('received')}
-          </div>
-          <div className='row'>
-            <div className='col'>
-              <div className='waiting-confirmations-circle'>
-                <div>{t('issue_page.waiting_for')}</div>
-                <div>{t('confirmations')}</div>
-                <div className='number-of-confirmations'>
-                  {`${props.request.confirmations}/${stableBitcoinConfirmations}`}
-                </div>
-                <div className='number-of-confirmations'>
-                  {`${requestConfirmations}/${stableParachainConfirmations}`}
-                </div>
-              </div>
-              <div className='row btc-transaction-wrapper'>
-                <div className='col'>
-                  <div className='btc-transaction-view'>
-                    {t('issue_page.btc_transaction')}
-                  </div>
-                </div>
-              </div>
-              <div className='row'>
-                <div className='col'>
-                  <div className='btc-transaction-view'>
-                    <BitcoinTransaction
-                      txId={props.request.btcTxId}
-                      shorten />
-                  </div>
-                  <div className='row mt-3'>
-                    <div className='col text-center'>
-                      <InterlayLink
-                        href={BTC_TRANSACTION_API + props.request.btcTxId}
-                        target='_blank'
-                        rel='noopener noreferrer'>
-                        <button className='btn green-button'>
-                          {t('issue_page.view_on_block_explorer')}
-                        </button>
-                      </InterlayLink>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </>
-      );
+      return <ReceivedIssueRequest request={props.request} />;
     case IssueRequestStatus.PendingWithEnoughConfirmations:
+      // ray test touch <<
       return (
         <>
           <div className='status-title'>
@@ -200,6 +135,7 @@ const IssueRequestStatusUI = (props: Props): JSX.Element => {
           </div>
         </>
       );
+      // ray test touch >>
     }
   }
 
