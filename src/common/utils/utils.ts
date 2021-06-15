@@ -3,8 +3,7 @@ import { IssueRequest } from '../types/issue.types';
 import {
   uint8ArrayToString,
   bitcoin,
-  reverseEndianness,
-  roundTwoDecimals
+  reverseEndianness
 } from '@interlay/polkabtc';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from '../../constants';
@@ -16,21 +15,25 @@ import { AccountId } from '@polkadot/types/interfaces/runtime';
 
 // TODO: should be one module
 function safeRoundTwoDecimals(input: string | number | undefined, defaultValue = '0'): string {
-  if (input === undefined) return defaultValue;
-  else return roundTwoDecimals(input.toString());
+  return safeRound(input, defaultValue, 2);
 }
+
+function safeRoundFiveDecimals(input: string | number | undefined, defaultValue = '0'): string {
+  return safeRound(input, defaultValue, 5);
+}
+
 function safeRoundEightDecimals(input: string | number | undefined, defaultValue = '0'): string {
-  if (input === undefined) return defaultValue;
-  const number = new Big(input);
-  return number.round(8).toString();
+  return safeRound(input, defaultValue, 8);
 }
-function safeRoundFiveDecimals(
-  input: string | number | undefined,
-  defaultValue = '0'
-): string {
+
+function safeRound(input: string | number | undefined, defaultValue: string, decimals: number) {
   if (input === undefined) return defaultValue;
-  const number = new Big(input);
-  return number.round(5).toString();
+  try {
+    const number = new Big(input);
+    return number.round(decimals).toString();
+  } catch {
+    return defaultValue;
+  }
 }
 
 function shortAddress(address: string): string {
