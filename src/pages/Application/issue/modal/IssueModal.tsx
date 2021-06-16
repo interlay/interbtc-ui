@@ -6,7 +6,7 @@ import clsx from 'clsx';
 
 import BTCPaymentPendingStatus from '../BTCPaymentPendingStatus';
 import IssueRequestStatusUI from './IssueRequestStatusUI';
-import WhoopsView from './whoops-view';
+import WhoopsStatusUI from './WhoopsStatusUI';
 import PriceInfo from '../../PriceInfo';
 import IconButton from 'components/IconButton';
 import {
@@ -40,7 +40,7 @@ const IssueModal = (props: IssueModalProps): JSX.Element => {
       return <BTCPaymentPendingStatus request={request} />;
     }
     case IssueRequestStatus.RequestedRefund: {
-      return <WhoopsView request={request} />;
+      return <WhoopsStatusUI request={request} />;
     }
     default: {
       return <IssueRequestStatusUI request={request} />;

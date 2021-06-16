@@ -14,7 +14,7 @@ import {
 } from 'react-icons/fa';
 import clsx from 'clsx';
 
-import IssueRequestWrapper from '../IssueRequestWrapper';
+import IssueRequestWrapper from '../../IssueRequestWrapper';
 import ErrorModal from 'components/ErrorModal';
 import InterlayLink from 'components/UI/InterlayLink';
 import InterlayButton from 'components/UI/InterlayButton';
@@ -77,7 +77,9 @@ const ConfirmedIssueRequest = ({
 
   return (
     <>
-      <IssueRequestWrapper id='ConfirmedIssueRequest'>
+      <IssueRequestWrapper
+        id='ConfirmedIssueRequest'
+        className='px-12'>
         <h2
           className={clsx(
             'text-3xl',
@@ -114,7 +116,6 @@ const ConfirmedIssueRequest = ({
         </InterlayLink>
         <p
           className={clsx(
-            'px-10',
             'text-justify',
             'text-textSecondary'
           )}>

@@ -411,7 +411,7 @@
     "cancelled": "Cancelled",
     "claim_polkabtc": "Claim PolkaBTC",
     "refund_whoops": "Whoops! Too many BTC deposited",
-    "refund_sent_more_btc": "Looks like you sent more BTC than requested",
+    "refund_sent_more_btc": "Looks like you sent more BTC than requested.",
     "refund_requested": "Requested",
     "refund_deposited": "Deposited",
     "refund_issued": "Issued",

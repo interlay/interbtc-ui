@@ -27,6 +27,7 @@ import InterlayTable, {
 } from 'components/UI/InterlayTable';
 import InterlayLink from 'components/UI/InterlayLink';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
+import { shortTxId } from 'common/utils/utils';
 import { RedeemRequestStatus } from 'common/types/redeem.types';
 import { StoreType } from 'common/types/util.types';
 import { changeRedeemIdAction } from 'common/actions/redeem.actions';
@@ -65,7 +66,7 @@ const RedeemRequestsTable = (): JSX.Element => {
         }
       },
       {
-        Header: `${t('issue_page.amount')} (PolkaBTC)`,
+        Header: `${t('redeem_page.amount')} (PolkaBTC)`,
         accessor: 'amountPolkaBTC',
         classNames: [
           'text-right'
@@ -218,18 +219,13 @@ const RedeemRequestsTable = (): JSX.Element => {
           'container',
           'mx-auto'
         )}>
-        <div>
-          <h2
-            className={clsx(
-              'text-2xl',
-              'font-bold'
-            )}>
-            {t('issue_page.issue_requests')}
-          </h2>
-          <p>
-            {t('issue_page.click_on_issue_request')}
-          </p>
-        </div>
+        <h2
+          className={clsx(
+            'text-2xl',
+            'font-bold'
+          )}>
+          {t('redeem_requests')}
+        </h2>
         <InterlayTable {...getTableProps()}>
           <InterlayThead>
             {headerGroups.map(headerGroup => (
