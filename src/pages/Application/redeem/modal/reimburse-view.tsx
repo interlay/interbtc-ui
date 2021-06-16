@@ -53,7 +53,10 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
       const redeemId = window.polkaBTC.api.createType('H256', '0x' + props.request.id);
       await window.polkaBTC.redeem.cancel(redeemId, false);
       dispatch(retryRedeemRequestAction(props.request.id));
+      // ray test touch <
+      // TODO: should drop after testing
       await fetchBalances(dispatch, store);
+      // ray test touch >
       props.onClose();
       toast.success(t('redeem_page.successfully_cancelled_redeem'));
     } catch (error) {
@@ -70,7 +73,10 @@ export default function ReimburseView(props: ReimburseViewProps): ReactElement {
       const redeemId = window.polkaBTC.api.createType('H256', '0x' + props.request.id);
       await window.polkaBTC.redeem.cancel(redeemId, true);
       dispatch(reimburseRedeemRequestAction(props.request.id));
+      // ray test touch <
+      // TODO: should drop after testing
       await fetchBalances(dispatch, store);
+      // ray test touch >
       props.onClose();
     } catch (error) {
       console.log(error);

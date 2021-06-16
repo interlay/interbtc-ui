@@ -12,7 +12,7 @@ import {
   resetIssueWizardAction,
   changeIssueStepAction
 } from 'common/actions/issue.actions';
-import PaymentView from './modal/PaymentView';
+import BTCPaymentPendingStatus from './BTCPaymentPendingStatus';
 
 const BTCPayment = (): JSX.Element => {
   const { address } = useSelector((state: StoreType) => state.general);
@@ -31,7 +31,7 @@ const BTCPayment = (): JSX.Element => {
 
   return (
     <>
-      {request && <PaymentView request={request} />}
+      {request && <BTCPaymentPendingStatus request={request} />}
       <InterlayButton
         style={{ display: 'flex' }}
         className={clsx(

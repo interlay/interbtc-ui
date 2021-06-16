@@ -31,7 +31,10 @@ import {
   togglePremiumRedeemAction,
   addRedeemRequestAction
 } from 'common/actions/redeem.actions';
-import { updateBalancePolkaBTCAction } from 'common/actions/general.actions';
+import {
+  updateBalancePolkaBTCAction,
+  showAccountModalAction
+} from 'common/actions/general.actions';
 import {
   StoreType,
   ParachainStatus
@@ -75,7 +78,8 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
     bitcoinHeight,
     btcRelayHeight,
     prices,
-    parachainStatus
+    parachainStatus,
+    extensions
   } = useSelector((state: StoreType) => state.general);
   const premiumRedeemSelected = useSelector((state: StoreType) => state.redeem.premiumRedeem);
 
@@ -302,6 +306,15 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
   const bitcoinNetworkFeeInUSD = getUsdAmount(currentInclusionFee, prices.bitcoin.usd);
 
   if (status === STATUSES.RESOLVED) {
+    const walletConnected = !!extensions.length;
+
+    const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (!walletConnected) {
+        dispatch(showAccountModalAction(true));
+        event.preventDefault();
+      }
+    };
+
     return (
       <>
         <form
@@ -447,8 +460,9 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
             variant='contained'
             color='primary'
             disabled={parachainStatus !== ParachainStatus.Running}
-            pending={submitStatus === STATUSES.PENDING}>
-            {t('confirm')}
+            pending={submitStatus === STATUSES.PENDING}
+            onClick={handleConfirmClick}>
+            {walletConnected ? t('confirm') : t('connect_wallet')}
           </InterlayButton>
         </form>
         {(submitStatus === STATUSES.REJECTED && submitError) && (
