@@ -1,4 +1,3 @@
-
 import {
   useState,
   useEffect
@@ -14,7 +13,7 @@ import { planckToDOT } from '@interlay/polkabtc';
 import {
   IssueColumns,
   RedeemColumns
-} from '@interlay/polkabtc-stats';
+} from '@interlay/interbtc-stats-client';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -106,8 +105,8 @@ function VaultDashboard(): JSX.Element {
           window.polkaBTC.vaults.getSLA(vaultId),
           window.polkaBTC.vaults.getAPY(vaultId),
           window.polkaBTC.vaults.getIssuableAmount(vaultId),
-          stats.getFilteredTotalIssues([{ column: IssueColumns.VaultId, value: address }]),
-          stats.getFilteredTotalRedeems([{ column: RedeemColumns.VaultId, value: address }])
+          stats.getFilteredTotalIssues({ filterIssueColumns: [{ column: IssueColumns.VaultId, value: address }] }),
+          stats.getFilteredTotalRedeems({ filterRedeemColumns: [{ column: RedeemColumns.VaultId, value: address }] })
         ]);
 
         if (vault.status === 'fulfilled') {
@@ -124,11 +123,11 @@ function VaultDashboard(): JSX.Element {
         }
 
         if (totalIssueRequests.status === 'fulfilled') {
-          setTotalIssueRequests(totalIssueRequests.value.data);
+          setTotalIssueRequests(totalIssueRequests.value);
         }
 
         if (totalRedeemRequests.status === 'fulfilled') {
-          setTotalRedeemRequests(totalRedeemRequests.value.data);
+          setTotalRedeemRequests(totalRedeemRequests.value);
         }
 
         if (lockedAmountBTC.status === 'fulfilled') {

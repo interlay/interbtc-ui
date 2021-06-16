@@ -12,7 +12,7 @@ import DashboardTable, {
   StatusComponent,
   StatusCategories
 } from '../../../common/components/dashboard-table/dashboard-table';
-import { StatusUpdateColumns } from '@interlay/polkabtc-stats';
+import { StatusUpdateColumns } from '@interlay/interbtc-stats-client';
 import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -30,13 +30,8 @@ export default function ParachainDashboard(): ReactElement {
 
   const fetchStatusUpdates = useMemo(
     () => async () => {
-      const res = await statsApi.getParachainStatusUpdates(
-        tableParams.page,
-        tableParams.perPage,
-        tableParams.sortBy,
-        tableParams.sortAsc
-      );
-      setStatusUpdates(res.data);
+      const res = await statsApi.getParachainStatusUpdates(tableParams);
+      setStatusUpdates(res);
     },
     [tableParams, statsApi]
   );
@@ -44,7 +39,7 @@ export default function ParachainDashboard(): ReactElement {
   const fetchTotalStatusUpdates = useMemo(
     () => async () => {
       const res = await statsApi.getTotalParachainStatusUpdates();
-      setTotalStatusUpdates(res.data);
+      setTotalStatusUpdates(res);
     },
     [statsApi] // to silence the compiler
   );
@@ -86,7 +81,7 @@ export default function ParachainDashboard(): ReactElement {
             t('dashboard.parachain.remove_error', { error: updt.removeError }) :
             t('dashboard.parachain.no_change')}
       </p>,
-      <p key={4}>{updt.btc_block_hash}</p>,
+      <p key={4}>{updt.btcBlockHash}</p>,
       <p key={5}>{t('dashboard.parachain.votes', { yeas: updt.yeas, nays: updt.nays })}</p>,
       <StatusComponent
         key={6}

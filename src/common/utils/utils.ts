@@ -3,8 +3,7 @@ import { IssueRequest } from '../types/issue.types';
 import {
   uint8ArrayToString,
   bitcoin,
-  reverseEndianness,
-  roundTwoDecimals
+  reverseEndianness
 } from '@interlay/polkabtc';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from '../../constants';
@@ -16,21 +15,25 @@ import { AccountId } from '@polkadot/types/interfaces/runtime';
 
 // TODO: should be one module
 function safeRoundTwoDecimals(input: string | number | undefined, defaultValue = '0'): string {
-  if (input === undefined) return defaultValue;
-  else return roundTwoDecimals(input.toString());
+  return safeRound(input, defaultValue, 2);
 }
+
+function safeRoundFiveDecimals(input: string | number | undefined, defaultValue = '0'): string {
+  return safeRound(input, defaultValue, 5);
+}
+
 function safeRoundEightDecimals(input: string | number | undefined, defaultValue = '0'): string {
-  if (input === undefined) return defaultValue;
-  const number = new Big(input);
-  return number.round(8).toString();
+  return safeRound(input, defaultValue, 8);
 }
-function safeRoundFiveDecimals(
-  input: string | number | undefined,
-  defaultValue = '0'
-): string {
+
+function safeRound(input: string | number | undefined, defaultValue: string, decimals: number) {
   if (input === undefined) return defaultValue;
-  const number = new Big(input);
-  return number.round(5).toString();
+  try {
+    const number = new Big(input);
+    return number.round(decimals).toString();
+  } catch {
+    return defaultValue;
+  }
 }
 
 function shortAddress(address: string): string {
@@ -38,9 +41,9 @@ function shortAddress(address: string): string {
   return address.substr(0, 6) + '...' + address.substr(address.length - 7, address.length - 1);
 }
 
-function shortTxId(txid: string): string {
-  if (txid.length < 20) return txid;
-  return txid.substr(0, 10) + '...' + txid.substr(txid.length - 11, txid.length - 1);
+function shortTxId(txId: string): string {
+  if (txId.length < 20) return txId;
+  return txId.substr(0, 10) + '...' + txId.substr(txId.length - 11, txId.length - 1);
 }
 
 function formatDateTime(date: Date): string {
@@ -112,7 +115,7 @@ function defaultBlockData(): RelayedBlock {
   return {
     height: '0',
     hash: '',
-    relay_ts: '0'
+    relayTs: '0'
   };
 }
 

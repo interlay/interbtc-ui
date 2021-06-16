@@ -34,12 +34,7 @@ const ButtonComponent = (props: buttonProps): React.ReactElement => {
     linkId.style.filter = `${accent.filter}`;
   };
   return (
-    // TODO: should create `LinkButton`
     <InterlayRouterLink
-      // TODO: hardcoded
-      style={{
-        textDecoration: 'none'
-      }}
       className='button-assets-container'
       to={props.buttonLink}>
       <button

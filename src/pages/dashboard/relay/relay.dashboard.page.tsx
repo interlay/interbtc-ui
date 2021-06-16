@@ -9,7 +9,7 @@ import DashboardTable, { StyledLinkData } from '../../../common/components/dashb
 import { BTC_BLOCK_API } from 'config/bitcoin';
 import BtcRelay from '../components/btc-relay';
 import { reverseEndiannessHex, stripHexPrefix } from '@interlay/polkabtc';
-import { BlockColumns } from '@interlay/polkabtc-stats';
+import { BlockColumns } from '@interlay/interbtc-stats-client';
 import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -27,11 +27,11 @@ export default function RelayDashboard(): ReactElement {
     () => async () => {
       try {
         const [blocks, totalRelayedBlocks] = await Promise.all([
-          statsApi.getBlocks(tableParams.page, tableParams.perPage, tableParams.sortBy, tableParams.sortAsc),
+          statsApi.getBlocks(tableParams),
           statsApi.getTotalRelayedBlocksCount()
         ]);
-        setBlocks(blocks.data);
-        setTotalRelayedBlocks(Number(totalRelayedBlocks.data));
+        setBlocks(blocks);
+        setTotalRelayedBlocks(Number(totalRelayedBlocks));
       } catch (error) {
         console.log('Error fetching btc-relay data.');
         console.log('error.message => ', error.message);
@@ -54,7 +54,7 @@ export default function RelayDashboard(): ReactElement {
         data={block.hash}
         target={BTC_BLOCK_API + block.hash}
         newTab={true} />,
-      <p key={3}>{formatDateTimePrecise(new Date(block.relay_ts))}</p>
+      <p key={3}>{formatDateTimePrecise(new Date(block.relayTs))}</p>
     ],
     []
   );
