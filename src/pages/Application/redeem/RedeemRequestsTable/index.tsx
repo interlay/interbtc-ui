@@ -26,6 +26,7 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import InterlayLink from 'components/UI/InterlayLink';
+import { BTC_TRANSACTION_API } from 'config/bitcoin';
 import { RedeemRequestStatus } from 'common/types/redeem.types';
 import { StoreType } from 'common/types/util.types';
 import { changeRedeemIdAction } from 'common/actions/redeem.actions';
