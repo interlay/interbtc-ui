@@ -45,9 +45,9 @@ interface Props {
   challengeTime: number;
 }
 
-interface PatchedRelayerData extends Omit<RelayerData, 'lifetime_sla'> {
+interface PatchedRelayerData extends Omit<RelayerData, 'lifetimeSla'> {
   // eslint-disable-next-line camelcase
-  lifetime_sla: string;
+  lifetimeSla: string;
 }
 
 const StakedRelayerScoresTable = ({
@@ -67,11 +67,11 @@ const StakedRelayerScoresTable = ({
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const response = await statsApi.getRelayers(challengeTime);
-        const sortedStakedRelayers = response.data.sort((a, b) => b.lifetime_sla - a.lifetime_sla);
+        const response = await statsApi.getRelayers({ slaSince: challengeTime });
+        const sortedStakedRelayers = response.sort((a, b) => b.lifetimeSla - a.lifetimeSla);
         const transformedStakedRelayers = sortedStakedRelayers.map(stakedRelayer => ({
           ...stakedRelayer,
-          lifetime_sla: Number(stakedRelayer.lifetime_sla).toFixed(2)
+          lifetimeSla: Number(stakedRelayer.lifetimeSla).toFixed(2)
         }));
         setStatus(STATUSES.RESOLVED);
 
@@ -99,14 +99,14 @@ const StakedRelayerScoresTable = ({
       },
       {
         Header: t('leaderboard.block_count'),
-        accessor: 'block_count',
+        accessor: 'blockCount',
         classNames: [
           'text-right'
         ]
       },
       {
-        Header: t('leaderboard.lifetime_sla'),
-        accessor: 'lifetime_sla',
+        Header: t('leaderboard.lifetimeSla'),
+        accessor: 'lifetimeSla',
         Filter: NumberRangeColumnFilter,
         filter: 'between',
         classNames: [

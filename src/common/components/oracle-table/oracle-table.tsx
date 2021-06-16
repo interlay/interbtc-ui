@@ -5,6 +5,7 @@ import { OracleStatus } from '@interlay/interbtc-stats-client';
 
 import DashboardTable, { StatusComponent, StatusCategories } from '../dashboard-table/dashboard-table';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import { formatDateTime } from 'common/utils/utils';
 
 type OracleTableProps = {
   dotLocked: string;
@@ -37,7 +38,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
   const oracleTableRow = (oracle: OracleStatus): ReactElement[] => [
     <p key={1}>{oracle.source}</p>,
     <p key={2}>{oracle.feed}</p>,
-    <p key={3}>{oracle.lastUpdate}</p>,
+    <p key={3}>{formatDateTime(oracle.lastUpdate)}</p>,
     <p key={4}> 1 BTC = {new Big(oracle.exchangeRate).toFixed(5)} DOT</p>,
     <StatusComponent
       key={5}

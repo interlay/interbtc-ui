@@ -61,16 +61,13 @@ const RedeemRequestsTable = ({
     try {
       (async () => {
         setStatus(STATUSES.PENDING);
-        const response = await statsApi.getRedeems(
-          selectedPageIndex,
-          PAGE_SIZE,
-          undefined,
-          undefined,
-          // TODO: should double-check
-          constants.BITCOIN_NETWORK as BtcNetworkName
-        );
+        const response = await statsApi.getRedeems({
+          page: selectedPageIndex,
+          perPage: PAGE_SIZE,
+          network: constants.BITCOIN_NETWORK as BtcNetworkName
+        });
         setStatus(STATUSES.RESOLVED);
-        setData(response.data);
+        setData(response);
       })();
     } catch (error) {
       setStatus(STATUSES.REJECTED);

@@ -68,11 +68,11 @@ const VaultScoresTable = ({
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const response = await statsApi.getChallengeVaults(challengeTime);
-        const sortedVaults = response.data.sort((a, b) => b.lifetime_sla - a.lifetime_sla);
+        const response = await statsApi.getChallengeVaults({ slaSince: challengeTime });
+        const sortedVaults = response.sort((a, b) => b.lifetimeSla - a.lifetimeSla);
         const transformedVaults = sortedVaults.map(vault => ({
           ...vault,
-          lifetime_sla: Number(vault.lifetime_sla).toFixed(2)
+          lifetimeSla: Number(vault.lifetimeSla).toFixed(2)
         }));
         setStatus(STATUSES.RESOLVED);
 
@@ -108,35 +108,35 @@ const VaultScoresTable = ({
       },
       {
         Header: t('leaderboard.request_issue_count'),
-        accessor: 'request_issue_count',
+        accessor: 'requestIssueCount',
         classNames: [
           'text-right'
         ]
       },
       {
         Header: t('leaderboard.execute_issue_count'),
-        accessor: 'execute_issue_count',
+        accessor: 'executeIssueCount',
         classNames: [
           'text-right'
         ]
       },
       {
         Header: t('leaderboard.request_redeem_count'),
-        accessor: 'request_redeem_count',
+        accessor: 'requestRedeemCount',
         classNames: [
           'text-right'
         ]
       },
       {
         Header: t('leaderboard.execute_redeem_count'),
-        accessor: 'execute_redeem_count',
+        accessor: 'executeRedeemCount',
         classNames: [
           'text-right'
         ]
       },
       {
         Header: t('leaderboard.lifetime_sla'),
-        accessor: 'lifetime_sla',
+        accessor: 'lifetimeSla',
         Filter: NumberRangeColumnFilter,
         filter: 'between',
         classNames: [

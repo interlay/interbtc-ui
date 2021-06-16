@@ -1,4 +1,3 @@
-
 import {
   useState,
   useEffect,
@@ -42,7 +41,7 @@ function IssueRequests(): JSX.Element {
     () => [
       async () => {
         const res = await statsApi.getTotalSuccessfulIssues();
-        setTotalSuccessfulIssues(res);
+        if (res) setTotalSuccessfulIssues(res.toString());
       },
       async () => {
         const res = await statsApi.getTotalIssues();

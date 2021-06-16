@@ -61,15 +61,13 @@ const IssueRequestsTable = ({
     try {
       (async () => {
         setStatus(STATUSES.PENDING);
-        const response = await statsApi.getIssues(
-          selectedPageIndex,
-          PAGE_SIZE,
-          undefined,
-          undefined,
-          constants.BITCOIN_NETWORK as BtcNetworkName // Not sure why cast is necessary here, but TS complains
-        );
+        const response = await statsApi.getIssues({
+          page: selectedPageIndex,
+          perPage: PAGE_SIZE,
+          network: constants.BITCOIN_NETWORK as BtcNetworkName // Not sure why cast is necessary here, but TS complains
+        });
         setStatus(STATUSES.RESOLVED);
-        setData(response.data);
+        setData(response);
       })();
     } catch (error) {
       setStatus(STATUSES.REJECTED);
