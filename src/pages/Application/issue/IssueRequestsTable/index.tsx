@@ -100,7 +100,7 @@ const IssueRequestsTable = (): JSX.Element => {
         Cell: function FormattedCell(props) {
           return (
             <>
-              {props.row.original.value ? (
+              {props.row.original.btcTxId ? (
                 <InterlayLink
                   className={clsx(
                     'text-interlayDodgerBlue',
@@ -108,13 +108,13 @@ const IssueRequestsTable = (): JSX.Element => {
                     'inline-flex',
                     'items-center'
                   )}
-                  href={`${BTC_TRANSACTION_API}${value}`}
+                  href={`${BTC_TRANSACTION_API}${props.row.original.btcTxId}`}
                   onClick={event => {
                     event.stopPropagation();
                   }}
                   target='_blank'
                   rel='noopener noreferrer'>
-                  <span>{shortTxId(value)}</span>
+                  <span>{shortTxId(props.row.original.btcTxId)}</span>
                   <FaExternalLinkAlt />
                 </InterlayLink>
               ) : (
