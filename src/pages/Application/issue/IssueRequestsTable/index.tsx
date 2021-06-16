@@ -97,10 +97,10 @@ const IssueRequestsTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell({ value }) {
+        Cell: function FormattedCell(props) {
           return (
             <>
-              {value ? (
+              {props.row.original.value ? (
                 <InterlayLink
                   className={clsx(
                     'text-interlayDodgerBlue',
@@ -118,7 +118,14 @@ const IssueRequestsTable = (): JSX.Element => {
                   <FaExternalLinkAlt />
                 </InterlayLink>
               ) : (
-                'Pending...' // TODO: should translate
+                (
+                  props.row.original.status === IssueRequestStatus.Expired ||
+                  props.row.original.status === IssueRequestStatus.Cancelled
+                ) ? (
+                    t('redeem_page.failed')
+                  ) : (
+                    `${t('pending')}...`
+                  )
               )}
             </>
           );
