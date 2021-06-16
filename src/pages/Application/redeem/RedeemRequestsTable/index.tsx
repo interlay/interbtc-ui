@@ -80,33 +80,38 @@ const RedeemRequestsTable = (): JSX.Element => {
         Cell: function FormattedCell(props) {
           return (
             <>
-              {props.row.original.status === RedeemRequestStatus.Expired ? (
-                t('redeem_page.failed')
-              ) : (
-                <>
-                  {/* TODO: could be a component */}
-                  {props.row.original.btcTxId ? (
-                    <InterlayLink
-                      className={clsx(
-                        'text-interlayDodgerBlue',
-                        'space-x-1.5',
-                        'inline-flex',
-                        'items-center'
-                      )}
-                      href={`${BTC_TRANSACTION_API}${props.row.original.btcTxId}`}
-                      onClick={event => {
-                        event.stopPropagation();
-                      }}
-                      target='_blank'
-                      rel='noopener noreferrer'>
-                      <span>{shortTxId(props.row.original.btcTxId)}</span>
-                      <FaExternalLinkAlt />
-                    </InterlayLink>
+              {
+                (
+                  props.row.original.status === RedeemRequestStatus.Expired ||
+                  props.row.original.status === RedeemRequestStatus.Retried ||
+                  props.row.original.status === RedeemRequestStatus.Reimbursed
+                ) ? (
+                    t('redeem_page.failed')
                   ) : (
-                    'Pending...' // TODO: should translate
+                    <>
+                      {/* TODO: could be a component */}
+                      {props.row.original.btcTxId ? (
+                        <InterlayLink
+                          className={clsx(
+                            'text-interlayDodgerBlue',
+                            'space-x-1.5',
+                            'inline-flex',
+                            'items-center'
+                          )}
+                          href={`${BTC_TRANSACTION_API}${props.row.original.btcTxId}`}
+                          onClick={event => {
+                            event.stopPropagation();
+                          }}
+                          target='_blank'
+                          rel='noopener noreferrer'>
+                          <span>{shortTxId(props.row.original.btcTxId)}</span>
+                          <FaExternalLinkAlt />
+                        </InterlayLink>
+                      ) : (
+                        `${t('pending')}...`
+                      )}
+                    </>
                   )}
-                </>
-              )}
             </>
           );
         }
