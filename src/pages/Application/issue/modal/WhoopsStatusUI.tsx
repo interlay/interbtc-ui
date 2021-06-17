@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 
-import IssueRequestWrapper from './IssueRequestWrapper';
+import RequestWrapper from '../../RequestWrapper';
 import PriceInfo from '../../PriceInfo';
 import Tooltip from 'components/Tooltip';
 import {
@@ -26,7 +26,7 @@ const WhoopsStatusUI = ({
   const { prices } = useSelector((state: StoreType) => state.general);
 
   return (
-    <IssueRequestWrapper
+    <RequestWrapper
       id='WhoopsStatusUI'
       className='px-12'>
       <div className='text-center'>
@@ -144,7 +144,7 @@ const WhoopsStatusUI = ({
           {request.refundBtcAddress}
         </span>
       </Tooltip>
-    </IssueRequestWrapper>
+    </RequestWrapper>
   );
 };
 

@@ -196,7 +196,7 @@ Visualize the Tailwindcss configuration.
 yarn tailwind-config-viewer
 ```
 
-Locally Run or build Storybook.
+Locally run or build Storybook.
 
 ```bash
 yarn storybook # locally run

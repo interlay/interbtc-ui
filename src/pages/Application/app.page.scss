@@ -1,40 +1,5 @@
 @import "../../variables";
 
-// ray test touch <
-.app-page {
-  .app-btn {
-    width: 50%;
-    padding: 10px;
-    margin-bottom: 15px;
-    margin-top: 35px;
-    font-weight: 700;
-    border-radius: 10px;
-    text-transform: uppercase;
-  }
-}
-// ray test touch >
-
-// ray test touch <
-.temp-text-left {
-  font-weight: 500;
-  opacity: 0.5;
-  text-align: left;
-}
-// ray test touch >
-
-// ray test touch <
-// TODO: should be correctly descriptive
-.right-text {
-  font-weight: 700;
-}
-// ray test touch >
-
-// ray test touch <
-.total-added-value {
-  opacity: 1;
-}
-// ray test touch >
-
 .bold {
   font-weight: 600;
 }
@@ -82,79 +47,10 @@
 }
 // ray test touch >
 
-.reimburse-title {
-  font-size: 1.5rem;
-  color: $d_yellow;
-  font-weight: 600;
-  text-align: center;
-}
-
-.reimburse-send {
-  font-weight: 600;
-  color: $d_grey;
-  text-align: center;
-
-  span {
-    color: $d_pink;
-  }
-}
-
-.to-redeem {
-  text-align: center;
-  font-weight: 600;
-  margin-top: 3rem;
-  margin-bottom: 2rem;
-}
-
-.receive-compensation {
-  font-weight: 600;
-  color: $d_grey;
-  text-align: center;
-  margin-bottom: 1rem;
-
-  span {
-    color: $d_pink;
-  }
-}
-
-// ray test touch <
-.total-amount {
-  font-weight: 600;
-}
-// ray test touch >
-
-// ray test touch <
-.step-item {
-  padding: 0.7rem;
-}
-// ray test touch >
-
 // ray test touch <
 .total-divider {
   margin: 10px;
   border-top: 2px solid rgba(0, 0, 0, 0.1);
-}
-// ray test touch >
-
-// ray test touch <
-.copy-address {
-  cursor: pointer;
-}
-// ray test touch >
-
-// ray test touch <
-.payment-address {
-  text-align: center;
-  padding: 15px;
-  font-size: 1rem;
-  font-weight: 600;
-
-  span {
-    border-radius: 5px;
-    border: 2.5px solid black;
-    padding: 10px;
-    font-weight: 700;
-  }
 }
 // ray test touch >
 
@@ -267,35 +163,6 @@
 }
 // ray test touch >
 
-// ray test touch <
-.status-description {
-  font-weight: 700;
-  text-align: center;
-  opacity: 0.5;
-}
-// ray test touch >
-
-.info-redeem-title {
-  font-size: 2rem;
-  font-weight: 600;
-  color: $d_yellow;
-  margin-bottom: 1rem;
-
-  span {
-    color: black;
-  }
-}
-
-.info-redeem-price {
-  color: $d_grey;
-  font-size: 1.5rem;
-}
-
-.typically-takes {
-  font-weight: 600;
-  color: $d_grey;
-}
-
 .btc-destination-address {
   font-weight: 600;
   color: $d_grey;
@@ -325,18 +192,6 @@
   color: $d_green;
 }
 // ray test touch >
-
-.redeem-modal {
-  .redeem-modal-title {
-    text-align: center;
-    color: $d_yellow;
-    font-size: 1rem;
-    width: 100%;
-    text-transform: uppercase;
-    word-wrap: break-word;
-    font-weight: 700;
-  }
-}
 
 // ray test touch <
 .modal-btn-green {
@@ -432,20 +287,6 @@
   }
 }
 
-.wizard-redeem-title {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  font-weight: 600;
-  font-size: 1rem;
-  color: $d_yellow;
-}
-
-.inform-you {
-  font-weight: 600;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
 .modal-content {
   padding: 3rem 3rem;
 }
@@ -459,33 +300,6 @@
   margin-top: 5px;
 }
 // ray test touch >
-
-.retry {
-  text-align: center;
-  width: 100%;
-
-  .btn {
-    width: 100%;
-  }
-}
-
-.burn {
-  text-align: center;
-  width: 100%;
-
-  .btn {
-    width: 100%;
-  }
-}
-
-.burn-desc {
-  text-align: center;
-  margin-bottom: 1rem;
-
-  span {
-    color: $d_pink;
-  }
-}
 
 .pending-text {
   color: $d_yellow;

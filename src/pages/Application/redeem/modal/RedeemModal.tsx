@@ -4,21 +4,18 @@ import { Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import BTCPaymentPendingStatusUI from '../BTCPaymentPendingStatusUI';
-import IssueRequestStatusUI from './IssueRequestStatusUI';
-import WhoopsStatusUI from './WhoopsStatusUI';
-import PriceInfo from '../../PriceInfo';
+import RedeemRequestStatusUI from './RedeemRequestStatusUI';
+import ReimburseStatusUI from './ReimburseStatusUI';
 import IconButton from 'components/IconButton';
+import PriceInfo from '../../PriceInfo';
 import {
   displayBtcAmount,
   getUsdAmount,
   shortAddress
 } from 'common/utils/utils';
+import { RedeemRequest } from 'common/types/redeem.types';
 import { StoreType } from 'common/types/util.types';
-import {
-  IssueRequestStatus,
-  IssueRequest
-} from 'common/types/issue.types';
+import { RedeemRequestStatus } from 'common/types/redeem.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
@@ -27,21 +24,7 @@ interface Props {
   onClose: () => void;
 }
 
-const renderModalStatusPanel = (request: IssueRequest) => {
-  switch (request.status) {
-  case IssueRequestStatus.PendingWithBtcTxNotFound: {
-    return <BTCPaymentPendingStatusUI request={request} />;
-  }
-  case IssueRequestStatus.RequestedRefund: {
-    return <WhoopsStatusUI request={request} />;
-  }
-  default: {
-    return <IssueRequestStatusUI request={request} />;
-  }
-  }
-};
-
-const IssueModal = ({
+const RedeemModal = ({
   open,
   onClose
 }: Props): JSX.Element => {
@@ -49,10 +32,25 @@ const IssueModal = ({
     address,
     prices
   } = useSelector((state: StoreType) => state.general);
-  const selectedIdRequest = useSelector((state: StoreType) => state.issue.id);
-  const userIssueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address) || [];
-  const request = userIssueRequests.filter(request => request.id === selectedIdRequest)[0];
+  const selectedIdRequest = useSelector((state: StoreType) => state.redeem.id);
+  const userRedeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address) || [];
+  const request = userRedeemRequests.filter(request => request.id === selectedIdRequest)[0];
   const { t } = useTranslation();
+
+  const renderModalStatusPanel = (request: RedeemRequest) => {
+    switch (request.status) {
+    case RedeemRequestStatus.Expired: {
+      return (
+        <ReimburseStatusUI
+          request={request}
+          onClose={onClose} />
+      );
+    }
+    default: {
+      return <RedeemRequestStatusUI request={request} />;
+    }
+    }
+  };
 
   return (
     <Modal
@@ -61,19 +59,17 @@ const IssueModal = ({
       size='xl'>
       {request && (
         <>
-          {/* TODO: could componentize */}
           <h4
             className={clsx(
               'break-words',
               'font-medium',
               'text-base',
-              'text-interlayRose',
+              'text-interlayTreePoppy',
               'text-center',
               'uppercase'
             )}>
             {t('issue_page.request', { id: request.id })}
           </h4>
-          {/* TODO: could componentize */}
           <IconButton
             className={clsx(
               'w-12',
@@ -88,12 +84,11 @@ const IssueModal = ({
               height={18}
               className='text-textSecondary' />
           </IconButton>
-          {/* TODO: could componentize */}
           <hr
             className={clsx(
               'border-t-2',
               'my-2',
-              'border-interlayRose'
+              'border-interlayTreePoppy'
             )} />
           <Modal.Body>
             <div
@@ -105,18 +100,20 @@ const IssueModal = ({
               )}>
               <div className='space-y-6'>
                 <div className='text-center'>
-                  {/* TODO: could componentize */}
                   <h4
                     className={clsx(
                       'font-medium',
-                      'text-interlayRose',
                       'space-x-1'
                     )}>
                     <span className='text-5xl'>
-                      {request.issuedAmountBtc || request.requestedAmountPolkaBTC}
+                      {request.amountPolkaBTC}
                     </span>
-                    <span className='text-2xl'>
-                      PolkaBTC
+                    <span
+                      className={clsx(
+                        'text-2xl',
+                        'text-interlayRose'
+                      )}>
+                      InterBTC
                     </span>
                   </h4>
                   <span
@@ -124,10 +121,7 @@ const IssueModal = ({
                       'text-textSecondary',
                       'block'
                     )}>
-                    {`≈ $ ${getUsdAmount(
-                      request.issuedAmountBtc || request.requestedAmountPolkaBTC || '0',
-                      prices.bitcoin.usd
-                    )}`}
+                    {`≈ $ ${getUsdAmount(request.amountPolkaBTC || '0', prices.bitcoin.usd)}`}
                   </span>
                 </div>
                 <div>
@@ -145,7 +139,20 @@ const IssueModal = ({
                     value={displayBtcAmount(request.fee)}
                     unitName='BTC'
                     approxUSD={getUsdAmount(request.fee, prices.bitcoin.usd)} />
-                  {/* TODO: could componentize */}
+                  <PriceInfo
+                    title={
+                      <h5 className='text-textSecondary'>
+                        {t('bitcoin_network_fee')}
+                      </h5>
+                    }
+                    unitIcon={
+                      <BitcoinLogoIcon
+                        width={23}
+                        height={23} />
+                    }
+                    value={displayBtcAmount(request.btcTransferFee)}
+                    unitName='BTC'
+                    approxUSD={getUsdAmount(request.btcTransferFee, prices.bitcoin.usd)} />
                   <hr
                     className={clsx(
                       'border-t-2',
@@ -155,7 +162,7 @@ const IssueModal = ({
                   <PriceInfo
                     title={
                       <h5 className='text-textSecondary'>
-                        {t('total_deposit')}
+                        {t('you_will_receive')}
                       </h5>
                     }
                     unitIcon={
@@ -165,13 +172,9 @@ const IssueModal = ({
                     }
                     value={displayBtcAmount(request.amountBTC)}
                     unitName='BTC'
-                    approxUSD={getUsdAmount(
-                      request.issuedAmountBtc || request.requestedAmountPolkaBTC,
-                      prices.bitcoin.usd
-                    )} />
+                    approxUSD={getUsdAmount(request.amountBTC, prices.bitcoin.usd)} />
                 </div>
                 <div className='space-y-4'>
-                  {/* TODO: could componentize */}
                   <div
                     className={clsx(
                       'flex',
@@ -181,7 +184,7 @@ const IssueModal = ({
                       {t('issue_page.destination_address')}
                     </span>
                     <span className='font-medium'>
-                      {shortAddress(address)}
+                      {shortAddress(request.userBTCAddress || '')}
                     </span>
                   </div>
                   <div
@@ -205,26 +208,10 @@ const IssueModal = ({
                       {t('issue_page.vault_dot_address')}
                     </span>
                     <span className='font-medium'>
-                      {shortAddress(request.vaultDOTAddress)}
-                    </span>
-                  </div>
-                  <div
-                    className={clsx(
-                      'flex',
-                      'justify-between'
-                    )}>
-                    <span className='text-textSecondary'>
-                      {t('issue_page.vault_btc_address')}
-                    </span>
-                    <span className='font-medium'>
-                      {shortAddress(request.vaultBTCAddress)}
+                      {shortAddress(request.vaultDOTAddress || '')}
                     </span>
                   </div>
                 </div>
-                <p className='space-x-1'>
-                  <span className='text-interlayPomegranate'>{t('note')}:</span>
-                  <span className='text-textSecondary'>{t('issue_page.fully_decentralized')}</span>
-                </p>
               </div>
               <>{renderModalStatusPanel(request)}</>
             </div>
@@ -235,4 +222,4 @@ const IssueModal = ({
   );
 };
 
-export default IssueModal;
+export default RedeemModal;

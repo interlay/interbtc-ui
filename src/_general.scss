@@ -67,9 +67,6 @@ th,
 li,
 ul {
   font-family: "airbnb-cereal", Arial;
-  // ray test touch <
-  // font-weight: 400;
-  // ray test touch >
 }
 
 .header {
@@ -136,12 +133,6 @@ body {
     color: $error-color;
     margin-top: -1rem;
   }
-
-  // ray test touch <
-  .error-borders {
-    border-color: $error-color;
-  }
-  // ray test touch >
 }
 
 textarea:hover,
@@ -330,64 +321,6 @@ input[type="number"] {
   }
 }
 
-// ray test touch <
-.green-button {
-  border: 1px solid $d_green;
-  color: $d_green;
-  background-color: white;
-  font-weight: 600;
-
-  &:hover {
-    color: white;
-    background-color: $d_green;
-    border: 1px solid $d_green;
-  }
-
-  &:disabled {
-    color: white !important;
-    background-color: $d_pink !important;
-    border: 1px solid $d_pink !important;
-  }
-}
-// ray test touch >
-
-.black-button {
-  border: 1px solid $text-color;
-  color: $text-color;
-  background-color: white;
-  font-weight: 600;
-
-  &:hover {
-    color: white;
-    background-color: $text-color;
-    border: 1px solid $text-color;
-  }
-
-  &:disabled {
-    color: white !important;
-    background-color: $text-color !important;
-    border: 1px solid $text-color !important;
-  }
-}
-
-.red-button {
-  border: 1px solid $d_red;
-  color: $d_red;
-  background-color: white;
-  font-weight: 600;
-
-  &:hover {
-    color: white;
-    background-color: $d_red;
-    border: 1px solid $d_red;
-  }
-
-  &:disabled {
-    color: white !important;
-    background-color: $d_red !important;
-    border: 1px solid $d_red !important;
-  }
-}
 
 .btn-primary.disabled,
 .btn-primary:disabled {
@@ -631,12 +564,6 @@ input[type="number"] {
 .min-height-5 {
   min-height: 5rem;
 }
-
-// ray test touch <
-.bold-text {
-  font-weight: 700;
-}
-// ray test touch >
 
 .medium-text {
   font-weight: 500;

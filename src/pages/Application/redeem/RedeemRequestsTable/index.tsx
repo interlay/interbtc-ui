@@ -16,7 +16,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import RedeemModal from '../modal/redeem-modal';
+import RedeemModal from '../modal/RedeemModal';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -285,7 +285,7 @@ const RedeemRequestsTable = (): JSX.Element => {
         </InterlayTable>
       </InterlayTableContainer>
       <RedeemModal
-        show={redeemModalOpen}
+        open={redeemModalOpen}
         onClose={handleRedeemModalClose} />
     </>
   );

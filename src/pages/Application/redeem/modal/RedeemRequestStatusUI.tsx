@@ -17,7 +17,7 @@ type StatusViewProps = {
   request: RedeemRequest;
 };
 
-export default function StatusView(props: StatusViewProps): ReactElement {
+export default function RedeemRequestStatusUI(props: StatusViewProps): ReactElement {
   const { t } = useTranslation();
   const { polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
   const [stableBitcoinConfirmations, setStableBitcoinConfirmations] = useState(1);
@@ -62,9 +62,9 @@ export default function StatusView(props: StatusViewProps): ReactElement {
         <React.Fragment>
           <div className='completed-status-title'>{t('completed')}</div>
           <div className='row'>
-            <div className='col text-center bold-text '>
+            <div className='col text-center font-bold '>
               {t('issue_page.you_received')}{' '}
-              <span className='orange-amount bold-text'>{props.request.amountPolkaBTC + ' BTC'}</span>
+              <span className='orange-amount font-bold'>{props.request.amountPolkaBTC + ' BTC'}</span>
             </div>
           </div>
           <div className='row mt-4'>
@@ -146,24 +146,24 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             <div className='col text-center'>{t('redeem_page.burn_notice')}</div>
           </div>
           <div className='row mt-5'>
-            <div className='col text-center bold-text '>
-              <span className='orange-amount bold-text'>
+            <div className='col text-center font-bold '>
+              <span className='orange-amount font-bold'>
                 {props.request.amountPolkaBTC + ' PolkaBTC '}
               </span>
                                 (~ ${getUsdAmount(props.request.amountPolkaBTC, prices.bitcoin.usd)})
-              <span className='orange-amount bold-text'>{t('redeem_page.burned')}</span>
+              <span className='orange-amount font-bold'>{t('redeem_page.burned')}</span>
             </div>
           </div>
           <div className='row mt-5'>
-            <div className='col text-center bold-text '>
-              <span className='pink-amount bold-text'>
+            <div className='col text-center font-bold '>
+              <span className='pink-amount font-bold'>
                 {t('redeem_page.recover_receive_dot') + amountDOT.toString() + ' DOT '}
               </span>
                                 (~ ${getUsdAmount(amountDOT.toString(), prices.polkadot.usd)})
-              <span className='pink-amount bold-text'>{t('redeem_page.recover_receive_total')}</span>
+              <span className='pink-amount font-bold'>{t('redeem_page.recover_receive_total')}</span>
             </div>
           </div>
-          <div className='step-item row'>
+          <div className='p-2.5 row'>
             <div className='col-6'>{t('redeem_page.compensation_burn')}</div>
             <div className='col-6'>
               <PolkadotLogoIcon
@@ -176,7 +176,7 @@ export default function StatusView(props: StatusViewProps): ReactElement {
               </div>
             </div>
           </div>
-          <div className='step-item row'>
+          <div className='p-2.5 row'>
             <div className='col-6'>{t('redeem_page.compensation_payment')}</div>
             <div className='col-6'>
               <PolkadotLogoIcon
@@ -190,9 +190,9 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             </div>
           </div>
           <hr className='total-divider' />
-          <div className='step-item row'>
-            <div className='col-6 total-amount text-green'>{t('you_received')}</div>
-            <div className='col-6 total-amount'>
+          <div className='p-2.5 row'>
+            <div className='col-6 font-medium text-green'>{t('you_received')}</div>
+            <div className='col-6 font-medium'>
               <PolkadotLogoIcon
                 className='inline-block'
                 width={23}
@@ -224,15 +224,15 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             <div className='col text-center'>{t('redeem_page.compensation_notice')}</div>
           </div>
           <div className='row mt-5'>
-            <div className='col text-center bold-text '>
-              <span className='pink-amount bold-text'>
+            <div className='col text-center font-bold '>
+              <span className='pink-amount font-bold'>
                 {t('redeem_page.recover_receive_dot') + punishmentDOT.toString() + ' DOT '}
               </span>
                                 (~ ${getUsdAmount(punishmentDOT.toString(), prices.polkadot.usd)})
-              <span className='pink-amount bold-text'>{t('redeem_page.recover_receive_total')}</span>
+              <span className='pink-amount font-bold'>{t('redeem_page.recover_receive_total')}</span>
             </div>
           </div>
-          <div className='step-item row'>
+          <div className='p-2.5 row'>
             <div className='col-6'>{t('redeem_page.compensation_payment')}</div>
             <div className='col-6'>
               <PolkadotLogoIcon
@@ -246,9 +246,9 @@ export default function StatusView(props: StatusViewProps): ReactElement {
             </div>
           </div>
           <hr className='total-divider' />
-          <div className='step-item row'>
-            <div className='col-6 total-amount text-green'>{t('you_received')}</div>
-            <div className='col-6 total-amount'>
+          <div className='p-2.5 row'>
+            <div className='col-6 font-medium text-green'>{t('you_received')}</div>
+            <div className='col-6 font-medium'>
               <PolkadotLogoIcon
                 className='inline-block'
                 width={23}

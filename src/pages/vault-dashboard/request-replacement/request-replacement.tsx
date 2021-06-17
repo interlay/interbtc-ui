@@ -79,7 +79,7 @@ export default function RequestReplacementModal(props: RequestReplacementProps):
                 <input
                   name='amount'
                   type='float'
-                  className={'form-control custom-input' + (errors.amount ? ' error-borders' : '')}
+                  className={'form-control custom-input' + (errors.amount ? ' border-interlayScarlet' : '')}
                   aria-describedby='basic-addon2'
                   ref={register({
                     required: true

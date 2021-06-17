@@ -21,7 +21,7 @@ interface Props {
   request: IssueRequest;
 }
 
-const BTCPaymentPendingStatus = ({
+const BTCPaymentPendingStatusUI = ({
   request
 }: Props): JSX.Element => {
   const { t } = useTranslation();
@@ -43,7 +43,7 @@ const BTCPaymentPendingStatus = ({
 
   return (
     <div
-      id='BTCPaymentPendingStatus'
+      id='BTCPaymentPendingStatusUI'
       className='space-y-8'>
       <div
         className={clsx(
@@ -143,4 +143,4 @@ const BTCPaymentPendingStatus = ({
   );
 };
 
-export default BTCPaymentPendingStatus;
+export default BTCPaymentPendingStatusUI;
