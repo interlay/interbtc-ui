@@ -39,7 +39,7 @@ export default function ParachainDashboard(): ReactElement {
   const fetchTotalStatusUpdates = useMemo(
     () => async () => {
       const res = await statsApi.getTotalParachainStatusUpdates();
-      setTotalStatusUpdates(res);
+      setTotalStatusUpdates(res.toString());
     },
     [statsApi] // to silence the compiler
   );

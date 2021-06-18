@@ -49,7 +49,7 @@ function RedeemRequests(): JSX.Element {
   useEffect(() => {
     const fetchTotalSuccessfulRedeems = async () => {
       const res = await statsApi.getTotalSuccessfulRedeems();
-      if (res) setTotalSuccessfulRedeems(res);
+      if (res) setTotalSuccessfulRedeems(res.toString());
     };
 
     const fetchTotalFailedRedeems = async () => {
@@ -59,7 +59,7 @@ function RedeemRequests(): JSX.Element {
 
     const fetchTotalRedeemedAmount = async () => {
       const res = await statsApi.getTotalRedeemedAmount();
-      if (res) setTotalRedeemedAmount(res);
+      if (res) setTotalRedeemedAmount(res.toString());
     };
 
     const fetchRedeemsLastDays = async () => {
