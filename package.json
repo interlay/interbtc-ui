@@ -1,6 +1,6 @@
 {
-  "name": "polkabtc-ui",
-  "version": "1.10.4",
+  "name": "interbtc-ui",
+  "version": "1.11.1",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.1",
