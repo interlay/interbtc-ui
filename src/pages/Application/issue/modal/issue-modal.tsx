@@ -7,7 +7,7 @@ import clsx from 'clsx';
 
 import PaymentView from './PaymentView';
 import StatusView from './status-view';
-import WhoopsView from './whoops-view';
+import WhoopsStatusUI from './WhoopsStatusUI';
 import {
   displayBtcAmount,
   getUsdAmount,
@@ -38,7 +38,7 @@ const IssueModal = (props: IssueModalProps): JSX.Element => {
       return <PaymentView request={request} />;
     }
     case IssueRequestStatus.RequestedRefund: {
-      return <WhoopsView request={request} />;
+      return <WhoopsStatusUI request={request} />;
     }
     default: {
       return <StatusView request={request} />;

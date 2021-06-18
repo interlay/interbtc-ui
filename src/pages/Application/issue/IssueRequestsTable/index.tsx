@@ -78,7 +78,7 @@ const IssueRequestsTable = (): JSX.Element => {
         }
       },
       {
-        Header: `${t('issue_page.amount')} (PolkaBTC)`,
+        Header: `${t('issue_page.amount')} (InterBTC)`,
         accessor: 'issuedAmountBtc',
         classNames: [
           'text-right'
