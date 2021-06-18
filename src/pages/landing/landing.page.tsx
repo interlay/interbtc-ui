@@ -75,7 +75,7 @@ export default function LandingPage(): JSX.Element {
             'mb-2',
             'text-4xl'
           )}>
-          PolkaBTC
+          InterBTC
         </h1>
         <h2
           className={clsx(
@@ -159,7 +159,7 @@ export default function LandingPage(): JSX.Element {
                     'mb-2',
                     'text-xl'
                   )}>
-                  {t('landing.issued')} {totalPolkaBTC} PolkaBTC
+                  {t('landing.issued')} {totalPolkaBTC} InterBTC
                 </h5>
               </Col>
             </Row>
