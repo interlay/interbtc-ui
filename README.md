@@ -20,14 +20,13 @@ It is implemented as a collection of open-source Substrate modules using Rust: <
 
 ### Built with
 
--   [React](https://github.com/facebook/react)
--   [TypeScript](https://github.com/Microsoft/TypeScript)
--   [polkadot-js](https://polkadot.js.org/)
--   [yarn](https://github.com/yarnpkg/yarn)
--   [docker-compose](https://docs.docker.com/compose/)
+- [React](https://github.com/facebook/react)
+- [TypeScript](https://github.com/Microsoft/TypeScript)
+- [polkadot-js](https://polkadot.js.org/)
+- [yarn](https://github.com/yarnpkg/yarn)
+- [docker-compose](https://docs.docker.com/compose/)
 
-
-You can visit [rococo.polkabtc.io](https://rococo.polkabtc.io/) for the latest stable version of the website.
+You can visit [beta.polkabtc.io](https://beta.polkabtc.io/) for the latest stable version of the website.
 
 ## Quickstart
 
@@ -38,8 +37,8 @@ You can run the UI with a local instance of the BTC-Parachain and in combination
 Clone this repository and enter into the root folder.
 
 ```bash
-git@gitlab.com:interlay/polkabtc-ui.git
-cd polkabtc-ui
+git@gitlab.com:interlay/interbtc-ui.git
+cd interbtc-ui
 ```
 
 Please make use of the `.env.*` files to set build variables. The priority of these are [defined here](https://create-react-app.dev/docs/adding-custom-environment-variables/#what-other-env-files-can-be-used).
@@ -84,7 +83,7 @@ If you wish to run the BTC-Parachain, its clients and Bitcoin without using dock
 
 **BTC Parachain**
 
-You need to have an instance of the BTC Parachain running. Follow the instructions at the [BTC-Parachain repository](https://gitlab.com/interlay/btc-parachain). Once you have successfully build the BTC Parachain, start a development server from the root folder of the BTC Parachain repository.
+You need to have an instance of the BTC Parachain running. Follow the instructions at the [BTC-Parachain repository](https://gitlab.com/interlay/interbtc). Once you have successfully build the BTC Parachain, start a development server from the root folder of the BTC Parachain repository.
 
 ```bash
 ./target/release/btc-parachain --dev
@@ -98,13 +97,13 @@ If you want to reset the development chain, execute the following command.
 
 **Clients**
 
-In order to automatically submit block headers, run the [staked-relayer](https://gitlab.com/interlay/polkabtc-clients/-/tree/dev/staked-relayer) client software.
+In order to automatically submit block headers, run the [staked-relayer](https://gitlab.com/interlay/interbtc-clients/-/tree/dev/staked-relayer) client software.
 
 ```shell
 staked-relayer --keyring=eve --polka-btc-url 'ws://localhost:9944'
 ```
 
-The architecture also relies upon collateralized vaults; use the [vault](https://gitlab.com/interlay/polkabtc-clients/-/tree/dev/vault) client to register automatically.
+The architecture also relies upon collateralized vaults; use the [vault](https://gitlab.com/interlay/interbtc-clients/-/tree/dev/vault) client to register automatically.
 
 ```shell
 vault --keyring=charlie --network=testnet --auto-register-with-collateral 100000000 --polka-btc-url 'ws://localhost:9944'
@@ -165,20 +164,20 @@ REACT_APP_BITCOIN_NETWORK=testnet yarn start
 Clone this repository and enter into the root folder.
 
 ```bash
-git@gitlab.com:interlay/polkabtc-ui.git
-cd polkabtc-ui
+git@gitlab.com:interlay/interbtc-ui.git
+cd interbtc-ui
 ```
 
 Install the required dependencies.
 
 ```bash
-docker build -t polkabtc:ui .
+docker build -t interbtc:ui .
 ```
 
 Start the development server. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ```bash
-docker run -it -p 3000:3000 polkabtc:ui
+docker run -it -p 3000:3000 interbtc:ui
 ```
 
 ### Test
@@ -218,6 +217,7 @@ For the issue process, you need to send a transaction. On regtest this can be ac
 ```shell
 bitcoin-cli -regtest -rpcwallet=Alice sendtoaddress VAULT_ADDRESS AMOUNT
 ```
+
 **Mining Blocks**
 
 In regtest, blocks are not automatically produced. After you sent a transaction, you need to mine e.g. 1 block:
@@ -238,15 +238,15 @@ bitcoin-cli -regtest -rpcwallet=Alice getbalance
 
 For more advanced interactions with the UI, you may also use the `testdata-gen` toolkit to automated some common actions.
 
-For an overview of actions [check the documentation here](https://github.com/interlay/polkabtc-clients/tree/master/testdata-gen#detailed-options).
+For an overview of actions [check the documentation here](https://github.com/interlay/interbtc-clients/tree/master/testdata-gen#detailed-options).
 
 **Installation**
 
 > Note: This requires a local Rust installation.
 
 ```shell
-git clone git@gitlab.com:interlay/polkabtc-clients.git
-cd polkabtc-clients
+git clone git@gitlab.com:interlay/interbtc-clients.git
+cd interbtc-clients
 cargo build -p testdata-gen
 # environment variables for bitcoind
 source .env
