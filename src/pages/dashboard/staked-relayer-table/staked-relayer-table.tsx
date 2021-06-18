@@ -21,8 +21,8 @@ export default function StakedRelayerTable(): ReactElement {
   useEffect(() => {
     (async () => {
       try {
-        const res = await statsApi.getRelayers(0);
-        setRelayers(res.data);
+        const res = await statsApi.getRelayers({ slaSince: 0 });
+        setRelayers(res);
       } catch (error) {
         console.log('Error fetching staked relayers data.');
         console.log('error.message => ', error.message);

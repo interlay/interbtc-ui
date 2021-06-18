@@ -37,6 +37,7 @@ import {
   addIssueRequestAction,
   updateIssuePeriodAction
 } from 'common/actions/issue.actions';
+import { showAccountModalAction } from 'common/actions/general.actions';
 import {
   displayBtcAmount,
   displayDotAmount,
@@ -73,7 +74,8 @@ const EnterBTCAmount = (): JSX.Element | null => {
     btcRelayHeight,
     prices,
     parachainStatus,
-    balanceDOT
+    balanceDOT,
+    extensions
   } = useSelector((state: StoreType) => state.general);
 
   const {
@@ -232,6 +234,15 @@ const EnterBTCAmount = (): JSX.Element | null => {
     const securityDeposit = bigBTCAmount.mul(btcToDOTRate).mul(depositRate);
     const polkaBTCAmount = bigBTCAmount.sub(bridgeFee);
 
+    const walletConnected = !!extensions.length;
+
+    const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (!walletConnected) {
+        dispatch(showAccountModalAction(true));
+        event.preventDefault();
+      }
+    };
+
     return (
       <>
         <form
@@ -333,8 +344,9 @@ const EnterBTCAmount = (): JSX.Element | null => {
               parachainStatus !== ParachainStatus.Running ||
               !address
             }
-            pending={submitStatus === STATUSES.PENDING}>
-            {t('confirm')}
+            pending={submitStatus === STATUSES.PENDING}
+            onClick={handleConfirmClick}>
+            {walletConnected ? t('confirm') : t('connect_wallet')}
           </InterlayButton>
         </form>
         {(submitStatus === STATUSES.REJECTED && submitError) && (

@@ -35,8 +35,8 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
 
   const fetchIssuesLastDays = useMemo(
     () => async () => {
-      const res = await statsApi.getRecentDailyIssues(6);
-      setCumulativeIssuesPerDay(res.data);
+      const res = await statsApi.getRecentDailyIssues({ daysBack: 6 });
+      setCumulativeIssuesPerDay(res);
     },
     [statsApi] // to silence the compiler
   );

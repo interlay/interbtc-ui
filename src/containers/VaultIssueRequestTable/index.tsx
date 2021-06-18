@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useTable } from 'react-table';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
-import { BtcNetworkName } from '@interlay/polkabtc-stats';
+import { BtcNetworkName } from '@interlay/interbtc-stats-client';
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorHandler from 'components/ErrorHandler';
@@ -30,7 +30,7 @@ import {
 import { DashboardRequestInfo } from 'common/types/redeem.types';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
-import { IssueColumns } from '@interlay/polkabtc-stats';
+import { IssueColumns } from '@interlay/interbtc-stats-client';
 import * as constants from '../../constants';
 import STATUSES from 'utils/constants/statuses';
 

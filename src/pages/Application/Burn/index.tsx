@@ -24,7 +24,8 @@ import {
 } from 'common/types/util.types';
 import {
   updateBalancePolkaBTCAction,
-  updateBalanceDOTAction
+  updateBalanceDOTAction,
+  showAccountModalAction
 } from 'common/actions/general.actions';
 import STATUSES from 'utils/constants/statuses';
 import { BALANCE_MAX_INTEGER_LENGTH } from '../../../constants';
@@ -48,7 +49,8 @@ const Burn = (): JSX.Element | null => {
     polkaBtcLoaded,
     balancePolkaBTC,
     balanceDOT,
-    parachainStatus
+    parachainStatus,
+    extensions
   } = useSelector((state: StoreType) => state.general);
 
   const {
@@ -150,6 +152,15 @@ const Burn = (): JSX.Element | null => {
   const earnedDOT = burnRate.times(polkaBTCAmount || '0').toString();
 
   if (status === STATUSES.RESOLVED) {
+    const walletConnected = !!extensions.length;
+
+    const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (!walletConnected) {
+        dispatch(showAccountModalAction(true));
+        event.preventDefault();
+      }
+    };
+
     return (
       <>
         <form
@@ -226,8 +237,9 @@ const Burn = (): JSX.Element | null => {
               parachainStatus === ParachainStatus.Loading ||
               parachainStatus === ParachainStatus.Shutdown
             }
-            pending={submitStatus === STATUSES.PENDING}>
-            {t('burn')}
+            pending={submitStatus === STATUSES.PENDING}
+            onClick={handleConfirmClick}>
+            {walletConnected ? t('burn') : t('connect_wallet')}
           </InterlayButton>
         </form>
         {(submitStatus === STATUSES.REJECTED && submitError) && (

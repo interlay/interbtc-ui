@@ -6,9 +6,9 @@ import Big from 'big.js';
 import clsx from 'clsx';
 
 import IssueSteps from './issue/issue-steps';
-import IssueRequests from './issue/IssueRequests';
+import IssueRequestsTable from './issue/IssueRequestsTable';
 import RedeemSteps from './redeem/redeem-steps';
-import RedeemRequests from './redeem/RedeemRequests';
+import RedeemRequestsTable from './redeem/RedeemRequestsTable';
 import Transfer from './Transfer';
 import Burn from './Burn';
 import MainContainer from 'parts/MainContainer';
@@ -130,7 +130,7 @@ const Application = (): JSX.Element | null => {
       <div
         className={clsx(
           'container',
-          'mt-12',
+          'my-12',
           'mx-auto'
         )}>
         <div
@@ -225,8 +225,8 @@ const Application = (): JSX.Element | null => {
           )}
         </div>
       </div>
-      {selectedTabId === TAB_IDS.issue && <IssueRequests />}
-      {selectedTabId === TAB_IDS.redeem && <RedeemRequests />}
+      {selectedTabId === TAB_IDS.issue && <IssueRequestsTable />}
+      {selectedTabId === TAB_IDS.redeem && <RedeemRequestsTable />}
     </MainContainer>
   );
 };

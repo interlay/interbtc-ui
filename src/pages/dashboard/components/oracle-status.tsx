@@ -30,7 +30,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
   useEffect(() => {
     (async () => {
       try {
-        const oracleStatus = (await statsApi.getLatestSubmission()).data;
+        const oracleStatus = (await statsApi.getLatestSubmission());
         const exchangeRate = new Big(oracleStatus.exchangeRate);
         setExchangeRate(exchangeRate.toFixed(2));
         const status = oracleStatus.online ? Status.Online : Status.Offline;

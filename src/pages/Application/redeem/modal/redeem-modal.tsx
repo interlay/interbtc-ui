@@ -3,13 +3,16 @@ import { ReactElement } from 'react';
 import { useSelector } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
 import StatusView from './status-view';
 import ReimburseView from './reimburse-view';
+import IconButton from 'components/IconButton';
 import { getUsdAmount, shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { RedeemRequestStatus } from 'common/types/redeem.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
+import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
 type RedeemModalProps = {
   show: boolean;
@@ -32,20 +35,53 @@ function RedeemModal(props: RedeemModalProps): ReactElement {
       {request && (
         <>
           <div className='redeem-modal-title'>{t('issue_page.request', { id: request.id })}</div>
-          <i
-            className='fas fa-times close-icon'
-            onClick={props.onClose} />
-          <div className='redeem-modal-horizontal-line' />
+          <IconButton
+            className={clsx(
+              'w-12',
+              'h-12',
+              'absolute',
+              'top-3',
+              'right-3'
+            )}
+            onClick={props.onClose}>
+            <CloseIcon
+              width={18}
+              height={18}
+              className='text-textSecondary' />
+          </IconButton>
+          <hr
+            className={clsx(
+              'border-t-2',
+              'my-2',
+              'border-interlayTreePoppy'
+            )} />
           <Modal.Body>
             <div className='row'>
               <div className='col-xl-6 col-lg-12 justify-center'>
-                <div className='redeem-amount'>
-                  <span className='wizard-number'>{request.amountPolkaBTC}</span>&nbsp;InterBTC
-                </div>
-                <div className='row usd-price-modal'>
-                  <div className='col'>
-                    {'~ $' + getUsdAmount(request.amountPolkaBTC || '0', prices.bitcoin.usd)}
-                  </div>
+                <div className='text-center'>
+                  <h4
+                    className={clsx(
+                      'font-medium',
+                      'space-x-1'
+                    )}>
+                    <span className='text-5xl'>
+                      {request.amountPolkaBTC}
+                    </span>
+                    <span
+                      className={clsx(
+                        'text-2xl',
+                        'text-interlayRose'
+                      )}>
+                      InterBTC
+                    </span>
+                  </h4>
+                  <span
+                    className={clsx(
+                      'text-textSecondary',
+                      'block'
+                    )}>
+                    {`≈ $ ${getUsdAmount(request.amountPolkaBTC || '0', prices.bitcoin.usd)}`}
+                  </span>
                 </div>
                 <div className='step-item row'>
                   <div className='col-6 temp-text-left'>{t('bridge_fee')}</div>

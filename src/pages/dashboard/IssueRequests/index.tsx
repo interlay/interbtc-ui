@@ -42,11 +42,11 @@ function IssueRequests(): JSX.Element {
     () => [
       async () => {
         const res = await statsApi.getTotalSuccessfulIssues();
-        setTotalSuccessfulIssues(res.data);
+        setTotalSuccessfulIssues(res);
       },
       async () => {
         const res = await statsApi.getTotalIssues();
-        setTotalIssueRequests(Number(res.data));
+        setTotalIssueRequests(res);
       }
     ],
     [statsApi] // To silence the compiler
@@ -54,8 +54,8 @@ function IssueRequests(): JSX.Element {
 
   const fetchIssuesLastDays = useMemo(
     () => async () => {
-      const res = await statsApi.getRecentDailyIssues(6);
-      setCumulativeIssuesPerDay(res.data);
+      const res = await statsApi.getRecentDailyIssues({ daysBack: 6 });
+      setCumulativeIssuesPerDay(res);
     },
     [statsApi] // To silence the compiler
   );

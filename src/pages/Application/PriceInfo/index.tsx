@@ -7,7 +7,8 @@ interface Props {
   value: string; // TODO: should be number
   unitName: string;
   approxUSD: string; // TODO: should be number
-  tooltip?: JSX.Element
+  tooltip?: JSX.Element;
+  className?: string;
 }
 
 const PriceInfo = ({
@@ -16,12 +17,14 @@ const PriceInfo = ({
   value,
   unitName,
   approxUSD,
-  tooltip
+  tooltip,
+  className
 }: Props): JSX.Element => (
   <div
     className={clsx(
       'flex',
-      'justify-between'
+      'justify-between',
+      className
     )}>
     <div
       className={clsx(
