@@ -66,7 +66,7 @@ const RedeemRequestsTable = (): JSX.Element => {
         }
       },
       {
-        Header: `${t('redeem_page.amount')} (PolkaBTC)`,
+        Header: `${t('redeem_page.amount')} (InterBTC)`,
         accessor: 'amountPolkaBTC',
         classNames: [
           'text-right'

@@ -93,7 +93,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: registry.gitlab.com/interlay/polkabtc-ui
+          images: registry.gitlab.com/interlay/interbtc-ui
           tags: |
             type=sha,prefix={{branch}}-,suffix=-${{ steps.prep.outputs.ts }}
             type=ref,event=branch

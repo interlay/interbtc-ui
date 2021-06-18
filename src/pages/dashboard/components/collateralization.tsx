@@ -109,7 +109,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
               <>{t('loading')}</>
             ) : (
               <>
-                <span className='inline-block'>{`${safeRoundTwoDecimals(issuablePolkaBTC)} PolkaBTC`}</span>
+                <span className='inline-block'>{`${safeRoundTwoDecimals(issuablePolkaBTC)} InterBTC`}</span>
                 <span className='inline-block'>{t('dashboard.vault.capacity')}</span>
               </>
             )

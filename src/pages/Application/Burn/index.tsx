@@ -172,13 +172,13 @@ const Burn = (): JSX.Element | null => {
               'text-center',
               'text-interlayPomegranate'
             )}>
-            {t('burn_page.burn_polkabtc')}
+            {t('burn_page.burn_interbtc')}
           </h4>
           <PolkaBTCField
             id='polka-btc-amount'
             name={POLKA_BTC_AMOUNT}
             type='number'
-            label='PolkaBTC'
+            label='InterBTC'
             step='any'
             placeholder='0.00'
             ref={register({
