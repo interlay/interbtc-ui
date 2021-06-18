@@ -111,7 +111,7 @@ vault --keyring=charlie --network=testnet --auto-register-with-collateral 100000
 
 Issue requests (BTC -> InterBTC) can be executed solely through the UI but a vault client is required to redeem (InterBTC -> BTC).
 
-Lastly, we require a price oracle to compute the exchange rate (BTC <> DOT), the [oracle](https://gitlab.com/interlay/polkabtc-clients/-/tree/dev/oracle) client can automatically feed this from an integrated data source (e.g. [CoinGecko](https://www.coingecko.com/en/coins/polkadot/btc)).
+Lastly, we require a price oracle to compute the exchange rate (BTC <> DOT), the [oracle](https://gitlab.com/interlay/interbtc-clients/-/tree/dev/oracle) client can automatically feed this from an integrated data source (e.g. [CoinGecko](https://www.coingecko.com/en/coins/polkadot/btc)).
 
 ```shell
 oracle --keyring=bob --polka-btc-url 'ws://localhost:9944' --coingecko
