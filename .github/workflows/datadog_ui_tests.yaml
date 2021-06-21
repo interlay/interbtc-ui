@@ -24,3 +24,6 @@ jobs:
       - run: datadog-ci synthetics run-tests
         env:
           SITE_URL: ${{ steps.vercel_preview_url.outputs.vercel_preview_url }}
+          DATADOG_API_KEY: ${{ secrets.DATADOG_API_KEY }}
+          DATADOG_APP_KEY:  ${{ secrets.DATADOG_APP_KEY }}
+          DATADOG_SITE:  ${{ secrets.DATADOG_SITE }}
