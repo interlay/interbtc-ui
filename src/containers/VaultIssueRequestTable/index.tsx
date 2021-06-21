@@ -68,16 +68,14 @@ const VaultIssueRequestsTable = ({
     try {
       (async () => {
         setStatus(STATUSES.PENDING);
-        const response = await statsApi.getFilteredIssues(
-          selectedPageIndex,
-          PAGE_SIZE,
-          undefined,
-          undefined,
-          constants.BITCOIN_NETWORK as BtcNetworkName, // Not sure why cast is necessary here, but TS complains
-          issueRequestFilter
-        );
+        const response = await statsApi.getFilteredIssues({
+          page: selectedPageIndex,
+          perPage: PAGE_SIZE,
+          network: constants.BITCOIN_NETWORK as BtcNetworkName, // Not sure why cast is necessary here, but TS complains
+          filterIssueColumns: issueRequestFilter
+        });
         setStatus(STATUSES.RESOLVED);
-        setData(response.data);
+        setData(response);
       })();
     } catch (error) {
       setStatus(STATUSES.REJECTED);

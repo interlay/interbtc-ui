@@ -1552,10 +1552,10 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-stats-client@0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-stats-client/-/interbtc-stats-client-0.4.0.tgz#42310c58e61c25a402252fe0c7ca2f2034b3ef18"
-  integrity sha512-zCaMs2oRzWYxQJ1SaURsxdh2H7Fet+gVu7r7HYU+czDVNwDBjoFHM/03+2G0CAPjxdebh5G5clg0aqH6P/xIpQ==
+"@interlay/interbtc-stats-client@0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-stats-client/-/interbtc-stats-client-0.4.1.tgz#2bb9e96295832ad7103734bee94cfec0daa86343"
+  integrity sha512-oK3hFGxMFDQqdFatqt6Bgi6Z4zu5pyWyZSV+69hZO8q+NbppdYhZxreNutoh2ogb2Ad7ketLqkziosm7d1GVZg==
 
 "@interlay/polkabtc-types@0.7.3":
   version "0.7.3"
