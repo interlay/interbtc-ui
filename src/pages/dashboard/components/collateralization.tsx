@@ -90,7 +90,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
           'h-60',
           'rounded-full',
           'flex',
-          'justify-content',
+          'justify-center',
           'items-center',
           'border-2',
           'border-interlayDodgerBlue'
