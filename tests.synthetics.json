@@ -3,19 +3,19 @@
         {
             "id": "r2b-ybe-7xr",
             "config": {
-                "startUrl": "{{ SITE_URL }}"
+                "startUrl": "{{SITE_URL}}"
             }
         },
         {
             "id": "zei-yc2-by4",
             "config": {
-                "startUrl": "{{ SITE_URL }}"
+                "startUrl": "{{SITE_URL}}"
             }
         },
         {
             "id": "gi8-my6-t8w",
             "config": {
-                "startUrl": "{{ SITE_URL }}"
+                "startUrl": "{{SITE_URL}}"
             }
         }
     ]
