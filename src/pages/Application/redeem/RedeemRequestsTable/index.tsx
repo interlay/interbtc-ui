@@ -211,6 +211,8 @@ const RedeemRequestsTable = (): JSX.Element => {
     }
   );
 
+  if (data.length === 0) return null;
+
   return (
     <>
       <InterlayTableContainer
