@@ -71,7 +71,7 @@ jobs:
           name: build-ui
           path: ./build/
 
-      - run: datadog-ci sourcemaps upload ./build/static/js/ --service polkabtc.io --minified-path-prefix /static/js/ --release-version $(echo $GITHUB_SHA | head -c7)
+      - run: datadog-ci sourcemaps upload ./build/static/js/ --service polkabtc.io --minified-path-prefix /static/js/ --release-version $GITHUB_SHA
         env:
           DATADOG_API_KEY: ${{ secrets.DATADOG_API_KEY }}
           DATADOG_APP_KEY:  ${{ secrets.DATADOG_APP_KEY }}
