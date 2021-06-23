@@ -53,6 +53,26 @@ jobs:
           name: build-ui
           path: build/
 
+  upload_datadog_sourcemaps:
+    timeout-minutes: 30
+    runs-on: [self-hosted, linux]
+    steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: npm install -g @datadog/datadog-ci
+      - uses: actions/download-artifact@v2
+        id: download
+        with:
+          name: build-ui
+          path: ./build/
+
+      - run: datadog-ci sourcemaps upload ./build/static/js/ --service polkabtc.io --minified-path-prefix /static/js/ --release-version $(echo $GITHUB_SHA | head -c7)
+        env:
+          DATADOG_API_KEY: ${{ secrets.DATADOG_API_KEY }}
+          DATADOG_APP_KEY:  ${{ secrets.DATADOG_APP_KEY }}
+          DATADOG_SITE:  ${{ secrets.DATADOG_SITE }}
+
   build_docker:
     runs-on: [self-hosted, linux]
     needs: [build_ui]
