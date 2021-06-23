@@ -121,12 +121,7 @@ const Application = (): JSX.Element | null => {
   const tabsHidden = issueStep !== 'ENTER_BTC_AMOUNT' && selectedTabId === TAB_IDS.issue;
 
   return (
-    <MainContainer
-      className={clsx(
-        // ray test touch <
-        'app-page'
-        // ray test touch >
-      )}>
+    <MainContainer>
       <div
         className={clsx(
           'container',
@@ -135,7 +130,7 @@ const Application = (): JSX.Element | null => {
         )}>
         <div
           className={clsx(
-            'bg-paper',
+            'bg-white',
             'mx-auto',
             'w-full',
             'md:max-w-xl',
@@ -162,7 +157,7 @@ const Application = (): JSX.Element | null => {
                   { 'grid-cols-3': TAB_ITEMS.length === 3 },
                   { 'grid-cols-4': TAB_ITEMS.length === 4 },
                   'rounded-lg',
-                  'bg-interlayGrey-400'
+                  'bg-interlaySilverChalice-200'
                 )}>
                 {TAB_ITEMS.map((tabItem, index) => (
                   <Tab

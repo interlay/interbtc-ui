@@ -49,6 +49,12 @@ const InterlayButton = ({
         minHeight: 36
       }}
       className={clsx(
+        'focus:outline-none',
+        'focus:ring',
+        'focus:border-primary-300',
+        'focus:ring-primary-200',
+        'focus:ring-opacity-50',
+
         {
           [clsx(
             'bg-gray-300',

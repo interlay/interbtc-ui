@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 
-import IssueRequestWrapper from '../../IssueRequestWrapper';
+import RequestWrapper from '../../../../RequestWrapper';
 import InterlayLink from 'components/UI/InterlayLink';
 import { shortAddress } from 'common/utils/utils';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
@@ -19,7 +19,7 @@ const CompletedIssueRequest = ({
   const { t } = useTranslation();
 
   return (
-    <IssueRequestWrapper id='CompletedIssueRequest'>
+    <RequestWrapper id='CompletedIssueRequest'>
       <h2
         className={clsx(
           'text-3xl',
@@ -97,7 +97,7 @@ const CompletedIssueRequest = ({
         </span>
         <FaExternalLinkAlt />
       </InterlayLink>
-    </IssueRequestWrapper>
+    </RequestWrapper>
   );
 };
 

@@ -1,7 +1,7 @@
 
 import clsx from 'clsx';
 
-const IssueRequestWrapper = ({
+const RequestWrapper = ({
   className,
   ...rest
 }: React.ComponentPropsWithRef<'div'>): JSX.Element => (
@@ -16,4 +16,4 @@ const IssueRequestWrapper = ({
     {...rest} />
 );
 
-export default IssueRequestWrapper;
+export default RequestWrapper;

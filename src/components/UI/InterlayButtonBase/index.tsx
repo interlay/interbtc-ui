@@ -14,11 +14,6 @@ const InterlayButtonBase = ({
   <button
     className={clsx(
       'select-none',
-      'focus:outline-none',
-      'focus:ring',
-      'focus:border-primary-300',
-      'focus:ring-primary-200',
-      'focus:ring-opacity-50',
       'transition-colors',
       'inline-flex',
       'items-center',

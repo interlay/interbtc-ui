@@ -2,10 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const plugin = require('tailwindcss/plugin');
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const colors = require('tailwindcss/colors');
 
 // MEMO: inspired by https://javisperez.github.io/tailwindcolorshades
@@ -70,8 +67,28 @@ const INTERLAY_DODGER_BLUE = Object.freeze({
   900: '#0e4275'
 });
 const INTERLAY_POMEGRANATE = Object.freeze({
+  50: '#fff6f4',
+  100: '#feece9',
+  200: '#fdd0c7',
+  300: '#fcb4a6',
   400: '#fa7b63',
-  500: '#f84320'
+  500: '#f84320',
+  600: '#df3c1d',
+  700: '#ba3218',
+  800: '#952813',
+  900: '#7a2110'
+});
+const INTERLAY_SILVER_CHALICE = Object.freeze({
+  50: '#fbfbfb',
+  100: '#f6f6f6',
+  200: '#eaeaea',
+  300: '#dddddd',
+  400: '#c3c3c3',
+  500: '#a9a9a9',
+  600: '#989898',
+  700: '#7f7f7f',
+  800: '#656565',
+  900: '#535353'
 });
 
 module.exports = {
@@ -84,13 +101,28 @@ module.exports = {
     extend: {
       colors: {
         interlayTreePoppy: {
+          50: INTERLAY_TREE_POPPY[50],
+          100: INTERLAY_TREE_POPPY[100],
+          200: INTERLAY_TREE_POPPY[200],
+          300: INTERLAY_TREE_POPPY[300],
           400: INTERLAY_TREE_POPPY[400],
           DEFAULT: INTERLAY_TREE_POPPY[500],
-          700: INTERLAY_TREE_POPPY[700]
+          600: INTERLAY_TREE_POPPY[600],
+          700: INTERLAY_TREE_POPPY[700],
+          800: INTERLAY_TREE_POPPY[800],
+          900: INTERLAY_TREE_POPPY[900]
         },
         interlayDodgerBlue: {
+          50: INTERLAY_DODGER_BLUE[50],
+          100: INTERLAY_DODGER_BLUE[100],
+          200: INTERLAY_DODGER_BLUE[200],
+          300: INTERLAY_DODGER_BLUE[300],
+          400: INTERLAY_DODGER_BLUE[400],
           DEFAULT: INTERLAY_DODGER_BLUE[500],
-          800: INTERLAY_DODGER_BLUE[800]
+          600: INTERLAY_DODGER_BLUE[600],
+          700: INTERLAY_DODGER_BLUE[700],
+          800: INTERLAY_DODGER_BLUE[800],
+          900: INTERLAY_DODGER_BLUE[900]
         },
         interlayScarlet: {
           50: INTERLAY_SCARLET[50],
@@ -105,21 +137,53 @@ module.exports = {
           900: INTERLAY_SCARLET[900]
         },
         // TODO: could use `Gray` shades from https://tailwindcss.com/docs/customizing-colors
-        interlayGrey: {
-          400: '#e9ecef', // TODO: could be gray-200 in the default theme
-          DEFAULT: '#a9a9a9'
+        interlaySilverChalice: {
+          50: INTERLAY_SILVER_CHALICE[50],
+          100: INTERLAY_SILVER_CHALICE[100],
+          200: INTERLAY_SILVER_CHALICE[200],
+          300: INTERLAY_SILVER_CHALICE[300],
+          400: INTERLAY_SILVER_CHALICE[400],
+          DEFAULT: INTERLAY_SILVER_CHALICE[500],
+          600: INTERLAY_SILVER_CHALICE[600],
+          700: INTERLAY_SILVER_CHALICE[700],
+          800: INTERLAY_SILVER_CHALICE[800],
+          900: INTERLAY_SILVER_CHALICE[900]
         },
         interlayRose: {
+          50: INTERLAY_ROSE[50],
+          100: INTERLAY_ROSE[100],
+          200: INTERLAY_ROSE[200],
+          300: INTERLAY_ROSE[300],
           400: INTERLAY_ROSE[400],
           DEFAULT: INTERLAY_ROSE[500],
-          800: INTERLAY_ROSE[800]
+          600: INTERLAY_ROSE[600],
+          700: INTERLAY_ROSE[700],
+          800: INTERLAY_ROSE[800],
+          900: INTERLAY_ROSE[900]
         },
         interlayMalachite: {
-          DEFAULT: INTERLAY_MALACHITE[500]
+          50: INTERLAY_MALACHITE[50],
+          100: INTERLAY_MALACHITE[100],
+          200: INTERLAY_MALACHITE[200],
+          300: INTERLAY_MALACHITE[300],
+          400: INTERLAY_MALACHITE[400],
+          DEFAULT: INTERLAY_MALACHITE[500],
+          600: INTERLAY_MALACHITE[600],
+          700: INTERLAY_MALACHITE[700],
+          800: INTERLAY_MALACHITE[800],
+          900: INTERLAY_MALACHITE[900]
         },
         interlayPomegranate: {
+          50: INTERLAY_POMEGRANATE[50],
+          100: INTERLAY_POMEGRANATE[100],
+          200: INTERLAY_POMEGRANATE[200],
+          300: INTERLAY_POMEGRANATE[300],
           400: INTERLAY_POMEGRANATE[400],
-          DEFAULT: INTERLAY_POMEGRANATE[500]
+          DEFAULT: INTERLAY_POMEGRANATE[500],
+          600: INTERLAY_POMEGRANATE[600],
+          700: INTERLAY_POMEGRANATE[700],
+          800: INTERLAY_POMEGRANATE[800],
+          900: INTERLAY_POMEGRANATE[900]
         },
         primary: {
           50: INTERLAY_ROSE[50],
@@ -151,7 +215,6 @@ module.exports = {
         textSecondary: theme('colors.gray.400')
       }),
       backgroundColor: theme => ({
-        paper: theme('colors.white'),
         default: theme('colors.gray.50')
       }),
       // MEMO: inspired by https://material-ui.com/customization/default-theme/

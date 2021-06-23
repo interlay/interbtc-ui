@@ -12,7 +12,7 @@ import {
   resetIssueWizardAction,
   changeIssueStepAction
 } from 'common/actions/issue.actions';
-import BTCPaymentPendingStatus from './BTCPaymentPendingStatus';
+import BTCPaymentPendingStatusUI from './BTCPaymentPendingStatusUI';
 
 const BTCPayment = (): JSX.Element => {
   const { address } = useSelector((state: StoreType) => state.general);
@@ -31,7 +31,7 @@ const BTCPayment = (): JSX.Element => {
 
   return (
     <>
-      {request && <BTCPaymentPendingStatus request={request} />}
+      {request && <BTCPaymentPendingStatusUI request={request} />}
       <InterlayButton
         style={{ display: 'flex' }}
         className={clsx(
