@@ -1,17 +1,20 @@
 
+import * as React from 'react';
 import clsx from 'clsx';
 
 interface CustomProps {
-  disabled?: boolean;
+  disabled: boolean;
 }
 
-const InterlayButtonBase = ({
+type Ref = HTMLButtonElement;
+const InterlayButtonBase = React.forwardRef<Ref, Props>(({
   disabled = false,
   className,
   children,
   ...rest
-}: Props): JSX.Element => (
+}, ref): JSX.Element => (
   <button
+    ref={ref}
     className={clsx(
       'select-none',
       'transition-colors',
@@ -24,7 +27,8 @@ const InterlayButtonBase = ({
     {...rest}>
     {children}
   </button>
-);
+));
+InterlayButtonBase.displayName = 'InterlayButtonBase';
 
 export type Props = CustomProps & React.ComponentPropsWithRef<'button'>;
 
