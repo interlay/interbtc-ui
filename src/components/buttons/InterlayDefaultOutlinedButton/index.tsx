@@ -12,7 +12,7 @@ interface CustomProps {
 }
 
 type Ref = HTMLButtonElement;
-const InterlayPurpleHeartContainedButton = React.forwardRef<Ref, Props>(({
+const InterlayDefaultOutlinedButton = React.forwardRef<Ref, Props>(({
   className,
   children,
   startIcon,
@@ -30,23 +30,23 @@ const InterlayPurpleHeartContainedButton = React.forwardRef<Ref, Props>(({
       className={clsx(
         'focus:outline-none',
         'focus:ring',
-        'focus:border-interlayPurpleHeart-300',
-        'focus:ring-interlayPurpleHeart-200',
+        'focus:border-interlayFrenchGray-300',
+        'focus:ring-interlayFrenchGray-200',
         'focus:ring-opacity-50',
 
         'border',
-        'border-transparent',
         'font-medium',
 
         disabledOrPending ? clsx(
-          'bg-black',
-          'bg-opacity-10',
+          'border-black',
+          'border-opacity-10',
           'text-black',
           'text-opacity-25'
         ) : clsx(
-          'text-white',
-          'bg-interlayPurpleHeart',
-          'hover:bg-interlayPurpleHeart-600'
+          'text-textPrimary',
+          'border-interlayFrenchGray',
+          'hover:bg-interlayFrenchGray',
+          'hover:bg-opacity-5'
         ),
 
         'rounded',
@@ -76,8 +76,8 @@ const InterlayPurpleHeartContainedButton = React.forwardRef<Ref, Props>(({
     </InterlayButtonBase>
   );
 });
-InterlayPurpleHeartContainedButton.displayName = 'InterlayPurpleHeartContainedButton';
+InterlayDefaultOutlinedButton.displayName = 'InterlayDefaultOutlinedButton';
 
 export type Props = CustomProps & InterlayButtonBaseProps;
 
-export default InterlayPurpleHeartContainedButton;
+export default InterlayDefaultOutlinedButton;

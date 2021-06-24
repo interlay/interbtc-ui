@@ -102,6 +102,18 @@ const INTERLAY_PURPLE_HEART = Object.freeze({
   800: '#59318a',
   900: '#492871'
 });
+const INTERLAY_FRENCH_GRAY = Object.freeze({
+  50: '#fcfcfc',
+  100: '#f9f8f9',
+  200: '#f0eff0',
+  300: '#e7e5e7',
+  400: '#d6d1d6',
+  500: '#c4bdc4',
+  600: '#b0aab0',
+  700: '#938e93',
+  800: '#767176',
+  900: '#605d60'
+});
 
 module.exports = {
   purge: [
@@ -207,6 +219,18 @@ module.exports = {
           700: INTERLAY_PURPLE_HEART[700],
           800: INTERLAY_PURPLE_HEART[800],
           900: INTERLAY_PURPLE_HEART[900]
+        },
+        interlayFrenchGray: {
+          50: INTERLAY_FRENCH_GRAY[50],
+          100: INTERLAY_FRENCH_GRAY[100],
+          200: INTERLAY_FRENCH_GRAY[200],
+          300: INTERLAY_FRENCH_GRAY[300],
+          400: INTERLAY_FRENCH_GRAY[400],
+          DEFAULT: INTERLAY_FRENCH_GRAY[500],
+          600: INTERLAY_FRENCH_GRAY[600],
+          700: INTERLAY_FRENCH_GRAY[700],
+          800: INTERLAY_FRENCH_GRAY[800],
+          900: INTERLAY_FRENCH_GRAY[900]
         },
         primary: {
           50: INTERLAY_ROSE[50],

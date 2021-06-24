@@ -52,7 +52,7 @@ const InterlayMalachiteOutlinedButton = React.forwardRef<Ref, Props>(({
         'rounded',
         'px-4',
         'py-2',
-        'text-xs',
+        'text-sm',
         'space-x-1',
         'justify-center',
         className

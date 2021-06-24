@@ -16,7 +16,7 @@ import PolkaBTCField from '../PolkaBTCField';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorHandler from 'components/ErrorHandler';
-import InterlayButton from 'components/UI/InterlayButton';
+import InterlayRoseContainedButton from 'components/buttons/InterlayRoseContainedButton';
 import { getUsdAmount } from 'common/utils/utils';
 import {
   StoreType,
@@ -226,12 +226,10 @@ const Burn = (): JSX.Element | null => {
             value={earnedDOT}
             unitName='DOT'
             approxUSD={getUsdAmount(earnedDOT, prices.polkadot.usd)} />
-          <InterlayButton
+          <InterlayRoseContainedButton
             type='submit'
             style={{ display: 'flex' }}
             className='mx-auto'
-            variant='contained'
-            color='primary'
             // TODO: should not check everywhere like this
             disabled={
               parachainStatus === ParachainStatus.Loading ||
@@ -240,7 +238,7 @@ const Burn = (): JSX.Element | null => {
             pending={submitStatus === STATUSES.PENDING}
             onClick={handleConfirmClick}>
             {walletConnected ? t('burn') : t('connect_wallet')}
-          </InterlayButton>
+          </InterlayRoseContainedButton>
         </form>
         {(submitStatus === STATUSES.REJECTED && submitError) && (
           <ErrorModal

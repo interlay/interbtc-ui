@@ -16,7 +16,9 @@ import InterlayModal, {
   InterlayModalTitle,
   InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
-import InterlayButton from 'components/UI/InterlayButton';
+import InterlayRoseContainedButton from 'components/buttons/InterlayRoseContainedButton';
+import InterlayRoseOutlinedButton from 'components/buttons/InterlayRoseOutlinedButton';
+import InterlayDefaultOutlinedButton from 'components/buttons/InterlayDefaultOutlinedButton';
 import ErrorModal from 'components/ErrorModal';
 import {
   ParachainStatus,
@@ -235,25 +237,21 @@ const Transfer = (): JSX.Element => {
             error={!!errors[DOT_ADDRESS]}
             helperText={errors[DOT_ADDRESS]?.message} />
           {/* TODO: should be a drop-down */}
-          <InterlayButton
+          <InterlayRoseOutlinedButton
             style={{ display: 'flex' }}
             className={clsx(
               'ml-auto',
               'mt-2'
             )}
-            variant='outlined'
-            color='primary'
             startIcon={selectedNetworkItem.icon}
             onClick={handleNetworkModalOpen}>
             {selectedNetworkItem.title}
-          </InterlayButton>
+          </InterlayRoseOutlinedButton>
         </div>
-        <InterlayButton
+        <InterlayRoseContainedButton
           type='submit'
           style={{ display: 'flex' }}
           className='mx-auto'
-          variant='contained'
-          color='primary'
           disabled={
             parachainStatus !== ParachainStatus.Running ||
             !!selectedNetworkItem.disabled
@@ -265,7 +263,7 @@ const Transfer = (): JSX.Element => {
           ) : (
             t('connect_wallet')
           )}
-        </InterlayButton>
+        </InterlayRoseContainedButton>
       </form>
       <InterlayModal
         open={networkModalOpen}
@@ -285,10 +283,8 @@ const Transfer = (): JSX.Element => {
           </InterlayModalTitle>
           <div className='space-y-2'>
             {NETWORK_ITEMS.map(networkItem => (
-              <InterlayButton
+              <InterlayDefaultOutlinedButton
                 key={networkItem.type}
-                variant='outlined'
-                color='default'
                 className='w-full'
                 startIcon={networkItem.icon}
                 onClick={() => {
@@ -296,7 +292,7 @@ const Transfer = (): JSX.Element => {
                   handleNetworkModalClose();
                 }}>
                 {networkItem.title}
-              </InterlayButton>
+              </InterlayDefaultOutlinedButton>
             ))}
           </div>
         </InterlayModalInnerWrapper>

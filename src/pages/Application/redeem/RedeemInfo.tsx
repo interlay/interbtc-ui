@@ -10,7 +10,7 @@ import clsx from 'clsx';
 
 import RedeemModal from './modal/RedeemModal';
 import InterlayMalachiteOutlinedButton from 'components/buttons/InterlayMalachiteOutlinedButton';
-import InterlayButton from 'components/UI/InterlayButton';
+import InterlayDefaultOutlinedButton from 'components/buttons/InterlayDefaultOutlinedButton';
 import {
   displayBtcAmount,
   getUsdAmount
@@ -121,12 +121,9 @@ const RedeemInfo = (): JSX.Element => {
             </div>
           </div>
         )}
-        <InterlayButton
-          variant='outlined'
-          color='default'
-          onClick={handleModalOpen}>
+        <InterlayDefaultOutlinedButton onClick={handleModalOpen}>
           {t('redeem_page.view_progress')}
-        </InterlayButton>
+        </InterlayDefaultOutlinedButton>
         <InterlayMalachiteOutlinedButton onClick={handleClose}>
           {t('close')}
         </InterlayMalachiteOutlinedButton>

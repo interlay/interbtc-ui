@@ -22,7 +22,7 @@ import Tooltip from 'components/Tooltip';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorHandler from 'components/ErrorHandler';
-import InterlayButton from 'components/UI/InterlayButton';
+import InterlayRoseContainedButton from 'components/buttons/InterlayRoseContainedButton';
 import {
   ParachainStatus,
   StoreType
@@ -333,12 +333,10 @@ const EnterBTCAmount = (): JSX.Element | null => {
             value={displayBtcAmount(polkaBTCAmount)}
             unitName='InterBTC'
             approxUSD={getUsdAmount(polkaBTCAmount, prices.bitcoin.usd)} />
-          <InterlayButton
+          <InterlayRoseContainedButton
             type='submit'
             style={{ display: 'flex' }}
             className='mx-auto'
-            variant='contained'
-            color='primary'
             disabled={
               // TODO: `parachainStatus` and `address` should be checked at upper levels
               parachainStatus !== ParachainStatus.Running ||
@@ -347,7 +345,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
             pending={submitStatus === STATUSES.PENDING}
             onClick={handleConfirmClick}>
             {walletConnected ? t('confirm') : t('connect_wallet')}
-          </InterlayButton>
+          </InterlayRoseContainedButton>
         </form>
         {(submitStatus === STATUSES.REJECTED && submitError) && (
           <ErrorModal

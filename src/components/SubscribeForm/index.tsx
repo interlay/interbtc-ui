@@ -2,7 +2,7 @@
 import clsx from 'clsx';
 
 import InterlayInput from 'components/UI/InterlayInput';
-import InterlayButton from 'components/UI/InterlayButton';
+import InterlayRoseContainedButton from 'components/buttons/InterlayRoseContainedButton';
 
 interface Props {
   endpoint: string;
@@ -31,13 +31,11 @@ const SubscribeForm = ({ endpoint }: Props): JSX.Element => (
             id='mce-EMAIL'
             type='email'
             name='EMAIL' />
-          <InterlayButton
-            variant='contained'
-            color='primary'
+          <InterlayRoseContainedButton
             type='submit'
             id='mc-embedded-subscribe'>
             SUBSCRIBE
-          </InterlayButton>
+          </InterlayRoseContainedButton>
         </div>
         {/* Do not remove this */}
         {/* Protection from bots */}

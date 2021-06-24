@@ -10,10 +10,7 @@ const Template: Story<Props> = args => <InterlayMalachiteOutlinedButton {...args
 
 const Default = Template.bind({});
 Default.args = {
-  children: 'InterlayMalachiteOutlinedButton',
-  style: {
-    height: 36
-  }
+  children: 'InterlayMalachiteOutlinedButton'
 };
 
 export {

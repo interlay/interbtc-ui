@@ -12,7 +12,6 @@ const VARIANTS = Object.freeze({
 
 const COLORS = Object.freeze({
   default: 'default',
-  inherit: 'inherit', // TODO: not used
   primary: 'primary',
   secondary: 'secondary'
 });
