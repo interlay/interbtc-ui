@@ -3,7 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 
 interface CustomProps {
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 type Ref = HTMLButtonElement;
