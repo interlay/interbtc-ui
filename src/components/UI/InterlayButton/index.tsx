@@ -85,9 +85,7 @@ const InterlayButton = ({
         {
           [clsx(
             'text-black',
-            'text-opacity-25',
-            'dark:text-white',
-            'dark:text-opacity-30'
+            'text-opacity-25'
           )]: disabledOrPending
         },
         { 'shadow-sm': variant === VARIANTS.contained && !disabledOrPending },

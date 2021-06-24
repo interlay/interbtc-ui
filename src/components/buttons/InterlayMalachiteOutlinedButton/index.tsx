@@ -41,9 +41,7 @@ const InterlayMalachiteOutlinedButton = React.forwardRef<Ref, Props>(({
           'border-black',
           'border-opacity-10',
           'text-black',
-          'text-opacity-25',
-          'dark:text-white',
-          'dark:text-opacity-30'
+          'text-opacity-25'
         ) : clsx(
           'text-interlayMalachite',
           'border-interlayMalachite',

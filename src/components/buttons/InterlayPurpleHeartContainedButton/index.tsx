@@ -42,9 +42,7 @@ const InterlayPurpleHeartContainedButton = React.forwardRef<Ref, Props>(({
           'bg-black',
           'bg-opacity-10',
           'text-black',
-          'text-opacity-25',
-          'dark:text-white',
-          'dark:text-opacity-30'
+          'text-opacity-25'
         ) : clsx(
           'text-white',
           'bg-interlayPurpleHeart',
