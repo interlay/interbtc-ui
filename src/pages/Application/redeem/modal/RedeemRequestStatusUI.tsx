@@ -1,23 +1,35 @@
-import React, { ReactElement, useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { RedeemRequest, RedeemRequestStatus } from '../../../../common/types/redeem.types';
-import BitcoinTransaction from '../../../../common/components/bitcoin-links/transaction';
-import { getUsdAmount, shortAddress } from '../../../../common/utils/utils';
-import { BTC_TRANSACTION_API } from 'config/bitcoin';
+
+import React, {
+  ReactElement,
+  useState,
+  useEffect
+} from 'react';
 import { useSelector } from 'react-redux';
-import { StoreType } from '../../../../common/types/util.types';
+import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
-import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
+import clsx from 'clsx';
+
 import InterlayLink from 'components/UI/InterlayLink';
 import Timer from 'components/Timer';
-import clsx from 'clsx';
+import BitcoinTransaction from 'common/components/bitcoin-links/transaction';
+import { BTC_TRANSACTION_API } from 'config/bitcoin';
 import { BLOCK_TIME } from 'config/parachain';
+import {
+  getUsdAmount,
+  shortAddress
+} from 'common/utils/utils';
+import {
+  RedeemRequest,
+  RedeemRequestStatus
+} from 'common/types/redeem.types';
+import { StoreType } from 'common/types/util.types';
+import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
-type StatusViewProps = {
+interface Props {
   request: RedeemRequest;
-};
+}
 
-export default function RedeemRequestStatusUI(props: StatusViewProps): ReactElement {
+const RedeemRequestStatusUI = (props: Props): ReactElement => {
   const { t } = useTranslation();
   const { polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
   const [stableBitcoinConfirmations, setStableBitcoinConfirmations] = useState(1);
@@ -316,4 +328,6 @@ export default function RedeemRequestStatusUI(props: StatusViewProps): ReactElem
   }
 
   return <div className='status-view'>{getStatus(props.request.status)}</div>;
-}
+};
+
+export default RedeemRequestStatusUI;
