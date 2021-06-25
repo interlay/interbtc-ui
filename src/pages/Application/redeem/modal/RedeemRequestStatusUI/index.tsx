@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
 
+import RequestWrapper from 'pages/Application/RequestWrapper';
 import InterlayLink from 'components/UI/InterlayLink';
 import Timer from 'components/Timer';
 import BitcoinTransaction from 'common/components/bitcoin-links/transaction';
@@ -81,8 +82,16 @@ const RedeemRequestStatusUI = ({
     switch (status) {
     case RedeemRequestStatus.Completed:
       return (
-        <>
-          <div className='completed-status-title'>{t('completed')}</div>
+        <RequestWrapper>
+          {/* TODO: could componentize */}
+          <h2
+            className={clsx(
+              'text-3xl',
+              'font-medium',
+              'text-interlayMalachite'
+            )}>
+            {t('completed')}
+          </h2>
           <div className='row'>
             <div className='col text-center font-bold '>
               {t('issue_page.you_received')}{' '}
@@ -131,11 +140,11 @@ const RedeemRequestStatusUI = ({
               </div>
             </div>
           </div>
-        </>
+        </RequestWrapper>
       );
     case RedeemRequestStatus.PendingWithBtcTxNotFound:
       return (
-        <React.Fragment>
+        <RequestWrapper>
           <div className='status-title'>{t('pending')}</div>
           <p
             className={clsx(
@@ -157,12 +166,19 @@ const RedeemRequestStatusUI = ({
               </div>
             </div>
           </div>
-        </React.Fragment>
+        </RequestWrapper>
       );
     case RedeemRequestStatus.Reimbursed:
       return (
-        <React.Fragment>
-          <div className='completed-status-title'>{t('redeem_page.burn_success')}</div>
+        <RequestWrapper>
+          <h2
+            className={clsx(
+              'text-3xl',
+              'font-medium',
+              'text-interlayMalachite'
+            )}>
+            {t('redeem_page.burn_success')}
+          </h2>
           <div className='row'>
             <div className='col text-center'>{t('redeem_page.burn_notice')}</div>
           </div>
@@ -235,12 +251,19 @@ const RedeemRequestStatusUI = ({
               </InterlayLink>
             </div>
           </div>
-        </React.Fragment>
+        </RequestWrapper>
       );
     case RedeemRequestStatus.Retried:
       return (
-        <React.Fragment>
-          <div className='completed-status-title'>{t('redeem_page.compensation_success')}</div>
+        <RequestWrapper>
+          <h2
+            className={clsx(
+              'text-3xl',
+              'font-medium',
+              'text-interlayMalachite'
+            )}>
+            {t('redeem_page.compensation_success')}
+          </h2>
           <div className='row'>
             <div className='col text-center'>{t('redeem_page.compensation_notice')}</div>
           </div>
@@ -300,11 +323,11 @@ const RedeemRequestStatusUI = ({
           <div className='row justify-center'>
             <div className='col-9 note-text'>{t('redeem_page.retry_new_redeem')}</div>
           </div>
-        </React.Fragment>
+        </RequestWrapper>
       );
     default:
       return (
-        <React.Fragment>
+        <RequestWrapper>
           <div className='status-title'>{t('received')}</div>
           <div className='row'>
             <div className='col'>
@@ -331,7 +354,7 @@ const RedeemRequestStatusUI = ({
               </div>
             </div>
           </div>
-        </React.Fragment>
+        </RequestWrapper>
       );
     }
   }
