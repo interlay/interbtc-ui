@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 
 import RequestWrapper from 'pages/Application/RequestWrapper';
 import InterlayLink from 'components/UI/InterlayLink';
@@ -78,7 +79,7 @@ const RedeemRequestStatusUI = ({
     polkaBtcLoaded
   ]);
 
-  function getStatus(status: RedeemRequestStatus): React.ReactFragment {
+  function getStatus(status: RedeemRequestStatus): JSX.Element {
     switch (status) {
     case RedeemRequestStatus.Completed:
       return (
@@ -92,54 +93,75 @@ const RedeemRequestStatusUI = ({
             )}>
             {t('completed')}
           </h2>
-          <div className='row'>
-            <div className='col text-center font-bold '>
-              {t('issue_page.you_received')}{' '}
-              <span className='orange-amount font-bold'>{request.amountPolkaBTC + ' BTC'}</span>
-            </div>
+          <p
+            className={clsx(
+              'space-x-1',
+              'font-medium'
+            )}>
+            <span>{t('issue_page.you_received')}</span>
+            <span className='text-interlayOutrageousOrange'>
+              {`${request.amountPolkaBTC} BTC`}
+            </span>
+            .
+          </p>
+          {/* TODO: could componentize */}
+          <div
+            className={clsx(
+              'w-48',
+              'h-48',
+              'ring-4',
+              'ring-interlayMalachite',
+              'rounded-full',
+              'inline-flex',
+              'flex-col',
+              'items-center',
+              'justify-center'
+            )}>
+            <span className='mt-4'>
+              {t('issue_page.in_parachain_block')}
+            </span>
+            <span
+              className={clsx(
+                'text-2xl',
+                'text-interlayMalachite',
+                'font-medium'
+              )}>
+              {request.creation}
+            </span>
           </div>
-          <div className='row mt-4'>
-            <div className='col'>
-              <div className='completed-confirmations-circle'>
-                <div>{t('issue_page.in_parachain_block')}</div>
-                <div className='number-of-confirmations'>{request.creation}</div>
-              </div>
-            </div>
-          </div>
-          <div className='row'>
-            <div className='col text-center mt-4'>
-              <InterlayLink
-                href='https://polkadot.js.org/apps/#/explorer'
-                target='_blank'
-                rel='noopener noreferrer'>
-                <button className='modal-btn-green'>{t('issue_page.view_parachain_block')}</button>
-              </InterlayLink>
-            </div>
-          </div>
-          <div className='row btc-transaction-wrapper'>
-            <div className='col'>
-              <div className='btc-transaction-title'>{t('issue_page.btc_transaction')}</div>
-            </div>
-          </div>
-          <div className='row'>
-            <div className='col'>
-              <div className='btc-transaction-id'>{shortAddress(request.btcTxId)}</div>
-            </div>
-          </div>
-          <div className='row'>
-            <div className='col'>
-              <div className='btc-transaction'>
-                <InterlayLink
-                  href={BTC_TRANSACTION_API + request.btcTxId}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <button className='modal-btn-green'>
-                    {t('issue_page.view_on_block_explorer')}
-                  </button>
-                </InterlayLink>
-              </div>
-            </div>
-          </div>
+          <InterlayLink
+            className={clsx(
+              'text-interlayDodgerBlue',
+              'space-x-1.5',
+              'inline-flex',
+              'items-center',
+              'text-sm'
+            )}
+            href='https://polkadot.js.org/apps/#/explorer'
+            target='_blank'
+            rel='noopener noreferrer'>
+            <span>{t('issue_page.view_parachain_block')}</span>
+            <FaExternalLinkAlt />
+          </InterlayLink>
+          {/* TODO: could componentize */}
+          <p className='space-x-1'>
+            <span className='text-textSecondary'>{t('issue_page.btc_transaction')}:</span>
+            <span className='font-medium'>{shortAddress(request.btcTxId)}</span>
+          </p>
+          <InterlayLink
+            className={clsx(
+              'text-interlayDodgerBlue',
+              'space-x-1.5',
+              'inline-flex',
+              'items-center',
+              'text-sm'
+            )}
+            href={`${BTC_TRANSACTION_API}${request.btcTxId}`}
+            target='_blank'
+            rel='noopener noreferrer'>
+            <span>{t('issue_page.view_on_block_explorer')}</span>
+            <FaExternalLinkAlt />
+          </InterlayLink>
         </RequestWrapper>
       );
     case RedeemRequestStatus.PendingWithBtcTxNotFound:
@@ -182,15 +204,18 @@ const RedeemRequestStatusUI = ({
           <div className='row'>
             <div className='col text-center'>{t('redeem_page.burn_notice')}</div>
           </div>
-          <div className='row mt-5'>
-            <div className='col text-center font-bold '>
-              <span className='orange-amount font-bold'>
-                {request.amountPolkaBTC + ' PolkaBTC '}
-              </span>
-                                (~ ${getUsdAmount(request.amountPolkaBTC, prices.bitcoin.usd)})
-              <span className='orange-amount font-bold'>{t('redeem_page.burned')}</span>
-            </div>
-          </div>
+          <p className='font-medium'>
+            <span className='text-interlayOutrageousOrange'>
+              {`${request.amountPolkaBTC} PolkaBTC`}
+            </span>
+            <span>
+              &nbsp;{`(≈ $${getUsdAmount(request.amountPolkaBTC, prices.bitcoin.usd)})`}
+            </span>
+            <span className='text-interlayOutrageousOrange'>
+              &nbsp;{t('redeem_page.burned')}
+            </span>
+            .
+          </p>
           <div className='row mt-5'>
             <div className='col text-center font-bold '>
               <span className='pink-amount font-bold'>
@@ -241,16 +266,20 @@ const RedeemRequestStatusUI = ({
               </div>
             </div>
           </div>
-          <div className='row mt-5'>
-            <div className='col text-center mt-4'>
-              <InterlayLink
-                href='https://polkadot.js.org/apps/#/explorer'
-                target='_blank'
-                rel='noopener noreferrer'>
-                <button className='modal-btn-green'>{t('issue_page.view_parachain_block')}</button>
-              </InterlayLink>
-            </div>
-          </div>
+          <InterlayLink
+            className={clsx(
+              'text-interlayDodgerBlue',
+              'space-x-1.5',
+              'inline-flex',
+              'items-center',
+              'text-sm'
+            )}
+            href='https://polkadot.js.org/apps/#/explorer'
+            target='_blank'
+            rel='noopener noreferrer'>
+            <span>{t('issue_page.view_parachain_block')}</span>
+            <FaExternalLinkAlt />
+          </InterlayLink>
         </RequestWrapper>
       );
     case RedeemRequestStatus.Retried:
@@ -264,18 +293,21 @@ const RedeemRequestStatusUI = ({
             )}>
             {t('redeem_page.compensation_success')}
           </h2>
-          <div className='row'>
-            <div className='col text-center'>{t('redeem_page.compensation_notice')}</div>
-          </div>
-          <div className='row mt-5'>
-            <div className='col text-center font-bold '>
-              <span className='pink-amount font-bold'>
-                {t('redeem_page.recover_receive_dot') + punishmentDOTAmount.toString() + ' DOT '}
-              </span>
-                                (~ ${getUsdAmount(punishmentDOTAmount.toString(), prices.polkadot.usd)})
-              <span className='pink-amount font-bold'>{t('redeem_page.recover_receive_total')}</span>
-            </div>
-          </div>
+          <p>{t('redeem_page.compensation_notice')}</p>
+          <p className='font-medium'>
+            <span className='text-interlayRose'>
+              {t('redeem_page.recover_receive_dot')}
+            </span>
+            <span className='text-interlayRose'>
+              &nbsp;{`${punishmentDOTAmount.toString()} DOT`}
+            </span>
+            <span>
+              &nbsp;({`≈ $${getUsdAmount(punishmentDOTAmount.toString(), prices.polkadot.usd)}`})
+            </span>
+            <span className='text-interlayRose'>
+              &nbsp;{t('redeem_page.recover_receive_total')}.
+            </span>
+          </p>
           <div className='p-2.5 row'>
             <div className='col-6'>{t('redeem_page.compensation_payment')}</div>
             <div className='col-6'>
@@ -304,16 +336,20 @@ const RedeemRequestStatusUI = ({
               </div>
             </div>
           </div>
-          <div className='row'>
-            <div className='col text-center mt-4'>
-              <InterlayLink
-                href='https://polkadot.js.org/apps/#/explorer'
-                target='_blank'
-                rel='noopener noreferrer'>
-                <button className='modal-btn-green'>{t('issue_page.view_parachain_block')}</button>
-              </InterlayLink>
-            </div>
-          </div>
+          <InterlayLink
+            className={clsx(
+              'text-interlayDodgerBlue',
+              'space-x-1.5',
+              'inline-flex',
+              'items-center',
+              'text-sm'
+            )}
+            href='https://polkadot.js.org/apps/#/explorer'
+            target='_blank'
+            rel='noopener noreferrer'>
+            <span>{t('issue_page.view_parachain_block')}</span>
+            <FaExternalLinkAlt />
+          </InterlayLink>
           <div className='row justify-center'>
             <div className='col-9 note-title'>
               {t('note')}&nbsp;

@@ -116,11 +116,6 @@
   text-align: center;
   margin: auto;
 }
-.completed-confirmations-circle {
-  @extend .confirmation-circle;
-  border: 5px solid $d_green;
-  padding-top: 72px;
-}
 // ray test touch >
 
 .pending-circle {
@@ -177,68 +172,12 @@
 }
 // ray test touch >
 
-.orange-amount {
-  color: $d_orange;
-  text-align: center;
-  font-weight: 600;
-}
-
-// ray test touch <
-.modal-btn-green {
-  width: fit-content;
-  padding: 10px 15px;
-  font-weight: 400;
-  background-color: white;
-  border-radius: 10px;
-  border: 2px solid #4ac948;
-  color: #4ac948;
-  font-size: 15px;
-}
-.modal-btn-green::after {
-  content: url("../../assets/img/icons/external-link.svg");
-  height: 20px;
-  width: 20px;
-  padding-left: 4px;
-  color: $d_green;
-  filter: brightness(0) saturate(100%) invert(68%) sepia(64%) saturate(530%) hue-rotate(66deg) brightness(89%) contrast(85%);
-}
-// ray test touch >
-
 // ray test touch <
 .btc-transaction-view {
   font-size: 1rem;
   width: fit-content;
   text-align: center;
   margin: auto;
-}
-// ray test touch >
-
-// ray test touch <
-.btc-transaction-id {
-  @extend .btc-transaction-view;
-  margin-top: .5rem;
-  margin-bottom: 1rem;
-  font-weight: 700;
-}
-// ray test touch >
-
-// ray test touch <
-.btc-transaction-title {
-  @extend .btc-transaction-view;
-  color: $d_grey;
-}
-// ray test touch >
-
-// ray test touch <
-.btc-transaction {
-  @extend .btc-transaction-view;
-  font-weight: 600;
-}
-// ray test touch >
-
-// ray test touch <
-.btc-transaction-wrapper {
-  margin-top: 2rem;
 }
 // ray test touch >
 

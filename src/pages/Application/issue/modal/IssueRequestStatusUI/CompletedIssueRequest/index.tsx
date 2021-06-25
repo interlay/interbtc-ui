@@ -62,7 +62,7 @@ const CompletedIssueRequest = ({
           {request.creation}
         </span>
       </div>
-      {/* TODO: could be a component */}
+      {/* TODO: could componentize */}
       <InterlayLink
         className={clsx(
           'text-interlayDodgerBlue',
