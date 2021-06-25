@@ -1,9 +1,5 @@
 
-import React, {
-  ReactElement,
-  useState,
-  useEffect
-} from 'react';
+import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
@@ -29,61 +25,75 @@ interface Props {
   request: RedeemRequest;
 }
 
-const RedeemRequestStatusUI = (props: Props): ReactElement => {
+const RedeemRequestStatusUI = ({
+  request
+}: Props): JSX.Element => {
   const { t } = useTranslation();
-  const { polkaBtcLoaded, prices } = useSelector((state: StoreType) => state.general);
-  const [stableBitcoinConfirmations, setStableBitcoinConfirmations] = useState(1);
-  const [punishmentDOT, setPunishmentDOT] = useState(new Big(0));
-  const [burnAmountDOT, setBurnAmountDOT] = useState(new Big(0));
-  const [amountDOT, setAmountDOT] = useState(new Big(0));
+  const {
+    polkaBtcLoaded,
+    prices
+  } = useSelector((state: StoreType) => state.general);
+  const [stableBitcoinConfirmations, setStableBitcoinConfirmations] = React.useState(1);
+  const [punishmentDOTAmount, setPunishmentDOTAmount] = React.useState(new Big(0));
+  const [burnDOTAmount, setBurnDOTAmount] = React.useState(new Big(0));
+  const [dotAmount, setDOTAmount] = React.useState(new Big(0));
   const [initialLeftSeconds, setInitialLeftSeconds] = React.useState<number>();
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!polkaBtcLoaded) return;
 
-    const fetchData = async () => {
+    (async () => {
       try {
-        const [punishment, btcDotRate, btcConfs, redeemPeriod] = await Promise.all([
+        const [
+          punishmentFee,
+          btcDotRate,
+          theStableBitcoinConfirmations,
+          redeemPeriod
+        ] = await Promise.all([
           window.polkaBTC.vaults.getPunishmentFee(),
           window.polkaBTC.oracle.getExchangeRate(),
           window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
           window.polkaBTC.redeem.getRedeemPeriod()
         ]);
-        const amountPolkaBTC = props.request ? new Big(props.request.amountPolkaBTC) : new Big(0);
-        const burned = amountPolkaBTC.mul(btcDotRate);
-        const punished = burned.mul(new Big(punishment));
-        setBurnAmountDOT(burned);
-        setPunishmentDOT(punished);
-        setAmountDOT(burned.add(punished));
-        setStableBitcoinConfirmations(btcConfs);
 
-        const requestTimestamp = Math.floor(new Date(Number(props.request.timestamp)).getTime() / 1000);
+        const polkaBTCAmount = request ? new Big(request.amountPolkaBTC) : new Big(0);
+        const theBurnDOTAmount = polkaBTCAmount.mul(btcDotRate);
+        const thePunishmentDOTAmount = theBurnDOTAmount.mul(new Big(punishmentFee));
+        const theDOTAmount = theBurnDOTAmount.add(thePunishmentDOTAmount);
+        setBurnDOTAmount(theBurnDOTAmount);
+        setPunishmentDOTAmount(thePunishmentDOTAmount);
+        setDOTAmount(theDOTAmount);
+        setStableBitcoinConfirmations(theStableBitcoinConfirmations);
+
+        const requestTimestamp = Math.floor(new Date(Number(request.timestamp)).getTime() / 1000);
         const theInitialLeftSeconds = requestTimestamp + (redeemPeriod * BLOCK_TIME) - Math.floor(Date.now() / 1000);
         setInitialLeftSeconds(theInitialLeftSeconds);
       } catch (error) {
-        console.log(error);
+        console.log('[RedeemRequestStatusUI useEffect] error.message => ', error.message);
       }
-    };
-    fetchData();
-  }, [props.request, polkaBtcLoaded]);
+    })();
+  }, [
+    request,
+    polkaBtcLoaded
+  ]);
 
   function getStatus(status: RedeemRequestStatus): React.ReactFragment {
     switch (status) {
     case RedeemRequestStatus.Completed:
       return (
-        <React.Fragment>
+        <>
           <div className='completed-status-title'>{t('completed')}</div>
           <div className='row'>
             <div className='col text-center font-bold '>
               {t('issue_page.you_received')}{' '}
-              <span className='orange-amount font-bold'>{props.request.amountPolkaBTC + ' BTC'}</span>
+              <span className='orange-amount font-bold'>{request.amountPolkaBTC + ' BTC'}</span>
             </div>
           </div>
           <div className='row mt-4'>
             <div className='col'>
               <div className='completed-confirmations-circle'>
                 <div>{t('issue_page.in_parachain_block')}</div>
-                <div className='number-of-confirmations'>{props.request.creation}</div>
+                <div className='number-of-confirmations'>{request.creation}</div>
               </div>
             </div>
           </div>
@@ -97,7 +107,6 @@ const RedeemRequestStatusUI = (props: Props): ReactElement => {
               </InterlayLink>
             </div>
           </div>
-
           <div className='row btc-transaction-wrapper'>
             <div className='col'>
               <div className='btc-transaction-title'>{t('issue_page.btc_transaction')}</div>
@@ -105,14 +114,14 @@ const RedeemRequestStatusUI = (props: Props): ReactElement => {
           </div>
           <div className='row'>
             <div className='col'>
-              <div className='btc-transaction-id'>{shortAddress(props.request.btcTxId)}</div>
+              <div className='btc-transaction-id'>{shortAddress(request.btcTxId)}</div>
             </div>
           </div>
           <div className='row'>
             <div className='col'>
               <div className='btc-transaction'>
                 <InterlayLink
-                  href={BTC_TRANSACTION_API + props.request.btcTxId}
+                  href={BTC_TRANSACTION_API + request.btcTxId}
                   target='_blank'
                   rel='noopener noreferrer'>
                   <button className='modal-btn-green'>
@@ -122,7 +131,7 @@ const RedeemRequestStatusUI = (props: Props): ReactElement => {
               </div>
             </div>
           </div>
-        </React.Fragment>
+        </>
       );
     case RedeemRequestStatus.PendingWithBtcTxNotFound:
       return (
@@ -160,18 +169,18 @@ const RedeemRequestStatusUI = (props: Props): ReactElement => {
           <div className='row mt-5'>
             <div className='col text-center font-bold '>
               <span className='orange-amount font-bold'>
-                {props.request.amountPolkaBTC + ' PolkaBTC '}
+                {request.amountPolkaBTC + ' PolkaBTC '}
               </span>
-                                (~ ${getUsdAmount(props.request.amountPolkaBTC, prices.bitcoin.usd)})
+                                (~ ${getUsdAmount(request.amountPolkaBTC, prices.bitcoin.usd)})
               <span className='orange-amount font-bold'>{t('redeem_page.burned')}</span>
             </div>
           </div>
           <div className='row mt-5'>
             <div className='col text-center font-bold '>
               <span className='pink-amount font-bold'>
-                {t('redeem_page.recover_receive_dot') + amountDOT.toString() + ' DOT '}
+                {t('redeem_page.recover_receive_dot') + dotAmount.toString() + ' DOT '}
               </span>
-                                (~ ${getUsdAmount(amountDOT.toString(), prices.polkadot.usd)})
+                                (~ ${getUsdAmount(dotAmount.toString(), prices.polkadot.usd)})
               <span className='pink-amount font-bold'>{t('redeem_page.recover_receive_total')}</span>
             </div>
           </div>
@@ -182,9 +191,9 @@ const RedeemRequestStatusUI = (props: Props): ReactElement => {
                 className='inline-block'
                 width={23}
                 height={23} /> &nbsp;
-              {burnAmountDOT.toString()} DOT
+              {burnDOTAmount.toString()} DOT
               <div className='send-price'>
-                {'~ $' + getUsdAmount(burnAmountDOT.toString(), prices.polkadot.usd)}
+                {'~ $' + getUsdAmount(burnDOTAmount.toString(), prices.polkadot.usd)}
               </div>
             </div>
           </div>
@@ -195,9 +204,9 @@ const RedeemRequestStatusUI = (props: Props): ReactElement => {
                 className='inline-block'
                 width={23}
                 height={23} /> &nbsp;
-              {punishmentDOT.toString()} DOT
+              {punishmentDOTAmount.toString()} DOT
               <div className='send-price'>
-                {'~ $' + getUsdAmount(punishmentDOT.toString(), prices.polkadot.usd)}
+                {'~ $' + getUsdAmount(punishmentDOTAmount.toString(), prices.polkadot.usd)}
               </div>
             </div>
           </div>
@@ -210,9 +219,9 @@ const RedeemRequestStatusUI = (props: Props): ReactElement => {
                 width={23}
                 height={23} />
               &nbsp;
-              {amountDOT.toString()} DOT
+              {dotAmount.toString()} DOT
               <div className='send-price'>
-                {'~ $' + getUsdAmount(amountDOT.toString(), prices.polkadot.usd)}
+                {'~ $' + getUsdAmount(dotAmount.toString(), prices.polkadot.usd)}
               </div>
             </div>
           </div>
@@ -238,9 +247,9 @@ const RedeemRequestStatusUI = (props: Props): ReactElement => {
           <div className='row mt-5'>
             <div className='col text-center font-bold '>
               <span className='pink-amount font-bold'>
-                {t('redeem_page.recover_receive_dot') + punishmentDOT.toString() + ' DOT '}
+                {t('redeem_page.recover_receive_dot') + punishmentDOTAmount.toString() + ' DOT '}
               </span>
-                                (~ ${getUsdAmount(punishmentDOT.toString(), prices.polkadot.usd)})
+                                (~ ${getUsdAmount(punishmentDOTAmount.toString(), prices.polkadot.usd)})
               <span className='pink-amount font-bold'>{t('redeem_page.recover_receive_total')}</span>
             </div>
           </div>
@@ -251,9 +260,9 @@ const RedeemRequestStatusUI = (props: Props): ReactElement => {
                 className='inline-block'
                 width={23}
                 height={23} /> &nbsp;
-              {punishmentDOT.toString()} DOT
+              {punishmentDOTAmount.toString()} DOT
               <div className='send-price'>
-                {'~ $' + getUsdAmount(punishmentDOT.toString(), prices.polkadot.usd)}
+                {'~ $' + getUsdAmount(punishmentDOTAmount.toString(), prices.polkadot.usd)}
               </div>
             </div>
           </div>
@@ -266,9 +275,9 @@ const RedeemRequestStatusUI = (props: Props): ReactElement => {
                 width={23}
                 height={23} />
               &nbsp;
-              {punishmentDOT.toString()} DOT
+              {punishmentDOTAmount.toString()} DOT
               <div className='send-price'>
-                {'~ $' + getUsdAmount(punishmentDOT.toString(), prices.polkadot.usd)}
+                {'~ $' + getUsdAmount(punishmentDOTAmount.toString(), prices.polkadot.usd)}
               </div>
             </div>
           </div>
@@ -303,7 +312,7 @@ const RedeemRequestStatusUI = (props: Props): ReactElement => {
                 <div>{t('redeem_page.waiting_for')}</div>
                 <div>{t('confirmations')}</div>
                 <div className='number-of-confirmations'>
-                  {props.request.confirmations + '/' + stableBitcoinConfirmations}
+                  {request.confirmations + '/' + stableBitcoinConfirmations}
                 </div>
               </div>
             </div>
@@ -317,7 +326,7 @@ const RedeemRequestStatusUI = (props: Props): ReactElement => {
             <div className='col'>
               <div className='btc-transaction-view'>
                 <BitcoinTransaction
-                  txId={props.request.btcTxId}
+                  txId={request.btcTxId}
                   shorten />
               </div>
             </div>
@@ -327,7 +336,7 @@ const RedeemRequestStatusUI = (props: Props): ReactElement => {
     }
   }
 
-  return <div className='status-view'>{getStatus(props.request.status)}</div>;
+  return <div className='status-view'>{getStatus(request.status)}</div>;
 };
 
 export default RedeemRequestStatusUI;
