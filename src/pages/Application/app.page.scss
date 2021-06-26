@@ -118,22 +118,6 @@
 }
 // ray test touch >
 
-.pending-circle {
-  @extend .confirmation-circle;
-  border: 5px solid #998;
-  padding-top: 64px;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.cancelled-confirmations-circle {
-  @extend .confirmation-circle;
-  border: 5px solid $error-color;
-  padding-top: 75px;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
 // ray test touch <
 .waiting-confirmations-circle {
   @extend .confirmation-circle;
@@ -146,15 +130,6 @@
   font-size: 1.5rem;
   color: $d_green;
   font-weight: 600;
-}
-// ray test touch >
-
-// ray test touch <
-.status-title {
-  font-size: 2rem;
-  font-weight: 700;
-  text-align: center;
-  margin: 1rem;
 }
 // ray test touch >
 

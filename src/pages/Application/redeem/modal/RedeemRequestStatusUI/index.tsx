@@ -8,10 +8,9 @@ import { FaExternalLinkAlt } from 'react-icons/fa';
 
 import RequestWrapper from 'pages/Application/RequestWrapper';
 import CompletedRedeemRequest from './CompletedRedeemRequest';
+import PendingWithBtcTxNotFoundRedeemRequest from './PendingWithBtcTxNotFoundRedeemRequest';
 import InterlayLink from 'components/UI/InterlayLink';
-import Timer from 'components/Timer';
 import BitcoinTransaction from 'common/components/bitcoin-links/transaction';
-import { BLOCK_TIME } from 'config/parachain';
 import { getUsdAmount } from 'common/utils/utils';
 import {
   RedeemRequest,
@@ -36,7 +35,6 @@ const RedeemRequestStatusUI = ({
   const [punishmentDOTAmount, setPunishmentDOTAmount] = React.useState(new Big(0));
   const [burnDOTAmount, setBurnDOTAmount] = React.useState(new Big(0));
   const [dotAmount, setDOTAmount] = React.useState(new Big(0));
-  const [initialLeftSeconds, setInitialLeftSeconds] = React.useState<number>();
 
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
@@ -46,13 +44,11 @@ const RedeemRequestStatusUI = ({
         const [
           punishmentFee,
           btcDotRate,
-          theStableBitcoinConfirmations,
-          redeemPeriod
+          theStableBitcoinConfirmations
         ] = await Promise.all([
           window.polkaBTC.vaults.getPunishmentFee(),
           window.polkaBTC.oracle.getExchangeRate(),
-          window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
-          window.polkaBTC.redeem.getRedeemPeriod()
+          window.polkaBTC.btcRelay.getStableBitcoinConfirmations()
         ]);
 
         const polkaBTCAmount = request ? new Big(request.amountPolkaBTC) : new Big(0);
@@ -63,10 +59,6 @@ const RedeemRequestStatusUI = ({
         setPunishmentDOTAmount(thePunishmentDOTAmount);
         setDOTAmount(theDOTAmount);
         setStableBitcoinConfirmations(theStableBitcoinConfirmations);
-
-        const requestTimestamp = Math.floor(new Date(Number(request.timestamp)).getTime() / 1000);
-        const theInitialLeftSeconds = requestTimestamp + (redeemPeriod * BLOCK_TIME) - Math.floor(Date.now() / 1000);
-        setInitialLeftSeconds(theInitialLeftSeconds);
       } catch (error) {
         console.log('[RedeemRequestStatusUI useEffect] error.message => ', error.message);
       }
@@ -81,31 +73,7 @@ const RedeemRequestStatusUI = ({
     case RedeemRequestStatus.Completed:
       return <CompletedRedeemRequest request={request} />;
     case RedeemRequestStatus.PendingWithBtcTxNotFound:
-      return (
-        <RequestWrapper>
-          <div className='status-title'>{t('pending')}</div>
-          <p
-            className={clsx(
-              'flex',
-              'justify-center',
-              'items-center',
-              'space-x-1'
-            )}>
-            <span className='text-textSecondary'>
-              {t('redeem_page.vault_has_time_to_complete')}
-            </span>
-            {initialLeftSeconds && <Timer initialLeftSeconds={initialLeftSeconds} />}
-          </p>
-          <div className='row mt-5'>
-            <div className='col'>
-              <div className='pending-circle'>
-                <div>{t('redeem_page.waiting_for')}</div>
-                <div>{t('nav_vault')}</div>
-              </div>
-            </div>
-          </div>
-        </RequestWrapper>
-      );
+      return <PendingWithBtcTxNotFoundRedeemRequest request={request} />;
     case RedeemRequestStatus.Reimbursed:
       return (
         <RequestWrapper>
@@ -280,7 +248,13 @@ const RedeemRequestStatusUI = ({
     default:
       return (
         <RequestWrapper>
-          <div className='status-title'>{t('received')}</div>
+          <h2
+            className={clsx(
+              'text-3xl',
+              'font-medium'
+            )}>
+            {t('received')}
+          </h2>
           <div className='row'>
             <div className='col'>
               <div className='waiting-confirmations-circle'>
