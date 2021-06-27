@@ -4,16 +4,11 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
-import {
-  FaExternalLinkAlt,
-  FaExclamationCircle
-} from 'react-icons/fa';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 
 import RequestWrapper from 'pages/Application/RequestWrapper';
-// ray test touch <<
-import PriceInfo from 'pages/Application/PriceInfo';
-// ray test touch >>
 import CompletedRedeemRequest from './CompletedRedeemRequest';
+import RetriedRedeemRequest from './RetriedRedeemRequest';
 import PendingWithBtcTxNotFoundRedeemRequest from './PendingWithBtcTxNotFoundRedeemRequest';
 import InterlayLink from 'components/UI/InterlayLink';
 import BitcoinTransaction from 'common/components/bitcoin-links/transaction';
@@ -66,6 +61,7 @@ const RedeemRequestStatusUI = ({
         setDOTAmount(theDOTAmount);
         setStableBitcoinConfirmations(theStableBitcoinConfirmations);
       } catch (error) {
+        // TODO: should add error handling UX
         console.log('[RedeemRequestStatusUI useEffect] error.message => ', error.message);
       }
     })();
@@ -178,106 +174,7 @@ const RedeemRequestStatusUI = ({
         </RequestWrapper>
       );
     case RedeemRequestStatus.Retried:
-      // ray test touch <<
-      return (
-        <RequestWrapper>
-          <h2
-            className={clsx(
-              'text-3xl',
-              'font-medium',
-              'text-interlayMalachite'
-            )}>
-            {t('redeem_page.compensation_success')}
-          </h2>
-          <p className='w-full'>{t('redeem_page.compensation_notice')}</p>
-          <p className='font-medium'>
-            <span className='text-interlayRose'>
-              {t('redeem_page.recover_receive_dot')}
-            </span>
-            <span className='text-interlayRose'>
-              &nbsp;{`${punishmentDOTAmount.toString()} DOT`}
-            </span>
-            <span>
-              &nbsp;({`≈ $${getUsdAmount(punishmentDOTAmount.toString(), prices.polkadot.usd)}`})
-            </span>
-            <span className='text-interlayRose'>
-              &nbsp;{t('redeem_page.recover_receive_total')}.
-            </span>
-          </p>
-          <div className='w-full'>
-            <PriceInfo
-              title={
-                <h5 className='text-textSecondary'>
-                  {t('redeem_page.compensation_payment')}
-                </h5>
-              }
-              unitIcon={
-                <PolkadotLogoIcon
-                  width={20}
-                  height={20} />
-              }
-              value={punishmentDOTAmount.toString()}
-              unitName='DOT'
-              approxUSD={getUsdAmount(punishmentDOTAmount.toString(), prices.polkadot.usd)} />
-            <hr
-              className={clsx(
-                'border-t-2',
-                'my-2.5',
-                'border-textSecondary'
-              )} />
-            <PriceInfo
-              className='w-full'
-              title={
-                <h5 className='text-textSecondary'>
-                  {t('you_received')}
-                </h5>
-              }
-              unitIcon={
-                <PolkadotLogoIcon
-                  width={20}
-                  height={20} />
-              }
-              value={punishmentDOTAmount.toString()}
-              unitName='DOT'
-              approxUSD={getUsdAmount(punishmentDOTAmount.toString(), prices.polkadot.usd)} />
-          </div>
-          <InterlayLink
-            className={clsx(
-              'text-interlayDodgerBlue',
-              'space-x-1.5',
-              'inline-flex',
-              'items-center',
-              'text-sm'
-            )}
-            href='https://polkadot.js.org/apps/#/explorer'
-            target='_blank'
-            rel='noopener noreferrer'>
-            <span>{t('issue_page.view_parachain_block')}</span>
-            <FaExternalLinkAlt />
-          </InterlayLink>
-          <div className='w-full'>
-            <h6
-              className={clsx(
-                'flex',
-                'items-center',
-                'justify-center',
-                'space-x-0.5',
-                'text-interlayScarlet'
-              )}>
-              <span>{t('note')}</span>
-              <FaExclamationCircle />
-            </h6>
-            <p
-              className={clsx(
-                'text-justify',
-                'text-textSecondary'
-              )}>
-              {t('redeem_page.retry_new_redeem')}
-            </p>
-          </div>
-        </RequestWrapper>
-      );
-      // ray test touch >>
+      return <RetriedRedeemRequest request={request} />;
     default:
       return (
         <RequestWrapper>
