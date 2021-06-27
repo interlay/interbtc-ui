@@ -23,7 +23,6 @@ import useQuery from 'utils/hooks/use-query';
 import useUpdateQueryParameters, { QueryParameters } from 'utils/hooks/use-update-query-parameters';
 import TAB_IDS from 'utils/constants/tab-ids';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
-import './app.page.css';
 
 const TAB_ITEMS_WITHOUT_BURN = [
   {

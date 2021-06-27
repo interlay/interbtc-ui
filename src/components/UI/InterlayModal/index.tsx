@@ -24,7 +24,7 @@ const InterlayModalInnerWrapper = ({
       'w-full',
       'my-8',
       'bg-white',
-      'rounded-3xl',
+      'rounded-lg',
       className
     )}
     {...rest} />
