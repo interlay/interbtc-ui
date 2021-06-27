@@ -41,12 +41,6 @@
   float: right;
 }
 
-// ray test touch <
-.green-text {
-  color: $d_green;
-}
-// ray test touch >
-
 .ledger-wrapper {
   text-align: center;
   padding: 15px;
@@ -84,46 +78,11 @@
   }
 }
 
-// ray test touch <
-.confirmation-circle {
-  border-radius: 50%;
-  padding-top: 54px;
-  width: 200px;
-  height: 200px;
-  text-align: center;
-  margin: auto;
-}
-// ray test touch >
-
-// ray test touch <
-.waiting-confirmations-circle {
-  @extend .confirmation-circle;
-  border: 5px solid orange;
-}
-// ray test touch >
-
-// ray test touch <
-.number-of-confirmations {
-  font-size: 1.5rem;
-  color: $d_green;
-  font-weight: 600;
-}
-// ray test touch >
-
 .btc-destination-address {
   font-weight: 600;
   color: $d_grey;
   margin-top: 1.5rem;
 }
-
-// ray test touch <
-.btc-transaction-view {
-  font-size: 1rem;
-  width: fit-content;
-  text-align: center;
-  margin: auto;
-}
-// ray test touch >
 
 .redeem-step-title {
   display: inline;
@@ -165,13 +124,6 @@
 .pending-text {
   color: $d_yellow;
 }
-
-// ray test touch <
-.green-text {
-  color: $d_green;
-  opacity: 1;
-}
-// ray test touch >
 
 .table-page-link {
   cursor: pointer;

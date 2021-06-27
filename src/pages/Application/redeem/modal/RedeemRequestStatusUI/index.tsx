@@ -9,7 +9,7 @@ import CompletedRedeemRequest from './CompletedRedeemRequest';
 import ReimbursedRedeemRequest from './ReimbursedRedeemRequest';
 import RetriedRedeemRequest from './RetriedRedeemRequest';
 import PendingWithBtcTxNotFoundRedeemRequest from './PendingWithBtcTxNotFoundRedeemRequest';
-import BitcoinTransaction from 'common/components/bitcoin-links/transaction';
+import { shortAddress } from 'common/utils/utils';
 import {
   RedeemRequest,
   RedeemRequestStatus
@@ -65,31 +65,37 @@ const RedeemRequestStatusUI = ({
             )}>
             {t('received')}
           </h2>
-          <div className='row'>
-            <div className='col'>
-              <div className='waiting-confirmations-circle'>
-                <div>{t('redeem_page.waiting_for')}</div>
-                <div>{t('confirmations')}</div>
-                <div className='number-of-confirmations'>
-                  {request.confirmations + '/' + stableBitcoinConfirmations}
-                </div>
-              </div>
-            </div>
+          <div
+            className={clsx(
+              'w-48',
+              'h-48',
+              'ring-4',
+              'ring-interlayTreePoppy',
+              'rounded-full',
+              'inline-flex',
+              'flex-col',
+              'items-center',
+              'justify-center'
+            )}>
+            <span className='mt-4'>
+              {t('redeem_page.waiting_for')}
+            </span>
+            <span>
+              {t('confirmations')}
+            </span>
+            <span
+              className={clsx(
+                'text-2xl',
+                'text-interlayMalachite',
+                'font-medium'
+              )}>
+              {`${request.confirmations}/${stableBitcoinConfirmations}`}
+            </span>
           </div>
-          <div className='row btc-transaction-wrapper'>
-            <div className='col'>
-              <div className='btc-transaction-view'>{t('issue_page.btc_transaction')}</div>
-            </div>
-          </div>
-          <div className='row'>
-            <div className='col'>
-              <div className='btc-transaction-view'>
-                <BitcoinTransaction
-                  txId={request.btcTxId}
-                  shorten />
-              </div>
-            </div>
-          </div>
+          <p className='space-x-1'>
+            <span className='text-textSecondary'>{t('issue_page.btc_transaction')}:</span>
+            <span className='font-medium'>{shortAddress(request.btcTxId)}</span>
+          </p>
         </RequestWrapper>
       );
     }
