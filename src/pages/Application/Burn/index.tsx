@@ -205,7 +205,7 @@ const Burn = (): JSX.Element | null => {
             value={earnedDOT}
             unitName='DOT'
             approxUSD={getUsdAmount(earnedDOT, prices.polkadot.usd)} />
-          {/* TODO: could be a reusable component */}
+          {/* TODO: could componentize */}
           <hr
             className={clsx(
               'border-t-2',
