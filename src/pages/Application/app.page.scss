@@ -117,14 +117,6 @@
 }
 
 // ray test touch <
-.pink-amount {
-  color: $d_pink;
-  text-align: center;
-  font-weight: 600;
-}
-// ray test touch >
-
-// ray test touch <
 .btc-transaction-view {
   font-size: 1rem;
   width: fit-content;
@@ -141,12 +133,6 @@
   color: $d_pink;
   left: calc(50% - 20px);
 }
-
-// ray test touch <
-.send-price {
-  color: $d_grey;
-}
-// ray test touch >
 
 .deposit-title {
   position: absolute;
@@ -175,12 +161,6 @@
 .modal-footer-border {
   border-top: 1px solid #dee2e6;
 }
-
-// ray test touch <
-.send-price {
-  margin-top: 5px;
-}
-// ray test touch >
 
 .pending-text {
   color: $d_yellow;
