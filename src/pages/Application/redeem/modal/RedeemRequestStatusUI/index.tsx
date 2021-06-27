@@ -16,22 +16,18 @@ interface Props {
 const RedeemRequestStatusUI = ({
   request
 }: Props): JSX.Element => {
-  function getStatus(status: RedeemRequestStatus): JSX.Element {
-    switch (status) {
-    case RedeemRequestStatus.Completed:
-      return <CompletedRedeemRequest request={request} />;
-    case RedeemRequestStatus.PendingWithBtcTxNotFound:
-      return <PendingWithBtcTxNotFoundRedeemRequest request={request} />;
-    case RedeemRequestStatus.Reimbursed:
-      return <ReimbursedRedeemRequest request={request} />;
-    case RedeemRequestStatus.Retried:
-      return <RetriedRedeemRequest request={request} />;
-    default:
-      return <DefaultRedeemRequest request={request} />;
-    }
+  switch (request.status) {
+  case RedeemRequestStatus.Completed:
+    return <CompletedRedeemRequest request={request} />;
+  case RedeemRequestStatus.PendingWithBtcTxNotFound:
+    return <PendingWithBtcTxNotFoundRedeemRequest request={request} />;
+  case RedeemRequestStatus.Reimbursed:
+    return <ReimbursedRedeemRequest request={request} />;
+  case RedeemRequestStatus.Retried:
+    return <RetriedRedeemRequest request={request} />;
+  default:
+    return <DefaultRedeemRequest request={request} />;
   }
-
-  return <div className='status-view'>{getStatus(request.status)}</div>;
 };
 
 export default RedeemRequestStatusUI;
