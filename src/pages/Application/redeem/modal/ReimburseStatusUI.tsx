@@ -5,6 +5,10 @@ import {
   useSelector,
   useDispatch
 } from 'react-redux';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
@@ -13,6 +17,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import RequestWrapper from '../../RequestWrapper';
 import InterlayRoseOutlinedButton from 'components/buttons/InterlayRoseOutlinedButton';
 import InterlayMalachiteOutlinedButton from 'components/buttons/InterlayMalachiteOutlinedButton';
+import ErrorFallback from 'components/ErrorFallback';
 import { getUsdAmount } from 'common/utils/utils';
 import STATUSES from 'utils/constants/statuses';
 import { StoreType } from 'common/types/util.types';
@@ -41,10 +46,12 @@ const ReimburseStatusUI = ({
   const [dotAmount, setDOTAmount] = React.useState(new Big(0));
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const handleError = useErrorHandler();
 
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
     if (!request) return;
+    if (!handleError) return;
 
     // TODO: should add loading UX
     (async () => {
@@ -60,13 +67,13 @@ const ReimburseStatusUI = ({
         setDOTAmount(amountPolkaBTC.mul(btcDotRate));
         setPunishmentDOT(amountPolkaBTC.mul(btcDotRate).mul(new Big(punishment)));
       } catch (error) {
-        // TODO: should add error handling UX
-        console.log('[ReimburseStatusUI useEffect] error.message => ', error.message);
+        handleError(error);
       }
     })();
   }, [
     request,
-    polkaBtcLoaded
+    polkaBtcLoaded,
+    handleError
   ]);
 
   const handleRetry = async () => {
@@ -211,4 +218,9 @@ const ReimburseStatusUI = ({
   );
 };
 
-export default ReimburseStatusUI;
+export default withErrorBoundary(ReimburseStatusUI, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});

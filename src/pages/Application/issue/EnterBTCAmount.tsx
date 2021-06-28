@@ -21,7 +21,7 @@ import ParachainStatusInfo from '../ParachainStatusInfo';
 import Tooltip from 'components/Tooltip';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
-import ErrorHandler from 'components/ErrorHandler';
+import ErrorFallback from 'components/ErrorFallback';
 import InterlayRoseContainedButton from 'components/buttons/InterlayRoseContainedButton';
 import {
   ParachainStatus,
@@ -151,7 +151,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
 
   if (status === STATUSES.REJECTED && error) {
     return (
-      <ErrorHandler error={error} />
+      <ErrorFallback error={error} />
     );
   }
 

@@ -19,7 +19,7 @@ import clsx from 'clsx';
 import { RelayerData } from '@interlay/interbtc-stats-client';
 
 import EllipsisLoader from 'components/EllipsisLoader';
-import ErrorHandler from 'components/ErrorHandler';
+import ErrorFallback from 'components/ErrorFallback';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -147,7 +147,7 @@ const StakedRelayerScoresTable = ({
 
   if (status === STATUSES.REJECTED && error) {
     return (
-      <ErrorHandler error={error} />
+      <ErrorFallback error={error} />
     );
   }
 

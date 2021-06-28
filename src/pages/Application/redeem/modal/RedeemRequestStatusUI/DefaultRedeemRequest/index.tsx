@@ -23,6 +23,7 @@ const DefaultRedeemRequest = ({
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
 
+    // TODO: should add loading UX
     (async () => {
       try {
         const theStableBitcoinConfirmations = await window.polkaBTC.btcRelay.getStableBitcoinConfirmations();
@@ -33,10 +34,7 @@ const DefaultRedeemRequest = ({
         console.log('[RedeemRequestStatusUI useEffect] error.message => ', error.message);
       }
     })();
-  }, [
-    request,
-    polkaBtcLoaded
-  ]);
+  }, [polkaBtcLoaded]);
 
   return (
     <RequestWrapper>

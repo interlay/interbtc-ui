@@ -15,7 +15,7 @@ import PriceInfo from '../PriceInfo';
 import PolkaBTCField from '../PolkaBTCField';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
-import ErrorHandler from 'components/ErrorHandler';
+import ErrorFallback from 'components/ErrorFallback';
 import InterlayRoseContainedButton from 'components/buttons/InterlayRoseContainedButton';
 import { getUsdAmount } from 'common/utils/utils';
 import {
@@ -87,7 +87,7 @@ const Burn = (): JSX.Element | null => {
 
   if (status === STATUSES.REJECTED && error) {
     return (
-      <ErrorHandler error={error} />
+      <ErrorFallback error={error} />
     );
   }
 

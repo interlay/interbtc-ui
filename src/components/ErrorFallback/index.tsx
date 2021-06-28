@@ -5,13 +5,17 @@ import InterlayLink from 'components/UI/InterlayLink';
 
 interface Props {
   error: Error | string;
+  resetErrorBoundary?: () => void;
 }
 
 const handleRefresh = () => {
   window.location.reload();
 };
 
-const ErrorHandler = ({ error }: Props): JSX.Element => {
+const ErrorFallback = ({
+  error,
+  resetErrorBoundary
+}: Props): JSX.Element => {
   let message;
 
   // TODO: should remove later as it's a workaround
@@ -31,14 +35,17 @@ const ErrorHandler = ({ error }: Props): JSX.Element => {
       <span>
         Please&nbsp;
         <InterlayLink
-          href='#'
-          onClick={handleRefresh}
-          style={{ textDecoration: 'underline' }}>
+          onClick={resetErrorBoundary ?? handleRefresh}
+          className={clsx(
+            'underline',
+            'cursor-pointer'
+          )}>
           refresh
-        </InterlayLink>.
+        </InterlayLink>
+        .
       </span>
     </p>
   );
 };
 
-export default ErrorHandler;
+export default ErrorFallback;

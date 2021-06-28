@@ -32,6 +32,10 @@ const RetriedRedeemRequest = ({
   const [punishmentDOTAmount, setPunishmentDOTAmount] = React.useState(new Big(0));
 
   React.useEffect(() => {
+    if (!polkaBtcLoaded) return;
+    if (!request) return;
+
+    // TODO: should add loading UX
     (async () => {
       try {
         const [

@@ -24,7 +24,9 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({
 
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
+    if (!request) return;
 
+    // TODO: should add loading UX
     (async () => {
       try {
         const redeemPeriod = await window.polkaBTC.redeem.getRedeemPeriod();

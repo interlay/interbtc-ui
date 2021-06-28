@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import { BtcNetworkName } from '@interlay/interbtc-stats-client';
 
 import EllipsisLoader from 'components/EllipsisLoader';
-import ErrorHandler from 'components/ErrorHandler';
+import ErrorFallback from 'components/ErrorFallback';
 import Pagination from 'components/Pagination';
 import InterlayTable, {
   InterlayTableContainer,
@@ -182,7 +182,7 @@ const RedeemRequestsTable = ({
 
   if (status === STATUSES.REJECTED && error) {
     return (
-      <ErrorHandler error={error} />
+      <ErrorFallback error={error} />
     );
   }
 

@@ -23,7 +23,7 @@ import Toggle from 'components/Toggle';
 import TextField from 'components/TextField';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
-import ErrorHandler from 'components/ErrorHandler';
+import ErrorFallback from 'components/ErrorFallback';
 import InterlayRoseContainedButton from 'components/buttons/InterlayRoseContainedButton';
 import {
   changeRedeemStepAction,
@@ -175,7 +175,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
 
   if (status === STATUSES.REJECTED && error) {
     return (
-      <ErrorHandler error={error} />
+      <ErrorFallback error={error} />
     );
   }
 
