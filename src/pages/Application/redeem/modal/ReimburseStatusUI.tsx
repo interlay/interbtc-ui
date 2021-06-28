@@ -46,9 +46,7 @@ const ReimburseStatusUI = ({
     if (!polkaBtcLoaded) return;
     if (!request) return;
 
-    // ray test touch <
     // TODO: should add loading UX
-    // ray test touch >
     (async () => {
       try {
         const [
@@ -62,9 +60,7 @@ const ReimburseStatusUI = ({
         setDOTAmount(amountPolkaBTC.mul(btcDotRate));
         setPunishmentDOT(amountPolkaBTC.mul(btcDotRate).mul(new Big(punishment)));
       } catch (error) {
-        // ray test touch <
         // TODO: should add error handling UX
-        // ray test touch >
         console.log('[ReimburseStatusUI useEffect] error.message => ', error.message);
       }
     })();
@@ -90,9 +86,7 @@ const ReimburseStatusUI = ({
       toast.success(t('redeem_page.successfully_cancelled_redeem'));
       setRetryStatus(STATUSES.RESOLVED);
     } catch (error) {
-      // ray test touch <
       // TODO: should add error handling UX
-      // ray test touch >
       setRetryStatus(STATUSES.REJECTED);
       console.log('[handleRetry] error => ', error);
     }
@@ -115,9 +109,7 @@ const ReimburseStatusUI = ({
       toast.success(t('redeem_page.successfully_cancelled_redeem'));
       setBurnStatus(STATUSES.RESOLVED);
     } catch (error) {
-      // ray test touch <
       // TODO: should add error handling UX
-      // ray test touch >
       setBurnStatus(STATUSES.REJECTED);
       console.log('[handleBurn] error => ', error);
     }
