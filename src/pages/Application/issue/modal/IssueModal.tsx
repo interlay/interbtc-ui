@@ -46,7 +46,7 @@ type Props = Omit<ModalProps, 'children'>;
 const IssueModal = ({
   open,
   onClose
-}: Props): JSX.Element => {
+}: Props): JSX.Element | null => {
   const {
     address,
     prices
@@ -56,6 +56,8 @@ const IssueModal = ({
   const request = userIssueRequests.filter(request => request.id === selectedIdRequest)[0];
   const { t } = useTranslation();
   const focusRef = React.useRef(null);
+
+  if (!request) return null;
 
   return (
     <InterlayModal
@@ -103,140 +105,138 @@ const IssueModal = ({
             height={18}
             className='text-textSecondary' />
         </IconButton>
-        {request && (
-          <div
-            className={clsx(
-              'grid',
-              'grid-cols-1',
-              'lg:grid-cols-2',
-              'gap-10'
-            )}>
-            <div className='space-y-6'>
-              <div className='text-center'>
-                {/* TODO: could componentize */}
-                <h4
-                  className={clsx(
-                    'font-medium',
-                    'text-interlayRose',
-                    'space-x-1'
-                  )}>
-                  <span className='text-5xl'>
-                    {request.issuedAmountBtc || request.requestedAmountPolkaBTC}
-                  </span>
-                  <span className='text-2xl'>
-                    PolkaBTC
-                  </span>
-                </h4>
-                <span
-                  className={clsx(
-                    'text-textSecondary',
-                    'block'
-                  )}>
-                  {`≈ $ ${getUsdAmount(
-                    request.issuedAmountBtc || request.requestedAmountPolkaBTC || '0',
-                    prices.bitcoin.usd
-                  )}`}
+        <div
+          className={clsx(
+            'grid',
+            'grid-cols-1',
+            'lg:grid-cols-2',
+            'gap-10'
+          )}>
+          <div className='space-y-6'>
+            <div className='text-center'>
+              {/* TODO: could componentize */}
+              <h4
+                className={clsx(
+                  'font-medium',
+                  'text-interlayRose',
+                  'space-x-1'
+                )}>
+                <span className='text-5xl'>
+                  {request.issuedAmountBtc || request.requestedAmountPolkaBTC}
+                </span>
+                <span className='text-2xl'>
+                  PolkaBTC
+                </span>
+              </h4>
+              <span
+                className={clsx(
+                  'text-textSecondary',
+                  'block'
+                )}>
+                {`≈ $ ${getUsdAmount(
+                  request.issuedAmountBtc || request.requestedAmountPolkaBTC || '0',
+                  prices.bitcoin.usd
+                )}`}
+              </span>
+            </div>
+            <div>
+              <PriceInfo
+                title={
+                  <h5 className='text-textSecondary'>
+                    {t('bridge_fee')}
+                  </h5>
+                }
+                unitIcon={
+                  <BitcoinLogoIcon
+                    width={23}
+                    height={23} />
+                }
+                value={displayBtcAmount(request.fee)}
+                unitName='BTC'
+                approxUSD={getUsdAmount(request.fee, prices.bitcoin.usd)} />
+              {/* TODO: could componentize */}
+              <hr
+                className={clsx(
+                  'border-t-2',
+                  'my-2.5',
+                  'border-textSecondary'
+                )} />
+              <PriceInfo
+                title={
+                  <h5 className='text-textSecondary'>
+                    {t('total_deposit')}
+                  </h5>
+                }
+                unitIcon={
+                  <BitcoinLogoIcon
+                    width={23}
+                    height={23} />
+                }
+                value={displayBtcAmount(request.amountBTC)}
+                unitName='BTC'
+                approxUSD={getUsdAmount(
+                  request.issuedAmountBtc || request.requestedAmountPolkaBTC,
+                  prices.bitcoin.usd
+                )} />
+            </div>
+            <div className='space-y-4'>
+              {/* TODO: could componentize */}
+              <div
+                className={clsx(
+                  'flex',
+                  'justify-between'
+                )}>
+                <span className='text-textSecondary'>
+                  {t('issue_page.destination_address')}
+                </span>
+                <span className='font-medium'>
+                  {shortAddress(address)}
                 </span>
               </div>
-              <div>
-                <PriceInfo
-                  title={
-                    <h5 className='text-textSecondary'>
-                      {t('bridge_fee')}
-                    </h5>
-                  }
-                  unitIcon={
-                    <BitcoinLogoIcon
-                      width={23}
-                      height={23} />
-                  }
-                  value={displayBtcAmount(request.fee)}
-                  unitName='BTC'
-                  approxUSD={getUsdAmount(request.fee, prices.bitcoin.usd)} />
-                {/* TODO: could componentize */}
-                <hr
-                  className={clsx(
-                    'border-t-2',
-                    'my-2.5',
-                    'border-textSecondary'
-                  )} />
-                <PriceInfo
-                  title={
-                    <h5 className='text-textSecondary'>
-                      {t('total_deposit')}
-                    </h5>
-                  }
-                  unitIcon={
-                    <BitcoinLogoIcon
-                      width={23}
-                      height={23} />
-                  }
-                  value={displayBtcAmount(request.amountBTC)}
-                  unitName='BTC'
-                  approxUSD={getUsdAmount(
-                    request.issuedAmountBtc || request.requestedAmountPolkaBTC,
-                    prices.bitcoin.usd
-                  )} />
+              <div
+                className={clsx(
+                  'flex',
+                  'justify-between'
+                )}>
+                <span className='text-textSecondary'>
+                  {t('issue_page.parachain_block')}
+                </span>
+                <span className='font-medium'>
+                  {request.creation}
+                </span>
               </div>
-              <div className='space-y-4'>
-                {/* TODO: could componentize */}
-                <div
-                  className={clsx(
-                    'flex',
-                    'justify-between'
-                  )}>
-                  <span className='text-textSecondary'>
-                    {t('issue_page.destination_address')}
-                  </span>
-                  <span className='font-medium'>
-                    {shortAddress(address)}
-                  </span>
-                </div>
-                <div
-                  className={clsx(
-                    'flex',
-                    'justify-between'
-                  )}>
-                  <span className='text-textSecondary'>
-                    {t('issue_page.parachain_block')}
-                  </span>
-                  <span className='font-medium'>
-                    {request.creation}
-                  </span>
-                </div>
-                <div
-                  className={clsx(
-                    'flex',
-                    'justify-between'
-                  )}>
-                  <span className='text-textSecondary'>
-                    {t('issue_page.vault_dot_address')}
-                  </span>
-                  <span className='font-medium'>
-                    {shortAddress(request.vaultDOTAddress)}
-                  </span>
-                </div>
-                <div
-                  className={clsx(
-                    'flex',
-                    'justify-between'
-                  )}>
-                  <span className='text-textSecondary'>
-                    {t('issue_page.vault_btc_address')}
-                  </span>
-                  <span className='font-medium'>
-                    {shortAddress(request.vaultBTCAddress)}
-                  </span>
-                </div>
+              <div
+                className={clsx(
+                  'flex',
+                  'justify-between'
+                )}>
+                <span className='text-textSecondary'>
+                  {t('issue_page.vault_dot_address')}
+                </span>
+                <span className='font-medium'>
+                  {shortAddress(request.vaultDOTAddress)}
+                </span>
               </div>
-              <p className='space-x-1'>
-                <span className='text-interlayPomegranate'>{t('note')}:</span>
-                <span className='text-textSecondary'>{t('issue_page.fully_decentralized')}</span>
-              </p>
+              <div
+                className={clsx(
+                  'flex',
+                  'justify-between'
+                )}>
+                <span className='text-textSecondary'>
+                  {t('issue_page.vault_btc_address')}
+                </span>
+                <span className='font-medium'>
+                  {shortAddress(request.vaultBTCAddress)}
+                </span>
+              </div>
             </div>
-            <>{renderModalStatusPanel(request)}</>
+            <p className='space-x-1'>
+              <span className='text-interlayPomegranate'>{t('note')}:</span>
+              <span className='text-textSecondary'>{t('issue_page.fully_decentralized')}</span>
+            </p>
           </div>
-        )}
+          <>{renderModalStatusPanel(request)}</>
+        </div>
       </InterlayModalInnerWrapper>
     </InterlayModal>
   );
