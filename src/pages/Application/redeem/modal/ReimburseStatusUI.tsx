@@ -14,6 +14,7 @@ import RequestWrapper from '../../RequestWrapper';
 import InterlayRoseOutlinedButton from 'components/buttons/InterlayRoseOutlinedButton';
 import InterlayMalachiteOutlinedButton from 'components/buttons/InterlayMalachiteOutlinedButton';
 import { getUsdAmount } from 'common/utils/utils';
+import STATUSES from 'utils/constants/statuses';
 import { StoreType } from 'common/types/util.types';
 import { RedeemRequest } from 'common/types/redeem.types';
 import {
@@ -34,11 +35,8 @@ const ReimburseStatusUI = ({
     polkaBtcLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
-  // ray test touch <
-  // TODO: should use enum instead of boolean for loading UX
-  const [reimbursePending, setReimbursePending] = React.useState(false);
-  const [retryPending, setRetryPending] = React.useState(false);
-  // ray test touch >
+  const [burnStatus, setBurnStatus] = React.useState(STATUSES.IDLE);
+  const [retryStatus, setRetryStatus] = React.useState(STATUSES.IDLE);
   const [punishmentDOT, setPunishmentDOT] = React.useState(new Big(0));
   const [dotAmount, setDOTAmount] = React.useState(new Big(0));
   const dispatch = useDispatch();
@@ -83,20 +81,21 @@ const ReimburseStatusUI = ({
       throw new Error('Invalid request!');
     }
 
-    setRetryPending(true);
     try {
+      setRetryStatus(STATUSES.PENDING);
       const redeemId = window.polkaBTC.api.createType('H256', '0x' + request.id);
       await window.polkaBTC.redeem.cancel(redeemId, false);
       dispatch(retryRedeemRequestAction(request.id));
       onClose();
       toast.success(t('redeem_page.successfully_cancelled_redeem'));
+      setRetryStatus(STATUSES.RESOLVED);
     } catch (error) {
       // ray test touch <
       // TODO: should add error handling UX
       // ray test touch >
+      setRetryStatus(STATUSES.REJECTED);
       console.log('[handleRetry] error => ', error);
     }
-    setRetryPending(false);
   };
 
   const handleBurn = async () => {
@@ -108,19 +107,20 @@ const ReimburseStatusUI = ({
     }
 
     try {
-      setReimbursePending(true);
+      setBurnStatus(STATUSES.PENDING);
       const redeemId = window.polkaBTC.api.createType('H256', '0x' + request.id);
       await window.polkaBTC.redeem.cancel(redeemId, true);
       dispatch(reimburseRedeemRequestAction(request.id));
       onClose();
       toast.success(t('redeem_page.successfully_cancelled_redeem'));
+      setBurnStatus(STATUSES.RESOLVED);
     } catch (error) {
       // ray test touch <
       // TODO: should add error handling UX
       // ray test touch >
+      setBurnStatus(STATUSES.REJECTED);
       console.log('[handleBurn] error => ', error);
     }
-    setReimbursePending(false);
   };
 
   return (
@@ -181,8 +181,8 @@ const ReimburseStatusUI = ({
             </p>
             <InterlayMalachiteOutlinedButton
               className='w-full'
-              disabled={retryPending || reimbursePending}
-              pending={retryPending}
+              disabled={retryStatus !== STATUSES.IDLE || burnStatus !== STATUSES.IDLE}
+              pending={retryStatus === STATUSES.PENDING}
               onClick={handleRetry}>
               {t('retry')}
             </InterlayMalachiteOutlinedButton>
@@ -207,8 +207,8 @@ const ReimburseStatusUI = ({
             </p>
             <InterlayRoseOutlinedButton
               className='w-full'
-              disabled={retryPending || reimbursePending}
-              pending={reimbursePending}
+              disabled={retryStatus !== STATUSES.IDLE || burnStatus !== STATUSES.IDLE}
+              pending={burnStatus === STATUSES.PENDING}
               onClick={handleBurn}>
               {t('redeem_page.burn')}
             </InterlayRoseOutlinedButton>
