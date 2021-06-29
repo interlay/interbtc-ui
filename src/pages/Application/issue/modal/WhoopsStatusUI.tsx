@@ -58,7 +58,7 @@ const WhoopsStatusUI = ({
             height={23} />
         }
         value={request.requestedAmountPolkaBTC}
-        unitName='PolkaBTC'
+        unitName='InterBTC'
         approxUSD={getUsdAmount(request.requestedAmountPolkaBTC, prices.bitcoin.usd)} />
       <PriceInfo
         className='w-full'
@@ -88,7 +88,7 @@ const WhoopsStatusUI = ({
             height={23} />
         }
         value={request.issuedAmountBtc}
-        unitName='PolkaBTC'
+        unitName='InterBTC'
         approxUSD={getUsdAmount(request.issuedAmountBtc, prices.bitcoin.usd)} />
       <hr
         className={clsx(

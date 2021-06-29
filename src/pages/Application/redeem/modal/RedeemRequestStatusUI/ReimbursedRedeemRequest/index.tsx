@@ -79,13 +79,13 @@ const ReimbursedRedeemRequest = ({
         {t('redeem_page.burn_notice')}
       </p>
       <p className='font-medium'>
-        <span className='text-interlayOutrageousOrange'>
-          {`${request.amountPolkaBTC} PolkaBTC`}
+        <span className='text-interlayCinnabar'>
+          {`${request.amountPolkaBTC} InterBTC`}
         </span>
         <span>
           &nbsp;{`(≈ $${getUsdAmount(request.amountPolkaBTC, prices.bitcoin.usd)})`}
         </span>
-        <span className='text-interlayOutrageousOrange'>
+        <span className='text-interlayCinnabar'>
           &nbsp;{t('redeem_page.burned')}
         </span>
         .

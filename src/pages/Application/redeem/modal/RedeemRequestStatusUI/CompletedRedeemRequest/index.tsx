@@ -35,7 +35,7 @@ const CompletedRedeemRequest = ({
           'font-medium'
         )}>
         <span>{t('issue_page.you_received')}</span>
-        <span className='text-interlayOutrageousOrange'>
+        <span className='text-interlayCinnabar'>
           {`${request.amountPolkaBTC} BTC`}
         </span>
         .

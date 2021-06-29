@@ -15,7 +15,7 @@ type PolkaBTCProps = {
   linkButton?: boolean;
 };
 
-const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
+const InterBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
   const { prices } = useSelector((state: StoreType) => state.general);
   const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
 
@@ -95,4 +95,4 @@ const PolkaBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
   );
 };
 
-export default PolkaBTC;
+export default InterBTC;

@@ -136,11 +136,11 @@ const Burn = (): JSX.Element | null => {
     }
 
     if (!polkaBtcLoaded) {
-      return 'PolkaBTC must be loaded!';
+      return 'InterBTC must be loaded!';
     }
 
     if (btcToSat(value.toString()) === undefined) {
-      return 'Invalid PolkaBTC amount input!'; // TODO: should translate
+      return 'Invalid InterBTC amount input!'; // TODO: should translate
     }
 
     const polkaBTCAmountInteger = value.toString().split('.')[0];

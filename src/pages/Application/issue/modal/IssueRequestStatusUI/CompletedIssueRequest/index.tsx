@@ -35,7 +35,7 @@ const CompletedIssueRequest = ({
         )}>
         <span>{t('issue_page.you_received')}</span>
         <span className='text-interlayRose'>
-          {request.issuedAmountBtc || request.requestedAmountPolkaBTC} PolkaBTC
+          {request.issuedAmountBtc || request.requestedAmountPolkaBTC} InterBTC
         </span>
       </p>
       <div

@@ -138,7 +138,7 @@ function App(): JSX.Element {
   const dispatch = useDispatch();
   const store = useStore();
 
-  // Load the main PolkaBTC API - connection to the PolkaBTC bridge
+  // Load the main InterBTC API - connection to the InterBTC bridge
   const loadPolkaBTC = React.useCallback(async (): Promise<void> => {
     try {
       window.polkaBTC = await connectToParachain();
@@ -183,7 +183,7 @@ function App(): JSX.Element {
         dispatch(isVaultClientLoaded(!!vault));
       } catch (error) {
         // TODO: should add error handling
-        console.log('No PolkaBTC vault found for the account in the connected Polkadot wallet.');
+        console.log('No InterBTC vault found for the account in the connected Polkadot wallet.');
         console.log('[App React.useEffect] error.message => ', error.message);
       }
     })();
@@ -196,7 +196,7 @@ function App(): JSX.Element {
         dispatch(isStakedRelayerLoaded(stakedRelayers.includes(id)));
       } catch (error) {
         // TODO: should add error handling
-        console.log('No PolkaBTC staked relayer found for the account in the connected Polkadot wallet.');
+        console.log('No InterBTC staked relayer found for the account in the connected Polkadot wallet.');
         console.log('[App React.useEffect] error.message => ', error.message);
       }
     })();
@@ -295,7 +295,7 @@ function App(): JSX.Element {
     dispatch
   ]);
 
-  // Loads the PolkaBTC bridge and the faucet
+  // Loads the InterBTC bridge and the faucet
   React.useEffect(() => {
     // Do not load data if showing static landing page only
     if (checkStaticPage()) return;

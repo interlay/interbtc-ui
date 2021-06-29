@@ -125,7 +125,7 @@ const IssueModal = ({
                   {request.issuedAmountBtc || request.requestedAmountPolkaBTC}
                 </span>
                 <span className='text-2xl'>
-                  PolkaBTC
+                  InterBTC
                 </span>
               </h4>
               <span

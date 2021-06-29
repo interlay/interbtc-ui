@@ -78,7 +78,7 @@ const ReimburseStatusUI = ({
 
   const handleRetry = async () => {
     if (!polkaBtcLoaded) {
-      throw new Error('PolkaBTC is not loaded!');
+      throw new Error('InterBTC is not loaded!');
     }
     if (!request) {
       throw new Error('Invalid request!');
@@ -101,7 +101,7 @@ const ReimburseStatusUI = ({
 
   const handleBurn = async () => {
     if (!polkaBtcLoaded) {
-      throw new Error('PolkaBTC is not loaded!');
+      throw new Error('InterBTC is not loaded!');
     }
     if (!request) {
       throw new Error('Invalid request!');

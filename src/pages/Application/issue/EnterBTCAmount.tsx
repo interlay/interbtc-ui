@@ -195,7 +195,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
     }
 
     if (!polkaBtcLoaded) {
-      return 'PolkaBTC must be loaded!';
+      return 'InterBTC must be loaded!';
     }
 
     if (btcToSat(value.toString()) === undefined) {
