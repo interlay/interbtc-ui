@@ -9,6 +9,10 @@ import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
 import {
   btcToSat,
@@ -23,7 +27,7 @@ import Toggle from 'components/Toggle';
 import TextField from 'components/TextField';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
-import ErrorHandler from 'components/ErrorHandler';
+import ErrorFallback from 'components/ErrorFallback';
 import InterlayRoseContainedButton from 'components/buttons/InterlayRoseContainedButton';
 import {
   changeRedeemStepAction,
@@ -68,7 +72,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
   const { t } = useTranslation();
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
-  const [error, setError] = React.useState<Error | null>(null);
+  const handleError = useErrorHandler();
 
   const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
   const {
@@ -121,6 +125,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
 
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
+    if (!handleError) return;
 
     (async () => {
       try {
@@ -168,16 +173,13 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
-        setError(error);
+        handleError(error);
       }
     })();
-  }, [polkaBtcLoaded]);
-
-  if (status === STATUSES.REJECTED && error) {
-    return (
-      <ErrorHandler error={error} />
-    );
-  }
+  }, [
+    polkaBtcLoaded,
+    handleError
+  ]);
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
     return (
@@ -484,4 +486,9 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
   return null;
 };
 
-export default EnterAmountAndAddress;
+export default withErrorBoundary(EnterAmountAndAddress, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});

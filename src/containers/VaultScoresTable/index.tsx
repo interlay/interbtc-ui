@@ -12,10 +12,14 @@ import {
 // eslint-disable-next-line max-len
 } from 'react-table'; // TODO: should type properly (Re:https://github.com/tannerlinsley/react-table/blob/master/TYPESCRIPT.md)
 import clsx from 'clsx';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
 import { VaultData } from '@interlay/interbtc-stats-client'; // TODO: should do tree-shaking
 
 import EllipsisLoader from 'components/EllipsisLoader';
-import ErrorHandler from 'components/ErrorHandler';
+import ErrorFallback from 'components/ErrorFallback';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -55,7 +59,7 @@ const VaultScoresTable = ({
   const statsApi = usePolkabtcStats();
   const [data, setData] = React.useState<PatchedVaultData[]>([]);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
-  const [error, setError] = React.useState<Error | null>(null);
+  const handleError = useErrorHandler();
   const { t } = useTranslation();
 
   // TODO: should add an abort-controller
@@ -64,6 +68,7 @@ const VaultScoresTable = ({
     // - (Re: https://kentcdodds.com/blog/authentication-in-react-applications)
     if (!polkaBtcLoaded) return;
     if (!statsApi) return;
+    if (!handleError) return;
 
     (async () => {
       try {
@@ -79,13 +84,14 @@ const VaultScoresTable = ({
         setData(transformedVaults);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
-        setError(error);
+        handleError(error);
       }
     })();
   }, [
     polkaBtcLoaded,
     challengeTime,
-    statsApi
+    statsApi,
+    handleError
   ]);
 
   const columns = React.useMemo(
@@ -175,12 +181,6 @@ const VaultScoresTable = ({
     );
   }
 
-  if (status === STATUSES.REJECTED && error) {
-    return (
-      <ErrorHandler error={error} />
-    );
-  }
-
   if (status === STATUSES.RESOLVED) {
     // TODO: should optimize re-renders https://kentcdodds.com/blog/optimize-react-re-renders
     return (
@@ -247,4 +247,9 @@ const VaultScoresTable = ({
   return null;
 };
 
-export default VaultScoresTable;
+export default withErrorBoundary(VaultScoresTable, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});

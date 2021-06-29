@@ -90,7 +90,7 @@ const RedeemRequestsTable = (): JSX.Element => {
                     t('redeem_page.failed')
                   ) : (
                     <>
-                      {/* TODO: could be a component */}
+                      {/* TODO: could componentize */}
                       {props.row.original.btcTxId ? (
                         <InterlayLink
                           className={clsx(

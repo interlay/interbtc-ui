@@ -9,13 +9,17 @@ import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
 import { btcToSat } from '@interlay/polkabtc';
 
 import PriceInfo from '../PriceInfo';
 import PolkaBTCField from '../PolkaBTCField';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
-import ErrorHandler from 'components/ErrorHandler';
+import ErrorFallback from 'components/ErrorFallback';
 import InterlayRoseContainedButton from 'components/buttons/InterlayRoseContainedButton';
 import { getUsdAmount } from 'common/utils/utils';
 import {
@@ -42,7 +46,7 @@ const Burn = (): JSX.Element | null => {
   const { t } = useTranslation();
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
-  const [error, setError] = React.useState<Error | null>(null);
+  const handleError = useErrorHandler();
 
   const {
     prices,
@@ -71,6 +75,7 @@ const Burn = (): JSX.Element | null => {
 
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
+    if (!handleError) return;
 
     (async () => {
       try {
@@ -80,16 +85,13 @@ const Burn = (): JSX.Element | null => {
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
-        setError(error);
+        handleError(error);
       }
     })();
-  }, [polkaBtcLoaded]);
-
-  if (status === STATUSES.REJECTED && error) {
-    return (
-      <ErrorHandler error={error} />
-    );
-  }
+  }, [
+    polkaBtcLoaded,
+    handleError
+  ]);
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
     return (
@@ -205,7 +207,7 @@ const Burn = (): JSX.Element | null => {
             value={earnedDOT}
             unitName='DOT'
             approxUSD={getUsdAmount(earnedDOT, prices.polkadot.usd)} />
-          {/* TODO: could be a reusable component */}
+          {/* TODO: could componentize */}
           <hr
             className={clsx(
               'border-t-2',
@@ -261,4 +263,9 @@ const Burn = (): JSX.Element | null => {
   return null;
 };
 
-export default Burn;
+export default withErrorBoundary(Burn, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});

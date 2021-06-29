@@ -36,6 +36,7 @@ const CancelledIssueRequest = (): JSX.Element => {
         )}>
         {t('issue_page.you_did_not_send')}
       </p>
+      {/* TODO: could componentize */}
       <div>
         <h6
           className={clsx(

@@ -7,19 +7,20 @@ import RequestWrapper from '../../../../RequestWrapper';
 import InterlayLink from 'components/UI/InterlayLink';
 import { shortAddress } from 'common/utils/utils';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
-import { IssueRequest } from 'common/types/issue.types';
+import { RedeemRequest } from 'common/types/redeem.types';
 
 interface Props {
-  request: IssueRequest;
+  request: RedeemRequest;
 }
 
-const CompletedIssueRequest = ({
+const CompletedRedeemRequest = ({
   request
 }: Props): JSX.Element => {
   const { t } = useTranslation();
 
   return (
-    <RequestWrapper id='CompletedIssueRequest'>
+    <RequestWrapper>
+      {/* TODO: could componentize */}
       <h2
         className={clsx(
           'text-3xl',
@@ -34,10 +35,12 @@ const CompletedIssueRequest = ({
           'font-medium'
         )}>
         <span>{t('issue_page.you_received')}</span>
-        <span className='text-interlayRose'>
-          {request.issuedAmountBtc || request.requestedAmountPolkaBTC} PolkaBTC
+        <span className='text-interlayOutrageousOrange'>
+          {`${request.amountPolkaBTC} BTC`}
         </span>
+        .
       </p>
+      {/* TODO: could componentize */}
       <div
         className={clsx(
           'w-48',
@@ -62,7 +65,6 @@ const CompletedIssueRequest = ({
           {request.creation}
         </span>
       </div>
-      {/* TODO: could componentize */}
       <InterlayLink
         className={clsx(
           'text-interlayDodgerBlue',
@@ -77,6 +79,7 @@ const CompletedIssueRequest = ({
         <span>{t('issue_page.view_parachain_block')}</span>
         <FaExternalLinkAlt />
       </InterlayLink>
+      {/* TODO: could componentize */}
       <p className='space-x-1'>
         <span className='text-textSecondary'>{t('issue_page.btc_transaction')}:</span>
         <span className='font-medium'>{shortAddress(request.btcTxId)}</span>
@@ -92,13 +95,11 @@ const CompletedIssueRequest = ({
         href={`${BTC_TRANSACTION_API}${request.btcTxId}`}
         target='_blank'
         rel='noopener noreferrer'>
-        <span>
-          {t('issue_page.view_on_block_explorer')}
-        </span>
+        <span>{t('issue_page.view_on_block_explorer')}</span>
         <FaExternalLinkAlt />
       </InterlayLink>
     </RequestWrapper>
   );
 };
 
-export default CompletedIssueRequest;
+export default CompletedRedeemRequest;

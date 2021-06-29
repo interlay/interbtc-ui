@@ -13,7 +13,7 @@ function PageLink({ page, setPage }: PageLinkProps): ReactElement {
     <span
       key={page}
       onClick={() => setPage(page)}
-      className='table-page-link hover-underline'>
+      className='cursor-pointer p-2.5 hover:underline'>
       {page + 1}&nbsp;
     </span>
   );
