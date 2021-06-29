@@ -12,7 +12,7 @@ interface CustomProps {
 }
 
 type Ref = HTMLButtonElement;
-const InterlayTreePoppyContainedButton = React.forwardRef<Ref, Props>(({
+const InterlayOrangePeelContainedButton = React.forwardRef<Ref, Props>(({
   className,
   children,
   startIcon,
@@ -30,8 +30,8 @@ const InterlayTreePoppyContainedButton = React.forwardRef<Ref, Props>(({
       className={clsx(
         'focus:outline-none',
         'focus:ring',
-        'focus:border-interlayTreePoppy-300',
-        'focus:ring-interlayTreePoppy-200',
+        'focus:border-interlayOrangePeel-300',
+        'focus:ring-interlayOrangePeel-200',
         'focus:ring-opacity-50',
 
         'border',
@@ -45,8 +45,8 @@ const InterlayTreePoppyContainedButton = React.forwardRef<Ref, Props>(({
           'text-opacity-25'
         ) : clsx(
           'text-white',
-          'bg-interlayTreePoppy',
-          'hover:bg-interlayTreePoppy-600'
+          'bg-interlayOrangePeel',
+          'hover:bg-interlayOrangePeel-600'
         ),
 
         'rounded',
@@ -76,8 +76,8 @@ const InterlayTreePoppyContainedButton = React.forwardRef<Ref, Props>(({
     </InterlayButtonBase>
   );
 });
-InterlayTreePoppyContainedButton.displayName = 'InterlayTreePoppyContainedButton';
+InterlayOrangePeelContainedButton.displayName = 'InterlayTreePoppyContainedButton';
 
 export type Props = CustomProps & InterlayButtonBaseProps;
 
-export default InterlayTreePoppyContainedButton;
+export default InterlayOrangePeelContainedButton;

@@ -17,18 +17,6 @@ const INTERLAY_ROSE = Object.freeze({
   800: '#8a0049',
   900: '#71003c'
 });
-const INTERLAY_TREE_POPPY = Object.freeze({
-  50: '#fffaf4',
-  100: '#fef4e8',
-  200: '#fde4c6',
-  300: '#fcd4a3',
-  400: '#f9b35f',
-  500: '#f7931a', // MEMO: bitcoin color
-  600: '#de8417',
-  700: '#b96e14',
-  800: '#945810',
-  900: '#79480d'
-});
 const INTERLAY_MALACHITE = Object.freeze({
   50: '#f6fcf6',
   100: '#edfaed',
@@ -221,18 +209,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        interlayTreePoppy: {
-          50: INTERLAY_TREE_POPPY[50],
-          100: INTERLAY_TREE_POPPY[100],
-          200: INTERLAY_TREE_POPPY[200],
-          300: INTERLAY_TREE_POPPY[300],
-          400: INTERLAY_TREE_POPPY[400],
-          DEFAULT: INTERLAY_TREE_POPPY[500],
-          600: INTERLAY_TREE_POPPY[600],
-          700: INTERLAY_TREE_POPPY[700],
-          800: INTERLAY_TREE_POPPY[800],
-          900: INTERLAY_TREE_POPPY[900]
-        },
         interlayDodgerBlue: {
           50: INTERLAY_DODGER_BLUE[50],
           100: INTERLAY_DODGER_BLUE[100],

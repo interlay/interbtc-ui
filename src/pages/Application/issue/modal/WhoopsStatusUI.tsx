@@ -63,7 +63,7 @@ const WhoopsStatusUI = ({
       <PriceInfo
         className='w-full'
         title={
-          <h5 className='text-interlayTreePoppy'>
+          <h5 className='text-interlayOrangePeel'>
             {t('issue_page.refund_deposited')}
           </h5>
         }

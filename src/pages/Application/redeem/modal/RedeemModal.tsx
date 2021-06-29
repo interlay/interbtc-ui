@@ -74,7 +74,7 @@ const RedeemModal = ({
             'font-medium',
             'break-words',
             'text-base',
-            'text-interlayTreePoppy',
+            'text-interlayOrangePeel',
             'text-center',
             'uppercase'
           )}>
@@ -84,7 +84,7 @@ const RedeemModal = ({
           className={clsx(
             'border-t-2',
             'my-2',
-            'border-interlayTreePoppy'
+            'border-interlayOrangePeel'
           )} />
         <IconButton
           ref={focusRef}

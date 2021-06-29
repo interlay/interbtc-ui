@@ -223,7 +223,7 @@ const VaultRedeemRequestsTable = ({
             'flex',
             'justify-center'
           )}>
-          <EllipsisLoader dotClassName='bg-interlayTreePoppy-400' />
+          <EllipsisLoader dotClassName='bg-interlayOrangePeel-400' />
         </div>
       )}
       {status === STATUSES.RESOLVED && (

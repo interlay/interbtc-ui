@@ -97,7 +97,7 @@ function IssueRequests(): JSX.Element {
           <PageTitle
             mainTitle={t('issue_page.issue_requests')}
             subTitle={<TimerIncrement />} />
-          <hr className='border-interlayTreePoppy' />
+          <hr className='border-interlayOrangePeel' />
         </div>
         <div
           className={clsx(

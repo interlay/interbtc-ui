@@ -51,7 +51,7 @@ const StatusCell = ({
   default:
     icon = <FaRegClock />;
     notice = t('pending');
-    colorClassName = 'text-interlayTreePoppy';
+    colorClassName = 'text-interlayOrangePeel';
     break;
   }
 

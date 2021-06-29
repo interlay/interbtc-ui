@@ -141,7 +141,7 @@ const Application = (): JSX.Element | null => {
             <h4
               className={clsx(
                 'text-2xl',
-                'text-interlayTreePoppy',
+                'text-interlayOrangePeel',
                 'font-medium',
                 'text-center',
                 'my-3'
@@ -167,7 +167,7 @@ const Application = (): JSX.Element | null => {
                       'uppercase',
                       { 'rounded-lg text-white transition': selectedTabId === tabItem.id },
                       { 'bg-interlayRose': tabItem.id === TAB_IDS.issue && selectedTabId === TAB_IDS.issue },
-                      { 'bg-interlayTreePoppy': tabItem.id === TAB_IDS.redeem && selectedTabId === TAB_IDS.redeem },
+                      { 'bg-interlayOrangePeel': tabItem.id === TAB_IDS.redeem && selectedTabId === TAB_IDS.redeem },
                       { 'bg-interlayDodgerBlue':
                         tabItem.id === TAB_IDS.transfer && selectedTabId === TAB_IDS.transfer },
                       { 'bg-interlayPomegranate': tabItem.id === TAB_IDS.burn && selectedTabId === TAB_IDS.burn },
@@ -185,7 +185,7 @@ const Application = (): JSX.Element | null => {
                   'border-t-2',
                   'my-2',
                   { 'border-interlayRose': selectedTabId === TAB_IDS.issue },
-                  { 'border-interlayTreePoppy': selectedTabId === TAB_IDS.redeem },
+                  { 'border-interlayOrangePeel': selectedTabId === TAB_IDS.redeem },
                   { 'border-interlayDodgerBlue': selectedTabId === TAB_IDS.transfer },
                   { 'border-interlayPomegranate': selectedTabId === TAB_IDS.burn }
                 )} />

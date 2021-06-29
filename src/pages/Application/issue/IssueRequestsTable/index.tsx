@@ -175,7 +175,7 @@ const IssueRequestsTable = (): JSX.Element => {
           default: {
             icon = <FaRegClock />;
             notice = t('pending');
-            colorClassName = 'text-interlayTreePoppy';
+            colorClassName = 'text-interlayOrangePeel';
             break;
           }
           }

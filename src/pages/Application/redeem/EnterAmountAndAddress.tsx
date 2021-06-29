@@ -188,7 +188,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
           'flex',
           'justify-center'
         )}>
-        <EllipsisLoader dotClassName='bg-interlayTreePoppy-400' />
+        <EllipsisLoader dotClassName='bg-interlayOrangePeel-400' />
       </div>
     );
   }
@@ -326,7 +326,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
             className={clsx(
               'font-medium',
               'text-center',
-              'text-interlayTreePoppy'
+              'text-interlayOrangePeel'
             )}>
             {t('redeem_page.you_will_receive')}
           </h4>

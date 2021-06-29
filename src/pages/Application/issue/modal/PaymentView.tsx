@@ -53,7 +53,7 @@ const PaymentView = ({
         <div
           className='text-xl'>
           {t('send')}
-          <span className='text-interlayTreePoppy'>&nbsp;{request.amountBTC}&nbsp;</span>
+          <span className='text-interlayOrangePeel'>&nbsp;{request.amountBTC}&nbsp;</span>
           BTC
         </div>
         <span
@@ -107,7 +107,7 @@ const PaymentView = ({
           )}>
           {t('issue_page.warning_mbtc_wallets')}
         </span>
-        <span className='text-interlayTreePoppy'>
+        <span className='text-interlayOrangePeel'>
           {displayBtcAmount(new Big(request.amountBTC).mul(1000).toString())}&nbsp;mBTC
         </span>
       </p>

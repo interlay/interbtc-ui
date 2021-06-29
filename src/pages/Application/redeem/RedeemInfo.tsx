@@ -62,7 +62,7 @@ const RedeemInfo = (): JSX.Element => {
               <h5
                 className={clsx(
                   'font-medium',
-                  'text-interlayTreePoppy',
+                  'text-interlayOrangePeel',
                   'flex',
                   'items-center',
                   'justify-center',
@@ -81,7 +81,7 @@ const RedeemInfo = (): JSX.Element => {
                   'text-center'
                 )}>
                 <span>{t('redeem_page.will_receive_BTC')}</span>
-                <span className='text-interlayTreePoppy'>
+                <span className='text-interlayOrangePeel'>
                   {displayBtcAmount(request.amountBTC)} BTC
                 </span>
               </h1>

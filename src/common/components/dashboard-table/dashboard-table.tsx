@@ -81,7 +81,7 @@ function StatusComponent({
             'ml-1',
             { 'text-interlayMalachite': category === StatusCategories.Ok },
             { 'text-interlayScarlet': category === StatusCategories.Bad },
-            { 'text-interlayTreePoppy': category !== StatusCategories.Ok && category !== StatusCategories.Bad }
+            { 'text-interlayOrangePeel': category !== StatusCategories.Ok && category !== StatusCategories.Bad }
           )}
           width={14}
           height={14} />
@@ -93,7 +93,7 @@ function StatusComponent({
           { 'text-interlayMalachite': category === StatusCategories.Ok },
           { 'text-interlayScarlet': category === StatusCategories.Bad },
           {
-            'text-interlayTreePoppy':
+            'text-interlayOrangePeel':
               category !== StatusCategories.Ok &&
               category !== StatusCategories.Bad &&
               category !== StatusCategories.Neutral
