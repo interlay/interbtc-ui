@@ -231,7 +231,7 @@ const IssueModal = ({
               </div>
             </div>
             <p className='space-x-1'>
-              <span className='text-interlayPomegranate'>{t('note')}:</span>
+              <span className='text-interlayCinnabar'>{t('note')}:</span>
               <span className='text-textSecondary'>{t('issue_page.fully_decentralized')}</span>
             </p>
           </div>

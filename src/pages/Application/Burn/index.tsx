@@ -100,7 +100,7 @@ const Burn = (): JSX.Element | null => {
           'flex',
           'justify-center'
         )}>
-        <EllipsisLoader dotClassName='bg-interlayPomegranate-400' />
+        <EllipsisLoader dotClassName='bg-interlayCinnabar-400' />
       </div>
     );
   }
@@ -172,7 +172,7 @@ const Burn = (): JSX.Element | null => {
             className={clsx(
               'font-medium',
               'text-center',
-              'text-interlayPomegranate'
+              'text-interlayCinnabar'
             )}>
             {t('burn_page.burn_interbtc')}
           </h4>

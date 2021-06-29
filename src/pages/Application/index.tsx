@@ -170,7 +170,7 @@ const Application = (): JSX.Element | null => {
                       { 'bg-interlayOrangePeel': tabItem.id === TAB_IDS.redeem && selectedTabId === TAB_IDS.redeem },
                       { 'bg-interlayDodgerBlue':
                         tabItem.id === TAB_IDS.transfer && selectedTabId === TAB_IDS.transfer },
-                      { 'bg-interlayPomegranate': tabItem.id === TAB_IDS.burn && selectedTabId === TAB_IDS.burn },
+                      { 'bg-interlayCinnabar': tabItem.id === TAB_IDS.burn && selectedTabId === TAB_IDS.burn },
                       { 'opacity-30': selectedTabId !== tabItem.id }
                     )}
                     key={tabItem.id}
@@ -187,7 +187,7 @@ const Application = (): JSX.Element | null => {
                   { 'border-interlayRose': selectedTabId === TAB_IDS.issue },
                   { 'border-interlayOrangePeel': selectedTabId === TAB_IDS.redeem },
                   { 'border-interlayDodgerBlue': selectedTabId === TAB_IDS.transfer },
-                  { 'border-interlayPomegranate': selectedTabId === TAB_IDS.burn }
+                  { 'border-interlayCinnabar': selectedTabId === TAB_IDS.burn }
                 )} />
             </>
           )}

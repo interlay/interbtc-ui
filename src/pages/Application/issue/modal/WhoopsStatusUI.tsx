@@ -122,7 +122,7 @@ const WhoopsStatusUI = ({
       <p className='text-textSecondary'>
         {t('issue_page.refund_requested_vault')}
         &nbsp;{t('issue_page.refund_vault_to_return')}
-        <span className='text-interlayPomegranate'>
+        <span className='text-interlayCinnabar'>
           &nbsp;{safeRoundEightDecimals(request.refundAmountBtc)}
         </span>
         &nbsp;BTC&nbsp;
