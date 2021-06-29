@@ -90,6 +90,30 @@ const INTERLAY_SILVER_CHALICE = Object.freeze({
   800: '#656565',
   900: '#535353'
 });
+const INTERLAY_PURPLE_HEART = Object.freeze({
+  50: '#faf6fe',
+  100: '#f4eefd',
+  200: '#e5d4f9',
+  300: '#d5b9f5',
+  400: '#b585ee',
+  500: '#9551e6',
+  600: '#8649cf',
+  700: '#703dad',
+  800: '#59318a',
+  900: '#492871'
+});
+const INTERLAY_FRENCH_GRAY = Object.freeze({
+  50: '#fcfcfc',
+  100: '#f9f8f9',
+  200: '#f0eff0',
+  300: '#e7e5e7',
+  400: '#d6d1d6',
+  500: '#c4bdc4',
+  600: '#b0aab0',
+  700: '#938e93',
+  800: '#767176',
+  900: '#605d60'
+});
 
 module.exports = {
   purge: [
@@ -136,7 +160,6 @@ module.exports = {
           800: INTERLAY_SCARLET[800],
           900: INTERLAY_SCARLET[900]
         },
-        // TODO: could use `Gray` shades from https://tailwindcss.com/docs/customizing-colors
         interlaySilverChalice: {
           50: INTERLAY_SILVER_CHALICE[50],
           100: INTERLAY_SILVER_CHALICE[100],
@@ -184,6 +207,30 @@ module.exports = {
           700: INTERLAY_POMEGRANATE[700],
           800: INTERLAY_POMEGRANATE[800],
           900: INTERLAY_POMEGRANATE[900]
+        },
+        interlayPurpleHeart: {
+          50: INTERLAY_PURPLE_HEART[50],
+          100: INTERLAY_PURPLE_HEART[100],
+          200: INTERLAY_PURPLE_HEART[200],
+          300: INTERLAY_PURPLE_HEART[300],
+          400: INTERLAY_PURPLE_HEART[400],
+          DEFAULT: INTERLAY_PURPLE_HEART[500],
+          600: INTERLAY_PURPLE_HEART[600],
+          700: INTERLAY_PURPLE_HEART[700],
+          800: INTERLAY_PURPLE_HEART[800],
+          900: INTERLAY_PURPLE_HEART[900]
+        },
+        interlayFrenchGray: {
+          50: INTERLAY_FRENCH_GRAY[50],
+          100: INTERLAY_FRENCH_GRAY[100],
+          200: INTERLAY_FRENCH_GRAY[200],
+          300: INTERLAY_FRENCH_GRAY[300],
+          400: INTERLAY_FRENCH_GRAY[400],
+          DEFAULT: INTERLAY_FRENCH_GRAY[500],
+          600: INTERLAY_FRENCH_GRAY[600],
+          700: INTERLAY_FRENCH_GRAY[700],
+          800: INTERLAY_FRENCH_GRAY[800],
+          900: INTERLAY_FRENCH_GRAY[900]
         },
         primary: {
           50: INTERLAY_ROSE[50],

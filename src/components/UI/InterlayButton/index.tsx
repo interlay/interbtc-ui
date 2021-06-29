@@ -12,7 +12,6 @@ const VARIANTS = Object.freeze({
 
 const COLORS = Object.freeze({
   default: 'default',
-  inherit: 'inherit', // TODO: not used
   primary: 'primary',
   secondary: 'secondary'
 });
@@ -85,9 +84,7 @@ const InterlayButton = ({
         {
           [clsx(
             'text-black',
-            'text-opacity-25',
-            'dark:text-white',
-            'dark:text-opacity-30'
+            'text-opacity-25'
           )]: disabledOrPending
         },
         { 'shadow-sm': variant === VARIANTS.contained && !disabledOrPending },

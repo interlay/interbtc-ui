@@ -6,7 +6,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import InterlayButton from 'components/UI/InterlayButton';
+import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import { StoreType } from 'common/types/util.types';
 import {
   resetIssueWizardAction,
@@ -32,17 +32,15 @@ const BTCPayment = (): JSX.Element => {
   return (
     <>
       {request && <BTCPaymentPendingStatusUI request={request} />}
-      <InterlayButton
+      <InterlayDefaultContainedButton
         style={{ display: 'flex' }}
         className={clsx(
           'mx-auto',
           'mt-8'
         )}
-        variant='contained'
-        color='default'
         onClick={handleClick}>
         {t('issue_page.made_payment')}
-      </InterlayButton>
+      </InterlayDefaultContainedButton>
     </>
   );
 };

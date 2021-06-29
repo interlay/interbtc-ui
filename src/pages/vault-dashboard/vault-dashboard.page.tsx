@@ -26,7 +26,9 @@ import CardList, {
   CardListContainer
 } from 'components/CardList';
 import BoldParagraph from 'components/BoldParagraph';
-import InterlayButton from 'components/UI/InterlayButton';
+import InterlayRoseContainedButton from 'components/buttons/InterlayRoseContainedButton';
+import InterlayTreePoppyContainedButton from 'components/buttons/InterlayTreePoppyContainedButton';
+import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
 import RequestReplacementModal from './request-replacement/request-replacement';
 import ReplaceTable from './replace-table/replace-table';
@@ -243,35 +245,29 @@ function VaultDashboard(): JSX.Element {
               'grid-cols-3',
               'gap-10'
             )}>
-            <InterlayButton
+            <InterlayRoseContainedButton
               type='submit'
               style={{ display: 'flex' }}
               className='mx-auto'
-              variant='contained'
-              color='primary'
               // TODO: should not use inlined functions
               onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Increase)}>
               {t('vault.deposit_collateral')}
-            </InterlayButton>
-            <InterlayButton
+            </InterlayRoseContainedButton>
+            <InterlayDefaultContainedButton
               type='submit'
               style={{ display: 'flex' }}
               className='mx-auto'
-              variant='contained'
-              color='default'
               onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Decrease)}>
               {t('vault.withdraw_collateral')}
-            </InterlayButton>
+            </InterlayDefaultContainedButton>
             {new Big(lockedBTC).gt(new Big(0)) ? (
-              <InterlayButton
+              <InterlayTreePoppyContainedButton
                 type='submit'
                 style={{ display: 'flex' }}
                 className='mx-auto'
-                variant='contained'
-                color='secondary'
                 onClick={() => setShowRequestReplacementModal(true)}>
                 {t('vault.replace_vault')}
-              </InterlayButton>
+              </InterlayTreePoppyContainedButton>
             ) : (
               ''
             )}

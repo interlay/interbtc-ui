@@ -11,7 +11,8 @@ import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
 
 import RequestWrapper from '../../RequestWrapper';
-import InterlayButton from 'components/UI/InterlayButton';
+import InterlayRoseOutlinedButton from 'components/buttons/InterlayRoseOutlinedButton';
+import InterlayMalachiteOutlinedButton from 'components/buttons/InterlayMalachiteOutlinedButton';
 import { getUsdAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { RedeemRequest } from 'common/types/redeem.types';
@@ -178,16 +179,13 @@ const ReimburseStatusUI = ({
               </span>
               .
             </p>
-            <InterlayButton
+            <InterlayMalachiteOutlinedButton
               className='w-full'
-              variant='outlined'
-              // TODO: green button
-              color='secondary'
               disabled={retryPending || reimbursePending}
               pending={retryPending}
               onClick={handleRetry}>
               {t('retry')}
-            </InterlayButton>
+            </InterlayMalachiteOutlinedButton>
           </li>
           <li className='list-decimal'>
             <p className='text-justify'>
@@ -207,15 +205,13 @@ const ReimburseStatusUI = ({
                 })}
               </span>
             </p>
-            <InterlayButton
+            <InterlayRoseOutlinedButton
               className='w-full'
-              variant='outlined'
-              color='primary'
               disabled={retryPending || reimbursePending}
               pending={reimbursePending}
               onClick={handleBurn}>
               {t('redeem_page.burn')}
-            </InterlayButton>
+            </InterlayRoseOutlinedButton>
           </li>
         </ul>
       </div>
