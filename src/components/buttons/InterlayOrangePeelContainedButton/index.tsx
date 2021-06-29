@@ -76,7 +76,7 @@ const InterlayOrangePeelContainedButton = React.forwardRef<Ref, Props>(({
     </InterlayButtonBase>
   );
 });
-InterlayOrangePeelContainedButton.displayName = 'InterlayTreePoppyContainedButton';
+InterlayOrangePeelContainedButton.displayName = 'InterlayOrangePeelContainedButton';
 
 export type Props = CustomProps & InterlayButtonBaseProps;
 

@@ -10,7 +10,7 @@ const Template: Story<Props> = args => <InterlayOrangePeelContainedButton {...ar
 
 const Default = Template.bind({});
 Default.args = {
-  children: 'InterlayTreePoppyContainedButton'
+  children: 'InterlayOrangePeelContainedButton'
 };
 
 export {
@@ -18,6 +18,6 @@ export {
 };
 
 export default {
-  title: 'buttons/InterlayTreePoppyContainedButton',
+  title: 'buttons/InterlayOrangePeelContainedButton',
   component: InterlayOrangePeelContainedButton
 } as Meta;

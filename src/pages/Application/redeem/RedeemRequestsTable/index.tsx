@@ -147,7 +147,7 @@ const RedeemRequestsTable = (): JSX.Element => {
           case RedeemRequestStatus.Reimbursed: {
             icon = <FaCheck />; // TODO: should update according to the design
             notice = t('redeem_page.reimbursed');
-            colorClassName = 'text-interlayMalachite'; // TODO: should update according to the design
+            colorClassName = 'text-interlayConifer'; // TODO: should update according to the design
             break;
           }
           case RedeemRequestStatus.Expired: {
@@ -159,13 +159,13 @@ const RedeemRequestsTable = (): JSX.Element => {
           case RedeemRequestStatus.Retried: {
             icon = <FaCheck />;
             notice = t('redeem_page.retried');
-            colorClassName = 'text-interlayMalachite';
+            colorClassName = 'text-interlayConifer';
             break;
           }
           case RedeemRequestStatus.Completed: {
             icon = <FaCheck />;
             notice = t('completed');
-            colorClassName = 'text-interlayMalachite';
+            colorClassName = 'text-interlayConifer';
             break;
           }
           default: {

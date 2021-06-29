@@ -31,7 +31,7 @@ const StatusCell = ({
   case status.completed:
     icon = <FaRegCheckCircle />;
     notice = t('completed');
-    colorClassName = 'text-interlayMalachite';
+    colorClassName = 'text-interlayConifer';
     break;
   case status.cancelled:
     icon = <FaRegTimesCircle />;
@@ -46,7 +46,7 @@ const StatusCell = ({
   case status.reimbursed:
     icon = <FaClipboardCheck />;
     notice = t('reimbursed');
-    colorClassName = 'text-interlayMalachite';
+    colorClassName = 'text-interlayConifer';
     break;
   default:
     icon = <FaRegClock />;

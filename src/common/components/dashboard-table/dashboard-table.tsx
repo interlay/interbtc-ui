@@ -79,7 +79,7 @@ function StatusComponent({
         <Icon
           className={clsx(
             'ml-1',
-            { 'text-interlayMalachite': category === StatusCategories.Ok },
+            { 'text-interlayConifer': category === StatusCategories.Ok },
             { 'text-interlayScarlet': category === StatusCategories.Bad },
             { 'text-interlayOrangePeel': category !== StatusCategories.Ok && category !== StatusCategories.Bad }
           )}
@@ -90,7 +90,7 @@ function StatusComponent({
         className={clsx(
           'ml-1',
           'font-bold',
-          { 'text-interlayMalachite': category === StatusCategories.Ok },
+          { 'text-interlayConifer': category === StatusCategories.Ok },
           { 'text-interlayScarlet': category === StatusCategories.Bad },
           {
             'text-interlayOrangePeel':

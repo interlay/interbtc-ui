@@ -24,7 +24,7 @@ const CompletedIssueRequest = ({
         className={clsx(
           'text-3xl',
           'font-medium',
-          'text-interlayMalachite'
+          'text-interlayConifer'
         )}>
         {t('completed')}
       </h2>
@@ -43,7 +43,7 @@ const CompletedIssueRequest = ({
           'w-48',
           'h-48',
           'ring-4',
-          'ring-interlayMalachite',
+          'ring-interlayConifer',
           'rounded-full',
           'inline-flex',
           'flex-col',
@@ -56,7 +56,7 @@ const CompletedIssueRequest = ({
         <span
           className={clsx(
             'text-2xl',
-            'text-interlayMalachite',
+            'text-interlayConifer',
             'font-medium'
           )}>
           {request.creation}

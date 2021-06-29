@@ -442,7 +442,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
           {premiumRedeemSelected && (
             <PriceInfo
               title={
-                <h5 className='text-interlayMalachite'>
+                <h5 className='text-interlayConifer'>
                   {t('redeem_page.earned_premium')}
                 </h5>
               }

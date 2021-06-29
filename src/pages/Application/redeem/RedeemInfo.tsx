@@ -9,7 +9,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import clsx from 'clsx';
 
 import RedeemModal from './modal/RedeemModal';
-import InterlayMalachiteOutlinedButton from 'components/buttons/InterlayMalachiteOutlinedButton';
+import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import InterlayDefaultOutlinedButton from 'components/buttons/InterlayDefaultOutlinedButton';
 import {
   displayBtcAmount,
@@ -124,9 +124,9 @@ const RedeemInfo = (): JSX.Element => {
         <InterlayDefaultOutlinedButton onClick={handleModalOpen}>
           {t('redeem_page.view_progress')}
         </InterlayDefaultOutlinedButton>
-        <InterlayMalachiteOutlinedButton onClick={handleClose}>
+        <InterlayConiferOutlinedButton onClick={handleClose}>
           {t('close')}
-        </InterlayMalachiteOutlinedButton>
+        </InterlayConiferOutlinedButton>
       </div>
       <RedeemModal
         open={modalOpen}

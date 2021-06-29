@@ -162,7 +162,7 @@ const IssueRequestsTable = (): JSX.Element => {
           case IssueRequestStatus.Completed: {
             icon = <FaCheck />;
             notice = t('completed');
-            colorClassName = 'text-interlayMalachite';
+            colorClassName = 'text-interlayConifer';
             break;
           }
           case IssueRequestStatus.Cancelled:

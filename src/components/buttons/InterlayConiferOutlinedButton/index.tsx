@@ -12,7 +12,7 @@ interface CustomProps {
 }
 
 type Ref = HTMLButtonElement;
-const InterlayMalachiteOutlinedButton = React.forwardRef<Ref, Props>(({
+const InterlayConiferOutlinedButton = React.forwardRef<Ref, Props>(({
   className,
   children,
   startIcon,
@@ -30,8 +30,8 @@ const InterlayMalachiteOutlinedButton = React.forwardRef<Ref, Props>(({
       className={clsx(
         'focus:outline-none',
         'focus:ring',
-        'focus:border-interlayMalachite-300',
-        'focus:ring-interlayMalachite-200',
+        'focus:border-interlayConifer-300',
+        'focus:ring-interlayConifer-200',
         'focus:ring-opacity-50',
 
         'border',
@@ -43,9 +43,9 @@ const InterlayMalachiteOutlinedButton = React.forwardRef<Ref, Props>(({
           'text-black',
           'text-opacity-25'
         ) : clsx(
-          'text-interlayMalachite',
-          'border-interlayMalachite',
-          'hover:bg-interlayMalachite',
+          'text-interlayConifer',
+          'border-interlayConifer',
+          'hover:bg-interlayConifer',
           'hover:bg-opacity-5'
         ),
 
@@ -76,8 +76,8 @@ const InterlayMalachiteOutlinedButton = React.forwardRef<Ref, Props>(({
     </InterlayButtonBase>
   );
 });
-InterlayMalachiteOutlinedButton.displayName = 'InterlayMalachiteOutlinedButton';
+InterlayConiferOutlinedButton.displayName = 'InterlayConiferOutlinedButton';
 
 export type Props = CustomProps & InterlayButtonBaseProps;
 
-export default InterlayMalachiteOutlinedButton;
+export default InterlayConiferOutlinedButton;

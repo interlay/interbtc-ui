@@ -66,7 +66,7 @@ const DefaultRedeemRequest = ({
         <span
           className={clsx(
             'text-2xl',
-            'text-interlayMalachite',
+            'text-interlayConifer',
             'font-medium'
           )}>
           {`${request.confirmations}/${stableBitcoinConfirmations}`}

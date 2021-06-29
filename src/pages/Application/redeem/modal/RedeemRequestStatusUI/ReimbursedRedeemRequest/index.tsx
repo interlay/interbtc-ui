@@ -71,7 +71,7 @@ const ReimbursedRedeemRequest = ({
         className={clsx(
           'text-3xl',
           'font-medium',
-          'text-interlayMalachite'
+          'text-interlayConifer'
         )}>
         {t('redeem_page.burn_success')}
       </h2>

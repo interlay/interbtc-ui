@@ -84,7 +84,7 @@ const ConfirmedIssueRequest = ({
           className={clsx(
             'text-3xl',
             'font-medium',
-            'text-interlayMalachite'
+            'text-interlayConifer'
           )}>
           {t('confirmed')}
         </h2>
@@ -92,7 +92,7 @@ const ConfirmedIssueRequest = ({
           className={clsx(
             'w-40',
             'h-40',
-            'text-interlayMalachite'
+            'text-interlayConifer'
           )} />
         <p className='space-x-1'>
           <span className='text-textSecondary'>{t('issue_page.btc_transaction')}:</span>

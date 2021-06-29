@@ -56,7 +56,7 @@ const ReceivedIssueRequest = ({
           'w-48',
           'h-48',
           'ring-4',
-          'ring-interlayMalachite',
+          'ring-interlayConifer',
           'rounded-full',
           'inline-flex',
           'flex-col',
@@ -68,7 +68,7 @@ const ReceivedIssueRequest = ({
         <span
           className={clsx(
             'text-2xl',
-            'text-interlayMalachite',
+            'text-interlayConifer',
             'font-medium'
           )}>
           {`${request.confirmations}/${stableBitcoinConfirmations}`}
@@ -76,7 +76,7 @@ const ReceivedIssueRequest = ({
         <span
           className={clsx(
             'text-2xl',
-            'text-interlayMalachite',
+            'text-interlayConifer',
             'font-medium'
           )}>
           {`${requestConfirmations}/${stableParachainConfirmations}`}

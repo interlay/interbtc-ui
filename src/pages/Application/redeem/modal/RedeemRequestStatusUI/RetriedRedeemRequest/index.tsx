@@ -66,7 +66,7 @@ const RetriedRedeemRequest = ({
         className={clsx(
           'text-3xl',
           'font-medium',
-          'text-interlayMalachite'
+          'text-interlayConifer'
         )}>
         {t('redeem_page.compensation_success')}
       </h2>

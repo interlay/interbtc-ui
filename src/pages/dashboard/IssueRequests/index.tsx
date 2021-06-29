@@ -130,7 +130,7 @@ function IssueRequests(): JSX.Element {
             </h5>
             <h5
               className={clsx(
-                'text-interlayMalachite',
+                'text-interlayConifer',
                 'font-bold',
                 'text-xl'
               )}>

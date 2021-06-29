@@ -16,7 +16,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 
 import RequestWrapper from '../../RequestWrapper';
 import InterlayRoseOutlinedButton from 'components/buttons/InterlayRoseOutlinedButton';
-import InterlayMalachiteOutlinedButton from 'components/buttons/InterlayMalachiteOutlinedButton';
+import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import ErrorFallback from 'components/ErrorFallback';
 import { getUsdAmount } from 'common/utils/utils';
 import STATUSES from 'utils/constants/statuses';
@@ -178,13 +178,13 @@ const ReimburseStatusUI = ({
               </span>
               .
             </p>
-            <InterlayMalachiteOutlinedButton
+            <InterlayConiferOutlinedButton
               className='w-full'
               disabled={retryStatus !== STATUSES.IDLE || burnStatus !== STATUSES.IDLE}
               pending={retryStatus === STATUSES.PENDING}
               onClick={handleRetry}>
               {t('retry')}
-            </InterlayMalachiteOutlinedButton>
+            </InterlayConiferOutlinedButton>
           </li>
           <li className='list-decimal'>
             <p className='text-justify'>

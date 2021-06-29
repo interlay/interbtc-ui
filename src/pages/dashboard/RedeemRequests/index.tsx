@@ -142,7 +142,7 @@ function RedeemRequests(): JSX.Element {
             )}
             <h5
               className={clsx(
-                'text-interlayMalachite',
+                'text-interlayConifer',
                 'font-bold',
                 'text-xl'
               )}>
@@ -154,7 +154,7 @@ function RedeemRequests(): JSX.Element {
             {/* TODO: add this again when the network is stable */}
             {/* <h5
               className={clsx(
-                'text-interlayMalachite',
+                'text-interlayConifer',
                 'font-bold',
                 'text-xl'
               )}>
