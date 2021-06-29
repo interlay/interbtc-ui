@@ -29,18 +29,6 @@ const INTERLAY_DODGER_BLUE = Object.freeze({
   800: '#11508f',
   900: '#0e4275'
 });
-const INTERLAY_SILVER_CHALICE = Object.freeze({
-  50: '#fbfbfb',
-  100: '#f6f6f6',
-  200: '#eaeaea',
-  300: '#dddddd',
-  400: '#c3c3c3',
-  500: '#a9a9a9',
-  600: '#989898',
-  700: '#7f7f7f',
-  800: '#656565',
-  900: '#535353'
-});
 const INTERLAY_PURPLE_HEART = Object.freeze({
   50: '#faf6fe',
   100: '#f4eefd',
@@ -172,18 +160,6 @@ module.exports = {
           700: INTERLAY_DODGER_BLUE[700],
           800: INTERLAY_DODGER_BLUE[800],
           900: INTERLAY_DODGER_BLUE[900]
-        },
-        interlaySilverChalice: {
-          50: INTERLAY_SILVER_CHALICE[50],
-          100: INTERLAY_SILVER_CHALICE[100],
-          200: INTERLAY_SILVER_CHALICE[200],
-          300: INTERLAY_SILVER_CHALICE[300],
-          400: INTERLAY_SILVER_CHALICE[400],
-          DEFAULT: INTERLAY_SILVER_CHALICE[500],
-          600: INTERLAY_SILVER_CHALICE[600],
-          700: INTERLAY_SILVER_CHALICE[700],
-          800: INTERLAY_SILVER_CHALICE[800],
-          900: INTERLAY_SILVER_CHALICE[900]
         },
         interlayRose: {
           50: INTERLAY_ROSE[50],

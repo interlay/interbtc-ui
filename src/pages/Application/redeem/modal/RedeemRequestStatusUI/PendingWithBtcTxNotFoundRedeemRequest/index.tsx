@@ -69,7 +69,7 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({
           'w-48',
           'h-48',
           'ring-4',
-          'ring-interlaySilverChalice',
+          'ring-interlayPaleSky',
           'rounded-full',
           'inline-flex',
           'flex-col',

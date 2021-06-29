@@ -156,7 +156,7 @@ const Application = (): JSX.Element | null => {
                   { 'grid-cols-3': TAB_ITEMS.length === 3 },
                   { 'grid-cols-4': TAB_ITEMS.length === 4 },
                   'rounded-lg',
-                  'bg-interlaySilverChalice-200'
+                  'bg-interlayPaleSky-200'
                 )}>
                 {TAB_ITEMS.map((tabItem, index) => (
                   <Tab
