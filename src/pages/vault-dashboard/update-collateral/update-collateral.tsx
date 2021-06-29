@@ -183,7 +183,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
                 <input
                   name='collateral'
                   type='float'
-                  className={'form-control custom-input' + (errors.collateral ? ' border-interlayScarlet' : '')}
+                  className={'form-control custom-input' + (errors.collateral ? ' border-interlayCinnabar' : '')}
                   aria-describedby='basic-addon2'
                   ref={register({
                     required: true,

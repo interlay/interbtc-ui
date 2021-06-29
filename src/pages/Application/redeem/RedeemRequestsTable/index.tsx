@@ -153,7 +153,7 @@ const RedeemRequestsTable = (): JSX.Element => {
           case RedeemRequestStatus.Expired: {
             icon = <FaRegTimesCircle />;
             notice = t('redeem_page.recover');
-            colorClassName = 'text-interlayScarlet';
+            colorClassName = 'text-interlayCinnabar';
             break;
           }
           case RedeemRequestStatus.Retried: {

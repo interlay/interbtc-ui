@@ -19,7 +19,7 @@ const CancelledIssueRequest = (): JSX.Element => {
         className={clsx(
           'text-3xl',
           'font-medium',
-          'text-interlayScarlet'
+          'text-interlayCinnabar'
         )}>
         {t('cancelled')}
       </h2>
@@ -27,7 +27,7 @@ const CancelledIssueRequest = (): JSX.Element => {
         className={clsx(
           'w-40',
           'h-40',
-          'text-interlayScarlet'
+          'text-interlayCinnabar'
         )} />
       <p
         className={clsx(
@@ -44,7 +44,7 @@ const CancelledIssueRequest = (): JSX.Element => {
             'items-center',
             'justify-center',
             'space-x-0.5',
-            'text-interlayScarlet'
+            'text-interlayCinnabar'
           )}>
           <span>{t('note')}</span>
           <FaExclamationCircle />

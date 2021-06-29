@@ -36,12 +36,12 @@ const StatusCell = ({
   case status.cancelled:
     icon = <FaRegTimesCircle />;
     notice = t('cancelled');
-    colorClassName = 'text-interlayScarlet';
+    colorClassName = 'text-interlayCinnabar';
     break;
   case status.isExpired:
     icon = <FaUserClock />;
     notice = t('expired');
-    colorClassName = 'text-interlayScarlet';
+    colorClassName = 'text-interlayCinnabar';
     break;
   case status.reimbursed:
     icon = <FaClipboardCheck />;

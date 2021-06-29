@@ -143,7 +143,7 @@ const RetriedRedeemRequest = ({
             'items-center',
             'justify-center',
             'space-x-0.5',
-            'text-interlayScarlet'
+            'text-interlayCinnabar'
           )}>
           <span>{t('note')}</span>
           <FaExclamationCircle />

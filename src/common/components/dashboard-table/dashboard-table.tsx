@@ -80,7 +80,7 @@ function StatusComponent({
           className={clsx(
             'ml-1',
             { 'text-interlayConifer': category === StatusCategories.Ok },
-            { 'text-interlayScarlet': category === StatusCategories.Bad },
+            { 'text-interlayCinnabar': category === StatusCategories.Bad },
             { 'text-interlayOrangePeel': category !== StatusCategories.Ok && category !== StatusCategories.Bad }
           )}
           width={14}
@@ -91,7 +91,7 @@ function StatusComponent({
           'ml-1',
           'font-bold',
           { 'text-interlayConifer': category === StatusCategories.Ok },
-          { 'text-interlayScarlet': category === StatusCategories.Bad },
+          { 'text-interlayCinnabar': category === StatusCategories.Bad },
           {
             'text-interlayOrangePeel':
               category !== StatusCategories.Ok &&

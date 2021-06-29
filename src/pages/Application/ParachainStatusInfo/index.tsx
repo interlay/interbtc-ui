@@ -35,7 +35,7 @@ const ParachainStatusInfo = ({
     return (
       <div
         className={clsx(
-          'text-interlayScarlet',
+          'text-interlayCinnabar',
           'font-medium',
           'text-sm',
           className

@@ -28,7 +28,7 @@ const ErrorFallback = ({
   return (
     <p
       className={clsx(
-        'text-interlayScarlet',
+        'text-interlayCinnabar',
         'space-x-1'
       )}>
       <span>Error: {message}.</span>

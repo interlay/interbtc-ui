@@ -37,7 +37,12 @@ const InterBTCField = React.forwardRef<Ref, CustomInterBTCFieldProps & InterlayI
           className={clsx(
             'text-5xl',
             'pr-36',
-            { 'border-interlayScarlet text-interlayScarlet': error }
+            {
+              [clsx(
+                'border-interlayCinnabar',
+                'text-interlayCinnabar'
+              )]: error
+            }
           )}
           {...rest} />
         <TextFieldLabel
@@ -67,7 +72,7 @@ const InterBTCField = React.forwardRef<Ref, CustomInterBTCFieldProps & InterlayI
       </TextFieldContainer>
       <TextFieldHelperText
         className={clsx(
-          { 'text-interlayScarlet': error }
+          { 'text-interlayCinnabar': error }
         )}>
         {helperText}
       </TextFieldHelperText>

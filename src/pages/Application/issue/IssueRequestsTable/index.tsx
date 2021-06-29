@@ -169,7 +169,7 @@ const IssueRequestsTable = (): JSX.Element => {
           case IssueRequestStatus.Expired: {
             icon = <FaRegTimesCircle />;
             notice = t('cancelled');
-            colorClassName = 'text-interlayScarlet';
+            colorClassName = 'text-interlayCinnabar';
             break;
           }
           default: {
