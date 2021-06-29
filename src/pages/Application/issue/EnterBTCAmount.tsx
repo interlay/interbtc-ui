@@ -9,6 +9,10 @@ import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
 import { AccountId } from '@polkadot/types/interfaces';
 import {
   btcToSat,
@@ -65,7 +69,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
   const { t } = useTranslation();
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
-  const [error, setError] = React.useState<Error | null>(null);
+  const handleError = useErrorHandler();
 
   const {
     polkaBtcLoaded,
@@ -102,6 +106,8 @@ const EnterBTCAmount = (): JSX.Element | null => {
 
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
+    if (!dispatch) return;
+    if (!handleError) return;
 
     (async () => {
       try {
@@ -141,19 +147,14 @@ const EnterBTCAmount = (): JSX.Element | null => {
         setVaults(theVaults);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
-        setError(error);
+        handleError(error);
       }
     })();
   }, [
     polkaBtcLoaded,
-    dispatch
+    dispatch,
+    handleError
   ]);
-
-  if (status === STATUSES.REJECTED && error) {
-    return (
-      <ErrorFallback error={error} />
-    );
-  }
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
     return (
@@ -368,4 +369,9 @@ const EnterBTCAmount = (): JSX.Element | null => {
   return null;
 };
 
-export default EnterBTCAmount;
+export default withErrorBoundary(EnterBTCAmount, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});

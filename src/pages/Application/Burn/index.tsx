@@ -9,6 +9,10 @@ import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
 import { btcToSat } from '@interlay/polkabtc';
 
 import PriceInfo from '../PriceInfo';
@@ -42,7 +46,7 @@ const Burn = (): JSX.Element | null => {
   const { t } = useTranslation();
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
-  const [error, setError] = React.useState<Error | null>(null);
+  const handleError = useErrorHandler();
 
   const {
     prices,
@@ -71,6 +75,7 @@ const Burn = (): JSX.Element | null => {
 
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
+    if (!handleError) return;
 
     (async () => {
       try {
@@ -80,16 +85,13 @@ const Burn = (): JSX.Element | null => {
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
-        setError(error);
+        handleError(error);
       }
     })();
-  }, [polkaBtcLoaded]);
-
-  if (status === STATUSES.REJECTED && error) {
-    return (
-      <ErrorFallback error={error} />
-    );
-  }
+  }, [
+    polkaBtcLoaded,
+    handleError
+  ]);
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
     return (
@@ -261,4 +263,9 @@ const Burn = (): JSX.Element | null => {
   return null;
 };
 
-export default Burn;
+export default withErrorBoundary(Burn, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});

@@ -16,6 +16,10 @@ import {
   useGlobalFilter
 } from 'react-table';
 import clsx from 'clsx';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
 import { RelayerData } from '@interlay/interbtc-stats-client';
 
 import EllipsisLoader from 'components/EllipsisLoader';
@@ -57,12 +61,13 @@ const StakedRelayerScoresTable = ({
   const statsApi = usePolkabtcStats();
   const [data, setData] = useState<(PatchedRelayerData)[]>([]);
   const [status, setStatus] = useState(STATUSES.IDLE);
-  const [error, setError] = useState<Error | null>(null);
+  const handleError = useErrorHandler();
   const { t } = useTranslation();
 
   useEffect(() => {
     if (!polkaBtcLoaded) return;
     if (!statsApi) return;
+    if (!handleError) return;
 
     (async () => {
       try {
@@ -78,13 +83,14 @@ const StakedRelayerScoresTable = ({
         setData(transformedStakedRelayers);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
-        setError(error);
+        handleError(error);
       }
     })();
   }, [
     polkaBtcLoaded,
     challengeTime,
-    statsApi
+    statsApi,
+    handleError
   ]);
 
   const columns = useMemo(
@@ -142,12 +148,6 @@ const StakedRelayerScoresTable = ({
         )}>
         <EllipsisLoader dotClassName='bg-interlayTreePoppy-400' />
       </div>
-    );
-  }
-
-  if (status === STATUSES.REJECTED && error) {
-    return (
-      <ErrorFallback error={error} />
     );
   }
 
@@ -216,4 +216,9 @@ const StakedRelayerScoresTable = ({
   return null;
 };
 
-export default StakedRelayerScoresTable;
+export default withErrorBoundary(StakedRelayerScoresTable, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});

@@ -5,6 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { useTable } from 'react-table';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
 import { BtcNetworkName } from '@interlay/interbtc-stats-client';
 
 import EllipsisLoader from 'components/EllipsisLoader';
@@ -51,7 +55,7 @@ const VaultIssueRequestsTable = ({
   const statsApi = usePolkabtcStats();
   const [data, setData] = React.useState<DashboardRequestInfo[]>([]);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
-  const [error, setError] = React.useState<Error | null>(null);
+  const handleError = useErrorHandler();
   const { t } = useTranslation();
 
   const issueRequestFilter = React.useMemo(
@@ -62,6 +66,7 @@ const VaultIssueRequestsTable = ({
   React.useEffect(() => {
     if (!statsApi) return;
     if (!selectedPage) return;
+    if (!handleError) return;
 
     const selectedPageIndex = selectedPage - 1;
 
@@ -79,12 +84,13 @@ const VaultIssueRequestsTable = ({
       })();
     } catch (error) {
       setStatus(STATUSES.REJECTED);
-      setError(error);
+      handleError(error);
     }
   }, [
     statsApi,
     selectedPage,
-    issueRequestFilter
+    issueRequestFilter,
+    handleError
   ]);
 
   const columns = React.useMemo(
@@ -203,12 +209,6 @@ const VaultIssueRequestsTable = ({
     }
   );
 
-  if (status === STATUSES.REJECTED && error) {
-    return (
-      <ErrorFallback error={error} />
-    );
-  }
-
   const handlePageChange = (newPage: number) => {
     updateQueryParameters({
       [QUERY_PARAMETERS.page]: newPage
@@ -293,4 +293,9 @@ const VaultIssueRequestsTable = ({
   );
 };
 
-export default VaultIssueRequestsTable;
+export default withErrorBoundary(VaultIssueRequestsTable, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});
