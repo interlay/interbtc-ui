@@ -9,7 +9,7 @@ import {
 } from 'components/TextField';
 import InterlayInput, { Props as InterlayInputProps } from 'components/UI/InterlayInput';
 
-interface CustomPolkaBTCFieldProps {
+interface CustomInterBTCFieldProps {
   label: string;
   error?: boolean;
   helperText?: JSX.Element | string;
@@ -19,7 +19,7 @@ interface CustomPolkaBTCFieldProps {
 
 type Ref = HTMLInputElement;
 
-const PolkaBTCField = React.forwardRef<Ref, CustomPolkaBTCFieldProps & InterlayInputProps>(({
+const InterBTCField = React.forwardRef<Ref, CustomInterBTCFieldProps & InterlayInputProps>(({
   id,
   label,
   error,
@@ -74,6 +74,6 @@ const PolkaBTCField = React.forwardRef<Ref, CustomPolkaBTCFieldProps & InterlayI
     </div>
   );
 });
-PolkaBTCField.displayName = 'PolkaBTCField';
+InterBTCField.displayName = 'PolkaBTCField';
 
-export default PolkaBTCField;
+export default InterBTCField;

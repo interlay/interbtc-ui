@@ -19,7 +19,7 @@ import {
   stripHexPrefix
 } from '@interlay/polkabtc';
 
-import PolkaBTCField from '../PolkaBTCField';
+import InterBTCField from '../InterBTCField';
 import PriceInfo from '../PriceInfo';
 import ParachainStatusInfo from '../ParachainStatusInfo';
 import Tooltip from 'components/Tooltip';
@@ -257,7 +257,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
             )}>
             {t('issue_page.mint_polka_by_wrapping')}
           </h4>
-          <PolkaBTCField
+          <InterBTCField
             id='btc-amount'
             name={BTC_AMOUNT}
             type='number'

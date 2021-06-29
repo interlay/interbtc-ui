@@ -10,7 +10,7 @@ import Big from 'big.js';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
 
-import PolkaBTCField from '../PolkaBTCField';
+import InterBTCField from '../InterBTCField';
 import TextField from 'components/TextField';
 import InterlayModal, {
   InterlayModalTitle,
@@ -204,7 +204,7 @@ const Transfer = (): JSX.Element => {
           )}>
           {t('transfer_page.transfer_interbtc')}
         </h4>
-        <PolkaBTCField
+        <InterBTCField
           id='polka-btc-amount'
           name={POLKA_BTC_AMOUNT}
           type='number'

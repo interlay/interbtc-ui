@@ -16,7 +16,7 @@ import {
 import { btcToSat } from '@interlay/polkabtc';
 
 import PriceInfo from '../PriceInfo';
-import PolkaBTCField from '../PolkaBTCField';
+import InterBTCField from '../InterBTCField';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
@@ -176,7 +176,7 @@ const Burn = (): JSX.Element | null => {
             )}>
             {t('burn_page.burn_interbtc')}
           </h4>
-          <PolkaBTCField
+          <InterBTCField
             id='polka-btc-amount'
             name={POLKA_BTC_AMOUNT}
             type='number'
