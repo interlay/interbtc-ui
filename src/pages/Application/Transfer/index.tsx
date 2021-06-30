@@ -200,7 +200,7 @@ const Transfer = (): JSX.Element => {
           className={clsx(
             'font-medium',
             'text-center',
-            'text-interlayDodgerBlue'
+            'text-interlayDenim'
           )}>
           {t('transfer_page.transfer_interbtc')}
         </h4>

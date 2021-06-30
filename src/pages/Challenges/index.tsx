@@ -164,7 +164,7 @@ function Challenges(): JSX.Element {
                       'items-center',
                       'space-x-1',
                       'ml-1',
-                      'text-interlayDodgerBlue'
+                      'text-interlayDenim'
                     )}
                     href={challengeItem.contentLink}
                     target='_blank'

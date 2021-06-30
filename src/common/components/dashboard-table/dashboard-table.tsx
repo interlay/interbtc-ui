@@ -28,7 +28,7 @@ function StyledLinkData(props: StyledLinkDataProps): ReactElement {
   // TODO: make into actual hyperlink
   return (
     <InterlayLink
-      className='text-interlayDodgerBlue'
+      className='text-interlayDenim'
       href={props.target}
       target={props.newTab ? '_blank' : ''}
       rel='noopener noreferrer'>

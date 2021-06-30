@@ -95,7 +95,7 @@ function StakedRelayer(): JSX.Element {
     {
       title: t('sla_score'),
       value: safeRoundTwoDecimals(sla),
-      color: 'text-interlayDodgerBlue-800'
+      color: 'text-interlayDenim-800'
     },
     {
       title: t('vault.fees_earned_interbtc'),
@@ -110,7 +110,7 @@ function StakedRelayer(): JSX.Element {
     {
       title: t('apy'),
       value: `~${safeRoundTwoDecimals(apy)}`,
-      color: 'text-interlayDodgerBlue-800'
+      color: 'text-interlayDenim-800'
     }
   ];
 

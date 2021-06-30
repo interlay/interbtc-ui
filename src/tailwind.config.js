@@ -17,18 +17,6 @@ const INTERLAY_ROSE = Object.freeze({
   800: '#8a0049',
   900: '#71003c'
 });
-const INTERLAY_DODGER_BLUE = Object.freeze({
-  50: '#f4f9fe',
-  100: '#e8f3fd',
-  200: '#c6e1fb',
-  300: '#a4cff8',
-  400: '#60aaf3',
-  500: '#1c86ee',
-  600: '#1979d6',
-  700: '#1565b3',
-  800: '#11508f',
-  900: '#0e4275'
-});
 // ray test touch <<
 const INTERLAY_DENIM = Object.freeze({
   50: '#f3f7fc',
@@ -125,18 +113,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        interlayDodgerBlue: {
-          50: INTERLAY_DODGER_BLUE[50],
-          100: INTERLAY_DODGER_BLUE[100],
-          200: INTERLAY_DODGER_BLUE[200],
-          300: INTERLAY_DODGER_BLUE[300],
-          400: INTERLAY_DODGER_BLUE[400],
-          DEFAULT: INTERLAY_DODGER_BLUE[500],
-          600: INTERLAY_DODGER_BLUE[600],
-          700: INTERLAY_DODGER_BLUE[700],
-          800: INTERLAY_DODGER_BLUE[800],
-          900: INTERLAY_DODGER_BLUE[900]
-        },
         interlayRose: {
           50: INTERLAY_ROSE[50],
           100: INTERLAY_ROSE[100],

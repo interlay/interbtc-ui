@@ -65,7 +65,7 @@ const CompletedIssueRequest = ({
       {/* TODO: could componentize */}
       <InterlayLink
         className={clsx(
-          'text-interlayDodgerBlue',
+          'text-interlayDenim',
           'space-x-1.5',
           'inline-flex',
           'items-center',
@@ -83,7 +83,7 @@ const CompletedIssueRequest = ({
       </p>
       <InterlayLink
         className={clsx(
-          'text-interlayDodgerBlue',
+          'text-interlayDenim',
           'space-x-1.5',
           'inline-flex',
           'items-center',

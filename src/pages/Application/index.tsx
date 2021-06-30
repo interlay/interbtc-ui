@@ -168,7 +168,7 @@ const Application = (): JSX.Element | null => {
                       { 'rounded-lg text-white transition': selectedTabId === tabItem.id },
                       { 'bg-interlayRose': tabItem.id === TAB_IDS.issue && selectedTabId === TAB_IDS.issue },
                       { 'bg-interlayOrangePeel': tabItem.id === TAB_IDS.redeem && selectedTabId === TAB_IDS.redeem },
-                      { 'bg-interlayDodgerBlue':
+                      { 'bg-interlayDenim':
                         tabItem.id === TAB_IDS.transfer && selectedTabId === TAB_IDS.transfer },
                       { 'bg-interlayCinnabar': tabItem.id === TAB_IDS.burn && selectedTabId === TAB_IDS.burn },
                       { 'opacity-30': selectedTabId !== tabItem.id }
@@ -186,7 +186,7 @@ const Application = (): JSX.Element | null => {
                   'my-2',
                   { 'border-interlayRose': selectedTabId === TAB_IDS.issue },
                   { 'border-interlayOrangePeel': selectedTabId === TAB_IDS.redeem },
-                  { 'border-interlayDodgerBlue': selectedTabId === TAB_IDS.transfer },
+                  { 'border-interlayDenim': selectedTabId === TAB_IDS.transfer },
                   { 'border-interlayCinnabar': selectedTabId === TAB_IDS.burn }
                 )} />
             </>

@@ -158,7 +158,7 @@ const ReimbursedRedeemRequest = ({
       </div>
       <InterlayLink
         className={clsx(
-          'text-interlayDodgerBlue',
+          'text-interlayDenim',
           'space-x-1.5',
           'inline-flex',
           'items-center',

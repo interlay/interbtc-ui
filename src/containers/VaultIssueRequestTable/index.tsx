@@ -161,7 +161,7 @@ const VaultIssueRequestsTable = ({
           return (
             <InterlayLink
               className={clsx(
-                'text-interlayDodgerBlue',
+                'text-interlayDenim',
                 'space-x-1.5',
                 'flex',
                 'items-center'

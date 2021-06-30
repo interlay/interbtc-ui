@@ -63,7 +63,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
         <div className='values-container'>
           {!failed && (
             <>
-              <h1 className='text-interlayDodgerBlue'>{t('dashboard.vault.collateralization')}</h1>
+              <h1 className='text-interlayDenim'>{t('dashboard.vault.collateralization')}</h1>
               <h2>{safeRoundTwoDecimals(systemCollateralization)}%</h2>
               <h2>
                 {t('dashboard.vault.secure_threshold', {
@@ -93,13 +93,13 @@ export default function Collateralization({ linkButton }: CollateralizationProps
           'justify-center',
           'items-center',
           'border-2',
-          'border-interlayDodgerBlue'
+          'border-interlayDenim'
         )}>
         <h1
           className={clsx(
             'h1-xl',
             'text-2xl',
-            'text-interlayDodgerBlue',
+            'text-interlayDenim',
             'text-center'
           )}>
           {failed ? (

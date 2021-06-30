@@ -21,7 +21,7 @@ const ParachainStatusInfo = ({
       <p
         className={clsx(
           'text-sm',
-          'text-interlayDodgerBlue',
+          'text-interlayDenim',
           'font-medium',
           className
         )}>
