@@ -29,18 +29,6 @@ const INTERLAY_DODGER_BLUE = Object.freeze({
   800: '#11508f',
   900: '#0e4275'
 });
-const INTERLAY_PURPLE_HEART = Object.freeze({
-  50: '#faf6fe',
-  100: '#f4eefd',
-  200: '#e5d4f9',
-  300: '#d5b9f5',
-  400: '#b585ee',
-  500: '#9551e6',
-  600: '#8649cf',
-  700: '#703dad',
-  800: '#59318a',
-  900: '#492871'
-});
 // ray test touch <<
 const INTERLAY_DENIM = Object.freeze({
   50: '#f3f7fc',
@@ -160,18 +148,6 @@ module.exports = {
           700: INTERLAY_ROSE[700],
           800: INTERLAY_ROSE[800],
           900: INTERLAY_ROSE[900]
-        },
-        interlayPurpleHeart: {
-          50: INTERLAY_PURPLE_HEART[50],
-          100: INTERLAY_PURPLE_HEART[100],
-          200: INTERLAY_PURPLE_HEART[200],
-          300: INTERLAY_PURPLE_HEART[300],
-          400: INTERLAY_PURPLE_HEART[400],
-          DEFAULT: INTERLAY_PURPLE_HEART[500],
-          600: INTERLAY_PURPLE_HEART[600],
-          700: INTERLAY_PURPLE_HEART[700],
-          800: INTERLAY_PURPLE_HEART[800],
-          900: INTERLAY_PURPLE_HEART[900]
         },
         // ray test touch <<
         interlayDenim: {
