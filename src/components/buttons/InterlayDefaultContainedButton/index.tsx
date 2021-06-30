@@ -30,8 +30,8 @@ const InterlayDefaultContainedButton = React.forwardRef<Ref, Props>(({
       className={clsx(
         'focus:outline-none',
         'focus:ring',
-        'focus:border-interlayFrenchGray-300',
-        'focus:ring-interlayFrenchGray-200',
+        'focus:border-interlayPaleSky-300',
+        'focus:ring-interlayPaleSky-200',
         'focus:ring-opacity-50',
 
         'border',
@@ -45,8 +45,8 @@ const InterlayDefaultContainedButton = React.forwardRef<Ref, Props>(({
           'text-opacity-25'
         ) : clsx(
           'text-textPrimary',
-          'bg-interlayFrenchGray',
-          'hover:bg-interlayFrenchGray-600'
+          'bg-interlayPaleSky-100',
+          'hover:bg-interlayPaleSky-200'
         ),
 
         'rounded',
