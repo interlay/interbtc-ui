@@ -28,7 +28,7 @@ import TextField from 'components/TextField';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
-import InterlayRoseContainedButton from 'components/buttons/InterlayRoseContainedButton';
+import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
 import {
   changeRedeemStepAction,
   changeRedeemIdAction,
@@ -455,7 +455,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
               unitName='DOT'
               approxUSD={totalDOTInUSD} />
           )}
-          <InterlayRoseContainedButton
+          <InterlayDenimContainedButton
             type='submit'
             style={{ display: 'flex' }}
             className='mx-auto'
@@ -463,7 +463,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
             pending={submitStatus === STATUSES.PENDING}
             onClick={handleConfirmClick}>
             {walletConnected ? t('confirm') : t('connect_wallet')}
-          </InterlayRoseContainedButton>
+          </InterlayDenimContainedButton>
         </form>
         {(submitStatus === STATUSES.REJECTED && submitError) && (
           <ErrorModal

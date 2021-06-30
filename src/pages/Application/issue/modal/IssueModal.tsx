@@ -77,7 +77,7 @@ const IssueModal = ({
             'font-medium',
             'break-words',
             'text-base',
-            'text-interlayRose',
+            'text-interlayDenim',
             'text-center',
             'uppercase'
           )}>
@@ -88,7 +88,7 @@ const IssueModal = ({
           className={clsx(
             'border-t-2',
             'my-2',
-            'border-interlayRose'
+            'border-interlayDenim'
           )} />
         {/* TODO: could componentize */}
         <IconButton
@@ -118,7 +118,7 @@ const IssueModal = ({
               <h4
                 className={clsx(
                   'font-medium',
-                  'text-interlayRose',
+                  'text-interlayDenim',
                   'space-x-1'
                 )}>
                 <span className='text-5xl'>

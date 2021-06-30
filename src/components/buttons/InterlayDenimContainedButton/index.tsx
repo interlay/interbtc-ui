@@ -12,7 +12,7 @@ interface CustomProps {
 }
 
 type Ref = HTMLButtonElement;
-const InterlayRoseContainedButton = React.forwardRef<Ref, Props>(({
+const InterlayDenimContainedButton = React.forwardRef<Ref, Props>(({
   className,
   children,
   startIcon,
@@ -30,8 +30,8 @@ const InterlayRoseContainedButton = React.forwardRef<Ref, Props>(({
       className={clsx(
         'focus:outline-none',
         'focus:ring',
-        'focus:border-interlayRose-300',
-        'focus:ring-interlayRose-200',
+        'focus:border-interlayDenim-300',
+        'focus:ring-interlayDenim-200',
         'focus:ring-opacity-50',
 
         'border',
@@ -45,8 +45,8 @@ const InterlayRoseContainedButton = React.forwardRef<Ref, Props>(({
           'text-opacity-25'
         ) : clsx(
           'text-white',
-          'bg-interlayRose',
-          'hover:bg-interlayRose-600'
+          'bg-interlayDenim',
+          'hover:bg-interlayDenim-600'
         ),
 
         'rounded',
@@ -76,8 +76,8 @@ const InterlayRoseContainedButton = React.forwardRef<Ref, Props>(({
     </InterlayButtonBase>
   );
 });
-InterlayRoseContainedButton.displayName = 'InterlayRoseContainedButton';
+InterlayDenimContainedButton.displayName = 'InterlayDenimContainedButton';
 
 export type Props = CustomProps & InterlayButtonBaseProps;
 
-export default InterlayRoseContainedButton;
+export default InterlayDenimContainedButton;

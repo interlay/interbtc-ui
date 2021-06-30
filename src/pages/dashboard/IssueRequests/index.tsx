@@ -116,7 +116,7 @@ function IssueRequests(): JSX.Element {
             )}>
             <h5
               className={clsx(
-                'text-interlayRose',
+                'text-interlayDenim',
                 'font-bold',
                 'text-xl'
               )}>

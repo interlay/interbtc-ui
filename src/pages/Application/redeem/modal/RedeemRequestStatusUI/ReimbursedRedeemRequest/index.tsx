@@ -91,14 +91,14 @@ const ReimbursedRedeemRequest = ({
         .
       </p>
       <p className='font-medium'>
-        <span className='text-interlayRose'>{t('redeem_page.recover_receive_dot')}</span>
-        <span className='text-interlayRose'>
+        <span className='text-interlayDenim'>{t('redeem_page.recover_receive_dot')}</span>
+        <span className='text-interlayDenim'>
           &nbsp;{`${dotAmount.toString()} DOT`}
         </span>
         <span>
           &nbsp;{`(≈ $${getUsdAmount(dotAmount.toString(), prices.polkadot.usd)})`}
         </span>
-        <span className='text-interlayRose'>
+        <span className='text-interlayDenim'>
           &nbsp;{t('redeem_page.recover_receive_total')}
         </span>
         .

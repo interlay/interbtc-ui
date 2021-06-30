@@ -26,7 +26,7 @@ import Tooltip from 'components/Tooltip';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
-import InterlayRoseContainedButton from 'components/buttons/InterlayRoseContainedButton';
+import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
 import {
   ParachainStatus,
   StoreType
@@ -163,7 +163,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
           'flex',
           'justify-center'
         )}>
-        <EllipsisLoader dotClassName='bg-interlayRose-400' />
+        <EllipsisLoader dotClassName='bg-interlayDenim-400' />
       </div>
     );
   }
@@ -253,7 +253,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
             className={clsx(
               'font-medium',
               'text-center',
-              'text-interlayRose'
+              'text-interlayDenim'
             )}>
             {t('issue_page.mint_polka_by_wrapping')}
           </h4>
@@ -334,7 +334,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
             value={displayBtcAmount(polkaBTCAmount)}
             unitName='InterBTC'
             approxUSD={getUsdAmount(polkaBTCAmount, prices.bitcoin.usd)} />
-          <InterlayRoseContainedButton
+          <InterlayDenimContainedButton
             type='submit'
             style={{ display: 'flex' }}
             className='mx-auto'
@@ -346,7 +346,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
             pending={submitStatus === STATUSES.PENDING}
             onClick={handleConfirmClick}>
             {walletConnected ? t('confirm') : t('connect_wallet')}
-          </InterlayRoseContainedButton>
+          </InterlayDenimContainedButton>
         </form>
         {(submitStatus === STATUSES.REJECTED && submitError) && (
           <ErrorModal

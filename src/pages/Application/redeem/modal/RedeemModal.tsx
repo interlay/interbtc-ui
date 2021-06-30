@@ -121,7 +121,7 @@ const RedeemModal = ({
                 <span
                   className={clsx(
                     'text-2xl',
-                    'text-interlayRose'
+                    'text-interlayDenim'
                   )}>
                   InterBTC
                 </span>

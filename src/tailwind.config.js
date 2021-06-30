@@ -5,19 +5,6 @@
 const plugin = require('tailwindcss/plugin');
 
 // MEMO: inspired by https://javisperez.github.io/tailwindcolorshades
-const INTERLAY_ROSE = Object.freeze({
-  50: '#fef2f8',
-  100: '#fde6f2',
-  200: '#f9bfde',
-  300: '#f599ca',
-  400: '#ee4da2',
-  500: '#e6007a', // MEMO: polkadot's branding pink
-  600: '#cf006e',
-  700: '#ad005c',
-  800: '#8a0049',
-  900: '#71003c'
-});
-// ray test touch <<
 const INTERLAY_DENIM = Object.freeze({
   50: '#f3f7fc',
   100: '#e6eff8',
@@ -102,7 +89,6 @@ const INTERLAY_PALE_SKY = Object.freeze({
   800: '#40444d',
   900: '#34383f'
 });
-// ray test touch >>
 
 module.exports = {
   purge: [
@@ -113,19 +99,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        interlayRose: {
-          50: INTERLAY_ROSE[50],
-          100: INTERLAY_ROSE[100],
-          200: INTERLAY_ROSE[200],
-          300: INTERLAY_ROSE[300],
-          400: INTERLAY_ROSE[400],
-          DEFAULT: INTERLAY_ROSE[500],
-          600: INTERLAY_ROSE[600],
-          700: INTERLAY_ROSE[700],
-          800: INTERLAY_ROSE[800],
-          900: INTERLAY_ROSE[900]
-        },
-        // ray test touch <<
         interlayDenim: {
           50: INTERLAY_DENIM[50],
           100: INTERLAY_DENIM[100],
@@ -234,7 +207,6 @@ module.exports = {
           800: INTERLAY_MULBERRY[800],
           900: INTERLAY_MULBERRY[900]
         }
-        // ray test touch >>
       },
       textColor: theme => ({
         textPrimary: theme('colors.gray.900'),

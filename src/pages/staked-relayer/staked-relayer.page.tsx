@@ -100,12 +100,12 @@ function StakedRelayer(): JSX.Element {
     {
       title: t('vault.fees_earned_interbtc'),
       value: displayBtcAmount(feesEarnedPolkaBTC),
-      color: 'text-interlayRose-800'
+      color: 'text-interlayDenim-800'
     },
     {
       title: t('vault.fees_earned_dot'),
       value: safeRoundFiveDecimals(feesEarnedDOT),
-      color: 'text-interlayRose-800'
+      color: 'text-interlayDenim-800'
     },
     {
       title: t('apy'),

@@ -154,7 +154,7 @@ const AccountModal = ({
                 'shadow-sm',
                 'border',
                 'border-solid',
-                'border-interlayRose',
+                'border-interlayDenim',
                 'w-1/2'
               )}
               href={POLKADOT_EXTENSION}

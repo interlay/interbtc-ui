@@ -26,7 +26,7 @@ import CardList, {
   CardListContainer
 } from 'components/CardList';
 import BoldParagraph from 'components/BoldParagraph';
-import InterlayRoseContainedButton from 'components/buttons/InterlayRoseContainedButton';
+import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
 import InterlayOrangePeelContainedButton from 'components/buttons/InterlayOrangePeelContainedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
@@ -172,12 +172,12 @@ function VaultDashboard(): JSX.Element {
     {
       title: t('vault.fees_earned_interbtc'),
       value: displayBtcAmount(feesEarnedPolkaBTC),
-      color: 'text-interlayRose-800'
+      color: 'text-interlayDenim-800'
     },
     {
       title: t('vault.fees_earned_dot'),
       value: safeRoundFiveDecimals(feesEarnedDOT),
-      color: 'text-interlayRose-800'
+      color: 'text-interlayDenim-800'
     },
     {
       title: t('sla_score'),
@@ -186,7 +186,7 @@ function VaultDashboard(): JSX.Element {
     }, {
       title: t('vault.locked_dot'),
       value: safeRoundFiveDecimals(collateral),
-      color: 'text-interlayRose-800'
+      color: 'text-interlayDenim-800'
     },
     {
       title: t('locked_btc'),
@@ -195,7 +195,7 @@ function VaultDashboard(): JSX.Element {
     }, {
       title: t('vault.remaining_capacity'),
       value: displayBtcAmount(capacity),
-      color: 'text-interlayRose-800'
+      color: 'text-interlayDenim-800'
     },
     {
       title: t('apy'),
@@ -245,14 +245,14 @@ function VaultDashboard(): JSX.Element {
               'grid-cols-3',
               'gap-10'
             )}>
-            <InterlayRoseContainedButton
+            <InterlayDenimContainedButton
               type='submit'
               style={{ display: 'flex' }}
               className='mx-auto'
               // TODO: should not use inlined functions
               onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Increase)}>
               {t('vault.deposit_collateral')}
-            </InterlayRoseContainedButton>
+            </InterlayDenimContainedButton>
             <InterlayDefaultContainedButton
               type='submit'
               style={{ display: 'flex' }}

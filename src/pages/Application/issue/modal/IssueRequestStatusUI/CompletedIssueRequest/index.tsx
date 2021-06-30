@@ -34,7 +34,7 @@ const CompletedIssueRequest = ({
           'font-medium'
         )}>
         <span>{t('issue_page.you_received')}</span>
-        <span className='text-interlayRose'>
+        <span className='text-interlayDenim'>
           {request.issuedAmountBtc || request.requestedAmountPolkaBTC} InterBTC
         </span>
       </p>

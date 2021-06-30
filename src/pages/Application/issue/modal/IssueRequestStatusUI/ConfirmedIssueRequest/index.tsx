@@ -17,7 +17,7 @@ import clsx from 'clsx';
 import RequestWrapper from '../../../../RequestWrapper';
 import ErrorModal from 'components/ErrorModal';
 import InterlayLink from 'components/UI/InterlayLink';
-import InterlayRoseOutlinedButton from 'components/buttons/InterlayRoseOutlinedButton';
+import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import { shortAddress } from 'common/utils/utils';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
 import STATUSES from 'utils/constants/statuses';
@@ -121,11 +121,11 @@ const ConfirmedIssueRequest = ({
           )}>
           {t('issue_page.receive_polkabtc_tokens')}
         </p>
-        <InterlayRoseOutlinedButton
+        <InterlayDenimOutlinedButton
           pending={executeStatus === STATUSES.PENDING}
           onClick={handleExecute(request)}>
           {t('issue_page.claim_polkabtc')}
-        </InterlayRoseOutlinedButton>
+        </InterlayDenimOutlinedButton>
       </RequestWrapper>
       {(executeStatus === STATUSES.REJECTED && executeError) && (
         <ErrorModal

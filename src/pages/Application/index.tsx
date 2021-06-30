@@ -166,7 +166,7 @@ const Application = (): JSX.Element | null => {
                       'py-2.5',
                       'uppercase',
                       { 'rounded-lg text-white transition': selectedTabId === tabItem.id },
-                      { 'bg-interlayRose': tabItem.id === TAB_IDS.issue && selectedTabId === TAB_IDS.issue },
+                      { 'bg-interlayDenim': tabItem.id === TAB_IDS.issue && selectedTabId === TAB_IDS.issue },
                       { 'bg-interlayOrangePeel': tabItem.id === TAB_IDS.redeem && selectedTabId === TAB_IDS.redeem },
                       { 'bg-interlayDenim':
                         tabItem.id === TAB_IDS.transfer && selectedTabId === TAB_IDS.transfer },
@@ -184,7 +184,7 @@ const Application = (): JSX.Element | null => {
                 className={clsx(
                   'border-t-2',
                   'my-2',
-                  { 'border-interlayRose': selectedTabId === TAB_IDS.issue },
+                  { 'border-interlayDenim': selectedTabId === TAB_IDS.issue },
                   { 'border-interlayOrangePeel': selectedTabId === TAB_IDS.redeem },
                   { 'border-interlayDenim': selectedTabId === TAB_IDS.transfer },
                   { 'border-interlayCinnabar': selectedTabId === TAB_IDS.burn }

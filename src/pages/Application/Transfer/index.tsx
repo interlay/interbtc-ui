@@ -16,8 +16,8 @@ import InterlayModal, {
   InterlayModalTitle,
   InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
-import InterlayRoseContainedButton from 'components/buttons/InterlayRoseContainedButton';
-import InterlayRoseOutlinedButton from 'components/buttons/InterlayRoseOutlinedButton';
+import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
+import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayDefaultOutlinedButton from 'components/buttons/InterlayDefaultOutlinedButton';
 import ErrorModal from 'components/ErrorModal';
 import {
@@ -237,7 +237,7 @@ const Transfer = (): JSX.Element => {
             error={!!errors[DOT_ADDRESS]}
             helperText={errors[DOT_ADDRESS]?.message} />
           {/* TODO: should be a drop-down */}
-          <InterlayRoseOutlinedButton
+          <InterlayDenimOutlinedButton
             style={{ display: 'flex' }}
             className={clsx(
               'ml-auto',
@@ -246,9 +246,9 @@ const Transfer = (): JSX.Element => {
             startIcon={selectedNetworkItem.icon}
             onClick={handleNetworkModalOpen}>
             {selectedNetworkItem.title}
-          </InterlayRoseOutlinedButton>
+          </InterlayDenimOutlinedButton>
         </div>
-        <InterlayRoseContainedButton
+        <InterlayDenimContainedButton
           type='submit'
           style={{ display: 'flex' }}
           className='mx-auto'
@@ -263,7 +263,7 @@ const Transfer = (): JSX.Element => {
           ) : (
             t('connect_wallet')
           )}
-        </InterlayRoseContainedButton>
+        </InterlayDenimContainedButton>
       </form>
       <InterlayModal
         open={networkModalOpen}

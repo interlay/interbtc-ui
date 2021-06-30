@@ -20,7 +20,7 @@ import InterBTCField from '../InterBTCField';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
-import InterlayRoseContainedButton from 'components/buttons/InterlayRoseContainedButton';
+import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
 import { getUsdAmount } from 'common/utils/utils';
 import {
   StoreType,
@@ -228,7 +228,7 @@ const Burn = (): JSX.Element | null => {
             value={earnedDOT}
             unitName='DOT'
             approxUSD={getUsdAmount(earnedDOT, prices.polkadot.usd)} />
-          <InterlayRoseContainedButton
+          <InterlayDenimContainedButton
             type='submit'
             style={{ display: 'flex' }}
             className='mx-auto'
@@ -240,7 +240,7 @@ const Burn = (): JSX.Element | null => {
             pending={submitStatus === STATUSES.PENDING}
             onClick={handleConfirmClick}>
             {walletConnected ? t('burn') : t('connect_wallet')}
-          </InterlayRoseContainedButton>
+          </InterlayDenimContainedButton>
         </form>
         {(submitStatus === STATUSES.REJECTED && submitError) && (
           <ErrorModal

@@ -15,7 +15,7 @@ import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
 
 import RequestWrapper from '../../RequestWrapper';
-import InterlayRoseOutlinedButton from 'components/buttons/InterlayRoseOutlinedButton';
+import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import ErrorFallback from 'components/ErrorFallback';
 import { getUsdAmount } from 'common/utils/utils';
@@ -148,7 +148,7 @@ const ReimburseStatusUI = ({
             'text-justify'
           )}>
           <span>{t('redeem_page.vault_did_not_send')}</span>
-          <span className='text-interlayRose'>
+          <span className='text-interlayDenim'>
             &nbsp;{punishmentDOT.toFixed(2).toString()} DOT
           </span>
           <span>&nbsp;{`(≈ $ ${getUsdAmount(punishmentDOT.toString(), prices.polkadot.usd)})`}</span>
@@ -169,7 +169,7 @@ const ReimburseStatusUI = ({
           <li className='list-decimal'>
             <p className='text-justify'>
               <span>{t('redeem_page.receive_compensation')}</span>
-              <span className='text-interlayRose'>&nbsp;{punishmentDOT.toFixed(2)} DOT</span>
+              <span className='text-interlayDenim'>&nbsp;{punishmentDOT.toFixed(2)} DOT</span>
               <span>
                 &nbsp;
                 {t('redeem_page.retry_with_another', {
@@ -189,14 +189,14 @@ const ReimburseStatusUI = ({
           <li className='list-decimal'>
             <p className='text-justify'>
               <span>{t('redeem_page.burn_interbtc')}</span>
-              <span className='text-interlayRose'>&nbsp;{dotAmount.toFixed(5).toString()} DOT</span>
+              <span className='text-interlayDenim'>&nbsp;{dotAmount.toFixed(5).toString()} DOT</span>
               <span>
                 &nbsp;
                 {t('redeem_page.with_added', {
                   amountPrice: getUsdAmount(dotAmount.toString(), prices.polkadot.usd)
                 })}
               </span>
-              <span className='text-interlayRose'>&nbsp;{punishmentDOT.toFixed(5).toString()} DOT</span>
+              <span className='text-interlayDenim'>&nbsp;{punishmentDOT.toFixed(5).toString()} DOT</span>
               <span>
                 &nbsp;
                 {t('redeem_page.as_compensation_instead', {
@@ -204,13 +204,13 @@ const ReimburseStatusUI = ({
                 })}
               </span>
             </p>
-            <InterlayRoseOutlinedButton
+            <InterlayDenimOutlinedButton
               className='w-full'
               disabled={retryStatus !== STATUSES.IDLE || burnStatus !== STATUSES.IDLE}
               pending={burnStatus === STATUSES.PENDING}
               onClick={handleBurn}>
               {t('redeem_page.burn')}
-            </InterlayRoseOutlinedButton>
+            </InterlayDenimOutlinedButton>
           </li>
         </ul>
       </div>

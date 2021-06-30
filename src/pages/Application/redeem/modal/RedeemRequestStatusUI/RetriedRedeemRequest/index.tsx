@@ -72,16 +72,16 @@ const RetriedRedeemRequest = ({
       </h2>
       <p className='w-full'>{t('redeem_page.compensation_notice')}</p>
       <p className='font-medium'>
-        <span className='text-interlayRose'>
+        <span className='text-interlayDenim'>
           {t('redeem_page.recover_receive_dot')}
         </span>
-        <span className='text-interlayRose'>
+        <span className='text-interlayDenim'>
           &nbsp;{`${punishmentDOTAmount.toString()} DOT`}
         </span>
         <span>
           &nbsp;({`≈ $${getUsdAmount(punishmentDOTAmount.toString(), prices.polkadot.usd)}`})
         </span>
-        <span className='text-interlayRose'>
+        <span className='text-interlayDenim'>
           &nbsp;{t('redeem_page.recover_receive_total')}.
         </span>
       </p>
