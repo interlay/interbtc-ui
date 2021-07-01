@@ -44,12 +44,6 @@
     flex-direction: column;
   }
 
-  .parachain-button-container {
-    width: 100%;
-    text-align: left;
-    margin-top: 10px;
-  }
-
   button.temp-dashboard-button {
     background-color: white;
     border-radius: 8px;
@@ -132,10 +126,5 @@
   button.temp-dashboard-button {
     width: 160px;
     padding: 12px 12px;
-  }
-
-  .latest-block-text {
-    font-size: 12px;
-    font-weight: 700;
   }
 }
