@@ -83,4 +83,7 @@ export {
   InterlayDenimToggleButtonGroupItem
 };
 
+export type InterlayDenimToggleButtonGroupProps = PropsOf<typeof RadioGroup>;
+export type InterlayDenimToggleButtonGroupItemProps = CustomInterlayDenimButtonGroupItemProps & InterlayButtonBaseProps;
+
 export default InterlayDenimToggleButtonGroup;
