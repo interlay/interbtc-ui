@@ -167,10 +167,9 @@ const Application = (): JSX.Element | null => {
                       'uppercase',
                       { 'rounded-lg text-white transition': selectedTabId === tabItem.id },
                       { 'bg-interlayDenim': tabItem.id === TAB_IDS.issue && selectedTabId === TAB_IDS.issue },
-                      { 'bg-interlayOrangePeel': tabItem.id === TAB_IDS.redeem && selectedTabId === TAB_IDS.redeem },
-                      { 'bg-interlayDenim':
-                        tabItem.id === TAB_IDS.transfer && selectedTabId === TAB_IDS.transfer },
-                      { 'bg-interlayCinnabar': tabItem.id === TAB_IDS.burn && selectedTabId === TAB_IDS.burn },
+                      { 'bg-interlayDenim': tabItem.id === TAB_IDS.redeem && selectedTabId === TAB_IDS.redeem },
+                      { 'bg-interlayDenim': tabItem.id === TAB_IDS.transfer && selectedTabId === TAB_IDS.transfer },
+                      { 'bg-interlayDenim': tabItem.id === TAB_IDS.burn && selectedTabId === TAB_IDS.burn },
                       { 'opacity-30': selectedTabId !== tabItem.id }
                     )}
                     key={tabItem.id}
@@ -184,10 +183,7 @@ const Application = (): JSX.Element | null => {
                 className={clsx(
                   'border-t-2',
                   'my-2',
-                  { 'border-interlayDenim': selectedTabId === TAB_IDS.issue },
-                  { 'border-interlayOrangePeel': selectedTabId === TAB_IDS.redeem },
-                  { 'border-interlayDenim': selectedTabId === TAB_IDS.transfer },
-                  { 'border-interlayCinnabar': selectedTabId === TAB_IDS.burn }
+                  'border-interlayDenim'
                 )} />
             </>
           )}
