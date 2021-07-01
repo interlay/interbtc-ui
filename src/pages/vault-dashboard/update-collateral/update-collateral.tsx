@@ -9,7 +9,7 @@ import { StoreType } from '../../../common/types/util.types';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import InterlayButton from 'components/UI/InterlayButton';
+import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 
 // Commenting because moving this to last line causes 3 "used before it was defined" warnings
 // eslint-disable-next-line import/exports-last
@@ -222,17 +222,16 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
           </div>
         </Modal.Body>
         <Modal.Footer className='row justify-center'>
-          <InterlayButton
+          <InterlayDefaultContainedButton
             type='submit'
             style={{ display: 'flex' }}
             className='mx-auto'
-            variant='contained'
             color={getButtonVariant(props.status)}
             disabled={!isCollateralUpdateAllowed}
             pending={isUpdatePending}>
             {props.status === CollateralUpdateStatus.Increase ?
               t('vault.deposit_collateral') : t('vault.withdraw_collateral')}
-          </InterlayButton>
+          </InterlayDefaultContainedButton>
         </Modal.Footer>
       </form>
     </Modal>

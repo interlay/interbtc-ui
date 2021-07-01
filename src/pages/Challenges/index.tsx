@@ -48,17 +48,17 @@ function ChallengeSelector(props: InterlayToggleButtonGroupProps) {
       type='radio'
       {...props}>
       {validChallengeCutOffs.map(challengeCutOff => (
+        // ray test touch <<
         <InterlayToggleButton
-          // TODO: should use tailwindcss
-          variant='outline-polkadot'
-          // className={clsx(
-          //   'border-interlayCinnabar-400',
-          //   'bg-interlayCinnabar-400'
-          // )}
+          className={clsx(
+            'border-interlayCinnabar-400',
+            'bg-interlayCinnabar-400'
+          )}
           key={challengeCutOff.id}
           value={challengeCutOff.id}>
           {t(`leaderboard.challenge_buttons.${challengeCutOff.id}`)}
         </InterlayToggleButton>
+        // ray test touch >>
       ))}
     </InterlayToggleButtonGroup>
   );
