@@ -232,13 +232,22 @@ module.exports = {
       borderColor: [
         'before',
         'after'
+      ],
+      borderRadius: [
+        'first',
+        'last'
       ]
     }
   },
   plugins: [
     require('@tailwindcss/forms'),
     require('tailwindcss-pseudo-elements'),
-    plugin(function ({ addUtilities }) {
+    plugin(function ({
+      addBase,
+      theme,
+      addVariant,
+      addUtilities
+    }) {
       addUtilities(
         {
           '.empty-content': {
@@ -250,6 +259,24 @@ module.exports = {
           'after'
         ]
       );
+
+      // MEMO: inspired by https://tailwindcss.com/docs/adding-base-styles#using-a-plugin
+      addBase({
+        body: {
+          color: theme('textColor.textPrimary'),
+          backgroundColor: theme('backgroundColor.default')
+        }
+      });
+
+      // MEMO: inspired by https://github.com/tailwindlabs/tailwindcss/issues/493#issuecomment-610907147
+      addVariant('important', ({ container }) => {
+        container.walkRules(rule => {
+          rule.selector = `.\\!${rule.selector.slice(1)}`;
+          rule.walkDecls(decl => {
+            decl.important = true;
+          });
+        });
+      });
     })
   ]
 };
