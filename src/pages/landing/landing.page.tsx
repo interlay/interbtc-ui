@@ -1,6 +1,5 @@
 
 import {
-  Button,
   Col,
   Row
 } from 'react-bootstrap';
@@ -12,6 +11,8 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
 import Timer from 'components/Timer';
+import InterlayDefaultOutlinedButton from 'components/buttons/InterlayDefaultOutlinedButton';
+import InterlayOrangePeelOutlinedButton from 'components/buttons/InterlayOrangePeelOutlinedButton';
 import InterlayLink from 'components/UI/InterlayLink';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import checkStaticPage from 'config/check-static-page';
@@ -106,46 +107,38 @@ export default function LandingPage(): JSX.Element {
               )}>
               <Timer initialLeftSeconds={initialLeftSecondsUntilBeta} />
             </h1>
-            <Row className={clsx('mt-12')}>
-              <Col
-                className='mt-2'
-                xs='12'
-                sm={{ span: 4, offset: 2 }}>
-                <InterlayLink
-                  style={{
-                    textDecoration: 'none'
-                  }}
-                  href='https://docs.polkabtc.io/#/'
-                  target='_bank'
-                  rel='noopener noreferrer'>
-                  <Button
-                    variant='outline-bitcoin'
-                    size='lg'
-                    block>
-                    {t('landing.docs')}
-                  </Button>
-                </InterlayLink>
-              </Col>
-              <Col
-                className='mt-2'
-                xs='12'
-                sm={{ span: 4, offset: 0 }}>
-                <InterlayLink
-                  style={{
-                    textDecoration: 'none'
-                  }}
-                  href='https://discord.gg/KgCYK3MKSf'
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <Button
-                    variant='outline-bitcoin'
-                    size='lg'
-                    block>
-                    {t('landing.discord')}
-                  </Button>
-                </InterlayLink>
-              </Col>
-            </Row>
+            <div
+              className={clsx(
+                'mt-12',
+                'max-w-lg',
+                'mx-auto',
+                'grid',
+                'grid-cols-2',
+                'gap-8'
+              )}>
+              <InterlayLink
+                style={{
+                  textDecoration: 'none'
+                }}
+                href='https://docs.polkabtc.io/#/'
+                target='_bank'
+                rel='noopener noreferrer'>
+                <InterlayOrangePeelOutlinedButton className='w-full'>
+                  {t('landing.docs')}
+                </InterlayOrangePeelOutlinedButton>
+              </InterlayLink>
+              <InterlayLink
+                style={{
+                  textDecoration: 'none'
+                }}
+                href='https://discord.gg/KgCYK3MKSf'
+                target='_blank'
+                rel='noopener noreferrer'>
+                <InterlayOrangePeelOutlinedButton className='w-full'>
+                  {t('landing.discord')}
+                </InterlayOrangePeelOutlinedButton>
+              </InterlayLink>
+            </div>
           </div>
         ) : (
           <div>
@@ -178,43 +171,37 @@ export default function LandingPage(): JSX.Element {
               </Col>
             </Row>
             {polkaBtcLoaded && (
-              <Row className={clsx('mt-12')}>
-                <Col
-                  className='mt-2'
-                  xs='12'
-                  sm={{ span: 4, offset: 2 }}>
-                  <InterlayRouterLink
-                    to={{
-                      pathname: PAGES.application,
-                      search: queryString.stringify({
-                        [QUERY_PARAMETERS.tab]: TAB_IDS.issue
-                      })
-                    }}>
-                    <Button
-                      variant='outline-dark'
-                      size='lg'
-                      block
-                      onClick={checkWalletAndAccount}>
-                      {t('app')}
-                    </Button>
-                  </InterlayRouterLink>
-                </Col>
-                <Col
-                  className='mt-2'
-                  xs='12'
-                  sm={{ span: 4 }}>
-                  <InterlayRouterLink
-                    to={PAGES.dashboard}>
-                    <Button
-                      variant='outline-dark'
-                      size='lg'
-                      block
-                      onClick={checkWalletAndAccount}>
-                      {t('nav_dashboard')}
-                    </Button>
-                  </InterlayRouterLink>
-                </Col>
-              </Row>
+              <div
+                className={clsx(
+                  'mt-12',
+                  'max-w-lg',
+                  'mx-auto',
+                  'grid',
+                  'grid-cols-2',
+                  'gap-8'
+                )}>
+                <InterlayRouterLink
+                  to={{
+                    pathname: PAGES.application,
+                    search: queryString.stringify({
+                      [QUERY_PARAMETERS.tab]: TAB_IDS.issue
+                    })
+                  }}>
+                  <InterlayDefaultOutlinedButton
+                    className='w-full'
+                    onClick={checkWalletAndAccount}>
+                    {t('app')}
+                  </InterlayDefaultOutlinedButton>
+                </InterlayRouterLink>
+                <InterlayRouterLink
+                  to={PAGES.dashboard}>
+                  <InterlayDefaultOutlinedButton
+                    className='w-full'
+                    onClick={checkWalletAndAccount}>
+                    {t('nav_dashboard')}
+                  </InterlayDefaultOutlinedButton>
+                </InterlayRouterLink>
+              </div>
             )}
           </div>
         )}

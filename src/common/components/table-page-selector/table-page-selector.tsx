@@ -1,7 +1,8 @@
 import { ReactElement } from 'react';
-import { Row, Button, Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import { range } from '../../utils/utils';
 import { useTranslation } from 'react-i18next';
+import InterlayDefaultOutlinedButton from 'components/buttons/InterlayDefaultOutlinedButton';
 
 type PageLinkProps = {
   page: number;
@@ -38,10 +39,9 @@ export default function TablePageSelector({ totalPages, currentPage, setPage }: 
 
   return (
     <Row className='justify-content-between mt-5'>
-      <Button
-        variant='outline-dark'
-        onClick={() => setPage(Math.max(currentPage - 1, 0))}>{t('prev')}
-      </Button>
+      <InterlayDefaultOutlinedButton onClick={() => setPage(Math.max(currentPage - 1, 0))}>
+        {t('prev')}
+      </InterlayDefaultOutlinedButton>
       <Col sm={4}>
         {pages[0] === 0 ? (
           ''
@@ -65,10 +65,9 @@ export default function TablePageSelector({ totalPages, currentPage, setPage }: 
           </>
         )}
       </Col>
-      <Button
-        variant='outline-dark'
-        onClick={() => setPage(Math.min(currentPage + 1, totalPages - 1))}>{t('next')}
-      </Button>
+      <InterlayDefaultOutlinedButton onClick={() => setPage(Math.min(currentPage + 1, totalPages - 1))}>
+        {t('next')}
+      </InterlayDefaultOutlinedButton>
     </Row>
   );
 }

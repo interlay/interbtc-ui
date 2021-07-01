@@ -1,3 +1,4 @@
+// ray test touch <<
 @import "./variables";
 
 @mixin mobile-range {
@@ -11,15 +12,4 @@
     @content;
   }
 }
-
-@mixin small-desktop-range {
-  @media (max-width: $desktop-size) {
-    @content;
-  }
-}
-
-@mixin large-desktop-range {
-  @media (min-width: $desktop-size +1) {
-    @content;
-  }
-}
+// ray test touch >>

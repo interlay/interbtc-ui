@@ -2,8 +2,7 @@
 import * as React from 'react';
 import {
   Navbar,
-  Nav,
-  Button
+  Nav
 } from 'react-bootstrap';
 import {
   useSelector,
@@ -17,7 +16,9 @@ import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import AccountModal from 'parts/AccountModal';
 import InterlayLink from 'components/UI/InterlayLink';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
-import ButtonMaybePending from './pending-button';
+import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
+import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
+import InterlayOrangePeelOutlinedButton from 'components/buttons/InterlayOrangePeelOutlinedButton';
 import {
   updateBalanceDOTAction,
   showAccountModalAction
@@ -203,12 +204,9 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                     <Nav
                       id='account-button'
                       className='d-inline'>
-                      <Button
-                        variant='outline-account-not-connected'
-                        className='nav-bar-button'
-                        onClick={handleAccountModalOpen}>
+                      <InterlayDefaultContainedButton onClick={handleAccountModalOpen}>
                         {accountLabel}
-                      </Button>
+                      </InterlayDefaultContainedButton>
                     </Nav>
                   ) : (
                     <>
@@ -218,19 +216,18 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                           rel='noopener noreferrer'
                           href='https://testnet-faucet.mempool.co/'
                           style={{ textDecoration: 'none' }}>
-                          <Button
-                            variant='outline-bitcoin'
-                            className='nav-bar-button'>
+                          <InterlayOrangePeelOutlinedButton>
                             {t('request_btc')}
-                          </Button>
+                          </InterlayOrangePeelOutlinedButton>
                         </InterlayLink>
-                        <ButtonMaybePending
-                          variant='outline-polkadot'
-                          className='nav-bar-button'
-                          isPending={isRequestPending}
+                        <InterlayCinnabarOutlinedButton
+                          style={{
+                            marginLeft: 8
+                          }}
+                          pending={isRequestPending}
                           onClick={requestDOT}>
                           {t('request_dot')}
-                        </ButtonMaybePending>
+                        </InterlayCinnabarOutlinedButton>
                       </Nav>
                       <Balances
                         balanceDOT={balanceDOT}
@@ -238,12 +235,9 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                       <Nav
                         id='account-button'
                         className='d-inline'>
-                        <Button
-                          variant='outline-account'
-                          className='nav-bar-button'
-                          onClick={handleAccountModalOpen}>
+                        <InterlayDefaultContainedButton onClick={handleAccountModalOpen}>
                           {accountLabel}
-                        </Button>
+                        </InterlayDefaultContainedButton>
                       </Nav>
                     </>
                   )}

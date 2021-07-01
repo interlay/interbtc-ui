@@ -19,7 +19,7 @@ import CardList, {
 } from 'components/CardList';
 import BoldParagraph from 'components/BoldParagraph';
 import NetworkActivity from 'common/components/network-activity/network-activity';
-import ButtonMaybePending from 'common/components/pending-button';
+import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
 import { StoreType } from 'common/types/util.types';
 import {
   displayBtcAmount,
@@ -151,14 +151,12 @@ function StakedRelayer(): JSX.Element {
           <NetworkActivity className='mt-20' />
           {relayerLoaded && (
             <>
-              <ButtonMaybePending
-                className='staked-button'
-                variant='outline-danger'
-                isPending={isDeregisterPending}
+              <InterlayCinnabarOutlinedButton
+                pending={isDeregisterPending}
                 disabled={relayerInactive || isDeregisterPending}
                 onClick={deregisterStakedRelayer}>
                 {t('relayer.deregister')}
-              </ButtonMaybePending>
+              </InterlayCinnabarOutlinedButton>
               <div className='row'>
                 <div className='col-12 de-note'>
                   {t('relayer.note_you_can_deregister')}
