@@ -79,7 +79,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
               buttonName='view vaults'
               propsButtonColor='d_blue'
               buttonId='collateralization'
-              buttonLink={PAGES.vaults} />
+              buttonLink={PAGES.DASHBOARD_VAULTS} />
           </div>
         )}
       </div>

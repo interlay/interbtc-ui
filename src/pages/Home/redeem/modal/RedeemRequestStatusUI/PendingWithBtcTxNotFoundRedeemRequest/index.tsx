@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import RequestWrapper from 'pages/Application/RequestWrapper';
+import RequestWrapper from 'pages/Home/RequestWrapper';
 import Timer from 'components/Timer';
 import { BLOCK_TIME } from 'config/parachain';
 import { RedeemRequest } from 'common/types/redeem.types';

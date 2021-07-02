@@ -78,7 +78,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
               buttonName='view oracles'
               propsButtonColor='d_green'
               buttonId='oracle-status'
-              buttonLink={PAGES.oracles} />
+              buttonLink={PAGES.DASHBOARD_ORACLES} />
           </div>
         )}
       </div>

@@ -26,16 +26,10 @@ import {
 import { updateBalances } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import Balances from './balances';
-import {
-  PAGES,
-  QUERY_PARAMETERS
-} from 'utils/constants/links';
+import { PAGES } from 'utils/constants/links';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import TAB_IDS from 'utils/constants/tab-ids';
 import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc-logo.svg';
 import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
-
-const queryString = require('query-string');
 
 type TopbarProps = {
   address?: string;
@@ -130,7 +124,7 @@ const Topbar = (props: TopbarProps): JSX.Element => {
           <React.Fragment>
             <Navbar.Brand>
               <InterlayRouterLink
-                to={PAGES.home}>
+                to={PAGES.HOME}>
                 <PolkabtcLogoIcon
                   fill='currentColor'
                   width={90}
@@ -144,40 +138,28 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                   // TODO: should use https://reactrouter.com/web/api/NavLink with `activeClassName`
                   <InterlayRouterLink
                     className='p-2'
-                    to={{
-                      pathname: PAGES.application,
-                      search: queryString.stringify({
-                        [QUERY_PARAMETERS.tab]: TAB_IDS.issue
-                      })
-                    }}>
-                    {t('app')}
-                  </InterlayRouterLink>
-                )}
-                {polkaBtcLoaded && (
-                  <InterlayRouterLink
-                    className='p-2'
-                    to={PAGES.dashboard}>
+                    to={PAGES.DASHBOARD}>
                     {t('nav_dashboard')}
                   </InterlayRouterLink>
                 )}
                 {vaultClientLoaded && (
                   <InterlayRouterLink
                     className='p-2'
-                    to={PAGES.vault}>
+                    to={PAGES.VAULT}>
                     {t('nav_vault')}
                   </InterlayRouterLink>
                 )}
                 {relayerLoaded && (
                   <InterlayRouterLink
                     className='p-2'
-                    to={PAGES.stakedRelayer}>
+                    to={PAGES.STAKED_RELAYER}>
                     {t('nav_relayer')}
                   </InterlayRouterLink>
                 )}
                 {polkaBtcLoaded && (
                   <InterlayRouterLink
                     className='p-2'
-                    to={PAGES.challenges}>
+                    to={PAGES.CHALLENGES}>
                     {t('nav_challenges')}
                     <NewMarkIcon
                       className='inline-block'
@@ -187,7 +169,7 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                 )}
                 <InterlayRouterLink
                   className='p-2'
-                  to={PAGES.feedback}>
+                  to={PAGES.FEEDBACK}>
                   {t('feedback.feedback')}
                 </InterlayRouterLink>
                 <InterlayLink

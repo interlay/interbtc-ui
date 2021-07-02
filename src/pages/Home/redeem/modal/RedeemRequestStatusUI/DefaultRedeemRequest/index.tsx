@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import RequestWrapper from 'pages/Application/RequestWrapper';
+import RequestWrapper from 'pages/Home/RequestWrapper';
 import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { RedeemRequest } from 'common/types/redeem.types';

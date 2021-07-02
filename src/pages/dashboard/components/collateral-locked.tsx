@@ -58,7 +58,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
               buttonName='view all vaults'
               propsButtonColor='d_pink'
               buttonId='collateral-locked'
-              buttonLink={PAGES.vaults} />
+              buttonLink={PAGES.DASHBOARD_VAULTS} />
           </div>
         )}
       </div>

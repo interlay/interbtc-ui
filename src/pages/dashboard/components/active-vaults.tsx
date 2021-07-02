@@ -41,7 +41,7 @@ const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
               buttonName='view all vaults'
               propsButtonColor='d_pink'
               buttonId='active-vaults'
-              buttonLink={PAGES.vaults} />
+              buttonLink={PAGES.DASHBOARD_VAULTS} />
           </div>
         )}
       </div>

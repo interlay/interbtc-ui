@@ -10,7 +10,7 @@ import {
 } from 'react-icons/fa';
 
 import RequestWrapper from '../../../../RequestWrapper';
-import PriceInfo from 'pages/Application/PriceInfo';
+import PriceInfo from 'pages/Home/PriceInfo';
 import InterlayLink from 'components/UI/InterlayLink';
 import { getUsdAmount } from 'common/utils/utils';
 import { RedeemRequest } from 'common/types/redeem.types';

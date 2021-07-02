@@ -62,14 +62,14 @@ const InterBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
                   buttonName='view all issued'
                   propsButtonColor='d_pink'
                   buttonId='issuebtn'
-                  buttonLink={PAGES.issue} />
+                  buttonLink={PAGES.DASHBOARD_ISSUE_REQUESTS} />
               </div>
               <div className='button-container'>
                 <ButtonComponent
                   buttonName='view all redeemed'
                   propsButtonColor='d_yellow'
                   buttonId='redeembtn'
-                  buttonLink={PAGES.redeem} />
+                  buttonLink={PAGES.DASHBOARD_REDEEM_REQUESTS} />
               </div>
             </div>
           </>

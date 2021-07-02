@@ -1,18 +1,17 @@
 
 const PAGES = Object.freeze({
-  home: '/',
-  stakedRelayer: '/staked-relayer',
-  challenges: '/challenges',
-  vaults: '/dashboard/vaults',
-  parachain: '/dashboard/parachain',
-  oracles: '/dashboard/oracles',
-  issue: '/dashboard/issue-requests',
-  redeem: '/dashboard/redeem-requests',
-  relay: '/dashboard/relay',
-  dashboard: '/dashboard',
-  vault: '/vault',
-  feedback: '/feedback',
-  application: '/application'
+  HOME: '/',
+  STAKED_RELAYER: '/staked-relayer',
+  CHALLENGES: '/challenges',
+  DASHBOARD_VAULTS: '/dashboard/vaults',
+  DASHBOARD_PARACHAIN: '/dashboard/parachain',
+  DASHBOARD_ORACLES: '/dashboard/oracles',
+  DASHBOARD_ISSUE_REQUESTS: '/dashboard/issue-requests',
+  DASHBOARD_REDEEM_REQUESTS: '/dashboard/redeem-requests',
+  DASHBOARD_RELAY: '/dashboard/relay',
+  DASHBOARD: '/dashboard',
+  VAULT: '/vault',
+  FEEDBACK: '/feedback'
 });
 
 const QUERY_PARAMETERS = Object.freeze({

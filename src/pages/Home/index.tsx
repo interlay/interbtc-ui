@@ -47,7 +47,7 @@ const TAB_ITEMS_WITH_BURN = [
   }
 ];
 
-const Application = (): JSX.Element | null => {
+const Home = (): JSX.Element | null => {
   const { t } = useTranslation();
 
   const issueStep = useSelector((state: StoreType) => state.issue.step);
@@ -221,4 +221,4 @@ const Application = (): JSX.Element | null => {
   );
 };
 
-export default Application;
+export default Home;
