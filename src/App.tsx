@@ -13,6 +13,7 @@ import {
   useDispatch,
   useStore
 } from 'react-redux';
+import { withErrorBoundary } from 'react-error-boundary';
 import Big from 'big.js';
 import {
   web3Accounts,
@@ -40,7 +41,7 @@ import OraclesDashboard from 'pages/dashboard/oracles/oracles.dashboard.page';
 import ParachainDashboard from 'pages/dashboard/parachain/parachain.dashboard.page';
 // TODO: block for now
 // import TransitionWrapper from 'parts/TransitionWrapper';
-import LazyLoadingErrorBoundary from 'utils/hocs/LazyLoadingErrorBoundary';
+import ErrorFallback from 'components/ErrorFallback';
 import {
   APP_NAME,
   ACCOUNT_ID_TYPE_NAME
@@ -370,63 +371,66 @@ function App(): JSX.Element {
         autoClose={5000}
         hideProgressBar={false} />
       <Layout>
-        <LazyLoadingErrorBoundary>
-          <Route
-            render={({ location }) => (
-              // TODO: block for now
-              // <TransitionWrapper location={location}>
-              // TODO: should use loading spinner instead of `Loading...`
-              <React.Suspense fallback={<div>Loading...</div>}>
-                <Switch location={location}>
-                  <Route path={PAGES.STAKED_RELAYER}>
-                    <StakedRelayer />
-                  </Route>
-                  <Route path={PAGES.DASHBOARD_VAULTS}>
-                    <VaultsDashboard />
-                  </Route>
-                  <Route path={PAGES.CHALLENGES}>
-                    <Challenges />
-                  </Route>
-                  <Route path={PAGES.DASHBOARD_PARACHAIN}>
-                    <ParachainDashboard />
-                  </Route>
-                  <Route path={PAGES.DASHBOARD_ORACLES}>
-                    <OraclesDashboard />
-                  </Route>
-                  <Route path={PAGES.DASHBOARD_ISSUE_REQUESTS}>
-                    <IssueRequests />
-                  </Route>
-                  <Route path={PAGES.DASHBOARD_REDEEM_REQUESTS}>
-                    <RedeemRequests />
-                  </Route>
-                  <Route path={PAGES.DASHBOARD_RELAY}>
-                    <RelayDashboard />
-                  </Route>
-                  <Route path={PAGES.DASHBOARD}>
-                    <Dashboard />
-                  </Route>
-                  <Route path={PAGES.VAULT}>
-                    <VaultDashboard />
-                  </Route>
-                  <Route path={PAGES.FEEDBACK}>
-                    <Feedback />
-                  </Route>
-                  <Route
-                    path={PAGES.HOME}
-                    exact>
-                    <Home />
-                  </Route>
-                  <Route path='*'>
-                    <NoMatch />
-                  </Route>
-                </Switch>
-              </React.Suspense>
-              // </TransitionWrapper>
-            )} />
-        </LazyLoadingErrorBoundary>
+        <Route
+          render={({ location }) => (
+            // TODO: block for now
+            // <TransitionWrapper location={location}>
+            // TODO: should use loading spinner instead of `Loading...`
+            <React.Suspense fallback={<div>Loading...</div>}>
+              <Switch location={location}>
+                <Route path={PAGES.STAKED_RELAYER}>
+                  <StakedRelayer />
+                </Route>
+                <Route path={PAGES.DASHBOARD_VAULTS}>
+                  <VaultsDashboard />
+                </Route>
+                <Route path={PAGES.CHALLENGES}>
+                  <Challenges />
+                </Route>
+                <Route path={PAGES.DASHBOARD_PARACHAIN}>
+                  <ParachainDashboard />
+                </Route>
+                <Route path={PAGES.DASHBOARD_ORACLES}>
+                  <OraclesDashboard />
+                </Route>
+                <Route path={PAGES.DASHBOARD_ISSUE_REQUESTS}>
+                  <IssueRequests />
+                </Route>
+                <Route path={PAGES.DASHBOARD_REDEEM_REQUESTS}>
+                  <RedeemRequests />
+                </Route>
+                <Route path={PAGES.DASHBOARD_RELAY}>
+                  <RelayDashboard />
+                </Route>
+                <Route path={PAGES.DASHBOARD}>
+                  <Dashboard />
+                </Route>
+                <Route path={PAGES.VAULT}>
+                  <VaultDashboard />
+                </Route>
+                <Route path={PAGES.FEEDBACK}>
+                  <Feedback />
+                </Route>
+                <Route
+                  path={PAGES.HOME}
+                  exact>
+                  <Home />
+                </Route>
+                <Route path='*'>
+                  <NoMatch />
+                </Route>
+              </Switch>
+            </React.Suspense>
+            // </TransitionWrapper>
+          )} />
       </Layout>
     </>
   );
 }
 
-export default App;
+export default withErrorBoundary(App, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});
