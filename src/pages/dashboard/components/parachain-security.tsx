@@ -1,4 +1,6 @@
-import ButtonComponent from './button-component';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import { getAccents } from '../dashboardcolors';
 import { useSelector } from 'react-redux';
 import { ParachainStatus, StoreType } from '../../../common/types/util.types';
@@ -77,15 +79,11 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
             {parachainState()}
           </h1>
           {linkButton && (
-            <div
-              className='button-container'
-              style={{ marginTop: '20px' }}>
-              <ButtonComponent
-                buttonName='Status Updates'
-                propsButtonColor='d_green'
-                buttonId='parachain-security'
-                buttonLink={PAGES.DASHBOARD_PARACHAIN} />
-            </div>
+            <InterlayRouterLink to={PAGES.DASHBOARD_PARACHAIN}>
+              <InterlayConiferOutlinedButton endIcon={<FaExternalLinkAlt />}>
+                STATUS UPDATES
+              </InterlayConiferOutlinedButton>
+            </InterlayRouterLink>
           )}
         </div>
       </div>

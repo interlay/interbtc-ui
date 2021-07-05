@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import ButtonComponent from './button-component';
 import { getAccents } from '../dashboard-colors';
 import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
 import { useSelector } from 'react-redux';
@@ -10,6 +9,10 @@ import { useTranslation } from 'react-i18next';
 import { getUsdAmount } from '../../../common/utils/utils';
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
+import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 
 type PolkaBTCProps = {
   linkButton?: boolean;
@@ -57,20 +60,20 @@ const InterBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
         {linkButton && (
           <>
             <div style={{ display: 'grid', gridRowGap: 10 }}>
-              <div className='button-container'>
-                <ButtonComponent
-                  buttonName='view all issued'
-                  propsButtonColor='d_pink'
-                  buttonId='issuebtn'
-                  buttonLink={PAGES.DASHBOARD_ISSUE_REQUESTS} />
-              </div>
-              <div className='button-container'>
-                <ButtonComponent
-                  buttonName='view all redeemed'
-                  propsButtonColor='d_yellow'
-                  buttonId='redeembtn'
-                  buttonLink={PAGES.DASHBOARD_REDEEM_REQUESTS} />
-              </div>
+              <InterlayRouterLink to={PAGES.DASHBOARD_ISSUE_REQUESTS}>
+                <InterlayDenimOutlinedButton
+                  endIcon={<FaExternalLinkAlt />}
+                  className='w-full'>
+                  VIEW ALL ISSUED
+                </InterlayDenimOutlinedButton>
+              </InterlayRouterLink>
+              <InterlayRouterLink to={PAGES.DASHBOARD_ISSUE_REQUESTS}>
+                <InterlayMulberryOutlinedButton
+                  endIcon={<FaExternalLinkAlt />}
+                  className='w-full'>
+                  VIEW ALL REDEEMED
+                </InterlayMulberryOutlinedButton>
+              </InterlayRouterLink>
             </div>
           </>
         )}

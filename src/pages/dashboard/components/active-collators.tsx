@@ -1,5 +1,7 @@
 import { ReactElement } from 'react';
-import ButtonComponent from './button-component';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import LineChartComponent from './line-chart-component';
 import { range } from '../../../common/utils/utils';
 import { useTranslation } from 'react-i18next';
@@ -31,17 +33,19 @@ const ActiveCollators = (): ReactElement => {
           <h2>3</h2>
         </div>
         {displayLinkBtn && (
-          <div className='button-container'>
-            <ButtonComponent
-              buttonName='view collators'
-              propsButtonColor='d_blue'
-              buttonId='active-collators'
-              buttonLink={PAGES.HOME} />
-          </div>
+          <InterlayRouterLink to={PAGES.HOME}>
+            <InterlayDenimOutlinedButton
+              endIcon={<FaExternalLinkAlt />}
+              className='w-full'>
+              VIEW COLLATORS
+            </InterlayDenimOutlinedButton>
+          </InterlayRouterLink>
         )}
       </div>
       <LineChartComponent
+        // ray test touch <<
         color='d_blue'
+        // ray test touch >>
         label={t('dashboard.collators.total_collators_chart') as string}
         yLabels={dates}
         yAxisProps={{ beginAtZero: true, precision: 0 }}

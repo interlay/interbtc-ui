@@ -1,5 +1,7 @@
 import { ReactElement, useState, useEffect } from 'react';
-import ButtonComponent from './button-component';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import { getAccents } from '../dashboardcolors';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
@@ -74,13 +76,13 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
             </h1>
           </div>
           {linkButton && (
-            <div className='button-container'>
-              <ButtonComponent
-                buttonName='view BTC Relay'
-                propsButtonColor='d_green'
-                buttonId='btc-relay'
-                buttonLink={PAGES.DASHBOARD_RELAY} />
-            </div>
+            <InterlayRouterLink to={PAGES.DASHBOARD_RELAY}>
+              <InterlayConiferOutlinedButton
+                endIcon={<FaExternalLinkAlt />}
+                className='w-full'>
+                VIEW BTC RELAY
+              </InterlayConiferOutlinedButton>
+            </InterlayRouterLink>
           )}
         </div>
         <div className='circle-container'>

@@ -1,5 +1,7 @@
 import { useEffect, ReactElement, useState, useMemo } from 'react';
-import ButtonComponent from './button-component';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import { getAccents } from '../dashboardcolors';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
@@ -53,13 +55,13 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
           <h2>${getUsdAmount(totalLockedDOT, prices.polkadot.usd)}</h2>
         </div>
         {linkButton && (
-          <div className='button-container'>
-            <ButtonComponent
-              buttonName='view all vaults'
-              propsButtonColor='d_pink'
-              buttonId='collateral-locked'
-              buttonLink={PAGES.DASHBOARD_VAULTS} />
-          </div>
+          <InterlayRouterLink to={PAGES.DASHBOARD_VAULTS}>
+            <InterlayDenimOutlinedButton
+              endIcon={<FaExternalLinkAlt />}
+              className='w-full'>
+              VIEW ALL VAULTS
+            </InterlayDenimOutlinedButton>
+          </InterlayRouterLink>
         )}
       </div>
       <div className='chart-container'>

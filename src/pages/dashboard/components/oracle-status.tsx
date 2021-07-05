@@ -6,7 +6,9 @@ import clsx from 'clsx';
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
 import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
-import ButtonComponent from './button-component';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import { getAccents } from '../dashboardcolors';
 
 enum Status {
@@ -73,13 +75,13 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
           </h1>
         </div>
         {linkButton && (
-          <div className='button-container'>
-            <ButtonComponent
-              buttonName='view oracles'
-              propsButtonColor='d_green'
-              buttonId='oracle-status'
-              buttonLink={PAGES.DASHBOARD_ORACLES} />
-          </div>
+          <InterlayRouterLink to={PAGES.DASHBOARD_ORACLES}>
+            <InterlayConiferOutlinedButton
+              endIcon={<FaExternalLinkAlt />}
+              className='w-full'>
+              VIEW ORACLES
+            </InterlayConiferOutlinedButton>
+          </InterlayRouterLink>
         )}
       </div>
       <div className='circle-container'>

@@ -1,5 +1,7 @@
 import { ReactElement, useState, useMemo, useEffect } from 'react';
-import ButtonComponent from './button-component';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import { getAccents } from '../dashboard-colors';
 import LineChartComponent from './line-chart-component';
 import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
@@ -36,13 +38,13 @@ const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
           <h2>{totalVaultsPerDay[totalVaultsPerDay.length - 1]?.count}</h2>
         </div>
         {linkButton && (
-          <div className='button-container'>
-            <ButtonComponent
-              buttonName='view all vaults'
-              propsButtonColor='d_pink'
-              buttonId='active-vaults'
-              buttonLink={PAGES.DASHBOARD_VAULTS} />
-          </div>
+          <InterlayRouterLink to={PAGES.DASHBOARD_VAULTS}>
+            <InterlayDenimOutlinedButton
+              endIcon={<FaExternalLinkAlt />}
+              className='w-full'>
+              VIEW ALL VAULTS
+            </InterlayDenimOutlinedButton>
+          </InterlayRouterLink>
         )}
       </div>
       <LineChartComponent

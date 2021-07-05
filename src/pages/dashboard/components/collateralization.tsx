@@ -1,5 +1,7 @@
 import { useEffect, useState, ReactElement } from 'react';
-import ButtonComponent from './button-component';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
@@ -74,13 +76,13 @@ export default function Collateralization({ linkButton }: CollateralizationProps
           )}
         </div>
         {linkButton && (
-          <div className='button-container'>
-            <ButtonComponent
-              buttonName='view vaults'
-              propsButtonColor='d_blue'
-              buttonId='collateralization'
-              buttonLink={PAGES.DASHBOARD_VAULTS} />
-          </div>
+          <InterlayRouterLink to={PAGES.DASHBOARD_VAULTS}>
+            <InterlayDenimOutlinedButton
+              endIcon={<FaExternalLinkAlt />}
+              className='w-full'>
+              VIEW VAULTS
+            </InterlayDenimOutlinedButton>
+          </InterlayRouterLink>
         )}
       </div>
       <div
