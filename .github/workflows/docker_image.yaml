@@ -60,6 +60,7 @@ jobs:
   upload_datadog_sourcemaps:
     timeout-minutes: 30
     runs-on: [self-hosted, linux]
+    needs: [build_ui]
     steps:
       - uses: actions/setup-node@v2
         with:
