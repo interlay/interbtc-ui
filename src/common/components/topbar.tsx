@@ -28,7 +28,7 @@ import { StoreType } from 'common/types/util.types';
 import Balances from './balances';
 import { PAGES } from 'utils/constants/links';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc-logo.svg';
+import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
 
 type TopbarProps = {
@@ -125,9 +125,9 @@ const Topbar = (props: TopbarProps): JSX.Element => {
             <Navbar.Brand>
               <InterlayRouterLink
                 to={PAGES.HOME}>
-                <PolkabtcLogoIcon
+                <InterBTCLogoIcon
                   fill='currentColor'
-                  width={90}
+                  width={53}
                   height={53} />
               </InterlayRouterLink>
             </Navbar.Brand>

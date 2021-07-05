@@ -33,7 +33,7 @@ import {
   showAccountModalAction
 } from 'common/actions/general.actions';
 import STATUSES from 'utils/constants/statuses';
-import { ReactComponent as PolkaBTCLogoIcon } from 'assets/img/polkabtc-logo.svg';
+import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as AcalaLogoIcon } from 'assets/img/acala-logo.svg';
 import { ReactComponent as PlasmLogoIcon } from 'assets/img/plasm-logo.svg';
 import { ReactComponent as EthereumLogoIcon } from 'assets/img/ethereum-logo.svg';
@@ -59,7 +59,7 @@ const NETWORK_ITEMS = [
   {
     type: NETWORK_TYPES.polkaBTC,
     icon: (
-      <PolkaBTCLogoIcon width={24} />
+      <InterBTCLogoIcon width={24} />
     ),
     title: 'InterBTC'
   },

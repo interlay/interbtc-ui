@@ -52,7 +52,7 @@ import { parachainToUIIssueRequest } from 'common/utils/requests';
 import STATUSES from 'utils/constants/statuses';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
-import { ReactComponent as PolkaBTCLogoIcon } from 'assets/img/polkabtc-logo.svg';
+import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 
 const BTC_AMOUNT = 'btc-amount';
 
@@ -327,7 +327,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={
-              <PolkaBTCLogoIcon
+              <InterBTCLogoIcon
                 width={23}
                 height={23} />
             }
