@@ -200,7 +200,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
                 </div>
               </div>
               {errors.collateral && (
-                <div className='input-error'>
+                <div className='input-error text-interlayConifer'>
                   {errors.collateral.type === 'required' ?
                     t('vault.collateral_is_required') :
                     errors.collateral.message}

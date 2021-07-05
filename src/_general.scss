@@ -71,9 +71,6 @@ ul {
 
 body {
   .input-error {
-    // ray test touch <<
-    color: $error-color;
-    // ray test touch >>
     margin-top: -1rem;
   }
 }
@@ -90,33 +87,10 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
-.green-text {
-  // ray test touch <<
-  color: $green-color;
-  // ray test touch >>
-  font-weight: 600;
-}
-
-.orange-text {
-  // ray test touch <<
-  color: $orange-color;
-  // ray test touch >>
-  font-weight: 600;
-}
-
-.red-text {
-  // ray test touch <<
-  color: $red-color;
-  // ray test touch >>
-  font-weight: 600;
-}
-
 #basic-navbar-nav {
   .navbar-nav {
     .dropdown.nav-item {
-      // ray test touch <<
       border: 1px solid #343a40;
-      // ray test touch >>
       max-height: 31px;
       margin-right: 0.5rem;
     }

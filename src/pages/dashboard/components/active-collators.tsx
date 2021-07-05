@@ -43,9 +43,7 @@ const ActiveCollators = (): ReactElement => {
         )}
       </div>
       <LineChartComponent
-        // ray test touch <<
         color='d_blue'
-        // ray test touch >>
         label={t('dashboard.collators.total_collators_chart') as string}
         yLabels={dates}
         yAxisProps={{ beginAtZero: true, precision: 0 }}
