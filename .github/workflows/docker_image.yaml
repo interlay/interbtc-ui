@@ -47,7 +47,7 @@ jobs:
           echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF})" >> $GITHUB_ENV
 
       - run: "ln -s .env.${BRANCH_NAME:dev} .env"
-      - run: yarn install
+      - run: yarn install --network-timeout 36000
       - run: yarn lint
       - run: yarn test
       - run: yarn build
