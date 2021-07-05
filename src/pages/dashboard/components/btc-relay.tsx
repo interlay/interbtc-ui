@@ -1,5 +1,7 @@
 import { ReactElement, useState, useEffect } from 'react';
-import ButtonComponent from './button-component';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import { getAccents } from '../dashboardcolors';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
@@ -45,7 +47,12 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
           state === Status.Ok ?
             t('dashboard.synced') :
             t('dashboard.out_of_sync');
-  const statusColor = state === Status.Loading ? 'd_grey' : state === Status.Ok ? 'd_green' : 'd_red';
+  const statusColor =
+    state === Status.Loading ?
+      'd_interlayPaleSky' :
+      state === Status.Ok ?
+        'd_interlayConifer' :
+        'd_interlayCinnabar';
 
   useEffect(() => {
     (async () => {
@@ -74,13 +81,13 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
             </h1>
           </div>
           {linkButton && (
-            <div className='button-container'>
-              <ButtonComponent
-                buttonName='view BTC Relay'
-                propsButtonColor='d_green'
-                buttonId='btc-relay'
-                buttonLink={PAGES.relay} />
-            </div>
+            <InterlayRouterLink to={PAGES.DASHBOARD_RELAY}>
+              <InterlayConiferOutlinedButton
+                endIcon={<FaExternalLinkAlt />}
+                className='w-full'>
+                VIEW BTC RELAY
+              </InterlayConiferOutlinedButton>
+            </InterlayRouterLink>
           )}
         </div>
         <div className='circle-container'>
@@ -120,13 +127,13 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
           </div>
           <div className='circle-container'>
             <div
-              className='status-circle border-interlayDodgerBlue'
+              className='status-circle border-interlayDenim'
               id='relay-circle'>
               <h1
                 className={clsx(
                   'h1-xl',
                   'text-3xl',
-                  'text-interlayDodgerBlue',
+                  'text-interlayDenim',
                   'text-center'
                 )}
                 id='relay-circle-text'>

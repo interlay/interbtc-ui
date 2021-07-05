@@ -1,7 +1,8 @@
 import React, { ReactElement } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import { StatusUpdate } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
+import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
 
 type MessageModalProps = {
   onClose: () => void;
@@ -32,11 +33,10 @@ export default function MessageModal(props: MessageModalProps): ReactElement {
         )}
       </Modal.Body>
       <Modal.Footer>
-        <Button
-          variant='secondary'
+        <InterlayMulberryOutlinedButton
           onClick={props.onClose}>
           {t('cancel')}
-        </Button>
+        </InterlayMulberryOutlinedButton>
       </Modal.Footer>
     </Modal>
   );

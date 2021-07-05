@@ -108,7 +108,7 @@ export default function ParachainDashboard(): ReactElement {
           <PageTitle
             mainTitle={t('dashboard.parachain.parachain')}
             subTitle={<TimerIncrement />} />
-          <hr className='border-interlayRose' />
+          <hr className='border-interlayDenim' />
           <div className='parachain-graphs-container dashboard-graphs-container'>
             <ParachainSecurity />
             <ActiveStakedRelayers />

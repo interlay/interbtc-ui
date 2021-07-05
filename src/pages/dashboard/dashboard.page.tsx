@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
-import PolkaBTC from './components/polkabtc';
+import InterBTC from './components/interbtc';
 import CollateralLocked from './components/collateral-locked';
 import Collateralization from './components/collateralization';
 import ParachainSecurity from './components/parachain-security';
@@ -37,7 +37,7 @@ function Dashboard(): JSX.Element {
           'xl:grid-cols-3'
         )}>
         {/* TODO: could remove linkButton */}
-        <PolkaBTC linkButton />
+        <InterBTC linkButton />
         <CollateralLocked linkButton />
         <Collateralization linkButton />
         <ParachainSecurity linkButton />

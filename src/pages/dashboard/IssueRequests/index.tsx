@@ -97,7 +97,7 @@ function IssueRequests(): JSX.Element {
           <PageTitle
             mainTitle={t('issue_page.issue_requests')}
             subTitle={<TimerIncrement />} />
-          <hr className='border-interlayTreePoppy' />
+          <hr className='border-interlayCalifornia' />
         </div>
         <div
           className={clsx(
@@ -116,7 +116,7 @@ function IssueRequests(): JSX.Element {
             )}>
             <h5
               className={clsx(
-                'text-interlayRose',
+                'text-interlayDenim',
                 'font-bold',
                 'text-xl'
               )}>
@@ -130,7 +130,7 @@ function IssueRequests(): JSX.Element {
             </h5>
             <h5
               className={clsx(
-                'text-interlayMalachite',
+                'text-interlayConifer',
                 'font-bold',
                 'text-xl'
               )}>
@@ -149,8 +149,8 @@ function IssueRequests(): JSX.Element {
             )}>
             <LineChartComponent
               color={[
-                'd_pink',
-                'd_grey'
+                'd_interlayDenim',
+                'd_interlayPaleSky'
               ]}
               label={[
                 t('dashboard.issue.total_issued_chart'),

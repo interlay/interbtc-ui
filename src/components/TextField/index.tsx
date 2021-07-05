@@ -27,7 +27,7 @@ const TextField = React.forwardRef<Ref, Props>(({
         htmlFor={id}
         required={required}
         className={clsx(
-          { 'text-interlayScarlet': error }
+          { 'text-interlayCinnabar': error }
         )}>
         {label}
       </TextFieldLabel>
@@ -36,13 +36,18 @@ const TextField = React.forwardRef<Ref, Props>(({
       ref={ref}
       id={id}
       className={clsx(
-        { 'border-interlayScarlet text-interlayScarlet': error }
+        {
+          [clsx(
+            'border-interlayCinnabar',
+            'text-interlayCinnabar'
+          )]: error
+        }
       )}
       {...rest} />
     {helperText && (
       <TextFieldHelperText
         className={clsx(
-          { 'text-interlayScarlet': error }
+          { 'text-interlayCinnabar': error }
         )}>
         {helperText}
       </TextFieldHelperText>

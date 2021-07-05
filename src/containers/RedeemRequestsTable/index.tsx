@@ -138,7 +138,7 @@ const RedeemRequestsTable = ({
           return (
             <InterlayLink
               className={clsx(
-                'text-interlayDodgerBlue',
+                'text-interlayDenim',
                 'space-x-1.5',
                 'flex',
                 'items-center'
@@ -207,7 +207,7 @@ const RedeemRequestsTable = ({
             'flex',
             'justify-center'
           )}>
-          <EllipsisLoader dotClassName='bg-interlayTreePoppy-400' />
+          <EllipsisLoader dotClassName='bg-interlayCalifornia-400' />
         </div>
       )}
       {status === STATUSES.RESOLVED && (

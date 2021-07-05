@@ -54,11 +54,11 @@ function MaintenanceBanner(): JSX.Element | null {
             'md:max-w-3xl',
             'border',
             'border-solid',
-            'border-interlaySilverChalice',
+            'border-interlayPaleSky',
             'rounded',
             'text-center'
           )}>
-          <strong className='text-interlaySilverChalice'>
+          <strong className='text-interlayPaleSky'>
             {`${item.type} ${formatDateTime(item.startTime)}: ${item.reason}`}
             &nbsp;
             <InterlayLink

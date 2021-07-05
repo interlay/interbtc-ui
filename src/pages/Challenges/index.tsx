@@ -14,12 +14,12 @@ import CardList, {
   CardListItemHeader,
   CardListItemContent
 } from 'components/CardList';
+import InterlayDenimToggleButtonGroup, {
+  InterlayDenimToggleButtonGroupItem,
+  InterlayDenimToggleButtonGroupProps
+} from 'components/toggle-button-groups/InterlayDenimToggleButtonGroup';
 import InterlayLink from 'components/UI/InterlayLink';
 import InterlayTabs, { InterlayTab } from 'components/UI/InterlayTabs';
-import InterlayToggleButtonGroup, {
-  InterlayToggleButton,
-  InterlayToggleButtonGroupProps
-} from 'components/UI/InterlayToggleButtonGroup';
 import {
   POLKA_BTC_DOC_START_TREASURE_HUNT,
   POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT,
@@ -32,7 +32,7 @@ import { CHALLENGE_CUT_OFFS } from 'config/challenges';
 
 const challengeCutOffs = Object.values(CHALLENGE_CUT_OFFS);
 
-function ChallengeSelector(props: InterlayToggleButtonGroupProps) {
+const ChallengeSelector = (props: InterlayDenimToggleButtonGroupProps) => {
   const { t } = useTranslation();
 
   const nowTimestamp = Date.now();
@@ -44,25 +44,17 @@ function ChallengeSelector(props: InterlayToggleButtonGroupProps) {
   }
 
   return (
-    <InterlayToggleButtonGroup
-      type='radio'
-      {...props}>
+    <InterlayDenimToggleButtonGroup {...props}>
       {validChallengeCutOffs.map(challengeCutOff => (
-        <InterlayToggleButton
-          // TODO: should use tailwindcss
-          variant='outline-polkadot'
-          // className={clsx(
-          //   'border-interlayScarlet-400',
-          //   'bg-interlayScarlet-400'
-          // )}
+        <InterlayDenimToggleButtonGroupItem
           key={challengeCutOff.id}
           value={challengeCutOff.id}>
           {t(`leaderboard.challenge_buttons.${challengeCutOff.id}`)}
-        </InterlayToggleButton>
+        </InterlayDenimToggleButtonGroupItem>
       ))}
-    </InterlayToggleButtonGroup>
+    </InterlayDenimToggleButtonGroup>
   );
-}
+};
 
 const CHALLENGE_ITEMS = [
   {
@@ -108,7 +100,7 @@ const TAB_KEYS = Object.freeze({
   STAKED_RELAYER: 'staked-relayer'
 });
 
-function Challenges(): JSX.Element {
+const Challenges = (): JSX.Element => {
   // TODO: should be persisted using query parameters
   const [challengeId, setChallengeId] = useState(challengeCutOffs[0].id ?? null);
   // TODO: should be persisted using query parameters
@@ -164,7 +156,7 @@ function Challenges(): JSX.Element {
                       'items-center',
                       'space-x-1',
                       'ml-1',
-                      'text-interlayDodgerBlue'
+                      'text-interlayDenim'
                     )}
                     href={challengeItem.contentLink}
                     target='_blank'
@@ -188,7 +180,6 @@ function Challenges(): JSX.Element {
             'px-4'
           )}>
           <ChallengeSelector
-            name='challenge'
             value={challengeId}
             onChange={handleChallengeIdChange} />
         </div>
@@ -209,6 +200,6 @@ function Challenges(): JSX.Element {
       </div>
     </MainContainer>
   );
-}
+};
 
 export default Challenges;

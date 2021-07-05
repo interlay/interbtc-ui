@@ -1,4 +1,6 @@
-import ButtonComponent from './button-component';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import { getAccents } from '../dashboardcolors';
 import { useSelector } from 'react-redux';
 import { ParachainStatus, StoreType } from '../../../common/types/util.types';
@@ -20,7 +22,7 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
     case ParachainStatus.Running:
       return (
         <span
-          style={{ color: getAccents('d_green').color }}
+          style={{ color: getAccents('d_interlayConifer').color }}
           id='parachain-text'
           className='font-bold'>
           {t('dashboard.parachain.secure')}
@@ -30,7 +32,7 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
     case ParachainStatus.Loading:
       return (
         <span
-          style={{ color: getAccents('d_grey').color }}
+          style={{ color: getAccents('d_interlayPaleSky').color }}
           id='parachain-text'
           className='font-bold'>
           {t('loading')}
@@ -41,7 +43,7 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
     case ParachainStatus.Shutdown:
       return (
         <span
-          style={{ color: getAccents('d_yellow').color }}
+          style={{ color: getAccents('d_interlayCalifornia').color }}
           id='parachain-text'
           className='font-bold'>
           {t('dashboard.parachain.halted')}
@@ -51,7 +53,7 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
     default:
       return (
         <span
-          style={{ color: getAccents('d_grey').color }}
+          style={{ color: getAccents('d_interlayPaleSky').color }}
           id='parachain-text'
           className='font-bold'>
           {t('no_data')}
@@ -77,15 +79,11 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
             {parachainState()}
           </h1>
           {linkButton && (
-            <div
-              className='button-container'
-              style={{ marginTop: '20px' }}>
-              <ButtonComponent
-                buttonName='Status Updates'
-                propsButtonColor='d_green'
-                buttonId='parachain-security'
-                buttonLink={PAGES.parachain} />
-            </div>
+            <InterlayRouterLink to={PAGES.DASHBOARD_PARACHAIN}>
+              <InterlayConiferOutlinedButton endIcon={<FaExternalLinkAlt />}>
+                STATUS UPDATES
+              </InterlayConiferOutlinedButton>
+            </InterlayRouterLink>
           )}
         </div>
       </div>

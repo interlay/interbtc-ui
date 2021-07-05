@@ -146,7 +146,7 @@ const StakedRelayerScoresTable = ({
           'flex',
           'justify-center'
         )}>
-        <EllipsisLoader dotClassName='bg-interlayTreePoppy-400' />
+        <EllipsisLoader dotClassName='bg-interlayCalifornia-400' />
       </div>
     );
   }

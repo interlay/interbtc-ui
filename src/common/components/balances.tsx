@@ -2,7 +2,7 @@
 import clsx from 'clsx';
 
 import { safeRoundFiveDecimals } from 'common/utils/utils';
-import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc-logo.svg';
+import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
 interface Props {
@@ -30,9 +30,9 @@ const Balances = ({
           'items-center',
           'space-x-2'
         )}>
-        <PolkabtcLogoIcon
+        <InterBTCLogoIcon
           fill='currentColor'
-          width={50}
+          width={30}
           height={30} />
         <span className='font-bold'>{balancePolkaBTC || '0'}</span>
         <span>InterBTC</span>

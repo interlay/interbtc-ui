@@ -101,7 +101,7 @@ function RedeemRequests(): JSX.Element {
           <PageTitle
             mainTitle={t('dashboard.redeem.redeem')}
             subTitle={<TimerIncrement />} />
-          <hr className='border-interlayRose' />
+          <hr className='border-interlayDenim' />
         </div>
         <div
           className={clsx(
@@ -120,7 +120,7 @@ function RedeemRequests(): JSX.Element {
             )}>
             <h5
               className={clsx(
-                'text-interlayTreePoppy',
+                'text-interlayCalifornia',
                 'font-bold',
                 'text-xl'
               )}>
@@ -142,7 +142,7 @@ function RedeemRequests(): JSX.Element {
             )}
             <h5
               className={clsx(
-                'text-interlayMalachite',
+                'text-interlayConifer',
                 'font-bold',
                 'text-xl'
               )}>
@@ -154,7 +154,7 @@ function RedeemRequests(): JSX.Element {
             {/* TODO: add this again when the network is stable */}
             {/* <h5
               className={clsx(
-                'text-interlayMalachite',
+                'text-interlayConifer',
                 'font-bold',
                 'text-xl'
               )}>
@@ -172,7 +172,7 @@ function RedeemRequests(): JSX.Element {
               'mx-6'
             )}>
             <LineChartComponent
-              color={['d_yellow', 'd_grey']}
+              color={['d_interlayCalifornia', 'd_interlayPaleSky']}
               label={[
                 t('dashboard.redeem.total_redeemed_chart'),
                 t('dashboard.redeem.per_day_redeemed_chart')

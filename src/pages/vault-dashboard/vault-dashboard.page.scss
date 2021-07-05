@@ -5,70 +5,12 @@
     display: flex;
     justify-content: center;
 
-    .vault-container {
-        width: 70%;
-        overflow-x: scroll;
-        padding: 0px 15px;
-    }
-
-    .register-vault-dashboard {
-        margin: 1rem;
-    }
-
-    .btc-address-header {
-        margin-top: 1rem;
-    }
-
-    .vault-dashboard-button {
-        margin: 2rem;
-    }
-
-    .title {
-        width: 100%;
-        text-align: center;
-        font-size: 2rem;
-        margin-top: 2rem;
-        font-weight: 600;
-    }
-
     .header {
         font-weight: 600;
         font-size: 1.1rem;
         text-align: center;
         margin-top: 2rem;
         margin-bottom: 1rem;
-    }
-
-    .table-wrapper {
-        width: 100%;
-        table {
-            table-layout: auto;
-            width: 1200px;
-            margin: auto;
-            overflow: scroll;
-            text-align: center;
-        }
-
-        th,
-        td {
-            padding: 5px 10px;
-            border: 1px solid #ddd;
-
-            i {
-                color: rgba(0, 0, 0, 0.5);
-            }
-            p {
-                margin: 0px;
-            }
-        }
-
-        td.break-words {
-            word-break: break-all;
-        }
-
-        thead {
-            background-color: #eaeaea;
-        }
     }
 }
 

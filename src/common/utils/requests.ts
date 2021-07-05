@@ -414,7 +414,7 @@ interface ParsableParachainTypes {
 /**
  * Parses types which belong to request objects and need parsing/conversion to be displayed in the UI.
  *
- * @param parachainObject A request object, which must have a BTC address, a PolkaBTC amount and a DOT amount.
+ * @param parachainObject A request object, which must have a BTC address, a InterBTC amount and a DOT amount.
  * @return A tuple with the parsed properties
  */
 
@@ -427,7 +427,7 @@ function convertParachainTypes(parachainObject: ParsableParachainTypes): [string
   } else if (parachainObject.amount) {
     parsedPolkaBTC = satToBTC(parachainObject.amount.toString());
   } else {
-    throw new Error('No property found for PolkaBTC amount');
+    throw new Error('No property found for InterBTC amount');
   }
 
   if (parachainObject.premium_dot && parachainObject.premium_dot.toString() !== '0') {

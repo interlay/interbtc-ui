@@ -44,29 +44,6 @@
     flex-direction: column;
   }
 
-  .parachain-button-container {
-    width: 100%;
-    text-align: left;
-    margin-top: 10px;
-  }
-
-  button.temp-dashboard-button {
-    background-color: white;
-    border-radius: 8px;
-    width: 130px;
-    padding: 10px 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .button-assets-container {
-    display: flex;
-    align-items: flex-start;
-    vertical-align: middle;
-    text-decoration: none;
-  }
-
   .card-top-content {
     display: flex;
     justify-content: space-between;
@@ -112,11 +89,6 @@
         width: 70%;
         padding-left: 30px;
     }
-    
-    button.temp-dashboard-button {
-      width: 160px;
-      padding: 12px 12px;
-    }
   }
   
   .chart-container {
@@ -127,15 +99,5 @@
   .parachain-content-container {
     width: 70%;
     padding-left: 30px;
-  }
-
-  button.temp-dashboard-button {
-    width: 160px;
-    padding: 12px 12px;
-  }
-
-  .latest-block-text {
-    font-size: 12px;
-    font-weight: 700;
   }
 }

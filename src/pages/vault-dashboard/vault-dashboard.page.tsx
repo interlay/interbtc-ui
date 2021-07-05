@@ -26,8 +26,8 @@ import CardList, {
   CardListContainer
 } from 'components/CardList';
 import BoldParagraph from 'components/BoldParagraph';
-import InterlayRoseContainedButton from 'components/buttons/InterlayRoseContainedButton';
-import InterlayTreePoppyContainedButton from 'components/buttons/InterlayTreePoppyContainedButton';
+import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
+import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
 import RequestReplacementModal from './request-replacement/request-replacement';
@@ -167,40 +167,40 @@ function VaultDashboard(): JSX.Element {
     {
       title: t('collateralization'),
       value: `${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`,
-      color: 'text-interlayDodgerBlue-800'
+      color: 'text-interlayDenim-800'
     },
     {
       title: t('vault.fees_earned_interbtc'),
       value: displayBtcAmount(feesEarnedPolkaBTC),
-      color: 'text-interlayRose-800'
+      color: 'text-interlayDenim-800'
     },
     {
       title: t('vault.fees_earned_dot'),
       value: safeRoundFiveDecimals(feesEarnedDOT),
-      color: 'text-interlayRose-800'
+      color: 'text-interlayDenim-800'
     },
     {
       title: t('sla_score'),
       value: safeRoundTwoDecimals(sla),
-      color: 'text-interlayDodgerBlue-800'
+      color: 'text-interlayDenim-800'
     }, {
       title: t('vault.locked_dot'),
       value: safeRoundFiveDecimals(collateral),
-      color: 'text-interlayRose-800'
+      color: 'text-interlayDenim-800'
     },
     {
       title: t('locked_btc'),
       value: displayBtcAmount(lockedBTC),
-      color: 'text-interlayTreePoppy-700'
+      color: 'text-interlayCalifornia-700'
     }, {
       title: t('vault.remaining_capacity'),
       value: displayBtcAmount(capacity),
-      color: 'text-interlayRose-800'
+      color: 'text-interlayDenim-800'
     },
     {
       title: t('apy'),
       value: `~${safeRoundTwoDecimals(apy)}%`,
-      color: 'text-interlayDodgerBlue-800'
+      color: 'text-interlayDenim-800'
     }
   ];
 
@@ -245,14 +245,14 @@ function VaultDashboard(): JSX.Element {
               'grid-cols-3',
               'gap-10'
             )}>
-            <InterlayRoseContainedButton
+            <InterlayDenimContainedButton
               type='submit'
               style={{ display: 'flex' }}
               className='mx-auto'
               // TODO: should not use inlined functions
               onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Increase)}>
               {t('vault.deposit_collateral')}
-            </InterlayRoseContainedButton>
+            </InterlayDenimContainedButton>
             <InterlayDefaultContainedButton
               type='submit'
               style={{ display: 'flex' }}
@@ -261,13 +261,13 @@ function VaultDashboard(): JSX.Element {
               {t('vault.withdraw_collateral')}
             </InterlayDefaultContainedButton>
             {new Big(lockedBTC).gt(new Big(0)) ? (
-              <InterlayTreePoppyContainedButton
+              <InterlayCaliforniaContainedButton
                 type='submit'
                 style={{ display: 'flex' }}
                 className='mx-auto'
                 onClick={() => setShowRequestReplacementModal(true)}>
                 {t('vault.replace_vault')}
-              </InterlayTreePoppyContainedButton>
+              </InterlayCaliforniaContainedButton>
             ) : (
               ''
             )}

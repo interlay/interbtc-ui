@@ -423,15 +423,6 @@
     "tooltip_bridge_fee": "The bridge fee is paid to the Vaults, Relayers, and maintainers of the system.",
     "tooltip_security_deposit": "The security deposit is a denial-of-service protection for Vaults that is refunded to you after the minting process is completed."
   },
-  "landing": {
-    "defi_ecosystem": "Bitcoin for Polkadot's DeFi Ecosystem",
-    "issued": "Issued: ",
-    "docs": "Learn more",
-    "testnet": "Alpha Testnet",
-    "beta_coming": "Beta testnet is coming soon!",
-    "discord": "Join Discord",
-    "countdown": "Launch in:"
-  },
   "feedback": {
     "thanks_for_testing": "Thanks for testing InterBTC!",
     "would_like_to_hear": "We want to build the best-possible solution and would like to hear your feedback!",

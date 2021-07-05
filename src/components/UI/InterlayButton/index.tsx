@@ -65,14 +65,14 @@ const InterlayButton = ({
           [clsx(
             'bg-primary',
             'hover:bg-primary-600',
-            'text-primary-contrastText'
+            'text-white'
           )]: variant === VARIANTS.contained && color === COLORS.primary && !disabledOrPending
         },
         {
           [clsx(
             'bg-secondary',
             'hover:bg-secondary-600',
-            'text-secondary-contrastText'
+            'text-textPrimary'
           )]: variant === VARIANTS.contained && color === COLORS.secondary && !disabledOrPending
         },
         {

@@ -1,5 +1,7 @@
 import { ReactElement, useState, useMemo, useEffect } from 'react';
-import ButtonComponent from './button-component';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import { getAccents } from '../dashboard-colors';
 import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
 import LineChartComponent from './line-chart-component';
@@ -33,22 +35,21 @@ const ActiveStakedRelayersComponent = ({ linkButton }: ActiveStakedRelayers): Re
     <DashboardCard>
       <div className='card-top-content'>
         <div className='values-container'>
-          <h1 style={{ color: getAccents('d_orange').color }}>{t('dashboard.parachain.active_relayers')}</h1>
+          <h1 style={{ color: getAccents('d_interlayMulberry').color }}>{t('dashboard.parachain.active_relayers')}</h1>
           <h2>{totalRelayersPerDay[totalRelayersPerDay.length - 1]?.count}</h2>
         </div>
-
         {linkButton && (
-          <div className='button-container'>
-            <ButtonComponent
-              buttonName='view relayers'
-              propsButtonColor='d_orange'
-              buttonId='active-staked'
-              buttonLink={PAGES.parachain} />
-          </div>
+          <InterlayRouterLink to={PAGES.DASHBOARD_PARACHAIN}>
+            <InterlayMulberryOutlinedButton
+              endIcon={<FaExternalLinkAlt />}
+              className='w-full'>
+              VIEW RELAYERS
+            </InterlayMulberryOutlinedButton>
+          </InterlayRouterLink>
         )}
       </div>
       <LineChartComponent
-        color='d_orange'
+        color='d_interlayMulberry'
         label={t('dashboard.parachain.total_relayers_chart') as string}
         yLabels={totalRelayersPerDay.map(dataPoint =>
           new Date(dataPoint.date).toISOString().substring(0, 10)

@@ -30,8 +30,8 @@ const InterlayDefaultOutlinedButton = React.forwardRef<Ref, Props>(({
       className={clsx(
         'focus:outline-none',
         'focus:ring',
-        'focus:border-interlayFrenchGray-300',
-        'focus:ring-interlayFrenchGray-200',
+        'focus:border-interlayPaleSky-300',
+        'focus:ring-interlayPaleSky-200',
         'focus:ring-opacity-50',
 
         'border',
@@ -44,8 +44,8 @@ const InterlayDefaultOutlinedButton = React.forwardRef<Ref, Props>(({
           'text-opacity-25'
         ) : clsx(
           'text-textPrimary',
-          'border-interlayFrenchGray',
-          'hover:bg-interlayFrenchGray',
+          'border-interlayPaleSky-300',
+          'hover:bg-interlayPaleSky',
           'hover:bg-opacity-5'
         ),
 

@@ -2,7 +2,7 @@
 
 <div align="center">
 	<p align="center">
-		<img src="src/assets/img/polkabtc.png" alt="logo" width="512">
+		<img src="src/assets/img/interbtc.png" alt="logo" width="512">
 	</p>
 	<p>
 		<h3 align="center">InterBTC: Trustless and open DeFi access for your Bitcoin.</h3>

@@ -28,7 +28,7 @@ function StyledLinkData(props: StyledLinkDataProps): ReactElement {
   // TODO: make into actual hyperlink
   return (
     <InterlayLink
-      className='text-interlayDodgerBlue'
+      className='text-interlayDenim'
       href={props.target}
       target={props.newTab ? '_blank' : ''}
       rel='noopener noreferrer'>
@@ -79,9 +79,9 @@ function StatusComponent({
         <Icon
           className={clsx(
             'ml-1',
-            { 'text-interlayMalachite': category === StatusCategories.Ok },
-            { 'text-interlayScarlet': category === StatusCategories.Bad },
-            { 'text-interlayTreePoppy': category !== StatusCategories.Ok && category !== StatusCategories.Bad }
+            { 'text-interlayConifer': category === StatusCategories.Ok },
+            { 'text-interlayCinnabar': category === StatusCategories.Bad },
+            { 'text-interlayCalifornia': category !== StatusCategories.Ok && category !== StatusCategories.Bad }
           )}
           width={14}
           height={14} />
@@ -90,10 +90,10 @@ function StatusComponent({
         className={clsx(
           'ml-1',
           'font-bold',
-          { 'text-interlayMalachite': category === StatusCategories.Ok },
-          { 'text-interlayScarlet': category === StatusCategories.Bad },
+          { 'text-interlayConifer': category === StatusCategories.Ok },
+          { 'text-interlayCinnabar': category === StatusCategories.Bad },
           {
-            'text-interlayTreePoppy':
+            'text-interlayCalifornia':
               category !== StatusCategories.Ok &&
               category !== StatusCategories.Bad &&
               category !== StatusCategories.Neutral
