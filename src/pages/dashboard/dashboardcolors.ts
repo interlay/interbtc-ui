@@ -3,26 +3,26 @@ export interface Style {
   filter?: string;
 }
 
-// ray test touch <<
+// ray test touch <
 export function getAccents(color: string): Style {
   const accent = { color: '#000000', filter: 'none' };
   switch (color) {
-  case 'd_yellow':
+  case 'd_interlayCalifornia':
     accent.color = '#ff9900';
     break;
-  case 'd_pink':
+  case 'd_interlayDenim':
     accent.color = '#075abc';
     break;
   case 'd_blue':
     accent.color = '#075abc';
     break;
-  case 'd_orange':
+  case 'd_interlayMulberry':
     accent.color = '#db5aad';
     break;
-  case 'd_green':
+  case 'd_interlayConifer':
     accent.color = '#a2e75e';
     break;
-  case 'd_red':
+  case 'd_interlayCinnabar':
     accent.color = '#ef4444';
     break;
   default:
@@ -31,4 +31,4 @@ export function getAccents(color: string): Style {
   }
   return accent;
 }
-// ray test touch >>
+// ray test touch >

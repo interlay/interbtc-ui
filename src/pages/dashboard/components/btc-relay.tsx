@@ -47,7 +47,12 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
           state === Status.Ok ?
             t('dashboard.synced') :
             t('dashboard.out_of_sync');
-  const statusColor = state === Status.Loading ? 'd_grey' : state === Status.Ok ? 'd_green' : 'd_red';
+  const statusColor =
+    state === Status.Loading ?
+      'd_interlayPaleSky' :
+      state === Status.Ok ?
+        'd_interlayConifer' :
+        'd_interlayCinnabar';
 
   useEffect(() => {
     (async () => {

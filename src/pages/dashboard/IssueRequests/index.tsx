@@ -149,8 +149,8 @@ function IssueRequests(): JSX.Element {
             )}>
             <LineChartComponent
               color={[
-                'd_pink',
-                'd_grey'
+                'd_interlayDenim',
+                'd_interlayPaleSky'
               ]}
               label={[
                 t('dashboard.issue.total_issued_chart'),

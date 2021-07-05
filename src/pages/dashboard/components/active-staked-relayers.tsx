@@ -35,7 +35,7 @@ const ActiveStakedRelayersComponent = ({ linkButton }: ActiveStakedRelayers): Re
     <DashboardCard>
       <div className='card-top-content'>
         <div className='values-container'>
-          <h1 style={{ color: getAccents('d_orange').color }}>{t('dashboard.parachain.active_relayers')}</h1>
+          <h1 style={{ color: getAccents('d_interlayMulberry').color }}>{t('dashboard.parachain.active_relayers')}</h1>
           <h2>{totalRelayersPerDay[totalRelayersPerDay.length - 1]?.count}</h2>
         </div>
         {linkButton && (
@@ -49,7 +49,7 @@ const ActiveStakedRelayersComponent = ({ linkButton }: ActiveStakedRelayers): Re
         )}
       </div>
       <LineChartComponent
-        color='d_orange'
+        color='d_interlayMulberry'
         label={t('dashboard.parachain.total_relayers_chart') as string}
         yLabels={totalRelayersPerDay.map(dataPoint =>
           new Date(dataPoint.date).toISOString().substring(0, 10)

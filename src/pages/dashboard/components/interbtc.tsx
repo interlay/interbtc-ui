@@ -52,7 +52,7 @@ const InterBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
     <DashboardCard>
       <div className='card-top-content'>
         <div className='values-container'>
-          <h1 style={{ color: getAccents('d_pink').color }}>{t('dashboard.issue.issued')}</h1>
+          <h1 style={{ color: getAccents('d_interlayDenim').color }}>{t('dashboard.issue.issued')}</h1>
           <h2>{t('dashboard.issue.total_interbtc', { amount: totalPolkaBTC })}</h2>
           {/* TODO: add the price API */}
           <h2>${getUsdAmount(totalPolkaBTC, prices.bitcoin.usd)}</h2>
@@ -80,7 +80,7 @@ const InterBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
       </div>
       <div className='chart-container'>
         <LineChartComponent
-          color={['d_yellow', 'd_grey']}
+          color={['d_interlayCalifornia', 'd_interlayPaleSky']}
           label={[t('dashboard.issue.total_issued_chart'), t('dashboard.issue.per_day_issued_chart')]}
           yLabels={cumulativeIssuesPerDay
             .slice(1)

@@ -172,7 +172,7 @@ function RedeemRequests(): JSX.Element {
               'mx-6'
             )}>
             <LineChartComponent
-              color={['d_yellow', 'd_grey']}
+              color={['d_interlayCalifornia', 'd_interlayPaleSky']}
               label={[
                 t('dashboard.redeem.total_redeemed_chart'),
                 t('dashboard.redeem.per_day_redeemed_chart')

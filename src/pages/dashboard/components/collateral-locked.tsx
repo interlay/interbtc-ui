@@ -50,7 +50,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
     <DashboardCard>
       <div className='card-top-content'>
         <div className='values-container'>
-          <h1 style={{ color: getAccents('d_pink').color }}>{t('dashboard.vault.locked_collateral')}</h1>
+          <h1 style={{ color: getAccents('d_interlayDenim').color }}>{t('dashboard.vault.locked_collateral')}</h1>
           <h2>{totalLockedDOT} DOT</h2>
           <h2>${getUsdAmount(totalLockedDOT, prices.polkadot.usd)}</h2>
         </div>
@@ -66,7 +66,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
       </div>
       <div className='chart-container'>
         <LineChartComponent
-          color='d_pink'
+          color='d_interlayDenim'
           label={t('dashboard.vault.total_collateral_locked') as string}
           yLabels={cumulativeCollateralPerDay
             .slice(1)

@@ -34,7 +34,7 @@ const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
     <DashboardCard>
       <div className='card-top-content'>
         <div className='values-container'>
-          <h1 style={{ color: getAccents('d_pink').color }}>{t('dashboard.vault.active_vaults')}</h1>
+          <h1 style={{ color: getAccents('d_interlayDenim').color }}>{t('dashboard.vault.active_vaults')}</h1>
           <h2>{totalVaultsPerDay[totalVaultsPerDay.length - 1]?.count}</h2>
         </div>
         {linkButton && (
@@ -48,7 +48,7 @@ const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
         )}
       </div>
       <LineChartComponent
-        color='d_pink'
+        color='d_interlayDenim'
         label={t('dashboard.vault.total_vaults_chart') as string}
         yLabels={totalVaultsPerDay.map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}
         yAxisProps={{ beginAtZero: true, precision: 0 }}
