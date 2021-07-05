@@ -26,7 +26,14 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
-      - run: npm install -g yarn
+      - run: |
+          npm install -g yarn
+          set http_proxy=
+          set https_proxy=
+          yarn config delete proxy
+          npm config rm https-proxy
+          npm config rm proxy
+          npm config set registry "https://registry.npmjs.org"
 
       - name: Extract branch name
         if: github.event_name != 'pull_request'
