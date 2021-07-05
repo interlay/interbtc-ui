@@ -41,17 +41,18 @@ const INTERLAY_CONIFER = Object.freeze({
   800: '#618b38',
   900: '#4f712e'
 });
-const INTERLAY_MOUNTAIN_MEADOW = Object.freeze({
-  50: '#f3fcf9',
-  100: '#e7f8f2',
-  200: '#c3eee0',
-  300: '#9fe3cd',
-  400: '#58cea7',
-  500: '#10b981',
-  600: '#0ea774',
-  700: '#0c8b61',
-  800: '#0a6f4d',
-  900: '#085b3f'
+// TODO: not used for now
+const INTERLAY_BRIGHT_TURQUOISE = Object.freeze({
+  50: '#f4fdfd',
+  100: '#e9fcfb',
+  200: '#c7f7f5',
+  300: '#a5f3ef',
+  400: '#62e9e2',
+  500: '#1ee0d6',
+  600: '#1bcac1',
+  700: '#17a8a1',
+  800: '#128680',
+  900: '#0f6e69'
 });
 const INTERLAY_CALIFORNIA = Object.freeze({
   50: '#fffaf2',
@@ -65,6 +66,7 @@ const INTERLAY_CALIFORNIA = Object.freeze({
   800: '#995c00',
   900: '#7d4b00'
 });
+// TODO: not from the design team
 const INTERLAY_CINNABAR = Object.freeze({
   50: '#fef6f6',
   100: '#fdecec',
@@ -77,6 +79,7 @@ const INTERLAY_CINNABAR = Object.freeze({
   800: '#8f2929',
   900: '#752121'
 });
+// TODO: not from the design team
 const INTERLAY_PALE_SKY = Object.freeze({
   50: '#f8f8f9',
   100: '#f0f1f2',
@@ -88,6 +91,45 @@ const INTERLAY_PALE_SKY = Object.freeze({
   700: '#505660',
   800: '#40444d',
   900: '#34383f'
+});
+// TODO: not used for now
+const INTERLAY_PURPLE_HEART = Object.freeze({
+  50: '#fbf7ff',
+  100: '#f6efff',
+  200: '#e9d6ff',
+  300: '#dbbdff',
+  400: '#c18cff',
+  500: '#a65aff',
+  600: '#9551e6',
+  700: '#7d44bf',
+  800: '#643699',
+  900: '#512c7d'
+});
+// TODO: not used for now
+const INTERLAY_DODGER_BLUE = Object.freeze({
+  50: '#f5faff',
+  100: '#ecf5ff',
+  200: '#cfe5ff',
+  300: '#b2d5ff',
+  400: '#78b6ff',
+  500: '#3e96ff',
+  600: '#3887e6',
+  700: '#2f71bf',
+  800: '#255a99',
+  900: '#1e4a7d'
+});
+// TODO: not used for now
+const INTERLAY_HAITI = Object.freeze({
+  50: '#f4f3f5',
+  100: '#e8e7ea',
+  200: '#c6c2cb',
+  300: '#a39dab',
+  400: '#5f546c',
+  500: '#1a0a2d',
+  600: '#170929',
+  700: '#140822',
+  800: '#10061b',
+  900: '#0d0516'
 });
 
 module.exports = {
@@ -135,17 +177,17 @@ module.exports = {
           800: INTERLAY_CONIFER[800],
           900: INTERLAY_CONIFER[900]
         },
-        interlayMountainMeadow: {
-          50: INTERLAY_MOUNTAIN_MEADOW[50],
-          100: INTERLAY_MOUNTAIN_MEADOW[100],
-          200: INTERLAY_MOUNTAIN_MEADOW[200],
-          300: INTERLAY_MOUNTAIN_MEADOW[300],
-          400: INTERLAY_MOUNTAIN_MEADOW[400],
-          DEFAULT: INTERLAY_MOUNTAIN_MEADOW[500],
-          600: INTERLAY_MOUNTAIN_MEADOW[600],
-          700: INTERLAY_MOUNTAIN_MEADOW[700],
-          800: INTERLAY_MOUNTAIN_MEADOW[800],
-          900: INTERLAY_MOUNTAIN_MEADOW[900]
+        interlayBrightTurquoise: {
+          50: INTERLAY_BRIGHT_TURQUOISE[50],
+          100: INTERLAY_BRIGHT_TURQUOISE[100],
+          200: INTERLAY_BRIGHT_TURQUOISE[200],
+          300: INTERLAY_BRIGHT_TURQUOISE[300],
+          400: INTERLAY_BRIGHT_TURQUOISE[400],
+          DEFAULT: INTERLAY_BRIGHT_TURQUOISE[500],
+          600: INTERLAY_BRIGHT_TURQUOISE[600],
+          700: INTERLAY_BRIGHT_TURQUOISE[700],
+          800: INTERLAY_BRIGHT_TURQUOISE[800],
+          900: INTERLAY_BRIGHT_TURQUOISE[900]
         },
         interlayCalifornia: {
           50: INTERLAY_CALIFORNIA[50],
@@ -182,6 +224,42 @@ module.exports = {
           700: INTERLAY_PALE_SKY[700],
           800: INTERLAY_PALE_SKY[800],
           900: INTERLAY_PALE_SKY[900]
+        },
+        interlayPurpleHeart: {
+          50: INTERLAY_PURPLE_HEART[50],
+          100: INTERLAY_PURPLE_HEART[100],
+          200: INTERLAY_PURPLE_HEART[200],
+          300: INTERLAY_PURPLE_HEART[300],
+          400: INTERLAY_PURPLE_HEART[400],
+          DEFAULT: INTERLAY_PURPLE_HEART[500],
+          600: INTERLAY_PURPLE_HEART[600],
+          700: INTERLAY_PURPLE_HEART[700],
+          800: INTERLAY_PURPLE_HEART[800],
+          900: INTERLAY_PURPLE_HEART[900]
+        },
+        interlayDodgerBlue: {
+          50: INTERLAY_DODGER_BLUE[50],
+          100: INTERLAY_DODGER_BLUE[100],
+          200: INTERLAY_DODGER_BLUE[200],
+          300: INTERLAY_DODGER_BLUE[300],
+          400: INTERLAY_DODGER_BLUE[400],
+          DEFAULT: INTERLAY_DODGER_BLUE[500],
+          600: INTERLAY_DODGER_BLUE[600],
+          700: INTERLAY_DODGER_BLUE[700],
+          800: INTERLAY_DODGER_BLUE[800],
+          900: INTERLAY_DODGER_BLUE[900]
+        },
+        interlayHaiti: {
+          50: INTERLAY_HAITI[50],
+          100: INTERLAY_HAITI[100],
+          200: INTERLAY_HAITI[200],
+          300: INTERLAY_HAITI[300],
+          400: INTERLAY_HAITI[400],
+          DEFAULT: INTERLAY_HAITI[500],
+          600: INTERLAY_HAITI[600],
+          700: INTERLAY_HAITI[700],
+          800: INTERLAY_HAITI[800],
+          900: INTERLAY_HAITI[900]
         },
         primary: {
           50: INTERLAY_DENIM[50],

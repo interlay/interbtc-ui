@@ -34,7 +34,7 @@ const PLANS = [
   }
 ];
 
-// TODO: unused for now
+// TODO: not used for now
 const InterlayRadioGroup = (): JSX.Element => {
   const [selected, setSelected] = React.useState(PLANS[0]);
 
