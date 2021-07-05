@@ -16,7 +16,7 @@ import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import AccountModal from 'parts/AccountModal';
 import InterlayLink from 'components/UI/InterlayLink';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
-import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
+import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import {
@@ -202,14 +202,14 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                             {t('request_btc')}
                           </InterlayCaliforniaOutlinedButton>
                         </InterlayLink>
-                        <InterlayCinnabarOutlinedButton
+                        <InterlayDenimOutlinedButton
                           style={{
                             marginLeft: 8
                           }}
                           pending={isRequestPending}
                           onClick={requestDOT}>
                           {t('request_dot')}
-                        </InterlayCinnabarOutlinedButton>
+                        </InterlayDenimOutlinedButton>
                       </Nav>
                       <Balances
                         balanceDOT={balanceDOT}
