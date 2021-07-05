@@ -12,7 +12,7 @@ interface CustomProps {
 }
 
 type Ref = HTMLButtonElement;
-const InterlayOrangePeelOutlinedButton = React.forwardRef<Ref, Props>(({
+const InterlayCaliforniaOutlinedButton = React.forwardRef<Ref, Props>(({
   className,
   children,
   startIcon,
@@ -30,8 +30,8 @@ const InterlayOrangePeelOutlinedButton = React.forwardRef<Ref, Props>(({
       className={clsx(
         'focus:outline-none',
         'focus:ring',
-        'focus:border-interlayOrangePeel-300',
-        'focus:ring-interlayOrangePeel-200',
+        'focus:border-interlayCalifornia-300',
+        'focus:ring-interlayCalifornia-200',
         'focus:ring-opacity-50',
 
         'border',
@@ -43,9 +43,9 @@ const InterlayOrangePeelOutlinedButton = React.forwardRef<Ref, Props>(({
           'text-black',
           'text-opacity-25'
         ) : clsx(
-          'text-interlayOrangePeel',
-          'border-interlayOrangePeel',
-          'hover:bg-interlayOrangePeel',
+          'text-interlayCalifornia',
+          'border-interlayCalifornia',
+          'hover:bg-interlayCalifornia',
           'hover:bg-opacity-5'
         ),
 
@@ -76,8 +76,8 @@ const InterlayOrangePeelOutlinedButton = React.forwardRef<Ref, Props>(({
     </InterlayButtonBase>
   );
 });
-InterlayOrangePeelOutlinedButton.displayName = 'InterlayOrangePeelOutlinedButton';
+InterlayCaliforniaOutlinedButton.displayName = 'InterlayCaliforniaOutlinedButton';
 
 export type Props = CustomProps & InterlayButtonBaseProps;
 
-export default InterlayOrangePeelOutlinedButton;
+export default InterlayCaliforniaOutlinedButton;

@@ -81,7 +81,7 @@ function StatusComponent({
             'ml-1',
             { 'text-interlayConifer': category === StatusCategories.Ok },
             { 'text-interlayCinnabar': category === StatusCategories.Bad },
-            { 'text-interlayOrangePeel': category !== StatusCategories.Ok && category !== StatusCategories.Bad }
+            { 'text-interlayCalifornia': category !== StatusCategories.Ok && category !== StatusCategories.Bad }
           )}
           width={14}
           height={14} />
@@ -93,7 +93,7 @@ function StatusComponent({
           { 'text-interlayConifer': category === StatusCategories.Ok },
           { 'text-interlayCinnabar': category === StatusCategories.Bad },
           {
-            'text-interlayOrangePeel':
+            'text-interlayCalifornia':
               category !== StatusCategories.Ok &&
               category !== StatusCategories.Bad &&
               category !== StatusCategories.Neutral

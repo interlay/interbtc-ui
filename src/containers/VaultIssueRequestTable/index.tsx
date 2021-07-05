@@ -230,7 +230,7 @@ const VaultIssueRequestsTable = ({
             'flex',
             'justify-center'
           )}>
-          <EllipsisLoader dotClassName='bg-interlayOrangePeel-400' />
+          <EllipsisLoader dotClassName='bg-interlayCalifornia-400' />
         </div>
       )}
       {status === STATUSES.RESOLVED && (

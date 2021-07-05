@@ -131,7 +131,7 @@ const ReimburseStatusUI = ({
           className={clsx(
             'text-lg',
             'font-medium',
-            'text-interlayOrangePeel',
+            'text-interlayCalifornia',
             'flex',
             'justify-center',
             'items-center',

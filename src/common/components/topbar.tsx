@@ -18,7 +18,7 @@ import InterlayLink from 'components/UI/InterlayLink';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import InterlayOrangePeelOutlinedButton from 'components/buttons/InterlayOrangePeelOutlinedButton';
+import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import {
   updateBalanceDOTAction,
   showAccountModalAction
@@ -198,9 +198,9 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                           rel='noopener noreferrer'
                           href='https://testnet-faucet.mempool.co/'
                           style={{ textDecoration: 'none' }}>
-                          <InterlayOrangePeelOutlinedButton>
+                          <InterlayCaliforniaOutlinedButton>
                             {t('request_btc')}
-                          </InterlayOrangePeelOutlinedButton>
+                          </InterlayCaliforniaOutlinedButton>
                         </InterlayLink>
                         <InterlayCinnabarOutlinedButton
                           style={{

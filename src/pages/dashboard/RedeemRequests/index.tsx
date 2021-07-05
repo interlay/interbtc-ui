@@ -120,7 +120,7 @@ function RedeemRequests(): JSX.Element {
             )}>
             <h5
               className={clsx(
-                'text-interlayOrangePeel',
+                'text-interlayCalifornia',
                 'font-bold',
                 'text-xl'
               )}>

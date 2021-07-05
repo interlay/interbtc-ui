@@ -27,7 +27,7 @@ import CardList, {
 } from 'components/CardList';
 import BoldParagraph from 'components/BoldParagraph';
 import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
-import InterlayOrangePeelContainedButton from 'components/buttons/InterlayOrangePeelContainedButton';
+import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
 import RequestReplacementModal from './request-replacement/request-replacement';
@@ -191,7 +191,7 @@ function VaultDashboard(): JSX.Element {
     {
       title: t('locked_btc'),
       value: displayBtcAmount(lockedBTC),
-      color: 'text-interlayOrangePeel-700'
+      color: 'text-interlayCalifornia-700'
     }, {
       title: t('vault.remaining_capacity'),
       value: displayBtcAmount(capacity),
@@ -261,13 +261,13 @@ function VaultDashboard(): JSX.Element {
               {t('vault.withdraw_collateral')}
             </InterlayDefaultContainedButton>
             {new Big(lockedBTC).gt(new Big(0)) ? (
-              <InterlayOrangePeelContainedButton
+              <InterlayCaliforniaContainedButton
                 type='submit'
                 style={{ display: 'flex' }}
                 className='mx-auto'
                 onClick={() => setShowRequestReplacementModal(true)}>
                 {t('vault.replace_vault')}
-              </InterlayOrangePeelContainedButton>
+              </InterlayCaliforniaContainedButton>
             ) : (
               ''
             )}

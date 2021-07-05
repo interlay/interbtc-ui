@@ -53,17 +53,17 @@ const INTERLAY_MOUNTAIN_MEADOW = Object.freeze({
   800: '#0a6f4d',
   900: '#085b3f'
 });
-const INTERLAY_ORANGE_PEEL = Object.freeze({
-  50: '#fffaf3',
-  100: '#fef5e7',
-  200: '#fde7c2',
-  300: '#fbd89d',
-  400: '#f8bb54',
-  500: '#f59e0b',
-  600: '#dd8e0a',
-  700: '#b87708',
-  800: '#935f07',
-  900: '#784d05'
+const INTERLAY_CALIFORNIA = Object.freeze({
+  50: '#fffaf2',
+  100: '#fff5e6',
+  200: '#ffe6bf',
+  300: '#ffd699',
+  400: '#ffb84d',
+  500: '#ff9900',
+  600: '#e68a00',
+  700: '#bf7300',
+  800: '#995c00',
+  900: '#7d4b00'
 });
 const INTERLAY_CINNABAR = Object.freeze({
   50: '#fef6f6',
@@ -147,17 +147,17 @@ module.exports = {
           800: INTERLAY_MOUNTAIN_MEADOW[800],
           900: INTERLAY_MOUNTAIN_MEADOW[900]
         },
-        interlayOrangePeel: {
-          50: INTERLAY_ORANGE_PEEL[50],
-          100: INTERLAY_ORANGE_PEEL[100],
-          200: INTERLAY_ORANGE_PEEL[200],
-          300: INTERLAY_ORANGE_PEEL[300],
-          400: INTERLAY_ORANGE_PEEL[400],
-          DEFAULT: INTERLAY_ORANGE_PEEL[500],
-          600: INTERLAY_ORANGE_PEEL[600],
-          700: INTERLAY_ORANGE_PEEL[700],
-          800: INTERLAY_ORANGE_PEEL[800],
-          900: INTERLAY_ORANGE_PEEL[900]
+        interlayCalifornia: {
+          50: INTERLAY_CALIFORNIA[50],
+          100: INTERLAY_CALIFORNIA[100],
+          200: INTERLAY_CALIFORNIA[200],
+          300: INTERLAY_CALIFORNIA[300],
+          400: INTERLAY_CALIFORNIA[400],
+          DEFAULT: INTERLAY_CALIFORNIA[500],
+          600: INTERLAY_CALIFORNIA[600],
+          700: INTERLAY_CALIFORNIA[700],
+          800: INTERLAY_CALIFORNIA[800],
+          900: INTERLAY_CALIFORNIA[900]
         },
         interlayCinnabar: {
           50: INTERLAY_CINNABAR[50],

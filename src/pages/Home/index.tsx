@@ -141,7 +141,7 @@ const Home = (): JSX.Element | null => {
             <h4
               className={clsx(
                 'text-2xl',
-                'text-interlayOrangePeel',
+                'text-interlayCalifornia',
                 'font-medium',
                 'text-center',
                 'my-3'

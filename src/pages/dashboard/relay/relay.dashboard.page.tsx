@@ -75,7 +75,7 @@ export default function RelayDashboard(): ReactElement {
           <PageTitle
             mainTitle={t('dashboard.relay.btc_relay')}
             subTitle={<TimerIncrement />} />
-          <hr className='border-interlayOrangePeel' />
+          <hr className='border-interlayCalifornia' />
           <div className='dashboard-graphs-container'>
             <div className='relay-grid-container'>
               <BtcRelay displayBlockstreamData={true} />

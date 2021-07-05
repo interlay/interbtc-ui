@@ -50,7 +50,7 @@ const DefaultRedeemRequest = ({
           'w-48',
           'h-48',
           'ring-4',
-          'ring-interlayOrangePeel',
+          'ring-interlayCalifornia',
           'rounded-full',
           'inline-flex',
           'flex-col',

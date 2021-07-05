@@ -171,7 +171,7 @@ const RedeemRequestsTable = (): JSX.Element => {
           default: {
             icon = <FaRegClock />;
             notice = t('pending');
-            colorClassName = 'text-interlayOrangePeel';
+            colorClassName = 'text-interlayCalifornia';
             break;
           }
           }
