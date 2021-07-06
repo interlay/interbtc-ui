@@ -26,15 +26,18 @@ export default function RelayDashboard(): ReactElement {
   const fetchBlocks = useMemo(
     () => async () => {
       try {
-        const [blocks, totalRelayedBlocks] = await Promise.all([
+        const [
+          blocks,
+          totalRelayedBlocksCount
+        ] = await Promise.all([
           statsApi.getBlocks(tableParams),
           statsApi.getTotalRelayedBlocksCount()
         ]);
         setBlocks(blocks);
-        setTotalRelayedBlocks(Number(totalRelayedBlocks));
+        const theTotalRelayedBlocks = totalRelayedBlocksCount.replaceAll('"', '');
+        setTotalRelayedBlocks(Number(theTotalRelayedBlocks));
       } catch (error) {
-        console.log('Error fetching btc-relay data.');
-        console.log('error.message => ', error.message);
+        console.log('[RelayDashboard fetchBlocks] error.message => ', error.message);
       }
     },
     [tableParams, statsApi]

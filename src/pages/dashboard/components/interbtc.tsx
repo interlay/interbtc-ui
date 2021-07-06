@@ -11,7 +11,7 @@ import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
-import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
+import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 
 type PolkaBTCProps = {
@@ -67,12 +67,12 @@ const InterBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
                   VIEW ALL ISSUED
                 </InterlayDenimOutlinedButton>
               </InterlayRouterLink>
-              <InterlayRouterLink to={PAGES.DASHBOARD_ISSUE_REQUESTS}>
-                <InterlayMulberryOutlinedButton
+              <InterlayRouterLink to={PAGES.DASHBOARD_REDEEM_REQUESTS}>
+                <InterlayCaliforniaOutlinedButton
                   endIcon={<FaExternalLinkAlt />}
                   className='w-full'>
                   VIEW ALL REDEEMED
-                </InterlayMulberryOutlinedButton>
+                </InterlayCaliforniaOutlinedButton>
               </InterlayRouterLink>
             </div>
           </>
