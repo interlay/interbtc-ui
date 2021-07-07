@@ -51,8 +51,6 @@ export interface IssueMap {
 export interface IssueState {
   // TODO: use current account from general state
   address: string;
-  // current step in the wizard
-  step: string;
   // id of the current issue request
   id: string;
   // mapping of all issue requests

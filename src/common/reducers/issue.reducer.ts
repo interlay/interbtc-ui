@@ -1,12 +1,10 @@
 import {
-  CHANGE_ISSUE_STEP,
   RESET_ISSUE_WIZARD,
   CHANGE_ISSUE_ID,
   CHANGE_ADDRESS,
   ADD_ISSUE_REQUEST,
   UPDATE_ISSUE_REQUEST,
   IssueActions,
-  INIT_STATE,
   UPDATE_ALL_ISSUE_REQUESTS,
   UPDATE_ISSUE_PERIOD
 } from '../types/actions.types';
@@ -14,9 +12,6 @@ import { IssueState } from '../types/issue.types';
 
 const initialState = {
   address: '',
-  // ray test touch <<
-  step: 'ENTER_BTC_AMOUNT',
-  // ray test touch >>
   id: '',
   issueRequests: new Map(),
   issuePeriod: 86400
@@ -26,8 +21,6 @@ export const issueReducer = (state: IssueState = initialState, action: IssueActi
   switch (action.type) {
   case CHANGE_ADDRESS:
     return { ...state, address: action.address };
-  case CHANGE_ISSUE_STEP:
-    return { ...state, step: action.step };
   case CHANGE_ISSUE_ID:
     return { ...state, id: action.id };
   case RESET_ISSUE_WIZARD: {
@@ -59,10 +52,6 @@ export const issueReducer = (state: IssueState = initialState, action: IssueActi
     map.set(state.address, updateRequests);
     return { ...state, issueRequests: map };
   }
-  // ray test touch <<
-  case INIT_STATE:
-    return { ...state, step: 'ENTER_BTC_AMOUNT' };
-  // ray test touch >>
   // ray test touch <
   case UPDATE_ALL_ISSUE_REQUESTS: {
     const newRequests = new Map(state.issueRequests);

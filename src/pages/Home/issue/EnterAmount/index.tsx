@@ -15,13 +15,16 @@ import {
 } from 'react-error-boundary';
 import { AccountId } from '@polkadot/types/interfaces';
 import {
-  btcToSat,
-  stripHexPrefix
+  btcToSat
+  // ray test touch <<
+  // stripHexPrefix
+  // ray test touch >>
 } from '@interlay/polkabtc';
 
-import InterBTCField from '../InterBTCField';
-import PriceInfo from '../PriceInfo';
-import ParachainStatusInfo from '../ParachainStatusInfo';
+import SubmittedRequestModal from './SubmittedRequestModal';
+import InterBTCField from 'pages/Home/InterBTCField';
+import PriceInfo from 'pages/Home/PriceInfo';
+import ParachainStatusInfo from 'pages/Home/ParachainStatusInfo';
 import Tooltip from 'components/Tooltip';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
@@ -36,8 +39,9 @@ import {
   BLOCKS_BEHIND_LIMIT
 } from 'config/parachain';
 import {
-  changeIssueStepAction,
-  changeIssueIdAction,
+  // ray test touch <<
+  // changeIssueIdAction,
+  // ray test touch >
   addIssueRequestAction,
   updateIssuePeriodAction
 } from 'common/actions/issue.actions';
@@ -50,6 +54,7 @@ import {
 } from 'common/utils/utils';
 import { parachainToUIIssueRequest } from 'common/utils/requests';
 import STATUSES from 'utils/constants/statuses';
+import { IssueRequest } from 'common/types/issue.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
@@ -64,11 +69,9 @@ type IssueForm = {
   [BTC_AMOUNT]: string;
 }
 
-const EnterBTCAmount = (): JSX.Element | null => {
+const EnterAmount = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-
-  const [status, setStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
 
   const {
@@ -92,6 +95,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
   });
   const btcAmount = watch(BTC_AMOUNT);
 
+  const [status, setStatus] = React.useState(STATUSES.IDLE);
   // Additional info: bridge fee, security deposit, amount BTC
   // Current fee model specification taken from: https://interlay.gitlab.io/polkabtc-spec/spec/fee.html
   const [feeRate, setFeeRate] = React.useState(new Big(0.005)); // Set default to 0.5%
@@ -100,9 +104,9 @@ const EnterBTCAmount = (): JSX.Element | null => {
   const [vaults, setVaults] = React.useState<Map<AccountId, Big>>();
   const [dustValue, setDustValue] = React.useState('0');
   const [vaultMaxAmount, setVaultMaxAmount] = React.useState('');
-
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
+  const [submittedRequest, setSubmittedRequest] = React.useState<IssueRequest>();
 
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
@@ -205,28 +209,30 @@ const EnterBTCAmount = (): JSX.Element | null => {
     return undefined;
   };
 
+  const handleSubmittedRequestModalOpen = (newSubmittedRequest: IssueRequest) => {
+    setSubmittedRequest(newSubmittedRequest);
+  };
+  const handleSubmittedRequestModalClose = () => {
+    setSubmittedRequest(undefined);
+  };
+
   const onSubmit = async (data: IssueForm) => {
     try {
       const polkaBTCAmount = new Big(data[BTC_AMOUNT]);
       setSubmitStatus(STATUSES.PENDING);
       const result = await window.polkaBTC.issue.request(polkaBTCAmount);
-      // ray test touch <
       // TODO: handle issue aggregation
-      const issueRequest = await parachainToUIIssueRequest(result[0].id, result[0].issueRequest);
-      // ray test touch >
+      const theSubmittedRequest = await parachainToUIIssueRequest(result[0].id, result[0].issueRequest);
+      handleSubmittedRequestModalOpen(theSubmittedRequest);
       setSubmitStatus(STATUSES.RESOLVED);
-
       // ray test touch <<
       // Get the issue ID from the request issue event
-      const issueId = stripHexPrefix(result[0].id.toString());
-      dispatch(changeIssueIdAction(issueId));
+      // const issueId = stripHexPrefix(result[0].id.toString());
+      // dispatch(changeIssueIdAction(issueId));
       // ray test touch >>
 
       // Update the issue status
-      dispatch(addIssueRequestAction(issueRequest));
-      // ray test touch <<
-      dispatch(changeIssueStepAction('BTC_PAYMENT'));
-      // ray test touch >>
+      dispatch(addIssueRequestAction(theSubmittedRequest));
     } catch (error) {
       setSubmitStatus(STATUSES.REJECTED);
       setSubmitError(error);
@@ -366,6 +372,12 @@ const EnterBTCAmount = (): JSX.Element | null => {
                 submitError.message
             } />
         )}
+        {submittedRequest && (
+          <SubmittedRequestModal
+            open={!!submittedRequest}
+            onClose={handleSubmittedRequestModalClose}
+            request={submittedRequest} />
+        )}
       </>
     );
   }
@@ -373,7 +385,7 @@ const EnterBTCAmount = (): JSX.Element | null => {
   return null;
 };
 
-export default withErrorBoundary(EnterBTCAmount, {
+export default withErrorBoundary(EnterAmount, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();

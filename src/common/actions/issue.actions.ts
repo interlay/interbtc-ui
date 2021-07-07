@@ -1,5 +1,4 @@
 import {
-  CHANGE_ISSUE_STEP,
   RESET_ISSUE_WIZARD,
   CHANGE_ISSUE_ID,
   ADD_ISSUE_REQUEST,
@@ -8,7 +7,6 @@ import {
   CHANGE_SELECTED_ISSUE,
   UPDATE_ISSUE_PERIOD,
   UpdateAllIssueRequests,
-  ChangeIssueStep,
   ResetIssueWizard,
   ChangeIssueId,
   AddIssueRequest,
@@ -17,13 +15,6 @@ import {
   UpdateIssuePeriod
 } from '../types/actions.types';
 import { IssueRequest } from '../types/issue.types';
-
-// ray test touch <<
-export const changeIssueStepAction = (step: string): ChangeIssueStep => ({
-  type: CHANGE_ISSUE_STEP,
-  step
-});
-// ray test touch >>
 
 // ray test touch <<
 export const resetIssueWizardAction = (): ResetIssueWizard => ({

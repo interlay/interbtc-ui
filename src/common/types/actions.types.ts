@@ -203,8 +203,6 @@ export type RedeemActions =
     | TogglePremiumRedeem;
 
 // ISSUE
-
-export const CHANGE_ISSUE_STEP = 'CHANGE_ISSUE_STEP';
 export const CHANGE_ISSUE_ID = 'CHANGE_ISSUE_ID';
 export const RESET_ISSUE_WIZARD = 'RESET_ISSUE_WIZARD';
 export const STORE_ISSUE_REQUEST = 'STORE_ISSUE_REQUEST';
@@ -217,11 +215,6 @@ export const UPDATE_ISSUE_PERIOD = 'UPDATE_ISSUE_PERIOD';
 export interface ChangeSelectedIssue {
     type: typeof CHANGE_SELECTED_ISSUE;
     request: IssueRequest;
-}
-
-export interface ChangeIssueStep {
-    type: typeof CHANGE_ISSUE_STEP;
-    step: string;
 }
 
 export interface ChangeIssueId {
@@ -259,7 +252,6 @@ export interface UpdateIssuePeriod {
 }
 
 export type IssueActions =
-    | ChangeIssueStep
     | ChangeIssueId
     | ResetIssueWizard
     | StoreIssueRequest
