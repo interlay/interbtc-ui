@@ -50,7 +50,9 @@ const TAB_ITEMS_WITH_BURN = [
 const Home = (): JSX.Element | null => {
   const { t } = useTranslation();
 
+  // ray test touch <<
   const issueStep = useSelector((state: StoreType) => state.issue.step);
+  // ray test touch >>
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
 
   const query = useQuery();
@@ -117,7 +119,9 @@ const Home = (): JSX.Element | null => {
     });
   };
 
+  // ray test touch <<
   const tabsHidden = issueStep !== 'ENTER_BTC_AMOUNT' && selectedTabId === TAB_IDS.issue;
+  // ray test touch >>
 
   return (
     <MainContainer>

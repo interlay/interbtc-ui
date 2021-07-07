@@ -216,13 +216,17 @@ const EnterBTCAmount = (): JSX.Element | null => {
       // ray test touch >
       setSubmitStatus(STATUSES.RESOLVED);
 
+      // ray test touch <<
       // Get the issue ID from the request issue event
       const issueId = stripHexPrefix(result[0].id.toString());
       dispatch(changeIssueIdAction(issueId));
+      // ray test touch >>
 
       // Update the issue status
       dispatch(addIssueRequestAction(issueRequest));
+      // ray test touch <<
       dispatch(changeIssueStepAction('BTC_PAYMENT'));
+      // ray test touch >>
     } catch (error) {
       setSubmitStatus(STATUSES.REJECTED);
       setSubmitError(error);

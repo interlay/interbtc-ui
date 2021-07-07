@@ -36,7 +36,9 @@ export const getInitialState = (): StoreType => {
     },
     issue: {
       address: '',
+      // ray test touch <<
       step: 'ENTER_BTC_AMOUNT',
+      // ray test touch >>
       id: '',
       issueRequests: new Map(),
       issuePeriod: 86400

@@ -14,7 +14,9 @@ import { IssueState } from '../types/issue.types';
 
 const initialState = {
   address: '',
+  // ray test touch <<
   step: 'ENTER_BTC_AMOUNT',
+  // ray test touch >>
   id: '',
   issueRequests: new Map(),
   issuePeriod: 86400
@@ -57,8 +59,10 @@ export const issueReducer = (state: IssueState = initialState, action: IssueActi
     map.set(state.address, updateRequests);
     return { ...state, issueRequests: map };
   }
+  // ray test touch <<
   case INIT_STATE:
     return { ...state, step: 'ENTER_BTC_AMOUNT' };
+  // ray test touch >>
   // ray test touch <
   case UPDATE_ALL_ISSUE_REQUESTS: {
     const newRequests = new Map(state.issueRequests);

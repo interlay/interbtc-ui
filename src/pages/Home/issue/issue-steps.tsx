@@ -1,15 +1,21 @@
+
+// ray test touch <<
+import { useSelector } from 'react-redux';
+
 import EnterBTCAmount from './EnterBTCAmount';
 import BTCPayment from './BTCPayment';
-import { useSelector } from 'react-redux';
-import { StoreType } from '../../../common/types/util.types';
+import { StoreType } from 'common/types/util.types';
 
-export default function IssueSteps(): JSX.Element {
+const IssueSteps = (): JSX.Element => {
   const step = useSelector((state: StoreType) => state.issue.step);
 
   return (
-    <div className='issue-steps'>
+    <>
       {step === 'ENTER_BTC_AMOUNT' && <EnterBTCAmount />}
       {step === 'BTC_PAYMENT' && <BTCPayment />}
-    </div>
+    </>
   );
-}
+};
+
+export default IssueSteps;
+// ray test touch >>

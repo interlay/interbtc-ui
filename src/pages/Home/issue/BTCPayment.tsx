@@ -25,8 +25,10 @@ const BTCPayment = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const handleClick = () => {
+    // ray test touch <<
     dispatch(changeIssueStepAction('ENTER_BTC_AMOUNT'));
     dispatch(resetIssueWizardAction());
+    // ray test touch >>
   };
 
   return (
