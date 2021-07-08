@@ -49,10 +49,10 @@ export interface IssueMap {
 }
 
 export interface IssueState {
-  // ray test touch <<
+  // ray test touch <
   // TODO: use current account from general state
   address: string;
-  // ray test touch >>
+  // ray test touch >
   // mapping of all issue requests
   issueRequests: Map<string, IssueRequest[]>;
   // issue period in seconds

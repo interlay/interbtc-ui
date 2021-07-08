@@ -1,6 +1,5 @@
 import {
   RESET_ISSUE_WIZARD,
-  CHANGE_ADDRESS,
   ADD_ISSUE_REQUEST,
   UPDATE_ISSUE_REQUEST,
   IssueActions,
@@ -17,10 +16,6 @@ const initialState = {
 
 export const issueReducer = (state: IssueState = initialState, action: IssueActions): IssueState => {
   switch (action.type) {
-  // ray test touch <<
-  case CHANGE_ADDRESS:
-    return { ...state, address: action.address };
-  // ray test touch >>
   case RESET_ISSUE_WIZARD: {
     const newState = {
       ...initialState,
