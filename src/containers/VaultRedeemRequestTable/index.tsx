@@ -50,7 +50,7 @@ const VaultRedeemRequestsTable = ({
   vaultAddress
 }: Props): JSX.Element | null => {
   const query = useQuery();
-  const selectedPage: number = query.get(QUERY_PARAMETERS.page) || 1;
+  const selectedPage: number = query.get(QUERY_PARAMETERS.PAGE) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
   const statsApi = usePolkabtcStats();
   const [data, setData] = React.useState<DashboardRequestInfo[]>([]);
@@ -204,7 +204,7 @@ const VaultRedeemRequestsTable = ({
 
   const handlePageChange = (newPage: number) => {
     updateQueryParameters({
-      [QUERY_PARAMETERS.page]: newPage
+      [QUERY_PARAMETERS.PAGE]: newPage
     });
   };
 

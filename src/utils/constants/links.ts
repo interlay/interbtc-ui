@@ -15,8 +15,9 @@ const PAGES = Object.freeze({
 });
 
 const QUERY_PARAMETERS = Object.freeze({
-  tab: 'tab',
-  page: 'page'
+  TAB: 'tab',
+  PAGE: 'page',
+  ISSUE_REQUEST_ID: 'issueRequestId'
 });
 
 export {

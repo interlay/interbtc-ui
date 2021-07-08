@@ -1,6 +1,5 @@
 import {
   RESET_ISSUE_WIZARD,
-  CHANGE_ISSUE_ID,
   ADD_ISSUE_REQUEST,
   UPDATE_ISSUE_REQUEST,
   UPDATE_ALL_ISSUE_REQUESTS,
@@ -8,7 +7,6 @@ import {
   UPDATE_ISSUE_PERIOD,
   UpdateAllIssueRequests,
   ResetIssueWizard,
-  ChangeIssueId,
   AddIssueRequest,
   UpdateIssueRequest,
   ChangeSelectedIssue,
@@ -19,13 +17,6 @@ import { IssueRequest } from '../types/issue.types';
 // ray test touch <
 export const resetIssueWizardAction = (): ResetIssueWizard => ({
   type: RESET_ISSUE_WIZARD
-});
-// ray test touch >
-
-// ray test touch <
-export const changeIssueIdAction = (id: string): ChangeIssueId => ({
-  type: CHANGE_ISSUE_ID,
-  id
 });
 // ray test touch >
 

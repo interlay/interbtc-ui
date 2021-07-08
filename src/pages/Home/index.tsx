@@ -52,7 +52,7 @@ const Home = (): JSX.Element | null => {
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
 
   const query = useQuery();
-  const selectedTabId = query.get(QUERY_PARAMETERS.tab);
+  const selectedTabId = query.get(QUERY_PARAMETERS.TAB);
   const updateQueryParameters = useUpdateQueryParameters();
 
   const [burnable, setBurnable] = React.useState(false);
@@ -80,7 +80,7 @@ const Home = (): JSX.Element | null => {
     case selectedTabId === TAB_IDS.burn && !burnable:
     case selectedTabId && !tabIdValues.includes(selectedTabId):
       updateQueryParametersRef.current({
-        [QUERY_PARAMETERS.tab]: TAB_IDS.issue
+        [QUERY_PARAMETERS.TAB]: TAB_IDS.issue
       });
     }
   }, [
@@ -111,7 +111,7 @@ const Home = (): JSX.Element | null => {
 
   const handleTabSelect = (index: number) => () => {
     updateQueryParameters({
-      [QUERY_PARAMETERS.tab]: TAB_ITEMS[index].id
+      [QUERY_PARAMETERS.TAB]: TAB_ITEMS[index].id
     });
   };
 

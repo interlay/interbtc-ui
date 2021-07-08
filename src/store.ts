@@ -35,8 +35,9 @@ export const getInitialState = (): StoreType => {
       prices: { bitcoin: { usd: 0 }, polkadot: { usd: 0 } }
     },
     issue: {
+      // ray test touch <<
       address: '',
-      id: '',
+      // ray test touch >>
       issueRequests: new Map(),
       issuePeriod: 86400
     },

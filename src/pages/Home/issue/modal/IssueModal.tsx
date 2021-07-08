@@ -41,19 +41,21 @@ const renderModalStatusPanel = (request: IssueRequest) => {
   }
 };
 
-type Props = Omit<ModalProps, 'children'>;
+interface CustomProps {
+  requestId: string;
+}
 
 const IssueModal = ({
   open,
-  onClose
-}: Props): JSX.Element | null => {
+  onClose,
+  requestId
+}: CustomProps & Omit<ModalProps, 'children'>): JSX.Element | null => {
   const {
     address,
     prices
   } = useSelector((state: StoreType) => state.general);
-  const selectedIdRequest = useSelector((state: StoreType) => state.issue.id);
   const userIssueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address) || [];
-  const request = userIssueRequests.filter(request => request.id === selectedIdRequest)[0];
+  const request = userIssueRequests.filter(request => request.id === requestId)[0];
   const { t } = useTranslation();
   const focusRef = React.useRef(null);
 
