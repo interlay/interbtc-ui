@@ -56,12 +56,12 @@ const IssueRequestsTable = (): JSX.Element => {
     }
   };
 
-  // ray test touch <<
+  // ray test touch <
   const handleRowClick = (requestId: string) => () => {
     dispatch(changeIssueIdAction(requestId));
     openWizard();
   };
-  // ray test touch >>
+  // ray test touch >
 
   const columns = React.useMemo(
     () => [

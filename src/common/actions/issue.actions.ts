@@ -16,18 +16,18 @@ import {
 } from '../types/actions.types';
 import { IssueRequest } from '../types/issue.types';
 
-// ray test touch <<
+// ray test touch <
 export const resetIssueWizardAction = (): ResetIssueWizard => ({
   type: RESET_ISSUE_WIZARD
 });
-// ray test touch >>
+// ray test touch >
 
-// ray test touch <<
+// ray test touch <
 export const changeIssueIdAction = (id: string): ChangeIssueId => ({
   type: CHANGE_ISSUE_ID,
   id
 });
-// ray test touch >>
+// ray test touch >
 
 export const changeSelectedIssueAction = (request: IssueRequest): ChangeSelectedIssue => ({
   type: CHANGE_SELECTED_ISSUE,

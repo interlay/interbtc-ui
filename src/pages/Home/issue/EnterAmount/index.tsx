@@ -14,12 +14,7 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { AccountId } from '@polkadot/types/interfaces';
-import {
-  btcToSat
-  // ray test touch <<
-  // stripHexPrefix
-  // ray test touch >>
-} from '@interlay/polkabtc';
+import { btcToSat } from '@interlay/polkabtc';
 
 import SubmittedRequestModal from './SubmittedRequestModal';
 import InterBTCField from 'pages/Home/InterBTCField';
@@ -39,9 +34,6 @@ import {
   BLOCKS_BEHIND_LIMIT
 } from 'config/parachain';
 import {
-  // ray test touch <<
-  // changeIssueIdAction,
-  // ray test touch >
   addIssueRequestAction,
   updateIssuePeriodAction
 } from 'common/actions/issue.actions';
@@ -225,11 +217,6 @@ const EnterAmount = (): JSX.Element | null => {
       const theSubmittedRequest = await parachainToUIIssueRequest(result[0].id, result[0].issueRequest);
       handleSubmittedRequestModalOpen(theSubmittedRequest);
       setSubmitStatus(STATUSES.RESOLVED);
-      // ray test touch <<
-      // Get the issue ID from the request issue event
-      // const issueId = stripHexPrefix(result[0].id.toString());
-      // dispatch(changeIssueIdAction(issueId));
-      // ray test touch >>
 
       // Update the issue status
       dispatch(addIssueRequestAction(theSubmittedRequest));
