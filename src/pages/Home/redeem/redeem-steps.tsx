@@ -1,4 +1,5 @@
 
+// ray test touch <<
 import { useSelector } from 'react-redux';
 
 import EnterAmountAndAddress from './EnterAmountAndAddress';
@@ -17,3 +18,4 @@ const RedeemSteps = (): JSX.Element => {
 };
 
 export default RedeemSteps;
+// ray test touch >>

@@ -1,4 +1,5 @@
 
+// ray test touch <<
 import * as React from 'react';
 import {
   useSelector,
@@ -36,11 +37,15 @@ const RedeemInfo = (): JSX.Element => {
 
   const handleClose = () => {
     dispatch(resetRedeemWizardAction());
+    // ray test touch <<
     dispatch(changeRedeemStepAction('AMOUNT_AND_ADDRESS'));
+    // ray test touch >>
   };
 
   const handleModalOpen = () => {
+    // ray test touch <<
     dispatch(changeRedeemIdAction(request.id));
+    // ray test touch >>
     setModalOpen(true);
   };
 
@@ -136,3 +141,4 @@ const RedeemInfo = (): JSX.Element => {
 };
 
 export default RedeemInfo;
+// ray test touch >>

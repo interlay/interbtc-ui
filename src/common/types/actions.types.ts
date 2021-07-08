@@ -111,8 +111,9 @@ export type GeneralActions =
     | UpdateTotals;
 
 // REDEEM
-
+// ray test touch <<
 export const CHANGE_REDEEM_STEP = 'CHANGE_REDEEM_STEP';
+// ray test touch >>
 export const CHANGE_REDEEM_ID = 'CHANGE_REDEEM_ID';
 export const SET_REDEEM_REQUESTS = 'SET_REDEEM_REQUESTS';
 export const RESET_REDEEM_WIZARD = 'RESET_REDEEM_WIZARD';
@@ -131,10 +132,12 @@ export interface TogglePremiumRedeem {
     premiumRedeem: boolean;
 }
 
+// ray test touch <<
 export interface ChangeRedeemStep {
     type: typeof CHANGE_REDEEM_STEP;
     step: string;
 }
+// ray test touch >>
 
 export interface ChangeRedeemId {
     type: typeof CHANGE_REDEEM_ID;

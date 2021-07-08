@@ -201,11 +201,8 @@ const EnterAmount = (): JSX.Element | null => {
     return undefined;
   };
 
-  const handleSubmittedRequestModalOpen = (newSubmittedRequest: IssueRequest) => {
+  const updateSubmittedRequest = (newSubmittedRequest: IssueRequest | undefined) => {
     setSubmittedRequest(newSubmittedRequest);
-  };
-  const handleSubmittedRequestModalClose = () => {
-    setSubmittedRequest(undefined);
   };
 
   const onSubmit = async (data: IssueForm) => {
@@ -215,7 +212,7 @@ const EnterAmount = (): JSX.Element | null => {
       const result = await window.polkaBTC.issue.request(polkaBTCAmount);
       // TODO: handle issue aggregation
       const theSubmittedRequest = await parachainToUIIssueRequest(result[0].id, result[0].issueRequest);
-      handleSubmittedRequestModalOpen(theSubmittedRequest);
+      updateSubmittedRequest(theSubmittedRequest);
       setSubmitStatus(STATUSES.RESOLVED);
 
       // Update the issue status
@@ -362,7 +359,7 @@ const EnterAmount = (): JSX.Element | null => {
         {submittedRequest && (
           <SubmittedRequestModal
             open={!!submittedRequest}
-            onClose={handleSubmittedRequestModalClose}
+            onClose={() => updateSubmittedRequest(undefined)}
             request={submittedRequest} />
         )}
       </>

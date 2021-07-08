@@ -24,10 +24,12 @@ import {
 } from '../types/actions.types';
 import { RedeemRequest } from '../types/redeem.types';
 
+// ray test touch <<
 export const changeRedeemStepAction = (step: string): ChangeRedeemStep => ({
   type: CHANGE_REDEEM_STEP,
   step
 });
+// ray test touch >>
 
 export const setRedeemRequestsAction = (requests: RedeemRequest[]): SetRedeemRequests => ({
   type: SET_REDEEM_REQUESTS,
@@ -38,10 +40,12 @@ export const resetRedeemWizardAction = (): ResetRedeemWizard => ({
   type: RESET_REDEEM_WIZARD
 });
 
+// ray test touch <<
 export const changeRedeemIdAction = (id: string): ChangeRedeemId => ({
   type: CHANGE_REDEEM_ID,
   id
 });
+// ray test touch >>
 
 export const addRedeemRequestAction = (request: RedeemRequest): AddRedeemRequest => ({
   type: ADD_REDEEM_REQUEST,

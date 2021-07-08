@@ -45,7 +45,9 @@ const RedeemRequestsTable = (): JSX.Element => {
   };
 
   const handleRowClick = (requestId: string) => () => {
+    // ray test touch <<
     dispatch(changeRedeemIdAction(requestId));
+    // ray test touch >>
     setRedeemModalOpen(true);
   };
 

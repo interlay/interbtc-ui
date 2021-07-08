@@ -41,10 +41,12 @@ export type DashboardRequestInfo = {
 export interface RedeemState {
   // TODO: use current account from general state
   address: string;
+  // ray test touch <<
   // current step in the wizard
   step: string;
   // id of the current request
   id: string;
+  // ray test touch >>
   // true if premium redeem is selected
   premiumRedeem: boolean;
   // mapping of all redeem requests

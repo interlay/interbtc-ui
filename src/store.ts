@@ -42,8 +42,10 @@ export const getInitialState = (): StoreType => {
     redeem: {
       premiumRedeem: false,
       address: '',
+      // ray test touch <<
       step: 'AMOUNT_AND_ADDRESS',
       id: '',
+      // ray test touch >>
       redeemRequests: new Map()
     },
     vault: {

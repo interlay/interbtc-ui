@@ -237,14 +237,18 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
       const redeemRequest = await parachainToUIRedeemRequest(result[0].id, result[0].redeemRequest);
       setSubmitStatus(STATUSES.RESOLVED);
 
+      // ray test touch <<
       // Get the redeem id from the request redeem event
       const redeemId = stripHexPrefix(result[0].id.toString());
       dispatch(changeRedeemIdAction(redeemId));
+      // ray test touch >>
 
       // Update the redeem status
       dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(data[POLKA_BTC_AMOUNT])).toString()));
       dispatch(addRedeemRequestAction(redeemRequest));
+      // ray test touch <<
       dispatch(changeRedeemStepAction('REDEEM_INFO'));
+      // ray test touch >
     } catch (error) {
       setSubmitStatus(STATUSES.REJECTED);
       setSubmitError(error);
