@@ -1,7 +1,5 @@
 import {
-  CHANGE_REDEEM_STEP,
   RESET_REDEEM_WIZARD,
-  CHANGE_REDEEM_ID,
   CHANGE_ADDRESS,
   RETRY_REDEEM_REQUEST,
   REIMBURSE_REDEEM_REQUEST,
@@ -17,10 +15,6 @@ import { RedeemRequestStatus, RedeemState } from '../types/redeem.types';
 
 const initialState = {
   address: '',
-  // ray test touch <<
-  step: 'AMOUNT_AND_ADDRESS',
-  id: '',
-  // ray test touch >>
   redeemRequests: new Map(),
   premiumRedeem: false
 };
@@ -31,12 +25,6 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
     return { ...state, premiumRedeem: action.premiumRedeem };
   case CHANGE_ADDRESS:
     return { ...state, address: action.address };
-  // ray test touch <<
-  case CHANGE_REDEEM_STEP:
-    return { ...state, step: action.step };
-  // ray test touch >>
-  case CHANGE_REDEEM_ID:
-    return { ...state, id: action.id };
   case RESET_REDEEM_WIZARD:
     return { ...initialState, address: state.address, redeemRequests: state.redeemRequests };
   case ADD_REDEEM_REQUEST: {
@@ -108,9 +96,6 @@ export const redeemReducer = (state: RedeemState = initialState, action: RedeemA
   case INIT_STATE:
     return {
       ...state,
-      // ray test touch <<
-      step: 'AMOUNT_AND_ADDRESS',
-      // ray test touch >>
       redeemRequests: new Map()
     };
   case UPDATE_ALL_REDEEM_REQUESTS: {

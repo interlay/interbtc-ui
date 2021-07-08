@@ -115,6 +115,7 @@
   "interbtc_bridge_recovery_mode": "The InterBTC bridge has entered recovery mode. User funds are safe. Please try again later or check the status on the Dashboard page.",
   "waiting_for_confirmations": "Waiting for Confirmations",
   "redeem_page": {
+    "withdraw": "Withdraw",
     "burn": "Burn",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
     "to_redeem_interbtc": "To redeem your InterBTC, you must now pick one of the two options:",

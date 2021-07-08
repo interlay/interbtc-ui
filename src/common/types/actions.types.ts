@@ -111,10 +111,6 @@ export type GeneralActions =
     | UpdateTotals;
 
 // REDEEM
-// ray test touch <<
-export const CHANGE_REDEEM_STEP = 'CHANGE_REDEEM_STEP';
-// ray test touch >>
-export const CHANGE_REDEEM_ID = 'CHANGE_REDEEM_ID';
 export const SET_REDEEM_REQUESTS = 'SET_REDEEM_REQUESTS';
 export const RESET_REDEEM_WIZARD = 'RESET_REDEEM_WIZARD';
 export const STORE_REDEEM_REQUEST = 'STORE_REDEEM_REQUEST';
@@ -130,18 +126,6 @@ export const TOGGLE_PREMIUM_REDEEM = 'TOGGLE_PREMIUM_REDEEM';
 export interface TogglePremiumRedeem {
     type: typeof TOGGLE_PREMIUM_REDEEM;
     premiumRedeem: boolean;
-}
-
-// ray test touch <<
-export interface ChangeRedeemStep {
-    type: typeof CHANGE_REDEEM_STEP;
-    step: string;
-}
-// ray test touch >>
-
-export interface ChangeRedeemId {
-    type: typeof CHANGE_REDEEM_ID;
-    id: string;
 }
 
 export interface ResetRedeemWizard {
@@ -190,8 +174,6 @@ export interface ReimburseRedeemRequest {
 }
 
 export type RedeemActions =
-    | ChangeRedeemStep
-    | ChangeRedeemId
     | ResetRedeemWizard
     | SetRedeemRequests
     | StoreRedeemRequest

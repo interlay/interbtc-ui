@@ -9,11 +9,11 @@ import { mapToArray, arrayToMap } from './common/utils/requests';
 import * as constants from './constants';
 
 declare global {
-    interface Window {
-        polkaBTC: PolkaBTCAPI;
-        faucet: FaucetClient;
-        isFetchingActive: boolean;
-    }
+  interface Window {
+    polkaBTC: PolkaBTCAPI;
+    faucet: FaucetClient;
+    isFetchingActive: boolean;
+  }
 }
 
 export const getInitialState = (): StoreType => {
@@ -42,10 +42,6 @@ export const getInitialState = (): StoreType => {
     redeem: {
       premiumRedeem: false,
       address: '',
-      // ray test touch <<
-      step: 'AMOUNT_AND_ADDRESS',
-      id: '',
-      // ray test touch >>
       redeemRequests: new Map()
     },
     vault: {

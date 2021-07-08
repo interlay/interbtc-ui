@@ -50,14 +50,17 @@ const IssueModal = ({
   onClose,
   requestId
 }: CustomProps & Omit<ModalProps, 'children'>): JSX.Element | null => {
+  const { t } = useTranslation();
+
   const {
     address,
     prices
   } = useSelector((state: StoreType) => state.general);
   const userIssueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address) || [];
-  const request = userIssueRequests.filter(request => request.id === requestId)[0];
-  const { t } = useTranslation();
+
   const focusRef = React.useRef(null);
+
+  const request = userIssueRequests.filter(request => request.id === requestId)[0];
 
   if (!request) return null;
 

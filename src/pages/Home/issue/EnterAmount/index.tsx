@@ -16,7 +16,7 @@ import {
 import { AccountId } from '@polkadot/types/interfaces';
 import { btcToSat } from '@interlay/polkabtc';
 
-import SubmittedRequestModal from './SubmittedRequestModal';
+import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
 import InterBTCField from 'pages/Home/InterBTCField';
 import PriceInfo from 'pages/Home/PriceInfo';
 import ParachainStatusInfo from 'pages/Home/ParachainStatusInfo';
@@ -201,8 +201,11 @@ const EnterAmount = (): JSX.Element | null => {
     return undefined;
   };
 
-  const updateSubmittedRequest = (newSubmittedRequest: IssueRequest | undefined) => {
+  const handleSubmittedRequestModalOpen = (newSubmittedRequest: IssueRequest) => {
     setSubmittedRequest(newSubmittedRequest);
+  };
+  const handleSubmittedRequestModalClose = () => {
+    setSubmittedRequest(undefined);
   };
 
   const onSubmit = async (data: IssueForm) => {
@@ -212,10 +215,9 @@ const EnterAmount = (): JSX.Element | null => {
       const result = await window.polkaBTC.issue.request(polkaBTCAmount);
       // TODO: handle issue aggregation
       const theSubmittedRequest = await parachainToUIIssueRequest(result[0].id, result[0].issueRequest);
-      updateSubmittedRequest(theSubmittedRequest);
+      handleSubmittedRequestModalOpen(theSubmittedRequest);
       setSubmitStatus(STATUSES.RESOLVED);
 
-      // Update the issue status
       dispatch(addIssueRequestAction(theSubmittedRequest));
     } catch (error) {
       setSubmitStatus(STATUSES.REJECTED);
@@ -357,9 +359,9 @@ const EnterAmount = (): JSX.Element | null => {
             } />
         )}
         {submittedRequest && (
-          <SubmittedRequestModal
+          <SubmittedIssueRequestModal
             open={!!submittedRequest}
-            onClose={() => updateSubmittedRequest(undefined)}
+            onClose={handleSubmittedRequestModalClose}
             request={submittedRequest} />
         )}
       </>

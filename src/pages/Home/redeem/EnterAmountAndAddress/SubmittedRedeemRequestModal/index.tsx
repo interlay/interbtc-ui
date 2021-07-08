@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import * as React from 'react';
 import {
   useSelector,
@@ -9,59 +8,82 @@ import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle } from 'react-icons/fa';
 import clsx from 'clsx';
 
-import RedeemModal from './modal/RedeemModal';
-import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
-import InterlayDefaultOutlinedButton from 'components/buttons/InterlayDefaultOutlinedButton';
+import IconButton from 'components/IconButton';
+import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
+import InterlayModal, {
+  Props as ModalProps,
+  InterlayModalInnerWrapper
+} from 'components/UI/InterlayModal';
+import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import {
   displayBtcAmount,
   getUsdAmount
 } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import {
-  changeRedeemStepAction,
-  resetRedeemWizardAction,
-  changeRedeemIdAction
-} from 'common/actions/redeem.actions';
+import { RedeemRequest } from 'common/types/redeem.types';
+import { resetRedeemWizardAction } from 'common/actions/redeem.actions';
 
-const RedeemInfo = (): JSX.Element => {
+interface CustomProps {
+  request: RedeemRequest
+}
+
+const SubmittedRedeemRequestModal = ({
+  open,
+  onClose,
+  request
+}: CustomProps & Omit<ModalProps, 'children'>): JSX.Element => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const {
-    address,
-    prices
-  } = useSelector((state: StoreType) => state.general);
-  const { id } = useSelector((state: StoreType) => state.redeem);
-  const requests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address) || [];
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const request = requests.filter(request => request.id === id)[0];
+
+  const { prices } = useSelector((state: StoreType) => state.general);
+
+  const focusRef = React.useRef(null);
 
   const handleClose = () => {
+    onClose();
     dispatch(resetRedeemWizardAction());
-    // ray test touch <<
-    dispatch(changeRedeemStepAction('AMOUNT_AND_ADDRESS'));
-    // ray test touch >>
-  };
-
-  const handleModalOpen = () => {
-    // ray test touch <<
-    dispatch(changeRedeemIdAction(request.id));
-    // ray test touch >>
-    setModalOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setModalOpen(false);
   };
 
   return (
-    <>
-      <div
+    <InterlayModal
+      initialFocus={focusRef}
+      open={open}
+      onClose={handleClose}>
+      <InterlayModalInnerWrapper
         className={clsx(
-          'flex',
-          'flex-col',
-          'space-y-8'
+          'p-8',
+          'max-w-lg'
         )}>
-        {request && (
+        <IconButton
+          ref={focusRef}
+          className={clsx(
+            'w-12',
+            'h-12',
+            'absolute',
+            'top-3',
+            'right-3'
+          )}
+          onClick={onClose}>
+          <CloseIcon
+            width={18}
+            height={18}
+            className='text-textSecondary' />
+        </IconButton>
+        <div
+          className={clsx(
+            'flex',
+            'flex-col',
+            'space-y-8'
+          )}>
+          <h4
+            className={clsx(
+              'text-2xl',
+              'text-interlayCalifornia',
+              'font-medium',
+              'text-center'
+            )}>
+            {t('redeem_page.withdraw')}
+          </h4>
           <div className='space-y-6'>
             <div className='space-y-1'>
               <h5
@@ -125,20 +147,13 @@ const RedeemInfo = (): JSX.Element => {
               <p className='text-textSecondary'>{t('redeem_page.typically_takes')}</p>
             </div>
           </div>
-        )}
-        <InterlayDefaultOutlinedButton onClick={handleModalOpen}>
-          {t('redeem_page.view_progress')}
-        </InterlayDefaultOutlinedButton>
-        <InterlayConiferOutlinedButton onClick={handleClose}>
-          {t('close')}
-        </InterlayConiferOutlinedButton>
-      </div>
-      <RedeemModal
-        open={modalOpen}
-        onClose={handleModalClose} />
-    </>
+          <InterlayDefaultContainedButton onClick={handleClose}>
+            {t('close')}
+          </InterlayDefaultContainedButton>
+        </div>
+      </InterlayModalInnerWrapper>
+    </InterlayModal>
   );
 };
 
-export default RedeemInfo;
-// ray test touch >>
+export default SubmittedRedeemRequestModal;

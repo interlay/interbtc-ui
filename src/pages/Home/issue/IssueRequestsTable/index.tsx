@@ -39,16 +39,18 @@ import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 
 const IssueRequestsTable = (): JSX.Element => {
+  const dispatch = useDispatch();
+  const { t } = useTranslation();
+
   const {
     address,
     extensions
   } = useSelector((state: StoreType) => state.general);
   const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address) || [];
+
   const query = useQuery();
   const selectedIssueRequestId = query.get(QUERY_PARAMETERS.ISSUE_REQUEST_ID);
   const updateQueryParameters = useUpdateQueryParameters();
-  const dispatch = useDispatch();
-  const { t } = useTranslation();
 
   const handleIssueModalClose = () => {
     updateQueryParameters({

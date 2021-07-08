@@ -24,20 +24,25 @@ import { RedeemRequestStatus } from 'common/types/redeem.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
-type Props = Omit<ModalProps, 'children'>;
+interface CustomProps {
+  requestId: string;
+}
 
 const RedeemModal = ({
   open,
-  onClose
-}: Props): JSX.Element | null => {
+  onClose,
+  requestId
+}: CustomProps & Omit<ModalProps, 'children'>): JSX.Element | null => {
+  const { t } = useTranslation();
+
   const {
     address,
     prices
   } = useSelector((state: StoreType) => state.general);
-  const selectedIdRequest = useSelector((state: StoreType) => state.redeem.id);
   const userRedeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address) || [];
-  const request = userRedeemRequests.filter(request => request.id === selectedIdRequest)[0];
-  const { t } = useTranslation();
+
+  const request = userRedeemRequests.filter(request => request.id === requestId)[0];
+
   const focusRef = React.useRef(null);
 
   const renderModalStatusPanel = (request: RedeemRequest) => {

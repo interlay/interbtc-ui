@@ -7,7 +7,7 @@ import clsx from 'clsx';
 
 import EnterAmount from './issue/EnterAmount';
 import IssueRequestsTable from './issue/IssueRequestsTable';
-import RedeemSteps from './redeem/redeem-steps';
+import EnterAmountAndAddress from './redeem/EnterAmountAndAddress';
 import RedeemRequestsTable from './redeem/RedeemRequestsTable';
 import Transfer from './Transfer';
 import Burn from './Burn';
@@ -180,7 +180,7 @@ const Home = (): JSX.Element | null => {
             index={1}
             selectedIndex={selectedTabIndex}
             id={TAB_IDS.redeem}>
-            <RedeemSteps />
+            <EnterAmountAndAddress />
           </TabPanel>
           <TabPanel
             index={2}

@@ -14,14 +14,12 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
-import {
-  btcToSat,
-  stripHexPrefix
-} from '@interlay/polkabtc';
+import { btcToSat } from '@interlay/polkabtc';
 
-import InterBTCField from '../InterBTCField';
-import PriceInfo from '../PriceInfo';
-import ParachainStatusInfo from '../ParachainStatusInfo';
+import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
+import InterBTCField from 'pages/Home/InterBTCField';
+import PriceInfo from 'pages/Home/PriceInfo';
+import ParachainStatusInfo from 'pages/Home/ParachainStatusInfo';
 import Tooltip from 'components/Tooltip';
 import Toggle from 'components/Toggle';
 import TextField from 'components/TextField';
@@ -29,9 +27,22 @@ import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
 import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
+
 import {
-  changeRedeemStepAction,
-  changeRedeemIdAction,
+  BALANCE_MAX_INTEGER_LENGTH,
+  BTC_ADDRESS_REGEX
+} from '../../../../constants';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
+import {
+  displayBtcAmount,
+  getUsdAmount,
+  getRandomVaultIdWithCapacity
+} from 'common/utils/utils';
+import { parachainToUIRedeemRequest } from 'common/utils/requests';
+import STATUSES from 'utils/constants/statuses';
+import { RedeemRequest } from 'common/types/redeem.types';
+import {
   togglePremiumRedeemAction,
   addRedeemRequestAction
 } from 'common/actions/redeem.actions';
@@ -43,21 +54,8 @@ import {
   StoreType,
   ParachainStatus
 } from 'common/types/util.types';
-import {
-  BALANCE_MAX_INTEGER_LENGTH,
-  BTC_ADDRESS_REGEX
-} from '../../../constants';
-import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
-import {
-  displayBtcAmount,
-  getUsdAmount,
-  getRandomVaultIdWithCapacity
-} from 'common/utils/utils';
-import { parachainToUIRedeemRequest } from 'common/utils/requests';
-import STATUSES from 'utils/constants/statuses';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
 const POLKA_BTC_AMOUNT = 'polka-btc-amount';
 const BTC_ADDRESS = 'btc-address';
@@ -70,8 +68,6 @@ type RedeemForm = {
 const EnterAmountAndAddress = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-
-  const [status, setStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
 
   const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
@@ -98,6 +94,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
   });
   const polkaBTCAmount = watch(POLKA_BTC_AMOUNT);
 
+  const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [dustValue, setDustValue] = React.useState('0');
   const [redeemFee, setRedeemFee] = React.useState('0');
   const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(0.005));
@@ -105,9 +102,9 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
   const [premiumRedeemVaults, setPremiumRedeemVaults] = React.useState<Map<AccountId, Big>>(new Map());
   const [premiumRedeemFee, setPremiumRedeemFee] = React.useState(new Big(0));
   const [currentInclusionFee, setCurrentInclusionFee] = React.useState(new Big(0));
-
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
+  const [submittedRequest, setSubmittedRequest] = React.useState<RedeemRequest>();
 
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
@@ -193,6 +190,13 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
     );
   }
 
+  const handleSubmittedRequestModalOpen = (newSubmittedRequest: RedeemRequest) => {
+    setSubmittedRequest(newSubmittedRequest);
+  };
+  const handleSubmittedRequestModalClose = () => {
+    setSubmittedRequest(undefined);
+  };
+
   const onSubmit = async (data: RedeemForm) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
@@ -234,21 +238,12 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
       relevantVaults.set(id, polkaBTCAmount.mul(2));
       const result = await window.polkaBTC.redeem.request(polkaBTCAmount, data[BTC_ADDRESS], true, 0, relevantVaults);
       // TODO: handle redeem aggregator
-      const redeemRequest = await parachainToUIRedeemRequest(result[0].id, result[0].redeemRequest);
+      const theSubmittedRequest = await parachainToUIRedeemRequest(result[0].id, result[0].redeemRequest);
+      handleSubmittedRequestModalOpen(theSubmittedRequest);
       setSubmitStatus(STATUSES.RESOLVED);
 
-      // ray test touch <<
-      // Get the redeem id from the request redeem event
-      const redeemId = stripHexPrefix(result[0].id.toString());
-      dispatch(changeRedeemIdAction(redeemId));
-      // ray test touch >>
-
-      // Update the redeem status
       dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(data[POLKA_BTC_AMOUNT])).toString()));
-      dispatch(addRedeemRequestAction(redeemRequest));
-      // ray test touch <<
-      dispatch(changeRedeemStepAction('REDEEM_INFO'));
-      // ray test touch >
+      dispatch(addRedeemRequestAction(theSubmittedRequest));
     } catch (error) {
       setSubmitStatus(STATUSES.REJECTED);
       setSubmitError(error);
@@ -482,6 +477,12 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
                 submitError :
                 submitError.message
             } />
+        )}
+        {submittedRequest && (
+          <SubmittedRedeemRequestModal
+            open={!!submittedRequest}
+            onClose={handleSubmittedRequestModalClose}
+            request={submittedRequest} />
         )}
       </>
     );

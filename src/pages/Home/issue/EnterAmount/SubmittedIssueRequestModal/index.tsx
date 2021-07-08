@@ -19,7 +19,7 @@ interface CustomProps {
   request: IssueRequest
 }
 
-const SubmittedRequestModal = ({
+const SubmittedIssueRequestModal = ({
   open,
   onClose,
   request
@@ -61,31 +61,29 @@ const SubmittedRequestModal = ({
             height={18}
             className='text-textSecondary' />
         </IconButton>
-        <>
+        <div
+          className={clsx(
+            'flex',
+            'flex-col',
+            'space-y-8'
+          )}>
           <h4
             className={clsx(
               'text-2xl',
               'text-interlayCalifornia',
               'font-medium',
-              'text-center',
-              'my-3'
+              'text-center'
             )}>
             {t('issue_page.deposit')}
           </h4>
-        </>
-        <BTCPaymentPendingStatusUI request={request} />
-        <InterlayDefaultContainedButton
-          style={{ display: 'flex' }}
-          className={clsx(
-            'mx-auto',
-            'mt-8'
-          )}
-          onClick={handleClose}>
-          {t('issue_page.made_payment')}
-        </InterlayDefaultContainedButton>
+          <BTCPaymentPendingStatusUI request={request} />
+          <InterlayDefaultContainedButton onClick={handleClose}>
+            {t('issue_page.made_payment')}
+          </InterlayDefaultContainedButton>
+        </div>
       </InterlayModalInnerWrapper>
     </InterlayModal>
   );
 };
 
-export default SubmittedRequestModal;
+export default SubmittedIssueRequestModal;
