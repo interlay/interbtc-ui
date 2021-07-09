@@ -16,10 +16,14 @@ import {
   useGlobalFilter
 } from 'react-table';
 import clsx from 'clsx';
-import { RelayerData } from '@interlay/polkabtc-stats';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
+import { RelayerData } from '@interlay/interbtc-index-client';
 
 import EllipsisLoader from 'components/EllipsisLoader';
-import ErrorHandler from 'components/ErrorHandler';
+import ErrorFallback from 'components/ErrorFallback';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -31,7 +35,7 @@ import InterlayTable, {
 import DefaultColumnFilter from 'components/UI/InterlayTable/DefaultColumnFilter';
 import NumberRangeColumnFilter from 'components/UI/InterlayTable/NumberRangeColumnFilter';
 import SortBy, { SortByContainer } from 'components/UI/InterlayTable/SortBy';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
 import STATUSES from 'utils/constants/statuses';
 
@@ -45,46 +49,48 @@ interface Props {
   challengeTime: number;
 }
 
-interface PatchedRelayerData extends Omit<RelayerData, 'lifetime_sla'> {
+interface PatchedRelayerData extends Omit<RelayerData, 'lifetimeSla'> {
   // eslint-disable-next-line camelcase
-  lifetime_sla: string;
+  lifetimeSla: string;
 }
 
 const StakedRelayerScoresTable = ({
   challengeTime
 }: Props): JSX.Element => {
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcIndex();
   const [data, setData] = useState<(PatchedRelayerData)[]>([]);
   const [status, setStatus] = useState(STATUSES.IDLE);
-  const [error, setError] = useState<Error | null>(null);
+  const handleError = useErrorHandler();
   const { t } = useTranslation();
 
   useEffect(() => {
     if (!polkaBtcLoaded) return;
     if (!statsApi) return;
+    if (!handleError) return;
 
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const response = await statsApi.getRelayers(challengeTime);
-        const sortedStakedRelayers = response.data.sort((a, b) => b.lifetime_sla - a.lifetime_sla);
+        const response = await statsApi.getRelayers({ slaSince: challengeTime });
+        const sortedStakedRelayers = response.sort((a, b) => b.lifetimeSla - a.lifetimeSla);
         const transformedStakedRelayers = sortedStakedRelayers.map(stakedRelayer => ({
           ...stakedRelayer,
-          lifetime_sla: Number(stakedRelayer.lifetime_sla).toFixed(2)
+          lifetimeSla: Number(stakedRelayer.lifetimeSla).toFixed(2)
         }));
         setStatus(STATUSES.RESOLVED);
 
         setData(transformedStakedRelayers);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
-        setError(error);
+        handleError(error);
       }
     })();
   }, [
     polkaBtcLoaded,
     challengeTime,
-    statsApi
+    statsApi,
+    handleError
   ]);
 
   const columns = useMemo(
@@ -99,14 +105,14 @@ const StakedRelayerScoresTable = ({
       },
       {
         Header: t('leaderboard.block_count'),
-        accessor: 'block_count',
+        accessor: 'blockCount',
         classNames: [
           'text-right'
         ]
       },
       {
-        Header: t('leaderboard.lifetime_sla'),
-        accessor: 'lifetime_sla',
+        Header: t('leaderboard.lifetimeSla'),
+        accessor: 'lifetimeSla',
         Filter: NumberRangeColumnFilter,
         filter: 'between',
         classNames: [
@@ -140,14 +146,8 @@ const StakedRelayerScoresTable = ({
           'flex',
           'justify-center'
         )}>
-        <EllipsisLoader dotClassName='bg-interlayTreePoppy-400' />
+        <EllipsisLoader dotClassName='bg-interlayCalifornia-400' />
       </div>
-    );
-  }
-
-  if (status === STATUSES.REJECTED && error) {
-    return (
-      <ErrorHandler error={error} />
     );
   }
 
@@ -216,4 +216,9 @@ const StakedRelayerScoresTable = ({
   return null;
 };
 
-export default StakedRelayerScoresTable;
+export default withErrorBoundary(StakedRelayerScoresTable, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});

@@ -1,7 +1,6 @@
 
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import { useMeasure } from 'react-use';
 
@@ -9,8 +8,6 @@ import Footer from 'parts/Footer';
 import TestnetBanner from 'parts/TestnetBanner';
 import MaintenanceBanner from 'parts/MaintenanceBanner';
 import Topbar from 'common/components/topbar';
-import checkStaticPage from 'config/check-static-page';
-import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
@@ -20,7 +17,6 @@ interface Props {
 
 const Layout = ({ children }: Props): JSX.Element => {
   const address = useSelector((state: StoreType) => state.general.address);
-  const location = useLocation();
   const [ref, { height: footerHeight }] = useMeasure<HTMLDivElement>();
 
   const handleRequestDotFromFaucet = async (): Promise<void> => {
@@ -36,22 +32,8 @@ const Layout = ({ children }: Props): JSX.Element => {
     }
   };
 
-  /**
-   * TODO: a hack for now.
-   * - Should apply the gradient on the landing page
-   */
-  const isHomePage = location.pathname === PAGES.home;
-
   return (
     <div
-      style={{
-        //  TODO: should avoid hard-coding colors (https://tailwindcss.com/docs/gradient-color-stops)
-        backgroundImage:
-          isHomePage ?
-            // eslint-disable-next-line max-len
-            'linear-gradient(to right bottom, #e1106d, #e52766, #e83761, #ea445b, #eb5157, #ed5952, #ef624e, #f06a4a, #f37143, #f4783c, #f58035, #f5882d)' :
-            'unset'
-      }}
       className={clsx(
         'relative',
         'min-h-screen'
@@ -62,13 +44,11 @@ const Layout = ({ children }: Props): JSX.Element => {
           'flex',
           'flex-col'
         )}>
-        {!checkStaticPage() && (
-          <Topbar
-            address={address}
-            requestDOT={handleRequestDotFromFaucet} />
-        )}
-        {!isHomePage && <TestnetBanner />}
-        {!isHomePage && <MaintenanceBanner />}
+        <Topbar
+          address={address}
+          requestDOT={handleRequestDotFromFaucet} />
+        <TestnetBanner />
+        <MaintenanceBanner />
         {children}
       </main>
       <Footer

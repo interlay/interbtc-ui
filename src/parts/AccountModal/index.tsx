@@ -1,9 +1,6 @@
 
 import * as React from 'react';
-import {
-  Button,
-  Modal
-} from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import {
   useDispatch,
   useSelector
@@ -17,6 +14,7 @@ import {
 } from '@polkadot/extension-dapp';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
+import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
 import InterlayLink from 'components/UI/InterlayLink';
 import { APP_NAME } from 'config/general';
 import { StoreType } from 'common/types/util.types';
@@ -154,7 +152,7 @@ const AccountModal = ({
                 'shadow-sm',
                 'border',
                 'border-solid',
-                'border-interlayRose',
+                'border-interlayDenim',
                 'w-1/2'
               )}
               href={POLKADOT_EXTENSION}
@@ -169,11 +167,9 @@ const AccountModal = ({
         )}
       </Modal.Body>
       <Modal.Footer>
-        <Button
-          variant='secondary'
-          onClick={onClose}>
+        <InterlayMulberryOutlinedButton onClick={onClose}>
           Close
-        </Button>
+        </InterlayMulberryOutlinedButton>
       </Modal.Footer>
     </Modal>
   );

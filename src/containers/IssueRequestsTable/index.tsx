@@ -1,4 +1,3 @@
-
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import * as React from 'react';
@@ -6,10 +5,14 @@ import { useTranslation } from 'react-i18next';
 import { useTable } from 'react-table';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
-import { BtcNetworkName } from '@interlay/polkabtc-stats';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
+import { BtcNetworkName } from '@interlay/interbtc-index-client';
 
 import EllipsisLoader from 'components/EllipsisLoader';
-import ErrorHandler from 'components/ErrorHandler';
+import ErrorFallback from 'components/ErrorFallback';
 import Pagination from 'components/Pagination';
 import InterlayTable, {
   InterlayTableContainer,
@@ -23,7 +26,7 @@ import StatusCell from 'components/UI/InterlayTable/StatusCell';
 import InterlayLink from 'components/UI/InterlayLink';
 import useQuery from 'utils/hooks/use-query';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   shortAddress,
   formatDateTimePrecise
@@ -46,38 +49,38 @@ const IssueRequestsTable = ({
   const query = useQuery();
   const selectedPage: number = query.get(QUERY_PARAMETERS.page) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcIndex();
   const [data, setData] = React.useState<DashboardRequestInfo[]>([]);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
-  const [error, setError] = React.useState<Error | null>(null);
+  const handleError = useErrorHandler();
   const { t } = useTranslation();
 
   React.useEffect(() => {
     if (!statsApi) return;
     if (!selectedPage) return;
+    if (!handleError) return;
 
     const selectedPageIndex = selectedPage - 1;
 
     try {
       (async () => {
         setStatus(STATUSES.PENDING);
-        const response = await statsApi.getIssues(
-          selectedPageIndex,
-          PAGE_SIZE,
-          undefined,
-          undefined,
-          constants.BITCOIN_NETWORK as BtcNetworkName // Not sure why cast is necessary here, but TS complains
-        );
+        const response = await statsApi.getIssues({
+          page: selectedPageIndex,
+          perPage: PAGE_SIZE,
+          network: constants.BITCOIN_NETWORK as BtcNetworkName // Not sure why cast is necessary here, but TS complains
+        });
         setStatus(STATUSES.RESOLVED);
-        setData(response.data);
+        setData(response);
       })();
     } catch (error) {
       setStatus(STATUSES.REJECTED);
-      setError(error);
+      handleError(error);
     }
   }, [
     statsApi,
-    selectedPage
+    selectedPage,
+    handleError
   ]);
 
   const columns = React.useMemo(
@@ -134,7 +137,7 @@ const IssueRequestsTable = ({
           return (
             <InterlayLink
               className={clsx(
-                'text-interlayDodgerBlue',
+                'text-interlayDenim',
                 'space-x-1.5',
                 'flex',
                 'items-center'
@@ -182,12 +185,6 @@ const IssueRequestsTable = ({
     }
   );
 
-  if (status === STATUSES.REJECTED && error) {
-    return (
-      <ErrorHandler error={error} />
-    );
-  }
-
   const handlePageChange = (newPage: number) => {
     updateQueryParameters({
       [QUERY_PARAMETERS.page]: newPage
@@ -209,7 +206,7 @@ const IssueRequestsTable = ({
             'flex',
             'justify-center'
           )}>
-          <EllipsisLoader dotClassName='bg-interlayTreePoppy-400' />
+          <EllipsisLoader dotClassName='bg-interlayCalifornia-400' />
         </div>
       )}
       {status === STATUSES.RESOLVED && (
@@ -272,4 +269,9 @@ const IssueRequestsTable = ({
   );
 };
 
-export default IssueRequestsTable;
+export default withErrorBoundary(IssueRequestsTable, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});

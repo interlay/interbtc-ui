@@ -1,4 +1,3 @@
-
 import {
   useState,
   useEffect,
@@ -7,13 +6,13 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { satToBTC } from '@interlay/polkabtc';
+import { satToBTC } from '@interlay/interbtc';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import RedeemRequestsTable from 'containers/RedeemRequestsTable';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
 import LineChartComponent from '../components/line-chart-component';
 
@@ -23,7 +22,7 @@ function RedeemRequests(): JSX.Element {
     prices
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcIndex();
 
   const [totalSuccessfulRedeems, setTotalSuccessfulRedeems] = useState('-');
   const [totalRedeemRequests, setTotalRedeemRequests] = useState(0);
@@ -50,22 +49,22 @@ function RedeemRequests(): JSX.Element {
   useEffect(() => {
     const fetchTotalSuccessfulRedeems = async () => {
       const res = await statsApi.getTotalSuccessfulRedeems();
-      setTotalSuccessfulRedeems(res.data);
+      if (res) setTotalSuccessfulRedeems(res.toString());
     };
 
     const fetchTotalFailedRedeems = async () => {
       const res = await statsApi.getTotalRedeems();
-      setTotalRedeemRequests(Number(res.data));
+      setTotalRedeemRequests(res);
     };
 
     const fetchTotalRedeemedAmount = async () => {
       const res = await statsApi.getTotalRedeemedAmount();
-      setTotalRedeemedAmount(res.data);
+      if (res) setTotalRedeemedAmount(res.toString());
     };
 
     const fetchRedeemsLastDays = async () => {
-      const res = await statsApi.getRecentDailyRedeems(6);
-      setCumulativeRedeemsPerDay(res.data);
+      const res = await statsApi.getRecentDailyRedeems({ daysBack: 6 });
+      setCumulativeRedeemsPerDay(res);
     };
 
     (async () => {
@@ -102,7 +101,7 @@ function RedeemRequests(): JSX.Element {
           <PageTitle
             mainTitle={t('dashboard.redeem.redeem')}
             subTitle={<TimerIncrement />} />
-          <hr className='border-interlayRose' />
+          <hr className='border-interlayDenim' />
         </div>
         <div
           className={clsx(
@@ -121,7 +120,7 @@ function RedeemRequests(): JSX.Element {
             )}>
             <h5
               className={clsx(
-                'text-interlayTreePoppy',
+                'text-interlayCalifornia',
                 'font-bold',
                 'text-xl'
               )}>
@@ -143,7 +142,7 @@ function RedeemRequests(): JSX.Element {
             )}
             <h5
               className={clsx(
-                'text-interlayMalachite',
+                'text-interlayConifer',
                 'font-bold',
                 'text-xl'
               )}>
@@ -155,7 +154,7 @@ function RedeemRequests(): JSX.Element {
             {/* TODO: add this again when the network is stable */}
             {/* <h5
               className={clsx(
-                'text-interlayMalachite',
+                'text-interlayConifer',
                 'font-bold',
                 'text-xl'
               )}>
@@ -173,7 +172,7 @@ function RedeemRequests(): JSX.Element {
               'mx-6'
             )}>
             <LineChartComponent
-              color={['d_yellow', 'd_grey']}
+              color={['d_interlayCalifornia', 'd_interlayPaleSky']}
               label={[
                 t('dashboard.redeem.total_redeemed_chart'),
                 t('dashboard.redeem.per_day_redeemed_chart')

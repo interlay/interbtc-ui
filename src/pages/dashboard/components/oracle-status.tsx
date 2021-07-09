@@ -5,8 +5,10 @@ import clsx from 'clsx';
 
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
-import ButtonComponent from './button-component';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import { getAccents } from '../dashboardcolors';
 
 enum Status {
@@ -21,7 +23,7 @@ type OracleStatusProps = {
 };
 
 const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcIndex();
   const { t } = useTranslation();
   // TODO: use translations for status
   const [oracleStatus, setOracleStatus] = useState(Status.Loading);
@@ -30,7 +32,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
   useEffect(() => {
     (async () => {
       try {
-        const oracleStatus = (await statsApi.getLatestSubmission()).data;
+        const oracleStatus = (await statsApi.getLatestSubmission());
         const exchangeRate = new Big(oracleStatus.exchangeRate);
         setExchangeRate(exchangeRate.toFixed(2));
         const status = oracleStatus.online ? Status.Online : Status.Offline;
@@ -50,21 +52,21 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
             {t('dashboard.oracles.oracles_are')}&nbsp;
             {oracleStatus === Status.Online ? (
               <span
-                style={{ color: getAccents('d_green').color }}
+                style={{ color: getAccents('d_interlayConifer').color }}
                 id='oracle-text'
                 className='font-bold'>
                 {t('dashboard.oracles.online')}
               </span>
             ) : oracleStatus === Status.Offline ? (
               <span
-                style={{ color: getAccents('d_red').color }}
+                style={{ color: getAccents('d_interlayCinnabar').color }}
                 id='oracle-text'
                 className='font-bold'>
                 {t('dashboard.oracles.offline')}
               </span>
             ) : (
               <span
-                style={{ color: getAccents('d_grey').color }}
+                style={{ color: getAccents('d_interlayPaleSky').color }}
                 id='oracle-text'
                 className='font-bold'>
                 {t('dashboard.oracles.loading')}
@@ -73,20 +75,20 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
           </h1>
         </div>
         {linkButton && (
-          <div className='button-container'>
-            <ButtonComponent
-              buttonName='view oracles'
-              propsButtonColor='d_green'
-              buttonId='oracle-status'
-              buttonLink={PAGES.oracles} />
-          </div>
+          <InterlayRouterLink to={PAGES.DASHBOARD_ORACLES}>
+            <InterlayConiferOutlinedButton
+              endIcon={<FaExternalLinkAlt />}
+              className='w-full'>
+              VIEW ORACLES
+            </InterlayConiferOutlinedButton>
+          </InterlayRouterLink>
         )}
       </div>
       <div className='circle-container'>
         {oracleStatus === Status.Online ? (
           <div
             className='status-circle'
-            style={{ borderColor: getAccents('d_green').color }}
+            style={{ borderColor: getAccents('d_interlayConifer').color }}
             id='oracle-circle'>
             <h1
               className={clsx(
@@ -94,7 +96,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
                 'text-3xl',
                 'text-center'
               )}
-              style={{ color: getAccents('d_green').color }}
+              style={{ color: getAccents('d_interlayConifer').color }}
               id='oracle-circle-text'>
               {t('online')}
             </h1>
@@ -103,7 +105,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
         ) : oracleStatus === Status.Offline ? (
           <div
             className='status-circle'
-            style={{ borderColor: getAccents('d_red').color }}
+            style={{ borderColor: getAccents('d_interlayCinnabar').color }}
             id='oracle-circle'>
             <h1
               className={clsx(
@@ -111,7 +113,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
                 'text-3xl',
                 'text-center'
               )}
-              style={{ color: getAccents('d_red').color }}
+              style={{ color: getAccents('d_interlayCinnabar').color }}
               id='oracle-circle-text'>
               {t('offline')}
             </h1>
@@ -120,7 +122,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
         ) : oracleStatus === Status.NoData ? (
           <div
             className='status-circle'
-            style={{ borderColor: getAccents('d_grey').color }}
+            style={{ borderColor: getAccents('d_interlayPaleSky').color }}
             id='oracle-circle'>
             <h1
               className={clsx(
@@ -128,7 +130,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
                 'text-3xl',
                 'text-center'
               )}
-              style={{ color: getAccents('d_grey').color }}
+              style={{ color: getAccents('d_interlayPaleSky').color }}
               id='oracle-circle-text'>
               {t('no_data')}
             </h1>
@@ -137,7 +139,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
         ) : (
           <div
             className='status-circle'
-            style={{ borderColor: getAccents('d_grey').color }}
+            style={{ borderColor: getAccents('d_interlayPaleSky').color }}
             id='oracle-circle'>
             <h1
               className={clsx(
@@ -145,7 +147,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
                 'text-3xl',
                 'text-center'
               )}
-              style={{ color: getAccents('d_grey').color }}
+              style={{ color: getAccents('d_interlayPaleSky').color }}
               id='oracle-circle-text'>
               {t('loading')}
             </h1>

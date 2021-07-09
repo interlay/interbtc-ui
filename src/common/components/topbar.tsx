@@ -2,8 +2,7 @@
 import * as React from 'react';
 import {
   Navbar,
-  Nav,
-  Button
+  Nav
 } from 'react-bootstrap';
 import {
   useSelector,
@@ -17,7 +16,9 @@ import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import AccountModal from 'parts/AccountModal';
 import InterlayLink from 'components/UI/InterlayLink';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
-import ButtonMaybePending from './pending-button';
+import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
+import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
+import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import {
   updateBalanceDOTAction,
   showAccountModalAction
@@ -25,16 +26,10 @@ import {
 import { updateBalances } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import Balances from './balances';
-import {
-  PAGES,
-  QUERY_PARAMETERS
-} from 'utils/constants/links';
+import { PAGES } from 'utils/constants/links';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import TAB_IDS from 'utils/constants/tab-ids';
-import { ReactComponent as PolkabtcLogoIcon } from 'assets/img/polkabtc-logo.svg';
+import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
-
-const queryString = require('query-string');
 
 type TopbarProps = {
   address?: string;
@@ -105,7 +100,7 @@ const Topbar = (props: TopbarProps): JSX.Element => {
 
   let accountLabel;
   if (!extensions.length) {
-    accountLabel = 'Connect Wallet';
+    accountLabel = t('connect_wallet');
   } else if (address) {
     // TODO: could memoize
     const matchedAccount = accounts.find(account => account.address === address);
@@ -129,14 +124,10 @@ const Topbar = (props: TopbarProps): JSX.Element => {
           <React.Fragment>
             <Navbar.Brand>
               <InterlayRouterLink
-                // TODO: hardcoded
-                style={{
-                  textDecoration: 'none'
-                }}
-                to={PAGES.home}>
-                <PolkabtcLogoIcon
+                to={PAGES.HOME}>
+                <InterBTCLogoIcon
                   fill='currentColor'
-                  width={90}
+                  width={53}
                   height={53} />
               </InterlayRouterLink>
             </Navbar.Brand>
@@ -146,56 +137,29 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                 {polkaBtcLoaded && (
                   // TODO: should use https://reactrouter.com/web/api/NavLink with `activeClassName`
                   <InterlayRouterLink
-                    style={{
-                      textDecoration: 'none'
-                    }}
-                    className='nav-link'
-                    to={{
-                      pathname: PAGES.application,
-                      search: queryString.stringify({
-                        [QUERY_PARAMETERS.tab]: TAB_IDS.issue
-                      })
-                    }}>
-                    {t('app')}
-                  </InterlayRouterLink>
-                )}
-                {polkaBtcLoaded && (
-                  <InterlayRouterLink
-                    style={{
-                      textDecoration: 'none'
-                    }}
-                    className='nav-link'
-                    to={PAGES.dashboard}>
+                    className='p-2'
+                    to={PAGES.DASHBOARD}>
                     {t('nav_dashboard')}
                   </InterlayRouterLink>
                 )}
                 {vaultClientLoaded && (
                   <InterlayRouterLink
-                    style={{
-                      textDecoration: 'none'
-                    }}
-                    className='nav-link'
-                    to={PAGES.vault}>
+                    className='p-2'
+                    to={PAGES.VAULT}>
                     {t('nav_vault')}
                   </InterlayRouterLink>
                 )}
                 {relayerLoaded && (
                   <InterlayRouterLink
-                    style={{
-                      textDecoration: 'none'
-                    }}
-                    className='nav-link'
-                    to={PAGES.stakedRelayer}>
+                    className='p-2'
+                    to={PAGES.STAKED_RELAYER}>
                     {t('nav_relayer')}
                   </InterlayRouterLink>
                 )}
                 {polkaBtcLoaded && (
                   <InterlayRouterLink
-                    style={{
-                      textDecoration: 'none'
-                    }}
-                    className='nav-link'
-                    to={PAGES.challenges}>
+                    className='p-2'
+                    to={PAGES.CHALLENGES}>
                     {t('nav_challenges')}
                     <NewMarkIcon
                       className='inline-block'
@@ -204,18 +168,12 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                   </InterlayRouterLink>
                 )}
                 <InterlayRouterLink
-                  style={{
-                    textDecoration: 'none'
-                  }}
-                  className='nav-link'
-                  to={PAGES.feedback}>
+                  className='p-2'
+                  to={PAGES.FEEDBACK}>
                   {t('feedback.feedback')}
                 </InterlayRouterLink>
                 <InterlayLink
-                  style={{
-                    textDecoration: 'none'
-                  }}
-                  className='nav-link'
+                  className='p-2'
                   href='https://docs.polkabtc.io/#/'
                   target='_blank'
                   rel='noopener noreferrer'>
@@ -228,12 +186,9 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                     <Nav
                       id='account-button'
                       className='d-inline'>
-                      <Button
-                        variant='outline-account-not-connected'
-                        className='nav-bar-button'
-                        onClick={handleAccountModalOpen}>
+                      <InterlayDefaultContainedButton onClick={handleAccountModalOpen}>
                         {accountLabel}
-                      </Button>
+                      </InterlayDefaultContainedButton>
                     </Nav>
                   ) : (
                     <>
@@ -243,19 +198,18 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                           rel='noopener noreferrer'
                           href='https://testnet-faucet.mempool.co/'
                           style={{ textDecoration: 'none' }}>
-                          <Button
-                            variant='outline-bitcoin'
-                            className='nav-bar-button'>
+                          <InterlayCaliforniaOutlinedButton>
                             {t('request_btc')}
-                          </Button>
+                          </InterlayCaliforniaOutlinedButton>
                         </InterlayLink>
-                        <ButtonMaybePending
-                          variant='outline-polkadot'
-                          className='nav-bar-button'
-                          isPending={isRequestPending}
+                        <InterlayDenimOutlinedButton
+                          style={{
+                            marginLeft: 8
+                          }}
+                          pending={isRequestPending}
                           onClick={requestDOT}>
                           {t('request_dot')}
-                        </ButtonMaybePending>
+                        </InterlayDenimOutlinedButton>
                       </Nav>
                       <Balances
                         balanceDOT={balanceDOT}
@@ -263,12 +217,9 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                       <Nav
                         id='account-button'
                         className='d-inline'>
-                        <Button
-                          variant='outline-account'
-                          className='nav-bar-button'
-                          onClick={handleAccountModalOpen}>
+                        <InterlayDefaultContainedButton onClick={handleAccountModalOpen}>
                           {accountLabel}
-                        </Button>
+                        </InterlayDefaultContainedButton>
                       </Nav>
                     </>
                   )}

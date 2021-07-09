@@ -1,13 +1,19 @@
 // ray test touch <
-import { useSelector, useDispatch } from 'react-redux';
-import * as polkabtcStats from '@interlay/polkabtc-stats';
-import { IssueColumns, BtcNetworkName } from '@interlay/polkabtc-stats';
+import {
+  useSelector,
+  useDispatch
+} from 'react-redux';
+import * as interbtcIndex from '@interlay/interbtc-index-client';
+import {
+  BitcoinNetwork,
+  IssueColumns
+} from '@interlay/interbtc-index-client';
 
 import useInterval from 'utils/hooks/use-interval';
 import { updateAllIssueRequestsAction } from 'common/actions/issue.actions';
 import { StoreType } from 'common/types/util.types';
 import * as constants from '../constants';
-import { Issue } from '@interlay/polkabtc';
+import { Issue } from '@interlay/interbtc';
 
 const useUpdateIssueRequests = (page = 0, limit = 15, delay = 10000): void => {
   const { address, polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
@@ -19,16 +25,14 @@ const useUpdateIssueRequests = (page = 0, limit = 15, delay = 10000): void => {
     async () => {
       try {
         // Temporary declaration pending refactor decision
-        const stats = new polkabtcStats.StatsApi(new polkabtcStats.Configuration({ basePath: constants.STATS_URL }));
+        const index = new interbtcIndex.IndexApi(new interbtcIndex.Configuration({ basePath: constants.STATS_URL }));
 
-        const databaseRequests: Issue[] = (await stats.getFilteredIssues(
-          page, // Page 0 (first page)
-          limit, // 15 per page
-          undefined, // Default sorting (= chronological)
-          undefined, // Default sorting order
-          constants.BITCOIN_NETWORK as BtcNetworkName,
-          [{ column: IssueColumns.Requester, value: address }] // Filter by requester == address
-        )).data;
+        const databaseRequests: Issue[] = await index.getFilteredIssues({
+          page,
+          perPage: limit,
+          network: constants.BITCOIN_NETWORK as BitcoinNetwork | undefined,
+          filterIssueColumns: [{ column: IssueColumns.Requester, value: address }] // Filter by requester == address
+        });
 
         dispatch(updateAllIssueRequestsAction(address, databaseRequests));
       } catch (error) {

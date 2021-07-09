@@ -1,7 +1,9 @@
 import { ReactElement, useState, useMemo, useEffect } from 'react';
-import ButtonComponent from './button-component';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import { getAccents } from '../dashboard-colors';
-import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
+import useInterbtcIndex from '../../../common/hooks/use-interbtc-index';
 import LineChartComponent from './line-chart-component';
 import { useTranslation } from 'react-i18next';
 import { PAGES } from 'utils/constants/links';
@@ -13,15 +15,15 @@ type ActiveStakedRelayers = {
 
 // TODO: should rename `ActiveStakedRelayersComponent`
 const ActiveStakedRelayersComponent = ({ linkButton }: ActiveStakedRelayers): ReactElement => {
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcIndex();
   const { t } = useTranslation();
 
   // eslint-disable-next-line no-array-constructor
   const [totalRelayersPerDay, setTotalRelayersPerDay] = useState(new Array<{ date: number; count: number }>());
   const fetchRelayersPerDay = useMemo(
     () => async () => {
-      const res = await statsApi.getRecentDailyRelayerCounts();
-      setTotalRelayersPerDay(res.data);
+      const res = await statsApi.getRecentDailyRelayerCounts({});
+      setTotalRelayersPerDay(res);
     },
     [statsApi] // to silence the compiler
   );
@@ -33,22 +35,21 @@ const ActiveStakedRelayersComponent = ({ linkButton }: ActiveStakedRelayers): Re
     <DashboardCard>
       <div className='card-top-content'>
         <div className='values-container'>
-          <h1 style={{ color: getAccents('d_orange').color }}>{t('dashboard.parachain.active_relayers')}</h1>
+          <h1 style={{ color: getAccents('d_interlayMulberry').color }}>{t('dashboard.parachain.active_relayers')}</h1>
           <h2>{totalRelayersPerDay[totalRelayersPerDay.length - 1]?.count}</h2>
         </div>
-
         {linkButton && (
-          <div className='button-container'>
-            <ButtonComponent
-              buttonName='view relayers'
-              propsButtonColor='d_orange'
-              buttonId='active-staked'
-              buttonLink={PAGES.parachain} />
-          </div>
+          <InterlayRouterLink to={PAGES.DASHBOARD_PARACHAIN}>
+            <InterlayMulberryOutlinedButton
+              endIcon={<FaExternalLinkAlt />}
+              className='w-full'>
+              VIEW RELAYERS
+            </InterlayMulberryOutlinedButton>
+          </InterlayRouterLink>
         )}
       </div>
       <LineChartComponent
-        color='d_orange'
+        color='d_interlayMulberry'
         label={t('dashboard.parachain.total_relayers_chart') as string}
         yLabels={totalRelayersPerDay.map(dataPoint =>
           new Date(dataPoint.date).toISOString().substring(0, 10)

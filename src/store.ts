@@ -4,13 +4,13 @@ import { AppState, StoreType, StoreState, ParachainStatus } from './common/types
 import { createLogger } from 'redux-logger';
 import { applyMiddleware, createStore } from 'redux';
 import { initializeState } from './common/actions/general.actions';
-import { FaucetClient, PolkaBTCAPI } from '@interlay/polkabtc';
+import { FaucetClient, InterBTCAPI } from '@interlay/interbtc';
 import { mapToArray, arrayToMap } from './common/utils/requests';
 import * as constants from './constants';
 
 declare global {
     interface Window {
-        polkaBTC: PolkaBTCAPI;
+        polkaBTC: InterBTCAPI;
         faucet: FaucetClient;
         isFetchingActive: boolean;
     }

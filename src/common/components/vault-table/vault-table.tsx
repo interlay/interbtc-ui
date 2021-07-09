@@ -10,6 +10,7 @@ import { StoreType } from '../../../common/types/util.types';
 import DashboardTable from '../dashboard-table/dashboard-table';
 import { VaultExt } from '@interlay/polkabtc/build/parachain/vaults';
 import Tooltip from 'components/Tooltip';
+import clsx from 'clsx';
 
 export default function VaultTable(): ReactElement {
   const [vaults, setVaults] = useState<Array<Vault>>([]);
@@ -157,17 +158,26 @@ export default function VaultTable(): ReactElement {
   const tableVaultRow = useMemo(() => {
     const getStatusColor = (status: string): string => {
       if (status === constants.VAULT_STATUS_ACTIVE) {
-        return 'green-text';
+        return clsx(
+          'text-interlayConifer',
+          'font-medium'
+        );
       }
       if (status === constants.VAULT_STATUS_UNDER_COLLATERALIZED) {
-        return 'orange-text';
+        return clsx(
+          'text-interlayCalifornia',
+          'font-medium'
+        );
       }
       if (
         status === constants.VAULT_STATUS_THEFT ||
         status === constants.VAULT_STATUS_AUCTION ||
         status === constants.VAULT_STATUS_LIQUIDATED
       ) {
-        return 'red-text';
+        return clsx(
+          'text-interlayCinnabar',
+          'font-medium'
+        );
       }
       return 'black-text';
     };
@@ -175,10 +185,16 @@ export default function VaultTable(): ReactElement {
     const getCollateralizationColor = (collateralization: string | undefined): string => {
       if (typeof collateralization !== 'undefined') {
         if (new Big(collateralization).gte(secureCollateralThreshold)) {
-          return 'green-text';
+          return clsx(
+            'text-interlayConifer',
+            'font-medium'
+          );
         }
         // Liquidation
-        return 'red-text';
+        return clsx(
+          'text-interlayCinnabar',
+          'font-medium'
+        );
       }
       return 'black-text';
     };

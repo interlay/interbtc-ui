@@ -4,7 +4,7 @@ import DashboardTable, {
   StatusComponent,
   StatusCategories
 } from '../../../common/components/dashboard-table/dashboard-table';
-import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
+import useInterbtcIndex from '../../../common/hooks/use-interbtc-index';
 
 type StakedRelayer = {
   id: string;
@@ -15,14 +15,14 @@ type StakedRelayer = {
 
 export default function StakedRelayerTable(): ReactElement {
   const { t } = useTranslation();
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcIndex();
   const [relayers, setRelayers] = useState<Array<StakedRelayer>>([]);
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await statsApi.getRelayers(0);
-        setRelayers(res.data);
+        const res = await statsApi.getRelayers({ slaSince: 0 });
+        setRelayers(res);
       } catch (error) {
         console.log('Error fetching staked relayers data.');
         console.log('error.message => ', error.message);

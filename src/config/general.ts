@@ -1,5 +1,5 @@
 
-const APP_NAME = 'PolkaBTC';
+const APP_NAME = 'InterBTC';
 
 const ACCOUNT_ID_TYPE_NAME = 'AccountId';
 

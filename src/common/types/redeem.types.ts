@@ -1,4 +1,4 @@
-import { Redeem } from '@interlay/polkabtc';
+import { Redeem } from '@interlay/interbtc';
 
 export type DashboardRequestInfo = {
   id: string;

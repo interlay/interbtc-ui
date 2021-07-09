@@ -33,6 +33,11 @@ jobs:
         shell: bash
         run: |
           echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+          echo "GITHUB_SHORT_SHA=$(echo $GITHUB_SHA | head -c7)" >> $GITHUB_ENV
+
+          # set env vars to match the vars predefined in Vercel https://vercel.com/docs/environment-variables
+          echo "REACT_APP_VERCEL_GIT_COMMIT_REF=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+          echo "REACT_APP_VERCEL_GIT_COMMIT_SHA=$(echo $GITHUB_SHA)" >> $GITHUB_ENV
         id: extract_branch
 
       # extract branch name on pull request
@@ -42,7 +47,7 @@ jobs:
           echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF})" >> $GITHUB_ENV
 
       - run: "ln -s .env.${BRANCH_NAME:dev} .env"
-      - run: yarn install
+      - run: yarn install --network-timeout 36000
       - run: yarn lint
       - run: yarn test
       - run: yarn build
@@ -51,6 +56,27 @@ jobs:
         with:
           name: build-ui
           path: build/
+
+  upload_datadog_sourcemaps:
+    timeout-minutes: 30
+    runs-on: [self-hosted, linux]
+    needs: [build_ui]
+    steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: npm install -g @datadog/datadog-ci
+      - uses: actions/download-artifact@v2
+        id: download
+        with:
+          name: build-ui
+          path: ./build/
+
+      - run: datadog-ci sourcemaps upload ./build/static/js/ --service polkabtc.io --minified-path-prefix /static/js/ --release-version $GITHUB_SHA
+        env:
+          DATADOG_API_KEY: ${{ secrets.DATADOG_API_KEY }}
+          DATADOG_APP_KEY:  ${{ secrets.DATADOG_APP_KEY }}
+          DATADOG_SITE:  ${{ secrets.DATADOG_SITE }}
 
   build_docker:
     runs-on: [self-hosted, linux]
@@ -93,7 +119,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: registry.gitlab.com/interlay/polkabtc-ui
+          images: registry.gitlab.com/interlay/interbtc-ui
           tags: |
             type=sha,prefix={{branch}}-,suffix=-${{ steps.prep.outputs.ts }}
             type=ref,event=branch

@@ -19,7 +19,7 @@ import CardList, {
 } from 'components/CardList';
 import BoldParagraph from 'components/BoldParagraph';
 import NetworkActivity from 'common/components/network-activity/network-activity';
-import ButtonMaybePending from 'common/components/pending-button';
+import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
 import { StoreType } from 'common/types/util.types';
 import {
   displayBtcAmount,
@@ -95,22 +95,22 @@ function StakedRelayer(): JSX.Element {
     {
       title: t('sla_score'),
       value: safeRoundTwoDecimals(sla),
-      color: 'text-interlayDodgerBlue-800'
+      color: 'text-interlayDenim-800'
     },
     {
-      title: t('vault.fees_earned_polkabtc'),
+      title: t('vault.fees_earned_interbtc'),
       value: displayBtcAmount(feesEarnedPolkaBTC),
-      color: 'text-interlayRose-800'
+      color: 'text-interlayDenim-800'
     },
     {
       title: t('vault.fees_earned_dot'),
       value: safeRoundFiveDecimals(feesEarnedDOT),
-      color: 'text-interlayRose-800'
+      color: 'text-interlayDenim-800'
     },
     {
       title: t('apy'),
       value: `~${safeRoundTwoDecimals(apy)}`,
-      color: 'text-interlayDodgerBlue-800'
+      color: 'text-interlayDenim-800'
     }
   ];
 
@@ -151,14 +151,12 @@ function StakedRelayer(): JSX.Element {
           <NetworkActivity className='mt-20' />
           {relayerLoaded && (
             <>
-              <ButtonMaybePending
-                className='staked-button'
-                variant='outline-danger'
-                isPending={isDeregisterPending}
+              <InterlayCinnabarOutlinedButton
+                pending={isDeregisterPending}
                 disabled={relayerInactive || isDeregisterPending}
                 onClick={deregisterStakedRelayer}>
                 {t('relayer.deregister')}
-              </ButtonMaybePending>
+              </InterlayCinnabarOutlinedButton>
               <div className='row'>
                 <div className='col-12 de-note'>
                   {t('relayer.note_you_can_deregister')}

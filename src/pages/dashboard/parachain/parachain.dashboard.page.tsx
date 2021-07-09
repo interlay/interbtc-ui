@@ -6,20 +6,20 @@ import ParachainSecurity from '../components/parachain-security';
 import ActiveStakedRelayers from '../components/active-staked-relayers';
 import StakedRelayerTable from '../staked-relayer-table/staked-relayer-table';
 import { DashboardStatusUpdateInfo } from '../../../common/types/util.types';
-import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
+import useInterbtcIndex from '../../../common/hooks/use-interbtc-index';
 import { defaultTableDisplayParams, formatDateTimePrecise } from '../../../common/utils/utils';
 import DashboardTable, {
   StatusComponent,
   StatusCategories
 } from '../../../common/components/dashboard-table/dashboard-table';
-import { StatusUpdateColumns } from '@interlay/polkabtc-stats';
+import { StatusUpdateColumns } from '@interlay/interbtc-index-client';
 import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 
 export default function ParachainDashboard(): ReactElement {
   const { t } = useTranslation();
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcIndex();
   // eslint-disable-next-line no-array-constructor
   const [statusUpdates, setStatusUpdates] = useState(new Array<DashboardStatusUpdateInfo>());
   const [tableParams, setTableParams] = useState({
@@ -30,13 +30,8 @@ export default function ParachainDashboard(): ReactElement {
 
   const fetchStatusUpdates = useMemo(
     () => async () => {
-      const res = await statsApi.getParachainStatusUpdates(
-        tableParams.page,
-        tableParams.perPage,
-        tableParams.sortBy,
-        tableParams.sortAsc
-      );
-      setStatusUpdates(res.data);
+      const res = await statsApi.getParachainStatusUpdates(tableParams);
+      setStatusUpdates(res);
     },
     [tableParams, statsApi]
   );
@@ -44,7 +39,7 @@ export default function ParachainDashboard(): ReactElement {
   const fetchTotalStatusUpdates = useMemo(
     () => async () => {
       const res = await statsApi.getTotalParachainStatusUpdates();
-      setTotalStatusUpdates(res.data);
+      setTotalStatusUpdates(res.toString());
     },
     [statsApi] // to silence the compiler
   );
@@ -86,7 +81,7 @@ export default function ParachainDashboard(): ReactElement {
             t('dashboard.parachain.remove_error', { error: updt.removeError }) :
             t('dashboard.parachain.no_change')}
       </p>,
-      <p key={4}>{updt.btc_block_hash}</p>,
+      <p key={4}>{updt.btcBlockHash}</p>,
       <p key={5}>{t('dashboard.parachain.votes', { yeas: updt.yeas, nays: updt.nays })}</p>,
       <StatusComponent
         key={6}
@@ -113,7 +108,7 @@ export default function ParachainDashboard(): ReactElement {
           <PageTitle
             mainTitle={t('dashboard.parachain.parachain')}
             subTitle={<TimerIncrement />} />
-          <hr className='border-interlayRose' />
+          <hr className='border-interlayDenim' />
           <div className='parachain-graphs-container dashboard-graphs-container'>
             <ParachainSecurity />
             <ActiveStakedRelayers />

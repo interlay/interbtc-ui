@@ -1,6 +1,6 @@
 import { VaultReplaceRequest } from './vault.types';
 import { StoreType, ParachainStatus, Prices } from './util.types';
-import { Issue, Redeem } from '@interlay/polkabtc';
+import { Issue, Redeem } from '@interlay/interbtc';
 
 // GENERAL ACTIONS
 

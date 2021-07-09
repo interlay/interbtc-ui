@@ -2,20 +2,20 @@ import { useState, useEffect, ReactElement, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
+import useInterbtcIndex from '../../../common/hooks/use-interbtc-index';
 import { defaultTableDisplayParams, formatDateTimePrecise } from '../../../common/utils/utils';
 import { RelayedBlock } from '../../../common/types/util.types';
 import DashboardTable, { StyledLinkData } from '../../../common/components/dashboard-table/dashboard-table';
 import { BTC_BLOCK_API } from 'config/bitcoin';
 import BtcRelay from '../components/btc-relay';
-import { reverseEndiannessHex, stripHexPrefix } from '@interlay/polkabtc';
-import { BlockColumns } from '@interlay/polkabtc-stats';
+import { reverseEndiannessHex, stripHexPrefix } from '@interlay/interbtc';
+import { BlockColumns } from '@interlay/interbtc-index-client';
 import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 
 export default function RelayDashboard(): ReactElement {
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcIndex();
   const { t } = useTranslation();
 
   // eslint-disable-next-line no-array-constructor
@@ -26,15 +26,18 @@ export default function RelayDashboard(): ReactElement {
   const fetchBlocks = useMemo(
     () => async () => {
       try {
-        const [blocks, totalRelayedBlocks] = await Promise.all([
-          statsApi.getBlocks(tableParams.page, tableParams.perPage, tableParams.sortBy, tableParams.sortAsc),
+        const [
+          blocks,
+          totalRelayedBlocksCount
+        ] = await Promise.all([
+          statsApi.getBlocks(tableParams),
           statsApi.getTotalRelayedBlocksCount()
         ]);
-        setBlocks(blocks.data);
-        setTotalRelayedBlocks(Number(totalRelayedBlocks.data));
+        setBlocks(blocks);
+        const theTotalRelayedBlocks = totalRelayedBlocksCount.replaceAll('"', '');
+        setTotalRelayedBlocks(Number(theTotalRelayedBlocks));
       } catch (error) {
-        console.log('Error fetching btc-relay data.');
-        console.log('error.message => ', error.message);
+        console.log('[RelayDashboard fetchBlocks] error.message => ', error.message);
       }
     },
     [tableParams, statsApi]
@@ -54,7 +57,7 @@ export default function RelayDashboard(): ReactElement {
         data={block.hash}
         target={BTC_BLOCK_API + block.hash}
         newTab={true} />,
-      <p key={3}>{formatDateTimePrecise(new Date(block.relay_ts))}</p>
+      <p key={3}>{formatDateTimePrecise(new Date(block.relayTs))}</p>
     ],
     []
   );
@@ -75,7 +78,7 @@ export default function RelayDashboard(): ReactElement {
           <PageTitle
             mainTitle={t('dashboard.relay.btc_relay')}
             subTitle={<TimerIncrement />} />
-          <hr className='border-interlayTreePoppy' />
+          <hr className='border-interlayCalifornia' />
           <div className='dashboard-graphs-container'>
             <div className='relay-grid-container'>
               <BtcRelay displayBlockstreamData={true} />

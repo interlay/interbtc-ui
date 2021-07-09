@@ -12,7 +12,6 @@ const VARIANTS = Object.freeze({
 
 const COLORS = Object.freeze({
   default: 'default',
-  inherit: 'inherit', // TODO: not used
   primary: 'primary',
   secondary: 'secondary'
 });
@@ -49,12 +48,33 @@ const InterlayButton = ({
         minHeight: 36
       }}
       className={clsx(
-        { 'bg-gray-300 hover:bg-gray-400 text-textPrimary':
-          variant === VARIANTS.contained && color === COLORS.default && !disabledOrPending },
-        { 'bg-primary hover:bg-primary-600 text-primary-contrastText':
-          variant === VARIANTS.contained && color === COLORS.primary && !disabledOrPending },
-        { 'bg-secondary hover:bg-secondary-600 text-secondary-contrastText':
-          variant === VARIANTS.contained && color === COLORS.secondary && !disabledOrPending },
+        'focus:outline-none',
+        'focus:ring',
+        'focus:border-primary-300',
+        'focus:ring-primary-200',
+        'focus:ring-opacity-50',
+
+        {
+          [clsx(
+            'bg-gray-300',
+            'hover:bg-gray-400',
+            'text-textPrimary'
+          )]: variant === VARIANTS.contained && color === COLORS.default && !disabledOrPending
+        },
+        {
+          [clsx(
+            'bg-primary',
+            'hover:bg-primary-600',
+            'text-white'
+          )]: variant === VARIANTS.contained && color === COLORS.primary && !disabledOrPending
+        },
+        {
+          [clsx(
+            'bg-secondary',
+            'hover:bg-secondary-600',
+            'text-textPrimary'
+          )]: variant === VARIANTS.contained && color === COLORS.secondary && !disabledOrPending
+        },
         {
           [clsx(
             'bg-black',
@@ -64,30 +84,66 @@ const InterlayButton = ({
         {
           [clsx(
             'text-black',
-            'text-opacity-25',
-            'dark:text-white',
-            'dark:text-opacity-30'
+            'text-opacity-25'
           )]: disabledOrPending
         },
         { 'shadow-sm': variant === VARIANTS.contained && !disabledOrPending },
 
         { 'bg-transparent': variant === VARIANTS.text },
-        { 'text-textPrimary hover:bg-black hover:bg-opacity-5':
-          variant === VARIANTS.text && color === COLORS.default && !disabledOrPending },
-        { 'text-primary hover:bg-primary hover:bg-opacity-5':
-          variant === VARIANTS.text && color === COLORS.primary && !disabledOrPending },
-        { 'text-secondary hover:bg-secondary hover:bg-opacity-5':
-          variant === VARIANTS.text && color === COLORS.secondary && !disabledOrPending },
+        {
+          [clsx(
+            'text-textPrimary',
+            'hover:bg-black',
+            'hover:bg-opacity-5'
+          )]: variant === VARIANTS.text && color === COLORS.default && !disabledOrPending
+        },
+        {
+          [clsx(
+            'text-primary',
+            'hover:bg-primary',
+            'hover:bg-opacity-5'
+          )]: variant === VARIANTS.text && color === COLORS.primary && !disabledOrPending
+        },
+        {
+          [clsx(
+            'text-secondary',
+            'hover:bg-secondary',
+            'hover:bg-opacity-5'
+          )]: variant === VARIANTS.text && color === COLORS.secondary && !disabledOrPending
+        },
 
-        { 'border border-solid':
-          variant === VARIANTS.outlined },
-        { 'text-textPrimary border-black border-opacity-25 hover:bg-black hover:bg-opacity-5':
-          variant === VARIANTS.outlined && color === COLORS.default && !disabledOrPending },
-        { 'text-primary border-primary border-opacity-50 hover:border-opacity-100 hover:bg-primary hover:bg-opacity-5':
-          variant === VARIANTS.outlined && color === COLORS.primary && !disabledOrPending },
-        // eslint-disable-next-line max-len
-        { 'text-secondary border-secondary border-opacity-50 hover:border-opacity-100 hover:bg-secondary hover:bg-opacity-5':
-          variant === VARIANTS.outlined && color === COLORS.secondary && !disabledOrPending },
+        {
+          [clsx(
+            'border',
+            'border-solid'
+          )]: variant === VARIANTS.outlined
+        },
+        {
+          [clsx(
+            'text-textPrimary',
+            'border-black',
+            'border-opacity-25',
+            'hover:bg-black',
+            'hover:bg-opacity-5'
+          )]: variant === VARIANTS.outlined && color === COLORS.default && !disabledOrPending },
+        {
+          [clsx(
+            'text-primary',
+            'border-primary',
+            'border-opacity-50',
+            'hover:border-opacity-100',
+            'hover:bg-primary',
+            'hover:bg-opacity-5'
+          )]: variant === VARIANTS.outlined && color === COLORS.primary && !disabledOrPending },
+        {
+          [clsx(
+            'text-secondary',
+            'border-secondary',
+            'border-opacity-50',
+            'hover:border-opacity-100',
+            'hover:bg-secondary',
+            'hover:bg-opacity-5'
+          )]: variant === VARIANTS.outlined && color === COLORS.secondary && !disabledOrPending },
         { 'border-opacity-25': variant === VARIANTS.outlined && disabledOrPending },
 
         'rounded',

@@ -2,17 +2,17 @@ import {
   useSelector,
   useDispatch
 } from 'react-redux';
-import * as polkabtcStats from '@interlay/polkabtc-stats';
+import * as interbtcIndex from '@interlay/interbtc-index-client';
 import {
-  RedeemColumns,
-  BtcNetworkName
-} from '@interlay/polkabtc-stats';
+  BitcoinNetwork,
+  RedeemColumns
+} from '@interlay/interbtc-index-client';
 
 import useInterval from 'utils/hooks/use-interval';
 import { updateAllRedeemRequestsAction } from 'common/actions/redeem.actions';
 import { StoreType } from 'common/types/util.types';
 import * as constants from '../constants';
-import { Redeem } from '@interlay/polkabtc';
+import { Redeem } from '@interlay/interbtc';
 
 const useUpdateRedeemRequests = (
   page = 0,
@@ -27,18 +27,14 @@ const useUpdateRedeemRequests = (
   useInterval(async () => {
     try {
       // Temporary declaration pending refactor decision
-      const stats = new polkabtcStats.StatsApi(new polkabtcStats.Configuration({ basePath: constants.STATS_URL }));
+      const stats = new interbtcIndex.IndexApi(new interbtcIndex.Configuration({ basePath: constants.STATS_URL }));
 
-      const databaseRequests: Redeem[] = (
-        await stats.getFilteredRedeems(
-          page, // Page 0 (i.e. first page)
-          limit, // 15 per page (i.e. fetch 15 latest requests)
-          undefined, // Default sorting
-          undefined, // Default sort order
-          constants.BITCOIN_NETWORK as BtcNetworkName,
-          [{ column: RedeemColumns.Requester, value: address }] // Filter by requester == address
-        )
-      ).data;
+      const databaseRequests: Redeem[] = await stats.getFilteredRedeems({
+        page,
+        perPage: limit,
+        network: constants.BITCOIN_NETWORK as BitcoinNetwork,
+        filterRedeemColumns: [{ column: RedeemColumns.Requester, value: address }] // Filter by requester == address
+      });
 
       dispatch(updateAllRedeemRequestsAction(address, databaseRequests));
     } catch (error) {

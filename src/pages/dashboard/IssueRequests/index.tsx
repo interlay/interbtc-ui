@@ -1,4 +1,3 @@
-
 import {
   useState,
   useEffect,
@@ -7,14 +6,14 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { satToBTC } from '@interlay/polkabtc';
+import { satToBTC } from '@interlay/interbtc';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import IssueRequestsTable from 'containers/IssueRequestsTable';
 import LineChartComponent from '../components/line-chart-component';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
 
 function IssueRequests(): JSX.Element {
@@ -23,7 +22,7 @@ function IssueRequests(): JSX.Element {
     prices
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcIndex();
 
   const [totalSuccessfulIssues, setTotalSuccessfulIssues] = useState('-');
   const [totalIssueRequests, setTotalIssueRequests] = useState(0);
@@ -42,11 +41,11 @@ function IssueRequests(): JSX.Element {
     () => [
       async () => {
         const res = await statsApi.getTotalSuccessfulIssues();
-        setTotalSuccessfulIssues(res.data);
+        if (res) setTotalSuccessfulIssues(res.toString());
       },
       async () => {
         const res = await statsApi.getTotalIssues();
-        setTotalIssueRequests(Number(res.data));
+        setTotalIssueRequests(res);
       }
     ],
     [statsApi] // To silence the compiler
@@ -54,8 +53,8 @@ function IssueRequests(): JSX.Element {
 
   const fetchIssuesLastDays = useMemo(
     () => async () => {
-      const res = await statsApi.getRecentDailyIssues(6);
-      setCumulativeIssuesPerDay(res.data);
+      const res = await statsApi.getRecentDailyIssues({ daysBack: 6 });
+      setCumulativeIssuesPerDay(res);
     },
     [statsApi] // To silence the compiler
   );
@@ -98,7 +97,7 @@ function IssueRequests(): JSX.Element {
           <PageTitle
             mainTitle={t('issue_page.issue_requests')}
             subTitle={<TimerIncrement />} />
-          <hr className='border-interlayTreePoppy' />
+          <hr className='border-interlayCalifornia' />
         </div>
         <div
           className={clsx(
@@ -117,21 +116,21 @@ function IssueRequests(): JSX.Element {
             )}>
             <h5
               className={clsx(
-                'text-interlayRose',
+                'text-interlayDenim',
                 'font-bold',
                 'text-xl'
               )}>
               {t('dashboard.issue.issued')}
             </h5>
             <h5>
-              {t('dashboard.issue.total_polkabtc', { amount: totalPolkaBTC })}
+              {t('dashboard.issue.total_interbtc', { amount: totalPolkaBTC })}
             </h5>
             <h5 className='text-textSecondary'>
               ${(prices.bitcoin.usd * parseFloat(totalPolkaBTC)).toLocaleString()}
             </h5>
             <h5
               className={clsx(
-                'text-interlayMalachite',
+                'text-interlayConifer',
                 'font-bold',
                 'text-xl'
               )}>
@@ -150,8 +149,8 @@ function IssueRequests(): JSX.Element {
             )}>
             <LineChartComponent
               color={[
-                'd_pink',
-                'd_grey'
+                'd_interlayDenim',
+                'd_interlayPaleSky'
               ]}
               label={[
                 t('dashboard.issue.total_issued_chart'),

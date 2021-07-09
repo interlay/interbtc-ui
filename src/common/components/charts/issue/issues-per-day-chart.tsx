@@ -1,8 +1,8 @@
 import { useState, useEffect, ReactElement, useMemo } from 'react';
-import usePolkabtcStats from '../../../hooks/use-polkabtc-stats';
+import useInterbtcIndex from '../../../hooks/use-interbtc-index';
 
 export default function IssuesPerDayChart(): ReactElement {
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcIndex();
 
   // eslint-disable-next-line no-array-constructor
   const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number }>());
@@ -17,9 +17,9 @@ export default function IssuesPerDayChart(): ReactElement {
 
   const fetchIssuesLastDays = useMemo(
     () => async () => {
-      const res = await statsApi.getRecentDailyIssues(6); // for 5 days
+      const res = await statsApi.getRecentDailyIssues({ daysBack: 6 }); // for 5 days
       // one extra, to be able to compute the per - day value from the difference
-      setCumulativeIssuesPerDay(res.data);
+      setCumulativeIssuesPerDay(res);
     },
     [statsApi] // to silence the compiler
   );

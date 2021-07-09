@@ -1,4 +1,4 @@
-import { Issue } from '@interlay/polkabtc';
+import { Issue } from '@interlay/interbtc';
 
 export type DashboardIssueInfo = {
   id: string;
@@ -11,10 +11,6 @@ export type DashboardIssueInfo = {
   completed: boolean;
   cancelled: boolean;
 };
-
-export interface IssueMap {
-  [key: string]: Issue[];
-}
 
 export interface IssueState {
   // TODO: use current account from general state

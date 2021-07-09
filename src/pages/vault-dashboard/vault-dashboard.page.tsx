@@ -1,4 +1,3 @@
-
 import {
   useState,
   useEffect
@@ -10,11 +9,11 @@ import {
 import clsx from 'clsx';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
-import { planckToDOT } from '@interlay/polkabtc';
+import { planckToDOT } from '@interlay/interbtc';
 import {
   IssueColumns,
   RedeemColumns
-} from '@interlay/polkabtc-stats';
+} from '@interlay/interbtc-index-client';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -27,7 +26,9 @@ import CardList, {
   CardListContainer
 } from 'components/CardList';
 import BoldParagraph from 'components/BoldParagraph';
-import InterlayButton from 'components/UI/InterlayButton';
+import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
+import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
+import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
 import RequestReplacementModal from './request-replacement/request-replacement';
 import ReplaceTable from './replace-table/replace-table';
@@ -48,7 +49,7 @@ import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import './vault-dashboard.page.scss';
 import VaultIssueRequestsTable from 'containers/VaultIssueRequestTable';
 import VaultRedeemRequestsTable from 'containers/VaultRedeemRequestTable';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 
 function VaultDashboard(): JSX.Element {
   const [updateCollateralModalStatus, setUpdateCollateralModalStatus] = useState(CollateralUpdateStatus.Hidden);
@@ -72,7 +73,7 @@ function VaultDashboard(): JSX.Element {
   const [totalRedeemRequests, setTotalRedeemRequests] = useState(0);
 
   const dispatch = useDispatch();
-  const stats = usePolkabtcStats();
+  const stats = useInterbtcIndex();
   const { t } = useTranslation();
 
   const closeUpdateCollateralModal = () => setUpdateCollateralModalStatus(CollateralUpdateStatus.Hidden);
@@ -106,8 +107,8 @@ function VaultDashboard(): JSX.Element {
           window.polkaBTC.vaults.getSLA(vaultId),
           window.polkaBTC.vaults.getAPY(vaultId),
           window.polkaBTC.vaults.getIssuableAmount(vaultId),
-          stats.getFilteredTotalIssues([{ column: IssueColumns.VaultId, value: address }]),
-          stats.getFilteredTotalRedeems([{ column: RedeemColumns.VaultId, value: address }])
+          stats.getFilteredTotalIssues({ filterIssueColumns: [{ column: IssueColumns.VaultId, value: address }] }),
+          stats.getFilteredTotalRedeems({ filterRedeemColumns: [{ column: RedeemColumns.VaultId, value: address }] })
         ]);
 
         if (vault.status === 'fulfilled') {
@@ -124,11 +125,11 @@ function VaultDashboard(): JSX.Element {
         }
 
         if (totalIssueRequests.status === 'fulfilled') {
-          setTotalIssueRequests(totalIssueRequests.value.data);
+          setTotalIssueRequests(totalIssueRequests.value);
         }
 
         if (totalRedeemRequests.status === 'fulfilled') {
-          setTotalRedeemRequests(totalRedeemRequests.value.data);
+          setTotalRedeemRequests(totalRedeemRequests.value);
         }
 
         if (lockedAmountBTC.status === 'fulfilled') {
@@ -166,40 +167,40 @@ function VaultDashboard(): JSX.Element {
     {
       title: t('collateralization'),
       value: `${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`,
-      color: 'text-interlayDodgerBlue-800'
+      color: 'text-interlayDenim-800'
     },
     {
-      title: t('vault.fees_earned_polkabtc'),
+      title: t('vault.fees_earned_interbtc'),
       value: displayBtcAmount(feesEarnedPolkaBTC),
-      color: 'text-interlayRose-800'
+      color: 'text-interlayDenim-800'
     },
     {
       title: t('vault.fees_earned_dot'),
       value: safeRoundFiveDecimals(feesEarnedDOT),
-      color: 'text-interlayRose-800'
+      color: 'text-interlayDenim-800'
     },
     {
       title: t('sla_score'),
       value: safeRoundTwoDecimals(sla),
-      color: 'text-interlayDodgerBlue-800'
+      color: 'text-interlayDenim-800'
     }, {
       title: t('vault.locked_dot'),
       value: safeRoundFiveDecimals(collateral),
-      color: 'text-interlayRose-800'
+      color: 'text-interlayDenim-800'
     },
     {
       title: t('locked_btc'),
       value: displayBtcAmount(lockedBTC),
-      color: 'text-interlayTreePoppy-700'
+      color: 'text-interlayCalifornia-700'
     }, {
       title: t('vault.remaining_capacity'),
       value: displayBtcAmount(capacity),
-      color: 'text-interlayRose-800'
+      color: 'text-interlayDenim-800'
     },
     {
       title: t('apy'),
-      value: `~${safeRoundTwoDecimals(apy)}`,
-      color: 'text-interlayDodgerBlue-800'
+      value: `~${safeRoundTwoDecimals(apy)}%`,
+      color: 'text-interlayDenim-800'
     }
   ];
 
@@ -238,41 +239,35 @@ function VaultDashboard(): JSX.Element {
           </div>
           <div
             className={clsx(
-              'max-w-sm',
+              'max-w-xl',
               'mx-auto',
               'grid',
-              'grid-cols-2',
+              'grid-cols-3',
               'gap-10'
             )}>
-            <InterlayButton
+            <InterlayDenimContainedButton
               type='submit'
               style={{ display: 'flex' }}
               className='mx-auto'
-              variant='contained'
-              color='primary'
               // TODO: should not use inlined functions
               onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Increase)}>
               {t('vault.deposit_collateral')}
-            </InterlayButton>
-            <InterlayButton
+            </InterlayDenimContainedButton>
+            <InterlayDefaultContainedButton
               type='submit'
               style={{ display: 'flex' }}
               className='mx-auto'
-              variant='contained'
-              color='default'
               onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Decrease)}>
               {t('vault.withdraw_collateral')}
-            </InterlayButton>
+            </InterlayDefaultContainedButton>
             {new Big(lockedBTC).gt(new Big(0)) ? (
-              <InterlayButton
+              <InterlayCaliforniaContainedButton
                 type='submit'
                 style={{ display: 'flex' }}
                 className='mx-auto'
-                variant='contained'
-                color='secondary'
                 onClick={() => setShowRequestReplacementModal(true)}>
                 {t('vault.replace_vault')}
-              </InterlayButton>
+              </InterlayCaliforniaContainedButton>
             ) : (
               ''
             )}

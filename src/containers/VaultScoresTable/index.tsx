@@ -1,4 +1,3 @@
-
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import * as React from 'react';
@@ -12,10 +11,14 @@ import {
 // eslint-disable-next-line max-len
 } from 'react-table'; // TODO: should type properly (Re:https://github.com/tannerlinsley/react-table/blob/master/TYPESCRIPT.md)
 import clsx from 'clsx';
-import { VaultData } from '@interlay/polkabtc-stats'; // TODO: should do tree-shaking
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
+import { VaultData } from '@interlay/interbtc-index-client'; // TODO: should do tree-shaking
 
 import EllipsisLoader from 'components/EllipsisLoader';
-import ErrorHandler from 'components/ErrorHandler';
+import ErrorFallback from 'components/ErrorFallback';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -27,7 +30,7 @@ import InterlayTable, {
 import DefaultColumnFilter from 'components/UI/InterlayTable/DefaultColumnFilter';
 import NumberRangeColumnFilter from 'components/UI/InterlayTable/NumberRangeColumnFilter';
 import SortBy, { SortByContainer } from 'components/UI/InterlayTable/SortBy';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import usePolkabtcStats from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
 import STATUSES from 'utils/constants/statuses';
 
@@ -55,7 +58,7 @@ const VaultScoresTable = ({
   const statsApi = usePolkabtcStats();
   const [data, setData] = React.useState<PatchedVaultData[]>([]);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
-  const [error, setError] = React.useState<Error | null>(null);
+  const handleError = useErrorHandler();
   const { t } = useTranslation();
 
   // TODO: should add an abort-controller
@@ -64,28 +67,30 @@ const VaultScoresTable = ({
     // - (Re: https://kentcdodds.com/blog/authentication-in-react-applications)
     if (!polkaBtcLoaded) return;
     if (!statsApi) return;
+    if (!handleError) return;
 
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const response = await statsApi.getChallengeVaults(challengeTime);
-        const sortedVaults = response.data.sort((a, b) => b.lifetime_sla - a.lifetime_sla);
+        const response = await statsApi.getChallengeVaults({ slaSince: challengeTime });
+        const sortedVaults = response.sort((a, b) => b.lifetimeSla - a.lifetimeSla);
         const transformedVaults = sortedVaults.map(vault => ({
           ...vault,
-          lifetime_sla: Number(vault.lifetime_sla).toFixed(2)
+          lifetimeSla: Number(vault.lifetimeSla).toFixed(2)
         }));
         setStatus(STATUSES.RESOLVED);
 
         setData(transformedVaults);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
-        setError(error);
+        handleError(error);
       }
     })();
   }, [
     polkaBtcLoaded,
     challengeTime,
-    statsApi
+    statsApi,
+    handleError
   ]);
 
   const columns = React.useMemo(
@@ -108,35 +113,35 @@ const VaultScoresTable = ({
       },
       {
         Header: t('leaderboard.request_issue_count'),
-        accessor: 'request_issue_count',
+        accessor: 'requestIssueCount',
         classNames: [
           'text-right'
         ]
       },
       {
         Header: t('leaderboard.execute_issue_count'),
-        accessor: 'execute_issue_count',
+        accessor: 'executeIssueCount',
         classNames: [
           'text-right'
         ]
       },
       {
         Header: t('leaderboard.request_redeem_count'),
-        accessor: 'request_redeem_count',
+        accessor: 'requestRedeemCount',
         classNames: [
           'text-right'
         ]
       },
       {
         Header: t('leaderboard.execute_redeem_count'),
-        accessor: 'execute_redeem_count',
+        accessor: 'executeRedeemCount',
         classNames: [
           'text-right'
         ]
       },
       {
         Header: t('leaderboard.lifetime_sla'),
-        accessor: 'lifetime_sla',
+        accessor: 'lifetimeSla',
         Filter: NumberRangeColumnFilter,
         filter: 'between',
         classNames: [
@@ -170,14 +175,8 @@ const VaultScoresTable = ({
           'flex',
           'justify-center'
         )}>
-        <EllipsisLoader dotClassName='bg-interlayTreePoppy-400' />
+        <EllipsisLoader dotClassName='bg-interlayCalifornia-400' />
       </div>
-    );
-  }
-
-  if (status === STATUSES.REJECTED && error) {
-    return (
-      <ErrorHandler error={error} />
     );
   }
 
@@ -247,4 +246,9 @@ const VaultScoresTable = ({
   return null;
 };
 
-export default VaultScoresTable;
+export default withErrorBoundary(VaultScoresTable, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});

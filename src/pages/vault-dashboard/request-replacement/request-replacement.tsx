@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { btcToSat } from '@interlay/polkabtc';
 import Big from 'big.js';
 
-import ButtonMaybePending from 'common/components/pending-button';
+import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
+import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
 import { addReplaceRequestsAction } from 'common/actions/vault.actions';
 import { StoreType } from 'common/types/util.types';
 import { parachainToUIReplaceRequests } from 'common/utils/requests';
@@ -79,7 +80,7 @@ export default function RequestReplacementModal(props: RequestReplacementProps):
                 <input
                   name='amount'
                   type='float'
-                  className={'form-control custom-input' + (errors.amount ? ' error-borders' : '')}
+                  className={'form-control custom-input' + (errors.amount ? ' border-interlayCinnabar' : '')}
                   aria-describedby='basic-addon2'
                   ref={register({
                     required: true
@@ -89,11 +90,11 @@ export default function RequestReplacementModal(props: RequestReplacementProps):
                   <span
                     className='input-group-text'
                     id='basic-addon2'>
-                                        PolkaBTC
+                                        InterBTC
                   </span>
                 </div>
                 {errors.amount && (
-                  <div className='input-error'>
+                  <div className='input-error text-interlayConifer'>
                     {errors.amount.type === 'required' ?
                       'Amount is required' :
                       errors.amount.message}
@@ -104,17 +105,14 @@ export default function RequestReplacementModal(props: RequestReplacementProps):
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant='secondary'
-            onClick={props.onClose}>
+          <InterlayMulberryOutlinedButton onClick={props.onClose}>
             {t('cancel')}
-          </Button>
-          <ButtonMaybePending
-            variant='outline-danger'
+          </InterlayMulberryOutlinedButton>
+          <InterlayCinnabarOutlinedButton
             type='submit'
-            isPending={isRequestPending}>
+            pending={isRequestPending}>
             {t('request')}
-          </ButtonMaybePending>
+          </InterlayCinnabarOutlinedButton>
         </Modal.Footer>
       </form>
     </Modal>
