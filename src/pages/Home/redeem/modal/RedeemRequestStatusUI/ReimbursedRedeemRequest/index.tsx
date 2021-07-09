@@ -47,8 +47,8 @@ const ReimbursedRedeemRequest = ({
           window.polkaBTC.oracle.getExchangeRate()
         ]);
 
-        const polkaBTCAmount = request ? new Big(request.amountPolkaBTC) : new Big(0);
-        const theBurnDOTAmount = polkaBTCAmount.mul(btcDotRate);
+        const interBTCAmount = request ? new Big(request.amountPolkaBTC) : new Big(0);
+        const theBurnDOTAmount = interBTCAmount.mul(btcDotRate);
         const thePunishmentDOTAmount = theBurnDOTAmount.mul(new Big(punishmentFee));
         const theDOTAmount = theBurnDOTAmount.add(thePunishmentDOTAmount);
         setPunishmentDOTAmount(thePunishmentDOTAmount);

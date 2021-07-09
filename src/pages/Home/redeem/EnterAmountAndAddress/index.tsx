@@ -57,11 +57,11 @@ import {
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
-const POLKA_BTC_AMOUNT = 'polka-btc-amount';
+const INTER_BTC_AMOUNT = 'inter-btc-amount';
 const BTC_ADDRESS = 'btc-address';
 
 type RedeemForm = {
-  [POLKA_BTC_AMOUNT]: string;
+  [INTER_BTC_AMOUNT]: string;
   [BTC_ADDRESS]: string;
 }
 
@@ -92,7 +92,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
   } = useForm<RedeemForm>({
     mode: 'onChange'
   });
-  const polkaBTCAmount = watch(POLKA_BTC_AMOUNT);
+  const interBTCAmount = watch(INTER_BTC_AMOUNT);
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [dustValue, setDustValue] = React.useState('0');
@@ -108,15 +108,15 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
 
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
-    if (!polkaBTCAmount) return;
+    if (!interBTCAmount) return;
     if (!redeemFeeRate) return;
 
-    const bigPolkaBTCAmount = new Big(polkaBTCAmount);
+    const bigPolkaBTCAmount = new Big(interBTCAmount);
     const theRedeemFee = bigPolkaBTCAmount.mul(redeemFeeRate);
     setRedeemFee(theRedeemFee.toString());
   }, [
     polkaBtcLoaded,
-    polkaBTCAmount,
+    interBTCAmount,
     redeemFeeRate
   ]);
 
@@ -200,14 +200,14 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
   const onSubmit = async (data: RedeemForm) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
-      const polkaBTCAmount = new Big(data[POLKA_BTC_AMOUNT]);
+      const interBTCAmount = new Big(data[INTER_BTC_AMOUNT]);
 
       // Differentiate between premium and regular redeem
       let vaultId;
       if (premiumRedeemSelected) {
         // Select a vault from the premium redeem vault list
         for (const [id, redeemableTokens] of premiumRedeemVaults) {
-          if (redeemableTokens >= polkaBTCAmount) {
+          if (redeemableTokens >= interBTCAmount) {
             vaultId = id;
             break;
           }
@@ -219,7 +219,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
               maxAmount = redeemableTokens;
             }
           }
-          setFormError(POLKA_BTC_AMOUNT, {
+          setFormError(INTER_BTC_AMOUNT, {
             type: 'manual',
             message: t('redeem_page.error_max_premium_redeem', { maxPremiumRedeem: maxAmount.toString() })
           });
@@ -228,21 +228,21 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
         }
       } else {
         const vaults = await window.polkaBTC.vaults.getVaultsWithRedeemableTokens();
-        vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), polkaBTCAmount);
+        vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), interBTCAmount);
       }
 
       // FIXME: workaround to make premium redeem still possible
       const relevantVaults = new Map<AccountId, Big>();
       const id = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vaultId);
       // FIXME: a bit of a dirty workaround with the capacity
-      relevantVaults.set(id, polkaBTCAmount.mul(2));
-      const result = await window.polkaBTC.redeem.request(polkaBTCAmount, data[BTC_ADDRESS], true, 0, relevantVaults);
+      relevantVaults.set(id, interBTCAmount.mul(2));
+      const result = await window.polkaBTC.redeem.request(interBTCAmount, data[BTC_ADDRESS], true, 0, relevantVaults);
       // TODO: handle redeem aggregator
       const theSubmittedRequest = await parachainToUIRedeemRequest(result[0].id, result[0].redeemRequest);
       handleSubmittedRequestModalOpen(theSubmittedRequest);
       setSubmitStatus(STATUSES.RESOLVED);
 
-      dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(data[POLKA_BTC_AMOUNT])).toString()));
+      dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(data[INTER_BTC_AMOUNT])).toString()));
       dispatch(addRedeemRequestAction(theSubmittedRequest));
     } catch (error) {
       setSubmitStatus(STATUSES.REJECTED);
@@ -292,14 +292,14 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
   const redeemFeeInUSD = getUsdAmount(redeemFee, prices.bitcoin.usd);
 
   const totalBTC =
-      polkaBTCAmount ?
-        displayBtcAmount(new Big(polkaBTCAmount).sub(new Big(redeemFee)).sub(currentInclusionFee)) :
+      interBTCAmount ?
+        displayBtcAmount(new Big(interBTCAmount).sub(new Big(redeemFee)).sub(currentInclusionFee)) :
         '0';
   const totalBTCInUSD = getUsdAmount(totalBTC, prices.bitcoin.usd);
 
   const totalDOT =
-    polkaBTCAmount ?
-      new Big(polkaBTCAmount).mul(btcToDotRate).mul(premiumRedeemFee).toString() :
+    interBTCAmount ?
+      new Big(interBTCAmount).mul(btcToDotRate).mul(premiumRedeemFee).toString() :
       '0';
   const totalDOTInUSD = getUsdAmount(totalDOT, prices.polkadot.usd);
 
@@ -331,7 +331,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
           </h4>
           <InterBTCField
             id='polka-btc-amount'
-            name={POLKA_BTC_AMOUNT}
+            name={INTER_BTC_AMOUNT}
             type='number'
             label='InterBTC'
             step='any'
@@ -344,9 +344,9 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
               },
               validate: value => validatePolkaBTCAmount(value)
             })}
-            approxUSD={`≈ $ ${getUsdAmount(polkaBTCAmount || '0', usdPrice)}`}
-            error={!!errors[POLKA_BTC_AMOUNT]}
-            helperText={errors[POLKA_BTC_AMOUNT]?.message} />
+            approxUSD={`≈ $ ${getUsdAmount(interBTCAmount || '0', usdPrice)}`}
+            error={!!errors[INTER_BTC_AMOUNT]}
+            helperText={errors[INTER_BTC_AMOUNT]?.message} />
           <ParachainStatusInfo status={parachainStatus} />
           <TextField
             id='btc-address'

@@ -39,11 +39,11 @@ import { ReactComponent as PlasmLogoIcon } from 'assets/img/plasm-logo.svg';
 import { ReactComponent as EthereumLogoIcon } from 'assets/img/ethereum-logo.svg';
 import { ReactComponent as CosmosLogoIcon } from 'assets/img/cosmos-logo.svg';
 
-const POLKA_BTC_AMOUNT = 'polka-btc-amount';
+const INTER_BTC_AMOUNT = 'inter-btc-amount';
 const DOT_ADDRESS = 'dot-address';
 
 type TransferForm = {
-  [POLKA_BTC_AMOUNT]: string;
+  [INTER_BTC_AMOUNT]: string;
   [DOT_ADDRESS]: string;
 }
 
@@ -126,7 +126,7 @@ const Transfer = (): JSX.Element => {
   } = useForm<TransferForm>({
     mode: 'onChange'
   });
-  const polkaBTCAmount = watch(POLKA_BTC_AMOUNT);
+  const interBTCAmount = watch(INTER_BTC_AMOUNT);
 
   const [networkModalOpen, setNetworkModalOpen] = React.useState(false);
   const [selectedNetworkType, setSelectedNetworkType] = React.useState(NETWORK_TYPES.polkaBTC);
@@ -145,14 +145,14 @@ const Transfer = (): JSX.Element => {
   const onSubmit = async (data: TransferForm) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
-      await window.polkaBTC.treasury.transfer(data[DOT_ADDRESS], new Big(data[POLKA_BTC_AMOUNT]));
+      await window.polkaBTC.treasury.transfer(data[DOT_ADDRESS], new Big(data[INTER_BTC_AMOUNT]));
       // TODO: should be managed by a dedicated cache mechanism
-      dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(data[POLKA_BTC_AMOUNT])).toString()));
+      dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(data[INTER_BTC_AMOUNT])).toString()));
       updateBalances(dispatch, data[DOT_ADDRESS], balanceDOT, balancePolkaBTC);
       setSubmitStatus(STATUSES.RESOLVED);
       toast.success(t('transfer_page.successfully_transferred'));
       reset({
-        [POLKA_BTC_AMOUNT]: '',
+        [INTER_BTC_AMOUNT]: '',
         [DOT_ADDRESS]: ''
       });
     } catch (error) {
@@ -206,7 +206,7 @@ const Transfer = (): JSX.Element => {
         </h4>
         <InterBTCField
           id='polka-btc-amount'
-          name={POLKA_BTC_AMOUNT}
+          name={INTER_BTC_AMOUNT}
           type='number'
           label='InterBTC'
           step='any'
@@ -218,9 +218,9 @@ const Transfer = (): JSX.Element => {
             },
             validate: value => validatePolkaBTCAmount(value)
           })}
-          approxUSD={`≈ $ ${getUsdAmount(polkaBTCAmount || '0.00', usdPrice)}`}
-          error={!!errors[POLKA_BTC_AMOUNT]}
-          helperText={errors[POLKA_BTC_AMOUNT]?.message} />
+          approxUSD={`≈ $ ${getUsdAmount(interBTCAmount || '0.00', usdPrice)}`}
+          error={!!errors[INTER_BTC_AMOUNT]}
+          helperText={errors[INTER_BTC_AMOUNT]?.message} />
         <div>
           <TextField
             id='dot-address'

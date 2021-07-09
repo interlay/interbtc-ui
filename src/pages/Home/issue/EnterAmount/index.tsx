@@ -210,9 +210,9 @@ const EnterAmount = (): JSX.Element | null => {
 
   const onSubmit = async (data: IssueForm) => {
     try {
-      const polkaBTCAmount = new Big(data[BTC_AMOUNT]);
+      const interBTCAmount = new Big(data[BTC_AMOUNT]);
       setSubmitStatus(STATUSES.PENDING);
-      const result = await window.polkaBTC.issue.request(polkaBTCAmount);
+      const result = await window.polkaBTC.issue.request(interBTCAmount);
       // TODO: handle issue aggregation
       const theSubmittedRequest = await parachainToUIIssueRequest(result[0].id, result[0].issueRequest);
       handleSubmittedRequestModalOpen(theSubmittedRequest);
@@ -229,7 +229,7 @@ const EnterAmount = (): JSX.Element | null => {
     const bigBTCAmount = new Big(btcAmount || 0);
     const bridgeFee = bigBTCAmount.mul(feeRate);
     const securityDeposit = bigBTCAmount.mul(btcToDOTRate).mul(depositRate);
-    const polkaBTCAmount = bigBTCAmount.sub(bridgeFee);
+    const interBTCAmount = bigBTCAmount.sub(bridgeFee);
 
     const walletConnected = !!extensions.length;
 
@@ -327,9 +327,9 @@ const EnterAmount = (): JSX.Element | null => {
                 width={23}
                 height={23} />
             }
-            value={displayBtcAmount(polkaBTCAmount)}
+            value={displayBtcAmount(interBTCAmount)}
             unitName='InterBTC'
-            approxUSD={getUsdAmount(polkaBTCAmount, prices.bitcoin.usd)} />
+            approxUSD={getUsdAmount(interBTCAmount, prices.bitcoin.usd)} />
           <InterlayDenimContainedButton
             type='submit'
             style={{ display: 'flex' }}
