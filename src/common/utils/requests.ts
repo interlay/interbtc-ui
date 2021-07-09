@@ -1,4 +1,4 @@
-import { DOT, PolkaBTC, ReplaceRequestStatus } from '@interlay/polkabtc/build/interfaces/default';
+import { DOT, PolkaBTC, ReplaceRequestStatus } from '@interlay/interbtc/build/interfaces/default';
 import { VaultReplaceRequest } from '../types/vault.types';
 import { H256 } from '@polkadot/types/interfaces';
 import {
@@ -8,7 +8,7 @@ import {
   ReplaceRequestExt as ParachainReplaceRequest,
   Issue,
   Redeem
-} from '@interlay/polkabtc';
+} from '@interlay/interbtc';
 
 // TODO: move functions to lib
 

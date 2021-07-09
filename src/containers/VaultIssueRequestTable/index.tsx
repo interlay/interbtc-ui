@@ -9,7 +9,7 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { BtcNetworkName, IssueColumns } from '@interlay/interbtc-index-client';
+import { BitcoinNetwork, IssueColumns } from '@interlay/interbtc-index-client';
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
@@ -31,11 +31,11 @@ import {
   shortAddress,
   formatDateTimePrecise
 } from 'common/utils/utils';
-import { DashboardRequestInfo } from 'common/types/redeem.types';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
 import * as constants from '../../constants';
 import STATUSES from 'utils/constants/statuses';
+import { Issue, IssueStatus } from '@interlay/interbtc';
 
 const PAGE_SIZE = 10;
 
@@ -49,10 +49,10 @@ const VaultIssueRequestsTable = ({
   vaultAddress
 }: Props): JSX.Element | null => {
   const query = useQuery();
-  const selectedPage: number = query.get(QUERY_PARAMETERS.page) || 1;
+  const selectedPage: number = Number(query.get(QUERY_PARAMETERS.page)) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
   const statsApi = useInterbtcIndex();
-  const [data, setData] = React.useState<DashboardRequestInfo[]>([]);
+  const [data, setData] = React.useState<Issue[]>([]);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
   const { t } = useTranslation();
@@ -75,7 +75,7 @@ const VaultIssueRequestsTable = ({
         const response = await statsApi.getFilteredIssues({
           page: selectedPageIndex,
           perPage: PAGE_SIZE,
-          network: constants.BITCOIN_NETWORK as BtcNetworkName, // Not sure why cast is necessary here, but TS complains
+          network: constants.BITCOIN_NETWORK as BitcoinNetwork, // Not sure why cast is necessary here, but TS complains
           filterIssueColumns: issueRequestFilter
         });
         setStatus(STATUSES.RESOLVED);
@@ -103,11 +103,11 @@ const VaultIssueRequestsTable = ({
       },
       {
         Header: t('date'),
-        accessor: 'timestamp',
+        accessor: 'creationTimestamp',
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }) {
+        Cell: function FormattedCell({ value }: {value: number}) {
           return (
             <>
               {formatDateTimePrecise(new Date(Number(value)))}
@@ -117,18 +117,18 @@ const VaultIssueRequestsTable = ({
       },
       {
         Header: t('vault.creation_block'),
-        accessor: 'creation',
+        accessor: 'creationBlock',
         classNames: [
           'text-right'
         ]
       },
       {
         Header: t('user'),
-        accessor: 'requester',
+        accessor: 'userDOTAddress',
         classNames: [
           'text-center'
         ],
-        Cell: function FormattedCell({ value }) {
+        Cell: function FormattedCell({ value }: {value: string}) {
           return (
             <>
               {shortAddress(value)}
@@ -138,7 +138,7 @@ const VaultIssueRequestsTable = ({
       },
       {
         Header: t('issue_page.amount'),
-        accessor: 'amountBTC',
+        accessor: 'amountInterBTC',
         classNames: [
           'text-right'
         ]
@@ -156,7 +156,7 @@ const VaultIssueRequestsTable = ({
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }) {
+        Cell: function FormattedCell({ value }: {value: string}) {
           return (
             <InterlayLink
               className={clsx(
@@ -176,17 +176,18 @@ const VaultIssueRequestsTable = ({
       },
       {
         Header: t('status'),
+        accessor: 'status',
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell(props) {
+        Cell: function FormattedCell({ value }: {value: IssueStatus}) {
           return (
             <StatusCell
               status={{
-                completed: props.row.original.completed,
-                cancelled: props.row.original.cancelled,
-                isExpired: props.row.original.isExpired,
-                reimbursed: props.row.original.reimbursed
+                completed: value === IssueStatus.Completed,
+                cancelled: value === IssueStatus.Cancelled,
+                isExpired: value === IssueStatus.Expired,
+                reimbursed: false
               }} />
           );
         }
@@ -210,7 +211,7 @@ const VaultIssueRequestsTable = ({
 
   const handlePageChange = (newPage: number) => {
     updateQueryParameters({
-      [QUERY_PARAMETERS.page]: newPage
+      [QUERY_PARAMETERS.page]: newPage.toString()
     });
   };
 

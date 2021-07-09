@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { getUsdAmount } from '../../../common/utils/utils';
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
+import BN from 'bn.js';
 
 type CollateralLockedProps = {
   linkButton?: boolean;
@@ -26,7 +27,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
 
   const [cumulativeCollateralPerDay, setCumulativeCollateralPerDay] = useState(
     // eslint-disable-next-line no-array-constructor
-    new Array<{ date: number; amount: string }>()
+    new Array<{ date: number; amount: number }>()
   );
 
   const fetchCollateralLastDays = useMemo(
@@ -75,7 +76,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
             { beginAtZero: true, precision: 0 }
           ]}
           data={
-            cumulativeCollateralPerDay.slice(1).map(dataPoint => Number(planckToDOT(dataPoint.amount.toString())))
+            cumulativeCollateralPerDay.slice(1).map(dataPoint => Number(planckToDOT(new BN(dataPoint.amount))))
           } />
       </div>
     </DashboardCard>

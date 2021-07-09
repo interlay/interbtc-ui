@@ -15,6 +15,7 @@ import IssueRequestsTable from 'containers/IssueRequestsTable';
 import LineChartComponent from '../components/line-chart-component';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
+import BN from 'bn.js';
 
 function IssueRequests(): JSX.Element {
   const {
@@ -175,8 +176,8 @@ function IssueRequests(): JSX.Element {
               data={[
                 cumulativeIssuesPerDay
                   .slice(1)
-                  .map(dataPoint => Number(satToBTC(dataPoint.sat.toString()))),
-                pointIssuesPerDay.slice(1).map(sat => Number(satToBTC(sat.toString())))
+                  .map(dataPoint => Number(satToBTC(new BN(dataPoint.sat)))),
+                pointIssuesPerDay.slice(1).map(sat => Number(new BN(sat)))
               ]} />
           </div>
         </div>

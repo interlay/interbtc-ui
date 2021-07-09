@@ -1,4 +1,4 @@
-import { RedeemStatus } from '@interlay/polkabtc';
+import { RedeemStatus } from '@interlay/interbtc';
 import {
   CHANGE_REDEEM_STEP,
   RESET_REDEEM_WIZARD,

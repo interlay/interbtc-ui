@@ -13,6 +13,7 @@ import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import { FaExternalLinkAlt } from 'react-icons/fa';
+import BN from 'bn.js';
 
 type PolkaBTCProps = {
   linkButton?: boolean;
@@ -90,8 +91,8 @@ const InterBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
             { position: 'right', maxTicksLimit: 6 }
           ]}
           data={[
-            cumulativeIssuesPerDay.slice(1).map(dataPoint => Number(satToBTC(dataPoint.sat.toString()))),
-            pointIssuesPerDay.slice(1).map(sat => Number(satToBTC(sat.toString())))
+            cumulativeIssuesPerDay.slice(1).map(dataPoint => Number(satToBTC(new BN(dataPoint.sat)))),
+            pointIssuesPerDay.slice(1).map(sat => Number(satToBTC(new BN(sat))))
           ]} />
       </div>
     </DashboardCard>

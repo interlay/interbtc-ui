@@ -15,6 +15,7 @@ import RedeemRequestsTable from 'containers/RedeemRequestsTable';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
 import LineChartComponent from '../components/line-chart-component';
+import BN from 'bn.js';
 
 function RedeemRequests(): JSX.Element {
   const {
@@ -131,13 +132,13 @@ function RedeemRequests(): JSX.Element {
                 'font-bold',
                 'text-xl'
               )}>
-              {totalRedeemedAmount === '-' ? t('no_data') : satToBTC(totalRedeemedAmount)}
+              {totalRedeemedAmount === '-' ? t('no_data') : satToBTC(new BN(totalRedeemedAmount))}
               &nbsp;BTC
             </h5>
             {totalRedeemedAmount !== '-' && (
               <h5 className='text-textSecondary'>
                 $
-                {(prices.bitcoin.usd * parseFloat(satToBTC(totalRedeemedAmount))).toLocaleString()}
+                {(prices.bitcoin.usd * parseFloat(satToBTC(new BN(totalRedeemedAmount)).toString())).toLocaleString()}
               </h5>
             )}
             <h5
@@ -183,9 +184,9 @@ function RedeemRequests(): JSX.Element {
               yAxisProps={[{ beginAtZero: true, position: 'left' }, { position: 'right' }]}
               data={[
                 cumulativeRedeemsPerDay.map(dataPoint =>
-                  Number(satToBTC(dataPoint.sat.toString()))
+                  Number(satToBTC(new BN(dataPoint.sat)))
                 ),
-                pointRedeemsPerDay.map(amount => Number(satToBTC(amount.toString())))
+                pointRedeemsPerDay.map(amount => Number(satToBTC(new BN(amount))))
               ]} />
           </div>
         </div>

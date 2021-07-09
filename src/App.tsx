@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import {
   Switch,
@@ -23,10 +22,10 @@ import {
 import keyring from '@polkadot/ui-keyring';
 import {
   FaucetClient,
-  createPolkabtcAPI,
-  PolkaBTCAPI
-} from '@interlay/polkabtc';
-import { StatusCode } from '@interlay/polkabtc/build/interfaces';
+  createInterbtcAPI,
+  InterBTCAPI
+} from '@interlay/interbtc';
+import { StatusCode } from '@interlay/interbtc/build/interfaces';
 
 import Layout from 'parts/Layout';
 import Home from 'pages/Home';
@@ -114,10 +113,10 @@ const NoMatch = React.lazy(() =>
   import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
 );
 
-function connectToParachain(): Promise<PolkaBTCAPI> {
-  return createPolkabtcAPI(
+function connectToParachain(): Promise<InterBTCAPI> {
+  return createInterbtcAPI(
     constants.PARACHAIN_URL,
-    constants.BITCOIN_NETWORK === 'regtest' ? constants.BITCOIN_REGTEST_URL : constants.BITCOIN_NETWORK
+    constants.BITCOIN_NETWORK
   );
 }
 

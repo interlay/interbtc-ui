@@ -1,17 +1,5 @@
 import { Issue } from '@interlay/interbtc';
 
-export type DashboardIssueInfo = {
-  id: string;
-  timestamp: string;
-  amountBTC: string;
-  creation: string;
-  vaultBTCAddress: string;
-  vaultDOTAddress: string;
-  btcTxId: string;
-  completed: boolean;
-  cancelled: boolean;
-};
-
 export interface IssueState {
   // TODO: use current account from general state
   address: string;

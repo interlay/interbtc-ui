@@ -34,8 +34,7 @@ export default function RelayDashboard(): ReactElement {
           statsApi.getTotalRelayedBlocksCount()
         ]);
         setBlocks(blocks);
-        const theTotalRelayedBlocks = totalRelayedBlocksCount.replaceAll('"', '');
-        setTotalRelayedBlocks(Number(theTotalRelayedBlocks));
+        setTotalRelayedBlocks(Number(totalRelayedBlocksCount));
       } catch (error) {
         console.log('[RelayDashboard fetchBlocks] error.message => ', error.message);
       }

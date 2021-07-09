@@ -1,18 +1,5 @@
 import { Redeem } from '@interlay/interbtc';
 
-export type DashboardRequestInfo = {
-  id: string;
-  timestamp: string;
-  amountPolkaBTC: string;
-  creation: string;
-  vaultDotAddress: string;
-  btcAddress: string;
-  completed: boolean;
-  cancelled: boolean;
-  isExpired: boolean;
-  reimbursed: boolean;
-};
-
 export interface RedeemState {
   // TODO: use current account from general state
   address: string;
