@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
-import BTCPaymentPendingStatusUI from 'pages/Home/issue/BTCPaymentPendingStatusUI';
+import BTCPaymentPendingStatusUI from 'pages/Home/issue/IssueRequestsTable/IssueModal/BTCPaymentPendingStatusUI';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import IconButton from 'components/IconButton';
 import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';

@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import BTCPaymentPendingStatusUI from 'pages/Home/issue/BTCPaymentPendingStatusUI';
-import IssueRequestStatusUI from 'pages/Home/issue/modal/IssueRequestStatusUI';
-import WhoopsStatusUI from 'pages/Home/issue/modal/WhoopsStatusUI';
+import BTCPaymentPendingStatusUI from 'pages/Home/issue/IssueRequestsTable/IssueModal/BTCPaymentPendingStatusUI';
+import IssueRequestStatusUI from 'pages/Home/issue/IssueRequestsTable/IssueModal/IssueRequestStatusUI';
+import WhoopsStatusUI from 'pages/Home/issue/IssueRequestsTable/IssueModal/WhoopsStatusUI';
 import PriceInfo from 'pages/Home/PriceInfo';
 import InterlayModal, {
   Props as ModalProps,
