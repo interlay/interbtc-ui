@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import RedeemModal from '../modal/RedeemModal';
+import RedeemModal from './RedeemModal';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,

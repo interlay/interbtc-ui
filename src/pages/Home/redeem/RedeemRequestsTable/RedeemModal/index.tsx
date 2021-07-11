@@ -6,8 +6,8 @@ import clsx from 'clsx';
 
 import RedeemRequestStatusUI from './RedeemRequestStatusUI';
 import ReimburseStatusUI from './ReimburseStatusUI';
-import IconButton from 'components/IconButton';
 import PriceInfo from 'pages/Home/PriceInfo';
+import IconButton from 'components/IconButton';
 import InterlayModal, {
   Props as ModalProps,
   InterlayModalInnerWrapper,
