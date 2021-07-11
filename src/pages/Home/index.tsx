@@ -142,26 +142,31 @@ const Home = (): JSX.Element | null => {
                 'rounded-lg',
                 'bg-interlayPaleSky-200'
               )}>
-              {TAB_ITEMS.map((tabItem, index) => (
-                <Tab
-                  anchorClassName={clsx(
-                    'font-medium',
-                    'px-4',
-                    'py-2.5',
-                    'uppercase',
-                    { 'rounded-lg text-white transition': selectedTabId === tabItem.id },
-                    { 'bg-interlayDenim': tabItem.id === TAB_IDS.issue && selectedTabId === TAB_IDS.issue },
-                    { 'bg-interlayDenim': tabItem.id === TAB_IDS.redeem && selectedTabId === TAB_IDS.redeem },
-                    { 'bg-interlayDenim': tabItem.id === TAB_IDS.transfer && selectedTabId === TAB_IDS.transfer },
-                    { 'bg-interlayDenim': tabItem.id === TAB_IDS.burn && selectedTabId === TAB_IDS.burn },
-                    { 'opacity-30': selectedTabId !== tabItem.id }
-                  )}
-                  key={tabItem.id}
-                  id={tabItem.id}
-                  onSelect={handleTabSelect(index)}>
-                  {t(tabItem.label)}
-                </Tab>
-              ))}
+              {TAB_ITEMS.map((tabItem, index) => {
+                const selected = selectedTabIndex === index;
+
+                return (
+                  <Tab
+                    anchorClassName={clsx(
+                      'font-medium',
+                      'px-4',
+                      'py-2.5',
+                      'uppercase',
+                      selected ?
+                        clsx(
+                          'rounded-lg',
+                          'text-white',
+                          'transition',
+                          'bg-interlayDenim'
+                        ) : 'opacity-30'
+                    )}
+                    key={tabItem.id}
+                    id={tabItem.id}
+                    onSelect={handleTabSelect(index)}>
+                    {t(tabItem.label)}
+                  </Tab>
+                );
+              })}
             </Tabs>
             <hr
               className={clsx(
