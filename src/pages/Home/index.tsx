@@ -5,12 +5,12 @@ import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
 
-import EnterAmount from './issue/EnterAmount';
+import IssueForm from './issue/IssueForm';
+import RedeemForm from './redeem/RedeemForm';
+import TransferForm from './TransferForm';
+import BurnForm from './BurnForm';
 import IssueRequestsTable from './issue/IssueRequestsTable';
-import EnterAmountAndAddress from './redeem/EnterAmountAndAddress';
 import RedeemRequestsTable from './redeem/RedeemRequestsTable';
-import Transfer from './Transfer';
-import Burn from './Burn';
 import MainContainer from 'parts/MainContainer';
 import Tabs, {
   Tab,
@@ -174,26 +174,26 @@ const Home = (): JSX.Element | null => {
             index={0}
             selectedIndex={selectedTabIndex}
             id={TAB_IDS.issue}>
-            <EnterAmount />
+            <IssueForm />
           </TabPanel>
           <TabPanel
             index={1}
             selectedIndex={selectedTabIndex}
             id={TAB_IDS.redeem}>
-            <EnterAmountAndAddress />
+            <RedeemForm />
           </TabPanel>
           <TabPanel
             index={2}
             selectedIndex={selectedTabIndex}
             id={TAB_IDS.transfer}>
-            <Transfer />
+            <TransferForm />
           </TabPanel>
           {burnable && (
             <TabPanel
               index={3}
               selectedIndex={selectedTabIndex}
               id={TAB_IDS.burn}>
-              <Burn />
+              <BurnForm />
             </TabPanel>
           )}
         </div>

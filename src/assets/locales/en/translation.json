@@ -116,7 +116,6 @@
   "waiting_for_confirmations": "Waiting for Confirmations",
   "redeem_page": {
     "withdraw": "Withdraw",
-    "burn": "Burn",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
     "to_redeem_interbtc": "To redeem your InterBTC, you must now pick one of the two options:",
     "burn_interbtc": "Burn InterBTC and get",

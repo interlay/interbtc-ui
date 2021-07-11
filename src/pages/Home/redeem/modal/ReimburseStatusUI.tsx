@@ -209,7 +209,7 @@ const ReimburseStatusUI = ({
               disabled={retryStatus !== STATUSES.IDLE || burnStatus !== STATUSES.IDLE}
               pending={burnStatus === STATUSES.PENDING}
               onClick={handleBurn}>
-              {t('redeem_page.burn')}
+              {t('redeem_page.reimburse')}
             </InterlayDenimOutlinedButton>
           </li>
         </ul>

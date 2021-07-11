@@ -60,12 +60,12 @@ import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg
 const INTER_BTC_AMOUNT = 'inter-btc-amount';
 const BTC_ADDRESS = 'btc-address';
 
-type RedeemForm = {
+type RedeemFormData = {
   [INTER_BTC_AMOUNT]: string;
   [BTC_ADDRESS]: string;
 }
 
-const EnterAmountAndAddress = (): JSX.Element | null => {
+const RedeemForm = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const handleError = useErrorHandler();
@@ -89,7 +89,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
     formState: { errors },
     watch,
     setError: setFormError
-  } = useForm<RedeemForm>({
+  } = useForm<RedeemFormData>({
     mode: 'onChange'
   });
   const interBTCAmount = watch(INTER_BTC_AMOUNT);
@@ -197,7 +197,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
     setSubmittedRequest(undefined);
   };
 
-  const onSubmit = async (data: RedeemForm) => {
+  const onSubmit = async (data: RedeemFormData) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
       const interBTCAmount = new Big(data[INTER_BTC_AMOUNT]);
@@ -491,7 +491,7 @@ const EnterAmountAndAddress = (): JSX.Element | null => {
   return null;
 };
 
-export default withErrorBoundary(EnterAmountAndAddress, {
+export default withErrorBoundary(RedeemForm, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();

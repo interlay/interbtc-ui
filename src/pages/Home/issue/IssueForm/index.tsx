@@ -57,11 +57,11 @@ const BTC_AMOUNT = 'btc-amount';
 const EXTRA_REQUIRED_DOT_AMOUNT = 0.2;
 const MAXIMUM_ISSUABLE_POLKA_BTC_AMOUNT = 1;
 
-type IssueForm = {
+type IssueFormData = {
   [BTC_AMOUNT]: string;
 }
 
-const EnterAmount = (): JSX.Element | null => {
+const IssueForm = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const handleError = useErrorHandler();
@@ -82,7 +82,7 @@ const EnterAmount = (): JSX.Element | null => {
     handleSubmit,
     watch,
     formState: { errors }
-  } = useForm<IssueForm>({
+  } = useForm<IssueFormData>({
     mode: 'onChange' // 'onBlur'
   });
   const btcAmount = watch(BTC_AMOUNT);
@@ -208,7 +208,7 @@ const EnterAmount = (): JSX.Element | null => {
     setSubmittedRequest(undefined);
   };
 
-  const onSubmit = async (data: IssueForm) => {
+  const onSubmit = async (data: IssueFormData) => {
     try {
       const interBTCAmount = new Big(data[BTC_AMOUNT]);
       setSubmitStatus(STATUSES.PENDING);
@@ -371,7 +371,7 @@ const EnterAmount = (): JSX.Element | null => {
   return null;
 };
 
-export default withErrorBoundary(EnterAmount, {
+export default withErrorBoundary(IssueForm, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();
