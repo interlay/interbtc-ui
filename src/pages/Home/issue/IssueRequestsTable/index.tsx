@@ -16,7 +16,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import IssueModal from 'pages/Home/issue/IssueRequestsTable/IssueModal';
+import IssueModal from './IssueModal';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,

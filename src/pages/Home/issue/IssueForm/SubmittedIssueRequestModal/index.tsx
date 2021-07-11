@@ -7,13 +7,13 @@ import { useTranslation } from 'react-i18next';
 import BTCPaymentPendingStatusUI from 'pages/Home/issue/IssueRequestsTable/IssueModal/BTCPaymentPendingStatusUI';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import IconButton from 'components/IconButton';
-import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 import InterlayModal, {
   Props as ModalProps,
   InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
 import { IssueRequest } from 'common/types/issue.types';
 import { resetIssueWizardAction } from 'common/actions/issue.actions';
+import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
 interface CustomProps {
   request: IssueRequest
