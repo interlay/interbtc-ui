@@ -14,7 +14,7 @@ import Big from 'big.js';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
 
-import RequestWrapper from '../../RequestWrapper';
+import RequestWrapper from 'pages/Home/RequestWrapper';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import ErrorFallback from 'components/ErrorFallback';

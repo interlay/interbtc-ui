@@ -4,10 +4,10 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import BTCPaymentPendingStatusUI from '../BTCPaymentPendingStatusUI';
-import IssueRequestStatusUI from './IssueRequestStatusUI';
-import WhoopsStatusUI from './WhoopsStatusUI';
-import PriceInfo from '../../PriceInfo';
+import BTCPaymentPendingStatusUI from 'pages/Home/issue/BTCPaymentPendingStatusUI';
+import IssueRequestStatusUI from 'pages/Home/issue/modal/IssueRequestStatusUI';
+import WhoopsStatusUI from 'pages/Home/issue/modal/WhoopsStatusUI';
+import PriceInfo from 'pages/Home/PriceInfo';
 import InterlayModal, {
   Props as ModalProps,
   InterlayModalInnerWrapper,

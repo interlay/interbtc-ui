@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 
-import RequestWrapper from '../../RequestWrapper';
-import PriceInfo from '../../PriceInfo';
+import RequestWrapper from 'pages/Home/RequestWrapper';
+import PriceInfo from 'pages/Home/PriceInfo';
 import Tooltip from 'components/Tooltip';
 import {
   copyToClipboard,

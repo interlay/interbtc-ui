@@ -14,7 +14,7 @@ import {
 } from 'react-icons/fa';
 import clsx from 'clsx';
 
-import RequestWrapper from '../../../../RequestWrapper';
+import RequestWrapper from 'pages/Home/RequestWrapper';
 import ErrorModal from 'components/ErrorModal';
 import InterlayLink from 'components/UI/InterlayLink';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';

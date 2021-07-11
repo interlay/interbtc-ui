@@ -6,7 +6,7 @@ import {
   FaExclamationCircle
 } from 'react-icons/fa';
 
-import RequestWrapper from '../../../../RequestWrapper';
+import RequestWrapper from 'pages/Home/RequestWrapper';
 
 const CancelledIssueRequest = (): JSX.Element => {
   const { t } = useTranslation();

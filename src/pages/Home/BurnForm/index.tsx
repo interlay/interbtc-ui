@@ -15,7 +15,7 @@ import {
 } from 'react-error-boundary';
 import { btcToSat } from '@interlay/polkabtc';
 
-import PriceInfo from '../PriceInfo';
+import PriceInfo from 'pages/Home/PriceInfo';
 import InterBTCField from '../InterBTCField';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
