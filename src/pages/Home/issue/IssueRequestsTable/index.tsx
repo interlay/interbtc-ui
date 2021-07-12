@@ -16,7 +16,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import IssueModal from '../modal/IssueModal';
+import IssueModal from './IssueModal';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -26,39 +26,46 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import InterlayLink from 'components/UI/InterlayLink';
+import useQuery from 'utils/hooks/use-query';
+import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
+import { BTC_TRANSACTION_API } from 'config/bitcoin';
+import { QUERY_PARAMETERS } from 'utils/constants/links';
+import {
+  formatDateTimePrecise,
+  shortTxId
+} from 'common/utils/utils';
 import { IssueRequestStatus } from 'common/types/issue.types';
 import { StoreType } from 'common/types/util.types';
-import { formatDateTimePrecise } from 'common/utils/utils';
-import { changeIssueIdAction } from 'common/actions/issue.actions';
 import { showAccountModalAction } from 'common/actions/general.actions';
-import { BTC_TRANSACTION_API } from 'config/bitcoin';
-import { shortTxId } from 'common/utils/utils';
 
 const IssueRequestsTable = (): JSX.Element => {
+  const dispatch = useDispatch();
+  const { t } = useTranslation();
+
   const {
     address,
     extensions
   } = useSelector((state: StoreType) => state.general);
   const issueRequests = useSelector((state: StoreType) => state.issue.issueRequests).get(address) || [];
-  const [issueModalOpen, setIssueModalOpen] = React.useState(false);
-  const dispatch = useDispatch();
-  const { t } = useTranslation();
+
+  const query = useQuery();
+  const selectedIssueRequestId = query.get(QUERY_PARAMETERS.ISSUE_REQUEST_ID);
+  const updateQueryParameters = useUpdateQueryParameters();
 
   const handleIssueModalClose = () => {
-    setIssueModalOpen(false);
-  };
-
-  const openWizard = () => {
-    if (extensions.length && address) {
-      setIssueModalOpen(true);
-    } else {
-      dispatch(showAccountModalAction(true));
-    }
+    updateQueryParameters({
+      [QUERY_PARAMETERS.ISSUE_REQUEST_ID]: ''
+    });
   };
 
   const handleRowClick = (requestId: string) => () => {
-    dispatch(changeIssueIdAction(requestId));
-    openWizard();
+    if (extensions.length && address) {
+      updateQueryParameters({
+        [QUERY_PARAMETERS.ISSUE_REQUEST_ID]: requestId
+      });
+    } else {
+      dispatch(showAccountModalAction(true));
+    }
   };
 
   const columns = React.useMemo(
@@ -296,9 +303,12 @@ const IssueRequestsTable = (): JSX.Element => {
           </InterlayTbody>
         </InterlayTable>
       </InterlayTableContainer>
-      <IssueModal
-        open={issueModalOpen}
-        onClose={handleIssueModalClose} />
+      {selectedIssueRequestId && (
+        <IssueModal
+          open={!!selectedIssueRequestId}
+          onClose={handleIssueModalClose}
+          requestId={selectedIssueRequestId} />
+      )}
     </>
   );
 };

@@ -111,9 +111,6 @@ export type GeneralActions =
     | UpdateTotals;
 
 // REDEEM
-
-export const CHANGE_REDEEM_STEP = 'CHANGE_REDEEM_STEP';
-export const CHANGE_REDEEM_ID = 'CHANGE_REDEEM_ID';
 export const SET_REDEEM_REQUESTS = 'SET_REDEEM_REQUESTS';
 export const RESET_REDEEM_WIZARD = 'RESET_REDEEM_WIZARD';
 export const STORE_REDEEM_REQUEST = 'STORE_REDEEM_REQUEST';
@@ -129,16 +126,6 @@ export const TOGGLE_PREMIUM_REDEEM = 'TOGGLE_PREMIUM_REDEEM';
 export interface TogglePremiumRedeem {
     type: typeof TOGGLE_PREMIUM_REDEEM;
     premiumRedeem: boolean;
-}
-
-export interface ChangeRedeemStep {
-    type: typeof CHANGE_REDEEM_STEP;
-    step: string;
-}
-
-export interface ChangeRedeemId {
-    type: typeof CHANGE_REDEEM_ID;
-    id: string;
 }
 
 export interface ResetRedeemWizard {
@@ -187,8 +174,6 @@ export interface ReimburseRedeemRequest {
 }
 
 export type RedeemActions =
-    | ChangeRedeemStep
-    | ChangeRedeemId
     | ResetRedeemWizard
     | SetRedeemRequests
     | StoreRedeemRequest
@@ -203,9 +188,6 @@ export type RedeemActions =
     | TogglePremiumRedeem;
 
 // ISSUE
-
-export const CHANGE_ISSUE_STEP = 'CHANGE_ISSUE_STEP';
-export const CHANGE_ISSUE_ID = 'CHANGE_ISSUE_ID';
 export const RESET_ISSUE_WIZARD = 'RESET_ISSUE_WIZARD';
 export const STORE_ISSUE_REQUEST = 'STORE_ISSUE_REQUEST';
 export const ADD_ISSUE_REQUEST = 'ADD_ISSUE_REQUEST';
@@ -217,16 +199,6 @@ export const UPDATE_ISSUE_PERIOD = 'UPDATE_ISSUE_PERIOD';
 export interface ChangeSelectedIssue {
     type: typeof CHANGE_SELECTED_ISSUE;
     request: IssueRequest;
-}
-
-export interface ChangeIssueStep {
-    type: typeof CHANGE_ISSUE_STEP;
-    step: string;
-}
-
-export interface ChangeIssueId {
-    type: typeof CHANGE_ISSUE_ID;
-    id: string;
 }
 
 export interface ResetIssueWizard {
@@ -259,8 +231,6 @@ export interface UpdateIssuePeriod {
 }
 
 export type IssueActions =
-    | ChangeIssueStep
-    | ChangeIssueId
     | ResetIssueWizard
     | StoreIssueRequest
     | AddIssueRequest

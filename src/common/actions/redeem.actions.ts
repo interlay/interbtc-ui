@@ -1,7 +1,5 @@
 import {
-  CHANGE_REDEEM_STEP,
   RESET_REDEEM_WIZARD,
-  CHANGE_REDEEM_ID,
   SET_REDEEM_REQUESTS,
   ADD_REDEEM_REQUEST,
   UPDATE_REDEEM_REQUEST,
@@ -12,9 +10,7 @@ import {
   TOGGLE_PREMIUM_REDEEM,
   TogglePremiumRedeem,
   UpdateAllRedeemRequests,
-  ChangeRedeemStep,
   ResetRedeemWizard,
-  ChangeRedeemId,
   SetRedeemRequests,
   AddRedeemRequest,
   UpdateRedeemRequest,
@@ -24,11 +20,6 @@ import {
 } from '../types/actions.types';
 import { RedeemRequest } from '../types/redeem.types';
 
-export const changeRedeemStepAction = (step: string): ChangeRedeemStep => ({
-  type: CHANGE_REDEEM_STEP,
-  step
-});
-
 export const setRedeemRequestsAction = (requests: RedeemRequest[]): SetRedeemRequests => ({
   type: SET_REDEEM_REQUESTS,
   requests
@@ -36,11 +27,6 @@ export const setRedeemRequestsAction = (requests: RedeemRequest[]): SetRedeemReq
 
 export const resetRedeemWizardAction = (): ResetRedeemWizard => ({
   type: RESET_REDEEM_WIZARD
-});
-
-export const changeRedeemIdAction = (id: string): ChangeRedeemId => ({
-  type: CHANGE_REDEEM_ID,
-  id
 });
 
 export const addRedeemRequestAction = (request: RedeemRequest): AddRedeemRequest => ({

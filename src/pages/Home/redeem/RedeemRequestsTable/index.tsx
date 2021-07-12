@@ -9,14 +9,11 @@ import {
   FaRegClock,
   FaExternalLinkAlt
 } from 'react-icons/fa';
-import {
-  useSelector,
-  useDispatch
-} from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import RedeemModal from '../modal/RedeemModal';
+import RedeemModal from './RedeemModal';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -26,27 +23,37 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import InterlayLink from 'components/UI/InterlayLink';
+import useQuery from 'utils/hooks/use-query';
+import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
-import { shortTxId } from 'common/utils/utils';
+import { QUERY_PARAMETERS } from 'utils/constants/links';
+import {
+  shortTxId,
+  formatDateTimePrecise
+} from 'common/utils/utils';
 import { RedeemRequestStatus } from 'common/types/redeem.types';
 import { StoreType } from 'common/types/util.types';
-import { changeRedeemIdAction } from 'common/actions/redeem.actions';
-import { formatDateTimePrecise } from 'common/utils/utils';
 
 const RedeemRequestsTable = (): JSX.Element => {
-  const dispatch = useDispatch();
   const { t } = useTranslation();
+
   const { address } = useSelector((state: StoreType) => state.general);
   const redeemRequests = useSelector((state: StoreType) => state.redeem.redeemRequests).get(address) || [];
-  const [redeemModalOpen, setRedeemModalOpen] = React.useState(false);
+
+  const query = useQuery();
+  const selectedRedeemRequestId = query.get(QUERY_PARAMETERS.REDEEM_REQUEST_ID);
+  const updateQueryParameters = useUpdateQueryParameters();
 
   const handleRedeemModalClose = () => {
-    setRedeemModalOpen(false);
+    updateQueryParameters({
+      [QUERY_PARAMETERS.REDEEM_REQUEST_ID]: ''
+    });
   };
 
   const handleRowClick = (requestId: string) => () => {
-    dispatch(changeRedeemIdAction(requestId));
-    setRedeemModalOpen(true);
+    updateQueryParameters({
+      [QUERY_PARAMETERS.REDEEM_REQUEST_ID]: requestId
+    });
   };
 
   const columns = React.useMemo(
@@ -286,9 +293,12 @@ const RedeemRequestsTable = (): JSX.Element => {
           </InterlayTbody>
         </InterlayTable>
       </InterlayTableContainer>
-      <RedeemModal
-        open={redeemModalOpen}
-        onClose={handleRedeemModalClose} />
+      {selectedRedeemRequestId && (
+        <RedeemModal
+          open={!!selectedRedeemRequestId}
+          onClose={handleRedeemModalClose}
+          requestId={selectedRedeemRequestId} />
+      )}
     </>
   );
 };
