@@ -120,7 +120,7 @@ services:
       FLYWAY_PASSWORD: 'password'
       FLYWAY_URL: 'jdbc:postgresql://postgres:5432/postgres'
     volumes:
-      - ${PWD}/node_modules/@interlay/polkabtc-stats/sql:/flyway/sql
+      - ${PWD}/node_modules/@interlay/interbtc-index-client/sql:/flyway/sql
     depends_on:
       - postgres
   polkabtc_stats:

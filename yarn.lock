@@ -1566,10 +1566,10 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-index-client@0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-index-client/-/interbtc-index-client-0.5.1.tgz#eebfab9cb873bf49bbfa355c717272608e717973"
-  integrity sha512-Ae1Wz9BYXBpAb4evFuzjAB2mlQFnW3lWuV6OQlV4NgE9Z2MDh5XhDj3OsltihZnBn42gBBvAw5X4ZVtW14cgJQ==
+"@interlay/interbtc-index-client@0.5.3":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-index-client/-/interbtc-index-client-0.5.3.tgz#8c8925615079583d6e465f1f6637680a0adc3275"
+  integrity sha512-W2udxjkm9lYQjU3LIas0i4ERdVJgjs+cfk83qVStyygIIPUHbQMoegwI8saHV3jRvrJ5MRABO3uYR/q2wkc+MQ==
 
 "@interlay/interbtc-types@0.8.3":
   version "0.8.3"
@@ -5183,9 +5183,9 @@ bip174@^2.0.1:
   resolved "https://registry.yarnpkg.com/bip174/-/bip174-2.0.1.tgz#39cf8ca99e50ce538fb762589832f4481d07c254"
   integrity sha512-i3X26uKJOkDTAalYAp0Er+qGMDhrbbh2o93/xiPyAN2s25KrClSpe3VXo/7mNJoqA5qfko8rLS2l3RWZgYmjKQ==
 
-"bip32-ed25519@git+https://github.com/Zondax/bip32-ed25519.git":
+"bip32-ed25519@https://github.com/Zondax/bip32-ed25519":
   version "0.0.4"
-  resolved "git+https://github.com/Zondax/bip32-ed25519.git#0949df01b5c93885339bc28116690292088f6134"
+  resolved "https://github.com/Zondax/bip32-ed25519#0949df01b5c93885339bc28116690292088f6134"
   dependencies:
     bn.js "^5.1.1"
     elliptic "^6.4.1"
