@@ -131,12 +131,12 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell({ confirmations }: {confirmations: number}) {
+        Cell: function FormattedCell({ value }: {value: number}) {
           return (
             <>
-              {confirmations === undefined ?
+              {value === undefined ?
                 t('not_applicable') :
-                Math.max(confirmations, 0)}
+                Math.max(value, 0)}
             </>
           );
         }

@@ -132,7 +132,7 @@ function RedeemRequests(): JSX.Element {
                 'font-bold',
                 'text-xl'
               )}>
-              {totalRedeemedAmount === '-' ? t('no_data') : satToBTC(new BN(totalRedeemedAmount))}
+              {totalRedeemedAmount === '-' ? t('no_data') : satToBTC(new BN(totalRedeemedAmount)).toString()}
               &nbsp;BTC
             </h5>
             {totalRedeemedAmount !== '-' && (
@@ -184,9 +184,9 @@ function RedeemRequests(): JSX.Element {
               yAxisProps={[{ beginAtZero: true, position: 'left' }, { position: 'right' }]}
               data={[
                 cumulativeRedeemsPerDay.map(dataPoint =>
-                  Number(satToBTC(new BN(dataPoint.sat)))
+                  satToBTC(new BN(dataPoint.sat)).toNumber()
                 ),
-                pointRedeemsPerDay.map(amount => Number(satToBTC(new BN(amount))))
+                pointRedeemsPerDay.map(amount => satToBTC(new BN(amount)).toNumber())
               ]} />
           </div>
         </div>

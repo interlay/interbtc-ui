@@ -21,8 +21,9 @@ import {
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
-import { Issue, IssueStatus } from '@interlay/interbtc';
+import { Issue, IssueStatus, satToBTC } from '@interlay/interbtc';
 import Big from 'big.js';
+import BN from 'bn.js';
 
 const renderModalStatusPanel = (request: Issue) => {
   switch (request.status) {
@@ -60,6 +61,13 @@ const IssueModal = ({
   const request = userIssueRequests.filter(request => request.id === requestId)[0];
 
   if (!request) return null;
+
+  const amountInterBTC = (request.executedAmountBTC && request.executedAmountBTC !== '0') ?
+    request.executedAmountBTC :
+    request.amountInterBTC;
+  const amountBTCSent = request.btcAmountSubmittedByUser ?
+    satToBTC(new BN(request.btcAmountSubmittedByUser)) :
+    new Big(request.amountInterBTC).add(request.bridgeFee);
 
   return (
     <InterlayModal
@@ -124,7 +132,7 @@ const IssueModal = ({
                   'space-x-1'
                 )}>
                 <span className='text-5xl'>
-                  {request.executedAmountBTC || request.amountInterBTC}
+                  {amountInterBTC}
                 </span>
                 <span className='text-2xl'>
                   InterBTC
@@ -136,7 +144,7 @@ const IssueModal = ({
                   'block'
                 )}>
                 {`≈ $ ${getUsdAmount(
-                  request.executedAmountBTC || request.amountInterBTC || '0',
+                  amountInterBTC || '0',
                   prices.bitcoin.usd
                 )}`}
               </span>
@@ -174,15 +182,9 @@ const IssueModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayBtcAmount(
-                  request.btcAmountSubmittedByUser ||
-                  new Big(request.amountInterBTC).add(request.bridgeFee)
-                )}
+                value={displayBtcAmount(amountBTCSent)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(
-                  request.btcAmountSubmittedByUser || new Big(request.amountInterBTC).add(request.bridgeFee).toString(),
-                  prices.bitcoin.usd
-                )} />
+                approxUSD={getUsdAmount(amountBTCSent, prices.bitcoin.usd)} />
             </div>
             <div className='space-y-4'>
               {/* TODO: could componentize */}

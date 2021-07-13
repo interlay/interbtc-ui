@@ -176,7 +176,7 @@ function IssueRequests(): JSX.Element {
               data={[
                 cumulativeIssuesPerDay
                   .slice(1)
-                  .map(dataPoint => Number(satToBTC(new BN(dataPoint.sat)))),
+                  .map(dataPoint => satToBTC(new BN(dataPoint.sat)).toNumber()),
                 pointIssuesPerDay.slice(1).map(sat => Number(new BN(sat)))
               ]} />
           </div>

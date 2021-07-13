@@ -92,7 +92,10 @@ const IssueRequestsTable = (): JSX.Element => {
         Cell: function FormattedCell(props: any) {
           return (
             <>
-              {props.row.original.executedAmountBTC || props.row.original.amountInterBTC}
+              {(props.row.original.executedAmountBTC && props.row.original.executedAmountBTC !== '0') ?
+                props.row.original.executedAmountBTC :
+                props.row.original.amountInterBTC
+              }
             </>
           );
         }
@@ -144,12 +147,12 @@ const IssueRequestsTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell({ confirmations }: {confirmations: number}) {
+        Cell: function FormattedCell({ value }: {value: number}) {
           return (
             <>
-              {confirmations === undefined ?
+              {value === undefined ?
                 t('not_applicable') :
-                Math.max(confirmations, 0)}
+                Math.max(value, 0)}
             </>
           );
         }

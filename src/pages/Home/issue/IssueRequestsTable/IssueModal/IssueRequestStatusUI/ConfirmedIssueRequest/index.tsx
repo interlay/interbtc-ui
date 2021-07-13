@@ -55,7 +55,9 @@ const ConfirmedIssueRequest = ({
       dispatch(
         updateBalancePolkaBTCAction(
           new Big(balancePolkaBTC)
-            .add(new Big(request.executedAmountBTC || request.amountInterBTC))
+            .add(new Big((request.executedAmountBTC && request.executedAmountBTC !== '0') ?
+              request.executedAmountBTC :
+              request.amountInterBTC))
             .toString()
         )
       );
@@ -115,12 +117,12 @@ const ConfirmedIssueRequest = ({
             'text-justify',
             'text-textSecondary'
           )}>
-          {t('issue_page.receive_polkabtc_tokens')}
+          {t('issue_page.receive_interbtc_tokens')}
         </p>
         <InterlayDenimOutlinedButton
           pending={executeStatus === STATUSES.PENDING}
           onClick={handleExecute(request)}>
-          {t('issue_page.claim_polkabtc')}
+          {t('issue_page.claim_interbtc')}
         </InterlayDenimOutlinedButton>
       </RequestWrapper>
       {(executeStatus === STATUSES.REJECTED && executeError) && (
