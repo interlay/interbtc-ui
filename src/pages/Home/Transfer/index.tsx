@@ -38,6 +38,7 @@ import { ReactComponent as AcalaLogoIcon } from 'assets/img/acala-logo.svg';
 import { ReactComponent as PlasmLogoIcon } from 'assets/img/plasm-logo.svg';
 import { ReactComponent as EthereumLogoIcon } from 'assets/img/ethereum-logo.svg';
 import { ReactComponent as CosmosLogoIcon } from 'assets/img/cosmos-logo.svg';
+import { CurrencyIdLiteral } from '@interlay/interbtc';
 
 const POLKA_BTC_AMOUNT = 'polka-btc-amount';
 const DOT_ADDRESS = 'dot-address';
@@ -145,7 +146,7 @@ const Transfer = (): JSX.Element => {
   const onSubmit = async (data: TransferForm) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
-      await window.polkaBTC.treasury.transfer(data[DOT_ADDRESS], new Big(data[POLKA_BTC_AMOUNT]));
+      await window.polkaBTC.tokens.transfer(CurrencyIdLiteral.INTERBTC, data[DOT_ADDRESS], new Big(data[POLKA_BTC_AMOUNT]));
       // TODO: should be managed by a dedicated cache mechanism
       dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(data[POLKA_BTC_AMOUNT])).toString()));
       updateBalances(dispatch, data[DOT_ADDRESS], balanceDOT, balancePolkaBTC);

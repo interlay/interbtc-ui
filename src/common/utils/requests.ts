@@ -1,4 +1,4 @@
-import { DOT, PolkaBTC, ReplaceRequestStatus } from '@interlay/interbtc/build/interfaces/default';
+import { Collateral, Wrapped, ReplaceRequestStatus } from '@interlay/interbtc/build/interfaces/default';
 import { VaultReplaceRequest } from '../types/vault.types';
 import { H256 } from '@polkadot/types/interfaces';
 import {
@@ -9,6 +9,7 @@ import {
   Issue,
   Redeem
 } from '@interlay/interbtc';
+import Big from 'big.js';
 
 // TODO: move functions to lib
 
@@ -66,46 +67,46 @@ interface ParsableParachainTypes {
   // eslint-disable-next-line camelcase
   btc_address: string;
   // eslint-disable-next-line camelcase
-  amount_polka_btc?: PolkaBTC;
-  amount?: PolkaBTC;
+  amount_polka_btc?: Wrapped;
+  amount?: Wrapped;
   // eslint-disable-next-line camelcase
-  amount_dot?: DOT;
+  amount_dot?: Collateral;
   // eslint-disable-next-line camelcase
-  griefing_collateral?: DOT;
+  griefing_collateral?: Collateral;
   // eslint-disable-next-line camelcase
-  premium_dot?: DOT;
+  premium_dot?: Collateral;
 }
 
 /**
  * Parses types which belong to request objects and need parsing/conversion to be displayed in the UI.
  *
- * @param parachainObject A request object, which must have a BTC address, a InterBTC amount and a DOT amount.
+ * @param parachainObject A request object, which must have a BTC address, a InterBTC amount and a Collateral amount.
  * @return A tuple with the parsed properties
  */
 
 function convertParachainTypes(parachainObject: ParsableParachainTypes): [string, string, string] {
-  let parsedPolkaBTC = '';
-  let parsedDOT = '';
+  let parsedPolkaBTC = new Big(0);
+  let parsedDOT = new Big(0);
 
   if (parachainObject.amount_polka_btc) {
-    parsedPolkaBTC = satToBTC(parachainObject.amount_polka_btc.toString());
+    parsedPolkaBTC = satToBTC(parachainObject.amount_polka_btc);
   } else if (parachainObject.amount) {
-    parsedPolkaBTC = satToBTC(parachainObject.amount.toString());
+    parsedPolkaBTC = satToBTC(parachainObject.amount);
   } else {
     throw new Error('No property found for InterBTC amount');
   }
 
   if (parachainObject.premium_dot && parachainObject.premium_dot.toString() !== '0') {
-    parsedDOT = planckToDOT(parachainObject.premium_dot.toString());
+    parsedDOT = planckToDOT(parachainObject.premium_dot);
   } else if (parachainObject.amount_dot) {
-    parsedDOT = planckToDOT(parachainObject.amount_dot.toString());
+    parsedDOT = planckToDOT(parachainObject.amount_dot);
   } else if (parachainObject.griefing_collateral) {
-    parsedDOT = planckToDOT(parachainObject.griefing_collateral.toString());
+    parsedDOT = planckToDOT(parachainObject.griefing_collateral);
   } else {
-    throw new Error('No property found for DOT amount');
+    throw new Error('No property found for Collateral amount');
   }
 
-  return [parachainObject.btc_address, parsedPolkaBTC, parsedDOT];
+  return [parachainObject.btc_address, parsedPolkaBTC.toString(), parsedDOT.toString()];
 }
 
 export { parachainToUIReplaceRequests, arrayToMap, mapToArray };

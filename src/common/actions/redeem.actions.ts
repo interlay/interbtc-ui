@@ -1,4 +1,4 @@
-import { Redeem } from '@interlay/polkabtc';
+import { Redeem } from '@interlay/interbtc';
 import {
   CHANGE_REDEEM_STEP,
   RESET_REDEEM_WIZARD,

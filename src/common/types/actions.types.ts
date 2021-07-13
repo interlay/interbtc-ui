@@ -5,7 +5,6 @@ import { Issue, Redeem } from '@interlay/interbtc';
 // GENERAL ACTIONS
 
 export const IS_POLKA_BTC_LOADED = 'IS_POLKA_BTC_LOADED';
-export const IS_STAKED_RELAYER_LOADED = 'IS_STAKED_RELAYER_LOADED';
 export const IS_FAUCET_LOADED = 'IS_FAUCET_LOADED';
 export const IS_VAULT_CLIENT_LOADED = 'IS_VAULT_CLIENT_LOADED';
 export const INIT_STATE = 'INIT_STATE';
@@ -37,11 +36,6 @@ export interface UpdateOfPrices {
 }
 export interface IsPolkaBtcLoaded {
   type: typeof IS_POLKA_BTC_LOADED;
-  isLoaded: boolean;
-}
-
-export interface IsStakedRelayerLoaded {
-  type: typeof IS_STAKED_RELAYER_LOADED;
   isLoaded: boolean;
 }
 
@@ -96,7 +90,6 @@ export interface ShowAccountModal {
 
 export type GeneralActions =
   | IsPolkaBtcLoaded
-  | IsStakedRelayerLoaded
   | ChangeAddress
   | InitState
   | InitGeneralDataAction

@@ -23,7 +23,8 @@ import keyring from '@polkadot/ui-keyring';
 import {
   FaucetClient,
   createInterbtcAPI,
-  InterBTCAPI
+  InterBTCAPI,
+  CurrencyIdLiteral
 } from '@interlay/interbtc';
 import { StatusCode } from '@interlay/interbtc/build/interfaces';
 
@@ -63,7 +64,6 @@ import {
   initGeneralDataAction,
   setInstalledExtensionAction,
   isFaucetLoaded,
-  isStakedRelayerLoaded,
   isVaultClientLoaded,
   updateBalancePolkaBTCAction,
   updateBalanceDOTAction
@@ -180,19 +180,6 @@ function App(): JSX.Element {
         console.log('[App React.useEffect] error.message => ', error.message);
       }
     })();
-
-    // Maybe load the staked relayer client - only if the current address is also registered as a vault
-    (async () => {
-      try {
-        dispatch(isStakedRelayerLoaded(false));
-        const stakedRelayers = await window.polkaBTC.stakedRelayer.list();
-        dispatch(isStakedRelayerLoaded(stakedRelayers.includes(id)));
-      } catch (error) {
-        // TODO: should add error handling
-        console.log('No InterBTC staked relayer found for the account in the connected Polkadot wallet.');
-        console.log('[App React.useEffect] error.message => ', error.message);
-      }
-    })();
   }, [
     polkaBtcLoaded,
     address,
@@ -212,8 +199,8 @@ function App(): JSX.Element {
           bitcoinHeight,
           state
         ] = await Promise.all([
-          window.polkaBTC.treasury.total(),
-          window.polkaBTC.collateral.totalLocked(),
+          window.polkaBTC.tokens.total(CurrencyIdLiteral.INTERBTC),
+          window.polkaBTC.tokens.total(CurrencyIdLiteral.DOT),
           window.polkaBTC.btcRelay.getLatestBlockHeight(),
           window.polkaBTC.electrsAPI.getLatestBlockHeight(),
           window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain()
@@ -318,11 +305,11 @@ function App(): JSX.Element {
     if (!address) return;
 
     let unsubscribeFromCollateral: () => void;
-    let unsubscribeFromTreasury: () => void;
+    let unsubscribeFromWrapped: () => void;
     (async () => {
       try {
         unsubscribeFromCollateral =
-          await window.polkaBTC.collateral.subscribeToBalance(address, (_, balance: Big) => {
+          await window.polkaBTC.tokens.subscribeToBalance(CurrencyIdLiteral.DOT, address, (_, balance: Big) => {
             const newDOTBalance = balance.toString();
             if (newDOTBalance !== balanceDOT) {
               dispatch(updateBalanceDOTAction(newDOTBalance));
@@ -335,8 +322,8 @@ function App(): JSX.Element {
 
     (async () => {
       try {
-        unsubscribeFromTreasury =
-          await window.polkaBTC.treasury.subscribeToBalance(address, (_, balance: Big) => {
+        unsubscribeFromWrapped =
+          await window.polkaBTC.tokens.subscribeToBalance(CurrencyIdLiteral.INTERBTC, address, (_, balance: Big) => {
             const newPolkaBTCBalance = balance.toString();
             if (newPolkaBTCBalance !== balancePolkaBTC) {
               dispatch(updateBalancePolkaBTCAction(newPolkaBTCBalance));
@@ -351,8 +338,8 @@ function App(): JSX.Element {
       if (unsubscribeFromCollateral) {
         unsubscribeFromCollateral();
       }
-      if (unsubscribeFromTreasury) {
-        unsubscribeFromTreasury();
+      if (unsubscribeFromWrapped) {
+        unsubscribeFromWrapped();
       }
     };
   }, [

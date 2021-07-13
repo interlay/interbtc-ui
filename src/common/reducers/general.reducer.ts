@@ -1,6 +1,5 @@
 import {
   IS_POLKA_BTC_LOADED,
-  IS_STAKED_RELAYER_LOADED,
   IS_VAULT_CLIENT_LOADED,
   INIT_GENERAL_DATA_ACTION,
   CHANGE_ADDRESS,
@@ -44,8 +43,6 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
     return { ...state, prices: action.prices };
   case IS_POLKA_BTC_LOADED:
     return { ...state, polkaBtcLoaded: action.isLoaded };
-  case IS_STAKED_RELAYER_LOADED:
-    return { ...state, relayerLoaded: action.isLoaded };
   case CHANGE_ADDRESS:
     return { ...state, address: action.address };
   case INIT_STATE:

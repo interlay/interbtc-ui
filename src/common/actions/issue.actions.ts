@@ -1,4 +1,4 @@
-import { Issue } from '@interlay/polkabtc';
+import { Issue } from '@interlay/interbtc';
 import {
   CHANGE_ISSUE_STEP,
   RESET_ISSUE_WIZARD,
