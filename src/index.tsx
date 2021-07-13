@@ -3,6 +3,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
+import {
+  QueryClientProvider,
+  QueryClient
+} from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 import App from './App';
 import { configureStore } from './store';
@@ -12,11 +17,16 @@ import './index.css';
 const store = configureStore();
 window.isFetchingActive = false;
 
+const queryClient = new QueryClient();
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <Router>
-        <App />
+        <QueryClientProvider client={queryClient}>
+          <App />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
       </Router>
     </Provider>
   </React.StrictMode>,

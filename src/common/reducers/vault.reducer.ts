@@ -6,8 +6,7 @@ import {
   UPDATE_LOCKED_BTC,
   UPDATE_SLA,
   UPDATE_APY,
-  VaultActions,
-  INIT_STATE
+  VaultActions
 } from '../types/actions.types';
 import { VaultState } from '../types/vault.types';
 
@@ -32,8 +31,6 @@ export const vaultReducer = (state: VaultState = initialState, action: VaultActi
     return { ...state, lockedBTC: action.lockedBTC };
   case UPDATE_SLA:
     return { ...state, sla: action.sla };
-  case INIT_STATE:
-    return { ...state };
   case UPDATE_APY:
     return { ...state, apy: action.apy };
   default:

@@ -1,7 +1,10 @@
 import { VaultReplaceRequest } from './vault.types';
 import { StoreType, ParachainStatus, Prices } from './util.types';
-import { Issue, Redeem } from '@interlay/interbtc';
-import { BTCAmount, PolkadotAmount } from '@interlay/monetary-js';
+import { Issue } from '@interlay/interbtc';
+import {
+  BTCAmount,
+  PolkadotAmount
+} from '@interlay/monetary-js';
 
 // GENERAL ACTIONS
 
@@ -103,16 +106,7 @@ export type GeneralActions =
   | UpdateTotals;
 
 // REDEEM
-export const SET_REDEEM_REQUESTS = 'SET_REDEEM_REQUESTS';
-export const RESET_REDEEM_WIZARD = 'RESET_REDEEM_WIZARD';
-export const STORE_REDEEM_REQUEST = 'STORE_REDEEM_REQUEST';
-export const ADD_REDEEM_REQUEST = 'ADD_REDEEM_REQUEST';
 export const ADD_VAULT_REDEEMS = 'ADD_VAULT_REDEEMS';
-export const UPDATE_REDEEM_REQUEST = 'UPDATE_REDEEM_REQUEST';
-export const UPDATE_ALL_REDEEM_REQUESTS = 'UPDATE_ALL_REDEEM_REQUESTS';
-export const RETRY_REDEEM_REQUEST = 'RETRY_REDEEM_REQUEST';
-export const REDEEM_EXPIRED = 'REDEEM_EXPIRED';
-export const REIMBURSE_REDEEM_REQUEST = 'REIMBURSE_REDEEM_REQUEST';
 export const TOGGLE_PREMIUM_REDEEM = 'TOGGLE_PREMIUM_REDEEM';
 
 export interface TogglePremiumRedeem {
@@ -120,117 +114,29 @@ export interface TogglePremiumRedeem {
   premiumRedeem: boolean;
 }
 
-export interface ResetRedeemWizard {
-  type: typeof RESET_REDEEM_WIZARD;
-}
-
-export interface SetRedeemRequests {
-  type: typeof SET_REDEEM_REQUESTS;
-  requests: Redeem[];
-}
-
-export interface StoreRedeemRequest {
-  type: typeof STORE_REDEEM_REQUEST;
-  request: Redeem;
-}
-
-export interface AddRedeemRequest {
-  type: typeof ADD_REDEEM_REQUEST;
-  request: Redeem;
-}
-
-export interface UpdateRedeemRequest {
-  type: typeof UPDATE_REDEEM_REQUEST;
-  request: Redeem;
-}
-
-export interface UpdateAllRedeemRequests {
-  type: typeof UPDATE_ALL_REDEEM_REQUESTS;
-  userDotAddress: string;
-  redeemRequests: Redeem[];
-}
-
-export interface RetryRedeemRequest {
-  type: typeof RETRY_REDEEM_REQUEST;
-  id: string;
-}
-
-export interface RedeemExpired {
-  type: typeof REDEEM_EXPIRED;
-  request: Redeem;
-}
-
-export interface ReimburseRedeemRequest {
-  type: typeof REIMBURSE_REDEEM_REQUEST;
-  id: string;
-}
-
 export type RedeemActions =
-    | ResetRedeemWizard
-    | SetRedeemRequests
-    | StoreRedeemRequest
-    | AddRedeemRequest
     | ChangeAddress
     | InitState
-    | UpdateRedeemRequest
-    | UpdateAllRedeemRequests
-    | RetryRedeemRequest
-    | RedeemExpired
-    | ReimburseRedeemRequest
     | TogglePremiumRedeem;
 
 // ISSUE
-export const RESET_ISSUE_WIZARD = 'RESET_ISSUE_WIZARD';
 export const STORE_ISSUE_REQUEST = 'STORE_ISSUE_REQUEST';
-export const ADD_ISSUE_REQUEST = 'ADD_ISSUE_REQUEST';
-export const UPDATE_ISSUE_REQUEST = 'UPDATE_ISSUE_REQUEST';
-export const UPDATE_ALL_ISSUE_REQUESTS = 'UPDATE_ALL_ISSUE_REQUESTS';
-export const CHANGE_SELECTED_ISSUE = 'CHANGE_SELECTED_ISSUE';
 export const UPDATE_ISSUE_PERIOD = 'UPDATE_ISSUE_PERIOD';
-
-export interface ChangeSelectedIssue {
-  type: typeof CHANGE_SELECTED_ISSUE;
-  request: Issue;
-}
-
-export interface ResetIssueWizard {
-  type: typeof RESET_ISSUE_WIZARD;
-}
 
 export interface StoreIssueRequest {
   type: typeof STORE_ISSUE_REQUEST;
   request: Issue;
 }
 
-export interface AddIssueRequest {
-  type: typeof ADD_ISSUE_REQUEST;
-  request: Issue;
-}
-
-export interface UpdateIssueRequest {
-  type: typeof UPDATE_ISSUE_REQUEST;
-  request: Issue;
-}
-
-export interface UpdateAllIssueRequests {
-  type: typeof UPDATE_ALL_ISSUE_REQUESTS;
-  userDotAddress: string;
-  issueRequests: Issue[];
-}
 export interface UpdateIssuePeriod {
   type: typeof UPDATE_ISSUE_PERIOD;
   period: number;
 }
 
 export type IssueActions =
-    | ResetIssueWizard
     | StoreIssueRequest
-    | AddIssueRequest
-    | UpdateIssueRequest
     | ChangeAddress
     | InitState
-    | UpdateAllIssueRequests
-    | ChangeSelectedIssue
     | UpdateIssuePeriod;
 
 // VAULT

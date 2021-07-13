@@ -11,7 +11,8 @@ const PAGES = Object.freeze({
   DASHBOARD_RELAY: '/dashboard/relay',
   DASHBOARD: '/dashboard',
   VAULT: '/vault',
-  FEEDBACK: '/feedback'
+  FEEDBACK: '/feedback',
+  REQUESTS: '/requests'
 });
 
 const QUERY_PARAMETERS = Object.freeze({

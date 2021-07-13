@@ -5,21 +5,17 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { BTCAmount } from '@interlay/monetary-js';
 
-import IssueForm from './issue/IssueForm';
-import RedeemForm from './redeem/RedeemForm';
+import IssueForm from './IssueForm';
+import RedeemForm from './RedeemForm';
 import TransferForm from './TransferForm';
 import BurnForm from './BurnForm';
-import IssueRequestsTable from './issue/IssueRequestsTable';
-import RedeemRequestsTable from './redeem/RedeemRequestsTable';
 import MainContainer from 'parts/MainContainer';
 import Tabs, {
   Tab,
   TabPanel
 } from 'components/Tabs';
-import useUpdateIssueRequests from 'services/use-update-issue-requests';
-import useUpdateRedeemRequests from 'services/use-update-redeem-requests';
 import { StoreType } from 'common/types/util.types';
-import useQuery from 'utils/hooks/use-query';
+import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters, { QueryParameters } from 'utils/hooks/use-update-query-parameters';
 import TAB_IDS from 'utils/constants/tab-ids';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
@@ -51,20 +47,11 @@ const Home = (): JSX.Element | null => {
   const { t } = useTranslation();
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
 
-  const query = useQuery();
+  const query = useQueryParams();
   const selectedTabId = query.get(QUERY_PARAMETERS.TAB);
   const updateQueryParameters = useUpdateQueryParameters();
 
   const [burnable, setBurnable] = React.useState(false);
-
-  /**
-   * TODO:
-   * - Should avoid using redux.
-   * - Could merge fetching issue and redeem transactions
-   * or at least should use SWR caching strategy (https or react-query).
-   */
-  useUpdateIssueRequests(0, 100, 10000);
-  useUpdateRedeemRequests(0, 100, 10000);
 
   const updateQueryParametersRef = React.useRef<(newQueryParameters: QueryParameters) => void>();
   React.useEffect(() => {
@@ -203,8 +190,6 @@ const Home = (): JSX.Element | null => {
           )}
         </div>
       </div>
-      {selectedTabId === TAB_IDS.issue && <IssueRequestsTable />}
-      {selectedTabId === TAB_IDS.redeem && <RedeemRequestsTable />}
     </MainContainer>
   );
 };

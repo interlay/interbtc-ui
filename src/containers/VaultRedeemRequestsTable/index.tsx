@@ -34,25 +34,33 @@ import {
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { REQUEST_TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
+import { RedeemColumns } from '@interlay/interbtc-index-client';
 import * as constants from '../../constants';
 import STATUSES from 'utils/constants/statuses';
-import { Issue, IssueStatus } from '@interlay/interbtc';
+import { Redeem, RedeemStatus } from '@interlay/interbtc';
 
 interface Props {
-  totalIssueRequests: number;
+  totalRedeemRequests: number;
+  vaultAddress: string;
 }
 
-const IssueRequestsTable = ({
-  totalIssueRequests
+const VaultRedeemRequestsTable = ({
+  totalRedeemRequests,
+  vaultAddress
 }: Props): JSX.Element | null => {
   const query = useQueryParams();
   const selectedPage = Number(query.get(QUERY_PARAMETERS.PAGE)) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
   const statsApi = useInterbtcIndex();
-  const [data, setData] = React.useState<Issue[]>([]);
+  const [data, setData] = React.useState<Redeem[]>([]);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
   const { t } = useTranslation();
+
+  const redeemRequestFilter = React.useMemo(
+    () => [{ column: RedeemColumns.VaultId, value: vaultAddress }], // filter requests by vault address
+    [vaultAddress]
+  );
 
   React.useEffect(() => {
     if (!statsApi) return;
@@ -64,10 +72,11 @@ const IssueRequestsTable = ({
     try {
       (async () => {
         setStatus(STATUSES.PENDING);
-        const response = await statsApi.getIssues({
+        const response = await statsApi.getFilteredRedeems({
           page: selectedPageIndex,
           perPage: REQUEST_TABLE_PAGE_LIMIT,
-          network: constants.BITCOIN_NETWORK as BitcoinNetwork
+          network: constants.BITCOIN_NETWORK as BitcoinNetwork, // Not sure why cast is necessary here, but TS complains
+          filterRedeemColumns: redeemRequestFilter
         });
         setStatus(STATUSES.RESOLVED);
         setData(response);
@@ -79,11 +88,19 @@ const IssueRequestsTable = ({
   }, [
     statsApi,
     selectedPage,
+    redeemRequestFilter,
     handleError
   ]);
 
   const columns = React.useMemo(
     () => [
+      {
+        Header: t('id'),
+        accessor: 'id',
+        classNames: [
+          'text-center'
+        ]
+      },
       {
         Header: t('date'),
         accessor: 'creationTimestamp',
@@ -99,24 +116,17 @@ const IssueRequestsTable = ({
         }
       },
       {
-        Header: t('issue_page.amount'),
-        accessor: 'amountInterBTC',
-        classNames: [
-          'text-right'
-        ]
-      },
-      {
-        Header: t('issue_page.parachain_block'),
+        Header: t('vault.creation_block'),
         accessor: 'creationBlock',
         classNames: [
           'text-right'
         ]
       },
       {
-        Header: t('issue_page.vault_dot_address'),
-        accessor: 'vaultDOTAddress',
+        Header: t('user'),
+        accessor: 'userDOTAddress',
         classNames: [
-          'text-left'
+          'text-center'
         ],
         Cell: function FormattedCell({ value }: {value: string}) {
           return (
@@ -127,8 +137,15 @@ const IssueRequestsTable = ({
         }
       },
       {
-        Header: t('issue_page.vault_btc_address'),
-        accessor: 'vaultBTCAddress',
+        Header: t('issue_page.amount'),
+        accessor: 'amountBTC',
+        classNames: [
+          'text-right'
+        ]
+      },
+      {
+        Header: t('redeem_page.btc_destination_address'),
+        accessor: 'userBTCAddress',
         classNames: [
           'text-left'
         ],
@@ -156,14 +173,14 @@ const IssueRequestsTable = ({
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }: {value: IssueStatus}) {
+        Cell: function FormattedCell({ value }: {value: RedeemStatus}) {
           return (
             <StatusCell
               status={{
-                completed: value === IssueStatus.Completed,
-                cancelled: value === IssueStatus.Cancelled,
-                isExpired: value === IssueStatus.Expired,
-                reimbursed: false
+                completed: value === RedeemStatus.Completed,
+                cancelled: value === RedeemStatus.Retried,
+                isExpired: value === RedeemStatus.Expired,
+                reimbursed: value === RedeemStatus.Reimbursed
               }} />
           );
         }
@@ -192,7 +209,7 @@ const IssueRequestsTable = ({
   };
 
   const selectedPageIndex = selectedPage - 1;
-  const pageCount = Math.ceil(totalIssueRequests / REQUEST_TABLE_PAGE_LIMIT);
+  const pageCount = Math.ceil(totalRedeemRequests / REQUEST_TABLE_PAGE_LIMIT);
 
   return (
     <InterlayTableContainer className='space-y-6'>
@@ -201,7 +218,7 @@ const IssueRequestsTable = ({
           'text-2xl',
           'font-bold'
         )}>
-        {t('issue_page.recent_requests')}
+        {t('redeem_requests')}
       </h2>
       {(status === STATUSES.IDLE || status === STATUSES.PENDING) && (
         <div
@@ -278,7 +295,7 @@ const IssueRequestsTable = ({
   );
 };
 
-export default withErrorBoundary(IssueRequestsTable, {
+export default withErrorBoundary(VaultRedeemRequestsTable, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();

@@ -18,7 +18,6 @@ interface CustomInterBTCFieldProps {
 }
 
 type Ref = HTMLInputElement;
-
 const InterBTCField = React.forwardRef<Ref, CustomInterBTCFieldProps & InterlayInputProps>(({
   id,
   label,
