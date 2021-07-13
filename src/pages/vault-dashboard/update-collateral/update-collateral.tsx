@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateCollateralAction, updateCollateralizationAction } from '../../../common/actions/vault.actions';
-import { dotToPlanck, roundTwoDecimals } from '@interlay/interbtc';
+import { CurrencyIdLiteral, dotToPlanck, roundTwoDecimals } from '@interlay/interbtc';
 import { StoreType } from '../../../common/types/util.types';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
@@ -66,7 +66,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
       }
 
       const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const balanceLockedDOT = await window.polkaBTC.collateral.balanceLocked(vaultId);
+      const balanceLockedDOT = await window.polkaBTC.tokens.balanceLocked(CurrencyIdLiteral.DOT, vaultId);
       dispatch(updateCollateralAction(balanceLockedDOT.toString()));
       let collateralization;
       try {

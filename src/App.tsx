@@ -32,7 +32,6 @@ import Layout from 'parts/Layout';
 import Home from 'pages/Home';
 import Dashboard from 'pages/dashboard/dashboard.page';
 import VaultDashboard from 'pages/vault-dashboard/vault-dashboard.page';
-import StakedRelayer from 'pages/staked-relayer/staked-relayer.page';
 import VaultsDashboard from 'pages/dashboard/vaults/vaults.dashboard.page';
 import IssueRequests from 'pages/dashboard/IssueRequests';
 import RedeemRequests from 'pages/dashboard/RedeemRequests';
@@ -364,9 +363,6 @@ function App(): JSX.Element {
             // TODO: should use loading spinner instead of `Loading...`
             <React.Suspense fallback={<div>Loading...</div>}>
               <Switch location={location}>
-                <Route path={PAGES.STAKED_RELAYER}>
-                  <StakedRelayer />
-                </Route>
                 <Route path={PAGES.DASHBOARD_VAULTS}>
                   <VaultsDashboard />
                 </Route>

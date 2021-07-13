@@ -246,7 +246,7 @@
       "total_redeems": "Executed redeems",
       "success_rate": "Success rate",
       "total_redeemed_chart": "Total BTC redeemed",
-      "per_day_redeemed_chart": "BTC redeemed per day",
+      "per_day_redeemed_chart": "BTC redeemed per day"
     },
     "relay": {
       "btc_relay": "BTC Relay",

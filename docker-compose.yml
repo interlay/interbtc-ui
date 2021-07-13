@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   polkabtc:
-    image: 'registry.gitlab.com/interlay/btc-parachain:0-7-2-a06ada7d-1622023912'
+    image: 'registry.gitlab.com/interlay/interbtc:master-bc3fbfa9-1624755169'
     command:
       - btc-parachain
       - --unsafe-rpc-external
@@ -58,25 +58,8 @@ services:
       - --index-unspendables
     ports:
       - '3002:3002'
-  staked_relayer:
-    # only start staked relayer after mining to prevent long catch-up
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:0-7-2'
-    command:
-      - staked-relayer
-      - --keyring
-      - eve
-      - --btc-parachain-url
-      - "ws://polkabtc:9944"
-      - --auto-fund-with-faucet-url
-      - "[::0]:3035"
-    environment: &client-env
-      BITCOIN_RPC_URL: http://bitcoind:18443
-      BITCOIN_RPC_USER: rpcuser
-      BITCOIN_RPC_PASS: rpcpassword
-      RUST_LOG: info
-    restart: unless-stopped
   oracle:
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/oracle:0-7-2'
+    image: 'registry.gitlab.com/interlay/interbtc-clients/oracle:master-590b9de9-1624871268'
     command:
       - oracle
       - --keyring
@@ -87,7 +70,7 @@ services:
       RUST_LOG: info
     restart: unless-stopped
   faucet:
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/faucet:0-7-2'
+    image: 'registry.gitlab.com/interlay/interbtc-clients/faucet:master-590b9de9-1624871271'
     command:
       - faucet
       - --keyring
@@ -106,7 +89,7 @@ services:
       - '3035:3035'
     restart: unless-stopped
   vault:
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/vault:0-7-2'
+    image: 'registry.gitlab.com/interlay/interbtc-clients/vault:master-590b9de9-1624871268'
     command:
       - /bin/sh
       - -c
@@ -116,32 +99,12 @@ services:
         # and also to ensure that the issue period and redeem period are set
         sleep 10
         vault --keyring=charlie --auto-register-with-collateral 100000000000000 --btc-parachain-url 'ws://polkabtc:9944'
-    environment:
-      <<: *client-env
+    environment: &client-env
+      BITCOIN_RPC_URL: http://bitcoind:18443
+      BITCOIN_RPC_USER: rpcuser
+      BITCOIN_RPC_PASS: rpcpassword
+      RUST_LOG: info
     restart: unless-stopped
-  testdata_gen:
-    image: 'registry.gitlab.com/interlay/polkabtc-clients/testdata-gen:0-7-2'
-    command:
-      - /bin/sh
-      - -c
-      - |
-        echo "Sleeping..."
-        sleep 3
-        testdata-gen --btc-parachain-url 'ws://polkabtc:9944' --keyring=alice set-issue-period --period=2000
-        testdata-gen --btc-parachain-url 'ws://polkabtc:9944' --keyring=alice set-redeem-period --period=2000
-
-        # wait for the vault to register
-        sleep 9
-        # NOTE: bitcoin-cli not installed on image
-        ALICE_ADDRESS="bcrt1q56l7a4g3hluklqmxs89wj8dkpazemfykwfkz4x"
-        testdata-gen --btc-parachain-url 'ws://polkabtc:9944' --keyring=bob set-exchange-rate --exchange-rate=385523187
-        testdata-gen --btc-parachain-url 'ws://polkabtc:9944' --keyring=alice request-issue --issue-amount=10000000 --vault=dave
-        REDEEM_ID=$$(testdata-gen --btc-parachain-url 'ws://polkabtc:9944' --keyring=alice request-redeem --redeem-amount=1000000 --btc-address=$${ALICE_ADDRESS} --vault=dave)
-        # testdata-gen --btc-parachain-url 'ws://polkabtc:9944' --keyring=alice execute-redeem --redeem-id=$${REDEEM_ID}
-    environment:
-      <<: *client-env
-    ports:
-      - '3033:3033'
   postgres:
     image: 'postgres:13'
     environment:
@@ -161,7 +124,7 @@ services:
     depends_on:
       - postgres
   polkabtc_stats:
-    image: 'registry.gitlab.com/interlay/polkabtc-stats:master-d64d4c6-1624030216'
+    image: 'registry.gitlab.com/interlay/polkabtc-stats:master-4937a9a-1625671429'
     restart: always
     depends_on:
       - postgres
