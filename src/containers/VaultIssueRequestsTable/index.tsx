@@ -9,7 +9,7 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { BitcoinNetwork } from '@interlay/interbtc-index-client';
+import { BitcoinNetwork, IssueColumns } from '@interlay/interbtc-index-client';
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
@@ -40,10 +40,12 @@ import { Issue, IssueStatus } from '@interlay/interbtc';
 
 interface Props {
   totalIssueRequests: number;
+  vaultAddress: string;
 }
 
-const IssueRequestsTable = ({
-  totalIssueRequests
+const VaultIssueRequestsTable = ({
+  totalIssueRequests,
+  vaultAddress
 }: Props): JSX.Element | null => {
   const query = useQueryParams();
   const selectedPage = Number(query.get(QUERY_PARAMETERS.PAGE)) || 1;
@@ -53,6 +55,11 @@ const IssueRequestsTable = ({
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
   const { t } = useTranslation();
+
+  const issueRequestFilter = React.useMemo(
+    () => [{ column: IssueColumns.VaultId, value: vaultAddress }], // filter requests by vault address
+    [vaultAddress]
+  );
 
   React.useEffect(() => {
     if (!statsApi) return;
@@ -64,10 +71,11 @@ const IssueRequestsTable = ({
     try {
       (async () => {
         setStatus(STATUSES.PENDING);
-        const response = await statsApi.getIssues({
+        const response = await statsApi.getFilteredIssues({
           page: selectedPageIndex,
           perPage: REQUEST_TABLE_PAGE_LIMIT,
-          network: constants.BITCOIN_NETWORK as BitcoinNetwork
+          network: constants.BITCOIN_NETWORK as BitcoinNetwork, // Not sure why cast is necessary here, but TS complains
+          filterIssueColumns: issueRequestFilter
         });
         setStatus(STATUSES.RESOLVED);
         setData(response);
@@ -79,11 +87,19 @@ const IssueRequestsTable = ({
   }, [
     statsApi,
     selectedPage,
+    issueRequestFilter,
     handleError
   ]);
 
   const columns = React.useMemo(
     () => [
+      {
+        Header: t('id'),
+        accessor: 'id',
+        classNames: [
+          'text-center'
+        ]
+      },
       {
         Header: t('date'),
         accessor: 'creationTimestamp',
@@ -99,24 +115,17 @@ const IssueRequestsTable = ({
         }
       },
       {
-        Header: t('issue_page.amount'),
-        accessor: 'amountInterBTC',
-        classNames: [
-          'text-right'
-        ]
-      },
-      {
-        Header: t('issue_page.parachain_block'),
+        Header: t('vault.creation_block'),
         accessor: 'creationBlock',
         classNames: [
           'text-right'
         ]
       },
       {
-        Header: t('issue_page.vault_dot_address'),
-        accessor: 'vaultDOTAddress',
+        Header: t('user'),
+        accessor: 'userDOTAddress',
         classNames: [
-          'text-left'
+          'text-center'
         ],
         Cell: function FormattedCell({ value }: {value: string}) {
           return (
@@ -125,6 +134,20 @@ const IssueRequestsTable = ({
             </>
           );
         }
+      },
+      {
+        Header: t('issue_page.amount'),
+        accessor: 'amountInterBTC',
+        classNames: [
+          'text-right'
+        ]
+      },
+      {
+        Header: t('griefing_collateral'),
+        accessor: 'griefingCollateral',
+        classNames: [
+          'text-right'
+        ]
       },
       {
         Header: t('issue_page.vault_btc_address'),
@@ -201,7 +224,7 @@ const IssueRequestsTable = ({
           'text-2xl',
           'font-bold'
         )}>
-        {t('issue_page.recent_requests')}
+        {t('issue_requests')}
       </h2>
       {(status === STATUSES.IDLE || status === STATUSES.PENDING) && (
         <div
@@ -278,7 +301,7 @@ const IssueRequestsTable = ({
   );
 };
 
-export default withErrorBoundary(IssueRequestsTable, {
+export default withErrorBoundary(VaultIssueRequestsTable, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();

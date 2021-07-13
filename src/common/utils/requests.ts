@@ -5,9 +5,7 @@ import {
   satToBTC,
   planckToDOT,
   stripHexPrefix,
-  ReplaceRequestExt as ParachainReplaceRequest,
-  Issue,
-  Redeem
+  ReplaceRequestExt as ParachainReplaceRequest
 } from '@interlay/interbtc';
 import Big from 'big.js';
 
@@ -40,27 +38,6 @@ const parseReplaceRequestStatus = (status: ReplaceRequestStatus): string => {
     return 'Cancelled';
   }
   return '';
-};
-
-interface DynamicObject {
-  [key: string]: Issue[] | Redeem[];
-}
-
-const mapToArray = (map: Map<string, Issue[] | Redeem[]>): DynamicObject => {
-  const result: DynamicObject = {};
-  map.forEach((value, key) => {
-    result[key] = value;
-  });
-  return result;
-};
-
-const arrayToMap = (arr: Issue[][] | Redeem[][]): Map<string, Issue[] | Redeem[]> => {
-  const map = new Map();
-  // eslint-disable-next-line guard-for-in
-  for (const key in arr) {
-    map.set(key, arr[key]);
-  }
-  return map;
 };
 
 interface ParsableParachainTypes {
@@ -109,4 +86,4 @@ function convertParachainTypes(parachainObject: ParsableParachainTypes): [string
   return [parachainObject.btc_address, parsedPolkaBTC.toString(), parsedDOT.toString()];
 }
 
-export { parachainToUIReplaceRequests, arrayToMap, mapToArray };
+export { parachainToUIReplaceRequests };

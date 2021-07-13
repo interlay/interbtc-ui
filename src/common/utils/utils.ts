@@ -3,13 +3,9 @@ import {
   bitcoin,
   reverseEndianness,
   Issue,
-  Redeem,
-  CurrencyIdLiteral
+  Redeem
 } from '@interlay/interbtc';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from '../../constants';
-import { Dispatch } from 'redux';
-import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from '../actions/general.actions';
 import Big from 'big.js';
 import { TableDisplayParams, RelayedBlock } from '../types/util.types';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
@@ -128,25 +124,6 @@ function defaultTableDisplayParams<Column>(): TableDisplayParams<Column> {
   };
 }
 
-const updateBalances = async (
-  dispatch: Dispatch,
-  address: string,
-  currentBalanceDOT: string,
-  currentBalancePolkaBTC: string
-): Promise<void> => {
-  const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-  const balancePolkaBTC = (await window.polkaBTC.tokens.balance(CurrencyIdLiteral.INTERBTC, accountId)).toString();
-  const balanceDOT = (await window.polkaBTC.tokens.balance(CurrencyIdLiteral.DOT, accountId)).toString();
-
-  if (currentBalanceDOT !== balanceDOT) {
-    dispatch(updateBalanceDOTAction(balanceDOT));
-  }
-
-  if (currentBalancePolkaBTC !== balancePolkaBTC) {
-    dispatch(updateBalancePolkaBTCAction(balancePolkaBTC));
-  }
-};
-
 const requestsInStore = (
   storeRequests: Issue[] | Redeem[],
   parachainRequests: Issue[] | Redeem[]
@@ -198,7 +175,6 @@ export {
   reverseHashEndianness,
   defaultBlockData,
   defaultTableDisplayParams,
-  updateBalances,
   requestsInStore,
   copyToClipboard,
   getRandomVaultIdWithCapacity,

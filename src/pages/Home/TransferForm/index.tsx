@@ -23,14 +23,8 @@ import {
   ParachainStatus,
   StoreType
 } from 'common/types/util.types';
-import {
-  getUsdAmount,
-  updateBalances
-} from 'common/utils/utils';
-import {
-  updateBalancePolkaBTCAction,
-  showAccountModalAction
-} from 'common/actions/general.actions';
+import { getUsdAmount } from 'common/utils/utils';
+import { showAccountModalAction } from 'common/actions/general.actions';
 import STATUSES from 'utils/constants/statuses';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as AcalaLogoIcon } from 'assets/img/acala-logo.svg';
@@ -42,7 +36,7 @@ import { CurrencyIdLiteral } from '@interlay/interbtc';
 const INTER_BTC_AMOUNT = 'inter-btc-amount';
 const DOT_ADDRESS = 'dot-address';
 
-type TransferForm = {
+type TransferFormData = {
   [INTER_BTC_AMOUNT]: string;
   [DOT_ADDRESS]: string;
 }
@@ -105,7 +99,7 @@ const NETWORK_ITEMS = [
   }
 ];
 
-const Transfer = (): JSX.Element => {
+const TransferForm = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -123,7 +117,7 @@ const Transfer = (): JSX.Element => {
     formState: { errors },
     watch,
     reset
-  } = useForm<TransferForm>({
+  } = useForm<TransferFormData>({
     mode: 'onChange'
   });
   const interBTCAmount = watch(INTER_BTC_AMOUNT);
@@ -142,7 +136,7 @@ const Transfer = (): JSX.Element => {
     setNetworkModalOpen(false);
   };
 
-  const onSubmit = async (data: TransferForm) => {
+  const onSubmit = async (data: TransferFormData) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
       await window.polkaBTC.tokens.transfer(
@@ -150,9 +144,6 @@ const Transfer = (): JSX.Element => {
         data[DOT_ADDRESS],
         new Big(data[INTER_BTC_AMOUNT])
       );
-      // TODO: should be managed by a dedicated cache mechanism
-      dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(data[INTER_BTC_AMOUNT])).toString()));
-      updateBalances(dispatch, data[DOT_ADDRESS], balanceDOT, balancePolkaBTC);
       setSubmitStatus(STATUSES.RESOLVED);
       toast.success(t('transfer_page.successfully_transferred'));
       reset({
@@ -165,7 +156,7 @@ const Transfer = (): JSX.Element => {
     }
   };
 
-  const validatePolkaBTCAmount = (value: number): string | undefined => {
+  const validateForm = (value: number): string | undefined => {
     if (Number(balancePolkaBTC) === 0) {
       return t('insufficient_funds');
     }
@@ -209,7 +200,7 @@ const Transfer = (): JSX.Element => {
           {t('transfer_page.transfer_interbtc')}
         </h4>
         <InterBTCField
-          id='polka-btc-amount'
+          id={INTER_BTC_AMOUNT}
           name={INTER_BTC_AMOUNT}
           type='number'
           label='InterBTC'
@@ -220,7 +211,7 @@ const Transfer = (): JSX.Element => {
               value: true,
               message: t('redeem_page.please_enter_amount')
             },
-            validate: value => validatePolkaBTCAmount(value)
+            validate: value => validateForm(value)
           })}
           approxUSD={`≈ $ ${getUsdAmount(interBTCAmount || '0.00', usdPrice)}`}
           error={!!errors[INTER_BTC_AMOUNT]}
@@ -319,4 +310,4 @@ const Transfer = (): JSX.Element => {
   );
 };
 
-export default Transfer;
+export default TransferForm;

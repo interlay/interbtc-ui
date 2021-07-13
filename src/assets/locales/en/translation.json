@@ -189,7 +189,7 @@
     "error_max_premium_redeem": "Could not find Vault below premium redeem threshold with sufficient locked InterBTC. Please try a different Vault. The maximum amount for premium redeem is {{maxPremiumRedeem}} InterBTC.",
     "compensation_success": "Compensation successful",
     "compensation_notice": "Your redeem request failed. You agreed to accept compensation and retry with another vault.",
-    "burn_success": "Burn successful",
+    "reimburse_success": "Reimburse successful",
     "burn_notice": "Your redeem request failed. You decided to burn InterBTC in return for DOT.",
     "burned": " burned",
     "recover_receive_dot": "You received",

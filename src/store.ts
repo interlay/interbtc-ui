@@ -5,7 +5,6 @@ import { createLogger } from 'redux-logger';
 import { applyMiddleware, createStore } from 'redux';
 import { initializeState } from './common/actions/general.actions';
 import { FaucetClient, InterBTCAPI } from '@interlay/interbtc';
-import { mapToArray, arrayToMap } from './common/utils/requests';
 import * as constants from './constants';
 
 declare global {
@@ -36,13 +35,11 @@ export const getInitialState = (): StoreType => {
     },
     issue: {
       address: '',
-      issueRequests: new Map(),
       issuePeriod: 86400
     },
     redeem: {
-      premiumRedeem: false,
       address: '',
-      redeemRequests: new Map()
+      premiumRedeem: false
     },
     vault: {
       requests: [],
@@ -72,17 +69,7 @@ export const loadState = (): StoreType => {
         relayerLoaded: false
       }
     };
-    return {
-      ...deserializedState,
-      issue: {
-        ...deserializedState.issue,
-        issueRequests: arrayToMap(deserializedState.issue.issueRequests)
-      },
-      redeem: {
-        ...deserializedState.redeem,
-        redeemRequests: arrayToMap(deserializedState.redeem.redeemRequests)
-      }
-    };
+    return deserializedState;
   } catch (error) {
     setTimeout(
       () => toast.error('Local storage is disabled. In order to use platform please enable local storage'),
@@ -95,18 +82,7 @@ export const loadState = (): StoreType => {
 
 export const saveState = (store: AppState): void => {
   try {
-    const preparedState = {
-      ...store,
-      issue: {
-        ...store.issue,
-        issueRequests: mapToArray(store.issue.issueRequests)
-      },
-      redeem: {
-        ...store.redeem,
-        redeemRequests: mapToArray(store.redeem.redeemRequests)
-      }
-    };
-    const serializedState = JSON.stringify(preparedState);
+    const serializedState = JSON.stringify(store);
     localStorage.setItem(constants.STORE_NAME, serializedState);
   } catch (error) {
     setTimeout(

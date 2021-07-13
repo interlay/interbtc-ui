@@ -13,7 +13,7 @@ import { BitcoinNetwork } from '@interlay/interbtc-index-client';
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
-import Pagination from 'components/Pagination';
+import InterlayPagination from 'components/UI/InterlayPagination';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -24,7 +24,7 @@ import InterlayTable, {
 } from 'components/UI/InterlayTable';
 import StatusCell from 'components/UI/InterlayTable/StatusCell';
 import InterlayLink from 'components/UI/InterlayLink';
-import useQuery from 'utils/hooks/use-query';
+import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
@@ -32,12 +32,11 @@ import {
   formatDateTimePrecise
 } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
+import { REQUEST_TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
 import * as constants from '../../constants';
 import STATUSES from 'utils/constants/statuses';
 import { Redeem, RedeemStatus } from '@interlay/interbtc';
-
-const PAGE_SIZE = 20;
 
 interface Props {
   totalRedeemRequests: number;
@@ -46,8 +45,8 @@ interface Props {
 const RedeemRequestsTable = ({
   totalRedeemRequests
 }: Props): JSX.Element | null => {
-  const query = useQuery();
-  const selectedPage: number = Number(query.get(QUERY_PARAMETERS.PAGE)) || 1;
+  const query = useQueryParams();
+  const selectedPage = Number(query.get(QUERY_PARAMETERS.PAGE)) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
   const statsApi = useInterbtcIndex();
   const [data, setData] = React.useState<Redeem[]>([]);
@@ -67,7 +66,7 @@ const RedeemRequestsTable = ({
         setStatus(STATUSES.PENDING);
         const response = await statsApi.getRedeems({
           page: selectedPageIndex,
-          perPage: PAGE_SIZE,
+          perPage: REQUEST_TABLE_PAGE_LIMIT,
           network: constants.BITCOIN_NETWORK as BitcoinNetwork
         });
         setStatus(STATUSES.RESOLVED);
@@ -186,11 +185,14 @@ const RedeemRequestsTable = ({
     }
   );
 
-  const handlePageChange = (newPage: number) => {
+  const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number }) => {
     updateQueryParameters({
-      [QUERY_PARAMETERS.PAGE]: newPage.toString()
+      [QUERY_PARAMETERS.PAGE]: (newSelectedPageIndex + 1).toString()
     });
   };
+
+  const selectedPageIndex = selectedPage - 1;
+  const pageCount = Math.ceil(totalRedeemRequests / REQUEST_TABLE_PAGE_LIMIT);
 
   return (
     <InterlayTableContainer className='space-y-6'>
@@ -258,13 +260,19 @@ const RedeemRequestsTable = ({
           </InterlayTbody>
         </InterlayTable>
       )}
-      {totalRedeemRequests > 0 && (
-        // TODO: error-prone in UI/UX
-        <Pagination
-          pageSize={PAGE_SIZE}
-          total={totalRedeemRequests}
-          current={selectedPage}
-          onChange={handlePageChange} />
+      {pageCount > 0 && (
+        <div
+          className={clsx(
+            'flex',
+            'justify-end'
+          )}>
+          <InterlayPagination
+            pageCount={pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={handlePageChange}
+            forcePage={selectedPageIndex} />
+        </div>
       )}
     </InterlayTableContainer>
   );

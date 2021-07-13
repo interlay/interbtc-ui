@@ -55,7 +55,8 @@ import * as constants from './constants';
 import startFetchingLiveData from 'common/live-data/live-data';
 import {
   StoreType,
-  ParachainStatus
+  ParachainStatus,
+  StoreState
 } from 'common/types/util.types';
 import {
   isPolkaBtcLoaded,
@@ -108,6 +109,9 @@ const Challenges = React.lazy(() =>
 const Feedback = React.lazy(() =>
   import(/* webpackChunkName: 'feedback' */ 'pages/Feedback')
 );
+const Requests = React.lazy(() =>
+  import(/* webpackChunkName: 'requests' */ 'pages/Requests')
+);
 const NoMatch = React.lazy(() =>
   import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
 );
@@ -128,7 +132,7 @@ function App(): JSX.Element {
   } = useSelector((state: StoreType) => state.general);
   const [isLoading, setIsLoading] = React.useState(true);
   const dispatch = useDispatch();
-  const store = useStore();
+  const store: StoreState = useStore();
 
   // Load the main InterBTC API - connection to the InterBTC bridge
   const loadPolkaBTC = React.useCallback(async (): Promise<void> => {
@@ -392,6 +396,9 @@ function App(): JSX.Element {
                 </Route>
                 <Route path={PAGES.FEEDBACK}>
                   <Feedback />
+                </Route>
+                <Route path={PAGES.REQUESTS}>
+                  <Requests />
                 </Route>
                 <Route
                   path={PAGES.HOME}
