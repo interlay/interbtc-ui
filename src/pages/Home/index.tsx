@@ -5,12 +5,12 @@ import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
 
-import IssueSteps from './issue/issue-steps';
+import IssueForm from './issue/IssueForm';
+import RedeemForm from './redeem/RedeemForm';
+import TransferForm from './TransferForm';
+import BurnForm from './BurnForm';
 import IssueRequestsTable from './issue/IssueRequestsTable';
-import RedeemSteps from './redeem/redeem-steps';
 import RedeemRequestsTable from './redeem/RedeemRequestsTable';
-import Transfer from './Transfer';
-import Burn from './Burn';
 import MainContainer from 'parts/MainContainer';
 import Tabs, {
   Tab,
@@ -49,12 +49,10 @@ const TAB_ITEMS_WITH_BURN = [
 
 const Home = (): JSX.Element | null => {
   const { t } = useTranslation();
-
-  const issueStep = useSelector((state: StoreType) => state.issue.step);
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
 
   const query = useQuery();
-  const selectedTabId = query.get(QUERY_PARAMETERS.tab);
+  const selectedTabId = query.get(QUERY_PARAMETERS.TAB);
   const updateQueryParameters = useUpdateQueryParameters();
 
   const [burnable, setBurnable] = React.useState(false);
@@ -82,7 +80,7 @@ const Home = (): JSX.Element | null => {
     case selectedTabId === TAB_IDS.burn && !burnable:
     case selectedTabId && !tabIdValues.includes(selectedTabId):
       updateQueryParametersRef.current({
-        [QUERY_PARAMETERS.tab]: TAB_IDS.issue
+        [QUERY_PARAMETERS.TAB]: TAB_IDS.issue
       });
     }
   }, [
@@ -113,11 +111,9 @@ const Home = (): JSX.Element | null => {
 
   const handleTabSelect = (index: number) => () => {
     updateQueryParameters({
-      [QUERY_PARAMETERS.tab]: TAB_ITEMS[index].id
+      [QUERY_PARAMETERS.TAB]: TAB_ITEMS[index].id
     });
   };
-
-  const tabsHidden = issueStep !== 'ENTER_BTC_AMOUNT' && selectedTabId === TAB_IDS.issue;
 
   return (
     <MainContainer>
@@ -137,80 +133,72 @@ const Home = (): JSX.Element | null => {
             'p-10',
             'rounded-lg'
           )}>
-          {tabsHidden ? (
-            <h4
+          <>
+            <Tabs
               className={clsx(
-                'text-2xl',
-                'text-interlayCalifornia',
-                'font-medium',
-                'text-center',
-                'my-3'
+                'grid',
+                { 'grid-cols-3': TAB_ITEMS.length === 3 },
+                { 'grid-cols-4': TAB_ITEMS.length === 4 },
+                'rounded-lg',
+                'bg-interlayPaleSky-200'
               )}>
-              {t('issue_page.deposit')}
-            </h4>
-          ) : (
-            <>
-              <Tabs
-                className={clsx(
-                  'grid',
-                  { 'grid-cols-3': TAB_ITEMS.length === 3 },
-                  { 'grid-cols-4': TAB_ITEMS.length === 4 },
-                  'rounded-lg',
-                  'bg-interlayPaleSky-200'
-                )}>
-                {TAB_ITEMS.map((tabItem, index) => (
+              {TAB_ITEMS.map((tabItem, index) => {
+                const selected = selectedTabIndex === index;
+
+                return (
                   <Tab
                     anchorClassName={clsx(
                       'font-medium',
                       'px-4',
                       'py-2.5',
                       'uppercase',
-                      { 'rounded-lg text-white transition': selectedTabId === tabItem.id },
-                      { 'bg-interlayDenim': tabItem.id === TAB_IDS.issue && selectedTabId === TAB_IDS.issue },
-                      { 'bg-interlayDenim': tabItem.id === TAB_IDS.redeem && selectedTabId === TAB_IDS.redeem },
-                      { 'bg-interlayDenim': tabItem.id === TAB_IDS.transfer && selectedTabId === TAB_IDS.transfer },
-                      { 'bg-interlayDenim': tabItem.id === TAB_IDS.burn && selectedTabId === TAB_IDS.burn },
-                      { 'opacity-30': selectedTabId !== tabItem.id }
+                      selected ?
+                        clsx(
+                          'rounded-lg',
+                          'text-white',
+                          'transition',
+                          'bg-interlayDenim'
+                        ) : 'opacity-30'
                     )}
                     key={tabItem.id}
                     id={tabItem.id}
                     onSelect={handleTabSelect(index)}>
                     {t(tabItem.label)}
                   </Tab>
-                ))}
-              </Tabs>
-              <hr
-                className={clsx(
-                  'border-t-2',
-                  'my-2',
-                  'border-interlayDenim'
-                )} />
-            </>
-          )}
+                );
+              })}
+            </Tabs>
+            <hr
+              className={clsx(
+                'border-t-2',
+                'my-2',
+                'border-interlayDenim'
+              )} />
+          </>
           <TabPanel
             index={0}
             selectedIndex={selectedTabIndex}
             id={TAB_IDS.issue}>
-            <IssueSteps />
+            <IssueForm />
           </TabPanel>
           <TabPanel
             index={1}
             selectedIndex={selectedTabIndex}
             id={TAB_IDS.redeem}>
-            <RedeemSteps />
+            <RedeemForm />
           </TabPanel>
           <TabPanel
             index={2}
             selectedIndex={selectedTabIndex}
             id={TAB_IDS.transfer}>
-            <Transfer />
+            <TransferForm />
           </TabPanel>
           {burnable && (
             <TabPanel
               index={3}
               selectedIndex={selectedTabIndex}
               id={TAB_IDS.burn}>
-              <Burn />
+              <BurnForm />
             </TabPanel>
           )}
         </div>

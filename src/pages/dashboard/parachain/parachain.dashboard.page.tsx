@@ -3,8 +3,6 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
 import ParachainSecurity from '../components/parachain-security';
-import ActiveStakedRelayers from '../components/active-staked-relayers';
-import StakedRelayerTable from '../staked-relayer-table/staked-relayer-table';
 import { DashboardStatusUpdateInfo } from '../../../common/types/util.types';
 import useInterbtcIndex from '../../../common/hooks/use-interbtc-index';
 import { defaultTableDisplayParams, formatDateTimePrecise } from '../../../common/utils/utils';
@@ -111,7 +109,6 @@ export default function ParachainDashboard(): ReactElement {
           <hr className='border-interlayDenim' />
           <div className='parachain-graphs-container dashboard-graphs-container'>
             <ParachainSecurity />
-            <ActiveStakedRelayers />
           </div>
           <div style={{ margin: '40px 0px' }}>
             <div>
@@ -133,7 +130,6 @@ export default function ParachainDashboard(): ReactElement {
               headings={tableHeadings}
               dataPointDisplayer={tableStatusUpdateRow} />
           </div>
-          <StakedRelayerTable />
         </div>
       </div>
     </MainContainer>

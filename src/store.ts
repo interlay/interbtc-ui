@@ -9,11 +9,11 @@ import { mapToArray, arrayToMap } from './common/utils/requests';
 import * as constants from './constants';
 
 declare global {
-    interface Window {
-        polkaBTC: InterBTCAPI;
-        faucet: FaucetClient;
-        isFetchingActive: boolean;
-    }
+  interface Window {
+    polkaBTC: InterBTCAPI;
+    faucet: FaucetClient;
+    isFetchingActive: boolean;
+  }
 }
 
 export const getInitialState = (): StoreType => {
@@ -36,16 +36,12 @@ export const getInitialState = (): StoreType => {
     },
     issue: {
       address: '',
-      step: 'ENTER_BTC_AMOUNT',
-      id: '',
       issueRequests: new Map(),
       issuePeriod: 86400
     },
     redeem: {
       premiumRedeem: false,
       address: '',
-      step: 'AMOUNT_AND_ADDRESS',
-      id: '',
       redeemRequests: new Map()
     },
     vault: {

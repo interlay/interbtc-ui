@@ -79,6 +79,6 @@ const InterBTCField = React.forwardRef<Ref, CustomInterBTCFieldProps & InterlayI
     </div>
   );
 });
-InterBTCField.displayName = 'PolkaBTCField';
+InterBTCField.displayName = 'InterBTCField';
 
 export default InterBTCField;

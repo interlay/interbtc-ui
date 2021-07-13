@@ -49,7 +49,7 @@ const VaultIssueRequestsTable = ({
   vaultAddress
 }: Props): JSX.Element | null => {
   const query = useQuery();
-  const selectedPage: number = Number(query.get(QUERY_PARAMETERS.page)) || 1;
+  const selectedPage: number = Number(query.get(QUERY_PARAMETERS.PAGE)) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
   const statsApi = useInterbtcIndex();
   const [data, setData] = React.useState<Issue[]>([]);
@@ -211,7 +211,7 @@ const VaultIssueRequestsTable = ({
 
   const handlePageChange = (newPage: number) => {
     updateQueryParameters({
-      [QUERY_PARAMETERS.page]: newPage.toString()
+      [QUERY_PARAMETERS.PAGE]: newPage.toString()
     });
   };
 
