@@ -1,10 +1,11 @@
-import { RedeemRequest } from '../types/redeem.types';
-import { IssueRequest } from '../types/issue.types';
 import {
   uint8ArrayToString,
   bitcoin,
-  reverseEndianness
-} from '@interlay/polkabtc';
+  reverseEndianness,
+  Issue,
+  Redeem,
+  CurrencyIdLiteral
+} from '@interlay/interbtc';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from '../../constants';
 import { Dispatch } from 'redux';
@@ -134,8 +135,8 @@ const updateBalances = async (
   currentBalancePolkaBTC: string
 ): Promise<void> => {
   const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-  const balancePolkaBTC = (await window.polkaBTC.treasury.balance(accountId)).toString();
-  const balanceDOT = (await window.polkaBTC.collateral.balance(accountId)).toString();
+  const balancePolkaBTC = (await window.polkaBTC.tokens.balance(CurrencyIdLiteral.INTERBTC, accountId)).toString();
+  const balanceDOT = (await window.polkaBTC.tokens.balance(CurrencyIdLiteral.DOT, accountId)).toString();
 
   if (currentBalanceDOT !== balanceDOT) {
     dispatch(updateBalanceDOTAction(balanceDOT));
@@ -147,15 +148,15 @@ const updateBalances = async (
 };
 
 const requestsInStore = (
-  storeRequests: IssueRequest[] | RedeemRequest[],
-  parachainRequests: IssueRequest[] | RedeemRequest[]
+  storeRequests: Issue[] | Redeem[],
+  parachainRequests: Issue[] | Redeem[]
 ): boolean => {
   if (storeRequests.length !== parachainRequests.length) return false;
   let inStore = true;
 
-  storeRequests.forEach((storeRequest: IssueRequest | RedeemRequest) => {
+  storeRequests.forEach((storeRequest: Issue | Redeem) => {
     let found = false;
-    parachainRequests.forEach((parachainRequest: IssueRequest | RedeemRequest) => {
+    parachainRequests.forEach((parachainRequest: Issue | Redeem) => {
       if (storeRequest.id === parachainRequest.id) {
         found = true;
       }

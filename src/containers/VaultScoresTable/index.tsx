@@ -1,4 +1,3 @@
-
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import * as React from 'react';
@@ -16,7 +15,7 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { VaultData } from '@interlay/interbtc-stats-client'; // TODO: should do tree-shaking
+import { VaultData } from '@interlay/interbtc-index-client'; // TODO: should do tree-shaking
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
@@ -31,7 +30,7 @@ import InterlayTable, {
 import DefaultColumnFilter from 'components/UI/InterlayTable/DefaultColumnFilter';
 import NumberRangeColumnFilter from 'components/UI/InterlayTable/NumberRangeColumnFilter';
 import SortBy, { SortByContainer } from 'components/UI/InterlayTable/SortBy';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import usePolkabtcStats from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
 import STATUSES from 'utils/constants/statuses';
 

@@ -1,4 +1,3 @@
-
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import * as React from 'react';
@@ -10,7 +9,7 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { BtcNetworkName } from '@interlay/interbtc-stats-client';
+import { BitcoinNetwork } from '@interlay/interbtc-index-client';
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
@@ -27,16 +26,16 @@ import StatusCell from 'components/UI/InterlayTable/StatusCell';
 import InterlayLink from 'components/UI/InterlayLink';
 import useQuery from 'utils/hooks/use-query';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   shortAddress,
   formatDateTimePrecise
 } from 'common/utils/utils';
-import { DashboardRequestInfo } from 'common/types/redeem.types';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
 import * as constants from '../../constants';
 import STATUSES from 'utils/constants/statuses';
+import { Redeem, RedeemStatus } from '@interlay/interbtc';
 
 const PAGE_SIZE = 20;
 
@@ -48,10 +47,10 @@ const RedeemRequestsTable = ({
   totalRedeemRequests
 }: Props): JSX.Element | null => {
   const query = useQuery();
-  const selectedPage: number = query.get(QUERY_PARAMETERS.PAGE) || 1;
+  const selectedPage: number = Number(query.get(QUERY_PARAMETERS.PAGE)) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
-  const statsApi = usePolkabtcStats();
-  const [data, setData] = React.useState<DashboardRequestInfo[]>([]);
+  const statsApi = useInterbtcIndex();
+  const [data, setData] = React.useState<Redeem[]>([]);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
   const { t } = useTranslation();
@@ -69,7 +68,7 @@ const RedeemRequestsTable = ({
         const response = await statsApi.getRedeems({
           page: selectedPageIndex,
           perPage: PAGE_SIZE,
-          network: constants.BITCOIN_NETWORK as BtcNetworkName
+          network: constants.BITCOIN_NETWORK as BitcoinNetwork
         });
         setStatus(STATUSES.RESOLVED);
         setData(response);
@@ -88,11 +87,11 @@ const RedeemRequestsTable = ({
     () => [
       {
         Header: t('date'),
-        accessor: 'timestamp',
+        accessor: 'creationTimestamp',
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }) {
+        Cell: function FormattedCell({ value }: {value: number}) {
           return (
             <>
               {formatDateTimePrecise(new Date(Number(value)))}
@@ -102,25 +101,25 @@ const RedeemRequestsTable = ({
       },
       {
         Header: t('redeem_page.amount'),
-        accessor: 'amountPolkaBTC',
+        accessor: 'amountBTC',
         classNames: [
           'text-right'
         ]
       },
       {
         Header: t('parachain_block'),
-        accessor: 'creation',
+        accessor: 'creationBlock',
         classNames: [
           'text-right'
         ]
       },
       {
         Header: t('issue_page.vault_dot_address'),
-        accessor: 'vaultDotAddress',
+        accessor: 'vaultDOTAddress',
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }) {
+        Cell: function FormattedCell({ value }: {value: string}) {
           return (
             <>
               {shortAddress(value)}
@@ -130,11 +129,11 @@ const RedeemRequestsTable = ({
       },
       {
         Header: t('redeem_page.output_BTC_address'),
-        accessor: 'btcAddress',
+        accessor: 'userBTCAddress',
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }) {
+        Cell: function FormattedCell({ value }: {value: string}) {
           return (
             <InterlayLink
               className={clsx(
@@ -154,17 +153,18 @@ const RedeemRequestsTable = ({
       },
       {
         Header: t('status'),
+        accessor: 'status',
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell(props) {
+        Cell: function FormattedCell({ value }: {value: RedeemStatus}) {
           return (
             <StatusCell
               status={{
-                completed: props.row.original.completed,
-                cancelled: props.row.original.cancelled,
-                isExpired: props.row.original.isExpired,
-                reimbursed: props.row.original.reimbursed
+                completed: value === RedeemStatus.Completed,
+                cancelled: value === RedeemStatus.Retried,
+                isExpired: value === RedeemStatus.Expired,
+                reimbursed: value === RedeemStatus.Reimbursed
               }} />
           );
         }
@@ -188,7 +188,7 @@ const RedeemRequestsTable = ({
 
   const handlePageChange = (newPage: number) => {
     updateQueryParameters({
-      [QUERY_PARAMETERS.PAGE]: newPage
+      [QUERY_PARAMETERS.PAGE]: newPage.toString()
     });
   };
 

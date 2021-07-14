@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +8,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 
 import Tooltip from 'components/Tooltip';
 import Timer from 'components/Timer';
-import { IssueRequest } from 'common/types/issue.types';
+import { Issue } from '@interlay/interbtc';
 import { StoreType } from 'common/types/util.types';
 import {
   copyToClipboard,
@@ -18,7 +17,7 @@ import {
 } from 'common/utils/utils';
 
 interface Props {
-  request: IssueRequest;
+  request: Issue;
 }
 
 const BTCPaymentPendingStatusUI = ({
@@ -27,17 +26,17 @@ const BTCPaymentPendingStatusUI = ({
   const { t } = useTranslation();
   const { prices } = useSelector((state: StoreType) => state.general);
   const { issuePeriod } = useSelector((state: StoreType) => state.issue);
-  const amount = new Big(request.requestedAmountPolkaBTC).add(new Big(request.fee)).toString();
+  const amountBTCToSend = new Big(request.amountInterBTC).add(request.bridgeFee).toString();
   const [initialLeftSeconds, setInitialLeftSeconds] = React.useState<number>();
 
   React.useEffect(() => {
-    if (!request.timestamp) return;
+    if (!request.creationTimestamp) return;
 
-    const requestTimestamp = Math.floor(new Date(Number(request.timestamp)).getTime() / 1000);
+    const requestTimestamp = Math.floor(new Date(Number(request.creationTimestamp)).getTime() / 1000);
     const theInitialLeftSeconds = requestTimestamp + issuePeriod - Math.floor(Date.now() / 1000);
     setInitialLeftSeconds(theInitialLeftSeconds);
   }, [
-    request.timestamp,
+    request.creationTimestamp,
     issuePeriod
   ]);
 
@@ -55,7 +54,7 @@ const BTCPaymentPendingStatusUI = ({
         <div
           className='text-xl'>
           {t('send')}
-          <span className='text-interlayCalifornia'>&nbsp;{request.amountBTC}&nbsp;</span>
+          <span className='text-interlayCalifornia'>&nbsp;{amountBTCToSend}&nbsp;</span>
           BTC
         </div>
         <span
@@ -63,7 +62,7 @@ const BTCPaymentPendingStatusUI = ({
             'text-textSecondary',
             'block'
           )}>
-          {`≈ $ ${getUsdAmount(request.amountBTC, prices.bitcoin.usd)}`}
+          {`≈ $ ${getUsdAmount(amountBTCToSend, prices.bitcoin.usd)}`}
         </span>
       </div>
       <div>
@@ -116,12 +115,12 @@ const BTCPaymentPendingStatusUI = ({
           {t('issue_page.warning_mbtc_wallets')}
         </span>
         <span className='text-interlayCalifornia'>
-          {displayBtcAmount(new Big(request.amountBTC).mul(1000).toString())}&nbsp;mBTC
+          {displayBtcAmount(new Big(amountBTCToSend).mul(1000).toString())}&nbsp;mBTC
         </span>
       </p>
       <QRCode
         className='mx-auto'
-        value={`bitcoin:${request.vaultBTCAddress}?amount=${amount}`} />
+        value={`bitcoin:${request.vaultBTCAddress}?amount=${amountBTCToSend}`} />
       <div
         className={clsx(
           'text-textSecondary'

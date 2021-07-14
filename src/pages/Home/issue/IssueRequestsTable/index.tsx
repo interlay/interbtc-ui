@@ -1,4 +1,3 @@
-
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import * as React from 'react';
@@ -26,6 +25,7 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import InterlayLink from 'components/UI/InterlayLink';
+import { Issue, IssueStatus } from '@interlay/interbtc';
 import useQuery from 'utils/hooks/use-query';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
@@ -34,7 +34,6 @@ import {
   formatDateTimePrecise,
   shortTxId
 } from 'common/utils/utils';
-import { IssueRequestStatus } from 'common/types/issue.types';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 
@@ -72,11 +71,11 @@ const IssueRequestsTable = (): JSX.Element => {
     () => [
       {
         Header: t('issue_page.updated'),
-        accessor: 'timestamp',
+        accessor: 'creationTimestamp',
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }) {
+        Cell: function FormattedCell({ value }: { value: number }) {
           return (
             <>
               {value ? formatDateTimePrecise(new Date(Number(value))) : t('pending')}
@@ -86,14 +85,17 @@ const IssueRequestsTable = (): JSX.Element => {
       },
       {
         Header: `${t('issue_page.amount')} (InterBTC)`,
-        accessor: 'issuedAmountBtc',
+        accessor: 'amountInterBTC',
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell(props) {
+        Cell: function FormattedCell(props: any) {
           return (
             <>
-              {props.row.original.issuedAmountBtc || props.row.original.requestedAmountPolkaBTC}
+              {(props.row.original.executedAmountBTC && props.row.original.executedAmountBTC !== '0') ?
+                props.row.original.executedAmountBTC :
+                props.row.original.amountInterBTC
+              }
             </>
           );
         }
@@ -104,10 +106,11 @@ const IssueRequestsTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell(props) {
+        Cell: function FormattedCell(props: any) {
+          const issueRequest: Issue = props.row.original;
           return (
             <>
-              {props.row.original.btcTxId ? (
+              {issueRequest.btcTxId ? (
                 <InterlayLink
                   className={clsx(
                     'text-interlayDenim',
@@ -115,19 +118,19 @@ const IssueRequestsTable = (): JSX.Element => {
                     'inline-flex',
                     'items-center'
                   )}
-                  href={`${BTC_TRANSACTION_API}${props.row.original.btcTxId}`}
+                  href={`${BTC_TRANSACTION_API}${issueRequest.btcTxId}`}
                   onClick={event => {
                     event.stopPropagation();
                   }}
                   target='_blank'
                   rel='noopener noreferrer'>
-                  <span>{shortTxId(props.row.original.btcTxId)}</span>
+                  <span>{shortTxId(issueRequest.btcTxId)}</span>
                   <FaExternalLinkAlt />
                 </InterlayLink>
               ) : (
                 (
-                  props.row.original.status === IssueRequestStatus.Expired ||
-                  props.row.original.status === IssueRequestStatus.Cancelled
+                  issueRequest.status === IssueStatus.Expired ||
+                  issueRequest.status === IssueStatus.Cancelled
                 ) ? (
                     t('redeem_page.failed')
                   ) : (
@@ -144,12 +147,12 @@ const IssueRequestsTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell(props) {
+        Cell: function FormattedCell({ value }: {value: number}) {
           return (
             <>
-              {props.row.original.btcTxId === '' ?
+              {value === undefined ?
                 t('not_applicable') :
-                Math.max(props.row.original.confirmations, 0)}
+                Math.max(value, 0)}
             </>
           );
         }
@@ -160,20 +163,20 @@ const IssueRequestsTable = (): JSX.Element => {
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }) {
+        Cell: function FormattedCell({ value }: {value: IssueStatus}) {
           let icon;
           let notice;
           let colorClassName;
           switch (value) {
-          case IssueRequestStatus.RequestedRefund:
-          case IssueRequestStatus.Completed: {
+          case IssueStatus.RequestedRefund:
+          case IssueStatus.Completed: {
             icon = <FaCheck />;
             notice = t('completed');
             colorClassName = 'text-interlayConifer';
             break;
           }
-          case IssueRequestStatus.Cancelled:
-          case IssueRequestStatus.Expired: {
+          case IssueStatus.Cancelled:
+          case IssueStatus.Expired: {
             icon = <FaRegTimesCircle />;
             notice = t('cancelled');
             colorClassName = 'text-interlayCinnabar';

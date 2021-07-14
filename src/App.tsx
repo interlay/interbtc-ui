@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import {
   Switch,
@@ -23,16 +22,16 @@ import {
 import keyring from '@polkadot/ui-keyring';
 import {
   FaucetClient,
-  createPolkabtcAPI,
-  PolkaBTCAPI
-} from '@interlay/polkabtc';
-import { StatusCode } from '@interlay/polkabtc/build/interfaces';
+  createInterbtcAPI,
+  InterBTCAPI,
+  CurrencyIdLiteral
+} from '@interlay/interbtc';
+import { StatusCode } from '@interlay/interbtc/build/interfaces';
 
 import Layout from 'parts/Layout';
 import Home from 'pages/Home';
 import Dashboard from 'pages/dashboard/dashboard.page';
 import VaultDashboard from 'pages/vault-dashboard/vault-dashboard.page';
-import StakedRelayer from 'pages/staked-relayer/staked-relayer.page';
 import VaultsDashboard from 'pages/dashboard/vaults/vaults.dashboard.page';
 import IssueRequests from 'pages/dashboard/IssueRequests';
 import RedeemRequests from 'pages/dashboard/RedeemRequests';
@@ -64,7 +63,6 @@ import {
   initGeneralDataAction,
   setInstalledExtensionAction,
   isFaucetLoaded,
-  isStakedRelayerLoaded,
   isVaultClientLoaded,
   updateBalancePolkaBTCAction,
   updateBalanceDOTAction
@@ -114,10 +112,10 @@ const NoMatch = React.lazy(() =>
   import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
 );
 
-function connectToParachain(): Promise<PolkaBTCAPI> {
-  return createPolkabtcAPI(
+function connectToParachain(): Promise<InterBTCAPI> {
+  return createInterbtcAPI(
     constants.PARACHAIN_URL,
-    constants.BITCOIN_NETWORK === 'regtest' ? constants.BITCOIN_REGTEST_URL : constants.BITCOIN_NETWORK
+    constants.BITCOIN_NETWORK
   );
 }
 
@@ -181,19 +179,6 @@ function App(): JSX.Element {
         console.log('[App React.useEffect] error.message => ', error.message);
       }
     })();
-
-    // Maybe load the staked relayer client - only if the current address is also registered as a vault
-    (async () => {
-      try {
-        dispatch(isStakedRelayerLoaded(false));
-        const stakedRelayers = await window.polkaBTC.stakedRelayer.list();
-        dispatch(isStakedRelayerLoaded(stakedRelayers.includes(id)));
-      } catch (error) {
-        // TODO: should add error handling
-        console.log('No InterBTC staked relayer found for the account in the connected Polkadot wallet.');
-        console.log('[App React.useEffect] error.message => ', error.message);
-      }
-    })();
   }, [
     polkaBtcLoaded,
     address,
@@ -213,8 +198,8 @@ function App(): JSX.Element {
           bitcoinHeight,
           state
         ] = await Promise.all([
-          window.polkaBTC.treasury.total(),
-          window.polkaBTC.collateral.totalLocked(),
+          window.polkaBTC.tokens.total(CurrencyIdLiteral.INTERBTC),
+          window.polkaBTC.tokens.total(CurrencyIdLiteral.DOT),
           window.polkaBTC.btcRelay.getLatestBlockHeight(),
           window.polkaBTC.electrsAPI.getLatestBlockHeight(),
           window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain()
@@ -319,11 +304,11 @@ function App(): JSX.Element {
     if (!address) return;
 
     let unsubscribeFromCollateral: () => void;
-    let unsubscribeFromTreasury: () => void;
+    let unsubscribeFromWrapped: () => void;
     (async () => {
       try {
         unsubscribeFromCollateral =
-          await window.polkaBTC.collateral.subscribeToBalance(address, (_, balance: Big) => {
+          await window.polkaBTC.tokens.subscribeToBalance(CurrencyIdLiteral.DOT, address, (_, balance: Big) => {
             const newDOTBalance = balance.toString();
             if (newDOTBalance !== balanceDOT) {
               dispatch(updateBalanceDOTAction(newDOTBalance));
@@ -336,8 +321,8 @@ function App(): JSX.Element {
 
     (async () => {
       try {
-        unsubscribeFromTreasury =
-          await window.polkaBTC.treasury.subscribeToBalance(address, (_, balance: Big) => {
+        unsubscribeFromWrapped =
+          await window.polkaBTC.tokens.subscribeToBalance(CurrencyIdLiteral.INTERBTC, address, (_, balance: Big) => {
             const newPolkaBTCBalance = balance.toString();
             if (newPolkaBTCBalance !== balancePolkaBTC) {
               dispatch(updateBalancePolkaBTCAction(newPolkaBTCBalance));
@@ -352,8 +337,8 @@ function App(): JSX.Element {
       if (unsubscribeFromCollateral) {
         unsubscribeFromCollateral();
       }
-      if (unsubscribeFromTreasury) {
-        unsubscribeFromTreasury();
+      if (unsubscribeFromWrapped) {
+        unsubscribeFromWrapped();
       }
     };
   }, [
@@ -378,9 +363,6 @@ function App(): JSX.Element {
             // TODO: should use loading spinner instead of `Loading...`
             <React.Suspense fallback={<div>Loading...</div>}>
               <Switch location={location}>
-                <Route path={PAGES.STAKED_RELAYER}>
-                  <StakedRelayer />
-                </Route>
                 <Route path={PAGES.DASHBOARD_VAULTS}>
                   <VaultsDashboard />
                 </Route>

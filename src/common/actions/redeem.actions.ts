@@ -1,3 +1,4 @@
+import { Redeem } from '@interlay/interbtc';
 import {
   RESET_REDEEM_WIZARD,
   SET_REDEEM_REQUESTS,
@@ -18,9 +19,8 @@ import {
   RedeemExpired,
   ReimburseRedeemRequest
 } from '../types/actions.types';
-import { RedeemRequest } from '../types/redeem.types';
 
-export const setRedeemRequestsAction = (requests: RedeemRequest[]): SetRedeemRequests => ({
+export const setRedeemRequestsAction = (requests: Redeem[]): SetRedeemRequests => ({
   type: SET_REDEEM_REQUESTS,
   requests
 });
@@ -29,26 +29,26 @@ export const resetRedeemWizardAction = (): ResetRedeemWizard => ({
   type: RESET_REDEEM_WIZARD
 });
 
-export const addRedeemRequestAction = (request: RedeemRequest): AddRedeemRequest => ({
+export const addRedeemRequestAction = (request: Redeem): AddRedeemRequest => ({
   type: ADD_REDEEM_REQUEST,
   request
 });
 
-export const updateRedeemRequestAction = (request: RedeemRequest): UpdateRedeemRequest => ({
+export const updateRedeemRequestAction = (request: Redeem): UpdateRedeemRequest => ({
   type: UPDATE_REDEEM_REQUEST,
   request
 });
 
 export const updateAllRedeemRequestsAction = (
   userDotAddress: string,
-  redeemRequests: RedeemRequest[]
+  redeemRequests: Redeem[]
 ): UpdateAllRedeemRequests => ({
   type: UPDATE_ALL_REDEEM_REQUESTS,
   userDotAddress,
   redeemRequests
 });
 
-export const redeemExpiredAction = (request: RedeemRequest): RedeemExpired => ({
+export const redeemExpiredAction = (request: Redeem): RedeemExpired => ({
   type: REDEEM_EXPIRED,
   request
 });

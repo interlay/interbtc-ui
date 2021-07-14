@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -20,19 +19,18 @@ import {
   shortAddress
 } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import {
-  IssueRequestStatus,
-  IssueRequest
-} from 'common/types/issue.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
+import { Issue, IssueStatus, satToBTC } from '@interlay/interbtc';
+import Big from 'big.js';
+import BN from 'bn.js';
 
-const renderModalStatusPanel = (request: IssueRequest) => {
+const renderModalStatusPanel = (request: Issue) => {
   switch (request.status) {
-  case IssueRequestStatus.PendingWithBtcTxNotFound: {
+  case IssueStatus.PendingWithBtcTxNotFound: {
     return <BTCPaymentPendingStatusUI request={request} />;
   }
-  case IssueRequestStatus.RequestedRefund: {
+  case IssueStatus.RequestedRefund: {
     return <WhoopsStatusUI request={request} />;
   }
   default: {
@@ -63,6 +61,13 @@ const IssueModal = ({
   const request = userIssueRequests.filter(request => request.id === requestId)[0];
 
   if (!request) return null;
+
+  const amountInterBTC = (request.executedAmountBTC && request.executedAmountBTC !== '0') ?
+    request.executedAmountBTC :
+    request.amountInterBTC;
+  const amountBTCSent = request.btcAmountSubmittedByUser ?
+    satToBTC(new BN(request.btcAmountSubmittedByUser)) :
+    new Big(request.amountInterBTC).add(request.bridgeFee);
 
   return (
     <InterlayModal
@@ -127,7 +132,7 @@ const IssueModal = ({
                   'space-x-1'
                 )}>
                 <span className='text-5xl'>
-                  {request.issuedAmountBtc || request.requestedAmountPolkaBTC}
+                  {amountInterBTC}
                 </span>
                 <span className='text-2xl'>
                   InterBTC
@@ -139,7 +144,7 @@ const IssueModal = ({
                   'block'
                 )}>
                 {`≈ $ ${getUsdAmount(
-                  request.issuedAmountBtc || request.requestedAmountPolkaBTC || '0',
+                  amountInterBTC || '0',
                   prices.bitcoin.usd
                 )}`}
               </span>
@@ -156,9 +161,9 @@ const IssueModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayBtcAmount(request.fee)}
+                value={displayBtcAmount(request.bridgeFee)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(request.fee, prices.bitcoin.usd)} />
+                approxUSD={getUsdAmount(request.bridgeFee, prices.bitcoin.usd)} />
               {/* TODO: could componentize */}
               <hr
                 className={clsx(
@@ -177,12 +182,9 @@ const IssueModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayBtcAmount(request.amountBTC)}
+                value={displayBtcAmount(amountBTCSent)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(
-                  request.issuedAmountBtc || request.requestedAmountPolkaBTC,
-                  prices.bitcoin.usd
-                )} />
+                approxUSD={getUsdAmount(amountBTCSent, prices.bitcoin.usd)} />
             </div>
             <div className='space-y-4'>
               {/* TODO: could componentize */}
@@ -207,7 +209,7 @@ const IssueModal = ({
                   {t('issue_page.parachain_block')}
                 </span>
                 <span className='font-medium'>
-                  {request.creation}
+                  {request.creationBlock}
                 </span>
               </div>
               <div

@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import Big from 'big.js';
@@ -13,12 +12,12 @@ import RequestWrapper from 'pages/Home/RequestWrapper';
 import PriceInfo from 'pages/Home/PriceInfo';
 import InterlayLink from 'components/UI/InterlayLink';
 import { getUsdAmount } from 'common/utils/utils';
-import { RedeemRequest } from 'common/types/redeem.types';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
+import { Redeem } from '@interlay/interbtc';
 
 interface Props {
-  request: RedeemRequest;
+  request: Redeem;
 }
 
 const RetriedRedeemRequest = ({
@@ -46,8 +45,8 @@ const RetriedRedeemRequest = ({
           window.polkaBTC.oracle.getExchangeRate()
         ]);
 
-        const interBTCAmount = request ? new Big(request.amountPolkaBTC) : new Big(0);
-        const theBurnDOTAmount = interBTCAmount.mul(btcDotRate);
+        const BTCAmount = request ? new Big(request.amountBTC) : new Big(0);
+        const theBurnDOTAmount = BTCAmount.mul(btcDotRate);
         const thePunishmentDOTAmount = theBurnDOTAmount.mul(new Big(punishmentFee));
         setPunishmentDOTAmount(thePunishmentDOTAmount);
       } catch (error) {

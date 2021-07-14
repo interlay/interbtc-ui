@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -7,10 +6,10 @@ import clsx from 'clsx';
 import RequestWrapper from 'pages/Home/RequestWrapper';
 import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import { RedeemRequest } from 'common/types/redeem.types';
+import { Redeem } from '@interlay/interbtc';
 
 interface Props {
-  request: RedeemRequest;
+  request: Redeem;
 }
 
 const DefaultRedeemRequest = ({
@@ -74,7 +73,7 @@ const DefaultRedeemRequest = ({
       </div>
       <p className='space-x-1'>
         <span className='text-textSecondary'>{t('issue_page.btc_transaction')}:</span>
-        <span className='font-medium'>{shortAddress(request.btcTxId)}</span>
+        <span className='font-medium'>{shortAddress(request.btcTxId || '')}</span>
       </p>
     </RequestWrapper>
   );

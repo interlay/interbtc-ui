@@ -5,13 +5,14 @@ import { FaExternalLinkAlt } from 'react-icons/fa';
 import { getAccents } from '../dashboardcolors';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
-import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
-import { planckToDOT } from '@interlay/polkabtc';
+import useInterbtcIndex from '../../../common/hooks/use-interbtc-index';
+import { planckToDOT } from '@interlay/interbtc';
 import LineChartComponent from './line-chart-component';
 import { useTranslation } from 'react-i18next';
 import { getUsdAmount } from '../../../common/utils/utils';
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
+import BN from 'bn.js';
 
 type CollateralLockedProps = {
   linkButton?: boolean;
@@ -22,11 +23,11 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
   const { prices } = useSelector((state: StoreType) => state.general);
 
   const { t } = useTranslation();
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcIndex();
 
   const [cumulativeCollateralPerDay, setCumulativeCollateralPerDay] = useState(
     // eslint-disable-next-line no-array-constructor
-    new Array<{ date: number; amount: string }>()
+    new Array<{ date: number; amount: number }>()
   );
 
   const fetchCollateralLastDays = useMemo(
@@ -75,7 +76,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
             { beginAtZero: true, precision: 0 }
           ]}
           data={
-            cumulativeCollateralPerDay.slice(1).map(dataPoint => Number(planckToDOT(dataPoint.amount.toString())))
+            cumulativeCollateralPerDay.slice(1).map(dataPoint => Number(planckToDOT(new BN(dataPoint.amount))))
           } />
       </div>
     </DashboardCard>

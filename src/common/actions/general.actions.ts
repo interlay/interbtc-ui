@@ -1,6 +1,5 @@
 import {
   IS_POLKA_BTC_LOADED,
-  IS_STAKED_RELAYER_LOADED,
   CHANGE_ADDRESS,
   INIT_STATE,
   INIT_GENERAL_DATA_ACTION,
@@ -14,7 +13,6 @@ import {
   UPDATE_HEIGHTS,
   UPDATE_TOTALS,
   IsPolkaBtcLoaded,
-  IsStakedRelayerLoaded,
   ChangeAddress,
   InitState,
   InitGeneralDataAction,
@@ -32,11 +30,6 @@ import { StoreType, ParachainStatus, Prices } from '../types/util.types';
 
 export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
   type: IS_POLKA_BTC_LOADED,
-  isLoaded
-});
-
-export const isStakedRelayerLoaded = (isLoaded = false): IsStakedRelayerLoaded => ({
-  type: IS_STAKED_RELAYER_LOADED,
   isLoaded
 });
 

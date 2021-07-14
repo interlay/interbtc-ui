@@ -1,3 +1,4 @@
+import { Issue } from '@interlay/interbtc';
 import {
   RESET_ISSUE_WIZARD,
   ADD_ISSUE_REQUEST,
@@ -12,7 +13,6 @@ import {
   ChangeSelectedIssue,
   UpdateIssuePeriod
 } from '../types/actions.types';
-import { IssueRequest } from '../types/issue.types';
 
 // ray test touch <
 export const resetIssueWizardAction = (): ResetIssueWizard => ({
@@ -20,24 +20,24 @@ export const resetIssueWizardAction = (): ResetIssueWizard => ({
 });
 // ray test touch >
 
-export const changeSelectedIssueAction = (request: IssueRequest): ChangeSelectedIssue => ({
+export const changeSelectedIssueAction = (request: Issue): ChangeSelectedIssue => ({
   type: CHANGE_SELECTED_ISSUE,
   request
 });
 
-export const addIssueRequestAction = (request: IssueRequest): AddIssueRequest => ({
+export const addIssueRequestAction = (request: Issue): AddIssueRequest => ({
   type: ADD_ISSUE_REQUEST,
   request
 });
 
-export const updateIssueRequestAction = (request: IssueRequest): UpdateIssueRequest => ({
+export const updateIssueRequestAction = (request: Issue): UpdateIssueRequest => ({
   type: UPDATE_ISSUE_REQUEST,
   request
 });
 
 export const updateAllIssueRequestsAction = (
   userDotAddress: string,
-  issueRequests: IssueRequest[]
+  issueRequests: Issue[]
 ): UpdateAllIssueRequests => ({
   type: UPDATE_ALL_ISSUE_REQUESTS,
   userDotAddress,

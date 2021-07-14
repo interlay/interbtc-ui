@@ -1,4 +1,3 @@
-
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import * as React from 'react';
@@ -10,7 +9,7 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { BtcNetworkName } from '@interlay/interbtc-stats-client';
+import { BitcoinNetwork } from '@interlay/interbtc-index-client';
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
@@ -27,16 +26,16 @@ import StatusCell from 'components/UI/InterlayTable/StatusCell';
 import InterlayLink from 'components/UI/InterlayLink';
 import useQuery from 'utils/hooks/use-query';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   shortAddress,
   formatDateTimePrecise
 } from 'common/utils/utils';
-import { DashboardRequestInfo } from 'common/types/redeem.types';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
 import * as constants from '../../constants';
 import STATUSES from 'utils/constants/statuses';
+import { Issue, IssueStatus } from '@interlay/interbtc';
 
 const PAGE_SIZE = 20;
 
@@ -48,10 +47,10 @@ const IssueRequestsTable = ({
   totalIssueRequests
 }: Props): JSX.Element | null => {
   const query = useQuery();
-  const selectedPage: number = query.get(QUERY_PARAMETERS.PAGE) || 1;
+  const selectedPage: number = Number(query.get(QUERY_PARAMETERS.PAGE)) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
-  const statsApi = usePolkabtcStats();
-  const [data, setData] = React.useState<DashboardRequestInfo[]>([]);
+  const statsApi = useInterbtcIndex();
+  const [data, setData] = React.useState<Issue[]>([]);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
   const { t } = useTranslation();
@@ -69,7 +68,7 @@ const IssueRequestsTable = ({
         const response = await statsApi.getIssues({
           page: selectedPageIndex,
           perPage: PAGE_SIZE,
-          network: constants.BITCOIN_NETWORK as BtcNetworkName // Not sure why cast is necessary here, but TS complains
+          network: constants.BITCOIN_NETWORK as BitcoinNetwork
         });
         setStatus(STATUSES.RESOLVED);
         setData(response);
@@ -88,11 +87,11 @@ const IssueRequestsTable = ({
     () => [
       {
         Header: t('date'),
-        accessor: 'timestamp',
+        accessor: 'creationTimestamp',
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }) {
+        Cell: function FormattedCell({ value }: {value: number}) {
           return (
             <>
               {formatDateTimePrecise(new Date(Number(value)))}
@@ -102,14 +101,14 @@ const IssueRequestsTable = ({
       },
       {
         Header: t('issue_page.amount'),
-        accessor: 'amountBTC',
+        accessor: 'amountInterBTC',
         classNames: [
           'text-right'
         ]
       },
       {
         Header: t('issue_page.parachain_block'),
-        accessor: 'creation',
+        accessor: 'creationBlock',
         classNames: [
           'text-right'
         ]
@@ -120,7 +119,7 @@ const IssueRequestsTable = ({
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }) {
+        Cell: function FormattedCell({ value }: {value: string}) {
           return (
             <>
               {shortAddress(value)}
@@ -134,7 +133,7 @@ const IssueRequestsTable = ({
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }) {
+        Cell: function FormattedCell({ value }: {value: string}) {
           return (
             <InterlayLink
               className={clsx(
@@ -154,17 +153,18 @@ const IssueRequestsTable = ({
       },
       {
         Header: t('status'),
+        accessor: 'status',
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell(props) {
+        Cell: function FormattedCell({ value }: {value: IssueStatus}) {
           return (
             <StatusCell
               status={{
-                completed: props.row.original.completed,
-                cancelled: props.row.original.cancelled,
-                isExpired: props.row.original.isExpired,
-                reimbursed: props.row.original.reimbursed
+                completed: value === IssueStatus.Completed,
+                cancelled: value === IssueStatus.Cancelled,
+                isExpired: value === IssueStatus.Expired,
+                reimbursed: false
               }} />
           );
         }
@@ -188,7 +188,7 @@ const IssueRequestsTable = ({
 
   const handlePageChange = (newPage: number) => {
     updateQueryParameters({
-      [QUERY_PARAMETERS.PAGE]: newPage
+      [QUERY_PARAMETERS.PAGE]: newPage.toString()
     });
   };
 

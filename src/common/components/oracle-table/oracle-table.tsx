@@ -1,10 +1,10 @@
 import { ReactElement, useEffect, useState } from 'react';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
-import { OracleStatus } from '@interlay/interbtc-stats-client';
+import { OracleStatus } from '@interlay/interbtc-index-client';
 
 import DashboardTable, { StatusComponent, StatusCategories } from '../dashboard-table/dashboard-table';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { formatDateTime } from 'common/utils/utils';
 
 type OracleTableProps = {
@@ -12,7 +12,7 @@ type OracleTableProps = {
 };
 
 export default function OracleTable(props: OracleTableProps): ReactElement {
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcIndex();
   const [oracles, setOracles] = useState<Array<OracleStatus>>([]);
   const { t } = useTranslation();
 

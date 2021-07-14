@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -24,13 +23,10 @@ import STATUSES from 'utils/constants/statuses';
 import { StoreType } from 'common/types/util.types';
 import { updateIssueRequestAction } from 'common/actions/issue.actions';
 import { updateBalancePolkaBTCAction } from 'common/actions/general.actions';
-import {
-  IssueRequest,
-  IssueRequestStatus
-} from 'common/types/issue.types';
+import { Issue, IssueStatus } from '@interlay/interbtc';
 
 type Props = {
-  request: IssueRequest;
+  request: Issue;
 };
 
 const ConfirmedIssueRequest = ({
@@ -46,7 +42,7 @@ const ConfirmedIssueRequest = ({
   const [executeStatus, setExecuteStatus] = React.useState(STATUSES.IDLE);
   const [executeError, setExecuteError] = React.useState<Error | null>(null);
 
-  const handleExecute = (request: IssueRequest) => async () => {
+  const handleExecute = (request: Issue) => async () => {
     try {
       if (!polkaBtcLoaded) return;
 
@@ -54,12 +50,14 @@ const ConfirmedIssueRequest = ({
       await window.polkaBTC.issue.execute('0x' + request.id, request.btcTxId);
 
       const completedReq = request;
-      completedReq.status = IssueRequestStatus.Completed;
+      completedReq.status = IssueStatus.Completed;
 
       dispatch(
         updateBalancePolkaBTCAction(
           new Big(balancePolkaBTC)
-            .add(new Big(request.issuedAmountBtc || request.requestedAmountPolkaBTC))
+            .add(new Big((request.executedAmountBTC && request.executedAmountBTC !== '0') ?
+              request.executedAmountBTC :
+              request.amountInterBTC))
             .toString()
         )
       );
@@ -96,7 +94,7 @@ const ConfirmedIssueRequest = ({
           )} />
         <p className='space-x-1'>
           <span className='text-textSecondary'>{t('issue_page.btc_transaction')}:</span>
-          <span className='font-medium'>{shortAddress(request.btcTxId)}</span>
+          <span className='font-medium'>{shortAddress(request.btcTxId || '')}</span>
         </p>
         <InterlayLink
           className={clsx(
@@ -119,12 +117,12 @@ const ConfirmedIssueRequest = ({
             'text-justify',
             'text-textSecondary'
           )}>
-          {t('issue_page.receive_polkabtc_tokens')}
+          {t('issue_page.receive_interbtc_tokens')}
         </p>
         <InterlayDenimOutlinedButton
           pending={executeStatus === STATUSES.PENDING}
           onClick={handleExecute(request)}>
-          {t('issue_page.claim_polkabtc')}
+          {t('issue_page.claim_interbtc')}
         </InterlayDenimOutlinedButton>
       </RequestWrapper>
       {(executeStatus === STATUSES.REJECTED && executeError) && (

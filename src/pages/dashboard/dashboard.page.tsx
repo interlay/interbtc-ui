@@ -12,7 +12,6 @@ import ParachainSecurity from './components/parachain-security';
 import BtcRelay from './components/btc-relay';
 import OracleStatus from './components/oracle-status';
 import ActiveVaults from './components/active-vaults';
-import ActiveStakedRelayers from './components/active-staked-relayers';
 import ActiveCollators from './components/active-collators';
 import './dashboard.page.scss';
 import './dashboard-sub-page.scss';
@@ -44,7 +43,6 @@ function Dashboard(): JSX.Element {
         <BtcRelay linkButton />
         <OracleStatus linkButton />
         <ActiveVaults linkButton />
-        <ActiveStakedRelayers linkButton />
         <ActiveCollators />
       </div>
     </MainContainer>

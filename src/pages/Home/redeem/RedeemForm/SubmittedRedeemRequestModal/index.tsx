@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import {
   useSelector,
@@ -20,11 +19,11 @@ import {
   getUsdAmount
 } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import { RedeemRequest } from 'common/types/redeem.types';
 import { resetRedeemWizardAction } from 'common/actions/redeem.actions';
+import { Redeem } from '@interlay/interbtc';
 
 interface CustomProps {
-  request: RedeemRequest
+  request: Redeem
 }
 
 const SubmittedRedeemRequestModal = ({
@@ -119,7 +118,7 @@ const SubmittedRedeemRequestModal = ({
                   'text-2xl',
                   'text-center'
                 )}>
-                {`≈ $${getUsdAmount(request.amountPolkaBTC, prices.bitcoin.usd)}`}
+                {`≈ $${getUsdAmount(request.amountBTC, prices.bitcoin.usd)}`}
               </span>
             </div>
             <div>

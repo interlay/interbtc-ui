@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getAccents } from '../dashboard-colors';
-import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
+import useInterbtcIndex from '../../../common/hooks/use-interbtc-index';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
-import { satToBTC } from '@interlay/polkabtc';
+import { satToBTC } from '@interlay/interbtc';
 import LineChartComponent from './line-chart-component';
 import { useTranslation } from 'react-i18next';
 import { getUsdAmount } from '../../../common/utils/utils';
@@ -13,6 +13,7 @@ import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import { FaExternalLinkAlt } from 'react-icons/fa';
+import BN from 'bn.js';
 
 type PolkaBTCProps = {
   linkButton?: boolean;
@@ -23,7 +24,7 @@ const InterBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
   const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
 
   const { t } = useTranslation();
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcIndex();
 
   // eslint-disable-next-line no-array-constructor
   const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number }>());
@@ -90,8 +91,8 @@ const InterBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
             { position: 'right', maxTicksLimit: 6 }
           ]}
           data={[
-            cumulativeIssuesPerDay.slice(1).map(dataPoint => Number(satToBTC(dataPoint.sat.toString()))),
-            pointIssuesPerDay.slice(1).map(sat => Number(satToBTC(sat.toString())))
+            cumulativeIssuesPerDay.slice(1).map(dataPoint => Number(satToBTC(new BN(dataPoint.sat)))),
+            pointIssuesPerDay.slice(1).map(sat => Number(satToBTC(new BN(sat))))
           ]} />
       </div>
     </DashboardCard>

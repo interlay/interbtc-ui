@@ -4,7 +4,7 @@ import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutline
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { getAccents } from '../dashboard-colors';
 import LineChartComponent from './line-chart-component';
-import usePolkabtcStats from '../../../common/hooks/use-polkabtc-stats';
+import useInterbtcIndex from '../../../common/hooks/use-interbtc-index';
 import { useTranslation } from 'react-i18next';
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
@@ -14,7 +14,7 @@ type ActiveVaultsProps = {
 };
 
 const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcIndex();
   const { t } = useTranslation();
 
   // eslint-disable-next-line no-array-constructor

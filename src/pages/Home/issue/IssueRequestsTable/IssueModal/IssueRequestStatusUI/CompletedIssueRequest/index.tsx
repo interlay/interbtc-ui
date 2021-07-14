@@ -1,4 +1,3 @@
-
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { FaExternalLinkAlt } from 'react-icons/fa';
@@ -7,10 +6,10 @@ import RequestWrapper from 'pages/Home/RequestWrapper';
 import InterlayLink from 'components/UI/InterlayLink';
 import { shortAddress } from 'common/utils/utils';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
-import { IssueRequest } from 'common/types/issue.types';
+import { Issue } from '@interlay/interbtc';
 
 interface Props {
-  request: IssueRequest;
+  request: Issue;
 }
 
 const CompletedIssueRequest = ({
@@ -35,7 +34,7 @@ const CompletedIssueRequest = ({
         )}>
         <span>{t('issue_page.you_received')}</span>
         <span className='text-interlayDenim'>
-          {request.issuedAmountBtc || request.requestedAmountPolkaBTC} InterBTC
+          {request.executedAmountBTC || request.amountInterBTC} InterBTC
         </span>
       </p>
       <div
@@ -59,7 +58,7 @@ const CompletedIssueRequest = ({
             'text-interlayConifer',
             'font-medium'
           )}>
-          {request.creation}
+          {request.creationBlock}
         </span>
       </div>
       {/* TODO: could componentize */}
@@ -79,7 +78,7 @@ const CompletedIssueRequest = ({
       </InterlayLink>
       <p className='space-x-1'>
         <span className='text-textSecondary'>{t('issue_page.btc_transaction')}:</span>
-        <span className='font-medium'>{shortAddress(request.btcTxId)}</span>
+        <span className='font-medium'>{shortAddress(request.btcTxId || '')}</span>
       </p>
       <InterlayLink
         className={clsx(

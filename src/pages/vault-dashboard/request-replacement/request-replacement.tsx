@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { btcToSat } from '@interlay/polkabtc';
+import { btcToSat } from '@interlay/interbtc';
 import Big from 'big.js';
 
 import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
@@ -35,7 +35,7 @@ export default function RequestReplacementModal(props: RequestReplacementProps):
   const onSubmit = handleSubmit(async ({ amount }) => {
     setRequestPending(true);
     try {
-      if (btcToSat(amount.toString()) === undefined) {
+      if (btcToSat(new Big(amount)) === undefined) {
         throw new Error('Amount to convert is less than 1 satoshi.');
       }
       const dustValue = await window.polkaBTC.redeem.getDustValue();

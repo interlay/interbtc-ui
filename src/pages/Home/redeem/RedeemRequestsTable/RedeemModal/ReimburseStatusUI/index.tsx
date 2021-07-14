@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { toast } from 'react-toastify';
 import {
@@ -21,14 +20,14 @@ import ErrorFallback from 'components/ErrorFallback';
 import { getUsdAmount } from 'common/utils/utils';
 import STATUSES from 'utils/constants/statuses';
 import { StoreType } from 'common/types/util.types';
-import { RedeemRequest } from 'common/types/redeem.types';
 import {
   retryRedeemRequestAction,
   reimburseRedeemRequestAction
 } from 'common/actions/redeem.actions';
+import { Redeem } from '@interlay/interbtc';
 
 interface Props {
-  request: RedeemRequest | undefined;
+  request: Redeem | undefined;
   onClose: () => void;
 }
 
@@ -63,7 +62,7 @@ const ReimburseStatusUI = ({
           window.polkaBTC.vaults.getPunishmentFee(),
           window.polkaBTC.oracle.getExchangeRate()
         ]);
-        const amountPolkaBTC = request ? new Big(request.amountPolkaBTC) : new Big(0);
+        const amountPolkaBTC = request ? new Big(request.amountBTC) : new Big(0);
         setDOTAmount(amountPolkaBTC.mul(btcDotRate));
         setPunishmentDOT(amountPolkaBTC.mul(btcDotRate).mul(new Big(punishment)));
       } catch (error) {
@@ -86,8 +85,7 @@ const ReimburseStatusUI = ({
 
     try {
       setRetryStatus(STATUSES.PENDING);
-      const redeemId = window.polkaBTC.api.createType('H256', '0x' + request.id);
-      await window.polkaBTC.redeem.cancel(redeemId, false);
+      await window.polkaBTC.redeem.cancel(request.id, false);
       dispatch(retryRedeemRequestAction(request.id));
       onClose();
       toast.success(t('redeem_page.successfully_cancelled_redeem'));
@@ -109,8 +107,7 @@ const ReimburseStatusUI = ({
 
     try {
       setBurnStatus(STATUSES.PENDING);
-      const redeemId = window.polkaBTC.api.createType('H256', '0x' + request.id);
-      await window.polkaBTC.redeem.cancel(redeemId, true);
+      await window.polkaBTC.redeem.cancel(request.id, true);
       dispatch(reimburseRedeemRequestAction(request.id));
       onClose();
       toast.success(t('redeem_page.successfully_cancelled_redeem'));

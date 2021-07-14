@@ -1,30 +1,26 @@
-
 import CompletedIssueRequest from './CompletedIssueRequest';
 import CancelledIssueRequest from './CancelledIssueRequest';
 import ReceivedIssueRequest from './ReceivedIssueRequest';
 import ConfirmedIssueRequest from './ConfirmedIssueRequest';
-import {
-  IssueRequest,
-  IssueRequestStatus
-} from 'common/types/issue.types';
+import { Issue, IssueStatus } from '@interlay/interbtc';
 
 interface Props {
-  request: IssueRequest;
+  request: Issue;
 }
 
 const IssueRequestStatusUI = ({
   request
 }: Props): JSX.Element => {
   switch (request.status) {
-  case IssueRequestStatus.Completed:
+  case IssueStatus.Completed:
     return <CompletedIssueRequest request={request} />;
-  case IssueRequestStatus.Cancelled:
-  case IssueRequestStatus.Expired:
+  case IssueStatus.Cancelled:
+  case IssueStatus.Expired:
     return <CancelledIssueRequest />;
-  case IssueRequestStatus.PendingWithBtcTxNotIncluded:
-  case IssueRequestStatus.PendingWithTooFewConfirmations:
+  case IssueStatus.PendingWithBtcTxNotIncluded:
+  case IssueStatus.PendingWithTooFewConfirmations:
     return <ReceivedIssueRequest request={request} />;
-  case IssueRequestStatus.PendingWithEnoughConfirmations:
+  case IssueStatus.PendingWithEnoughConfirmations:
     return <ConfirmedIssueRequest request={request} />;
   default:
     throw new Error('Invalid issue request status!');

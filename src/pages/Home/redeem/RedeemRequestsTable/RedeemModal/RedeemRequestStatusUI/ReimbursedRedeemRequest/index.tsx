@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import Big from 'big.js';
@@ -12,12 +11,12 @@ import RequestWrapper from 'pages/Home/RequestWrapper';
 import PriceInfo from 'pages/Home/PriceInfo';
 import InterlayLink from 'components/UI/InterlayLink';
 import { getUsdAmount } from 'common/utils/utils';
-import { RedeemRequest } from 'common/types/redeem.types';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
+import { Redeem } from '@interlay/interbtc';
 
 interface Props {
-  request: RedeemRequest;
+  request: Redeem;
 }
 
 const ReimbursedRedeemRequest = ({
@@ -28,6 +27,7 @@ const ReimbursedRedeemRequest = ({
     polkaBtcLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
+  const [burnedBTCAmount, setBurnedBTCAmount] = React.useState(new Big(0));
   const [punishmentDOTAmount, setPunishmentDOTAmount] = React.useState(new Big(0));
   const [burnDOTAmount, setBurnDOTAmount] = React.useState(new Big(0));
   const [dotAmount, setDOTAmount] = React.useState(new Big(0));
@@ -47,10 +47,11 @@ const ReimbursedRedeemRequest = ({
           window.polkaBTC.oracle.getExchangeRate()
         ]);
 
-        const interBTCAmount = request ? new Big(request.amountPolkaBTC) : new Big(0);
-        const theBurnDOTAmount = interBTCAmount.mul(btcDotRate);
+        const burnedBTCAmount = request ? new Big(request.amountBTC).add(request.bridgeFee) : new Big(0);
+        const theBurnDOTAmount = burnedBTCAmount.mul(btcDotRate);
         const thePunishmentDOTAmount = theBurnDOTAmount.mul(new Big(punishmentFee));
         const theDOTAmount = theBurnDOTAmount.add(thePunishmentDOTAmount);
+        setBurnedBTCAmount(burnedBTCAmount);
         setPunishmentDOTAmount(thePunishmentDOTAmount);
         setBurnDOTAmount(theBurnDOTAmount);
         setPunishmentDOTAmount(thePunishmentDOTAmount);
@@ -80,10 +81,10 @@ const ReimbursedRedeemRequest = ({
       </p>
       <p className='font-medium'>
         <span className='text-interlayCinnabar'>
-          {`${request.amountPolkaBTC} InterBTC`}
+          {`${burnedBTCAmount} InterBTC`}
         </span>
         <span>
-          &nbsp;{`(≈ $${getUsdAmount(request.amountPolkaBTC, prices.bitcoin.usd)})`}
+          &nbsp;{`(≈ $${getUsdAmount(burnedBTCAmount, prices.bitcoin.usd)})`}
         </span>
         <span className='text-interlayCinnabar'>
           &nbsp;{t('redeem_page.burned')}

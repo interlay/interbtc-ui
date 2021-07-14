@@ -1,6 +1,6 @@
-
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+
 import * as React from 'react';
 import { useTable } from 'react-table';
 import {
@@ -26,12 +26,12 @@ import InterlayLink from 'components/UI/InterlayLink';
 import useQuery from 'utils/hooks/use-query';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
+import { Redeem, RedeemStatus } from '@interlay/interbtc';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import {
   shortTxId,
   formatDateTimePrecise
 } from 'common/utils/utils';
-import { RedeemRequestStatus } from 'common/types/redeem.types';
 import { StoreType } from 'common/types/util.types';
 
 const RedeemRequestsTable = (): JSX.Element => {
@@ -60,11 +60,11 @@ const RedeemRequestsTable = (): JSX.Element => {
     () => [
       {
         Header: t('issue_page.updated'),
-        accessor: 'timestamp',
+        accessor: 'creationTimestamp',
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }) {
+        Cell: function FormattedCell({ value }: {value: number}) {
           return (
             <>
               {value ? formatDateTimePrecise(new Date(Number(value))) : t('pending')}
@@ -74,7 +74,7 @@ const RedeemRequestsTable = (): JSX.Element => {
       },
       {
         Header: `${t('redeem_page.amount')} (InterBTC)`,
-        accessor: 'amountPolkaBTC',
+        accessor: 'amountBTC',
         classNames: [
           'text-right'
         ]
@@ -85,20 +85,21 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell(props) {
+        Cell: function FormattedCell(props: any) {
+          const redeemRequest: Redeem = props.row.original;
           return (
             <>
               {
                 (
-                  props.row.original.status === RedeemRequestStatus.Expired ||
-                  props.row.original.status === RedeemRequestStatus.Retried ||
-                  props.row.original.status === RedeemRequestStatus.Reimbursed
+                  redeemRequest.status === RedeemStatus.Expired ||
+                  redeemRequest.status === RedeemStatus.Retried ||
+                  redeemRequest.status === RedeemStatus.Reimbursed
                 ) ? (
                     t('redeem_page.failed')
                   ) : (
                     <>
                       {/* TODO: could componentize */}
-                      {props.row.original.btcTxId ? (
+                      {redeemRequest.btcTxId ? (
                         <InterlayLink
                           className={clsx(
                             'text-interlayDenim',
@@ -106,13 +107,13 @@ const RedeemRequestsTable = (): JSX.Element => {
                             'inline-flex',
                             'items-center'
                           )}
-                          href={`${BTC_TRANSACTION_API}${props.row.original.btcTxId}`}
+                          href={`${BTC_TRANSACTION_API}${redeemRequest.btcTxId}`}
                           onClick={event => {
                             event.stopPropagation();
                           }}
                           target='_blank'
                           rel='noopener noreferrer'>
-                          <span>{shortTxId(props.row.original.btcTxId)}</span>
+                          <span>{shortTxId(redeemRequest.btcTxId)}</span>
                           <FaExternalLinkAlt />
                         </InterlayLink>
                       ) : (
@@ -130,12 +131,12 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell(props) {
+        Cell: function FormattedCell({ value }: {value: number}) {
           return (
             <>
-              {props.row.original.btcTxId === '' ?
+              {value === undefined ?
                 t('not_applicable') :
-                Math.max(props.row.original.confirmations, 0)}
+                Math.max(value, 0)}
             </>
           );
         }
@@ -146,30 +147,30 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }) {
+        Cell: function FormattedCell({ value }: {value: RedeemStatus}) {
           let icon;
           let notice;
           let colorClassName;
           switch (value) {
-          case RedeemRequestStatus.Reimbursed: {
+          case RedeemStatus.Reimbursed: {
             icon = <FaCheck />; // TODO: should update according to the design
             notice = t('redeem_page.reimbursed');
             colorClassName = 'text-interlayConifer'; // TODO: should update according to the design
             break;
           }
-          case RedeemRequestStatus.Expired: {
+          case RedeemStatus.Expired: {
             icon = <FaRegTimesCircle />;
             notice = t('redeem_page.recover');
             colorClassName = 'text-interlayCinnabar';
             break;
           }
-          case RedeemRequestStatus.Retried: {
+          case RedeemStatus.Retried: {
             icon = <FaCheck />;
             notice = t('redeem_page.retried');
             colorClassName = 'text-interlayConifer';
             break;
           }
-          case RedeemRequestStatus.Completed: {
+          case RedeemStatus.Completed: {
             icon = <FaCheck />;
             notice = t('completed');
             colorClassName = 'text-interlayConifer';

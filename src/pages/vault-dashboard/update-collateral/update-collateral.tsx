@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateCollateralAction, updateCollateralizationAction } from '../../../common/actions/vault.actions';
-import { dotToPlanck, roundTwoDecimals } from '@interlay/polkabtc';
+import { CurrencyIdLiteral, dotToPlanck, roundTwoDecimals } from '@interlay/interbtc';
 import { StoreType } from '../../../common/types/util.types';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
@@ -59,14 +59,14 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
         await window.polkaBTC.vaults.withdrawCollateral(withdrawAmount);
       } else if (currentCollateralBig.lt(newCollateralBig)) {
         const depositAmount = newCollateralBig.sub(currentCollateralBig);
-        await window.polkaBTC.vaults.lockAdditionalCollateral(depositAmount);
+        await window.polkaBTC.vaults.depositCollateral(depositAmount);
       } else {
         closeModal();
         return;
       }
 
       const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const balanceLockedDOT = await window.polkaBTC.collateral.balanceLocked(vaultId);
+      const balanceLockedDOT = await window.polkaBTC.tokens.balanceLocked(CurrencyIdLiteral.DOT, vaultId);
       dispatch(updateCollateralAction(balanceLockedDOT.toString()));
       let collateralization;
       try {
@@ -97,7 +97,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
         return;
       }
 
-      if (!dotToPlanck(value)) {
+      if (!dotToPlanck(new Big(value))) {
         throw new Error('Please enter an amount greater than 1 Planck');
       }
 

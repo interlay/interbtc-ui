@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
@@ -8,23 +7,25 @@ import RequestWrapper from 'pages/Home/RequestWrapper';
 import InterlayLink from 'components/UI/InterlayLink';
 import { shortAddress } from 'common/utils/utils';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
-import { IssueRequest } from 'common/types/issue.types';
+import { Issue } from '@interlay/interbtc';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 
 interface Props {
-  request: IssueRequest;
+  request: Issue;
 }
 
 const ReceivedIssueRequest = ({
   request
 }: Props): JSX.Element => {
   const { t } = useTranslation();
+  const interbtcIndex = useInterbtcIndex();
 
   const [stableBitcoinConfirmations, setStableBitcoinConfirmations] = React.useState(1);
   const [stableParachainConfirmations, setStableParachainConfirmations] = React.useState(100);
   const [requestConfirmations, setRequestConfirmations] = React.useState(0);
 
   React.useEffect(() => {
-    if (!request.creation) return;
+    if (!request.creationBlock) return;
 
     (async () => {
       const [
@@ -32,15 +33,15 @@ const ReceivedIssueRequest = ({
         theStableParachainConfirmations,
         parachainHeight
       ] = await Promise.all([
-        await window.polkaBTC.btcRelay.getStableBitcoinConfirmations(),
+        interbtcIndex.getBtcConfirmations(),
         await window.polkaBTC.btcRelay.getStableParachainConfirmations(),
         await window.polkaBTC.system.getCurrentBlockNumber()
       ]);
       setStableBitcoinConfirmations(theStableBitcoinConfirmations);
       setStableParachainConfirmations(theStableParachainConfirmations);
-      setRequestConfirmations(parachainHeight - Number(request.creation));
+      setRequestConfirmations(parachainHeight - Number(request.creationBlock));
     })();
-  }, [request.creation]);
+  }, [interbtcIndex, request.creationBlock]);
 
   return (
     <RequestWrapper id='ReceivedIssueRequest'>
@@ -84,7 +85,7 @@ const ReceivedIssueRequest = ({
       </div>
       <p className='space-x-1'>
         <span className='text-textSecondary'>{t('issue_page.btc_transaction')}:</span>
-        <span className='font-medium'>{shortAddress(request.btcTxId)}</span>
+        <span className='font-medium'>{shortAddress(request.btcTxId || '')}</span>
       </p>
       <InterlayLink
         className={clsx(

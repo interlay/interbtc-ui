@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import {
   useDispatch,
@@ -13,7 +12,7 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { btcToSat } from '@interlay/polkabtc';
+import { btcToSat } from '@interlay/interbtc';
 
 import PriceInfo from 'pages/Home/PriceInfo';
 import InterBTCField from '../InterBTCField';
@@ -139,7 +138,7 @@ const Burn = (): JSX.Element | null => {
       return 'InterBTC must be loaded!';
     }
 
-    if (btcToSat(value.toString()) === undefined) {
+    if (btcToSat(new Big(value)) === undefined) {
       return 'Invalid InterBTC amount input!'; // TODO: should translate
     }
 

@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -7,11 +6,11 @@ import clsx from 'clsx';
 import RequestWrapper from 'pages/Home/RequestWrapper';
 import Timer from 'components/Timer';
 import { BLOCK_TIME } from 'config/parachain';
-import { RedeemRequest } from 'common/types/redeem.types';
 import { StoreType } from 'common/types/util.types';
+import { Redeem } from '@interlay/interbtc';
 
 interface Props {
-  request: RedeemRequest;
+  request: Redeem;
 }
 
 const PendingWithBtcTxNotFoundRedeemRequest = ({
@@ -30,7 +29,7 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({
     (async () => {
       try {
         const redeemPeriod = await window.polkaBTC.redeem.getRedeemPeriod();
-        const requestTimestamp = Math.floor(new Date(Number(request.timestamp)).getTime() / 1000);
+        const requestTimestamp = Math.floor(new Date(Number(request.creationTimestamp)).getTime() / 1000);
         const theInitialLeftSeconds = requestTimestamp + (redeemPeriod * BLOCK_TIME) - Math.floor(Date.now() / 1000);
         setInitialLeftSeconds(theInitialLeftSeconds);
       } catch (error) {

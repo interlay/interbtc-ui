@@ -1,4 +1,3 @@
-
 // TODO: should type properly
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
@@ -20,7 +19,7 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { RelayerData } from '@interlay/interbtc-stats-client';
+import { RelayerData } from '@interlay/interbtc-index-client';
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
@@ -35,7 +34,7 @@ import InterlayTable, {
 import DefaultColumnFilter from 'components/UI/InterlayTable/DefaultColumnFilter';
 import NumberRangeColumnFilter from 'components/UI/InterlayTable/NumberRangeColumnFilter';
 import SortBy, { SortByContainer } from 'components/UI/InterlayTable/SortBy';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
 import STATUSES from 'utils/constants/statuses';
 
@@ -58,7 +57,7 @@ const StakedRelayerScoresTable = ({
   challengeTime
 }: Props): JSX.Element => {
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcIndex();
   const [data, setData] = useState<(PatchedRelayerData)[]>([]);
   const [status, setStatus] = useState(STATUSES.IDLE);
   const handleError = useErrorHandler();

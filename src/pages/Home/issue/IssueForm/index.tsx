@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import {
   useDispatch,
@@ -14,7 +13,9 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { AccountId } from '@polkadot/types/interfaces';
-import { btcToSat } from '@interlay/polkabtc';
+import {
+  btcToSat, Issue
+} from '@interlay/interbtc';
 
 import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
 import InterBTCField from 'pages/Home/InterBTCField';
@@ -44,12 +45,11 @@ import {
   getRandomVaultIdWithCapacity,
   getUsdAmount
 } from 'common/utils/utils';
-import { parachainToUIIssueRequest } from 'common/utils/requests';
 import STATUSES from 'utils/constants/statuses';
-import { IssueRequest } from 'common/types/issue.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 
 const BTC_AMOUNT = 'btc-amount';
 
@@ -64,6 +64,8 @@ type IssueFormData = {
 const IssueForm = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const interbtcIndex = useInterbtcIndex();
+
   const handleError = useErrorHandler();
 
   const {
@@ -90,15 +92,15 @@ const IssueForm = (): JSX.Element | null => {
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   // Additional info: bridge fee, security deposit, amount BTC
   // Current fee model specification taken from: https://interlay.gitlab.io/polkabtc-spec/spec/fee.html
-  const [feeRate, setFeeRate] = React.useState(new Big(0.005)); // Set default to 0.5%
-  const [depositRate, setDepositRate] = React.useState(new Big(0.00005)); // Set default to 0.005%
+  const [feeRate, setFeeRate] = React.useState(0.005); // Set default to 0.5%
+  const [depositRate, setDepositRate] = React.useState(0.00005); // Set default to 0.005%
   const [btcToDOTRate, setBTCToDOTRate] = React.useState(new Big(0));
   const [vaults, setVaults] = React.useState<Map<AccountId, Big>>();
   const [dustValue, setDustValue] = React.useState('0');
   const [vaultMaxAmount, setVaultMaxAmount] = React.useState('');
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
-  const [submittedRequest, setSubmittedRequest] = React.useState<IssueRequest>();
+  const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
 
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
@@ -118,10 +120,10 @@ const IssueForm = (): JSX.Element | null => {
         ] = await Promise.all([
           // Loading this data is not strictly required as long as the constantly set values did
           // not change. However, you will not see the correct value for the security deposit.
-          window.polkaBTC.issue.getFeeRate(),
-          window.polkaBTC.fee.getIssueGriefingCollateralRate(),
-          window.polkaBTC.issue.getIssuePeriod(),
-          window.polkaBTC.redeem.getDustValue(),
+          interbtcIndex.getIssueFee(),
+          interbtcIndex.getIssueGriefingCollateral(),
+          interbtcIndex.getIssuePeriod(),
+          interbtcIndex.getDustValue(),
           window.polkaBTC.oracle.getExchangeRate(),
           // This data (the vaults) is strictly required to request issue
           window.polkaBTC.vaults.getVaultsWithIssuableTokens()
@@ -147,6 +149,7 @@ const IssueForm = (): JSX.Element | null => {
       }
     })();
   }, [
+    interbtcIndex,
     polkaBtcLoaded,
     dispatch,
     handleError
@@ -194,14 +197,14 @@ const IssueForm = (): JSX.Element | null => {
       return 'InterBTC must be loaded!';
     }
 
-    if (btcToSat(value.toString()) === undefined) {
+    if (btcToSat(bigBTCAmount) === undefined) {
       return 'Invalid BTC amount input!';
     }
 
     return undefined;
   };
 
-  const handleSubmittedRequestModalOpen = (newSubmittedRequest: IssueRequest) => {
+  const handleSubmittedRequestModalOpen = (newSubmittedRequest: Issue) => {
     setSubmittedRequest(newSubmittedRequest);
   };
   const handleSubmittedRequestModalClose = () => {
@@ -214,11 +217,11 @@ const IssueForm = (): JSX.Element | null => {
       setSubmitStatus(STATUSES.PENDING);
       const result = await window.polkaBTC.issue.request(interBTCAmount);
       // TODO: handle issue aggregation
-      const theSubmittedRequest = await parachainToUIIssueRequest(result[0].id, result[0].issueRequest);
-      handleSubmittedRequestModalOpen(theSubmittedRequest);
+      const issueRequest = result[0];
+      handleSubmittedRequestModalOpen(issueRequest);
       setSubmitStatus(STATUSES.RESOLVED);
 
-      dispatch(addIssueRequestAction(theSubmittedRequest));
+      dispatch(addIssueRequestAction(issueRequest));
     } catch (error) {
       setSubmitStatus(STATUSES.REJECTED);
       setSubmitError(error);

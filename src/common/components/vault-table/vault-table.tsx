@@ -2,13 +2,13 @@ import { ReactElement, useState, useEffect, useMemo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Vault } from '../../types/vault.types';
 import * as constants from '../../../constants';
-import { planckToDOT, satToBTC, roundTwoDecimals } from '@interlay/polkabtc';
+import { planckToDOT, satToBTC, roundTwoDecimals } from '@interlay/interbtc';
 import { shortAddress } from '../../utils/utils';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import { StoreType } from '../../../common/types/util.types';
 import DashboardTable from '../dashboard-table/dashboard-table';
-import { VaultExt } from '@interlay/polkabtc/build/parachain/vaults';
+import { VaultExt } from '@interlay/interbtc/build/parachain/vaults';
 import Tooltip from 'components/Tooltip';
 import clsx from 'clsx';
 
@@ -95,10 +95,10 @@ export default function VaultTable(): ReactElement {
           }
         };
 
-        const vaultCollateral = new Big(planckToDOT(vault.backing_collateral.toString()));
-        const unsettledTokens = new Big(satToBTC(vault.issued_tokens.toString()))
-          .add(new Big(satToBTC(vault.to_be_issued_tokens.toString())));
-        const settledTokens = new Big(satToBTC(vault.issued_tokens.toString()));
+        const vaultCollateral = new Big(planckToDOT(vault.backing_collateral));
+        const unsettledTokens = new Big(satToBTC(vault.issued_tokens))
+          .add(new Big(satToBTC(vault.to_be_issued_tokens)));
+        const settledTokens = new Big(satToBTC(vault.issued_tokens));
         const unsettledCollateralization = getCollateralization(vaultCollateral, unsettledTokens);
         const settledCollateralization = getCollateralization(vaultCollateral, settledTokens);
 
@@ -107,9 +107,9 @@ export default function VaultTable(): ReactElement {
         vaultsList.push({
           vaultId: vault.id.toString(),
           // TODO: fetch collateral reserved
-          lockedBTC: satToBTC(vault.issued_tokens.toString()),
+          lockedBTC: satToBTC(vault.issued_tokens).toString(),
           lockedDOT: vaultCollateral.toString(),
-          pendingBTC: satToBTC(vault.to_be_issued_tokens.toString()),
+          pendingBTC: satToBTC(vault.to_be_issued_tokens).toString(),
           btcAddress: btcAddress || '',
           status:
             vault.status &&

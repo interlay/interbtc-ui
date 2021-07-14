@@ -1,4 +1,3 @@
-
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
@@ -11,12 +10,12 @@ import {
   getUsdAmount,
   safeRoundEightDecimals
 } from 'common/utils/utils';
-import { IssueRequest } from 'common/types/issue.types';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
+import { Issue } from '@interlay/interbtc';
 
 interface Props {
-  request: IssueRequest;
+  request: Issue;
 }
 
 const WhoopsStatusUI = ({
@@ -57,9 +56,9 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={request.requestedAmountPolkaBTC}
+        value={request.amountInterBTC}
         unitName='InterBTC'
-        approxUSD={getUsdAmount(request.requestedAmountPolkaBTC, prices.bitcoin.usd)} />
+        approxUSD={getUsdAmount(request.amountInterBTC, prices.bitcoin.usd)} />
       <PriceInfo
         className='w-full'
         title={
@@ -74,7 +73,7 @@ const WhoopsStatusUI = ({
         }
         value={safeRoundEightDecimals(Number(request.btcAmountSubmittedByUser))}
         unitName='BTC'
-        approxUSD={getUsdAmount(request.btcAmountSubmittedByUser, prices.bitcoin.usd)} />
+        approxUSD={getUsdAmount(request.btcAmountSubmittedByUser || '0', prices.bitcoin.usd)} />
       <PriceInfo
         className='w-full'
         title={
@@ -87,9 +86,9 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={request.issuedAmountBtc}
+        value={request.executedAmountBTC || request.amountInterBTC}
         unitName='InterBTC'
-        approxUSD={getUsdAmount(request.issuedAmountBtc, prices.bitcoin.usd)} />
+        approxUSD={getUsdAmount(request.executedAmountBTC || request.amountInterBTC, prices.bitcoin.usd)} />
       <hr
         className={clsx(
           'border-t-2',
@@ -110,12 +109,12 @@ const WhoopsStatusUI = ({
             height={23} />
         }
         value={safeRoundEightDecimals(
-          Number(request.btcAmountSubmittedByUser) - Number(request.issuedAmountBtc)
+          Number(request.btcAmountSubmittedByUser) - Number(request.executedAmountBTC)
         )}
         unitName='BTC'
         approxUSD={
           getUsdAmount(
-            (Number(request.btcAmountSubmittedByUser) - Number(request.issuedAmountBtc)).toString(),
+            (Number(request.btcAmountSubmittedByUser) - Number(request.executedAmountBTC)).toString(),
             prices.bitcoin.usd
           )
         } />
@@ -123,7 +122,7 @@ const WhoopsStatusUI = ({
         {t('issue_page.refund_requested_vault')}
         &nbsp;{t('issue_page.refund_vault_to_return')}
         <span className='text-interlayCinnabar'>
-          &nbsp;{safeRoundEightDecimals(request.refundAmountBtc)}
+          &nbsp;{safeRoundEightDecimals(request.refundAmountBTC)}
         </span>
         &nbsp;BTC&nbsp;
         {t('issue_page.refund_vault_to_address')}.

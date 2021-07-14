@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
-import usePolkabtcStats from 'common/hooks/use-polkabtc-stats';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import { FaExternalLinkAlt } from 'react-icons/fa';
@@ -23,7 +23,7 @@ type OracleStatusProps = {
 };
 
 const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
-  const statsApi = usePolkabtcStats();
+  const statsApi = useInterbtcIndex();
   const { t } = useTranslation();
   // TODO: use translations for status
   const [oracleStatus, setOracleStatus] = useState(Status.Loading);

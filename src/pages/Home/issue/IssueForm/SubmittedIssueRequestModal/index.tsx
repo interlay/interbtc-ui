@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import clsx from 'clsx';
@@ -11,12 +10,12 @@ import InterlayModal, {
   Props as ModalProps,
   InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
-import { IssueRequest } from 'common/types/issue.types';
 import { resetIssueWizardAction } from 'common/actions/issue.actions';
 import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
+import { Issue } from '@interlay/interbtc';
 
 interface CustomProps {
-  request: IssueRequest
+  request: Issue
 }
 
 const SubmittedIssueRequestModal = ({

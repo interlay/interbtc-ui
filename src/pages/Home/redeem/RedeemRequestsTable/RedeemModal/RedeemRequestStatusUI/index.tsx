@@ -1,29 +1,25 @@
-
 import CompletedRedeemRequest from './CompletedRedeemRequest';
 import ReimbursedRedeemRequest from './ReimbursedRedeemRequest';
 import RetriedRedeemRequest from './RetriedRedeemRequest';
 import PendingWithBtcTxNotFoundRedeemRequest from './PendingWithBtcTxNotFoundRedeemRequest';
 import DefaultRedeemRequest from './DefaultRedeemRequest';
-import {
-  RedeemRequest,
-  RedeemRequestStatus
-} from 'common/types/redeem.types';
+import { Redeem, RedeemStatus } from '@interlay/interbtc';
 
 interface Props {
-  request: RedeemRequest;
+  request: Redeem;
 }
 
 const RedeemRequestStatusUI = ({
   request
 }: Props): JSX.Element => {
   switch (request.status) {
-  case RedeemRequestStatus.Completed:
+  case RedeemStatus.Completed:
     return <CompletedRedeemRequest request={request} />;
-  case RedeemRequestStatus.PendingWithBtcTxNotFound:
+  case RedeemStatus.PendingWithBtcTxNotFound:
     return <PendingWithBtcTxNotFoundRedeemRequest request={request} />;
-  case RedeemRequestStatus.Reimbursed:
+  case RedeemStatus.Reimbursed:
     return <ReimbursedRedeemRequest request={request} />;
-  case RedeemRequestStatus.Retried:
+  case RedeemStatus.Retried:
     return <RetriedRedeemRequest request={request} />;
   default:
     return <DefaultRedeemRequest request={request} />;

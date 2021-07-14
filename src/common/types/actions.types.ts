@@ -1,12 +1,10 @@
-import { IssueRequest } from './issue.types';
-import { RedeemRequest } from './redeem.types';
 import { VaultReplaceRequest } from './vault.types';
 import { StoreType, ParachainStatus, Prices } from './util.types';
+import { Issue, Redeem } from '@interlay/interbtc';
 
 // GENERAL ACTIONS
 
 export const IS_POLKA_BTC_LOADED = 'IS_POLKA_BTC_LOADED';
-export const IS_STAKED_RELAYER_LOADED = 'IS_STAKED_RELAYER_LOADED';
 export const IS_FAUCET_LOADED = 'IS_FAUCET_LOADED';
 export const IS_VAULT_CLIENT_LOADED = 'IS_VAULT_CLIENT_LOADED';
 export const INIT_STATE = 'INIT_STATE';
@@ -21,94 +19,88 @@ export const UPDATE_HEIGHTS = 'UPDATE_HEIGHTS';
 export const UPDATE_TOTALS = 'UPDATE_TOTALS';
 
 export interface UpdateTotals {
-    type: typeof UPDATE_TOTALS;
-    totalLockedDOT: string;
-    totalPolkaBTC: string;
+  type: typeof UPDATE_TOTALS;
+  totalLockedDOT: string;
+  totalPolkaBTC: string;
 }
 
 export interface UpdateHeights {
-    type: typeof UPDATE_HEIGHTS;
-    btcRelayHeight: number;
-    bitcoinHeight: number;
+  type: typeof UPDATE_HEIGHTS;
+  btcRelayHeight: number;
+  bitcoinHeight: number;
 }
 
 export interface UpdateOfPrices {
-    type: typeof UPDATE_OF_PRICES;
-    prices: Prices;
+  type: typeof UPDATE_OF_PRICES;
+  prices: Prices;
 }
 export interface IsPolkaBtcLoaded {
-    type: typeof IS_POLKA_BTC_LOADED;
-    isLoaded: boolean;
-}
-
-export interface IsStakedRelayerLoaded {
-    type: typeof IS_STAKED_RELAYER_LOADED;
-    isLoaded: boolean;
+  type: typeof IS_POLKA_BTC_LOADED;
+  isLoaded: boolean;
 }
 
 export interface IsFaucetLoaded {
-    type: typeof IS_FAUCET_LOADED;
-    isLoaded: boolean;
+  type: typeof IS_FAUCET_LOADED;
+  isLoaded: boolean;
 }
 
 export interface IsVaultClientLoaded {
-    type: typeof IS_VAULT_CLIENT_LOADED;
-    isLoaded: boolean;
+  type: typeof IS_VAULT_CLIENT_LOADED;
+  isLoaded: boolean;
 }
 
 export interface ChangeAddress {
-    type: typeof CHANGE_ADDRESS;
-    address: string;
+  type: typeof CHANGE_ADDRESS;
+  address: string;
 }
 
 export interface InitState {
-    type: typeof INIT_STATE;
-    state: StoreType;
+  type: typeof INIT_STATE;
+  state: StoreType;
 }
 
 export interface InitGeneralDataAction {
-    type: typeof INIT_GENERAL_DATA_ACTION;
-    totalPolkaBTC: string;
-    totalLockedDOT: string;
-    btcRelayHeight: number;
-    bitcoinHeight: number;
-    parachainStatus: ParachainStatus;
+  type: typeof INIT_GENERAL_DATA_ACTION;
+  totalPolkaBTC: string;
+  totalLockedDOT: string;
+  btcRelayHeight: number;
+  bitcoinHeight: number;
+  parachainStatus: ParachainStatus;
 }
 
 export interface UpdateBalancePolkaBTC {
-    type: typeof UPDATE_BALANCE_POLKA_BTC;
-    balancePolkaBTC: string;
+  type: typeof UPDATE_BALANCE_POLKA_BTC;
+  balancePolkaBTC: string;
 }
 
 export interface UpdateBalanceDOT {
-    type: typeof UPDATE_BALANCE_DOT;
-    balanceDOT: string;
+  type: typeof UPDATE_BALANCE_DOT;
+  balanceDOT: string;
 }
 
 export interface SetInstalledExtension {
-    type: typeof SET_INSTALLED_EXTENSION;
-    extensions: string[];
+  type: typeof SET_INSTALLED_EXTENSION;
+  extensions: string[];
 }
 
 export interface ShowAccountModal {
-    type: typeof SHOW_ACCOUNT_MODAL;
-    showAccountModal: boolean;
+  type: typeof SHOW_ACCOUNT_MODAL;
+  showAccountModal: boolean;
 }
 
 export type GeneralActions =
-    | IsPolkaBtcLoaded
-    | IsStakedRelayerLoaded
-    | ChangeAddress
-    | InitState
-    | InitGeneralDataAction
-    | IsVaultClientLoaded
-    | UpdateBalancePolkaBTC
-    | UpdateBalanceDOT
-    | SetInstalledExtension
-    | ShowAccountModal
-    | UpdateOfPrices
-    | UpdateHeights
-    | UpdateTotals;
+  | IsPolkaBtcLoaded
+  | ChangeAddress
+  | InitState
+  | InitGeneralDataAction
+  | IsVaultClientLoaded
+  | UpdateBalancePolkaBTC
+  | UpdateBalanceDOT
+  | SetInstalledExtension
+  | ShowAccountModal
+  | UpdateOfPrices
+  | UpdateHeights
+  | UpdateTotals;
 
 // REDEEM
 export const SET_REDEEM_REQUESTS = 'SET_REDEEM_REQUESTS';
@@ -124,53 +116,53 @@ export const REIMBURSE_REDEEM_REQUEST = 'REIMBURSE_REDEEM_REQUEST';
 export const TOGGLE_PREMIUM_REDEEM = 'TOGGLE_PREMIUM_REDEEM';
 
 export interface TogglePremiumRedeem {
-    type: typeof TOGGLE_PREMIUM_REDEEM;
-    premiumRedeem: boolean;
+  type: typeof TOGGLE_PREMIUM_REDEEM;
+  premiumRedeem: boolean;
 }
 
 export interface ResetRedeemWizard {
-    type: typeof RESET_REDEEM_WIZARD;
+  type: typeof RESET_REDEEM_WIZARD;
 }
 
 export interface SetRedeemRequests {
-    type: typeof SET_REDEEM_REQUESTS;
-    requests: RedeemRequest[];
+  type: typeof SET_REDEEM_REQUESTS;
+  requests: Redeem[];
 }
 
 export interface StoreRedeemRequest {
-    type: typeof STORE_REDEEM_REQUEST;
-    request: RedeemRequest;
+  type: typeof STORE_REDEEM_REQUEST;
+  request: Redeem;
 }
 
 export interface AddRedeemRequest {
-    type: typeof ADD_REDEEM_REQUEST;
-    request: RedeemRequest;
+  type: typeof ADD_REDEEM_REQUEST;
+  request: Redeem;
 }
 
 export interface UpdateRedeemRequest {
-    type: typeof UPDATE_REDEEM_REQUEST;
-    request: RedeemRequest;
+  type: typeof UPDATE_REDEEM_REQUEST;
+  request: Redeem;
 }
 
 export interface UpdateAllRedeemRequests {
-    type: typeof UPDATE_ALL_REDEEM_REQUESTS;
-    userDotAddress: string;
-    redeemRequests: RedeemRequest[];
+  type: typeof UPDATE_ALL_REDEEM_REQUESTS;
+  userDotAddress: string;
+  redeemRequests: Redeem[];
 }
 
 export interface RetryRedeemRequest {
-    type: typeof RETRY_REDEEM_REQUEST;
-    id: string;
+  type: typeof RETRY_REDEEM_REQUEST;
+  id: string;
 }
 
 export interface RedeemExpired {
-    type: typeof REDEEM_EXPIRED;
-    request: RedeemRequest;
+  type: typeof REDEEM_EXPIRED;
+  request: Redeem;
 }
 
 export interface ReimburseRedeemRequest {
-    type: typeof REIMBURSE_REDEEM_REQUEST;
-    id: string;
+  type: typeof REIMBURSE_REDEEM_REQUEST;
+  id: string;
 }
 
 export type RedeemActions =
@@ -197,37 +189,37 @@ export const CHANGE_SELECTED_ISSUE = 'CHANGE_SELECTED_ISSUE';
 export const UPDATE_ISSUE_PERIOD = 'UPDATE_ISSUE_PERIOD';
 
 export interface ChangeSelectedIssue {
-    type: typeof CHANGE_SELECTED_ISSUE;
-    request: IssueRequest;
+  type: typeof CHANGE_SELECTED_ISSUE;
+  request: Issue;
 }
 
 export interface ResetIssueWizard {
-    type: typeof RESET_ISSUE_WIZARD;
+  type: typeof RESET_ISSUE_WIZARD;
 }
 
 export interface StoreIssueRequest {
-    type: typeof STORE_ISSUE_REQUEST;
-    request: IssueRequest;
+  type: typeof STORE_ISSUE_REQUEST;
+  request: Issue;
 }
 
 export interface AddIssueRequest {
-    type: typeof ADD_ISSUE_REQUEST;
-    request: IssueRequest;
+  type: typeof ADD_ISSUE_REQUEST;
+  request: Issue;
 }
 
 export interface UpdateIssueRequest {
-    type: typeof UPDATE_ISSUE_REQUEST;
-    request: IssueRequest;
+  type: typeof UPDATE_ISSUE_REQUEST;
+  request: Issue;
 }
 
 export interface UpdateAllIssueRequests {
-    type: typeof UPDATE_ALL_ISSUE_REQUESTS;
-    userDotAddress: string;
-    issueRequests: IssueRequest[];
+  type: typeof UPDATE_ALL_ISSUE_REQUESTS;
+  userDotAddress: string;
+  issueRequests: Issue[];
 }
 export interface UpdateIssuePeriod {
-    type: typeof UPDATE_ISSUE_PERIOD;
-    period: number;
+  type: typeof UPDATE_ISSUE_PERIOD;
+  period: number;
 }
 
 export type IssueActions =
@@ -251,40 +243,40 @@ export const UPDATE_SLA = 'UPDATE_SLA';
 export const UPDATE_APY = 'UPDATE_APY';
 
 export interface AddReplaceRequests {
-    type: typeof ADD_REPLACE_REQUESTS;
-    requests: VaultReplaceRequest[];
+  type: typeof ADD_REPLACE_REQUESTS;
+  requests: VaultReplaceRequest[];
 }
 
 export interface UpdateCollateralization {
-    type: typeof UPDATE_COLLATERALIZATION;
-    collateralization: string | undefined;
+  type: typeof UPDATE_COLLATERALIZATION;
+  collateralization: string | undefined;
 }
 
 export interface UpdateCollateral {
-    type: typeof UPDATE_COLLATERAL;
-    collateral: string;
+  type: typeof UPDATE_COLLATERAL;
+  collateral: string;
 }
 
 export interface UpdateLockedBTC {
-    type: typeof UPDATE_LOCKED_BTC;
-    lockedBTC: string;
+  type: typeof UPDATE_LOCKED_BTC;
+  lockedBTC: string;
 }
 
 export interface UpdateSLA {
-    type: typeof UPDATE_SLA;
-    sla: string;
+  type: typeof UPDATE_SLA;
+  sla: string;
 }
 
 export interface UpdateAPY {
-    type: typeof UPDATE_APY;
-    apy: string;
+  type: typeof UPDATE_APY;
+  apy: string;
 }
 
 export type VaultActions =
-    | AddReplaceRequests
-    | UpdateCollateralization
-    | UpdateCollateral
-    | UpdateLockedBTC
-    | UpdateSLA
-    | InitState
-    | UpdateAPY;
+  | AddReplaceRequests
+  | UpdateCollateralization
+  | UpdateCollateral
+  | UpdateLockedBTC
+  | UpdateSLA
+  | InitState
+  | UpdateAPY;

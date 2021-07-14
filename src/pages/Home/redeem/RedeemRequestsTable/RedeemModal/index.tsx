@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -18,11 +17,10 @@ import {
   getUsdAmount,
   shortAddress
 } from 'common/utils/utils';
-import { RedeemRequest } from 'common/types/redeem.types';
 import { StoreType } from 'common/types/util.types';
-import { RedeemRequestStatus } from 'common/types/redeem.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
+import { Redeem, RedeemStatus } from '@interlay/interbtc';
 
 interface CustomProps {
   requestId: string;
@@ -45,9 +43,9 @@ const RedeemModal = ({
 
   const focusRef = React.useRef(null);
 
-  const renderModalStatusPanel = (request: RedeemRequest) => {
+  const renderModalStatusPanel = (request: Redeem) => {
     switch (request.status) {
-    case RedeemRequestStatus.Expired: {
+    case RedeemStatus.Expired: {
       return (
         <ReimburseStatusUI
           request={request}
@@ -121,7 +119,7 @@ const RedeemModal = ({
                   'space-x-1'
                 )}>
                 <span className='text-5xl'>
-                  {request.amountPolkaBTC}
+                  {request.amountBTC}
                 </span>
                 <span
                   className={clsx(
@@ -136,7 +134,7 @@ const RedeemModal = ({
                   'text-textSecondary',
                   'block'
                 )}>
-                {`≈ $ ${getUsdAmount(request.amountPolkaBTC || '0', prices.bitcoin.usd)}`}
+                {`≈ $ ${getUsdAmount(request.amountBTC || '0', prices.bitcoin.usd)}`}
               </span>
             </div>
             <div>
@@ -151,9 +149,9 @@ const RedeemModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayBtcAmount(request.fee)}
+                value={displayBtcAmount(request.bridgeFee)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(request.fee, prices.bitcoin.usd)} />
+                approxUSD={getUsdAmount(request.bridgeFee, prices.bitcoin.usd)} />
               <PriceInfo
                 title={
                   <h5 className='text-textSecondary'>
@@ -211,7 +209,7 @@ const RedeemModal = ({
                   {t('issue_page.parachain_block')}
                 </span>
                 <span className='font-medium'>
-                  {request.creation}
+                  {request.creationBlock}
                 </span>
               </div>
               <div
