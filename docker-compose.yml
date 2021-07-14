@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  polkabtc:
+  interbtc:
     image: 'registry.gitlab.com/interlay/interbtc:master-bc3fbfa9-1624755169'
     command:
       - btc-parachain
@@ -65,7 +65,7 @@ services:
       - --keyring
       - bob
       - --btc-parachain-url
-      - "ws://polkabtc:9944"
+      - "ws://interbtc:9944"
     environment:
       RUST_LOG: info
     restart: unless-stopped
@@ -76,7 +76,7 @@ services:
       - --keyring
       - ferdie
       - --btc-parachain-url
-      - "ws://polkabtc:9944"
+      - "ws://interbtc:9944"
       - --user-allowance
       - "1"
       - --vault-allowance
@@ -89,16 +89,17 @@ services:
       - '3035:3035'
     restart: unless-stopped
   vault:
-    image: 'registry.gitlab.com/interlay/interbtc-clients/vault:master-590b9de9-1624871268'
+    image: "registry.gitlab.com/interlay/interbtc-clients/vault:master-590b9de9-1624871268"
     command:
       - /bin/sh
       - -c
       - |
-        echo "Sleeping..."
-        # sleep for 10s to wait for bitcoin to create the Dave wallet
-        # and also to ensure that the issue period and redeem period are set
-        sleep 10
-        vault --keyring=charlie --auto-register-with-collateral 100000000000000 --btc-parachain-url 'ws://polkabtc:9944'
+          echo '{"charlie_stash": "0x66256c4e2f90e273bf387923a9a7860f2e9f47a1848d6263de512f7fb110fc08"}' > keyfile.json
+          echo "Sleeping..."
+          # sleep for 30s to wait for bitcoin to create the Charlie wallet
+          # and also to ensure that the issue period and redeem period are set
+          sleep 30
+          vault --keyfile="keyfile.json" --keyname=charlie_stash --auto-register-with-collateral 1000000000000000000 --btc-parachain-url 'ws://interbtc:9944'
     environment: &client-env
       BITCOIN_RPC_URL: http://bitcoind:18443
       BITCOIN_RPC_USER: rpcuser
@@ -123,7 +124,7 @@ services:
       - ${PWD}/node_modules/@interlay/interbtc-index-client/sql:/flyway/sql
     depends_on:
       - postgres
-  polkabtc_stats:
+  interbtc_stats:
     image: 'registry.gitlab.com/interlay/polkabtc-stats:master-4937a9a-1625671429'
     restart: always
     depends_on:
@@ -133,7 +134,7 @@ services:
       MONITOR: '1'
       LOG_PRETTY_PRINT: '1'
       SYNC_DB_SCHEMA: '1'
-      ENDPOINT_URL: 'ws://polkabtc:9944'
+      ENDPOINT_URL: 'ws://interbtc:9944'
       BTC_NETWORK: 'http://electrs:3002'
       PGHOST: 'postgres'
       PGPORT: '5432'
