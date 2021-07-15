@@ -52,14 +52,11 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
 
     setUpdatePending(true);
     try {
-      const parsedNewCollateral = PolkadotAmount.from.DOT(newCollateral);
-      const parsedCurrentCollateral = PolkadotAmount.from.DOT(currentCollateral);
-
-      if (parsedCurrentCollateral.gt(parsedNewCollateral)) {
-        const withdrawAmount = parsedCurrentCollateral.sub(parsedNewCollateral);
+      if (currentCollateral.gt(newCollateral)) {
+        const withdrawAmount = currentCollateral.sub(newCollateral);
         await window.polkaBTC.vaults.withdrawCollateral(withdrawAmount);
-      } else if (parsedCurrentCollateral.lt(parsedNewCollateral)) {
-        const depositAmount = parsedNewCollateral.sub(parsedCurrentCollateral);
+      } else if (currentCollateral.lt(newCollateral)) {
+        const depositAmount = newCollateral.sub(currentCollateral);
         await window.polkaBTC.vaults.depositCollateral(depositAmount);
       } else {
         closeModal();
@@ -68,7 +65,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
 
       const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
       const balanceLockedDOT = await window.polkaBTC.tokens.balanceLocked(Polkadot, vaultId);
-      dispatch(updateCollateralAction(balanceLockedDOT.toHuman()));
+      dispatch(updateCollateralAction(balanceLockedDOT));
       let collateralization;
       try {
         collateralization = new Big(parseFloat(newCollateralization) / 100);
@@ -107,11 +104,11 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
         throw new Error('Couldn\'t fetch current vault collateral');
       }
 
-      let parsedNewCollateral = PolkadotAmount.from.DOT(currentCollateral);
+      let newCollateral = currentCollateral;
       if (props.status === CollateralUpdateStatus.Increase) {
-        parsedNewCollateral = parsedNewCollateral.add(parsedValue);
+        newCollateral = newCollateral.add(parsedValue);
       } else if (props.status === CollateralUpdateStatus.Decrease) {
-        parsedNewCollateral = parsedNewCollateral.sub(parsedValue);
+        newCollateral = newCollateral.sub(parsedValue);
       }
       setNewCollateral(newCollateral);
 
@@ -119,11 +116,11 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
       const requiredCollateral = await window.polkaBTC.vaults.getRequiredCollateralForVault(vaultId, Polkadot);
 
       // collateral update only allowed if above required collateral
-      const allowed = parsedNewCollateral.gte(requiredCollateral);
+      const allowed = newCollateral.gte(requiredCollateral);
       setCollateralUpdateAllowed(allowed);
 
       // get the updated collateralization
-      const newCollateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId, parsedNewCollateral);
+      const newCollateralization = await window.polkaBTC.vaults.getVaultCollateralization(vaultId, newCollateral);
       if (newCollateralization === undefined) {
         setNewCollateralization('∞');
       } else {

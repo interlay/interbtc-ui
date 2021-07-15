@@ -7,6 +7,7 @@ import { initializeState } from './common/actions/general.actions';
 import { FaucetClient, InterBTCAPI } from '@interlay/interbtc';
 import { mapToArray, arrayToMap } from './common/utils/requests';
 import * as constants from './constants';
+import { BTCAmount, PolkadotAmount } from '@interlay/monetary-js';
 
 declare global {
   interface Window {
@@ -24,10 +25,10 @@ export const getInitialState = (): StoreType => {
       vaultClientLoaded: false,
       showAccountModal: false,
       address: '',
-      totalLockedDOT: '',
-      totalPolkaBTC: '',
-      balancePolkaBTC: '',
-      balanceDOT: '',
+      totalLockedDOT: PolkadotAmount.zero,
+      totalInterBTC: BTCAmount.zero,
+      balanceInterBTC: BTCAmount.zero,
+      balanceDOT: PolkadotAmount.zero,
       extensions: [],
       btcRelayHeight: 0,
       bitcoinHeight: 0,
@@ -47,8 +48,8 @@ export const getInitialState = (): StoreType => {
     vault: {
       requests: [],
       collateralization: undefined,
-      collateral: '0',
-      lockedBTC: '0',
+      collateral: PolkadotAmount.zero,
+      lockedBTC: BTCAmount.zero,
       sla: '0',
       apy: '0'
     }

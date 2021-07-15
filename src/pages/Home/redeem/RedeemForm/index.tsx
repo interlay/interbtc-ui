@@ -83,7 +83,7 @@ const RedeemForm = (): JSX.Element | null => {
 
   const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
   const {
-    balancePolkaBTC,
+    balanceInterBTC,
     polkaBtcLoaded,
     address,
     bitcoinHeight,
@@ -261,7 +261,7 @@ const RedeemForm = (): JSX.Element | null => {
       handleSubmittedRequestModalOpen(redeemRequest);
       setSubmitStatus(STATUSES.RESOLVED);
 
-      dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(data[INTER_BTC_AMOUNT])).toString()));
+      dispatch(updateBalancePolkaBTCAction(balanceInterBTC.sub(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]))));
       dispatch(addRedeemRequestAction(redeemRequest));
     } catch (error) {
       setSubmitStatus(STATUSES.REJECTED);
@@ -272,8 +272,8 @@ const RedeemForm = (): JSX.Element | null => {
   const validatePolkaBTCAmount = (value: string): string | undefined => {
     const parsedValue = BTCAmount.from.BTC(value);
     const minValue = dustValue.add(currentInclusionFee).add(redeemFee);
-    if (parsedValue.gt(BTCAmount.from.BTC(balancePolkaBTC))) {
-      return `${t('redeem_page.current_balance')}${balancePolkaBTC}`;
+    if (parsedValue.gt(balanceInterBTC)) {
+      return `${t('redeem_page.current_balance')}${balanceInterBTC}`;
     } else if (parsedValue.lte(minValue)) {
       return `${t('redeem_page.amount_greater_dust_inclusion')}${minValue} BTC).`;
     }

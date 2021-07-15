@@ -1,14 +1,11 @@
 import { Bitcoin, Polkadot } from '@interlay/monetary-js';
-import {
-  displayMonetaryAmount
-} from 'common/utils/utils';
 import { Dispatch } from 'redux';
 import { updateTotalsAction } from '../actions/general.actions';
 import { StoreState } from '../types/util.types';
 
 export default async function fetchTotals(dispatch: Dispatch, store: StoreState): Promise<void> {
   const state = store.getState();
-  const { totalLockedDOT, totalPolkaBTC, polkaBtcLoaded } = state.general;
+  const { totalLockedDOT, totalInterBTC, polkaBtcLoaded } = state.general;
   if (!polkaBtcLoaded) return;
 
   try {
@@ -18,10 +15,10 @@ export default async function fetchTotals(dispatch: Dispatch, store: StoreState)
     ]);
 
     // update store only if there is a difference between the latest totals and current totals
-    if (totalPolkaBTC !== latestTotalPolkaBTC.toHuman() || totalLockedDOT !== latestTotalLockedDOT.toHuman()) {
+    if (!totalInterBTC.eq(latestTotalPolkaBTC) || !totalLockedDOT.eq(latestTotalLockedDOT)) {
       dispatch(updateTotalsAction(
-        displayMonetaryAmount(latestTotalLockedDOT),
-        displayMonetaryAmount(latestTotalPolkaBTC)
+        latestTotalLockedDOT,
+        latestTotalPolkaBTC
       ));
     }
   } catch (error) {

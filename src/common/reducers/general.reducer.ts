@@ -1,3 +1,4 @@
+import { BTCAmount, PolkadotAmount } from '@interlay/monetary-js';
 import {
   IS_POLKA_BTC_LOADED,
   IS_VAULT_CLIENT_LOADED,
@@ -22,10 +23,10 @@ const initialState = {
   hasFeedbackModalBeenDisplayed: false,
   showAccountModal: false,
   address: '',
-  totalPolkaBTC: '0',
-  totalLockedDOT: '0',
-  balancePolkaBTC: '0',
-  balanceDOT: '0',
+  totalInterBTC: BTCAmount.zero,
+  totalLockedDOT: PolkadotAmount.zero,
+  balanceInterBTC: BTCAmount.zero,
+  balanceDOT: PolkadotAmount.zero,
   extensions: [],
   btcRelayHeight: 0,
   bitcoinHeight: 0,
@@ -36,7 +37,7 @@ const initialState = {
 export const generalReducer = (state: GeneralState = initialState, action: GeneralActions): GeneralState => {
   switch (action.type) {
   case UPDATE_TOTALS:
-    return { ...state, totalPolkaBTC: action.totalPolkaBTC, totalLockedDOT: action.totalLockedDOT };
+    return { ...state, totalInterBTC: action.totalInterBTC, totalLockedDOT: action.totalLockedDOT };
   case UPDATE_HEIGHTS:
     return { ...state, btcRelayHeight: action.btcRelayHeight, bitcoinHeight: action.bitcoinHeight };
   case UPDATE_OF_PRICES:
@@ -58,7 +59,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
     return {
       ...state,
       totalLockedDOT: action.totalLockedDOT,
-      totalPolkaBTC: action.totalPolkaBTC,
+      totalInterBTC: action.totalInterBTC,
       btcRelayHeight: action.btcRelayHeight,
       bitcoinHeight: action.bitcoinHeight,
       parachainStatus: action.parachainStatus
@@ -68,7 +69,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
   case UPDATE_BALANCE_DOT:
     return { ...state, balanceDOT: action.balanceDOT };
   case UPDATE_BALANCE_POLKA_BTC:
-    return { ...state, balancePolkaBTC: action.balancePolkaBTC };
+    return { ...state, balanceInterBTC: action.balanceInterBTC };
   case SHOW_ACCOUNT_MODAL:
     return { ...state, showAccountModal: action.showAccountModal };
   case SET_INSTALLED_EXTENSION:

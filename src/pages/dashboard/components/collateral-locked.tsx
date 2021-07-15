@@ -13,7 +13,6 @@ import { getUsdAmount } from '../../../common/utils/utils';
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
 import BN from 'bn.js';
-import { PolkadotAmount } from '@interlay/monetary-js';
 
 type CollateralLockedProps = {
   linkButton?: boolean;
@@ -54,7 +53,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
         <div className='values-container'>
           <h1 style={{ color: getAccents('d_interlayDenim').color }}>{t('dashboard.vault.locked_collateral')}</h1>
           <h2>{totalLockedDOT} DOT</h2>
-          <h2>${getUsdAmount(PolkadotAmount.from.DOT(totalLockedDOT), prices.polkadot.usd)}</h2>
+          <h2>${getUsdAmount(totalLockedDOT, prices.polkadot.usd)}</h2>
         </div>
         {linkButton && (
           <InterlayRouterLink to={PAGES.DASHBOARD_VAULTS}>

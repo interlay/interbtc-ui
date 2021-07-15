@@ -13,7 +13,7 @@ import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from '../actions/
 import Big from 'big.js';
 import { TableDisplayParams, RelayedBlock } from '../types/util.types';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
-import { Bitcoin, BTCAmount, Currency, MonetaryAmount, Polkadot } from '@interlay/monetary-js';
+import { Bitcoin, BTCAmount, Currency, MonetaryAmount, Polkadot, PolkadotAmount } from '@interlay/monetary-js';
 
 // TODO: should be one module
 function safeRoundTwoDecimals(input: string | number | undefined, defaultValue = '0'): string {
@@ -128,19 +128,19 @@ function defaultTableDisplayParams<Column>(): TableDisplayParams<Column> {
 const updateBalances = async (
   dispatch: Dispatch,
   address: string,
-  currentBalanceDOT: string,
-  currentBalancePolkaBTC: string
+  currentBalanceDOT: PolkadotAmount,
+  currentBalancePolkaBTC: BTCAmount
 ): Promise<void> => {
   const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-  const balancePolkaBTC = (await window.polkaBTC.tokens.balance(Bitcoin, accountId)).toHuman();
-  const balanceDOT = (await window.polkaBTC.tokens.balance(Polkadot, accountId)).toHuman();
+  const balanceInterBTC = await window.polkaBTC.tokens.balance(Bitcoin, accountId);
+  const balanceDOT = await window.polkaBTC.tokens.balance(Polkadot, accountId);
 
   if (currentBalanceDOT !== balanceDOT) {
     dispatch(updateBalanceDOTAction(balanceDOT));
   }
 
-  if (currentBalancePolkaBTC !== balancePolkaBTC) {
-    dispatch(updateBalancePolkaBTCAction(balancePolkaBTC));
+  if (currentBalancePolkaBTC !== balanceInterBTC) {
+    dispatch(updateBalancePolkaBTCAction(balanceInterBTC));
   }
 };
 

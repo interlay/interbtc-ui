@@ -1,6 +1,7 @@
 import { VaultReplaceRequest } from './vault.types';
 import { StoreType, ParachainStatus, Prices } from './util.types';
 import { Issue, Redeem } from '@interlay/interbtc';
+import { BTCAmount, PolkadotAmount } from '@interlay/monetary-js';
 
 // GENERAL ACTIONS
 
@@ -20,8 +21,8 @@ export const UPDATE_TOTALS = 'UPDATE_TOTALS';
 
 export interface UpdateTotals {
   type: typeof UPDATE_TOTALS;
-  totalLockedDOT: string;
-  totalPolkaBTC: string;
+  totalLockedDOT: PolkadotAmount;
+  totalInterBTC: BTCAmount;
 }
 
 export interface UpdateHeights {
@@ -61,8 +62,8 @@ export interface InitState {
 
 export interface InitGeneralDataAction {
   type: typeof INIT_GENERAL_DATA_ACTION;
-  totalPolkaBTC: string;
-  totalLockedDOT: string;
+  totalInterBTC: BTCAmount;
+  totalLockedDOT: PolkadotAmount;
   btcRelayHeight: number;
   bitcoinHeight: number;
   parachainStatus: ParachainStatus;
@@ -70,12 +71,12 @@ export interface InitGeneralDataAction {
 
 export interface UpdateBalancePolkaBTC {
   type: typeof UPDATE_BALANCE_POLKA_BTC;
-  balancePolkaBTC: string;
+  balanceInterBTC: BTCAmount;
 }
 
 export interface UpdateBalanceDOT {
   type: typeof UPDATE_BALANCE_DOT;
-  balanceDOT: string;
+  balanceDOT: PolkadotAmount;
 }
 
 export interface SetInstalledExtension {
@@ -254,12 +255,12 @@ export interface UpdateCollateralization {
 
 export interface UpdateCollateral {
   type: typeof UPDATE_COLLATERAL;
-  collateral: string;
+  collateral: PolkadotAmount;
 }
 
 export interface UpdateLockedBTC {
   type: typeof UPDATE_LOCKED_BTC;
-  lockedBTC: string;
+  lockedBTC: BTCAmount;
 }
 
 export interface UpdateSLA {

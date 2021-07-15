@@ -46,9 +46,6 @@ import {
 } from 'config/general';
 import { PAGES } from 'utils/constants/links';
 import './i18n';
-import {
-  displayMonetaryAmount
-} from 'common/utils/utils';
 import * as constants from './constants';
 import startFetchingLiveData from 'common/live-data/live-data';
 import {
@@ -121,7 +118,7 @@ function App(): JSX.Element {
   const {
     polkaBtcLoaded,
     address,
-    balancePolkaBTC,
+    balanceInterBTC,
     balanceDOT
   } = useSelector((state: StoreType) => state.general);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -190,7 +187,7 @@ function App(): JSX.Element {
     (async () => {
       try {
         const [
-          totalPolkaBTC,
+          totalInterBTC,
           totalLockedDOT,
           btcRelayHeight,
           bitcoinHeight,
@@ -217,8 +214,8 @@ function App(): JSX.Element {
 
         dispatch(
           initGeneralDataAction(
-            displayMonetaryAmount(totalPolkaBTC),
-            displayMonetaryAmount(totalLockedDOT),
+            totalInterBTC,
+            totalLockedDOT,
             Number(btcRelayHeight),
             bitcoinHeight,
             parachainStatus(state)
@@ -307,9 +304,8 @@ function App(): JSX.Element {
       try {
         unsubscribeFromCollateral =
           await window.polkaBTC.tokens.subscribeToBalance(Polkadot, address, (_, balance: PolkadotAmount) => {
-            const newDOTBalance = balance.toHuman();
-            if (newDOTBalance !== balanceDOT) {
-              dispatch(updateBalanceDOTAction(newDOTBalance));
+            if (!balance.eq(balanceDOT)) {
+              dispatch(updateBalanceDOTAction(balance));
             }
           });
       } catch (error) {
@@ -321,9 +317,8 @@ function App(): JSX.Element {
       try {
         unsubscribeFromWrapped =
           await window.polkaBTC.tokens.subscribeToBalance(Bitcoin, address, (_, balance: BTCAmount) => {
-            const newPolkaBTCBalance = balance.toHuman();
-            if (newPolkaBTCBalance !== balancePolkaBTC) {
-              dispatch(updateBalancePolkaBTCAction(newPolkaBTCBalance));
+            if (!balance.eq(balanceInterBTC)) {
+              dispatch(updateBalancePolkaBTCAction(balance));
             }
           });
       } catch (error) {
@@ -343,7 +338,7 @@ function App(): JSX.Element {
     dispatch,
     polkaBtcLoaded,
     address,
-    balancePolkaBTC,
+    balanceInterBTC,
     balanceDOT
   ]);
 

@@ -5,7 +5,6 @@ import {
 } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import Big from 'big.js';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
 
@@ -111,7 +110,7 @@ const Transfer = (): JSX.Element => {
 
   const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
   const {
-    balancePolkaBTC,
+    balanceInterBTC,
     balanceDOT,
     parachainStatus,
     extensions
@@ -150,8 +149,8 @@ const Transfer = (): JSX.Element => {
         BTCAmount.from.BTC(data[INTER_BTC_AMOUNT])
       );
       // TODO: should be managed by a dedicated cache mechanism
-      dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(data[INTER_BTC_AMOUNT])).toString()));
-      updateBalances(dispatch, data[DOT_ADDRESS], balanceDOT, balancePolkaBTC);
+      dispatch(updateBalancePolkaBTCAction(balanceInterBTC.sub(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]))));
+      updateBalances(dispatch, data[DOT_ADDRESS], balanceDOT, balanceInterBTC);
       setSubmitStatus(STATUSES.RESOLVED);
       toast.success(t('transfer_page.successfully_transferred'));
       reset({
@@ -165,7 +164,7 @@ const Transfer = (): JSX.Element => {
   };
 
   const validatePolkaBTCAmount = (value: number): string | undefined => {
-    if (Number(balancePolkaBTC) === 0) {
+    if (Number(balanceInterBTC) === 0) {
       return t('insufficient_funds');
     }
 
@@ -173,8 +172,8 @@ const Transfer = (): JSX.Element => {
       return t('insufficient_funds_dot');
     }
 
-    if (value > Number(balancePolkaBTC)) {
-      return `${t('redeem_page.current_balance')}${balancePolkaBTC}`;
+    if (value > Number(balanceInterBTC)) {
+      return `${t('redeem_page.current_balance')}${balanceInterBTC}`;
     }
 
     return undefined;

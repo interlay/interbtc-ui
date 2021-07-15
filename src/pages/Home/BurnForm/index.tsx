@@ -59,7 +59,7 @@ const Burn = (): JSX.Element | null => {
   const {
     prices,
     polkaBtcLoaded,
-    balancePolkaBTC,
+    balanceInterBTC,
     balanceDOT,
     parachainStatus,
     extensions
@@ -125,9 +125,9 @@ const Burn = (): JSX.Element | null => {
       await window.polkaBTC.redeem.burn(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]));
       // TODO: should not manually update the balances everywhere
       // - Should be able to watch the balances in one place and update the context accordingly.
-      dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(data[INTER_BTC_AMOUNT])).toString()));
+      dispatch(updateBalancePolkaBTCAction(balanceInterBTC.sub(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]))));
       const earnedDOT = burnRate.toBase(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]) || BTCAmount.zero);
-      dispatch(updateBalanceDOTAction(new Big(balanceDOT).add(earnedDOT.toBig(earnedDOT.currency.base)).toString()));
+      dispatch(updateBalanceDOTAction(balanceDOT.add(earnedDOT)));
       toast.success(t('burn_page.successfully_burned'));
       reset({
         [INTER_BTC_AMOUNT]: ''
@@ -141,8 +141,8 @@ const Burn = (): JSX.Element | null => {
 
   const validatePolkaBTCAmount = (value: number): string | undefined => {
     // TODO: should be `big` type other than `Number`
-    if (value > Number(balancePolkaBTC)) {
-      return `${t('redeem_page.current_balance')}${balancePolkaBTC}`;
+    if (value > Number(balanceInterBTC)) {
+      return `${t('redeem_page.current_balance')}${balanceInterBTC}`;
     }
 
     if (!polkaBtcLoaded) {

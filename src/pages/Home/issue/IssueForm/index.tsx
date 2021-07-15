@@ -182,7 +182,7 @@ const IssueForm = (): JSX.Element | null => {
 
     const securityDeposit = btcToDOTRate.toCounter(btcAmount).mul(depositRate);
     const minimumRequiredDOTAmount = PolkadotAmount.from.DOT(EXTRA_REQUIRED_DOT_AMOUNT).add(securityDeposit);
-    if (PolkadotAmount.from.DOT(balanceDOT).lte(minimumRequiredDOTAmount)) {
+    if (balanceDOT.lte(minimumRequiredDOTAmount)) {
       return t('insufficient_funds_dot');
     }
 

@@ -5,6 +5,7 @@ import { u256 } from '@polkadot/types/primitive';
 import { IssueState } from './issue.types';
 import { RedeemState } from './redeem.types';
 import { VaultState } from './vault.types';
+import { BTCAmount, PolkadotAmount } from '@interlay/monetary-js';
 export interface StatusUpdate {
   id: u256;
   timestamp: string;
@@ -58,10 +59,10 @@ export type GeneralState = {
   vaultClientLoaded: boolean;
   showAccountModal: boolean;
   address: string;
-  totalPolkaBTC: string;
-  totalLockedDOT: string;
-  balancePolkaBTC: string;
-  balanceDOT: string;
+  totalInterBTC: BTCAmount;
+  totalLockedDOT: PolkadotAmount;
+  balanceInterBTC: BTCAmount;
+  balanceDOT: PolkadotAmount;
   extensions: string[];
   btcRelayHeight: number;
   bitcoinHeight: number;

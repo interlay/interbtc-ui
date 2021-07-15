@@ -7,9 +7,7 @@ import {
   useDispatch
 } from 'react-redux';
 import clsx from 'clsx';
-import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
-import { planckToDOT } from '@interlay/interbtc';
 import {
   IssueColumns,
   RedeemColumns
@@ -35,8 +33,7 @@ import ReplaceTable from './replace-table/replace-table';
 import { StoreType } from 'common/types/util.types';
 import {
   safeRoundTwoDecimals,
-  displayMonetaryAmount,
-  safeRoundFiveDecimals
+  displayMonetaryAmount
 } from 'common/utils/utils';
 import {
   updateCollateralizationAction,
@@ -113,8 +110,8 @@ function VaultDashboard(): JSX.Element {
         ]);
 
         if (vault.status === 'fulfilled') {
-          const collateralDot = planckToDOT(vault.value.backing_collateral);
-          dispatch(updateCollateralAction(collateralDot.toString()));
+          const collateralDot = PolkadotAmount.from.Planck(vault.value.backing_collateral.toString());
+          dispatch(updateCollateralAction(collateralDot));
         }
 
         if (feesPolkaBTC.status === 'fulfilled') {
@@ -134,7 +131,7 @@ function VaultDashboard(): JSX.Element {
         }
 
         if (lockedAmountBTC.status === 'fulfilled') {
-          dispatch(updateLockedBTCAction(lockedAmountBTC.value.toHuman()));
+          dispatch(updateLockedBTCAction(lockedAmountBTC.value));
         }
 
         if (collateralization.status === 'fulfilled') {
@@ -186,12 +183,12 @@ function VaultDashboard(): JSX.Element {
       color: 'text-interlayDenim-800'
     }, {
       title: t('vault.locked_dot'),
-      value: safeRoundFiveDecimals(collateral),
+      value: displayMonetaryAmount(collateral),
       color: 'text-interlayDenim-800'
     },
     {
       title: t('locked_btc'),
-      value: displayMonetaryAmount(BTCAmount.from.BTC(lockedBTC)),
+      value: displayMonetaryAmount(lockedBTC),
       color: 'text-interlayCalifornia-700'
     }, {
       title: t('vault.remaining_capacity'),
@@ -261,7 +258,7 @@ function VaultDashboard(): JSX.Element {
               onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Decrease)}>
               {t('vault.withdraw_collateral')}
             </InterlayDefaultContainedButton>
-            {new Big(lockedBTC).gt(new Big(0)) ? (
+            {lockedBTC.gt(BTCAmount.zero) ? (
               <InterlayCaliforniaContainedButton
                 type='submit'
                 style={{ display: 'flex' }}

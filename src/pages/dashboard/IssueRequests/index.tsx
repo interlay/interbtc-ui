@@ -16,10 +16,11 @@ import LineChartComponent from '../components/line-chart-component';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
 import BN from 'bn.js';
+import { getUsdAmount } from 'common/utils/utils';
 
 function IssueRequests(): JSX.Element {
   const {
-    totalPolkaBTC,
+    totalInterBTC,
     prices
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
@@ -124,10 +125,10 @@ function IssueRequests(): JSX.Element {
               {t('dashboard.issue.issued')}
             </h5>
             <h5>
-              {t('dashboard.issue.total_interbtc', { amount: totalPolkaBTC })}
+              {t('dashboard.issue.total_interbtc', { amount: totalInterBTC })}
             </h5>
             <h5 className='text-textSecondary'>
-              ${(prices.bitcoin.usd * parseFloat(totalPolkaBTC)).toLocaleString()}
+              ${getUsdAmount(totalInterBTC, prices.bitcoin.usd)}
             </h5>
             <h5
               className={clsx(
