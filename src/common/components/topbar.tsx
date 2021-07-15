@@ -30,7 +30,7 @@ import { PAGES } from 'utils/constants/links';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
-import { CurrencyIdLiteral } from '@interlay/interbtc';
+import { Polkadot } from '@interlay/monetary-js';
 
 type TopbarProps = {
   address?: string;
@@ -83,8 +83,8 @@ const Topbar = (props: TopbarProps): JSX.Element => {
     try {
       await props.requestDOT();
       const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const balanceDOT = await window.polkaBTC.tokens.balance(CurrencyIdLiteral.DOT, accountId);
-      dispatch(updateBalanceDOTAction(balanceDOT.toString()));
+      const balanceDOT = await window.polkaBTC.tokens.balance(Polkadot, accountId);
+      dispatch(updateBalanceDOTAction(balanceDOT.toHuman()));
     } catch (error) {
       console.log(error);
     }

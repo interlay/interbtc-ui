@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import Big from 'big.js';
 import clsx from 'clsx';
 
 import IssueForm from './issue/IssueForm';
@@ -23,6 +22,7 @@ import useQuery from 'utils/hooks/use-query';
 import useUpdateQueryParameters, { QueryParameters } from 'utils/hooks/use-update-query-parameters';
 import TAB_IDS from 'utils/constants/tab-ids';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
+import { BTCAmount } from '@interlay/monetary-js';
 
 const TAB_ITEMS_WITHOUT_BURN = [
   {
@@ -93,7 +93,7 @@ const Home = (): JSX.Element | null => {
     (async () => {
       try {
         const maxBurnableTokens = await window.polkaBTC.redeem.getMaxBurnableTokens();
-        setBurnable(maxBurnableTokens > new Big(0));
+        setBurnable(maxBurnableTokens.gt(BTCAmount.zero));
       } catch (error) {
         // TODO: should add error handling
         console.log('[Application] error.message => ', error.message);

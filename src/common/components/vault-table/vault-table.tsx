@@ -2,7 +2,7 @@ import { ReactElement, useState, useEffect, useMemo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Vault } from '../../types/vault.types';
 import * as constants from '../../../constants';
-import { planckToDOT, satToBTC, roundTwoDecimals } from '@interlay/interbtc';
+import { satToBTC, roundTwoDecimals } from '@interlay/interbtc';
 import { shortAddress } from '../../utils/utils';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
@@ -11,13 +11,24 @@ import DashboardTable from '../dashboard-table/dashboard-table';
 import { VaultExt } from '@interlay/interbtc/build/parachain/vaults';
 import Tooltip from 'components/Tooltip';
 import clsx from 'clsx';
+import {
+  Bitcoin,
+  BTCAmount,
+  BTCUnit,
+  ExchangeRate,
+  Polkadot,
+  PolkadotAmount,
+  PolkadotUnit
+} from '@interlay/monetary-js';
 
 export default function VaultTable(): ReactElement {
   const [vaults, setVaults] = useState<Array<Vault>>([]);
   const [vaultsExt, setVaultsExt] = useState<Array<VaultExt>>([]);
   const [liquidationThreshold, setLiquidationThreshold] = useState(new Big(0));
   const [secureCollateralThreshold, setSecureCollateralThreshold] = useState(new Big(0));
-  const [btcToDotRate, setBtcToDotRate] = useState(new Big(0));
+  const [btcToDotRate, setBtcToDotRate] = useState(
+    new ExchangeRate<Bitcoin, BTCUnit, Polkadot, PolkadotUnit>(Bitcoin, Polkadot, new Big(0))
+  );
   const { t } = useTranslation();
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
 
@@ -34,7 +45,7 @@ export default function VaultTable(): ReactElement {
         ] = await Promise.all([
           window.polkaBTC.vaults.getSecureCollateralThreshold(),
           window.polkaBTC.vaults.getLiquidationCollateralThreshold(),
-          window.polkaBTC.oracle.getExchangeRate(),
+          window.polkaBTC.oracle.getExchangeRate(Polkadot),
           window.polkaBTC.vaults.list()
         ]);
 
@@ -87,19 +98,19 @@ export default function VaultTable(): ReactElement {
       const vaultsList: Vault[] = [];
 
       for (const vault of vaultsExt) {
-        const getCollateralization = (collateral: Big, tokens: Big) => {
-          if (tokens.gt(0) && btcToDotRate.gt(0)) {
-            return collateral.div(tokens).div(btcToDotRate).mul(100);
+        const getCollateralization = (collateral: PolkadotAmount, tokens: BTCAmount) => {
+          if (tokens.gt(BTCAmount.zero) && btcToDotRate.toBig().gt(0)) {
+            const tokensAsCollateral = btcToDotRate.toCounter(tokens);
+            return collateral.toBig().div(tokensAsCollateral.toBig()).mul(100);
           } else {
             return undefined;
           }
         };
 
-        const vaultCollateral = new Big(planckToDOT(vault.backing_collateral));
-        const unsettledTokens = new Big(satToBTC(vault.issued_tokens))
-          .add(new Big(satToBTC(vault.to_be_issued_tokens)));
-        const settledTokens = new Big(satToBTC(vault.issued_tokens));
-        const unsettledCollateralization = getCollateralization(vaultCollateral, unsettledTokens);
+        const vaultCollateral = PolkadotAmount.from.Planck(vault.backing_collateral.toString());
+        const unsettledTokens = BTCAmount.from.Satoshi(vault.to_be_issued_tokens.toString());
+        const settledTokens = BTCAmount.from.Satoshi(vault.issued_tokens.toString());
+        const unsettledCollateralization = getCollateralization(vaultCollateral, unsettledTokens.add(settledTokens));
         const settledCollateralization = getCollateralization(vaultCollateral, settledTokens);
 
         const btcAddress = vault.wallet.btcAddress;
@@ -108,7 +119,7 @@ export default function VaultTable(): ReactElement {
           vaultId: vault.id.toString(),
           // TODO: fetch collateral reserved
           lockedBTC: satToBTC(vault.issued_tokens).toString(),
-          lockedDOT: vaultCollateral.toString(),
+          lockedDOT: vaultCollateral.toHuman(),
           pendingBTC: satToBTC(vault.to_be_issued_tokens).toString(),
           btcAddress: btcAddress || '',
           status:

@@ -14,6 +14,7 @@ import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutline
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import BN from 'bn.js';
+import { BTCAmount } from '@interlay/monetary-js';
 
 type PolkaBTCProps = {
   linkButton?: boolean;
@@ -56,7 +57,7 @@ const InterBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
           <h1 style={{ color: getAccents('d_interlayDenim').color }}>{t('dashboard.issue.issued')}</h1>
           <h2>{t('dashboard.issue.total_interbtc', { amount: totalPolkaBTC })}</h2>
           {/* TODO: add the price API */}
-          <h2>${getUsdAmount(totalPolkaBTC, prices.bitcoin.usd)}</h2>
+          <h2>${getUsdAmount(BTCAmount.from.BTC(totalPolkaBTC), prices.bitcoin.usd)}</h2>
         </div>
         {linkButton && (
           <>

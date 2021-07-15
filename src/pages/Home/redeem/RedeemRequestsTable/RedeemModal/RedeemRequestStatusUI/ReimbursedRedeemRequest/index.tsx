@@ -14,6 +14,7 @@ import { getUsdAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import { Redeem } from '@interlay/interbtc';
+import { BTCAmount, Polkadot, PolkadotAmount } from '@interlay/monetary-js';
 
 interface Props {
   request: Redeem;
@@ -27,10 +28,10 @@ const ReimbursedRedeemRequest = ({
     polkaBtcLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
-  const [burnedBTCAmount, setBurnedBTCAmount] = React.useState(new Big(0));
-  const [punishmentDOTAmount, setPunishmentDOTAmount] = React.useState(new Big(0));
-  const [burnDOTAmount, setBurnDOTAmount] = React.useState(new Big(0));
-  const [dotAmount, setDOTAmount] = React.useState(new Big(0));
+  const [burnedBTCAmount, setBurnedBTCAmount] = React.useState(BTCAmount.zero);
+  const [punishmentDOTAmount, setPunishmentDOTAmount] = React.useState(PolkadotAmount.zero);
+  const [burnDOTAmount, setBurnDOTAmount] = React.useState(PolkadotAmount.zero);
+  const [dotAmount, setDOTAmount] = React.useState(PolkadotAmount.zero);
 
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
@@ -44,11 +45,13 @@ const ReimbursedRedeemRequest = ({
           btcDotRate
         ] = await Promise.all([
           window.polkaBTC.vaults.getPunishmentFee(),
-          window.polkaBTC.oracle.getExchangeRate()
+          window.polkaBTC.oracle.getExchangeRate(Polkadot)
         ]);
 
-        const burnedBTCAmount = request ? new Big(request.amountBTC).add(request.bridgeFee) : new Big(0);
-        const theBurnDOTAmount = burnedBTCAmount.mul(btcDotRate);
+        const burnedBTCAmount = request ?
+          BTCAmount.from.BTC(new Big(request.amountBTC).add(request.bridgeFee)) :
+          BTCAmount.zero;
+        const theBurnDOTAmount = btcDotRate.toCounter(burnedBTCAmount);
         const thePunishmentDOTAmount = theBurnDOTAmount.mul(new Big(punishmentFee));
         const theDOTAmount = theBurnDOTAmount.add(thePunishmentDOTAmount);
         setBurnedBTCAmount(burnedBTCAmount);
@@ -81,7 +84,7 @@ const ReimbursedRedeemRequest = ({
       </p>
       <p className='font-medium'>
         <span className='text-interlayCinnabar'>
-          {`${burnedBTCAmount} InterBTC`}
+          {`${burnedBTCAmount.toHuman()} InterBTC`}
         </span>
         <span>
           &nbsp;{`(≈ $${getUsdAmount(burnedBTCAmount, prices.bitcoin.usd)})`}
@@ -94,10 +97,10 @@ const ReimbursedRedeemRequest = ({
       <p className='font-medium'>
         <span className='text-interlayDenim'>{t('redeem_page.recover_receive_dot')}</span>
         <span className='text-interlayDenim'>
-          &nbsp;{`${dotAmount.toString()} DOT`}
+          &nbsp;{`${dotAmount.toHuman()} DOT`}
         </span>
         <span>
-          &nbsp;{`(≈ $${getUsdAmount(dotAmount.toString(), prices.polkadot.usd)})`}
+          &nbsp;{`(≈ $${getUsdAmount(dotAmount, prices.polkadot.usd)})`}
         </span>
         <span className='text-interlayDenim'>
           &nbsp;{t('redeem_page.recover_receive_total')}
@@ -117,9 +120,9 @@ const ReimbursedRedeemRequest = ({
               width={20}
               height={20} />
           }
-          value={burnDOTAmount.toString()}
+          value={burnDOTAmount.toHuman()}
           unitName='DOT'
-          approxUSD={getUsdAmount(burnDOTAmount.toString(), prices.polkadot.usd)} />
+          approxUSD={getUsdAmount(burnDOTAmount, prices.polkadot.usd)} />
         <PriceInfo
           className='w-full'
           title={
@@ -132,9 +135,9 @@ const ReimbursedRedeemRequest = ({
               width={20}
               height={20} />
           }
-          value={punishmentDOTAmount.toString()}
+          value={punishmentDOTAmount.toHuman()}
           unitName='DOT'
-          approxUSD={getUsdAmount(punishmentDOTAmount.toString(), prices.polkadot.usd)} />
+          approxUSD={getUsdAmount(punishmentDOTAmount, prices.polkadot.usd)} />
         <hr
           className={clsx(
             'border-t-2',
@@ -153,9 +156,9 @@ const ReimbursedRedeemRequest = ({
               width={20}
               height={20} />
           }
-          value={dotAmount.toString()}
+          value={dotAmount.toHuman()}
           unitName='DOT'
-          approxUSD={getUsdAmount(dotAmount.toString(), prices.polkadot.usd)} />
+          approxUSD={getUsdAmount(dotAmount, prices.polkadot.usd)} />
       </div>
       <InterlayLink
         className={clsx(

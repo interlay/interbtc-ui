@@ -33,6 +33,15 @@ import {
 import STATUSES from 'utils/constants/statuses';
 import { BALANCE_MAX_INTEGER_LENGTH } from '../../../constants';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
+import {
+  ExchangeRate,
+  Bitcoin,
+  BTCUnit,
+  Polkadot,
+  PolkadotUnit,
+  BTCAmount,
+  PolkadotAmount
+} from '@interlay/monetary-js';
 
 const INTER_BTC_AMOUNT = 'inter-btc-amount';
 
@@ -67,7 +76,9 @@ const Burn = (): JSX.Element | null => {
   });
   const interBTCAmount = watch(INTER_BTC_AMOUNT);
 
-  const [burnRate, setBurnRate] = React.useState<Big>();
+  const [burnRate, setBurnRate] = React.useState(
+    new ExchangeRate<Polkadot, PolkadotUnit, Bitcoin, BTCUnit>(Polkadot, Bitcoin, new Big(0))
+  );
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
@@ -111,12 +122,12 @@ const Burn = (): JSX.Element | null => {
   const onSubmit = async (data: BurnForm) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
-      await window.polkaBTC.redeem.burn(new Big(data[INTER_BTC_AMOUNT]));
+      await window.polkaBTC.redeem.burn(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]));
       // TODO: should not manually update the balances everywhere
       // - Should be able to watch the balances in one place and update the context accordingly.
       dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(data[INTER_BTC_AMOUNT])).toString()));
-      const earnedDOT = burnRate.times(data[INTER_BTC_AMOUNT] || '0').toString();
-      dispatch(updateBalanceDOTAction(new Big(balanceDOT).add(new Big(earnedDOT)).toString()));
+      const earnedDOT = burnRate.toBase(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]) || BTCAmount.zero);
+      dispatch(updateBalanceDOTAction(new Big(balanceDOT).add(earnedDOT.toBig(earnedDOT.currency.base)).toString()));
       toast.success(t('burn_page.successfully_burned'));
       reset({
         [INTER_BTC_AMOUNT]: ''
@@ -150,7 +161,10 @@ const Burn = (): JSX.Element | null => {
     return undefined;
   };
 
-  const earnedDOT = burnRate.times(interBTCAmount || '0').toString();
+  const parsedInterBTCAmount = BTCAmount.from.BTC(interBTCAmount || 0);
+  const earnedDOT = burnRate.rate.eq(0) ?
+    PolkadotAmount.zero :
+    burnRate.toBase(parsedInterBTCAmount || BTCAmount.zero);
 
   if (status === STATUSES.RESOLVED) {
     const walletConnected = !!extensions.length;
@@ -189,7 +203,7 @@ const Burn = (): JSX.Element | null => {
               },
               validate: value => validatePolkaBTCAmount(value)
             })}
-            approxUSD={`≈ $ ${getUsdAmount(interBTCAmount || '0', prices.bitcoin.usd)}`}
+            approxUSD={`≈ $ ${getUsdAmount(parsedInterBTCAmount || BTCAmount.zero, prices.bitcoin.usd)}`}
             error={!!errors[INTER_BTC_AMOUNT]}
             helperText={errors[INTER_BTC_AMOUNT]?.message} />
           <PriceInfo
@@ -203,7 +217,7 @@ const Burn = (): JSX.Element | null => {
                 width={20}
                 height={20} />
             }
-            value={earnedDOT}
+            value={earnedDOT.toHuman()}
             unitName='DOT'
             approxUSD={getUsdAmount(earnedDOT, prices.polkadot.usd)} />
           {/* TODO: could componentize */}
@@ -224,7 +238,7 @@ const Burn = (): JSX.Element | null => {
                 width={20}
                 height={20} />
             }
-            value={earnedDOT}
+            value={earnedDOT.toHuman()}
             unitName='DOT'
             approxUSD={getUsdAmount(earnedDOT, prices.polkadot.usd)} />
           <InterlayDenimContainedButton

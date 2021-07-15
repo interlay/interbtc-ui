@@ -37,7 +37,7 @@ import { ReactComponent as AcalaLogoIcon } from 'assets/img/acala-logo.svg';
 import { ReactComponent as PlasmLogoIcon } from 'assets/img/plasm-logo.svg';
 import { ReactComponent as EthereumLogoIcon } from 'assets/img/ethereum-logo.svg';
 import { ReactComponent as CosmosLogoIcon } from 'assets/img/cosmos-logo.svg';
-import { CurrencyIdLiteral } from '@interlay/interbtc';
+import { BTCAmount } from '@interlay/monetary-js';
 
 const INTER_BTC_AMOUNT = 'inter-btc-amount';
 const DOT_ADDRESS = 'dot-address';
@@ -146,9 +146,8 @@ const Transfer = (): JSX.Element => {
     try {
       setSubmitStatus(STATUSES.PENDING);
       await window.polkaBTC.tokens.transfer(
-        CurrencyIdLiteral.INTERBTC,
         data[DOT_ADDRESS],
-        new Big(data[INTER_BTC_AMOUNT])
+        BTCAmount.from.BTC(data[INTER_BTC_AMOUNT])
       );
       // TODO: should be managed by a dedicated cache mechanism
       dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(data[INTER_BTC_AMOUNT])).toString()));
@@ -222,7 +221,7 @@ const Transfer = (): JSX.Element => {
             },
             validate: value => validatePolkaBTCAmount(value)
           })}
-          approxUSD={`≈ $ ${getUsdAmount(interBTCAmount || '0.00', usdPrice)}`}
+          approxUSD={`≈ $ ${getUsdAmount(BTCAmount.from.BTC(interBTCAmount || '0.00'), usdPrice)}`}
           error={!!errors[INTER_BTC_AMOUNT]}
           helperText={errors[INTER_BTC_AMOUNT]?.message} />
         <div>

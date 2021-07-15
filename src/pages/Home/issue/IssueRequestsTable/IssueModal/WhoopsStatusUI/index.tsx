@@ -13,6 +13,7 @@ import {
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { Issue } from '@interlay/interbtc';
+import { BTCAmount } from '@interlay/monetary-js';
 
 interface Props {
   request: Issue;
@@ -58,7 +59,7 @@ const WhoopsStatusUI = ({
         }
         value={request.amountInterBTC}
         unitName='InterBTC'
-        approxUSD={getUsdAmount(request.amountInterBTC, prices.bitcoin.usd)} />
+        approxUSD={getUsdAmount(BTCAmount.from.BTC(request.amountInterBTC), prices.bitcoin.usd)} />
       <PriceInfo
         className='w-full'
         title={
@@ -73,7 +74,7 @@ const WhoopsStatusUI = ({
         }
         value={safeRoundEightDecimals(Number(request.btcAmountSubmittedByUser))}
         unitName='BTC'
-        approxUSD={getUsdAmount(request.btcAmountSubmittedByUser || '0', prices.bitcoin.usd)} />
+        approxUSD={getUsdAmount(BTCAmount.from.BTC(request.btcAmountSubmittedByUser || '0'), prices.bitcoin.usd)} />
       <PriceInfo
         className='w-full'
         title={
@@ -88,7 +89,9 @@ const WhoopsStatusUI = ({
         }
         value={request.executedAmountBTC || request.amountInterBTC}
         unitName='InterBTC'
-        approxUSD={getUsdAmount(request.executedAmountBTC || request.amountInterBTC, prices.bitcoin.usd)} />
+        approxUSD={
+          getUsdAmount(BTCAmount.from.BTC(request.executedAmountBTC || request.amountInterBTC), prices.bitcoin.usd)
+        } />
       <hr
         className={clsx(
           'border-t-2',
@@ -114,7 +117,7 @@ const WhoopsStatusUI = ({
         unitName='BTC'
         approxUSD={
           getUsdAmount(
-            (Number(request.btcAmountSubmittedByUser) - Number(request.executedAmountBTC)).toString(),
+            BTCAmount.from.BTC((Number(request.btcAmountSubmittedByUser) - Number(request.executedAmountBTC))),
             prices.bitcoin.usd
           )
         } />

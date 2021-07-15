@@ -4,7 +4,7 @@ import {
   reverseEndianness,
   Issue,
   Redeem,
-  CurrencyIdLiteral
+  CurrencyUnit
 } from '@interlay/interbtc';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from '../../constants';
@@ -13,6 +13,7 @@ import { updateBalanceDOTAction, updateBalancePolkaBTCAction } from '../actions/
 import Big from 'big.js';
 import { TableDisplayParams, RelayedBlock } from '../types/util.types';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
+import { Bitcoin, BTCAmount, Currency, MonetaryAmount, Polkadot } from '@interlay/monetary-js';
 
 // TODO: should be one module
 function safeRoundTwoDecimals(input: string | number | undefined, defaultValue = '0'): string {
@@ -58,30 +59,26 @@ function formatDateTimePrecise(date: Date): string {
 
 // TODO: replace these functions with internationalization functions
 // always round USD amounts to two decimals
-function getUsdAmount(amount: string | Big, rate: number): string {
-  return new Big(amount).mul(new Big(rate)).toFixed(2).toString();
+function getUsdAmount<C extends CurrencyUnit>(
+  amount: MonetaryAmount<Currency<C>, C>,
+  rate: number
+): string {
+  return amount.toBig(amount.currency.base).mul(new Big(rate)).toFixed(2).toString();
 }
 
-function displayBtcAmount(amount: string | number | Big, defaultValue = '0.00'): string {
+function displayMonetaryAmount<C extends CurrencyUnit>(
+  amount: MonetaryAmount<Currency<C>, C> | undefined,
+  defaultValue = '0.00'
+): string {
   if (amount === undefined) return defaultValue;
-  // FIXME: hotfix workaround
-  try {
-    Big.NE = -10;
-    const bigAmount = new Big(amount);
-    if (bigAmount.gte('0')) {
-      return new Big(amount).round(8).toString();
-    }
-    return defaultValue;
-  } catch {
-    return defaultValue;
-  }
-}
 
-function displayDotAmount(amount: string | number | Big | undefined, defaultValue = '0.00'): string {
-  if (amount === undefined) return defaultValue;
-  const bigAmount = new Big(amount);
-  if (bigAmount.gte('0')) {
-    return new Big(amount).round(5).toString();
+  // TODO: Refactor once Monetary.js exposes an `isGreaterThanZero()` method
+  const zero = new MonetaryAmount<Currency<C>, C>(
+    amount.currency,
+    0
+  );
+  if (amount.gte(zero)) {
+    return amount.toHuman();
   }
   return defaultValue;
 }
@@ -135,8 +132,8 @@ const updateBalances = async (
   currentBalancePolkaBTC: string
 ): Promise<void> => {
   const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-  const balancePolkaBTC = (await window.polkaBTC.tokens.balance(CurrencyIdLiteral.INTERBTC, accountId)).toString();
-  const balanceDOT = (await window.polkaBTC.tokens.balance(CurrencyIdLiteral.DOT, accountId)).toString();
+  const balancePolkaBTC = (await window.polkaBTC.tokens.balance(Bitcoin, accountId)).toHuman();
+  const balanceDOT = (await window.polkaBTC.tokens.balance(Polkadot, accountId)).toHuman();
 
   if (currentBalanceDOT !== balanceDOT) {
     dispatch(updateBalanceDOTAction(balanceDOT));
@@ -172,7 +169,7 @@ const copyToClipboard = (text: string): void => {
   navigator.clipboard.writeText(text);
 };
 
-const getRandomVaultIdWithCapacity = (vaults: [AccountId, Big][], requiredCapacity: Big): string => {
+const getRandomVaultIdWithCapacity = (vaults: [AccountId, BTCAmount][], requiredCapacity: BTCAmount): string => {
   const filteredVaults = vaults.filter(vault => vault[1].gte(requiredCapacity));
   return filteredVaults.length > 0 ? getRandomArrayElement(filteredVaults)[0].toString() : '';
 };
@@ -190,8 +187,7 @@ export {
   formatDateTime,
   formatDateTimePrecise,
   getUsdAmount,
-  displayBtcAmount,
-  displayDotAmount,
+  displayMonetaryAmount,
   isPositiveNumeric,
   range,
   BtcNetwork,

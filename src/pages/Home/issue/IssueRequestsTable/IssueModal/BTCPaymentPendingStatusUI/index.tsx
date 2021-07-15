@@ -12,9 +12,10 @@ import { Issue } from '@interlay/interbtc';
 import { StoreType } from 'common/types/util.types';
 import {
   copyToClipboard,
-  displayBtcAmount,
+  displayMonetaryAmount,
   getUsdAmount
 } from 'common/utils/utils';
+import { BTCAmount } from '@interlay/monetary-js';
 
 interface Props {
   request: Issue;
@@ -26,7 +27,7 @@ const BTCPaymentPendingStatusUI = ({
   const { t } = useTranslation();
   const { prices } = useSelector((state: StoreType) => state.general);
   const { issuePeriod } = useSelector((state: StoreType) => state.issue);
-  const amountBTCToSend = new Big(request.amountInterBTC).add(request.bridgeFee).toString();
+  const amountBTCToSend = BTCAmount.from.BTC(new Big(request.amountInterBTC).add(request.bridgeFee).toString());
   const [initialLeftSeconds, setInitialLeftSeconds] = React.useState<number>();
 
   React.useEffect(() => {
@@ -54,7 +55,7 @@ const BTCPaymentPendingStatusUI = ({
         <div
           className='text-xl'>
           {t('send')}
-          <span className='text-interlayCalifornia'>&nbsp;{amountBTCToSend}&nbsp;</span>
+          <span className='text-interlayCalifornia'>&nbsp;{amountBTCToSend.toHuman()}&nbsp;</span>
           BTC
         </div>
         <span
@@ -115,12 +116,12 @@ const BTCPaymentPendingStatusUI = ({
           {t('issue_page.warning_mbtc_wallets')}
         </span>
         <span className='text-interlayCalifornia'>
-          {displayBtcAmount(new Big(amountBTCToSend).mul(1000).toString())}&nbsp;mBTC
+          {displayMonetaryAmount(amountBTCToSend.mul(1000))}&nbsp;mBTC
         </span>
       </p>
       <QRCode
         className='mx-auto'
-        value={`bitcoin:${request.vaultBTCAddress}?amount=${amountBTCToSend}`} />
+        value={`bitcoin:${request.vaultBTCAddress}?amount=${amountBTCToSend.toHuman()}`} />
       <div
         className={clsx(
           'text-textSecondary'
