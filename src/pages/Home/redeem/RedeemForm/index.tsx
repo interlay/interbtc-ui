@@ -80,8 +80,7 @@ const RedeemForm = (): JSX.Element | null => {
     bitcoinHeight,
     btcRelayHeight,
     prices,
-    parachainStatus,
-    extensions
+    parachainStatus
   } = useSelector((state: StoreType) => state.general);
   const premiumRedeemSelected = useSelector((state: StoreType) => state.redeem.premiumRedeem);
 
@@ -315,10 +314,10 @@ const RedeemForm = (): JSX.Element | null => {
   const bitcoinNetworkFeeInUSD = getUsdAmount(currentInclusionFee, prices.bitcoin.usd);
 
   if (status === STATUSES.RESOLVED) {
-    const walletConnected = !!extensions.length;
+    const accountSet = !!address;
 
     const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      if (!walletConnected) {
+      if (!accountSet) {
         dispatch(showAccountModalAction(true));
         event.preventDefault();
       }
@@ -469,7 +468,7 @@ const RedeemForm = (): JSX.Element | null => {
             disabled={parachainStatus !== ParachainStatus.Running}
             pending={submitStatus === STATUSES.PENDING}
             onClick={handleConfirmClick}>
-            {walletConnected ? t('confirm') : t('connect_wallet')}
+            {accountSet ? t('confirm') : t('connect_wallet')}
           </InterlayDenimContainedButton>
         </form>
         {(submitStatus === STATUSES.REJECTED && submitError) && (

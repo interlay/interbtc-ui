@@ -114,7 +114,7 @@ const Transfer = (): JSX.Element => {
     balancePolkaBTC,
     balanceDOT,
     parachainStatus,
-    extensions
+    address
   } = useSelector((state: StoreType) => state.general);
 
   const {
@@ -186,10 +186,10 @@ const Transfer = (): JSX.Element => {
     throw new Error('Something went wrong!'); // TODO: hardcoded
   }
 
-  const walletConnected = !!extensions.length;
+  const accountSet = !!address;
 
   const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (!walletConnected) {
+    if (!accountSet) {
       dispatch(showAccountModalAction(true));
       event.preventDefault();
     }
@@ -262,7 +262,7 @@ const Transfer = (): JSX.Element => {
           }
           pending={submitStatus === STATUSES.PENDING}
           onClick={handleConfirmClick}>
-          {walletConnected ? (
+          {accountSet ? (
             selectedNetworkItem.disabled ? t('coming_soon') : t('transfer')
           ) : (
             t('connect_wallet')
