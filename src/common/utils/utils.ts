@@ -72,7 +72,7 @@ function displayMonetaryAmount<C extends CurrencyUnit>(
 ): string {
   if (amount === undefined) return defaultValue;
 
-  // TODO: Refactor once Monetary.js exposes an `isGreaterThanZero()` method
+  // TODO: refactor once Monetary.js exposes an `isGreaterThanZero()` method
   const zero = new MonetaryAmount<Currency<C>, C>(
     amount.currency,
     0

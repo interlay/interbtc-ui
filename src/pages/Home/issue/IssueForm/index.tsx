@@ -16,6 +16,15 @@ import { AccountId } from '@polkadot/types/interfaces';
 import {
   Issue
 } from '@interlay/interbtc';
+import {
+  Bitcoin,
+  BTCAmount,
+  BTCUnit,
+  ExchangeRate,
+  Polkadot,
+  PolkadotAmount,
+  PolkadotUnit
+} from '@interlay/monetary-js';
 
 import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
 import InterBTCField from 'pages/Home/InterBTCField';
@@ -49,15 +58,6 @@ import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
-import {
-  Bitcoin,
-  BTCAmount,
-  BTCUnit,
-  ExchangeRate,
-  Polkadot,
-  PolkadotAmount,
-  PolkadotUnit
-} from '@interlay/monetary-js';
 
 const BTC_AMOUNT = 'btc-amount';
 

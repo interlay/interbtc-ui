@@ -5188,9 +5188,9 @@ bip174@^2.0.1:
   resolved "https://registry.yarnpkg.com/bip174/-/bip174-2.0.1.tgz#39cf8ca99e50ce538fb762589832f4481d07c254"
   integrity sha512-i3X26uKJOkDTAalYAp0Er+qGMDhrbbh2o93/xiPyAN2s25KrClSpe3VXo/7mNJoqA5qfko8rLS2l3RWZgYmjKQ==
 
-"bip32-ed25519@git+https://github.com/Zondax/bip32-ed25519.git":
+"bip32-ed25519@https://github.com/Zondax/bip32-ed25519":
   version "0.0.4"
-  resolved "git+https://github.com/Zondax/bip32-ed25519.git#0949df01b5c93885339bc28116690292088f6134"
+  resolved "https://github.com/Zondax/bip32-ed25519#0949df01b5c93885339bc28116690292088f6134"
   dependencies:
     bn.js "^5.1.1"
     elliptic "^6.4.1"

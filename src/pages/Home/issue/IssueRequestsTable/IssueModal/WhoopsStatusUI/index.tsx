@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
+import { Issue } from '@interlay/interbtc';
+import { BTCAmount } from '@interlay/monetary-js';
 
 import RequestWrapper from 'pages/Home/RequestWrapper';
 import PriceInfo from 'pages/Home/PriceInfo';
@@ -12,8 +14,6 @@ import {
 } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import { Issue } from '@interlay/interbtc';
-import { BTCAmount } from '@interlay/monetary-js';
 
 interface Props {
   request: Issue;

@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { BTCAmount } from '@interlay/monetary-js';
 
 import IssueForm from './issue/IssueForm';
 import RedeemForm from './redeem/RedeemForm';
@@ -22,7 +23,6 @@ import useQuery from 'utils/hooks/use-query';
 import useUpdateQueryParameters, { QueryParameters } from 'utils/hooks/use-update-query-parameters';
 import TAB_IDS from 'utils/constants/tab-ids';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
-import { BTCAmount } from '@interlay/monetary-js';
 
 const TAB_ITEMS_WITHOUT_BURN = [
   {

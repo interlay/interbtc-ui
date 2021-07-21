@@ -5,17 +5,17 @@ import QRCode from 'qrcode.react';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
+import { BTCAmount } from '@interlay/monetary-js';
+import { Issue } from '@interlay/interbtc';
 
 import Tooltip from 'components/Tooltip';
 import Timer from 'components/Timer';
-import { Issue } from '@interlay/interbtc';
 import { StoreType } from 'common/types/util.types';
 import {
   copyToClipboard,
   displayMonetaryAmount,
   getUsdAmount
 } from 'common/utils/utils';
-import { BTCAmount } from '@interlay/monetary-js';
 
 interface Props {
   request: Issue;

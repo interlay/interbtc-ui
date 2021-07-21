@@ -13,6 +13,15 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { btcToSat } from '@interlay/interbtc';
+import {
+  ExchangeRate,
+  Bitcoin,
+  BTCUnit,
+  Polkadot,
+  PolkadotUnit,
+  BTCAmount,
+  PolkadotAmount
+} from '@interlay/monetary-js';
 
 import PriceInfo from 'pages/Home/PriceInfo';
 import InterBTCField from '../InterBTCField';
@@ -33,15 +42,6 @@ import {
 import STATUSES from 'utils/constants/statuses';
 import { BALANCE_MAX_INTEGER_LENGTH } from '../../../constants';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
-import {
-  ExchangeRate,
-  Bitcoin,
-  BTCUnit,
-  Polkadot,
-  PolkadotUnit,
-  BTCAmount,
-  PolkadotAmount
-} from '@interlay/monetary-js';
 
 const INTER_BTC_AMOUNT = 'inter-btc-amount';
 
