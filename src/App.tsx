@@ -244,10 +244,9 @@ function App(): JSX.Element {
     const trySetDefaultAccount = () => {
       if (constants.DEFAULT_ACCOUNT_SEED) {
         const keyring = new Keyring({ type: 'sr25519' });
-        const aliceKeyring = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED);
-        window.polkaBTC.setAccount(aliceKeyring);
-        console.log(`[App React.useEffect] Using default account: ${aliceKeyring.address}`);
-        dispatch(changeAddressAction(aliceKeyring.address));
+        const defaultAccountKeyring = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED);
+        window.polkaBTC.setAccount(defaultAccountKeyring);
+        dispatch(changeAddressAction(defaultAccountKeyring.address));
       }
     };
 
