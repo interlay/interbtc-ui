@@ -1,13 +1,8 @@
 import { rootReducer } from './common/reducers/index';
-import { toast } from 'react-toastify';
-import { AppState, StoreType, StoreState, ParachainStatus } from './common/types/util.types';
+import { StoreState } from './common/types/util.types';
 import { createLogger } from 'redux-logger';
 import { applyMiddleware, createStore } from 'redux';
-import { initializeState } from './common/actions/general.actions';
 import { FaucetClient, InterBTCAPI } from '@interlay/interbtc';
-import { mapToArray, arrayToMap } from './common/utils/requests';
-import * as constants from './constants';
-import { BTCAmount, PolkadotAmount } from '@interlay/monetary-js';
 
 declare global {
   interface Window {
@@ -17,113 +12,9 @@ declare global {
   }
 }
 
-export const getInitialState = (): StoreType => {
-  const emptyStore: StoreType = {
-    general: {
-      polkaBtcLoaded: false,
-      relayerLoaded: false,
-      vaultClientLoaded: false,
-      showAccountModal: false,
-      address: '',
-      totalLockedDOT: PolkadotAmount.zero,
-      totalInterBTC: BTCAmount.zero,
-      balanceInterBTC: BTCAmount.zero,
-      balanceDOT: PolkadotAmount.zero,
-      extensions: [],
-      btcRelayHeight: 0,
-      bitcoinHeight: 0,
-      parachainStatus: ParachainStatus.Loading,
-      prices: { bitcoin: { usd: 0 }, polkadot: { usd: 0 } }
-    },
-    issue: {
-      address: '',
-      issueRequests: new Map(),
-      issuePeriod: 86400
-    },
-    redeem: {
-      premiumRedeem: false,
-      address: '',
-      redeemRequests: new Map()
-    },
-    vault: {
-      requests: [],
-      collateralization: undefined,
-      collateral: PolkadotAmount.zero,
-      lockedBTC: BTCAmount.zero,
-      sla: '0',
-      apy: '0'
-    }
-  };
-  return emptyStore;
-};
-
-export const loadState = (): StoreType => {
-  try {
-    const serializedState = localStorage.getItem(constants.STORE_NAME);
-    if (serializedState === null) {
-      const initialState = getInitialState();
-      return initialState;
-    }
-    const rawStore = JSON.parse(serializedState);
-    const deserializedState = {
-      ...rawStore,
-      general: {
-        ...rawStore.general,
-        polkaBtcLoaded: false,
-        relayerLoaded: false
-      }
-    };
-    return {
-      ...deserializedState,
-      issue: {
-        ...deserializedState.issue,
-        issueRequests: arrayToMap(deserializedState.issue.issueRequests)
-      },
-      redeem: {
-        ...deserializedState.redeem,
-        redeemRequests: arrayToMap(deserializedState.redeem.redeemRequests)
-      }
-    };
-  } catch (error) {
-    setTimeout(
-      () => toast.error('Local storage is disabled. In order to use platform please enable local storage'),
-      2000
-    );
-    const initialState = getInitialState();
-    return initialState;
-  }
-};
-
-export const saveState = (store: AppState): void => {
-  try {
-    const preparedState = {
-      ...store,
-      issue: {
-        ...store.issue,
-        issueRequests: mapToArray(store.issue.issueRequests)
-      },
-      redeem: {
-        ...store.redeem,
-        redeemRequests: mapToArray(store.redeem.redeemRequests)
-      }
-    };
-    const serializedState = JSON.stringify(preparedState);
-    localStorage.setItem(constants.STORE_NAME, serializedState);
-  } catch (error) {
-    setTimeout(
-      () => toast.error('Local storage is disabled. In order to use platform please enable local storage'),
-      2000
-    );
-  }
-};
-
 export const configureStore = (): StoreState => {
   const storeLogger = createLogger();
-  const state = loadState();
-  const store = createStore(rootReducer, state, applyMiddleware(storeLogger));
-  store.dispatch(initializeState(state));
-  store.subscribe(() => {
-    saveState(store.getState());
-  });
+  const store = createStore(rootReducer, undefined, applyMiddleware(storeLogger));
+
   return store;
 };
