@@ -5,13 +5,14 @@ import {
   useSelector
 } from 'react-redux';
 import { toast } from 'react-toastify';
-import Big from 'big.js';
 
 import {
   FaCheckCircle,
   FaExternalLinkAlt
 } from 'react-icons/fa';
 import clsx from 'clsx';
+import { Issue, IssueStatus } from '@interlay/interbtc';
+import { BTCAmount } from '@interlay/monetary-js';
 
 import RequestWrapper from 'pages/Home/RequestWrapper';
 import ErrorModal from 'components/ErrorModal';
@@ -23,7 +24,6 @@ import STATUSES from 'utils/constants/statuses';
 import { StoreType } from 'common/types/util.types';
 import { updateIssueRequestAction } from 'common/actions/issue.actions';
 import { updateBalancePolkaBTCAction } from 'common/actions/general.actions';
-import { Issue, IssueStatus } from '@interlay/interbtc';
 
 type Props = {
   request: Issue;
@@ -36,7 +36,7 @@ const ConfirmedIssueRequest = ({
   const dispatch = useDispatch();
   const {
     polkaBtcLoaded,
-    balancePolkaBTC
+    balanceInterBTC
   } = useSelector((state: StoreType) => state.general);
 
   const [executeStatus, setExecuteStatus] = React.useState(STATUSES.IDLE);
@@ -54,11 +54,10 @@ const ConfirmedIssueRequest = ({
 
       dispatch(
         updateBalancePolkaBTCAction(
-          new Big(balancePolkaBTC)
-            .add(new Big((request.executedAmountBTC && request.executedAmountBTC !== '0') ?
+          balanceInterBTC
+            .add(BTCAmount.from.BTC((request.executedAmountBTC && request.executedAmountBTC !== '0') ?
               request.executedAmountBTC :
               request.amountInterBTC))
-            .toString()
         )
       );
       dispatch(updateIssueRequestAction(completedReq));

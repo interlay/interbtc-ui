@@ -1,3 +1,4 @@
+import { BTCAmount, PolkadotAmount } from '@interlay/monetary-js';
 import {
   ADD_REPLACE_REQUESTS,
   UPDATE_COLLATERALIZATION,
@@ -13,8 +14,8 @@ import { VaultState } from '../types/vault.types';
 const initialState = {
   requests: [],
   collateralization: '0',
-  collateral: '0',
-  lockedBTC: '0',
+  collateral: PolkadotAmount.zero,
+  lockedBTC: BTCAmount.zero,
   sla: '0',
   apy: '0'
 };

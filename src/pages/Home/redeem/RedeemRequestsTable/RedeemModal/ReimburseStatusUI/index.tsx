@@ -25,6 +25,7 @@ import {
   reimburseRedeemRequestAction
 } from 'common/actions/redeem.actions';
 import { Redeem } from '@interlay/interbtc';
+import { BTCAmount, Polkadot, PolkadotAmount } from '@interlay/monetary-js';
 
 interface Props {
   request: Redeem | undefined;
@@ -41,8 +42,8 @@ const ReimburseStatusUI = ({
   } = useSelector((state: StoreType) => state.general);
   const [burnStatus, setBurnStatus] = React.useState(STATUSES.IDLE);
   const [retryStatus, setRetryStatus] = React.useState(STATUSES.IDLE);
-  const [punishmentDOT, setPunishmentDOT] = React.useState(new Big(0));
-  const [dotAmount, setDOTAmount] = React.useState(new Big(0));
+  const [punishmentDOT, setPunishmentDOT] = React.useState(PolkadotAmount.zero);
+  const [dotAmount, setDOTAmount] = React.useState(PolkadotAmount.zero);
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const handleError = useErrorHandler();
@@ -60,11 +61,11 @@ const ReimburseStatusUI = ({
           btcDotRate
         ] = await Promise.all([
           window.polkaBTC.vaults.getPunishmentFee(),
-          window.polkaBTC.oracle.getExchangeRate()
+          window.polkaBTC.oracle.getExchangeRate(Polkadot)
         ]);
-        const amountPolkaBTC = request ? new Big(request.amountBTC) : new Big(0);
-        setDOTAmount(amountPolkaBTC.mul(btcDotRate));
-        setPunishmentDOT(amountPolkaBTC.mul(btcDotRate).mul(new Big(punishment)));
+        const amountPolkaBTC = request ? BTCAmount.from.BTC(request.amountBTC) : BTCAmount.zero;
+        setDOTAmount(btcDotRate.toCounter(amountPolkaBTC));
+        setPunishmentDOT(btcDotRate.toCounter(amountPolkaBTC).mul(new Big(punishment)));
       } catch (error) {
         handleError(error);
       }
@@ -146,9 +147,9 @@ const ReimburseStatusUI = ({
           )}>
           <span>{t('redeem_page.vault_did_not_send')}</span>
           <span className='text-interlayDenim'>
-            &nbsp;{punishmentDOT.toFixed(2).toString()} DOT
+            &nbsp;{punishmentDOT.toHuman()} DOT
           </span>
-          <span>&nbsp;{`(≈ $ ${getUsdAmount(punishmentDOT.toString(), prices.polkadot.usd)})`}</span>
+          <span>&nbsp;{`(≈ $ ${getUsdAmount(punishmentDOT, prices.polkadot.usd)})`}</span>
           <span>&nbsp;{t('redeem_page.compensation')}</span>
           .
         </p>
@@ -166,11 +167,11 @@ const ReimburseStatusUI = ({
           <li className='list-decimal'>
             <p className='text-justify'>
               <span>{t('redeem_page.receive_compensation')}</span>
-              <span className='text-interlayDenim'>&nbsp;{punishmentDOT.toFixed(2)} DOT</span>
+              <span className='text-interlayDenim'>&nbsp;{punishmentDOT.toHuman()} DOT</span>
               <span>
                 &nbsp;
                 {t('redeem_page.retry_with_another', {
-                  compensationPrice: getUsdAmount(punishmentDOT.toString(), prices.polkadot.usd)
+                  compensationPrice: getUsdAmount(punishmentDOT, prices.polkadot.usd)
                 })}
               </span>
               .
@@ -186,18 +187,18 @@ const ReimburseStatusUI = ({
           <li className='list-decimal'>
             <p className='text-justify'>
               <span>{t('redeem_page.burn_interbtc')}</span>
-              <span className='text-interlayDenim'>&nbsp;{dotAmount.toFixed(5).toString()} DOT</span>
+              <span className='text-interlayDenim'>&nbsp;{dotAmount.toHuman()} DOT</span>
               <span>
                 &nbsp;
                 {t('redeem_page.with_added', {
-                  amountPrice: getUsdAmount(dotAmount.toString(), prices.polkadot.usd)
+                  amountPrice: getUsdAmount(dotAmount, prices.polkadot.usd)
                 })}
               </span>
-              <span className='text-interlayDenim'>&nbsp;{punishmentDOT.toFixed(5).toString()} DOT</span>
+              <span className='text-interlayDenim'>&nbsp;{punishmentDOT.toHuman()} DOT</span>
               <span>
                 &nbsp;
                 {t('redeem_page.as_compensation_instead', {
-                  compensationPrice: getUsdAmount(punishmentDOT.toString(), prices.polkadot.usd)
+                  compensationPrice: getUsdAmount(punishmentDOT, prices.polkadot.usd)
                 })}
               </span>
             </p>

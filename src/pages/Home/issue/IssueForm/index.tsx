@@ -14,8 +14,17 @@ import {
 } from 'react-error-boundary';
 import { AccountId } from '@polkadot/types/interfaces';
 import {
-  btcToSat, Issue
+  Issue
 } from '@interlay/interbtc';
+import {
+  Bitcoin,
+  BTCAmount,
+  BTCUnit,
+  ExchangeRate,
+  Polkadot,
+  PolkadotAmount,
+  PolkadotUnit
+} from '@interlay/monetary-js';
 
 import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
 import InterBTCField from 'pages/Home/InterBTCField';
@@ -40,8 +49,7 @@ import {
 } from 'common/actions/issue.actions';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import {
-  displayBtcAmount,
-  displayDotAmount,
+  displayMonetaryAmount,
   getRandomVaultIdWithCapacity,
   getUsdAmount
 } from 'common/utils/utils';
@@ -93,10 +101,12 @@ const IssueForm = (): JSX.Element | null => {
   // Current fee model specification taken from: https://interlay.gitlab.io/polkabtc-spec/spec/fee.html
   const [feeRate, setFeeRate] = React.useState(0.005); // Set default to 0.5%
   const [depositRate, setDepositRate] = React.useState(0.00005); // Set default to 0.005%
-  const [btcToDOTRate, setBTCToDOTRate] = React.useState(new Big(0));
-  const [vaults, setVaults] = React.useState<Map<AccountId, Big>>();
-  const [dustValue, setDustValue] = React.useState('0');
-  const [vaultMaxAmount, setVaultMaxAmount] = React.useState('');
+  const [btcToDOTRate, setBTCToDOTRate] = React.useState(
+    new ExchangeRate<Bitcoin, BTCUnit, Polkadot, PolkadotUnit>(Bitcoin, Polkadot, new Big(0))
+  );
+  const [vaults, setVaults] = React.useState<Map<AccountId, BTCAmount>>();
+  const [dustValue, setDustValue] = React.useState(BTCAmount.zero);
+  const [vaultMaxAmount, setVaultMaxAmount] = React.useState(BTCAmount.zero);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
@@ -123,7 +133,7 @@ const IssueForm = (): JSX.Element | null => {
           interbtcIndex.getIssueGriefingCollateral(),
           interbtcIndex.getIssuePeriod(),
           interbtcIndex.getDustValue(),
-          window.polkaBTC.oracle.getExchangeRate(),
+          window.polkaBTC.oracle.getExchangeRate(Polkadot),
           // This data (the vaults) is strictly required to request issue
           window.polkaBTC.vaults.getVaultsWithIssuableTokens()
         ]);
@@ -133,14 +143,14 @@ const IssueForm = (): JSX.Element | null => {
         setDepositRate(theDepositRate);
         const issuePeriod = issuePeriodInBlocks * BLOCK_TIME;
         dispatch(updateIssuePeriodAction(issuePeriod));
-        setDustValue(theDustValue.toString());
+        setDustValue(BTCAmount.from.BTC(theDustValue));
         setBTCToDOTRate(btcToDot);
 
-        let theVaultMaxAmount = new Big(0);
+        let theVaultMaxAmount = BTCAmount.zero;
         // The first item is the vault with the largest capacity
         theVaultMaxAmount = theVaults.values().next().value;
 
-        setVaultMaxAmount(theVaultMaxAmount.toString());
+        setVaultMaxAmount(theVaultMaxAmount);
         setVaults(theVaults);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
@@ -167,24 +177,24 @@ const IssueForm = (): JSX.Element | null => {
   }
 
   const validateBTCAmount = (value = 0): string | undefined => {
-    const bigBTCAmount = new Big(value);
+    const btcAmount = BTCAmount.from.BTC(value);
 
-    const securityDeposit = bigBTCAmount.mul(btcToDOTRate).mul(depositRate);
-    const minimumRequiredDOTAmount = new Big(EXTRA_REQUIRED_DOT_AMOUNT).add(securityDeposit);
-    if (new Big(balanceDOT) <= minimumRequiredDOTAmount) {
+    const securityDeposit = btcToDOTRate.toCounter(btcAmount).mul(depositRate);
+    const minimumRequiredDOTAmount = PolkadotAmount.from.DOT(EXTRA_REQUIRED_DOT_AMOUNT).add(securityDeposit);
+    if (balanceDOT.lte(minimumRequiredDOTAmount)) {
       return t('insufficient_funds_dot');
     }
 
     if (value > MAXIMUM_ISSUABLE_POLKA_BTC_AMOUNT) {
       return t('issue_page.validation_max_value');
-    } else if (bigBTCAmount < new Big(dustValue)) {
-      return `${t('issue_page.validation_min_value')}${dustValue} BTC).`;
+    } else if (btcAmount.lt(dustValue)) {
+      return `${t('issue_page.validation_min_value')}${dustValue.toHuman()} BTC).`;
     }
 
-    const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), bigBTCAmount);
+    const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), btcAmount);
     if (!vaultId) {
       return t('issue_page.maximum_in_single_request', {
-        maxAmount: parseFloat(Number(vaultMaxAmount).toFixed(5))
+        maxAmount: vaultMaxAmount.toHuman()
       });
     }
 
@@ -196,7 +206,7 @@ const IssueForm = (): JSX.Element | null => {
       return 'InterBTC must be loaded!';
     }
 
-    if (btcToSat(bigBTCAmount) === undefined) {
+    if (btcAmount === undefined) {
       return 'Invalid BTC amount input!';
     }
 
@@ -212,7 +222,7 @@ const IssueForm = (): JSX.Element | null => {
 
   const onSubmit = async (data: IssueFormData) => {
     try {
-      const interBTCAmount = new Big(data[BTC_AMOUNT]);
+      const interBTCAmount = BTCAmount.from.BTC(data[BTC_AMOUNT]);
       setSubmitStatus(STATUSES.PENDING);
       const result = await window.polkaBTC.issue.request(interBTCAmount);
       // TODO: handle issue aggregation
@@ -228,10 +238,10 @@ const IssueForm = (): JSX.Element | null => {
   };
 
   if (status === STATUSES.RESOLVED) {
-    const bigBTCAmount = new Big(btcAmount || 0);
-    const bridgeFee = bigBTCAmount.mul(feeRate);
-    const securityDeposit = bigBTCAmount.mul(btcToDOTRate).mul(depositRate);
-    const interBTCAmount = bigBTCAmount.sub(bridgeFee);
+    const parsedBTCAmount = BTCAmount.from.BTC(btcAmount || 0);
+    const bridgeFee = parsedBTCAmount.mul(feeRate);
+    const securityDeposit = btcToDOTRate.toCounter(parsedBTCAmount).mul(depositRate);
+    const interBTCAmount = parsedBTCAmount.sub(bridgeFee);
 
     const accountSet = !!address;
 
@@ -270,7 +280,7 @@ const IssueForm = (): JSX.Element | null => {
               },
               validate: value => validateBTCAmount(value)
             })}
-            approxUSD={`≈ $ ${getUsdAmount(btcAmount || '0', prices.bitcoin.usd)}`}
+            approxUSD={`≈ $ ${getUsdAmount(parsedBTCAmount || BTCAmount.zero, prices.bitcoin.usd)}`}
             error={!!errors[BTC_AMOUNT]}
             helperText={errors[BTC_AMOUNT]?.message} />
           <ParachainStatusInfo status={parachainStatus} />
@@ -285,7 +295,7 @@ const IssueForm = (): JSX.Element | null => {
                 width={23}
                 height={23} />
             }
-            value={displayBtcAmount(bridgeFee)}
+            value={displayMonetaryAmount(bridgeFee)}
             unitName='BTC'
             approxUSD={getUsdAmount(bridgeFee, prices.bitcoin.usd)}
             tooltip={
@@ -304,7 +314,7 @@ const IssueForm = (): JSX.Element | null => {
                 width={20}
                 height={20} />
             }
-            value={displayDotAmount(securityDeposit)}
+            value={displayMonetaryAmount(securityDeposit)}
             unitName='DOT'
             approxUSD={getUsdAmount(securityDeposit, prices.polkadot.usd)}
             tooltip={
@@ -329,7 +339,7 @@ const IssueForm = (): JSX.Element | null => {
                 width={23}
                 height={23} />
             }
-            value={displayBtcAmount(interBTCAmount)}
+            value={displayMonetaryAmount(interBTCAmount)}
             unitName='InterBTC'
             approxUSD={getUsdAmount(interBTCAmount, prices.bitcoin.usd)} />
           <InterlayDenimContainedButton

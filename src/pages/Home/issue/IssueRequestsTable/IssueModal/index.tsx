@@ -14,7 +14,7 @@ import InterlayModal, {
 } from 'components/UI/InterlayModal';
 import IconButton from 'components/IconButton';
 import {
-  displayBtcAmount,
+  displayMonetaryAmount,
   getUsdAmount,
   shortAddress
 } from 'common/utils/utils';
@@ -24,6 +24,7 @@ import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 import { Issue, IssueStatus, satToBTC } from '@interlay/interbtc';
 import Big from 'big.js';
 import BN from 'bn.js';
+import { BTCAmount } from '@interlay/monetary-js';
 
 const renderModalStatusPanel = (request: Issue) => {
   switch (request.status) {
@@ -144,7 +145,7 @@ const IssueModal = ({
                   'block'
                 )}>
                 {`≈ $ ${getUsdAmount(
-                  amountInterBTC || '0',
+                  BTCAmount.from.BTC(amountInterBTC) || BTCAmount.zero,
                   prices.bitcoin.usd
                 )}`}
               </span>
@@ -161,9 +162,9 @@ const IssueModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayBtcAmount(request.bridgeFee)}
+                value={displayMonetaryAmount(BTCAmount.from.BTC(request.bridgeFee))}
                 unitName='BTC'
-                approxUSD={getUsdAmount(request.bridgeFee, prices.bitcoin.usd)} />
+                approxUSD={getUsdAmount(BTCAmount.from.BTC(request.bridgeFee), prices.bitcoin.usd)} />
               {/* TODO: could componentize */}
               <hr
                 className={clsx(
@@ -182,9 +183,9 @@ const IssueModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayBtcAmount(amountBTCSent)}
+                value={displayMonetaryAmount(BTCAmount.from.BTC(amountBTCSent))}
                 unitName='BTC'
-                approxUSD={getUsdAmount(amountBTCSent, prices.bitcoin.usd)} />
+                approxUSD={getUsdAmount(BTCAmount.from.BTC(amountBTCSent), prices.bitcoin.usd)} />
             </div>
             <div className='space-y-4'>
               {/* TODO: could componentize */}

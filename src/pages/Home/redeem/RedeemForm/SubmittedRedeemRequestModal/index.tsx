@@ -15,12 +15,13 @@ import InterlayModal, {
 } from 'components/UI/InterlayModal';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import {
-  displayBtcAmount,
+  displayMonetaryAmount,
   getUsdAmount
 } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { resetRedeemWizardAction } from 'common/actions/redeem.actions';
 import { Redeem } from '@interlay/interbtc';
+import { BTCAmount } from '@interlay/monetary-js';
 
 interface CustomProps {
   request: Redeem
@@ -108,7 +109,7 @@ const SubmittedRedeemRequestModal = ({
                 )}>
                 <span>{t('redeem_page.will_receive_BTC')}</span>
                 <span className='text-interlayCalifornia'>
-                  {displayBtcAmount(request.amountBTC)} BTC
+                  {displayMonetaryAmount(BTCAmount.from.BTC(request.amountBTC))} BTC
                 </span>
               </h1>
               <span
@@ -118,7 +119,7 @@ const SubmittedRedeemRequestModal = ({
                   'text-2xl',
                   'text-center'
                 )}>
-                {`≈ $${getUsdAmount(request.amountBTC, prices.bitcoin.usd)}`}
+                {`≈ $${getUsdAmount(BTCAmount.from.BTC(request.amountBTC), prices.bitcoin.usd)}`}
               </span>
             </div>
             <div>

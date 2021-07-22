@@ -1,3 +1,5 @@
+import { BTCAmount, PolkadotAmount } from '@interlay/monetary-js';
+
 export type Vault = {
     vaultId: string;
     btcAddress: string;
@@ -23,8 +25,8 @@ export interface VaultReplaceRequest {
 export interface VaultState {
     requests: VaultReplaceRequest[];
     collateralization: string | undefined;
-    collateral: string;
-    lockedBTC: string;
+    collateral: PolkadotAmount;
+    lockedBTC: BTCAmount;
     sla: string;
     apy: string;
 }

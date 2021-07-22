@@ -13,6 +13,7 @@ import { addReplaceRequestsAction } from 'common/actions/vault.actions';
 import { StoreType } from 'common/types/util.types';
 import { parachainToUIReplaceRequests } from 'common/utils/requests';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import { BTCAmount } from '@interlay/monetary-js';
 
 type RequestReplacementForm = {
   amount: number;
@@ -39,9 +40,9 @@ export default function RequestReplacementModal(props: RequestReplacementProps):
         throw new Error('Amount to convert is less than 1 satoshi.');
       }
       const dustValue = await window.polkaBTC.redeem.getDustValue();
-      const amountPolkaBtc = new Big(amount);
-      if (amountPolkaBtc <= dustValue) {
-        throw new Error(`Please enter an amount greater than Bitcoin dust (${dustValue.toString()} BTC)`);
+      const amountPolkaBtc = BTCAmount.from.BTC(amount);
+      if (amountPolkaBtc.lte(dustValue)) {
+        throw new Error(`Please enter an amount greater than Bitcoin dust (${dustValue.toHuman()} BTC)`);
       }
       await window.polkaBTC.replace.request(amountPolkaBtc);
 

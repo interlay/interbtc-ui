@@ -4,12 +4,13 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateCollateralAction, updateCollateralizationAction } from '../../../common/actions/vault.actions';
-import { CurrencyIdLiteral, dotToPlanck, roundTwoDecimals } from '@interlay/interbtc';
+import { roundTwoDecimals } from '@interlay/interbtc';
 import { StoreType } from '../../../common/types/util.types';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
+import { Polkadot, PolkadotAmount } from '@interlay/monetary-js';
 
 // Commenting because moving this to last line causes 3 "used before it was defined" warnings
 // eslint-disable-next-line import/exports-last
@@ -51,14 +52,11 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
 
     setUpdatePending(true);
     try {
-      const newCollateralBig = new Big(newCollateral);
-      const currentCollateralBig = new Big(currentCollateral);
-
-      if (currentCollateralBig.gt(newCollateralBig)) {
-        const withdrawAmount = currentCollateralBig.sub(newCollateralBig);
+      if (currentCollateral.gt(newCollateral)) {
+        const withdrawAmount = currentCollateral.sub(newCollateral);
         await window.polkaBTC.vaults.withdrawCollateral(withdrawAmount);
-      } else if (currentCollateralBig.lt(newCollateralBig)) {
-        const depositAmount = newCollateralBig.sub(currentCollateralBig);
+      } else if (currentCollateral.lt(newCollateral)) {
+        const depositAmount = newCollateral.sub(currentCollateral);
         await window.polkaBTC.vaults.depositCollateral(depositAmount);
       } else {
         closeModal();
@@ -66,8 +64,8 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
       }
 
       const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const balanceLockedDOT = await window.polkaBTC.tokens.balanceLocked(CurrencyIdLiteral.DOT, vaultId);
-      dispatch(updateCollateralAction(balanceLockedDOT.toString()));
+      const balanceLockedDOT = await window.polkaBTC.tokens.balanceLocked(Polkadot, vaultId);
+      dispatch(updateCollateralAction(balanceLockedDOT));
       let collateralization;
       try {
         collateralization = new Big(parseFloat(newCollateralization) / 100);
@@ -96,8 +94,8 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
         setCollateralUpdateAllowed(false);
         return;
       }
-
-      if (!dotToPlanck(new Big(value))) {
+      const parsedValue = PolkadotAmount.from.DOT(value);
+      if (parsedValue.toBig(parsedValue.currency.rawBase).lte(1)) {
         throw new Error('Please enter an amount greater than 1 Planck');
       }
 
@@ -106,19 +104,19 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
         throw new Error('Couldn\'t fetch current vault collateral');
       }
 
-      let newCollateral = new Big(currentCollateral);
+      let newCollateral = currentCollateral;
       if (props.status === CollateralUpdateStatus.Increase) {
-        newCollateral = newCollateral.add(new Big(value));
+        newCollateral = newCollateral.add(parsedValue);
       } else if (props.status === CollateralUpdateStatus.Decrease) {
-        newCollateral = newCollateral.sub(new Big(value));
+        newCollateral = newCollateral.sub(parsedValue);
       }
-      setNewCollateral(newCollateral.toString());
+      setNewCollateral(newCollateral);
 
       const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const requiredCollateral = (await window.polkaBTC.vaults.getRequiredCollateralForVault(vaultId)).toString();
+      const requiredCollateral = await window.polkaBTC.vaults.getRequiredCollateralForVault(vaultId, Polkadot);
 
       // collateral update only allowed if above required collateral
-      const allowed = newCollateral.gte(new Big(requiredCollateral));
+      const allowed = newCollateral.gte(requiredCollateral);
       setCollateralUpdateAllowed(allowed);
 
       // get the updated collateralization
