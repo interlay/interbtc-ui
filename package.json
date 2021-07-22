@@ -5,7 +5,7 @@
   "dependencies": {
     "@craco/craco": "^6.1.1",
     "@headlessui/react": "^1.1.1",
-    "@interlay/interbtc": "0.20.3",
+    "@interlay/interbtc": "0.21.0",
     "@interlay/interbtc-index-client": "0.5.7",
     "@interlay/monetary-js": "0.2.1",
     "@polkadot/api": "4.17.1",

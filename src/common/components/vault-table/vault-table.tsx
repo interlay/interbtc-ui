@@ -107,7 +107,7 @@ export default function VaultTable(): ReactElement {
           }
         };
 
-        const vaultCollateral = PolkadotAmount.from.Planck(vault.backing_collateral.toString());
+        const vaultCollateral = vault.backingCollateral;
         const unsettledTokens = BTCAmount.from.Satoshi(vault.to_be_issued_tokens.toString());
         const settledTokens = BTCAmount.from.Satoshi(vault.issued_tokens.toString());
         const unsettledCollateralization = getCollateralization(vaultCollateral, unsettledTokens.add(settledTokens));
