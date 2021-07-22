@@ -1,7 +1,7 @@
+import { BTCAmount, PolkadotAmount } from '@interlay/monetary-js';
 import {
   IS_POLKA_BTC_LOADED,
   CHANGE_ADDRESS,
-  INIT_STATE,
   INIT_GENERAL_DATA_ACTION,
   IS_VAULT_CLIENT_LOADED,
   UPDATE_BALANCE_POLKA_BTC,
@@ -14,7 +14,6 @@ import {
   UPDATE_TOTALS,
   IsPolkaBtcLoaded,
   ChangeAddress,
-  InitState,
   InitGeneralDataAction,
   IsVaultClientLoaded,
   UpdateBalancePolkaBTC,
@@ -26,7 +25,7 @@ import {
   UpdateHeights,
   UpdateTotals
 } from '../types/actions.types';
-import { StoreType, ParachainStatus, Prices } from '../types/util.types';
+import { ParachainStatus, Prices } from '../types/util.types';
 
 export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
   type: IS_POLKA_BTC_LOADED,
@@ -48,17 +47,12 @@ export const changeAddressAction = (address: string): ChangeAddress => ({
   address
 });
 
-export const initializeState = (state: StoreType): InitState => ({
-  type: INIT_STATE,
-  state
-});
-
-export const updateBalancePolkaBTCAction = (balancePolkaBTC: string): UpdateBalancePolkaBTC => ({
+export const updateBalancePolkaBTCAction = (balanceInterBTC: BTCAmount): UpdateBalancePolkaBTC => ({
   type: UPDATE_BALANCE_POLKA_BTC,
-  balancePolkaBTC
+  balanceInterBTC
 });
 
-export const updateBalanceDOTAction = (balanceDOT: string): UpdateBalanceDOT => ({
+export const updateBalanceDOTAction = (balanceDOT: PolkadotAmount): UpdateBalanceDOT => ({
   type: UPDATE_BALANCE_DOT,
   balanceDOT
 });
@@ -69,8 +63,8 @@ export const updateOfPricesAction = (prices: Prices): UpdateOfPrices => ({
 });
 
 export const initGeneralDataAction = (
-  totalPolkaBTC: string,
-  totalLockedDOT: string,
+  totalInterBTC: BTCAmount,
+  totalLockedDOT: PolkadotAmount,
   btcRelayHeight: number,
   bitcoinHeight: number,
   parachainStatus: ParachainStatus
@@ -78,7 +72,7 @@ export const initGeneralDataAction = (
   type: INIT_GENERAL_DATA_ACTION,
   btcRelayHeight,
   bitcoinHeight,
-  totalPolkaBTC,
+  totalInterBTC,
   totalLockedDOT,
   parachainStatus
 });
@@ -99,8 +93,8 @@ export const updateHeightsAction = (btcRelayHeight: number, bitcoinHeight: numbe
   bitcoinHeight
 });
 
-export const updateTotalsAction = (totalLockedDOT: string, totalPolkaBTC: string): UpdateTotals => ({
+export const updateTotalsAction = (totalLockedDOT: PolkadotAmount, totalInterBTC: BTCAmount): UpdateTotals => ({
   type: UPDATE_TOTALS,
   totalLockedDOT,
-  totalPolkaBTC
+  totalInterBTC
 });

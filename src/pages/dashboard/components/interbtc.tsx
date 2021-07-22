@@ -21,7 +21,7 @@ type PolkaBTCProps = {
 
 const InterBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
   const { prices } = useSelector((state: StoreType) => state.general);
-  const totalPolkaBTC = useSelector((state: StoreType) => state.general.totalPolkaBTC);
+  const totalInterBTC = useSelector((state: StoreType) => state.general.totalInterBTC);
 
   const { t } = useTranslation();
   const statsApi = useInterbtcIndex();
@@ -54,9 +54,9 @@ const InterBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
       <div className='card-top-content'>
         <div className='values-container'>
           <h1 style={{ color: getAccents('d_interlayDenim').color }}>{t('dashboard.issue.issued')}</h1>
-          <h2>{t('dashboard.issue.total_interbtc', { amount: totalPolkaBTC })}</h2>
+          <h2>{t('dashboard.issue.total_interbtc', { amount: totalInterBTC })}</h2>
           {/* TODO: add the price API */}
-          <h2>${getUsdAmount(totalPolkaBTC, prices.bitcoin.usd)}</h2>
+          <h2>${getUsdAmount(totalInterBTC, prices.bitcoin.usd)}</h2>
         </div>
         {linkButton && (
           <>

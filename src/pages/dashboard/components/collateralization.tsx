@@ -38,7 +38,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
       if (!polkaBtcLoaded) return;
       try {
         const issuablePolkaBTC = await window.polkaBTC.vaults.getTotalIssuableAmount();
-        setIssuablePolkaBTC(issuablePolkaBTC?.toString() || '0');
+        setIssuablePolkaBTC(issuablePolkaBTC?.toHuman() || '0');
       } catch (error) {
         console.log('[Collateralization useEffect] error.message => ', error.message);
         setFailed(true);

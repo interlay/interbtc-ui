@@ -7,9 +7,7 @@ import {
   useDispatch
 } from 'react-redux';
 import clsx from 'clsx';
-import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
-import { planckToDOT } from '@interlay/interbtc';
 import {
   IssueColumns,
   RedeemColumns
@@ -35,8 +33,7 @@ import ReplaceTable from './replace-table/replace-table';
 import { StoreType } from 'common/types/util.types';
 import {
   safeRoundTwoDecimals,
-  displayBtcAmount,
-  safeRoundFiveDecimals
+  displayMonetaryAmount
 } from 'common/utils/utils';
 import {
   updateCollateralizationAction,
@@ -50,6 +47,7 @@ import './vault-dashboard.page.scss';
 import VaultIssueRequestsTable from 'containers/VaultIssueRequestTable';
 import VaultRedeemRequestsTable from 'containers/VaultRedeemRequestTable';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
+import { BTCAmount, Polkadot, PolkadotAmount } from '@interlay/monetary-js';
 
 function VaultDashboard(): JSX.Element {
   const [updateCollateralModalStatus, setUpdateCollateralModalStatus] = useState(CollateralUpdateStatus.Hidden);
@@ -66,9 +64,9 @@ function VaultDashboard(): JSX.Element {
     sla,
     apy
   } = useSelector((state: StoreType) => state.vault);
-  const [capacity, setCapacity] = useState(new Big(0));
-  const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState('0');
-  const [feesEarnedDOT, setFeesEarnedDOT] = useState('0');
+  const [capacity, setCapacity] = useState(BTCAmount.zero);
+  const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState(BTCAmount.zero);
+  const [feesEarnedDOT, setFeesEarnedDOT] = useState(PolkadotAmount.zero);
   const [totalIssueRequests, setTotalIssueRequests] = useState(0);
   const [totalRedeemRequests, setTotalRedeemRequests] = useState(0);
 
@@ -101,7 +99,7 @@ function VaultDashboard(): JSX.Element {
         ] = await Promise.allSettled([
           window.polkaBTC.vaults.get(vaultId),
           window.polkaBTC.vaults.getFeesWrapped(address),
-          window.polkaBTC.vaults.getFeesCollateral(address),
+          window.polkaBTC.vaults.getFeesCollateral(address, Polkadot),
           window.polkaBTC.vaults.getIssuedAmount(vaultId),
           window.polkaBTC.vaults.getVaultCollateralization(vaultId),
           window.polkaBTC.vaults.getSLA(vaultId),
@@ -112,16 +110,16 @@ function VaultDashboard(): JSX.Element {
         ]);
 
         if (vault.status === 'fulfilled') {
-          const collateralDot = planckToDOT(vault.value.backing_collateral);
-          dispatch(updateCollateralAction(collateralDot.toString()));
+          const collateralDot = PolkadotAmount.from.Planck(vault.value.backing_collateral.toString());
+          dispatch(updateCollateralAction(collateralDot));
         }
 
         if (feesPolkaBTC.status === 'fulfilled') {
-          setFeesEarnedPolkaBTC(feesPolkaBTC.value.toString());
+          setFeesEarnedPolkaBTC(feesPolkaBTC.value);
         }
 
         if (feesDOT.status === 'fulfilled') {
-          setFeesEarnedDOT(feesDOT.value.toString());
+          setFeesEarnedDOT(feesDOT.value);
         }
 
         if (totalIssueRequests.status === 'fulfilled') {
@@ -133,7 +131,7 @@ function VaultDashboard(): JSX.Element {
         }
 
         if (lockedAmountBTC.status === 'fulfilled') {
-          dispatch(updateLockedBTCAction(lockedAmountBTC.value.toString()));
+          dispatch(updateLockedBTCAction(lockedAmountBTC.value));
         }
 
         if (collateralization.status === 'fulfilled') {
@@ -171,12 +169,12 @@ function VaultDashboard(): JSX.Element {
     },
     {
       title: t('vault.fees_earned_interbtc'),
-      value: displayBtcAmount(feesEarnedPolkaBTC),
+      value: displayMonetaryAmount(feesEarnedPolkaBTC),
       color: 'text-interlayDenim-800'
     },
     {
       title: t('vault.fees_earned_dot'),
-      value: safeRoundFiveDecimals(feesEarnedDOT),
+      value: feesEarnedDOT.toHuman(),
       color: 'text-interlayDenim-800'
     },
     {
@@ -185,16 +183,16 @@ function VaultDashboard(): JSX.Element {
       color: 'text-interlayDenim-800'
     }, {
       title: t('vault.locked_dot'),
-      value: safeRoundFiveDecimals(collateral),
+      value: displayMonetaryAmount(collateral),
       color: 'text-interlayDenim-800'
     },
     {
       title: t('locked_btc'),
-      value: displayBtcAmount(lockedBTC),
+      value: displayMonetaryAmount(lockedBTC),
       color: 'text-interlayCalifornia-700'
     }, {
       title: t('vault.remaining_capacity'),
-      value: displayBtcAmount(capacity),
+      value: displayMonetaryAmount(capacity),
       color: 'text-interlayDenim-800'
     },
     {
@@ -260,7 +258,7 @@ function VaultDashboard(): JSX.Element {
               onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Decrease)}>
               {t('vault.withdraw_collateral')}
             </InterlayDefaultContainedButton>
-            {new Big(lockedBTC).gt(new Big(0)) ? (
+            {lockedBTC.gt(BTCAmount.zero) ? (
               <InterlayCaliforniaContainedButton
                 type='submit'
                 style={{ display: 'flex' }}

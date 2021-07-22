@@ -15,6 +15,7 @@ import { getUsdAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import { Redeem } from '@interlay/interbtc';
+import { BTCAmount, Polkadot, PolkadotAmount } from '@interlay/monetary-js';
 
 interface Props {
   request: Redeem;
@@ -28,7 +29,7 @@ const RetriedRedeemRequest = ({
     polkaBtcLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
-  const [punishmentDOTAmount, setPunishmentDOTAmount] = React.useState(new Big(0));
+  const [punishmentDOTAmount, setPunishmentDOTAmount] = React.useState(PolkadotAmount.zero);
 
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
@@ -42,11 +43,11 @@ const RetriedRedeemRequest = ({
           btcDotRate
         ] = await Promise.all([
           window.polkaBTC.vaults.getPunishmentFee(),
-          window.polkaBTC.oracle.getExchangeRate()
+          window.polkaBTC.oracle.getExchangeRate(Polkadot)
         ]);
 
-        const BTCAmount = request ? new Big(request.amountBTC) : new Big(0);
-        const theBurnDOTAmount = BTCAmount.mul(btcDotRate);
+        const btcAmount = request ? BTCAmount.from.BTC(request.amountBTC) : BTCAmount.zero;
+        const theBurnDOTAmount = btcDotRate.toCounter(btcAmount);
         const thePunishmentDOTAmount = theBurnDOTAmount.mul(new Big(punishmentFee));
         setPunishmentDOTAmount(thePunishmentDOTAmount);
       } catch (error) {
@@ -75,10 +76,10 @@ const RetriedRedeemRequest = ({
           {t('redeem_page.recover_receive_dot')}
         </span>
         <span className='text-interlayDenim'>
-          &nbsp;{`${punishmentDOTAmount.toString()} DOT`}
+          &nbsp;{`${punishmentDOTAmount.toHuman()} DOT`}
         </span>
         <span>
-          &nbsp;({`≈ $${getUsdAmount(punishmentDOTAmount.toString(), prices.polkadot.usd)}`})
+          &nbsp;({`≈ $${getUsdAmount(punishmentDOTAmount, prices.polkadot.usd)}`})
         </span>
         <span className='text-interlayDenim'>
           &nbsp;{t('redeem_page.recover_receive_total')}.
@@ -96,9 +97,9 @@ const RetriedRedeemRequest = ({
               width={20}
               height={20} />
           }
-          value={punishmentDOTAmount.toString()}
+          value={punishmentDOTAmount.toHuman()}
           unitName='DOT'
-          approxUSD={getUsdAmount(punishmentDOTAmount.toString(), prices.polkadot.usd)} />
+          approxUSD={getUsdAmount(punishmentDOTAmount, prices.polkadot.usd)} />
         <hr
           className={clsx(
             'border-t-2',
@@ -117,9 +118,9 @@ const RetriedRedeemRequest = ({
               width={20}
               height={20} />
           }
-          value={punishmentDOTAmount.toString()}
+          value={punishmentDOTAmount.toHuman()}
           unitName='DOT'
-          approxUSD={getUsdAmount(punishmentDOTAmount.toString(), prices.polkadot.usd)} />
+          approxUSD={getUsdAmount(punishmentDOTAmount, prices.polkadot.usd)} />
       </div>
       <InterlayLink
         className={clsx(

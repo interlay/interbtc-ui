@@ -14,6 +14,7 @@ import {
   UPDATE_SLA,
   UPDATE_APY
 } from '../types/actions.types';
+import { BTCAmount, PolkadotAmount } from '@interlay/monetary-js';
 
 export const addReplaceRequestsAction = (requests: VaultReplaceRequest[]): AddReplaceRequests => ({
   type: ADD_REPLACE_REQUESTS,
@@ -25,12 +26,12 @@ export const updateCollateralizationAction = (collateralization: string | undefi
   collateralization
 });
 
-export const updateCollateralAction = (collateral: string): UpdateCollateral => ({
+export const updateCollateralAction = (collateral: PolkadotAmount): UpdateCollateral => ({
   type: UPDATE_COLLATERAL,
   collateral
 });
 
-export const updateLockedBTCAction = (lockedBTC: string): UpdateLockedBTC => ({
+export const updateLockedBTCAction = (lockedBTC: BTCAmount): UpdateLockedBTC => ({
   type: UPDATE_LOCKED_BTC,
   lockedBTC
 });

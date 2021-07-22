@@ -1,20 +1,22 @@
 
 import clsx from 'clsx';
 
-import { safeRoundFiveDecimals } from 'common/utils/utils';
+import { displayMonetaryAmount } from 'common/utils/utils';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
+import { BTCAmount, PolkadotAmount } from '@interlay/monetary-js';
 
 interface Props {
-  balancePolkaBTC?: string;
-  balanceDOT?: string;
+  balanceInterBTC?: BTCAmount;
+  balanceDOT?: PolkadotAmount;
 }
 
 const Balances = ({
-  balancePolkaBTC,
+  balanceInterBTC,
   balanceDOT
 }: Props): JSX.Element => {
-  const roundedBalanceDot = safeRoundFiveDecimals(balanceDOT);
+  const roundedBalanceDot = displayMonetaryAmount(balanceDOT);
+  const roundedBalanceInterBTC = displayMonetaryAmount(balanceInterBTC);
 
   return (
     <div
@@ -34,7 +36,7 @@ const Balances = ({
           fill='currentColor'
           width={30}
           height={30} />
-        <span className='font-bold'>{balancePolkaBTC || '0'}</span>
+        <span className='font-bold'>{roundedBalanceInterBTC}</span>
         <span>InterBTC</span>
       </div>
       <div
@@ -46,7 +48,7 @@ const Balances = ({
         <PolkadotLogoIcon
           width={20}
           height={20} />
-        <span className='font-bold'>{roundedBalanceDot ?? '0'}</span>
+        <span className='font-bold'>{roundedBalanceDot}</span>
         <span>DOT</span>
       </div>
     </div>

@@ -13,7 +13,6 @@ import {
   useStore
 } from 'react-redux';
 import { withErrorBoundary } from 'react-error-boundary';
-import Big from 'big.js';
 import {
   web3Accounts,
   web3Enable,
@@ -23,10 +22,10 @@ import keyring from '@polkadot/ui-keyring';
 import {
   FaucetClient,
   createInterbtcAPI,
-  InterBTCAPI,
-  CurrencyIdLiteral
+  InterBTCAPI
 } from '@interlay/interbtc';
 import { StatusCode } from '@interlay/interbtc/build/interfaces';
+import { Bitcoin, BTCAmount, Polkadot, PolkadotAmount } from '@interlay/monetary-js';
 
 import Layout from 'parts/Layout';
 import Home from 'pages/Home';
@@ -47,10 +46,6 @@ import {
 } from 'config/general';
 import { PAGES } from 'utils/constants/links';
 import './i18n';
-import {
-  displayBtcAmount,
-  displayDotAmount
-} from 'common/utils/utils';
 import * as constants from './constants';
 import startFetchingLiveData from 'common/live-data/live-data';
 import {
@@ -123,7 +118,7 @@ function App(): JSX.Element {
   const {
     polkaBtcLoaded,
     address,
-    balancePolkaBTC,
+    balanceInterBTC,
     balanceDOT
   } = useSelector((state: StoreType) => state.general);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -192,14 +187,14 @@ function App(): JSX.Element {
     (async () => {
       try {
         const [
-          totalPolkaBTC,
+          totalInterBTC,
           totalLockedDOT,
           btcRelayHeight,
           bitcoinHeight,
           state
         ] = await Promise.all([
-          window.polkaBTC.tokens.total(CurrencyIdLiteral.INTERBTC),
-          window.polkaBTC.tokens.total(CurrencyIdLiteral.DOT),
+          window.polkaBTC.tokens.total(Bitcoin),
+          window.polkaBTC.tokens.total(Polkadot),
           window.polkaBTC.btcRelay.getLatestBlockHeight(),
           window.polkaBTC.electrsAPI.getLatestBlockHeight(),
           window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain()
@@ -219,8 +214,8 @@ function App(): JSX.Element {
 
         dispatch(
           initGeneralDataAction(
-            displayBtcAmount(totalPolkaBTC),
-            displayDotAmount(totalLockedDOT),
+            totalInterBTC,
+            totalLockedDOT,
             Number(btcRelayHeight),
             bitcoinHeight,
             parachainStatus(state)
@@ -308,10 +303,9 @@ function App(): JSX.Element {
     (async () => {
       try {
         unsubscribeFromCollateral =
-          await window.polkaBTC.tokens.subscribeToBalance(CurrencyIdLiteral.DOT, address, (_, balance: Big) => {
-            const newDOTBalance = balance.toString();
-            if (newDOTBalance !== balanceDOT) {
-              dispatch(updateBalanceDOTAction(newDOTBalance));
+          await window.polkaBTC.tokens.subscribeToBalance(Polkadot, address, (_, balance: PolkadotAmount) => {
+            if (!balance.eq(balanceDOT)) {
+              dispatch(updateBalanceDOTAction(balance));
             }
           });
       } catch (error) {
@@ -322,10 +316,9 @@ function App(): JSX.Element {
     (async () => {
       try {
         unsubscribeFromWrapped =
-          await window.polkaBTC.tokens.subscribeToBalance(CurrencyIdLiteral.INTERBTC, address, (_, balance: Big) => {
-            const newPolkaBTCBalance = balance.toString();
-            if (newPolkaBTCBalance !== balancePolkaBTC) {
-              dispatch(updateBalancePolkaBTCAction(newPolkaBTCBalance));
+          await window.polkaBTC.tokens.subscribeToBalance(Bitcoin, address, (_, balance: BTCAmount) => {
+            if (!balance.eq(balanceInterBTC)) {
+              dispatch(updateBalancePolkaBTCAction(balance));
             }
           });
       } catch (error) {
@@ -345,7 +338,7 @@ function App(): JSX.Element {
     dispatch,
     polkaBtcLoaded,
     address,
-    balancePolkaBTC,
+    balanceInterBTC,
     balanceDOT
   ]);
 

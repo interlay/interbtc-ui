@@ -45,6 +45,7 @@ module.exports = {
         argsIgnorePattern: '^_'
       }
     ],
+    'new-cap': ['error', { capIsNew: false }],
 
     // JS ESLinting rules
     'comma-dangle': [

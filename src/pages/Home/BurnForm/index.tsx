@@ -13,6 +13,15 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { btcToSat } from '@interlay/interbtc';
+import {
+  ExchangeRate,
+  Bitcoin,
+  BTCUnit,
+  Polkadot,
+  PolkadotUnit,
+  BTCAmount,
+  PolkadotAmount
+} from '@interlay/monetary-js';
 
 import PriceInfo from 'pages/Home/PriceInfo';
 import InterBTCField from '../InterBTCField';
@@ -50,7 +59,7 @@ const Burn = (): JSX.Element | null => {
   const {
     prices,
     polkaBtcLoaded,
-    balancePolkaBTC,
+    balanceInterBTC,
     balanceDOT,
     parachainStatus,
     extensions
@@ -67,7 +76,9 @@ const Burn = (): JSX.Element | null => {
   });
   const interBTCAmount = watch(INTER_BTC_AMOUNT);
 
-  const [burnRate, setBurnRate] = React.useState<Big>();
+  const [burnRate, setBurnRate] = React.useState(
+    new ExchangeRate<Polkadot, PolkadotUnit, Bitcoin, BTCUnit>(Polkadot, Bitcoin, new Big(0))
+  );
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
@@ -111,12 +122,12 @@ const Burn = (): JSX.Element | null => {
   const onSubmit = async (data: BurnForm) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
-      await window.polkaBTC.redeem.burn(new Big(data[INTER_BTC_AMOUNT]));
+      await window.polkaBTC.redeem.burn(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]));
       // TODO: should not manually update the balances everywhere
       // - Should be able to watch the balances in one place and update the context accordingly.
-      dispatch(updateBalancePolkaBTCAction(new Big(balancePolkaBTC).sub(new Big(data[INTER_BTC_AMOUNT])).toString()));
-      const earnedDOT = burnRate.times(data[INTER_BTC_AMOUNT] || '0').toString();
-      dispatch(updateBalanceDOTAction(new Big(balanceDOT).add(new Big(earnedDOT)).toString()));
+      dispatch(updateBalancePolkaBTCAction(balanceInterBTC.sub(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]))));
+      const earnedDOT = burnRate.toBase(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]) || BTCAmount.zero);
+      dispatch(updateBalanceDOTAction(balanceDOT.add(earnedDOT)));
       toast.success(t('burn_page.successfully_burned'));
       reset({
         [INTER_BTC_AMOUNT]: ''
@@ -130,8 +141,8 @@ const Burn = (): JSX.Element | null => {
 
   const validatePolkaBTCAmount = (value: number): string | undefined => {
     // TODO: should be `big` type other than `Number`
-    if (value > Number(balancePolkaBTC)) {
-      return `${t('redeem_page.current_balance')}${balancePolkaBTC}`;
+    if (value > Number(balanceInterBTC)) {
+      return `${t('redeem_page.current_balance')}${balanceInterBTC}`;
     }
 
     if (!polkaBtcLoaded) {
@@ -150,7 +161,10 @@ const Burn = (): JSX.Element | null => {
     return undefined;
   };
 
-  const earnedDOT = burnRate.times(interBTCAmount || '0').toString();
+  const parsedInterBTCAmount = BTCAmount.from.BTC(interBTCAmount || 0);
+  const earnedDOT = burnRate.rate.eq(0) ?
+    PolkadotAmount.zero :
+    burnRate.toBase(parsedInterBTCAmount || BTCAmount.zero);
 
   if (status === STATUSES.RESOLVED) {
     const walletConnected = !!extensions.length;
@@ -189,7 +203,7 @@ const Burn = (): JSX.Element | null => {
               },
               validate: value => validatePolkaBTCAmount(value)
             })}
-            approxUSD={`≈ $ ${getUsdAmount(interBTCAmount || '0', prices.bitcoin.usd)}`}
+            approxUSD={`≈ $ ${getUsdAmount(parsedInterBTCAmount || BTCAmount.zero, prices.bitcoin.usd)}`}
             error={!!errors[INTER_BTC_AMOUNT]}
             helperText={errors[INTER_BTC_AMOUNT]?.message} />
           <PriceInfo
@@ -203,7 +217,7 @@ const Burn = (): JSX.Element | null => {
                 width={20}
                 height={20} />
             }
-            value={earnedDOT}
+            value={earnedDOT.toHuman()}
             unitName='DOT'
             approxUSD={getUsdAmount(earnedDOT, prices.polkadot.usd)} />
           {/* TODO: could componentize */}
@@ -224,7 +238,7 @@ const Burn = (): JSX.Element | null => {
                 width={20}
                 height={20} />
             }
-            value={earnedDOT}
+            value={earnedDOT.toHuman()}
             unitName='DOT'
             approxUSD={getUsdAmount(earnedDOT, prices.polkadot.usd)} />
           <InterlayDenimContainedButton

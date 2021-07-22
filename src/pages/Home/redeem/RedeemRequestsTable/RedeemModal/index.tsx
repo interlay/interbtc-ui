@@ -13,7 +13,7 @@ import InterlayModal, {
   InterlayModalTitle
 } from 'components/UI/InterlayModal';
 import {
-  displayBtcAmount,
+  displayMonetaryAmount,
   getUsdAmount,
   shortAddress
 } from 'common/utils/utils';
@@ -21,6 +21,7 @@ import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 import { Redeem, RedeemStatus } from '@interlay/interbtc';
+import { BTCAmount } from '@interlay/monetary-js';
 
 interface CustomProps {
   requestId: string;
@@ -134,7 +135,7 @@ const RedeemModal = ({
                   'text-textSecondary',
                   'block'
                 )}>
-                {`≈ $ ${getUsdAmount(request.amountBTC || '0', prices.bitcoin.usd)}`}
+                {`≈ $ ${getUsdAmount(BTCAmount.from.BTC(request.amountBTC) || BTCAmount.zero, prices.bitcoin.usd)}`}
               </span>
             </div>
             <div>
@@ -149,9 +150,9 @@ const RedeemModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayBtcAmount(request.bridgeFee)}
+                value={displayMonetaryAmount(BTCAmount.from.BTC(request.bridgeFee))}
                 unitName='BTC'
-                approxUSD={getUsdAmount(request.bridgeFee, prices.bitcoin.usd)} />
+                approxUSD={getUsdAmount(BTCAmount.from.BTC(request.bridgeFee), prices.bitcoin.usd)} />
               <PriceInfo
                 title={
                   <h5 className='text-textSecondary'>
@@ -163,9 +164,9 @@ const RedeemModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayBtcAmount(request.btcTransferFee)}
+                value={displayMonetaryAmount(BTCAmount.from.BTC(request.btcTransferFee))}
                 unitName='BTC'
-                approxUSD={getUsdAmount(request.btcTransferFee, prices.bitcoin.usd)} />
+                approxUSD={getUsdAmount(BTCAmount.from.BTC(request.btcTransferFee), prices.bitcoin.usd)} />
               <hr
                 className={clsx(
                   'border-t-2',
@@ -183,9 +184,9 @@ const RedeemModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayBtcAmount(request.amountBTC)}
+                value={displayMonetaryAmount(BTCAmount.from.BTC(request.amountBTC))}
                 unitName='BTC'
-                approxUSD={getUsdAmount(request.amountBTC, prices.bitcoin.usd)} />
+                approxUSD={getUsdAmount(BTCAmount.from.BTC(request.amountBTC), prices.bitcoin.usd)} />
             </div>
             <div className='space-y-4'>
               <div
