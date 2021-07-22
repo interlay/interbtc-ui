@@ -83,8 +83,7 @@ const IssueForm = (): JSX.Element | null => {
     btcRelayHeight,
     prices,
     parachainStatus,
-    balanceDOT,
-    extensions
+    balanceDOT
   } = useSelector((state: StoreType) => state.general);
 
   const {
@@ -244,10 +243,10 @@ const IssueForm = (): JSX.Element | null => {
     const securityDeposit = btcToDOTRate.toCounter(parsedBTCAmount).mul(depositRate);
     const interBTCAmount = parsedBTCAmount.sub(bridgeFee);
 
-    const walletConnected = !!extensions.length;
+    const accountSet = !!address;
 
     const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      if (!walletConnected) {
+      if (!accountSet) {
         dispatch(showAccountModalAction(true));
         event.preventDefault();
       }
@@ -354,7 +353,7 @@ const IssueForm = (): JSX.Element | null => {
             }
             pending={submitStatus === STATUSES.PENDING}
             onClick={handleConfirmClick}>
-            {walletConnected ? t('confirm') : t('connect_wallet')}
+            {accountSet ? t('confirm') : t('connect_wallet')}
           </InterlayDenimContainedButton>
         </form>
         {(submitStatus === STATUSES.REJECTED && submitError) && (

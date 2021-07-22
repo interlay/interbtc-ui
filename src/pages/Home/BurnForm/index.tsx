@@ -62,7 +62,7 @@ const Burn = (): JSX.Element | null => {
     balanceInterBTC,
     balanceDOT,
     parachainStatus,
-    extensions
+    address
   } = useSelector((state: StoreType) => state.general);
 
   const {
@@ -167,10 +167,10 @@ const Burn = (): JSX.Element | null => {
     burnRate.toBase(parsedInterBTCAmount || BTCAmount.zero);
 
   if (status === STATUSES.RESOLVED) {
-    const walletConnected = !!extensions.length;
+    const accountSet = !!address;
 
     const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      if (!walletConnected) {
+      if (!accountSet) {
         dispatch(showAccountModalAction(true));
         event.preventDefault();
       }
@@ -252,7 +252,7 @@ const Burn = (): JSX.Element | null => {
             }
             pending={submitStatus === STATUSES.PENDING}
             onClick={handleConfirmClick}>
-            {walletConnected ? t('burn') : t('connect_wallet')}
+            {accountSet ? t('burn') : t('connect_wallet')}
           </InterlayDenimContainedButton>
         </form>
         {(submitStatus === STATUSES.REJECTED && submitError) && (

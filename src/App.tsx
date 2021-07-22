@@ -25,6 +25,7 @@ import {
   InterBTCAPI
 } from '@interlay/interbtc';
 import { StatusCode } from '@interlay/interbtc/build/interfaces';
+import { Keyring } from '@polkadot/api';
 import { Bitcoin, BTCAmount, Polkadot, PolkadotAmount } from '@interlay/monetary-js';
 
 import Layout from 'parts/Layout';
@@ -235,10 +236,22 @@ function App(): JSX.Element {
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
 
+    const trySetDefaultAccount = () => {
+      if (constants.DEFAULT_ACCOUNT_SEED) {
+        const keyring = new Keyring({ type: 'sr25519' });
+        const defaultAccountKeyring = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED);
+        window.polkaBTC.setAccount(defaultAccountKeyring);
+        dispatch(changeAddressAction(defaultAccountKeyring.address));
+      }
+    };
+
     (async () => {
       try {
         const theExtensions = await web3Enable(APP_NAME);
-        if (theExtensions.length === 0) return;
+        if (theExtensions.length === 0) {
+          trySetDefaultAccount();
+          return;
+        }
 
         dispatch(setInstalledExtensionAction(theExtensions.map(extension => extension.name)));
 
