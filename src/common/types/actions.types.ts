@@ -92,7 +92,6 @@ export interface ShowAccountModal {
 export type GeneralActions =
   | IsPolkaBtcLoaded
   | ChangeAddress
-  | InitState
   | InitGeneralDataAction
   | IsVaultClientLoaded
   | UpdateBalancePolkaBTC

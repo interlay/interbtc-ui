@@ -2,7 +2,6 @@ import { BTCAmount, PolkadotAmount } from '@interlay/monetary-js';
 import {
   IS_POLKA_BTC_LOADED,
   CHANGE_ADDRESS,
-  INIT_STATE,
   INIT_GENERAL_DATA_ACTION,
   IS_VAULT_CLIENT_LOADED,
   UPDATE_BALANCE_POLKA_BTC,
@@ -15,7 +14,6 @@ import {
   UPDATE_TOTALS,
   IsPolkaBtcLoaded,
   ChangeAddress,
-  InitState,
   InitGeneralDataAction,
   IsVaultClientLoaded,
   UpdateBalancePolkaBTC,
@@ -27,7 +25,7 @@ import {
   UpdateHeights,
   UpdateTotals
 } from '../types/actions.types';
-import { StoreType, ParachainStatus, Prices } from '../types/util.types';
+import { ParachainStatus, Prices } from '../types/util.types';
 
 export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
   type: IS_POLKA_BTC_LOADED,
@@ -47,11 +45,6 @@ export const isVaultClientLoaded = (isLoaded = false): IsVaultClientLoaded => ({
 export const changeAddressAction = (address: string): ChangeAddress => ({
   type: CHANGE_ADDRESS,
   address
-});
-
-export const initializeState = (state: StoreType): InitState => ({
-  type: INIT_STATE,
-  state
 });
 
 export const updateBalancePolkaBTCAction = (balanceInterBTC: BTCAmount): UpdateBalancePolkaBTC => ({

@@ -4,7 +4,6 @@ import {
   IS_VAULT_CLIENT_LOADED,
   INIT_GENERAL_DATA_ACTION,
   CHANGE_ADDRESS,
-  INIT_STATE,
   UPDATE_BALANCE_DOT,
   UPDATE_BALANCE_POLKA_BTC,
   GeneralActions,
@@ -46,15 +45,6 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
     return { ...state, polkaBtcLoaded: action.isLoaded };
   case CHANGE_ADDRESS:
     return { ...state, address: action.address };
-  case INIT_STATE:
-    return {
-      ...state,
-      polkaBtcLoaded: false,
-      relayerLoaded: false,
-      vaultClientLoaded: false,
-      showAccountModal: false,
-      extensions: []
-    };
   case INIT_GENERAL_DATA_ACTION:
     return {
       ...state,
