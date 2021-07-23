@@ -54,9 +54,9 @@ const TOTAL_ISSUE_REQUESTS = 100; // TODO: hardcoded
 const RedeemRequestsTable = (): JSX.Element => {
   const { t } = useTranslation();
 
-  const query = useQueryParams();
-  const selectedRedeemRequestId = query.get(QUERY_PARAMETERS.REDEEM_REQUEST_ID);
-  const selectedPage = Number(query.get(QUERY_PARAMETERS.PAGE)) || 1;
+  const queryParams = useQueryParams();
+  const selectedRedeemRequestId = queryParams.get(QUERY_PARAMETERS.REDEEM_REQUEST_ID);
+  const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const selectedPageIndex = selectedPage - 1;
   const updateQueryParameters = useUpdateQueryParameters();
 

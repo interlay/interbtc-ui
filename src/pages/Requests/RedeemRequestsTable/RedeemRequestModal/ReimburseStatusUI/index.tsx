@@ -78,8 +78,8 @@ const ReimburseStatusUI = ({
     handleError
   ]);
 
-  const query = useQueryParams();
-  const selectedPage = Number(query.get(QUERY_PARAMETERS.PAGE)) || 1;
+  const queryParams = useQueryParams();
+  const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const selectedPageIndex = selectedPage - 1;
 
   const queryClient = useQueryClient();

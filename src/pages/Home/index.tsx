@@ -47,8 +47,8 @@ const Home = (): JSX.Element | null => {
   const { t } = useTranslation();
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
 
-  const query = useQueryParams();
-  const selectedTabId = query.get(QUERY_PARAMETERS.TAB);
+  const queryParams = useQueryParams();
+  const selectedTabId = queryParams.get(QUERY_PARAMETERS.TAB);
   const updateQueryParameters = useUpdateQueryParameters();
 
   const [burnable, setBurnable] = React.useState(false);
