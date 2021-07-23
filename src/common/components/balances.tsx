@@ -1,10 +1,13 @@
 
 import clsx from 'clsx';
+import {
+  BTCAmount,
+  PolkadotAmount
+} from '@interlay/monetary-js';
 
 import { displayMonetaryAmount } from 'common/utils/utils';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
-import { BTCAmount, PolkadotAmount } from '@interlay/monetary-js';
 
 interface Props {
   balanceInterBTC?: BTCAmount;

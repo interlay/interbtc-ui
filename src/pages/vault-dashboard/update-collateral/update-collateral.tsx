@@ -3,14 +3,18 @@ import { Modal } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateCollateralAction, updateCollateralizationAction } from '../../../common/actions/vault.actions';
 import { roundTwoDecimals } from '@interlay/interbtc';
-import { StoreType } from '../../../common/types/util.types';
-import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
+import Big from 'big.js';
+import {
+  Polkadot,
+  PolkadotAmount
+} from '@interlay/monetary-js';
+
+import { updateCollateralAction, updateCollateralizationAction } from '../../../common/actions/vault.actions';
+import { StoreType } from '../../../common/types/util.types';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import { Polkadot, PolkadotAmount } from '@interlay/monetary-js';
 
 // Commenting because moving this to last line causes 3 "used before it was defined" warnings
 // eslint-disable-next-line import/exports-last

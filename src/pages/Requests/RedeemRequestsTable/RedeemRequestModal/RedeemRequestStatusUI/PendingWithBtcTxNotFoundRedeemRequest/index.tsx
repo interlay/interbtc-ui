@@ -2,12 +2,12 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { Redeem } from '@interlay/interbtc';
 
 import RequestWrapper from 'pages/Home/RequestWrapper';
 import Timer from 'components/Timer';
 import { BLOCK_TIME } from 'config/parachain';
 import { StoreType } from 'common/types/util.types';
-import { Redeem } from '@interlay/interbtc';
 
 interface Props {
   request: Redeem;

@@ -6,6 +6,12 @@ import clsx from 'clsx';
 import {
   FaExternalLinkAlt
 } from 'react-icons/fa';
+import {
+  BTCAmount,
+  Polkadot,
+  PolkadotAmount
+} from '@interlay/monetary-js';
+import { Redeem } from '@interlay/interbtc';
 
 import RequestWrapper from 'pages/Home/RequestWrapper';
 import PriceInfo from 'pages/Home/PriceInfo';
@@ -13,8 +19,6 @@ import InterlayLink from 'components/UI/InterlayLink';
 import { getUsdAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
-import { Redeem } from '@interlay/interbtc';
-import { BTCAmount, Polkadot, PolkadotAmount } from '@interlay/monetary-js';
 
 interface Props {
   request: Redeem;

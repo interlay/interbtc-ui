@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
+import { Issue } from '@interlay/interbtc';
 
 import BTCPaymentPendingStatusUI from 'pages/Requests/IssueRequestsTable/IssueRequestModal/BTCPaymentPendingStatusUI';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
@@ -10,7 +11,6 @@ import InterlayModal, {
   InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
 import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
-import { Issue } from '@interlay/interbtc';
 
 interface CustomProps {
   request: Issue

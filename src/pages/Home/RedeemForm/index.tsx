@@ -17,6 +17,15 @@ import { AccountId } from '@polkadot/types/interfaces/runtime';
 import {
   Redeem
 } from '@interlay/interbtc';
+import {
+  Bitcoin,
+  BTCAmount,
+  BTCUnit,
+  ExchangeRate,
+  Polkadot,
+  PolkadotAmount,
+  PolkadotUnit
+} from '@interlay/monetary-js';
 
 import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
 import InterBTCField from 'pages/Home/InterBTCField';
@@ -29,7 +38,6 @@ import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
 import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
-
 import {
   BALANCE_MAX_INTEGER_LENGTH,
   BTC_ADDRESS_REGEX
@@ -54,15 +62,6 @@ import {
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
-import {
-  Bitcoin,
-  BTCAmount,
-  BTCUnit,
-  ExchangeRate,
-  Polkadot,
-  PolkadotAmount,
-  PolkadotUnit
-} from '@interlay/monetary-js';
 
 const INTER_BTC_AMOUNT = 'inter-btc-amount';
 const BTC_ADDRESS = 'btc-address';

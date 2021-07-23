@@ -10,6 +10,10 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { BitcoinNetwork } from '@interlay/interbtc-index-client';
+import {
+  Redeem,
+  RedeemStatus
+} from '@interlay/interbtc';
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
@@ -37,7 +41,6 @@ import { BTC_ADDRESS_API } from 'config/bitcoin';
 import { RedeemColumns } from '@interlay/interbtc-index-client';
 import * as constants from '../../constants';
 import STATUSES from 'utils/constants/statuses';
-import { Redeem, RedeemStatus } from '@interlay/interbtc';
 
 interface Props {
   totalRedeemRequests: number;

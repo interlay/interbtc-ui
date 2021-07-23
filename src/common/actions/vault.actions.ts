@@ -1,5 +1,9 @@
-import { VaultReplaceRequest } from '../types/vault.types';
+import {
+  BTCAmount,
+  PolkadotAmount
+} from '@interlay/monetary-js';
 
+import { VaultReplaceRequest } from '../types/vault.types';
 import {
   AddReplaceRequests,
   UpdateCollateralization,
@@ -14,7 +18,6 @@ import {
   UPDATE_SLA,
   UPDATE_APY
 } from '../types/actions.types';
-import { BTCAmount, PolkadotAmount } from '@interlay/monetary-js';
 
 export const addReplaceRequestsAction = (requests: VaultReplaceRequest[]): AddReplaceRequests => ({
   type: ADD_REPLACE_REQUESTS,

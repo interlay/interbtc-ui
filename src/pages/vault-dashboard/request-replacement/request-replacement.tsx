@@ -4,8 +4,9 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { btcToSat } from '@interlay/interbtc';
 import Big from 'big.js';
+import { btcToSat } from '@interlay/interbtc';
+import { BTCAmount } from '@interlay/monetary-js';
 
 import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
@@ -13,7 +14,6 @@ import { addReplaceRequestsAction } from 'common/actions/vault.actions';
 import { StoreType } from 'common/types/util.types';
 import { parachainToUIReplaceRequests } from 'common/utils/requests';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { BTCAmount } from '@interlay/monetary-js';
 
 type RequestReplacementForm = {
   amount: number;

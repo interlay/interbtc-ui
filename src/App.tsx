@@ -26,7 +26,12 @@ import {
 } from '@interlay/interbtc';
 import { StatusCode } from '@interlay/interbtc/build/interfaces';
 import { Keyring } from '@polkadot/api';
-import { Bitcoin, BTCAmount, Polkadot, PolkadotAmount } from '@interlay/monetary-js';
+import {
+  Bitcoin,
+  BTCAmount,
+  Polkadot,
+  PolkadotAmount
+} from '@interlay/monetary-js';
 
 import Layout from 'parts/Layout';
 import Home from 'pages/Home';

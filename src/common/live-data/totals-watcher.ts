@@ -1,5 +1,9 @@
-import { Bitcoin, Polkadot } from '@interlay/monetary-js';
+import {
+  Bitcoin,
+  Polkadot
+} from '@interlay/monetary-js';
 import { Dispatch } from 'redux';
+
 import { updateTotalsAction } from '../actions/general.actions';
 import { StoreState } from '../types/util.types';
 

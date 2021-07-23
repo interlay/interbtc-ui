@@ -2,12 +2,12 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { FaExternalLinkAlt } from 'react-icons/fa';
+import { Issue } from '@interlay/interbtc';
 
 import RequestWrapper from 'pages/Home/RequestWrapper';
 import InterlayLink from 'components/UI/InterlayLink';
 import { shortAddress } from 'common/utils/utils';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
-import { Issue } from '@interlay/interbtc';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 
 interface Props {

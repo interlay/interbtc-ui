@@ -10,6 +10,10 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { BitcoinNetwork, IssueColumns } from '@interlay/interbtc-index-client';
+import {
+  Issue,
+  IssueStatus
+} from '@interlay/interbtc';
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
@@ -36,7 +40,6 @@ import { REQUEST_TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
 import * as constants from '../../constants';
 import STATUSES from 'utils/constants/statuses';
-import { Issue, IssueStatus } from '@interlay/interbtc';
 
 interface Props {
   totalIssueRequests: number;

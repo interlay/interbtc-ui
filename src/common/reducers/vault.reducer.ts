@@ -1,4 +1,8 @@
-import { BTCAmount, PolkadotAmount } from '@interlay/monetary-js';
+import {
+  BTCAmount,
+  PolkadotAmount
+} from '@interlay/monetary-js';
+
 import {
   ADD_REPLACE_REQUESTS,
   UPDATE_COLLATERALIZATION,
