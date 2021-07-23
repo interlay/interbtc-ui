@@ -1,9 +1,9 @@
 version: "3.8"
 services:
-    polkabtc:
-        image: "registry.gitlab.com/interlay/btc-parachain/standalone:0.6.1"
+    interbtc:
+        image: "interlayhq/interbtc:interbtc-standalone-0.8.5"
         command:
-            - btc-parachain
+            - interbtc-standalone
             - --dev
             - --unsafe-rpc-external
             - --unsafe-ws-external
@@ -12,24 +12,8 @@ services:
         ports:
             - "9933:9933"
             - "9944:9944"
-    staked_relayer:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/staked-relayer:0.6.1"
-        command:
-            - staked-relayer
-            - --keyring
-            - eve
-            - --polka-btc-url
-            - "ws://polkabtc:9944"
-            - --auto-register-with-stake
-            - "100"
-        environment: &client-env
-            BITCOIN_RPC_URL: http://btc.do.polkabtc.io:18332
-            BITCOIN_RPC_USER: rpcuser
-            BITCOIN_RPC_PASS: rpcpassword
-            RUST_LOG: info
-        restart: unless-stopped
     oracle:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/oracle:0.6.1"
+        image: "interlayhq/interbtc-clients:oracle-0-8-2"
         command:
             - oracle
             - --keyring
@@ -40,13 +24,13 @@ services:
             RUST_LOG: info
         restart: unless-stopped
     faucet:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/faucet:0.6.1"
+        image: "interlayhq/interbtc-clients:faucet-0-8-2"
         command:
             - faucet
             - --keyring
             - ferdie
-            - --polka-btc-url
-            - "ws://polkabtc:9944"
+            - --btc-parachain-url
+            - "ws://interbtc:9944"
             - --user-allowance
             - "1"
             - --vault-allowance
@@ -59,7 +43,7 @@ services:
             - "3035:3035"
         restart: unless-stopped
     vault:
-        image: "registry.gitlab.com/interlay/polkabtc-clients/vault:0.6.1"
+        image: "interlayhq/interbtc-clients:vault-0-8-2"
         command:
             - vault
             - --keyring
@@ -68,7 +52,7 @@ services:
             - testnet
             - --auto-register-with-collateral
             - "100000000000000"
-            - --polka-btc-url
+            - --btc-parachain-url
             - "ws://polkabtc:9944"
         environment:
             <<: *client-env
@@ -80,8 +64,8 @@ services:
             POSTGRES_PASSWORD: "password"
         ports:
             - "5432:5432"
-    polkabtc_stats:
-        image: "registry.gitlab.com/interlay/polkabtc-stats:0.1.21"
+    interbtc_stats:
+        image: "registry.gitlab.com/interlay/polkabtc-stats:0.5.7"
         restart: always
         depends_on:
             - postgres

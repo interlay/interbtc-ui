@@ -1,9 +1,9 @@
 version: '3.8'
 services:
   interbtc:
-    image: 'registry.gitlab.com/interlay/interbtc:master-bc3fbfa9-1624755169'
+    image: "interlayhq/interbtc:interbtc-standalone-0.8.5"
     command:
-      - btc-parachain
+      - interbtc-standalone
       - --unsafe-rpc-external
       - --unsafe-ws-external
       - --rpc-methods
@@ -59,7 +59,7 @@ services:
     ports:
       - '3002:3002'
   oracle:
-    image: 'registry.gitlab.com/interlay/interbtc-clients/oracle:master-590b9de9-1624871268'
+    image: "interlayhq/interbtc-clients:oracle-0-8-2"
     command:
       - oracle
       - --keyring
@@ -70,7 +70,7 @@ services:
       RUST_LOG: info
     restart: unless-stopped
   faucet:
-    image: 'registry.gitlab.com/interlay/interbtc-clients/faucet:master-590b9de9-1624871271'
+    image: "interlayhq/interbtc-clients:faucet-0-8-2"
     command:
       - faucet
       - --keyring
@@ -89,7 +89,7 @@ services:
       - '3035:3035'
     restart: unless-stopped
   vault:
-    image: "registry.gitlab.com/interlay/interbtc-clients/vault:master-590b9de9-1624871268"
+    image: "interlayhq/interbtc-clients:vault-0-8-2"
     command:
       - /bin/sh
       - -c
@@ -125,7 +125,7 @@ services:
     depends_on:
       - postgres
   interbtc_stats:
-    image: 'registry.gitlab.com/interlay/polkabtc-stats:master-4937a9a-1625671429'
+    image: 'registry.gitlab.com/interlay/polkabtc-stats:0.5.7'
     restart: always
     depends_on:
       - postgres

@@ -98,8 +98,8 @@ function VaultDashboard(): JSX.Element {
           totalRedeemRequests
         ] = await Promise.allSettled([
           window.polkaBTC.vaults.get(vaultId),
-          window.polkaBTC.vaults.getFeesWrapped(address),
-          window.polkaBTC.vaults.getFeesCollateral(address, Polkadot),
+          window.polkaBTC.pools.getFeesWrapped(address),
+          window.polkaBTC.pools.getFeesCollateral(address, Polkadot),
           window.polkaBTC.vaults.getIssuedAmount(vaultId),
           window.polkaBTC.vaults.getVaultCollateralization(vaultId),
           window.polkaBTC.vaults.getSLA(vaultId),
@@ -110,7 +110,7 @@ function VaultDashboard(): JSX.Element {
         ]);
 
         if (vault.status === 'fulfilled') {
-          const collateralDot = PolkadotAmount.from.Planck(vault.value.backing_collateral.toString());
+          const collateralDot = vault.value.backingCollateral;
           dispatch(updateCollateralAction(collateralDot));
         }
 
