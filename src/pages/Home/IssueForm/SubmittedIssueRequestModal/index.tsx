@@ -10,6 +10,8 @@ import InterlayModal, {
   Props as ModalProps,
   InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import { PAGES } from 'utils/constants/links';
 import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
 interface CustomProps {
@@ -66,9 +68,13 @@ const SubmittedIssueRequestModal = ({
             {t('issue_page.deposit')}
           </h4>
           <BTCPaymentPendingStatusUI request={request} />
-          <InterlayDefaultContainedButton onClick={onClose}>
-            {t('issue_page.made_payment')}
-          </InterlayDefaultContainedButton>
+          <InterlayRouterLink to={PAGES.REQUESTS}>
+            <InterlayDefaultContainedButton
+              onClick={onClose}
+              className='w-full'>
+              {t('issue_page.i_have_made_payment')}
+            </InterlayDefaultContainedButton>
+          </InterlayRouterLink>
         </div>
       </InterlayModalInnerWrapper>
     </InterlayModal>

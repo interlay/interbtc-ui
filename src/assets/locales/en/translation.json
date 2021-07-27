@@ -388,7 +388,7 @@
     "speed_things_up": "Optional: inform us of your Bitcoin txid to speed things up",
     "valid_transaction_id": "Please enter valid transaction Id",
     "required_message": "Please enter the your btc transaction id",
-    "made_payment": "I have made the payment",
+    "i_have_made_payment": "I have made the payment",
     "issue_interbtc": "Issue InterBTC",
     "confirm_issue_request": "Confirm Issue Request",
     "verify_and_confirm": "Please verify and confirm your issue request.",
