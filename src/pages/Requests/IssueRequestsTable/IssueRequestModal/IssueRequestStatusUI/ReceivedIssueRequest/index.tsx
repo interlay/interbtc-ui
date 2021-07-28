@@ -34,8 +34,8 @@ const ReceivedIssueRequest = ({
         parachainHeight
       ] = await Promise.all([
         interbtcIndex.getBtcConfirmations(),
-        await window.polkaBTC.btcRelay.getStableParachainConfirmations(),
-        await window.polkaBTC.system.getCurrentBlockNumber()
+        window.polkaBTC.btcRelay.getStableParachainConfirmations(),
+        window.polkaBTC.system.getCurrentBlockNumber()
       ]);
       setStableBitcoinConfirmations(theStableBitcoinConfirmations);
       setStableParachainConfirmations(theStableParachainConfirmations);
