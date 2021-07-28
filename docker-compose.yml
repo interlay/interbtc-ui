@@ -124,11 +124,12 @@ services:
       - ${PWD}/node_modules/@interlay/interbtc-index-client/sql:/flyway/sql
     depends_on:
       - postgres
-  interbtc_stats:
+  index:
     image: 'registry.gitlab.com/interlay/polkabtc-stats:0.5.7'
     restart: always
     depends_on:
       - postgres
+      - flyway
     command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 1; done; yarn start'
     environment:
       MONITOR: '1'
