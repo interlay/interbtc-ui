@@ -1,18 +1,27 @@
-import { useEffect, ReactElement, useState, useMemo } from 'react';
+import {
+  useEffect,
+  ReactElement,
+  useState,
+  useMemo
+} from 'react';
+import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import BN from 'bn.js';
+import { FaExternalLinkAlt } from 'react-icons/fa';
+import { planckToDOT } from '@interlay/interbtc';
+
+import DashboardCard from 'pages/dashboard/DashboardCard';
+import LineChartComponent from './line-chart-component';
+import { getAccents } from '../dashboardcolors';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
-import { FaExternalLinkAlt } from 'react-icons/fa';
-import { getAccents } from '../dashboardcolors';
-import { useSelector } from 'react-redux';
-import { StoreType } from '../../../common/types/util.types';
-import useInterbtcIndex from '../../../common/hooks/use-interbtc-index';
-import { planckToDOT } from '@interlay/interbtc';
-import LineChartComponent from './line-chart-component';
-import { useTranslation } from 'react-i18next';
-import { getUsdAmount } from '../../../common/utils/utils';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
+import {
+  getUsdAmount,
+  displayMonetaryAmount
+} from 'common/utils/utils';
 import { PAGES } from 'utils/constants/links';
-import DashboardCard from 'pages/dashboard/DashboardCard';
-import BN from 'bn.js';
+import { StoreType } from 'common/types/util.types';
 
 type CollateralLockedProps = {
   linkButton?: boolean;
@@ -52,7 +61,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
       <div className='card-top-content'>
         <div className='values-container'>
           <h1 style={{ color: getAccents('d_interlayDenim').color }}>{t('dashboard.vault.locked_collateral')}</h1>
-          <h2>{totalLockedDOT} DOT</h2>
+          <h2>{displayMonetaryAmount(totalLockedDOT)} DOT</h2>
           <h2>${getUsdAmount(totalLockedDOT, prices.polkadot.usd)}</h2>
         </div>
         {linkButton && (
