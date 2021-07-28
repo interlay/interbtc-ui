@@ -1,9 +1,12 @@
+
 import * as React from 'react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { Issue } from '@interlay/interbtc';
 
-import BTCPaymentPendingStatusUI from 'pages/Requests/IssueRequestsTable/IssueRequestModal/BTCPaymentPendingStatusUI';
+import
+BTCPaymentPendingStatusUI
+  from 'pages/Transactions/IssueRequestsTable/IssueRequestModal/BTCPaymentPendingStatusUI';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import IconButton from 'components/IconButton';
 import InterlayModal, {
@@ -11,8 +14,13 @@ import InterlayModal, {
   InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
-import { PAGES } from 'utils/constants/links';
+import {
+  PAGES,
+  QUERY_PARAMETERS
+} from 'utils/constants/links';
 import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
+
+const queryString = require('query-string');
 
 interface CustomProps {
   request: Issue
@@ -68,11 +76,17 @@ const SubmittedIssueRequestModal = ({
             {t('issue_page.deposit')}
           </h4>
           <BTCPaymentPendingStatusUI request={request} />
-          <InterlayRouterLink to={PAGES.REQUESTS}>
+          <InterlayRouterLink
+            to={{
+              pathname: PAGES.TRANSACTIONS,
+              search: queryString.stringify({
+                [QUERY_PARAMETERS.ISSUE_REQUEST_ID]: request.id
+              })
+            }}>
             <InterlayDefaultContainedButton
               onClick={onClose}
               className='w-full'>
-              {t('issue_page.i_have_made_payment')}
+              {t('issue_page.i_have_made_the_payment')}
             </InterlayDefaultContainedButton>
           </InterlayRouterLink>
         </div>

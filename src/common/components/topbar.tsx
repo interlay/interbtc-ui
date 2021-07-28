@@ -121,7 +121,7 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                     {/* TODO: should use https://reactrouter.com/web/api/NavLink with `activeClassName` */}
                     <InterlayRouterLink
                       className='p-2'
-                      to={PAGES.REQUESTS}>
+                      to={PAGES.TRANSACTIONS}>
                       {t('nav_transactions')}
                     </InterlayRouterLink>
                     <InterlayRouterLink

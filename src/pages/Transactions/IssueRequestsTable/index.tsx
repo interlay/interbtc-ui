@@ -1,4 +1,3 @@
-
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import * as React from 'react';
@@ -14,15 +13,18 @@ import {
   FaRegClock,
   FaExternalLinkAlt
 } from 'react-icons/fa';
-import { useSelector } from 'react-redux';
+import {
+  useSelector,
+  useDispatch
+} from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import {
-  Redeem,
-  RedeemStatus
+  Issue,
+  IssueStatus
 } from '@interlay/interbtc';
 
-import RedeemRequestModal from './RedeemRequestModal';
+import IssueRequestModal from './IssueRequestModal';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
 import InterlayPagination from 'components/UI/InterlayPagination';
@@ -41,41 +43,44 @@ import { BTC_TRANSACTION_API } from 'config/bitcoin';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { REQUEST_TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import {
-  shortTxId,
-  formatDateTimePrecise
+  formatDateTimePrecise,
+  shortTxId
 } from 'common/utils/utils';
-import userRedeemRequestsFetcher, { USER_REDEEM_REQUESTS_FETCHER } from 'services/user-redeem-requests-fetcher';
+import userIssueRequestsFetcher, { USER_ISSUE_REQUESTS_FETCHER } from 'services/user-issue-requests-fetcher';
 import { StoreType } from 'common/types/util.types';
+import { showAccountModalAction } from 'common/actions/general.actions';
 
 // ray test touch <<
 const TOTAL_ISSUE_REQUESTS = 100; // TODO: hardcoded
 // ray test touch >>
 
-const RedeemRequestsTable = (): JSX.Element => {
+const IssueRequestsTable = (): JSX.Element => {
+  const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const queryParams = useQueryParams();
-  const selectedRedeemRequestId = queryParams.get(QUERY_PARAMETERS.REDEEM_REQUEST_ID);
-  const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
+  const selectedIssueRequestId = queryParams.get(QUERY_PARAMETERS.ISSUE_REQUEST_ID);
+  const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.ISSUE_REQUESTS_PAGE)) || 1;
   const selectedPageIndex = selectedPage - 1;
   const updateQueryParameters = useUpdateQueryParameters();
 
   const {
     address,
+    extensions,
     polkaBtcLoaded
   } = useSelector((state: StoreType) => state.general);
   const {
     isLoading,
-    data: redeemRequests,
+    data: issueRequests,
     error
-  } = useQuery<Array<Redeem>, Error>(
+  } = useQuery<Array<Issue>, Error>(
     [
-      USER_REDEEM_REQUESTS_FETCHER,
+      USER_ISSUE_REQUESTS_FETCHER,
       address,
       selectedPageIndex,
       REQUEST_TABLE_PAGE_LIMIT
     ],
-    userRedeemRequestsFetcher,
+    userIssueRequestsFetcher,
     {
       enabled: !!address && !!polkaBtcLoaded,
       refetchInterval: 10000
@@ -91,7 +96,7 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }: {value: number}) {
+        Cell: function FormattedCell({ value }: { value: number }) {
           return (
             <>
               {value ? formatDateTimePrecise(new Date(Number(value))) : t('pending')}
@@ -100,11 +105,21 @@ const RedeemRequestsTable = (): JSX.Element => {
         }
       },
       {
-        Header: `${t('redeem_page.amount')} (interBTC)`,
-        accessor: 'amountBTC',
+        Header: `${t('issue_page.amount')} (interBTC)`,
+        accessor: 'amountInterBTC',
         classNames: [
           'text-right'
-        ]
+        ],
+        Cell: function FormattedCell(props: any) {
+          return (
+            <>
+              {(props.row.original.executedAmountBTC && props.row.original.executedAmountBTC !== '0') ?
+                props.row.original.executedAmountBTC :
+                props.row.original.amountInterBTC
+              }
+            </>
+          );
+        }
       },
       {
         Header: t('issue_page.btc_transaction'),
@@ -113,41 +128,36 @@ const RedeemRequestsTable = (): JSX.Element => {
           'text-right'
         ],
         Cell: function FormattedCell(props: any) {
-          const redeemRequest: Redeem = props.row.original;
+          const issueRequest: Issue = props.row.original;
           return (
             <>
-              {
+              {issueRequest.btcTxId ? (
+                <InterlayLink
+                  className={clsx(
+                    'text-interlayDenim',
+                    'space-x-1.5',
+                    'inline-flex',
+                    'items-center'
+                  )}
+                  href={`${BTC_TRANSACTION_API}${issueRequest.btcTxId}`}
+                  onClick={event => {
+                    event.stopPropagation();
+                  }}
+                  target='_blank'
+                  rel='noopener noreferrer'>
+                  <span>{shortTxId(issueRequest.btcTxId)}</span>
+                  <FaExternalLinkAlt />
+                </InterlayLink>
+              ) : (
                 (
-                  redeemRequest.status === RedeemStatus.Expired ||
-                  redeemRequest.status === RedeemStatus.Retried ||
-                  redeemRequest.status === RedeemStatus.Reimbursed
+                  issueRequest.status === IssueStatus.Expired ||
+                  issueRequest.status === IssueStatus.Cancelled
                 ) ? (
                     t('redeem_page.failed')
                   ) : (
-                    <>
-                      {/* TODO: could componentize */}
-                      {redeemRequest.btcTxId ? (
-                        <InterlayLink
-                          className={clsx(
-                            'text-interlayDenim',
-                            'space-x-1.5',
-                            'inline-flex',
-                            'items-center'
-                          )}
-                          href={`${BTC_TRANSACTION_API}${redeemRequest.btcTxId}`}
-                          onClick={event => {
-                            event.stopPropagation();
-                          }}
-                          target='_blank'
-                          rel='noopener noreferrer'>
-                          <span>{shortTxId(redeemRequest.btcTxId)}</span>
-                          <FaExternalLinkAlt />
-                        </InterlayLink>
-                      ) : (
-                        `${t('pending')}...`
-                      )}
-                    </>
-                  )}
+                    `${t('pending')}...`
+                  )
+              )}
             </>
           );
         }
@@ -174,33 +184,23 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }: {value: RedeemStatus}) {
+        Cell: function FormattedCell({ value }: {value: IssueStatus}) {
           let icon;
           let notice;
           let colorClassName;
           switch (value) {
-          case RedeemStatus.Reimbursed: {
-            icon = <FaCheck />; // TODO: should update according to the design
-            notice = t('redeem_page.reimbursed');
-            colorClassName = 'text-interlayConifer'; // TODO: should update according to the design
-            break;
-          }
-          case RedeemStatus.Expired: {
-            icon = <FaRegTimesCircle />;
-            notice = t('redeem_page.recover');
-            colorClassName = 'text-interlayCinnabar';
-            break;
-          }
-          case RedeemStatus.Retried: {
-            icon = <FaCheck />;
-            notice = t('redeem_page.retried');
-            colorClassName = 'text-interlayConifer';
-            break;
-          }
-          case RedeemStatus.Completed: {
+          case IssueStatus.RequestedRefund:
+          case IssueStatus.Completed: {
             icon = <FaCheck />;
             notice = t('completed');
             colorClassName = 'text-interlayConifer';
+            break;
+          }
+          case IssueStatus.Cancelled:
+          case IssueStatus.Expired: {
+            icon = <FaRegTimesCircle />;
+            notice = t('cancelled');
+            colorClassName = 'text-interlayCinnabar';
             break;
           }
           default: {
@@ -211,6 +211,7 @@ const RedeemRequestsTable = (): JSX.Element => {
           }
           }
 
+          // TODO: double-check with `src\components\UI\InterlayTable\StatusCell\index.tsx`
           return (
             <div
               className={clsx(
@@ -231,7 +232,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     [t]
   );
 
-  const data = redeemRequests ?? [];
+  const data = issueRequests ?? [];
 
   const {
     getTableProps,
@@ -260,24 +261,28 @@ const RedeemRequestsTable = (): JSX.Element => {
 
   const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number }) => {
     updateQueryParameters({
-      [QUERY_PARAMETERS.PAGE]: (newSelectedPageIndex + 1).toString()
+      [QUERY_PARAMETERS.ISSUE_REQUESTS_PAGE]: (newSelectedPageIndex + 1).toString()
     });
   };
 
-  const handleRedeemModalClose = () => {
+  const handleIssueModalClose = () => {
     updateQueryParameters({
-      [QUERY_PARAMETERS.REDEEM_REQUEST_ID]: ''
+      [QUERY_PARAMETERS.ISSUE_REQUEST_ID]: ''
     });
   };
 
   const handleRowClick = (requestId: string) => () => {
-    updateQueryParameters({
-      [QUERY_PARAMETERS.REDEEM_REQUEST_ID]: requestId
-    });
+    if (extensions.length && address) {
+      updateQueryParameters({
+        [QUERY_PARAMETERS.ISSUE_REQUEST_ID]: requestId
+      });
+    } else {
+      dispatch(showAccountModalAction(true));
+    }
   };
 
   const pageCount = Math.ceil(TOTAL_ISSUE_REQUESTS / REQUEST_TABLE_PAGE_LIMIT);
-  const selectedRedeemRequest = data.find(redeemRequest => redeemRequest.id === selectedRedeemRequestId);
+  const selectedIssueRequest = data.find(issueRequest => issueRequest.id === selectedIssueRequestId);
 
   return (
     <>
@@ -287,13 +292,18 @@ const RedeemRequestsTable = (): JSX.Element => {
           'container',
           'mx-auto'
         )}>
-        <h2
-          className={clsx(
-            'text-2xl',
-            'font-bold'
-          )}>
-          {t('redeem_requests')}
-        </h2>
+        <div>
+          <h2
+            className={clsx(
+              'text-2xl',
+              'font-bold'
+            )}>
+            {t('issue_page.issue_requests')}
+          </h2>
+          <p>
+            {t('issue_page.click_on_issue_request')}
+          </p>
+        </div>
         <InterlayTable {...getTableProps()}>
           <InterlayThead>
             {headerGroups.map(headerGroup => (
@@ -366,17 +376,17 @@ const RedeemRequestsTable = (): JSX.Element => {
           </div>
         )}
       </InterlayTableContainer>
-      {selectedRedeemRequest && (
-        <RedeemRequestModal
-          open={!!selectedRedeemRequest}
-          onClose={handleRedeemModalClose}
-          request={selectedRedeemRequest} />
+      {selectedIssueRequest && (
+        <IssueRequestModal
+          open={!!selectedIssueRequest}
+          onClose={handleIssueModalClose}
+          request={selectedIssueRequest} />
       )}
     </>
   );
 };
 
-export default withErrorBoundary(RedeemRequestsTable, {
+export default withErrorBoundary(IssueRequestsTable, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();

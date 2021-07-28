@@ -111,7 +111,7 @@ const Feedback = React.lazy(() =>
   import(/* webpackChunkName: 'feedback' */ 'pages/Feedback')
 );
 const Requests = React.lazy(() =>
-  import(/* webpackChunkName: 'requests' */ 'pages/Requests')
+  import(/* webpackChunkName: 'transactions' */ 'pages/Transactions')
 );
 const NoMatch = React.lazy(() =>
   import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
@@ -408,7 +408,7 @@ function App(): JSX.Element {
                 <Route path={PAGES.FEEDBACK}>
                   <Feedback />
                 </Route>
-                <Route path={PAGES.REQUESTS}>
+                <Route path={PAGES.TRANSACTIONS}>
                   <Requests />
                 </Route>
                 <Route

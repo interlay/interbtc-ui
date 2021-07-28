@@ -7,17 +7,24 @@ import { Redeem } from '@interlay/interbtc';
 import { BTCAmount } from '@interlay/monetary-js';
 
 import IconButton from 'components/IconButton';
-import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
+import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import InterlayModal, {
   Props as ModalProps,
   InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
-import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import {
   displayMonetaryAmount,
   getUsdAmount
 } from 'common/utils/utils';
+import {
+  PAGES,
+  QUERY_PARAMETERS
+} from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
+import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
+
+const queryString = require('query-string');
 
 interface CustomProps {
   request: Redeem
@@ -137,9 +144,19 @@ const SubmittedRedeemRequestModal = ({
               <p className='text-textSecondary'>{t('redeem_page.typically_takes')}</p>
             </div>
           </div>
-          <InterlayDefaultContainedButton onClick={onClose}>
-            {t('close')}
-          </InterlayDefaultContainedButton>
+          <InterlayRouterLink
+            to={{
+              pathname: PAGES.TRANSACTIONS,
+              search: queryString.stringify({
+                [QUERY_PARAMETERS.REDEEM_REQUEST_ID]: request.id
+              })
+            }}>
+            <InterlayDefaultContainedButton
+              onClick={onClose}
+              className='w-full'>
+              {t('redeem_page.view_progress')}
+            </InterlayDefaultContainedButton>
+          </InterlayRouterLink>
         </div>
       </InterlayModalInnerWrapper>
     </InterlayModal>

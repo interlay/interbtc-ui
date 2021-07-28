@@ -12,12 +12,14 @@ const PAGES = Object.freeze({
   DASHBOARD: '/dashboard',
   VAULT: '/vault',
   FEEDBACK: '/feedback',
-  REQUESTS: '/requests'
+  TRANSACTIONS: '/transactions'
 });
 
 const QUERY_PARAMETERS = Object.freeze({
   TAB: 'tab',
   PAGE: 'page',
+  ISSUE_REQUESTS_PAGE: 'issueRequestPage',
+  REDEEM_REQUESTS_PAGE: 'redeemRequestPage',
   ISSUE_REQUEST_ID: 'issueRequestId',
   REDEEM_REQUEST_ID: 'redeemRequestId'
 });

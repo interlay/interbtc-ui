@@ -2,6 +2,14 @@
 import ReactPaginate, { ReactPaginateProps } from 'react-paginate';
 import clsx from 'clsx';
 
+const focusStyling = clsx(
+  'focus:outline-none',
+  'focus:ring',
+  'focus:border-primary-300',
+  'focus:ring-primary-200',
+  'focus:ring-opacity-50'
+);
+
 const InterlayPagination = ({
   onPageChange,
   ...rest
@@ -13,6 +21,7 @@ const InterlayPagination = ({
       breakLabel='...'
       onPageChange={onPageChange}
       breakLinkClassName={clsx(
+        focusStyling,
         'px-4',
         'py-2'
       )}
@@ -37,6 +46,7 @@ const InterlayPagination = ({
         'select-none'
       )}
       previousLinkClassName={clsx(
+        focusStyling,
         'px-4',
         'py-2'
       )}
@@ -54,6 +64,7 @@ const InterlayPagination = ({
         'font-medium'
       )}
       pageLinkClassName={clsx(
+        focusStyling,
         'px-4',
         'py-2'
       )}
@@ -71,6 +82,7 @@ const InterlayPagination = ({
         'font-medium'
       )}
       nextLinkClassName={clsx(
+        focusStyling,
         'px-4',
         'py-2'
       )}
@@ -88,6 +100,7 @@ const InterlayPagination = ({
         'font-medium'
       )}
       activeLinkClassName={clsx(
+        focusStyling,
         'px-4',
         'py-2'
       )}
