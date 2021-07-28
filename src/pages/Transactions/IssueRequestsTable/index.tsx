@@ -47,12 +47,13 @@ import {
   shortTxId
 } from 'common/utils/utils';
 import userIssueRequestsFetcher, { USER_ISSUE_REQUESTS_FETCHER } from 'services/user-issue-requests-fetcher';
+// ray test touch <<
+import userIssueRequestsTotalCountFetcher, {
+  USER_ISSUE_REQUESTS_TOTAL_COUNT_FETCHER
+} from 'services/user-issue-requests-total-count-fetcher';
+// ray test touch >>
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
-
-// ray test touch <<
-const TOTAL_ISSUE_REQUESTS = 100; // TODO: hardcoded
-// ray test touch >>
 
 const IssueRequestsTable = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -69,10 +70,30 @@ const IssueRequestsTable = (): JSX.Element => {
     extensions,
     polkaBtcLoaded
   } = useSelector((state: StoreType) => state.general);
+  // ray test touch <<
+  // eslint-disable-next-line max-len
+  // TODO: should be refactored via `https://www.notion.so/interlay/Include-total-count-into-paginated-API-calls-in-index-894b56f288d24aaf8fb1aec36eadf41d`
   const {
-    isLoading,
+    isLoading: issueRequestsTotalCountLoading,
+    data: issueRequestsTotalCount,
+    error: issueRequestsTotalCountError
+  } = useQuery<number, Error>(
+    [
+      USER_ISSUE_REQUESTS_TOTAL_COUNT_FETCHER,
+      address
+    ],
+    userIssueRequestsTotalCountFetcher,
+    {
+      enabled: !!address && !!polkaBtcLoaded,
+      refetchInterval: 10000
+    }
+  );
+  useErrorHandler(issueRequestsTotalCountError);
+  // ray test touch >>
+  const {
+    isLoading: issueRequestsLoading,
     data: issueRequests,
-    error
+    error: issueRequestsError
   } = useQuery<Array<Issue>, Error>(
     [
       USER_ISSUE_REQUESTS_FETCHER,
@@ -86,7 +107,7 @@ const IssueRequestsTable = (): JSX.Element => {
       refetchInterval: 10000
     }
   );
-  useErrorHandler(error);
+  useErrorHandler(issueRequestsError);
 
   const columns = React.useMemo(
     () => [
@@ -247,7 +268,7 @@ const IssueRequestsTable = (): JSX.Element => {
     }
   );
 
-  if (isLoading) {
+  if (issueRequestsLoading || issueRequestsTotalCountLoading) {
     return (
       <div
         className={clsx(
@@ -281,7 +302,7 @@ const IssueRequestsTable = (): JSX.Element => {
     }
   };
 
-  const pageCount = Math.ceil(TOTAL_ISSUE_REQUESTS / REQUEST_TABLE_PAGE_LIMIT);
+  const pageCount = Math.ceil(issueRequestsTotalCount / REQUEST_TABLE_PAGE_LIMIT);
   const selectedIssueRequest = data.find(issueRequest => issueRequest.id === selectedIssueRequestId);
 
   return (

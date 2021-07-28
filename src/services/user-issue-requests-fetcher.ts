@@ -38,7 +38,7 @@ const userIssueRequestsFetcher = async ({ queryKey }: Arguments): Promise<Array<
   // Temporary declaration pending refactor decision
   const index = new IndexApi(new Configuration({ basePath: STATS_URL }));
 
-  const userIssueRequests = await index.getFilteredIssues({
+  return await index.getFilteredIssues({
     page,
     perPage: limit,
     network: BITCOIN_NETWORK as BitcoinNetwork | undefined,
@@ -47,8 +47,6 @@ const userIssueRequestsFetcher = async ({ queryKey }: Arguments): Promise<Array<
       value: account
     }] // Filter by requester == account
   });
-
-  return userIssueRequests;
 };
 
 export {

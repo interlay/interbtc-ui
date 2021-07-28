@@ -38,7 +38,7 @@ const userRedeemRequestsFetcher = async ({ queryKey }: Arguments): Promise<Array
   // Temporary declaration pending refactor decision
   const index = new IndexApi(new Configuration({ basePath: STATS_URL }));
 
-  const userRedeemRequests = await index.getFilteredRedeems({
+  return await index.getFilteredRedeems({
     page,
     perPage: limit,
     network: BITCOIN_NETWORK as BitcoinNetwork,
@@ -47,8 +47,6 @@ const userRedeemRequestsFetcher = async ({ queryKey }: Arguments): Promise<Array
       value: account
     }] // Filter by requester == account
   });
-
-  return userRedeemRequests;
 };
 
 export {
