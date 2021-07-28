@@ -1,12 +1,16 @@
 
-import * as interbtcIndex from '@interlay/interbtc-index-client';
 import {
   BitcoinNetwork,
-  RedeemColumns
+  RedeemColumns,
+  IndexApi,
+  Configuration
 } from '@interlay/interbtc-index-client';
 import { Redeem } from '@interlay/interbtc';
 
-import * as constants from '../constants';
+import {
+  STATS_URL,
+  BITCOIN_NETWORK
+} from '../constants';
 
 const USER_REDEEM_REQUESTS_FETCHER = 'user-redeem-requests-fetcher';
 
@@ -32,12 +36,12 @@ const userRedeemRequestsFetcher = async ({ queryKey }: Arguments): Promise<Array
   }
 
   // Temporary declaration pending refactor decision
-  const index = new interbtcIndex.IndexApi(new interbtcIndex.Configuration({ basePath: constants.STATS_URL }));
+  const index = new IndexApi(new Configuration({ basePath: STATS_URL }));
 
   const userRedeemRequests = await index.getFilteredRedeems({
     page,
     perPage: limit,
-    network: constants.BITCOIN_NETWORK as BitcoinNetwork,
+    network: BITCOIN_NETWORK as BitcoinNetwork,
     filterRedeemColumns: [{
       column: RedeemColumns.Requester,
       value: account

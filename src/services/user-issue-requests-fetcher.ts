@@ -1,12 +1,16 @@
 
-import * as interbtcIndex from '@interlay/interbtc-index-client';
 import {
   BitcoinNetwork,
-  IssueColumns
+  IssueColumns,
+  IndexApi,
+  Configuration
 } from '@interlay/interbtc-index-client';
 import { Issue } from '@interlay/interbtc';
 
-import * as constants from '../constants';
+import {
+  STATS_URL,
+  BITCOIN_NETWORK
+} from '../constants';
 
 const USER_ISSUE_REQUESTS_FETCHER = 'user-issue-requests-fetcher';
 
@@ -32,12 +36,12 @@ const userIssueRequestsFetcher = async ({ queryKey }: Arguments): Promise<Array<
   }
 
   // Temporary declaration pending refactor decision
-  const index = new interbtcIndex.IndexApi(new interbtcIndex.Configuration({ basePath: constants.STATS_URL }));
+  const index = new IndexApi(new Configuration({ basePath: STATS_URL }));
 
   const userIssueRequests = await index.getFilteredIssues({
     page,
     perPage: limit,
-    network: constants.BITCOIN_NETWORK as BitcoinNetwork | undefined,
+    network: BITCOIN_NETWORK as BitcoinNetwork | undefined,
     filterIssueColumns: [{
       column: IssueColumns.Requester,
       value: account
