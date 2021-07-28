@@ -24,7 +24,6 @@ import { StoreType } from 'common/types/util.types';
 import Balances from './balances';
 import { PAGES } from 'utils/constants/links';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
-import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
 
 type TopbarProps = {
   address?: string;
@@ -151,10 +150,6 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                     className='p-2'
                     to={PAGES.CHALLENGES}>
                     {t('nav_challenges')}
-                    <NewMarkIcon
-                      className='inline-block'
-                      width={20}
-                      height={20} />
                   </InterlayRouterLink>
                 )}
                 <InterlayRouterLink

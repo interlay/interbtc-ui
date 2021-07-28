@@ -8,7 +8,6 @@ import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import VaultScoresTable from 'containers/VaultScoresTable';
-import StakedRelayerScoresTable from 'containers/StakedRelayerScoresTable';
 import CardList, {
   CardListItem,
   CardListItemHeader,
@@ -19,7 +18,6 @@ import InterlayDenimToggleButtonGroup, {
   InterlayDenimToggleButtonGroupProps
 } from 'components/toggle-button-groups/InterlayDenimToggleButtonGroup';
 import InterlayLink from 'components/UI/InterlayLink';
-import InterlayTabs, { InterlayTab } from 'components/UI/InterlayTabs';
 import {
   POLKA_BTC_DOC_START_TREASURE_HUNT,
   POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT,
@@ -27,7 +25,6 @@ import {
   POLKA_BTC_DOC_KING_OF_THE_HILL,
   POLKA_BTC_DOC_LOTTERY
 } from 'config/links';
-// import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
 import { CHALLENGE_CUT_OFFS } from 'config/challenges';
 
 const challengeCutOffs = Object.values(CHALLENGE_CUT_OFFS);
@@ -84,35 +81,14 @@ const CHALLENGE_ITEMS = [
   }
 ];
 
-const tabStyles = {
-  className: clsx(
-    'py-2'
-  ),
-  // TODO: hack for now
-  tabClassName: clsx(
-    'no-underline',
-    'text-black'
-  )
-};
-
-const TAB_KEYS = Object.freeze({
-  VAULTS: 'vaults',
-  STAKED_RELAYER: 'staked-relayer'
-});
-
 const Challenges = (): JSX.Element => {
   // TODO: should be persisted using query parameters
   const [challengeId, setChallengeId] = useState(challengeCutOffs[0].id ?? null);
   // TODO: should be persisted using query parameters
-  const [tabKey, setTabKey] = useState<string | null>('vaults');
   const { t } = useTranslation();
 
   const handleChallengeIdChange = (newChallengeId: number) => {
     setChallengeId(newChallengeId);
-  };
-
-  const handleTabSelect = (newTabKey: string | null) => {
-    setTabKey(newTabKey);
   };
 
   const challengeTime = challengeCutOffs.find(item => item.id === challengeId)?.time;
@@ -183,20 +159,7 @@ const Challenges = (): JSX.Element => {
             value={challengeId}
             onChange={handleChallengeIdChange} />
         </div>
-        <InterlayTabs onSelect={handleTabSelect}>
-          <InterlayTab
-            {...tabStyles}
-            eventKey={TAB_KEYS.VAULTS}
-            title={t('leaderboard.vault_scores')}>
-            {tabKey === TAB_KEYS.VAULTS && <VaultScoresTable challengeTime={challengeTime} />}
-          </InterlayTab>
-          <InterlayTab
-            {...tabStyles}
-            eventKey={TAB_KEYS.STAKED_RELAYER}
-            title={t('leaderboard.relayer_scores')}>
-            {tabKey === TAB_KEYS.STAKED_RELAYER && <StakedRelayerScoresTable challengeTime={challengeTime} />}
-          </InterlayTab>
-        </InterlayTabs>
+        <VaultScoresTable challengeTime={challengeTime} />
       </div>
     </MainContainer>
   );

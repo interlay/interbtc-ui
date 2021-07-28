@@ -28,7 +28,6 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import DefaultColumnFilter from 'components/UI/InterlayTable/DefaultColumnFilter';
-import NumberRangeColumnFilter from 'components/UI/InterlayTable/NumberRangeColumnFilter';
 import SortBy, { SortByContainer } from 'components/UI/InterlayTable/SortBy';
 import usePolkabtcStats from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
@@ -135,15 +134,6 @@ const VaultScoresTable = ({
       {
         Header: t('leaderboard.execute_redeem_count'),
         accessor: 'executeRedeemCount',
-        classNames: [
-          'text-right'
-        ]
-      },
-      {
-        Header: t('leaderboard.lifetime_sla'),
-        accessor: 'lifetimeSla',
-        Filter: NumberRangeColumnFilter,
-        filter: 'between',
         classNames: [
           'text-right'
         ]

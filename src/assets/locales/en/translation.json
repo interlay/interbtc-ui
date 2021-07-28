@@ -446,8 +446,6 @@
   "leaderboard": {
     "title": "Leaderboard",
     "challenges_title": "Challenges",
-    "vault_scores": "Vault Scores",
-    "relayer_scores": "Relayer Scores",
     "account_id": "Account ID",
     "stake": "Total Stake",
     "collateral": "Collateral",

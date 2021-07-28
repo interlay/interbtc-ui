@@ -6,6 +6,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 
+// TODO: not used for now
 function NumberRangeColumnFilter({
   column: {
     filterValue = [],
