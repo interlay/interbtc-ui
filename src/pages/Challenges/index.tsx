@@ -93,7 +93,6 @@ const Challenges = (): JSX.Element => {
 
   const challengeTime = challengeCutOffs.find(item => item.id === challengeId)?.time;
   if (challengeTime === undefined) {
-    // TODO: should translate
     throw new Error('Something went wrong!');
   }
 

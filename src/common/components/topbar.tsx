@@ -122,7 +122,7 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                     <InterlayRouterLink
                       className='p-2'
                       to={PAGES.REQUESTS}>
-                      Requests
+                      {t('nav_transactions')}
                     </InterlayRouterLink>
                     <InterlayRouterLink
                       className='p-2'
