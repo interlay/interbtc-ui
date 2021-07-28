@@ -1564,10 +1564,10 @@
   resolved "https://registry.yarnpkg.com/@interlay/interbtc-index-client/-/interbtc-index-client-0.5.1.tgz#eebfab9cb873bf49bbfa355c717272608e717973"
   integrity sha512-Ae1Wz9BYXBpAb4evFuzjAB2mlQFnW3lWuV6OQlV4NgE9Z2MDh5XhDj3OsltihZnBn42gBBvAw5X4ZVtW14cgJQ==
 
-"@interlay/interbtc-index-client@0.5.7":
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-index-client/-/interbtc-index-client-0.5.7.tgz#ed17ad061570bb7e21e0860444167db649090877"
-  integrity sha512-YZf42ofXowvaD5sHvRBR1eUXE2wIOwIHe5AyWNKz9JYeXcZ4vcrW2FLh5SW/EQsP38+OC5KBrjvWja8sJb+3Hg==
+"@interlay/interbtc-index-client@0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-index-client/-/interbtc-index-client-0.6.0.tgz#c58277f7c5f4d3312e70923187c53d1ee90d21d0"
+  integrity sha512-t+BaTec5bdG4B03/pY8cKy7M0BMfSrsKbwvIJGXUeR2BPJcVEKo5tVvLMA/hXuUkCDMYsxj9W4e2VOnF5oVRIA==
 
 "@interlay/interbtc-types@0.9.1":
   version "0.9.1"
