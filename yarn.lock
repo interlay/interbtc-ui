@@ -1574,10 +1574,10 @@
   resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-0.9.1.tgz#9cfecc88983c69dc662fe1b62fcd1a3eda8de496"
   integrity sha512-Dxq73tU6clnkMF/ToQg5fcurkawrpfIqJVKuFGbOQBzDN8Bj2VRQsKhTgO6Rs4v6Ea0CL+jD6EsvSDhJzy00+w==
 
-"@interlay/interbtc@0.21.0":
-  version "0.21.0"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-0.21.0.tgz#e0f542ff0bb1cda77a0bc1db4c2a41b83466aab9"
-  integrity sha512-OaaELcrvxKjY1mFEutB2hpnqkEMDTe5qCZ1khk/eERuZVbS/F7QUUFT/qyCXoN8v3faaZ5b0d817fRY9CwCf1Q==
+"@interlay/interbtc@0.21.1":
+  version "0.21.1"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-0.21.1.tgz#9cf2e0f7786ab87fbfe3afedde11508927b4430d"
+  integrity sha512-cfsoLa3Dhv2mFrE/+QD8v7M/bvhugr6qg1n5Onjm026wMCQF1yv89cCb8dCcb+ugiThEKoYR9aFVfVIMviXGZg==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
     "@interlay/interbtc-index-client" "0.5.1"
