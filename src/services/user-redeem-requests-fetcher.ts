@@ -35,7 +35,6 @@ const userRedeemRequestsFetcher = async ({ queryKey }: Arguments): Promise<Array
     throw new Error('Invalid key!');
   }
 
-  // Temporary declaration pending refactor decision
   const index = new IndexApi(new Configuration({ basePath: STATS_URL }));
 
   return await index.getFilteredRedeems({

@@ -45,11 +45,10 @@ import {
   formatDateTimePrecise
 } from 'common/utils/utils';
 import userRedeemRequestsFetcher, { USER_REDEEM_REQUESTS_FETCHER } from 'services/user-redeem-requests-fetcher';
+import userRedeemRequestsTotalCountFetcher, {
+  USER_REDEEM_REQUESTS_TOTAL_COUNT_FETCHER
+} from 'services/user-redeem-requests-total-count-fetcher';
 import { StoreType } from 'common/types/util.types';
-
-// ray test touch <<
-const TOTAL_ISSUE_REQUESTS = 100; // TODO: hardcoded
-// ray test touch >>
 
 const RedeemRequestsTable = (): JSX.Element => {
   const { t } = useTranslation();
@@ -65,9 +64,25 @@ const RedeemRequestsTable = (): JSX.Element => {
     polkaBtcLoaded
   } = useSelector((state: StoreType) => state.general);
   const {
-    isLoading,
+    isLoading: redeemRequestsTotalCountLoading,
+    data: redeemRequestsTotalCount,
+    error: redeemRequestsTotalCountError
+  } = useQuery<number, Error>(
+    [
+      USER_REDEEM_REQUESTS_TOTAL_COUNT_FETCHER,
+      address
+    ],
+    userRedeemRequestsTotalCountFetcher,
+    {
+      enabled: !!address && !!polkaBtcLoaded,
+      refetchInterval: 10000
+    }
+  );
+  useErrorHandler(redeemRequestsTotalCountError);
+  const {
+    isLoading: redeemRequestsLoading,
     data: redeemRequests,
-    error
+    error: redeemRequestsError
   } = useQuery<Array<Redeem>, Error>(
     [
       USER_REDEEM_REQUESTS_FETCHER,
@@ -81,7 +96,7 @@ const RedeemRequestsTable = (): JSX.Element => {
       refetchInterval: 10000
     }
   );
-  useErrorHandler(error);
+  useErrorHandler(redeemRequestsError);
 
   const columns = React.useMemo(
     () => [
@@ -246,7 +261,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     }
   );
 
-  if (isLoading) {
+  if (redeemRequestsLoading || redeemRequestsTotalCountLoading) {
     return (
       <div
         className={clsx(
@@ -276,7 +291,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     });
   };
 
-  const pageCount = Math.ceil(TOTAL_ISSUE_REQUESTS / REQUEST_TABLE_PAGE_LIMIT);
+  const pageCount = Math.ceil(redeemRequestsTotalCount / REQUEST_TABLE_PAGE_LIMIT);
   const selectedRedeemRequest = data.find(redeemRequest => redeemRequest.id === selectedRedeemRequestId);
 
   return (

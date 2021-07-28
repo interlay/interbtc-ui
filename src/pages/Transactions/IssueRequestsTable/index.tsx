@@ -47,11 +47,9 @@ import {
   shortTxId
 } from 'common/utils/utils';
 import userIssueRequestsFetcher, { USER_ISSUE_REQUESTS_FETCHER } from 'services/user-issue-requests-fetcher';
-// ray test touch <<
 import userIssueRequestsTotalCountFetcher, {
   USER_ISSUE_REQUESTS_TOTAL_COUNT_FETCHER
 } from 'services/user-issue-requests-total-count-fetcher';
-// ray test touch >>
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 
@@ -70,7 +68,6 @@ const IssueRequestsTable = (): JSX.Element => {
     extensions,
     polkaBtcLoaded
   } = useSelector((state: StoreType) => state.general);
-  // ray test touch <<
   // eslint-disable-next-line max-len
   // TODO: should be refactored via `https://www.notion.so/interlay/Include-total-count-into-paginated-API-calls-in-index-894b56f288d24aaf8fb1aec36eadf41d`
   const {
@@ -89,7 +86,6 @@ const IssueRequestsTable = (): JSX.Element => {
     }
   );
   useErrorHandler(issueRequestsTotalCountError);
-  // ray test touch >>
   const {
     isLoading: issueRequestsLoading,
     data: issueRequests,

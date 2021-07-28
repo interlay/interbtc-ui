@@ -27,7 +27,6 @@ const userIssueRequestsTotalCountFetcher = async ({ queryKey }: Arguments): Prom
     throw new Error('Invalid key!');
   }
 
-  // Temporary declaration pending refactor decision
   const index = new IndexApi(new Configuration({ basePath: STATS_URL }));
 
   return await index.getFilteredTotalIssues({
