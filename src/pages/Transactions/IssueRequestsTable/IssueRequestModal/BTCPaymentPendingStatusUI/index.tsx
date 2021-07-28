@@ -31,9 +31,10 @@ const BTCPaymentPendingStatusUI = ({
   const [initialLeftSeconds, setInitialLeftSeconds] = React.useState<number>();
 
   React.useEffect(() => {
-    if (!request.creationTimestamp) return;
+    // TODO: should remove `Date.now()` once the API is ready
+    const requestCreationTimestamp = request.creationTimestamp ?? Date.now();
 
-    const requestTimestamp = Math.floor(new Date(Number(request.creationTimestamp)).getTime() / 1000);
+    const requestTimestamp = Math.floor(new Date(requestCreationTimestamp).getTime() / 1000);
     const theInitialLeftSeconds = requestTimestamp + issuePeriod - Math.floor(Date.now() / 1000);
     setInitialLeftSeconds(theInitialLeftSeconds);
   }, [
