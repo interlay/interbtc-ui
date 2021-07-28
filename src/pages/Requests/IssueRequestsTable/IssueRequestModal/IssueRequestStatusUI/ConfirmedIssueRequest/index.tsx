@@ -55,9 +55,6 @@ const ConfirmedIssueRequest = ({
           REQUEST_TABLE_PAGE_LIMIT
         ]);
         toast.success(t('issue_page.successfully_executed', { id: variables.id }));
-      },
-      onError: error => {
-        toast.error(`${t('issue_page.execute_failed')}: ${error.message}`);
       }
     }
   );
