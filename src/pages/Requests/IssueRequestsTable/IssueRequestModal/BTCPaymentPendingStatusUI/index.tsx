@@ -90,22 +90,24 @@ const BTCPaymentPendingStatusUI = ({
             {request.vaultBTCAddress}
           </span>
         </Tooltip>
-        <p
-          className={clsx(
-            'flex',
-            'justify-center',
-            'items-center',
-            'space-x-1'
-          )}>
-          <span
+        {initialLeftSeconds && (
+          <p
             className={clsx(
-              'text-textSecondary',
-              'capitalize'
+              'flex',
+              'justify-center',
+              'items-center',
+              'space-x-1'
             )}>
-            {t('issue_page.within')}
-          </span>
-          {initialLeftSeconds && <Timer initialLeftSeconds={initialLeftSeconds} />}
-        </p>
+            <span
+              className={clsx(
+                'text-textSecondary',
+                'capitalize'
+              )}>
+              {t('issue_page.within')}
+            </span>
+            <Timer initialLeftSeconds={initialLeftSeconds} />
+          </p>
+        )}
       </div>
       <p className='space-x-1'>
         <span
