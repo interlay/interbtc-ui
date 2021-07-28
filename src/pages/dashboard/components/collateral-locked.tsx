@@ -6,9 +6,7 @@ import {
 } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import BN from 'bn.js';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import { planckToDOT } from '@interlay/interbtc';
 
 import DashboardCard from 'pages/dashboard/DashboardCard';
 import LineChartComponent from './line-chart-component';
@@ -85,7 +83,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
             { beginAtZero: true, precision: 0 }
           ]}
           data={
-            cumulativeCollateralPerDay.slice(1).map(dataPoint => Number(planckToDOT(new BN(dataPoint.amount))))
+            cumulativeCollateralPerDay.slice(1).map(dataPoint => dataPoint.amount)
           } />
       </div>
     </DashboardCard>

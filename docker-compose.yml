@@ -125,7 +125,7 @@ services:
     depends_on:
       - postgres
   index:
-    image: 'registry.gitlab.com/interlay/polkabtc-stats:0.5.7'
+    image: 'registry.gitlab.com/interlay/polkabtc-stats:0.6.0'
     restart: always
     depends_on:
       - postgres
