@@ -55,7 +55,7 @@ const NETWORK_ITEMS = [
     icon: (
       <InterBTCLogoIcon width={24} />
     ),
-    title: 'InterBTC'
+    title: 'interBTC'
   },
   {
     type: NETWORK_TYPES.acala,
@@ -201,7 +201,7 @@ const TransferForm = (): JSX.Element => {
           id={INTER_BTC_AMOUNT}
           name={INTER_BTC_AMOUNT}
           type='number'
-          label='InterBTC'
+          label='interBTC'
           step='any'
           placeholder='0.00'
           ref={register({

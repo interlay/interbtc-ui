@@ -58,7 +58,7 @@ const WhoopsStatusUI = ({
             height={23} />
         }
         value={request.amountInterBTC}
-        unitName='InterBTC'
+        unitName='interBTC'
         approxUSD={getUsdAmount(BTCAmount.from.BTC(request.amountInterBTC), prices.bitcoin.usd)} />
       <PriceInfo
         className='w-full'
@@ -88,7 +88,7 @@ const WhoopsStatusUI = ({
             height={23} />
         }
         value={request.executedAmountBTC || request.amountInterBTC}
-        unitName='InterBTC'
+        unitName='interBTC'
         approxUSD={
           getUsdAmount(BTCAmount.from.BTC(request.executedAmountBTC || request.amountInterBTC), prices.bitcoin.usd)
         } />

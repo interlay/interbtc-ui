@@ -286,7 +286,7 @@ const RedeemForm = (): JSX.Element | null => {
       }
 
       if (!polkaBtcLoaded) {
-        return 'InterBTC must be loaded!';
+        return 'interBTC must be loaded!';
       }
 
       if (bitcoinHeight - btcRelayHeight > BLOCKS_BEHIND_LIMIT) {
@@ -342,7 +342,7 @@ const RedeemForm = (): JSX.Element | null => {
             id='polka-btc-amount'
             name={INTER_BTC_AMOUNT}
             type='number'
-            label='InterBTC'
+            label='interBTC'
             step='any'
             placeholder='0.00'
             min={0}

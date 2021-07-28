@@ -88,7 +88,7 @@ const ReimbursedRedeemRequest = ({
       </p>
       <p className='font-medium'>
         <span className='text-interlayCinnabar'>
-          {`${burnedBTCAmount.toHuman()} InterBTC`}
+          {`${burnedBTCAmount.toHuman()} interBTC`}
         </span>
         <span>
           &nbsp;{`(≈ $${getUsdAmount(burnedBTCAmount, prices.bitcoin.usd)})`}

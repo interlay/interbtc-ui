@@ -137,7 +137,7 @@ const IssueRequestModal = ({
                   {amountInterBTC}
                 </span>
                 <span className='text-2xl'>
-                  InterBTC
+                  interBTC
                 </span>
               </h4>
               <span

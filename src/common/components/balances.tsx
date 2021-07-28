@@ -40,7 +40,7 @@ const Balances = ({
           width={30}
           height={30} />
         <span className='font-bold'>{roundedBalanceInterBTC}</span>
-        <span>InterBTC</span>
+        <span>interBTC</span>
       </div>
       <div
         className={clsx(

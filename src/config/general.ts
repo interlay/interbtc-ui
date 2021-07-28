@@ -1,5 +1,5 @@
 
-const APP_NAME = 'InterBTC';
+const APP_NAME = 'interBTC';
 
 const ACCOUNT_ID_TYPE_NAME = 'AccountId';
 

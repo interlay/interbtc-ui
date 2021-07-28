@@ -58,7 +58,7 @@ export default function ReplaceTable(): ReactElement {
                 <th>{t('vault.old_vault')}</th>
                 <th>{t('vault.new_vault')}</th>
                 <th>{t('btc_address')}</th>
-                <th>InterBTC</th>
+                <th>interBTC</th>
                 <th>{t('griefing_collateral')}</th>
                 <th>{t('status')}</th>
               </tr>

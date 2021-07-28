@@ -128,7 +128,7 @@ const ReimburseStatusUI = ({
 
   const handleRetry = () => {
     if (!polkaBtcLoaded) {
-      throw new Error('InterBTC is not loaded!');
+      throw new Error('interBTC is not loaded!');
     }
 
     retryMutation.mutate(request);
@@ -136,7 +136,7 @@ const ReimburseStatusUI = ({
 
   const handleReimburse = () => {
     if (!polkaBtcLoaded) {
-      throw new Error('InterBTC is not loaded!');
+      throw new Error('interBTC is not loaded!');
     }
 
     reimburseMutation.mutate(request);

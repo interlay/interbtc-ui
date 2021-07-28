@@ -202,7 +202,7 @@ const IssueForm = (): JSX.Element | null => {
       }
 
       if (!polkaBtcLoaded) {
-        return 'InterBTC must be loaded!';
+        return 'interBTC must be loaded!';
       }
 
       if (btcAmount === undefined) {
@@ -335,7 +335,7 @@ const IssueForm = (): JSX.Element | null => {
                 height={23} />
             }
             value={displayMonetaryAmount(interBTCAmount)}
-            unitName='InterBTC'
+            unitName='interBTC'
             approxUSD={getUsdAmount(interBTCAmount, prices.bitcoin.usd)} />
           <InterlayDenimContainedButton
             type='submit'

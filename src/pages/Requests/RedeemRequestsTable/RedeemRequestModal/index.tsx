@@ -123,7 +123,7 @@ const RedeemRequestModal = ({
                     'text-2xl',
                     'text-interlayDenim'
                   )}>
-                  InterBTC
+                  interBTC
                 </span>
               </h4>
               <span

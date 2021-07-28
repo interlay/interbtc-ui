@@ -91,7 +91,7 @@ export default function RequestReplacementModal(props: RequestReplacementProps):
                   <span
                     className='input-group-text'
                     id='basic-addon2'>
-                                        InterBTC
+                    interBTC
                   </span>
                 </div>
                 {errors.amount && (

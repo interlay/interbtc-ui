@@ -105,7 +105,7 @@ const IssueRequestsTable = (): JSX.Element => {
         }
       },
       {
-        Header: `${t('issue_page.amount')} (InterBTC)`,
+        Header: `${t('issue_page.amount')} (interBTC)`,
         accessor: 'amountInterBTC',
         classNames: [
           'text-right'

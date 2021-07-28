@@ -155,11 +155,11 @@ const Burn = (): JSX.Element | null => {
       }
 
       if (!polkaBtcLoaded) {
-        return 'InterBTC must be loaded!';
+        return 'interBTC must be loaded!';
       }
 
       if (btcToSat(new Big(value)) === undefined) {
-        return 'Invalid InterBTC amount input!'; // TODO: should translate
+        return 'Invalid interBTC amount input!'; // TODO: should translate
       }
 
       const polkaBTCAmountInteger = value.toString().split('.')[0];
@@ -193,7 +193,7 @@ const Burn = (): JSX.Element | null => {
             id='polka-btc-amount'
             name={INTER_BTC_AMOUNT}
             type='number'
-            label='InterBTC'
+            label='interBTC'
             step='any'
             placeholder='0.00'
             ref={register({

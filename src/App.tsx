@@ -135,7 +135,7 @@ function App(): JSX.Element {
   const dispatch = useDispatch();
   const store: StoreState = useStore();
 
-  // Load the main InterBTC API - connection to the InterBTC bridge
+  // Load the main interBTC API - connection to the interBTC bridge
   const loadPolkaBTC = React.useCallback(async (): Promise<void> => {
     try {
       window.polkaBTC = await connectToParachain();
@@ -180,7 +180,7 @@ function App(): JSX.Element {
         dispatch(isVaultClientLoaded(!!vault));
       } catch (error) {
         // TODO: should add error handling
-        console.log('No InterBTC vault found for the account in the connected Polkadot wallet.');
+        console.log('No interBTC vault found for the account in the connected Polkadot wallet.');
         console.log('[App React.useEffect] error.message => ', error.message);
       }
     })();
@@ -288,7 +288,7 @@ function App(): JSX.Element {
     dispatch
   ]);
 
-  // Loads the InterBTC bridge and the faucet
+  // Loads the interBTC bridge and the faucet
   React.useEffect(() => {
     if (polkaBtcLoaded) return;
 
