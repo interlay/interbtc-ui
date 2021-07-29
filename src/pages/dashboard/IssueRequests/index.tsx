@@ -16,7 +16,7 @@ import LineChartComponent from '../components/line-chart-component';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
 import BN from 'bn.js';
-import { getUsdAmount } from 'common/utils/utils';
+import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
 
 function IssueRequests(): JSX.Element {
   const {
@@ -125,7 +125,7 @@ function IssueRequests(): JSX.Element {
               {t('dashboard.issue.issued')}
             </h5>
             <h5>
-              {t('dashboard.issue.total_interbtc', { amount: totalInterBTC })}
+              {t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalInterBTC) })}
             </h5>
             <h5 className='text-textSecondary'>
               ${getUsdAmount(totalInterBTC, prices.bitcoin.usd)}

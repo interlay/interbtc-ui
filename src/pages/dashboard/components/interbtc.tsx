@@ -6,7 +6,7 @@ import { StoreType } from '../../../common/types/util.types';
 import { satToBTC } from '@interlay/interbtc';
 import LineChartComponent from './line-chart-component';
 import { useTranslation } from 'react-i18next';
-import { getUsdAmount } from '../../../common/utils/utils';
+import { displayMonetaryAmount, getUsdAmount } from '../../../common/utils/utils';
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
@@ -54,7 +54,7 @@ const InterBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
       <div className='card-top-content'>
         <div className='values-container'>
           <h1 style={{ color: getAccents('d_interlayDenim').color }}>{t('dashboard.issue.issued')}</h1>
-          <h2>{t('dashboard.issue.total_interbtc', { amount: totalInterBTC })}</h2>
+          <h2>{t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalInterBTC) })}</h2>
           {/* TODO: add the price API */}
           <h2>${getUsdAmount(totalInterBTC, prices.bitcoin.usd)}</h2>
         </div>
