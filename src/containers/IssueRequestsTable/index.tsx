@@ -10,10 +10,14 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { BitcoinNetwork } from '@interlay/interbtc-index-client';
+import {
+  Issue,
+  IssueStatus
+} from '@interlay/interbtc';
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
-import Pagination from 'components/Pagination';
+import InterlayPagination from 'components/UI/InterlayPagination';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -24,7 +28,7 @@ import InterlayTable, {
 } from 'components/UI/InterlayTable';
 import StatusCell from 'components/UI/InterlayTable/StatusCell';
 import InterlayLink from 'components/UI/InterlayLink';
-import useQuery from 'utils/hooks/use-query';
+import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
@@ -32,12 +36,10 @@ import {
   formatDateTimePrecise
 } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
+import { REQUEST_TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
 import * as constants from '../../constants';
 import STATUSES from 'utils/constants/statuses';
-import { Issue, IssueStatus } from '@interlay/interbtc';
-
-const PAGE_SIZE = 20;
 
 interface Props {
   totalIssueRequests: number;
@@ -46,8 +48,8 @@ interface Props {
 const IssueRequestsTable = ({
   totalIssueRequests
 }: Props): JSX.Element | null => {
-  const query = useQuery();
-  const selectedPage: number = Number(query.get(QUERY_PARAMETERS.PAGE)) || 1;
+  const queryParams = useQueryParams();
+  const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
   const statsApi = useInterbtcIndex();
   const [data, setData] = React.useState<Issue[]>([]);
@@ -67,7 +69,7 @@ const IssueRequestsTable = ({
         setStatus(STATUSES.PENDING);
         const response = await statsApi.getIssues({
           page: selectedPageIndex,
-          perPage: PAGE_SIZE,
+          perPage: REQUEST_TABLE_PAGE_LIMIT,
           network: constants.BITCOIN_NETWORK as BitcoinNetwork
         });
         setStatus(STATUSES.RESOLVED);
@@ -186,11 +188,14 @@ const IssueRequestsTable = ({
     }
   );
 
-  const handlePageChange = (newPage: number) => {
+  const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number }) => {
     updateQueryParameters({
-      [QUERY_PARAMETERS.PAGE]: newPage.toString()
+      [QUERY_PARAMETERS.PAGE]: (newSelectedPageIndex + 1).toString()
     });
   };
+
+  const selectedPageIndex = selectedPage - 1;
+  const pageCount = Math.ceil(totalIssueRequests / REQUEST_TABLE_PAGE_LIMIT);
 
   return (
     <InterlayTableContainer className='space-y-6'>
@@ -258,13 +263,19 @@ const IssueRequestsTable = ({
           </InterlayTbody>
         </InterlayTable>
       )}
-      {totalIssueRequests > 0 && (
-        // TODO: error-prone in UI/UX
-        <Pagination
-          pageSize={PAGE_SIZE}
-          total={totalIssueRequests}
-          current={selectedPage}
-          onChange={handlePageChange} />
+      {pageCount > 0 && (
+        <div
+          className={clsx(
+            'flex',
+            'justify-end'
+          )}>
+          <InterlayPagination
+            pageCount={pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={handlePageChange}
+            forcePage={selectedPageIndex} />
+        </div>
       )}
     </InterlayTableContainer>
   );

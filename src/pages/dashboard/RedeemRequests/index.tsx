@@ -6,6 +6,7 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import BN from 'bn.js';
 import { satToBTC } from '@interlay/interbtc';
 
 import MainContainer from 'parts/MainContainer';
@@ -15,7 +16,6 @@ import RedeemRequestsTable from 'containers/RedeemRequestsTable';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
 import LineChartComponent from '../components/line-chart-component';
-import BN from 'bn.js';
 
 function RedeemRequests(): JSX.Element {
   const {

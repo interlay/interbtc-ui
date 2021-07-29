@@ -1,10 +1,13 @@
 
 import clsx from 'clsx';
+import {
+  BTCAmount,
+  PolkadotAmount
+} from '@interlay/monetary-js';
 
 import { displayMonetaryAmount } from 'common/utils/utils';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
-import { BTCAmount, PolkadotAmount } from '@interlay/monetary-js';
 
 interface Props {
   balanceInterBTC?: BTCAmount;
@@ -37,7 +40,7 @@ const Balances = ({
           width={30}
           height={30} />
         <span className='font-bold'>{roundedBalanceInterBTC}</span>
-        <span>InterBTC</span>
+        <span>interBTC</span>
       </div>
       <div
         className={clsx(

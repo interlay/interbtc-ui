@@ -26,7 +26,12 @@ import {
 } from '@interlay/interbtc';
 import { StatusCode } from '@interlay/interbtc/build/interfaces';
 import { Keyring } from '@polkadot/api';
-import { Bitcoin, BTCAmount, Polkadot, PolkadotAmount } from '@interlay/monetary-js';
+import {
+  Bitcoin,
+  BTCAmount,
+  Polkadot,
+  PolkadotAmount
+} from '@interlay/monetary-js';
 
 import Layout from 'parts/Layout';
 import Home from 'pages/Home';
@@ -51,7 +56,8 @@ import * as constants from './constants';
 import startFetchingLiveData from 'common/live-data/live-data';
 import {
   StoreType,
-  ParachainStatus
+  ParachainStatus,
+  StoreState
 } from 'common/types/util.types';
 import {
   isPolkaBtcLoaded,
@@ -104,6 +110,9 @@ const Challenges = React.lazy(() =>
 const Feedback = React.lazy(() =>
   import(/* webpackChunkName: 'feedback' */ 'pages/Feedback')
 );
+const Requests = React.lazy(() =>
+  import(/* webpackChunkName: 'transactions' */ 'pages/Transactions')
+);
 const NoMatch = React.lazy(() =>
   import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
 );
@@ -124,9 +133,9 @@ function App(): JSX.Element {
   } = useSelector((state: StoreType) => state.general);
   const [isLoading, setIsLoading] = React.useState(true);
   const dispatch = useDispatch();
-  const store = useStore();
+  const store: StoreState = useStore();
 
-  // Load the main InterBTC API - connection to the InterBTC bridge
+  // Load the main interBTC API - connection to the interBTC bridge
   const loadPolkaBTC = React.useCallback(async (): Promise<void> => {
     try {
       window.polkaBTC = await connectToParachain();
@@ -171,7 +180,7 @@ function App(): JSX.Element {
         dispatch(isVaultClientLoaded(!!vault));
       } catch (error) {
         // TODO: should add error handling
-        console.log('No InterBTC vault found for the account in the connected Polkadot wallet.');
+        console.log('No interBTC vault found for the account in the connected Polkadot wallet.');
         console.log('[App React.useEffect] error.message => ', error.message);
       }
     })();
@@ -279,7 +288,7 @@ function App(): JSX.Element {
     dispatch
   ]);
 
-  // Loads the InterBTC bridge and the faucet
+  // Loads the interBTC bridge and the faucet
   React.useEffect(() => {
     if (polkaBtcLoaded) return;
 
@@ -398,6 +407,9 @@ function App(): JSX.Element {
                 </Route>
                 <Route path={PAGES.FEEDBACK}>
                   <Feedback />
+                </Route>
+                <Route path={PAGES.TRANSACTIONS}>
+                  <Requests />
                 </Route>
                 <Route
                   path={PAGES.HOME}

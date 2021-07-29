@@ -5,7 +5,11 @@ import { u256 } from '@polkadot/types/primitive';
 import { IssueState } from './issue.types';
 import { RedeemState } from './redeem.types';
 import { VaultState } from './vault.types';
-import { BTCAmount, PolkadotAmount } from '@interlay/monetary-js';
+import {
+  BTCAmount,
+  PolkadotAmount
+} from '@interlay/monetary-js';
+
 export interface StatusUpdate {
   id: u256;
   timestamp: string;

@@ -1,0 +1,6 @@
+
+const REQUEST_TABLE_PAGE_LIMIT = 20;
+
+export {
+  REQUEST_TABLE_PAGE_LIMIT
+};

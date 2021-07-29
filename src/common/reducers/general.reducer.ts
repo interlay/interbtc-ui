@@ -1,4 +1,8 @@
-import { BTCAmount, PolkadotAmount } from '@interlay/monetary-js';
+import {
+  BTCAmount,
+  PolkadotAmount
+} from '@interlay/monetary-js';
+
 import {
   IS_POLKA_BTC_LOADED,
   IS_VAULT_CLIENT_LOADED,

@@ -1,15 +1,15 @@
-# InterBTC
+# interBTC
 
 <div align="center">
 	<p>
-		<h3 align="center">InterBTC: Trustless and open DeFi access for your Bitcoin.</h3>
+		<h3 align="center">interBTC: Trustless and open DeFi access for your Bitcoin.</h3>
 	</p>
 </div>
 
 ## About
 
-The InterBTC UI connects the Polkadot ecosystem with Bitcoin. It allows the creation of InterBTC, a fungible token that represents Bitcoin in the Polkadot ecosystem. InterBTC is backed by Bitcoin 1:1 and allows redeeming of the equivalent amount of Bitcoins by relying on a collateralized third-party.
-In comparison to other bridge constructions (like tBTC, wBTC, or RenVM) _anyone_ can become an intermediary by depositing collateral making InterBTC the only truly open system.
+The interBTC UI connects the Polkadot ecosystem with Bitcoin. It allows the creation of interBTC, a fungible token that represents Bitcoin in the Polkadot ecosystem. interBTC is backed by Bitcoin 1:1 and allows redeeming of the equivalent amount of Bitcoins by relying on a collateralized third-party.
+In comparison to other bridge constructions (like tBTC, wBTC, or RenVM) _anyone_ can become an intermediary by depositing collateral making interBTC the only truly open system.
 
 The bridge itself follows the detailed specification: <a href="https://interlay.gitlab.io/polkabtc-spec/" target="_blank"><strong>Explore the specification »</strong></a>
 
@@ -106,7 +106,7 @@ The architecture also relies upon collateralized vaults; use the [vault](https:/
 vault --keyring=charlie --network=testnet --auto-register-with-collateral 100000000 --polka-btc-url 'ws://localhost:9944'
 ```
 
-Issue requests (BTC -> InterBTC) can be executed solely through the UI but a vault client is required to redeem (InterBTC -> BTC).
+Issue requests (BTC -> interBTC) can be executed solely through the UI but a vault client is required to redeem (interBTC -> BTC).
 
 Lastly, we require a price oracle to compute the exchange rate (BTC <> DOT), the [oracle](https://gitlab.com/interlay/interbtc-clients/-/tree/dev/oracle) client can automatically feed this from an integrated data source (e.g. [CoinGecko](https://www.coingecko.com/en/coins/polkadot/btc)).
 
@@ -257,9 +257,9 @@ For example, to register `bob` as a vault we can use the following command:
 testdata-gen --keyring bob register-vault --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --collateral 100000000
 ```
 
-**Issue InterBTC**
+**Issue interBTC**
 
-Then when `alice` wants to issue 0.001 InterBTC, we need to send the equivalent number of Satoshis to `bob`:
+Then when `alice` wants to issue 0.001 interBTC, we need to send the equivalent number of Satoshis to `bob`:
 
 ```shell
 testdata-gen --keyring alice send-bitcoin --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --satoshis 100000
@@ -302,7 +302,7 @@ If you are searching for a place to start or would like to discuss features, rea
 
 (C) Copyright 2021 [Interlay](https://www.interlay.io) Ltd
 
-InterBTC-ui is licensed under the terms of the Apache License (Version 2.0). See [LICENSE](LICENSE).
+interBTC-ui is licensed under the terms of the Apache License (Version 2.0). See [LICENSE](LICENSE).
 
 ## Contact
 

@@ -19,18 +19,11 @@ import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
-import {
-  updateBalanceDOTAction,
-  showAccountModalAction
-} from 'common/actions/general.actions';
-import { updateBalances } from 'common/utils/utils';
+import { showAccountModalAction } from 'common/actions/general.actions';
 import { StoreType } from 'common/types/util.types';
 import Balances from './balances';
 import { PAGES } from 'utils/constants/links';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
-import { ReactComponent as NewMarkIcon } from 'assets/img/icons/new-mark.svg';
-import { Polkadot } from '@interlay/monetary-js';
 
 type TopbarProps = {
   address?: string;
@@ -68,25 +61,13 @@ const Topbar = (props: TopbarProps): JSX.Element => {
     })();
   }, [extensions.length]);
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      if (!polkaBtcLoaded || address === '') return;
-
-      updateBalances(dispatch, address, balanceDOT, balanceInterBTC);
-    };
-    fetchData();
-  }, [address, polkaBtcLoaded, dispatch, balanceDOT, balanceInterBTC]);
-
   const requestDOT = async () => {
     if (!polkaBtcLoaded) return;
     setIsRequestPending(true);
     try {
       await props.requestDOT();
-      const accountId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const balanceDOT = await window.polkaBTC.tokens.balance(Polkadot, accountId);
-      dispatch(updateBalanceDOTAction(balanceDOT));
     } catch (error) {
-      console.log(error);
+      console.log('[requestDOT] error.message => ', error.message);
     }
     setIsRequestPending(false);
   };
@@ -136,12 +117,19 @@ const Topbar = (props: TopbarProps): JSX.Element => {
             <Navbar.Collapse id='basic-navbar-nav'>
               <Nav className='mr-auto'>
                 {polkaBtcLoaded && (
-                  // TODO: should use https://reactrouter.com/web/api/NavLink with `activeClassName`
-                  <InterlayRouterLink
-                    className='p-2'
-                    to={PAGES.DASHBOARD}>
-                    {t('nav_dashboard')}
-                  </InterlayRouterLink>
+                  <>
+                    {/* TODO: should use https://reactrouter.com/web/api/NavLink with `activeClassName` */}
+                    <InterlayRouterLink
+                      className='p-2'
+                      to={PAGES.TRANSACTIONS}>
+                      {t('nav_transactions')}
+                    </InterlayRouterLink>
+                    <InterlayRouterLink
+                      className='p-2'
+                      to={PAGES.DASHBOARD}>
+                      {t('nav_dashboard')}
+                    </InterlayRouterLink>
+                  </>
                 )}
                 {vaultClientLoaded && (
                   <InterlayRouterLink
@@ -162,10 +150,6 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                     className='p-2'
                     to={PAGES.CHALLENGES}>
                     {t('nav_challenges')}
-                    <NewMarkIcon
-                      className='inline-block'
-                      width={20}
-                      height={20} />
                   </InterlayRouterLink>
                 )}
                 <InterlayRouterLink

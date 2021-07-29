@@ -12,6 +12,11 @@ import {
   IssueColumns,
   RedeemColumns
 } from '@interlay/interbtc-index-client';
+import {
+  BTCAmount,
+  Polkadot,
+  PolkadotAmount
+} from '@interlay/monetary-js';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -44,10 +49,9 @@ import {
 } from 'common/actions/vault.actions';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import './vault-dashboard.page.scss';
-import VaultIssueRequestsTable from 'containers/VaultIssueRequestTable';
-import VaultRedeemRequestsTable from 'containers/VaultRedeemRequestTable';
+import VaultIssueRequestsTable from 'containers/VaultIssueRequestsTable';
+import VaultRedeemRequestsTable from 'containers/VaultRedeemRequestsTable';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
-import { BTCAmount, Polkadot, PolkadotAmount } from '@interlay/monetary-js';
 
 function VaultDashboard(): JSX.Element {
   const [updateCollateralModalStatus, setUpdateCollateralModalStatus] = useState(CollateralUpdateStatus.Hidden);

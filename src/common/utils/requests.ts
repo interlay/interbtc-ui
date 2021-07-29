@@ -5,9 +5,7 @@ import {
   satToBTC,
   planckToDOT,
   stripHexPrefix,
-  ReplaceRequestExt as ParachainReplaceRequest,
-  Issue,
-  Redeem
+  ReplaceRequestExt as ParachainReplaceRequest
 } from '@interlay/interbtc';
 import Big from 'big.js';
 
@@ -42,27 +40,6 @@ const parseReplaceRequestStatus = (status: ReplaceRequestStatus): string => {
   return '';
 };
 
-interface DynamicObject {
-  [key: string]: Issue[] | Redeem[];
-}
-
-const mapToArray = (map: Map<string, Issue[] | Redeem[]>): DynamicObject => {
-  const result: DynamicObject = {};
-  map.forEach((value, key) => {
-    result[key] = value;
-  });
-  return result;
-};
-
-const arrayToMap = (arr: Issue[][] | Redeem[][]): Map<string, Issue[] | Redeem[]> => {
-  const map = new Map();
-  // eslint-disable-next-line guard-for-in
-  for (const key in arr) {
-    map.set(key, arr[key]);
-  }
-  return map;
-};
-
 interface ParsableParachainTypes {
   // eslint-disable-next-line camelcase
   btc_address: string;
@@ -80,7 +57,7 @@ interface ParsableParachainTypes {
 /**
  * Parses types which belong to request objects and need parsing/conversion to be displayed in the UI.
  *
- * @param parachainObject A request object, which must have a BTC address, a InterBTC amount and a Collateral amount.
+ * @param parachainObject A request object, which must have a BTC address, an interBTC amount and a Collateral amount.
  * @return A tuple with the parsed properties
  */
 
@@ -93,7 +70,7 @@ function convertParachainTypes(parachainObject: ParsableParachainTypes): [string
   } else if (parachainObject.amount) {
     parsedPolkaBTC = satToBTC(parachainObject.amount);
   } else {
-    throw new Error('No property found for InterBTC amount');
+    throw new Error('No property found for interBTC amount');
   }
 
   if (parachainObject.premium_dot && parachainObject.premium_dot.toString() !== '0') {
@@ -109,4 +86,4 @@ function convertParachainTypes(parachainObject: ParsableParachainTypes): [string
   return [parachainObject.btc_address, parsedPolkaBTC.toString(), parsedDOT.toString()];
 }
 
-export { parachainToUIReplaceRequests, arrayToMap, mapToArray };
+export { parachainToUIReplaceRequests };

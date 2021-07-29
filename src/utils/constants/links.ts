@@ -11,12 +11,15 @@ const PAGES = Object.freeze({
   DASHBOARD_RELAY: '/dashboard/relay',
   DASHBOARD: '/dashboard',
   VAULT: '/vault',
-  FEEDBACK: '/feedback'
+  FEEDBACK: '/feedback',
+  TRANSACTIONS: '/transactions'
 });
 
 const QUERY_PARAMETERS = Object.freeze({
   TAB: 'tab',
   PAGE: 'page',
+  ISSUE_REQUESTS_PAGE: 'issueRequestPage',
+  REDEEM_REQUESTS_PAGE: 'redeemRequestPage',
   ISSUE_REQUEST_ID: 'issueRequestId',
   REDEEM_REQUEST_ID: 'redeemRequestId'
 });
