@@ -40,9 +40,7 @@ import {
 } from 'config/links';
 import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
 // TODO: should use a vivid-looking version
-import {
-  ReactComponent as Web3FoundationGrantsBadgeIcon
-} from 'assets/img/web3-foundation-grants-badge.svg';
+import { ReactComponent as Web3FoundationGrantsBadgeIcon } from 'assets/img/web3-foundation-grants-badge.svg';
 import styles from './footer.module.css';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -313,7 +311,7 @@ const Footer = React.forwardRef<Ref, Props>(({
             rel='noopener noreferrer'>
             <InterlayLogoIcon
               width={150}
-              height={40} />
+              height={33.7} />
           </InterlayLink>
           <InterlayLink
             href={WEB3_FOUNDATION}
