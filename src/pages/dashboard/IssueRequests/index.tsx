@@ -128,7 +128,7 @@ function IssueRequests(): JSX.Element {
               {t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalInterBTC) })}
             </h5>
             <h5 className='text-textSecondary'>
-              ${getUsdAmount(totalInterBTC, prices.bitcoin.usd)}
+              ${getUsdAmount(totalInterBTC, prices.bitcoin.usd).toLocaleString()}
             </h5>
             <h5
               className={clsx(
