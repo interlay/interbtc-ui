@@ -24,7 +24,7 @@ export default function OraclesDashboard(): ReactElement {
             mainTitle={t('dashboard.oracles.oracles')}
             subTitle={<TimerIncrement />} />
           <hr className='border-interlayDenim' />
-          <div className='dashboard-graphs-container'>
+          <div className='mt-10'>
             <OracleStatus />
           </div>
           <OracleTable dotLocked='1' />

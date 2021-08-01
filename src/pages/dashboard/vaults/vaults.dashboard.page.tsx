@@ -26,7 +26,7 @@ export default function VaultsDashboard(): ReactElement {
             mainTitle={t('dashboard.vault.vaults')}
             subTitle={<TimerIncrement />} />
           <hr className='border-interlayDenim' />
-          <div className='vaults-graphs-container dashboard-graphs-container'>
+          <div className='grid grid-cols-3 gap-7 mt-10'>
             <ActiveVaults />
             <CollateralLocked />
             <Collateralization />

@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import {
   useEffect,
   useMemo,
@@ -104,4 +103,3 @@ const InterBTC = (): React.ReactElement => {
 };
 
 export default InterBTC;
-// ray test touch >>

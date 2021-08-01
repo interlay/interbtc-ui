@@ -107,7 +107,7 @@ export default function ParachainDashboard(): ReactElement {
             mainTitle={t('dashboard.parachain.parachain')}
             subTitle={<TimerIncrement />} />
           <hr className='border-interlayDenim' />
-          <div className='parachain-graphs-container dashboard-graphs-container'>
+          <div className='grid grid-cols-2 gap-7 mt-10'>
             <ParachainSecurity />
           </div>
           <div style={{ margin: '40px 0px' }}>
