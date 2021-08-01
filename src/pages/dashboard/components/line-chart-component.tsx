@@ -1,6 +1,5 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import { getAccents } from '../dashboardcolors';
 
 interface YAxisConfig {
   beginAtZero?: boolean;
@@ -25,6 +24,35 @@ interface MultiAxisProps {
   data: number[][];
 }
 type ChartProps = SingleAxisProps | MultiAxisProps;
+
+// ray test touch <<<
+function getAccents(color: string): {
+  color: string;
+} {
+  const accent = { color: '' };
+  switch (color) {
+  case 'd_interlayCalifornia':
+    accent.color = '#ff9900';
+    break;
+  case 'd_interlayDenim':
+    accent.color = '#075abc';
+    break;
+  case 'd_interlayMulberry':
+    accent.color = '#db5aad';
+    break;
+  case 'd_interlayConifer':
+    accent.color = '#a2e75e';
+    break;
+  case 'd_interlayCinnabar':
+    accent.color = '#ef4444';
+    break;
+  default:
+    accent.color = '#6b7280';
+    break;
+  }
+  return accent;
+}
+// ray test touch >>>
 
 // TODO: should refactor by using a better package
 export default function LineChartComponent(propsArg: ChartProps): React.ReactElement {

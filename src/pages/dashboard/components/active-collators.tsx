@@ -49,7 +49,7 @@ const ActiveCollators = (): ReactElement => {
         )}
       </div>
       <LineChartComponent
-        color='d_blue'
+        color='d_interlayDenim'
         label={t('dashboard.collators.total_collators_chart') as string}
         yLabels={dates}
         yAxisProps={{ beginAtZero: true, precision: 0 }}

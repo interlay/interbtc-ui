@@ -11,7 +11,6 @@ import clsx from 'clsx';
 
 import DashboardCard from 'pages/dashboard/DashboardCard';
 import LineChartComponent from './line-chart-component';
-import { getAccents } from '../dashboardcolors';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
@@ -64,7 +63,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
           'items-center'
         )}>
         <div>
-          <h1 style={{ color: getAccents('d_interlayDenim').color }}>{t('dashboard.vault.locked_collateral')}</h1>
+          <h1 className='text-interlayDenim'>{t('dashboard.vault.locked_collateral')}</h1>
           <h2>{displayMonetaryAmount(totalLockedDOT)} DOT</h2>
           <h2>${getUsdAmount(totalLockedDOT, prices.polkadot.usd)}</h2>
         </div>

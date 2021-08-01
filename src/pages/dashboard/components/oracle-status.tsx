@@ -9,7 +9,6 @@ import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import { getAccents } from '../dashboardcolors';
 
 enum Status {
   Loading,
@@ -57,23 +56,20 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
             {t('dashboard.oracles.oracles_are')}&nbsp;
             {oracleStatus === Status.Online ? (
               <span
-                style={{ color: getAccents('d_interlayConifer').color }}
                 id='oracle-text'
-                className='font-bold'>
+                className='font-bold text-interlayConifer'>
                 {t('dashboard.oracles.online')}
               </span>
             ) : oracleStatus === Status.Offline ? (
               <span
-                style={{ color: getAccents('d_interlayCinnabar').color }}
                 id='oracle-text'
-                className='font-bold'>
+                className='font-bold text-interlayCinnabar'>
                 {t('dashboard.oracles.offline')}
               </span>
             ) : (
               <span
-                style={{ color: getAccents('d_interlayPaleSky').color }}
                 id='oracle-text'
-                className='font-bold'>
+                className='font-bold text-interlayPaleSky'>
                 {t('dashboard.oracles.loading')}
               </span>
             )}
@@ -92,16 +88,15 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
       <div className='circle-container'>
         {oracleStatus === Status.Online ? (
           <div
-            className='status-circle'
-            style={{ borderColor: getAccents('d_interlayConifer').color }}
+            className='status-circle border border-interlayConifer'
             id='oracle-circle'>
             <h1
               className={clsx(
                 'h1-xl',
                 'text-3xl',
-                'text-center'
+                'text-center',
+                'text-interlayConifer'
               )}
-              style={{ color: getAccents('d_interlayConifer').color }}
               id='oracle-circle-text'>
               {t('online')}
             </h1>
@@ -109,16 +104,15 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
           </div>
         ) : oracleStatus === Status.Offline ? (
           <div
-            className='status-circle'
-            style={{ borderColor: getAccents('d_interlayCinnabar').color }}
+            className='status-circle border border-interlayCinnabar'
             id='oracle-circle'>
             <h1
               className={clsx(
                 'h1-xl',
                 'text-3xl',
-                'text-center'
+                'text-center',
+                'text-interlayCinnabar'
               )}
-              style={{ color: getAccents('d_interlayCinnabar').color }}
               id='oracle-circle-text'>
               {t('offline')}
             </h1>
@@ -126,16 +120,15 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
           </div>
         ) : oracleStatus === Status.NoData ? (
           <div
-            className='status-circle'
-            style={{ borderColor: getAccents('d_interlayPaleSky').color }}
+            className='status-circle border border-interlayPaleSky'
             id='oracle-circle'>
             <h1
               className={clsx(
                 'h1-xl',
                 'text-3xl',
-                'text-center'
+                'text-center',
+                'text-interlayPaleSky'
               )}
-              style={{ color: getAccents('d_interlayPaleSky').color }}
               id='oracle-circle-text'>
               {t('no_data')}
             </h1>
@@ -143,16 +136,15 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
           </div>
         ) : (
           <div
-            className='status-circle'
-            style={{ borderColor: getAccents('d_interlayPaleSky').color }}
+            className='status-circle border border-interlayPaleSky'
             id='oracle-circle'>
             <h1
               className={clsx(
                 'h1-xl',
                 'text-3xl',
-                'text-center'
+                'text-center',
+                'text-interlayPaleSky'
               )}
-              style={{ color: getAccents('d_interlayPaleSky').color }}
               id='oracle-circle-text'>
               {t('loading')}
             </h1>

@@ -2,7 +2,6 @@ import { ReactElement, useState, useEffect } from 'react';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import { getAccents } from '../dashboardcolors';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
@@ -47,12 +46,6 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
           state === Status.Ok ?
             t('dashboard.synced') :
             t('dashboard.out_of_sync');
-  const statusColor =
-    state === Status.Loading ?
-      'd_interlayPaleSky' :
-      state === Status.Ok ?
-        'd_interlayConifer' :
-        'd_interlayCinnabar';
 
   useEffect(() => {
     (async () => {
@@ -78,9 +71,13 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
             <h1 className='font-bold'>
               {t('dashboard.relay.relay_is')}&nbsp;
               <span
-                style={{ color: getAccents(statusColor).color }}
                 id='relay-text'
-                className='font-bold'>
+                className={clsx(
+                  'font-bold',
+                  { 'text-interlayPaleSky': state === Status.Loading },
+                  { 'text-interlayConifer': state === Status.Ok },
+                  { 'text-interlayCinnabar': state !== Status.Loading && state !== Status.Ok }
+                )}>
                 {statusText}
               </span>
             </h1>
@@ -97,16 +94,23 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
         </div>
         <div className='circle-container'>
           <div
-            className='status-circle'
-            style={{ borderColor: getAccents(statusColor).color }}
+            className={clsx(
+              'status-circle',
+              'border',
+              { 'border-interlayPaleSky': state === Status.Loading },
+              { 'border-interlayConifer': state === Status.Ok },
+              { 'border-interlayCinnabar': state !== Status.Loading && state !== Status.Ok }
+            )}
             id='relay-circle'>
             <h1
               className={clsx(
                 'h1-xl',
                 'text-3xl',
-                'text-center'
+                'text-center',
+                { 'text-interlayPaleSky': state === Status.Loading },
+                { 'text-interlayConifer': state === Status.Ok },
+                { 'text-interlayCinnabar': state !== Status.Loading && state !== Status.Ok }
               )}
-              style={{ color: getAccents(statusColor).color }}
               id='relay-circle-text'>
               {graphText}
             </h1>

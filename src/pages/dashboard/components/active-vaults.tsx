@@ -2,7 +2,6 @@ import { ReactElement, useState, useMemo, useEffect } from 'react';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import { getAccents } from '../dashboard-colors';
 import LineChartComponent from './line-chart-component';
 import useInterbtcIndex from '../../../common/hooks/use-interbtc-index';
 import { useTranslation } from 'react-i18next';
@@ -40,7 +39,7 @@ const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
           'items-center'
         )}>
         <div>
-          <h1 style={{ color: getAccents('d_interlayDenim').color }}>{t('dashboard.vault.active_vaults')}</h1>
+          <h1 className='text-interlayDenim'>{t('dashboard.vault.active_vaults')}</h1>
           <h2>{totalVaultsPerDay[totalVaultsPerDay.length - 1]?.count}</h2>
         </div>
         {linkButton && (

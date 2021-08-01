@@ -14,7 +14,6 @@ import { satToBTC } from '@interlay/interbtc';
 
 import DashboardCard from 'pages/dashboard/DashboardCard';
 import LineChartComponent from './line-chart-component';
-import { getAccents } from '../dashboard-colors';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
@@ -59,7 +58,9 @@ const InterBTC = (): React.ReactElement => {
           'items-center'
         )}>
         <div>
-          <h1 style={{ color: getAccents('d_interlayDenim').color }}>{t('dashboard.issue.issued')}</h1>
+          <h1 className='text-interlayDenim'>
+            {t('dashboard.issue.issued')}
+          </h1>
           <h2>{t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalInterBTC) })}</h2>
           {/* TODO: add the price API */}
           <h2>${getUsdAmount(totalInterBTC, prices.bitcoin.usd)}</h2>
