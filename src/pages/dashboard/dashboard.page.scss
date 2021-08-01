@@ -53,11 +53,6 @@
   }
 }
 
-.chart-container {
-  position: relative;
-  margin-top: 10px;
-}
-
 @media only screen and (min-width: 1200px) {
   .dashboard-card {
     h1 {
@@ -72,11 +67,6 @@
         width: 70%;
         padding-left: 30px;
     }
-  }
-  
-  .chart-container {
-    margin-top: 20px;
-    height: 200px;
   }
 
   .parachain-content-container {

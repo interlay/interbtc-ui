@@ -77,7 +77,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
           </InterlayRouterLink>
         )}
       </div>
-      <div className='chart-container'>
+      <div className='mt-5'>
         <LineChartComponent
           color='d_interlayDenim'
           label={t('dashboard.vault.total_collateral_locked') as string}

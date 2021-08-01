@@ -82,13 +82,14 @@ const InterBTC = (): React.ReactElement => {
           </InterlayRouterLink>
         </div>
       </div>
-      <div className='chart-container'>
+      <div className='mt-5'>
         <LineChartComponent
           color={['d_interlayCalifornia', 'd_interlayPaleSky']}
           label={[t('dashboard.issue.total_issued_chart'), t('dashboard.issue.per_day_issued_chart')]}
           yLabels={cumulativeIssuesPerDay
             .slice(1)
-            .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}
+            .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))
+          }
           yAxisProps={[
             { beginAtZero: true, position: 'left', maxTicksLimit: 6 },
             { position: 'right', maxTicksLimit: 6 }

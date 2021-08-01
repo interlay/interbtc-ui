@@ -112,7 +112,7 @@ export default function LineChartComponent(propsArg: ChartProps): React.ReactEle
     }
   };
   return (
-    <div className='chart-container'>
+    <div className='mt-5'>
       <Line {...chartProps} />
     </div>
   );
