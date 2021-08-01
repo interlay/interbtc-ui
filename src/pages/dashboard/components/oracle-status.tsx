@@ -88,7 +88,17 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
       <div className='circle-container'>
         {oracleStatus === Status.Online ? (
           <div
-            className='status-circle border border-interlayConifer'
+            className={clsx(
+              'w-64',
+              'h-64',
+              'ring-4',
+              'ring-interlayConifer',
+              'rounded-full',
+              'inline-flex',
+              'flex-col',
+              'items-center',
+              'justify-center'
+            )}
             id='oracle-circle'>
             <h1
               className={clsx(
@@ -104,7 +114,17 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
           </div>
         ) : oracleStatus === Status.Offline ? (
           <div
-            className='status-circle border border-interlayCinnabar'
+            className={clsx(
+              'w-64',
+              'h-64',
+              'ring-4',
+              'ring-interlayCinnabar',
+              'rounded-full',
+              'inline-flex',
+              'flex-col',
+              'items-center',
+              'justify-center'
+            )}
             id='oracle-circle'>
             <h1
               className={clsx(
@@ -120,7 +140,17 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
           </div>
         ) : oracleStatus === Status.NoData ? (
           <div
-            className='status-circle border border-interlayPaleSky'
+            className={clsx(
+              'w-64',
+              'h-64',
+              'ring-4',
+              'ring-interlayPaleSky',
+              'rounded-full',
+              'inline-flex',
+              'flex-col',
+              'items-center',
+              'justify-center'
+            )}
             id='oracle-circle'>
             <h1
               className={clsx(
@@ -136,7 +166,17 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
           </div>
         ) : (
           <div
-            className='status-circle border border-interlayPaleSky'
+            className={clsx(
+              'w-64',
+              'h-64',
+              'ring-4',
+              'ring-interlayPaleSky',
+              'rounded-full',
+              'inline-flex',
+              'flex-col',
+              'items-center',
+              'justify-center'
+            )}
             id='oracle-circle'>
             <h1
               className={clsx(

@@ -95,11 +95,18 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
         <div className='circle-container'>
           <div
             className={clsx(
-              'status-circle',
-              'border',
-              { 'border-interlayPaleSky': state === Status.Loading },
-              { 'border-interlayConifer': state === Status.Ok },
-              { 'border-interlayCinnabar': state !== Status.Loading && state !== Status.Ok }
+              'w-64',
+              'h-64',
+              'ring-4',
+              'rounded-full',
+              'inline-flex',
+              'flex-col',
+              'items-center',
+              'justify-center',
+
+              { 'ring-interlayPaleSky': state === Status.Loading },
+              { 'ring-interlayConifer': state === Status.Ok },
+              { 'ring-interlayCinnabar': state !== Status.Loading && state !== Status.Ok }
             )}
             id='relay-circle'>
             <h1
@@ -141,7 +148,17 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
           </div>
           <div className='circle-container'>
             <div
-              className='status-circle border-interlayDenim'
+              className={clsx(
+                'w-64',
+                'h-64',
+                'ring-4',
+                'ring-interlayDenim',
+                'rounded-full',
+                'inline-flex',
+                'flex-col',
+                'items-center',
+                'justify-center'
+              )}
               id='relay-circle'>
               <h1
                 className={clsx(
