@@ -67,7 +67,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
           'justify-between',
           'items-center'
         )}>
-        <div className='values-container'>
+        <div>
           {!failed && (
             <>
               <h1 className='text-interlayDenim'>{t('dashboard.vault.collateralization')}</h1>

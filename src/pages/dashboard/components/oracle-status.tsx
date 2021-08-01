@@ -52,7 +52,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
           'justify-between',
           'items-center'
         )}>
-        <div className='values-container'>
+        <div>
           <h1 className='font-bold'>
             {t('dashboard.oracles.oracles_are')}&nbsp;
             {oracleStatus === Status.Online ? (

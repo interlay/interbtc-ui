@@ -39,7 +39,7 @@ const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
           'justify-between',
           'items-center'
         )}>
-        <div className='values-container'>
+        <div>
           <h1 style={{ color: getAccents('d_interlayDenim').color }}>{t('dashboard.vault.active_vaults')}</h1>
           <h2>{totalVaultsPerDay[totalVaultsPerDay.length - 1]?.count}</h2>
         </div>

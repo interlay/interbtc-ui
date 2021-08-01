@@ -63,7 +63,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
           'justify-between',
           'items-center'
         )}>
-        <div className='values-container'>
+        <div>
           <h1 style={{ color: getAccents('d_interlayDenim').color }}>{t('dashboard.vault.locked_collateral')}</h1>
           <h2>{displayMonetaryAmount(totalLockedDOT)} DOT</h2>
           <h2>${getUsdAmount(totalLockedDOT, prices.polkadot.usd)}</h2>

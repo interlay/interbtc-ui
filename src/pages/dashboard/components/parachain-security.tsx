@@ -65,7 +65,6 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
 
   return (
     <DashboardCard>
-      <div className='values-container'></div>
       {/* TODO: move this to the right */}
       <div className='parachain-content-container'>
         <div>

@@ -34,7 +34,7 @@ const ActiveCollators = (): ReactElement => {
           'justify-between',
           'items-center'
         )}>
-        <div className='values-container'>
+        <div>
           <h1 className='text-interlayDenim'>{t('dashboard.collators.active_collators')}</h1>
           <h2>3</h2>
         </div>

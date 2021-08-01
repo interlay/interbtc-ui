@@ -74,7 +74,7 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
             'justify-between',
             'items-center'
           )}>
-          <div className='values-container'>
+          <div>
             <h1 className='font-bold'>
               {t('dashboard.relay.relay_is')}&nbsp;
               <span
@@ -124,7 +124,7 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
               'justify-between',
               'items-center'
             )}>
-            <div className='values-container'>
+            <div>
               <h1 className='font-bold'>
                 {blockstreamTip !== '-' && (
                   <StyledLinkData

@@ -58,7 +58,7 @@ const InterBTC = (): React.ReactElement => {
           'justify-between',
           'items-center'
         )}>
-        <div className='values-container'>
+        <div>
           <h1 style={{ color: getAccents('d_interlayDenim').color }}>{t('dashboard.issue.issued')}</h1>
           <h2>{t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalInterBTC) })}</h2>
           {/* TODO: add the price API */}
