@@ -7,6 +7,7 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
+import clsx from 'clsx';
 
 import DashboardCard from 'pages/dashboard/DashboardCard';
 import LineChartComponent from './line-chart-component';
@@ -56,7 +57,12 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
 
   return (
     <DashboardCard>
-      <div className='card-top-content'>
+      <div
+        className={clsx(
+          'flex',
+          'justify-between',
+          'items-center'
+        )}>
         <div className='values-container'>
           <h1 style={{ color: getAccents('d_interlayDenim').color }}>{t('dashboard.vault.locked_collateral')}</h1>
           <h2>{displayMonetaryAmount(totalLockedDOT)} DOT</h2>

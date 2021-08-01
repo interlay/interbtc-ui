@@ -68,7 +68,12 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
   return (
     <>
       <DashboardCard>
-        <div className='card-top-content'>
+        <div
+          className={clsx(
+            'flex',
+            'justify-between',
+            'items-center'
+          )}>
           <div className='values-container'>
             <h1 className='font-bold'>
               {t('dashboard.relay.relay_is')}&nbsp;
@@ -113,7 +118,12 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
       </DashboardCard>
       {displayBlockstreamData && (
         <DashboardCard>
-          <div className='card-top-content'>
+          <div
+            className={clsx(
+              'flex',
+              'justify-between',
+              'items-center'
+            )}>
             <div className='values-container'>
               <h1 className='font-bold'>
                 {blockstreamTip !== '-' && (

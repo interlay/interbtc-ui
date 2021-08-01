@@ -1,19 +1,27 @@
-import { useEffect, useMemo, useState } from 'react';
-import { getAccents } from '../dashboard-colors';
-import useInterbtcIndex from '../../../common/hooks/use-interbtc-index';
+
+// ray test touch <<
+import {
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 import { useSelector } from 'react-redux';
-import { StoreType } from '../../../common/types/util.types';
-import { satToBTC } from '@interlay/interbtc';
-import LineChartComponent from './line-chart-component';
 import { useTranslation } from 'react-i18next';
-import { displayMonetaryAmount, getUsdAmount } from '../../../common/utils/utils';
-import { PAGES } from 'utils/constants/links';
-import DashboardCard from 'pages/dashboard/DashboardCard';
-import InterlayRouterLink from 'components/UI/InterlayLink/router';
-import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
-import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import BN from 'bn.js';
+import clsx from 'clsx';
+import { satToBTC } from '@interlay/interbtc';
+
+import DashboardCard from 'pages/dashboard/DashboardCard';
+import LineChartComponent from './line-chart-component';
+import { getAccents } from '../dashboard-colors';
+import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
+import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
+import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
+import { StoreType } from 'common/types/util.types';
+import { PAGES } from 'utils/constants/links';
 
 const InterBTC = (): React.ReactElement => {
   const { prices } = useSelector((state: StoreType) => state.general);
@@ -33,21 +41,23 @@ const InterBTC = (): React.ReactElement => {
     [cumulativeIssuesPerDay]
   );
 
-  const fetchIssuesLastDays = useMemo(
-    () => async () => {
+  useEffect(() => {
+    if (!statsApi) return;
+
+    (async () => {
       const res = await statsApi.getRecentDailyIssues({ daysBack: 6 });
       setCumulativeIssuesPerDay(res);
-    },
-    [statsApi] // to silence the compiler
-  );
-
-  useEffect(() => {
-    fetchIssuesLastDays();
-  }, [fetchIssuesLastDays]);
+    })();
+  }, [statsApi]);
 
   return (
     <DashboardCard>
-      <div className='card-top-content'>
+      <div
+        className={clsx(
+          'flex',
+          'justify-between',
+          'items-center'
+        )}>
         <div className='values-container'>
           <h1 style={{ color: getAccents('d_interlayDenim').color }}>{t('dashboard.issue.issued')}</h1>
           <h2>{t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalInterBTC) })}</h2>
@@ -92,3 +102,4 @@ const InterBTC = (): React.ReactElement => {
 };
 
 export default InterBTC;
+// ray test touch >>

@@ -16,7 +16,7 @@ import ActiveCollators from './components/active-collators';
 import './dashboard.page.scss';
 import './dashboard-sub-page.scss';
 
-function Dashboard(): JSX.Element {
+const Dashboard = (): JSX.Element => {
   const { t } = useTranslation();
 
   return (
@@ -46,6 +46,6 @@ function Dashboard(): JSX.Element {
       </div>
     </MainContainer>
   );
-}
+};
 
 export default Dashboard;

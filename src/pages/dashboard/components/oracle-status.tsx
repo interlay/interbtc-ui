@@ -46,7 +46,12 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
 
   return (
     <DashboardCard>
-      <div className='card-top-content'>
+      <div
+        className={clsx(
+          'flex',
+          'justify-between',
+          'items-center'
+        )}>
         <div className='values-container'>
           <h1 className='font-bold'>
             {t('dashboard.oracles.oracles_are')}&nbsp;

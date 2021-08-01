@@ -61,7 +61,12 @@ export default function Collateralization({ linkButton }: CollateralizationProps
 
   return (
     <DashboardCard>
-      <div className='card-top-content'>
+      <div
+        className={clsx(
+          'flex',
+          'justify-between',
+          'items-center'
+        )}>
         <div className='values-container'>
           {!failed && (
             <>
