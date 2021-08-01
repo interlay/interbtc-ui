@@ -1,6 +1,3 @@
-@import "../../variables";
-@import "../../mixins";
-
 .dashboard-card {
   h1 {
     font-weight: 400;
@@ -61,7 +58,7 @@
   margin-top: 10px;
 }
 
-@media only screen and (min-width: $desktop-size) {
+@media only screen and (min-width: 1200px) {
   .dashboard-card {
     h1 {
         font-size: 16px;
