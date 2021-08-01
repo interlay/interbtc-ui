@@ -59,7 +59,6 @@ export type Prices = {
 
 export type GeneralState = {
   polkaBtcLoaded: boolean;
-  relayerLoaded: boolean;
   vaultClientLoaded: boolean;
   showAccountModal: boolean;
   address: string;
