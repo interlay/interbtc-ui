@@ -25,7 +25,6 @@ interface MultiAxisProps {
 }
 type ChartProps = SingleAxisProps | MultiAxisProps;
 
-// ray test touch <<<
 function getAccents(color: string): {
   color: string;
 } {
@@ -37,22 +36,12 @@ function getAccents(color: string): {
   case 'd_interlayDenim':
     accent.color = '#075abc';
     break;
-  case 'd_interlayMulberry':
-    accent.color = '#db5aad';
-    break;
-  case 'd_interlayConifer':
-    accent.color = '#a2e75e';
-    break;
-  case 'd_interlayCinnabar':
-    accent.color = '#ef4444';
-    break;
   default:
     accent.color = '#6b7280';
     break;
   }
   return accent;
 }
-// ray test touch >>>
 
 // TODO: should refactor by using a better package
 export default function LineChartComponent(propsArg: ChartProps): React.ReactElement {
