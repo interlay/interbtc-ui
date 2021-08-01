@@ -15,11 +15,7 @@ import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCalifor
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import BN from 'bn.js';
 
-type PolkaBTCProps = {
-  linkButton?: boolean;
-};
-
-const InterBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
+const InterBTC = (): React.ReactElement => {
   const { prices } = useSelector((state: StoreType) => state.general);
   const totalInterBTC = useSelector((state: StoreType) => state.general.totalInterBTC);
 
@@ -58,26 +54,22 @@ const InterBTC = ({ linkButton }: PolkaBTCProps): React.ReactElement => {
           {/* TODO: add the price API */}
           <h2>${getUsdAmount(totalInterBTC, prices.bitcoin.usd)}</h2>
         </div>
-        {linkButton && (
-          <>
-            <div style={{ display: 'grid', gridRowGap: 10 }}>
-              <InterlayRouterLink to={PAGES.DASHBOARD_ISSUE_REQUESTS}>
-                <InterlayDenimOutlinedButton
-                  endIcon={<FaExternalLinkAlt />}
-                  className='w-full'>
-                  VIEW ALL ISSUED
-                </InterlayDenimOutlinedButton>
-              </InterlayRouterLink>
-              <InterlayRouterLink to={PAGES.DASHBOARD_REDEEM_REQUESTS}>
-                <InterlayCaliforniaOutlinedButton
-                  endIcon={<FaExternalLinkAlt />}
-                  className='w-full'>
-                  VIEW ALL REDEEMED
-                </InterlayCaliforniaOutlinedButton>
-              </InterlayRouterLink>
-            </div>
-          </>
-        )}
+        <div style={{ display: 'grid', gridRowGap: 10 }}>
+          <InterlayRouterLink to={PAGES.DASHBOARD_ISSUE_REQUESTS}>
+            <InterlayDenimOutlinedButton
+              endIcon={<FaExternalLinkAlt />}
+              className='w-full'>
+              VIEW ALL ISSUED
+            </InterlayDenimOutlinedButton>
+          </InterlayRouterLink>
+          <InterlayRouterLink to={PAGES.DASHBOARD_REDEEM_REQUESTS}>
+            <InterlayCaliforniaOutlinedButton
+              endIcon={<FaExternalLinkAlt />}
+              className='w-full'>
+              VIEW ALL REDEEMED
+            </InterlayCaliforniaOutlinedButton>
+          </InterlayRouterLink>
+        </div>
       </div>
       <div className='chart-container'>
         <LineChartComponent

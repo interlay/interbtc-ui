@@ -35,8 +35,7 @@ function Dashboard(): JSX.Element {
           'lg:gap-10',
           'xl:grid-cols-3'
         )}>
-        {/* TODO: could remove linkButton */}
-        <InterBTC linkButton />
+        <InterBTC />
         <CollateralLocked linkButton />
         <Collateralization linkButton />
         <ParachainSecurity linkButton />
