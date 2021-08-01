@@ -23,15 +23,6 @@
     font-size: 25px;
     font-weight: 700;
   }
-  
-  .parachain-content-container {
-    height: 250px;
-    padding-left: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
 
   .circle-container {
     display: flex;
@@ -63,14 +54,5 @@
         font-size: 10px;
         letter-spacing: 0.6px;
     }
-    .parachain-content-container {
-        width: 70%;
-        padding-left: 30px;
-    }
-  }
-
-  .parachain-content-container {
-    width: 70%;
-    padding-left: 30px;
   }
 }

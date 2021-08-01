@@ -59,7 +59,7 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
   return (
     <DashboardCard>
       {/* TODO: move this to the right */}
-      <div className='parachain-content-container'>
+      <div className='h-64 grid place-items-center'>
         <div>
           <h1
             className={clsx(

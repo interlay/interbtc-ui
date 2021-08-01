@@ -146,7 +146,7 @@ function DashboardTable<D extends DataWithID, C>(props: DashboardTableProps<D, C
             <div className='w-full h-0.5 bg-interlayHaiti-100' />
             {props.pageData.map((point, subIndex) => (
               <div key={subIndex}>
-                <div className='data-container'>{props.dataPointDisplayer(point)[index]}</div>
+                <div>{props.dataPointDisplayer(point)[index]}</div>
                 <div className='w-full h-0.5 bg-interlayHaiti-100' />
               </div>
             ))}
