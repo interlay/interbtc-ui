@@ -46,9 +46,21 @@ export default function RelayDashboard(): ReactElement {
   );
 
   const tableHeadings = [
-    <h1 key={1}>{t('dashboard.relay.block_height')}</h1>,
-    <h1 key={2}>{t('dashboard.relay.block_hash')}</h1>,
-    <h1 key={3}>{t('dashboard.relay.timestamp')}</h1>
+    <h1
+      className='opacity-30'
+      key={1}>
+      {t('dashboard.relay.block_height')}
+    </h1>,
+    <h1
+      className='opacity-30'
+      key={2}>
+      {t('dashboard.relay.block_hash')}
+    </h1>,
+    <h1
+      className='opacity-30'
+      key={3}>
+      {t('dashboard.relay.timestamp')}
+    </h1>
   ];
 
   const tableBlockRow = useMemo(

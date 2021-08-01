@@ -136,18 +136,18 @@ function DashboardTable<D extends DataWithID, C>(props: DashboardTableProps<D, C
 
   return props.pageData.length > 0 ? (
     <div className='dashboard-table'>
-      <div className='dashboard-table-grid'>
+      <div className='grid auto-cols-auto'>
         {props.headings.map((heading, index) => (
           <div
             key={index}
             style={{ gridColumn: index + 1 }}>
-            <div className='line'></div>
-            <div className='data-container'>{heading}</div>
-            <div className='line'></div>
+            <div className='w-full h-0.5 bg-interlayHaiti-100' />
+            <div className='px-5 py-3.5 h-12 flex justify-center items-center'>{heading}</div>
+            <div className='w-full h-0.5 bg-interlayHaiti-100' />
             {props.pageData.map((point, subIndex) => (
               <div key={subIndex}>
                 <div className='data-container'>{props.dataPointDisplayer(point)[index]}</div>
-                <div className='line'></div>
+                <div className='w-full h-0.5 bg-interlayHaiti-100' />
               </div>
             ))}
           </div>

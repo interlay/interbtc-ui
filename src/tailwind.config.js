@@ -118,7 +118,6 @@ const INTERLAY_DODGER_BLUE = Object.freeze({
   800: '#255a99',
   900: '#1e4a7d'
 });
-// TODO: not used for now
 const INTERLAY_HAITI = Object.freeze({
   50: '#f4f3f5',
   100: '#e8e7ea',

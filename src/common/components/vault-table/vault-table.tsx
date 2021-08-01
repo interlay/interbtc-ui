@@ -148,22 +148,38 @@ export default function VaultTable(): ReactElement {
   ]);
 
   const tableHeadings: ReactElement[] = [
-    <h1 key={1}>{t('account_id')}</h1>,
-    <h1 key={2}>{t('locked_dot')}</h1>,
-    <h1 key={3}>{t('locked_btc')}</h1>,
+    <h1
+      className='opacity-30'
+      key={1}>
+      {t('account_id')}
+    </h1>,
+    <h1
+      className='opacity-30'
+      key={2}>
+      {t('locked_dot')}
+    </h1>,
+    <h1
+      className='opacity-30'
+      key={3}>
+      {t('locked_btc')}
+    </h1>,
     <>
-      <h1>{t('pending_btc')}</h1> &nbsp;
+      <h1 className='opacity-30'>{t('pending_btc')}</h1> &nbsp;
       <Tooltip overlay={t('vault.tip_pending_btc')}>
         <i className='far fa-question-circle' />
       </Tooltip>
     </>,
     <>
-      <h1>{t('collateralization')}</h1> &nbsp;
+      <h1 className='opacity-30'>{t('collateralization')}</h1> &nbsp;
       <Tooltip overlay={t('vault.tip_collateralization')}>
         <i className='far fa-question-circle' />
       </Tooltip>
     </>,
-    <h1 key={4}>{t('status')}</h1>
+    <h1
+      className='opacity-30'
+      key={4}>
+      {t('status')}
+    </h1>
   ];
 
   const tableVaultRow = useMemo(() => {

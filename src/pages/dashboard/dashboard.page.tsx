@@ -14,7 +14,6 @@ import OracleStatus from './components/oracle-status';
 import ActiveVaults from './components/active-vaults';
 import ActiveCollators from './components/active-collators';
 import './dashboard.page.scss';
-import './dashboard-sub-page.scss';
 
 const Dashboard = (): JSX.Element => {
   const { t } = useTranslation();
