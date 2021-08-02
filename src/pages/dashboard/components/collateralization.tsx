@@ -61,8 +61,13 @@ export default function Collateralization({ linkButton }: CollateralizationProps
 
   return (
     <DashboardCard>
-      <div className='card-top-content'>
-        <div className='values-container'>
+      <div
+        className={clsx(
+          'flex',
+          'justify-between',
+          'items-center'
+        )}>
+        <div>
           {!failed && (
             <>
               <h1 className='text-interlayDenim'>{t('dashboard.vault.collateralization')}</h1>

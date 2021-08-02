@@ -7,10 +7,10 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
+import clsx from 'clsx';
 
 import DashboardCard from 'pages/dashboard/DashboardCard';
 import LineChartComponent from './line-chart-component';
-import { getAccents } from '../dashboardcolors';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
@@ -56,9 +56,14 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
 
   return (
     <DashboardCard>
-      <div className='card-top-content'>
-        <div className='values-container'>
-          <h1 style={{ color: getAccents('d_interlayDenim').color }}>{t('dashboard.vault.locked_collateral')}</h1>
+      <div
+        className={clsx(
+          'flex',
+          'justify-between',
+          'items-center'
+        )}>
+        <div>
+          <h1 className='text-interlayDenim'>{t('dashboard.vault.locked_collateral')}</h1>
           <h2>{displayMonetaryAmount(totalLockedDOT)} DOT</h2>
           <h2>${getUsdAmount(totalLockedDOT, prices.polkadot.usd)}</h2>
         </div>
@@ -72,7 +77,7 @@ const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement =
           </InterlayRouterLink>
         )}
       </div>
-      <div className='chart-container'>
+      <div className='mt-5'>
         <LineChartComponent
           color='d_interlayDenim'
           label={t('dashboard.vault.total_collateral_locked') as string}

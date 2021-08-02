@@ -1,7 +1,6 @@
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import { getAccents } from '../dashboardcolors';
 import { useSelector } from 'react-redux';
 import { ParachainStatus, StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
@@ -22,9 +21,8 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
     case ParachainStatus.Running:
       return (
         <span
-          style={{ color: getAccents('d_interlayConifer').color }}
           id='parachain-text'
-          className='font-bold'>
+          className='font-bold text-interlayConifer'>
           {t('dashboard.parachain.secure')}
         </span>
 
@@ -32,9 +30,8 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
     case ParachainStatus.Loading:
       return (
         <span
-          style={{ color: getAccents('d_interlayPaleSky').color }}
           id='parachain-text'
-          className='font-bold'>
+          className='font-bold text-interlayPaleSky'>
           {t('loading')}
         </span>
 
@@ -43,31 +40,26 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
     case ParachainStatus.Shutdown:
       return (
         <span
-          style={{ color: getAccents('d_interlayCalifornia').color }}
           id='parachain-text'
-          className='font-bold'>
+          className='font-bold text-interlayCalifornia'>
           {t('dashboard.parachain.halted')}
         </span>
-
       );
     default:
       return (
         <span
-          style={{ color: getAccents('d_interlayPaleSky').color }}
           id='parachain-text'
-          className='font-bold'>
+          className='font-bold text-interlayPaleSky'>
           {t('no_data')}
         </span>
-
       );
     }
   };
 
   return (
     <DashboardCard>
-      <div className='values-container'></div>
       {/* TODO: move this to the right */}
-      <div className='parachain-content-container'>
+      <div className='h-64 grid place-items-center'>
         <div>
           <h1
             className={clsx(

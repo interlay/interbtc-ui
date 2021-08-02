@@ -14,9 +14,8 @@ import OracleStatus from './components/oracle-status';
 import ActiveVaults from './components/active-vaults';
 import ActiveCollators from './components/active-collators';
 import './dashboard.page.scss';
-import './dashboard-sub-page.scss';
 
-function Dashboard(): JSX.Element {
+const Dashboard = (): JSX.Element => {
   const { t } = useTranslation();
 
   return (
@@ -35,8 +34,7 @@ function Dashboard(): JSX.Element {
           'lg:gap-10',
           'xl:grid-cols-3'
         )}>
-        {/* TODO: could remove linkButton */}
-        <InterBTC linkButton />
+        <InterBTC />
         <CollateralLocked linkButton />
         <Collateralization linkButton />
         <ParachainSecurity linkButton />
@@ -47,6 +45,6 @@ function Dashboard(): JSX.Element {
       </div>
     </MainContainer>
   );
-}
+};
 
 export default Dashboard;

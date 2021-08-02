@@ -38,7 +38,6 @@ const Topbar = (props: TopbarProps): JSX.Element => {
     balanceDOT,
     balanceInterBTC,
     vaultClientLoaded,
-    relayerLoaded,
     showAccountModal
   } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
@@ -136,13 +135,6 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                     className='p-2'
                     to={PAGES.VAULT}>
                     {t('nav_vault')}
-                  </InterlayRouterLink>
-                )}
-                {relayerLoaded && (
-                  <InterlayRouterLink
-                    className='p-2'
-                    to={PAGES.STAKED_RELAYER}>
-                    {t('nav_relayer')}
                   </InterlayRouterLink>
                 )}
                 {polkaBtcLoaded && (

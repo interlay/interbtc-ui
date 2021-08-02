@@ -59,13 +59,41 @@ export default function ParachainDashboard(): ReactElement {
   }, [fetchTotalStatusUpdates]);
 
   const tableHeadings = [
-    <h1 key={1}>{t('id')}</h1>,
-    <h1 key={2}>{t('timestamp')}</h1>,
-    <h1 key={3}>{t('proposed_status')}</h1>,
-    <h1 key={4}>{t('proposed_changes')}</h1>,
-    <h1 key={5}>{t('btc_block_hash')}</h1>,
-    <h1 key={6}>{t('votes_yes_no')}</h1>,
-    <h1 key={7}>{t('result')}</h1>
+    <h1
+      className='opacity-30'
+      key={1}>
+      {t('id')}
+    </h1>,
+    <h1
+      className='opacity-30'
+      key={2}>
+      {t('timestamp')}
+    </h1>,
+    <h1
+      className='opacity-30'
+      key={3}>
+      {t('proposed_status')}
+    </h1>,
+    <h1
+      className='opacity-30'
+      key={4}>
+      {t('proposed_changes')}
+    </h1>,
+    <h1
+      className='opacity-30'
+      key={5}>
+      {t('btc_block_hash')}
+    </h1>,
+    <h1
+      className='opacity-30'
+      key={6}>
+      {t('votes_yes_no')}
+    </h1>,
+    <h1
+      className='opacity-30'
+      key={7}>
+      {t('result')}
+    </h1>
   ];
 
   const tableStatusUpdateRow = useMemo(
@@ -107,7 +135,7 @@ export default function ParachainDashboard(): ReactElement {
             mainTitle={t('dashboard.parachain.parachain')}
             subTitle={<TimerIncrement />} />
           <hr className='border-interlayDenim' />
-          <div className='parachain-graphs-container dashboard-graphs-container'>
+          <div className='grid grid-cols-2 gap-7 mt-10'>
             <ParachainSecurity />
           </div>
           <div style={{ margin: '40px 0px' }}>

@@ -46,9 +46,21 @@ export default function RelayDashboard(): ReactElement {
   );
 
   const tableHeadings = [
-    <h1 key={1}>{t('dashboard.relay.block_height')}</h1>,
-    <h1 key={2}>{t('dashboard.relay.block_hash')}</h1>,
-    <h1 key={3}>{t('dashboard.relay.timestamp')}</h1>
+    <h1
+      className='opacity-30'
+      key={1}>
+      {t('dashboard.relay.block_height')}
+    </h1>,
+    <h1
+      className='opacity-30'
+      key={2}>
+      {t('dashboard.relay.block_hash')}
+    </h1>,
+    <h1
+      className='opacity-30'
+      key={3}>
+      {t('dashboard.relay.timestamp')}
+    </h1>
   ];
 
   const tableBlockRow = useMemo(
@@ -81,8 +93,8 @@ export default function RelayDashboard(): ReactElement {
             mainTitle={t('dashboard.relay.btc_relay')}
             subTitle={<TimerIncrement />} />
           <hr className='border-interlayCalifornia' />
-          <div className='dashboard-graphs-container'>
-            <div className='relay-grid-container'>
+          <div className='mt-10'>
+            <div className='grid grid-cols-2 gap-7'>
               <BtcRelay displayBlockstreamData={true} />
             </div>
           </div>

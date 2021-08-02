@@ -1,6 +1,5 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import { getAccents } from '../dashboardcolors';
 
 interface YAxisConfig {
   beginAtZero?: boolean;
@@ -25,6 +24,24 @@ interface MultiAxisProps {
   data: number[][];
 }
 type ChartProps = SingleAxisProps | MultiAxisProps;
+
+function getAccents(color: string): {
+  color: string;
+} {
+  const accent = { color: '' };
+  switch (color) {
+  case 'd_interlayCalifornia':
+    accent.color = '#ff9900';
+    break;
+  case 'd_interlayDenim':
+    accent.color = '#075abc';
+    break;
+  default:
+    accent.color = '#6b7280';
+    break;
+  }
+  return accent;
+}
 
 // TODO: should refactor by using a better package
 export default function LineChartComponent(propsArg: ChartProps): React.ReactElement {
@@ -95,7 +112,7 @@ export default function LineChartComponent(propsArg: ChartProps): React.ReactEle
     }
   };
   return (
-    <div className='chart-container'>
+    <div className='mt-5'>
       <Line {...chartProps} />
     </div>
   );

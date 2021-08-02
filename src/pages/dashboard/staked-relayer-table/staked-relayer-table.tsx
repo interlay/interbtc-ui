@@ -31,9 +31,21 @@ export default function StakedRelayerTable(): ReactElement {
   }, [statsApi]);
 
   const tableHeadings = [
-    <h1 key={1}>{t('account_id')}</h1>,
-    <h1 key={2}>{t('locked_dot')}</h1>,
-    <h1 key={3}>{t('status')}</h1>
+    <h1
+      className='opacity-30'
+      key={1}>
+      {t('account_id')}
+    </h1>,
+    <h1
+      className='opacity-30'
+      key={2}>
+      {t('locked_dot')}
+    </h1>,
+    <h1
+      className='opacity-30'
+      key={3}>
+      {t('status')}
+    </h1>
   ];
 
   const relayersTableRow = (relayer: StakedRelayer): ReactElement[] => [

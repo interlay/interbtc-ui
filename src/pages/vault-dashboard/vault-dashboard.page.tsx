@@ -48,7 +48,6 @@ import {
   updateAPYAction
 } from 'common/actions/vault.actions';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import './vault-dashboard.page.scss';
 import VaultIssueRequestsTable from 'containers/VaultIssueRequestsTable';
 import VaultRedeemRequestsTable from 'containers/VaultRedeemRequestsTable';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
@@ -207,7 +206,12 @@ function VaultDashboard(): JSX.Element {
   ];
 
   return (
-    <MainContainer className='vault-dashboard-page'>
+    <MainContainer
+      className={clsx(
+        'flex',
+        'justify-center',
+        'fade-in-animation'
+      )}>
       <div className='space-y-20'>
         <div className='space-y-10'>
           <div>

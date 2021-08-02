@@ -2,7 +2,6 @@ import { ReactElement, useState, useEffect } from 'react';
 import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import { getAccents } from '../dashboardcolors';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
@@ -47,12 +46,6 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
           state === Status.Ok ?
             t('dashboard.synced') :
             t('dashboard.out_of_sync');
-  const statusColor =
-    state === Status.Loading ?
-      'd_interlayPaleSky' :
-      state === Status.Ok ?
-        'd_interlayConifer' :
-        'd_interlayCinnabar';
 
   useEffect(() => {
     (async () => {
@@ -68,14 +61,23 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
   return (
     <>
       <DashboardCard>
-        <div className='card-top-content'>
-          <div className='values-container'>
+        <div
+          className={clsx(
+            'flex',
+            'justify-between',
+            'items-center'
+          )}>
+          <div>
             <h1 className='font-bold'>
               {t('dashboard.relay.relay_is')}&nbsp;
               <span
-                style={{ color: getAccents(statusColor).color }}
                 id='relay-text'
-                className='font-bold'>
+                className={clsx(
+                  'font-bold',
+                  { 'text-interlayPaleSky': state === Status.Loading },
+                  { 'text-interlayConifer': state === Status.Ok },
+                  { 'text-interlayCinnabar': state !== Status.Loading && state !== Status.Ok }
+                )}>
                 {statusText}
               </span>
             </h1>
@@ -90,18 +92,32 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
             </InterlayRouterLink>
           )}
         </div>
-        <div className='circle-container'>
+        <div className='mt-6 flex justify-center items-center'>
           <div
-            className='status-circle'
-            style={{ borderColor: getAccents(statusColor).color }}
+            className={clsx(
+              'w-64',
+              'h-64',
+              'ring-4',
+              'rounded-full',
+              'inline-flex',
+              'flex-col',
+              'items-center',
+              'justify-center',
+
+              { 'ring-interlayPaleSky': state === Status.Loading },
+              { 'ring-interlayConifer': state === Status.Ok },
+              { 'ring-interlayCinnabar': state !== Status.Loading && state !== Status.Ok }
+            )}
             id='relay-circle'>
             <h1
               className={clsx(
                 'h1-xl',
                 'text-3xl',
-                'text-center'
+                'text-center',
+                { 'text-interlayPaleSky': state === Status.Loading },
+                { 'text-interlayConifer': state === Status.Ok },
+                { 'text-interlayCinnabar': state !== Status.Loading && state !== Status.Ok }
               )}
-              style={{ color: getAccents(statusColor).color }}
               id='relay-circle-text'>
               {graphText}
             </h1>
@@ -113,8 +129,13 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
       </DashboardCard>
       {displayBlockstreamData && (
         <DashboardCard>
-          <div className='card-top-content'>
-            <div className='values-container'>
+          <div
+            className={clsx(
+              'flex',
+              'justify-between',
+              'items-center'
+            )}>
+            <div>
               <h1 className='font-bold'>
                 {blockstreamTip !== '-' && (
                   <StyledLinkData
@@ -125,9 +146,19 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
               </h1>
             </div>
           </div>
-          <div className='circle-container'>
+          <div className='mt-6 flex justify-center items-center'>
             <div
-              className='status-circle border-interlayDenim'
+              className={clsx(
+                'w-64',
+                'h-64',
+                'ring-4',
+                'ring-interlayDenim',
+                'rounded-full',
+                'inline-flex',
+                'flex-col',
+                'items-center',
+                'justify-center'
+              )}
               id='relay-circle'>
               <h1
                 className={clsx(

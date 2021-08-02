@@ -28,11 +28,31 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
   }, [statsApi]);
 
   const tableHeadings = [
-    <h1 key={1}>{t('source')}</h1>,
-    <h1 key={2}>{t('feed')}</h1>,
-    <h1 key={3}>{t('last_update')}</h1>,
-    <h1 key={4}>{t('exchange_rate')}</h1>,
-    <h1 key={5}>{t('status')}</h1>
+    <h1
+      className='opacity-30'
+      key={1}>
+      {t('source')}
+    </h1>,
+    <h1
+      className='opacity-30'
+      key={2}>
+      {t('feed')}
+    </h1>,
+    <h1
+      className='opacity-30'
+      key={3}>
+      {t('last_update')}
+    </h1>,
+    <h1
+      className='opacity-30'
+      key={4}>
+      {t('exchange_rate')}
+    </h1>,
+    <h1
+      className='opacity-30'
+      key={5}>
+      {t('status')}
+    </h1>
   ];
 
   const oracleTableRow = (oracle: OracleStatus): ReactElement[] => [

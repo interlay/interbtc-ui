@@ -83,9 +83,6 @@ import 'react-toastify/dist/ReactToastify.css';
 // const VaultDashboardPage = React.lazy(() =>
 //   import(/* webpackChunkName: 'vault' */ 'pages/vault-dashboard/vault-dashboard.page')
 // );
-// const StakedRelayerPage = React.lazy(() =>
-//   import(/* webpackChunkName: 'staked-relayer' */ 'pages/staked-relayer/staked-relayer.page')
-// );
 const Challenges = React.lazy(() =>
   import(/* webpackChunkName: 'challenges' */ 'pages/Challenges')
 );

@@ -21,7 +21,6 @@ import { GeneralState, ParachainStatus } from '../types/util.types';
 
 const initialState = {
   polkaBtcLoaded: false,
-  relayerLoaded: false,
   vaultClientLoaded: false,
   hasFeedbackModalBeenDisplayed: false,
   showAccountModal: false,

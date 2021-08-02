@@ -47,43 +47,40 @@ const FEEDBACK_ITEMS = [
 ];
 
 const Feedback = (): JSX.Element => (
-  <>
-    {/* TODO: should use footer layout pattern */}
-    <MainContainer>
-      <PageTitle mainTitle='Feedback' />
-      <CardList
-        className={clsx(
-          'max-w-max',
-          'm-auto',
-          'md:grid-cols-3',
-          '2xl:grid-cols-5',
-          'gap-5'
-        )}>
-        {FEEDBACK_ITEMS.map(feedbackType => (
-          <CardListItem
-            key={feedbackType.title}
+  <MainContainer>
+    <PageTitle mainTitle='Feedback' />
+    <CardList
+      className={clsx(
+        'max-w-max',
+        'm-auto',
+        'md:grid-cols-3',
+        '2xl:grid-cols-5',
+        'gap-5'
+      )}>
+      {FEEDBACK_ITEMS.map(feedbackType => (
+        <CardListItem
+          key={feedbackType.title}
+          className={clsx(
+            'justify-center',
+            'items-center'
+          )}>
+          <InterlayLink
+            href={feedbackType.link}
+            target='_blank'
+            rel='noopener noreferrer'
             className={clsx(
-              'justify-center',
-              'items-center'
+              'font-bold',
+              'flex',
+              'items-center',
+              'space-x-1'
             )}>
-            <InterlayLink
-              href={feedbackType.link}
-              target='_blank'
-              rel='noopener noreferrer'
-              className={clsx(
-                'font-bold',
-                'flex',
-                'items-center',
-                'space-x-1'
-              )}>
-              <span>{feedbackType.title}</span>
-              {feedbackType.icon}
-            </InterlayLink>
-          </CardListItem>
-        ))}
-      </CardList>
-    </MainContainer>
-  </>
+            <span>{feedbackType.title}</span>
+            {feedbackType.icon}
+          </InterlayLink>
+        </CardListItem>
+      ))}
+    </CardList>
+  </MainContainer>
 );
 
 export default Feedback;

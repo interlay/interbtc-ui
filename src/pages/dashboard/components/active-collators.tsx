@@ -7,6 +7,7 @@ import { range } from '../../../common/utils/utils';
 import { useTranslation } from 'react-i18next';
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
+import clsx from 'clsx';
 
 const ActiveCollators = (): ReactElement => {
   const { t } = useTranslation();
@@ -27,8 +28,13 @@ const ActiveCollators = (): ReactElement => {
   );
   return (
     <DashboardCard>
-      <div className='card-top-content'>
-        <div className='values-container'>
+      <div
+        className={clsx(
+          'flex',
+          'justify-between',
+          'items-center'
+        )}>
+        <div>
           <h1 className='text-interlayDenim'>{t('dashboard.collators.active_collators')}</h1>
           <h2>3</h2>
         </div>
@@ -43,7 +49,7 @@ const ActiveCollators = (): ReactElement => {
         )}
       </div>
       <LineChartComponent
-        color='d_blue'
+        color='d_interlayDenim'
         label={t('dashboard.collators.total_collators_chart') as string}
         yLabels={dates}
         yAxisProps={{ beginAtZero: true, precision: 0 }}
