@@ -174,10 +174,10 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
         </Modal.Header>
         <Modal.Body>
           <div className='row'>
-            <div className='col-12 current-collateral'>
+            <div className='col-12 my-4'>
               {t('vault.current_total_collateral', { currentCollateral })}
             </div>
-            <div className='col-12 current-collateral'>
+            <div className='col-12 my-4'>
               {t('vault.new_total_collateral', { newCollateral })}
             </div>
             <div className='col-12 basic-addon'>
@@ -202,7 +202,7 @@ export default function UpdateCollateralModal(props: UpdateCollateralProps): JSX
                 </div>
               </div>
               {errors.collateral && (
-                <div className='input-error text-interlayConifer'>
+                <div className='mt-0.5 text-interlayConifer'>
                   {errors.collateral.type === 'required' ?
                     t('vault.collateral_is_required') :
                     errors.collateral.message}

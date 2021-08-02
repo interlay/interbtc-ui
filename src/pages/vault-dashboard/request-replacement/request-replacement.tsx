@@ -51,7 +51,7 @@ export default function RequestReplacementModal(props: RequestReplacementProps):
       if (!requests) return;
 
       dispatch(addReplaceRequestsAction(parachainToUIReplaceRequests(requests)));
-      toast.success('Replacment request is submitted');
+      toast.success('Replacement request is submitted');
       props.onClose();
     } catch (error) {
       toast.error(error.toString());
@@ -69,13 +69,13 @@ export default function RequestReplacementModal(props: RequestReplacementProps):
         </Modal.Header>
         <Modal.Body>
           <div className='row'>
-            <div className='col-12 request-header'>{t('vault.withdraw_your_collateral')}</div>
+            <div className='col-12 text-center mb-4'>{t('vault.withdraw_your_collateral')}</div>
             <div className='col-12'>{t('vault.your_have')}</div>
             <div className='col-12'> {lockedDot} DOT</div>
-            <div className='col-12 vault-empty-space'>
+            <div className='col-12 mb-4'>
               {t('locked')} {lockedBtc} BTC
             </div>
-            <div className='col-12 vault-empty-space'>{t('vault.replace_amount')}</div>
+            <div className='col-12 mb-4'>{t('vault.replace_amount')}</div>
             <div className='col-12'>
               <div className='input-group'>
                 <input
