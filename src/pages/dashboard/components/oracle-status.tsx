@@ -85,7 +85,7 @@ const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
           </InterlayRouterLink>
         )}
       </div>
-      <div className='circle-container'>
+      <div className='mt-6 flex justify-center items-center'>
         {oracleStatus === Status.Online ? (
           <div
             className={clsx(

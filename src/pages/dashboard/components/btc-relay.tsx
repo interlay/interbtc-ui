@@ -92,7 +92,7 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
             </InterlayRouterLink>
           )}
         </div>
-        <div className='circle-container'>
+        <div className='mt-6 flex justify-center items-center'>
           <div
             className={clsx(
               'w-64',
@@ -146,7 +146,7 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
               </h1>
             </div>
           </div>
-          <div className='circle-container'>
+          <div className='mt-6 flex justify-center items-center'>
             <div
               className={clsx(
                 'w-64',
