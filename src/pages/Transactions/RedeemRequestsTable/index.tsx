@@ -305,7 +305,7 @@ const RedeemRequestsTable = (): JSX.Element => {
         <h2
           className={clsx(
             'text-2xl',
-            'font-bold'
+            'font-medium'
           )}>
           {t('redeem_requests')}
         </h2>
