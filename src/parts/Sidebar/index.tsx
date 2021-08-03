@@ -1,6 +1,4 @@
 
-// ray test touch <<
-/* This example requires Tailwind CSS v2.0+ */
 import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import {
@@ -288,11 +286,15 @@ const Sidebar = (): JSX.Element => {
               'flex-shrink-0',
               'w-14'
             )}>
+            {/* ray test touch << */}
             {/* Force sidebar to shrink to fit close icon */}
+            {/* ray test touch >> */}
           </div>
         </Dialog>
       </Transition.Root>
+      {/* ray test touch << */}
       {/* Static sidebar for desktop */}
+      {/* ray test touch >> */}
       <div
         className={clsx(
           'hidden',
@@ -305,7 +307,9 @@ const Sidebar = (): JSX.Element => {
             'flex-col',
             'w-64'
           )}>
+          {/* ray test touch << */}
           {/* Sidebar component, swap this element with another sidebar if you like */}
+          {/* ray test touch >> */}
           <div
             className={clsx(
               'flex',
@@ -313,7 +317,9 @@ const Sidebar = (): JSX.Element => {
               'h-0',
               'flex-1',
               'border-r',
+              // ray test touch <<
               'border-gray-200',
+              // ray test touch >>
               'bg-white'
             )}>
             <div
@@ -332,6 +338,7 @@ const Sidebar = (): JSX.Element => {
                   'flex-shrink-0',
                   'px-4'
                 )}>
+                {/* ray test touch << */}
                 <img
                   className={clsx(
                     'h-8',
@@ -339,6 +346,7 @@ const Sidebar = (): JSX.Element => {
                   )}
                   src='https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-800-text.svg'
                   alt='Workflow' />
+                {/* ray test touch >> */}
               </div>
               <nav
                 className={clsx(
@@ -400,7 +408,9 @@ const Sidebar = (): JSX.Element => {
                 'flex-shrink-0',
                 'flex',
                 'border-t',
+                // ray test touch <<
                 'border-gray-200',
+                // ray test touch >>
                 'p-4'
               )}>
               <a
@@ -470,6 +480,7 @@ const Sidebar = (): JSX.Element => {
             'sm:pl-3',
             'sm:pt-3'
           )}>
+          {/* ray test touch << */}
           <button
             className={clsx(
               '-ml-0.5',
@@ -496,6 +507,7 @@ const Sidebar = (): JSX.Element => {
               )}
               aria-hidden='true' />
           </button>
+          {/* ray test touch >> */}
         </div>
         <main
           className={clsx(
@@ -505,6 +517,7 @@ const Sidebar = (): JSX.Element => {
             'overflow-y-auto',
             'focus:outline-none'
           )}>
+          {/* ray test touch << */}
           <div className='py-6'>
             <div
               className={clsx(
@@ -545,6 +558,7 @@ const Sidebar = (): JSX.Element => {
               {/* /End replace */}
             </div>
           </div>
+          {/* ray test touch >> */}
         </main>
       </div>
     </div>
@@ -552,4 +566,3 @@ const Sidebar = (): JSX.Element => {
 };
 
 export default Sidebar;
-// ray test touch >>
