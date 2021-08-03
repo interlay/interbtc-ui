@@ -313,7 +313,7 @@ const IssueRequestsTable = (): JSX.Element => {
           <h2
             className={clsx(
               'text-2xl',
-              'font-bold'
+              'font-medium'
             )}>
             {t('issue_page.issue_requests')}
           </h2>
