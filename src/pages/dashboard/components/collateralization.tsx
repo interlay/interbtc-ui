@@ -3,9 +3,10 @@ import InterlayRouterLink from 'components/UI/InterlayLink/router';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
+import { BTCAmount } from '@interlay/monetary-js';
 import { StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
-import { safeRoundTwoDecimals } from '../../../common/utils/utils';
+import { displayMonetaryAmount, safeRoundTwoDecimals } from '../../../common/utils/utils';
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
 import clsx from 'clsx';
@@ -18,7 +19,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
   const { t } = useTranslation();
 
   const [systemCollateralization, setSystemCollateralization] = useState('0');
-  const [issuablePolkaBTC, setIssuablePolkaBTC] = useState('0');
+  const [issuablePolkaBTC, setIssuablePolkaBTC] = useState(BTCAmount.zero);
   const [secureCollateralThreshold, setSecureCollateralThreshold] = useState('150');
   const [failed, setFailed] = useState(false);
   const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
@@ -38,7 +39,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
       if (!polkaBtcLoaded) return;
       try {
         const issuablePolkaBTC = await window.polkaBTC.vaults.getTotalIssuableAmount();
-        setIssuablePolkaBTC(issuablePolkaBTC?.toHuman() || '0');
+        setIssuablePolkaBTC(issuablePolkaBTC);
       } catch (error) {
         console.log('[Collateralization useEffect] error.message => ', error.message);
         setFailed(true);
@@ -107,11 +108,11 @@ export default function Collateralization({ linkButton }: CollateralizationProps
           {failed ? (
             <>{t('no_data')}</>
           ) : (
-            issuablePolkaBTC === '0' ? (
+            issuablePolkaBTC.eq(BTCAmount.zero) ? (
               <>{t('loading')}</>
             ) : (
               <>
-                <span className='inline-block'>{`${safeRoundTwoDecimals(issuablePolkaBTC)} interBTC`}</span>
+                <span className='inline-block'>{`${displayMonetaryAmount(issuablePolkaBTC)} interBTC`}</span>
                 <span className='inline-block'>{t('dashboard.vault.capacity')}</span>
               </>
             )
