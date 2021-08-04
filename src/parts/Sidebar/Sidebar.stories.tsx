@@ -4,18 +4,20 @@ import {
   Meta
 } from '@storybook/react';
 
-import Sidebar from './';
+import Sidebar, { Props } from './';
 
-const Template: Story = args => <Sidebar {...args} />;
+const Template: Story<Props> = args => <Sidebar {...args} />;
 
 const Default = Template.bind({});
-Default.args = {};
+Default.args = {
+  children: 'children'
+};
 
 export {
   Sidebar
 };
 
 export default {
-  title: 'Sidebar',
+  title: 'parts/Sidebar',
   component: Sidebar
 } as Meta;

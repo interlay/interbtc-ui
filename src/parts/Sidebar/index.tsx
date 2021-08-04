@@ -28,7 +28,13 @@ const navigation = [
   { name: 'Reports', href: '#', icon: ChartBarIcon, current: false }
 ];
 
-const Sidebar = (): JSX.Element => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const Sidebar = ({
+  children
+}: Props): JSX.Element => {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
 
   return (
@@ -501,52 +507,15 @@ const Sidebar = (): JSX.Element => {
             'overflow-y-auto',
             'focus:outline-none'
           )}>
-          {/* ray test touch << */}
-          <div className='py-6'>
-            <div
-              className={clsx(
-                'max-w-7xl',
-                'mx-auto',
-                'px-4',
-                'sm:px-6',
-                'md:px-8'
-              )}>
-              <h1
-                className={clsx(
-                  'text-2xl',
-                  'font-semibold',
-                  'text-gray-900'
-                )}>
-                Dashboard
-              </h1>
-            </div>
-            <div
-              className={clsx(
-                'max-w-7xl',
-                'mx-auto',
-                'px-4',
-                'sm:px-6',
-                'md:px-8'
-              )}>
-              {/* Replace with your content */}
-              <div className='py-4'>
-                <div
-                  className={clsx(
-                    'border-4',
-                    'border-dashed',
-                    'border-gray-200',
-                    'rounded-lg',
-                    'h-96'
-                  )} />
-              </div>
-              {/* /End replace */}
-            </div>
-          </div>
-          {/* ray test touch >> */}
+          {children}
         </main>
       </div>
     </div>
   );
+};
+
+export type {
+  Props
 };
 
 export default Sidebar;
