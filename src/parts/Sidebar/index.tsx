@@ -194,6 +194,7 @@ const Sidebar = ({
                   </button>
                 </div>
               </Transition.Child>
+              {/* TODO: should componentize */}
               <div
                 className={clsx(
                   'flex-1',
@@ -209,13 +210,9 @@ const Sidebar = ({
                     'items-center',
                     'px-4'
                   )}>
-                  <img
-                    className={clsx(
-                      'h-8',
-                      'w-auto'
-                    )}
-                    src='https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-800-text.svg'
-                    alt='Workflow' />
+                  <InterBTCHorizontalRGBIcon
+                    width={141.6}
+                    height={36} />
                 </div>
                 <nav
                   className={clsx(
@@ -292,56 +289,9 @@ const Sidebar = ({
                   'border-gray-200',
                   'p-4'
                 )}>
-                <a
-                  href='#sidebar'
-                  className={clsx(
-                    'flex-shrink-0',
-                    'group',
-                    'block'
-                  )}>
-                  <div
-                    className={clsx(
-                      'flex',
-                      'items-center'
-                    )}>
-                    <div>
-                      <img
-                        className={clsx(
-                          'inline-block',
-                          'h-10',
-                          'w-10',
-                          'rounded-full'
-                        )}
-                        // eslint-disable-next-line max-len
-                        src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-                        alt='' />
-                    </div>
-                    <div className='ml-3'>
-                      <p
-                        className={clsx(
-                          'text-base',
-                          'font-medium',
-                          // ray test touch <<
-                          'text-gray-700',
-                          'group-hover:text-gray-900'
-                          // ray test touch >>
-                        )}>
-                        Tom Cook
-                      </p>
-                      <p
-                        className={clsx(
-                          'text-sm',
-                          'font-medium',
-                          // ray test touch <<
-                          'text-gray-500',
-                          'group-hover:text-gray-700'
-                          // ray test touch >>
-                        )}>
-                        View profile
-                      </p>
-                    </div>
-                  </div>
-                </a>
+                {/* ray test touch << */}
+                Social Media
+                {/* ray test touch >> */}
               </div>
             </div>
           </Transition.Child>
@@ -469,57 +419,9 @@ const Sidebar = ({
                 'border-interlayHaiti-100',
                 'p-4'
               )}>
-              <a
-                href='#sidebar'
-                className={clsx(
-                  'flex-shrink-0',
-                  'w-full',
-                  'group',
-                  'block'
-                )}>
-                <div
-                  className={clsx(
-                    'flex',
-                    'items-center'
-                  )}>
-                  <div>
-                    <img
-                      className={clsx(
-                        'inline-block',
-                        'h-9',
-                        'w-9',
-                        'rounded-full'
-                      )}
-                      // eslint-disable-next-line max-len
-                      src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-                      alt='' />
-                  </div>
-                  <div className='ml-3'>
-                    <p
-                      className={clsx(
-                        'text-sm',
-                        'font-medium',
-                        // ray test touch <<
-                        'text-gray-700',
-                        'group-hover:text-gray-900'
-                        // ray test touch >>
-                      )}>
-                      Tom Cook
-                    </p>
-                    <p
-                      className={clsx(
-                        'text-xs',
-                        'font-medium',
-                        // ray test touch <<
-                        'text-gray-500',
-                        'group-hover:text-gray-700'
-                        // ray test touch >>
-                      )}>
-                      View profile
-                    </p>
-                  </div>
-                </div>
-              </a>
+              {/* ray test touch << */}
+              Social Media
+              {/* ray test touch >> */}
             </div>
           </div>
         </div>
