@@ -23,7 +23,7 @@ It is implemented as a collection of open-source Substrate modules using Rust: <
 - [yarn](https://github.com/yarnpkg/yarn)
 - [docker-compose](https://docs.docker.com/compose/)
 
-You can visit [beta.polkabtc.io](https://beta.polkabtc.io/) for the latest stable version of the website.
+You can visit [bridge.interlay.io](https://bridge.interlay.io/) for the latest stable version of the website.
 
 ## Quickstart
 

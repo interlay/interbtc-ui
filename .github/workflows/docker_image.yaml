@@ -10,7 +10,6 @@ on:
       - master
       - prod
       - dev
-      - beta
     tags: '*'
 
 jobs:

@@ -200,7 +200,7 @@
     "retry_new_redeem": "You can now create a new redeem request with another vault.",
     "premium_redeem_info": "If you select premium redeem, you will try to redeem with a vault that is below the secure collateral threshold. This operation has a higher risk since the vault might be liquidated. For this higher risk, you will receive a compensation.",
     "vault_has_time_to_complete": "The Vault has to complete the transaction in: ",
-    "btc_block_height":"BTC block height"
+    "btc_block_height": "BTC block height"
   },
   "transfer_page": {
     "successfully_transferred": "Successfully transferred.",
@@ -210,7 +210,7 @@
     "burn_interbtc": "Burn interBTC in exchange for DOT",
     "dot_earned": "DOT earned",
     "burn": "Burn",
-    "please_enter_the_amount":"Please enter the amount.",
+    "please_enter_the_amount": "Please enter the amount.",
     "successfully_burned": "Successfully burned."
   },
   "dashboard": {
@@ -226,7 +226,7 @@
     "synced": "Synced",
     "out_of_sync": "Out of Sync",
     "capacity": "Capacity",
-    "total_value_locked":"Total Value Locked",
+    "total_value_locked": "Total Value Locked",
     "collators": {
       "total_collators_chart": "Total active collators",
       "active_collators": "Active Collators"
@@ -258,8 +258,8 @@
       "block_number": "Block {{number}}",
       "relay_is": "BTC Relay is",
       "blockstream_verify_link": "Verify on blockstream.info",
-      "parachain_block_height":"BTC Parachain block height",
-      "core_block_height":"Core block height"
+      "parachain_block_height": "BTC Parachain block height",
+      "core_block_height": "Core block height"
     },
     "oracles": {
       "oracles": "Oracles",
@@ -305,7 +305,7 @@
       "total_collateral_locked": "Total Collateral Locked",
       "per_day_collateral_locked": "Collateral Locked Per Day",
       "total_vaults_chart": "Total number of vaults",
-      "capacity":"Capacity",
+      "capacity": "Capacity",
       "vaults": "Vaults"
     },
     "parachain": {
@@ -361,7 +361,7 @@
     "enter-interbtc-amount-desc-1": "Please enter the amount of interBTC you would like to issue.",
     "enter-interbtc-amount-desc-2": "You will have to lock the amount of interBTC together with a small fee.",
     "enter-interbtc-amount-desc-3": "Please enter an amount greater than the Bitcoin dust limit",
-    "validation_max_value": "The maximum amount you can issue (per request) during the beta testnet is 1.0 interBTC. There will be NO restrictions on mainnet. Please enter a lower amount.",
+    "validation_max_value": "The maximum amount you can issue (per request) on the testnet is 1.0 interBTC. Please enter a lower amount.",
     "validation_min_value": "Please enter an amount greater than Bitcoin dust limit (",
     "enter_valid_amount": "Please enter a valid amount.",
     "proof_data": "Fetching proof data for Bitcoin transaction: {{txId}}",
@@ -508,8 +508,8 @@
     "tip_collateralization": "Collateralization rate for locked BTC. 'Pending' includes in-progress issue requests.",
     "pending_table_subcell": "Pending: ",
     "locked_dot": "Locked Collateral DOT",
-    "fees_earned_dot":"Fees earned DOT",
-    "fees_earned_interbtc":"Fees earned interBTC",
+    "fees_earned_dot": "Fees earned DOT",
+    "fees_earned_interbtc": "Fees earned interBTC",
     "remaining_capacity": "Remaining interBTC capacity"
   },
   "about": {
@@ -528,7 +528,7 @@
     "alpha_testnet": "interBTC User Guide (Alpha Testnet)"
   },
   "testnet": {
-    "warning": "Notice: All assets in the beta testnet are for testing purposes only and have no real value."
+    "warning": "Notice: All testnet assets are for testing purposes only and have no real value."
   },
   "maintenance": {
     "type": {
@@ -565,6 +565,6 @@
     "subscribe": "Subscribe",
     "join_newsletter_description": "Join our newsletter to get updates about upcoming challenges and interBTC news!",
     "all_rights_reserved": "All Rights Reserved",
-    "privacy":"Privacy"
+    "privacy": "Privacy"
   }
 }
