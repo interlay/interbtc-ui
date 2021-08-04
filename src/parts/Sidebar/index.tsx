@@ -313,9 +313,7 @@ const Sidebar = (): JSX.Element => {
               'h-0',
               'flex-1',
               'border-r',
-              // ray test touch <<
-              'border-gray-200',
-              // ray test touch >>
+              'border-interlayHaiti-100',
               'bg-white'
             )}>
             <div
@@ -398,9 +396,7 @@ const Sidebar = (): JSX.Element => {
                 'flex-shrink-0',
                 'flex',
                 'border-t',
-                // ray test touch <<
-                'border-gray-200',
-                // ray test touch >>
+                'border-interlayHaiti-100',
                 'p-4'
               )}>
               <a
@@ -484,10 +480,8 @@ const Sidebar = (): JSX.Element => {
               'w-12',
               'justify-center',
               'rounded-md',
-              // ray test touch <<
-              'text-gray-500',
-              'hover:text-gray-900'
-              // ray test touch >>
+              'text-interlayHaiti-400',
+              'hover:text-interlayHaiti'
             )}
             onClick={() => setSidebarOpen(true)}>
             <span className='sr-only'>Open sidebar</span>
