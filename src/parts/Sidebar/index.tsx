@@ -19,13 +19,13 @@ import clsx from 'clsx';
 import InterlayButtonBase from 'components/UI/InterlayButtonBase';
 import { ReactComponent as InterBTCHorizontalRGBIcon } from 'assets/img/interbtc-horizontal-rgb.svg';
 
-const navigation = [
+const navigationItems = [
+  { name: 'Bridge', href: '#', icon: FolderIcon, current: false },
+  { name: 'Transactions', href: '#', icon: CalendarIcon, current: false },
   { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-  { name: 'Team', href: '#', icon: UsersIcon, current: false },
-  { name: 'Projects', href: '#', icon: FolderIcon, current: false },
-  { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-  { name: 'Documents', href: '#', icon: InboxIcon, current: false },
-  { name: 'Reports', href: '#', icon: ChartBarIcon, current: false }
+  { name: 'Challenges', href: '#', icon: UsersIcon, current: false },
+  { name: 'Feedback', href: '#', icon: InboxIcon, current: false },
+  { name: 'Docs', href: '#', icon: ChartBarIcon, current: false }
 ];
 
 interface Props {
@@ -80,7 +80,9 @@ const Sidebar = ({
               className={clsx(
                 'fixed',
                 'inset-0',
+                // ray test touch <<
                 'bg-gray-600',
+                // ray test touch >>
                 'bg-opacity-75'
               )} />
           </Transition.Child>
@@ -189,20 +191,24 @@ const Sidebar = ({
                     'px-2',
                     'space-y-1'
                   )}>
-                  {navigation.map(item => (
+                  {navigationItems.map(item => (
                     <a
                       key={item.name}
                       href={item.href}
                       className={clsx(
                         item.current ?
                           clsx(
+                            // ray test touch <<
                             'bg-gray-100',
                             'text-gray-900'
+                            // ray test touch >>
                           ) :
                           clsx(
+                            // ray test touch <<
                             'text-gray-600',
                             'hover:bg-gray-50',
                             'hover:text-gray-900'
+                            // ray test touch >>
                           ),
                         clsx(
                           'group',
@@ -218,10 +224,14 @@ const Sidebar = ({
                       <item.icon
                         className={clsx(
                           item.current ?
+                            // ray test touch <<
                             'text-gray-500' :
+                            // ray test touch >>
                             clsx(
+                              // ray test touch <<
                               'text-gray-400',
                               'group-hover:text-gray-500'
+                              // ray test touch >>
                             ),
                           clsx(
                             'mr-4',
@@ -273,8 +283,10 @@ const Sidebar = ({
                         className={clsx(
                           'text-base',
                           'font-medium',
+                          // ray test touch <<
                           'text-gray-700',
                           'group-hover:text-gray-900'
+                          // ray test touch >>
                         )}>
                         Tom Cook
                       </p>
@@ -282,8 +294,10 @@ const Sidebar = ({
                         className={clsx(
                           'text-sm',
                           'font-medium',
+                          // ray test touch <<
                           'text-gray-500',
                           'group-hover:text-gray-700'
+                          // ray test touch >>
                         )}>
                         View profile
                       </p>
@@ -350,20 +364,24 @@ const Sidebar = ({
                   'bg-white',
                   'space-y-1'
                 )}>
-                {navigation.map(item => (
+                {navigationItems.map(item => (
                   <a
                     key={item.name}
                     href={item.href}
                     className={clsx(
                       item.current ?
                         clsx(
+                          // ray test touch <<
                           'bg-gray-100',
                           'text-gray-900'
+                          // ray test touch >>
                         ) :
                         clsx(
+                          // ray test touch <<
                           'text-gray-600',
                           'hover:bg-gray-50',
                           'hover:text-gray-900'
+                          // ray test touch >>
                         ),
                       clsx(
                         'group',
@@ -379,10 +397,14 @@ const Sidebar = ({
                     <item.icon
                       className={clsx(
                         item.current ?
+                          // ray test touch <<
                           'text-gray-500' :
+                          // ray test touch >>
                           clsx(
+                            // ray test touch <<
                             'text-gray-400',
                             'group-hover:text-gray-500'
+                            // ray test touch >>
                           ),
                         clsx(
                           'mr-3',
@@ -435,8 +457,10 @@ const Sidebar = ({
                       className={clsx(
                         'text-sm',
                         'font-medium',
+                        // ray test touch <<
                         'text-gray-700',
                         'group-hover:text-gray-900'
+                        // ray test touch >>
                       )}>
                       Tom Cook
                     </p>
@@ -444,8 +468,10 @@ const Sidebar = ({
                       className={clsx(
                         'text-xs',
                         'font-medium',
+                        // ray test touch <<
                         'text-gray-500',
                         'group-hover:text-gray-700'
+                        // ray test touch >>
                       )}>
                       View profile
                     </p>

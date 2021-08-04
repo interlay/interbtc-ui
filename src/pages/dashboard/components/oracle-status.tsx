@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { PAGES } from 'utils/constants/links';
 import DashboardCard from 'pages/dashboard/DashboardCard';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
-import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 

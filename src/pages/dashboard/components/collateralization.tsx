@@ -1,5 +1,5 @@
 import { useEffect, useState, ReactElement } from 'react';
-import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useSelector } from 'react-redux';

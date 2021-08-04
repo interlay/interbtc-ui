@@ -13,7 +13,7 @@ import InterlayModal, {
   Props as ModalProps,
   InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
-import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import {
   PAGES,
   QUERY_PARAMETERS

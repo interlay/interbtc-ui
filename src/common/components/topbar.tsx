@@ -15,7 +15,7 @@ import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 import AccountModal from 'parts/AccountModal';
 import InterlayLink from 'components/UI/InterlayLink';
-import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';

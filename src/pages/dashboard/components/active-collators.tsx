@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import LineChartComponent from './line-chart-component';
