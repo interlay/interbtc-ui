@@ -15,19 +15,19 @@ export const BTC_TRANSACTION_ID_REGEX = /[a-fA-F0-9]{64}/;
 export const NUMERIC_STRING_REGEX = /^[0-9]+([.][0-9]+)?$/;
 
 export const BITCOIN_NETWORK = (process.env.REACT_APP_BITCOIN_NETWORK || 'testnet') as
-    | 'mainnet'
-    | 'testnet'
-    | 'regtest';
+  | 'mainnet'
+  | 'testnet'
+  | 'regtest';
 export const BITCOIN_REGTEST_URL = process.env.REACT_APP_BITCOIN_REGTEST_URL || 'http://localhost:3002';
 
 export const STORE_NAME = 'pbtc-store-2';
 
 export const BTC_ADDRESS_REGEX =
-    BITCOIN_NETWORK === 'mainnet' ?
-      BTC_MAINNET_REGEX :
-      BITCOIN_NETWORK === 'testnet' ?
-        BTC_TESTNET_REGEX :
-        BTC_REGTEST_REGEX;
+  BITCOIN_NETWORK === 'mainnet' ?
+    BTC_MAINNET_REGEX :
+    BITCOIN_NETWORK === 'testnet' ?
+      BTC_TESTNET_REGEX :
+      BTC_REGTEST_REGEX;
 
 export const PARACHAIN_URL = process.env.REACT_APP_PARACHAIN_URL || 'ws://127.0.0.1:9944';
 export const DEFAULT_ACCOUNT_SEED = process.env.REACT_APP_DEFAULT_ACCOUNT_SEED;
@@ -61,7 +61,3 @@ export const VAULT_STATUS_LIQUIDATION = 'Being liquidated';
 // ####################################################
 export const BTC_RELAY_DELAY_WARNING = 6;
 export const BTC_RELAY_DELAY_CRITICAL = 12;
-
-// #######################################
-// Beta
-export const BETA_LAUNCH_DATE = 1614675600; // Tue Mar 02 2021 09:00:00 GMT+0000
