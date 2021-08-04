@@ -1,6 +1,9 @@
 
-import { Fragment, useState } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
+import * as React from 'react';
+import {
+  Dialog,
+  Transition
+} from '@headlessui/react';
 import {
   CalendarIcon,
   ChartBarIcon,
@@ -13,6 +16,9 @@ import {
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
 
+import InterlayButtonBase from 'components/UI/InterlayButtonBase';
+import { ReactComponent as InterBTCHorizontalRGBIcon } from 'assets/img/interbtc-horizontal-rgb.svg';
+
 const navigation = [
   { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
   { name: 'Team', href: '#', icon: UsersIcon, current: false },
@@ -23,7 +29,7 @@ const navigation = [
 ];
 
 const Sidebar = (): JSX.Element => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
 
   return (
     <div
@@ -35,7 +41,7 @@ const Sidebar = (): JSX.Element => {
       )}>
       <Transition.Root
         show={sidebarOpen}
-        as={Fragment}>
+        as={React.Fragment}>
         <Dialog
           as='div'
           static
@@ -49,7 +55,7 @@ const Sidebar = (): JSX.Element => {
           open={sidebarOpen}
           onClose={setSidebarOpen}>
           <Transition.Child
-            as={Fragment}
+            as={React.Fragment}
             enter={clsx(
               'transition-opacity',
               'ease-linear',
@@ -73,7 +79,7 @@ const Sidebar = (): JSX.Element => {
               )} />
           </Transition.Child>
           <Transition.Child
-            as={Fragment}
+            as={React.Fragment}
             enter={clsx(
               'transition',
               'ease-in-out',
@@ -101,7 +107,7 @@ const Sidebar = (): JSX.Element => {
                 'bg-white'
               )}>
               <Transition.Child
-                as={Fragment}
+                as={React.Fragment}
                 enter={clsx(
                   'ease-in-out',
                   'duration-300'
@@ -285,16 +291,9 @@ const Sidebar = (): JSX.Element => {
             className={clsx(
               'flex-shrink-0',
               'w-14'
-            )}>
-            {/* ray test touch << */}
-            {/* Force sidebar to shrink to fit close icon */}
-            {/* ray test touch >> */}
-          </div>
+            )} />
         </Dialog>
       </Transition.Root>
-      {/* ray test touch << */}
-      {/* Static sidebar for desktop */}
-      {/* ray test touch >> */}
       <div
         className={clsx(
           'hidden',
@@ -307,9 +306,6 @@ const Sidebar = (): JSX.Element => {
             'flex-col',
             'w-64'
           )}>
-          {/* ray test touch << */}
-          {/* Sidebar component, swap this element with another sidebar if you like */}
-          {/* ray test touch >> */}
           <div
             className={clsx(
               'flex',
@@ -338,15 +334,9 @@ const Sidebar = (): JSX.Element => {
                   'flex-shrink-0',
                   'px-4'
                 )}>
-                {/* ray test touch << */}
-                <img
-                  className={clsx(
-                    'h-8',
-                    'w-auto'
-                  )}
-                  src='https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-800-text.svg'
-                  alt='Workflow' />
-                {/* ray test touch >> */}
+                <InterBTCHorizontalRGBIcon
+                  width={141.6}
+                  height={36} />
               </div>
               <nav
                 className={clsx(
@@ -480,23 +470,24 @@ const Sidebar = (): JSX.Element => {
             'sm:pl-3',
             'sm:pt-3'
           )}>
-          {/* ray test touch << */}
-          <button
+          <InterlayButtonBase
             className={clsx(
+              'focus:outline-none',
+              'focus:ring',
+              'focus:border-interlayDenim-300',
+              'focus:ring-interlayDenim-200',
+              'focus:ring-opacity-50',
+
               '-ml-0.5',
               '-mt-0.5',
               'h-12',
               'w-12',
-              'inline-flex',
-              'items-center',
               'justify-center',
               'rounded-md',
+              // ray test touch <<
               'text-gray-500',
-              'hover:text-gray-900',
-              'focus:outline-none',
-              'focus:ring-2',
-              'focus:ring-inset',
-              'focus:ring-indigo-500'
+              'hover:text-gray-900'
+              // ray test touch >>
             )}
             onClick={() => setSidebarOpen(true)}>
             <span className='sr-only'>Open sidebar</span>
@@ -506,8 +497,7 @@ const Sidebar = (): JSX.Element => {
                 'w-6'
               )}
               aria-hidden='true' />
-          </button>
-          {/* ray test touch >> */}
+          </InterlayButtonBase>
         </div>
         <main
           className={clsx(
