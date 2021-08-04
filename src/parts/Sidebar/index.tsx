@@ -1,5 +1,7 @@
 
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
+import { matchPath } from 'react-router';
 import {
   Dialog,
   Transition
@@ -17,15 +19,43 @@ import {
 import clsx from 'clsx';
 
 import InterlayButtonBase from 'components/UI/InterlayButtonBase';
+import InterlayRouterNavLink from 'components/UI/InterlayRouterNavLink';
+import { PAGES } from 'utils/constants/links';
 import { ReactComponent as InterBTCHorizontalRGBIcon } from 'assets/img/interbtc-horizontal-rgb.svg';
 
-const navigationItems = [
-  { name: 'Bridge', href: '#', icon: FolderIcon, current: false },
-  { name: 'Transactions', href: '#', icon: CalendarIcon, current: false },
-  { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-  { name: 'Challenges', href: '#', icon: UsersIcon, current: false },
-  { name: 'Feedback', href: '#', icon: InboxIcon, current: false },
-  { name: 'Docs', href: '#', icon: ChartBarIcon, current: false }
+const NAVIGATION_ITEMS = [
+  {
+    name: 'Bridge',
+    href: PAGES.HOME,
+    icon: FolderIcon
+  },
+  {
+    name: 'Transactions',
+    href: PAGES.TRANSACTIONS,
+    icon: CalendarIcon
+  },
+  {
+    name: 'Dashboard',
+    href: PAGES.DASHBOARD,
+    icon: HomeIcon
+  },
+  {
+    name: 'Challenges',
+    href: PAGES.CHALLENGES,
+    icon: UsersIcon
+  },
+  {
+    name: 'Feedback',
+    href: PAGES.FEEDBACK,
+    icon: InboxIcon
+  },
+  // ray test touch <<
+  {
+    name: 'Docs',
+    href: '#',
+    icon: ChartBarIcon
+  }
+  // ray test touch >>
 ];
 
 interface Props {
@@ -36,6 +66,8 @@ const Sidebar = ({
   children
 }: Props): JSX.Element => {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
+
+  const location = useLocation();
 
   return (
     <div
@@ -191,26 +223,32 @@ const Sidebar = ({
                     'px-2',
                     'space-y-1'
                   )}>
-                  {navigationItems.map(item => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className={clsx(
-                        item.current ?
-                          clsx(
-                            // ray test touch <<
-                            'bg-gray-100',
-                            'text-gray-900'
-                            // ray test touch >>
-                          ) :
-                          clsx(
-                            // ray test touch <<
-                            'text-gray-600',
-                            'hover:bg-gray-50',
-                            'hover:text-gray-900'
-                            // ray test touch >>
-                          ),
-                        clsx(
+                  {NAVIGATION_ITEMS.map(navigationItem => {
+                    const match = matchPath(location.pathname, {
+                      path: navigationItem.href,
+                      exact: true,
+                      strict: false
+                    });
+
+                    return (
+                      <InterlayRouterNavLink
+                        key={navigationItem.name}
+                        to={navigationItem.href}
+                        className={clsx(
+                          match?.isExact ?
+                            clsx(
+                              // ray test touch <<
+                              'bg-gray-100',
+                              'text-gray-900'
+                              // ray test touch >>
+                            ) :
+                            clsx(
+                              // ray test touch <<
+                              'text-gray-600',
+                              'hover:bg-gray-50',
+                              'hover:text-gray-900'
+                              // ray test touch >>
+                            ),
                           'group',
                           'flex',
                           'items-center',
@@ -219,31 +257,31 @@ const Sidebar = ({
                           'text-base',
                           'font-medium',
                           'rounded-md'
-                        )
-                      )}>
-                      <item.icon
-                        className={clsx(
-                          item.current ?
-                            // ray test touch <<
-                            'text-gray-500' :
-                            // ray test touch >>
-                            clsx(
+                        )}>
+                        <navigationItem.icon
+                          className={clsx(
+                            match?.isExact ?
                               // ray test touch <<
-                              'text-gray-400',
-                              'group-hover:text-gray-500'
+                              'text-gray-500' :
                               // ray test touch >>
-                            ),
-                          clsx(
-                            'mr-4',
-                            'flex-shrink-0',
-                            'h-6',
-                            'w-6'
-                          )
-                        )}
-                        aria-hidden='true' />
-                      {item.name}
-                    </a>
-                  ))}
+                              clsx(
+                                // ray test touch <<
+                                'text-gray-400',
+                                'group-hover:text-gray-500'
+                                // ray test touch >>
+                              ),
+                            clsx(
+                              'mr-4',
+                              'flex-shrink-0',
+                              'h-6',
+                              'w-6'
+                            )
+                          )}
+                          aria-hidden='true' />
+                        {navigationItem.name}
+                      </InterlayRouterNavLink>
+                    );
+                  })}
                 </nav>
               </div>
               <div
@@ -364,26 +402,32 @@ const Sidebar = ({
                   'bg-white',
                   'space-y-1'
                 )}>
-                {navigationItems.map(item => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className={clsx(
-                      item.current ?
-                        clsx(
-                          // ray test touch <<
-                          'bg-gray-100',
-                          'text-gray-900'
-                          // ray test touch >>
-                        ) :
-                        clsx(
-                          // ray test touch <<
-                          'text-gray-600',
-                          'hover:bg-gray-50',
-                          'hover:text-gray-900'
-                          // ray test touch >>
-                        ),
-                      clsx(
+                {NAVIGATION_ITEMS.map(navigationItem => {
+                  const match = matchPath(location.pathname, {
+                    path: navigationItem.href,
+                    exact: true,
+                    strict: false
+                  });
+
+                  return (
+                    <InterlayRouterNavLink
+                      key={navigationItem.name}
+                      to={navigationItem.href}
+                      className={clsx(
+                        match?.isExact ?
+                          clsx(
+                            // ray test touch <<
+                            'bg-gray-100',
+                            'text-gray-900'
+                            // ray test touch >>
+                          ) :
+                          clsx(
+                            // ray test touch <<
+                            'text-gray-600',
+                            'hover:bg-gray-50',
+                            'hover:text-gray-900'
+                            // ray test touch >>
+                          ),
                         'group',
                         'flex',
                         'items-center',
@@ -392,31 +436,29 @@ const Sidebar = ({
                         'text-sm',
                         'font-medium',
                         'rounded-md'
-                      )
-                    )}>
-                    <item.icon
-                      className={clsx(
-                        item.current ?
-                          // ray test touch <<
-                          'text-gray-500' :
-                          // ray test touch >>
-                          clsx(
+                      )}>
+                      <navigationItem.icon
+                        className={clsx(
+                          match?.isExact ?
                             // ray test touch <<
-                            'text-gray-400',
-                            'group-hover:text-gray-500'
+                            'text-gray-500' :
                             // ray test touch >>
-                          ),
-                        clsx(
+                            clsx(
+                              // ray test touch <<
+                              'text-gray-400',
+                              'group-hover:text-gray-500'
+                              // ray test touch >>
+                            ),
                           'mr-3',
                           'flex-shrink-0',
                           'h-6',
                           'w-6'
-                        )
-                      )}
-                      aria-hidden='true' />
-                    {item.name}
-                  </a>
-                ))}
+                        )}
+                        aria-hidden='true' />
+                      {navigationItem.name}
+                    </InterlayRouterNavLink>
+                  );
+                })}
               </nav>
             </div>
             <div
