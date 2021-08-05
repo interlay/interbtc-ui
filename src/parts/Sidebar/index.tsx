@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 
 import SidebarNavLink from './SidebarNavLink';
 import InterlayButtonBase from 'components/UI/InterlayButtonBase';
+import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayLink from 'components/UI/InterlayLink';
 import {
   INTERLAY_COMPANY,
@@ -221,9 +222,11 @@ const Sidebar = ({
                     'items-center',
                     'px-4'
                   )}>
-                  <InterBTCHorizontalRGBIcon
-                    width={141.6}
-                    height={36} />
+                  <InterlayRouterLink to={PAGES.HOME}>
+                    <InterBTCHorizontalRGBIcon
+                      width={141.6}
+                      height={36} />
+                  </InterlayRouterLink>
                 </div>
                 <nav
                   className={clsx(
@@ -356,9 +359,11 @@ const Sidebar = ({
                   'flex-shrink-0',
                   'px-4'
                 )}>
-                <InterBTCHorizontalRGBIcon
-                  width={141.6}
-                  height={36} />
+                <InterlayRouterLink to={PAGES.HOME}>
+                  <InterBTCHorizontalRGBIcon
+                    width={141.6}
+                    height={36} />
+                </InterlayRouterLink>
               </div>
               <nav
                 className={clsx(
