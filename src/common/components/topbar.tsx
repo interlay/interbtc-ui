@@ -156,7 +156,7 @@ const Topbar = (props: TopbarProps): JSX.Element => {
                 </InterlayRouterLink>
                 <InterlayLink
                   className='p-2'
-                  href='https://docs.polkabtc.io/#/'
+                  href='https://docs.interlay.io/#/'
                   target='_blank'
                   rel='noopener noreferrer'>
                   {t('nav_docs')}

@@ -18,10 +18,13 @@ import {
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
 
+import SidebarNavLink from './SidebarNavLink';
 import InterlayButtonBase from 'components/UI/InterlayButtonBase';
-import InterlayRouterNavLink from 'components/UI/InterlayRouterNavLink';
 import InterlayLink from 'components/UI/InterlayLink';
-import { INTERLAY_COMPANY } from 'config/links';
+import {
+  INTERLAY_COMPANY,
+  INTERLAY_DOCS
+} from 'config/links';
 import { PAGES } from 'utils/constants/links';
 import { ReactComponent as InterBTCHorizontalRGBIcon } from 'assets/img/interbtc-horizontal-rgb.svg';
 import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
@@ -52,13 +55,16 @@ const NAVIGATION_ITEMS = [
     href: PAGES.FEEDBACK,
     icon: InboxIcon
   },
-  // ray test touch <<
   {
     name: 'Docs',
-    href: '#',
-    icon: ChartBarIcon
+    href: INTERLAY_DOCS,
+    icon: ChartBarIcon,
+    external: true,
+    rest: {
+      target: '_blank',
+      rel: 'noopener noreferrer'
+    }
   }
-  // ray test touch >>
 ];
 
 interface Props {
@@ -230,9 +236,11 @@ const Sidebar = ({
                     });
 
                     return (
-                      <InterlayRouterNavLink
+                      <SidebarNavLink
                         key={navigationItem.name}
-                        to={navigationItem.href}
+                        external={!!navigationItem.external}
+                        {...navigationItem.rest}
+                        href={navigationItem.href}
                         className={clsx(
                           match?.isExact ?
                             clsx(
@@ -276,7 +284,7 @@ const Sidebar = ({
                           )}
                           aria-hidden='true' />
                         {navigationItem.name}
-                      </InterlayRouterNavLink>
+                      </SidebarNavLink>
                     );
                   })}
                 </nav>
@@ -365,9 +373,11 @@ const Sidebar = ({
                   });
 
                   return (
-                    <InterlayRouterNavLink
+                    <SidebarNavLink
                       key={navigationItem.name}
-                      to={navigationItem.href}
+                      external={!!navigationItem.external}
+                      {...navigationItem.rest}
+                      href={navigationItem.href}
                       className={clsx(
                         match?.isExact ?
                           clsx(
@@ -405,7 +415,7 @@ const Sidebar = ({
                         )}
                         aria-hidden='true' />
                       {navigationItem.name}
-                    </InterlayRouterNavLink>
+                    </SidebarNavLink>
                   );
                 })}
               </nav>

@@ -7,10 +7,12 @@ import {
 const InterlayRouterNavLink = ({
   children,
   ...rest
-}: NavLinkProps): JSX.Element => (
+}: Props): JSX.Element => (
   <NavLink {...rest}>
     {children}
   </NavLink>
 );
+
+export type Props = NavLinkProps;
 
 export default InterlayRouterNavLink;
