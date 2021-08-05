@@ -2,7 +2,7 @@
 import InterlayRouterNavLink, { Props as InterlayRouterNavLinkProps } from 'components/UI/InterlayRouterNavLink';
 import InterlayLink, { Props as InterlayLinkProps } from 'components/UI/InterlayLink';
 
-interface Props {
+interface CustomProps {
   external: boolean;
   href: string;
 }
@@ -12,7 +12,7 @@ const SidebarNavLink = ({
   href,
   children,
   ...rest
-}: (Props & InterlayRouterNavLinkProps) | (Props & InterlayLinkProps)): JSX.Element => (
+}: (CustomProps & InterlayRouterNavLinkProps) | (CustomProps & InterlayLinkProps)): JSX.Element => (
   <>
     {external ? (
       <InterlayLink

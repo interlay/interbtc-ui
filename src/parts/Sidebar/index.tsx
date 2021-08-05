@@ -1,32 +1,20 @@
 
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
-import { matchPath } from 'react-router';
 import {
   Dialog,
   Transition
 } from '@headlessui/react';
 import {
-  CalendarIcon,
-  ChartBarIcon,
-  FolderIcon,
-  HomeIcon,
-  InboxIcon,
   MenuIcon,
-  UsersIcon,
   XIcon
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
-import { useTranslation } from 'react-i18next';
 
-import SidebarNavLink from './SidebarNavLink';
+import Navigation from './Navigation';
 import InterlayButtonBase from 'components/UI/InterlayButtonBase';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayLink from 'components/UI/InterlayLink';
-import {
-  INTERLAY_COMPANY,
-  INTERLAY_DOCS
-} from 'config/links';
+import { INTERLAY_COMPANY } from 'config/links';
 import { PAGES } from 'utils/constants/links';
 import { ReactComponent as InterBTCHorizontalRGBIcon } from 'assets/img/interbtc-horizontal-rgb.svg';
 import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
@@ -35,52 +23,10 @@ interface Props {
   children: React.ReactNode;
 }
 
-const NAVIGATION_ITEMS = [
-  {
-    name: 'nav_bridge',
-    href: PAGES.HOME,
-    icon: FolderIcon
-  },
-  {
-    name: 'nav_transactions',
-    href: PAGES.TRANSACTIONS,
-    icon: CalendarIcon
-  },
-  {
-    name: 'nav_dashboard',
-    href: PAGES.DASHBOARD,
-    icon: HomeIcon
-  },
-  {
-    name: 'nav_challenges',
-    href: PAGES.CHALLENGES,
-    icon: UsersIcon
-  },
-  {
-    name: 'nav_feedback',
-    href: PAGES.FEEDBACK,
-    icon: InboxIcon
-  },
-  {
-    name: 'nav_docs',
-    href: INTERLAY_DOCS,
-    icon: ChartBarIcon,
-    external: true,
-    rest: {
-      target: '_blank',
-      rel: 'noopener noreferrer'
-    }
-  }
-];
-
 const Sidebar = ({
   children
 }: Props): JSX.Element => {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
-
-  const location = useLocation();
-
-  const { t } = useTranslation();
 
   return (
     <div
@@ -228,79 +174,16 @@ const Sidebar = ({
                       height={36} />
                   </InterlayRouterLink>
                 </div>
-                <nav
-                  className={clsx(
-                    'mt-5',
-                    'px-2',
-                    'space-y-1'
-                  )}>
-                  {NAVIGATION_ITEMS.map(navigationItem => {
-                    const match = matchPath(location.pathname, {
-                      path: navigationItem.href,
-                      exact: true,
-                      strict: false
-                    });
-
-                    return (
-                      <SidebarNavLink
-                        key={navigationItem.name}
-                        external={!!navigationItem.external}
-                        {...navigationItem.rest}
-                        href={navigationItem.href}
-                        className={clsx(
-                          match?.isExact ?
-                            clsx(
-                              // TODO: could replace `gray` with `interlayHaiti`
-                              'bg-interlayHaiti-100',
-                              // 'bg-gray-100',
-                              // 'text-interlayHaiti'
-                              'text-gray-900'
-                            ) :
-                            clsx(
-                              // 'text-interlayHaiti-400',
-                              'text-gray-600',
-                              'hover:bg-interlayHaiti-50',
-                              // 'hover:bg-gray-50',
-                              // 'hover:text-interlayHaiti'
-                              'hover:text-gray-900'
-                            ),
-                          'group',
-                          'flex',
-                          'items-center',
-                          'px-2',
-                          'py-2',
-                          'text-base',
-                          'font-medium',
-                          'rounded-md'
-                        )}>
-                        <navigationItem.icon
-                          className={clsx(
-                            match?.isExact ?
-                              'text-gray-500' :
-                              clsx(
-                                'text-gray-400',
-                                'group-hover:text-gray-500'
-                              ),
-                            clsx(
-                              'mr-4',
-                              'flex-shrink-0',
-                              'h-6',
-                              'w-6'
-                            )
-                          )}
-                          aria-hidden='true' />
-                        {t(navigationItem.name)}
-                      </SidebarNavLink>
-                    );
-                  })}
-                </nav>
+                <Navigation
+                  className='mt-5'
+                  onSmallScreen />
               </div>
               <div
                 className={clsx(
                   'flex-shrink-0',
                   'flex',
                   'border-t',
-                  'border-gray-200',
+                  'border-interlayHaiti-100',
                   'p-4'
                 )}>
                 <InterlayLink
@@ -354,9 +237,9 @@ const Sidebar = ({
               )}>
               <div
                 className={clsx(
+                  'flex-shrink-0',
                   'flex',
                   'items-center',
-                  'flex-shrink-0',
                   'px-4'
                 )}>
                 <InterlayRouterLink to={PAGES.HOME}>
@@ -365,68 +248,12 @@ const Sidebar = ({
                     height={36} />
                 </InterlayRouterLink>
               </div>
-              <nav
+              <Navigation
                 className={clsx(
                   'mt-5',
                   'flex-1',
-                  'px-2',
-                  'bg-white',
-                  'space-y-1'
-                )}>
-                {NAVIGATION_ITEMS.map(navigationItem => {
-                  const match = matchPath(location.pathname, {
-                    path: navigationItem.href,
-                    exact: true,
-                    strict: false
-                  });
-
-                  return (
-                    <SidebarNavLink
-                      key={navigationItem.name}
-                      external={!!navigationItem.external}
-                      {...navigationItem.rest}
-                      href={navigationItem.href}
-                      className={clsx(
-                        match?.isExact ?
-                          clsx(
-                            'bg-interlayHaiti-100',
-                            // 'bg-gray-100',
-                            'text-gray-900'
-                          ) :
-                          clsx(
-                            'text-gray-600',
-                            'hover:bg-interlayHaiti-50',
-                            // 'hover:bg-gray-50',
-                            'hover:text-gray-900'
-                          ),
-                        'group',
-                        'flex',
-                        'items-center',
-                        'px-2',
-                        'py-2',
-                        'text-sm',
-                        'font-medium',
-                        'rounded-md'
-                      )}>
-                      <navigationItem.icon
-                        className={clsx(
-                          match?.isExact ?
-                            'text-gray-500' :
-                            clsx(
-                              'text-gray-400',
-                              'group-hover:text-gray-500'
-                            ),
-                          'mr-3',
-                          'flex-shrink-0',
-                          'h-6',
-                          'w-6'
-                        )}
-                        aria-hidden='true' />
-                      {t(navigationItem.name)}
-                    </SidebarNavLink>
-                  );
-                })}
-              </nav>
+                  'bg-white'
+                )} />
             </div>
             <div
               className={clsx(
