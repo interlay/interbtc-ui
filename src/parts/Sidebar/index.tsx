@@ -4,13 +4,11 @@ import {
   Dialog,
   Transition
 } from '@headlessui/react';
-import {
-  MenuIcon,
-  XIcon
-} from '@heroicons/react/outline';
+import { MenuIcon } from '@heroicons/react/outline';
 import clsx from 'clsx';
 
 import Navigation from './Navigation';
+import CloseButton from './CloseButton';
 import InterlayButtonBase from 'components/UI/InterlayButtonBase';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayLink from 'components/UI/InterlayLink';
@@ -72,7 +70,6 @@ const Sidebar = ({
                 'fixed',
                 'inset-0',
                 'bg-interlayHaiti-400',
-                // 'bg-gray-600',
                 'bg-opacity-75'
               )} />
           </Transition.Child>
@@ -104,59 +101,12 @@ const Sidebar = ({
                 'w-full',
                 'bg-white'
               )}>
-              <Transition.Child
-                as={React.Fragment}
-                enter={clsx(
-                  'ease-in-out',
-                  'duration-300'
-                )}
-                enterFrom='opacity-0'
-                enterTo='opacity-100'
-                leave={clsx(
-                  'ease-in-out',
-                  'duration-300'
-                )}
-                leaveFrom='opacity-100'
-                leaveTo='opacity-0'>
-                <div
-                  className={clsx(
-                    'absolute',
-                    'top-0',
-                    'right-0',
-                    '-mr-12',
-                    'pt-2'
-                  )}>
-                  <button
-                    className={clsx(
-                      'ml-1',
-                      'flex',
-                      'items-center',
-                      'justify-center',
-                      'h-10',
-                      'w-10',
-                      'rounded-full',
-                      'focus:outline-none',
-                      'focus:ring-2',
-                      'focus:ring-inset',
-                      'focus:ring-white'
-                    )}
-                    onClick={() => setSidebarOpen(false)}>
-                    <span className='sr-only'>Close sidebar</span>
-                    <XIcon
-                      className={clsx(
-                        'h-6',
-                        'w-6',
-                        'text-white'
-                      )}
-                      aria-hidden='true' />
-                  </button>
-                </div>
-              </Transition.Child>
+              <CloseButton onClick={() => setSidebarOpen(false)} />
               {/* TODO: should componentize */}
               <div
                 className={clsx(
-                  'flex-1',
                   'h-0',
+                  'flex-1',
                   'pt-5',
                   'pb-4',
                   'overflow-y-auto'
@@ -228,9 +178,9 @@ const Sidebar = ({
             )}>
             <div
               className={clsx(
-                'flex-1',
                 'flex',
                 'flex-col',
+                'flex-1',
                 'pt-5',
                 'pb-4',
                 'overflow-y-auto'
