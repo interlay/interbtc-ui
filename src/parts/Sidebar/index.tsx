@@ -17,6 +17,7 @@ import {
   XIcon
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 import SidebarNavLink from './SidebarNavLink';
 import InterlayButtonBase from 'components/UI/InterlayButtonBase';
@@ -29,34 +30,38 @@ import { PAGES } from 'utils/constants/links';
 import { ReactComponent as InterBTCHorizontalRGBIcon } from 'assets/img/interbtc-horizontal-rgb.svg';
 import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
 
+interface Props {
+  children: React.ReactNode;
+}
+
 const NAVIGATION_ITEMS = [
   {
-    name: 'Bridge',
+    name: 'nav_bridge',
     href: PAGES.HOME,
     icon: FolderIcon
   },
   {
-    name: 'Transactions',
+    name: 'nav_transactions',
     href: PAGES.TRANSACTIONS,
     icon: CalendarIcon
   },
   {
-    name: 'Dashboard',
+    name: 'nav_dashboard',
     href: PAGES.DASHBOARD,
     icon: HomeIcon
   },
   {
-    name: 'Challenges',
+    name: 'nav_challenges',
     href: PAGES.CHALLENGES,
     icon: UsersIcon
   },
   {
-    name: 'Feedback',
+    name: 'nav_feedback',
     href: PAGES.FEEDBACK,
     icon: InboxIcon
   },
   {
-    name: 'Docs',
+    name: 'nav_docs',
     href: INTERLAY_DOCS,
     icon: ChartBarIcon,
     external: true,
@@ -67,16 +72,14 @@ const NAVIGATION_ITEMS = [
   }
 ];
 
-interface Props {
-  children: React.ReactNode;
-}
-
 const Sidebar = ({
   children
 }: Props): JSX.Element => {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
 
   const location = useLocation();
+
+  const { t } = useTranslation();
 
   return (
     <div
@@ -283,7 +286,7 @@ const Sidebar = ({
                             )
                           )}
                           aria-hidden='true' />
-                        {navigationItem.name}
+                        {t(navigationItem.name)}
                       </SidebarNavLink>
                     );
                   })}
@@ -414,7 +417,7 @@ const Sidebar = ({
                           'w-6'
                         )}
                         aria-hidden='true' />
-                      {navigationItem.name}
+                      {t(navigationItem.name)}
                     </SidebarNavLink>
                   );
                 })}
