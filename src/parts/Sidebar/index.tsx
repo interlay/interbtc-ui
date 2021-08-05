@@ -4,19 +4,10 @@ import {
   Dialog,
   Transition
 } from '@headlessui/react';
-import { MenuIcon } from '@heroicons/react/outline';
 import clsx from 'clsx';
 
-import Navigation from './Navigation';
-import CloseButton from './CloseButton';
-import InterlayButtonBase from 'components/UI/InterlayButtonBase';
-import InterlayRouterLink from 'components/UI/InterlayRouterLink';
-import InterlayLink from 'components/UI/InterlayLink';
-import { INTERLAY_COMPANY } from 'config/links';
-import { PAGES } from 'utils/constants/links';
-import { ReactComponent as InterBTCHorizontalRGBIcon } from 'assets/img/interbtc-horizontal-rgb.svg';
-import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
-
+import SidebarContent from './SidebarContent';
+import OpenButton from './OpenButton';
 interface Props {
   children: React.ReactNode;
 }
@@ -25,6 +16,13 @@ const Sidebar = ({
   children
 }: Props): JSX.Element => {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setSidebarOpen(false);
+  };
+  const handleOpen = () => {
+    setSidebarOpen(true);
+  };
 
   return (
     <div
@@ -91,61 +89,9 @@ const Sidebar = ({
             )}
             leaveFrom='translate-x-0'
             leaveTo='-translate-x-full'>
-            <div
-              className={clsx(
-                'relative',
-                'flex-1',
-                'flex',
-                'flex-col',
-                'max-w-xs',
-                'w-full',
-                'bg-white'
-              )}>
-              <CloseButton onClick={() => setSidebarOpen(false)} />
-              {/* TODO: should componentize */}
-              <div
-                className={clsx(
-                  'h-0',
-                  'flex-1',
-                  'pt-5',
-                  'pb-4',
-                  'overflow-y-auto'
-                )}>
-                <div
-                  className={clsx(
-                    'flex-shrink-0',
-                    'flex',
-                    'items-center',
-                    'px-4'
-                  )}>
-                  <InterlayRouterLink to={PAGES.HOME}>
-                    <InterBTCHorizontalRGBIcon
-                      width={141.6}
-                      height={36} />
-                  </InterlayRouterLink>
-                </div>
-                <Navigation
-                  className='mt-5'
-                  onSmallScreen />
-              </div>
-              <div
-                className={clsx(
-                  'flex-shrink-0',
-                  'flex',
-                  'border-t',
-                  'border-interlayHaiti-100',
-                  'p-4'
-                )}>
-                <InterlayLink
-                  href={INTERLAY_COMPANY}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <InterlayLogoIcon
-                    width={150}
-                    height={33.7} />
-                </InterlayLink>
-              </div>
-            </div>
+            <SidebarContent
+              onSmallScreen
+              onClose={handleClose} />
           </Transition.Child>
           <div
             className={clsx(
@@ -166,63 +112,7 @@ const Sidebar = ({
             'flex-col',
             'w-64'
           )}>
-          <div
-            className={clsx(
-              'flex',
-              'flex-col',
-              'h-0',
-              'flex-1',
-              'border-r',
-              'border-interlayHaiti-100',
-              'bg-white'
-            )}>
-            <div
-              className={clsx(
-                'flex',
-                'flex-col',
-                'flex-1',
-                'pt-5',
-                'pb-4',
-                'overflow-y-auto'
-              )}>
-              <div
-                className={clsx(
-                  'flex-shrink-0',
-                  'flex',
-                  'items-center',
-                  'px-4'
-                )}>
-                <InterlayRouterLink to={PAGES.HOME}>
-                  <InterBTCHorizontalRGBIcon
-                    width={141.6}
-                    height={36} />
-                </InterlayRouterLink>
-              </div>
-              <Navigation
-                className={clsx(
-                  'mt-5',
-                  'flex-1',
-                  'bg-white'
-                )} />
-            </div>
-            <div
-              className={clsx(
-                'flex-shrink-0',
-                'flex',
-                'border-t',
-                'border-interlayHaiti-100',
-                'p-4'
-              )}>
-              <InterlayLink
-                href={INTERLAY_COMPANY}
-                target='_blank'
-                rel='noopener noreferrer'>
-                <InterlayLogoIcon
-                  width={150}
-                  height={33.7} />
-              </InterlayLink>
-            </div>
-          </div>
+          <SidebarContent onClose={handleClose} />
         </div>
       </div>
       <div
@@ -241,32 +131,7 @@ const Sidebar = ({
             'sm:pl-3',
             'sm:pt-3'
           )}>
-          <InterlayButtonBase
-            className={clsx(
-              'focus:outline-none',
-              'focus:ring',
-              'focus:border-interlayDenim-300',
-              'focus:ring-interlayDenim-200',
-              'focus:ring-opacity-50',
-
-              '-ml-0.5',
-              '-mt-0.5',
-              'h-12',
-              'w-12',
-              'justify-center',
-              'rounded-md',
-              'text-interlayHaiti-400',
-              'hover:text-interlayHaiti'
-            )}
-            onClick={() => setSidebarOpen(true)}>
-            <span className='sr-only'>Open sidebar</span>
-            <MenuIcon
-              className={clsx(
-                'h-6',
-                'w-6'
-              )}
-              aria-hidden='true' />
-          </InterlayButtonBase>
+          <OpenButton onClick={handleOpen} />
         </div>
         <main
           className={clsx(

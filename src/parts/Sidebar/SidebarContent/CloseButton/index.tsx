@@ -6,9 +6,10 @@ import clsx from 'clsx';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
 
-const CloseButton = ({
+type Ref = HTMLButtonElement;
+const CloseButton = React.forwardRef<Ref, InterlayButtonBaseProps>(({
   onClick
-}: InterlayButtonBaseProps): JSX.Element => {
+}, ref): JSX.Element => {
   return (
     <Transition.Child
       as={React.Fragment}
@@ -33,6 +34,7 @@ const CloseButton = ({
           'pt-2'
         )}>
         <InterlayButtonBase
+          ref={ref}
           className={clsx(
             'ml-1',
             'justify-center',
@@ -57,6 +59,7 @@ const CloseButton = ({
       </div>
     </Transition.Child>
   );
-};
+});
+CloseButton.displayName = 'CloseButton';
 
 export default CloseButton;
