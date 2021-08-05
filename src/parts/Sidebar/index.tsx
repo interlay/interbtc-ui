@@ -112,9 +112,8 @@ const Sidebar = ({
               className={clsx(
                 'fixed',
                 'inset-0',
-                // ray test touch <<
-                'bg-gray-600',
-                // ray test touch >>
+                'bg-interlayHaiti-400',
+                // 'bg-gray-600',
                 'bg-opacity-75'
               )} />
           </Transition.Child>
@@ -234,17 +233,19 @@ const Sidebar = ({
                         className={clsx(
                           match?.isExact ?
                             clsx(
-                              // ray test touch <<
-                              'bg-gray-100',
+                              // TODO: could replace `gray` with `interlayHaiti`
+                              'bg-interlayHaiti-100',
+                              // 'bg-gray-100',
+                              // 'text-interlayHaiti'
                               'text-gray-900'
-                              // ray test touch >>
                             ) :
                             clsx(
-                              // ray test touch <<
+                              // 'text-interlayHaiti-400',
                               'text-gray-600',
-                              'hover:bg-gray-50',
+                              'hover:bg-interlayHaiti-50',
+                              // 'hover:bg-gray-50',
+                              // 'hover:text-interlayHaiti'
                               'hover:text-gray-900'
-                              // ray test touch >>
                             ),
                           'group',
                           'flex',
@@ -258,14 +259,10 @@ const Sidebar = ({
                         <navigationItem.icon
                           className={clsx(
                             match?.isExact ?
-                              // ray test touch <<
                               'text-gray-500' :
-                              // ray test touch >>
                               clsx(
-                                // ray test touch <<
                                 'text-gray-400',
                                 'group-hover:text-gray-500'
-                                // ray test touch >>
                               ),
                             clsx(
                               'mr-4',
@@ -366,17 +363,15 @@ const Sidebar = ({
                       className={clsx(
                         match?.isExact ?
                           clsx(
-                            // ray test touch <<
-                            'bg-gray-100',
+                            'bg-interlayHaiti-100',
+                            // 'bg-gray-100',
                             'text-gray-900'
-                            // ray test touch >>
                           ) :
                           clsx(
-                            // ray test touch <<
                             'text-gray-600',
-                            'hover:bg-gray-50',
+                            'hover:bg-interlayHaiti-50',
+                            // 'hover:bg-gray-50',
                             'hover:text-gray-900'
-                            // ray test touch >>
                           ),
                         'group',
                         'flex',
@@ -390,14 +385,10 @@ const Sidebar = ({
                       <navigationItem.icon
                         className={clsx(
                           match?.isExact ?
-                            // ray test touch <<
                             'text-gray-500' :
-                            // ray test touch >>
                             clsx(
-                              // ray test touch <<
                               'text-gray-400',
                               'group-hover:text-gray-500'
-                              // ray test touch >>
                             ),
                           'mr-3',
                           'flex-shrink-0',
