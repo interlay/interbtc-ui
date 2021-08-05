@@ -12,6 +12,8 @@ interface Props {
   children: React.ReactNode;
 }
 
+const ON_SMALL_SCREEN_CLASS_NAME = 'md:hidden';
+
 const Sidebar = ({
   children
 }: Props): JSX.Element => {
@@ -43,7 +45,7 @@ const Sidebar = ({
             'inset-0',
             'flex',
             'z-40',
-            'md:hidden'
+            ON_SMALL_SCREEN_CLASS_NAME
           )}
           open={sidebarOpen}
           onClose={setSidebarOpen}>
@@ -125,7 +127,7 @@ const Sidebar = ({
         )}>
         <div
           className={clsx(
-            'md:hidden',
+            ON_SMALL_SCREEN_CLASS_NAME,
             'pl-1',
             'pt-1',
             'sm:pl-3',
