@@ -20,8 +20,11 @@ import clsx from 'clsx';
 
 import InterlayButtonBase from 'components/UI/InterlayButtonBase';
 import InterlayRouterNavLink from 'components/UI/InterlayRouterNavLink';
+import InterlayLink from 'components/UI/InterlayLink';
+import { INTERLAY_COMPANY } from 'config/links';
 import { PAGES } from 'utils/constants/links';
 import { ReactComponent as InterBTCHorizontalRGBIcon } from 'assets/img/interbtc-horizontal-rgb.svg';
+import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
 
 const NAVIGATION_ITEMS = [
   {
@@ -286,9 +289,14 @@ const Sidebar = ({
                   'border-gray-200',
                   'p-4'
                 )}>
-                {/* ray test touch << */}
-                Social Media
-                {/* ray test touch >> */}
+                <InterlayLink
+                  href={INTERLAY_COMPANY}
+                  target='_blank'
+                  rel='noopener noreferrer'>
+                  <InterlayLogoIcon
+                    width={150}
+                    height={33.7} />
+                </InterlayLink>
               </div>
             </div>
           </Transition.Child>
@@ -410,9 +418,14 @@ const Sidebar = ({
                 'border-interlayHaiti-100',
                 'p-4'
               )}>
-              {/* ray test touch << */}
-              Social Media
-              {/* ray test touch >> */}
+              <InterlayLink
+                href={INTERLAY_COMPANY}
+                target='_blank'
+                rel='noopener noreferrer'>
+                <InterlayLogoIcon
+                  width={150}
+                  height={33.7} />
+              </InterlayLink>
             </div>
           </div>
         </div>
