@@ -2,13 +2,11 @@
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import clsx from 'clsx';
-import { useMeasure } from 'react-use';
 
-import Footer from 'parts/Footer';
 import TestnetBanner from 'parts/TestnetBanner';
 import MaintenanceBanner from 'parts/MaintenanceBanner';
 import Sidebar from 'parts/Sidebar';
-import Topbar from 'common/components/topbar';
+import Topbar from 'parts/Topbar';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { StoreType } from 'common/types/util.types';
 
@@ -17,11 +15,10 @@ interface Props {
 }
 
 const Layout = ({ children }: Props): JSX.Element => {
+  // ray test touch <<
   const address = useSelector((state: StoreType) => state.general.address);
-  const [ref, { height: footerHeight }] = useMeasure<HTMLDivElement>();
 
   const handleRequestDotFromFaucet = async (): Promise<void> => {
-    // TODO: should show a descriptive warning
     if (!address) return;
 
     try {
@@ -32,6 +29,7 @@ const Layout = ({ children }: Props): JSX.Element => {
       toast.error(`Funding failed. ${error.message}`);
     }
   };
+  // ray test touch >>
 
   return (
     <Sidebar>
@@ -41,27 +39,19 @@ const Layout = ({ children }: Props): JSX.Element => {
           'min-h-screen'
         )}>
         <div
-          style={{ paddingBottom: footerHeight }}
           className={clsx(
             'flex',
             'flex-col'
           )}>
+          {/* ray test touch << */}
           <Topbar
             address={address}
             requestDOT={handleRequestDotFromFaucet} />
+          {/* ray test touch >> */}
           <TestnetBanner />
           <MaintenanceBanner />
           {children}
         </div>
-        <Footer
-          ref={ref}
-          className={clsx(
-            'absolute',
-            'bottom-0',
-            'w-full',
-            'shadow',
-            'border-t'
-          )} />
       </div>
     </Sidebar>
   );

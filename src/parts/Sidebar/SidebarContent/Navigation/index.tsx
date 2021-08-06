@@ -7,7 +7,8 @@ import {
   FolderIcon,
   HomeIcon,
   InboxIcon,
-  UsersIcon
+  UsersIcon,
+  CurrencyDollarIcon
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
@@ -19,32 +20,37 @@ import { PAGES } from 'utils/constants/links';
 const NAVIGATION_ITEMS = [
   {
     name: 'nav_bridge',
-    href: PAGES.HOME,
+    link: PAGES.HOME,
     icon: FolderIcon
   },
   {
     name: 'nav_transactions',
-    href: PAGES.TRANSACTIONS,
+    link: PAGES.TRANSACTIONS,
     icon: CalendarIcon
   },
   {
+    name: 'nav_vault',
+    link: PAGES.VAULT,
+    icon: CurrencyDollarIcon
+  },
+  {
     name: 'nav_dashboard',
-    href: PAGES.DASHBOARD,
+    link: PAGES.DASHBOARD,
     icon: HomeIcon
   },
   {
     name: 'nav_challenges',
-    href: PAGES.CHALLENGES,
+    link: PAGES.CHALLENGES,
     icon: UsersIcon
   },
   {
     name: 'nav_feedback',
-    href: PAGES.FEEDBACK,
+    link: PAGES.FEEDBACK,
     icon: InboxIcon
   },
   {
     name: 'nav_docs',
-    href: INTERLAY_DOCS,
+    link: INTERLAY_DOCS,
     icon: ChartBarIcon,
     external: true,
     rest: {
@@ -80,7 +86,7 @@ const Navigation = ({
       {...rest}>
       {NAVIGATION_ITEMS.map(navigationItem => {
         const match = matchPath(location.pathname, {
-          path: navigationItem.href,
+          path: navigationItem.link,
           exact: true,
           strict: false
         });
@@ -90,7 +96,7 @@ const Navigation = ({
             key={navigationItem.name}
             external={!!navigationItem.external}
             {...navigationItem.rest}
-            href={navigationItem.href}
+            href={navigationItem.link}
             className={clsx(
               match?.isExact ?
                 clsx(

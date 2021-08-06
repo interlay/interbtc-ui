@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 import Navigation from './Navigation';
 import CloseButton from './CloseButton';
+import SocialMediaContainer from './SocialMediaContainer';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayLink from 'components/UI/InterlayLink';
 import { INTERLAY_COMPANY } from 'config/links';
@@ -69,6 +70,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
         <Navigation
           onSmallScreen={onSmallScreen}
           className='mt-5' />
+        <SocialMediaContainer className='px-2' />
       </div>
       <div
         className={clsx(

@@ -19,11 +19,11 @@ import InterlayDenimToggleButtonGroup, {
 } from 'components/toggle-button-groups/InterlayDenimToggleButtonGroup';
 import InterlayLink from 'components/UI/InterlayLink';
 import {
-  POLKA_BTC_DOC_START_TREASURE_HUNT,
-  POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT,
-  POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER,
-  POLKA_BTC_DOC_KING_OF_THE_HILL,
-  POLKA_BTC_DOC_LOTTERY
+  INTER_BTC_DOC_START_TREASURE_HUNT,
+  INTER_BTC_DOC_START_TREASURE_HUNT_VAULT,
+  INTER_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER,
+  INTER_BTC_DOC_KING_OF_THE_HILL,
+  INTER_BTC_DOC_LOTTERY
 } from 'config/links';
 import { CHALLENGE_CUT_OFFS } from 'config/challenges';
 
@@ -57,27 +57,27 @@ const CHALLENGE_ITEMS = [
   {
     title: 'leaderboard.challenges.treasure_hunt',
     content: 'leaderboard.challenges.treasure_hunt_desc',
-    contentLink: POLKA_BTC_DOC_START_TREASURE_HUNT
+    contentLink: INTER_BTC_DOC_START_TREASURE_HUNT
   },
   {
     title: 'leaderboard.challenges.vault_treasure_hunt',
     content: 'leaderboard.challenges.vault_treasure_hunt_desc',
-    contentLink: POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT
+    contentLink: INTER_BTC_DOC_START_TREASURE_HUNT_VAULT
   },
   {
     title: 'leaderboard.challenges.relayer_treasure_hunt',
     content: 'leaderboard.challenges.relayer_treasure_hunt_desc',
-    contentLink: POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER
+    contentLink: INTER_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER
   },
   {
     title: 'leaderboard.challenges.vaults_relayers',
     content: 'leaderboard.challenges.vaults_relayers_desc',
-    contentLink: POLKA_BTC_DOC_KING_OF_THE_HILL
+    contentLink: INTER_BTC_DOC_KING_OF_THE_HILL
   },
   {
     title: 'leaderboard.challenges.lottery',
     content: 'leaderboard.challenges.lottery_desc',
-    contentLink: POLKA_BTC_DOC_LOTTERY
+    contentLink: INTER_BTC_DOC_LOTTERY
   }
 ];
 

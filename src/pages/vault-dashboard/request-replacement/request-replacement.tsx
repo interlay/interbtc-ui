@@ -95,7 +95,7 @@ export default function RequestReplacementModal(props: RequestReplacementProps):
                   </span>
                 </div>
                 {errors.amount && (
-                  <div className='input-error text-interlayConifer'>
+                  <div className='-mt-4 text-interlayConifer'>
                     {errors.amount.type === 'required' ?
                       'Amount is required' :
                       errors.amount.message}
