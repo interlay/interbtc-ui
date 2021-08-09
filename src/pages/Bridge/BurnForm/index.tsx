@@ -24,7 +24,7 @@ import {
   PolkadotAmount
 } from '@interlay/monetary-js';
 
-import PriceInfo from 'pages/Home/PriceInfo';
+import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterBTCField from '../InterBTCField';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';

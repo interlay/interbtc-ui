@@ -43,7 +43,7 @@ const TAB_ITEMS_WITH_BURN = [
   }
 ];
 
-const Home = (): JSX.Element | null => {
+const Bridge = (): JSX.Element | null => {
   const { t } = useTranslation();
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
 
@@ -188,4 +188,4 @@ const Home = (): JSX.Element | null => {
   );
 };
 
-export default Home;
+export default Bridge;

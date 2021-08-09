@@ -20,7 +20,7 @@ import { PAGES } from 'utils/constants/links';
 const NAVIGATION_ITEMS = [
   {
     name: 'nav_bridge',
-    link: PAGES.HOME,
+    link: PAGES.BRIDGE,
     icon: FolderIcon
   },
   {
@@ -125,12 +125,10 @@ const Navigation = ({
                     'text-gray-400',
                     'group-hover:text-gray-500'
                   ),
-                clsx(
-                  onSmallScreen ? 'mr-4' : 'mr-3',
-                  'flex-shrink-0',
-                  'h-6',
-                  'w-6'
-                )
+                onSmallScreen ? 'mr-4' : 'mr-3',
+                'flex-shrink-0',
+                'w-6',
+                'h-6'
               )}
               aria-hidden='true' />
             {t(navigationItem.name)}

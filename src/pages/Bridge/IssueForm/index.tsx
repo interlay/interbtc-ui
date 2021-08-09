@@ -28,9 +28,9 @@ import {
 } from '@interlay/monetary-js';
 
 import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
-import InterBTCField from 'pages/Home/InterBTCField';
-import PriceInfo from 'pages/Home/PriceInfo';
-import ParachainStatusInfo from 'pages/Home/ParachainStatusInfo';
+import InterBTCField from 'pages/Bridge/InterBTCField';
+import PriceInfo from 'pages/Bridge/PriceInfo';
+import ParachainStatusInfo from 'pages/Bridge/ParachainStatusInfo';
 import Tooltip from 'components/Tooltip';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
