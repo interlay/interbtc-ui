@@ -331,8 +331,8 @@ const IssueForm = (): JSX.Element | null => {
             }
             unitIcon={
               <InterBTCLogoIcon
-                width={23}
-                height={23} />
+                width={24}
+                height={19.05} />
             }
             value={displayMonetaryAmount(interBTCAmount)}
             unitName='interBTC'

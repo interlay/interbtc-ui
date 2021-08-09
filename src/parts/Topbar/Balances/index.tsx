@@ -25,21 +25,19 @@ const Balances = ({
     <div
       className={clsx(
         'flex',
-        'flex-wrap',
-        'space-x-2',
-        'mx-2' // TODO: should use space-x-{number} at upper level
+        'space-x-2'
       )}>
       <div
         className={clsx(
           'flex',
           'items-center',
-          'space-x-2'
+          'space-x-1'
         )}>
         <InterBTCLogoIcon
           fill='currentColor'
           width={30}
-          height={30} />
-        <span className='font-bold'>{roundedBalanceInterBTC}</span>
+          height={23.8} />
+        <span className='font-medium'>{roundedBalanceInterBTC}</span>
         <span>interBTC</span>
       </div>
       <div
@@ -51,7 +49,7 @@ const Balances = ({
         <PolkadotLogoIcon
           width={20}
           height={20} />
-        <span className='font-bold'>{roundedBalanceDot}</span>
+        <span className='font-medium'>{roundedBalanceDot}</span>
         <span>DOT</span>
       </div>
     </div>

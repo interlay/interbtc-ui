@@ -53,7 +53,9 @@ const NETWORK_ITEMS = [
   {
     type: NETWORK_TYPES.polkaBTC,
     icon: (
-      <InterBTCLogoIcon width={24} />
+      <InterBTCLogoIcon
+        width={24}
+        height={19.05} />
     ),
     title: 'interBTC'
   },

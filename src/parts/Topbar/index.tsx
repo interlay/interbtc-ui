@@ -10,8 +10,8 @@ import { toast } from 'react-toastify';
 import { web3Accounts } from '@polkadot/extension-dapp';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
+import Balances from './Balances';
 import AccountModal from 'parts/AccountModal';
-import Balances from 'common/components/balances';
 import InterlayLink from 'components/UI/InterlayLink';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
@@ -19,6 +19,7 @@ import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCalifor
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { StoreType } from 'common/types/util.types';
+import clsx from 'clsx';
 
 const Topbar = (): JSX.Element => {
   const {
@@ -32,7 +33,6 @@ const Topbar = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  // ray test touch <<
   const handleRequestDotFromFaucet = async (): Promise<void> => {
     if (!address) return;
 
@@ -44,7 +44,6 @@ const Topbar = (): JSX.Element => {
       toast.error(`Funding failed. ${error.message}`);
     }
   };
-  // ray test touch >>
 
   const [isRequestPending, setIsRequestPending] = React.useState(false);
 
@@ -94,41 +93,47 @@ const Topbar = (): JSX.Element => {
 
   return (
     <>
-      {address !== undefined && (
-        <>
-          {address === '' ? (
-            <InterlayDefaultContainedButton onClick={handleAccountModalOpen}>
-              {accountLabel}
-            </InterlayDefaultContainedButton>
-          ) : (
-            <>
-              <InterlayLink
-                target='_blank'
-                rel='noopener noreferrer'
-                href='https://testnet-faucet.mempool.co/'
-                style={{ textDecoration: 'none' }}>
-                <InterlayCaliforniaOutlinedButton>
-                  {t('request_btc')}
-                </InterlayCaliforniaOutlinedButton>
-              </InterlayLink>
-              <InterlayDenimOutlinedButton
-                style={{
-                  marginLeft: 8
-                }}
-                pending={isRequestPending}
-                onClick={requestDOT}>
-                {t('request_dot')}
-              </InterlayDenimOutlinedButton>
-              <Balances
-                balanceDOT={balanceDOT}
-                balanceInterBTC={balanceInterBTC} />
+      <div
+        className={clsx(
+          'flex',
+          'items-center',
+          'justify-end',
+          'p-2',
+          'space-x-2'
+        )}>
+        {address !== undefined && (
+          <>
+            {address === '' ? (
               <InterlayDefaultContainedButton onClick={handleAccountModalOpen}>
                 {accountLabel}
               </InterlayDefaultContainedButton>
-            </>
-          )}
-        </>
-      )}
+            ) : (
+              <>
+                <InterlayLink
+                  className='hover:no-underline'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  href='https://testnet-faucet.mempool.co'>
+                  <InterlayCaliforniaOutlinedButton>
+                    {t('request_btc')}
+                  </InterlayCaliforniaOutlinedButton>
+                </InterlayLink>
+                <InterlayDenimOutlinedButton
+                  pending={isRequestPending}
+                  onClick={requestDOT}>
+                  {t('request_dot')}
+                </InterlayDenimOutlinedButton>
+                <Balances
+                  balanceDOT={balanceDOT}
+                  balanceInterBTC={balanceInterBTC} />
+                <InterlayDefaultContainedButton onClick={handleAccountModalOpen}>
+                  {accountLabel}
+                </InterlayDefaultContainedButton>
+              </>
+            )}
+          </>
+        )}
+      </div>
       <AccountModal
         open={showAccountModal}
         onClose={handleAccountModalClose} />
