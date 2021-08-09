@@ -6,6 +6,7 @@ import {
   useDispatch
 } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import { web3Accounts } from '@polkadot/extension-dapp';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
@@ -15,15 +16,11 @@ import InterlayLink from 'components/UI/InterlayLink';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { StoreType } from 'common/types/util.types';
 
-interface Props {
-  address: string;
-  requestDOT: () => Promise<void>;
-}
-
-const Topbar = (props: Props): JSX.Element => {
+const Topbar = (): JSX.Element => {
   const {
     extensions,
     address,
@@ -34,6 +31,20 @@ const Topbar = (props: Props): JSX.Element => {
   } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  // ray test touch <<
+  const handleRequestDotFromFaucet = async (): Promise<void> => {
+    if (!address) return;
+
+    try {
+      const receiverId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
+      await window.faucet.fundAccount(receiverId);
+      toast.success('Your account has been funded.');
+    } catch (error) {
+      toast.error(`Funding failed. ${error.message}`);
+    }
+  };
+  // ray test touch >>
 
   const [isRequestPending, setIsRequestPending] = React.useState(false);
 
@@ -56,7 +67,7 @@ const Topbar = (props: Props): JSX.Element => {
     if (!polkaBtcLoaded) return;
     setIsRequestPending(true);
     try {
-      await props.requestDOT();
+      await handleRequestDotFromFaucet();
     } catch (error) {
       console.log('[requestDOT] error.message => ', error.message);
     }
@@ -83,7 +94,7 @@ const Topbar = (props: Props): JSX.Element => {
 
   return (
     <>
-      {props.address !== undefined && (
+      {address !== undefined && (
         <>
           {address === '' ? (
             <InterlayDefaultContainedButton onClick={handleAccountModalOpen}>

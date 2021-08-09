@@ -54,7 +54,8 @@ const Home = (): JSX.Element | null => {
   const [burnable, setBurnable] = React.useState(false);
 
   const updateQueryParametersRef = React.useRef<(newQueryParameters: QueryParameters) => void>();
-  React.useEffect(() => {
+  // MEMO: inspired by https://epicreact.dev/the-latest-ref-pattern-in-react/
+  React.useLayoutEffect(() => {
     updateQueryParametersRef.current = updateQueryParameters;
   });
 
