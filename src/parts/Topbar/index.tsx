@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import * as React from 'react';
 import {
   useSelector,
@@ -7,6 +6,8 @@ import {
 } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { ExternalLinkIcon } from '@heroicons/react/outline';
+import clsx from 'clsx';
 import { web3Accounts } from '@polkadot/extension-dapp';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
@@ -19,9 +20,9 @@ import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCalifor
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { StoreType } from 'common/types/util.types';
-import clsx from 'clsx';
 
 const Topbar = (): JSX.Element => {
+  // ray test touch <
   const {
     extensions,
     address,
@@ -80,6 +81,7 @@ const Topbar = (): JSX.Element => {
   const handleAccountModalClose = () => {
     dispatch(showAccountModalAction(false));
   };
+  // ray test touch >
 
   let accountLabel;
   if (!extensions.length) {
@@ -114,11 +116,27 @@ const Topbar = (): JSX.Element => {
                   target='_blank'
                   rel='noopener noreferrer'
                   href='https://testnet-faucet.mempool.co'>
-                  <InterlayCaliforniaOutlinedButton>
+                  <InterlayCaliforniaOutlinedButton
+                    className={clsx(
+                      '!px-2.5',
+                      '!py-1.5'
+                    )}
+                    endIcon={
+                      <ExternalLinkIcon
+                        className={clsx(
+                          'w-4',
+                          'h-4',
+                          'ml-1'
+                        )} />
+                    }>
                     {t('request_btc')}
                   </InterlayCaliforniaOutlinedButton>
                 </InterlayLink>
                 <InterlayDenimOutlinedButton
+                  className={clsx(
+                    '!px-2.5',
+                    '!py-1.5'
+                  )}
                   pending={isRequestPending}
                   onClick={requestDOT}>
                   {t('request_dot')}
@@ -126,7 +144,12 @@ const Topbar = (): JSX.Element => {
                 <Balances
                   balanceDOT={balanceDOT}
                   balanceInterBTC={balanceInterBTC} />
-                <InterlayDefaultContainedButton onClick={handleAccountModalOpen}>
+                <InterlayDefaultContainedButton
+                  className={clsx(
+                    '!px-2.5',
+                    '!py-1.5'
+                  )}
+                  onClick={handleAccountModalOpen}>
                   {accountLabel}
                 </InterlayDefaultContainedButton>
               </>
@@ -142,4 +165,3 @@ const Topbar = (): JSX.Element => {
 };
 
 export default Topbar;
-// ray test touch >>

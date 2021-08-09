@@ -313,7 +313,8 @@ module.exports = {
       borderRadius: [
         'first',
         'last'
-      ]
+      ],
+      padding: ['important']
     }
   },
   plugins: [
