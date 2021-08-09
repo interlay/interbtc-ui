@@ -125,40 +125,37 @@ export default function ParachainDashboard(): ReactElement {
   return (
     <MainContainer
       className={clsx(
-        'flex',
-        'justify-center',
-        'fade-in-animation'
+        'fade-in-animation',
+        'space-y-10',
+        'container',
+        'm-auto'
       )}>
-      <div className='w-3/4'>
-        <div>
-          <PageTitle
-            mainTitle={t('dashboard.parachain.parachain')}
-            subTitle={<TimerIncrement />} />
-          <hr className='border-interlayDenim' />
-          <div className='grid grid-cols-2 gap-7 mt-10'>
-            <ParachainSecurity />
-          </div>
-          <div style={{ margin: '40px 0px' }}>
-            <div>
-              <p
-                className='mb-4'
-                style={{
-                  fontWeight: 700,
-                  fontSize: '26px'
-                }}>
-                {t('dashboard.parachain.status_updates')}
-              </p>
-            </div>
-            <DashboardTable
-              richTable={true}
-              pageData={statusUpdates}
-              totalPages={Math.ceil(Number(totalStatusUpdates) / tableParams.perPage)}
-              tableParams={tableParams}
-              setTableParams={setTableParams}
-              headings={tableHeadings}
-              dataPointDisplayer={tableStatusUpdateRow} />
-          </div>
-        </div>
+      <div>
+        <PageTitle
+          mainTitle={t('dashboard.parachain.parachain')}
+          subTitle={<TimerIncrement />} />
+        <hr className='border-interlayDenim' />
+      </div>
+      <div className='grid grid-cols-2 gap-7 mt-10'>
+        <ParachainSecurity />
+      </div>
+      <div>
+        <p
+          className='mb-4'
+          style={{
+            fontWeight: 700,
+            fontSize: '26px'
+          }}>
+          {t('dashboard.parachain.status_updates')}
+        </p>
+        <DashboardTable
+          richTable={true}
+          pageData={statusUpdates}
+          totalPages={Math.ceil(Number(totalStatusUpdates) / tableParams.perPage)}
+          tableParams={tableParams}
+          setTableParams={setTableParams}
+          headings={tableHeadings}
+          dataPointDisplayer={tableStatusUpdateRow} />
       </div>
     </MainContainer>
   );

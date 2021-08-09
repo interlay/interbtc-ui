@@ -13,11 +13,12 @@ const PageTitle = ({
   ...rest
 }: Props & React.ComponentPropsWithRef<'div'>): JSX.Element => (
   <div
-    id='PageTitle'
     className={clsx(
       'text-center',
-      'mt-7',
+      // ray test touch <<
+      // 'mt-7',
       'mb-4',
+      // ray test touch >>
       className
     )}
     {...rest}>
@@ -35,7 +36,9 @@ const PageTitle = ({
         className={clsx(
           'text-xs',
           'xl:text-sm',
+          // ray test touch <<
           'mb-4'
+          // ray test touch >>
         )}>
         {subTitle}
       </p>

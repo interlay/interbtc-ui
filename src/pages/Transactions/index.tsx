@@ -3,18 +3,20 @@ import clsx from 'clsx';
 
 import IssueRequestsTable from './IssueRequestsTable';
 import RedeemRequestsTable from './RedeemRequestsTable';
+import MainContainer from 'parts/MainContainer';
 
-const Requests = (): JSX.Element => {
+const Transactions = (): JSX.Element => {
   return (
-    <div
+    <MainContainer
       className={clsx(
-        'space-y-8',
-        'p-8'
+        'space-y-10',
+        'container',
+        'm-auto'
       )}>
       <IssueRequestsTable />
       <RedeemRequestsTable />
-    </div>
+    </MainContainer>
   );
 };
 
-export default Requests;
+export default Transactions;

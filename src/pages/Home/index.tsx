@@ -104,92 +104,89 @@ const Home = (): JSX.Element | null => {
   };
 
   return (
-    <MainContainer>
+    <MainContainer
+      className={clsx(
+        'container',
+        'm-auto'
+      )}>
       <div
         className={clsx(
-          'container',
-          'my-12',
-          'mx-auto'
+          'bg-white',
+          'mx-auto',
+          'w-full',
+          'md:max-w-xl',
+          'shadow',
+          'p-10',
+          'rounded-lg'
         )}>
-        <div
-          className={clsx(
-            'bg-white',
-            'mx-auto',
-            'w-full',
-            'md:max-w-xl',
-            'shadow',
-            'p-10',
-            'rounded-lg'
-          )}>
-          <>
-            <Tabs
-              className={clsx(
-                'grid',
-                { 'grid-cols-3': TAB_ITEMS.length === 3 },
-                { 'grid-cols-4': TAB_ITEMS.length === 4 },
-                'rounded-lg',
-                'bg-interlayPaleSky-200'
-              )}>
-              {TAB_ITEMS.map((tabItem, index) => {
-                const selected = selectedTabIndex === index;
+        <>
+          <Tabs
+            className={clsx(
+              'grid',
+              { 'grid-cols-3': TAB_ITEMS.length === 3 },
+              { 'grid-cols-4': TAB_ITEMS.length === 4 },
+              'rounded-lg',
+              'bg-interlayPaleSky-200'
+            )}>
+            {TAB_ITEMS.map((tabItem, index) => {
+              const selected = selectedTabIndex === index;
 
-                return (
-                  <Tab
-                    anchorClassName={clsx(
-                      'font-medium',
-                      'px-4',
-                      'py-2.5',
-                      'uppercase',
-                      selected ?
-                        clsx(
-                          'rounded-lg',
-                          'text-white',
-                          'transition',
-                          'bg-interlayDenim'
-                        ) : 'opacity-30'
-                    )}
-                    key={tabItem.id}
-                    id={tabItem.id}
-                    onSelect={handleTabSelect(index)}>
-                    {t(tabItem.label)}
-                  </Tab>
-                );
-              })}
-            </Tabs>
-            <hr
-              className={clsx(
-                'border-t-2',
-                'my-2',
-                'border-interlayDenim'
-              )} />
-          </>
+              return (
+                <Tab
+                  anchorClassName={clsx(
+                    'font-medium',
+                    'px-4',
+                    'py-2.5',
+                    'uppercase',
+                    selected ?
+                      clsx(
+                        'rounded-lg',
+                        'text-white',
+                        'transition',
+                        'bg-interlayDenim'
+                      ) : 'opacity-30'
+                  )}
+                  key={tabItem.id}
+                  id={tabItem.id}
+                  onSelect={handleTabSelect(index)}>
+                  {t(tabItem.label)}
+                </Tab>
+              );
+            })}
+          </Tabs>
+          <hr
+            className={clsx(
+              'border-t-2',
+              'my-2',
+              'border-interlayDenim'
+            )} />
+        </>
+        <TabPanel
+          index={0}
+          selectedIndex={selectedTabIndex}
+          id={TAB_IDS.issue}>
+          <IssueForm />
+        </TabPanel>
+        <TabPanel
+          index={1}
+          selectedIndex={selectedTabIndex}
+          id={TAB_IDS.redeem}>
+          <RedeemForm />
+        </TabPanel>
+        <TabPanel
+          index={2}
+          selectedIndex={selectedTabIndex}
+          id={TAB_IDS.transfer}>
+          <TransferForm />
+        </TabPanel>
+        {burnable && (
           <TabPanel
-            index={0}
+            index={3}
             selectedIndex={selectedTabIndex}
-            id={TAB_IDS.issue}>
-            <IssueForm />
+            id={TAB_IDS.burn}>
+            <BurnForm />
           </TabPanel>
-          <TabPanel
-            index={1}
-            selectedIndex={selectedTabIndex}
-            id={TAB_IDS.redeem}>
-            <RedeemForm />
-          </TabPanel>
-          <TabPanel
-            index={2}
-            selectedIndex={selectedTabIndex}
-            id={TAB_IDS.transfer}>
-            <TransferForm />
-          </TabPanel>
-          {burnable && (
-            <TabPanel
-              index={3}
-              selectedIndex={selectedTabIndex}
-              id={TAB_IDS.burn}>
-              <BurnForm />
-            </TabPanel>
-          )}
-        </div>
+        )}
       </div>
     </MainContainer>
   );

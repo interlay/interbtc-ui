@@ -100,9 +100,7 @@ const Challenges = (): JSX.Element => {
     <MainContainer
       className={clsx(
         'fade-in-animation',
-        'space-y-20',
-        // TODO: should set it within `MainContainer`
-        'px-6',
+        'space-y-10',
         'container',
         'm-auto'
       )}>
@@ -110,8 +108,6 @@ const Challenges = (): JSX.Element => {
         <PageTitle mainTitle={t('leaderboard.challenges_title')} />
         <CardList
           className= {clsx(
-            'max-w-max',
-            'mx-auto',
             'md:grid-cols-3',
             '2xl:grid-cols-5',
             'gap-5'
@@ -152,7 +148,7 @@ const Challenges = (): JSX.Element => {
         <div
           className={clsx(
             'text-right',
-            'px-4'
+            'py-2'
           )}>
           <ChallengeSelector
             value={challengeId}

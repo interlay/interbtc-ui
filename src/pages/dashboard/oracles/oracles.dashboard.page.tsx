@@ -14,22 +14,19 @@ export default function OraclesDashboard(): ReactElement {
   return (
     <MainContainer
       className={clsx(
-        'flex',
-        'justify-center',
-        'fade-in-animation'
+        'fade-in-animation',
+        'space-y-10',
+        'container',
+        'm-auto'
       )}>
-      <div className='w-3/4'>
-        <div>
-          <PageTitle
-            mainTitle={t('dashboard.oracles.oracles')}
-            subTitle={<TimerIncrement />} />
-          <hr className='border-interlayDenim' />
-          <div className='mt-10'>
-            <OracleStatus />
-          </div>
-          <OracleTable dotLocked='1' />
-        </div>
+      <div>
+        <PageTitle
+          mainTitle={t('dashboard.oracles.oracles')}
+          subTitle={<TimerIncrement />} />
+        <hr className='border-interlayDenim' />
       </div>
+      <OracleStatus />
+      <OracleTable dotLocked='1' />
     </MainContainer>
   );
 }

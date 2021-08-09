@@ -83,46 +83,41 @@ export default function RelayDashboard(): ReactElement {
   return (
     <MainContainer
       className={clsx(
-        'flex',
-        'justify-center',
-        'fade-in-animation'
+        'fade-in-animation',
+        'space-y-10',
+        'container',
+        'm-auto'
       )}>
-      <div className='w-3/4'>
-        <div>
-          <PageTitle
-            mainTitle={t('dashboard.relay.btc_relay')}
-            subTitle={<TimerIncrement />} />
-          <hr className='border-interlayCalifornia' />
-          <div className='mt-10'>
-            <div className='grid grid-cols-2 gap-7'>
-              <BtcRelay displayBlockstreamData={true} />
-            </div>
-          </div>
-          <div style={{ margin: '40px 0px' }}>
-            <div>
-              <p
-                className='mb-4'
-                style={{
-                  fontWeight: 700,
-                  fontSize: '26px'
-                }}>
-                {t('dashboard.relay.blocks')}
-              </p>
-            </div>
-            <DashboardTable
-              richTable={true}
-              pageData={blocks.map(b => ({
-                ...b,
-                hash: reverseEndiannessHex(stripHexPrefix(b.hash)),
-                id: b.hash
-              }))}
-              totalPages={Math.ceil(totalRelayedBlocks / tableParams.perPage)}
-              tableParams={tableParams}
-              setTableParams={setTableParams}
-              headings={tableHeadings}
-              dataPointDisplayer={tableBlockRow} />
-          </div>
-        </div>
+      <div>
+        <PageTitle
+          mainTitle={t('dashboard.relay.btc_relay')}
+          subTitle={<TimerIncrement />} />
+        <hr className='border-interlayCalifornia' />
+      </div>
+      <div className='grid grid-cols-2 gap-7'>
+        <BtcRelay displayBlockstreamData={true} />
+      </div>
+      <div>
+        <p
+          className='mb-4'
+          style={{
+            fontWeight: 700,
+            fontSize: '26px'
+          }}>
+          {t('dashboard.relay.blocks')}
+        </p>
+        <DashboardTable
+          richTable={true}
+          pageData={blocks.map(b => ({
+            ...b,
+            hash: reverseEndiannessHex(stripHexPrefix(b.hash)),
+            id: b.hash
+          }))}
+          totalPages={Math.ceil(totalRelayedBlocks / tableParams.perPage)}
+          tableParams={tableParams}
+          setTableParams={setTableParams}
+          headings={tableHeadings}
+          dataPointDisplayer={tableBlockRow} />
       </div>
     </MainContainer>
   );
