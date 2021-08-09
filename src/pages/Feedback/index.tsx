@@ -47,12 +47,7 @@ const FEEDBACK_ITEMS = [
 ];
 
 const Feedback = (): JSX.Element => (
-  <MainContainer
-    className={clsx(
-      'space-y-10',
-      'container',
-      'm-auto'
-    )}>
+  <MainContainer>
     <PageTitle mainTitle='Feedback' />
     <CardList
       className={clsx(

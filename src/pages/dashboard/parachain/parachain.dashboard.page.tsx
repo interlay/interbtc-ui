@@ -1,6 +1,5 @@
 import { ReactElement, useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
 
 import ParachainSecurity from '../components/parachain-security';
 import { DashboardStatusUpdateInfo } from '../../../common/types/util.types';
@@ -123,13 +122,7 @@ export default function ParachainDashboard(): ReactElement {
   );
 
   return (
-    <MainContainer
-      className={clsx(
-        'fade-in-animation',
-        'space-y-10',
-        'container',
-        'm-auto'
-      )}>
+    <MainContainer className='fade-in-animation'>
       <div>
         <PageTitle
           mainTitle={t('dashboard.parachain.parachain')}

@@ -1,6 +1,5 @@
 import { useState, useEffect, ReactElement, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
 import {
   reverseEndiannessHex,
   stripHexPrefix
@@ -81,13 +80,7 @@ export default function RelayDashboard(): ReactElement {
   }, [fetchBlocks, tableParams]);
 
   return (
-    <MainContainer
-      className={clsx(
-        'fade-in-animation',
-        'space-y-10',
-        'container',
-        'm-auto'
-      )}>
+    <MainContainer className='fade-in-animation'>
       <div>
         <PageTitle
           mainTitle={t('dashboard.relay.btc_relay')}

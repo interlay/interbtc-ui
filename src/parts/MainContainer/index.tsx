@@ -9,6 +9,9 @@ const MainContainer = ({
     className={clsx(
       'p-4',
       'lg:p-6',
+      'space-y-10',
+      'container',
+      'm-auto',
       className
     )}
     {...rest} />

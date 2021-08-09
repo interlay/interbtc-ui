@@ -97,13 +97,7 @@ const Challenges = (): JSX.Element => {
   }
 
   return (
-    <MainContainer
-      className={clsx(
-        'fade-in-animation',
-        'space-y-10',
-        'container',
-        'm-auto'
-      )}>
+    <MainContainer className='fade-in-animation'>
       <div>
         <PageTitle mainTitle={t('leaderboard.challenges_title')} />
         <CardList

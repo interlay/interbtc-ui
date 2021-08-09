@@ -19,12 +19,7 @@ const Dashboard = (): JSX.Element => {
   const { t } = useTranslation();
 
   return (
-    <MainContainer
-      className={clsx(
-        'space-y-10',
-        'container',
-        'mx-auto'
-      )}>
+    <MainContainer>
       <PageTitle
         mainTitle={t('dashboard.dashboard')}
         subTitle={<TimerIncrement />} />

@@ -104,11 +104,7 @@ const Home = (): JSX.Element | null => {
   };
 
   return (
-    <MainContainer
-      className={clsx(
-        'container',
-        'm-auto'
-      )}>
+    <MainContainer>
       <div
         className={clsx(
           'bg-white',

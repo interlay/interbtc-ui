@@ -1,6 +1,5 @@
 import { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
 
 import VaultTable from '../../../common/components/vault-table/vault-table';
 import ActiveVaults from '../components/active-vaults';
@@ -14,13 +13,7 @@ export default function VaultsDashboard(): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <MainContainer
-      className={clsx(
-        'fade-in-animation',
-        'space-y-10',
-        'container',
-        'm-auto'
-      )}>
+    <MainContainer className='fade-in-animation'>
       <div>
         <PageTitle
           mainTitle={t('dashboard.vault.vaults')}
