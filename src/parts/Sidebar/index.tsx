@@ -150,8 +150,4 @@ const Sidebar = ({
   );
 };
 
-export type {
-  Props
-};
-
 export default Sidebar;
