@@ -70,7 +70,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
         <Navigation
           onSmallScreen={onSmallScreen}
           className='mt-5' />
-        <SocialMediaContainer className='px-2' />
+        <SocialMediaContainer className='p-2' />
       </div>
       <div
         className={clsx(
