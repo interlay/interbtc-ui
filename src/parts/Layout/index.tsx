@@ -18,11 +18,7 @@ const Layout = ({ children }: Props): JSX.Element => {
           'relative',
           'min-h-screen'
         )}>
-        <div
-          className={clsx(
-            'flex',
-            'flex-col'
-          )}>
+        <div>
           <Topbar />
           <TestnetBanner />
           <MaintenanceBanner />

@@ -21,6 +21,12 @@ import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { StoreType } from 'common/types/util.types';
 
+// TODO: could create a specific prop
+const SMALL_SIZE_BUTTON_CLASS_NAME = clsx(
+  'leading-4',
+  '!px-3'
+);
+
 const Topbar = (): JSX.Element => {
   // ray test touch <
   const {
@@ -97,16 +103,18 @@ const Topbar = (): JSX.Element => {
     <>
       <div
         className={clsx(
+          'p-2',
           'flex',
           'items-center',
           'justify-end',
-          'p-2',
           'space-x-2'
         )}>
         {address !== undefined && (
           <>
             {address === '' ? (
-              <InterlayDefaultContainedButton onClick={handleAccountModalOpen}>
+              <InterlayDefaultContainedButton
+                className={SMALL_SIZE_BUTTON_CLASS_NAME}
+                onClick={handleAccountModalOpen}>
                 {accountLabel}
               </InterlayDefaultContainedButton>
             ) : (
@@ -117,10 +125,7 @@ const Topbar = (): JSX.Element => {
                   rel='noopener noreferrer'
                   href='https://testnet-faucet.mempool.co'>
                   <InterlayCaliforniaOutlinedButton
-                    className={clsx(
-                      '!px-2.5',
-                      '!py-1.5'
-                    )}
+                    className={SMALL_SIZE_BUTTON_CLASS_NAME}
                     endIcon={
                       <ExternalLinkIcon
                         className={clsx(
@@ -133,10 +138,7 @@ const Topbar = (): JSX.Element => {
                   </InterlayCaliforniaOutlinedButton>
                 </InterlayLink>
                 <InterlayDenimOutlinedButton
-                  className={clsx(
-                    '!px-2.5',
-                    '!py-1.5'
-                  )}
+                  className={SMALL_SIZE_BUTTON_CLASS_NAME}
                   pending={isRequestPending}
                   onClick={requestDOT}>
                   {t('request_dot')}
@@ -145,10 +147,7 @@ const Topbar = (): JSX.Element => {
                   balanceDOT={balanceDOT}
                   balanceInterBTC={balanceInterBTC} />
                 <InterlayDefaultContainedButton
-                  className={clsx(
-                    '!px-2.5',
-                    '!py-1.5'
-                  )}
+                  className={SMALL_SIZE_BUTTON_CLASS_NAME}
                   onClick={handleAccountModalOpen}>
                   {accountLabel}
                 </InterlayDefaultContainedButton>
