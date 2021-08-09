@@ -113,7 +113,7 @@ const Bridge = (): JSX.Element | null => {
           'md:max-w-xl',
           'shadow',
           'p-10',
-          'rounded-lg'
+          'md:rounded-lg'
         )}>
         <>
           <Tabs
