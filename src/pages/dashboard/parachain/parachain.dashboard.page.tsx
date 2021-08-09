@@ -1,5 +1,6 @@
 import { ReactElement, useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
 import ParachainSecurity from '../components/parachain-security';
 import { DashboardStatusUpdateInfo } from '../../../common/types/util.types';
@@ -127,18 +128,27 @@ export default function ParachainDashboard(): ReactElement {
         <PageTitle
           mainTitle={t('dashboard.parachain.parachain')}
           subTitle={<TimerIncrement />} />
-        <hr className='border-interlayDenim' />
+        <hr
+          className={clsx(
+            'border-interlayDenim',
+            'mt-2'
+          )} />
       </div>
-      <div className='grid grid-cols-2 gap-7 mt-10'>
+      <div
+        className={clsx(
+          'grid',
+          'grid-cols-2',
+          'gap-7'
+        )}>
         <ParachainSecurity />
       </div>
       <div>
         <p
-          className='mb-4'
-          style={{
-            fontWeight: 700,
-            fontSize: '26px'
-          }}>
+          className={clsx(
+            'mb-2',
+            'font-bold',
+            'text-2xl'
+          )}>
           {t('dashboard.parachain.status_updates')}
         </p>
         <DashboardTable

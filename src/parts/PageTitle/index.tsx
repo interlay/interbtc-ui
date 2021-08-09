@@ -15,10 +15,6 @@ const PageTitle = ({
   <div
     className={clsx(
       'text-center',
-      // ray test touch <<
-      // 'mt-7',
-      'mb-4',
-      // ray test touch >>
       className
     )}
     {...rest}>
@@ -26,7 +22,6 @@ const PageTitle = ({
       className={clsx(
         'text-2xl',
         'xl:text-3xl',
-        'mb-1',
         'font-bold'
       )}>
       {mainTitle}
@@ -35,10 +30,7 @@ const PageTitle = ({
       <p
         className={clsx(
           'text-xs',
-          'xl:text-sm',
-          // ray test touch <<
-          'mb-4'
-          // ray test touch >>
+          'xl:text-sm'
         )}>
         {subTitle}
       </p>

@@ -1,5 +1,6 @@
 import { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
 import OracleStatus from '../components/oracle-status';
 import OracleTable from '../../../common/components/oracle-table/oracle-table';
@@ -16,7 +17,11 @@ export default function OraclesDashboard(): ReactElement {
         <PageTitle
           mainTitle={t('dashboard.oracles.oracles')}
           subTitle={<TimerIncrement />} />
-        <hr className='border-interlayDenim' />
+        <hr
+          className={clsx(
+            'border-interlayDenim',
+            'mt-2'
+          )} />
       </div>
       <OracleStatus />
       <OracleTable dotLocked='1' />

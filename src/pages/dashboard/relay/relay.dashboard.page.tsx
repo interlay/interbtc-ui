@@ -1,5 +1,6 @@
 import { useState, useEffect, ReactElement, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 import {
   reverseEndiannessHex,
   stripHexPrefix
@@ -85,7 +86,11 @@ export default function RelayDashboard(): ReactElement {
         <PageTitle
           mainTitle={t('dashboard.relay.btc_relay')}
           subTitle={<TimerIncrement />} />
-        <hr className='border-interlayCalifornia' />
+        <hr
+          className={clsx(
+            'border-interlayCalifornia',
+            'mt-2'
+          )} />
       </div>
       <div className='grid grid-cols-2 gap-7'>
         <BtcRelay displayBlockstreamData={true} />

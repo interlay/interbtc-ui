@@ -89,7 +89,11 @@ function IssueRequests(): JSX.Element {
         <PageTitle
           mainTitle={t('issue_page.issue_requests')}
           subTitle={<TimerIncrement />} />
-        <hr className='border-interlayCalifornia' />
+        <hr
+          className={clsx(
+            'border-interlayCalifornia',
+            'mt-2'
+          )} />
       </div>
       <div
         className={clsx(

@@ -1,5 +1,6 @@
 import { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
 import VaultTable from '../../../common/components/vault-table/vault-table';
 import ActiveVaults from '../components/active-vaults';
@@ -18,9 +19,18 @@ export default function VaultsDashboard(): ReactElement {
         <PageTitle
           mainTitle={t('dashboard.vault.vaults')}
           subTitle={<TimerIncrement />} />
-        <hr className='border-interlayDenim' />
+        <hr
+          className={clsx(
+            'border-interlayDenim',
+            'mt-2'
+          )} />
       </div>
-      <div className='grid grid-cols-3 gap-7 mt-10'>
+      <div
+        className={clsx(
+          'grid',
+          'grid-cols-3',
+          'gap-7'
+        )}>
         <ActiveVaults />
         <CollateralLocked />
         <Collateralization />

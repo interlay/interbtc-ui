@@ -92,7 +92,11 @@ function RedeemRequests(): JSX.Element {
         <PageTitle
           mainTitle={t('dashboard.redeem.redeem')}
           subTitle={<TimerIncrement />} />
-        <hr className='border-interlayDenim' />
+        <hr
+          className={clsx(
+            'border-interlayDenim',
+            'mt-2'
+          )} />
       </div>
       <div
         className={clsx(
