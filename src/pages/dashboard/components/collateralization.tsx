@@ -1,32 +1,38 @@
-import { useEffect, useState, ReactElement } from 'react';
-import InterlayRouterLink from 'components/UI/InterlayRouterLink';
-import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
-import { FaExternalLinkAlt } from 'react-icons/fa';
+
+import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { BTCAmount } from '@interlay/monetary-js';
-import { StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
-import { displayMonetaryAmount, safeRoundTwoDecimals } from '../../../common/utils/utils';
-import { PAGES } from 'utils/constants/links';
-import DashboardCard from 'pages/dashboard/DashboardCard';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
 
-type CollateralizationProps = {
+import DashboardCard from 'pages/dashboard/DashboardCard';
+import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
+import InterlayRouterLink from 'components/UI/InterlayRouterLink';
+import {
+  displayMonetaryAmount,
+  safeRoundTwoDecimals
+} from 'common/utils/utils';
+import { PAGES } from 'utils/constants/links';
+import { StoreType } from 'common/types/util.types';
+
+interface Props {
   linkButton?: boolean;
-};
+}
 
-export default function Collateralization({ linkButton }: CollateralizationProps): ReactElement {
+const Collateralization = ({ linkButton }: Props): JSX.Element => {
   const { t } = useTranslation();
-
-  const [systemCollateralization, setSystemCollateralization] = useState('0');
-  const [issuablePolkaBTC, setIssuablePolkaBTC] = useState(BTCAmount.zero);
-  const [secureCollateralThreshold, setSecureCollateralThreshold] = useState('150');
-  const [failed, setFailed] = useState(false);
   const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
-  useEffect(() => {
-    const fetchSystemCollateralization = async () => {
+  const [systemCollateralization, setSystemCollateralization] = React.useState('0');
+  const [issuablePolkaBTC, setIssuablePolkaBTC] = React.useState(BTCAmount.zero);
+  const [secureCollateralThreshold, setSecureCollateralThreshold] = React.useState('150');
+  const [failed, setFailed] = React.useState(false);
+
+  React.useEffect(() => {
+    (async () => {
       if (!polkaBtcLoaded) return;
+
       try {
         const systemCollateralization = await window.polkaBTC.vaults.getSystemCollateralization();
         setSystemCollateralization(systemCollateralization?.mul(100).toString() || '0');
@@ -34,9 +40,11 @@ export default function Collateralization({ linkButton }: CollateralizationProps
         console.log('[Collateralization useEffect] error.message => ', error.message);
         setFailed(true);
       }
-    };
-    const fetchIssuableTokens = async () => {
+    })();
+
+    (async () => {
       if (!polkaBtcLoaded) return;
+
       try {
         const issuablePolkaBTC = await window.polkaBTC.vaults.getTotalIssuableAmount();
         setIssuablePolkaBTC(issuablePolkaBTC);
@@ -44,9 +52,11 @@ export default function Collateralization({ linkButton }: CollateralizationProps
         console.log('[Collateralization useEffect] error.message => ', error.message);
         setFailed(true);
       }
-    };
-    const fetchSecureCollateralThreshold = async () => {
+    })();
+
+    (async () => {
       if (!polkaBtcLoaded) return;
+
       try {
         const secureCollateralThreshold = await window.polkaBTC.vaults.getSecureCollateralThreshold();
         setSecureCollateralThreshold(secureCollateralThreshold?.mul(100).toString() || '150');
@@ -54,10 +64,7 @@ export default function Collateralization({ linkButton }: CollateralizationProps
         console.log('[Collateralization useEffect] error.message => ', error.message);
         setFailed(true);
       }
-    };
-    fetchSystemCollateralization();
-    fetchIssuableTokens();
-    fetchSecureCollateralThreshold();
+    })();
   });
 
   return (
@@ -126,4 +133,6 @@ export default function Collateralization({ linkButton }: CollateralizationProps
       </div>
     </DashboardCard>
   );
-}
+};
+
+export default Collateralization;
