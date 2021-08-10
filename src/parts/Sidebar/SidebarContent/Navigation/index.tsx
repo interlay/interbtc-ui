@@ -2,13 +2,13 @@
 import { useLocation } from 'react-router-dom';
 import { matchPath } from 'react-router';
 import {
-  CalendarIcon,
-  ChartBarIcon,
-  FolderIcon,
-  HomeIcon,
-  InboxIcon,
-  UsersIcon,
-  CurrencyDollarIcon
+  ClipboardListIcon,
+  BookOpenIcon,
+  RefreshIcon,
+  ChartSquareBarIcon,
+  ChatAltIcon,
+  StarIcon,
+  ChipIcon
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
@@ -21,37 +21,37 @@ const NAVIGATION_ITEMS = [
   {
     name: 'nav_bridge',
     link: PAGES.BRIDGE,
-    icon: FolderIcon
+    icon: RefreshIcon
   },
   {
     name: 'nav_transactions',
     link: PAGES.TRANSACTIONS,
-    icon: CalendarIcon
-  },
-  {
-    name: 'nav_vault',
-    link: PAGES.VAULT,
-    icon: CurrencyDollarIcon
+    icon: ClipboardListIcon
   },
   {
     name: 'nav_dashboard',
     link: PAGES.DASHBOARD,
-    icon: HomeIcon
+    icon: ChartSquareBarIcon
+  },
+  {
+    name: 'nav_vault',
+    link: PAGES.VAULT,
+    icon: ChipIcon
   },
   {
     name: 'nav_challenges',
     link: PAGES.CHALLENGES,
-    icon: UsersIcon
+    icon: StarIcon
   },
   {
     name: 'nav_feedback',
     link: PAGES.FEEDBACK,
-    icon: InboxIcon
+    icon: ChatAltIcon
   },
   {
     name: 'nav_docs',
     link: INTERLAY_DOCS,
-    icon: ChartBarIcon,
+    icon: BookOpenIcon,
     external: true,
     rest: {
       target: '_blank',
