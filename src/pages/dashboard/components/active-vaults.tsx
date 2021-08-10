@@ -1,35 +1,39 @@
-import { ReactElement, useState, useMemo, useEffect } from 'react';
-import InterlayRouterLink from 'components/UI/InterlayRouterLink';
-import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
-import { FaExternalLinkAlt } from 'react-icons/fa';
-import LineChartComponent from './line-chart-component';
-import useInterbtcIndex from '../../../common/hooks/use-interbtc-index';
+
+import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { PAGES } from 'utils/constants/links';
-import DashboardCard from 'pages/dashboard/DashboardCard';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
 
-type ActiveVaultsProps = {
-  linkButton?: boolean;
-};
+import LineChartComponent from './line-chart-component';
+import DashboardCard from 'pages/dashboard/DashboardCard';
+import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
+import InterlayRouterLink from 'components/UI/InterlayRouterLink';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
+import { PAGES } from 'utils/constants/links';
 
-const ActiveVaults = ({ linkButton }: ActiveVaultsProps): ReactElement => {
+interface Props {
+  linkButton?: boolean;
+}
+
+const ActiveVaults = ({ linkButton }: Props): JSX.Element => {
   const statsApi = useInterbtcIndex();
   const { t } = useTranslation();
 
   // eslint-disable-next-line no-array-constructor
-  const [totalVaultsPerDay, setTotalVaultsPerDay] = useState(new Array<{ date: number; count: number }>());
-  const fetchVaultsPerDay = useMemo(
-    () => async () => {
+  const [totalVaultsPerDay, setTotalVaultsPerDay] = React.useState(new Array<{
+    date: number;
+    count: number;
+  }>());
+
+  React.useEffect(() => {
+    if (!statsApi) return;
+
+    (async () => {
       const res = await statsApi.getRecentDailyVaultCounts({});
       setTotalVaultsPerDay(res);
-    },
-    [statsApi] // to silence the compiler
-  );
+    })();
+  }, [statsApi]);
 
-  useEffect(() => {
-    fetchVaultsPerDay();
-  }, [fetchVaultsPerDay]);
   return (
     <DashboardCard>
       <div
