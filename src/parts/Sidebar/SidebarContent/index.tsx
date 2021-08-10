@@ -1,5 +1,6 @@
 
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
 import Navigation from './Navigation';
@@ -22,6 +23,8 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
   onSmallScreen,
   onClose
 }, ref): JSX.Element => {
+  const { t } = useTranslation();
+
   return (
     <div
       ref={ref}
@@ -81,12 +84,22 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           'p-4'
         )}>
         <InterlayLink
+          className={clsx(
+            'flex',
+            'items-center',
+            'justify-center',
+            'space-x-2',
+            'w-full'
+          )}
           href={INTERLAY_COMPANY}
           target='_blank'
           rel='noopener noreferrer'>
+          <span className='font-medium'>
+            {t('built_by')}
+          </span>
           <InterlayLogoIcon
-            width={150}
-            height={33.7} />
+            width={130}
+            height={29.21} />
         </InterlayLink>
       </div>
     </div>

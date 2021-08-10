@@ -115,6 +115,7 @@
   "issue_redeem_disabled": "Issue and Redeem is currently disabled.",
   "interbtc_bridge_recovery_mode": "The interBTC bridge has entered recovery mode. User funds are safe. Please try again later or check the status on the Dashboard page.",
   "waiting_for_confirmations": "Waiting for Confirmations",
+  "built_by": "Built by",
   "redeem_page": {
     "withdraw": "Withdraw",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
