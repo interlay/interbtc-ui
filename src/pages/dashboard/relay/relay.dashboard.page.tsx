@@ -93,7 +93,7 @@ export default function RelayDashboard(): ReactElement {
           )} />
       </div>
       <div className='grid grid-cols-2 gap-7'>
-        <BtcRelay displayBlockstreamData={true} />
+        <BtcRelay displayBlockstreamData />
       </div>
       <div>
         <p

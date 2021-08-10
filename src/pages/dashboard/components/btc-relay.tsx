@@ -1,15 +1,17 @@
-import { ReactElement, useState, useEffect } from 'react';
-import InterlayRouterLink from 'components/UI/InterlayRouterLink';
-import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
-import { FaExternalLinkAlt } from 'react-icons/fa';
+
+import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { StoreType } from '../../../common/types/util.types';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import { StyledLinkData } from '../../../common/components/dashboard-table/dashboard-table';
+import clsx from 'clsx';
+
+import DashboardCard from 'pages/dashboard/DashboardCard';
+import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
+import InterlayRouterLink from 'components/UI/InterlayRouterLink';
+import { StyledLinkData } from 'common/components/dashboard-table/dashboard-table';
 import { BTC_BLOCK_API } from 'config/bitcoin';
 import { PAGES } from 'utils/constants/links';
-import DashboardCard from 'pages/dashboard/DashboardCard';
-import clsx from 'clsx';
+import { StoreType } from 'common/types/util.types';
 
 enum Status {
   Loading,
@@ -17,16 +19,21 @@ enum Status {
   Failure
 }
 
-type BtcRelayProps = {
+interface Props {
   linkButton?: boolean;
   displayBlockstreamData?: boolean;
-};
+}
 
-const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactElement => {
+const BtcRelay = ({
+  linkButton,
+  displayBlockstreamData
+}: Props): JSX.Element => {
   const { t } = useTranslation();
-  // TODO: Compute status using blockstream data
+  // TODO: compute status using blockstream data
   const { btcRelayHeight, bitcoinHeight } = useSelector((state: StoreType) => state.general);
-  const [blockstreamTip, setBlockstreamTip] = useState('-');
+
+  const [blockstreamTip, setBlockstreamTip] = React.useState('-');
+
   const outdatedRelayThreshold = 12;
   const state =
         bitcoinHeight === 0 ?
@@ -47,13 +54,13 @@ const BtcRelay = ({ linkButton, displayBlockstreamData }: BtcRelayProps): ReactE
             t('dashboard.synced') :
             t('dashboard.out_of_sync');
 
-  useEffect(() => {
+  React.useEffect(() => {
     (async () => {
       try {
         const hash = await window.polkaBTC.electrsAPI.getLatestBlock();
         setBlockstreamTip(hash);
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log('[BtcRelay] error.message => ', error.message);
       }
     })();
   });
