@@ -1,18 +1,23 @@
-import InterlayRouterLink from 'components/UI/InterlayRouterLink';
-import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
-import { FaExternalLinkAlt } from 'react-icons/fa';
+
 import { useSelector } from 'react-redux';
-import { ParachainStatus, StoreType } from '../../../common/types/util.types';
 import { useTranslation } from 'react-i18next';
-import { PAGES } from 'utils/constants/links';
-import DashboardCard from 'pages/dashboard/DashboardCard';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
 
-type ParachainSecurityProps = {
-  linkButton?: boolean;
-};
+import DashboardCard from 'pages/dashboard/DashboardCard';
+import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
+import InterlayRouterLink from 'components/UI/InterlayRouterLink';
+import { PAGES } from 'utils/constants/links';
+import {
+  ParachainStatus,
+  StoreType
+} from 'common/types/util.types';
 
-const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactElement => {
+interface Props {
+  linkButton?: boolean;
+}
+
+const ParachainSecurity = ({ linkButton }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
 
@@ -58,8 +63,12 @@ const ParachainSecurity = ({ linkButton }: ParachainSecurityProps): React.ReactE
 
   return (
     <DashboardCard>
-      {/* TODO: move this to the right */}
-      <div className='h-64 grid place-items-center'>
+      <div
+        className={clsx(
+          'h-64',
+          'grid',
+          'place-items-center'
+        )}>
         <div>
           <h1
             className={clsx(
