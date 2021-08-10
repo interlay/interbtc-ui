@@ -1,14 +1,15 @@
-import { useState, useEffect, ReactElement } from 'react';
+
+import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
-
-import { PAGES } from 'utils/constants/links';
-import DashboardCard from 'pages/dashboard/DashboardCard';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
-import InterlayRouterLink from 'components/UI/InterlayRouterLink';
-import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import { FaExternalLinkAlt } from 'react-icons/fa';
+
+import DashboardCard from 'pages/dashboard/DashboardCard';
+import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
+import InterlayRouterLink from 'components/UI/InterlayRouterLink';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
+import { PAGES } from 'utils/constants/links';
 
 enum Status {
   Loading,
@@ -17,21 +18,22 @@ enum Status {
   NoData
 }
 
-type OracleStatusProps = {
+interface Props {
   linkButton?: boolean;
-};
+}
 
-const OracleStatus = ({ linkButton }: OracleStatusProps): ReactElement => {
+const OracleStatus = ({ linkButton }: Props): JSX.Element => {
   const statsApi = useInterbtcIndex();
   const { t } = useTranslation();
-  // TODO: use translations for status
-  const [oracleStatus, setOracleStatus] = useState(Status.Loading);
-  const [exchangeRate, setExchangeRate] = useState('0');
 
-  useEffect(() => {
+  // TODO: use translations for status
+  const [oracleStatus, setOracleStatus] = React.useState(Status.Loading);
+  const [exchangeRate, setExchangeRate] = React.useState('0');
+
+  React.useEffect(() => {
     (async () => {
       try {
-        const oracleStatus = (await statsApi.getLatestSubmission());
+        const oracleStatus = await statsApi.getLatestSubmission();
         const exchangeRate = new Big(oracleStatus.exchangeRate);
         setExchangeRate(exchangeRate.toFixed(2));
         const status = oracleStatus.online ? Status.Online : Status.Offline;
