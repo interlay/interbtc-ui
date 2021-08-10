@@ -39,6 +39,12 @@ const NAVIGATION_ITEMS = [
     icon: ChipIcon
   },
   {
+    name: '',
+    link: '#',
+    icon: () => null,
+    separator: true
+  },
+  {
     name: 'nav_challenges',
     link: PAGES.CHALLENGES,
     icon: StarIcon
@@ -85,6 +91,16 @@ const Navigation = ({
       )}
       {...rest}>
       {NAVIGATION_ITEMS.map(navigationItem => {
+        if (navigationItem.separator) {
+          return (
+            <hr
+              className={clsx(
+                'border-t',
+                'border-gray-200'
+              )} />
+          );
+        }
+
         const match = matchPath(location.pathname, {
           path: navigationItem.link,
           exact: true,
