@@ -1,11 +1,14 @@
 
+import * as React from 'react';
 import clsx from 'clsx';
 
-const InterlayCinnabarBadge = ({
+type Ref = HTMLSpanElement;
+const InterlayCinnabarBadge = React.forwardRef<Ref, Props>(({
   className,
   ...rest
-}: Props): JSX.Element => (
+}, ref): JSX.Element => (
   <span
+    ref={ref}
     className={clsx(
       'inline-flex',
       'items-center',
@@ -19,7 +22,8 @@ const InterlayCinnabarBadge = ({
       className
     )}
     {...rest} />
-);
+));
+InterlayCinnabarBadge.displayName = 'InterlayCinnabarBadge';
 
 export type Props = React.ComponentPropsWithRef<'span'>;
 

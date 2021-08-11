@@ -308,13 +308,50 @@ module.exports = {
     extend: {
       borderColor: [
         'before',
-        'after'
+        'after',
+        'important'
       ],
       borderRadius: [
         'first',
-        'last'
+        'last',
+        'important'
       ],
-      padding: ['important']
+      padding: [
+        'important'
+      ],
+      maxWidth: [
+        'important'
+      ],
+      width: [
+        'important'
+      ],
+      fontSize: [
+        'important'
+      ],
+      fontWeight: [
+        'important'
+      ],
+      backdropFilter: [
+        'important'
+      ],
+      backdropBlur: [
+        'important'
+      ],
+      backgroundColor: [
+        'important'
+      ],
+      backgroundOpacity: [
+        'important'
+      ],
+      textColor: [
+        'important'
+      ],
+      wordBreak: [
+        'important'
+      ],
+      zIndex: [
+        'important'
+      ]
     }
   },
   plugins: [

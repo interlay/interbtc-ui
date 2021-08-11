@@ -1,4 +1,5 @@
 
+// ray test touch <<
 // TODO: could use tailwindcss
 import RCTooltip from 'rc-tooltip';
 import { TooltipProps as RCTooltipProps } from 'rc-tooltip/lib/Tooltip';
@@ -18,3 +19,4 @@ const Tooltip = ({
 export type Props = RCTooltipProps;
 
 export default Tooltip;
+// ray test touch >>

@@ -103,7 +103,7 @@ const Topbar = (): JSX.Element => {
     <>
       <div
         className={clsx(
-          'p-2',
+          'p-4',
           'flex',
           'items-center',
           'justify-end',

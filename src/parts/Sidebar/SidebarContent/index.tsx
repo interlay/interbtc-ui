@@ -70,9 +70,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
               width={141.6}
               height={36} />
           </InterlayRouterLink>
-          {/* ray test touch << */}
           <TestNetBadge className='ml-2' />
-          {/* ray test touch >> */}
         </div>
         <Navigation
           onSmallScreen={onSmallScreen}
