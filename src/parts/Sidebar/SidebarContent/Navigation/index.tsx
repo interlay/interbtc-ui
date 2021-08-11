@@ -1,6 +1,7 @@
 
 import { useLocation } from 'react-router-dom';
 import { matchPath } from 'react-router';
+import { useSelector } from 'react-redux';
 import {
   ClipboardListIcon,
   BookOpenIcon,
@@ -16,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import SidebarNavLink from './SidebarNavLink';
 import { INTERLAY_DOCS } from 'config/links';
 import { PAGES } from 'utils/constants/links';
+import { StoreType } from 'common/types/util.types';
 
 const NAVIGATION_ITEMS = [
   {
@@ -77,6 +79,7 @@ const Navigation = ({
 }: CustomProps & React.ComponentPropsWithRef<'nav'>): JSX.Element => {
   const location = useLocation();
   const { t } = useTranslation();
+  const { vaultClientLoaded } = useSelector((state: StoreType) => state.general);
 
   return (
     <nav
@@ -99,6 +102,11 @@ const Navigation = ({
                 'border-gray-200'
               )} />
           );
+        }
+
+        // TODO: could disable the vault link rather than hiding
+        if (navigationItem.link === PAGES.VAULT && !vaultClientLoaded) {
+          return null;
         }
 
         const match = matchPath(location.pathname, {
