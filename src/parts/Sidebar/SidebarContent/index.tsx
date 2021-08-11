@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import Navigation from './Navigation';
 import CloseButton from './CloseButton';
 import SocialMediaContainer from './SocialMediaContainer';
+import TestNetBadge from './TestnetBadge';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayLink from 'components/UI/InterlayLink';
 import { INTERLAY_COMPANY } from 'config/links';
@@ -61,7 +62,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           className={clsx(
             'flex-shrink-0',
             'flex',
-            'items-center',
+            'items-start',
             'px-4'
           )}>
           <InterlayRouterLink to={PAGES.HOME}>
@@ -69,6 +70,9 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
               width={141.6}
               height={36} />
           </InterlayRouterLink>
+          {/* ray test touch << */}
+          <TestNetBadge className='ml-2' />
+          {/* ray test touch >> */}
         </div>
         <Navigation
           onSmallScreen={onSmallScreen}

@@ -1,7 +1,6 @@
 
 import clsx from 'clsx';
 
-import TestnetBanner from 'parts/TestnetBanner';
 import MaintenanceBanner from 'parts/MaintenanceBanner';
 import Sidebar from 'parts/Sidebar';
 import Topbar from 'parts/Topbar';
@@ -20,8 +19,9 @@ const Layout = ({ children }: Props): JSX.Element => {
         )}>
         <div>
           <Topbar />
-          <TestnetBanner />
+          {/* ray test touch << */}
           <MaintenanceBanner />
+          {/* ray test touch >> */}
           {children}
         </div>
       </div>
