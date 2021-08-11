@@ -122,12 +122,13 @@ function connectToParachain(): Promise<InterBTCAPI> {
   );
 }
 
-function App(): JSX.Element {
+const App = (): JSX.Element => {
   const {
     polkaBtcLoaded,
     address,
     balanceInterBTC,
-    balanceDOT
+    balanceDOT,
+    vaultClientLoaded
   } = useSelector((state: StoreType) => state.general);
   const [isLoading, setIsLoading] = React.useState(true);
   const dispatch = useDispatch();
@@ -400,9 +401,11 @@ function App(): JSX.Element {
                 <Route path={PAGES.DASHBOARD}>
                   <Dashboard />
                 </Route>
-                <Route path={PAGES.VAULT}>
-                  <VaultDashboard />
-                </Route>
+                {vaultClientLoaded && (
+                  <Route path={PAGES.VAULT}>
+                    <VaultDashboard />
+                  </Route>
+                )}
                 <Route path={PAGES.FEEDBACK}>
                   <Feedback />
                 </Route>
@@ -426,7 +429,7 @@ function App(): JSX.Element {
       </Layout>
     </>
   );
-}
+};
 
 export default withErrorBoundary(App, {
   FallbackComponent: ErrorFallback,
