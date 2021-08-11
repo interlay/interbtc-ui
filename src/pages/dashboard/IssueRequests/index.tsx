@@ -84,106 +84,97 @@ function IssueRequests(): JSX.Element {
   ]);
 
   return (
-    <MainContainer
-      className={clsx(
-        'flex',
-        'justify-center',
-        'fade-in-animation'
-      )}>
+    <MainContainer className='fade-in-animation'>
+      <div>
+        <PageTitle
+          mainTitle={t('issue_page.issue_requests')}
+          subTitle={<TimerIncrement />} />
+        <hr
+          className={clsx(
+            'border-interlayCalifornia',
+            'mt-2'
+          )} />
+      </div>
       <div
         className={clsx(
-          'w-3/4',
-          'space-y-10'
+          'sm:flex',
+          'sm:flex-wrap',
+          'sm:items-center',
+          'sm:justify-center'
         )}>
-        <div>
-          <PageTitle
-            mainTitle={t('issue_page.issue_requests')}
-            subTitle={<TimerIncrement />} />
-          <hr className='border-interlayCalifornia' />
+        <div
+          className={clsx(
+            'space-y-0.5',
+            'font-medium',
+            'text-lg',
+            'sm:flex-1'
+          )}>
+          <h5
+            className={clsx(
+              'text-interlayDenim',
+              'font-bold',
+              'text-xl'
+            )}>
+            {t('dashboard.issue.issued')}
+          </h5>
+          <h5>
+            {t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalInterBTC) })}
+          </h5>
+          <h5 className='text-textSecondary'>
+            ${getUsdAmount(totalInterBTC, prices.bitcoin.usd).toLocaleString()}
+          </h5>
+          <h5
+            className={clsx(
+              'text-interlayConifer',
+              'font-bold',
+              'text-xl'
+            )}>
+            {t('dashboard.issue.issue_requests')}
+          </h5>
+          <h5>
+            {totalSuccessfulIssues === '-' ? t('no_data') : totalSuccessfulIssues}
+          </h5>
         </div>
         <div
           className={clsx(
-            'sm:flex',
-            'sm:flex-wrap',
-            'sm:items-center',
-            'sm:justify-center'
+            'border',
+            'rounded',
+            'sm:flex-1'
           )}>
-          <div
-            className={clsx(
-              'space-y-0.5',
-              'font-medium',
-              'text-lg',
-              'sm:flex-1',
-              'mx-6'
-            )}>
-            <h5
-              className={clsx(
-                'text-interlayDenim',
-                'font-bold',
-                'text-xl'
-              )}>
-              {t('dashboard.issue.issued')}
-            </h5>
-            <h5>
-              {t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalInterBTC) })}
-            </h5>
-            <h5 className='text-textSecondary'>
-              ${getUsdAmount(totalInterBTC, prices.bitcoin.usd).toLocaleString()}
-            </h5>
-            <h5
-              className={clsx(
-                'text-interlayConifer',
-                'font-bold',
-                'text-xl'
-              )}>
-              {t('dashboard.issue.issue_requests')}
-            </h5>
-            <h5>
-              {totalSuccessfulIssues === '-' ? t('no_data') : totalSuccessfulIssues}
-            </h5>
-          </div>
-          <div
-            className={clsx(
-              'border',
-              'rounded',
-              'sm:flex-1',
-              'mx-6'
-            )}>
-            <LineChartComponent
-              color={[
-                'd_interlayDenim',
-                'd_interlayPaleSky'
-              ]}
-              label={[
-                t('dashboard.issue.total_issued_chart'),
-                t('dashboard.issue.per_day_issued_chart')
-              ]}
-              yLabels={
-                cumulativeIssuesPerDay
-                  .slice(1)
-                  .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))
+          <LineChartComponent
+            color={[
+              'd_interlayDenim',
+              'd_interlayPaleSky'
+            ]}
+            label={[
+              t('dashboard.issue.total_issued_chart'),
+              t('dashboard.issue.per_day_issued_chart')
+            ]}
+            yLabels={
+              cumulativeIssuesPerDay
+                .slice(1)
+                .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))
+            }
+            yAxisProps={[
+              {
+                beginAtZero: true,
+                position: 'left',
+                maxTicksLimit: 6
+              },
+              {
+                position: 'right',
+                maxTicksLimit: 6
               }
-              yAxisProps={[
-                {
-                  beginAtZero: true,
-                  position: 'left',
-                  maxTicksLimit: 6
-                },
-                {
-                  position: 'right',
-                  maxTicksLimit: 6
-                }
-              ]}
-              data={[
-                cumulativeIssuesPerDay
-                  .slice(1)
-                  .map(dataPoint => satToBTC(new BN(dataPoint.sat)).toNumber()),
-                pointIssuesPerDay.slice(1).map(sat => Number(new BN(sat)))
-              ]} />
-          </div>
+            ]}
+            data={[
+              cumulativeIssuesPerDay
+                .slice(1)
+                .map(dataPoint => satToBTC(new BN(dataPoint.sat)).toNumber()),
+              pointIssuesPerDay.slice(1).map(sat => Number(new BN(sat)))
+            ]} />
         </div>
-        <IssueRequestsTable totalIssueRequests={totalIssueRequests} />
       </div>
+      <IssueRequestsTable totalIssueRequests={totalIssueRequests} />
     </MainContainer>
   );
 }

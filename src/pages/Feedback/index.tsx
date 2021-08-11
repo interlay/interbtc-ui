@@ -14,7 +14,7 @@ import {
   USER_FEEDBACK_FORM,
   VAULT_FEEDBACK_FORM,
   RELAYER_FEEDBACK_FORM,
-  POLKA_BTC_UI_GITHUB_ISSUES,
+  INTER_BTC_UI_GITHUB_ISSUES,
   INTERLAY_DISCORD
 } from 'config/links';
 
@@ -36,7 +36,7 @@ const FEEDBACK_ITEMS = [
   },
   {
     title: 'Open an Issue on Github',
-    link: POLKA_BTC_UI_GITHUB_ISSUES,
+    link: INTER_BTC_UI_GITHUB_ISSUES,
     icon: <FaGithub />
   },
   {
@@ -51,8 +51,6 @@ const Feedback = (): JSX.Element => (
     <PageTitle mainTitle='Feedback' />
     <CardList
       className={clsx(
-        'max-w-max',
-        'm-auto',
         'md:grid-cols-3',
         '2xl:grid-cols-5',
         'gap-5'

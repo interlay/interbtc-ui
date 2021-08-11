@@ -6,7 +6,7 @@ const InterlayLink = ({
   className,
   children,
   ...rest
-}: React.ComponentPropsWithRef<'a'>): JSX.Element => (
+}: Props): JSX.Element => (
   <a
     className={clsx(
       'hover:underline',
@@ -16,5 +16,7 @@ const InterlayLink = ({
     {children}
   </a>
 );
+
+export type Props = React.ComponentPropsWithRef<'a'>;
 
 export default InterlayLink;

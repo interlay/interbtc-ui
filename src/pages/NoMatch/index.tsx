@@ -1,7 +1,9 @@
 
+import MainContainer from 'parts/MainContainer';
+
 // TODO: should polish
 const NoMatch = (): JSX.Element => (
-  <>404</>
+  <MainContainer>404</MainContainer>
 );
 
 export default NoMatch;

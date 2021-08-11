@@ -1,6 +1,7 @@
 
 const PAGES = Object.freeze({
   HOME: '/',
+  BRIDGE: '/bridge',
   CHALLENGES: '/challenges',
   DASHBOARD_VAULTS: '/dashboard/vaults',
   DASHBOARD_PARACHAIN: '/dashboard/parachain',

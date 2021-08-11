@@ -15,7 +15,7 @@ import { BTCAmount } from '@interlay/monetary-js';
 import BTCPaymentPendingStatusUI from './BTCPaymentPendingStatusUI';
 import IssueRequestStatusUI from './IssueRequestStatusUI';
 import WhoopsStatusUI from './WhoopsStatusUI';
-import PriceInfo from 'pages/Home/PriceInfo';
+import PriceInfo from 'pages/Bridge/PriceInfo';
 import IconButton from 'components/IconButton';
 import InterlayModal, {
   Props as ModalProps,

@@ -12,24 +12,19 @@ export default function OraclesDashboard(): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <MainContainer
-      className={clsx(
-        'flex',
-        'justify-center',
-        'fade-in-animation'
-      )}>
-      <div className='w-3/4'>
-        <div>
-          <PageTitle
-            mainTitle={t('dashboard.oracles.oracles')}
-            subTitle={<TimerIncrement />} />
-          <hr className='border-interlayDenim' />
-          <div className='mt-10'>
-            <OracleStatus />
-          </div>
-          <OracleTable dotLocked='1' />
-        </div>
+    <MainContainer className='fade-in-animation'>
+      <div>
+        <PageTitle
+          mainTitle={t('dashboard.oracles.oracles')}
+          subTitle={<TimerIncrement />} />
+        <hr
+          className={clsx(
+            'border-interlayDenim',
+            'mt-2'
+          )} />
       </div>
+      <OracleStatus />
+      <OracleTable dotLocked='1' />
     </MainContainer>
   );
 }

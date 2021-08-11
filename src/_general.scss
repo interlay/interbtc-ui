@@ -68,12 +68,6 @@ ul {
   font-family: "airbnb-cereal", Arial;
 }
 
-body {
-  .input-error {
-    margin-top: -1rem;
-  }
-}
-
 // MEMO inspired by https://stackoverflow.com/questions/3790935/can-i-hide-the-html5-number-input-s-spin-box
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
@@ -84,20 +78,6 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
-}
-
-#basic-navbar-nav {
-  .navbar-nav {
-    .dropdown.nav-item {
-      border: 1px solid #343a40;
-      max-height: 31px;
-      margin-right: 0.5rem;
-    }
-  }
-}
-
-.top-bar {
-  min-height: 80px;
 }
 
 .fade-in-animation {

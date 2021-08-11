@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { Redeem } from '@interlay/interbtc';
 
-import RequestWrapper from 'pages/Home/RequestWrapper';
+import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import InterlayLink from 'components/UI/InterlayLink';
 import { shortAddress } from 'common/utils/utils';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { Redeem } from '@interlay/interbtc';
 
-import RequestWrapper from 'pages/Home/RequestWrapper';
+import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 

@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import { Issue } from '@interlay/interbtc';
 import { BTCAmount } from '@interlay/monetary-js';
 
-import RequestWrapper from 'pages/Home/RequestWrapper';
-import PriceInfo from 'pages/Home/PriceInfo';
+import RequestWrapper from 'pages/Bridge/RequestWrapper';
+import PriceInfo from 'pages/Bridge/PriceInfo';
 import Tooltip from 'components/Tooltip';
 import {
   copyToClipboard,
