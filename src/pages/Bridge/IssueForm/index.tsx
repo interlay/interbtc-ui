@@ -27,6 +27,7 @@ import {
   PolkadotUnit
 } from '@interlay/monetary-js';
 
+import SubmitButton from '../SubmitButton';
 import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
 import InterBTCField from 'pages/Bridge/InterBTCField';
 import PriceInfo from 'pages/Bridge/PriceInfo';
@@ -35,7 +36,6 @@ import Tooltip from 'components/Tooltip';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
-import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
 import {
   ParachainStatus,
   StoreType
@@ -337,10 +337,7 @@ const IssueForm = (): JSX.Element | null => {
             value={displayMonetaryAmount(interBTCAmount)}
             unitName='interBTC'
             approxUSD={getUsdAmount(interBTCAmount, prices.bitcoin.usd)} />
-          <InterlayDenimContainedButton
-            type='submit'
-            style={{ display: 'flex' }}
-            className='mx-auto'
+          <SubmitButton
             disabled={
               // TODO: `parachainStatus` and `address` should be checked at upper levels
               parachainStatus !== ParachainStatus.Running ||
@@ -349,7 +346,7 @@ const IssueForm = (): JSX.Element | null => {
             pending={submitStatus === STATUSES.PENDING}
             onClick={handleConfirmClick}>
             {accountSet ? t('confirm') : t('connect_wallet')}
-          </InterlayDenimContainedButton>
+          </SubmitButton>
         </form>
         {(submitStatus === STATUSES.REJECTED && submitError) && (
           <ErrorModal

@@ -10,12 +10,12 @@ import clsx from 'clsx';
 import { toast } from 'react-toastify';
 
 import InterBTCField from '../InterBTCField';
+import SubmitButton from '../SubmitButton';
 import TextField from 'components/TextField';
 import InterlayModal, {
   InterlayModalTitle,
   InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
-import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayDefaultOutlinedButton from 'components/buttons/InterlayDefaultOutlinedButton';
 import ErrorModal from 'components/ErrorModal';
@@ -243,10 +243,7 @@ const TransferForm = (): JSX.Element => {
             {selectedNetworkItem.title}
           </InterlayDenimOutlinedButton>
         </div>
-        <InterlayDenimContainedButton
-          type='submit'
-          style={{ display: 'flex' }}
-          className='mx-auto'
+        <SubmitButton
           disabled={
             parachainStatus !== ParachainStatus.Running ||
             !!selectedNetworkItem.disabled
@@ -258,7 +255,7 @@ const TransferForm = (): JSX.Element => {
           ) : (
             t('connect_wallet')
           )}
-        </InterlayDenimContainedButton>
+        </SubmitButton>
       </form>
       <InterlayModal
         open={networkModalOpen}

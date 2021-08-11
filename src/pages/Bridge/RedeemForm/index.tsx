@@ -27,6 +27,7 @@ import {
   PolkadotUnit
 } from '@interlay/monetary-js';
 
+import SubmitButton from '../SubmitButton';
 import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
 import InterBTCField from 'pages/Bridge/InterBTCField';
 import PriceInfo from 'pages/Bridge/PriceInfo';
@@ -37,7 +38,6 @@ import TextField from 'components/TextField';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
-import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
 import {
   BALANCE_MAX_INTEGER_LENGTH,
   BTC_ADDRESS_REGEX
@@ -463,15 +463,12 @@ const RedeemForm = (): JSX.Element | null => {
               unitName='DOT'
               approxUSD={totalDOTInUSD} />
           )}
-          <InterlayDenimContainedButton
-            type='submit'
-            style={{ display: 'flex' }}
-            className='mx-auto'
+          <SubmitButton
             disabled={parachainStatus !== ParachainStatus.Running}
             pending={submitStatus === STATUSES.PENDING}
             onClick={handleConfirmClick}>
             {accountSet ? t('confirm') : t('connect_wallet')}
-          </InterlayDenimContainedButton>
+          </SubmitButton>
         </form>
         {(submitStatus === STATUSES.REJECTED && submitError) && (
           <ErrorModal

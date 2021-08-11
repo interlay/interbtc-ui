@@ -26,10 +26,10 @@ import {
 
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterBTCField from '../InterBTCField';
+import SubmitButton from '../SubmitButton';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
-import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
 import { getUsdAmount } from 'common/utils/utils';
 import {
   StoreType,
@@ -241,10 +241,7 @@ const Burn = (): JSX.Element | null => {
             value={earnedDOT.toHuman()}
             unitName='DOT'
             approxUSD={getUsdAmount(earnedDOT, prices.polkadot.usd)} />
-          <InterlayDenimContainedButton
-            type='submit'
-            style={{ display: 'flex' }}
-            className='mx-auto'
+          <SubmitButton
             // TODO: should not check everywhere like this
             disabled={
               parachainStatus === ParachainStatus.Loading ||
@@ -253,7 +250,7 @@ const Burn = (): JSX.Element | null => {
             pending={submitStatus === STATUSES.PENDING}
             onClick={handleConfirmClick}>
             {accountSet ? t('burn') : t('connect_wallet')}
-          </InterlayDenimContainedButton>
+          </SubmitButton>
         </form>
         {(submitStatus === STATUSES.REJECTED && submitError) && (
           <ErrorModal
