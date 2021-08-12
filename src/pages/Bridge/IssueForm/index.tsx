@@ -8,7 +8,6 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
-import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 import {
   useErrorHandler,
   withErrorBoundary
@@ -37,13 +36,10 @@ import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
 import {
-  ParachainStatus,
-  StoreType
-} from 'common/types/util.types';
-import {
   BLOCK_TIME,
   BLOCKS_BEHIND_LIMIT
 } from 'config/parachain';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { updateIssuePeriodAction } from 'common/actions/issue.actions';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import {
@@ -52,10 +48,14 @@ import {
   getUsdAmount
 } from 'common/utils/utils';
 import STATUSES from 'utils/constants/statuses';
+import {
+  ParachainStatus,
+  StoreType
+} from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
+import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const BTC_AMOUNT = 'btc-amount';
 

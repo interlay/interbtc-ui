@@ -8,7 +8,6 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
-import { FaExclamationCircle } from 'react-icons/fa';
 import {
   useErrorHandler,
   withErrorBoundary
@@ -32,18 +31,19 @@ import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
 import InterBTCField from 'pages/Bridge/InterBTCField';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import ParachainStatusInfo from 'pages/Bridge/ParachainStatusInfo';
-import Tooltip from 'components/Tooltip';
 import Toggle from 'components/Toggle';
 import TextField from 'components/TextField';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
+import InterlayTooltip from 'components/UI/InterlayTooltip';
 import {
   BALANCE_MAX_INTEGER_LENGTH,
   BTC_ADDRESS_REGEX
 } from '../../../constants';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   displayMonetaryAmount,
   getUsdAmount,
@@ -61,7 +61,7 @@ import {
 } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
+import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const INTER_BTC_AMOUNT = 'inter-btc-amount';
 const BTC_ADDRESS = 'btc-address';
@@ -390,9 +390,14 @@ const RedeemForm = (): JSX.Element | null => {
                   'space-x-1'
                 )}>
                 <span>{t('redeem_page.premium_redeem')}</span>
-                <Tooltip overlay={t('redeem_page.premium_redeem_info')}>
-                  <FaExclamationCircle />
-                </Tooltip>
+                <InterlayTooltip label={t('redeem_page.premium_redeem_info')}>
+                  <InformationCircleIcon
+                    className={clsx(
+                      'text-textSecondary',
+                      'w-5',
+                      'h-5'
+                    )} />
+                </InterlayTooltip>
               </div>
               <Toggle
                 checked={premiumRedeemSelected}
