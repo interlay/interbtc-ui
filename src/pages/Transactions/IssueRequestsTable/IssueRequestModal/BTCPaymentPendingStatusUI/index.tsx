@@ -8,8 +8,8 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { BTCAmount } from '@interlay/monetary-js';
 import { Issue } from '@interlay/interbtc';
 
-import Tooltip from 'components/Tooltip';
 import Timer from 'components/Timer';
+import InterlayTooltip from 'components/UI/InterlayTooltip';
 import { StoreType } from 'common/types/util.types';
 import {
   copyToClipboard,
@@ -43,9 +43,7 @@ const BTCPaymentPendingStatusUI = ({
   ]);
 
   return (
-    <div
-      id='BTCPaymentPendingStatusUI'
-      className='space-y-8'>
+    <div className='space-y-8'>
       <div
         className={clsx(
           'flex',
@@ -75,8 +73,8 @@ const BTCPaymentPendingStatusUI = ({
           )}>
           {t('issue_page.single_transaction')}
         </p>
-        {/* TODO: should improve the UX */}
-        <Tooltip overlay={t('click_to_copy')}>
+        {/* TODO: should improve UX */}
+        <InterlayTooltip label={t('click_to_copy')}>
           <span
             className={clsx(
               'block',
@@ -90,7 +88,7 @@ const BTCPaymentPendingStatusUI = ({
             onClick={() => copyToClipboard(request.vaultBTCAddress)}>
             {request.vaultBTCAddress}
           </span>
-        </Tooltip>
+        </InterlayTooltip>
         {initialLeftSeconds && (
           <p
             className={clsx(
