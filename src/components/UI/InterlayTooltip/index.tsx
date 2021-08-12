@@ -10,19 +10,21 @@ const InterlayTooltip = React.forwardRef<Ref, Props>((props, ref): JSX.Element =
     <Tooltip
       ref={ref}
       className={clsx(
-        '!w-max',
-        '!p-2.5',
-        '!rounded-lg',
-        '!text-xs',
-        '!backdrop-filter',
-        '!backdrop-blur-2xl',
-        '!bg-white',
-        '!bg-opacity-70',
-        '!text-textPrimary',
-        '!border',
-        '!border-interlayHaiti-100',
-        '!break-all',
-        '!z-interlayTooltip'
+        'w-max',
+        'max-w-xs',
+        'p-2.5',
+        'rounded-lg',
+        'text-xs',
+        'backdrop-filter',
+        'backdrop-blur-2xl',
+        'bg-white',
+        'bg-opacity-70',
+        'text-textPrimary',
+        'border',
+        'border-interlayHaiti-100',
+        'whitespace-normal',
+        'z-interlayTooltip',
+        'shadow-md'
       )}
       {...props} />
   );

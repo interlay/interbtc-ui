@@ -529,6 +529,7 @@
     "alpha_testnet": "interBTC User Guide (Alpha Testnet)"
   },
   "test_net": "TestNet",
+  "test_net_warning": "All testnet assets are for testing purposes only and have no real value.",
   "maintenance": {
     "type": {
       "scheduled": "Scheduled maintenance on",

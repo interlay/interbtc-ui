@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
 import InterlayCinnabarBadge, { Props as InterlayCinnabarBadgeProps } from 'components/badges/InterlayCinnabarBadge';
-import InterlayTooltip from 'components/InterlayTooltip';
+import InterlayTooltip from 'components/UI/InterlayTooltip';
 
 const TestNetBadge = ({
   className,
@@ -12,7 +12,7 @@ const TestNetBadge = ({
   const { t } = useTranslation();
 
   return (
-    <InterlayTooltip label='All testnet assets are for testing purposes only and have no real value.'>
+    <InterlayTooltip label={t('test_net_warning')}>
       <InterlayCinnabarBadge
         className={clsx(
           'cursor-default',

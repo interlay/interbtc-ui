@@ -17,13 +17,11 @@ const Layout = ({ children }: Props): JSX.Element => {
           'relative',
           'min-h-screen'
         )}>
-        <div>
-          <Topbar />
-          {/* ray test touch << */}
-          <MaintenanceBanner />
-          {/* ray test touch >> */}
-          {children}
-        </div>
+        {/* ray test touch << */}
+        <MaintenanceBanner />
+        {/* ray test touch >> */}
+        <Topbar />
+        {children}
       </div>
     </Sidebar>
   );
