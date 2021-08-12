@@ -17,9 +17,7 @@ const Layout = ({ children }: Props): JSX.Element => {
           'relative',
           'min-h-screen'
         )}>
-        {/* ray test touch << */}
         <MaintenanceBanner />
-        {/* ray test touch >> */}
         <Topbar />
         {children}
       </div>
