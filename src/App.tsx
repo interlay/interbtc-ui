@@ -81,7 +81,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // const Dashboard = React.lazy(() =>
 //   import(/* webpackChunkName: 'dashboard' */ 'pages/dashboard/dashboard.page')
 // );
-// const VaultDashboardPage = React.lazy(() =>
+// const VaultDashboard = React.lazy(() =>
 //   import(/* webpackChunkName: 'vault' */ 'pages/vault-dashboard/vault-dashboard.page')
 // );
 const Challenges = React.lazy(() =>
