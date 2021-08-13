@@ -1,37 +1,48 @@
-import React, { ReactElement, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+
+import * as React from 'react';
+import {
+  useSelector,
+  useDispatch
+} from 'react-redux';
 import { Table } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
-import { StoreType } from 'common/types/util.types';
-import { addReplaceRequestsAction } from 'common/actions/vault.actions';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { parachainToUIReplaceRequests } from 'common/utils/requests';
 import { shortAddress } from 'common/utils/utils';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import { StoreType } from 'common/types/util.types';
+import { addReplaceRequestsAction } from 'common/actions/vault.actions';
 
-export default function ReplaceTable(): ReactElement {
-  const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
+const ReplaceTable = (): JSX.Element => {
+  const {
+    polkaBtcLoaded,
+    address
+  } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
   const replaceRequests = useSelector((state: StoreType) => state.vault.requests);
   const { t } = useTranslation();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!polkaBtcLoaded || !address) return;
+  React.useEffect(() => {
+    if (!polkaBtcLoaded) return;
+    if (!dispatch) return;
+    if (!address) return;
 
+    (async () => {
       try {
         const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
         const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
         if (!requests) return;
 
         dispatch(addReplaceRequestsAction(parachainToUIReplaceRequests(requests)));
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        console.log('[ReplaceTable] error.message => ', error.message);
       }
-    };
-
-    fetchData();
-  }, [polkaBtcLoaded, dispatch, address]);
+    })();
+  }, [
+    polkaBtcLoaded,
+    dispatch,
+    address
+  ]);
 
   return (
     <div style={{ margin: '40px 0px' }}>
@@ -46,7 +57,7 @@ export default function ReplaceTable(): ReactElement {
         </p>
       </div>
       {replaceRequests && replaceRequests.length > 0 ? (
-        <React.Fragment>
+        <>
           <Table
             hover
             responsive
@@ -80,10 +91,12 @@ export default function ReplaceTable(): ReactElement {
               })}
             </tbody>
           </Table>
-        </React.Fragment>
+        </>
       ) : (
-        <React.Fragment>{t('empty_data')}</React.Fragment>
+        <>{t('empty_data')}</>
       )}
     </div>
   );
-}
+};
+
+export default ReplaceTable;

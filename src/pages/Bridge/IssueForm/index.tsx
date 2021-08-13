@@ -8,7 +8,6 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
-import { HiOutlineExclamationCircle } from 'react-icons/hi';
 import {
   useErrorHandler,
   withErrorBoundary
@@ -32,18 +31,15 @@ import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
 import InterBTCField from 'pages/Bridge/InterBTCField';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import ParachainStatusInfo from 'pages/Bridge/ParachainStatusInfo';
-import Tooltip from 'components/Tooltip';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
-import {
-  ParachainStatus,
-  StoreType
-} from 'common/types/util.types';
+import InterlayTooltip from 'components/UI/InterlayTooltip';
 import {
   BLOCK_TIME,
   BLOCKS_BEHIND_LIMIT
 } from 'config/parachain';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { updateIssuePeriodAction } from 'common/actions/issue.actions';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import {
@@ -52,10 +48,14 @@ import {
   getUsdAmount
 } from 'common/utils/utils';
 import STATUSES from 'utils/constants/statuses';
+import {
+  ParachainStatus,
+  StoreType
+} from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
+import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const BTC_AMOUNT = 'btc-amount';
 
@@ -294,9 +294,14 @@ const IssueForm = (): JSX.Element | null => {
             unitName='BTC'
             approxUSD={getUsdAmount(bridgeFee, prices.bitcoin.usd)}
             tooltip={
-              <Tooltip overlay={t('issue_page.tooltip_bridge_fee')}>
-                <HiOutlineExclamationCircle className='text-textSecondary' />
-              </Tooltip>
+              <InterlayTooltip label={t('issue_page.tooltip_bridge_fee')}>
+                <InformationCircleIcon
+                  className={clsx(
+                    'text-textSecondary',
+                    'w-5',
+                    'h-5'
+                  )} />
+              </InterlayTooltip>
             } />
           <PriceInfo
             title={
@@ -313,9 +318,14 @@ const IssueForm = (): JSX.Element | null => {
             unitName='DOT'
             approxUSD={getUsdAmount(securityDeposit, prices.polkadot.usd)}
             tooltip={
-              <Tooltip overlay={t('issue_page.tooltip_security_deposit')}>
-                <HiOutlineExclamationCircle className='text-textSecondary' />
-              </Tooltip>
+              <InterlayTooltip label={t('issue_page.tooltip_security_deposit')}>
+                <InformationCircleIcon
+                  className={clsx(
+                    'text-textSecondary',
+                    'w-5',
+                    'h-5'
+                  )} />
+              </InterlayTooltip>
             } />
           <hr
             className={clsx(

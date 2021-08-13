@@ -18,9 +18,14 @@ import {
   PolkadotAmount
 } from '@interlay/monetary-js';
 
+import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
+import RequestReplacementModal from './request-replacement/request-replacement';
+import ReplaceTable from './replace-table/replace-table';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
+import VaultIssueRequestsTable from 'containers/VaultIssueRequestsTable';
+import VaultRedeemRequestsTable from 'containers/VaultRedeemRequestsTable';
 import CardList, {
   CardListItem,
   CardListItemHeader,
@@ -32,14 +37,13 @@ import BoldParagraph from 'components/BoldParagraph';
 import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
 import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
-import RequestReplacementModal from './request-replacement/request-replacement';
-import ReplaceTable from './replace-table/replace-table';
-import { StoreType } from 'common/types/util.types';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   safeRoundTwoDecimals,
   displayMonetaryAmount
 } from 'common/utils/utils';
+import { StoreType } from 'common/types/util.types';
 import {
   updateCollateralizationAction,
   updateCollateralAction,
@@ -47,12 +51,8 @@ import {
   updateSLAAction,
   updateAPYAction
 } from 'common/actions/vault.actions';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import VaultIssueRequestsTable from 'containers/VaultIssueRequestsTable';
-import VaultRedeemRequestsTable from 'containers/VaultRedeemRequestsTable';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 
-function VaultDashboard(): JSX.Element {
+const VaultDashboard = (): JSX.Element => {
   const [updateCollateralModalStatus, setUpdateCollateralModalStatus] = useState(CollateralUpdateStatus.Hidden);
   const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
   const {
@@ -277,6 +277,6 @@ function VaultDashboard(): JSX.Element {
         show={showRequestReplacementModal} />
     </>
   );
-}
+};
 
 export default VaultDashboard;

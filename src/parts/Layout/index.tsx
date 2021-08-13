@@ -1,7 +1,6 @@
 
 import clsx from 'clsx';
 
-import TestnetBanner from 'parts/TestnetBanner';
 import MaintenanceBanner from 'parts/MaintenanceBanner';
 import Sidebar from 'parts/Sidebar';
 import Topbar from 'parts/Topbar';
@@ -18,12 +17,9 @@ const Layout = ({ children }: Props): JSX.Element => {
           'relative',
           'min-h-screen'
         )}>
-        <div>
-          <Topbar />
-          <TestnetBanner />
-          <MaintenanceBanner />
-          {children}
-        </div>
+        <MaintenanceBanner />
+        <Topbar />
+        {children}
       </div>
     </Sidebar>
   );

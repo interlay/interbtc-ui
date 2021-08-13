@@ -41,7 +41,7 @@ const NAVIGATION_ITEMS = [
     icon: ChipIcon
   },
   {
-    name: '',
+    name: 'separator',
     link: '#',
     icon: () => null,
     separator: true
@@ -97,6 +97,7 @@ const Navigation = ({
         if (navigationItem.separator) {
           return (
             <hr
+              key={navigationItem.name}
               className={clsx(
                 'border-t',
                 'border-gray-200'
