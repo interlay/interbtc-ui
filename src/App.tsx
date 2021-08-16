@@ -14,6 +14,7 @@ import {
   useStore
 } from 'react-redux';
 import { withErrorBoundary } from 'react-error-boundary';
+import clsx from 'clsx';
 import {
   web3Accounts,
   web3Enable,
@@ -61,11 +62,11 @@ import {
   updateBalancePolkaBTCAction,
   updateBalanceDOTAction
 } from 'common/actions/general.actions';
+import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 // TODO: should clean up
 import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
 
-// TODO: block code-splitting for now
 const Bridge = React.lazy(() =>
   import(/* webpackChunkName: 'bridge' */ 'pages/Bridge')
 );
@@ -365,8 +366,28 @@ const App = (): JSX.Element => {
           render={({ location }) => (
             // TODO: block for now
             // <TransitionWrapper location={location}>
-            // TODO: should use loading spinner instead of `Loading...`
-            <React.Suspense fallback={<div>Loading...</div>}>
+            <React.Suspense
+              fallback={
+                <div
+                  className={clsx(
+                    'flex',
+                    'justify-center',
+                    'items-center',
+                    'absolute',
+                    'top-0',
+                    'left-0',
+                    'w-full',
+                    'h-full'
+                  )}>
+                  <SpinIcon
+                    className={clsx(
+                      'text-interlayDenim',
+                      'animate-spin',
+                      'w-9',
+                      'h-9'
+                    )} />
+                </div>
+              }>
               <Switch location={location}>
                 <Route path={PAGES.DASHBOARD_VAULTS}>
                   <VaultsDashboard />
