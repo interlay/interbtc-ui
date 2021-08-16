@@ -35,15 +35,6 @@ import {
 } from '@interlay/monetary-js';
 
 import Layout from 'parts/Layout';
-import Bridge from 'pages/Bridge';
-import Dashboard from 'pages/dashboard/dashboard.page';
-import VaultDashboard from 'pages/vault-dashboard/vault-dashboard.page';
-import VaultsDashboard from 'pages/dashboard/vaults/vaults.dashboard.page';
-import IssueRequests from 'pages/dashboard/IssueRequests';
-import RedeemRequests from 'pages/dashboard/RedeemRequests';
-import RelayDashboard from 'pages/dashboard/relay/relay.dashboard.page';
-import OraclesDashboard from 'pages/dashboard/oracles/oracles.dashboard.page';
-import ParachainDashboard from 'pages/dashboard/parachain/parachain.dashboard.page';
 // TODO: block for now
 // import TransitionWrapper from 'parts/TransitionWrapper';
 import ErrorFallback from 'components/ErrorFallback';
@@ -75,36 +66,36 @@ import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
 
 // TODO: block code-splitting for now
-// const Bridge = React.lazy(() =>
-//   import(/* webpackChunkName: 'bridge' */ 'pages/Bridge')
-// );
-// const Dashboard = React.lazy(() =>
-//   import(/* webpackChunkName: 'dashboard' */ 'pages/dashboard/dashboard.page')
-// );
-// const VaultDashboard = React.lazy(() =>
-//   import(/* webpackChunkName: 'vault' */ 'pages/vault-dashboard/vault-dashboard.page')
-// );
+const Bridge = React.lazy(() =>
+  import(/* webpackChunkName: 'bridge' */ 'pages/Bridge')
+);
+const Dashboard = React.lazy(() =>
+  import(/* webpackChunkName: 'dashboard' */ 'pages/dashboard/dashboard.page')
+);
+const VaultDashboard = React.lazy(() =>
+  import(/* webpackChunkName: 'vault' */ 'pages/vault-dashboard/vault-dashboard.page')
+);
 const Challenges = React.lazy(() =>
   import(/* webpackChunkName: 'challenges' */ 'pages/Challenges')
 );
-// const VaultsDashboard = React.lazy(() =>
-//   import(/* webpackChunkName: 'vaults' */ 'pages/dashboard/vaults/vaults.dashboard.page')
-// );
-// const IssueRequests = React.lazy(() =>
-//   import(/* webpackChunkName: 'issue' */ 'pages/dashboard/IssueRequests')
-// );
-// const RedeemRequests = React.lazy(() =>
-//   import(/* webpackChunkName: 'redeem' */ 'pages/dashboard/RedeemRequests')
-// );
-// const RelayDashboard = React.lazy(() =>
-//   import(/* webpackChunkName: 'relay' */ 'pages/dashboard/relay/relay.dashboard.page')
-// );
-// const OraclesDashboard = React.lazy(() =>
-//   import(/* webpackChunkName: 'oracles' */ 'pages/dashboard/oracles/oracles.dashboard.page')
-// );
-// const ParachainDashboard = React.lazy(() =>
-//   import(/* webpackChunkName: 'parachain' */ 'pages/dashboard/parachain/parachain.dashboard.page')
-// );
+const VaultsDashboard = React.lazy(() =>
+  import(/* webpackChunkName: 'vaults' */ 'pages/dashboard/vaults/vaults.dashboard.page')
+);
+const IssueRequests = React.lazy(() =>
+  import(/* webpackChunkName: 'issue' */ 'pages/dashboard/IssueRequests')
+);
+const RedeemRequests = React.lazy(() =>
+  import(/* webpackChunkName: 'redeem' */ 'pages/dashboard/RedeemRequests')
+);
+const RelayDashboard = React.lazy(() =>
+  import(/* webpackChunkName: 'relay' */ 'pages/dashboard/relay/relay.dashboard.page')
+);
+const OraclesDashboard = React.lazy(() =>
+  import(/* webpackChunkName: 'oracles' */ 'pages/dashboard/oracles/oracles.dashboard.page')
+);
+const ParachainDashboard = React.lazy(() =>
+  import(/* webpackChunkName: 'parachain' */ 'pages/dashboard/parachain/parachain.dashboard.page')
+);
 const Feedback = React.lazy(() =>
   import(/* webpackChunkName: 'feedback' */ 'pages/Feedback')
 );
