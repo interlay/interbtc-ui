@@ -24,7 +24,7 @@ import {
   createInterbtcAPI,
   InterBTCAPI
 } from '@interlay/interbtc';
-import { StatusCode } from '@interlay/interbtc/build/interfaces';
+import { StatusCode } from '@interlay/interbtc/build/src/interfaces';
 import { Keyring } from '@polkadot/api';
 import {
   Bitcoin,
@@ -204,7 +204,7 @@ function App(): JSX.Element {
           window.polkaBTC.tokens.total(Polkadot),
           window.polkaBTC.btcRelay.getLatestBlockHeight(),
           window.polkaBTC.electrsAPI.getLatestBlockHeight(),
-          window.polkaBTC.stakedRelayer.getCurrentStateOfBTCParachain()
+          window.polkaBTC.system.getStatusCode()
         ]);
 
         const parachainStatus = (state: StatusCode) => {

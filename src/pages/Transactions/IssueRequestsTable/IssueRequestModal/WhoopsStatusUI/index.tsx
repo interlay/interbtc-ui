@@ -57,9 +57,9 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={request.amountInterBTC}
+        value={request.amountInterBTC.toHuman()}
         unitName='interBTC'
-        approxUSD={getUsdAmount(BTCAmount.from.BTC(request.amountInterBTC), prices.bitcoin.usd)} />
+        approxUSD={getUsdAmount(request.amountInterBTC, prices.bitcoin.usd)} />
       <PriceInfo
         className='w-full'
         title={
@@ -74,7 +74,9 @@ const WhoopsStatusUI = ({
         }
         value={safeRoundEightDecimals(Number(request.btcAmountSubmittedByUser))}
         unitName='BTC'
-        approxUSD={getUsdAmount(BTCAmount.from.BTC(request.btcAmountSubmittedByUser || '0'), prices.bitcoin.usd)} />
+        approxUSD={getUsdAmount(request.btcAmountSubmittedByUser ?
+          request.btcAmountSubmittedByUser :
+          BTCAmount.zero, prices.bitcoin.usd)} />
       <PriceInfo
         className='w-full'
         title={
@@ -87,10 +89,10 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={request.executedAmountBTC || request.amountInterBTC}
+        value={request.executedAmountBTC?.toHuman() || request.amountInterBTC.toString()}
         unitName='interBTC'
         approxUSD={
-          getUsdAmount(BTCAmount.from.BTC(request.executedAmountBTC || request.amountInterBTC), prices.bitcoin.usd)
+          getUsdAmount(request.executedAmountBTC || request.amountInterBTC, prices.bitcoin.usd)
         } />
       <hr
         className={clsx(
@@ -125,7 +127,7 @@ const WhoopsStatusUI = ({
         {t('issue_page.refund_requested_vault')}
         &nbsp;{t('issue_page.refund_vault_to_return')}
         <span className='text-interlayCinnabar'>
-          &nbsp;{safeRoundEightDecimals(request.refundAmountBTC)}
+          &nbsp;{request.refundAmountBTC?.toHuman() || '0'}
         </span>
         &nbsp;BTC&nbsp;
         {t('issue_page.refund_vault_to_address')}.

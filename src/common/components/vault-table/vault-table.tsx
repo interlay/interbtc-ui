@@ -2,13 +2,13 @@ import { ReactElement, useState, useEffect, useMemo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Vault } from '../../types/vault.types';
 import * as constants from '../../../constants';
-import { satToBTC, roundTwoDecimals } from '@interlay/interbtc';
+import { roundTwoDecimals, VaultStatusExt } from '@interlay/interbtc';
 import { shortAddress } from '../../utils/utils';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import { StoreType } from '../../../common/types/util.types';
 import DashboardTable from '../dashboard-table/dashboard-table';
-import { VaultExt } from '@interlay/interbtc/build/parachain/vaults';
+import { VaultExt } from '@interlay/interbtc';
 import Tooltip from 'components/Tooltip';
 import clsx from 'clsx';
 import {
@@ -62,28 +62,31 @@ export default function VaultTable(): ReactElement {
 
   const checkVaultStatus = useCallback(
     (
-      status: string,
+      status: VaultStatusExt,
       collateralization: Big | undefined,
       bannedUntil: string | undefined
     ): string => {
-      if (status === constants.VAULT_STATUS_THEFT) {
+      if (status === VaultStatusExt.CommittedTheft) {
         return t('dashboard.vault.theft');
       }
-      if (status === constants.VAULT_STATUS_LIQUIDATED) {
-        return constants.VAULT_STATUS_LIQUIDATED;
+      if (status === VaultStatusExt.Liquidated) {
+        return t('dashboard.vault.liquidated');
       }
       if (collateralization) {
         if (collateralization.lt(liquidationThreshold)) {
-          return constants.VAULT_STATUS_LIQUIDATION;
+          return t('dashboard.vault.liquidation');
         }
         if (collateralization.lt(secureCollateralThreshold)) {
-          return constants.VAULT_STATUS_UNDER_COLLATERALIZED;
+          return t('dashboard.vault.undercollateralized');
         }
       }
       if (bannedUntil) {
-        return constants.VAULT_STATUS_BANNED + bannedUntil;
+        return t('dashboard.vault.banned_until', { blockheight: bannedUntil });
       }
-      return constants.VAULT_STATUS_ACTIVE;
+      if (status === VaultStatusExt.Inactive) {
+        return t('dashboard.vault.inactive');
+      }
+      return t('dashboard.vault.active');
     }, [
       liquidationThreshold,
       secureCollateralThreshold,
@@ -108,26 +111,25 @@ export default function VaultTable(): ReactElement {
         };
 
         const vaultCollateral = vault.backingCollateral;
-        const unsettledTokens = BTCAmount.from.Satoshi(vault.to_be_issued_tokens.toString());
-        const settledTokens = BTCAmount.from.Satoshi(vault.issued_tokens.toString());
+        const unsettledTokens = vault.toBeIssuedTokens;
+        const settledTokens = vault.issuedTokens;
         const unsettledCollateralization = getCollateralization(vaultCollateral, unsettledTokens.add(settledTokens));
         const settledCollateralization = getCollateralization(vaultCollateral, settledTokens);
 
-        const btcAddress = vault.wallet.btcAddress;
+        const btcAddress = vault.wallet.publicKey; // TODO: get address(es)?
 
         vaultsList.push({
           vaultId: vault.id.toString(),
           // TODO: fetch collateral reserved
-          lockedBTC: satToBTC(vault.issued_tokens).toString(),
+          lockedBTC: settledTokens.toHuman(),
           lockedDOT: vaultCollateral.toHuman(),
-          pendingBTC: satToBTC(vault.to_be_issued_tokens).toString(),
+          pendingBTC: unsettledTokens.toHuman(),
           btcAddress: btcAddress || '',
           status:
-            vault.status &&
             checkVaultStatus(
-              vault.status.toString(),
+              vault.status,
               settledCollateralization,
-              vault.banned_until.toString()
+              vault.bannedUntil?.toString()
             ),
           unsettledCollateralization: unsettledCollateralization?.toString(),
           settledCollateralization: settledCollateralization?.toString()

@@ -50,7 +50,7 @@ const RetriedRedeemRequest = ({
           window.polkaBTC.oracle.getExchangeRate(Polkadot)
         ]);
 
-        const btcAmount = request ? BTCAmount.from.BTC(request.amountBTC) : BTCAmount.zero;
+        const btcAmount = request ? request.amountBTC : BTCAmount.zero;
         const theBurnDOTAmount = btcDotRate.toCounter(btcAmount);
         const thePunishmentDOTAmount = theBurnDOTAmount.mul(new Big(punishmentFee));
         setPunishmentDOTAmount(thePunishmentDOTAmount);

@@ -1,14 +1,10 @@
-
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import Big from 'big.js';
-import BN from 'bn.js';
 import {
   Issue,
-  IssueStatus,
-  satToBTC
+  IssueStatus
 } from '@interlay/interbtc';
 import { BTCAmount } from '@interlay/monetary-js';
 
@@ -63,12 +59,12 @@ const IssueRequestModal = ({
 
   const focusRef = React.useRef(null);
 
-  const amountInterBTC = (request.executedAmountBTC && request.executedAmountBTC !== '0') ?
+  const amountInterBTC = (request.executedAmountBTC && !request.executedAmountBTC.isZero()) ?
     request.executedAmountBTC :
     request.amountInterBTC;
   const amountBTCSent = request.btcAmountSubmittedByUser ?
-    satToBTC(new BN(request.btcAmountSubmittedByUser)) :
-    new Big(request.amountInterBTC).add(request.bridgeFee);
+    request.btcAmountSubmittedByUser :
+    request.amountInterBTC.add(request.bridgeFee);
 
   return (
     <InterlayModal
@@ -146,7 +142,7 @@ const IssueRequestModal = ({
                   'block'
                 )}>
                 {`≈ $ ${getUsdAmount(
-                  BTCAmount.from.BTC(amountInterBTC) || BTCAmount.zero,
+                  amountInterBTC || BTCAmount.zero,
                   prices.bitcoin.usd
                 )}`}
               </span>
@@ -163,9 +159,9 @@ const IssueRequestModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayMonetaryAmount(BTCAmount.from.BTC(request.bridgeFee))}
+                value={displayMonetaryAmount(request.bridgeFee)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(BTCAmount.from.BTC(request.bridgeFee), prices.bitcoin.usd)} />
+                approxUSD={getUsdAmount(request.bridgeFee, prices.bitcoin.usd)} />
               {/* TODO: could componentize */}
               <hr
                 className={clsx(
@@ -184,9 +180,9 @@ const IssueRequestModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayMonetaryAmount(BTCAmount.from.BTC(amountBTCSent))}
+                value={displayMonetaryAmount(amountBTCSent)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(BTCAmount.from.BTC(amountBTCSent), prices.bitcoin.usd)} />
+                approxUSD={getUsdAmount(amountBTCSent, prices.bitcoin.usd)} />
             </div>
             <div className='space-y-4'>
               {/* TODO: could componentize */}

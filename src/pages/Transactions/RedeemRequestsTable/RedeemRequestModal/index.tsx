@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -131,7 +130,7 @@ const RedeemRequestModal = ({
                   'text-textSecondary',
                   'block'
                 )}>
-                {`≈ $ ${getUsdAmount(BTCAmount.from.BTC(request.amountBTC) || BTCAmount.zero, prices.bitcoin.usd)}`}
+                {`≈ $ ${getUsdAmount(request.amountBTC || BTCAmount.zero, prices.bitcoin.usd)}`}
               </span>
             </div>
             <div>
@@ -146,9 +145,9 @@ const RedeemRequestModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayMonetaryAmount(BTCAmount.from.BTC(request.bridgeFee))}
+                value={displayMonetaryAmount(request.bridgeFee)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(BTCAmount.from.BTC(request.bridgeFee), prices.bitcoin.usd)} />
+                approxUSD={getUsdAmount(request.bridgeFee, prices.bitcoin.usd)} />
               <PriceInfo
                 title={
                   <h5 className='text-textSecondary'>
@@ -160,9 +159,9 @@ const RedeemRequestModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayMonetaryAmount(BTCAmount.from.BTC(request.btcTransferFee))}
+                value={displayMonetaryAmount(request.btcTransferFee)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(BTCAmount.from.BTC(request.btcTransferFee), prices.bitcoin.usd)} />
+                approxUSD={getUsdAmount(request.btcTransferFee, prices.bitcoin.usd)} />
               <hr
                 className={clsx(
                   'border-t-2',
@@ -180,9 +179,9 @@ const RedeemRequestModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayMonetaryAmount(BTCAmount.from.BTC(request.amountBTC))}
+                value={displayMonetaryAmount(request.amountBTC)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(BTCAmount.from.BTC(request.amountBTC), prices.bitcoin.usd)} />
+                approxUSD={getUsdAmount(request.amountBTC, prices.bitcoin.usd)} />
             </div>
             <div className='space-y-4'>
               <div

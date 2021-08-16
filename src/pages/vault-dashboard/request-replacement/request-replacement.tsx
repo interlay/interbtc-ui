@@ -12,7 +12,6 @@ import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarO
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
 import { addReplaceRequestsAction } from 'common/actions/vault.actions';
 import { StoreType } from 'common/types/util.types';
-import { parachainToUIReplaceRequests } from 'common/utils/requests';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
 type RequestReplacementForm = {
@@ -50,7 +49,7 @@ export default function RequestReplacementModal(props: RequestReplacementProps):
       const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
       if (!requests) return;
 
-      dispatch(addReplaceRequestsAction(parachainToUIReplaceRequests(requests)));
+      dispatch(addReplaceRequestsAction(requests));
       toast.success('Replacement request is submitted');
       props.onClose();
     } catch (error) {

@@ -4,8 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle } from 'react-icons/fa';
 import clsx from 'clsx';
 import { Redeem } from '@interlay/interbtc';
-import { BTCAmount } from '@interlay/monetary-js';
-
 import IconButton from 'components/IconButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import InterlayModal, {
@@ -106,7 +104,7 @@ const SubmittedRedeemRequestModal = ({
                 )}>
                 <span>{t('redeem_page.will_receive_BTC')}</span>
                 <span className='text-interlayCalifornia'>
-                  {displayMonetaryAmount(BTCAmount.from.BTC(request.amountBTC))} BTC
+                  {displayMonetaryAmount(request.amountBTC)} BTC
                 </span>
               </h1>
               <span
@@ -116,7 +114,7 @@ const SubmittedRedeemRequestModal = ({
                   'text-2xl',
                   'text-center'
                 )}>
-                {`≈ $${getUsdAmount(BTCAmount.from.BTC(request.amountBTC), prices.bitcoin.usd)}`}
+                {`≈ $${getUsdAmount(request.amountBTC, prices.bitcoin.usd)}`}
               </span>
             </div>
             <div>

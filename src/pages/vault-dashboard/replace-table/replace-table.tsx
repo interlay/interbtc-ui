@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next';
 
 import { StoreType } from 'common/types/util.types';
 import { addReplaceRequestsAction } from 'common/actions/vault.actions';
-import { parachainToUIReplaceRequests } from 'common/utils/requests';
 import { shortAddress } from 'common/utils/utils';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import { stripHexPrefix } from '@interlay/interbtc';
 
 export default function ReplaceTable(): ReactElement {
   const { polkaBtcLoaded, address } = useSelector((state: StoreType) => state.general);
@@ -24,7 +24,7 @@ export default function ReplaceTable(): ReactElement {
         const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
         if (!requests) return;
 
-        dispatch(addReplaceRequestsAction(parachainToUIReplaceRequests(requests)));
+        dispatch(addReplaceRequestsAction(requests));
       } catch (err) {
         console.log(err);
       }
@@ -45,7 +45,7 @@ export default function ReplaceTable(): ReactElement {
           {t('vault.replace_requests')}
         </p>
       </div>
-      {replaceRequests && replaceRequests.length > 0 ? (
+      {replaceRequests && replaceRequests.size > 0 ? (
         <React.Fragment>
           <Table
             hover
@@ -64,17 +64,24 @@ export default function ReplaceTable(): ReactElement {
               </tr>
             </thead>
             <tbody>
-              {replaceRequests.map((redeem, index) => {
+              {[...replaceRequests.entries()].map(([id, redeem], index) => {
                 return (
                   <tr key={index}>
-                    <td>{redeem.id}</td>
-                    <td>{redeem.timestamp}</td>
-                    <td>{shortAddress(redeem.oldVault)}</td>
-                    <td>{shortAddress(redeem.newVault)}</td>
+                    <td>{stripHexPrefix(id.toString())}</td>
+                    <td>{redeem.btcHeight}</td>
+                    <td>{shortAddress(redeem.oldVault.toString())}</td>
+                    <td>{shortAddress(redeem.newVault.toString())}</td>
                     <td>{shortAddress(redeem.btcAddress)}</td>
-                    <td>{redeem.polkaBTC}</td>
-                    <td>{redeem.lockedDOT}</td>
-                    <td>{redeem.status}</td>
+                    <td>{redeem.amount.toHuman()}</td>
+                    <td>{redeem.collateral.toHuman()}</td>
+                    <td>{redeem.status.isPending ?
+                      t('pending') :
+                      redeem.status.isCompleted ?
+                        t('completed') :
+                        redeem.status.isCancelled ?
+                          t('cancelled') :
+                          t('loading_ellipsis')}
+                    </td>
                   </tr>
                 );
               })}

@@ -53,7 +53,7 @@ const ReimbursedRedeemRequest = ({
         ]);
 
         const burnedBTCAmount = request ?
-          BTCAmount.from.BTC(new Big(request.amountBTC).add(request.bridgeFee)) :
+          request.amountBTC.add(request.bridgeFee) :
           BTCAmount.zero;
         const theBurnDOTAmount = btcDotRate.toCounter(burnedBTCAmount);
         const thePunishmentDOTAmount = theBurnDOTAmount.mul(new Big(punishmentFee));

@@ -1,31 +1,29 @@
 import { ReactElement, useEffect, useState } from 'react';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
-import { OracleStatus } from '@interlay/interbtc-index-client';
 
 import DashboardTable, { StatusComponent, StatusCategories } from '../dashboard-table/dashboard-table';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { formatDateTime } from 'common/utils/utils';
+import { DOTBTCOracleStatus } from '@interlay/interbtc/build/src/types/oracleTypes';
 
 type OracleTableProps = {
   dotLocked: string;
 };
 
 export default function OracleTable(props: OracleTableProps): ReactElement {
-  const statsApi = useInterbtcIndex();
-  const [oracles, setOracles] = useState<Array<OracleStatus>>([]);
+  const [oracles, setOracles] = useState<Array<DOTBTCOracleStatus>>([]);
   const { t } = useTranslation();
 
   useEffect(() => {
     (async () => {
       try {
-        const oracleStatuses = await statsApi.getLatestSubmissionForEachOracle();
+        const oracleStatuses = await window.polkaBTC.index.getLatestSubmissionForEachOracle();
         setOracles(oracleStatuses);
       } catch (error) {
         console.log('[OracleTable] error.message => ', error.message);
       }
     })();
-  }, [statsApi]);
+  }, []);
 
   const tableHeadings = [
     <h1
@@ -55,11 +53,11 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
     </h1>
   ];
 
-  const oracleTableRow = (oracle: OracleStatus): ReactElement[] => [
+  const oracleTableRow = (oracle: DOTBTCOracleStatus): ReactElement[] => [
     <p key={1}>{oracle.source}</p>,
     <p key={2}>{oracle.feed}</p>,
     <p key={3}>{formatDateTime(oracle.lastUpdate)}</p>,
-    <p key={4}> 1 BTC = {new Big(oracle.exchangeRate).toFixed(5)} DOT</p>,
+    <p key={4}> 1 BTC = {oracle.exchangeRate.toHuman(5)} DOT</p>,
     <StatusComponent
       key={5}
       {...(oracle.online ?

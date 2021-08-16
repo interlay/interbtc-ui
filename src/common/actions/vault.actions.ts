@@ -3,7 +3,6 @@ import {
   PolkadotAmount
 } from '@interlay/monetary-js';
 
-import { VaultReplaceRequest } from '../types/vault.types';
 import {
   AddReplaceRequests,
   UpdateCollateralization,
@@ -18,8 +17,10 @@ import {
   UPDATE_SLA,
   UPDATE_APY
 } from '../types/actions.types';
+import { ReplaceRequestExt } from '@interlay/interbtc';
+import { H256 } from '@polkadot/types/interfaces';
 
-export const addReplaceRequestsAction = (requests: VaultReplaceRequest[]): AddReplaceRequests => ({
+export const addReplaceRequestsAction = (requests: Map<H256, ReplaceRequestExt>): AddReplaceRequests => ({
   type: ADD_REPLACE_REQUESTS,
   requests
 });
