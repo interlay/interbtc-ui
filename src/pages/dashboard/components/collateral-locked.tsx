@@ -60,9 +60,32 @@ const CollateralLocked = ({ linkButton }: Props): JSX.Element => {
           'items-center'
         )}>
         <div>
-          <h1 className='text-interlayDenim'>{t('dashboard.vault.locked_collateral')}</h1>
-          <h2>{displayMonetaryAmount(totalLockedDOT)} DOT</h2>
-          <h2>${getUsdAmount(totalLockedDOT, prices.polkadot.usd)}</h2>
+          <h1
+            className={clsx(
+              'text-interlayDenim',
+              'text-sm',
+              'xl:text-base',
+              'mb-1',
+              'xl:mb-2'
+            )}>
+            {t('dashboard.vault.locked_collateral')}
+          </h1>
+          <h2
+            className={clsx(
+              'text-base',
+              'font-bold',
+              'mb-1'
+            )}>
+            {displayMonetaryAmount(totalLockedDOT)} DOT
+          </h2>
+          <h2
+            className={clsx(
+              'text-base',
+              'font-bold',
+              'mb-1'
+            )}>
+            ${getUsdAmount(totalLockedDOT, prices.polkadot.usd)}
+          </h2>
         </div>
         {linkButton && (
           <InterlayRouterLink to={PAGES.DASHBOARD_VAULTS}>

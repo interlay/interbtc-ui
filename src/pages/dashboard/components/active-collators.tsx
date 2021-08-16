@@ -34,8 +34,24 @@ const ActiveCollators = (): JSX.Element => {
           'items-center'
         )}>
         <div>
-          <h1 className='text-interlayDenim'>{t('dashboard.collators.active_collators')}</h1>
-          <h2>3</h2>
+          <h1
+            className={clsx(
+              'text-interlayDenim',
+              'text-sm',
+              'xl:text-base',
+              'mb-1',
+              'xl:mb-2'
+            )}>
+            {t('dashboard.collators.active_collators')}
+          </h1>
+          <h2
+            className={clsx(
+              'text-base',
+              'font-bold',
+              'mb-1'
+            )}>
+            3
+          </h2>
         </div>
       </div>
       <LineChartComponent

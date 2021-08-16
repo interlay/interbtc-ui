@@ -57,12 +57,33 @@ const InterBTC = (): React.ReactElement => {
           'items-center'
         )}>
         <div>
-          <h1 className='text-interlayDenim'>
+          <h1
+            className={clsx(
+              'text-interlayDenim',
+              'text-sm',
+              'xl:text-base',
+              'mb-1',
+              'xl:mb-2'
+            )}>
             {t('dashboard.issue.issued')}
           </h1>
-          <h2>{t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalInterBTC) })}</h2>
+          <h2
+            className={clsx(
+              'text-base',
+              'font-bold',
+              'mb-1'
+            )}>
+            {t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalInterBTC) })}
+          </h2>
           {/* TODO: add the price API */}
-          <h2>${getUsdAmount(totalInterBTC, prices.bitcoin.usd)}</h2>
+          <h2
+            className={clsx(
+              'text-base',
+              'font-bold',
+              'mb-1'
+            )}>
+            ${getUsdAmount(totalInterBTC, prices.bitcoin.usd)}
+          </h2>
         </div>
         <div style={{ display: 'grid', gridRowGap: 10 }}>
           <InterlayRouterLink to={PAGES.DASHBOARD_ISSUE_REQUESTS}>

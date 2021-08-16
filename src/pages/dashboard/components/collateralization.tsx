@@ -78,9 +78,30 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
         <div>
           {!failed && (
             <>
-              <h1 className='text-interlayDenim'>{t('dashboard.vault.collateralization')}</h1>
-              <h2>{safeRoundTwoDecimals(systemCollateralization)}%</h2>
-              <h2>
+              <h1
+                className={clsx(
+                  'text-interlayDenim',
+                  'text-sm',
+                  'xl:text-base',
+                  'mb-1',
+                  'xl:mb-2'
+                )}>
+                {t('dashboard.vault.collateralization')}
+              </h1>
+              <h2
+                className={clsx(
+                  'text-base',
+                  'font-bold',
+                  'mb-1'
+                )}>
+                {safeRoundTwoDecimals(systemCollateralization)}%
+              </h2>
+              <h2
+                className={clsx(
+                  'text-base',
+                  'font-bold',
+                  'mb-1'
+                )}>
                 {t('dashboard.vault.secure_threshold', {
                   threshold: safeRoundTwoDecimals(secureCollateralThreshold)
                 })}
@@ -112,7 +133,7 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
         )}>
         <h1
           className={clsx(
-            'h1-xl',
+            'font-bold',
             'text-2xl',
             'text-interlayDenim',
             'text-center'
