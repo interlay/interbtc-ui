@@ -14,26 +14,28 @@ export default function VaultsDashboard(): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <MainContainer
-      className={clsx(
-        'flex',
-        'justify-center',
-        'fade-in-animation'
-      )}>
-      <div className='w-3/4'>
-        <div>
-          <PageTitle
-            mainTitle={t('dashboard.vault.vaults')}
-            subTitle={<TimerIncrement />} />
-          <hr className='border-interlayDenim' />
-          <div className='grid grid-cols-3 gap-7 mt-10'>
-            <ActiveVaults />
-            <CollateralLocked />
-            <Collateralization />
-          </div>
-          <VaultTable></VaultTable>
-        </div>
+    <MainContainer className='fade-in-animation'>
+      <div>
+        <PageTitle
+          mainTitle={t('dashboard.vault.vaults')}
+          subTitle={<TimerIncrement />} />
+        <hr
+          className={clsx(
+            'border-interlayDenim',
+            'mt-2'
+          )} />
       </div>
+      <div
+        className={clsx(
+          'grid',
+          'grid-cols-3',
+          'gap-7'
+        )}>
+        <ActiveVaults />
+        <CollateralLocked />
+        <Collateralization />
+      </div>
+      <VaultTable />
     </MainContainer>
   );
 }

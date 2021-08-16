@@ -13,8 +13,8 @@ import {
 } from '@interlay/monetary-js';
 import { Redeem } from '@interlay/interbtc';
 
-import RequestWrapper from 'pages/Home/RequestWrapper';
-import PriceInfo from 'pages/Home/PriceInfo';
+import RequestWrapper from 'pages/Bridge/RequestWrapper';
+import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterlayLink from 'components/UI/InterlayLink';
 import { getUsdAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';

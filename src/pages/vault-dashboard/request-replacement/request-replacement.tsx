@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import * as React from 'react';
 import { Modal } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -10,26 +10,26 @@ import { BTCAmount } from '@interlay/monetary-js';
 
 import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { addReplaceRequestsAction } from 'common/actions/vault.actions';
 import { StoreType } from 'common/types/util.types';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
 type RequestReplacementForm = {
   amount: number;
 };
 
-type RequestReplacementProps = {
+interface Props {
   onClose: () => void;
   show: boolean;
-};
+}
 
-export default function RequestReplacementModal(props: RequestReplacementProps): JSX.Element {
+const RequestReplacementModal = (props: Props): JSX.Element => {
   const { register, handleSubmit, errors } = useForm<RequestReplacementForm>();
   const dispatch = useDispatch();
   const { address } = useSelector((state: StoreType) => state.general);
   const lockedDot = useSelector((state: StoreType) => state.vault.collateral);
   const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
-  const [isRequestPending, setRequestPending] = useState(false);
+  const [isRequestPending, setRequestPending] = React.useState(false);
   const { t } = useTranslation();
 
   const onSubmit = handleSubmit(async ({ amount }) => {
@@ -94,7 +94,7 @@ export default function RequestReplacementModal(props: RequestReplacementProps):
                   </span>
                 </div>
                 {errors.amount && (
-                  <div className='input-error text-interlayConifer'>
+                  <div className='-mt-4 text-interlayConifer'>
                     {errors.amount.type === 'required' ?
                       'Amount is required' :
                       errors.amount.message}
@@ -117,4 +117,6 @@ export default function RequestReplacementModal(props: RequestReplacementProps):
       </form>
     </Modal>
   );
-}
+};
+
+export default RequestReplacementModal;

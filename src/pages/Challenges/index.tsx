@@ -19,11 +19,11 @@ import InterlayDenimToggleButtonGroup, {
 } from 'components/toggle-button-groups/InterlayDenimToggleButtonGroup';
 import InterlayLink from 'components/UI/InterlayLink';
 import {
-  POLKA_BTC_DOC_START_TREASURE_HUNT,
-  POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT,
-  POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER,
-  POLKA_BTC_DOC_KING_OF_THE_HILL,
-  POLKA_BTC_DOC_LOTTERY
+  INTER_BTC_DOC_START_TREASURE_HUNT,
+  INTER_BTC_DOC_START_TREASURE_HUNT_VAULT,
+  INTER_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER,
+  INTER_BTC_DOC_KING_OF_THE_HILL,
+  INTER_BTC_DOC_LOTTERY
 } from 'config/links';
 import { CHALLENGE_CUT_OFFS } from 'config/challenges';
 
@@ -57,27 +57,27 @@ const CHALLENGE_ITEMS = [
   {
     title: 'leaderboard.challenges.treasure_hunt',
     content: 'leaderboard.challenges.treasure_hunt_desc',
-    contentLink: POLKA_BTC_DOC_START_TREASURE_HUNT
+    contentLink: INTER_BTC_DOC_START_TREASURE_HUNT
   },
   {
     title: 'leaderboard.challenges.vault_treasure_hunt',
     content: 'leaderboard.challenges.vault_treasure_hunt_desc',
-    contentLink: POLKA_BTC_DOC_START_TREASURE_HUNT_VAULT
+    contentLink: INTER_BTC_DOC_START_TREASURE_HUNT_VAULT
   },
   {
     title: 'leaderboard.challenges.relayer_treasure_hunt',
     content: 'leaderboard.challenges.relayer_treasure_hunt_desc',
-    contentLink: POLKA_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER
+    contentLink: INTER_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER
   },
   {
     title: 'leaderboard.challenges.vaults_relayers',
     content: 'leaderboard.challenges.vaults_relayers_desc',
-    contentLink: POLKA_BTC_DOC_KING_OF_THE_HILL
+    contentLink: INTER_BTC_DOC_KING_OF_THE_HILL
   },
   {
     title: 'leaderboard.challenges.lottery',
     content: 'leaderboard.challenges.lottery_desc',
-    contentLink: POLKA_BTC_DOC_LOTTERY
+    contentLink: INTER_BTC_DOC_LOTTERY
   }
 ];
 
@@ -97,69 +97,55 @@ const Challenges = (): JSX.Element => {
   }
 
   return (
-    <MainContainer
-      className={clsx(
-        'fade-in-animation',
-        'space-y-20',
-        // TODO: should set it within `MainContainer`
-        'px-6',
-        'container',
-        'm-auto'
-      )}>
-      <div>
-        <PageTitle mainTitle={t('leaderboard.challenges_title')} />
-        <CardList
-          className= {clsx(
-            'max-w-max',
-            'mx-auto',
-            'md:grid-cols-3',
-            '2xl:grid-cols-5',
-            'gap-5'
-          )}>
-          {CHALLENGE_ITEMS.map(challengeItem => (
-            <CardListItem key={challengeItem.title}>
-              <CardListItemHeader>
-                {t(challengeItem.title)}
-                {/* {challengeItem.titleIcon} */}
-              </CardListItemHeader>
-              <CardListItemContent className='text-gray-500'>
-                {t(challengeItem.content)}
-                {challengeItem.contentLink && (
-                  <InterlayLink
-                    className={clsx(
-                      'inline-flex',
-                      'items-center',
-                      'space-x-1',
-                      'ml-1',
-                      'text-interlayDenim'
-                    )}
-                    href={challengeItem.contentLink}
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    <span>{t('leaderboard.more_info')}</span>
-                    <FaExternalLinkAlt />
-                  </InterlayLink>
-                )}
-              </CardListItemContent>
-            </CardListItem>
-          ))}
-        </CardList>
+    <MainContainer className='fade-in-animation'>
+      <PageTitle mainTitle={t('leaderboard.challenges_title')} />
+      <CardList
+        className= {clsx(
+          'md:grid-cols-3',
+          '2xl:grid-cols-5',
+          'gap-5'
+        )}>
+        {CHALLENGE_ITEMS.map(challengeItem => (
+          <CardListItem key={challengeItem.title}>
+            <CardListItemHeader>
+              {t(challengeItem.title)}
+              {/* {challengeItem.titleIcon} */}
+            </CardListItemHeader>
+            <CardListItemContent className='text-gray-500'>
+              {t(challengeItem.content)}
+              {challengeItem.contentLink && (
+                <InterlayLink
+                  className={clsx(
+                    'inline-flex',
+                    'items-center',
+                    'space-x-1',
+                    'ml-1',
+                    'text-interlayDenim'
+                  )}
+                  href={challengeItem.contentLink}
+                  target='_blank'
+                  rel='noopener noreferrer'>
+                  <span>{t('leaderboard.more_info')}</span>
+                  <FaExternalLinkAlt />
+                </InterlayLink>
+              )}
+            </CardListItemContent>
+          </CardListItem>
+        ))}
+      </CardList>
+      <PageTitle
+        mainTitle={t('leaderboard.title')}
+        subTitle={<TimerIncrement />} />
+      <div
+        className={clsx(
+          'text-right',
+          'py-2'
+        )}>
+        <ChallengeSelector
+          value={challengeId}
+          onChange={handleChallengeIdChange} />
       </div>
-      <div>
-        <PageTitle
-          mainTitle={t('leaderboard.title')}
-          subTitle={<TimerIncrement />} />
-        <div
-          className={clsx(
-            'text-right',
-            'px-4'
-          )}>
-          <ChallengeSelector
-            value={challengeId}
-            onChange={handleChallengeIdChange} />
-        </div>
-        <VaultScoresTable challengeTime={challengeTime} />
-      </div>
+      <VaultScoresTable challengeTime={challengeTime} />
     </MainContainer>
   );
 };

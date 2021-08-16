@@ -1,17 +1,13 @@
-import {
-  useEffect,
-  ReactElement,
-  useState,
-  useMemo
-} from 'react';
+
+import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
 
-import DashboardCard from 'pages/dashboard/DashboardCard';
 import LineChartComponent from './line-chart-component';
-import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import DashboardCard from 'pages/dashboard/DashboardCard';
+import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
@@ -21,38 +17,39 @@ import {
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 
-type CollateralLockedProps = {
+interface Props {
   linkButton?: boolean;
-};
+}
 
-const CollateralLocked = ({ linkButton }: CollateralLockedProps): ReactElement => {
-  const totalLockedDOT = useSelector((state: StoreType) => state.general.totalLockedDOT);
-  const { prices } = useSelector((state: StoreType) => state.general);
+const CollateralLocked = ({ linkButton }: Props): JSX.Element => {
+  const {
+    prices,
+    totalLockedDOT
+  } = useSelector((state: StoreType) => state.general);
 
   const { t } = useTranslation();
   const statsApi = useInterbtcIndex();
 
-  const [cumulativeCollateralPerDay, setCumulativeCollateralPerDay] = useState(
+  const [cumulativeCollateralPerDay, setCumulativeCollateralPerDay] = React.useState(
     // eslint-disable-next-line no-array-constructor
-    new Array<{ date: number; amount: number }>()
+    new Array<{
+      date: number;
+      amount: number;
+    }>()
   );
 
-  const fetchCollateralLastDays = useMemo(
-    () => async () => {
+  React.useEffect(() => {
+    if (!statsApi) return;
+
+    (async () => {
       try {
-        const res = await statsApi.getRecentDailyCollateralLocked({ daysBack: 6 });
-        setCumulativeCollateralPerDay(res);
+        const result = await statsApi.getRecentDailyCollateralLocked({ daysBack: 6 });
+        setCumulativeCollateralPerDay(result);
       } catch (error) {
-        console.log('Error fetching daily locked collateral.');
-        console.log('error.message => ', error.message);
+        console.log('[CollateralLocked] error.message => ', error.message);
       }
-    },
-    [statsApi]
-  );
-
-  useEffect(() => {
-    fetchCollateralLastDays();
-  }, [fetchCollateralLastDays]);
+    })();
+  }, [statsApi]);
 
   return (
     <DashboardCard>

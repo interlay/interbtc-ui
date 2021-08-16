@@ -1,7 +1,8 @@
 import * as React from 'react';
 import {
   Switch,
-  Route
+  Route,
+  Redirect
 } from 'react-router-dom';
 import {
   toast,
@@ -34,7 +35,7 @@ import {
 } from '@interlay/monetary-js';
 
 import Layout from 'parts/Layout';
-import Home from 'pages/Home';
+import Bridge from 'pages/Bridge';
 import Dashboard from 'pages/dashboard/dashboard.page';
 import VaultDashboard from 'pages/vault-dashboard/vault-dashboard.page';
 import VaultsDashboard from 'pages/dashboard/vaults/vaults.dashboard.page';
@@ -74,13 +75,13 @@ import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
 
 // TODO: block code-splitting for now
-// const Home = React.lazy(() =>
-//   import(/* webpackChunkName: 'application' */ 'pages/Home')
+// const Bridge = React.lazy(() =>
+//   import(/* webpackChunkName: 'bridge' */ 'pages/Bridge')
 // );
 // const Dashboard = React.lazy(() =>
 //   import(/* webpackChunkName: 'dashboard' */ 'pages/dashboard/dashboard.page')
 // );
-// const VaultDashboardPage = React.lazy(() =>
+// const VaultDashboard = React.lazy(() =>
 //   import(/* webpackChunkName: 'vault' */ 'pages/vault-dashboard/vault-dashboard.page')
 // );
 const Challenges = React.lazy(() =>
@@ -107,7 +108,7 @@ const Challenges = React.lazy(() =>
 const Feedback = React.lazy(() =>
   import(/* webpackChunkName: 'feedback' */ 'pages/Feedback')
 );
-const Requests = React.lazy(() =>
+const Transactions = React.lazy(() =>
   import(/* webpackChunkName: 'transactions' */ 'pages/Transactions')
 );
 const NoMatch = React.lazy(() =>
@@ -121,12 +122,13 @@ function connectToParachain(): Promise<InterBTCAPI> {
   );
 }
 
-function App(): JSX.Element {
+const App = (): JSX.Element => {
   const {
     polkaBtcLoaded,
     address,
     balanceInterBTC,
-    balanceDOT
+    balanceDOT,
+    vaultClientLoaded
   } = useSelector((state: StoreType) => state.general);
   const [isLoading, setIsLoading] = React.useState(true);
   const dispatch = useDispatch();
@@ -399,20 +401,24 @@ function App(): JSX.Element {
                 <Route path={PAGES.DASHBOARD}>
                   <Dashboard />
                 </Route>
-                <Route path={PAGES.VAULT}>
-                  <VaultDashboard />
-                </Route>
+                {vaultClientLoaded && (
+                  <Route path={PAGES.VAULT}>
+                    <VaultDashboard />
+                  </Route>
+                )}
                 <Route path={PAGES.FEEDBACK}>
                   <Feedback />
                 </Route>
                 <Route path={PAGES.TRANSACTIONS}>
-                  <Requests />
+                  <Transactions />
                 </Route>
-                <Route
-                  path={PAGES.HOME}
-                  exact>
-                  <Home />
+                <Route path={PAGES.BRIDGE}>
+                  <Bridge />
                 </Route>
+                <Redirect
+                  exact
+                  from={PAGES.HOME}
+                  to={PAGES.BRIDGE} />
                 <Route path='*'>
                   <NoMatch />
                 </Route>
@@ -423,7 +429,7 @@ function App(): JSX.Element {
       </Layout>
     </>
   );
-}
+};
 
 export default withErrorBoundary(App, {
   FallbackComponent: ErrorFallback,

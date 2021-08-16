@@ -1,7 +1,0 @@
-
-/* TODO: could use tailwindcss */
-li.footer-bottom-item:not(:first-child) > *:before {
-  content: '|';
-  margin: 0 0.375rem;
-  opacity: 0.5;
-}

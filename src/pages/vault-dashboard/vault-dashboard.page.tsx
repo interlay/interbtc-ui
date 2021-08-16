@@ -17,9 +17,14 @@ import {
   Polkadot
 } from '@interlay/monetary-js';
 
+import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
+import RequestReplacementModal from './request-replacement/request-replacement';
+import ReplaceTable from './replace-table/replace-table';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
+import VaultIssueRequestsTable from 'containers/VaultIssueRequestsTable';
+import VaultRedeemRequestsTable from 'containers/VaultRedeemRequestsTable';
 import CardList, {
   CardListItem,
   CardListItemHeader,
@@ -31,14 +36,13 @@ import BoldParagraph from 'components/BoldParagraph';
 import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
 import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
-import RequestReplacementModal from './request-replacement/request-replacement';
-import ReplaceTable from './replace-table/replace-table';
-import { StoreType } from 'common/types/util.types';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   safeRoundTwoDecimals,
   displayMonetaryAmount
 } from 'common/utils/utils';
+import { StoreType } from 'common/types/util.types';
 import {
   updateCollateralizationAction,
   updateCollateralAction,
@@ -46,12 +50,8 @@ import {
   updateSLAAction,
   updateAPYAction
 } from 'common/actions/vault.actions';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import VaultIssueRequestsTable from 'containers/VaultIssueRequestsTable';
-import VaultRedeemRequestsTable from 'containers/VaultRedeemRequestsTable';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 
-function VaultDashboard(): JSX.Element {
+const VaultDashboard = (): JSX.Element => {
   const [updateCollateralModalStatus, setUpdateCollateralModalStatus] = useState(CollateralUpdateStatus.Hidden);
   const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
   const {
@@ -193,97 +193,77 @@ function VaultDashboard(): JSX.Element {
   ];
 
   return (
-    <MainContainer
-      className={clsx(
-        'flex',
-        'justify-center',
-        'fade-in-animation'
-      )}>
-      <div className='space-y-20'>
-        <div className='space-y-10'>
-          <div>
-            <PageTitle
-              mainTitle={t('vault.vault_dashboard')}
-              subTitle={<TimerIncrement />} />
-            <BoldParagraph className='text-center'>{address}</BoldParagraph>
-            <CardListContainer>
-              <CardListHeader>Vault Stats</CardListHeader>
-              <CardList
-                className={clsx(
-                  'md:grid-cols-3',
-                  'lg:grid-cols-4',
-                  'gap-5',
-                  '2xl:gap-6')}>
-                {VAULT_ITEMS.map(vaultItem => (
-                  <CardListItem key={vaultItem.title}>
-                    <CardListItemHeader className={vaultItem.color}>
-                      {vaultItem.title}
-                    </CardListItemHeader>
-                    <CardListItemContent
-                      className={clsx(
-                        'text-2xl',
-                        'font-medium')}>
-                      {vaultItem.value}
-                    </CardListItemContent>
-                  </CardListItem>
-                ))}
-              </CardList>
-            </CardListContainer>
-          </div>
-          <div
+    <>
+      <MainContainer className='fade-in-animation'>
+        <div>
+          <PageTitle
+            mainTitle={t('vault.vault_dashboard')}
+            subTitle={<TimerIncrement />} />
+          <BoldParagraph className='text-center'>
+            {address}
+          </BoldParagraph>
+        </div>
+        <CardListContainer>
+          <CardListHeader>Vault Stats</CardListHeader>
+          <CardList
             className={clsx(
-              'max-w-xl',
-              'mx-auto',
-              'grid',
-              'grid-cols-3',
-              'gap-10'
-            )}>
-            <InterlayDenimContainedButton
-              type='submit'
-              style={{ display: 'flex' }}
-              className='mx-auto'
-              // TODO: should not use inlined functions
-              onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Increase)}>
-              {t('vault.deposit_collateral')}
-            </InterlayDenimContainedButton>
-            <InterlayDefaultContainedButton
-              type='submit'
-              style={{ display: 'flex' }}
-              className='mx-auto'
-              onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Decrease)}>
-              {t('vault.withdraw_collateral')}
-            </InterlayDefaultContainedButton>
-            {lockedBTC.gt(BTCAmount.zero) ? (
-              <InterlayCaliforniaContainedButton
-                type='submit'
-                style={{ display: 'flex' }}
-                className='mx-auto'
-                onClick={() => setShowRequestReplacementModal(true)}>
-                {t('vault.replace_vault')}
-              </InterlayCaliforniaContainedButton>
-            ) : (
-              ''
-            )}
-          </div>
+              'md:grid-cols-3',
+              'lg:grid-cols-4',
+              'gap-5',
+              '2xl:gap-6')}>
+            {VAULT_ITEMS.map(vaultItem => (
+              <CardListItem key={vaultItem.title}>
+                <CardListItemHeader className={vaultItem.color}>
+                  {vaultItem.title}
+                </CardListItemHeader>
+                <CardListItemContent
+                  className={clsx(
+                    'text-2xl',
+                    'font-medium')}>
+                  {vaultItem.value}
+                </CardListItemContent>
+              </CardListItem>
+            ))}
+          </CardList>
+        </CardListContainer>
+        <div
+          className={clsx(
+            'grid',
+            'grid-cols-3',
+            'gap-10'
+          )}>
+          <InterlayDenimContainedButton
+            // TODO: should not use inlined functions
+            onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Increase)}>
+            {t('vault.deposit_collateral')}
+          </InterlayDenimContainedButton>
+          <InterlayDefaultContainedButton
+            onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Decrease)}>
+            {t('vault.withdraw_collateral')}
+          </InterlayDefaultContainedButton>
+          {lockedBTC.gt(BTCAmount.zero) && (
+            <InterlayCaliforniaContainedButton
+              onClick={() => setShowRequestReplacementModal(true)}>
+              {t('vault.replace_vault')}
+            </InterlayCaliforniaContainedButton>
+          )}
         </div>
-        <div className='text-center'>
-          <VaultIssueRequestsTable
-            totalIssueRequests={totalIssueRequests}
-            vaultAddress={address} />
-          <VaultRedeemRequestsTable
-            totalRedeemRequests={totalRedeemRequests}
-            vaultAddress={address} />
-          <ReplaceTable />
-          <UpdateCollateralModal
-            onClose={closeUpdateCollateralModal}
-            status={updateCollateralModalStatus} />
-          <RequestReplacementModal
-            onClose={closeRequestReplacementModal}
-            show={showRequestReplacementModal} />
-        </div>
-      </div>
-    </MainContainer>
+        <VaultIssueRequestsTable
+          totalIssueRequests={totalIssueRequests}
+          vaultAddress={address} />
+        <VaultRedeemRequestsTable
+          totalRedeemRequests={totalRedeemRequests}
+          vaultAddress={address} />
+        <ReplaceTable />
+      </MainContainer>
+      <UpdateCollateralModal
+        onClose={closeUpdateCollateralModal}
+        status={updateCollateralModalStatus} />
+      <RequestReplacementModal
+        onClose={closeRequestReplacementModal}
+        show={showRequestReplacementModal} />
+    </>
   );
-}
+};
 
 export default VaultDashboard;

@@ -9,7 +9,7 @@ import Big from 'big.js';
 import { StoreType } from '../../../common/types/util.types';
 import DashboardTable from '../dashboard-table/dashboard-table';
 import { VaultExt } from '@interlay/interbtc';
-import Tooltip from 'components/Tooltip';
+import InterlayTooltip from 'components/UI/InterlayTooltip';
 import clsx from 'clsx';
 import {
   Bitcoin,
@@ -167,15 +167,15 @@ export default function VaultTable(): ReactElement {
     </h1>,
     <>
       <h1 className='opacity-30'>{t('pending_btc')}</h1> &nbsp;
-      <Tooltip overlay={t('vault.tip_pending_btc')}>
+      <InterlayTooltip label={t('vault.tip_pending_btc')}>
         <i className='far fa-question-circle' />
-      </Tooltip>
+      </InterlayTooltip>
     </>,
     <>
       <h1 className='opacity-30'>{t('collateralization')}</h1> &nbsp;
-      <Tooltip overlay={t('vault.tip_collateralization')}>
+      <InterlayTooltip label={t('vault.tip_collateralization')}>
         <i className='far fa-question-circle' />
-      </Tooltip>
+      </InterlayTooltip>
     </>,
     <h1
       className='opacity-30'

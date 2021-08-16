@@ -25,8 +25,6 @@ const Dashboard = (): JSX.Element => {
         subTitle={<TimerIncrement />} />
       <div
         className={clsx(
-          'container',
-          'mx-auto',
           'grid',
           'gap-5',
           'grid-cols-1',

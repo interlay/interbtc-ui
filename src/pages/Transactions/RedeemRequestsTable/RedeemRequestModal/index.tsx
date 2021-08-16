@@ -10,7 +10,7 @@ import { BTCAmount } from '@interlay/monetary-js';
 
 import RedeemRequestStatusUI from './RedeemRequestStatusUI';
 import ReimburseStatusUI from './ReimburseStatusUI';
-import PriceInfo from 'pages/Home/PriceInfo';
+import PriceInfo from 'pages/Bridge/PriceInfo';
 import IconButton from 'components/IconButton';
 import InterlayModal, {
   Props as ModalProps,

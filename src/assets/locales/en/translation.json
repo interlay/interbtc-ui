@@ -7,7 +7,6 @@
   "connect_wallet": "Connect Wallet",
   "next": "Next",
   "loading_ellipsis": "Loading...",
-  "nav_challenges": "Challenges",
   "note": "Note",
   "close": "Close",
   "loading": "Loading",
@@ -84,8 +83,9 @@
   "nav_bridge": "Bridge",
   "nav_transactions": "Transactions",
   "nav_dashboard": "Dashboard",
-  "nav_leaderboard": "Leaderboard",
   "nav_vault": "Vault",
+  "nav_challenges": "Challenges",
+  "nav_feedback": "Feedback",
   "nav_docs": "Docs",
   "report_bug": "Report a bug:",
   "request_dot": "DOT Faucet",
@@ -115,6 +115,7 @@
   "issue_redeem_disabled": "Issue and Redeem is currently disabled.",
   "interbtc_bridge_recovery_mode": "The interBTC bridge has entered recovery mode. User funds are safe. Please try again later or check the status on the Dashboard page.",
   "waiting_for_confirmations": "Waiting for Confirmations",
+  "built_by": "Built by",
   "redeem_page": {
     "withdraw": "Withdraw",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
@@ -533,9 +534,8 @@
   "guide": {
     "alpha_testnet": "interBTC User Guide (Alpha Testnet)"
   },
-  "testnet": {
-    "warning": "Notice: All testnet assets are for testing purposes only and have no real value."
-  },
+  "test_net": "TestNet",
+  "test_net_warning": "All testnet assets are for testing purposes only and have no real value.",
   "maintenance": {
     "type": {
       "scheduled": "Scheduled maintenance on",

@@ -87,111 +87,102 @@ function RedeemRequests(): JSX.Element {
   ]);
 
   return (
-    <MainContainer
-      className={clsx(
-        'flex',
-        'justify-center',
-        'fade-in-animation'
-      )}>
+    <MainContainer className='fade-in-animation'>
+      <div>
+        <PageTitle
+          mainTitle={t('dashboard.redeem.redeem')}
+          subTitle={<TimerIncrement />} />
+        <hr
+          className={clsx(
+            'border-interlayDenim',
+            'mt-2'
+          )} />
+      </div>
       <div
         className={clsx(
-          'w-3/4',
-          'space-y-10'
+          'sm:flex',
+          'sm:flex-wrap',
+          'sm:items-center',
+          'sm:justify-center'
         )}>
-        <div>
-          <PageTitle
-            mainTitle={t('dashboard.redeem.redeem')}
-            subTitle={<TimerIncrement />} />
-          <hr className='border-interlayDenim' />
+        <div
+          className={clsx(
+            'space-y-0.5',
+            'font-medium',
+            'text-lg',
+            'sm:flex-1'
+          )}>
+          <h5
+            className={clsx(
+              'text-interlayCalifornia',
+              'font-bold',
+              'text-xl'
+            )}>
+            {t('dashboard.redeem.total_redeemed')}
+          </h5>
+          <h5
+            className={clsx(
+              'font-bold',
+              'text-xl'
+            )}>
+            {totalRedeemedAmount === '-' ? t('no_data') : satToBTC(new BN(totalRedeemedAmount)).toString()}
+            &nbsp;BTC
+          </h5>
+          {totalRedeemedAmount !== '-' && (
+            <h5 className='text-textSecondary'>
+              $
+              {(prices.bitcoin.usd * parseFloat(satToBTC(new BN(totalRedeemedAmount)).toString())).toLocaleString()}
+            </h5>
+          )}
+          <h5
+            className={clsx(
+              'text-interlayConifer',
+              'font-bold',
+              'text-xl'
+            )}>
+            {t('dashboard.redeem.total_redeems')}
+          </h5>
+          <h5>
+            {totalSuccessfulRedeems === '-' ? t('no_data') : totalSuccessfulRedeems}
+          </h5>
+          {/* TODO: add this again when the network is stable */}
+          {/* <h5
+            className={clsx(
+              'text-interlayConifer',
+              'font-bold',
+              'text-xl'
+            )}>
+            {t('dashboard.redeem.success_rate')}
+          </h5>
+          <h5>
+            {totalRedeemRequests ? (redeemSuccessRate * 100).toFixed(2) + '%' : t('no_data')}
+          </h5> */}
         </div>
         <div
           className={clsx(
-            'sm:flex',
-            'sm:flex-wrap',
-            'sm:items-center',
-            'sm:justify-center'
+            'border',
+            'rounded',
+            'sm:flex-1'
           )}>
-          <div
-            className={clsx(
-              'space-y-0.5',
-              'font-medium',
-              'text-lg',
-              'sm:flex-1',
-              'mx-6'
-            )}>
-            <h5
-              className={clsx(
-                'text-interlayCalifornia',
-                'font-bold',
-                'text-xl'
-              )}>
-              {t('dashboard.redeem.total_redeemed')}
-            </h5>
-            <h5
-              className={clsx(
-                'font-bold',
-                'text-xl'
-              )}>
-              {totalRedeemedAmount === '-' ? t('no_data') : satToBTC(new BN(totalRedeemedAmount)).toString()}
-              &nbsp;BTC
-            </h5>
-            {totalRedeemedAmount !== '-' && (
-              <h5 className='text-textSecondary'>
-                $
-                {(prices.bitcoin.usd * parseFloat(satToBTC(new BN(totalRedeemedAmount)).toString())).toLocaleString()}
-              </h5>
+          <LineChartComponent
+            color={['d_interlayCalifornia', 'd_interlayPaleSky']}
+            label={[
+              t('dashboard.redeem.total_redeemed_chart'),
+              t('dashboard.redeem.per_day_redeemed_chart')
+            ]}
+            yLabels={cumulativeRedeemsPerDay.map(dataPoint =>
+              new Date(dataPoint.date).toLocaleDateString()
             )}
-            <h5
-              className={clsx(
-                'text-interlayConifer',
-                'font-bold',
-                'text-xl'
-              )}>
-              {t('dashboard.redeem.total_redeems')}
-            </h5>
-            <h5>
-              {totalSuccessfulRedeems === '-' ? t('no_data') : totalSuccessfulRedeems}
-            </h5>
-            {/* TODO: add this again when the network is stable */}
-            {/* <h5
-              className={clsx(
-                'text-interlayConifer',
-                'font-bold',
-                'text-xl'
-              )}>
-              {t('dashboard.redeem.success_rate')}
-            </h5>
-            <h5>
-              {totalRedeemRequests ? (redeemSuccessRate * 100).toFixed(2) + '%' : t('no_data')}
-            </h5> */}
-          </div>
-          <div
-            className={clsx(
-              'border',
-              'rounded',
-              'sm:flex-1',
-              'mx-6'
-            )}>
-            <LineChartComponent
-              color={['d_interlayCalifornia', 'd_interlayPaleSky']}
-              label={[
-                t('dashboard.redeem.total_redeemed_chart'),
-                t('dashboard.redeem.per_day_redeemed_chart')
-              ]}
-              yLabels={cumulativeRedeemsPerDay.map(dataPoint =>
-                new Date(dataPoint.date).toLocaleDateString()
-              )}
-              yAxisProps={[{ beginAtZero: true, position: 'left' }, { position: 'right' }]}
-              data={[
-                cumulativeRedeemsPerDay.map(dataPoint =>
-                  satToBTC(new BN(dataPoint.sat)).toNumber()
-                ),
-                pointRedeemsPerDay.map(amount => satToBTC(new BN(amount)).toNumber())
-              ]} />
-          </div>
+            yAxisProps={[{ beginAtZero: true, position: 'left' }, { position: 'right' }]}
+            data={[
+              cumulativeRedeemsPerDay.map(dataPoint =>
+                satToBTC(new BN(dataPoint.sat)).toNumber()
+              ),
+              pointRedeemsPerDay.map(amount => satToBTC(new BN(amount)).toNumber())
+            ]} />
         </div>
-        <RedeemRequestsTable totalRedeemRequests={totalRedeemRequests} />
       </div>
+      <RedeemRequestsTable totalRedeemRequests={totalRedeemRequests} />
     </MainContainer>
   );
 }

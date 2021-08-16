@@ -13,7 +13,7 @@ import { satToBTC } from '@interlay/interbtc';
 
 import DashboardCard from 'pages/dashboard/DashboardCard';
 import LineChartComponent from './line-chart-component';
-import InterlayRouterLink from 'components/UI/InterlayLink/router';
+import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';

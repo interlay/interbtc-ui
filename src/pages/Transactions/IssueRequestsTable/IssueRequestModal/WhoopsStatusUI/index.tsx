@@ -4,9 +4,9 @@ import clsx from 'clsx';
 import { Issue } from '@interlay/interbtc';
 import { BTCAmount } from '@interlay/monetary-js';
 
-import RequestWrapper from 'pages/Home/RequestWrapper';
-import PriceInfo from 'pages/Home/PriceInfo';
-import Tooltip from 'components/Tooltip';
+import RequestWrapper from 'pages/Bridge/RequestWrapper';
+import PriceInfo from 'pages/Bridge/PriceInfo';
+import InterlayTooltip from 'components/UI/InterlayTooltip';
 import {
   copyToClipboard,
   getUsdAmount,
@@ -132,7 +132,7 @@ const WhoopsStatusUI = ({
         &nbsp;BTC&nbsp;
         {t('issue_page.refund_vault_to_address')}.
       </p>
-      <Tooltip overlay={t('click_to_copy')}>
+      <InterlayTooltip label={t('click_to_copy')}>
         <span
           className={clsx(
             'block',
@@ -147,7 +147,7 @@ const WhoopsStatusUI = ({
           onClick={() => copyToClipboard('1')}>
           {request.refundBtcAddress}
         </span>
-      </Tooltip>
+      </InterlayTooltip>
     </RequestWrapper>
   );
 };
