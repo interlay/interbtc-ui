@@ -70,15 +70,16 @@ import 'react-toastify/dist/ReactToastify.css';
 const Bridge = React.lazy(() =>
   import(/* webpackChunkName: 'bridge' */ 'pages/Bridge')
 );
+const Transactions = React.lazy(() =>
+  import(/* webpackChunkName: 'transactions' */ 'pages/Transactions')
+);
+const Staking = React.lazy(() =>
+  import(/* webpackChunkName: 'staking' */ 'pages/Staking')
+);
 const Dashboard = React.lazy(() =>
   import(/* webpackChunkName: 'dashboard' */ 'pages/dashboard/dashboard.page')
 );
-const VaultDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'vault' */ 'pages/vault-dashboard/vault-dashboard.page')
-);
-const Challenges = React.lazy(() =>
-  import(/* webpackChunkName: 'challenges' */ 'pages/Challenges')
-);
+// ray test touch <
 const VaultsDashboard = React.lazy(() =>
   import(/* webpackChunkName: 'vaults' */ 'pages/dashboard/vaults/vaults.dashboard.page')
 );
@@ -97,11 +98,15 @@ const OraclesDashboard = React.lazy(() =>
 const ParachainDashboard = React.lazy(() =>
   import(/* webpackChunkName: 'parachain' */ 'pages/dashboard/parachain/parachain.dashboard.page')
 );
+const VaultDashboard = React.lazy(() =>
+  import(/* webpackChunkName: 'vault' */ 'pages/vault-dashboard/vault-dashboard.page')
+);
+// ray test touch >
+const Challenges = React.lazy(() =>
+  import(/* webpackChunkName: 'challenges' */ 'pages/Challenges')
+);
 const Feedback = React.lazy(() =>
   import(/* webpackChunkName: 'feedback' */ 'pages/Feedback')
-);
-const Transactions = React.lazy(() =>
-  import(/* webpackChunkName: 'transactions' */ 'pages/Transactions')
 );
 const NoMatch = React.lazy(() =>
   import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
@@ -389,11 +394,19 @@ const App = (): JSX.Element => {
                 </div>
               }>
               <Switch location={location}>
-                <Route path={PAGES.DASHBOARD_VAULTS}>
-                  <VaultsDashboard />
+                <Route path={PAGES.FEEDBACK}>
+                  <Feedback />
                 </Route>
                 <Route path={PAGES.CHALLENGES}>
                   <Challenges />
+                </Route>
+                {vaultClientLoaded && (
+                  <Route path={PAGES.VAULT}>
+                    <VaultDashboard />
+                  </Route>
+                )}
+                <Route path={PAGES.DASHBOARD_VAULTS}>
+                  <VaultsDashboard />
                 </Route>
                 <Route path={PAGES.DASHBOARD_PARACHAIN}>
                   <ParachainDashboard />
@@ -413,13 +426,8 @@ const App = (): JSX.Element => {
                 <Route path={PAGES.DASHBOARD}>
                   <Dashboard />
                 </Route>
-                {vaultClientLoaded && (
-                  <Route path={PAGES.VAULT}>
-                    <VaultDashboard />
-                  </Route>
-                )}
-                <Route path={PAGES.FEEDBACK}>
-                  <Feedback />
+                <Route path={PAGES.STAKING}>
+                  <Staking />
                 </Route>
                 <Route path={PAGES.TRANSACTIONS}>
                   <Transactions />

@@ -4,6 +4,7 @@ import { matchPath } from 'react-router';
 import { useSelector } from 'react-redux';
 import {
   ClipboardListIcon,
+  CashIcon,
   BookOpenIcon,
   RefreshIcon,
   ChartSquareBarIcon,
@@ -29,6 +30,11 @@ const NAVIGATION_ITEMS = [
     name: 'nav_transactions',
     link: PAGES.TRANSACTIONS,
     icon: ClipboardListIcon
+  },
+  {
+    name: 'nav_staking',
+    link: PAGES.STAKING,
+    icon: CashIcon
   },
   {
     name: 'nav_dashboard',
