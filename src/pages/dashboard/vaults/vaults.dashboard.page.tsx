@@ -1,16 +1,16 @@
-import { ReactElement } from 'react';
+
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import VaultTable from '../../../common/components/vault-table/vault-table';
 import ActiveVaults from '../components/active-vaults';
 import CollateralLocked from '../components/collateral-locked';
 import Collateralization from '../components/collateralization';
 import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
+import VaultTable from 'common/components/vault-table/vault-table';
 
-export default function VaultsDashboard(): ReactElement {
+const VaultsDashboard = (): JSX.Element => {
   const { t } = useTranslation();
 
   return (
@@ -38,4 +38,6 @@ export default function VaultsDashboard(): ReactElement {
       <VaultTable />
     </MainContainer>
   );
-}
+};
+
+export default VaultsDashboard;
