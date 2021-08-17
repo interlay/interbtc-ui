@@ -72,7 +72,7 @@ const ParachainSecurity = ({ linkButton }: Props): JSX.Element => {
         <div>
           <h1
             className={clsx(
-              'h1-xl',
+              'font-bold',
               'text-3xl',
               'text-left'
             )}>

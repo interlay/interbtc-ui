@@ -54,7 +54,14 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
           'items-center'
         )}>
         <div>
-          <h1 className='font-bold'>
+          <h1
+            className={clsx(
+              'font-bold',
+              'text-sm',
+              'xl:text-base',
+              'mb-1',
+              'xl:mb-2'
+            )}>
             {t('dashboard.oracles.oracles_are')}&nbsp;
             {oracleStatus === Status.Online ? (
               <span
@@ -104,7 +111,7 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
             id='oracle-circle'>
             <h1
               className={clsx(
-                'h1-xl',
+                'font-bold',
                 'text-3xl',
                 'text-center',
                 'text-interlayConifer'
@@ -112,7 +119,14 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
               id='oracle-circle-text'>
               {t('online')}
             </h1>
-            <h2>{exchangeRate} DOT/BTC</h2>
+            <h2
+              className={clsx(
+                'text-base',
+                'font-bold',
+                'mb-1'
+              )}>
+              {exchangeRate} DOT/BTC
+            </h2>
           </div>
         ) : oracleStatus === Status.Offline ? (
           <div
@@ -130,7 +144,7 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
             id='oracle-circle'>
             <h1
               className={clsx(
-                'h1-xl',
+                'font-bold',
                 'text-3xl',
                 'text-center',
                 'text-interlayCinnabar'
@@ -138,7 +152,14 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
               id='oracle-circle-text'>
               {t('offline')}
             </h1>
-            <h2>{exchangeRate} DOT/BTC</h2>
+            <h2
+              className={clsx(
+                'text-base',
+                'font-bold',
+                'mb-1'
+              )}>
+              {exchangeRate} DOT/BTC
+            </h2>
           </div>
         ) : oracleStatus === Status.NoData ? (
           <div
@@ -156,7 +177,7 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
             id='oracle-circle'>
             <h1
               className={clsx(
-                'h1-xl',
+                'font-bold',
                 'text-3xl',
                 'text-center',
                 'text-interlayPaleSky'
@@ -164,7 +185,14 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
               id='oracle-circle-text'>
               {t('no_data')}
             </h1>
-            <h2>{exchangeRate} DOT/BTC</h2>
+            <h2
+              className={clsx(
+                'text-base',
+                'font-bold',
+                'mb-1'
+              )}>
+              {exchangeRate} DOT/BTC
+            </h2>
           </div>
         ) : (
           <div
@@ -182,7 +210,7 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
             id='oracle-circle'>
             <h1
               className={clsx(
-                'h1-xl',
+                'font-bold',
                 'text-3xl',
                 'text-center',
                 'text-interlayPaleSky'
@@ -190,7 +218,14 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
               id='oracle-circle-text'>
               {t('loading')}
             </h1>
-            <h2>{exchangeRate} DOT/BTC</h2>
+            <h2
+              className={clsx(
+                'text-base',
+                'font-bold',
+                'mb-1'
+              )}>
+              {exchangeRate} DOT/BTC
+            </h2>
           </div>
         )}
       </div>

@@ -43,8 +43,24 @@ const ActiveVaults = ({ linkButton }: Props): JSX.Element => {
           'items-center'
         )}>
         <div>
-          <h1 className='text-interlayDenim'>{t('dashboard.vault.active_vaults')}</h1>
-          <h2>{totalVaultsPerDay[totalVaultsPerDay.length - 1]?.count}</h2>
+          <h1
+            className={clsx(
+              'text-interlayDenim',
+              'text-sm',
+              'xl:text-base',
+              'mb-1',
+              'xl:mb-2'
+            )}>
+            {t('dashboard.vault.active_vaults')}
+          </h1>
+          <h2
+            className={clsx(
+              'text-base',
+              'font-bold',
+              'mb-1'
+            )}>
+            {totalVaultsPerDay[totalVaultsPerDay.length - 1]?.count}
+          </h2>
         </div>
         {linkButton && (
           <InterlayRouterLink to={PAGES.DASHBOARD_VAULTS}>

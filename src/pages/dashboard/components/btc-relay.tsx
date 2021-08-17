@@ -75,7 +75,14 @@ const BtcRelay = ({
             'items-center'
           )}>
           <div>
-            <h1 className='font-bold'>
+            <h1
+              className={clsx(
+                'font-bold',
+                'text-sm',
+                'xl:text-base',
+                'mb-1',
+                'xl:mb-2'
+              )}>
               {t('dashboard.relay.relay_is')}&nbsp;
               <span
                 id='relay-text'
@@ -118,17 +125,21 @@ const BtcRelay = ({
             id='relay-circle'>
             <h1
               className={clsx(
-                'h1-xl',
+                'font-bold',
                 'text-3xl',
                 'text-center',
                 { 'text-interlayPaleSky': state === Status.Loading },
                 { 'text-interlayConifer': state === Status.Ok },
                 { 'text-interlayCinnabar': state !== Status.Loading && state !== Status.Ok }
-              )}
-              id='relay-circle-text'>
+              )}>
               {graphText}
             </h1>
-            <h2>
+            <h2
+              className={clsx(
+                'text-base',
+                'font-bold',
+                'mb-1'
+              )}>
               {t('dashboard.relay.block_number', { number: btcRelayHeight })}
             </h2>
           </div>
@@ -143,7 +154,14 @@ const BtcRelay = ({
               'items-center'
             )}>
             <div>
-              <h1 className='font-bold'>
+              <h1
+                className={clsx(
+                  'font-bold',
+                  'text-sm',
+                  'xl:text-base',
+                  'mb-1',
+                  'xl:mb-2'
+                )}>
                 {blockstreamTip !== '-' && (
                   <StyledLinkData
                     data={t('dashboard.relay.blockstream_verify_link')}
@@ -169,15 +187,19 @@ const BtcRelay = ({
               id='relay-circle'>
               <h1
                 className={clsx(
-                  'h1-xl',
+                  'font-bold',
                   'text-3xl',
                   'text-interlayDenim',
                   'text-center'
-                )}
-                id='relay-circle-text'>
+                )}>
                 {t('blockstream')}
               </h1>
-              <h2>
+              <h2
+                className={clsx(
+                  'text-base',
+                  'font-bold',
+                  'mb-1'
+                )}>
                 {t('dashboard.relay.block_number', { number: bitcoinHeight })}
               </h2>
             </div>
