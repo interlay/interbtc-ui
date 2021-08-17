@@ -62,9 +62,10 @@ const IssueRequestModal = ({
   const amountInterBTC = (request.executedAmountBTC && !request.executedAmountBTC.isZero()) ?
     request.executedAmountBTC :
     request.amountInterBTC;
-  const amountBTCSent = request.btcAmountSubmittedByUser ?
-    request.btcAmountSubmittedByUser :
-    request.amountInterBTC.add(request.bridgeFee);
+  const amountBTCSent =
+    request.btcAmountSubmittedByUser ?
+      request.btcAmountSubmittedByUser :
+      request.amountInterBTC.add(request.bridgeFee);
 
   return (
     <InterlayModal

@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import {
   useSelector,
@@ -6,12 +5,12 @@ import {
 } from 'react-redux';
 import { Table } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { stripHexPrefix } from '@interlay/interbtc';
 
 import { StoreType } from 'common/types/util.types';
 import { addReplaceRequestsAction } from 'common/actions/vault.actions';
 import { shortAddress } from 'common/utils/utils';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { stripHexPrefix } from '@interlay/interbtc';
 
 const ReplaceTable = (): JSX.Element => {
   const {

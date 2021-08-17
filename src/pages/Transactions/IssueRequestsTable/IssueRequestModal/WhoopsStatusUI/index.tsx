@@ -74,9 +74,11 @@ const WhoopsStatusUI = ({
         }
         value={safeRoundEightDecimals(Number(request.btcAmountSubmittedByUser))}
         unitName='BTC'
-        approxUSD={getUsdAmount(request.btcAmountSubmittedByUser ?
-          request.btcAmountSubmittedByUser :
-          BTCAmount.zero, prices.bitcoin.usd)} />
+        approxUSD={getUsdAmount(
+          request.btcAmountSubmittedByUser ?
+            request.btcAmountSubmittedByUser :
+            BTCAmount.zero, prices.bitcoin.usd
+        )} />
       <PriceInfo
         className='w-full'
         title={

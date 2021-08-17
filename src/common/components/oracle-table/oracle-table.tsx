@@ -1,10 +1,10 @@
 import { ReactElement, useEffect, useState } from 'react';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
+import { DOTBTCOracleStatus } from '@interlay/interbtc/build/src/types/oracleTypes';
 
 import DashboardTable, { StatusComponent, StatusCategories } from '../dashboard-table/dashboard-table';
 import { formatDateTime } from 'common/utils/utils';
-import { DOTBTCOracleStatus } from '@interlay/interbtc/build/src/types/oracleTypes';
 
 type OracleTableProps = {
   dotLocked: string;
