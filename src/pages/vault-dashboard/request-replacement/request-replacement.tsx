@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { Modal } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
@@ -12,7 +11,6 @@ import { BTCAmount } from '@interlay/monetary-js';
 import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { parachainToUIReplaceRequests } from 'common/utils/requests';
 import { addReplaceRequestsAction } from 'common/actions/vault.actions';
 import { StoreType } from 'common/types/util.types';
 
@@ -51,7 +49,7 @@ const RequestReplacementModal = (props: Props): JSX.Element => {
       const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
       if (!requests) return;
 
-      dispatch(addReplaceRequestsAction(parachainToUIReplaceRequests(requests)));
+      dispatch(addReplaceRequestsAction(requests));
       toast.success('Replacement request is submitted');
       props.onClose();
     } catch (error) {

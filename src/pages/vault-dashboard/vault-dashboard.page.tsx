@@ -14,8 +14,7 @@ import {
 } from '@interlay/interbtc-index-client';
 import {
   BTCAmount,
-  Polkadot,
-  PolkadotAmount
+  Polkadot
 } from '@interlay/monetary-js';
 
 import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
@@ -69,7 +68,6 @@ const VaultDashboard = (): JSX.Element => {
   } = useSelector((state: StoreType) => state.vault);
   const [capacity, setCapacity] = useState(BTCAmount.zero);
   const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState(BTCAmount.zero);
-  const [feesEarnedDOT, setFeesEarnedDOT] = useState(PolkadotAmount.zero);
   const [totalIssueRequests, setTotalIssueRequests] = useState(0);
   const [totalRedeemRequests, setTotalRedeemRequests] = useState(0);
 
@@ -91,7 +89,6 @@ const VaultDashboard = (): JSX.Element => {
         const [
           vault,
           feesPolkaBTC,
-          feesDOT,
           lockedAmountBTC,
           collateralization,
           slaScore,
@@ -101,8 +98,7 @@ const VaultDashboard = (): JSX.Element => {
           totalRedeemRequests
         ] = await Promise.allSettled([
           window.polkaBTC.vaults.get(vaultId),
-          window.polkaBTC.pools.getFeesWrapped(address),
-          window.polkaBTC.pools.getFeesCollateral(address, Polkadot),
+          window.polkaBTC.pools.getFeesWrapped(address, Polkadot),
           window.polkaBTC.vaults.getIssuedAmount(vaultId),
           window.polkaBTC.vaults.getVaultCollateralization(vaultId),
           window.polkaBTC.vaults.getSLA(vaultId),
@@ -119,10 +115,6 @@ const VaultDashboard = (): JSX.Element => {
 
         if (feesPolkaBTC.status === 'fulfilled') {
           setFeesEarnedPolkaBTC(feesPolkaBTC.value);
-        }
-
-        if (feesDOT.status === 'fulfilled') {
-          setFeesEarnedDOT(feesDOT.value);
         }
 
         if (totalIssueRequests.status === 'fulfilled') {
@@ -173,11 +165,6 @@ const VaultDashboard = (): JSX.Element => {
     {
       title: t('vault.fees_earned_interbtc'),
       value: displayMonetaryAmount(feesEarnedPolkaBTC),
-      color: 'text-interlayDenim-800'
-    },
-    {
-      title: t('vault.fees_earned_dot'),
-      value: feesEarnedDOT.toHuman(),
       color: 'text-interlayDenim-800'
     },
     {

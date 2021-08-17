@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import {
   useSelector,
@@ -6,12 +5,12 @@ import {
 } from 'react-redux';
 import { Table } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { stripHexPrefix } from '@interlay/interbtc';
 
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { parachainToUIReplaceRequests } from 'common/utils/requests';
-import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { addReplaceRequestsAction } from 'common/actions/vault.actions';
+import { shortAddress } from 'common/utils/utils';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
 const ReplaceTable = (): JSX.Element => {
   const {
@@ -33,7 +32,7 @@ const ReplaceTable = (): JSX.Element => {
         const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
         if (!requests) return;
 
-        dispatch(addReplaceRequestsAction(parachainToUIReplaceRequests(requests)));
+        dispatch(addReplaceRequestsAction(requests));
       } catch (error) {
         console.log('[ReplaceTable] error.message => ', error.message);
       }
@@ -56,7 +55,7 @@ const ReplaceTable = (): JSX.Element => {
           {t('vault.replace_requests')}
         </p>
       </div>
-      {replaceRequests && replaceRequests.length > 0 ? (
+      {replaceRequests && replaceRequests.size > 0 ? (
         <>
           <Table
             hover
@@ -75,17 +74,24 @@ const ReplaceTable = (): JSX.Element => {
               </tr>
             </thead>
             <tbody>
-              {replaceRequests.map((redeem, index) => {
+              {[...replaceRequests.entries()].map(([id, redeem], index) => {
                 return (
                   <tr key={index}>
-                    <td>{redeem.id}</td>
-                    <td>{redeem.timestamp}</td>
-                    <td>{shortAddress(redeem.oldVault)}</td>
-                    <td>{shortAddress(redeem.newVault)}</td>
+                    <td>{stripHexPrefix(id.toString())}</td>
+                    <td>{redeem.btcHeight}</td>
+                    <td>{shortAddress(redeem.oldVault.toString())}</td>
+                    <td>{shortAddress(redeem.newVault.toString())}</td>
                     <td>{shortAddress(redeem.btcAddress)}</td>
-                    <td>{redeem.polkaBTC}</td>
-                    <td>{redeem.lockedDOT}</td>
-                    <td>{redeem.status}</td>
+                    <td>{redeem.amount.toHuman()}</td>
+                    <td>{redeem.collateral.toHuman()}</td>
+                    <td>{redeem.status.isPending ?
+                      t('pending') :
+                      redeem.status.isCompleted ?
+                        t('completed') :
+                        redeem.status.isCancelled ?
+                          t('cancelled') :
+                          t('loading_ellipsis')}
+                    </td>
                   </tr>
                 );
               })}

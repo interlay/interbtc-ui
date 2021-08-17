@@ -1,10 +1,10 @@
-import { VaultReplaceRequest } from './vault.types';
 import { StoreType, ParachainStatus, Prices } from './util.types';
-import { Issue } from '@interlay/interbtc';
+import { Issue, ReplaceRequestExt } from '@interlay/interbtc';
 import {
   BTCAmount,
   PolkadotAmount
 } from '@interlay/monetary-js';
+import { H256 } from '@polkadot/types/interfaces';
 
 // GENERAL ACTIONS
 
@@ -150,7 +150,7 @@ export const UPDATE_APY = 'UPDATE_APY';
 
 export interface AddReplaceRequests {
   type: typeof ADD_REPLACE_REQUESTS;
-  requests: VaultReplaceRequest[];
+  requests: Map<H256, ReplaceRequestExt>;
 }
 
 export interface UpdateCollateralization {

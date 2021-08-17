@@ -1,14 +1,10 @@
-
 import {
   BitcoinNetwork,
-  IssueColumns,
-  IndexApi,
-  Configuration
+  IssueColumns
 } from '@interlay/interbtc-index-client';
 import { Issue } from '@interlay/interbtc';
 
 import {
-  STATS_URL,
   BITCOIN_NETWORK
 } from '../constants';
 
@@ -35,10 +31,7 @@ const userIssueRequestsFetcher = async ({ queryKey }: Arguments): Promise<Array<
     throw new Error('Invalid key!');
   }
 
-  // Temporary declaration pending refactor decision
-  const index = new IndexApi(new Configuration({ basePath: STATS_URL }));
-
-  return await index.getFilteredIssues({
+  return await window.polkaBTC.index.getFilteredIssues({
     page,
     perPage: limit,
     network: BITCOIN_NETWORK as BitcoinNetwork | undefined,

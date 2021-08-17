@@ -13,9 +13,11 @@ import {
   VaultActions
 } from '../types/actions.types';
 import { VaultState } from '../types/vault.types';
+import { ReplaceRequestExt } from '@interlay/interbtc';
+import { H256 } from '@polkadot/types/interfaces';
 
 const initialState = {
-  requests: [],
+  requests: new Map<H256, ReplaceRequestExt>(),
   collateralization: '0',
   collateral: PolkadotAmount.zero,
   lockedBTC: BTCAmount.zero,

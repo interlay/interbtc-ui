@@ -2,10 +2,8 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import QRCode from 'qrcode.react';
-import Big from 'big.js';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { BTCAmount } from '@interlay/monetary-js';
 import { Issue } from '@interlay/interbtc';
 
 import Timer from 'components/Timer';
@@ -27,7 +25,7 @@ const BTCPaymentPendingStatusUI = ({
   const { t } = useTranslation();
   const { prices } = useSelector((state: StoreType) => state.general);
   const { issuePeriod } = useSelector((state: StoreType) => state.issue);
-  const amountBTCToSend = BTCAmount.from.BTC(new Big(request.amountInterBTC).add(request.bridgeFee).toString());
+  const amountBTCToSend = request.amountInterBTC.add(request.bridgeFee);
   const [initialLeftSeconds, setInitialLeftSeconds] = React.useState<number>();
 
   React.useEffect(() => {

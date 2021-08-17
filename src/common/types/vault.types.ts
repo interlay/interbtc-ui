@@ -2,6 +2,8 @@ import {
   BTCAmount,
   PolkadotAmount
 } from '@interlay/monetary-js';
+import { ReplaceRequestExt } from '@interlay/interbtc';
+import { H256 } from '@polkadot/types/interfaces';
 
 export type Vault = {
   vaultId: string;
@@ -14,19 +16,8 @@ export type Vault = {
   settledCollateralization: string | undefined;
 };
 
-export interface VaultReplaceRequest {
-  id: string;
-  timestamp: string;
-  newVault: string;
-  oldVault: string;
-  btcAddress: string;
-  polkaBTC: string;
-  lockedDOT: string;
-  status: string;
-}
-
 export interface VaultState {
-  requests: VaultReplaceRequest[];
+  requests: Map<H256, ReplaceRequestExt>;
   collateralization: string | undefined;
   collateral: PolkadotAmount;
   lockedBTC: BTCAmount;

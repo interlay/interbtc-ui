@@ -65,7 +65,7 @@ const ReimburseStatusUI = ({
           window.polkaBTC.vaults.getPunishmentFee(),
           window.polkaBTC.oracle.getExchangeRate(Polkadot)
         ]);
-        const amountPolkaBTC = request ? BTCAmount.from.BTC(request.amountBTC) : BTCAmount.zero;
+        const amountPolkaBTC = request ? request.amountBTC : BTCAmount.zero;
         setDOTAmount(btcDotRate.toCounter(amountPolkaBTC));
         setPunishmentDOT(btcDotRate.toCounter(amountPolkaBTC).mul(new Big(punishment)));
       } catch (error) {
