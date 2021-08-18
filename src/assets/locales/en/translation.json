@@ -306,7 +306,7 @@
       "liquidated": "Liquidated",
       "liquidation": "Being liquidated",
       "undercollateralized": "Undercollateralized",
-      "banned_until": "Banned until block {{blockheight}}",
+      "banned_until": "Banned until block {{blockHeight}}",
       "inactive": "Inactive",
       "active": "Active",
       "secure_threshold": "Secure Threshold: {{threshold}} %",
