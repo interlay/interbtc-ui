@@ -30,10 +30,10 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
-import { shortAddress } from '../../utils/utils';
-import * as constants from '../../../constants';
+import { shortAddress } from '../../../../common/utils/utils';
+import * as constants from '../../../../constants';
 import { StoreType } from 'common/types/util.types';
-import { Vault } from '../../types/vault.types';
+import { Vault } from '../../../../common/types/vault.types';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const getCollateralization = (
@@ -69,7 +69,7 @@ const getCollateralizationColor = (
   }
 };
 
-const VaultTable = (): JSX.Element => {
+const VaultsTable = (): JSX.Element => {
   const [vaults, setVaults] = React.useState<Array<Vault>>([]);
   const { t } = useTranslation();
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
@@ -86,10 +86,13 @@ const VaultTable = (): JSX.Element => {
           theBTCToDOTRate,
           theVaultsExt
         ] = await Promise.all([
+          // ray test touch <<
+          // TODO: react-query
           window.polkaBTC.vaults.getSecureCollateralThreshold(),
           window.polkaBTC.vaults.getLiquidationCollateralThreshold(),
           window.polkaBTC.oracle.getExchangeRate(Polkadot),
           window.polkaBTC.vaults.list()
+          // ray test touch >>
         ]);
         setSecureCollateralThreshold(theSecureCollateralThreshold);
 
@@ -280,6 +283,9 @@ const VaultTable = (): JSX.Element => {
     }
   );
 
+  // ray test touch <
+  // TODO: should add pagination
+  // ray test touch >
   return (
     <InterlayTableContainer className='space-y-6'>
       <h2
@@ -351,4 +357,4 @@ const VaultTable = (): JSX.Element => {
   );
 };
 
-export default VaultTable;
+export default VaultsTable;

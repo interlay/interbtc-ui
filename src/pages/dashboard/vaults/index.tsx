@@ -2,15 +2,15 @@
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
+import VaultsTable from './VaultsTable';
 import ActiveVaults from '../components/active-vaults';
 import CollateralLocked from '../components/collateral-locked';
 import Collateralization from '../components/collateralization';
 import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
-import VaultTable from 'common/components/vault-table/vault-table';
 
-const VaultsDashboard = (): JSX.Element => {
+const Vaults = (): JSX.Element => {
   const { t } = useTranslation();
 
   return (
@@ -35,9 +35,9 @@ const VaultsDashboard = (): JSX.Element => {
         <CollateralLocked />
         <Collateralization />
       </div>
-      <VaultTable />
+      <VaultsTable />
     </MainContainer>
   );
 };
 
-export default VaultsDashboard;
+export default Vaults;

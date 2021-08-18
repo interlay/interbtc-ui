@@ -80,8 +80,8 @@ const Dashboard = React.lazy(() =>
   import(/* webpackChunkName: 'dashboard' */ 'pages/dashboard/dashboard.page')
 );
 // ray test touch <
-const VaultsDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'vaults' */ 'pages/dashboard/vaults/vaults.dashboard.page')
+const Vaults = React.lazy(() =>
+  import(/* webpackChunkName: 'vaults' */ 'pages/dashboard/vaults')
 );
 const IssueRequests = React.lazy(() =>
   import(/* webpackChunkName: 'issue' */ 'pages/dashboard/IssueRequests')
@@ -406,7 +406,7 @@ const App = (): JSX.Element => {
                   </Route>
                 )}
                 <Route path={PAGES.DASHBOARD_VAULTS}>
-                  <VaultsDashboard />
+                  <Vaults />
                 </Route>
                 <Route path={PAGES.DASHBOARD_PARACHAIN}>
                   <ParachainDashboard />
