@@ -1,16 +1,15 @@
-import { ReactElement, useState, useEffect, useMemo, useCallback } from 'react';
+
+// ray test touch <<
+import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { Vault } from '../../types/vault.types';
-import * as constants from '../../../constants';
-import { roundTwoDecimals, VaultStatusExt } from '@interlay/interbtc';
-import { shortAddress } from '../../utils/utils';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
-import { StoreType } from '../../../common/types/util.types';
-import DashboardTable from '../dashboard-table/dashboard-table';
-import { VaultExt } from '@interlay/interbtc';
-import InterlayTooltip from 'components/UI/InterlayTooltip';
 import clsx from 'clsx';
+import {
+  roundTwoDecimals,
+  VaultStatusExt,
+  VaultExt
+} from '@interlay/interbtc';
 import {
   Bitcoin,
   BTCAmount,
@@ -21,21 +20,28 @@ import {
   PolkadotUnit
 } from '@interlay/monetary-js';
 
-export default function VaultTable(): ReactElement {
-  const [vaults, setVaults] = useState<Array<Vault>>([]);
-  const [vaultsExt, setVaultsExt] = useState<Array<VaultExt>>([]);
-  const [liquidationThreshold, setLiquidationThreshold] = useState(new Big(0));
-  const [secureCollateralThreshold, setSecureCollateralThreshold] = useState(new Big(0));
-  const [btcToDotRate, setBtcToDotRate] = useState(
+import DashboardTable from '../dashboard-table/dashboard-table';
+import InterlayTooltip from 'components/UI/InterlayTooltip';
+import { shortAddress } from '../../utils/utils';
+import * as constants from '../../../constants';
+import { StoreType } from '../../../common/types/util.types';
+import { Vault } from '../../types/vault.types';
+
+const VaultTable = (): JSX.Element => {
+  const [vaults, setVaults] = React.useState<Array<Vault>>([]);
+  const [vaultsExt, setVaultsExt] = React.useState<Array<VaultExt>>([]);
+  const [liquidationThreshold, setLiquidationThreshold] = React.useState(new Big(0));
+  const [secureCollateralThreshold, setSecureCollateralThreshold] = React.useState(new Big(0));
+  const [btcToDotRate, setBtcToDotRate] = React.useState(
     new ExchangeRate<Bitcoin, BTCUnit, Polkadot, PolkadotUnit>(Bitcoin, Polkadot, new Big(0))
   );
   const { t } = useTranslation();
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!polkaBtcLoaded) return;
+  React.useEffect(() => {
+    if (!polkaBtcLoaded) return;
 
+    (async () => {
       try {
         const [
           secure,
@@ -53,14 +59,13 @@ export default function VaultTable(): ReactElement {
         setLiquidationThreshold(liquidation);
         setBtcToDotRate(btcToDot);
         setVaultsExt(vaultsExt);
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log('[VaultTable] error.message => ', error.message);
       }
-    };
-    fetchData();
+    })();
   }, [polkaBtcLoaded]);
 
-  const checkVaultStatus = useCallback(
+  const checkVaultStatus = React.useCallback(
     (
       status: VaultStatusExt,
       collateralization: Big | undefined,
@@ -93,55 +98,51 @@ export default function VaultTable(): ReactElement {
       t
     ]);
 
-  useEffect(() => {
-    const fetchData = () => {
-      if (vaultsExt.length === 0) return;
-      if (secureCollateralThreshold.eq(0)) return;
+  React.useEffect(() => {
+    if (vaultsExt.length === 0) return;
+    if (secureCollateralThreshold.eq(0)) return;
+    const vaultsList: Vault[] = [];
 
-      const vaultsList: Vault[] = [];
-
-      for (const vault of vaultsExt) {
-        const getCollateralization = (collateral: PolkadotAmount, tokens: BTCAmount) => {
-          if (tokens.gt(BTCAmount.zero) && btcToDotRate.toBig().gt(0)) {
-            const tokensAsCollateral = btcToDotRate.toCounter(tokens);
-            return collateral.toBig().div(tokensAsCollateral.toBig()).mul(100);
-          } else {
-            return undefined;
-          }
-        };
-
-        const vaultCollateral = vault.backingCollateral;
-        const unsettledTokens = vault.toBeIssuedTokens;
-        const settledTokens = vault.issuedTokens;
-        const unsettledCollateralization = getCollateralization(vaultCollateral, unsettledTokens.add(settledTokens));
-        const settledCollateralization = getCollateralization(vaultCollateral, settledTokens);
-
-        const btcAddress = vault.wallet.publicKey; // TODO: get address(es)?
-
-        vaultsList.push({
-          vaultId: vault.id.toString(),
-          // TODO: fetch collateral reserved
-          lockedBTC: settledTokens.toHuman(),
-          lockedDOT: vaultCollateral.toHuman(),
-          pendingBTC: unsettledTokens.toHuman(),
-          btcAddress: btcAddress || '',
-          status:
-            checkVaultStatus(
-              vault.status,
-              settledCollateralization,
-              vault.bannedUntil?.toString()
-            ),
-          unsettledCollateralization: unsettledCollateralization?.toString(),
-          settledCollateralization: settledCollateralization?.toString()
-        });
-        // TODO: hacky way to update 5 vaults at a time
-        if (vaultsList.length % 5 === 0) {
-          setVaults(vaultsList);
+    for (const vault of vaultsExt) {
+      const getCollateralization = (collateral: PolkadotAmount, tokens: BTCAmount) => {
+        if (tokens.gt(BTCAmount.zero) && btcToDotRate.toBig().gt(0)) {
+          const tokensAsCollateral = btcToDotRate.toCounter(tokens);
+          return collateral.toBig().div(tokensAsCollateral.toBig()).mul(100);
+        } else {
+          return undefined;
         }
+      };
+
+      const vaultCollateral = vault.backingCollateral;
+      const unsettledTokens = vault.toBeIssuedTokens;
+      const settledTokens = vault.issuedTokens;
+      const unsettledCollateralization = getCollateralization(vaultCollateral, unsettledTokens.add(settledTokens));
+      const settledCollateralization = getCollateralization(vaultCollateral, settledTokens);
+
+      const btcAddress = vault.wallet.publicKey; // TODO: get address(es)?
+
+      vaultsList.push({
+        vaultId: vault.id.toString(),
+        // TODO: fetch collateral reserved
+        lockedBTC: settledTokens.toHuman(),
+        lockedDOT: vaultCollateral.toHuman(),
+        pendingBTC: unsettledTokens.toHuman(),
+        btcAddress: btcAddress || '',
+        status:
+          checkVaultStatus(
+            vault.status,
+            settledCollateralization,
+            vault.bannedUntil?.toString()
+          ),
+        unsettledCollateralization: unsettledCollateralization?.toString(),
+        settledCollateralization: settledCollateralization?.toString()
+      });
+      // TODO: hacky way to update 5 vaults at a time
+      if (vaultsList.length % 5 === 0) {
+        setVaults(vaultsList);
       }
-      setVaults(vaultsList);
-    };
-    fetchData();
+    }
+    setVaults(vaultsList);
   }, [
     vaultsExt,
     secureCollateralThreshold,
@@ -149,7 +150,7 @@ export default function VaultTable(): ReactElement {
     btcToDotRate
   ]);
 
-  const tableHeadings: ReactElement[] = [
+  const tableHeadings: React.ReactElement[] = [
     <h1
       className='opacity-30'
       key={1}>
@@ -184,7 +185,7 @@ export default function VaultTable(): ReactElement {
     </h1>
   ];
 
-  const tableVaultRow = useMemo(() => {
+  const tableVaultRow = React.useMemo(() => {
     const getStatusColor = (status: string): string => {
       if (status === constants.VAULT_STATUS_ACTIVE) {
         return clsx(
@@ -251,7 +252,7 @@ export default function VaultTable(): ReactElement {
       );
     };
 
-    return (vault: Vault): ReactElement[] => [
+    return (vault: Vault): React.ReactElement[] => [
       <p key={1}>{shortAddress(vault.vaultId)}</p>,
       <p key={2}>{vault.lockedDOT}</p>,
       <p key={3}>{vault.lockedBTC}</p>,
@@ -284,4 +285,7 @@ export default function VaultTable(): ReactElement {
         noDataEl={<td colSpan={6}>{t('loading')}</td>} />
     </div>
   );
-}
+};
+
+export default VaultTable;
+// ray test touch >>
