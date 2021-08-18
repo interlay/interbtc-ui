@@ -202,7 +202,7 @@ const RedeemRequestsTable = ({
       <h2
         className={clsx(
           'text-2xl',
-          'font-bold'
+          'font-medium'
         )}>
         {t('issue_page.recent_requests')}
       </h2>

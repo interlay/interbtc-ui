@@ -225,7 +225,7 @@ const VaultIssueRequestsTable = ({
       <h2
         className={clsx(
           'text-2xl',
-          'font-bold'
+          'font-medium'
         )}>
         {t('issue_requests')}
       </h2>
