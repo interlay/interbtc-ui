@@ -7,9 +7,6 @@ import clsx from 'clsx';
 import {
   roundTwoDecimals,
   VaultStatusExt
-  // ray test touch <<
-  // VaultExt
-  // ray test touch >>
 } from '@interlay/interbtc';
 import {
   Bitcoin,
@@ -28,7 +25,6 @@ import * as constants from '../../../constants';
 import { StoreType } from '../../../common/types/util.types';
 import { Vault } from '../../types/vault.types';
 
-// ray test touch <<
 const getCollateralization = (
   collateral: PolkadotAmount,
   tokens: BTCAmount,
@@ -41,55 +37,12 @@ const getCollateralization = (
     return undefined;
   }
 };
-// ray test touch >>
 
 const VaultTable = (): JSX.Element => {
   const [vaults, setVaults] = React.useState<Array<Vault>>([]);
-  // ray test touch <<
-  // const [vaultsExt, setVaultsExt] = React.useState<Array<VaultExt>>([]);
-  // const [btcToDOTRate, setBTCToDOTRate] = React.useState(
-  //   new ExchangeRate<Bitcoin, BTCUnit, Polkadot, PolkadotUnit>(Bitcoin, Polkadot, new Big(0))
-  // );
-  // const [liquidationThreshold, setLiquidationThreshold] = React.useState(new Big(0));
-  // ray test touch >>
   const { t } = useTranslation();
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
   const [secureCollateralThreshold, setSecureCollateralThreshold] = React.useState(new Big(0));
-
-  // ray test touch <<
-  // const checkVaultStatus = React.useCallback(
-  //   (
-  //     status: VaultStatusExt,
-  //     collateralization: Big | undefined,
-  //     bannedUntil: string | undefined
-  //   ): string => {
-  //     if (status === VaultStatusExt.CommittedTheft) {
-  //       return t('dashboard.vault.theft');
-  //     }
-  //     if (status === VaultStatusExt.Liquidated) {
-  //       return t('dashboard.vault.liquidated');
-  //     }
-  //     if (collateralization) {
-  //       if (collateralization.lt(liquidationThreshold)) {
-  //         return t('dashboard.vault.liquidation');
-  //       }
-  //       if (collateralization.lt(secureCollateralThreshold)) {
-  //         return t('dashboard.vault.undercollateralized');
-  //       }
-  //     }
-  //     if (bannedUntil) {
-  //       return t('dashboard.vault.banned_until', { blockHeight: bannedUntil });
-  //     }
-  //     if (status === VaultStatusExt.Inactive) {
-  //       return t('dashboard.vault.inactive');
-  //     }
-  //     return t('dashboard.vault.active');
-  //   }, [
-  //     liquidationThreshold,
-  //     secureCollateralThreshold,
-  //     t
-  //   ]);
-  // ray test touch >>
 
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
@@ -107,12 +60,8 @@ const VaultTable = (): JSX.Element => {
           window.polkaBTC.oracle.getExchangeRate(Polkadot),
           window.polkaBTC.vaults.list()
         ]);
-
         setSecureCollateralThreshold(theSecureCollateralThreshold);
-        // ray test touch <<
-        // setLiquidationThreshold(theLiquidationThreshold);
-        // setBTCToDOTRate(theBTCToDOTRate);
-        // setVaultsExt(theVaultsExt);
+
         const checkVaultStatus =
         (
           status: VaultStatusExt,
@@ -141,9 +90,7 @@ const VaultTable = (): JSX.Element => {
           }
           return t('dashboard.vault.active');
         };
-        // ray test touch >>
 
-        // ray test touch <<
         const theVaults: Vault[] = [];
         for (const vault of theVaultsExt) {
           const vaultCollateral = vault.backingCollateral;
@@ -177,7 +124,6 @@ const VaultTable = (): JSX.Element => {
           }
         }
         setVaults(theVaults);
-        // ray test touch >>
       } catch (error) {
         console.log('[VaultTable] error.message => ', error.message);
       }
@@ -186,18 +132,6 @@ const VaultTable = (): JSX.Element => {
     polkaBtcLoaded,
     t
   ]);
-
-  // ray test touch <<
-  // React.useEffect(() => {
-  //   if (vaultsExt.length === 0) return;
-  //   if (secureCollateralThreshold.eq(0)) return;
-  // }, [
-  //   vaultsExt,
-  //   secureCollateralThreshold,
-  //   checkVaultStatus,
-  //   btcToDOTRate
-  // ]);
-  // ray test touch >>
 
   const tableHeadings: React.ReactElement[] = [
     <h1
