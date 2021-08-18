@@ -22,7 +22,7 @@ import DashboardTable from '../dashboard-table/dashboard-table';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
 import { shortAddress } from '../../utils/utils';
 import * as constants from '../../../constants';
-import { StoreType } from '../../../common/types/util.types';
+import { StoreType } from 'common/types/util.types';
 import { Vault } from '../../types/vault.types';
 
 const getCollateralization = (
@@ -118,10 +118,6 @@ const VaultTable = (): JSX.Element => {
             unsettledCollateralization: unsettledCollateralization?.toString(),
             settledCollateralization: settledCollateralization?.toString()
           });
-          // TODO: hacky way to update 5 vaults at a time
-          if (theVaults.length % 5 === 0) {
-            setVaults(theVaults);
-          }
         }
         setVaults(theVaults);
       } catch (error) {
@@ -240,7 +236,9 @@ const VaultTable = (): JSX.Element => {
       <p key={2}>{vault.lockedDOT}</p>,
       <p key={3}>{vault.lockedBTC}</p>,
       <p key={4}>{vault.pendingBTC}</p>,
+      // ray test touch <<
       <p key={5}>{showCollateralizations(vault)}</p>,
+      // ray test touch >>
       <p
         key={6}
         className={getStatusColor(vault.status)}>
