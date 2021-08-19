@@ -5,10 +5,16 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useTable } from 'react-table';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
+import { useQuery } from 'react-query';
 import Big from 'big.js';
 import clsx from 'clsx';
 import {
   roundTwoDecimals,
+  VaultExt,
   VaultStatusExt
 } from '@interlay/interbtc';
 import {
@@ -21,6 +27,8 @@ import {
   PolkadotUnit
 } from '@interlay/monetary-js';
 
+import ErrorFallback from 'components/ErrorFallback';
+import EllipsisLoader from 'components/EllipsisLoader';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -32,6 +40,9 @@ import InterlayTable, {
 import InterlayTooltip from 'components/UI/InterlayTooltip';
 import { shortAddress } from '../../../../common/utils/utils';
 import * as constants from '../../../../constants';
+import genericFetcher, {
+  GENERIC_FETCHER
+} from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { Vault } from '../../../../common/types/vault.types';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
@@ -70,87 +81,77 @@ const getCollateralizationColor = (
 };
 
 const VaultsTable = (): JSX.Element => {
-  const [vaults, setVaults] = React.useState<Array<Vault>>([]);
   const { t } = useTranslation();
   const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
-  const [secureCollateralThreshold, setSecureCollateralThreshold] = React.useState(new Big(0));
 
-  React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+  const {
+    isLoading: secureCollateralThresholdLoading,
+    data: secureCollateralThreshold,
+    error: secureCollateralThresholdError
+  } = useQuery<Big, Error>(
+    [
+      GENERIC_FETCHER,
+      'vaults',
+      'getSecureCollateralThreshold'
+    ],
+    genericFetcher<Big>(),
+    {
+      enabled: !!polkaBtcLoaded
+    }
+  );
+  useErrorHandler(secureCollateralThresholdError);
 
-    (async () => {
-      try {
-        const [
-          theSecureCollateralThreshold,
-          theLiquidationThreshold,
-          theBTCToDOTRate,
-          theVaultsExt
-        ] = await Promise.all([
-          // ray test touch <<
-          // TODO: react-query
-          window.polkaBTC.vaults.getSecureCollateralThreshold(),
-          window.polkaBTC.vaults.getLiquidationCollateralThreshold(),
-          window.polkaBTC.oracle.getExchangeRate(Polkadot),
-          window.polkaBTC.vaults.list()
-          // ray test touch >>
-        ]);
-        setSecureCollateralThreshold(theSecureCollateralThreshold);
+  const {
+    isLoading: liquidationThresholdLoading,
+    data: liquidationThreshold,
+    error: liquidationThresholdError
+  } = useQuery<Big, Error>(
+    [
+      GENERIC_FETCHER,
+      'vaults',
+      'getLiquidationCollateralThreshold'
+    ],
+    genericFetcher<Big>(),
+    {
+      enabled: !!polkaBtcLoaded
+    }
+  );
+  useErrorHandler(liquidationThresholdError);
 
-        const theVaults: Vault[] = [];
-        for (const vault of theVaultsExt) {
-          const vaultCollateral = vault.backingCollateral;
-          const unsettledTokens = vault.toBeIssuedTokens;
-          const settledTokens = vault.issuedTokens;
-          const unsettledCollateralization =
-            getCollateralization(vaultCollateral, unsettledTokens.add(settledTokens), theBTCToDOTRate);
-          const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, theBTCToDOTRate);
+  const {
+    isLoading: btcToDOTRateLoading,
+    data: btcToDOTRate,
+    error: btcToDOTRateError
+  } = useQuery<ExchangeRate<Bitcoin, BTCUnit, Polkadot, PolkadotUnit>, Error>(
+    [
+      GENERIC_FETCHER,
+      'oracle',
+      'getExchangeRate',
+      Polkadot
+    ],
+    genericFetcher<ExchangeRate<Bitcoin, BTCUnit, Polkadot, PolkadotUnit>>(),
+    {
+      enabled: !!polkaBtcLoaded
+    }
+  );
+  useErrorHandler(btcToDOTRateError);
 
-          const btcAddress = vault.wallet.publicKey; // TODO: get address(es)?
-
-          let statusText;
-          if (vault.status === VaultStatusExt.CommittedTheft) {
-            statusText = t('dashboard.vault.theft');
-          }
-          if (vault.status === VaultStatusExt.Liquidated) {
-            statusText = t('dashboard.vault.liquidated');
-          }
-          if (settledCollateralization) {
-            if (settledCollateralization.lt(theLiquidationThreshold)) {
-              statusText = t('dashboard.vault.liquidation');
-            }
-            if (settledCollateralization.lt(theSecureCollateralThreshold)) {
-              statusText = t('dashboard.vault.undercollateralized');
-            }
-          }
-          if (vault.bannedUntil) {
-            statusText = t('dashboard.vault.banned_until', { blockHeight: bannedUntil });
-          }
-          if (vault.status === VaultStatusExt.Inactive) {
-            statusText = t('dashboard.vault.inactive');
-          }
-          statusText = t('dashboard.vault.active');
-
-          theVaults.push({
-            vaultId: shortAddress(vault.id.toString()),
-            // TODO: fetch collateral reserved
-            lockedBTC: settledTokens.toHuman(),
-            lockedDOT: vaultCollateral.toHuman(),
-            pendingBTC: unsettledTokens.toHuman(),
-            btcAddress,
-            status: statusText,
-            unsettledCollateralization: unsettledCollateralization?.toString(),
-            settledCollateralization: settledCollateralization?.toString()
-          });
-        }
-        setVaults(theVaults);
-      } catch (error) {
-        console.log('[VaultTable] error.message => ', error.message);
-      }
-    })();
-  }, [
-    polkaBtcLoaded,
-    t
-  ]);
+  const {
+    isLoading: vaultsExtLoading,
+    data: vaultsExt,
+    error: vaultsExtError
+  } = useQuery<Array<VaultExt>, Error>(
+    [
+      GENERIC_FETCHER,
+      'vaults',
+      'list'
+    ],
+    genericFetcher<Array<VaultExt>>(),
+    {
+      enabled: !!polkaBtcLoaded
+    }
+  );
+  useErrorHandler(vaultsExtError);
 
   const columns = React.useMemo(
     () => [
@@ -200,29 +201,33 @@ const VaultsTable = (): JSX.Element => {
             );
           } else {
             return (
-              <div>
-                <p
-                  className={getCollateralizationColor(
-                    props.row.original.settledCollateralization,
-                    secureCollateralThreshold
-                  )}>
-                  {props.row.original.settledCollateralization === undefined ?
-                    '∞' :
-                    roundTwoDecimals(props.row.original.settledCollateralization.toString()) + '%'}
-                </p>
-                <p className='text-xs'>
-                  <span>{t('vault.pending_table_subcell')}</span>
-                  <span
-                    className={getCollateralizationColor(
-                      props.row.original.unsettledCollateralization,
-                      secureCollateralThreshold
-                    )}>
-                    {props.row.original.unsettledCollateralization === undefined ?
-                      '∞' :
-                      roundTwoDecimals(props.row.original.unsettledCollateralization.toString()) + '%'}
-                  </span>
-                </p>
-              </div>
+              <>
+                {secureCollateralThreshold && (
+                  <div>
+                    <p
+                      className={getCollateralizationColor(
+                        props.row.original.settledCollateralization,
+                        secureCollateralThreshold
+                      )}>
+                      {props.row.original.settledCollateralization === undefined ?
+                        '∞' :
+                        roundTwoDecimals(props.row.original.settledCollateralization.toString()) + '%'}
+                    </p>
+                    <p className='text-xs'>
+                      <span>{t('vault.pending_table_subcell')}</span>
+                      <span
+                        className={getCollateralizationColor(
+                          props.row.original.unsettledCollateralization,
+                          secureCollateralThreshold
+                        )}>
+                        {props.row.original.unsettledCollateralization === undefined ?
+                          '∞' :
+                          roundTwoDecimals(props.row.original.unsettledCollateralization.toString()) + '%'}
+                      </span>
+                    </p>
+                  </div>
+                )}
+              </>
             );
           }
         }
@@ -270,6 +275,60 @@ const VaultsTable = (): JSX.Element => {
     ]
   );
 
+  const vaults: Vault[] = [];
+  if (
+    vaultsExt &&
+    btcToDOTRate &&
+    liquidationThreshold &&
+    secureCollateralThreshold
+  ) {
+    for (const vaultExt of vaultsExt) {
+      const vaultCollateral = vaultExt.backingCollateral;
+      const unsettledTokens = vaultExt.toBeIssuedTokens;
+      const settledTokens = vaultExt.issuedTokens;
+      const unsettledCollateralization =
+        getCollateralization(vaultCollateral, unsettledTokens.add(settledTokens), btcToDOTRate);
+      const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToDOTRate);
+
+      const btcAddress = vaultExt.wallet.publicKey; // TODO: get address(es)?
+
+      let statusText;
+      if (vaultExt.status === VaultStatusExt.CommittedTheft) {
+        statusText = t('dashboard.vault.theft');
+      }
+      if (vaultExt.status === VaultStatusExt.Liquidated) {
+        statusText = t('dashboard.vault.liquidated');
+      }
+      if (settledCollateralization) {
+        if (settledCollateralization.lt(liquidationThreshold)) {
+          statusText = t('dashboard.vault.liquidation');
+        }
+        if (settledCollateralization.lt(secureCollateralThreshold)) {
+          statusText = t('dashboard.vault.undercollateralized');
+        }
+      }
+      if (vaultExt.bannedUntil) {
+        statusText = t('dashboard.vault.banned_until', { blockHeight: bannedUntil });
+      }
+      if (vaultExt.status === VaultStatusExt.Inactive) {
+        statusText = t('dashboard.vault.inactive');
+      }
+      statusText = t('dashboard.vault.active');
+
+      vaults.push({
+        vaultId: shortAddress(vaultExt.id.toString()),
+        // TODO: fetch collateral reserved
+        lockedBTC: settledTokens.toHuman(),
+        lockedDOT: vaultCollateral.toHuman(),
+        pendingBTC: unsettledTokens.toHuman(),
+        btcAddress,
+        status: statusText,
+        unsettledCollateralization: unsettledCollateralization?.toString(),
+        settledCollateralization: settledCollateralization?.toString()
+      });
+    }
+  }
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -283,18 +342,25 @@ const VaultsTable = (): JSX.Element => {
     }
   );
 
-  // ray test touch <
-  // TODO: should add pagination
-  // ray test touch >
-  return (
-    <InterlayTableContainer className='space-y-6'>
-      <h2
-        className={clsx(
-          'text-2xl',
-          'font-medium'
-        )}>
-        {t('dashboard.vault.active_vaults')}
-      </h2>
+  const renderTable = () => {
+    if (
+      secureCollateralThresholdLoading ||
+      liquidationThresholdLoading ||
+      btcToDOTRateLoading ||
+      vaultsExtLoading
+    ) {
+      return (
+        <div
+          className={clsx(
+            'flex',
+            'justify-center'
+          )}>
+          <EllipsisLoader dotClassName='bg-interlayCalifornia-400' />
+        </div>
+      );
+    }
+
+    return (
       <InterlayTable {...getTableProps()}>
         <InterlayThead>
           {headerGroups.map(headerGroup => (
@@ -353,8 +419,29 @@ const VaultsTable = (): JSX.Element => {
           })}
         </InterlayTbody>
       </InterlayTable>
+    );
+  };
+
+  // ray test touch <
+  // TODO: should add pagination
+  // ray test touch >
+  return (
+    <InterlayTableContainer className='space-y-6'>
+      <h2
+        className={clsx(
+          'text-2xl',
+          'font-medium'
+        )}>
+        {t('dashboard.vault.active_vaults')}
+      </h2>
+      {renderTable()}
     </InterlayTableContainer>
   );
 };
 
-export default VaultsTable;
+export default withErrorBoundary(VaultsTable, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});

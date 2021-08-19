@@ -1,3 +1,5 @@
+
+// ray test touch <<
 import {
   BitcoinNetwork,
   RedeemColumns
@@ -47,3 +49,4 @@ export {
 };
 
 export default userRedeemRequestsFetcher;
+// ray test touch >>
