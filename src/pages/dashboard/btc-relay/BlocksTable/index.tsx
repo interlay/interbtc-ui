@@ -2,6 +2,14 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import * as React from 'react';
+// ray test touch <
+// import { useSelector } from 'react-redux';
+// import { useQuery } from 'react-query';
+import {
+  // useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
+// ray test touch >
 import { useTable } from 'react-table';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +19,7 @@ import {
   stripHexPrefix
 } from '@interlay/interbtc';
 
+import ErrorFallback from 'components/ErrorFallback';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -27,24 +36,73 @@ import { BTC_BLOCK_API } from 'config/bitcoin';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
+// ray test touch <
+// import genericFetcher, {
+//   GENERIC_FETCHER
+// } from 'services/fetchers/generic-fetcher';
+// ray test touch >
 import { formatDateTimePrecise } from 'common/utils/utils';
-import { RelayedBlock } from 'common/types/util.types';
+import {
+  // ray test touch <
+  // StoreType,
+  // ray test touch >
+  RelayedBlock
+} from 'common/types/util.types';
 
 const BlocksTable = (): JSX.Element => {
   const { t } = useTranslation();
 
-  // ray test touch <<
+  // ray test touch <
+  // const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+  // console.log('ray : ***** window?.polkaBTC?.index => ', window?.polkaBTC?.index);
+  // ray test touch >
   const [blocks, setBlocks] = React.useState<Array<RelayedBlock>>();
   const [totalRelayedBlocks, setTotalRelayedBlocks] = React.useState(0);
   const statsApi = useInterbtcIndex();
-
-  console.log('ray : ***** window.polkaBTC.index => ', window.polkaBTC.index);
-  // ray test touch >>
 
   const queryParams = useQueryParams();
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const selectedPageIndex = selectedPage - 1;
   const updateQueryParameters = useUpdateQueryParameters();
+
+  // ray test touch <
+  // const {
+  //   isLoading: blocksLoading,
+  //   data: blocks,
+  //   error: blocksError
+  // } = useQuery<Big, Error>(
+  //   [
+  //     GENERIC_FETCHER,
+  //     'index',
+  //     'getBlocks',
+  //     {
+  //       page: selectedPageIndex,
+  //       perPage: TABLE_PAGE_LIMIT
+  //     }
+  //   ],
+  //   genericFetcher<Big>(),
+  //   {
+  //     enabled: !!polkaBtcLoaded
+  //   }
+  // );
+  // useErrorHandler(blocksError);
+  // const {
+  //   isLoading: totalRelayedBlocksCountLoading,
+  //   data: totalRelayedBlocksCount,
+  //   error: totalRelayedBlocksCountError
+  // } = useQuery<Big, Error>(
+  //   [
+  //     GENERIC_FETCHER,
+  //     'index',
+  //     'getTotalRelayedBlocksCount'
+  //   ],
+  //   genericFetcher<Big>(),
+  //   {
+  //     enabled: !!polkaBtcLoaded
+  //   }
+  // );
+  // useErrorHandler(totalRelayedBlocksCountError);
+  // ray test touch >
 
   React.useEffect(() => {
     if (selectedPageIndex === undefined) return;
@@ -226,4 +284,9 @@ const BlocksTable = (): JSX.Element => {
   );
 };
 
-export default BlocksTable;
+export default withErrorBoundary(BlocksTable, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});
