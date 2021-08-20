@@ -20,7 +20,7 @@ import useQueryParams from 'utils/hooks/use-query-params';
 import { shortAddress } from 'common/utils/utils';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
-import { REQUEST_TABLE_PAGE_LIMIT } from 'utils/constants/general';
+import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { USER_ISSUE_REQUESTS_FETCHER } from 'services/user-issue-requests-fetcher';
 import { StoreType } from 'common/types/util.types';
 
@@ -52,7 +52,7 @@ const ConfirmedIssueRequest = ({
           USER_ISSUE_REQUESTS_FETCHER,
           address,
           selectedPageIndex,
-          REQUEST_TABLE_PAGE_LIMIT
+          TABLE_PAGE_LIMIT
         ]);
         toast.success(t('issue_page.successfully_executed', { id: variables.id }));
       }

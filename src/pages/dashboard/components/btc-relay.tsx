@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import DashboardCard from 'pages/dashboard/DashboardCard';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
-import { StyledLinkData } from 'common/components/dashboard-table/dashboard-table';
+import InterlayLink from 'components/UI/InterlayLink';
 import { BTC_BLOCK_API } from 'config/bitcoin';
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
@@ -163,10 +163,19 @@ const BtcRelay = ({
                   'xl:mb-2'
                 )}>
                 {blockstreamTip !== '-' && (
-                  <StyledLinkData
-                    data={t('dashboard.relay.blockstream_verify_link')}
-                    target={BTC_BLOCK_API + blockstreamTip}
-                    newTab={true} />
+                  <InterlayLink
+                    className={clsx(
+                      'text-interlayDenim',
+                      'space-x-1.5',
+                      'inline-flex',
+                      'items-center'
+                    )}
+                    href={`${BTC_BLOCK_API}${blockstreamTip}`}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    <span>{t('dashboard.relay.blockstream_verify_link')}</span>
+                    <FaExternalLinkAlt />
+                  </InterlayLink>
                 )}
               </h1>
             </div>

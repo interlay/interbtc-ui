@@ -27,7 +27,7 @@ import ErrorFallback from 'components/ErrorFallback';
 import useQueryParams from 'utils/hooks/use-query-params';
 import { getUsdAmount } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
-import { REQUEST_TABLE_PAGE_LIMIT } from 'utils/constants/general';
+import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { USER_REDEEM_REQUESTS_FETCHER } from 'services/user-redeem-requests-fetcher';
 import { StoreType } from 'common/types/util.types';
 
@@ -93,7 +93,7 @@ const ReimburseStatusUI = ({
           USER_REDEEM_REQUESTS_FETCHER,
           address,
           selectedPageIndex,
-          REQUEST_TABLE_PAGE_LIMIT
+          TABLE_PAGE_LIMIT
         ]);
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();
@@ -114,7 +114,7 @@ const ReimburseStatusUI = ({
           USER_REDEEM_REQUESTS_FETCHER,
           address,
           selectedPageIndex,
-          REQUEST_TABLE_PAGE_LIMIT
+          TABLE_PAGE_LIMIT
         ]);
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();

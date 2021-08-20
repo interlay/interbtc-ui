@@ -1,108 +1,229 @@
 
-// ray test touch <<
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import * as React from 'react';
+import { useTable } from 'react-table';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 import {
   reverseEndiannessHex,
   stripHexPrefix
 } from '@interlay/interbtc';
-import { BlockColumns } from '@interlay/interbtc-index-client';
 
-import DashboardTable, { StyledLinkData } from 'common/components/dashboard-table/dashboard-table';
+import InterlayTable, {
+  InterlayTableContainer,
+  InterlayThead,
+  InterlayTbody,
+  InterlayTr,
+  InterlayTh,
+  InterlayTd
+} from 'components/UI/InterlayTable';
+import InterlayPagination from 'components/UI/InterlayPagination';
+import InterlayLink from 'components/UI/InterlayLink';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
+import useQueryParams from 'utils/hooks/use-query-params';
 import { BTC_BLOCK_API } from 'config/bitcoin';
-import { defaultTableDisplayParams, formatDateTimePrecise } from 'common/utils/utils';
+import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
+import { QUERY_PARAMETERS } from 'utils/constants/links';
+import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
+import { formatDateTimePrecise } from 'common/utils/utils';
 import { RelayedBlock } from 'common/types/util.types';
 
 const BlocksTable = (): JSX.Element => {
   const { t } = useTranslation();
 
-  // eslint-disable-next-line no-array-constructor
-  const [blocks, setBlocks] = React.useState(new Array<RelayedBlock>());
+  // ray test touch <<
+  const [blocks, setBlocks] = React.useState<Array<RelayedBlock>>();
   const [totalRelayedBlocks, setTotalRelayedBlocks] = React.useState(0);
-  const [tableParams, setTableParams] = React.useState(defaultTableDisplayParams<BlockColumns>());
   const statsApi = useInterbtcIndex();
 
+  console.log('ray : ***** window.polkaBTC.index => ', window.polkaBTC.index);
+  // ray test touch >>
+
+  const queryParams = useQueryParams();
+  const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
+  const selectedPageIndex = selectedPage - 1;
+  const updateQueryParameters = useUpdateQueryParameters();
+
   React.useEffect(() => {
-    if (!tableParams) return;
+    if (selectedPageIndex === undefined) return;
     if (!statsApi) return;
 
     (async () => {
       try {
         const [
-          blocks,
-          totalRelayedBlocksCount
+          theBlocks,
+          theTotalRelayedBlocksCount
         ] = await Promise.all([
-          statsApi.getBlocks(tableParams),
+          statsApi.getBlocks({
+            page: selectedPageIndex,
+            perPage: TABLE_PAGE_LIMIT
+          }),
           statsApi.getTotalRelayedBlocksCount()
         ]);
-        setBlocks(blocks);
-        setTotalRelayedBlocks(Number(totalRelayedBlocksCount));
+        setBlocks(theBlocks);
+        setTotalRelayedBlocks(Number(theTotalRelayedBlocksCount));
       } catch (error) {
-        console.log('[RelayDashboard] error.message => ', error.message);
+        console.log('[BlocksTable] error.message => ', error.message);
       }
     })();
   }, [
-    tableParams,
+    selectedPageIndex,
     statsApi
   ]);
 
-  const tableHeadings = [
-    <h1
-      className='opacity-30'
-      key={1}>
-      {t('dashboard.relay.block_height')}
-    </h1>,
-    <h1
-      className='opacity-30'
-      key={2}>
-      {t('dashboard.relay.block_hash')}
-    </h1>,
-    <h1
-      className='opacity-30'
-      key={3}>
-      {t('dashboard.relay.timestamp')}
-    </h1>
-  ];
-
-  const tableBlockRow = React.useMemo(
-    () => (block: RelayedBlock): React.ReactElement[] => [
-      <p key={1}>{block.height}</p>,
-      <StyledLinkData
-        key={2}
-        data={block.hash}
-        target={BTC_BLOCK_API + block.hash}
-        newTab={true} />,
-      <p key={3}>{formatDateTimePrecise(new Date(block.relayTs))}</p>
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: t('dashboard.relay.block_height'),
+        accessor: 'height',
+        classNames: [
+          'text-right'
+        ]
+      },
+      {
+        Header: t('dashboard.relay.block_hash'),
+        accessor: 'hash',
+        classNames: [
+          'text-right'
+        ],
+        Cell: function FormattedCell({ value }: { value: number; }) {
+          const hash = reverseEndiannessHex(stripHexPrefix(value));
+          return (
+            <InterlayLink
+              className={clsx(
+                'text-interlayDenim',
+                'space-x-1.5',
+                'inline-flex',
+                'items-center'
+              )}
+              href={`${BTC_BLOCK_API}${hash}`}
+              target='_blank'
+              rel='noopener noreferrer'>
+              <span>{hash}</span>
+              <FaExternalLinkAlt />
+            </InterlayLink>
+          );
+        }
+      },
+      {
+        Header: t('dashboard.relay.timestamp'),
+        accessor: 'relayTs',
+        classNames: [
+          'text-left'
+        ],
+        Cell: function FormattedCell({ value }: { value: number; }) {
+          return (
+            <>
+              {formatDateTimePrecise(new Date(value))}
+            </>
+          );
+        }
+      }
     ],
-    []
+    [t]
   );
 
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow
+  } = useTable(
+    {
+      columns,
+      data: blocks ?? []
+    }
+  );
+
+  const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number }) => {
+    updateQueryParameters({
+      [QUERY_PARAMETERS.PAGE]: (newSelectedPageIndex + 1).toString()
+    });
+  };
+
+  const pageCount = Math.ceil(totalRelayedBlocks / TABLE_PAGE_LIMIT);
+
   return (
-    <div>
-      <p
-        className='mb-4'
-        style={{
-          fontWeight: 700,
-          fontSize: '26px'
-        }}>
-        {t('dashboard.relay.blocks')}
-      </p>
-      <DashboardTable
-        richTable={true}
-        pageData={blocks.map(b => ({
-          ...b,
-          hash: reverseEndiannessHex(stripHexPrefix(b.hash)),
-          id: b.hash
-        }))}
-        totalPages={Math.ceil(totalRelayedBlocks / tableParams.perPage)}
-        tableParams={tableParams}
-        setTableParams={setTableParams}
-        headings={tableHeadings}
-        dataPointDisplayer={tableBlockRow} />
-    </div>
+    <InterlayTableContainer
+      className={clsx(
+        'space-y-6',
+        'container',
+        'mx-auto'
+      )}>
+      <div>
+        <h2
+          className={clsx(
+            'text-2xl',
+            'font-medium'
+          )}>
+          {t('dashboard.relay.blocks')}
+        </h2>
+      </div>
+      <InterlayTable {...getTableProps()}>
+        <InterlayThead>
+          {headerGroups.map(headerGroup => (
+            // eslint-disable-next-line react/jsx-key
+            <InterlayTr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                // eslint-disable-next-line react/jsx-key
+                <InterlayTh
+                  {...column.getHeaderProps([
+                    {
+                      className: clsx(column.classNames),
+                      style: column.style
+                    }
+                  ])}>
+                  {column.render('Header')}
+                </InterlayTh>
+              ))}
+            </InterlayTr>
+          ))}
+        </InterlayThead>
+        <InterlayTbody {...getTableBodyProps()}>
+          {rows.map(row => {
+            prepareRow(row);
+
+            return (
+              // eslint-disable-next-line react/jsx-key
+              <InterlayTr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return (
+                    // eslint-disable-next-line react/jsx-key
+                    <InterlayTd
+                      {...cell.getCellProps([
+                        {
+                          className: clsx(cell.column.classNames),
+                          style: cell.column.style
+                        }
+                      ])}>
+                      {cell.render('Cell')}
+                    </InterlayTd>
+                  );
+                })}
+              </InterlayTr>
+            );
+          })}
+        </InterlayTbody>
+      </InterlayTable>
+      {pageCount > 0 && (
+        <div
+          className={clsx(
+            'flex',
+            'justify-end'
+          )}>
+          <InterlayPagination
+            pageCount={pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={handlePageChange}
+            forcePage={selectedPageIndex} />
+        </div>
+      )}
+    </InterlayTableContainer>
   );
 };
 
 export default BlocksTable;
-// ray test touch >>

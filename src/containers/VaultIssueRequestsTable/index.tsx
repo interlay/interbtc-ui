@@ -36,7 +36,7 @@ import {
   formatDateTimePrecise
 } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
-import { REQUEST_TABLE_PAGE_LIMIT } from 'utils/constants/general';
+import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
 import * as constants from '../../constants';
 import STATUSES from 'utils/constants/statuses';
@@ -76,7 +76,7 @@ const VaultIssueRequestsTable = ({
         setStatus(STATUSES.PENDING);
         const response = await statsApi.getFilteredIssues({
           page: selectedPageIndex,
-          perPage: REQUEST_TABLE_PAGE_LIMIT,
+          perPage: TABLE_PAGE_LIMIT,
           network: constants.BITCOIN_NETWORK as BitcoinNetwork, // Not sure why cast is necessary here, but TS complains
           filterIssueColumns: issueRequestFilter
         });
@@ -109,7 +109,7 @@ const VaultIssueRequestsTable = ({
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }: {value: number}) {
+        Cell: function FormattedCell({ value }: { value: number; }) {
           return (
             <>
               {formatDateTimePrecise(new Date(Number(value)))}
@@ -130,7 +130,7 @@ const VaultIssueRequestsTable = ({
         classNames: [
           'text-center'
         ],
-        Cell: function FormattedCell({ value }: {value: string}) {
+        Cell: function FormattedCell({ value }: { value: string; }) {
           return (
             <>
               {shortAddress(value)}
@@ -158,13 +158,13 @@ const VaultIssueRequestsTable = ({
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }: {value: string}) {
+        Cell: function FormattedCell({ value }: { value: string; }) {
           return (
             <InterlayLink
               className={clsx(
                 'text-interlayDenim',
                 'space-x-1.5',
-                'flex',
+                'inline-flex',
                 'items-center'
               )}
               href={`${BTC_ADDRESS_API}${value}`}
@@ -182,7 +182,7 @@ const VaultIssueRequestsTable = ({
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }: {value: IssueStatus}) {
+        Cell: function FormattedCell({ value }: { value: IssueStatus; }) {
           return (
             <StatusCell
               status={{
@@ -218,7 +218,7 @@ const VaultIssueRequestsTable = ({
   };
 
   const selectedPageIndex = selectedPage - 1;
-  const pageCount = Math.ceil(totalIssueRequests / REQUEST_TABLE_PAGE_LIMIT);
+  const pageCount = Math.ceil(totalIssueRequests / TABLE_PAGE_LIMIT);
 
   return (
     <InterlayTableContainer className='space-y-6'>

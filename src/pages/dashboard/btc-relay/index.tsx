@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
@@ -33,4 +32,3 @@ const BTCRelay = (): JSX.Element => {
 };
 
 export default BTCRelay;
-// ray test touch >>

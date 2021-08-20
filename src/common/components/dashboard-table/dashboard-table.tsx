@@ -6,40 +6,11 @@ import {
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import InterlayLink from 'components/UI/InterlayLink';
 import { TableDisplayParams } from 'common/types/util.types';
 import TablePageSelector from '../table-page-selector/table-page-selector';
-import { ReactComponent as ExternalLinkIcon } from 'assets/img/icons/external-link.svg';
 import { ReactComponent as CheckCircleIcon } from 'assets/img/icons/check-circle.svg';
 import { ReactComponent as CancelIcon } from 'assets/img/icons/cancel.svg';
 import { ReactComponent as ErrorIcon } from 'assets/img/icons/error.svg';
-
-/**
- * Helper component to display a blue link with icon.
- **/
-type StyledLinkDataProps = {
-  data: string;
-  target?: string;
-  newTab?: boolean;
-};
-
-// TODO: should not use as it's too implicit
-function StyledLinkData(props: StyledLinkDataProps): ReactElement {
-  // TODO: make into actual hyperlink
-  return (
-    <InterlayLink
-      className='text-interlayDenim'
-      href={props.target}
-      target={props.newTab ? '_blank' : ''}
-      rel='noopener noreferrer'>
-      <span>{props.data}</span>
-      <ExternalLinkIcon
-        className='ml-1'
-        width={14}
-        height={14} />
-    </InterlayLink>
-  );
-}
 
 /**
  * Helper component to display status text, with appropriate colour and status icon
@@ -170,7 +141,6 @@ function DashboardTable<D extends DataWithID, C>(props: DashboardTableProps<D, C
 }
 
 export {
-  StyledLinkData,
   StatusComponent,
   StatusCategories
 };

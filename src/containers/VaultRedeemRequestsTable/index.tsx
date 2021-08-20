@@ -36,7 +36,7 @@ import {
   formatDateTimePrecise
 } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
-import { REQUEST_TABLE_PAGE_LIMIT } from 'utils/constants/general';
+import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
 import { RedeemColumns } from '@interlay/interbtc-index-client';
 import * as constants from '../../constants';
@@ -77,7 +77,7 @@ const VaultRedeemRequestsTable = ({
         setStatus(STATUSES.PENDING);
         const response = await statsApi.getFilteredRedeems({
           page: selectedPageIndex,
-          perPage: REQUEST_TABLE_PAGE_LIMIT,
+          perPage: TABLE_PAGE_LIMIT,
           network: constants.BITCOIN_NETWORK as BitcoinNetwork, // Not sure why cast is necessary here, but TS complains
           filterRedeemColumns: redeemRequestFilter
         });
@@ -110,7 +110,7 @@ const VaultRedeemRequestsTable = ({
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }: {value: number}) {
+        Cell: function FormattedCell({ value }: { value: number; }) {
           return (
             <>
               {formatDateTimePrecise(new Date(Number(value)))}
@@ -131,7 +131,7 @@ const VaultRedeemRequestsTable = ({
         classNames: [
           'text-center'
         ],
-        Cell: function FormattedCell({ value }: {value: string}) {
+        Cell: function FormattedCell({ value }: { value: string; }) {
           return (
             <>
               {shortAddress(value)}
@@ -152,13 +152,13 @@ const VaultRedeemRequestsTable = ({
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }: {value: string}) {
+        Cell: function FormattedCell({ value }: { value: string; }) {
           return (
             <InterlayLink
               className={clsx(
                 'text-interlayDenim',
                 'space-x-1.5',
-                'flex',
+                'inline-flex',
                 'items-center'
               )}
               href={`${BTC_ADDRESS_API}${value}`}
@@ -176,7 +176,7 @@ const VaultRedeemRequestsTable = ({
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }: {value: RedeemStatus}) {
+        Cell: function FormattedCell({ value }: { value: RedeemStatus; }) {
           return (
             <StatusCell
               status={{
@@ -212,7 +212,7 @@ const VaultRedeemRequestsTable = ({
   };
 
   const selectedPageIndex = selectedPage - 1;
-  const pageCount = Math.ceil(totalRedeemRequests / REQUEST_TABLE_PAGE_LIMIT);
+  const pageCount = Math.ceil(totalRedeemRequests / TABLE_PAGE_LIMIT);
 
   return (
     <InterlayTableContainer className='space-y-6'>

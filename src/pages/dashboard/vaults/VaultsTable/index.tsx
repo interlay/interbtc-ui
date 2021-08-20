@@ -292,6 +292,8 @@ const VaultsTable = (): JSX.Element => {
 
       const btcAddress = vaultExt.wallet.publicKey; // TODO: get address(es)?
 
+      // ray test touch <
+      // TODO: format via `FormattedCell`
       let statusText;
       if (vaultExt.status === VaultStatusExt.CommittedTheft) {
         statusText = t('dashboard.vault.theft');
@@ -326,6 +328,7 @@ const VaultsTable = (): JSX.Element => {
         unsettledCollateralization: unsettledCollateralization?.toString(),
         settledCollateralization: settledCollateralization?.toString()
       });
+      // ray test touch >
     }
   }
 

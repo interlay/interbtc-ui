@@ -41,7 +41,7 @@ import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
-import { REQUEST_TABLE_PAGE_LIMIT } from 'utils/constants/general';
+import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import {
   formatDateTimePrecise,
   shortTxId
@@ -95,7 +95,7 @@ const IssueRequestsTable = (): JSX.Element => {
       USER_ISSUE_REQUESTS_FETCHER,
       address,
       selectedPageIndex,
-      REQUEST_TABLE_PAGE_LIMIT
+      TABLE_PAGE_LIMIT
     ],
     userIssueRequestsFetcher,
     {
@@ -113,7 +113,7 @@ const IssueRequestsTable = (): JSX.Element => {
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }: { value: number }) {
+        Cell: function FormattedCell({ value }: { value: number; }) {
           return (
             <>
               {value ? formatDateTimePrecise(new Date(Number(value))) : t('pending')}
@@ -185,7 +185,7 @@ const IssueRequestsTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell({ value }: {value: number}) {
+        Cell: function FormattedCell({ value }: { value: number; }) {
           return (
             <>
               {value === undefined ?
@@ -201,7 +201,7 @@ const IssueRequestsTable = (): JSX.Element => {
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }: {value: IssueStatus}) {
+        Cell: function FormattedCell({ value }: { value: IssueStatus; }) {
           let icon;
           let notice;
           let colorClassName;
@@ -298,7 +298,7 @@ const IssueRequestsTable = (): JSX.Element => {
     }
   };
 
-  const pageCount = Math.ceil(issueRequestsTotalCount / REQUEST_TABLE_PAGE_LIMIT);
+  const pageCount = Math.ceil(issueRequestsTotalCount / TABLE_PAGE_LIMIT);
   const selectedIssueRequest = data.find(issueRequest => issueRequest.id === selectedIssueRequestId);
 
   return (
