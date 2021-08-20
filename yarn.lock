@@ -1586,9 +1586,27 @@
   resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-0.9.1.tgz#9cfecc88983c69dc662fe1b62fcd1a3eda8de496"
   integrity sha512-Dxq73tU6clnkMF/ToQg5fcurkawrpfIqJVKuFGbOQBzDN8Bj2VRQsKhTgO6Rs4v6Ea0CL+jD6EsvSDhJzy00+w==
 
-"@interlay/interbtc@link:../interbtc-js":
-  version "0.0.0"
-  uid ""
+"@interlay/interbtc@0.24.1":
+  version "0.24.1"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-0.24.1.tgz#2ed6f8b32eeda4d4d3de06dec1811d6297e084e9"
+  integrity sha512-KudoHWHCBTeDaAYnA2XAphUqt2nFyFucHFLLE6S66jDcbNayoykxeb5Ddt2lSaOiDxrcxYO6uvMc0CTta19QxA==
+  dependencies:
+    "@interlay/esplora-btc-api" "0.4.0"
+    "@interlay/interbtc-index-client" "0.7.0"
+    "@interlay/interbtc-types" "0.9.1"
+    "@interlay/monetary-js" "0.2.1"
+    "@polkadot/api" "5.3.2"
+    "@polkadot/keyring" "6.6.2-6"
+    "@types/big.js" "6.1.1"
+    big.js "6.1.1"
+    bitcoin-core "^3.0.0"
+    bitcoinjs-lib "^5.2.0"
+    bn.js "^5.2.0"
+    cross-fetch "^3.0.6"
+    isomorphic-fetch "^3.0.0"
+    regtest-client "^0.2.0"
+    sinon "^9.0.3"
+    ts-mock-imports "^1.3.0"
 
 "@interlay/monetary-js@0.2.1":
   version "0.2.1"
