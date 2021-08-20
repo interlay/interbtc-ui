@@ -1,3 +1,4 @@
+// ray test touch <
 import * as React from 'react';
 import {
   useSelector,
@@ -106,3 +107,4 @@ const ReplaceTable = (): JSX.Element => {
 };
 
 export default ReplaceTable;
+// ray test touch >

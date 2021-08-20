@@ -1,9 +1,11 @@
+
+// ray test touch <<
 import { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
 import OracleStatus from '../components/oracle-status';
-import OracleTable from '../../../common/components/oracle-table/oracle-table';
+import OracleTable from './oracle-table/oracle-table';
 import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -28,3 +30,4 @@ export default function OraclesDashboard(): ReactElement {
     </MainContainer>
   );
 }
+// ray test touch >>
