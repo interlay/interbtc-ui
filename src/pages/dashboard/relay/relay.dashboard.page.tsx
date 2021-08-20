@@ -1,33 +1,37 @@
-import { useState, useEffect, ReactElement, useMemo } from 'react';
+// ray test touch <<
+import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import {
   reverseEndiannessHex,
   stripHexPrefix
 } from '@interlay/interbtc';
-
-import useInterbtcIndex from '../../../common/hooks/use-interbtc-index';
-import { defaultTableDisplayParams, formatDateTimePrecise } from '../../../common/utils/utils';
-import { RelayedBlock } from '../../../common/types/util.types';
-import DashboardTable, { StyledLinkData } from '../../../common/components/dashboard-table/dashboard-table';
-import { BTC_BLOCK_API } from 'config/bitcoin';
-import BtcRelay from '../components/btc-relay';
 import { BlockColumns } from '@interlay/interbtc-index-client';
+
+import BtcRelay from '../components/btc-relay';
 import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
+import DashboardTable, { StyledLinkData } from 'common/components/dashboard-table/dashboard-table';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
+import { BTC_BLOCK_API } from 'config/bitcoin';
+import { defaultTableDisplayParams, formatDateTimePrecise } from 'common/utils/utils';
+import { RelayedBlock } from 'common/types/util.types';
 
-export default function RelayDashboard(): ReactElement {
+const RelayDashboard = (): JSX.Element => {
   const statsApi = useInterbtcIndex();
   const { t } = useTranslation();
 
   // eslint-disable-next-line no-array-constructor
-  const [blocks, setBlocks] = useState(new Array<RelayedBlock>());
-  const [totalRelayedBlocks, setTotalRelayedBlocks] = useState(0);
-  const [tableParams, setTableParams] = useState(defaultTableDisplayParams<BlockColumns>());
+  const [blocks, setBlocks] = React.useState(new Array<RelayedBlock>());
+  const [totalRelayedBlocks, setTotalRelayedBlocks] = React.useState(0);
+  const [tableParams, setTableParams] = React.useState(defaultTableDisplayParams<BlockColumns>());
 
-  const fetchBlocks = useMemo(
-    () => async () => {
+  React.useEffect(() => {
+    if (!tableParams) return;
+    if (!statsApi) return;
+
+    (async () => {
       try {
         const [
           blocks,
@@ -39,11 +43,13 @@ export default function RelayDashboard(): ReactElement {
         setBlocks(blocks);
         setTotalRelayedBlocks(Number(totalRelayedBlocksCount));
       } catch (error) {
-        console.log('[RelayDashboard fetchBlocks] error.message => ', error.message);
+        console.log('[RelayDashboard] error.message => ', error.message);
       }
-    },
-    [tableParams, statsApi]
-  );
+    })();
+  }, [
+    tableParams,
+    statsApi
+  ]);
 
   const tableHeadings = [
     <h1
@@ -63,8 +69,8 @@ export default function RelayDashboard(): ReactElement {
     </h1>
   ];
 
-  const tableBlockRow = useMemo(
-    () => (block: RelayedBlock): ReactElement[] => [
+  const tableBlockRow = React.useMemo(
+    () => (block: RelayedBlock): React.ReactElement[] => [
       <p key={1}>{block.height}</p>,
       <StyledLinkData
         key={2}
@@ -75,10 +81,6 @@ export default function RelayDashboard(): ReactElement {
     ],
     []
   );
-
-  useEffect(() => {
-    fetchBlocks();
-  }, [fetchBlocks, tableParams]);
 
   return (
     <MainContainer className='fade-in-animation'>
@@ -119,4 +121,7 @@ export default function RelayDashboard(): ReactElement {
       </div>
     </MainContainer>
   );
-}
+};
+
+export default RelayDashboard;
+// ray test touch >>
