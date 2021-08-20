@@ -1,5 +1,5 @@
 
-// ray test touch <<
+// ray test touch <
 import {
   IssueColumns,
   IndexApi,
@@ -43,4 +43,4 @@ export {
 };
 
 export default userIssueRequestsTotalCountFetcher;
-// ray test touch >>
+// ray test touch >

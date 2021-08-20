@@ -6,6 +6,7 @@ import {
 
 import { STATS_URL } from '../../constants';
 
+// ray test touch <
 export default function useInterbtcIndex(): IndexApi {
   const indexApi = useMemo(
     () => new IndexApi(new Configuration({ basePath: STATS_URL })),
@@ -14,3 +15,4 @@ export default function useInterbtcIndex(): IndexApi {
 
   return indexApi;
 }
+// ray test touch >

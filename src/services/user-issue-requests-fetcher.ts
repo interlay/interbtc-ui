@@ -1,5 +1,5 @@
 
-// ray test touch <<
+// ray test touch <
 import {
   BitcoinNetwork,
   IssueColumns
@@ -49,4 +49,4 @@ export {
 };
 
 export default userIssueRequestsFetcher;
-// ray test touch >>
+// ray test touch >
