@@ -89,8 +89,8 @@ const IssueRequests = React.lazy(() =>
 const RedeemRequests = React.lazy(() =>
   import(/* webpackChunkName: 'redeem' */ 'pages/dashboard/RedeemRequests')
 );
-const RelayDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'relay' */ 'pages/dashboard/relay/relay.dashboard.page')
+const BTCRelay = React.lazy(() =>
+  import(/* webpackChunkName: 'relay' */ 'pages/dashboard/btc-relay')
 );
 const OraclesDashboard = React.lazy(() =>
   import(/* webpackChunkName: 'oracles' */ 'pages/dashboard/oracles/oracles.dashboard.page')
@@ -421,7 +421,7 @@ const App = (): JSX.Element => {
                   <RedeemRequests />
                 </Route>
                 <Route path={PAGES.DASHBOARD_RELAY}>
-                  <RelayDashboard />
+                  <BTCRelay />
                 </Route>
                 <Route path={PAGES.DASHBOARD}>
                   <Dashboard />

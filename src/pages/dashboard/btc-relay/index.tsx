@@ -18,7 +18,7 @@ import { BTC_BLOCK_API } from 'config/bitcoin';
 import { defaultTableDisplayParams, formatDateTimePrecise } from 'common/utils/utils';
 import { RelayedBlock } from 'common/types/util.types';
 
-const RelayDashboard = (): JSX.Element => {
+const BTCRelay = (): JSX.Element => {
   const statsApi = useInterbtcIndex();
   const { t } = useTranslation();
 
@@ -123,5 +123,5 @@ const RelayDashboard = (): JSX.Element => {
   );
 };
 
-export default RelayDashboard;
+export default BTCRelay;
 // ray test touch >>
