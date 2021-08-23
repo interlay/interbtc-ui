@@ -190,7 +190,7 @@ const Burn = (): JSX.Element | null => {
             {t('burn_page.burn_interbtc')}
           </h4>
           <InterBTCField
-            id='polka-btc-amount'
+            id='inter-btc-amount'
             name={INTER_BTC_AMOUNT}
             type='number'
             label='interBTC'

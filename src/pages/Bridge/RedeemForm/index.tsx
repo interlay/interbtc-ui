@@ -339,7 +339,7 @@ const RedeemForm = (): JSX.Element | null => {
             {t('redeem_page.you_will_receive')}
           </h4>
           <InterBTCField
-            id='polka-btc-amount'
+            id='inter-btc-amount'
             name={INTER_BTC_AMOUNT}
             type='number'
             label='interBTC'
