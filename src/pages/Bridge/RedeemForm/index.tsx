@@ -13,9 +13,7 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
-// ray test touch <<
 import { Redeem } from '@interlay/interbtc-api';
-// ray test touch >>
 import {
   Bitcoin,
   BTCAmount,
@@ -251,9 +249,7 @@ const RedeemForm = (): JSX.Element | null => {
 
         // FIXME: workaround to make premium redeem still possible
         const relevantVaults = new Map<AccountId, BTCAmount>();
-        // ray test touch <<
         const id = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, vaultId);
-        // ray test touch >>
         // FIXME: a bit of a dirty workaround with the capacity
         relevantVaults.set(id, interBTCAmount.mul(2));
         const result = await window.polkaBTC.interBtcApi.redeem.request(

@@ -12,9 +12,7 @@ import {
   Polkadot,
   PolkadotAmount
 } from '@interlay/monetary-js';
-// ray test touch <<
 import { Redeem } from '@interlay/interbtc-api';
-// ray test touch >>
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';

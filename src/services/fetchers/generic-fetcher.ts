@@ -8,6 +8,7 @@ interface Arguments {
   queryKey: [
     string,
     string,
+    string,
     string
   ]
 }
@@ -17,6 +18,7 @@ const genericFetcher = <T>() => async ({ queryKey }: Arguments): Promise<T> => {
     _key,
     arg1,
     arg2,
+    arg3,
     ...rest
   ] = queryKey;
 
@@ -25,7 +27,7 @@ const genericFetcher = <T>() => async ({ queryKey }: Arguments): Promise<T> => {
   }
 
   // TODO: should type properly
-  return await window.polkaBTC[arg1][arg2](...rest);
+  return await window.polkaBTC[arg1][arg2][arg3](...rest);
 };
 
 export {

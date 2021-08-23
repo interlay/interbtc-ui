@@ -3,9 +3,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle } from 'react-icons/fa';
 import clsx from 'clsx';
-// ray test touch <<
 import { Redeem } from '@interlay/interbtc-api';
-// ray test touch >>
 
 import IconButton from 'components/IconButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';

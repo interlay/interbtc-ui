@@ -2,9 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-// ray test touch <<
 import { Issue } from '@interlay/interbtc-api';
-// ray test touch >>
 
 import
 BTCPaymentPendingStatusUI

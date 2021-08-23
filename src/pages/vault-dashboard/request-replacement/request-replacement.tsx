@@ -5,9 +5,7 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import Big from 'big.js';
-// ray test touch <<
 import { btcToSat } from '@interlay/interbtc-api';
-// ray test touch >>
 import { BTCAmount } from '@interlay/monetary-js';
 
 import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
@@ -47,9 +45,7 @@ const RequestReplacementModal = (props: Props): JSX.Element => {
       }
       await window.polkaBTC.interBtcApi.replace.request(amountPolkaBtc);
 
-      // ray test touch <<
       const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
-      // ray test touch >>
       const requests = await window.polkaBTC.interBtcApi.vaults.mapReplaceRequests(vaultId);
       if (!requests) return;
 

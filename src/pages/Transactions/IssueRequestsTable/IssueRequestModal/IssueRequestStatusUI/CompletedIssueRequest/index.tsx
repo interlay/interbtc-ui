@@ -1,9 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-// ray test touch <<
 import { Issue } from '@interlay/interbtc-api';
-// ray test touch >>
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import InterlayLink from 'components/UI/InterlayLink';

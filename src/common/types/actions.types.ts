@@ -1,7 +1,5 @@
 import { StoreType, ParachainStatus, Prices } from './util.types';
-// ray test touch <<
 import { Issue, ReplaceRequestExt } from '@interlay/interbtc-api';
-// ray test touch >>
 import {
   BTCAmount,
   PolkadotAmount
@@ -147,9 +145,6 @@ export const ADD_REPLACE_REQUESTS = 'ADD_REPLACE_REQUESTS';
 export const UPDATE_COLLATERALIZATION = 'UPDATE_COLLATERALIZATION';
 export const UPDATE_COLLATERAL = 'UPDATE_COLLATERAL';
 export const UPDATE_LOCKED_BTC = 'UPDATE_LOCKED_BTC';
-// ray test touch <<
-// export const UPDATE_SLA = 'UPDATE_SLA';
-// ray test touch >>
 export const UPDATE_APY = 'UPDATE_APY';
 
 export interface AddReplaceRequests {
@@ -172,13 +167,6 @@ export interface UpdateLockedBTC {
   lockedBTC: BTCAmount;
 }
 
-// ray test touch <<
-// export interface UpdateSLA {
-//   type: typeof UPDATE_SLA;
-//   sla: string;
-// }
-// ray test touch >>
-
 export interface UpdateAPY {
   type: typeof UPDATE_APY;
   apy: string;
@@ -189,8 +177,5 @@ export type VaultActions =
   | UpdateCollateralization
   | UpdateCollateral
   | UpdateLockedBTC
-  // ray test touch <<
-  // | UpdateSLA
-  // ray test touch >>
   | InitState
   | UpdateAPY;

@@ -10,12 +10,10 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { BitcoinNetwork } from '@interlay/interbtc-index-client';
-// ray test touch <<
 import {
   Issue,
   IssueStatus
 } from '@interlay/interbtc-api';
-// ray test touch >>
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';

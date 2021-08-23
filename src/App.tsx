@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import {
   Switch,
@@ -21,18 +22,9 @@ import {
   web3FromAddress
 } from '@polkadot/extension-dapp';
 import keyring from '@polkadot/ui-keyring';
-// ray test touch <<
-import {
-  createInterbtc,
-  InterBtc
-} from '@interlay/interbtc';
-import {
-  FaucetClient
-  // createInterbtcAPI,
-  // InterBTCAPI
-} from '@interlay/interbtc-api';
+import { createInterbtc } from '@interlay/interbtc';
+import { FaucetClient } from '@interlay/interbtc-api';
 import { StatusCode } from '@interlay/interbtc-api/build/src/interfaces';
-// ray test touch >>
 import { Keyring } from '@polkadot/api';
 import {
   Bitcoin,
@@ -118,16 +110,6 @@ const NoMatch = React.lazy(() =>
   import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
 );
 
-// ray test touch <<
-function connectToParachain(): Promise<InterBtc> {
-  return createInterbtc(
-    constants.PARACHAIN_URL,
-    constants.BITCOIN_NETWORK,
-    constants.STATS_URL
-  );
-}
-// ray test touch >>
-
 const App = (): JSX.Element => {
   const {
     polkaBtcLoaded,
@@ -143,7 +125,11 @@ const App = (): JSX.Element => {
   // Load the main interBTC API - connection to the interBTC bridge
   const loadPolkaBTC = React.useCallback(async (): Promise<void> => {
     try {
-      window.polkaBTC = await connectToParachain();
+      window.polkaBTC = await createInterbtc(
+        constants.PARACHAIN_URL,
+        constants.BITCOIN_NETWORK,
+        constants.STATS_URL
+      );
       dispatch(isPolkaBtcLoaded(true));
       setIsLoading(false);
     } catch (error) {
@@ -175,9 +161,7 @@ const App = (): JSX.Element => {
     if (!polkaBtcLoaded) return;
     if (!address) return;
 
-    // ray test touch <<
     const id = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
-    // ray test touch >>
 
     // Maybe load the vault client - only if the current address is also registered as a vault
     (async () => {

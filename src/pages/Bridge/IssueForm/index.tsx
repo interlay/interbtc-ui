@@ -13,9 +13,7 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { AccountId } from '@polkadot/types/interfaces';
-// ray test touch <<
 import { Issue } from '@interlay/interbtc-api';
-// ray test touch >>
 import {
   Bitcoin,
   BTCAmount,

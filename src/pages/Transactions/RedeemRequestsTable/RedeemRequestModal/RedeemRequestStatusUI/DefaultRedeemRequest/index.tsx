@@ -3,9 +3,7 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-// ray test touch <<
 import { Redeem } from '@interlay/interbtc-api';
-// ray test touch >>
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import { shortAddress } from 'common/utils/utils';

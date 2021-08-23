@@ -13,9 +13,7 @@ import {
   Polkadot,
   PolkadotAmount
 } from '@interlay/monetary-js';
-// ray test touch <<
 import { roundTwoDecimals } from '@interlay/interbtc-api';
-// ray test touch >>
 
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
@@ -83,9 +81,7 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
         return;
       }
 
-      // ray test touch <<
       const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
-      // ray test touch >>
       const balanceLockedDOT = await window.polkaBTC.interBtcApi.tokens.balanceLocked(Polkadot, vaultId);
       dispatch(updateCollateralAction(balanceLockedDOT));
       let collateralization;
@@ -134,9 +130,7 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
       }
       setNewCollateral(newCollateral);
 
-      // ray test touch <<
       const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
-      // ray test touch >>
       const requiredCollateral =
         await window.polkaBTC.interBtcApi.vaults.getRequiredCollateralForVault(vaultId, Polkadot);
 

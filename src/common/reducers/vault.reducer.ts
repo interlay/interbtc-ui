@@ -8,16 +8,11 @@ import {
   UPDATE_COLLATERALIZATION,
   UPDATE_COLLATERAL,
   UPDATE_LOCKED_BTC,
-  // ray test touch <<
-  // UPDATE_SLA,
-  // ray test touch >>
   UPDATE_APY,
   VaultActions
 } from '../types/actions.types';
 import { VaultState } from '../types/vault.types';
-// ray test touch <<
 import { ReplaceRequestExt } from '@interlay/interbtc-api';
-// ray test touch >>
 import { H256 } from '@polkadot/types/interfaces';
 
 const initialState = {
@@ -39,10 +34,6 @@ export const vaultReducer = (state: VaultState = initialState, action: VaultActi
     return { ...state, collateral: action.collateral };
   case UPDATE_LOCKED_BTC:
     return { ...state, lockedBTC: action.lockedBTC };
-  // ray test touch <<
-  // case UPDATE_SLA:
-  //   return { ...state, sla: action.sla };
-  // ray test touch >>
   case UPDATE_APY:
     return { ...state, apy: action.apy };
   default:

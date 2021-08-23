@@ -4,9 +4,7 @@ import { useTranslation } from 'react-i18next';
 import QRCode from 'qrcode.react';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
-// ray test touch <<
 import { Issue } from '@interlay/interbtc-api';
-// ray test touch >>
 
 import Timer from 'components/Timer';
 import InterlayTooltip from 'components/UI/InterlayTooltip';

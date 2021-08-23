@@ -12,13 +12,11 @@ import {
 import { useQuery } from 'react-query';
 import Big from 'big.js';
 import clsx from 'clsx';
-// ray test touch <<
 import {
   roundTwoDecimals,
   VaultExt,
   VaultStatusExt
 } from '@interlay/interbtc-api';
-// ray test touch >>
 import {
   Bitcoin,
   BTCAmount,
@@ -93,9 +91,7 @@ const VaultsTable = (): JSX.Element => {
   } = useQuery<Big, Error>(
     [
       GENERIC_FETCHER,
-      // ray test touch <<
       'interBtcApi',
-      // ray test touch >>
       'vaults',
       'getSecureCollateralThreshold'
     ],
@@ -113,9 +109,7 @@ const VaultsTable = (): JSX.Element => {
   } = useQuery<Big, Error>(
     [
       GENERIC_FETCHER,
-      // ray test touch <<
       'interBtcApi',
-      // ray test touch >>
       'vaults',
       'getLiquidationCollateralThreshold'
     ],
@@ -133,9 +127,7 @@ const VaultsTable = (): JSX.Element => {
   } = useQuery<ExchangeRate<Bitcoin, BTCUnit, Polkadot, PolkadotUnit>, Error>(
     [
       GENERIC_FETCHER,
-      // ray test touch <<
       'interBtcApi',
-      // ray test touch >>
       'oracle',
       'getExchangeRate',
       Polkadot
@@ -154,9 +146,7 @@ const VaultsTable = (): JSX.Element => {
   } = useQuery<Array<VaultExt>, Error>(
     [
       GENERIC_FETCHER,
-      // ray test touch <<
       'interBtcApi',
-      // ray test touch >>
       'vaults',
       'list'
     ],

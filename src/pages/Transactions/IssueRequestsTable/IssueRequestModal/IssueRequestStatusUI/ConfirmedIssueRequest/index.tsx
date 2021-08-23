@@ -10,9 +10,7 @@ import {
   FaExternalLinkAlt
 } from 'react-icons/fa';
 import clsx from 'clsx';
-// ray test touch <<
 import { Issue } from '@interlay/interbtc-api';
-// ray test touch >>
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import ErrorModal from 'components/ErrorModal';

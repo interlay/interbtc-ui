@@ -4,9 +4,7 @@ import {
   BitcoinNetwork,
   IssueColumns
 } from '@interlay/interbtc-index-client';
-// ray test touch <<
 import { Issue } from '@interlay/interbtc-api';
-// ray test touch >>
 
 import {
   BITCOIN_NETWORK
@@ -35,9 +33,7 @@ const userIssueRequestsFetcher = async ({ queryKey }: Arguments): Promise<Array<
     throw new Error('Invalid key!');
   }
 
-  // ray test touch <<
   return await window.polkaBTC.interBtcIndex.getFilteredIssues({
-  // ray test touch >>
     page,
     perPage: limit,
     network: BITCOIN_NETWORK as BitcoinNetwork | undefined,

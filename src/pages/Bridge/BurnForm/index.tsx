@@ -13,9 +13,7 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-// ray test touch <<
 import { btcToSat } from '@interlay/interbtc-api';
-// ray test touch >>
 import {
   ExchangeRate,
   Bitcoin,

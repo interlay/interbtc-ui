@@ -13,9 +13,7 @@ import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
-// ray test touch <<
 import { Redeem } from '@interlay/interbtc-api';
-// ray test touch >>
 import {
   BTCAmount,
   Polkadot,

@@ -13,12 +13,10 @@ import {
   BitcoinNetwork,
   RedeemColumns
 } from '@interlay/interbtc-index-client';
-// ray test touch <<
 import {
   Redeem,
   RedeemStatus
 } from '@interlay/interbtc-api';
-// ray test touch >>
 
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';

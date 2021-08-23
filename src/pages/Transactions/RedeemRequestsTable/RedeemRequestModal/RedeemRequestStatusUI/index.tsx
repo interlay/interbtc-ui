@@ -1,10 +1,8 @@
 
-// ray test touch <<
 import {
   Redeem,
   RedeemStatus
 } from '@interlay/interbtc-api';
-// ray test touch >>
 
 import CompletedRedeemRequest from './CompletedRedeemRequest';
 import ReimbursedRedeemRequest from './ReimbursedRedeemRequest';

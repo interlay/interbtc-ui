@@ -1,13 +1,13 @@
-import CompletedIssueRequest from './CompletedIssueRequest';
-import CancelledIssueRequest from './CancelledIssueRequest';
-import ReceivedIssueRequest from './ReceivedIssueRequest';
-import ConfirmedIssueRequest from './ConfirmedIssueRequest';
-// ray test touch <<
+
 import {
   Issue,
   IssueStatus
 } from '@interlay/interbtc-api';
-// ray test touch >>
+
+import CompletedIssueRequest from './CompletedIssueRequest';
+import CancelledIssueRequest from './CancelledIssueRequest';
+import ReceivedIssueRequest from './ReceivedIssueRequest';
+import ConfirmedIssueRequest from './ConfirmedIssueRequest';
 
 interface Props {
   request: Issue;
