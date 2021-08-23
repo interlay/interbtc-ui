@@ -62,7 +62,6 @@ const VaultDashboard = (): JSX.Element => {
     collateralization,
     collateral,
     lockedBTC,
-    sla,
     apy
   } = useSelector((state: StoreType) => state.vault);
   const [capacity, setCapacity] = useState(BTCAmount.zero);
@@ -161,10 +160,6 @@ const VaultDashboard = (): JSX.Element => {
       color: 'text-interlayDenim-800'
     },
     {
-      title: t('sla_score'),
-      value: safeRoundTwoDecimals(sla),
-      color: 'text-interlayDenim-800'
-    }, {
       title: t('vault.locked_dot'),
       value: displayMonetaryAmount(collateral),
       color: 'text-interlayDenim-800'

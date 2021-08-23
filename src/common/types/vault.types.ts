@@ -21,6 +21,5 @@ export interface VaultState {
   collateralization: string | undefined;
   collateral: PolkadotAmount;
   lockedBTC: BTCAmount;
-  sla: string;
   apy: string;
 }

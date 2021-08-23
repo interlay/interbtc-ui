@@ -139,7 +139,7 @@ const IssueForm = (): JSX.Element | null => {
         setDepositRate(theDepositRate);
         const issuePeriod = issuePeriodInBlocks * BLOCK_TIME;
         dispatch(updateIssuePeriodAction(issuePeriod));
-        setDustValue(BTCAmount.from.BTC(theDustValue));
+        setDustValue(BTCAmount.from.BTC(Number(JSON.parse(theDustValue))));
         setBTCToDOTRate(btcToDot);
 
         let theVaultMaxAmount = BTCAmount.zero;

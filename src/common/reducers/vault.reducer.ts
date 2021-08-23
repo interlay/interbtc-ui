@@ -20,7 +20,6 @@ const initialState = {
   collateralization: '0',
   collateral: PolkadotAmount.zero,
   lockedBTC: BTCAmount.zero,
-  sla: '0',
   apy: '0'
 };
 
