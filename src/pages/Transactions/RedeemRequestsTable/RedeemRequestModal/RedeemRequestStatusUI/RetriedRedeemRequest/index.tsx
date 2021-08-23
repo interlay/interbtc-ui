@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import Big from 'big.js';
@@ -12,7 +13,9 @@ import {
   Polkadot,
   PolkadotAmount
 } from '@interlay/monetary-js';
-import { Redeem } from '@interlay/interbtc';
+// ray test touch <<
+import { Redeem } from '@interlay/interbtc-api';
+// ray test touch >>
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
@@ -46,8 +49,8 @@ const RetriedRedeemRequest = ({
           punishmentFee,
           btcDotRate
         ] = await Promise.all([
-          window.polkaBTC.vaults.getPunishmentFee(),
-          window.polkaBTC.oracle.getExchangeRate(Polkadot)
+          window.polkaBTC.interBtcApi.vaults.getPunishmentFee(),
+          window.polkaBTC.interBtcApi.oracle.getExchangeRate(Polkadot)
         ]);
 
         const btcAmount = request ? request.amountBTC : BTCAmount.zero;

@@ -1,3 +1,4 @@
+// ray test touch <<
 import {
   uint8ArrayToString,
   bitcoin,
@@ -5,7 +6,8 @@ import {
   Issue,
   Redeem,
   CurrencyUnit
-} from '@interlay/interbtc';
+} from '@interlay/interbtc-api';
+// ray test touch >>
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from '../../constants';
 import Big from 'big.js';
 import { TableDisplayParams, RelayedBlock } from '../types/util.types';

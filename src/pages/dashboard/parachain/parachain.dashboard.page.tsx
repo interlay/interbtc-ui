@@ -2,6 +2,7 @@
 import { ReactElement, useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { StatusUpdateColumns } from '@interlay/interbtc-index-client';
 
 import ParachainSecurity from '../components/parachain-security';
 import { DashboardStatusUpdateInfo } from '../../../common/types/util.types';
@@ -11,7 +12,6 @@ import DashboardTable, {
   StatusComponent,
   StatusCategories
 } from '../../../common/components/dashboard-table/dashboard-table';
-import { StatusUpdateColumns } from '@interlay/interbtc-index-client';
 import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';

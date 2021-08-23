@@ -47,7 +47,9 @@ import {
   updateCollateralizationAction,
   updateCollateralAction,
   updateLockedBTCAction,
-  updateSLAAction,
+  // ray test touch <<
+  // updateSLAAction,
+  // ray test touch >>
   updateAPYAction
 } from 'common/actions/vault.actions';
 
@@ -85,25 +87,31 @@ const VaultDashboard = (): JSX.Element => {
       if (!address) return;
 
       try {
-        const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
+        // ray test touch <<
+        const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+        // ray test touch >>
         const [
           vault,
           feesPolkaBTC,
           lockedAmountBTC,
           collateralization,
-          slaScore,
+          // ray test touch <<
+          // slaScore,
+          // ray test touch >>
           apyScore,
           issuableAmount,
           totalIssueRequests,
           totalRedeemRequests
         ] = await Promise.allSettled([
-          window.polkaBTC.vaults.get(vaultId),
-          window.polkaBTC.pools.getFeesWrapped(address, Polkadot),
-          window.polkaBTC.vaults.getIssuedAmount(vaultId),
-          window.polkaBTC.vaults.getVaultCollateralization(vaultId),
-          window.polkaBTC.vaults.getSLA(vaultId),
-          window.polkaBTC.vaults.getAPY(vaultId),
-          window.polkaBTC.vaults.getIssuableAmount(vaultId),
+          window.polkaBTC.interBtcApi.vaults.get(vaultId),
+          window.polkaBTC.interBtcApi.pools.getFeesWrapped(address, Polkadot),
+          window.polkaBTC.interBtcApi.vaults.getIssuedAmount(vaultId),
+          window.polkaBTC.interBtcApi.vaults.getVaultCollateralization(vaultId),
+          // ray test touch <<
+          // window.polkaBTC.interBtcApi.vaults.getSLA(vaultId),
+          // ray test touch >>
+          window.polkaBTC.interBtcApi.vaults.getAPY(vaultId),
+          window.polkaBTC.interBtcApi.vaults.getIssuableAmount(vaultId),
           stats.getFilteredTotalIssues({ filterIssueColumns: [{ column: IssueColumns.VaultId, value: address }] }),
           stats.getFilteredTotalRedeems({ filterRedeemColumns: [{ column: RedeemColumns.VaultId, value: address }] })
         ]);
@@ -133,9 +141,11 @@ const VaultDashboard = (): JSX.Element => {
           dispatch(updateCollateralizationAction(collateralization.value?.mul(100).toString()));
         }
 
-        if (slaScore.status === 'fulfilled') {
-          dispatch(updateSLAAction(slaScore.value.toString()));
-        }
+        // ray test touch <<
+        // if (slaScore.status === 'fulfilled') {
+        //   dispatch(updateSLAAction(slaScore.value.toString()));
+        // }
+        // ray test touch >>
 
         if (apyScore.status === 'fulfilled') {
           dispatch(updateAPYAction(apyScore.value.toString()));

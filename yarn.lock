@@ -1571,29 +1571,13 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-index-client@0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-index-client/-/interbtc-index-client-0.7.0.tgz#d19eddf8da777c21fa1f79ab8ddde70031737324"
-  integrity sha512-eg6XfIkAtCkeI00lIh/V9vYOogfyDBGLwbnp2tE9rhEYgrNHDgCrJU8c0fp1USwYD1Jiwxm81jlbQW0zZ0c7ZQ==
-
-"@interlay/interbtc-index-client@0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-index-client/-/interbtc-index-client-0.8.0.tgz#74e2125c06fb9bbc0eabd71bcc66e9cfc9e7cb3c"
-  integrity sha512-5W0dQynhiG0Ke59qNRSdXWN3R1GHXk60hXCBOCUQ6X2mNFaBKUDZicDVJRDlZjPsQ3D075QM6qlYByR/qlwQQw==
-
-"@interlay/interbtc-types@0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-0.9.1.tgz#9cfecc88983c69dc662fe1b62fcd1a3eda8de496"
-  integrity sha512-Dxq73tU6clnkMF/ToQg5fcurkawrpfIqJVKuFGbOQBzDN8Bj2VRQsKhTgO6Rs4v6Ea0CL+jD6EsvSDhJzy00+w==
-
-"@interlay/interbtc@0.24.1":
-  version "0.24.1"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-0.24.1.tgz#2ed6f8b32eeda4d4d3de06dec1811d6297e084e9"
-  integrity sha512-KudoHWHCBTeDaAYnA2XAphUqt2nFyFucHFLLE6S66jDcbNayoykxeb5Ddt2lSaOiDxrcxYO6uvMc0CTta19QxA==
+"@interlay/interbtc-api@0.26.0":
+  version "0.26.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-0.26.0.tgz#363c10d95f756a266e7b9df3949039c39e3802e2"
+  integrity sha512-J5YYx1FcEVSEyY6md+k4BGgn7ebV1LzlpdARECa6JsuNVLZzqAjo6O50f6/ZgqKGN4sV1zWi0Fh6hYJguE3hlw==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
-    "@interlay/interbtc-index-client" "0.7.0"
-    "@interlay/interbtc-types" "0.9.1"
+    "@interlay/interbtc-types" "0.10.1"
     "@interlay/monetary-js" "0.2.1"
     "@polkadot/api" "5.3.2"
     "@polkadot/keyring" "6.6.2-6"
@@ -1607,6 +1591,31 @@
     regtest-client "^0.2.0"
     sinon "^9.0.3"
     ts-mock-imports "^1.3.0"
+
+"@interlay/interbtc-index-client@0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-index-client/-/interbtc-index-client-0.8.0.tgz#74e2125c06fb9bbc0eabd71bcc66e9cfc9e7cb3c"
+  integrity sha512-5W0dQynhiG0Ke59qNRSdXWN3R1GHXk60hXCBOCUQ6X2mNFaBKUDZicDVJRDlZjPsQ3D075QM6qlYByR/qlwQQw==
+
+"@interlay/interbtc-index-client@0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-index-client/-/interbtc-index-client-0.9.0.tgz#247c481053f3579c9e77bdfa9df78851b223f209"
+  integrity sha512-x8W5s5WJNcZ7YH7fe+wbo7TYIhK06o1K9jZNhOHJPixDck0+c1lUa3whFHFXxv71JuwALFEkNaiTLd9UWIqgPg==
+
+"@interlay/interbtc-types@0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-0.10.1.tgz#669b2b1ca4b3d0cd5b7ed946756c453d8444b382"
+  integrity sha512-RmGASIIjzvyD/xprfCaDxo5xRx8FLnD1So7CmxI8xR/KDOhrYkGfQPL8gR3N6lmUFpjVHT/Ro1tICS8TMke5/w==
+
+"@interlay/interbtc@0.26.2":
+  version "0.26.2"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-0.26.2.tgz#0264dc2b376fc09ba1bef7bc08e921a090a33681"
+  integrity sha512-I67G3+3l1R+3OsaXroQ/cZ7Bv2WSLxMw/QmD73YkZ9OTC+8rcGbCCodYfKjMmK3DTIwXfem/AraOldGf4cY5wQ==
+  dependencies:
+    "@interlay/interbtc-api" "0.26.0"
+    "@interlay/interbtc-index-client" "0.9.0"
+    "@interlay/interbtc-types" "0.10.1"
+    "@interlay/monetary-js" "0.2.1"
 
 "@interlay/monetary-js@0.2.1":
   version "0.2.1"

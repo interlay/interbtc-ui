@@ -2,7 +2,9 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import { Issue } from '@interlay/interbtc';
+// ray test touch <<
+import { Issue } from '@interlay/interbtc-api';
+// ray test touch >>
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import InterlayLink from 'components/UI/InterlayLink';
@@ -34,8 +36,8 @@ const ReceivedIssueRequest = ({
         parachainHeight
       ] = await Promise.all([
         interbtcIndex.getBtcConfirmations(),
-        window.polkaBTC.btcRelay.getStableParachainConfirmations(),
-        window.polkaBTC.system.getCurrentBlockNumber()
+        window.polkaBTC.interBtcApi.btcRelay.getStableParachainConfirmations(),
+        window.polkaBTC.interBtcApi.system.getCurrentBlockNumber()
       ]);
       setStableBitcoinConfirmations(theStableBitcoinConfirmations);
       setStableParachainConfirmations(theStableParachainConfirmations);

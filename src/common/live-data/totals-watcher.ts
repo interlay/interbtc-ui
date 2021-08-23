@@ -14,8 +14,8 @@ export default async function fetchTotals(dispatch: Dispatch, store: StoreState)
 
   try {
     const [latestTotalPolkaBTC, latestTotalLockedDOT] = await Promise.all([
-      window.polkaBTC.tokens.total(Bitcoin),
-      window.polkaBTC.tokens.total(Polkadot)
+      window.polkaBTC.interBtcApi.tokens.total(Bitcoin),
+      window.polkaBTC.interBtcApi.tokens.total(Polkadot)
     ]);
 
     // update store only if there is a difference between the latest totals and current totals

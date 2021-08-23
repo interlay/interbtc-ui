@@ -14,10 +14,12 @@ import { useTable } from 'react-table';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+// ray test touch <<
 import {
   reverseEndiannessHex,
   stripHexPrefix
-} from '@interlay/interbtc';
+} from '@interlay/interbtc-api';
+// ray test touch >>
 
 import ErrorFallback from 'components/ErrorFallback';
 import InterlayTable, {

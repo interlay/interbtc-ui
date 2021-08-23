@@ -19,10 +19,12 @@ import {
 } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+// ray test touch <<
 import {
   Issue,
   IssueStatus
-} from '@interlay/interbtc';
+} from '@interlay/interbtc-api';
+// ray test touch >>
 
 import IssueRequestModal from './IssueRequestModal';
 import EllipsisLoader from 'components/EllipsisLoader';

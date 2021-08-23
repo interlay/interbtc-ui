@@ -2,7 +2,9 @@ import {
   BTCAmount,
   PolkadotAmount
 } from '@interlay/monetary-js';
-import { ReplaceRequestExt } from '@interlay/interbtc';
+// ray test touch <<
+import { ReplaceRequestExt } from '@interlay/interbtc-api';
+// ray test touch >>
 import { H256 } from '@polkadot/types/interfaces';
 
 export type Vault = {

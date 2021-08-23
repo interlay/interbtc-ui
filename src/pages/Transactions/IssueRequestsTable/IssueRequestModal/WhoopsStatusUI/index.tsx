@@ -1,7 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { Issue } from '@interlay/interbtc';
+// ray test touch <<
+import { Issue } from '@interlay/interbtc-api';
+// ray test touch >>
 import { BTCAmount } from '@interlay/monetary-js';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';

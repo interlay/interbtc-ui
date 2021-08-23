@@ -9,7 +9,9 @@ import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import BN from 'bn.js';
 import clsx from 'clsx';
-import { satToBTC } from '@interlay/interbtc';
+// ray test touch <<
+import { satToBTC } from '@interlay/interbtc-api';
+// ray test touch >>
 
 import DashboardCard from 'pages/dashboard/DashboardCard';
 import LineChartComponent from './line-chart-component';

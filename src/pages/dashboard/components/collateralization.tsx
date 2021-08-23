@@ -34,7 +34,7 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
       if (!polkaBtcLoaded) return;
 
       try {
-        const systemCollateralization = await window.polkaBTC.vaults.getSystemCollateralization();
+        const systemCollateralization = await window.polkaBTC.interBtcApi.vaults.getSystemCollateralization();
         setSystemCollateralization(systemCollateralization?.mul(100).toString() || '0');
       } catch (error) {
         console.log('[Collateralization useEffect] error.message => ', error.message);
@@ -46,7 +46,7 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
       if (!polkaBtcLoaded) return;
 
       try {
-        const issuablePolkaBTC = await window.polkaBTC.vaults.getTotalIssuableAmount();
+        const issuablePolkaBTC = await window.polkaBTC.interBtcApi.vaults.getTotalIssuableAmount();
         setIssuablePolkaBTC(issuablePolkaBTC);
       } catch (error) {
         console.log('[Collateralization useEffect] error.message => ', error.message);
@@ -58,7 +58,7 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
       if (!polkaBtcLoaded) return;
 
       try {
-        const secureCollateralThreshold = await window.polkaBTC.vaults.getSecureCollateralThreshold();
+        const secureCollateralThreshold = await window.polkaBTC.interBtcApi.vaults.getSecureCollateralThreshold();
         setSecureCollateralThreshold(secureCollateralThreshold?.mul(100).toString() || '150');
       } catch (error) {
         console.log('[Collateralization useEffect] error.message => ', error.message);

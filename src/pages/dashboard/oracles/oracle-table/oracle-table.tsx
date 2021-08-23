@@ -3,7 +3,9 @@
 import { ReactElement, useEffect, useState } from 'react';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
-import { DOTBTCOracleStatus } from '@interlay/interbtc/build/src/types/oracleTypes';
+// ray test touch <<
+import { DOTBTCOracleStatus } from '@interlay/interbtc-api/build/src/types/oracleTypes';
+// ray test touch >>
 
 import DashboardTable, { StatusComponent, StatusCategories } from 'common/components/dashboard-table/dashboard-table';
 import { formatDateTime } from 'common/utils/utils';
@@ -19,7 +21,9 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
   useEffect(() => {
     (async () => {
       try {
-        const oracleStatuses = await window.polkaBTC.index.getLatestSubmissionForEachOracle();
+        // ray test touch <<
+        const oracleStatuses = await window.polkaBTC.interBtcIndex.getLatestSubmissionForEachOracle();
+        // ray test touch >>
         setOracles(oracleStatuses);
       } catch (error) {
         console.log('[OracleTable] error.message => ', error.message);

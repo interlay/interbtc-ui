@@ -13,7 +13,9 @@ import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { Redeem } from '@interlay/interbtc';
+// ray test touch <<
+import { Redeem } from '@interlay/interbtc-api';
+// ray test touch >>
 import {
   BTCAmount,
   Polkadot,
@@ -62,8 +64,8 @@ const ReimburseStatusUI = ({
           punishment,
           btcDotRate
         ] = await Promise.all([
-          window.polkaBTC.vaults.getPunishmentFee(),
-          window.polkaBTC.oracle.getExchangeRate(Polkadot)
+          window.polkaBTC.interBtcApi.vaults.getPunishmentFee(),
+          window.polkaBTC.interBtcApi.oracle.getExchangeRate(Polkadot)
         ]);
         const amountPolkaBTC = request ? request.amountBTC : BTCAmount.zero;
         setDOTAmount(btcDotRate.toCounter(amountPolkaBTC));
@@ -85,7 +87,7 @@ const ReimburseStatusUI = ({
   const queryClient = useQueryClient();
   const retryMutation = useMutation<void, Error, Redeem>(
     (variables: Redeem) => {
-      return window.polkaBTC.redeem.cancel(variables.id, false);
+      return window.polkaBTC.interBtcApi.redeem.cancel(variables.id, false);
     },
     {
       onSuccess: () => {
@@ -106,7 +108,7 @@ const ReimburseStatusUI = ({
   );
   const reimburseMutation = useMutation<void, Error, Redeem>(
     (variables: Redeem) => {
-      return window.polkaBTC.redeem.cancel(variables.id, true);
+      return window.polkaBTC.interBtcApi.redeem.cancel(variables.id, true);
     },
     {
       onSuccess: () => {

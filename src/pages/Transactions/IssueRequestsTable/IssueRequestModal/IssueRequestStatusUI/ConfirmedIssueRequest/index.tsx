@@ -10,7 +10,9 @@ import {
   FaExternalLinkAlt
 } from 'react-icons/fa';
 import clsx from 'clsx';
-import { Issue } from '@interlay/interbtc';
+// ray test touch <<
+import { Issue } from '@interlay/interbtc-api';
+// ray test touch >>
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import ErrorModal from 'components/ErrorModal';
@@ -44,7 +46,7 @@ const ConfirmedIssueRequest = ({
   const queryClient = useQueryClient();
   const executeMutation = useMutation<void, Error, Issue>(
     (variables: Issue) => {
-      return window.polkaBTC.issue.execute('0x' + variables.id, variables.btcTxId);
+      return window.polkaBTC.interBtcApi.issue.execute('0x' + variables.id, variables.btcTxId);
     },
     {
       onSuccess: (_, variables) => {

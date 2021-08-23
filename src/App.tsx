@@ -21,12 +21,18 @@ import {
   web3FromAddress
 } from '@polkadot/extension-dapp';
 import keyring from '@polkadot/ui-keyring';
+// ray test touch <<
 import {
-  FaucetClient,
-  createInterbtcAPI,
-  InterBTCAPI
+  createInterbtc,
+  InterBtc
 } from '@interlay/interbtc';
-import { StatusCode } from '@interlay/interbtc/build/src/interfaces';
+import {
+  FaucetClient
+  // createInterbtcAPI,
+  // InterBTCAPI
+} from '@interlay/interbtc-api';
+import { StatusCode } from '@interlay/interbtc-api/build/src/interfaces';
+// ray test touch >>
 import { Keyring } from '@polkadot/api';
 import {
   Bitcoin,
@@ -112,12 +118,15 @@ const NoMatch = React.lazy(() =>
   import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
 );
 
-function connectToParachain(): Promise<InterBTCAPI> {
-  return createInterbtcAPI(
+// ray test touch <<
+function connectToParachain(): Promise<InterBtc> {
+  return createInterbtc(
     constants.PARACHAIN_URL,
-    constants.BITCOIN_NETWORK
+    constants.BITCOIN_NETWORK,
+    constants.STATS_URL
   );
 }
+// ray test touch >>
 
 const App = (): JSX.Element => {
   const {
@@ -166,13 +175,15 @@ const App = (): JSX.Element => {
     if (!polkaBtcLoaded) return;
     if (!address) return;
 
-    const id = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
+    // ray test touch <<
+    const id = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+    // ray test touch >>
 
     // Maybe load the vault client - only if the current address is also registered as a vault
     (async () => {
       try {
         dispatch(isVaultClientLoaded(false));
-        const vault = await window.polkaBTC.vaults.get(id);
+        const vault = await window.polkaBTC.interBtcApi.vaults.get(id);
         dispatch(isVaultClientLoaded(!!vault));
       } catch (error) {
         // TODO: should add error handling
@@ -199,11 +210,11 @@ const App = (): JSX.Element => {
           bitcoinHeight,
           state
         ] = await Promise.all([
-          window.polkaBTC.tokens.total(Bitcoin),
-          window.polkaBTC.tokens.total(Polkadot),
-          window.polkaBTC.btcRelay.getLatestBlockHeight(),
-          window.polkaBTC.electrsAPI.getLatestBlockHeight(),
-          window.polkaBTC.system.getStatusCode()
+          window.polkaBTC.interBtcApi.tokens.total(Bitcoin),
+          window.polkaBTC.interBtcApi.tokens.total(Polkadot),
+          window.polkaBTC.interBtcApi.btcRelay.getLatestBlockHeight(),
+          window.polkaBTC.interBtcApi.electrsAPI.getLatestBlockHeight(),
+          window.polkaBTC.interBtcApi.system.getStatusCode()
         ]);
 
         const parachainStatus = (state: StatusCode) => {
@@ -245,7 +256,7 @@ const App = (): JSX.Element => {
       if (constants.DEFAULT_ACCOUNT_SEED) {
         const keyring = new Keyring({ type: 'sr25519' });
         const defaultAccountKeyring = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED);
-        window.polkaBTC.setAccount(defaultAccountKeyring);
+        window.polkaBTC.interBtcApi.setAccount(defaultAccountKeyring);
         dispatch(changeAddressAction(defaultAccountKeyring.address));
       }
     };
@@ -271,7 +282,7 @@ const App = (): JSX.Element => {
 
         const { signer } = await web3FromAddress(newAddress);
         // TODO: could store the active address just in one place (either in `window` object or in redux)
-        window.polkaBTC.setAccount(newAddress, signer);
+        window.polkaBTC.interBtcApi.setAccount(newAddress, signer);
         dispatch(changeAddressAction(newAddress));
       } catch (error) {
         // TODO: should add error handling
@@ -321,11 +332,15 @@ const App = (): JSX.Element => {
     (async () => {
       try {
         unsubscribeFromCollateral =
-          await window.polkaBTC.tokens.subscribeToBalance(Polkadot, address, (_, balance: PolkadotAmount) => {
-            if (!balance.eq(balanceDOT)) {
-              dispatch(updateBalanceDOTAction(balance));
+          await window.polkaBTC.interBtcApi.tokens.subscribeToBalance(
+            Polkadot,
+            address,
+            (_, balance: PolkadotAmount) => {
+              if (!balance.eq(balanceDOT)) {
+                dispatch(updateBalanceDOTAction(balance));
+              }
             }
-          });
+          );
       } catch (error) {
         console.log('[App React.useEffect] error.message => ', error.message);
       }
@@ -334,7 +349,7 @@ const App = (): JSX.Element => {
     (async () => {
       try {
         unsubscribeFromWrapped =
-          await window.polkaBTC.tokens.subscribeToBalance(Bitcoin, address, (_, balance: BTCAmount) => {
+          await window.polkaBTC.interBtcApi.tokens.subscribeToBalance(Bitcoin, address, (_, balance: BTCAmount) => {
             if (!balance.eq(balanceInterBTC)) {
               dispatch(updateBalancePolkaBTCAction(balance));
             }

@@ -2,10 +2,12 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+// ray test touch <<
 import {
   Redeem,
   RedeemStatus
-} from '@interlay/interbtc';
+} from '@interlay/interbtc-api';
+// ray test touch >>
 import { BTCAmount } from '@interlay/monetary-js';
 
 import RedeemRequestStatusUI from './RedeemRequestStatusUI';
