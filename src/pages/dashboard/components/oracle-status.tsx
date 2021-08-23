@@ -33,7 +33,9 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
   React.useEffect(() => {
     (async () => {
       try {
-        const oracleStatus = await statsApi.getLatestSubmission();
+        const oracleStatus = await statsApi.getLatestSubmission({
+          currencyKey: 'DOT'
+        });
         const exchangeRate = new Big(oracleStatus.exchangeRate);
         setExchangeRate(exchangeRate.toFixed(2));
         const status = oracleStatus.online ? Status.Online : Status.Offline;
