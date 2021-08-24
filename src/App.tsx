@@ -100,9 +100,6 @@ const VaultDashboard = React.lazy(() =>
   import(/* webpackChunkName: 'vault' */ 'pages/vault-dashboard/vault-dashboard.page')
 );
 // ray test touch >
-const Challenges = React.lazy(() =>
-  import(/* webpackChunkName: 'challenges' */ 'pages/Challenges')
-);
 const Feedback = React.lazy(() =>
   import(/* webpackChunkName: 'feedback' */ 'pages/Feedback')
 );
@@ -395,9 +392,6 @@ const App = (): JSX.Element => {
               <Switch location={location}>
                 <Route path={PAGES.FEEDBACK}>
                   <Feedback />
-                </Route>
-                <Route path={PAGES.CHALLENGES}>
-                  <Challenges />
                 </Route>
                 {vaultClientLoaded && (
                   <Route path={PAGES.VAULT}>

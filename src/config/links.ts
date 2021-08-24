@@ -13,16 +13,6 @@ const USER_FEEDBACK_FORM = 'https://forms.gle/JXBoRdspbG8pMs3k6';
 const VAULT_FEEDBACK_FORM = 'https://forms.gle/zzKhaEzttCKksjej7';
 const RELAYER_FEEDBACK_FORM = 'https://forms.gle/hriZNJ6pSEKHzwpS7';
 
-const INTER_BTC_DOC_START_TREASURE_HUNT = 'https://docs.interlay.io/#/start/beta?id=treasure-hunt-900-dot';
-const INTER_BTC_DOC_START_TREASURE_HUNT_VAULT =
-  'https://docs.interlay.io/#/start/beta?id=vault-award-4-dot-for-the-first-50-200-dot-in-total';
-const INTER_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER =
-  'https://docs.interlay.io/#/start/beta?id=staked-relayer-award-4-dot-for-the-first-50-200-dot-in-total';
-const INTER_BTC_DOC_KING_OF_THE_HILL =
-  'https://docs.interlay.io/#/start/beta?id=king-of-the-hill-vaults-and-relayers-200-dot';
-const INTER_BTC_DOC_LOTTERY =
-  'https://docs.interlay.io/#/start/beta?id=lottery-200-dot';
-
 export {
   INTERLAY_COMPANY,
   INTERLAY_EMAIL,
@@ -33,10 +23,5 @@ export {
   INTER_BTC_UI_GITHUB_ISSUES,
   USER_FEEDBACK_FORM,
   VAULT_FEEDBACK_FORM,
-  RELAYER_FEEDBACK_FORM,
-  INTER_BTC_DOC_START_TREASURE_HUNT,
-  INTER_BTC_DOC_START_TREASURE_HUNT_VAULT,
-  INTER_BTC_DOC_START_TREASURE_HUNT_STAKED_RELAYER,
-  INTER_BTC_DOC_KING_OF_THE_HILL,
-  INTER_BTC_DOC_LOTTERY
+  RELAYER_FEEDBACK_FORM
 };

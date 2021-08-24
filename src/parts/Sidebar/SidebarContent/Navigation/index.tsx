@@ -9,7 +9,6 @@ import {
   RefreshIcon,
   ChartSquareBarIcon,
   ChatAltIcon,
-  StarIcon,
   ChipIcon
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
@@ -51,11 +50,6 @@ const NAVIGATION_ITEMS = [
     link: '#',
     icon: () => null,
     separator: true
-  },
-  {
-    name: 'nav_challenges',
-    link: PAGES.CHALLENGES,
-    icon: StarIcon
   },
   {
     name: 'nav_feedback',
