@@ -5,7 +5,7 @@ import Big from 'big.js';
 import clsx from 'clsx';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 
-import DashboardCard from 'pages/dashboard/DashboardCard';
+import DashboardCard from 'pages/Dashboard/DashboardCard';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';

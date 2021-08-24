@@ -5,7 +5,7 @@ import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import DashboardCard from 'pages/dashboard/DashboardCard';
+import DashboardCard from 'pages/Dashboard/DashboardCard';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayLink from 'components/UI/InterlayLink';

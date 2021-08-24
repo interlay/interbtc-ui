@@ -1,4 +1,3 @@
-// ray test touch <<
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
@@ -7,7 +6,7 @@ import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 
-const ParachainDashboard = (): JSX.Element => {
+const Parachain = (): JSX.Element => {
   const { t } = useTranslation();
 
   return (
@@ -34,5 +33,4 @@ const ParachainDashboard = (): JSX.Element => {
   );
 };
 
-export default ParachainDashboard;
-// ray test touch >>
+export default Parachain;

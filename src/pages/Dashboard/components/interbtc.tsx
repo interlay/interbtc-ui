@@ -11,7 +11,7 @@ import BN from 'bn.js';
 import clsx from 'clsx';
 import { satToBTC } from '@interlay/interbtc-api';
 
-import DashboardCard from 'pages/dashboard/DashboardCard';
+import DashboardCard from 'pages/Dashboard/DashboardCard';
 import LineChartComponent from './line-chart-component';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';

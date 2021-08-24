@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
 
-import DashboardCard from 'pages/dashboard/DashboardCard';
+import DashboardCard from 'pages/Dashboard/DashboardCard';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import {

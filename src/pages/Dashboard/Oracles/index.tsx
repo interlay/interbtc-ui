@@ -1,6 +1,4 @@
 
-// ray test touch <<
-import { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
@@ -10,7 +8,7 @@ import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 
-export default function OraclesDashboard(): ReactElement {
+const Oracles = (): JSX.Element => {
   const { t } = useTranslation();
 
   return (
@@ -29,5 +27,6 @@ export default function OraclesDashboard(): ReactElement {
       <OracleTable dotLocked='1' />
     </MainContainer>
   );
-}
-// ray test touch >>
+};
+
+export default Oracles;

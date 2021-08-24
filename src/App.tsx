@@ -75,31 +75,32 @@ const Staking = React.lazy(() =>
   import(/* webpackChunkName: 'staking' */ 'pages/Staking')
 );
 const Dashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'dashboard' */ 'pages/dashboard/dashboard.page')
+  import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard')
 );
 // ray test touch <
+// TODO: nested routing
 const Vaults = React.lazy(() =>
-  import(/* webpackChunkName: 'vaults' */ 'pages/dashboard/vaults')
+  import(/* webpackChunkName: 'vaults' */ 'pages/Dashboard/Vaults')
 );
 const IssueRequests = React.lazy(() =>
-  import(/* webpackChunkName: 'issue' */ 'pages/dashboard/IssueRequests')
+  import(/* webpackChunkName: 'issue' */ 'pages/Dashboard/IssueRequests')
 );
 const RedeemRequests = React.lazy(() =>
-  import(/* webpackChunkName: 'redeem' */ 'pages/dashboard/RedeemRequests')
+  import(/* webpackChunkName: 'redeem' */ 'pages/Dashboard/RedeemRequests')
 );
 const BTCRelay = React.lazy(() =>
-  import(/* webpackChunkName: 'relay' */ 'pages/dashboard/btc-relay')
+  import(/* webpackChunkName: 'relay' */ 'pages/Dashboard/BTCRelay')
 );
-const OraclesDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'oracles' */ 'pages/dashboard/oracles/oracles.dashboard.page')
+const Oracles = React.lazy(() =>
+  import(/* webpackChunkName: 'oracles' */ 'pages/Dashboard/Oracles')
 );
-const ParachainDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'parachain' */ 'pages/dashboard/parachain/parachain.dashboard.page')
+const Parachain = React.lazy(() =>
+  import(/* webpackChunkName: 'parachain' */ 'pages/Dashboard/Parachain')
 );
+// ray test touch >
 const VaultDashboard = React.lazy(() =>
   import(/* webpackChunkName: 'vault' */ 'pages/vault-dashboard/vault-dashboard.page')
 );
-// ray test touch >
 const Feedback = React.lazy(() =>
   import(/* webpackChunkName: 'feedback' */ 'pages/Feedback')
 );
@@ -402,10 +403,10 @@ const App = (): JSX.Element => {
                   <Vaults />
                 </Route>
                 <Route path={PAGES.DASHBOARD_PARACHAIN}>
-                  <ParachainDashboard />
+                  <Parachain />
                 </Route>
                 <Route path={PAGES.DASHBOARD_ORACLES}>
-                  <OraclesDashboard />
+                  <Oracles />
                 </Route>
                 <Route path={PAGES.DASHBOARD_ISSUE_REQUESTS}>
                   <IssueRequests />
