@@ -15,17 +15,16 @@ import {
   useStore
 } from 'react-redux';
 import { withErrorBoundary } from 'react-error-boundary';
-import clsx from 'clsx';
 import {
   web3Accounts,
   web3Enable,
   web3FromAddress
 } from '@polkadot/extension-dapp';
 import keyring from '@polkadot/ui-keyring';
+import { Keyring } from '@polkadot/api';
 import { createInterbtc } from '@interlay/interbtc';
 import { FaucetClient } from '@interlay/interbtc-api';
 import { StatusCode } from '@interlay/interbtc-api/build/src/interfaces';
-import { Keyring } from '@polkadot/api';
 import {
   Bitcoin,
   BTCAmount,
@@ -34,6 +33,7 @@ import {
 } from '@interlay/monetary-js';
 
 import Layout from 'parts/Layout';
+import FullLoadingSpinner from 'components/FullLoadingSpinner';
 // TODO: block for now
 // import TransitionWrapper from 'parts/TransitionWrapper';
 import ErrorFallback from 'components/ErrorFallback';
@@ -60,7 +60,6 @@ import {
   updateBalancePolkaBTCAction,
   updateBalanceDOTAction
 } from 'common/actions/general.actions';
-import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 // TODO: should clean up
 import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
@@ -370,25 +369,7 @@ const App = (): JSX.Element => {
             // <TransitionWrapper location={location}>
             <React.Suspense
               fallback={
-                <div
-                  className={clsx(
-                    'flex',
-                    'justify-center',
-                    'items-center',
-                    'absolute',
-                    'top-0',
-                    'left-0',
-                    'w-full',
-                    'h-full'
-                  )}>
-                  <SpinIcon
-                    className={clsx(
-                      'text-interlayDenim',
-                      'animate-spin',
-                      'w-9',
-                      'h-9'
-                    )} />
-                </div>
+                <FullLoadingSpinner />
               }>
               <Switch location={location}>
                 <Route path={PAGES.FEEDBACK}>
