@@ -15,7 +15,7 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import SidebarNavLink from './SidebarNavLink';
-import { INTERLAY_DOCS } from 'config/links';
+import { INTERLAY_DOCS_LINK } from 'config/links';
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 
@@ -58,7 +58,7 @@ const NAVIGATION_ITEMS = [
   },
   {
     name: 'nav_docs',
-    link: INTERLAY_DOCS,
+    link: INTERLAY_DOCS_LINK,
     icon: BookOpenIcon,
     external: true,
     rest: {

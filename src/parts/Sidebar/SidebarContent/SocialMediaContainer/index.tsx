@@ -9,15 +9,15 @@ import clsx from 'clsx';
 
 import InterlayLink from 'components/UI/InterlayLink';
 import {
-  INTERLAY_TWITTER,
-  INTERLAY_DISCORD,
-  INTERLAY_GITHUB,
-  INTERLAY_EMAIL
+  INTERLAY_TWITTER_LINK,
+  INTERLAY_DISCORD_LINK,
+  INTERLAY_GITHUB_LINK,
+  INTERLAY_EMAIL_LINK
 } from 'config/links';
 
 const SOCIAL_MEDIA_ITEMS = [
   {
-    link: INTERLAY_TWITTER,
+    link: INTERLAY_TWITTER_LINK,
     icon: (
       <FaTwitter
         className={clsx(
@@ -27,7 +27,7 @@ const SOCIAL_MEDIA_ITEMS = [
     )
   },
   {
-    link: INTERLAY_DISCORD,
+    link: INTERLAY_DISCORD_LINK,
     icon: (
       <FaDiscord
         className={clsx(
@@ -37,7 +37,7 @@ const SOCIAL_MEDIA_ITEMS = [
     )
   },
   {
-    link: INTERLAY_GITHUB,
+    link: INTERLAY_GITHUB_LINK,
     icon: (
       <FaGithub
         className={clsx(
@@ -47,7 +47,7 @@ const SOCIAL_MEDIA_ITEMS = [
     )
   },
   {
-    link: INTERLAY_EMAIL,
+    link: INTERLAY_EMAIL_LINK,
     icon: (
       <FaMailBulk
         className={clsx(

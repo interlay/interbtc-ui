@@ -9,7 +9,7 @@ import SocialMediaContainer from './SocialMediaContainer';
 import TestNetBadge from './TestnetBadge';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayLink from 'components/UI/InterlayLink';
-import { INTERLAY_COMPANY } from 'config/links';
+import { INTERLAY_COMPANY_LINK } from 'config/links';
 import { PAGES } from 'utils/constants/links';
 import { ReactComponent as InterBTCHorizontalRGBIcon } from 'assets/img/interbtc-horizontal-rgb.svg';
 import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
@@ -93,7 +93,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
             'space-x-2',
             'w-full'
           )}
-          href={INTERLAY_COMPANY}
+          href={INTERLAY_COMPANY_LINK}
           target='_blank'
           rel='noopener noreferrer'>
           <span className='font-medium'>
