@@ -12,7 +12,7 @@ import BTCPaymentPendingStatusUI from './BTCPaymentPendingStatusUI';
 import IssueRequestStatusUI from './IssueRequestStatusUI';
 import WhoopsStatusUI from './WhoopsStatusUI';
 import PriceInfo from 'pages/Bridge/PriceInfo';
-import IconButton from 'components/IconButton';
+import IconButton from 'components/buttons/IconButton';
 import InterlayModal, {
   Props as ModalProps,
   InterlayModalInnerWrapper,

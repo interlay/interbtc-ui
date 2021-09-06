@@ -4,7 +4,7 @@ import {
   Meta
 } from '@storybook/react';
 
-import IconButton, { Props } from './';
+import IconButton, { Props } from '.';
 import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 import clsx from 'clsx';
 
