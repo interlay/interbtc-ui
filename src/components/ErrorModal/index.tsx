@@ -59,7 +59,8 @@ const ErrorModal = ({
         <p
           className={clsx(
             'text-base',
-            'break-all'
+            'break-all',
+            'mt-4'
           )}>
           {description}
         </p>
