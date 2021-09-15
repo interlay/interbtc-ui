@@ -8,16 +8,14 @@ import {
   UpdateCollateralization,
   UpdateCollateral,
   UpdateLockedBTC,
-  UpdateSLA,
   UpdateAPY,
   ADD_REPLACE_REQUESTS,
   UPDATE_COLLATERALIZATION,
   UPDATE_COLLATERAL,
   UPDATE_LOCKED_BTC,
-  UPDATE_SLA,
   UPDATE_APY
 } from '../types/actions.types';
-import { ReplaceRequestExt } from '@interlay/interbtc';
+import { ReplaceRequestExt } from '@interlay/interbtc-api';
 import { H256 } from '@polkadot/types/interfaces';
 
 export const addReplaceRequestsAction = (requests: Map<H256, ReplaceRequestExt>): AddReplaceRequests => ({
@@ -38,11 +36,6 @@ export const updateCollateralAction = (collateral: PolkadotAmount): UpdateCollat
 export const updateLockedBTCAction = (lockedBTC: BTCAmount): UpdateLockedBTC => ({
   type: UPDATE_LOCKED_BTC,
   lockedBTC
-});
-
-export const updateSLAAction = (sla: string): UpdateSLA => ({
-  type: UPDATE_SLA,
-  sla
 });
 
 export const updateAPYAction = (apy: string): UpdateAPY => ({

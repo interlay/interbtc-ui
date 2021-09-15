@@ -1,13 +1,14 @@
 import { createLogger } from 'redux-logger';
 import { applyMiddleware, createStore } from 'redux';
-import { FaucetClient, InterBTCAPI } from '@interlay/interbtc';
+import { InterBtc } from '@interlay/interbtc';
+import { FaucetClient } from '@interlay/interbtc-api';
 
 import { rootReducer } from './common/reducers/index';
 import { StoreState } from './common/types/util.types';
 
 declare global {
   interface Window {
-    polkaBTC: InterBTCAPI;
+    polkaBTC: InterBtc;
     faucet: FaucetClient;
     isFetchingActive: boolean;
   }

@@ -13,7 +13,7 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { btcToSat } from '@interlay/interbtc';
+import { btcToSat } from '@interlay/interbtc-api';
 import {
   ExchangeRate,
   Bitcoin,
@@ -91,7 +91,7 @@ const Burn = (): JSX.Element | null => {
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const theBurnRate = await window.polkaBTC.redeem.getBurnExchangeRate();
+        const theBurnRate = await window.polkaBTC.interBtcApi.redeem.getBurnExchangeRate();
         setBurnRate(theBurnRate);
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
@@ -131,7 +131,7 @@ const Burn = (): JSX.Element | null => {
     const onSubmit = async (data: BurnForm) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
-        await window.polkaBTC.redeem.burn(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]));
+        await window.polkaBTC.interBtcApi.redeem.burn(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]));
         // TODO: should not manually update the balances everywhere
         // - Should be able to watch the balances in one place and update the context accordingly.
         dispatch(updateBalancePolkaBTCAction(balanceInterBTC.sub(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]))));
@@ -190,7 +190,7 @@ const Burn = (): JSX.Element | null => {
             {t('burn_page.burn_interbtc')}
           </h4>
           <InterBTCField
-            id='polka-btc-amount'
+            id='inter-btc-amount'
             name={INTER_BTC_AMOUNT}
             type='number'
             label='interBTC'

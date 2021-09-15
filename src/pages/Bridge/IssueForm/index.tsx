@@ -13,9 +13,7 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { AccountId } from '@polkadot/types/interfaces';
-import {
-  Issue
-} from '@interlay/interbtc';
+import { Issue } from '@interlay/interbtc-api';
 import {
   Bitcoin,
   BTCAmount,
@@ -131,9 +129,9 @@ const IssueForm = (): JSX.Element | null => {
           interbtcIndex.getIssueGriefingCollateral(),
           interbtcIndex.getIssuePeriod(),
           interbtcIndex.getDustValue(),
-          window.polkaBTC.oracle.getExchangeRate(Polkadot),
+          window.polkaBTC.interBtcApi.oracle.getExchangeRate(Polkadot),
           // This data (the vaults) is strictly required to request issue
-          window.polkaBTC.vaults.getVaultsWithIssuableTokens()
+          window.polkaBTC.interBtcApi.vaults.getVaultsWithIssuableTokens()
         ]);
         setStatus(STATUSES.RESOLVED);
 
@@ -141,7 +139,7 @@ const IssueForm = (): JSX.Element | null => {
         setDepositRate(theDepositRate);
         const issuePeriod = issuePeriodInBlocks * BLOCK_TIME;
         dispatch(updateIssuePeriodAction(issuePeriod));
-        setDustValue(BTCAmount.from.BTC(theDustValue));
+        setDustValue(BTCAmount.from.BTC(Number(JSON.parse(theDustValue))));
         setBTCToDOTRate(btcToDot);
 
         let theVaultMaxAmount = BTCAmount.zero;
@@ -230,7 +228,7 @@ const IssueForm = (): JSX.Element | null => {
       try {
         const interBTCAmount = BTCAmount.from.BTC(data[BTC_AMOUNT]);
         setSubmitStatus(STATUSES.PENDING);
-        const result = await window.polkaBTC.issue.request(interBTCAmount);
+        const result = await window.polkaBTC.interBtcApi.issue.request(interBTCAmount);
         // TODO: handle issue aggregation
         const issueRequest = result[0];
         handleSubmittedRequestModalOpen(issueRequest);

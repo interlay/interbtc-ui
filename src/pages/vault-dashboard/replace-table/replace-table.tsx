@@ -1,3 +1,4 @@
+// ray test touch <
 import * as React from 'react';
 import {
   useSelector,
@@ -5,7 +6,7 @@ import {
 } from 'react-redux';
 import { Table } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { stripHexPrefix } from '@interlay/interbtc';
+import { stripHexPrefix } from '@interlay/interbtc-api';
 
 import { StoreType } from 'common/types/util.types';
 import { addReplaceRequestsAction } from 'common/actions/vault.actions';
@@ -28,8 +29,8 @@ const ReplaceTable = (): JSX.Element => {
 
     (async () => {
       try {
-        const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-        const requests = await window.polkaBTC.vaults.mapReplaceRequests(vaultId);
+        const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+        const requests = await window.polkaBTC.interBtcApi.vaults.mapReplaceRequests(vaultId);
         if (!requests) return;
 
         dispatch(addReplaceRequestsAction(requests));
@@ -106,3 +107,4 @@ const ReplaceTable = (): JSX.Element => {
 };
 
 export default ReplaceTable;
+// ray test touch >

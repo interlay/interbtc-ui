@@ -80,7 +80,7 @@ const Bridge = (): JSX.Element | null => {
     if (!polkaBtcLoaded) return;
     (async () => {
       try {
-        const maxBurnableTokens = await window.polkaBTC.redeem.getMaxBurnableTokens();
+        const maxBurnableTokens = await window.polkaBTC.interBtcApi.redeem.getMaxBurnableTokens();
         setBurnable(maxBurnableTokens.gt(BTCAmount.zero));
       } catch (error) {
         // TODO: should add error handling

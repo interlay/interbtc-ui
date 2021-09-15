@@ -140,7 +140,7 @@ const TransferForm = (): JSX.Element => {
   const onSubmit = async (data: TransferFormData) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
-      await window.polkaBTC.tokens.transfer(
+      await window.polkaBTC.interBtcApi.tokens.transfer(
         data[DOT_ADDRESS],
         BTCAmount.from.BTC(data[INTER_BTC_AMOUNT])
       );

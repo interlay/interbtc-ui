@@ -44,7 +44,7 @@ const Topbar = (): JSX.Element => {
     if (!address) return;
 
     try {
-      const receiverId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
+      const receiverId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
       await window.faucet.fundAccount(receiverId);
       toast.success('Your account has been funded.');
     } catch (error) {

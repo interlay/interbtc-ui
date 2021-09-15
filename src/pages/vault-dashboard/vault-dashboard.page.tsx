@@ -47,7 +47,6 @@ import {
   updateCollateralizationAction,
   updateCollateralAction,
   updateLockedBTCAction,
-  updateSLAAction,
   updateAPYAction
 } from 'common/actions/vault.actions';
 
@@ -63,7 +62,6 @@ const VaultDashboard = (): JSX.Element => {
     collateralization,
     collateral,
     lockedBTC,
-    sla,
     apy
   } = useSelector((state: StoreType) => state.vault);
   const [capacity, setCapacity] = useState(BTCAmount.zero);
@@ -85,25 +83,23 @@ const VaultDashboard = (): JSX.Element => {
       if (!address) return;
 
       try {
-        const vaultId = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, address);
+        const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
         const [
           vault,
           feesPolkaBTC,
           lockedAmountBTC,
           collateralization,
-          slaScore,
           apyScore,
           issuableAmount,
           totalIssueRequests,
           totalRedeemRequests
         ] = await Promise.allSettled([
-          window.polkaBTC.vaults.get(vaultId),
-          window.polkaBTC.pools.getFeesWrapped(address, Polkadot),
-          window.polkaBTC.vaults.getIssuedAmount(vaultId),
-          window.polkaBTC.vaults.getVaultCollateralization(vaultId),
-          window.polkaBTC.vaults.getSLA(vaultId),
-          window.polkaBTC.vaults.getAPY(vaultId),
-          window.polkaBTC.vaults.getIssuableAmount(vaultId),
+          window.polkaBTC.interBtcApi.vaults.get(vaultId),
+          window.polkaBTC.interBtcApi.pools.getFeesWrapped(address, Polkadot),
+          window.polkaBTC.interBtcApi.vaults.getIssuedAmount(vaultId),
+          window.polkaBTC.interBtcApi.vaults.getVaultCollateralization(vaultId),
+          window.polkaBTC.interBtcApi.vaults.getAPY(vaultId),
+          window.polkaBTC.interBtcApi.vaults.getIssuableAmount(vaultId),
           stats.getFilteredTotalIssues({ filterIssueColumns: [{ column: IssueColumns.VaultId, value: address }] }),
           stats.getFilteredTotalRedeems({ filterRedeemColumns: [{ column: RedeemColumns.VaultId, value: address }] })
         ]);
@@ -131,10 +127,6 @@ const VaultDashboard = (): JSX.Element => {
 
         if (collateralization.status === 'fulfilled') {
           dispatch(updateCollateralizationAction(collateralization.value?.mul(100).toString()));
-        }
-
-        if (slaScore.status === 'fulfilled') {
-          dispatch(updateSLAAction(slaScore.value.toString()));
         }
 
         if (apyScore.status === 'fulfilled') {
@@ -168,10 +160,6 @@ const VaultDashboard = (): JSX.Element => {
       color: 'text-interlayDenim-800'
     },
     {
-      title: t('sla_score'),
-      value: safeRoundTwoDecimals(sla),
-      color: 'text-interlayDenim-800'
-    }, {
       title: t('vault.locked_dot'),
       value: displayMonetaryAmount(collateral),
       color: 'text-interlayDenim-800'

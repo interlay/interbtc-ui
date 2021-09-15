@@ -3,8 +3,9 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle } from 'react-icons/fa';
 import clsx from 'clsx';
-import { Redeem } from '@interlay/interbtc';
-import IconButton from 'components/IconButton';
+import { Redeem } from '@interlay/interbtc-api';
+
+import IconButton from 'components/buttons/IconButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import InterlayModal, {
   Props as ModalProps,

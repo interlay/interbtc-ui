@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { Redeem } from '@interlay/interbtc';
+import { Redeem } from '@interlay/interbtc-api';
 import {
   BTCAmount,
   Polkadot,
@@ -27,7 +27,7 @@ import ErrorFallback from 'components/ErrorFallback';
 import useQueryParams from 'utils/hooks/use-query-params';
 import { getUsdAmount } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
-import { REQUEST_TABLE_PAGE_LIMIT } from 'utils/constants/general';
+import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { USER_REDEEM_REQUESTS_FETCHER } from 'services/user-redeem-requests-fetcher';
 import { StoreType } from 'common/types/util.types';
 
@@ -62,8 +62,8 @@ const ReimburseStatusUI = ({
           punishment,
           btcDotRate
         ] = await Promise.all([
-          window.polkaBTC.vaults.getPunishmentFee(),
-          window.polkaBTC.oracle.getExchangeRate(Polkadot)
+          window.polkaBTC.interBtcApi.vaults.getPunishmentFee(),
+          window.polkaBTC.interBtcApi.oracle.getExchangeRate(Polkadot)
         ]);
         const amountPolkaBTC = request ? request.amountBTC : BTCAmount.zero;
         setDOTAmount(btcDotRate.toCounter(amountPolkaBTC));
@@ -85,7 +85,7 @@ const ReimburseStatusUI = ({
   const queryClient = useQueryClient();
   const retryMutation = useMutation<void, Error, Redeem>(
     (variables: Redeem) => {
-      return window.polkaBTC.redeem.cancel(variables.id, false);
+      return window.polkaBTC.interBtcApi.redeem.cancel(variables.id, false);
     },
     {
       onSuccess: () => {
@@ -93,7 +93,7 @@ const ReimburseStatusUI = ({
           USER_REDEEM_REQUESTS_FETCHER,
           address,
           selectedPageIndex,
-          REQUEST_TABLE_PAGE_LIMIT
+          TABLE_PAGE_LIMIT
         ]);
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();
@@ -106,7 +106,7 @@ const ReimburseStatusUI = ({
   );
   const reimburseMutation = useMutation<void, Error, Redeem>(
     (variables: Redeem) => {
-      return window.polkaBTC.redeem.cancel(variables.id, true);
+      return window.polkaBTC.interBtcApi.redeem.cancel(variables.id, true);
     },
     {
       onSuccess: () => {
@@ -114,7 +114,7 @@ const ReimburseStatusUI = ({
           USER_REDEEM_REQUESTS_FETCHER,
           address,
           selectedPageIndex,
-          REQUEST_TABLE_PAGE_LIMIT
+          TABLE_PAGE_LIMIT
         ]);
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();

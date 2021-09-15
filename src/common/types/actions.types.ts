@@ -1,5 +1,5 @@
 import { StoreType, ParachainStatus, Prices } from './util.types';
-import { Issue, ReplaceRequestExt } from '@interlay/interbtc';
+import { Issue, ReplaceRequestExt } from '@interlay/interbtc-api';
 import {
   BTCAmount,
   PolkadotAmount
@@ -145,7 +145,6 @@ export const ADD_REPLACE_REQUESTS = 'ADD_REPLACE_REQUESTS';
 export const UPDATE_COLLATERALIZATION = 'UPDATE_COLLATERALIZATION';
 export const UPDATE_COLLATERAL = 'UPDATE_COLLATERAL';
 export const UPDATE_LOCKED_BTC = 'UPDATE_LOCKED_BTC';
-export const UPDATE_SLA = 'UPDATE_SLA';
 export const UPDATE_APY = 'UPDATE_APY';
 
 export interface AddReplaceRequests {
@@ -168,11 +167,6 @@ export interface UpdateLockedBTC {
   lockedBTC: BTCAmount;
 }
 
-export interface UpdateSLA {
-  type: typeof UPDATE_SLA;
-  sla: string;
-}
-
 export interface UpdateAPY {
   type: typeof UPDATE_APY;
   apy: string;
@@ -183,6 +177,5 @@ export type VaultActions =
   | UpdateCollateralization
   | UpdateCollateral
   | UpdateLockedBTC
-  | UpdateSLA
   | InitState
   | UpdateAPY;

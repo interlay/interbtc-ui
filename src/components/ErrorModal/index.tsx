@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 
-import IconButton from 'components/IconButton';
+import IconButton from 'components/buttons/IconButton';
 import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 import InterlayModal, {
   Props as ModalProps,
@@ -56,7 +56,11 @@ const ErrorModal = ({
             height={18}
             className='text-textSecondary' />
         </IconButton>
-        <p className='text-base'>
+        <p
+          className={clsx(
+            'text-base',
+            'break-all'
+          )}>
           {description}
         </p>
       </InterlayModalInnerWrapper>

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import QRCode from 'qrcode.react';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { Issue } from '@interlay/interbtc';
+import { Issue } from '@interlay/interbtc-api';
 
 import Timer from 'components/Timer';
 import InterlayTooltip from 'components/UI/InterlayTooltip';

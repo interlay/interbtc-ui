@@ -1,7 +1,8 @@
+
 import {
   Redeem,
   RedeemStatus
-} from '@interlay/interbtc';
+} from '@interlay/interbtc-api';
 
 import CompletedRedeemRequest from './CompletedRedeemRequest';
 import ReimbursedRedeemRequest from './ReimbursedRedeemRequest';

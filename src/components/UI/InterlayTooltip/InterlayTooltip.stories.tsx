@@ -19,6 +19,6 @@ export {
 };
 
 export default {
-  title: 'InterlayTooltip',
+  title: 'UI/InterlayTooltip',
   component: InterlayTooltip
 } as Meta;

@@ -1,8 +1,9 @@
+
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { Redeem } from '@interlay/interbtc';
+import { Redeem } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import { shortAddress } from 'common/utils/utils';
@@ -25,7 +26,8 @@ const DefaultRedeemRequest = ({
     // TODO: should add loading UX
     (async () => {
       try {
-        const theStableBitcoinConfirmations = await window.polkaBTC.btcRelay.getStableBitcoinConfirmations();
+        const theStableBitcoinConfirmations =
+          await window.polkaBTC.interBtcApi.btcRelay.getStableBitcoinConfirmations();
 
         setStableBitcoinConfirmations(theStableBitcoinConfirmations);
       } catch (error) {

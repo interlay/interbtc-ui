@@ -1,11 +1,13 @@
+
+import {
+  Issue,
+  IssueStatus
+} from '@interlay/interbtc-api';
+
 import CompletedIssueRequest from './CompletedIssueRequest';
 import CancelledIssueRequest from './CancelledIssueRequest';
 import ReceivedIssueRequest from './ReceivedIssueRequest';
 import ConfirmedIssueRequest from './ConfirmedIssueRequest';
-import {
-  Issue,
-  IssueStatus
-} from '@interlay/interbtc';
 
 interface Props {
   request: Issue;

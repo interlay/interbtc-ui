@@ -2,17 +2,17 @@
 const PAGES = Object.freeze({
   HOME: '/',
   BRIDGE: '/bridge',
-  CHALLENGES: '/challenges',
+  TRANSACTIONS: '/transactions',
+  STAKING: '/staking',
+  DASHBOARD: '/dashboard',
   DASHBOARD_VAULTS: '/dashboard/vaults',
   DASHBOARD_PARACHAIN: '/dashboard/parachain',
   DASHBOARD_ORACLES: '/dashboard/oracles',
   DASHBOARD_ISSUE_REQUESTS: '/dashboard/issue-requests',
   DASHBOARD_REDEEM_REQUESTS: '/dashboard/redeem-requests',
   DASHBOARD_RELAY: '/dashboard/relay',
-  DASHBOARD: '/dashboard',
   VAULT: '/vault',
-  FEEDBACK: '/feedback',
-  TRANSACTIONS: '/transactions'
+  FEEDBACK: '/feedback'
 });
 
 const QUERY_PARAMETERS = Object.freeze({

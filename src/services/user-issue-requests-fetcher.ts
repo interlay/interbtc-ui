@@ -1,8 +1,10 @@
+
+// ray test touch <
 import {
   BitcoinNetwork,
   IssueColumns
 } from '@interlay/interbtc-index-client';
-import { Issue } from '@interlay/interbtc';
+import { Issue } from '@interlay/interbtc-api';
 
 import {
   BITCOIN_NETWORK
@@ -31,7 +33,7 @@ const userIssueRequestsFetcher = async ({ queryKey }: Arguments): Promise<Array<
     throw new Error('Invalid key!');
   }
 
-  return await window.polkaBTC.index.getFilteredIssues({
+  return await window.polkaBTC.interBtcIndex.getFilteredIssues({
     page,
     perPage: limit,
     network: BITCOIN_NETWORK as BitcoinNetwork | undefined,
@@ -47,3 +49,4 @@ export {
 };
 
 export default userIssueRequestsFetcher;
+// ray test touch >

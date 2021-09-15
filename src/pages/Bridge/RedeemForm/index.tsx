@@ -13,9 +13,7 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
-import {
-  Redeem
-} from '@interlay/interbtc';
+import { Redeem } from '@interlay/interbtc-api';
 import {
   Bitcoin,
   BTCAmount,
@@ -145,11 +143,11 @@ const RedeemForm = (): JSX.Element | null => {
           currentInclusionFeeResult
         ] = await Promise.allSettled([
           interbtcIndex.getDustValue(),
-          window.polkaBTC.vaults.getPremiumRedeemVaults(),
+          window.polkaBTC.interBtcApi.vaults.getPremiumRedeemVaults(),
           interbtcIndex.getPremiumRedeemFee(),
-          window.polkaBTC.oracle.getExchangeRate(Polkadot),
-          window.polkaBTC.redeem.getFeeRate(),
-          window.polkaBTC.redeem.getCurrentInclusionFee()
+          window.polkaBTC.interBtcApi.oracle.getExchangeRate(Polkadot),
+          window.polkaBTC.interBtcApi.redeem.getFeeRate(),
+          window.polkaBTC.interBtcApi.redeem.getCurrentInclusionFee()
         ]);
 
         if (dustValueResult.status === 'rejected') {
@@ -245,16 +243,16 @@ const RedeemForm = (): JSX.Element | null => {
             return;
           }
         } else {
-          const vaults = await window.polkaBTC.vaults.getVaultsWithRedeemableTokens();
+          const vaults = await window.polkaBTC.interBtcApi.vaults.getVaultsWithRedeemableTokens();
           vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), interBTCAmount);
         }
 
         // FIXME: workaround to make premium redeem still possible
         const relevantVaults = new Map<AccountId, BTCAmount>();
-        const id = window.polkaBTC.api.createType(ACCOUNT_ID_TYPE_NAME, vaultId);
+        const id = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, vaultId);
         // FIXME: a bit of a dirty workaround with the capacity
         relevantVaults.set(id, interBTCAmount.mul(2));
-        const result = await window.polkaBTC.redeem.request(
+        const result = await window.polkaBTC.interBtcApi.redeem.request(
           interBTCAmount,
           data[BTC_ADDRESS],
           id
@@ -339,7 +337,7 @@ const RedeemForm = (): JSX.Element | null => {
             {t('redeem_page.you_will_receive')}
           </h4>
           <InterBTCField
-            id='polka-btc-amount'
+            id='inter-btc-amount'
             name={INTER_BTC_AMOUNT}
             type='number'
             label='interBTC'

@@ -5,6 +5,7 @@ import { PropsOf } from '@headlessui/react/dist/types';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
 
+// TODO: not used for now
 const InterlayDenimToggleButtonGroup = ({
   className,
   ...rest

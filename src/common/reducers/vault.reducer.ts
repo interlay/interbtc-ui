@@ -8,12 +8,11 @@ import {
   UPDATE_COLLATERALIZATION,
   UPDATE_COLLATERAL,
   UPDATE_LOCKED_BTC,
-  UPDATE_SLA,
   UPDATE_APY,
   VaultActions
 } from '../types/actions.types';
 import { VaultState } from '../types/vault.types';
-import { ReplaceRequestExt } from '@interlay/interbtc';
+import { ReplaceRequestExt } from '@interlay/interbtc-api';
 import { H256 } from '@polkadot/types/interfaces';
 
 const initialState = {
@@ -21,7 +20,6 @@ const initialState = {
   collateralization: '0',
   collateral: PolkadotAmount.zero,
   lockedBTC: BTCAmount.zero,
-  sla: '0',
   apy: '0'
 };
 
@@ -35,8 +33,6 @@ export const vaultReducer = (state: VaultState = initialState, action: VaultActi
     return { ...state, collateral: action.collateral };
   case UPDATE_LOCKED_BTC:
     return { ...state, lockedBTC: action.lockedBTC };
-  case UPDATE_SLA:
-    return { ...state, sla: action.sla };
   case UPDATE_APY:
     return { ...state, apy: action.apy };
   default:

@@ -11,7 +11,7 @@ const MainContainer = ({
       'lg:p-6',
       'space-y-10',
       'container',
-      'm-auto',
+      'mx-auto',
       className
     )}
     {...rest} />

@@ -2,13 +2,13 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { Issue } from '@interlay/interbtc';
+import { Issue } from '@interlay/interbtc-api';
 
 import
 BTCPaymentPendingStatusUI
   from 'pages/Transactions/IssueRequestsTable/IssueRequestModal/BTCPaymentPendingStatusUI';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import IconButton from 'components/IconButton';
+import IconButton from 'components/buttons/IconButton';
 import InterlayModal, {
   Props as ModalProps,
   InterlayModalInnerWrapper

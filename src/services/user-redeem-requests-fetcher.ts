@@ -1,8 +1,10 @@
+
+// ray test touch <
 import {
   BitcoinNetwork,
   RedeemColumns
 } from '@interlay/interbtc-index-client';
-import { Redeem } from '@interlay/interbtc';
+import { Redeem } from '@interlay/interbtc-api';
 
 import {
   BITCOIN_NETWORK
@@ -31,7 +33,7 @@ const userRedeemRequestsFetcher = async ({ queryKey }: Arguments): Promise<Array
     throw new Error('Invalid key!');
   }
 
-  return await window.polkaBTC.index.getFilteredRedeems({
+  return await window.polkaBTC.interBtcIndex.getFilteredRedeems({
     page,
     perPage: limit,
     network: BITCOIN_NETWORK as BitcoinNetwork,
@@ -47,3 +49,4 @@ export {
 };
 
 export default userRedeemRequestsFetcher;
+// ray test touch >

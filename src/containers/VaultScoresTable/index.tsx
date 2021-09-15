@@ -49,6 +49,7 @@ interface PatchedVaultData extends Omit<VaultData, 'lifetime_sla'> {
   lifetime_sla: string;
 }
 
+// TODO: not used for now
 // TODO: should be paginated
 const VaultScoresTable = ({
   challengeTime
