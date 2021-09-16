@@ -14,7 +14,6 @@ const ACCOUNT_ID_TYPE_NAME = 'AccountId';
 
 // TODO: should be environment variables for easy configuration switch
 // TODO: should be programable
-// ray test touch <<<
 const WRAPPED_TOKEN = InterBtc;
 const COLLATERAL_CURRENCY = Polkadot;
 type CollateralCurrencyAmount = PolkadotAmount;
@@ -22,7 +21,6 @@ type CollateralCurrencyAmount = PolkadotAmount;
 export type {
   CollateralCurrencyAmount
 };
-// ray test touch >>>
 
 export {
   APP_NAME,

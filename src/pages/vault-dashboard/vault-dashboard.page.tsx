@@ -36,9 +36,7 @@ import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultCo
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   ACCOUNT_ID_TYPE_NAME,
-  // ray test touch <<<
   CollateralCurrencyAmount
-  // ray test touch >>>
 } from 'config/general';
 import {
   safeRoundTwoDecimals,
@@ -107,9 +105,7 @@ const VaultDashboard = (): JSX.Element => {
         ]);
 
         if (vault.status === 'fulfilled') {
-          // ray test touch <<<
           const collateralDot = vault.value.backingCollateral as CollateralCurrencyAmount;
-          // ray test touch >>>
           dispatch(updateCollateralAction(collateralDot));
         }
 

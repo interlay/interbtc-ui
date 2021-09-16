@@ -115,9 +115,9 @@ const InterBTC = (): React.ReactElement => {
           ]}
           data={[
             cumulativeIssuesPerDay.slice(1).map(
-              dataPoint => BitcoinAmount.from.Satoshi(dataPoint.sat).to.BTC().round().toNumber()
+              dataPoint => Number(BitcoinAmount.from.Satoshi(dataPoint.sat).str.BTC())
             ),
-            pointIssuesPerDay.slice(1).map(sat => BitcoinAmount.from.Satoshi(sat).to.BTC().round().toNumber())
+            pointIssuesPerDay.slice(1).map(sat => Number(BitcoinAmount.from.Satoshi(sat).str.BTC()))
           ]} />
       </div>
     </DashboardCard>

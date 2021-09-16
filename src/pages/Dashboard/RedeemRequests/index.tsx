@@ -126,14 +126,14 @@ function RedeemRequests(): JSX.Element {
             )}>
             {totalRedeemedAmount === '-' ?
               t('no_data') :
-              BitcoinAmount.from.Satoshi(totalRedeemedAmount).to.BTC().toString()}
+              BitcoinAmount.from.Satoshi(totalRedeemedAmount).str.BTC()}
             &nbsp;BTC
           </h5>
           {totalRedeemedAmount !== '-' && (
             <h5 className='text-textSecondary'>
               $
               {/* eslint-disable-next-line max-len */}
-              {(prices.bitcoin.usd * BitcoinAmount.from.Satoshi(totalRedeemedAmount).to.BTC().round().toNumber()).toLocaleString()}
+              {(prices.bitcoin.usd * Number(BitcoinAmount.from.Satoshi(totalRedeemedAmount).str.BTC())).toLocaleString()}
             </h5>
           )}
           <h5
@@ -178,10 +178,10 @@ function RedeemRequests(): JSX.Element {
             yAxisProps={[{ beginAtZero: true, position: 'left' }, { position: 'right' }]}
             data={[
               cumulativeRedeemsPerDay.map(dataPoint =>
-                BitcoinAmount.from.Satoshi(dataPoint.sat).to.BTC().round().toNumber()
+                Number(BitcoinAmount.from.Satoshi(dataPoint.sat).str.BTC())
               ),
               pointRedeemsPerDay.map(
-                amount => BitcoinAmount.from.Satoshi(amount).to.BTC().round().toNumber()
+                amount => Number(BitcoinAmount.from.Satoshi(amount).str.BTC())
               )
             ]} />
         </div>
