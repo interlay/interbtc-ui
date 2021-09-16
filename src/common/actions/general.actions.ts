@@ -1,6 +1,5 @@
 import {
   BitcoinAmount,
-  PolkadotAmount,
   MonetaryAmount,
   Currency
 } from '@interlay/monetary-js';
@@ -73,7 +72,7 @@ export const updateOfPricesAction = (prices: Prices): UpdateOfPrices => ({
 
 export const initGeneralDataAction = (
   totalInterBTC: BitcoinAmount,
-  totalLockedDOT: PolkadotAmount,
+  totalLockedDOT: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
   btcRelayHeight: number,
   bitcoinHeight: number,
   parachainStatus: ParachainStatus
@@ -102,7 +101,10 @@ export const updateHeightsAction = (btcRelayHeight: number, bitcoinHeight: numbe
   bitcoinHeight
 });
 
-export const updateTotalsAction = (totalLockedDOT: PolkadotAmount, totalInterBTC: BitcoinAmount): UpdateTotals => ({
+export const updateTotalsAction = (
+  totalLockedDOT: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
+  totalInterBTC: BitcoinAmount
+): UpdateTotals => ({
   type: UPDATE_TOTALS,
   totalLockedDOT,
   totalInterBTC

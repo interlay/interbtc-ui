@@ -1,7 +1,4 @@
-import {
-  BitcoinAmount,
-  PolkadotAmount
-} from '@interlay/monetary-js';
+import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import { COLLATERAL_CURRENCY } from 'config/general';
@@ -28,7 +25,7 @@ const initialState = {
   showAccountModal: false,
   address: '',
   totalInterBTC: BitcoinAmount.zero,
-  totalLockedDOT: PolkadotAmount.zero,
+  totalLockedDOT: newMonetaryAmount(0, COLLATERAL_CURRENCY),
   balanceInterBTC: BitcoinAmount.zero,
   balanceDOT: newMonetaryAmount(0, COLLATERAL_CURRENCY),
   extensions: [],

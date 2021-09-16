@@ -15,7 +15,8 @@ import clsx from 'clsx';
 import {
   roundTwoDecimals,
   VaultExt,
-  VaultStatusExt
+  VaultStatusExt,
+  CollateralUnit
 } from '@interlay/interbtc-api';
 import {
   Bitcoin,
@@ -23,7 +24,8 @@ import {
   BitcoinUnit,
   ExchangeRate,
   Polkadot,
-  PolkadotAmount,
+  MonetaryAmount,
+  Currency,
   PolkadotUnit
 } from '@interlay/monetary-js';
 
@@ -48,7 +50,7 @@ import { Vault } from '../../../../common/types/vault.types';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const getCollateralization = (
-  collateral: PolkadotAmount,
+  collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
   tokens: BitcoinAmount,
   btcToDOTRate: ExchangeRate<Bitcoin, BitcoinUnit, Polkadot, PolkadotUnit>
 ) => {

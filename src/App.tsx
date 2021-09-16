@@ -31,7 +31,6 @@ import { StatusCode } from '@interlay/interbtc-api/build/src/interfaces';
 import {
   Bitcoin,
   BitcoinAmount,
-  Polkadot,
   MonetaryAmount,
   Currency
 } from '@interlay/monetary-js';
@@ -199,7 +198,7 @@ const App = (): JSX.Element => {
           state
         ] = await Promise.all([
           window.polkaBTC.interBtcApi.tokens.total(Bitcoin),
-          window.polkaBTC.interBtcApi.tokens.total(Polkadot),
+          window.polkaBTC.interBtcApi.tokens.total(COLLATERAL_CURRENCY),
           window.polkaBTC.interBtcApi.btcRelay.getLatestBlockHeight(),
           window.polkaBTC.interBtcApi.electrsAPI.getLatestBlockHeight(),
           window.polkaBTC.interBtcApi.system.getStatusCode()

@@ -7,7 +7,6 @@ import { RedeemState } from './redeem.types';
 import { VaultState } from './vault.types';
 import {
   BitcoinAmount,
-  PolkadotAmount,
   MonetaryAmount,
   Currency
 } from '@interlay/monetary-js';
@@ -66,7 +65,7 @@ export type GeneralState = {
   showAccountModal: boolean;
   address: string;
   totalInterBTC: BitcoinAmount;
-  totalLockedDOT: PolkadotAmount;
+  totalLockedDOT: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   balanceInterBTC: BitcoinAmount;
   balanceDOT: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   extensions: string[];
