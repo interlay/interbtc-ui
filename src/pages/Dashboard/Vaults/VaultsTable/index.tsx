@@ -23,10 +23,8 @@ import {
   BitcoinAmount,
   BitcoinUnit,
   ExchangeRate,
-  Polkadot,
   MonetaryAmount,
-  Currency,
-  PolkadotUnit
+  Currency
 } from '@interlay/monetary-js';
 
 import ErrorFallback from 'components/ErrorFallback';
@@ -40,6 +38,7 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
+import { COLLATERAL_CURRENCY } from 'config/general';
 import { shortAddress } from '../../../../common/utils/utils';
 import * as constants from '../../../../constants';
 import genericFetcher, {
@@ -52,7 +51,13 @@ import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/i
 const getCollateralization = (
   collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
   tokens: BitcoinAmount,
-  btcToDOTRate: ExchangeRate<Bitcoin, BitcoinUnit, Polkadot, PolkadotUnit>
+  btcToDOTRate:
+    ExchangeRate<
+      Bitcoin,
+      BitcoinUnit,
+      Currency<CollateralUnit>,
+      CollateralUnit,
+    >
 ) => {
   if (tokens.gt(BitcoinAmount.zero) && btcToDOTRate.toBig().gt(0)) {
     const tokensAsCollateral = btcToDOTRate.toCounter(tokens);
@@ -126,15 +131,30 @@ const VaultsTable = (): JSX.Element => {
     isLoading: btcToDOTRateLoading,
     data: btcToDOTRate,
     error: btcToDOTRateError
-  } = useQuery<ExchangeRate<Bitcoin, BitcoinUnit, Polkadot, PolkadotUnit>, Error>(
+  } = useQuery<
+    ExchangeRate<
+      Bitcoin,
+      BitcoinUnit,
+      Currency<CollateralUnit>,
+      CollateralUnit
+    >,
+    Error
+  >(
     [
       GENERIC_FETCHER,
       'interBtcApi',
       'oracle',
       'getExchangeRate',
-      Polkadot
+      COLLATERAL_CURRENCY
     ],
-    genericFetcher<ExchangeRate<Bitcoin, BitcoinUnit, Polkadot, PolkadotUnit>>(),
+    genericFetcher<
+      ExchangeRate<
+        Bitcoin,
+        BitcoinUnit,
+        Currency<CollateralUnit>,
+        CollateralUnit
+      >
+    >(),
     {
       enabled: !!polkaBtcLoaded
     }
