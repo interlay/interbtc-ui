@@ -1,7 +1,10 @@
 import {
   BitcoinAmount,
-  PolkadotAmount
+  PolkadotAmount,
+  MonetaryAmount,
+  Currency
 } from '@interlay/monetary-js';
+import { CollateralUnit } from '@interlay/interbtc-api';
 
 import {
   IS_POLKA_BTC_LOADED,
@@ -56,7 +59,9 @@ export const updateBalancePolkaBTCAction = (balanceInterBTC: BitcoinAmount): Upd
   balanceInterBTC
 });
 
-export const updateBalanceDOTAction = (balanceDOT: PolkadotAmount): UpdateBalanceDOT => ({
+export const updateBalanceDOTAction = (
+  balanceDOT: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>
+): UpdateBalanceDOT => ({
   type: UPDATE_BALANCE_DOT,
   balanceDOT
 });

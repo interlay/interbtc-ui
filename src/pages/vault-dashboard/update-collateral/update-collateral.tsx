@@ -10,13 +10,15 @@ import {
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import {
-  Polkadot,
-  PolkadotAmount
-} from '@interlay/monetary-js';
-import { roundTwoDecimals } from '@interlay/interbtc-api';
+  roundTwoDecimals,
+  newMonetaryAmount
+} from '@interlay/interbtc-api';
 
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import {
+  ACCOUNT_ID_TYPE_NAME,
+  COLLATERAL_CURRENCY
+} from 'config/general';
 import {
   updateCollateralAction,
   updateCollateralizationAction
@@ -82,7 +84,7 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
       }
 
       const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const balanceLockedDOT = await window.polkaBTC.interBtcApi.tokens.balanceLocked(Polkadot, vaultId);
+      const balanceLockedDOT = await window.polkaBTC.interBtcApi.tokens.balanceLocked(COLLATERAL_CURRENCY, vaultId);
       dispatch(updateCollateralAction(balanceLockedDOT));
       let collateralization;
       try {
@@ -112,7 +114,7 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
         setCollateralUpdateAllowed(false);
         return;
       }
-      const parsedValue = PolkadotAmount.from.DOT(value);
+      const parsedValue = newMonetaryAmount(value, COLLATERAL_CURRENCY);
       if (parsedValue.toBig(parsedValue.currency.rawBase).lte(1)) {
         throw new Error('Please enter an amount greater than 1 Planck');
       }
@@ -132,7 +134,7 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
 
       const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
       const requiredCollateral =
-        await window.polkaBTC.interBtcApi.vaults.getRequiredCollateralForVault(vaultId, Polkadot);
+        await window.polkaBTC.interBtcApi.vaults.getRequiredCollateralForVault(vaultId, COLLATERAL_CURRENCY);
 
       // Collateral update only allowed if above required collateral
       const allowed = newCollateral.gte(requiredCollateral);

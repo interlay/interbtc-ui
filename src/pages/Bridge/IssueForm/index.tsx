@@ -13,15 +13,17 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { AccountId } from '@polkadot/types/interfaces';
-import { Issue } from '@interlay/interbtc-api';
+import {
+  Issue,
+  newMonetaryAmount,
+  CollateralUnit
+} from '@interlay/interbtc-api';
 import {
   Bitcoin,
   BitcoinAmount,
   BitcoinUnit,
   ExchangeRate,
-  Polkadot,
-  PolkadotAmount,
-  PolkadotUnit
+  Currency
 } from '@interlay/monetary-js';
 
 import SubmitButton from '../SubmitButton';
@@ -33,13 +35,12 @@ import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
+import { COLLATERAL_CURRENCY } from 'config/general';
 import {
   BLOCK_TIME,
   BLOCKS_BEHIND_LIMIT
 } from 'config/parachain';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
-import { updateIssuePeriodAction } from 'common/actions/issue.actions';
-import { showAccountModalAction } from 'common/actions/general.actions';
 import {
   displayMonetaryAmount,
   getRandomVaultIdWithCapacity,
@@ -50,6 +51,8 @@ import {
   ParachainStatus,
   StoreType
 } from 'common/types/util.types';
+import { updateIssuePeriodAction } from 'common/actions/issue.actions';
+import { showAccountModalAction } from 'common/actions/general.actions';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
@@ -98,7 +101,12 @@ const IssueForm = (): JSX.Element | null => {
   const [feeRate, setFeeRate] = React.useState(0.005); // Set default to 0.5%
   const [depositRate, setDepositRate] = React.useState(0.00005); // Set default to 0.005%
   const [btcToDOTRate, setBTCToDOTRate] = React.useState(
-    new ExchangeRate<Bitcoin, BitcoinUnit, Polkadot, PolkadotUnit>(Bitcoin, Polkadot, new Big(0))
+    new ExchangeRate<
+      Bitcoin,
+      BitcoinUnit,
+      Currency<CollateralUnit>,
+      CollateralUnit
+    >(Bitcoin, COLLATERAL_CURRENCY, new Big(0))
   );
   const [vaults, setVaults] = React.useState<Map<AccountId, BitcoinAmount>>();
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero);
@@ -129,7 +137,7 @@ const IssueForm = (): JSX.Element | null => {
           interbtcIndex.getIssueGriefingCollateral(),
           interbtcIndex.getIssuePeriod(),
           interbtcIndex.getDustValue(),
-          window.polkaBTC.interBtcApi.oracle.getExchangeRate(Polkadot),
+          window.polkaBTC.interBtcApi.oracle.getExchangeRate(COLLATERAL_CURRENCY),
           // This data (the vaults) is strictly required to request issue
           window.polkaBTC.interBtcApi.vaults.getVaultsWithIssuableTokens()
         ]);
@@ -177,7 +185,8 @@ const IssueForm = (): JSX.Element | null => {
       const btcAmount = BitcoinAmount.from.BTC(value);
 
       const securityDeposit = btcToDOTRate.toCounter(btcAmount).mul(depositRate);
-      const minimumRequiredDOTAmount = PolkadotAmount.from.DOT(EXTRA_REQUIRED_DOT_AMOUNT).add(securityDeposit);
+      const minimumRequiredDOTAmount =
+        newMonetaryAmount(EXTRA_REQUIRED_DOT_AMOUNT, COLLATERAL_CURRENCY).add(securityDeposit);
       if (balanceDOT.lte(minimumRequiredDOTAmount)) {
         return t('insufficient_funds_dot');
       }

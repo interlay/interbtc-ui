@@ -23,13 +23,17 @@ import {
 import keyring from '@polkadot/ui-keyring';
 import { Keyring } from '@polkadot/api';
 import { createInterbtc } from '@interlay/interbtc';
-import { FaucetClient } from '@interlay/interbtc-api';
+import {
+  FaucetClient,
+  CollateralUnit
+} from '@interlay/interbtc-api';
 import { StatusCode } from '@interlay/interbtc-api/build/src/interfaces';
 import {
   Bitcoin,
   BitcoinAmount,
   Polkadot,
-  PolkadotAmount
+  MonetaryAmount,
+  Currency
 } from '@interlay/monetary-js';
 
 import Layout from 'parts/Layout';
@@ -40,7 +44,8 @@ import ErrorFallback from 'components/ErrorFallback';
 import {
   APP_NAME,
   ACCOUNT_ID_TYPE_NAME,
-  WRAPPED_TOKEN
+  WRAPPED_TOKEN,
+  COLLATERAL_CURRENCY
 } from 'config/general';
 import { PAGES } from 'utils/constants/links';
 import './i18n';
@@ -316,9 +321,9 @@ const App = (): JSX.Element => {
       try {
         unsubscribeFromCollateral =
           await window.polkaBTC.interBtcApi.tokens.subscribeToBalance(
-            Polkadot,
+            COLLATERAL_CURRENCY,
             address,
-            (_, balance: PolkadotAmount) => {
+            (_, balance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>) => {
               if (!balance.eq(balanceDOT)) {
                 dispatch(updateBalanceDOTAction(balance));
               }

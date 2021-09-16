@@ -34,10 +34,7 @@ import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContai
 import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
-import {
-  ACCOUNT_ID_TYPE_NAME,
-  CollateralCurrencyAmount
-} from 'config/general';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   safeRoundTwoDecimals,
   displayMonetaryAmount
@@ -105,7 +102,7 @@ const VaultDashboard = (): JSX.Element => {
         ]);
 
         if (vault.status === 'fulfilled') {
-          const collateralDot = vault.value.backingCollateral as CollateralCurrencyAmount;
+          const collateralDot = vault.value.backingCollateral;
           dispatch(updateCollateralAction(collateralDot));
         }
 

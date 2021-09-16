@@ -13,17 +13,17 @@ import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { Redeem } from '@interlay/interbtc-api';
 import {
-  BitcoinAmount,
-  Polkadot,
-  PolkadotAmount
-} from '@interlay/monetary-js';
+  Redeem,
+  newMonetaryAmount
+} from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import ErrorFallback from 'components/ErrorFallback';
+import { COLLATERAL_CURRENCY } from 'config/general';
 import useQueryParams from 'utils/hooks/use-query-params';
 import { getUsdAmount } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
@@ -45,8 +45,8 @@ const ReimburseStatusUI = ({
     polkaBtcLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
-  const [punishmentDOT, setPunishmentDOT] = React.useState(PolkadotAmount.zero);
-  const [dotAmount, setDOTAmount] = React.useState(PolkadotAmount.zero);
+  const [punishmentDOT, setPunishmentDOT] = React.useState(newMonetaryAmount(0, COLLATERAL_CURRENCY));
+  const [dotAmount, setDOTAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_CURRENCY));
   const { t } = useTranslation();
   const handleError = useErrorHandler();
 
@@ -63,7 +63,7 @@ const ReimburseStatusUI = ({
           btcDotRate
         ] = await Promise.all([
           window.polkaBTC.interBtcApi.vaults.getPunishmentFee(),
-          window.polkaBTC.interBtcApi.oracle.getExchangeRate(Polkadot)
+          window.polkaBTC.interBtcApi.oracle.getExchangeRate(COLLATERAL_CURRENCY)
         ]);
         const amountPolkaBTC = request ? request.amountBTC : BitcoinAmount.zero;
         setDOTAmount(btcDotRate.toCounter(amountPolkaBTC));

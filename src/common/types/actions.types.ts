@@ -1,8 +1,14 @@
 import { StoreType, ParachainStatus, Prices } from './util.types';
-import { Issue, ReplaceRequestExt } from '@interlay/interbtc-api';
+import {
+  Issue,
+  ReplaceRequestExt,
+  CollateralUnit
+} from '@interlay/interbtc-api';
 import {
   BitcoinAmount,
-  PolkadotAmount
+  PolkadotAmount,
+  MonetaryAmount,
+  Currency
 } from '@interlay/monetary-js';
 import { H256 } from '@polkadot/types/interfaces';
 
@@ -79,7 +85,7 @@ export interface UpdateBalancePolkaBTC {
 
 export interface UpdateBalanceDOT {
   type: typeof UPDATE_BALANCE_DOT;
-  balanceDOT: PolkadotAmount;
+  balanceDOT: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
 }
 
 export interface SetInstalledExtension {
@@ -159,7 +165,7 @@ export interface UpdateCollateralization {
 
 export interface UpdateCollateral {
   type: typeof UPDATE_COLLATERAL;
-  collateral: PolkadotAmount;
+  collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
 }
 
 export interface UpdateLockedBTC {

@@ -7,8 +7,11 @@ import { RedeemState } from './redeem.types';
 import { VaultState } from './vault.types';
 import {
   BitcoinAmount,
-  PolkadotAmount
+  PolkadotAmount,
+  MonetaryAmount,
+  Currency
 } from '@interlay/monetary-js';
+import { CollateralUnit } from '@interlay/interbtc-api';
 
 export interface StatusUpdate {
   id: u256;
@@ -65,7 +68,7 @@ export type GeneralState = {
   totalInterBTC: BitcoinAmount;
   totalLockedDOT: PolkadotAmount;
   balanceInterBTC: BitcoinAmount;
-  balanceDOT: PolkadotAmount;
+  balanceDOT: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   extensions: string[];
   btcRelayHeight: number;
   bitcoinHeight: number;

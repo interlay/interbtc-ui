@@ -13,15 +13,17 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
-import { Redeem } from '@interlay/interbtc-api';
+import {
+  Redeem,
+  CollateralUnit,
+  newMonetaryAmount
+} from '@interlay/interbtc-api';
 import {
   Bitcoin,
   BitcoinAmount,
   BitcoinUnit,
   ExchangeRate,
-  Polkadot,
-  PolkadotAmount,
-  PolkadotUnit
+  Currency
 } from '@interlay/monetary-js';
 
 import SubmitButton from '../SubmitButton';
@@ -39,7 +41,10 @@ import {
   BALANCE_MAX_INTEGER_LENGTH,
   BTC_ADDRESS_REGEX
 } from '../../../constants';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import {
+  ACCOUNT_ID_TYPE_NAME,
+  COLLATERAL_CURRENCY
+} from 'config/general';
 import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
@@ -104,7 +109,12 @@ const RedeemForm = (): JSX.Element | null => {
   const [redeemFee, setRedeemFee] = React.useState(BitcoinAmount.zero);
   const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(0.005));
   const [btcToDotRate, setBtcToDotRate] = React.useState(
-    new ExchangeRate<Bitcoin, BitcoinUnit, Polkadot, PolkadotUnit>(Bitcoin, Polkadot, new Big(0))
+    new ExchangeRate<
+      Bitcoin,
+      BitcoinUnit,
+      Currency<CollateralUnit>,
+      CollateralUnit
+    >(Bitcoin, COLLATERAL_CURRENCY, new Big(0))
   );
   const [premiumRedeemVaults, setPremiumRedeemVaults] = React.useState<Map<AccountId, BitcoinAmount>>(new Map());
   const [premiumRedeemFee, setPremiumRedeemFee] = React.useState(new Big(0));
@@ -145,7 +155,7 @@ const RedeemForm = (): JSX.Element | null => {
           interbtcIndex.getDustValue(),
           window.polkaBTC.interBtcApi.vaults.getPremiumRedeemVaults(),
           interbtcIndex.getPremiumRedeemFee(),
-          window.polkaBTC.interBtcApi.oracle.getExchangeRate(Polkadot),
+          window.polkaBTC.interBtcApi.oracle.getExchangeRate(COLLATERAL_CURRENCY),
           window.polkaBTC.interBtcApi.redeem.getFeeRate(),
           window.polkaBTC.interBtcApi.redeem.getCurrentInclusionFee()
         ]);
@@ -316,7 +326,7 @@ const RedeemForm = (): JSX.Element | null => {
     const totalDOT =
       interBTCAmount ?
         btcToDotRate.toCounter(parsedInterBTCAmount).mul(premiumRedeemFee) :
-        PolkadotAmount.zero;
+        newMonetaryAmount(0, COLLATERAL_CURRENCY);
     const totalDOTInUSD = getUsdAmount(totalDOT, prices.polkadot.usd);
 
     const bitcoinNetworkFeeInBTC = displayMonetaryAmount(currentInclusionFee);

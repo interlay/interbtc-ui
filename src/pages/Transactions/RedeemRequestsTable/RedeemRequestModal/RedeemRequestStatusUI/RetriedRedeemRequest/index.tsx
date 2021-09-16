@@ -8,16 +8,16 @@ import {
   FaExternalLinkAlt,
   FaExclamationCircle
 } from 'react-icons/fa';
+import { BitcoinAmount } from '@interlay/monetary-js';
 import {
-  BitcoinAmount,
-  Polkadot,
-  PolkadotAmount
-} from '@interlay/monetary-js';
-import { Redeem } from '@interlay/interbtc-api';
+  Redeem,
+  newMonetaryAmount
+} from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterlayLink from 'components/UI/InterlayLink';
+import { COLLATERAL_CURRENCY } from 'config/general';
 import { getUsdAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
@@ -34,7 +34,7 @@ const RetriedRedeemRequest = ({
     polkaBtcLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
-  const [punishmentDOTAmount, setPunishmentDOTAmount] = React.useState(PolkadotAmount.zero);
+  const [punishmentDOTAmount, setPunishmentDOTAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_CURRENCY));
 
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
@@ -48,7 +48,7 @@ const RetriedRedeemRequest = ({
           btcDotRate
         ] = await Promise.all([
           window.polkaBTC.interBtcApi.vaults.getPunishmentFee(),
-          window.polkaBTC.interBtcApi.oracle.getExchangeRate(Polkadot)
+          window.polkaBTC.interBtcApi.oracle.getExchangeRate(COLLATERAL_CURRENCY)
         ]);
 
         const btcAmount = request ? request.amountBTC : BitcoinAmount.zero;

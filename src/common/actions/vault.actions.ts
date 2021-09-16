@@ -1,7 +1,9 @@
 import {
   BitcoinAmount,
-  PolkadotAmount
+  MonetaryAmount,
+  Currency
 } from '@interlay/monetary-js';
+import { CollateralUnit } from '@interlay/interbtc-api';
 
 import {
   AddReplaceRequests,
@@ -28,7 +30,9 @@ export const updateCollateralizationAction = (collateralization: string | undefi
   collateralization
 });
 
-export const updateCollateralAction = (collateral: PolkadotAmount): UpdateCollateral => ({
+export const updateCollateralAction = (
+  collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>
+): UpdateCollateral => ({
   type: UPDATE_COLLATERAL,
   collateral
 });

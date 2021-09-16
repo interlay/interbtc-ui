@@ -17,11 +17,13 @@ import {
   ExchangeRate,
   Bitcoin,
   BitcoinUnit,
-  Polkadot,
-  PolkadotUnit,
-  BitcoinAmount,
-  PolkadotAmount
+  Currency,
+  BitcoinAmount
 } from '@interlay/monetary-js';
+import {
+  CollateralUnit,
+  newMonetaryAmount
+} from '@interlay/interbtc-api';
 
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterBTCField from '../InterBTCField';
@@ -78,7 +80,12 @@ const Burn = (): JSX.Element | null => {
   const interBTCAmount = watch(INTER_BTC_AMOUNT);
 
   const [burnRate, setBurnRate] = React.useState(
-    new ExchangeRate<Polkadot, PolkadotUnit, Bitcoin, BitcoinUnit>(Polkadot, Bitcoin, new Big(0))
+    new ExchangeRate<
+      Currency<CollateralUnit>,
+      CollateralUnit,
+      Bitcoin,
+      BitcoinUnit
+    >(COLLATERAL_CURRENCY, Bitcoin, new Big(0))
   );
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
@@ -175,7 +182,7 @@ const Burn = (): JSX.Element | null => {
 
     const parsedInterBTCAmount = BitcoinAmount.from.BTC(interBTCAmount || 0);
     const earnedDOT = burnRate.rate.eq(0) ?
-      PolkadotAmount.zero :
+      newMonetaryAmount(0, COLLATERAL_CURRENCY) :
       burnRate.toBase(parsedInterBTCAmount || BitcoinAmount.zero);
     const accountSet = !!address;
 
