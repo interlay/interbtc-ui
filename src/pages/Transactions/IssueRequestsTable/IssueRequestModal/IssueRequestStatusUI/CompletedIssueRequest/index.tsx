@@ -34,7 +34,7 @@ const CompletedIssueRequest = ({
         )}>
         <span>{t('issue_page.you_received')}</span>
         <span className='text-interlayDenim'>
-          {request.executedAmountBTC || request.amountInterBTC} interBTC
+          {request.executedAmountBTC || request.wrappedAmount} interBTC
         </span>
       </p>
       <div

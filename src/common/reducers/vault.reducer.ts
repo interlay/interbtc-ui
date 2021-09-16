@@ -1,5 +1,5 @@
 import {
-  BTCAmount,
+  BitcoinAmount,
   PolkadotAmount
 } from '@interlay/monetary-js';
 
@@ -19,7 +19,7 @@ const initialState = {
   requests: new Map<H256, ReplaceRequestExt>(),
   collateralization: '0',
   collateral: PolkadotAmount.zero,
-  lockedBTC: BTCAmount.zero,
+  lockedBTC: BitcoinAmount.zero,
   apy: '0'
 };
 

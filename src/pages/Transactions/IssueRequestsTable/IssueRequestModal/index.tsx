@@ -6,7 +6,7 @@ import {
   Issue,
   IssueStatus
 } from '@interlay/interbtc-api';
-import { BTCAmount } from '@interlay/monetary-js';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import BTCPaymentPendingStatusUI from './BTCPaymentPendingStatusUI';
 import IssueRequestStatusUI from './IssueRequestStatusUI';
@@ -59,13 +59,13 @@ const IssueRequestModal = ({
 
   const focusRef = React.useRef(null);
 
-  const amountInterBTC = (request.executedAmountBTC && !request.executedAmountBTC.isZero()) ?
+  const wrappedAmount = (request.executedAmountBTC && !request.executedAmountBTC.isZero()) ?
     request.executedAmountBTC :
-    request.amountInterBTC;
+    request.wrappedAmount;
   const amountBTCSent =
     request.btcAmountSubmittedByUser ?
       request.btcAmountSubmittedByUser :
-      request.amountInterBTC.add(request.bridgeFee);
+      request.wrappedAmount.add(request.bridgeFee);
 
   return (
     <InterlayModal
@@ -131,7 +131,7 @@ const IssueRequestModal = ({
                   'space-x-1'
                 )}>
                 <span className='text-5xl'>
-                  {amountInterBTC}
+                  {wrappedAmount}
                 </span>
                 <span className='text-2xl'>
                   interBTC
@@ -143,7 +143,7 @@ const IssueRequestModal = ({
                   'block'
                 )}>
                 {`≈ $ ${getUsdAmount(
-                  amountInterBTC || BTCAmount.zero,
+                  wrappedAmount || BitcoinAmount.zero,
                   prices.bitcoin.usd
                 )}`}
               </span>
@@ -220,7 +220,7 @@ const IssueRequestModal = ({
                   {t('issue_page.vault_dot_address')}
                 </span>
                 <span className='font-medium'>
-                  {shortAddress(request.vaultDOTAddress)}
+                  {shortAddress(request.vaultParachainAddress)}
                 </span>
               </div>
               <div

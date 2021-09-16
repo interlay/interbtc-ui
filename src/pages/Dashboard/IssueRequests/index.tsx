@@ -6,7 +6,8 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { satToBTC } from '@interlay/interbtc-api';
+import BN from 'bn.js';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -15,7 +16,6 @@ import IssueRequestsTable from 'containers/IssueRequestsTable';
 import LineChartComponent from '../components/line-chart-component';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
-import BN from 'bn.js';
 import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
 
 function IssueRequests(): JSX.Element {
@@ -169,7 +169,7 @@ function IssueRequests(): JSX.Element {
             data={[
               cumulativeIssuesPerDay
                 .slice(1)
-                .map(dataPoint => satToBTC(new BN(dataPoint.sat)).toNumber()),
+                .map(dataPoint => BitcoinAmount.from.Satoshi(dataPoint.sat).to.BTC().round().toNumber()),
               pointIssuesPerDay.slice(1).map(sat => Number(new BN(sat)))
             ]} />
         </div>

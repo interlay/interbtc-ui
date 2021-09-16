@@ -1,5 +1,5 @@
 import {
-  BTCAmount,
+  BitcoinAmount,
   PolkadotAmount
 } from '@interlay/monetary-js';
 
@@ -33,7 +33,7 @@ export const updateCollateralAction = (collateral: PolkadotAmount): UpdateCollat
   collateral
 });
 
-export const updateLockedBTCAction = (lockedBTC: BTCAmount): UpdateLockedBTC => ({
+export const updateLockedBTCAction = (lockedBTC: BitcoinAmount): UpdateLockedBTC => ({
   type: UPDATE_LOCKED_BTC,
   lockedBTC
 });

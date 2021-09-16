@@ -27,7 +27,7 @@ import { FaucetClient } from '@interlay/interbtc-api';
 import { StatusCode } from '@interlay/interbtc-api/build/src/interfaces';
 import {
   Bitcoin,
-  BTCAmount,
+  BitcoinAmount,
   Polkadot,
   PolkadotAmount
 } from '@interlay/monetary-js';
@@ -39,7 +39,8 @@ import FullLoadingSpinner from 'components/FullLoadingSpinner';
 import ErrorFallback from 'components/ErrorFallback';
 import {
   APP_NAME,
-  ACCOUNT_ID_TYPE_NAME
+  ACCOUNT_ID_TYPE_NAME,
+  WRAPPED_TOKEN
 } from 'config/general';
 import { PAGES } from 'utils/constants/links';
 import './i18n';
@@ -125,6 +126,7 @@ const App = (): JSX.Element => {
       window.polkaBTC = await createInterbtc(
         constants.PARACHAIN_URL,
         constants.BITCOIN_NETWORK,
+        WRAPPED_TOKEN,
         constants.STATS_URL
       );
       dispatch(isPolkaBtcLoaded(true));
@@ -330,7 +332,7 @@ const App = (): JSX.Element => {
     (async () => {
       try {
         unsubscribeFromWrapped =
-          await window.polkaBTC.interBtcApi.tokens.subscribeToBalance(Bitcoin, address, (_, balance: BTCAmount) => {
+          await window.polkaBTC.interBtcApi.tokens.subscribeToBalance(Bitcoin, address, (_, balance: BitcoinAmount) => {
             if (!balance.eq(balanceInterBTC)) {
               dispatch(updateBalancePolkaBTCAction(balance));
             }

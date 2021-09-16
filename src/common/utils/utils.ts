@@ -11,7 +11,7 @@ import Big from 'big.js';
 import { TableDisplayParams, RelayedBlock } from '../types/util.types';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
 import {
-  BTCAmount,
+  BitcoinAmount,
   Currency,
   MonetaryAmount
 } from '@interlay/monetary-js';
@@ -151,7 +151,11 @@ const copyToClipboard = (text: string): void => {
   navigator.clipboard.writeText(text);
 };
 
-const getRandomVaultIdWithCapacity = (vaults: [AccountId, BTCAmount][], requiredCapacity: BTCAmount): string => {
+const getRandomVaultIdWithCapacity = (
+  vaults: [AccountId,
+  BitcoinAmount][],
+  requiredCapacity: BitcoinAmount
+): string => {
   const filteredVaults = vaults.filter(vault => vault[1].gte(requiredCapacity));
   return filteredVaults.length > 0 ? getRandomArrayElement(filteredVaults)[0].toString() : '';
 };

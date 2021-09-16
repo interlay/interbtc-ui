@@ -6,8 +6,7 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import BN from 'bn.js';
-import { satToBTC } from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -125,13 +124,16 @@ function RedeemRequests(): JSX.Element {
               'font-bold',
               'text-xl'
             )}>
-            {totalRedeemedAmount === '-' ? t('no_data') : satToBTC(new BN(totalRedeemedAmount)).toString()}
+            {totalRedeemedAmount === '-' ?
+              t('no_data') :
+              BitcoinAmount.from.Satoshi(totalRedeemedAmount).to.BTC().toString()}
             &nbsp;BTC
           </h5>
           {totalRedeemedAmount !== '-' && (
             <h5 className='text-textSecondary'>
               $
-              {(prices.bitcoin.usd * parseFloat(satToBTC(new BN(totalRedeemedAmount)).toString())).toLocaleString()}
+              {/* eslint-disable-next-line max-len */}
+              {(prices.bitcoin.usd * BitcoinAmount.from.Satoshi(totalRedeemedAmount).to.BTC().round().toNumber()).toLocaleString()}
             </h5>
           )}
           <h5
@@ -176,9 +178,11 @@ function RedeemRequests(): JSX.Element {
             yAxisProps={[{ beginAtZero: true, position: 'left' }, { position: 'right' }]}
             data={[
               cumulativeRedeemsPerDay.map(dataPoint =>
-                satToBTC(new BN(dataPoint.sat)).toNumber()
+                BitcoinAmount.from.Satoshi(dataPoint.sat).to.BTC().round().toNumber()
               ),
-              pointRedeemsPerDay.map(amount => satToBTC(new BN(amount)).toNumber())
+              pointRedeemsPerDay.map(
+                amount => BitcoinAmount.from.Satoshi(amount).to.BTC().round().toNumber()
+              )
             ]} />
         </div>
       </div>

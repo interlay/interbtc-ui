@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { BTCAmount } from '@interlay/monetary-js';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import IssueForm from './IssueForm';
 import RedeemForm from './RedeemForm';
@@ -14,11 +14,12 @@ import Tabs, {
   Tab,
   TabPanel
 } from 'components/Tabs';
-import { StoreType } from 'common/types/util.types';
+import { COLLATERAL_CURRENCY } from 'config/general';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters, { QueryParameters } from 'utils/hooks/use-update-query-parameters';
 import TAB_IDS from 'utils/constants/tab-ids';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
+import { StoreType } from 'common/types/util.types';
 
 const TAB_ITEMS_WITHOUT_BURN = [
   {
@@ -80,8 +81,8 @@ const Bridge = (): JSX.Element | null => {
     if (!polkaBtcLoaded) return;
     (async () => {
       try {
-        const maxBurnableTokens = await window.polkaBTC.interBtcApi.redeem.getMaxBurnableTokens();
-        setBurnable(maxBurnableTokens.gt(BTCAmount.zero));
+        const maxBurnableTokens = await window.polkaBTC.interBtcApi.redeem.getMaxBurnableTokens(COLLATERAL_CURRENCY);
+        setBurnable(maxBurnableTokens.gt(BitcoinAmount.zero));
       } catch (error) {
         // TODO: should add error handling
         console.log('[Application] error.message => ', error.message);

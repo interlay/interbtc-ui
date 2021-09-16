@@ -19,8 +19,8 @@ import {
 } from '@interlay/interbtc-api';
 import {
   Bitcoin,
-  BTCAmount,
-  BTCUnit,
+  BitcoinAmount,
+  BitcoinUnit,
   ExchangeRate,
   Polkadot,
   PolkadotAmount,
@@ -49,10 +49,10 @@ import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/i
 
 const getCollateralization = (
   collateral: PolkadotAmount,
-  tokens: BTCAmount,
-  btcToDOTRate: ExchangeRate<Bitcoin, BTCUnit, Polkadot, PolkadotUnit>
+  tokens: BitcoinAmount,
+  btcToDOTRate: ExchangeRate<Bitcoin, BitcoinUnit, Polkadot, PolkadotUnit>
 ) => {
-  if (tokens.gt(BTCAmount.zero) && btcToDOTRate.toBig().gt(0)) {
+  if (tokens.gt(BitcoinAmount.zero) && btcToDOTRate.toBig().gt(0)) {
     const tokensAsCollateral = btcToDOTRate.toCounter(tokens);
     return collateral.toBig().div(tokensAsCollateral.toBig()).mul(100);
   } else {
@@ -124,7 +124,7 @@ const VaultsTable = (): JSX.Element => {
     isLoading: btcToDOTRateLoading,
     data: btcToDOTRate,
     error: btcToDOTRateError
-  } = useQuery<ExchangeRate<Bitcoin, BTCUnit, Polkadot, PolkadotUnit>, Error>(
+  } = useQuery<ExchangeRate<Bitcoin, BitcoinUnit, Polkadot, PolkadotUnit>, Error>(
     [
       GENERIC_FETCHER,
       'interBtcApi',
@@ -132,7 +132,7 @@ const VaultsTable = (): JSX.Element => {
       'getExchangeRate',
       Polkadot
     ],
-    genericFetcher<ExchangeRate<Bitcoin, BTCUnit, Polkadot, PolkadotUnit>>(),
+    genericFetcher<ExchangeRate<Bitcoin, BitcoinUnit, Polkadot, PolkadotUnit>>(),
     {
       enabled: !!polkaBtcLoaded
     }

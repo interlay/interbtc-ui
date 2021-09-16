@@ -1,7 +1,7 @@
 import { StoreType, ParachainStatus, Prices } from './util.types';
 import { Issue, ReplaceRequestExt } from '@interlay/interbtc-api';
 import {
-  BTCAmount,
+  BitcoinAmount,
   PolkadotAmount
 } from '@interlay/monetary-js';
 import { H256 } from '@polkadot/types/interfaces';
@@ -25,7 +25,7 @@ export const UPDATE_TOTALS = 'UPDATE_TOTALS';
 export interface UpdateTotals {
   type: typeof UPDATE_TOTALS;
   totalLockedDOT: PolkadotAmount;
-  totalInterBTC: BTCAmount;
+  totalInterBTC: BitcoinAmount;
 }
 
 export interface UpdateHeights {
@@ -65,7 +65,7 @@ export interface InitState {
 
 export interface InitGeneralDataAction {
   type: typeof INIT_GENERAL_DATA_ACTION;
-  totalInterBTC: BTCAmount;
+  totalInterBTC: BitcoinAmount;
   totalLockedDOT: PolkadotAmount;
   btcRelayHeight: number;
   bitcoinHeight: number;
@@ -74,7 +74,7 @@ export interface InitGeneralDataAction {
 
 export interface UpdateBalancePolkaBTC {
   type: typeof UPDATE_BALANCE_POLKA_BTC;
-  balanceInterBTC: BTCAmount;
+  balanceInterBTC: BitcoinAmount;
 }
 
 export interface UpdateBalanceDOT {
@@ -164,7 +164,7 @@ export interface UpdateCollateral {
 
 export interface UpdateLockedBTC {
   type: typeof UPDATE_LOCKED_BTC;
-  lockedBTC: BTCAmount;
+  lockedBTC: BitcoinAmount;
 }
 
 export interface UpdateAPY {

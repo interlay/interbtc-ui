@@ -9,7 +9,7 @@ import {
   FaExclamationCircle
 } from 'react-icons/fa';
 import {
-  BTCAmount,
+  BitcoinAmount,
   Polkadot,
   PolkadotAmount
 } from '@interlay/monetary-js';
@@ -51,7 +51,7 @@ const RetriedRedeemRequest = ({
           window.polkaBTC.interBtcApi.oracle.getExchangeRate(Polkadot)
         ]);
 
-        const btcAmount = request ? request.amountBTC : BTCAmount.zero;
+        const btcAmount = request ? request.amountBTC : BitcoinAmount.zero;
         const theBurnDOTAmount = btcDotRate.toCounter(btcAmount);
         const thePunishmentDOTAmount = theBurnDOTAmount.mul(new Big(punishmentFee));
         setPunishmentDOTAmount(thePunishmentDOTAmount);

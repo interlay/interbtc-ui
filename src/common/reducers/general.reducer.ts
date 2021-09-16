@@ -1,5 +1,5 @@
 import {
-  BTCAmount,
+  BitcoinAmount,
   PolkadotAmount
 } from '@interlay/monetary-js';
 
@@ -25,9 +25,9 @@ const initialState = {
   hasFeedbackModalBeenDisplayed: false,
   showAccountModal: false,
   address: '',
-  totalInterBTC: BTCAmount.zero,
+  totalInterBTC: BitcoinAmount.zero,
   totalLockedDOT: PolkadotAmount.zero,
-  balanceInterBTC: BTCAmount.zero,
+  balanceInterBTC: BitcoinAmount.zero,
   balanceDOT: PolkadotAmount.zero,
   extensions: [],
   btcRelayHeight: 0,

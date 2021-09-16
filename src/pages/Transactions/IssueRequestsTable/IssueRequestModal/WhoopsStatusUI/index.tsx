@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { Issue } from '@interlay/interbtc-api';
-import { BTCAmount } from '@interlay/monetary-js';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
@@ -57,9 +57,9 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={request.amountInterBTC.toHuman()}
+        value={request.wrappedAmount.toHuman()}
         unitName='interBTC'
-        approxUSD={getUsdAmount(request.amountInterBTC, prices.bitcoin.usd)} />
+        approxUSD={getUsdAmount(request.wrappedAmount, prices.bitcoin.usd)} />
       <PriceInfo
         className='w-full'
         title={
@@ -77,7 +77,7 @@ const WhoopsStatusUI = ({
         approxUSD={getUsdAmount(
           request.btcAmountSubmittedByUser ?
             request.btcAmountSubmittedByUser :
-            BTCAmount.zero, prices.bitcoin.usd
+            BitcoinAmount.zero, prices.bitcoin.usd
         )} />
       <PriceInfo
         className='w-full'
@@ -91,10 +91,10 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={request.executedAmountBTC?.toHuman() || request.amountInterBTC.toString()}
+        value={request.executedAmountBTC?.toHuman() || request.wrappedAmount.toString()}
         unitName='interBTC'
         approxUSD={
-          getUsdAmount(request.executedAmountBTC || request.amountInterBTC, prices.bitcoin.usd)
+          getUsdAmount(request.executedAmountBTC || request.wrappedAmount, prices.bitcoin.usd)
         } />
       <hr
         className={clsx(
@@ -121,7 +121,7 @@ const WhoopsStatusUI = ({
         unitName='BTC'
         approxUSD={
           getUsdAmount(
-            BTCAmount.from.BTC((Number(request.btcAmountSubmittedByUser) - Number(request.executedAmountBTC))),
+            BitcoinAmount.from.BTC((Number(request.btcAmountSubmittedByUser) - Number(request.executedAmountBTC))),
             prices.bitcoin.usd
           )
         } />

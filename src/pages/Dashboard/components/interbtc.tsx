@@ -7,9 +7,8 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import BN from 'bn.js';
 import clsx from 'clsx';
-import { satToBTC } from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import DashboardCard from 'pages/Dashboard/DashboardCard';
 import LineChartComponent from './line-chart-component';
@@ -115,8 +114,10 @@ const InterBTC = (): React.ReactElement => {
             { position: 'right', maxTicksLimit: 6 }
           ]}
           data={[
-            cumulativeIssuesPerDay.slice(1).map(dataPoint => Number(satToBTC(new BN(dataPoint.sat)))),
-            pointIssuesPerDay.slice(1).map(sat => Number(satToBTC(new BN(sat))))
+            cumulativeIssuesPerDay.slice(1).map(
+              dataPoint => BitcoinAmount.from.Satoshi(dataPoint.sat).to.BTC().round().toNumber()
+            ),
+            pointIssuesPerDay.slice(1).map(sat => BitcoinAmount.from.Satoshi(sat).to.BTC().round().toNumber())
           ]} />
       </div>
     </DashboardCard>

@@ -12,10 +12,7 @@ import {
   IssueColumns,
   RedeemColumns
 } from '@interlay/interbtc-index-client';
-import {
-  BTCAmount,
-  Polkadot
-} from '@interlay/monetary-js';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
 import RequestReplacementModal from './request-replacement/request-replacement';
@@ -37,7 +34,12 @@ import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContai
 import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import {
+  ACCOUNT_ID_TYPE_NAME,
+  // ray test touch <<<
+  CollateralCurrencyAmount
+  // ray test touch >>>
+} from 'config/general';
 import {
   safeRoundTwoDecimals,
   displayMonetaryAmount
@@ -64,8 +66,8 @@ const VaultDashboard = (): JSX.Element => {
     lockedBTC,
     apy
   } = useSelector((state: StoreType) => state.vault);
-  const [capacity, setCapacity] = useState(BTCAmount.zero);
-  const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState(BTCAmount.zero);
+  const [capacity, setCapacity] = useState(BitcoinAmount.zero);
+  const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState(BitcoinAmount.zero);
   const [totalIssueRequests, setTotalIssueRequests] = useState(0);
   const [totalRedeemRequests, setTotalRedeemRequests] = useState(0);
 
@@ -95,7 +97,7 @@ const VaultDashboard = (): JSX.Element => {
           totalRedeemRequests
         ] = await Promise.allSettled([
           window.polkaBTC.interBtcApi.vaults.get(vaultId),
-          window.polkaBTC.interBtcApi.pools.getFeesWrapped(address, Polkadot),
+          window.polkaBTC.interBtcApi.pools.getFeesWrapped(address),
           window.polkaBTC.interBtcApi.vaults.getIssuedAmount(vaultId),
           window.polkaBTC.interBtcApi.vaults.getVaultCollateralization(vaultId),
           window.polkaBTC.interBtcApi.vaults.getAPY(vaultId),
@@ -105,7 +107,9 @@ const VaultDashboard = (): JSX.Element => {
         ]);
 
         if (vault.status === 'fulfilled') {
-          const collateralDot = vault.value.backingCollateral;
+          // ray test touch <<<
+          const collateralDot = vault.value.backingCollateral as CollateralCurrencyAmount;
+          // ray test touch >>>
           dispatch(updateCollateralAction(collateralDot));
         }
 
@@ -229,7 +233,7 @@ const VaultDashboard = (): JSX.Element => {
             onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Decrease)}>
             {t('vault.withdraw_collateral')}
           </InterlayDefaultContainedButton>
-          {lockedBTC.gt(BTCAmount.zero) && (
+          {lockedBTC.gt(BitcoinAmount.zero) && (
             <InterlayCaliforniaContainedButton
               onClick={() => setShowRequestReplacementModal(true)}>
               {t('vault.replace_vault')}

@@ -13,14 +13,13 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { btcToSat } from '@interlay/interbtc-api';
 import {
   ExchangeRate,
   Bitcoin,
-  BTCUnit,
+  BitcoinUnit,
   Polkadot,
   PolkadotUnit,
-  BTCAmount,
+  BitcoinAmount,
   PolkadotAmount
 } from '@interlay/monetary-js';
 
@@ -30,6 +29,7 @@ import SubmitButton from '../SubmitButton';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
+import { COLLATERAL_CURRENCY } from 'config/general';
 import { getUsdAmount } from 'common/utils/utils';
 import {
   StoreType,
@@ -78,7 +78,7 @@ const Burn = (): JSX.Element | null => {
   const interBTCAmount = watch(INTER_BTC_AMOUNT);
 
   const [burnRate, setBurnRate] = React.useState(
-    new ExchangeRate<Polkadot, PolkadotUnit, Bitcoin, BTCUnit>(Polkadot, Bitcoin, new Big(0))
+    new ExchangeRate<Polkadot, PolkadotUnit, Bitcoin, BitcoinUnit>(Polkadot, Bitcoin, new Big(0))
   );
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
@@ -91,7 +91,7 @@ const Burn = (): JSX.Element | null => {
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const theBurnRate = await window.polkaBTC.interBtcApi.redeem.getBurnExchangeRate();
+        const theBurnRate = await window.polkaBTC.interBtcApi.redeem.getBurnExchangeRate(COLLATERAL_CURRENCY);
         setBurnRate(theBurnRate);
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
@@ -131,11 +131,14 @@ const Burn = (): JSX.Element | null => {
     const onSubmit = async (data: BurnForm) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
-        await window.polkaBTC.interBtcApi.redeem.burn(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]));
+        await window.polkaBTC.interBtcApi.redeem.burn(
+          BitcoinAmount.from.BTC(data[INTER_BTC_AMOUNT]),
+          COLLATERAL_CURRENCY
+        );
         // TODO: should not manually update the balances everywhere
         // - Should be able to watch the balances in one place and update the context accordingly.
-        dispatch(updateBalancePolkaBTCAction(balanceInterBTC.sub(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]))));
-        const earnedDOT = burnRate.toBase(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]) || BTCAmount.zero);
+        dispatch(updateBalancePolkaBTCAction(balanceInterBTC.sub(BitcoinAmount.from.BTC(data[INTER_BTC_AMOUNT]))));
+        const earnedDOT = burnRate.toBase(BitcoinAmount.from.BTC(data[INTER_BTC_AMOUNT]) || BitcoinAmount.zero);
         dispatch(updateBalanceDOTAction(balanceDOT.add(earnedDOT)));
         toast.success(t('burn_page.successfully_burned'));
         reset({
@@ -158,7 +161,7 @@ const Burn = (): JSX.Element | null => {
         return 'interBTC must be loaded!';
       }
 
-      if (btcToSat(new Big(value)) === undefined) {
+      if (BitcoinAmount.from.BTC(value).to.Satoshi() === undefined) {
         return 'Invalid interBTC amount input!'; // TODO: should translate
       }
 
@@ -170,10 +173,10 @@ const Burn = (): JSX.Element | null => {
       return undefined;
     };
 
-    const parsedInterBTCAmount = BTCAmount.from.BTC(interBTCAmount || 0);
+    const parsedInterBTCAmount = BitcoinAmount.from.BTC(interBTCAmount || 0);
     const earnedDOT = burnRate.rate.eq(0) ?
       PolkadotAmount.zero :
-      burnRate.toBase(parsedInterBTCAmount || BTCAmount.zero);
+      burnRate.toBase(parsedInterBTCAmount || BitcoinAmount.zero);
     const accountSet = !!address;
 
     return (
@@ -203,7 +206,7 @@ const Burn = (): JSX.Element | null => {
               },
               validate: value => validateForm(value)
             })}
-            approxUSD={`≈ $ ${getUsdAmount(parsedInterBTCAmount || BTCAmount.zero, prices.bitcoin.usd)}`}
+            approxUSD={`≈ $ ${getUsdAmount(parsedInterBTCAmount || BitcoinAmount.zero, prices.bitcoin.usd)}`}
             error={!!errors[INTER_BTC_AMOUNT]}
             helperText={errors[INTER_BTC_AMOUNT]?.message} />
           <PriceInfo

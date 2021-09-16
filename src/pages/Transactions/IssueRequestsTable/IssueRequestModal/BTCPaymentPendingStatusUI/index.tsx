@@ -25,7 +25,7 @@ const BTCPaymentPendingStatusUI = ({
   const { t } = useTranslation();
   const { prices } = useSelector((state: StoreType) => state.general);
   const { issuePeriod } = useSelector((state: StoreType) => state.issue);
-  const amountBTCToSend = request.amountInterBTC.add(request.bridgeFee);
+  const amountBTCToSend = request.wrappedAmount.add(request.bridgeFee);
   const [initialLeftSeconds, setInitialLeftSeconds] = React.useState<number>();
 
   React.useEffect(() => {

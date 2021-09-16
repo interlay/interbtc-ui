@@ -6,7 +6,7 @@ import {
   Redeem,
   RedeemStatus
 } from '@interlay/interbtc-api';
-import { BTCAmount } from '@interlay/monetary-js';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import RedeemRequestStatusUI from './RedeemRequestStatusUI';
 import ReimburseStatusUI from './ReimburseStatusUI';
@@ -130,7 +130,7 @@ const RedeemRequestModal = ({
                   'text-textSecondary',
                   'block'
                 )}>
-                {`≈ $ ${getUsdAmount(request.amountBTC || BTCAmount.zero, prices.bitcoin.usd)}`}
+                {`≈ $ ${getUsdAmount(request.amountBTC || BitcoinAmount.zero, prices.bitcoin.usd)}`}
               </span>
             </div>
             <div>
@@ -217,7 +217,7 @@ const RedeemRequestModal = ({
                   {t('issue_page.vault_dot_address')}
                 </span>
                 <span className='font-medium'>
-                  {shortAddress(request.vaultDOTAddress || '')}
+                  {shortAddress(request.vaultParachainAddress || '')}
                 </span>
               </div>
             </div>

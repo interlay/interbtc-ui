@@ -123,7 +123,7 @@ const IssueRequestsTable = (): JSX.Element => {
       },
       {
         Header: `${t('issue_page.amount')} (interBTC)`,
-        accessor: 'amountInterBTC',
+        accessor: 'wrappedAmount',
         classNames: [
           'text-right'
         ],
@@ -132,7 +132,7 @@ const IssueRequestsTable = (): JSX.Element => {
             <>
               {(props.row.original.executedAmountBTC && props.row.original.executedAmountBTC !== '0') ?
                 props.row.original.executedAmountBTC :
-                props.row.original.amountInterBTC
+                props.row.original.wrappedAmount
               }
             </>
           );

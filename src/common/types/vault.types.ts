@@ -1,5 +1,5 @@
 import {
-  BTCAmount,
+  BitcoinAmount,
   PolkadotAmount
 } from '@interlay/monetary-js';
 import { ReplaceRequestExt } from '@interlay/interbtc-api';
@@ -20,6 +20,6 @@ export interface VaultState {
   requests: Map<H256, ReplaceRequestExt>;
   collateralization: string | undefined;
   collateral: PolkadotAmount;
-  lockedBTC: BTCAmount;
+  lockedBTC: BitcoinAmount;
   apy: string;
 }

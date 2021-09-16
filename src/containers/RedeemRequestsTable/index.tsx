@@ -117,7 +117,7 @@ const RedeemRequestsTable = ({
       },
       {
         Header: t('issue_page.vault_dot_address'),
-        accessor: 'vaultDOTAddress',
+        accessor: 'vaultParachainAddress',
         classNames: [
           'text-left'
         ],

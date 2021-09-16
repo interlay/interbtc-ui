@@ -1,7 +1,7 @@
 
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { BTCAmount } from '@interlay/monetary-js';
+import { BitcoinAmount } from '@interlay/monetary-js';
 import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
@@ -9,6 +9,7 @@ import clsx from 'clsx';
 import DashboardCard from 'pages/Dashboard/DashboardCard';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
+import { COLLATERAL_CURRENCY } from 'config/general';
 import {
   displayMonetaryAmount,
   safeRoundTwoDecimals
@@ -25,7 +26,7 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
   const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
 
   const [systemCollateralization, setSystemCollateralization] = React.useState('0');
-  const [issuablePolkaBTC, setIssuablePolkaBTC] = React.useState(BTCAmount.zero);
+  const [issuablePolkaBTC, setIssuablePolkaBTC] = React.useState(BitcoinAmount.zero);
   const [secureCollateralThreshold, setSecureCollateralThreshold] = React.useState('150');
   const [failed, setFailed] = React.useState(false);
 
@@ -58,7 +59,8 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
       if (!polkaBtcLoaded) return;
 
       try {
-        const secureCollateralThreshold = await window.polkaBTC.interBtcApi.vaults.getSecureCollateralThreshold();
+        const secureCollateralThreshold =
+          await window.polkaBTC.interBtcApi.vaults.getSecureCollateralThreshold(COLLATERAL_CURRENCY);
         setSecureCollateralThreshold(secureCollateralThreshold?.mul(100).toString() || '150');
       } catch (error) {
         console.log('[Collateralization useEffect] error.message => ', error.message);
@@ -141,7 +143,7 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
           {failed ? (
             <>{t('no_data')}</>
           ) : (
-            issuablePolkaBTC.eq(BTCAmount.zero) ? (
+            issuablePolkaBTC.eq(BitcoinAmount.zero) ? (
               <>{t('loading')}</>
             ) : (
               <>

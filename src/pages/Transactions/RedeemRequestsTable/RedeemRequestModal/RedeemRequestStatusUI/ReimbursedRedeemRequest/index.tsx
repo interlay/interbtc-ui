@@ -8,7 +8,7 @@ import {
   FaExternalLinkAlt
 } from 'react-icons/fa';
 import {
-  BTCAmount,
+  BitcoinAmount,
   Polkadot,
   PolkadotAmount
 } from '@interlay/monetary-js';
@@ -33,7 +33,7 @@ const ReimbursedRedeemRequest = ({
     polkaBtcLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
-  const [burnedBTCAmount, setBurnedBTCAmount] = React.useState(BTCAmount.zero);
+  const [burnedBTCAmount, setBurnedBTCAmount] = React.useState(BitcoinAmount.zero);
   const [punishmentDOTAmount, setPunishmentDOTAmount] = React.useState(PolkadotAmount.zero);
   const [burnDOTAmount, setBurnDOTAmount] = React.useState(PolkadotAmount.zero);
   const [dotAmount, setDOTAmount] = React.useState(PolkadotAmount.zero);
@@ -55,7 +55,7 @@ const ReimbursedRedeemRequest = ({
 
         const burnedBTCAmount = request ?
           request.amountBTC.add(request.bridgeFee) :
-          BTCAmount.zero;
+          BitcoinAmount.zero;
         const theBurnDOTAmount = btcDotRate.toCounter(burnedBTCAmount);
         const thePunishmentDOTAmount = theBurnDOTAmount.mul(new Big(punishmentFee));
         const theDOTAmount = theBurnDOTAmount.add(thePunishmentDOTAmount);

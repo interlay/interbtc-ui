@@ -16,8 +16,8 @@ import { AccountId } from '@polkadot/types/interfaces';
 import { Issue } from '@interlay/interbtc-api';
 import {
   Bitcoin,
-  BTCAmount,
-  BTCUnit,
+  BitcoinAmount,
+  BitcoinUnit,
   ExchangeRate,
   Polkadot,
   PolkadotAmount,
@@ -98,11 +98,11 @@ const IssueForm = (): JSX.Element | null => {
   const [feeRate, setFeeRate] = React.useState(0.005); // Set default to 0.5%
   const [depositRate, setDepositRate] = React.useState(0.00005); // Set default to 0.005%
   const [btcToDOTRate, setBTCToDOTRate] = React.useState(
-    new ExchangeRate<Bitcoin, BTCUnit, Polkadot, PolkadotUnit>(Bitcoin, Polkadot, new Big(0))
+    new ExchangeRate<Bitcoin, BitcoinUnit, Polkadot, PolkadotUnit>(Bitcoin, Polkadot, new Big(0))
   );
-  const [vaults, setVaults] = React.useState<Map<AccountId, BTCAmount>>();
-  const [dustValue, setDustValue] = React.useState(BTCAmount.zero);
-  const [vaultMaxAmount, setVaultMaxAmount] = React.useState(BTCAmount.zero);
+  const [vaults, setVaults] = React.useState<Map<AccountId, BitcoinAmount>>();
+  const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero);
+  const [vaultMaxAmount, setVaultMaxAmount] = React.useState(BitcoinAmount.zero);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
@@ -139,10 +139,10 @@ const IssueForm = (): JSX.Element | null => {
         setDepositRate(theDepositRate);
         const issuePeriod = issuePeriodInBlocks * BLOCK_TIME;
         dispatch(updateIssuePeriodAction(issuePeriod));
-        setDustValue(BTCAmount.from.BTC(Number(JSON.parse(theDustValue))));
+        setDustValue(BitcoinAmount.from.BTC(Number(JSON.parse(theDustValue))));
         setBTCToDOTRate(btcToDot);
 
-        let theVaultMaxAmount = BTCAmount.zero;
+        let theVaultMaxAmount = BitcoinAmount.zero;
         // The first item is the vault with the largest capacity
         theVaultMaxAmount = theVaults.values().next().value;
 
@@ -174,7 +174,7 @@ const IssueForm = (): JSX.Element | null => {
 
   if (status === STATUSES.RESOLVED) {
     const validateForm = (value = 0): string | undefined => {
-      const btcAmount = BTCAmount.from.BTC(value);
+      const btcAmount = BitcoinAmount.from.BTC(value);
 
       const securityDeposit = btcToDOTRate.toCounter(btcAmount).mul(depositRate);
       const minimumRequiredDOTAmount = PolkadotAmount.from.DOT(EXTRA_REQUIRED_DOT_AMOUNT).add(securityDeposit);
@@ -226,7 +226,7 @@ const IssueForm = (): JSX.Element | null => {
 
     const onSubmit = async (data: IssueFormData) => {
       try {
-        const interBTCAmount = BTCAmount.from.BTC(data[BTC_AMOUNT]);
+        const interBTCAmount = BitcoinAmount.from.BTC(data[BTC_AMOUNT]);
         setSubmitStatus(STATUSES.PENDING);
         const result = await window.polkaBTC.interBtcApi.issue.request(interBTCAmount);
         // TODO: handle issue aggregation
@@ -239,7 +239,7 @@ const IssueForm = (): JSX.Element | null => {
       }
     };
 
-    const parsedBTCAmount = BTCAmount.from.BTC(btcAmount || 0);
+    const parsedBTCAmount = BitcoinAmount.from.BTC(btcAmount || 0);
     const bridgeFee = parsedBTCAmount.mul(feeRate);
     const securityDeposit = btcToDOTRate.toCounter(parsedBTCAmount).mul(depositRate);
     const interBTCAmount = parsedBTCAmount.sub(bridgeFee);
@@ -273,7 +273,7 @@ const IssueForm = (): JSX.Element | null => {
               },
               validate: value => validateForm(value)
             })}
-            approxUSD={`≈ $ ${getUsdAmount(parsedBTCAmount || BTCAmount.zero, prices.bitcoin.usd)}`}
+            approxUSD={`≈ $ ${getUsdAmount(parsedBTCAmount || BitcoinAmount.zero, prices.bitcoin.usd)}`}
             error={!!errors[BTC_AMOUNT]}
             helperText={errors[BTC_AMOUNT]?.message} />
           <ParachainStatusInfo status={parachainStatus} />

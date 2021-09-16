@@ -4,9 +4,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import Big from 'big.js';
-import { btcToSat } from '@interlay/interbtc-api';
-import { BTCAmount } from '@interlay/monetary-js';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
@@ -35,18 +33,18 @@ const RequestReplacementModal = (props: Props): JSX.Element => {
   const onSubmit = handleSubmit(async ({ amount }) => {
     setRequestPending(true);
     try {
-      if (btcToSat(new Big(amount)) === undefined) {
+      if (BitcoinAmount.from.BTC(amount).to.Satoshi() === undefined) {
         throw new Error('Amount to convert is less than 1 satoshi.');
       }
       const dustValue = await window.polkaBTC.interBtcApi.redeem.getDustValue();
-      const amountPolkaBtc = BTCAmount.from.BTC(amount);
+      const amountPolkaBtc = BitcoinAmount.from.BTC(amount);
       if (amountPolkaBtc.lte(dustValue)) {
         throw new Error(`Please enter an amount greater than Bitcoin dust (${dustValue.toHuman()} BTC)`);
       }
       await window.polkaBTC.interBtcApi.replace.request(amountPolkaBtc);
 
       const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const requests = await window.polkaBTC.interBtcApi.vaults.mapReplaceRequests(vaultId);
+      const requests = await window.polkaBTC.interBtcApi.replace.mapReplaceRequests(vaultId);
       if (!requests) return;
 
       dispatch(addReplaceRequestsAction(requests));

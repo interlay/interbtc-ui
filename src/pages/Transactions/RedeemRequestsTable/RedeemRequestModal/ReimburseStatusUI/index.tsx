@@ -15,7 +15,7 @@ import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { Redeem } from '@interlay/interbtc-api';
 import {
-  BTCAmount,
+  BitcoinAmount,
   Polkadot,
   PolkadotAmount
 } from '@interlay/monetary-js';
@@ -65,7 +65,7 @@ const ReimburseStatusUI = ({
           window.polkaBTC.interBtcApi.vaults.getPunishmentFee(),
           window.polkaBTC.interBtcApi.oracle.getExchangeRate(Polkadot)
         ]);
-        const amountPolkaBTC = request ? request.amountBTC : BTCAmount.zero;
+        const amountPolkaBTC = request ? request.amountBTC : BitcoinAmount.zero;
         setDOTAmount(btcDotRate.toCounter(amountPolkaBTC));
         setPunishmentDOT(btcDotRate.toCounter(amountPolkaBTC).mul(new Big(punishment)));
       } catch (error) {
