@@ -175,7 +175,7 @@ const App = (): JSX.Element => {
       } catch (error) {
         // TODO: should add error handling
         console.log('No interBTC vault found for the account in the connected Polkadot wallet.');
-        console.log('[App React.useEffect] error.message => ', error.message);
+        console.log('[App React.useEffect 1] error.message => ', error.message);
       }
     })();
   }, [
@@ -227,7 +227,7 @@ const App = (): JSX.Element => {
         );
       } catch (error) {
         // TODO: should add error handling
-        console.log('[App React.useEffect] error.message => ', error.message);
+        console.log('[App React.useEffect 2] error.message => ', error.message);
       }
     })();
   }, [
@@ -273,7 +273,7 @@ const App = (): JSX.Element => {
         dispatch(changeAddressAction(newAddress));
       } catch (error) {
         // TODO: should add error handling
-        console.log('[App React.useEffect] error.message => ', error.message);
+        console.log('[App React.useEffect 3] error.message => ', error.message);
       }
     })();
   }, [
@@ -329,7 +329,7 @@ const App = (): JSX.Element => {
             }
           );
       } catch (error) {
-        console.log('[App React.useEffect] error.message => ', error.message);
+        console.log('[App React.useEffect 4] error.message => ', error.message);
       }
     })();
 
@@ -342,7 +342,7 @@ const App = (): JSX.Element => {
             }
           });
       } catch (error) {
-        console.log('[App React.useEffect] error.message => ', error.message);
+        console.log('[App React.useEffect 5] error.message => ', error.message);
       }
     })();
 
