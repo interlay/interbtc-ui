@@ -1,7 +1,10 @@
-import { Bitcoin } from '@interlay/monetary-js';
+
 import { Dispatch } from 'redux';
 
-import { COLLATERAL_TOKEN } from 'config/general';
+import {
+  COLLATERAL_TOKEN,
+  WRAPPED_TOKEN
+} from 'config/general';
 import { updateTotalsAction } from '../actions/general.actions';
 import { StoreState } from '../types/util.types';
 
@@ -15,8 +18,11 @@ export default async function fetchTotals(dispatch: Dispatch, store: StoreState)
   if (!bridgeLoaded) return;
 
   try {
-    const [latestTotalWrappedTokenAmount, latestTotalLockedCollateralTokenAmount] = await Promise.all([
-      window.polkaBTC.interBtcApi.tokens.total(Bitcoin),
+    const [
+      latestTotalWrappedTokenAmount,
+      latestTotalLockedCollateralTokenAmount
+    ] = await Promise.all([
+      window.polkaBTC.interBtcApi.tokens.total(WRAPPED_TOKEN),
       window.polkaBTC.interBtcApi.tokens.total(COLLATERAL_TOKEN)
     ]);
 

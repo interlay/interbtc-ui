@@ -29,8 +29,6 @@ import {
 } from '@interlay/interbtc-api';
 import { StatusCode } from '@interlay/interbtc-api/build/src/interfaces';
 import {
-  Bitcoin,
-  BitcoinAmount,
   MonetaryAmount,
   Currency
 } from '@interlay/monetary-js';
@@ -44,7 +42,8 @@ import {
   APP_NAME,
   ACCOUNT_ID_TYPE_NAME,
   WRAPPED_TOKEN,
-  COLLATERAL_TOKEN
+  COLLATERAL_TOKEN,
+  WrappedTokenAmount
 } from 'config/general';
 import { PAGES } from 'utils/constants/links';
 import './i18n';
@@ -197,7 +196,7 @@ const App = (): JSX.Element => {
           bitcoinHeight,
           state
         ] = await Promise.all([
-          window.polkaBTC.interBtcApi.tokens.total(Bitcoin),
+          window.polkaBTC.interBtcApi.tokens.total(WRAPPED_TOKEN),
           window.polkaBTC.interBtcApi.tokens.total(COLLATERAL_TOKEN),
           window.polkaBTC.interBtcApi.btcRelay.getLatestBlockHeight(),
           window.polkaBTC.interBtcApi.electrsAPI.getLatestBlockHeight(),
@@ -336,11 +335,15 @@ const App = (): JSX.Element => {
     (async () => {
       try {
         unsubscribeFromWrapped =
-          await window.polkaBTC.interBtcApi.tokens.subscribeToBalance(Bitcoin, address, (_, balance: BitcoinAmount) => {
-            if (!balance.eq(wrappedTokenBalance)) {
-              dispatch(updateWrappedTokenBalanceAction(balance));
+          await window.polkaBTC.interBtcApi.tokens.subscribeToBalance(
+            WRAPPED_TOKEN,
+            address,
+            (_, balance: WrappedTokenAmount) => {
+              if (!balance.eq(wrappedTokenBalance)) {
+                dispatch(updateWrappedTokenBalanceAction(balance));
+              }
             }
-          });
+          );
       } catch (error) {
         console.log('[App React.useEffect 5] error.message => ', error.message);
       }

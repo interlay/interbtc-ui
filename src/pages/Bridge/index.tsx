@@ -81,8 +81,10 @@ const Bridge = (): JSX.Element | null => {
     if (!bridgeLoaded) return;
     (async () => {
       try {
+        // ray test touch <<<
         const maxBurnableTokens = await window.polkaBTC.interBtcApi.redeem.getMaxBurnableTokens(COLLATERAL_TOKEN);
         setBurnable(maxBurnableTokens.gt(BitcoinAmount.zero));
+        // ray test touch >>>
       } catch (error) {
         // TODO: should add error handling
         console.log('[Application] error.message => ', error.message);

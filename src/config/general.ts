@@ -5,7 +5,8 @@ import {
   // Kusama, // on Kusama
   // KusamaAmount, // on Kusama
   InterBtc, // on Polkadot
-  Polkadot // on Polkadot
+  Polkadot, // on Polkadot
+  InterBtcAmount // on Polkadot
 } from '@interlay/monetary-js';
 import { CollateralUnit } from '@interlay/interbtc-api';
 
@@ -17,6 +18,11 @@ const APP_NAME = 'interBTC';
 // TODO: should be programable
 const WRAPPED_TOKEN = InterBtc;
 const COLLATERAL_TOKEN = Polkadot as Currency<CollateralUnit>;
+type WrappedTokenAmount = InterBtcAmount;
+
+export type {
+  WrappedTokenAmount
+};
 // ray test touch >>>
 
 export {
