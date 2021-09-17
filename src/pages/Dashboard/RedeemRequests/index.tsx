@@ -18,7 +18,7 @@ import LineChartComponent from '../components/line-chart-component';
 
 function RedeemRequests(): JSX.Element {
   const {
-    polkaBtcLoaded,
+    bridgeLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
@@ -68,7 +68,7 @@ function RedeemRequests(): JSX.Element {
     };
 
     (async () => {
-      if (!polkaBtcLoaded) return;
+      if (!bridgeLoaded) return;
       try {
         await Promise.all([
           fetchTotalSuccessfulRedeems(),
@@ -81,7 +81,7 @@ function RedeemRequests(): JSX.Element {
       }
     })();
   }, [
-    polkaBtcLoaded,
+    bridgeLoaded,
     statsApi
   ]);
 

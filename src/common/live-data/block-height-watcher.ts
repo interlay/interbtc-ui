@@ -4,8 +4,8 @@ import { StoreState } from '../types/util.types';
 
 export default async function fetchBtcRelayAndBitcoinHeight(dispatch: Dispatch, store: StoreState): Promise<void> {
   const state = store.getState();
-  const { btcRelayHeight, bitcoinHeight, polkaBtcLoaded } = state.general;
-  if (!polkaBtcLoaded) return;
+  const { btcRelayHeight, bitcoinHeight, bridgeLoaded } = state.general;
+  if (!bridgeLoaded) return;
 
   try {
     const latestBtcRelayHeight = Number(await window.polkaBTC.interBtcApi.btcRelay.getLatestBlockHeight());

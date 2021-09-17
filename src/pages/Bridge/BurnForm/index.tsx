@@ -61,7 +61,7 @@ const Burn = (): JSX.Element | null => {
 
   const {
     prices,
-    polkaBtcLoaded,
+    bridgeLoaded,
     wrappedTokenBalance,
     collateralTokenBalance,
     parachainStatus,
@@ -92,7 +92,7 @@ const Burn = (): JSX.Element | null => {
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!handleError) return;
 
     (async () => {
@@ -107,7 +107,7 @@ const Burn = (): JSX.Element | null => {
       }
     })();
   }, [
-    polkaBtcLoaded,
+    bridgeLoaded,
     handleError
   ]);
 
@@ -164,7 +164,7 @@ const Burn = (): JSX.Element | null => {
         return `${t('redeem_page.current_balance')}${wrappedTokenBalance}`;
       }
 
-      if (!polkaBtcLoaded) {
+      if (!bridgeLoaded) {
         return 'interBTC must be loaded!';
       }
 

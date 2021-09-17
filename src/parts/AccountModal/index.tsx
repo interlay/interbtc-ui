@@ -34,7 +34,7 @@ const AccountModal = ({
   onClose
 }: Props): JSX.Element => {
   const {
-    polkaBtcLoaded,
+    bridgeLoaded,
     address,
     extensions
   } = useSelector((state: StoreType) => state.general);
@@ -58,7 +58,7 @@ const AccountModal = ({
   }, [extensions.length]);
 
   const handleAccountSelect = (newAddress: string) => async () => {
-    if (!polkaBtcLoaded) {
+    if (!bridgeLoaded) {
       return;
     }
 

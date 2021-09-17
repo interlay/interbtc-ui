@@ -84,7 +84,7 @@ const RedeemForm = (): JSX.Element | null => {
   const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
   const {
     wrappedTokenBalance,
-    polkaBtcLoaded,
+    bridgeLoaded,
     address,
     bitcoinHeight,
     btcRelayHeight,
@@ -124,7 +124,7 @@ const RedeemForm = (): JSX.Element | null => {
   const [submittedRequest, setSubmittedRequest] = React.useState<Redeem>();
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!interBTCAmount) return;
     if (!redeemFeeRate) return;
 
@@ -132,13 +132,13 @@ const RedeemForm = (): JSX.Element | null => {
     const theRedeemFee = parsedPolkaBTCAmount.mul(redeemFeeRate);
     setRedeemFee(theRedeemFee);
   }, [
-    polkaBtcLoaded,
+    bridgeLoaded,
     interBTCAmount,
     redeemFeeRate
   ]);
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!handleError) return;
 
     (async () => {
@@ -192,7 +192,7 @@ const RedeemForm = (): JSX.Element | null => {
     })();
   }, [
     interbtcIndex,
-    polkaBtcLoaded,
+    bridgeLoaded,
     handleError
   ]);
 
@@ -293,7 +293,7 @@ const RedeemForm = (): JSX.Element | null => {
         return t('redeem_page.must_select_account_warning');
       }
 
-      if (!polkaBtcLoaded) {
+      if (!bridgeLoaded) {
         return 'interBTC must be loaded!';
       }
 

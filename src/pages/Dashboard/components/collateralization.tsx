@@ -23,7 +23,7 @@ interface Props {
 
 const Collateralization = ({ linkButton }: Props): JSX.Element => {
   const { t } = useTranslation();
-  const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+  const bridgeLoaded = useSelector((state: StoreType) => state.general.bridgeLoaded);
 
   const [systemCollateralization, setSystemCollateralization] = React.useState('0');
   const [issuablePolkaBTC, setIssuablePolkaBTC] = React.useState(BitcoinAmount.zero);
@@ -32,7 +32,7 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
 
   React.useEffect(() => {
     (async () => {
-      if (!polkaBtcLoaded) return;
+      if (!bridgeLoaded) return;
 
       try {
         const systemCollateralization = await window.polkaBTC.interBtcApi.vaults.getSystemCollateralization();
@@ -44,7 +44,7 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
     })();
 
     (async () => {
-      if (!polkaBtcLoaded) return;
+      if (!bridgeLoaded) return;
 
       try {
         const issuablePolkaBTC = await window.polkaBTC.interBtcApi.vaults.getTotalIssuableAmount();
@@ -56,7 +56,7 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
     })();
 
     (async () => {
-      if (!polkaBtcLoaded) return;
+      if (!bridgeLoaded) return;
 
       try {
         const secureCollateralThreshold =

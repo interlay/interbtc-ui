@@ -32,7 +32,7 @@ const Topbar = (): JSX.Element => {
   const {
     extensions,
     address,
-    polkaBtcLoaded,
+    bridgeLoaded,
     collateralTokenBalance,
     wrappedTokenBalance,
     showAccountModal
@@ -70,7 +70,7 @@ const Topbar = (): JSX.Element => {
   }, [extensions.length]);
 
   const requestDOT = async () => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     setIsRequestPending(true);
     try {
       await handleRequestDotFromFaucet();

@@ -61,7 +61,7 @@ const RedeemRequestsTable = (): JSX.Element => {
 
   const {
     address,
-    polkaBtcLoaded
+    bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
   const {
     isLoading: redeemRequestsTotalCountLoading,
@@ -74,7 +74,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     ],
     userRedeemRequestsTotalCountFetcher,
     {
-      enabled: !!address && !!polkaBtcLoaded,
+      enabled: !!address && !!bridgeLoaded,
       refetchInterval: 10000
     }
   );
@@ -92,7 +92,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     ],
     userRedeemRequestsFetcher,
     {
-      enabled: !!address && !!polkaBtcLoaded,
+      enabled: !!address && !!bridgeLoaded,
       refetchInterval: 10000
     }
   );

@@ -52,7 +52,7 @@ const VaultDashboard = (): JSX.Element => {
   const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
   const {
     vaultClientLoaded,
-    polkaBtcLoaded,
+    bridgeLoaded,
     address
   } = useSelector((state: StoreType) => state.general);
   const {
@@ -75,7 +75,7 @@ const VaultDashboard = (): JSX.Element => {
 
   useEffect(() => {
     (async () => {
-      if (!polkaBtcLoaded) return;
+      if (!bridgeLoaded) return;
       if (!vaultClientLoaded) return;
       if (!address) return;
 
@@ -138,7 +138,7 @@ const VaultDashboard = (): JSX.Element => {
       }
     })();
   }, [
-    polkaBtcLoaded,
+    bridgeLoaded,
     vaultClientLoaded,
     dispatch,
     address,

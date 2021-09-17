@@ -76,7 +76,7 @@ const IssueForm = (): JSX.Element | null => {
   const handleError = useErrorHandler();
 
   const {
-    polkaBtcLoaded,
+    bridgeLoaded,
     address,
     bitcoinHeight,
     btcRelayHeight,
@@ -116,7 +116,7 @@ const IssueForm = (): JSX.Element | null => {
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!dispatch) return;
     if (!handleError) return;
 
@@ -163,7 +163,7 @@ const IssueForm = (): JSX.Element | null => {
     })();
   }, [
     interbtcIndex,
-    polkaBtcLoaded,
+    bridgeLoaded,
     dispatch,
     handleError
   ]);
@@ -208,7 +208,7 @@ const IssueForm = (): JSX.Element | null => {
         return t('issue_page.error_more_than_6_blocks_behind');
       }
 
-      if (!polkaBtcLoaded) {
+      if (!bridgeLoaded) {
         return 'interBTC must be loaded!';
       }
 

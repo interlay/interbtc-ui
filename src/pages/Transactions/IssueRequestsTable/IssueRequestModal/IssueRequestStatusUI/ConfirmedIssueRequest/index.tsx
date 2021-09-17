@@ -34,7 +34,7 @@ const ConfirmedIssueRequest = ({
   const { t } = useTranslation();
   const {
     address,
-    polkaBtcLoaded
+    bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
 
   const queryParams = useQueryParams();
@@ -60,7 +60,7 @@ const ConfirmedIssueRequest = ({
   );
 
   const handleExecute = (request: Issue) => () => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
 
     executeMutation.mutate(request);
   };

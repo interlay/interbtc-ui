@@ -31,13 +31,13 @@ const RetriedRedeemRequest = ({
 }: Props): JSX.Element => {
   const { t } = useTranslation();
   const {
-    polkaBtcLoaded,
+    bridgeLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
   const [punishmentDOTAmount, setPunishmentDOTAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!request) return;
 
     // TODO: should add loading UX
@@ -62,7 +62,7 @@ const RetriedRedeemRequest = ({
     })();
   }, [
     request,
-    polkaBtcLoaded
+    bridgeLoaded
   ]);
 
   return (

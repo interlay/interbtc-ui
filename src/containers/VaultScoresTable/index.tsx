@@ -54,7 +54,7 @@ interface PatchedVaultData extends Omit<VaultData, 'lifetime_sla'> {
 const VaultScoresTable = ({
   challengeTime
 }: Props): JSX.Element => {
-  const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const statsApi = usePolkabtcStats();
   const [data, setData] = React.useState<PatchedVaultData[]>([]);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
@@ -65,7 +65,7 @@ const VaultScoresTable = ({
   React.useEffect(() => {
     // TODO: should follow `<AuthenticatedApp />` vs. `<UnauthenticatedApp />` approach
     // - (Re: https://kentcdodds.com/blog/authentication-in-react-applications)
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!statsApi) return;
     if (!handleError) return;
 
@@ -87,7 +87,7 @@ const VaultScoresTable = ({
       }
     })();
   }, [
-    polkaBtcLoaded,
+    bridgeLoaded,
     challengeTime,
     statsApi,
     handleError

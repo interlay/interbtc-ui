@@ -10,9 +10,9 @@ export default async function fetchTotals(dispatch: Dispatch, store: StoreState)
   const {
     totalLockedCollateralTokenAmount,
     totalWrappedTokenAmount,
-    polkaBtcLoaded
+    bridgeLoaded
   } = state.general;
-  if (!polkaBtcLoaded) return;
+  if (!bridgeLoaded) return;
 
   try {
     const [latestTotalWrappedTokenAmount, latestTotalLockedCollateralTokenAmount] = await Promise.all([

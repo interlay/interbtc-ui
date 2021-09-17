@@ -17,11 +17,11 @@ const DefaultRedeemRequest = ({
   request
 }: Props): JSX.Element => {
   const { t } = useTranslation();
-  const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const [stableBitcoinConfirmations, setStableBitcoinConfirmations] = React.useState(1);
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
 
     // TODO: should add loading UX
     (async () => {
@@ -35,7 +35,7 @@ const DefaultRedeemRequest = ({
         console.log('[RedeemRequestStatusUI useEffect] error.message => ', error.message);
       }
     })();
-  }, [polkaBtcLoaded]);
+  }, [bridgeLoaded]);
 
   return (
     <RequestWrapper>

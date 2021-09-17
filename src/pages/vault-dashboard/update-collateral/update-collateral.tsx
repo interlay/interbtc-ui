@@ -44,7 +44,7 @@ interface Props {
 
 const UpdateCollateralModal = (props: Props): JSX.Element => {
   const {
-    polkaBtcLoaded,
+    bridgeLoaded,
     vaultClientLoaded,
     address
   } = useSelector((state: StoreType) => state.general);
@@ -67,7 +67,7 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
   const [isCollateralUpdateAllowed, setCollateralUpdateAllowed] = React.useState(false);
 
   const onSubmit = handleSubmit(async () => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!vaultClientLoaded) return;
 
     setUpdatePending(true);
@@ -110,7 +110,7 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
   const onChange = async (obj: React.SyntheticEvent) => {
     try {
       const value = (obj.target as HTMLInputElement).value;
-      if (value === '' || !polkaBtcLoaded || Number(value) <= 0 || isNaN(Number(value))) {
+      if (value === '' || !bridgeLoaded || Number(value) <= 0 || isNaN(Number(value))) {
         setCollateralUpdateAllowed(false);
         return;
       }

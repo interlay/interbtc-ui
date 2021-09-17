@@ -18,12 +18,12 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({
   request
 }: Props): JSX.Element => {
   const { t } = useTranslation();
-  const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const [initialLeftSeconds, setInitialLeftSeconds] = React.useState<number>();
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!request) return;
 
     // TODO: should add loading UX
@@ -40,7 +40,7 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({
     })();
   }, [
     request,
-    polkaBtcLoaded
+    bridgeLoaded
   ]);
 
   return (

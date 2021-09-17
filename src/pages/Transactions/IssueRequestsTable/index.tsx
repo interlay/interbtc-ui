@@ -66,7 +66,7 @@ const IssueRequestsTable = (): JSX.Element => {
   const {
     address,
     extensions,
-    polkaBtcLoaded
+    bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
   // eslint-disable-next-line max-len
   // TODO: should be refactored via `https://www.notion.so/interlay/Include-total-count-into-paginated-API-calls-in-index-894b56f288d24aaf8fb1aec36eadf41d`
@@ -81,7 +81,7 @@ const IssueRequestsTable = (): JSX.Element => {
     ],
     userIssueRequestsTotalCountFetcher,
     {
-      enabled: !!address && !!polkaBtcLoaded,
+      enabled: !!address && !!bridgeLoaded,
       refetchInterval: 10000
     }
   );
@@ -99,7 +99,7 @@ const IssueRequestsTable = (): JSX.Element => {
     ],
     userIssueRequestsFetcher,
     {
-      enabled: !!address && !!polkaBtcLoaded,
+      enabled: !!address && !!bridgeLoaded,
       refetchInterval: 10000
     }
   );

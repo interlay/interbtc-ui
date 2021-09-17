@@ -89,7 +89,7 @@ const getCollateralizationColor = (
 
 const VaultsTable = (): JSX.Element => {
   const { t } = useTranslation();
-  const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const {
     isLoading: secureCollateralThresholdLoading,
@@ -104,7 +104,7 @@ const VaultsTable = (): JSX.Element => {
     ],
     genericFetcher<Big>(),
     {
-      enabled: !!polkaBtcLoaded
+      enabled: !!bridgeLoaded
     }
   );
   useErrorHandler(secureCollateralThresholdError);
@@ -122,7 +122,7 @@ const VaultsTable = (): JSX.Element => {
     ],
     genericFetcher<Big>(),
     {
-      enabled: !!polkaBtcLoaded
+      enabled: !!bridgeLoaded
     }
   );
   useErrorHandler(liquidationThresholdError);
@@ -156,7 +156,7 @@ const VaultsTable = (): JSX.Element => {
       >
     >(),
     {
-      enabled: !!polkaBtcLoaded
+      enabled: !!bridgeLoaded
     }
   );
   useErrorHandler(btcToDOTRateError);
@@ -174,7 +174,7 @@ const VaultsTable = (): JSX.Element => {
     ],
     genericFetcher<Array<VaultExt>>(),
     {
-      enabled: !!polkaBtcLoaded
+      enabled: !!bridgeLoaded
     }
   );
   useErrorHandler(vaultsExtError);

@@ -15,7 +15,7 @@ import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
 const ReplaceTable = (): JSX.Element => {
   const {
-    polkaBtcLoaded,
+    bridgeLoaded,
     address
   } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ const ReplaceTable = (): JSX.Element => {
   const { t } = useTranslation();
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!dispatch) return;
     if (!address) return;
 
@@ -39,7 +39,7 @@ const ReplaceTable = (): JSX.Element => {
       }
     })();
   }, [
-    polkaBtcLoaded,
+    bridgeLoaded,
     dispatch,
     address
   ]);

@@ -42,7 +42,7 @@ const ReimburseStatusUI = ({
 }: Props): JSX.Element => {
   const {
     address,
-    polkaBtcLoaded,
+    bridgeLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
   const [punishmentDOT, setPunishmentDOT] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
@@ -51,7 +51,7 @@ const ReimburseStatusUI = ({
   const handleError = useErrorHandler();
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!request) return;
     if (!handleError) return;
 
@@ -74,7 +74,7 @@ const ReimburseStatusUI = ({
     })();
   }, [
     request,
-    polkaBtcLoaded,
+    bridgeLoaded,
     handleError
   ]);
 
@@ -127,7 +127,7 @@ const ReimburseStatusUI = ({
   );
 
   const handleRetry = () => {
-    if (!polkaBtcLoaded) {
+    if (!bridgeLoaded) {
       throw new Error('interBTC is not loaded!');
     }
 
@@ -135,7 +135,7 @@ const ReimburseStatusUI = ({
   };
 
   const handleReimburse = () => {
-    if (!polkaBtcLoaded) {
+    if (!bridgeLoaded) {
       throw new Error('interBTC is not loaded!');
     }
 

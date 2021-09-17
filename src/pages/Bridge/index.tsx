@@ -46,7 +46,7 @@ const TAB_ITEMS_WITH_BURN = [
 
 const Bridge = (): JSX.Element | null => {
   const { t } = useTranslation();
-  const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const queryParams = useQueryParams();
   const selectedTabId = queryParams.get(QUERY_PARAMETERS.TAB);
@@ -78,7 +78,7 @@ const Bridge = (): JSX.Element | null => {
   ]);
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     (async () => {
       try {
         const maxBurnableTokens = await window.polkaBTC.interBtcApi.redeem.getMaxBurnableTokens(COLLATERAL_TOKEN);
@@ -88,7 +88,7 @@ const Bridge = (): JSX.Element | null => {
         console.log('[Application] error.message => ', error.message);
       }
     })();
-  }, [polkaBtcLoaded]);
+  }, [bridgeLoaded]);
 
   if (selectedTabId === null) {
     return null;

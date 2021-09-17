@@ -114,7 +114,7 @@ const NoMatch = React.lazy(() =>
 
 const App = (): JSX.Element => {
   const {
-    polkaBtcLoaded,
+    bridgeLoaded,
     address,
     wrappedTokenBalance,
     collateralTokenBalance,
@@ -161,7 +161,7 @@ const App = (): JSX.Element => {
   }, [dispatch]);
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!address) return;
 
     const id = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
@@ -179,13 +179,13 @@ const App = (): JSX.Element => {
       }
     })();
   }, [
-    polkaBtcLoaded,
+    bridgeLoaded,
     address,
     dispatch
   ]);
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
 
     // Initialize data on app bootstrap
     (async () => {
@@ -232,12 +232,12 @@ const App = (): JSX.Element => {
     })();
   }, [
     dispatch,
-    polkaBtcLoaded
+    bridgeLoaded
   ]);
 
   // Loads the address for the currently select account and maybe loads the vault and staked relayer dashboards
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
 
     const trySetDefaultAccount = () => {
       if (constants.DEFAULT_ACCOUNT_SEED) {
@@ -278,13 +278,13 @@ const App = (): JSX.Element => {
     })();
   }, [
     address,
-    polkaBtcLoaded,
+    bridgeLoaded,
     dispatch
   ]);
 
   // Loads the interBTC bridge and the faucet
   React.useEffect(() => {
-    if (polkaBtcLoaded) return;
+    if (bridgeLoaded) return;
 
     (async () => {
       try {
@@ -304,14 +304,14 @@ const App = (): JSX.Element => {
     loadPolkaBTC,
     loadFaucet,
     isLoading,
-    polkaBtcLoaded,
+    bridgeLoaded,
     dispatch,
     store
   ]);
 
   React.useEffect(() => {
     if (!dispatch) return;
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!address) return;
 
     let unsubscribeFromCollateral: () => void;
@@ -356,7 +356,7 @@ const App = (): JSX.Element => {
     };
   }, [
     dispatch,
-    polkaBtcLoaded,
+    bridgeLoaded,
     address,
     wrappedTokenBalance,
     collateralTokenBalance

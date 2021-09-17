@@ -31,7 +31,7 @@ export default function NetworkActivity({
   const [heightDiff, setHeightDiff] = useState(0);
   const [parachainInfo, setParachainInfo] = useState<BlockInfo>({ height: '', hash: '' });
   const [coreInfo, setCoreInfo] = useState<BlockInfo>({ height: '', hash: '' });
-  const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+  const bridgeLoaded = useSelector((state: StoreType) => state.general.bridgeLoaded);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -56,7 +56,7 @@ export default function NetworkActivity({
     };
 
     const fetchData = async () => {
-      if (!polkaBtcLoaded) return;
+      if (!bridgeLoaded) return;
 
       // Returns a little endian encoded block hash
       // Converting to big endian for display
@@ -96,7 +96,7 @@ export default function NetworkActivity({
     };
 
     fetchData();
-  }, [polkaBtcLoaded, noData, fork, heightDiff]);
+  }, [bridgeLoaded, noData, fork, heightDiff]);
 
   const getValueColor = (status: string): string => {
     if (status === 'Online') {

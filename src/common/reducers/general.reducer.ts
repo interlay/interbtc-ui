@@ -19,7 +19,7 @@ import {
 import { GeneralState, ParachainStatus } from '../types/util.types';
 
 const initialState = {
-  polkaBtcLoaded: false,
+  bridgeLoaded: false,
   vaultClientLoaded: false,
   hasFeedbackModalBeenDisplayed: false,
   showAccountModal: false,
@@ -48,7 +48,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
   case UPDATE_OF_PRICES:
     return { ...state, prices: action.prices };
   case IS_POLKA_BTC_LOADED:
-    return { ...state, polkaBtcLoaded: action.isLoaded };
+    return { ...state, bridgeLoaded: action.isLoaded };
   case CHANGE_ADDRESS:
     return { ...state, address: action.address };
   case INIT_GENERAL_DATA_ACTION:

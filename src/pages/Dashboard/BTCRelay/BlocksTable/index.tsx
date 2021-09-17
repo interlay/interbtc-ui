@@ -53,7 +53,7 @@ const BlocksTable = (): JSX.Element => {
   const { t } = useTranslation();
 
   // ray test touch <
-  // const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+  // const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   // console.log('ray : ***** window?.polkaBTC?.index => ', window?.polkaBTC?.index);
   // ray test touch >
   const [blocks, setBlocks] = React.useState<Array<RelayedBlock>>();
@@ -82,7 +82,7 @@ const BlocksTable = (): JSX.Element => {
   //   ],
   //   genericFetcher<Big>(),
   //   {
-  //     enabled: !!polkaBtcLoaded
+  //     enabled: !!bridgeLoaded
   //   }
   // );
   // useErrorHandler(blocksError);
@@ -98,7 +98,7 @@ const BlocksTable = (): JSX.Element => {
   //   ],
   //   genericFetcher<Big>(),
   //   {
-  //     enabled: !!polkaBtcLoaded
+  //     enabled: !!bridgeLoaded
   //   }
   // );
   // useErrorHandler(totalRelayedBlocksCountError);

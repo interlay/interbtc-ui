@@ -30,7 +30,7 @@ const ReimbursedRedeemRequest = ({
 }: Props): JSX.Element => {
   const { t } = useTranslation();
   const {
-    polkaBtcLoaded,
+    bridgeLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
   const [burnedBTCAmount, setBurnedBTCAmount] = React.useState(BitcoinAmount.zero);
@@ -39,7 +39,7 @@ const ReimbursedRedeemRequest = ({
   const [dotAmount, setDOTAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!request) return;
 
     // TODO: should add loading UX
@@ -71,7 +71,7 @@ const ReimbursedRedeemRequest = ({
     })();
   }, [
     request,
-    polkaBtcLoaded
+    bridgeLoaded
   ]);
 
   return (
