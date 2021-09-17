@@ -38,18 +38,18 @@ import {
   ParachainStatus
 } from 'common/types/util.types';
 import {
-  updateBalancePolkaBTCAction,
-  updateBalanceDOTAction,
+  updateWrappedTokenBalanceAction,
+  updateCollateralTokenBalanceAction,
   showAccountModalAction
 } from 'common/actions/general.actions';
 import STATUSES from 'utils/constants/statuses';
 import { BALANCE_MAX_INTEGER_LENGTH } from '../../../constants';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
-const INTER_BTC_AMOUNT = 'inter-btc-amount';
+const WRAPPED_TOKEN_AMOUNT = 'inter-btc-amount';
 
 type BurnForm = {
-  [INTER_BTC_AMOUNT]: string;
+  [WRAPPED_TOKEN_AMOUNT]: string;
 }
 
 const Burn = (): JSX.Element | null => {
@@ -77,7 +77,7 @@ const Burn = (): JSX.Element | null => {
   } = useForm<BurnForm>({
     mode: 'onChange'
   });
-  const interBTCAmount = watch(INTER_BTC_AMOUNT);
+  const interBTCAmount = watch(WRAPPED_TOKEN_AMOUNT);
 
   const [burnRate, setBurnRate] = React.useState(
     new ExchangeRate<
@@ -139,17 +139,19 @@ const Burn = (): JSX.Element | null => {
       try {
         setSubmitStatus(STATUSES.PENDING);
         await window.polkaBTC.interBtcApi.redeem.burn(
-          BitcoinAmount.from.BTC(data[INTER_BTC_AMOUNT]),
+          BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]),
           COLLATERAL_TOKEN
         );
         // TODO: should not manually update the balances everywhere
         // - Should be able to watch the balances in one place and update the context accordingly.
-        dispatch(updateBalancePolkaBTCAction(wrappedTokenBalance.sub(BitcoinAmount.from.BTC(data[INTER_BTC_AMOUNT]))));
-        const earnedDOT = burnRate.toBase(BitcoinAmount.from.BTC(data[INTER_BTC_AMOUNT]) || BitcoinAmount.zero);
-        dispatch(updateBalanceDOTAction(collateralTokenBalance.add(earnedDOT)));
+        dispatch(
+          updateWrappedTokenBalanceAction(wrappedTokenBalance.sub(BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT])))
+        );
+        const earnedDOT = burnRate.toBase(BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]) || BitcoinAmount.zero);
+        dispatch(updateCollateralTokenBalanceAction(collateralTokenBalance.add(earnedDOT)));
         toast.success(t('burn_page.successfully_burned'));
         reset({
-          [INTER_BTC_AMOUNT]: ''
+          [WRAPPED_TOKEN_AMOUNT]: ''
         });
         setSubmitStatus(STATUSES.RESOLVED);
       } catch (error) {
@@ -201,7 +203,7 @@ const Burn = (): JSX.Element | null => {
           </h4>
           <InterBTCField
             id='inter-btc-amount'
-            name={INTER_BTC_AMOUNT}
+            name={WRAPPED_TOKEN_AMOUNT}
             type='number'
             label='interBTC'
             step='any'
@@ -214,8 +216,8 @@ const Burn = (): JSX.Element | null => {
               validate: value => validateForm(value)
             })}
             approxUSD={`≈ $ ${getUsdAmount(parsedInterBTCAmount || BitcoinAmount.zero, prices.bitcoin.usd)}`}
-            error={!!errors[INTER_BTC_AMOUNT]}
-            helperText={errors[INTER_BTC_AMOUNT]?.message} />
+            error={!!errors[WRAPPED_TOKEN_AMOUNT]}
+            helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message} />
           <PriceInfo
             title={
               <h5 className='text-textSecondary'>

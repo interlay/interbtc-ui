@@ -55,7 +55,7 @@ import {
 import STATUSES from 'utils/constants/statuses';
 import { togglePremiumRedeemAction } from 'common/actions/redeem.actions';
 import {
-  updateBalancePolkaBTCAction,
+  updateWrappedTokenBalanceAction,
   showAccountModalAction
 } from 'common/actions/general.actions';
 import {
@@ -66,11 +66,11 @@ import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
-const INTER_BTC_AMOUNT = 'inter-btc-amount';
+const WRAPPED_TOKEN_AMOUNT = 'inter-btc-amount';
 const BTC_ADDRESS = 'btc-address';
 
 type RedeemFormData = {
-  [INTER_BTC_AMOUNT]: string;
+  [WRAPPED_TOKEN_AMOUNT]: string;
   [BTC_ADDRESS]: string;
 }
 
@@ -102,7 +102,7 @@ const RedeemForm = (): JSX.Element | null => {
   } = useForm<RedeemFormData>({
     mode: 'onChange'
   });
-  const interBTCAmount = watch(INTER_BTC_AMOUNT);
+  const interBTCAmount = watch(WRAPPED_TOKEN_AMOUNT);
 
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
@@ -226,7 +226,7 @@ const RedeemForm = (): JSX.Element | null => {
     const onSubmit = async (data: RedeemFormData) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
-        const interBTCAmount = BitcoinAmount.from.BTC(data[INTER_BTC_AMOUNT]);
+        const interBTCAmount = BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]);
 
         // Differentiate between premium and regular redeem
         let vaultId;
@@ -245,7 +245,7 @@ const RedeemForm = (): JSX.Element | null => {
                 maxAmount = redeemableTokens;
               }
             }
-            setFormError(INTER_BTC_AMOUNT, {
+            setFormError(WRAPPED_TOKEN_AMOUNT, {
               type: 'manual',
               message: t('redeem_page.error_max_premium_redeem', { maxPremiumRedeem: maxAmount.toHuman() })
             });
@@ -273,7 +273,9 @@ const RedeemForm = (): JSX.Element | null => {
         handleSubmittedRequestModalOpen(redeemRequest);
         setSubmitStatus(STATUSES.RESOLVED);
 
-        dispatch(updateBalancePolkaBTCAction(wrappedTokenBalance.sub(BitcoinAmount.from.BTC(data[INTER_BTC_AMOUNT]))));
+        dispatch(
+          updateWrappedTokenBalanceAction(wrappedTokenBalance.sub(BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT])))
+        );
       } catch (error) {
         setSubmitStatus(STATUSES.REJECTED);
         setSubmitError(error);
@@ -348,7 +350,7 @@ const RedeemForm = (): JSX.Element | null => {
           </h4>
           <InterBTCField
             id='inter-btc-amount'
-            name={INTER_BTC_AMOUNT}
+            name={WRAPPED_TOKEN_AMOUNT}
             type='number'
             label='interBTC'
             step='any'
@@ -362,8 +364,8 @@ const RedeemForm = (): JSX.Element | null => {
               validate: value => validateForm(value)
             })}
             approxUSD={`≈ $ ${getUsdAmount(parsedInterBTCAmount || BitcoinAmount.zero, usdPrice)}`}
-            error={!!errors[INTER_BTC_AMOUNT]}
-            helperText={errors[INTER_BTC_AMOUNT]?.message} />
+            error={!!errors[WRAPPED_TOKEN_AMOUNT]}
+            helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message} />
           <ParachainStatusInfo status={parachainStatus} />
           <TextField
             id='btc-address'

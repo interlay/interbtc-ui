@@ -152,8 +152,7 @@ const copyToClipboard = (text: string): void => {
 };
 
 const getRandomVaultIdWithCapacity = (
-  vaults: [AccountId,
-  BitcoinAmount][],
+  vaults: [AccountId, BitcoinAmount][],
   requiredCapacity: BitcoinAmount
 ): string => {
   const filteredVaults = vaults.filter(vault => vault[1].gte(requiredCapacity));

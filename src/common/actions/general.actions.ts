@@ -53,12 +53,12 @@ export const changeAddressAction = (address: string): ChangeAddress => ({
   address
 });
 
-export const updateBalancePolkaBTCAction = (wrappedTokenBalance: BitcoinAmount): UpdateBalancePolkaBTC => ({
+export const updateWrappedTokenBalanceAction = (wrappedTokenBalance: BitcoinAmount): UpdateBalancePolkaBTC => ({
   type: UPDATE_BALANCE_POLKA_BTC,
   wrappedTokenBalance
 });
 
-export const updateBalanceDOTAction = (
+export const updateCollateralTokenBalanceAction = (
   collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>
 ): UpdateBalanceDOT => ({
   type: UPDATE_BALANCE_DOT,

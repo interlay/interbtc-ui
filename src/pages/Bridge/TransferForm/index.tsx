@@ -33,11 +33,11 @@ import { ReactComponent as EthereumLogoIcon } from 'assets/img/ethereum-logo.svg
 import { ReactComponent as CosmosLogoIcon } from 'assets/img/cosmos-logo.svg';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
-const INTER_BTC_AMOUNT = 'inter-btc-amount';
+const WRAPPED_TOKEN_AMOUNT = 'inter-btc-amount';
 const DOT_ADDRESS = 'dot-address';
 
 type TransferFormData = {
-  [INTER_BTC_AMOUNT]: string;
+  [WRAPPED_TOKEN_AMOUNT]: string;
   [DOT_ADDRESS]: string;
 }
 
@@ -122,7 +122,7 @@ const TransferForm = (): JSX.Element => {
   } = useForm<TransferFormData>({
     mode: 'onChange'
   });
-  const interBTCAmount = watch(INTER_BTC_AMOUNT);
+  const interBTCAmount = watch(WRAPPED_TOKEN_AMOUNT);
 
   const [networkModalOpen, setNetworkModalOpen] = React.useState(false);
   const [selectedNetworkType, setSelectedNetworkType] = React.useState(NETWORK_TYPES.polkaBTC);
@@ -142,12 +142,12 @@ const TransferForm = (): JSX.Element => {
       setSubmitStatus(STATUSES.PENDING);
       await window.polkaBTC.interBtcApi.tokens.transfer(
         data[DOT_ADDRESS],
-        BitcoinAmount.from.BTC(data[INTER_BTC_AMOUNT])
+        BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT])
       );
       setSubmitStatus(STATUSES.RESOLVED);
       toast.success(t('transfer_page.successfully_transferred'));
       reset({
-        [INTER_BTC_AMOUNT]: '',
+        [WRAPPED_TOKEN_AMOUNT]: '',
         [DOT_ADDRESS]: ''
       });
     } catch (error) {
@@ -200,8 +200,8 @@ const TransferForm = (): JSX.Element => {
           {t('transfer_page.transfer_interbtc')}
         </h4>
         <InterBTCField
-          id={INTER_BTC_AMOUNT}
-          name={INTER_BTC_AMOUNT}
+          id={WRAPPED_TOKEN_AMOUNT}
+          name={WRAPPED_TOKEN_AMOUNT}
           type='number'
           label='interBTC'
           step='any'
@@ -214,8 +214,8 @@ const TransferForm = (): JSX.Element => {
             validate: value => validateForm(value)
           })}
           approxUSD={`≈ $ ${getUsdAmount(BitcoinAmount.from.BTC(interBTCAmount || '0.00'), usdPrice)}`}
-          error={!!errors[INTER_BTC_AMOUNT]}
-          helperText={errors[INTER_BTC_AMOUNT]?.message} />
+          error={!!errors[WRAPPED_TOKEN_AMOUNT]}
+          helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message} />
         <div>
           <TextField
             id='dot-address'

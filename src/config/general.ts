@@ -9,14 +9,15 @@ import {
 } from '@interlay/monetary-js';
 import { CollateralUnit } from '@interlay/interbtc-api';
 
-const APP_NAME = 'interBTC';
-
 const ACCOUNT_ID_TYPE_NAME = 'AccountId';
 
+// ray test touch <<<
+const APP_NAME = 'interBTC';
 // TODO: should be environment variables for easy configuration switch
 // TODO: should be programable
 const WRAPPED_TOKEN = InterBtc;
 const COLLATERAL_TOKEN = Polkadot as Currency<CollateralUnit>;
+// ray test touch >>>
 
 export {
   APP_NAME,

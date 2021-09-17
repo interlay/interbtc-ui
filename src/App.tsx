@@ -62,8 +62,8 @@ import {
   setInstalledExtensionAction,
   isFaucetLoaded,
   isVaultClientLoaded,
-  updateBalancePolkaBTCAction,
-  updateBalanceDOTAction
+  updateWrappedTokenBalanceAction,
+  updateCollateralTokenBalanceAction
 } from 'common/actions/general.actions';
 // TODO: should clean up
 import './_general.scss';
@@ -324,7 +324,7 @@ const App = (): JSX.Element => {
             address,
             (_, balance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>) => {
               if (!balance.eq(collateralTokenBalance)) {
-                dispatch(updateBalanceDOTAction(balance));
+                dispatch(updateCollateralTokenBalanceAction(balance));
               }
             }
           );
@@ -338,7 +338,7 @@ const App = (): JSX.Element => {
         unsubscribeFromWrapped =
           await window.polkaBTC.interBtcApi.tokens.subscribeToBalance(Bitcoin, address, (_, balance: BitcoinAmount) => {
             if (!balance.eq(wrappedTokenBalance)) {
-              dispatch(updateBalancePolkaBTCAction(balance));
+              dispatch(updateWrappedTokenBalanceAction(balance));
             }
           });
       } catch (error) {

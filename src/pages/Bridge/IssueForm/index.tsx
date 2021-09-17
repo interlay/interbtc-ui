@@ -185,9 +185,9 @@ const IssueForm = (): JSX.Element | null => {
       const btcAmount = BitcoinAmount.from.BTC(value);
 
       const securityDeposit = btcToDOTRate.toCounter(btcAmount).mul(depositRate);
-      const minimumRequiredDOTAmount =
+      const minimumRequiredCollateralTokenAmount =
         newMonetaryAmount(EXTRA_REQUIRED_DOT_AMOUNT, COLLATERAL_TOKEN).add(securityDeposit);
-      if (collateralTokenBalance.lte(minimumRequiredDOTAmount)) {
+      if (collateralTokenBalance.lte(minimumRequiredCollateralTokenAmount)) {
         return t('insufficient_funds_dot');
       }
 
