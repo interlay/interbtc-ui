@@ -12,16 +12,16 @@ import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
 interface Props {
-  balanceInterBTC?: BitcoinAmount;
+  wrappedTokenBalance?: BitcoinAmount;
   collateralTokenBalance?: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
 }
 
 const Balances = ({
-  balanceInterBTC,
+  wrappedTokenBalance,
   collateralTokenBalance
 }: Props): JSX.Element => {
   const roundedBalanceDot = displayMonetaryAmount(collateralTokenBalance);
-  const roundedBalanceInterBTC = displayMonetaryAmount(balanceInterBTC);
+  const roundedBalanceInterBTC = displayMonetaryAmount(wrappedTokenBalance);
 
   return (
     <div

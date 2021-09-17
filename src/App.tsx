@@ -116,7 +116,7 @@ const App = (): JSX.Element => {
   const {
     polkaBtcLoaded,
     address,
-    balanceInterBTC,
+    wrappedTokenBalance,
     collateralTokenBalance,
     vaultClientLoaded
   } = useSelector((state: StoreType) => state.general);
@@ -337,7 +337,7 @@ const App = (): JSX.Element => {
       try {
         unsubscribeFromWrapped =
           await window.polkaBTC.interBtcApi.tokens.subscribeToBalance(Bitcoin, address, (_, balance: BitcoinAmount) => {
-            if (!balance.eq(balanceInterBTC)) {
+            if (!balance.eq(wrappedTokenBalance)) {
               dispatch(updateBalancePolkaBTCAction(balance));
             }
           });
@@ -358,7 +358,7 @@ const App = (): JSX.Element => {
     dispatch,
     polkaBtcLoaded,
     address,
-    balanceInterBTC,
+    wrappedTokenBalance,
     collateralTokenBalance
   ]);
 

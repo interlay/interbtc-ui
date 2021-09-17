@@ -79,7 +79,7 @@ export interface InitGeneralDataAction {
 
 export interface UpdateBalancePolkaBTC {
   type: typeof UPDATE_BALANCE_POLKA_BTC;
-  balanceInterBTC: BitcoinAmount;
+  wrappedTokenBalance: BitcoinAmount;
 }
 
 export interface UpdateBalanceDOT {

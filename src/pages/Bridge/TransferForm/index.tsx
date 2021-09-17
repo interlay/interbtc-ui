@@ -107,7 +107,7 @@ const TransferForm = (): JSX.Element => {
 
   const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
   const {
-    balanceInterBTC,
+    wrappedTokenBalance,
     collateralTokenBalance,
     parachainStatus,
     address
@@ -157,7 +157,7 @@ const TransferForm = (): JSX.Element => {
   };
 
   const validateForm = (value: number): string | undefined => {
-    if (Number(balanceInterBTC) === 0) {
+    if (Number(wrappedTokenBalance) === 0) {
       return t('insufficient_funds');
     }
 
@@ -165,8 +165,8 @@ const TransferForm = (): JSX.Element => {
       return t('insufficient_funds_dot');
     }
 
-    if (value > Number(balanceInterBTC)) {
-      return `${t('redeem_page.current_balance')}${balanceInterBTC}`;
+    if (value > Number(wrappedTokenBalance)) {
+      return `${t('redeem_page.current_balance')}${wrappedTokenBalance}`;
     }
 
     return undefined;

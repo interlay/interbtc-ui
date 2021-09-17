@@ -34,7 +34,7 @@ const Topbar = (): JSX.Element => {
     address,
     polkaBtcLoaded,
     collateralTokenBalance,
-    balanceInterBTC,
+    wrappedTokenBalance,
     showAccountModal
   } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
@@ -145,7 +145,7 @@ const Topbar = (): JSX.Element => {
                 </InterlayDenimOutlinedButton>
                 <Balances
                   collateralTokenBalance={collateralTokenBalance}
-                  balanceInterBTC={balanceInterBTC} />
+                  wrappedTokenBalance={wrappedTokenBalance} />
                 <InterlayDefaultContainedButton
                   className={SMALL_SIZE_BUTTON_CLASS_NAME}
                   onClick={handleAccountModalOpen}>

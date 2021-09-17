@@ -53,9 +53,9 @@ export const changeAddressAction = (address: string): ChangeAddress => ({
   address
 });
 
-export const updateBalancePolkaBTCAction = (balanceInterBTC: BitcoinAmount): UpdateBalancePolkaBTC => ({
+export const updateBalancePolkaBTCAction = (wrappedTokenBalance: BitcoinAmount): UpdateBalancePolkaBTC => ({
   type: UPDATE_BALANCE_POLKA_BTC,
-  balanceInterBTC
+  wrappedTokenBalance
 });
 
 export const updateBalanceDOTAction = (
