@@ -15,19 +15,19 @@ export default async function fetchTotals(dispatch: Dispatch, store: StoreState)
   if (!polkaBtcLoaded) return;
 
   try {
-    const [latestTotalInterBTC, latestTotalLockedCollateralTokenAmount] = await Promise.all([
+    const [latestTotalWrappedTokenAmount, latestTotalLockedCollateralTokenAmount] = await Promise.all([
       window.polkaBTC.interBtcApi.tokens.total(Bitcoin),
       window.polkaBTC.interBtcApi.tokens.total(COLLATERAL_TOKEN)
     ]);
 
     // update store only if there is a difference between the latest totals and current totals
     if (
-      !totalWrappedTokenAmount.eq(latestTotalInterBTC) ||
+      !totalWrappedTokenAmount.eq(latestTotalWrappedTokenAmount) ||
       !totalLockedCollateralTokenAmount.eq(latestTotalLockedCollateralTokenAmount)
     ) {
       dispatch(updateTotalsAction(
         latestTotalLockedCollateralTokenAmount,
-        latestTotalInterBTC
+        latestTotalWrappedTokenAmount
       ));
     }
   } catch (error) {
