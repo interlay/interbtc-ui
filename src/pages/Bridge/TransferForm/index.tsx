@@ -122,7 +122,7 @@ const TransferForm = (): JSX.Element => {
   } = useForm<TransferFormData>({
     mode: 'onChange'
   });
-  const interBTCAmount = watch(WRAPPED_TOKEN_AMOUNT);
+  const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT);
 
   const [networkModalOpen, setNetworkModalOpen] = React.useState(false);
   const [selectedNetworkType, setSelectedNetworkType] = React.useState(NETWORK_TYPES.polkaBTC);
@@ -213,7 +213,7 @@ const TransferForm = (): JSX.Element => {
             },
             validate: value => validateForm(value)
           })}
-          approxUSD={`≈ $ ${getUsdAmount(BitcoinAmount.from.BTC(interBTCAmount || '0.00'), usdPrice)}`}
+          approxUSD={`≈ $ ${getUsdAmount(BitcoinAmount.from.BTC(wrappedTokenAmount || '0.00'), usdPrice)}`}
           error={!!errors[WRAPPED_TOKEN_AMOUNT]}
           helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message} />
         <div>

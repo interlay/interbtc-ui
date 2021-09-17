@@ -77,7 +77,7 @@ const Burn = (): JSX.Element | null => {
   } = useForm<BurnForm>({
     mode: 'onChange'
   });
-  const interBTCAmount = watch(WRAPPED_TOKEN_AMOUNT);
+  const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT);
 
   const [burnRate, setBurnRate] = React.useState(
     new ExchangeRate<
@@ -182,7 +182,7 @@ const Burn = (): JSX.Element | null => {
       return undefined;
     };
 
-    const parsedInterBTCAmount = BitcoinAmount.from.BTC(interBTCAmount || 0);
+    const parsedInterBTCAmount = BitcoinAmount.from.BTC(wrappedTokenAmount || 0);
     const earnedDOT = burnRate.rate.eq(0) ?
       newMonetaryAmount(0, COLLATERAL_TOKEN) :
       burnRate.toBase(parsedInterBTCAmount || BitcoinAmount.zero);

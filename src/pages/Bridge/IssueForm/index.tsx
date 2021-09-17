@@ -235,9 +235,9 @@ const IssueForm = (): JSX.Element | null => {
 
     const onSubmit = async (data: IssueFormData) => {
       try {
-        const interBTCAmount = BitcoinAmount.from.BTC(data[BTC_AMOUNT]);
+        const wrappedTokenAmount = BitcoinAmount.from.BTC(data[BTC_AMOUNT]);
         setSubmitStatus(STATUSES.PENDING);
-        const result = await window.polkaBTC.interBtcApi.issue.request(interBTCAmount);
+        const result = await window.polkaBTC.interBtcApi.issue.request(wrappedTokenAmount);
         // TODO: handle issue aggregation
         const issueRequest = result[0];
         handleSubmittedRequestModalOpen(issueRequest);
@@ -251,7 +251,7 @@ const IssueForm = (): JSX.Element | null => {
     const parsedBTCAmount = BitcoinAmount.from.BTC(btcAmount || 0);
     const bridgeFee = parsedBTCAmount.mul(feeRate);
     const securityDeposit = btcToDOTRate.toCounter(parsedBTCAmount).mul(depositRate);
-    const interBTCAmount = parsedBTCAmount.sub(bridgeFee);
+    const wrappedTokenAmount = parsedBTCAmount.sub(bridgeFee);
     const accountSet = !!address;
 
     return (
@@ -351,9 +351,9 @@ const IssueForm = (): JSX.Element | null => {
                 width={24}
                 height={19.05} />
             }
-            value={displayMonetaryAmount(interBTCAmount)}
+            value={displayMonetaryAmount(wrappedTokenAmount)}
             unitName='interBTC'
-            approxUSD={getUsdAmount(interBTCAmount, prices.bitcoin.usd)} />
+            approxUSD={getUsdAmount(wrappedTokenAmount, prices.bitcoin.usd)} />
           <SubmitButton
             disabled={
               // TODO: `parachainStatus` and `address` should be checked at upper levels

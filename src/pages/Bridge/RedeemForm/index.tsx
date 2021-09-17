@@ -102,7 +102,7 @@ const RedeemForm = (): JSX.Element | null => {
   } = useForm<RedeemFormData>({
     mode: 'onChange'
   });
-  const interBTCAmount = watch(WRAPPED_TOKEN_AMOUNT);
+  const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT);
 
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
@@ -125,15 +125,15 @@ const RedeemForm = (): JSX.Element | null => {
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
-    if (!interBTCAmount) return;
+    if (!wrappedTokenAmount) return;
     if (!redeemFeeRate) return;
 
-    const parsedPolkaBTCAmount = BitcoinAmount.from.BTC(interBTCAmount);
+    const parsedPolkaBTCAmount = BitcoinAmount.from.BTC(wrappedTokenAmount);
     const theRedeemFee = parsedPolkaBTCAmount.mul(redeemFeeRate);
     setRedeemFee(theRedeemFee);
   }, [
     bridgeLoaded,
-    interBTCAmount,
+    wrappedTokenAmount,
     redeemFeeRate
   ]);
 
@@ -226,14 +226,14 @@ const RedeemForm = (): JSX.Element | null => {
     const onSubmit = async (data: RedeemFormData) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
-        const interBTCAmount = BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]);
+        const wrappedTokenAmount = BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]);
 
         // Differentiate between premium and regular redeem
         let vaultId;
         if (premiumRedeemSelected) {
           // Select a vault from the premium redeem vault list
           for (const [id, redeemableTokens] of premiumRedeemVaults) {
-            if (redeemableTokens.gte(interBTCAmount)) {
+            if (redeemableTokens.gte(wrappedTokenAmount)) {
               vaultId = id;
               break;
             }
@@ -254,16 +254,16 @@ const RedeemForm = (): JSX.Element | null => {
           }
         } else {
           const vaults = await window.polkaBTC.interBtcApi.vaults.getVaultsWithRedeemableTokens();
-          vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), interBTCAmount);
+          vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), wrappedTokenAmount);
         }
 
         // FIXME: workaround to make premium redeem still possible
         const relevantVaults = new Map<AccountId, BitcoinAmount>();
         const id = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, vaultId);
         // FIXME: a bit of a dirty workaround with the capacity
-        relevantVaults.set(id, interBTCAmount.mul(2));
+        relevantVaults.set(id, wrappedTokenAmount.mul(2));
         const result = await window.polkaBTC.interBtcApi.redeem.request(
-          interBTCAmount,
+          wrappedTokenAmount,
           data[BTC_ADDRESS],
           id
         );
@@ -318,15 +318,15 @@ const RedeemForm = (): JSX.Element | null => {
 
     const redeemFeeInBTC = displayMonetaryAmount(redeemFee);
     const redeemFeeInUSD = getUsdAmount(redeemFee, prices.bitcoin.usd);
-    const parsedInterBTCAmount = BitcoinAmount.from.BTC(interBTCAmount || 0);
+    const parsedInterBTCAmount = BitcoinAmount.from.BTC(wrappedTokenAmount || 0);
     const totalBTC =
-        interBTCAmount ?
+        wrappedTokenAmount ?
           parsedInterBTCAmount.sub(redeemFee).sub(currentInclusionFee) :
           BitcoinAmount.zero;
     const totalBTCInUSD = getUsdAmount(totalBTC, prices.bitcoin.usd);
 
     const totalDOT =
-      interBTCAmount ?
+      wrappedTokenAmount ?
         btcToDotRate.toCounter(parsedInterBTCAmount).mul(premiumRedeemFee) :
         newMonetaryAmount(0, COLLATERAL_TOKEN);
     const totalDOTInUSD = getUsdAmount(totalDOT, prices.polkadot.usd);
