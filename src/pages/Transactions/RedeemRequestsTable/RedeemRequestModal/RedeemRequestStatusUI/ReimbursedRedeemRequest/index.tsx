@@ -34,9 +34,15 @@ const ReimbursedRedeemRequest = ({
     prices
   } = useSelector((state: StoreType) => state.general);
   const [burnedBTCAmount, setBurnedBTCAmount] = React.useState(BitcoinAmount.zero);
-  const [punishmentDOTAmount, setPunishmentDOTAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
-  const [burnDOTAmount, setBurnDOTAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
-  const [dotAmount, setDOTAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
+  const [
+    punishmentCollateralTokenAmount,
+    setPunishmentCollateralTokenAmount
+  ] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
+  const [
+    burnCollateralTokenAmount,
+    setBurnCollateralTokenAmount
+  ] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
+  const [collateralTokenAmount, setCollateralTokenAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -60,10 +66,10 @@ const ReimbursedRedeemRequest = ({
         const thePunishmentDOTAmount = theBurnDOTAmount.mul(new Big(punishmentFee));
         const theDOTAmount = theBurnDOTAmount.add(thePunishmentDOTAmount);
         setBurnedBTCAmount(burnedBTCAmount);
-        setPunishmentDOTAmount(thePunishmentDOTAmount);
-        setBurnDOTAmount(theBurnDOTAmount);
-        setPunishmentDOTAmount(thePunishmentDOTAmount);
-        setDOTAmount(theDOTAmount);
+        setPunishmentCollateralTokenAmount(thePunishmentDOTAmount);
+        setBurnCollateralTokenAmount(theBurnDOTAmount);
+        setPunishmentCollateralTokenAmount(thePunishmentDOTAmount);
+        setCollateralTokenAmount(theDOTAmount);
       } catch (error) {
         // TODO: should add error handling UX
         console.log('[ReimbursedRedeemRequest useEffect] error.message => ', error.message);
@@ -102,10 +108,10 @@ const ReimbursedRedeemRequest = ({
       <p className='font-medium'>
         <span className='text-interlayDenim'>{t('redeem_page.recover_receive_dot')}</span>
         <span className='text-interlayDenim'>
-          &nbsp;{`${dotAmount.toHuman()} DOT`}
+          &nbsp;{`${collateralTokenAmount.toHuman()} DOT`}
         </span>
         <span>
-          &nbsp;{`(≈ $${getUsdAmount(dotAmount, prices.polkadot.usd)})`}
+          &nbsp;{`(≈ $${getUsdAmount(collateralTokenAmount, prices.polkadot.usd)})`}
         </span>
         <span className='text-interlayDenim'>
           &nbsp;{t('redeem_page.recover_receive_total')}
@@ -125,9 +131,9 @@ const ReimbursedRedeemRequest = ({
               width={20}
               height={20} />
           }
-          value={burnDOTAmount.toHuman()}
+          value={burnCollateralTokenAmount.toHuman()}
           unitName='DOT'
-          approxUSD={getUsdAmount(burnDOTAmount, prices.polkadot.usd)} />
+          approxUSD={getUsdAmount(burnCollateralTokenAmount, prices.polkadot.usd)} />
         <PriceInfo
           className='w-full'
           title={
@@ -140,9 +146,9 @@ const ReimbursedRedeemRequest = ({
               width={20}
               height={20} />
           }
-          value={punishmentDOTAmount.toHuman()}
+          value={punishmentCollateralTokenAmount.toHuman()}
           unitName='DOT'
-          approxUSD={getUsdAmount(punishmentDOTAmount, prices.polkadot.usd)} />
+          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.polkadot.usd)} />
         <hr
           className={clsx(
             'border-t-2',
@@ -161,9 +167,9 @@ const ReimbursedRedeemRequest = ({
               width={20}
               height={20} />
           }
-          value={dotAmount.toHuman()}
+          value={collateralTokenAmount.toHuman()}
           unitName='DOT'
-          approxUSD={getUsdAmount(dotAmount, prices.polkadot.usd)} />
+          approxUSD={getUsdAmount(collateralTokenAmount, prices.polkadot.usd)} />
       </div>
       <InterlayLink
         className={clsx(

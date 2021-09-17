@@ -147,8 +147,9 @@ const Burn = (): JSX.Element | null => {
         dispatch(
           updateWrappedTokenBalanceAction(wrappedTokenBalance.sub(BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT])))
         );
-        const earnedDOT = burnRate.toBase(BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]) || BitcoinAmount.zero);
-        dispatch(updateCollateralTokenBalanceAction(collateralTokenBalance.add(earnedDOT)));
+        const earnedCollateralTokenAmount =
+          burnRate.toBase(BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]) || BitcoinAmount.zero);
+        dispatch(updateCollateralTokenBalanceAction(collateralTokenBalance.add(earnedCollateralTokenAmount)));
         toast.success(t('burn_page.successfully_burned'));
         reset({
           [WRAPPED_TOKEN_AMOUNT]: ''
@@ -183,7 +184,7 @@ const Burn = (): JSX.Element | null => {
     };
 
     const parsedInterBTCAmount = BitcoinAmount.from.BTC(wrappedTokenAmount || 0);
-    const earnedDOT = burnRate.rate.eq(0) ?
+    const earnedCollateralTokenAmount = burnRate.rate.eq(0) ?
       newMonetaryAmount(0, COLLATERAL_TOKEN) :
       burnRate.toBase(parsedInterBTCAmount || BitcoinAmount.zero);
     const accountSet = !!address;
@@ -229,9 +230,9 @@ const Burn = (): JSX.Element | null => {
                 width={20}
                 height={20} />
             }
-            value={earnedDOT.toHuman()}
+            value={earnedCollateralTokenAmount.toHuman()}
             unitName='DOT'
-            approxUSD={getUsdAmount(earnedDOT, prices.polkadot.usd)} />
+            approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.polkadot.usd)} />
           {/* TODO: could componentize */}
           <hr
             className={clsx(
@@ -250,9 +251,9 @@ const Burn = (): JSX.Element | null => {
                 width={20}
                 height={20} />
             }
-            value={earnedDOT.toHuman()}
+            value={earnedCollateralTokenAmount.toHuman()}
             unitName='DOT'
-            approxUSD={getUsdAmount(earnedDOT, prices.polkadot.usd)} />
+            approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.polkadot.usd)} />
           <SubmitButton
             // TODO: should not check everywhere like this
             disabled={

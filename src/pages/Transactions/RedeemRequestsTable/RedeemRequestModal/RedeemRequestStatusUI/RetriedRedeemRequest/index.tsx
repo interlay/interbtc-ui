@@ -34,7 +34,10 @@ const RetriedRedeemRequest = ({
     bridgeLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
-  const [punishmentDOTAmount, setPunishmentDOTAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
+  const [
+    punishmentCollateralTokenAmount,
+    setPunishmentCollateralTokenAmount
+  ] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -54,7 +57,7 @@ const RetriedRedeemRequest = ({
         const btcAmount = request ? request.amountBTC : BitcoinAmount.zero;
         const theBurnDOTAmount = btcDotRate.toCounter(btcAmount);
         const thePunishmentDOTAmount = theBurnDOTAmount.mul(new Big(punishmentFee));
-        setPunishmentDOTAmount(thePunishmentDOTAmount);
+        setPunishmentCollateralTokenAmount(thePunishmentDOTAmount);
       } catch (error) {
         // TODO: should add error handling UX
         console.log('[RetriedRedeemRequest useEffect] error.message => ', error.message);
@@ -81,10 +84,10 @@ const RetriedRedeemRequest = ({
           {t('redeem_page.recover_receive_dot')}
         </span>
         <span className='text-interlayDenim'>
-          &nbsp;{`${punishmentDOTAmount.toHuman()} DOT`}
+          &nbsp;{`${punishmentCollateralTokenAmount.toHuman()} DOT`}
         </span>
         <span>
-          &nbsp;({`≈ $${getUsdAmount(punishmentDOTAmount, prices.polkadot.usd)}`})
+          &nbsp;({`≈ $${getUsdAmount(punishmentCollateralTokenAmount, prices.polkadot.usd)}`})
         </span>
         <span className='text-interlayDenim'>
           &nbsp;{t('redeem_page.recover_receive_total')}.
@@ -102,9 +105,9 @@ const RetriedRedeemRequest = ({
               width={20}
               height={20} />
           }
-          value={punishmentDOTAmount.toHuman()}
+          value={punishmentCollateralTokenAmount.toHuman()}
           unitName='DOT'
-          approxUSD={getUsdAmount(punishmentDOTAmount, prices.polkadot.usd)} />
+          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.polkadot.usd)} />
         <hr
           className={clsx(
             'border-t-2',
@@ -123,9 +126,9 @@ const RetriedRedeemRequest = ({
               width={20}
               height={20} />
           }
-          value={punishmentDOTAmount.toHuman()}
+          value={punishmentCollateralTokenAmount.toHuman()}
           unitName='DOT'
-          approxUSD={getUsdAmount(punishmentDOTAmount, prices.polkadot.usd)} />
+          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.polkadot.usd)} />
       </div>
       <InterlayLink
         className={clsx(
