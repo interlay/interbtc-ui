@@ -33,7 +33,7 @@ import { ReactComponent as EthereumLogoIcon } from 'assets/img/ethereum-logo.svg
 import { ReactComponent as CosmosLogoIcon } from 'assets/img/cosmos-logo.svg';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
-const WRAPPED_TOKEN_AMOUNT = 'inter-btc-amount';
+const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 const DOT_ADDRESS = 'dot-address';
 
 type TransferFormData = {

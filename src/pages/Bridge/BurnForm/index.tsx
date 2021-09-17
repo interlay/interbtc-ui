@@ -46,7 +46,7 @@ import STATUSES from 'utils/constants/statuses';
 import { BALANCE_MAX_INTEGER_LENGTH } from '../../../constants';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
-const WRAPPED_TOKEN_AMOUNT = 'inter-btc-amount';
+const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 
 type BurnForm = {
   [WRAPPED_TOKEN_AMOUNT]: string;
@@ -203,7 +203,7 @@ const Burn = (): JSX.Element | null => {
             {t('burn_page.burn_interbtc')}
           </h4>
           <InterBTCField
-            id='inter-btc-amount'
+            id='wrapped-token-amount'
             name={WRAPPED_TOKEN_AMOUNT}
             type='number'
             label='interBTC'

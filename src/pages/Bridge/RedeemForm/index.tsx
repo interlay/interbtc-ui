@@ -66,7 +66,7 @@ import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
-const WRAPPED_TOKEN_AMOUNT = 'inter-btc-amount';
+const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 const BTC_ADDRESS = 'btc-address';
 
 type RedeemFormData = {
@@ -349,7 +349,7 @@ const RedeemForm = (): JSX.Element | null => {
             {t('redeem_page.you_will_receive')}
           </h4>
           <InterBTCField
-            id='inter-btc-amount'
+            id='wrapped-token-amount'
             name={WRAPPED_TOKEN_AMOUNT}
             type='number'
             label='interBTC'
