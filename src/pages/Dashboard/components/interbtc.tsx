@@ -22,7 +22,7 @@ import { PAGES } from 'utils/constants/links';
 
 const InterBTC = (): React.ReactElement => {
   const { prices } = useSelector((state: StoreType) => state.general);
-  const totalInterBTC = useSelector((state: StoreType) => state.general.totalInterBTC);
+  const totalWrappedTokenAmount = useSelector((state: StoreType) => state.general.totalWrappedTokenAmount);
 
   const { t } = useTranslation();
   const statsApi = useInterbtcIndex();
@@ -72,7 +72,7 @@ const InterBTC = (): React.ReactElement => {
               'font-bold',
               'mb-1'
             )}>
-            {t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalInterBTC) })}
+            {t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalWrappedTokenAmount) })}
           </h2>
           {/* TODO: add the price API */}
           <h2
@@ -81,7 +81,7 @@ const InterBTC = (): React.ReactElement => {
               'font-bold',
               'mb-1'
             )}>
-            ${getUsdAmount(totalInterBTC, prices.bitcoin.usd)}
+            ${getUsdAmount(totalWrappedTokenAmount, prices.bitcoin.usd)}
           </h2>
         </div>
         <div style={{ display: 'grid', gridRowGap: 10 }}>

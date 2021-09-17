@@ -191,7 +191,7 @@ const App = (): JSX.Element => {
     (async () => {
       try {
         const [
-          totalInterBTC,
+          totalWrappedTokenAmount,
           totalLockedCollateralTokenAmount,
           btcRelayHeight,
           bitcoinHeight,
@@ -218,7 +218,7 @@ const App = (): JSX.Element => {
 
         dispatch(
           initGeneralDataAction(
-            totalInterBTC,
+            totalWrappedTokenAmount,
             totalLockedCollateralTokenAmount,
             Number(btcRelayHeight),
             bitcoinHeight,

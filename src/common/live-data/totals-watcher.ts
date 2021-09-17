@@ -9,7 +9,7 @@ export default async function fetchTotals(dispatch: Dispatch, store: StoreState)
   const state = store.getState();
   const {
     totalLockedCollateralTokenAmount,
-    totalInterBTC,
+    totalWrappedTokenAmount,
     polkaBtcLoaded
   } = state.general;
   if (!polkaBtcLoaded) return;
@@ -22,7 +22,7 @@ export default async function fetchTotals(dispatch: Dispatch, store: StoreState)
 
     // update store only if there is a difference between the latest totals and current totals
     if (
-      !totalInterBTC.eq(latestTotalInterBTC) ||
+      !totalWrappedTokenAmount.eq(latestTotalInterBTC) ||
       !totalLockedCollateralTokenAmount.eq(latestTotalLockedCollateralTokenAmount)
     ) {
       dispatch(updateTotalsAction(

@@ -64,7 +64,7 @@ export type GeneralState = {
   vaultClientLoaded: boolean;
   showAccountModal: boolean;
   address: string;
-  totalInterBTC: BitcoinAmount;
+  totalWrappedTokenAmount: BitcoinAmount;
   totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   wrappedTokenBalance: BitcoinAmount;
   collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;

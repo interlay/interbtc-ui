@@ -20,7 +20,7 @@ import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
 
 function IssueRequests(): JSX.Element {
   const {
-    totalInterBTC,
+    totalWrappedTokenAmount,
     prices
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
@@ -118,10 +118,10 @@ function IssueRequests(): JSX.Element {
             {t('dashboard.issue.issued')}
           </h5>
           <h5>
-            {t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalInterBTC) })}
+            {t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalWrappedTokenAmount) })}
           </h5>
           <h5 className='text-textSecondary'>
-            ${getUsdAmount(totalInterBTC, prices.bitcoin.usd).toLocaleString()}
+            ${getUsdAmount(totalWrappedTokenAmount, prices.bitcoin.usd).toLocaleString()}
           </h5>
           <h5
             className={clsx(

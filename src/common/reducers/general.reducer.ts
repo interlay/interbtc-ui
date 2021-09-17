@@ -24,7 +24,7 @@ const initialState = {
   hasFeedbackModalBeenDisplayed: false,
   showAccountModal: false,
   address: '',
-  totalInterBTC: BitcoinAmount.zero,
+  totalWrappedTokenAmount: BitcoinAmount.zero,
   totalLockedCollateralTokenAmount: newMonetaryAmount(0, COLLATERAL_TOKEN),
   wrappedTokenBalance: BitcoinAmount.zero,
   collateralTokenBalance: newMonetaryAmount(0, COLLATERAL_TOKEN),
@@ -40,7 +40,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
   case UPDATE_TOTALS:
     return {
       ...state,
-      totalInterBTC: action.totalInterBTC,
+      totalWrappedTokenAmount: action.totalWrappedTokenAmount,
       totalLockedCollateralTokenAmount: action.totalLockedCollateralTokenAmount
     };
   case UPDATE_HEIGHTS:
@@ -55,7 +55,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
     return {
       ...state,
       totalLockedCollateralTokenAmount: action.totalLockedCollateralTokenAmount,
-      totalInterBTC: action.totalInterBTC,
+      totalWrappedTokenAmount: action.totalWrappedTokenAmount,
       btcRelayHeight: action.btcRelayHeight,
       bitcoinHeight: action.bitcoinHeight,
       parachainStatus: action.parachainStatus

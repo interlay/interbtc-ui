@@ -71,7 +71,7 @@ export const updateOfPricesAction = (prices: Prices): UpdateOfPrices => ({
 });
 
 export const initGeneralDataAction = (
-  totalInterBTC: BitcoinAmount,
+  totalWrappedTokenAmount: BitcoinAmount,
   totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
   btcRelayHeight: number,
   bitcoinHeight: number,
@@ -80,7 +80,7 @@ export const initGeneralDataAction = (
   type: INIT_GENERAL_DATA_ACTION,
   btcRelayHeight,
   bitcoinHeight,
-  totalInterBTC,
+  totalWrappedTokenAmount,
   totalLockedCollateralTokenAmount,
   parachainStatus
 });
@@ -103,9 +103,9 @@ export const updateHeightsAction = (btcRelayHeight: number, bitcoinHeight: numbe
 
 export const updateTotalsAction = (
   totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
-  totalInterBTC: BitcoinAmount
+  totalWrappedTokenAmount: BitcoinAmount
 ): UpdateTotals => ({
   type: UPDATE_TOTALS,
   totalLockedCollateralTokenAmount,
-  totalInterBTC
+  totalWrappedTokenAmount
 });
