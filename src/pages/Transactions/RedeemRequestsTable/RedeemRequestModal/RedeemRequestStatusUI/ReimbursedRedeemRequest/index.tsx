@@ -16,7 +16,7 @@ import {
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterlayLink from 'components/UI/InterlayLink';
-import { COLLATERAL_CURRENCY } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/general';
 import { getUsdAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
@@ -34,9 +34,9 @@ const ReimbursedRedeemRequest = ({
     prices
   } = useSelector((state: StoreType) => state.general);
   const [burnedBTCAmount, setBurnedBTCAmount] = React.useState(BitcoinAmount.zero);
-  const [punishmentDOTAmount, setPunishmentDOTAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_CURRENCY));
-  const [burnDOTAmount, setBurnDOTAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_CURRENCY));
-  const [dotAmount, setDOTAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_CURRENCY));
+  const [punishmentDOTAmount, setPunishmentDOTAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
+  const [burnDOTAmount, setBurnDOTAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
+  const [dotAmount, setDOTAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
 
   React.useEffect(() => {
     if (!polkaBtcLoaded) return;
@@ -50,7 +50,7 @@ const ReimbursedRedeemRequest = ({
           btcDotRate
         ] = await Promise.all([
           window.polkaBTC.interBtcApi.vaults.getPunishmentFee(),
-          window.polkaBTC.interBtcApi.oracle.getExchangeRate(COLLATERAL_CURRENCY)
+          window.polkaBTC.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN)
         ]);
 
         const burnedBTCAmount = request ?

@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import DashboardCard from 'pages/Dashboard/DashboardCard';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
-import { COLLATERAL_CURRENCY } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/general';
 import {
   displayMonetaryAmount,
   safeRoundTwoDecimals
@@ -60,7 +60,7 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
 
       try {
         const secureCollateralThreshold =
-          await window.polkaBTC.interBtcApi.vaults.getSecureCollateralThreshold(COLLATERAL_CURRENCY);
+          await window.polkaBTC.interBtcApi.vaults.getSecureCollateralThreshold(COLLATERAL_TOKEN);
         setSecureCollateralThreshold(secureCollateralThreshold?.mul(100).toString() || '150');
       } catch (error) {
         console.log('[Collateralization useEffect] error.message => ', error.message);

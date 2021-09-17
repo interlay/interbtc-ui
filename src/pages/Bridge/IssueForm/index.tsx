@@ -35,7 +35,7 @@ import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
-import { COLLATERAL_CURRENCY } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/general';
 import {
   BLOCK_TIME,
   BLOCKS_BEHIND_LIMIT
@@ -106,7 +106,7 @@ const IssueForm = (): JSX.Element | null => {
       BitcoinUnit,
       Currency<CollateralUnit>,
       CollateralUnit
-    >(Bitcoin, COLLATERAL_CURRENCY, new Big(0))
+    >(Bitcoin, COLLATERAL_TOKEN, new Big(0))
   );
   const [vaults, setVaults] = React.useState<Map<AccountId, BitcoinAmount>>();
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero);
@@ -137,7 +137,7 @@ const IssueForm = (): JSX.Element | null => {
           interbtcIndex.getIssueGriefingCollateral(),
           interbtcIndex.getIssuePeriod(),
           interbtcIndex.getDustValue(),
-          window.polkaBTC.interBtcApi.oracle.getExchangeRate(COLLATERAL_CURRENCY),
+          window.polkaBTC.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN),
           // This data (the vaults) is strictly required to request issue
           window.polkaBTC.interBtcApi.vaults.getVaultsWithIssuableTokens()
         ]);
@@ -186,7 +186,7 @@ const IssueForm = (): JSX.Element | null => {
 
       const securityDeposit = btcToDOTRate.toCounter(btcAmount).mul(depositRate);
       const minimumRequiredDOTAmount =
-        newMonetaryAmount(EXTRA_REQUIRED_DOT_AMOUNT, COLLATERAL_CURRENCY).add(securityDeposit);
+        newMonetaryAmount(EXTRA_REQUIRED_DOT_AMOUNT, COLLATERAL_TOKEN).add(securityDeposit);
       if (balanceDOT.lte(minimumRequiredDOTAmount)) {
         return t('insufficient_funds_dot');
       }

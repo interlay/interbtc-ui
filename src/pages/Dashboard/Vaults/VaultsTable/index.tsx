@@ -38,7 +38,7 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
-import { COLLATERAL_CURRENCY } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/general';
 import { shortAddress } from '../../../../common/utils/utils';
 import * as constants from '../../../../constants';
 import genericFetcher, {
@@ -145,7 +145,7 @@ const VaultsTable = (): JSX.Element => {
       'interBtcApi',
       'oracle',
       'getExchangeRate',
-      COLLATERAL_CURRENCY
+      COLLATERAL_TOKEN
     ],
     genericFetcher<
       ExchangeRate<

@@ -23,7 +23,7 @@ import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import ErrorFallback from 'components/ErrorFallback';
-import { COLLATERAL_CURRENCY } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/general';
 import useQueryParams from 'utils/hooks/use-query-params';
 import { getUsdAmount } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
@@ -45,8 +45,8 @@ const ReimburseStatusUI = ({
     polkaBtcLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
-  const [punishmentDOT, setPunishmentDOT] = React.useState(newMonetaryAmount(0, COLLATERAL_CURRENCY));
-  const [dotAmount, setDOTAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_CURRENCY));
+  const [punishmentDOT, setPunishmentDOT] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
+  const [dotAmount, setDOTAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
   const { t } = useTranslation();
   const handleError = useErrorHandler();
 
@@ -63,7 +63,7 @@ const ReimburseStatusUI = ({
           btcDotRate
         ] = await Promise.all([
           window.polkaBTC.interBtcApi.vaults.getPunishmentFee(),
-          window.polkaBTC.interBtcApi.oracle.getExchangeRate(COLLATERAL_CURRENCY)
+          window.polkaBTC.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN)
         ]);
         const amountPolkaBTC = request ? request.amountBTC : BitcoinAmount.zero;
         setDOTAmount(btcDotRate.toCounter(amountPolkaBTC));

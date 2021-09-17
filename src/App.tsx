@@ -44,7 +44,7 @@ import {
   APP_NAME,
   ACCOUNT_ID_TYPE_NAME,
   WRAPPED_TOKEN,
-  COLLATERAL_CURRENCY
+  COLLATERAL_TOKEN
 } from 'config/general';
 import { PAGES } from 'utils/constants/links';
 import './i18n';
@@ -192,13 +192,13 @@ const App = (): JSX.Element => {
       try {
         const [
           totalInterBTC,
-          totalLockedDOT,
+          totalLockedCollateralTokenAmount,
           btcRelayHeight,
           bitcoinHeight,
           state
         ] = await Promise.all([
           window.polkaBTC.interBtcApi.tokens.total(Bitcoin),
-          window.polkaBTC.interBtcApi.tokens.total(COLLATERAL_CURRENCY),
+          window.polkaBTC.interBtcApi.tokens.total(COLLATERAL_TOKEN),
           window.polkaBTC.interBtcApi.btcRelay.getLatestBlockHeight(),
           window.polkaBTC.interBtcApi.electrsAPI.getLatestBlockHeight(),
           window.polkaBTC.interBtcApi.system.getStatusCode()
@@ -219,7 +219,7 @@ const App = (): JSX.Element => {
         dispatch(
           initGeneralDataAction(
             totalInterBTC,
-            totalLockedDOT,
+            totalLockedCollateralTokenAmount,
             Number(btcRelayHeight),
             bitcoinHeight,
             parachainStatus(state)
@@ -320,7 +320,7 @@ const App = (): JSX.Element => {
       try {
         unsubscribeFromCollateral =
           await window.polkaBTC.interBtcApi.tokens.subscribeToBalance(
-            COLLATERAL_CURRENCY,
+            COLLATERAL_TOKEN,
             address,
             (_, balance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>) => {
               if (!balance.eq(balanceDOT)) {

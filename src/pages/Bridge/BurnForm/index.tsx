@@ -31,7 +31,7 @@ import SubmitButton from '../SubmitButton';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
-import { COLLATERAL_CURRENCY } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/general';
 import { getUsdAmount } from 'common/utils/utils';
 import {
   StoreType,
@@ -85,7 +85,7 @@ const Burn = (): JSX.Element | null => {
       CollateralUnit,
       Bitcoin,
       BitcoinUnit
-    >(COLLATERAL_CURRENCY, Bitcoin, new Big(0))
+    >(COLLATERAL_TOKEN, Bitcoin, new Big(0))
   );
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
@@ -98,7 +98,7 @@ const Burn = (): JSX.Element | null => {
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const theBurnRate = await window.polkaBTC.interBtcApi.redeem.getBurnExchangeRate(COLLATERAL_CURRENCY);
+        const theBurnRate = await window.polkaBTC.interBtcApi.redeem.getBurnExchangeRate(COLLATERAL_TOKEN);
         setBurnRate(theBurnRate);
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
@@ -140,7 +140,7 @@ const Burn = (): JSX.Element | null => {
         setSubmitStatus(STATUSES.PENDING);
         await window.polkaBTC.interBtcApi.redeem.burn(
           BitcoinAmount.from.BTC(data[INTER_BTC_AMOUNT]),
-          COLLATERAL_CURRENCY
+          COLLATERAL_TOKEN
         );
         // TODO: should not manually update the balances everywhere
         // - Should be able to watch the balances in one place and update the context accordingly.
@@ -182,7 +182,7 @@ const Burn = (): JSX.Element | null => {
 
     const parsedInterBTCAmount = BitcoinAmount.from.BTC(interBTCAmount || 0);
     const earnedDOT = burnRate.rate.eq(0) ?
-      newMonetaryAmount(0, COLLATERAL_CURRENCY) :
+      newMonetaryAmount(0, COLLATERAL_TOKEN) :
       burnRate.toBase(parsedInterBTCAmount || BitcoinAmount.zero);
     const accountSet = !!address;
 

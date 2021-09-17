@@ -17,7 +17,7 @@ import {
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import {
   ACCOUNT_ID_TYPE_NAME,
-  COLLATERAL_CURRENCY
+  COLLATERAL_TOKEN
 } from 'config/general';
 import {
   updateCollateralAction,
@@ -84,7 +84,7 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
       }
 
       const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const balanceLockedDOT = await window.polkaBTC.interBtcApi.tokens.balanceLocked(COLLATERAL_CURRENCY, vaultId);
+      const balanceLockedDOT = await window.polkaBTC.interBtcApi.tokens.balanceLocked(COLLATERAL_TOKEN, vaultId);
       dispatch(updateCollateralAction(balanceLockedDOT));
       let collateralization;
       try {
@@ -114,7 +114,7 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
         setCollateralUpdateAllowed(false);
         return;
       }
-      const parsedValue = newMonetaryAmount(value, COLLATERAL_CURRENCY);
+      const parsedValue = newMonetaryAmount(value, COLLATERAL_TOKEN);
       if (parsedValue.toBig(parsedValue.currency.rawBase).lte(1)) {
         throw new Error('Please enter an amount greater than 1 Planck');
       }
@@ -134,7 +134,7 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
 
       const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
       const requiredCollateral =
-        await window.polkaBTC.interBtcApi.vaults.getRequiredCollateralForVault(vaultId, COLLATERAL_CURRENCY);
+        await window.polkaBTC.interBtcApi.vaults.getRequiredCollateralForVault(vaultId, COLLATERAL_TOKEN);
 
       // Collateral update only allowed if above required collateral
       const allowed = newCollateral.gte(requiredCollateral);

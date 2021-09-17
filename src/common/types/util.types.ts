@@ -65,7 +65,7 @@ export type GeneralState = {
   showAccountModal: boolean;
   address: string;
   totalInterBTC: BitcoinAmount;
-  totalLockedDOT: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   balanceInterBTC: BitcoinAmount;
   balanceDOT: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   extensions: string[];

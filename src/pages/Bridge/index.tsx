@@ -14,7 +14,7 @@ import Tabs, {
   Tab,
   TabPanel
 } from 'components/Tabs';
-import { COLLATERAL_CURRENCY } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/general';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters, { QueryParameters } from 'utils/hooks/use-update-query-parameters';
 import TAB_IDS from 'utils/constants/tab-ids';
@@ -81,7 +81,7 @@ const Bridge = (): JSX.Element | null => {
     if (!polkaBtcLoaded) return;
     (async () => {
       try {
-        const maxBurnableTokens = await window.polkaBTC.interBtcApi.redeem.getMaxBurnableTokens(COLLATERAL_CURRENCY);
+        const maxBurnableTokens = await window.polkaBTC.interBtcApi.redeem.getMaxBurnableTokens(COLLATERAL_TOKEN);
         setBurnable(maxBurnableTokens.gt(BitcoinAmount.zero));
       } catch (error) {
         // TODO: should add error handling

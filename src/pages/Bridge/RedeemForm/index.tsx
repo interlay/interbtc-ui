@@ -43,7 +43,7 @@ import {
 } from '../../../constants';
 import {
   ACCOUNT_ID_TYPE_NAME,
-  COLLATERAL_CURRENCY
+  COLLATERAL_TOKEN
 } from 'config/general';
 import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
@@ -114,7 +114,7 @@ const RedeemForm = (): JSX.Element | null => {
       BitcoinUnit,
       Currency<CollateralUnit>,
       CollateralUnit
-    >(Bitcoin, COLLATERAL_CURRENCY, new Big(0))
+    >(Bitcoin, COLLATERAL_TOKEN, new Big(0))
   );
   const [premiumRedeemVaults, setPremiumRedeemVaults] = React.useState<Map<AccountId, BitcoinAmount>>(new Map());
   const [premiumRedeemFee, setPremiumRedeemFee] = React.useState(new Big(0));
@@ -155,7 +155,7 @@ const RedeemForm = (): JSX.Element | null => {
           interbtcIndex.getDustValue(),
           window.polkaBTC.interBtcApi.vaults.getPremiumRedeemVaults(),
           interbtcIndex.getPremiumRedeemFee(),
-          window.polkaBTC.interBtcApi.oracle.getExchangeRate(COLLATERAL_CURRENCY),
+          window.polkaBTC.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN),
           window.polkaBTC.interBtcApi.redeem.getFeeRate(),
           window.polkaBTC.interBtcApi.redeem.getCurrentInclusionFee()
         ]);
@@ -326,7 +326,7 @@ const RedeemForm = (): JSX.Element | null => {
     const totalDOT =
       interBTCAmount ?
         btcToDotRate.toCounter(parsedInterBTCAmount).mul(premiumRedeemFee) :
-        newMonetaryAmount(0, COLLATERAL_CURRENCY);
+        newMonetaryAmount(0, COLLATERAL_TOKEN);
     const totalDOTInUSD = getUsdAmount(totalDOT, prices.polkadot.usd);
 
     const bitcoinNetworkFeeInBTC = displayMonetaryAmount(currentInclusionFee);

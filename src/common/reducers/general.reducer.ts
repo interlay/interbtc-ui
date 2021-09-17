@@ -1,7 +1,7 @@
 import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 
-import { COLLATERAL_CURRENCY } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/general';
 import {
   IS_POLKA_BTC_LOADED,
   IS_VAULT_CLIENT_LOADED,
@@ -25,9 +25,9 @@ const initialState = {
   showAccountModal: false,
   address: '',
   totalInterBTC: BitcoinAmount.zero,
-  totalLockedDOT: newMonetaryAmount(0, COLLATERAL_CURRENCY),
+  totalLockedCollateralTokenAmount: newMonetaryAmount(0, COLLATERAL_TOKEN),
   balanceInterBTC: BitcoinAmount.zero,
-  balanceDOT: newMonetaryAmount(0, COLLATERAL_CURRENCY),
+  balanceDOT: newMonetaryAmount(0, COLLATERAL_TOKEN),
   extensions: [],
   btcRelayHeight: 0,
   bitcoinHeight: 0,
@@ -38,7 +38,11 @@ const initialState = {
 export const generalReducer = (state: GeneralState = initialState, action: GeneralActions): GeneralState => {
   switch (action.type) {
   case UPDATE_TOTALS:
-    return { ...state, totalInterBTC: action.totalInterBTC, totalLockedDOT: action.totalLockedDOT };
+    return {
+      ...state,
+      totalInterBTC: action.totalInterBTC,
+      totalLockedCollateralTokenAmount: action.totalLockedCollateralTokenAmount
+    };
   case UPDATE_HEIGHTS:
     return { ...state, btcRelayHeight: action.btcRelayHeight, bitcoinHeight: action.bitcoinHeight };
   case UPDATE_OF_PRICES:
@@ -50,7 +54,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
   case INIT_GENERAL_DATA_ACTION:
     return {
       ...state,
-      totalLockedDOT: action.totalLockedDOT,
+      totalLockedCollateralTokenAmount: action.totalLockedCollateralTokenAmount,
       totalInterBTC: action.totalInterBTC,
       btcRelayHeight: action.btcRelayHeight,
       bitcoinHeight: action.bitcoinHeight,
