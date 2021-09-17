@@ -82,7 +82,7 @@ const IssueForm = (): JSX.Element | null => {
     btcRelayHeight,
     prices,
     parachainStatus,
-    balanceDOT
+    collateralTokenBalance
   } = useSelector((state: StoreType) => state.general);
 
   const {
@@ -187,7 +187,7 @@ const IssueForm = (): JSX.Element | null => {
       const securityDeposit = btcToDOTRate.toCounter(btcAmount).mul(depositRate);
       const minimumRequiredDOTAmount =
         newMonetaryAmount(EXTRA_REQUIRED_DOT_AMOUNT, COLLATERAL_TOKEN).add(securityDeposit);
-      if (balanceDOT.lte(minimumRequiredDOTAmount)) {
+      if (collateralTokenBalance.lte(minimumRequiredDOTAmount)) {
         return t('insufficient_funds_dot');
       }
 

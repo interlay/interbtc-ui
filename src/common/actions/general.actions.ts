@@ -59,10 +59,10 @@ export const updateBalancePolkaBTCAction = (balanceInterBTC: BitcoinAmount): Upd
 });
 
 export const updateBalanceDOTAction = (
-  balanceDOT: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>
+  collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>
 ): UpdateBalanceDOT => ({
   type: UPDATE_BALANCE_DOT,
-  balanceDOT
+  collateralTokenBalance
 });
 
 export const updateOfPricesAction = (prices: Prices): UpdateOfPrices => ({

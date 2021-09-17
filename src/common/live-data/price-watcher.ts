@@ -3,6 +3,7 @@ import { Dispatch } from 'redux';
 import { updateOfPricesAction } from '../actions/general.actions';
 import { StoreState } from '../types/util.types';
 
+// ray test touch <<<
 export default function fetchPrices(dispatch: Dispatch, store: StoreState): void {
   const state = store.getState();
   const storePrices = state.general.prices;
@@ -25,3 +26,4 @@ export default function fetchPrices(dispatch: Dispatch, store: StoreState): void
       }
     });
 }
+// ray test touch >>>

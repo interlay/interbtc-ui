@@ -67,7 +67,7 @@ export type GeneralState = {
   totalInterBTC: BitcoinAmount;
   totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   balanceInterBTC: BitcoinAmount;
-  balanceDOT: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   extensions: string[];
   btcRelayHeight: number;
   bitcoinHeight: number;

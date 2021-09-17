@@ -108,7 +108,7 @@ const TransferForm = (): JSX.Element => {
   const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
   const {
     balanceInterBTC,
-    balanceDOT,
+    collateralTokenBalance,
     parachainStatus,
     address
   } = useSelector((state: StoreType) => state.general);
@@ -161,7 +161,7 @@ const TransferForm = (): JSX.Element => {
       return t('insufficient_funds');
     }
 
-    if (Number(balanceDOT) === 0) {
+    if (Number(collateralTokenBalance) === 0) {
       return t('insufficient_funds_dot');
     }
 

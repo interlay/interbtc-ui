@@ -84,7 +84,7 @@ export interface UpdateBalancePolkaBTC {
 
 export interface UpdateBalanceDOT {
   type: typeof UPDATE_BALANCE_DOT;
-  balanceDOT: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
 }
 
 export interface SetInstalledExtension {

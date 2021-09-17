@@ -13,14 +13,14 @@ import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg
 
 interface Props {
   balanceInterBTC?: BitcoinAmount;
-  balanceDOT?: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  collateralTokenBalance?: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
 }
 
 const Balances = ({
   balanceInterBTC,
-  balanceDOT
+  collateralTokenBalance
 }: Props): JSX.Element => {
-  const roundedBalanceDot = displayMonetaryAmount(balanceDOT);
+  const roundedBalanceDot = displayMonetaryAmount(collateralTokenBalance);
   const roundedBalanceInterBTC = displayMonetaryAmount(balanceInterBTC);
 
   return (

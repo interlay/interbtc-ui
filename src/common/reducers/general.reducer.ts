@@ -27,7 +27,7 @@ const initialState = {
   totalInterBTC: BitcoinAmount.zero,
   totalLockedCollateralTokenAmount: newMonetaryAmount(0, COLLATERAL_TOKEN),
   balanceInterBTC: BitcoinAmount.zero,
-  balanceDOT: newMonetaryAmount(0, COLLATERAL_TOKEN),
+  collateralTokenBalance: newMonetaryAmount(0, COLLATERAL_TOKEN),
   extensions: [],
   btcRelayHeight: 0,
   bitcoinHeight: 0,
@@ -63,7 +63,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
   case IS_VAULT_CLIENT_LOADED:
     return { ...state, vaultClientLoaded: action.isLoaded };
   case UPDATE_BALANCE_DOT:
-    return { ...state, balanceDOT: action.balanceDOT };
+    return { ...state, collateralTokenBalance: action.collateralTokenBalance };
   case UPDATE_BALANCE_POLKA_BTC:
     return { ...state, balanceInterBTC: action.balanceInterBTC };
   case SHOW_ACCOUNT_MODAL:

@@ -33,7 +33,7 @@ const Topbar = (): JSX.Element => {
     extensions,
     address,
     polkaBtcLoaded,
-    balanceDOT,
+    collateralTokenBalance,
     balanceInterBTC,
     showAccountModal
   } = useSelector((state: StoreType) => state.general);
@@ -144,7 +144,7 @@ const Topbar = (): JSX.Element => {
                   {t('request_dot')}
                 </InterlayDenimOutlinedButton>
                 <Balances
-                  balanceDOT={balanceDOT}
+                  collateralTokenBalance={collateralTokenBalance}
                   balanceInterBTC={balanceInterBTC} />
                 <InterlayDefaultContainedButton
                   className={SMALL_SIZE_BUTTON_CLASS_NAME}

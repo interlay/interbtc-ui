@@ -63,7 +63,7 @@ const Burn = (): JSX.Element | null => {
     prices,
     polkaBtcLoaded,
     balanceInterBTC,
-    balanceDOT,
+    collateralTokenBalance,
     parachainStatus,
     address
   } = useSelector((state: StoreType) => state.general);
@@ -146,7 +146,7 @@ const Burn = (): JSX.Element | null => {
         // - Should be able to watch the balances in one place and update the context accordingly.
         dispatch(updateBalancePolkaBTCAction(balanceInterBTC.sub(BitcoinAmount.from.BTC(data[INTER_BTC_AMOUNT]))));
         const earnedDOT = burnRate.toBase(BitcoinAmount.from.BTC(data[INTER_BTC_AMOUNT]) || BitcoinAmount.zero);
-        dispatch(updateBalanceDOTAction(balanceDOT.add(earnedDOT)));
+        dispatch(updateBalanceDOTAction(collateralTokenBalance.add(earnedDOT)));
         toast.success(t('burn_page.successfully_burned'));
         reset({
           [INTER_BTC_AMOUNT]: ''

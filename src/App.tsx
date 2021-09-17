@@ -117,7 +117,7 @@ const App = (): JSX.Element => {
     polkaBtcLoaded,
     address,
     balanceInterBTC,
-    balanceDOT,
+    collateralTokenBalance,
     vaultClientLoaded
   } = useSelector((state: StoreType) => state.general);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -323,7 +323,7 @@ const App = (): JSX.Element => {
             COLLATERAL_TOKEN,
             address,
             (_, balance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>) => {
-              if (!balance.eq(balanceDOT)) {
+              if (!balance.eq(collateralTokenBalance)) {
                 dispatch(updateBalanceDOTAction(balance));
               }
             }
@@ -359,7 +359,7 @@ const App = (): JSX.Element => {
     polkaBtcLoaded,
     address,
     balanceInterBTC,
-    balanceDOT
+    collateralTokenBalance
   ]);
 
   return (
