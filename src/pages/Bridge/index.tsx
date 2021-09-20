@@ -14,7 +14,7 @@ import Tabs, {
   Tab,
   TabPanel
 } from 'components/Tabs';
-import { COLLATERAL_TOKEN } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters, { QueryParameters } from 'utils/hooks/use-update-query-parameters';
 import TAB_IDS from 'utils/constants/tab-ids';
@@ -81,13 +81,11 @@ const Bridge = (): JSX.Element | null => {
     if (!bridgeLoaded) return;
     (async () => {
       try {
-        // ray test touch <<<
         const maxBurnableTokens = await window.polkaBTC.interBtcApi.redeem.getMaxBurnableTokens(COLLATERAL_TOKEN);
         setBurnable(maxBurnableTokens.gt(BitcoinAmount.zero));
-        // ray test touch >>>
       } catch (error) {
         // TODO: should add error handling
-        console.log('[Application] error.message => ', error.message);
+        console.log('[Application] error => ', error);
       }
     })();
   }, [bridgeLoaded]);

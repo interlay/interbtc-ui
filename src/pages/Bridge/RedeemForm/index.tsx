@@ -41,10 +41,8 @@ import {
   BALANCE_MAX_INTEGER_LENGTH,
   BTC_ADDRESS_REGEX
 } from '../../../constants';
-import {
-  ACCOUNT_ID_TYPE_NAME,
-  COLLATERAL_TOKEN
-} from 'config/general';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {

@@ -17,7 +17,7 @@ import {
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterlayLink from 'components/UI/InterlayLink';
-import { COLLATERAL_TOKEN } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import { getUsdAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';

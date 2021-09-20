@@ -1,7 +1,7 @@
 import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 
-import { COLLATERAL_TOKEN } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import {
   IS_POLKA_BTC_LOADED,
   IS_VAULT_CLIENT_LOADED,

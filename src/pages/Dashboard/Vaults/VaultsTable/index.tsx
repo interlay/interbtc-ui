@@ -38,7 +38,7 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
-import { COLLATERAL_TOKEN } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import { shortAddress } from '../../../../common/utils/utils';
 import * as constants from '../../../../constants';
 import genericFetcher, {

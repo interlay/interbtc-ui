@@ -16,7 +16,7 @@ import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
 import InterlayLink from 'components/UI/InterlayLink';
-import { APP_NAME } from 'config/general';
+import { APP_NAME } from 'config/relay-chains';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';
 import { shortAddress } from 'common/utils/utils';

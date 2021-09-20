@@ -38,13 +38,13 @@ import FullLoadingSpinner from 'components/FullLoadingSpinner';
 // TODO: block for now
 // import TransitionWrapper from 'parts/TransitionWrapper';
 import ErrorFallback from 'components/ErrorFallback';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   APP_NAME,
-  ACCOUNT_ID_TYPE_NAME,
   WRAPPED_TOKEN,
   COLLATERAL_TOKEN,
   WrappedTokenAmount
-} from 'config/general';
+} from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import './i18n';
 import * as constants from './constants';
@@ -173,8 +173,7 @@ const App = (): JSX.Element => {
         dispatch(isVaultClientLoaded(!!vault));
       } catch (error) {
         // TODO: should add error handling
-        console.log('No interBTC vault found for the account in the connected Polkadot wallet.');
-        console.log('[App React.useEffect 1] error.message => ', error.message);
+        console.log('[App React.useEffect 1] error => ', error);
       }
     })();
   }, [
@@ -226,7 +225,9 @@ const App = (): JSX.Element => {
         );
       } catch (error) {
         // TODO: should add error handling
+        // ray test touch <<<
         console.log('[App React.useEffect 2] error.message => ', error.message);
+        // ray test touch >>>
       }
     })();
   }, [

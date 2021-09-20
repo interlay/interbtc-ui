@@ -23,7 +23,7 @@ import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import ErrorFallback from 'components/ErrorFallback';
-import { COLLATERAL_TOKEN } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import useQueryParams from 'utils/hooks/use-query-params';
 import { getUsdAmount } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';

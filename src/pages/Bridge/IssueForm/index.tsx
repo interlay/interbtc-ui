@@ -35,7 +35,7 @@ import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
-import { COLLATERAL_TOKEN } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import {
   BLOCK_TIME,
   BLOCKS_BEHIND_LIMIT
@@ -128,7 +128,7 @@ const IssueForm = (): JSX.Element | null => {
           theDepositRate,
           issuePeriodInBlocks,
           theDustValue,
-          btcToDot,
+          theBtcToDot,
           theVaults
         ] = await Promise.all([
           // Loading this data is not strictly required as long as the constantly set values did
@@ -137,7 +137,9 @@ const IssueForm = (): JSX.Element | null => {
           interbtcIndex.getIssueGriefingCollateral(),
           interbtcIndex.getIssuePeriod(),
           interbtcIndex.getDustValue(),
+          // ray test touch <<<
           window.polkaBTC.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN),
+          // ray test touch >>>
           // This data (the vaults) is strictly required to request issue
           window.polkaBTC.interBtcApi.vaults.getVaultsWithIssuableTokens()
         ]);
@@ -148,7 +150,7 @@ const IssueForm = (): JSX.Element | null => {
         const issuePeriod = issuePeriodInBlocks * BLOCK_TIME;
         dispatch(updateIssuePeriodAction(issuePeriod));
         setDustValue(BitcoinAmount.from.BTC(Number(JSON.parse(theDustValue))));
-        setBTCToDOTRate(btcToDot);
+        setBTCToDOTRate(theBtcToDot);
 
         let theVaultMaxAmount = BitcoinAmount.zero;
         // The first item is the vault with the largest capacity

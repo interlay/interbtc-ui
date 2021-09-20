@@ -31,7 +31,7 @@ import SubmitButton from '../SubmitButton';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
-import { COLLATERAL_TOKEN } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import { getUsdAmount } from 'common/utils/utils';
 import {
   StoreType,

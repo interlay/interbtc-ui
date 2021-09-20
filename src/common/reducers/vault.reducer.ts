@@ -5,7 +5,7 @@ import {
 } from '@interlay/interbtc-api';
 import { H256 } from '@polkadot/types/interfaces';
 
-import { COLLATERAL_TOKEN } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import {
   ADD_REPLACE_REQUESTS,
   UPDATE_COLLATERALIZATION,

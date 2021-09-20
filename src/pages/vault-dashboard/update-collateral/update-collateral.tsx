@@ -15,10 +15,8 @@ import {
 } from '@interlay/interbtc-api';
 
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import {
-  ACCOUNT_ID_TYPE_NAME,
-  COLLATERAL_TOKEN
-} from 'config/general';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import {
   updateCollateralAction,
   updateCollateralizationAction
