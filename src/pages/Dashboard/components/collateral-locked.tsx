@@ -84,7 +84,7 @@ const CollateralLocked = ({ linkButton }: Props): JSX.Element => {
               'font-bold',
               'mb-1'
             )}>
-            ${getUsdAmount(totalLockedCollateralTokenAmount, prices.polkadot.usd)}
+            ${getUsdAmount(totalLockedCollateralTokenAmount, prices.collateralToken.usd)}
           </h2>
         </div>
         {linkButton && (

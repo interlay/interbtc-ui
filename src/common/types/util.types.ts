@@ -54,7 +54,7 @@ export type Prices = {
   bitcoin: {
     usd: number;
   };
-  polkadot: {
+  collateralToken: {
     usd: number;
   };
 };

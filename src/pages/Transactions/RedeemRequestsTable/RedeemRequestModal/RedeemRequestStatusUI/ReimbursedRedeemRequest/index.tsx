@@ -111,7 +111,7 @@ const ReimbursedRedeemRequest = ({
           &nbsp;{`${collateralTokenAmount.toHuman()} DOT`}
         </span>
         <span>
-          &nbsp;{`(≈ $${getUsdAmount(collateralTokenAmount, prices.polkadot.usd)})`}
+          &nbsp;{`(≈ $${getUsdAmount(collateralTokenAmount, prices.collateralToken.usd)})`}
         </span>
         <span className='text-interlayDenim'>
           &nbsp;{t('redeem_page.recover_receive_total')}
@@ -133,7 +133,7 @@ const ReimbursedRedeemRequest = ({
           }
           value={burnCollateralTokenAmount.toHuman()}
           unitName='DOT'
-          approxUSD={getUsdAmount(burnCollateralTokenAmount, prices.polkadot.usd)} />
+          approxUSD={getUsdAmount(burnCollateralTokenAmount, prices.collateralToken.usd)} />
         <PriceInfo
           className='w-full'
           title={
@@ -148,7 +148,7 @@ const ReimbursedRedeemRequest = ({
           }
           value={punishmentCollateralTokenAmount.toHuman()}
           unitName='DOT'
-          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.polkadot.usd)} />
+          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)} />
         <hr
           className={clsx(
             'border-t-2',
@@ -169,7 +169,7 @@ const ReimbursedRedeemRequest = ({
           }
           value={collateralTokenAmount.toHuman()}
           unitName='DOT'
-          approxUSD={getUsdAmount(collateralTokenAmount, prices.polkadot.usd)} />
+          approxUSD={getUsdAmount(collateralTokenAmount, prices.collateralToken.usd)} />
       </div>
       <InterlayLink
         className={clsx(

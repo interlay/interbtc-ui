@@ -232,7 +232,7 @@ const Burn = (): JSX.Element | null => {
             }
             value={earnedCollateralTokenAmount.toHuman()}
             unitName='DOT'
-            approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.polkadot.usd)} />
+            approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.collateralToken.usd)} />
           {/* TODO: could componentize */}
           <hr
             className={clsx(
@@ -253,7 +253,7 @@ const Burn = (): JSX.Element | null => {
             }
             value={earnedCollateralTokenAmount.toHuman()}
             unitName='DOT'
-            approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.polkadot.usd)} />
+            approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.collateralToken.usd)} />
           <SubmitButton
             // TODO: should not check everywhere like this
             disabled={

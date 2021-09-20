@@ -177,7 +177,7 @@ const ReimburseStatusUI = ({
           <span className='text-interlayDenim'>
             &nbsp;{punishmentCollateralTokenAmount.toHuman()} DOT
           </span>
-          <span>&nbsp;{`(≈ $ ${getUsdAmount(punishmentCollateralTokenAmount, prices.polkadot.usd)})`}</span>
+          <span>&nbsp;{`(≈ $ ${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)})`}</span>
           <span>&nbsp;{t('redeem_page.compensation')}</span>
           .
         </p>
@@ -199,7 +199,7 @@ const ReimburseStatusUI = ({
               <span>
                 &nbsp;
                 {t('redeem_page.retry_with_another', {
-                  compensationPrice: getUsdAmount(punishmentCollateralTokenAmount, prices.polkadot.usd)
+                  compensationPrice: getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)
                 })}
               </span>
               .
@@ -219,14 +219,14 @@ const ReimburseStatusUI = ({
               <span>
                 &nbsp;
                 {t('redeem_page.with_added', {
-                  amountPrice: getUsdAmount(collateralTokenAmount, prices.polkadot.usd)
+                  amountPrice: getUsdAmount(collateralTokenAmount, prices.collateralToken.usd)
                 })}
               </span>
               <span className='text-interlayDenim'>&nbsp;{punishmentCollateralTokenAmount.toHuman()} DOT</span>
               <span>
                 &nbsp;
                 {t('redeem_page.as_compensation_instead', {
-                  compensationPrice: getUsdAmount(punishmentCollateralTokenAmount, prices.polkadot.usd)
+                  compensationPrice: getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)
                 })}
               </span>
             </p>

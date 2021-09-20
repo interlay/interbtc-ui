@@ -325,7 +325,7 @@ const IssueForm = (): JSX.Element | null => {
             }
             value={displayMonetaryAmount(securityDeposit)}
             unitName='DOT'
-            approxUSD={getUsdAmount(securityDeposit, prices.polkadot.usd)}
+            approxUSD={getUsdAmount(securityDeposit, prices.collateralToken.usd)}
             tooltip={
               <InterlayTooltip label={t('issue_page.tooltip_security_deposit')}>
                 <InformationCircleIcon

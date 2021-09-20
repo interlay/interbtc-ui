@@ -87,7 +87,7 @@ const RetriedRedeemRequest = ({
           &nbsp;{`${punishmentCollateralTokenAmount.toHuman()} DOT`}
         </span>
         <span>
-          &nbsp;({`≈ $${getUsdAmount(punishmentCollateralTokenAmount, prices.polkadot.usd)}`})
+          &nbsp;({`≈ $${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)}`})
         </span>
         <span className='text-interlayDenim'>
           &nbsp;{t('redeem_page.recover_receive_total')}.
@@ -107,7 +107,7 @@ const RetriedRedeemRequest = ({
           }
           value={punishmentCollateralTokenAmount.toHuman()}
           unitName='DOT'
-          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.polkadot.usd)} />
+          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)} />
         <hr
           className={clsx(
             'border-t-2',
@@ -128,7 +128,7 @@ const RetriedRedeemRequest = ({
           }
           value={punishmentCollateralTokenAmount.toHuman()}
           unitName='DOT'
-          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.polkadot.usd)} />
+          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)} />
       </div>
       <InterlayLink
         className={clsx(

@@ -18,9 +18,7 @@ export default function fetchPrices(dispatch: Dispatch, store: StoreState): void
         // Update the store only if the price is actually changed
         if (
           prices.bitcoin.usd !== storePrices.bitcoin.usd ||
-          // ray test touch <<<
-          prices.polkadot.usd !== storePrices.polkadot.usd
-          // ray test touch >>>
+          prices.collateralToken.usd !== storePrices.collateralToken.usd
         ) {
           dispatch(updateOfPricesAction(prices));
         }

@@ -32,7 +32,10 @@ const initialState = {
   btcRelayHeight: 0,
   bitcoinHeight: 0,
   parachainStatus: ParachainStatus.Loading,
-  prices: { bitcoin: { usd: 0 }, polkadot: { usd: 0 } }
+  prices: {
+    bitcoin: { usd: 0 },
+    collateralToken: { usd: 0 }
+  }
 };
 
 export const generalReducer = (state: GeneralState = initialState, action: GeneralActions): GeneralState => {
