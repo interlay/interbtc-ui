@@ -8,7 +8,7 @@ import { StoreState } from './common/types/util.types';
 
 declare global {
   interface Window {
-    polkaBTC: InterBtc;
+    bridge: InterBtc;
     faucet: FaucetClient;
     isFetchingActive: boolean;
   }

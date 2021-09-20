@@ -36,15 +36,15 @@ const RequestReplacementModal = (props: Props): JSX.Element => {
       if (BitcoinAmount.from.BTC(amount).to.Satoshi() === undefined) {
         throw new Error('Amount to convert is less than 1 satoshi.');
       }
-      const dustValue = await window.polkaBTC.interBtcApi.redeem.getDustValue();
+      const dustValue = await window.bridge.interBtcApi.redeem.getDustValue();
       const amountPolkaBtc = BitcoinAmount.from.BTC(amount);
       if (amountPolkaBtc.lte(dustValue)) {
         throw new Error(`Please enter an amount greater than Bitcoin dust (${dustValue.toHuman()} BTC)`);
       }
-      await window.polkaBTC.interBtcApi.replace.request(amountPolkaBtc);
+      await window.bridge.interBtcApi.replace.request(amountPolkaBtc);
 
-      const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const requests = await window.polkaBTC.interBtcApi.replace.mapReplaceRequests(vaultId);
+      const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+      const requests = await window.bridge.interBtcApi.replace.mapReplaceRequests(vaultId);
       if (!requests) return;
 
       dispatch(addReplaceRequestsAction(requests));

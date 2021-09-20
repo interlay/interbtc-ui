@@ -27,7 +27,7 @@ const DefaultRedeemRequest = ({
     (async () => {
       try {
         const theStableBitcoinConfirmations =
-          await window.polkaBTC.interBtcApi.btcRelay.getStableBitcoinConfirmations();
+          await window.bridge.interBtcApi.btcRelay.getStableBitcoinConfirmations();
 
         setStableBitcoinConfirmations(theStableBitcoinConfirmations);
       } catch (error) {

@@ -11,7 +11,7 @@ import {
   INIT_GENERAL_DATA_ACTION,
   IS_VAULT_CLIENT_LOADED,
   UPDATE_BALANCE_POLKA_BTC,
-  UPDATE_BALANCE_DOT,
+  UPDATE_COLLATERAL_TOKEN_BALANCE,
   SET_INSTALLED_EXTENSION,
   SHOW_ACCOUNT_MODAL,
   UPDATE_OF_PRICES,
@@ -23,7 +23,7 @@ import {
   InitGeneralDataAction,
   IsVaultClientLoaded,
   UpdateBalancePolkaBTC,
-  UpdateBalanceDOT,
+  UpdateCollateralTokenBalance,
   SetInstalledExtension,
   ShowAccountModal,
   IsFaucetLoaded,
@@ -60,8 +60,8 @@ export const updateWrappedTokenBalanceAction = (wrappedTokenBalance: BitcoinAmou
 
 export const updateCollateralTokenBalanceAction = (
   collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>
-): UpdateBalanceDOT => ({
-  type: UPDATE_BALANCE_DOT,
+): UpdateCollateralTokenBalance => ({
+  type: UPDATE_COLLATERAL_TOKEN_BALANCE,
   collateralTokenBalance
 });
 

@@ -50,8 +50,8 @@ const RetriedRedeemRequest = ({
           punishmentFee,
           btcDotRate
         ] = await Promise.all([
-          window.polkaBTC.interBtcApi.vaults.getPunishmentFee(),
-          window.polkaBTC.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN)
+          window.bridge.interBtcApi.vaults.getPunishmentFee(),
+          window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN)
         ]);
 
         const btcAmount = request ? request.amountBTC : BitcoinAmount.zero;

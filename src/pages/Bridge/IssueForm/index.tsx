@@ -138,10 +138,10 @@ const IssueForm = (): JSX.Element | null => {
           interbtcIndex.getIssuePeriod(),
           interbtcIndex.getDustValue(),
           // ray test touch <<<
-          window.polkaBTC.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN),
+          window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN),
           // ray test touch >>>
           // This data (the vaults) is strictly required to request issue
-          window.polkaBTC.interBtcApi.vaults.getVaultsWithIssuableTokens()
+          window.bridge.interBtcApi.vaults.getVaultsWithIssuableTokens()
         ]);
         setStatus(STATUSES.RESOLVED);
 
@@ -239,7 +239,7 @@ const IssueForm = (): JSX.Element | null => {
       try {
         const wrappedTokenAmount = BitcoinAmount.from.BTC(data[BTC_AMOUNT]);
         setSubmitStatus(STATUSES.PENDING);
-        const result = await window.polkaBTC.interBtcApi.issue.request(wrappedTokenAmount);
+        const result = await window.bridge.interBtcApi.issue.request(wrappedTokenAmount);
         // TODO: handle issue aggregation
         const issueRequest = result[0];
         handleSubmittedRequestModalOpen(issueRequest);

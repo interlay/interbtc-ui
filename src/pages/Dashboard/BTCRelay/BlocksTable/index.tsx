@@ -54,7 +54,7 @@ const BlocksTable = (): JSX.Element => {
 
   // ray test touch <
   // const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
-  // console.log('ray : ***** window?.polkaBTC?.index => ', window?.polkaBTC?.index);
+  // console.log('ray : ***** window?.bridge?.index => ', window?.bridge?.index);
   // ray test touch >
   const [blocks, setBlocks] = React.useState<Array<RelayedBlock>>();
   const [totalRelayedBlocks, setTotalRelayedBlocks] = React.useState(0);

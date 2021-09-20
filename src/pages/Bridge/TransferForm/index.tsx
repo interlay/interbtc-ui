@@ -42,16 +42,16 @@ type TransferFormData = {
 }
 
 const NETWORK_TYPES = Object.freeze({
-  polkaBTC: 'inter-btc',
-  acala: 'acala',
-  plasm: 'plasm',
-  ethereum: 'ethereum',
-  cosmos: 'cosmos'
+  INTER_BTC: 'inter-btc',
+  ACALA: 'acala',
+  PLASM: 'plasm',
+  ETHEREUM: 'ethereum',
+  COSMOS: 'cosmos'
 });
 
 const NETWORK_ITEMS = [
   {
-    type: NETWORK_TYPES.polkaBTC,
+    type: NETWORK_TYPES.INTER_BTC,
     icon: (
       <InterBTCLogoIcon
         width={24}
@@ -60,7 +60,7 @@ const NETWORK_ITEMS = [
     title: 'interBTC'
   },
   {
-    type: NETWORK_TYPES.acala,
+    type: NETWORK_TYPES.ACALA,
     icon: (
       <AcalaLogoIcon
         width={20}
@@ -70,7 +70,7 @@ const NETWORK_ITEMS = [
     disabled: true
   },
   {
-    type: NETWORK_TYPES.plasm,
+    type: NETWORK_TYPES.PLASM,
     icon: (
       <PlasmLogoIcon
         width={20}
@@ -80,7 +80,7 @@ const NETWORK_ITEMS = [
     disabled: true
   },
   {
-    type: NETWORK_TYPES.ethereum,
+    type: NETWORK_TYPES.ETHEREUM,
     icon: (
       <EthereumLogoIcon
         width={20}
@@ -90,7 +90,7 @@ const NETWORK_ITEMS = [
     disabled: true
   },
   {
-    type: NETWORK_TYPES.cosmos,
+    type: NETWORK_TYPES.COSMOS,
     icon: (
       <CosmosLogoIcon
         width={20}
@@ -125,7 +125,7 @@ const TransferForm = (): JSX.Element => {
   const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT);
 
   const [networkModalOpen, setNetworkModalOpen] = React.useState(false);
-  const [selectedNetworkType, setSelectedNetworkType] = React.useState(NETWORK_TYPES.polkaBTC);
+  const [selectedNetworkType, setSelectedNetworkType] = React.useState(NETWORK_TYPES.INTER_BTC);
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
@@ -140,7 +140,7 @@ const TransferForm = (): JSX.Element => {
   const onSubmit = async (data: TransferFormData) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
-      await window.polkaBTC.interBtcApi.tokens.transfer(
+      await window.bridge.interBtcApi.tokens.transfer(
         data[DOT_ADDRESS],
         BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT])
       );

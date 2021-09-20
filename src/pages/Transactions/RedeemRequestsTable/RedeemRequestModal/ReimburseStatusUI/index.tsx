@@ -68,8 +68,8 @@ const ReimburseStatusUI = ({
           punishment,
           btcDotRate
         ] = await Promise.all([
-          window.polkaBTC.interBtcApi.vaults.getPunishmentFee(),
-          window.polkaBTC.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN)
+          window.bridge.interBtcApi.vaults.getPunishmentFee(),
+          window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN)
         ]);
         const amountPolkaBTC = request ? request.amountBTC : BitcoinAmount.zero;
         setCollateralTokenAmount(btcDotRate.toCounter(amountPolkaBTC));
@@ -91,7 +91,7 @@ const ReimburseStatusUI = ({
   const queryClient = useQueryClient();
   const retryMutation = useMutation<void, Error, Redeem>(
     (variables: Redeem) => {
-      return window.polkaBTC.interBtcApi.redeem.cancel(variables.id, false);
+      return window.bridge.interBtcApi.redeem.cancel(variables.id, false);
     },
     {
       onSuccess: () => {
@@ -112,7 +112,7 @@ const ReimburseStatusUI = ({
   );
   const reimburseMutation = useMutation<void, Error, Redeem>(
     (variables: Redeem) => {
-      return window.polkaBTC.interBtcApi.redeem.cancel(variables.id, true);
+      return window.bridge.interBtcApi.redeem.cancel(variables.id, true);
     },
     {
       onSuccess: () => {

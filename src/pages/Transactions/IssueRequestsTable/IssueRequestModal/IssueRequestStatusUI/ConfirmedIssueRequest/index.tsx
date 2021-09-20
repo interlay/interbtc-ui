@@ -44,7 +44,7 @@ const ConfirmedIssueRequest = ({
   const queryClient = useQueryClient();
   const executeMutation = useMutation<void, Error, Issue>(
     (variables: Issue) => {
-      return window.polkaBTC.interBtcApi.issue.execute('0x' + variables.id, variables.btcTxId);
+      return window.bridge.interBtcApi.issue.execute('0x' + variables.id, variables.btcTxId);
     },
     {
       onSuccess: (_, variables) => {

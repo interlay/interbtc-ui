@@ -98,7 +98,7 @@ const Burn = (): JSX.Element | null => {
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const theBurnRate = await window.polkaBTC.interBtcApi.redeem.getBurnExchangeRate(COLLATERAL_TOKEN);
+        const theBurnRate = await window.bridge.interBtcApi.redeem.getBurnExchangeRate(COLLATERAL_TOKEN);
         setBurnRate(theBurnRate);
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
@@ -138,7 +138,7 @@ const Burn = (): JSX.Element | null => {
     const onSubmit = async (data: BurnForm) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
-        await window.polkaBTC.interBtcApi.redeem.burn(
+        await window.bridge.interBtcApi.redeem.burn(
           BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]),
           COLLATERAL_TOKEN
         );

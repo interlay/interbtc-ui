@@ -19,7 +19,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
   useEffect(() => {
     (async () => {
       try {
-        const oracleStatuses = await window.polkaBTC.interBtcIndex.getLatestSubmissionForEachOracle();
+        const oracleStatuses = await window.bridge.interBtcIndex.getLatestSubmissionForEachOracle();
         setOracles(oracleStatuses);
       } catch (error) {
         console.log('[OracleTable] error.message => ', error.message);

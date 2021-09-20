@@ -22,8 +22,8 @@ export default async function fetchTotals(dispatch: Dispatch, store: StoreState)
       latestTotalWrappedTokenAmount,
       latestTotalLockedCollateralTokenAmount
     ] = await Promise.all([
-      window.polkaBTC.interBtcApi.tokens.total(WRAPPED_TOKEN),
-      window.polkaBTC.interBtcApi.tokens.total(COLLATERAL_TOKEN)
+      window.bridge.interBtcApi.tokens.total(WRAPPED_TOKEN),
+      window.bridge.interBtcApi.tokens.total(COLLATERAL_TOKEN)
     ]);
 
     // update store only if there is a difference between the latest totals and current totals

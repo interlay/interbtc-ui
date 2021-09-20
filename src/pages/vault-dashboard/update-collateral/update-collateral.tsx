@@ -72,17 +72,17 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
     try {
       if (currentCollateral.gt(newCollateral)) {
         const withdrawAmount = currentCollateral.sub(newCollateral);
-        await window.polkaBTC.interBtcApi.vaults.withdrawCollateral(withdrawAmount);
+        await window.bridge.interBtcApi.vaults.withdrawCollateral(withdrawAmount);
       } else if (currentCollateral.lt(newCollateral)) {
         const depositAmount = newCollateral.sub(currentCollateral);
-        await window.polkaBTC.interBtcApi.vaults.depositCollateral(depositAmount);
+        await window.bridge.interBtcApi.vaults.depositCollateral(depositAmount);
       } else {
         closeModal();
         return;
       }
 
-      const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const balanceLockedDOT = await window.polkaBTC.interBtcApi.tokens.balanceLocked(COLLATERAL_TOKEN, vaultId);
+      const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+      const balanceLockedDOT = await window.bridge.interBtcApi.tokens.balanceLocked(COLLATERAL_TOKEN, vaultId);
       dispatch(updateCollateralAction(balanceLockedDOT));
       let collateralization;
       try {
@@ -130,9 +130,9 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
       }
       setNewCollateral(newCollateral);
 
-      const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+      const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
       const requiredCollateral =
-        await window.polkaBTC.interBtcApi.vaults.getRequiredCollateralForVault(vaultId, COLLATERAL_TOKEN);
+        await window.bridge.interBtcApi.vaults.getRequiredCollateralForVault(vaultId, COLLATERAL_TOKEN);
 
       // Collateral update only allowed if above required collateral
       const allowed = newCollateral.gte(requiredCollateral);
@@ -140,7 +140,7 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
 
       // Get the updated collateralization
       const newCollateralization =
-        await window.polkaBTC.interBtcApi.vaults.getVaultCollateralization(vaultId, newCollateral);
+        await window.bridge.interBtcApi.vaults.getVaultCollateralization(vaultId, newCollateral);
       if (newCollateralization === undefined) {
         setNewCollateralization('∞');
       } else {

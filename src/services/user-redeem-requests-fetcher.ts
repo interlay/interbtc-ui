@@ -33,7 +33,7 @@ const userRedeemRequestsFetcher = async ({ queryKey }: Arguments): Promise<Array
     throw new Error('Invalid key!');
   }
 
-  return await window.polkaBTC.interBtcIndex.getFilteredRedeems({
+  return await window.bridge.interBtcIndex.getFilteredRedeems({
     page,
     perPage: limit,
     network: BITCOIN_NETWORK as BitcoinNetwork,

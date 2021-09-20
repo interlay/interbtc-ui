@@ -60,16 +60,16 @@ export default function NetworkActivity({
 
       // Returns a little endian encoded block hash
       // Converting to big endian for display
-      const bestParachainBlock = reverseHashEndianness(await window.polkaBTC.interBtcApi.btcRelay.getLatestBlock());
-      const bestParachainHeight = Number(await window.polkaBTC.interBtcApi.btcRelay.getLatestBlockHeight());
+      const bestParachainBlock = reverseHashEndianness(await window.bridge.interBtcApi.btcRelay.getLatestBlock());
+      const bestParachainHeight = Number(await window.bridge.interBtcApi.btcRelay.getLatestBlockHeight());
 
       let bestBitcoinBlock = '-';
       let bestBitcoinHeight = 0;
 
       try {
         // Returns a big endian encoded block hash
-        bestBitcoinBlock = await window.polkaBTC.interBtcApi.electrsAPI.getLatestBlock();
-        bestBitcoinHeight = await window.polkaBTC.interBtcApi.electrsAPI.getLatestBlockHeight();
+        bestBitcoinBlock = await window.bridge.interBtcApi.electrsAPI.getLatestBlock();
+        bestBitcoinHeight = await window.bridge.interBtcApi.electrsAPI.getLatestBlockHeight();
       } catch (error) {
         // network error
       }

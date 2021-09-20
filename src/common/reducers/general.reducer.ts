@@ -7,7 +7,7 @@ import {
   IS_VAULT_CLIENT_LOADED,
   INIT_GENERAL_DATA_ACTION,
   CHANGE_ADDRESS,
-  UPDATE_BALANCE_DOT,
+  UPDATE_COLLATERAL_TOKEN_BALANCE,
   UPDATE_BALANCE_POLKA_BTC,
   GeneralActions,
   SET_INSTALLED_EXTENSION,
@@ -65,7 +65,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
     };
   case IS_VAULT_CLIENT_LOADED:
     return { ...state, vaultClientLoaded: action.isLoaded };
-  case UPDATE_BALANCE_DOT:
+  case UPDATE_COLLATERAL_TOKEN_BALANCE:
     return { ...state, collateralTokenBalance: action.collateralTokenBalance };
   case UPDATE_BALANCE_POLKA_BTC:
     return { ...state, wrappedTokenBalance: action.wrappedTokenBalance };

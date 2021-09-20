@@ -80,7 +80,7 @@ const VaultDashboard = (): JSX.Element => {
       if (!address) return;
 
       try {
-        const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+        const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
         const [
           vault,
           feesPolkaBTC,
@@ -91,12 +91,12 @@ const VaultDashboard = (): JSX.Element => {
           totalIssueRequests,
           totalRedeemRequests
         ] = await Promise.allSettled([
-          window.polkaBTC.interBtcApi.vaults.get(vaultId),
-          window.polkaBTC.interBtcApi.pools.getFeesWrapped(address),
-          window.polkaBTC.interBtcApi.vaults.getIssuedAmount(vaultId),
-          window.polkaBTC.interBtcApi.vaults.getVaultCollateralization(vaultId),
-          window.polkaBTC.interBtcApi.vaults.getAPY(vaultId),
-          window.polkaBTC.interBtcApi.vaults.getIssuableAmount(vaultId),
+          window.bridge.interBtcApi.vaults.get(vaultId),
+          window.bridge.interBtcApi.pools.getFeesWrapped(address),
+          window.bridge.interBtcApi.vaults.getIssuedAmount(vaultId),
+          window.bridge.interBtcApi.vaults.getVaultCollateralization(vaultId),
+          window.bridge.interBtcApi.vaults.getAPY(vaultId),
+          window.bridge.interBtcApi.vaults.getIssuableAmount(vaultId),
           stats.getFilteredTotalIssues({ filterIssueColumns: [{ column: IssueColumns.VaultId, value: address }] }),
           stats.getFilteredTotalRedeems({ filterRedeemColumns: [{ column: RedeemColumns.VaultId, value: address }] })
         ]);

@@ -29,8 +29,8 @@ const ReplaceTable = (): JSX.Element => {
 
     (async () => {
       try {
-        const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
-        const requests = await window.polkaBTC.interBtcApi.replace.mapReplaceRequests(vaultId);
+        const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+        const requests = await window.bridge.interBtcApi.replace.mapReplaceRequests(vaultId);
         if (!requests) return;
 
         dispatch(addReplaceRequestsAction(requests));

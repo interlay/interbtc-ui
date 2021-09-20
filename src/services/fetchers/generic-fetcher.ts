@@ -27,7 +27,7 @@ const genericFetcher = <T>() => async ({ queryKey }: Arguments): Promise<T> => {
   }
 
   // TODO: should type properly
-  return await window.polkaBTC[arg1][arg2][arg3](...rest);
+  return await window.bridge[arg1][arg2][arg3](...rest);
 };
 
 export {

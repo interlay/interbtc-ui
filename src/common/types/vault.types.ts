@@ -9,17 +9,6 @@ import {
 } from '@interlay/interbtc-api';
 import { H256 } from '@polkadot/types/interfaces';
 
-export type Vault = {
-  vaultId: string;
-  btcAddress: string;
-  lockedDOT: string;
-  lockedBTC: string;
-  pendingBTC: string;
-  status: string;
-  unsettledCollateralization: string | undefined;
-  settledCollateralization: string | undefined;
-};
-
 export interface VaultState {
   requests: Map<H256, ReplaceRequestExt>;
   collateralization: string | undefined;

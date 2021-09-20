@@ -57,7 +57,7 @@ const BtcRelay = ({
   React.useEffect(() => {
     (async () => {
       try {
-        const hash = await window.polkaBTC.interBtcApi.electrsAPI.getLatestBlock();
+        const hash = await window.bridge.interBtcApi.electrsAPI.getLatestBlock();
         setBlockstreamTip(hash);
       } catch (error) {
         console.log('[BtcRelay] error.message => ', error.message);

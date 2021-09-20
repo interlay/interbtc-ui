@@ -151,11 +151,11 @@ const RedeemForm = (): JSX.Element | null => {
           currentInclusionFeeResult
         ] = await Promise.allSettled([
           interbtcIndex.getDustValue(),
-          window.polkaBTC.interBtcApi.vaults.getPremiumRedeemVaults(),
+          window.bridge.interBtcApi.vaults.getPremiumRedeemVaults(),
           interbtcIndex.getPremiumRedeemFee(),
-          window.polkaBTC.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN),
-          window.polkaBTC.interBtcApi.redeem.getFeeRate(),
-          window.polkaBTC.interBtcApi.redeem.getCurrentInclusionFee()
+          window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN),
+          window.bridge.interBtcApi.redeem.getFeeRate(),
+          window.bridge.interBtcApi.redeem.getCurrentInclusionFee()
         ]);
 
         if (dustValueResult.status === 'rejected') {
@@ -251,16 +251,16 @@ const RedeemForm = (): JSX.Element | null => {
             return;
           }
         } else {
-          const vaults = await window.polkaBTC.interBtcApi.vaults.getVaultsWithRedeemableTokens();
+          const vaults = await window.bridge.interBtcApi.vaults.getVaultsWithRedeemableTokens();
           vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), wrappedTokenAmount);
         }
 
         // FIXME: workaround to make premium redeem still possible
         const relevantVaults = new Map<AccountId, BitcoinAmount>();
-        const id = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, vaultId);
+        const id = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, vaultId);
         // FIXME: a bit of a dirty workaround with the capacity
         relevantVaults.set(id, wrappedTokenAmount.mul(2));
-        const result = await window.polkaBTC.interBtcApi.redeem.request(
+        const result = await window.bridge.interBtcApi.redeem.request(
           wrappedTokenAmount,
           data[BTC_ADDRESS],
           id

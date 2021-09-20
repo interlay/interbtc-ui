@@ -65,7 +65,7 @@ const AccountModal = ({
     // TODO: should check when the app being initialized (not check everywhere)
     await web3Enable(APP_NAME);
     const { signer } = await web3FromAddress(newAddress);
-    window.polkaBTC.interBtcApi.setAccount(newAddress, signer);
+    window.bridge.interBtcApi.setAccount(newAddress, signer);
     dispatch(changeAddressAction(newAddress));
 
     onClose();
