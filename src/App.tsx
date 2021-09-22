@@ -225,9 +225,7 @@ const App = (): JSX.Element => {
         );
       } catch (error) {
         // TODO: should add error handling
-        // ray test touch <<<
         console.log('[App React.useEffect 2] error.message => ', error.message);
-        // ray test touch >>>
       }
     })();
   }, [

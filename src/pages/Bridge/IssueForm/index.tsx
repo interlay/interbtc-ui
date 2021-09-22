@@ -137,9 +137,7 @@ const IssueForm = (): JSX.Element | null => {
           interbtcIndex.getIssueGriefingCollateral(),
           interbtcIndex.getIssuePeriod(),
           interbtcIndex.getDustValue(),
-          // ray test touch <<<
           window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN),
-          // ray test touch >>>
           // This data (the vaults) is strictly required to request issue
           window.bridge.interBtcApi.vaults.getVaultsWithIssuableTokens()
         ]);
