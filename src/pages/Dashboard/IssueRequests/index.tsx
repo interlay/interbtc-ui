@@ -6,7 +6,6 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import BN from 'bn.js';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import MainContainer from 'parts/MainContainer';
@@ -170,7 +169,7 @@ function IssueRequests(): JSX.Element {
               cumulativeIssuesPerDay
                 .slice(1)
                 .map(dataPoint => Number(BitcoinAmount.from.Satoshi(dataPoint.sat).str.BTC())),
-              pointIssuesPerDay.slice(1).map(sat => Number(new BN(sat)))
+              pointIssuesPerDay.slice(1).map(sat => Number(BitcoinAmount.from.Satoshi(sat).str.BTC()))
             ]} />
         </div>
       </div>
