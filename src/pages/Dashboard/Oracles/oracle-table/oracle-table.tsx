@@ -2,11 +2,11 @@
 import { ReactElement, useEffect, useState } from 'react';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
+import { CollateralBtcOracleStatus } from '@interlay/interbtc/build/oracleTypes';
 
+import { ORACLE_CURRENCY_KEY } from 'config/relay-chains';
 import DashboardTable, { StatusComponent, StatusCategories } from 'common/components/dashboard-table/dashboard-table';
 import { formatDateTime } from 'common/utils/utils';
-import { ORACLE_CURRENCY_KEY } from 'config/relay-chains';
-import { CollateralBtcOracleStatus } from '@interlay/interbtc/build/oracleTypes';
 
 type OracleTableProps = {
   dotLocked: string;

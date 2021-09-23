@@ -17,7 +17,7 @@ import {
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 
-const TEMP_DISABLE_COLLATERALISATION_DISPLAY = true; // remove once lib reimplements collateralization
+const TEMP_DISABLE_COLLATERALIZATION_DISPLAY = true; // TODO: remove once lib reimplements collateralization
 
 interface Props {
   linkButton?: boolean;
@@ -34,7 +34,7 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
 
   React.useEffect(() => {
     (async () => {
-      if (!bridgeLoaded || TEMP_DISABLE_COLLATERALISATION_DISPLAY) return;
+      if (!bridgeLoaded || TEMP_DISABLE_COLLATERALIZATION_DISPLAY) return;
 
       try {
         const systemCollateralization = await window.bridge.interBtcApi.vaults.getSystemCollateralization();
@@ -80,7 +80,7 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
           'items-center'
         )}>
         <div>
-          {!(failed || TEMP_DISABLE_COLLATERALISATION_DISPLAY) && (
+          {!(failed || TEMP_DISABLE_COLLATERALIZATION_DISPLAY) && (
             <>
               <h1
                 className={clsx(
