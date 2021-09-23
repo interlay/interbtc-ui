@@ -153,10 +153,6 @@ const IssueForm = (): JSX.Element | null => {
         let theVaultMaxAmount = BitcoinAmount.zero;
         // The first item is the vault with the largest capacity
         theVaultMaxAmount = theVaults.values().next().value;
-        // ray test touch <<<
-        console.log('ray : ***** theVaults => ', theVaults);
-        console.log('ray : ***** theVaultMaxAmount => ', theVaultMaxAmount);
-        // ray test touch >>>
 
         setVaultMaxAmount(theVaultMaxAmount);
         setVaults(theVaults);
@@ -204,9 +200,7 @@ const IssueForm = (): JSX.Element | null => {
       const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), btcAmount);
       if (!vaultId) {
         return t('issue_page.maximum_in_single_request', {
-          // ray test touch <<<
           maxAmount: vaultMaxAmount.toHuman()
-          // ray test touch >>>
         });
       }
 
