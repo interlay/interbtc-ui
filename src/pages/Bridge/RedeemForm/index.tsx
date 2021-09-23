@@ -177,7 +177,7 @@ const RedeemForm = (): JSX.Element | null => {
           setPremiumRedeemVaults(premiumRedeemVaultsResult.value);
         }
 
-        setDustValue(BitcoinAmount.from.Satoshi(dustValueResult.value));
+        setDustValue(BitcoinAmount.from.Satoshi(JSON.parse(dustValueResult.value)));
         setPremiumRedeemFee(new Big(premiumRedeemFeeResult.value));
         setBtcToDotRate(btcToDotRateResult.value);
         setRedeemFeeRate(redeemFeeRateResult.value);
