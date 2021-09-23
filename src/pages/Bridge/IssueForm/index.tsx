@@ -62,7 +62,7 @@ const BTC_AMOUNT = 'btc-amount';
 
 // TODO: should handle correctly later
 const EXTRA_REQUIRED_DOT_AMOUNT = 0.2;
-const MAXIMUM_ISSUABLE_POLKA_BTC_AMOUNT = 1;
+const MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT = 1;
 
 type IssueFormData = {
   [BTC_AMOUNT]: string;
@@ -147,12 +147,16 @@ const IssueForm = (): JSX.Element | null => {
         setDepositRate(theDepositRate);
         const issuePeriod = issuePeriodInBlocks * BLOCK_TIME;
         dispatch(updateIssuePeriodAction(issuePeriod));
-        setDustValue(BitcoinAmount.from.BTC(Number(JSON.parse(theDustValue))));
+        setDustValue(BitcoinAmount.from.Satoshi(JSON.parse(theDustValue)));
         setBTCToDOTRate(theBtcToDot);
 
         let theVaultMaxAmount = BitcoinAmount.zero;
         // The first item is the vault with the largest capacity
         theVaultMaxAmount = theVaults.values().next().value;
+        // ray test touch <<<
+        console.log('ray : ***** theVaults => ', theVaults);
+        console.log('ray : ***** theVaultMaxAmount => ', theVaultMaxAmount);
+        // ray test touch >>>
 
         setVaultMaxAmount(theVaultMaxAmount);
         setVaults(theVaults);
@@ -191,7 +195,7 @@ const IssueForm = (): JSX.Element | null => {
         return t('insufficient_funds_dot');
       }
 
-      if (value > MAXIMUM_ISSUABLE_POLKA_BTC_AMOUNT) {
+      if (value > MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT) {
         return t('issue_page.validation_max_value');
       } else if (btcAmount.lt(dustValue)) {
         return `${t('issue_page.validation_min_value')}${dustValue.toHuman()} BTC).`;
@@ -200,7 +204,9 @@ const IssueForm = (): JSX.Element | null => {
       const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), btcAmount);
       if (!vaultId) {
         return t('issue_page.maximum_in_single_request', {
+          // ray test touch <<<
           maxAmount: vaultMaxAmount.toHuman()
+          // ray test touch >>>
         });
       }
 
