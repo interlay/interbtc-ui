@@ -1,4 +1,3 @@
-
 import {
   Currency,
   BitcoinUnit,
@@ -25,6 +24,7 @@ let WRAPPED_TOKEN: Currency<BitcoinUnit>;
 let COLLATERAL_TOKEN: Currency<CollateralUnit>;
 let PRICES_URL: string;
 let COLLATERAL_TOKEN_SYMBOL: string;
+let ORACLE_CURRENCY_KEY: string;
 
 type WrappedTokenAmount =
   InterBtcAmount |
@@ -37,6 +37,7 @@ case POLKADOT: {
   COLLATERAL_TOKEN = Polkadot as Currency<CollateralUnit>;
   COLLATERAL_TOKEN_SYMBOL = 'polkadot';
   PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${COLLATERAL_TOKEN_SYMBOL}&vs_currencies=usd`;
+  ORACLE_CURRENCY_KEY = 'DOT';
   break;
 }
 case KUSAMA: {
@@ -45,6 +46,7 @@ case KUSAMA: {
   COLLATERAL_TOKEN = Kusama as Currency<CollateralUnit>;
   COLLATERAL_TOKEN_SYMBOL = 'kusama';
   PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${COLLATERAL_TOKEN_SYMBOL}&vs_currencies=usd`;
+  ORACLE_CURRENCY_KEY = 'KSM';
   break;
 }
 default: {
@@ -61,5 +63,6 @@ export {
   WRAPPED_TOKEN,
   COLLATERAL_TOKEN,
   PRICES_URL,
-  COLLATERAL_TOKEN_SYMBOL
+  COLLATERAL_TOKEN_SYMBOL,
+  ORACLE_CURRENCY_KEY
 };

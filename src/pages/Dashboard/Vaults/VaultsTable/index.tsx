@@ -100,7 +100,8 @@ const VaultsTable = (): JSX.Element => {
       GENERIC_FETCHER,
       'interBtcApi',
       'vaults',
-      'getSecureCollateralThreshold'
+      'getSecureCollateralThreshold',
+      COLLATERAL_TOKEN
     ],
     genericFetcher<Big>(),
     {
@@ -118,7 +119,8 @@ const VaultsTable = (): JSX.Element => {
       GENERIC_FETCHER,
       'interBtcApi',
       'vaults',
-      'getLiquidationCollateralThreshold'
+      'getLiquidationCollateralThreshold',
+      COLLATERAL_TOKEN
     ],
     genericFetcher<Big>(),
     {

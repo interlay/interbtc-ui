@@ -1592,23 +1592,23 @@
     sinon "^9.0.3"
     ts-mock-imports "^1.3.0"
 
-"@interlay/interbtc-index-client@0.9.0":
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-index-client/-/interbtc-index-client-0.9.0.tgz#247c481053f3579c9e77bdfa9df78851b223f209"
-  integrity sha512-x8W5s5WJNcZ7YH7fe+wbo7TYIhK06o1K9jZNhOHJPixDck0+c1lUa3whFHFXxv71JuwALFEkNaiTLd9UWIqgPg==
+"@interlay/interbtc-index-client@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-index-client/-/interbtc-index-client-1.0.0.tgz#2412554056dba71ad1e348f23a7145252f778922"
+  integrity sha512-LP+GrBEbmDnu25c1Ats0KVStEkM00Y044kZ4lZUWCX5zthYdbHhNjjEdJa+T16KzhVagoVXv0XHAx5XmDoGNAw==
 
 "@interlay/interbtc-types@0.12.5":
   version "0.12.5"
   resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-0.12.5.tgz#d78f62700aa6330454b8ee80bfe0b2fb76fc29a2"
   integrity sha512-6SfMnYHzp9ROFBGVKoNwSPZDjJ6hBZqiz2mfxjNRBQQfx2SUq9xbFg8gS0yudACYXWmF4zs3ceH5v/13e9tmtw==
 
-"@interlay/interbtc@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-1.0.1.tgz#e747cfbe29f38bdbc30fb1c4b3ef18d491a24625"
-  integrity sha512-c0Ru9Q3H3R5TG+VyezFPu//qfzDrMmq3xHJ1CnbH3f9nBiuSOrrtewqy3JtLRVoQ2hiGMlZDBA0IMKeZdmq3fg==
+"@interlay/interbtc@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-1.1.0.tgz#3b33c16750b8ee8a354f2f84335ef4c48c95853f"
+  integrity sha512-m7nU4kaIbP29H/uCgWHpBoPtJQt1MKnIWpOZ9am8JMX+H9XY+0z6jViyZ07C7zh8nnAwsyWTcG1lizA1ym4mvQ==
   dependencies:
     "@interlay/interbtc-api" "1.0.0"
-    "@interlay/interbtc-index-client" "0.9.0"
+    "@interlay/interbtc-index-client" "1.0.0"
     "@interlay/interbtc-types" "0.12.5"
     "@interlay/monetary-js" "0.4.0"
 

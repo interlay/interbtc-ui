@@ -1,25 +1,25 @@
-
 // ray test touch <<
 import { ReactElement, useEffect, useState } from 'react';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
-import { DOTBTCOracleStatus } from '@interlay/interbtc-api/build/src/types/oracleTypes';
 
 import DashboardTable, { StatusComponent, StatusCategories } from 'common/components/dashboard-table/dashboard-table';
 import { formatDateTime } from 'common/utils/utils';
+import { ORACLE_CURRENCY_KEY } from 'config/relay-chains';
+import { CollateralBtcOracleStatus } from '@interlay/interbtc/build/oracleTypes';
 
 type OracleTableProps = {
   dotLocked: string;
 };
 
 export default function OracleTable(props: OracleTableProps): ReactElement {
-  const [oracles, setOracles] = useState<Array<DOTBTCOracleStatus>>([]);
+  const [oracles, setOracles] = useState<Array<CollateralBtcOracleStatus>>([]);
   const { t } = useTranslation();
 
   useEffect(() => {
     (async () => {
       try {
-        const oracleStatuses = await window.bridge.interBtcIndex.getLatestSubmissionForEachOracle();
+        const oracleStatuses = await window.bridge.interBtcIndex.getLatestSubmissionForEachOracle(ORACLE_CURRENCY_KEY);
         setOracles(oracleStatuses);
       } catch (error) {
         console.log('[OracleTable] error.message => ', error.message);
@@ -55,7 +55,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
     </h1>
   ];
 
-  const oracleTableRow = (oracle: DOTBTCOracleStatus): ReactElement[] => [
+  const oracleTableRow = (oracle: CollateralBtcOracleStatus): ReactElement[] => [
     <p key={1}>{oracle.source}</p>,
     <p key={2}>{oracle.feed}</p>,
     <p key={3}>{formatDateTime(oracle.lastUpdate)}</p>,
