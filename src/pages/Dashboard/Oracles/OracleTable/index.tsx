@@ -1,30 +1,62 @@
-// ray test touch <<
+
+import { ReactElement } from 'react';
+import { useSelector } from 'react-redux';
 import {
-  ReactElement,
-  useEffect,
-  useState
-} from 'react';
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
+import { useQuery } from 'react-query';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 import { CollateralBtcOracleStatus } from '@interlay/interbtc/build/oracleTypes';
 
-import { ORACLE_CURRENCY_KEY } from 'config/relay-chains';
 import DashboardTable, { StatusComponent, StatusCategories } from 'common/components/dashboard-table/dashboard-table';
+import ErrorFallback from 'components/ErrorFallback';
+import EllipsisLoader from 'components/EllipsisLoader';
+import { ORACLE_CURRENCY_KEY } from 'config/relay-chains';
+import genericFetcher, {
+  GENERIC_FETCHER
+} from 'services/fetchers/generic-fetcher';
 import { formatDateTime } from 'common/utils/utils';
+import { StoreType } from 'common/types/util.types';
 
 const OracleTable = (): JSX.Element => {
-  const [oracles, setOracles] = useState<Array<CollateralBtcOracleStatus>>([]);
   const { t } = useTranslation();
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const oracleStatuses = await window.bridge.interBtcIndex.getLatestSubmissionForEachOracle(ORACLE_CURRENCY_KEY);
-        setOracles(oracleStatuses);
-      } catch (error) {
-        console.log('[OracleTable] error.message => ', error.message);
-      }
-    })();
-  }, []);
+  const {
+    isIdle: oraclesIdle,
+    isLoading: oraclesLoading,
+    data: oracles,
+    error: oraclesError
+  } = useQuery<Array<CollateralBtcOracleStatus>, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'getLatestSubmissionForEachOracle',
+      ORACLE_CURRENCY_KEY
+    ],
+    genericFetcher<Array<CollateralBtcOracleStatus>>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(oraclesError);
+
+  if (oraclesIdle || oraclesLoading) {
+    return (
+      <div
+        className={clsx(
+          'flex',
+          'justify-center'
+        )}>
+        <EllipsisLoader dotClassName='bg-interlayCalifornia-400' />
+      </div>
+    );
+  }
+  if (!oracles) {
+    throw new Error('Something went wrong!');
+  }
 
   const tableHeadings = [
     <h1
@@ -88,5 +120,9 @@ const OracleTable = (): JSX.Element => {
   );
 };
 
-export default OracleTable;
-// ray test touch >>
+export default withErrorBoundary(OracleTable, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});
