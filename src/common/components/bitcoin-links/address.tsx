@@ -1,3 +1,4 @@
+// ray test touch <<
 import React from 'react';
 import { shortAddress } from '../../../common/utils/utils';
 import InterlayLink from 'components/UI/InterlayLink';
@@ -20,3 +21,4 @@ export default class BitcoinAddress extends React.Component<{
     );
   }
 }
+// ray test touch >>

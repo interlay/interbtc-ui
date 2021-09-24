@@ -8,7 +8,7 @@ import {
 } from '@interlay/interbtc-api';
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from '../../constants';
 import Big from 'big.js';
-import { TableDisplayParams, RelayedBlock } from '../types/util.types';
+import { RelayedBlock } from '../types/util.types';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
 import {
   BitcoinAmount,
@@ -118,14 +118,6 @@ function defaultBlockData(): RelayedBlock {
   };
 }
 
-// TODO: should double-check
-function defaultTableDisplayParams<Column>(): TableDisplayParams<Column> {
-  return {
-    page: 0,
-    perPage: 20
-  };
-}
-
 const requestsInStore = (
   storeRequests: Issue[] | Redeem[],
   parachainRequests: Issue[] | Redeem[]
@@ -178,7 +170,6 @@ export {
   BtcNetwork,
   reverseHashEndianness,
   defaultBlockData,
-  defaultTableDisplayParams,
   requestsInStore,
   copyToClipboard,
   getRandomVaultIdWithCapacity,

@@ -14,9 +14,6 @@ import clsx from 'clsx';
 import { CollateralBtcOracleStatus } from '@interlay/interbtc/build/oracleTypes';
 import { ExchangeRate } from '@interlay/monetary-js';
 
-// ray test touch <<
-// import DashboardTable, { StatusComponent, StatusCategories } from 'common/components/dashboard-table/dashboard-table';
-// ray test touch >>
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -33,6 +30,8 @@ import genericFetcher, {
 } from 'services/fetchers/generic-fetcher';
 import { formatDateTime } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
+import { ReactComponent as CheckCircleIcon } from 'assets/img/icons/check-circle.svg';
+import { ReactComponent as CancelIcon } from 'assets/img/icons/cancel.svg';
 
 const OracleTable = (): JSX.Element => {
   const { t } = useTranslation();
@@ -56,20 +55,6 @@ const OracleTable = (): JSX.Element => {
     }
   );
   useErrorHandler(oraclesError);
-
-  // ray test touch <<
-  // const oracleTableRow = (oracle: CollateralBtcOracleStatus): ReactElement[] => [
-  //   <p key={1}>{oracle.source}</p>,
-  //   <p key={2}>{oracle.feed}</p>,
-  //   <p key={3}>{formatDateTime(oracle.lastUpdate)}</p>,
-  //   <p key={4}> 1 BTC = {oracle.exchangeRate.toHuman(5)} DOT</p>,
-  //   <StatusComponent
-  //     key={5}
-  //     {...(oracle.online ?
-  //       { text: t('online'), category: StatusCategories.Ok } :
-  //       { text: t('offline'), category: StatusCategories.Bad })} />
-  // ];
-  // ray test touch >>
 
   const columns = React.useMemo(
     () => [
@@ -117,13 +102,28 @@ const OracleTable = (): JSX.Element => {
         classNames: [
           'text-center'
         ],
-        // ray test touch <<
         Cell: function FormattedCell({ value }: { value: boolean; }) {
           return (
-            <>{value ? 'online' : 'offline'}</>
+            <div
+              className={clsx(
+                'inline-flex',
+                'items-center',
+                'space-x-1'
+              )}>
+              {value ? (
+                <>
+                  <CheckCircleIcon className='text-interlayConifer' />
+                  <span className='text-interlayConifer'>{t('online')}</span>
+                </>
+              ) : (
+                <>
+                  <CancelIcon className='text-interlayCinnabar' />
+                  <span className='text-interlayCinnabar'>{t('offline')}</span>
+                </>
+              )}
+            </div>
           );
         }
-        // ray test touch >>
       }
     ],
     [t]

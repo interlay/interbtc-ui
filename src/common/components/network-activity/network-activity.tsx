@@ -1,3 +1,4 @@
+// ray test touch <<
 import { ReactElement, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../types/util.types';
@@ -184,3 +185,4 @@ export default function NetworkActivity({
     </CardListContainer>
   );
 }
+// ray test touch >>
