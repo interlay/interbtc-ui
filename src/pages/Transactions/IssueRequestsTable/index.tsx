@@ -128,11 +128,12 @@ const IssueRequestsTable = (): JSX.Element => {
           'text-right'
         ],
         Cell: function FormattedCell(props: any) {
+          const issueRequest: Issue = props.row.original;
           return (
             <>
-              {(props.row.original.executedAmountBTC && props.row.original.executedAmountBTC !== '0') ?
-                props.row.original.executedAmountBTC :
-                props.row.original.wrappedAmount
+              {(issueRequest.executedAmountBTC && !issueRequest.executedAmountBTC.isZero()) ?
+                issueRequest.executedAmountBTC.toHuman() :
+                issueRequest.wrappedAmount.toHuman()
               }
             </>
           );
