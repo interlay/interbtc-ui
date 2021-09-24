@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
 import OracleStatus from '../components/oracle-status';
-import OracleTable from './oracle-table/oracle-table';
+import OracleTable from './OracleTable';
 import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
