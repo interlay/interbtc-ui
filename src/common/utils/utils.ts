@@ -1,7 +1,5 @@
 import {
-  uint8ArrayToString,
   bitcoin,
-  reverseEndianness,
   Issue,
   Redeem,
   CurrencyUnit
@@ -106,10 +104,6 @@ const BtcNetwork =
       bitcoin.networks.testnet :
       bitcoin.networks.regtest;
 
-function reverseHashEndianness(hash: Uint8Array): string {
-  return uint8ArrayToString(reverseEndianness(hash));
-}
-
 function defaultBlockData(): RelayedBlock {
   return {
     height: '0',
@@ -168,7 +162,6 @@ export {
   isPositiveNumeric,
   range,
   BtcNetwork,
-  reverseHashEndianness,
   defaultBlockData,
   requestsInStore,
   copyToClipboard,
