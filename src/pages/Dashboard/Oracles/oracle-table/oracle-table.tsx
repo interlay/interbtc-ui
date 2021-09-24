@@ -1,6 +1,9 @@
 // ray test touch <<
-import { ReactElement, useEffect, useState } from 'react';
-import Big from 'big.js';
+import {
+  ReactElement,
+  useEffect,
+  useState
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { CollateralBtcOracleStatus } from '@interlay/interbtc/build/oracleTypes';
 
@@ -8,11 +11,7 @@ import { ORACLE_CURRENCY_KEY } from 'config/relay-chains';
 import DashboardTable, { StatusComponent, StatusCategories } from 'common/components/dashboard-table/dashboard-table';
 import { formatDateTime } from 'common/utils/utils';
 
-type OracleTableProps = {
-  dotLocked: string;
-};
-
-export default function OracleTable(props: OracleTableProps): ReactElement {
+const OracleTable = (): JSX.Element => {
   const [oracles, setOracles] = useState<Array<CollateralBtcOracleStatus>>([]);
   const { t } = useTranslation();
 
@@ -69,8 +68,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
 
   return (
     <div
-      style={{ margin: '40px 0px' }}
-      className={(new Big(props.dotLocked) <= new Big(0) ? 'oracle-space' : '')}>
+      style={{ margin: '40px 0px' }}>
       <div>
         <p
           className='mb-4'
@@ -88,5 +86,7 @@ export default function OracleTable(props: OracleTableProps): ReactElement {
         noDataEl={<td colSpan={4}>{t('no_oracles')}</td>} />
     </div>
   );
-}
+};
+
+export default OracleTable;
 // ray test touch >>

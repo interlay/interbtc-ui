@@ -24,7 +24,7 @@ const Oracles = (): JSX.Element => {
           )} />
       </div>
       <OracleStatus />
-      <OracleTable dotLocked='1' />
+      <OracleTable />
     </MainContainer>
   );
 };
