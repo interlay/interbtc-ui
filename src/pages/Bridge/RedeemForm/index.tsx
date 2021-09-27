@@ -126,8 +126,8 @@ const RedeemForm = (): JSX.Element | null => {
     if (!wrappedTokenAmount) return;
     if (!redeemFeeRate) return;
 
-    const parsedPolkaBTCAmount = BitcoinAmount.from.BTC(wrappedTokenAmount);
-    const theRedeemFee = parsedPolkaBTCAmount.mul(redeemFeeRate);
+    const parsedWrappedTokenAmount = BitcoinAmount.from.BTC(wrappedTokenAmount);
+    const theRedeemFee = parsedWrappedTokenAmount.mul(redeemFeeRate);
     setRedeemFee(theRedeemFee);
   }, [
     bridgeLoaded,
@@ -150,7 +150,7 @@ const RedeemForm = (): JSX.Element | null => {
           redeemFeeRateResult,
           currentInclusionFeeResult
         ] = await Promise.allSettled([
-          interbtcIndex.getDustValue(),
+          window.bridge.interBtcApi.redeem.getDustValue(),
           window.bridge.interBtcApi.vaults.getPremiumRedeemVaults(),
           interbtcIndex.getPremiumRedeemFee(),
           window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN),
@@ -177,7 +177,7 @@ const RedeemForm = (): JSX.Element | null => {
           setPremiumRedeemVaults(premiumRedeemVaultsResult.value);
         }
 
-        setDustValue(BitcoinAmount.from.Satoshi(JSON.parse(dustValueResult.value)));
+        setDustValue(dustValueResult.value);
         setPremiumRedeemFee(new Big(premiumRedeemFeeResult.value));
         setBtcToDotRate(btcToDotRateResult.value);
         setRedeemFeeRate(redeemFeeRateResult.value);
@@ -286,7 +286,7 @@ const RedeemForm = (): JSX.Element | null => {
       if (parsedValue.gt(wrappedTokenBalance)) {
         return `${t('redeem_page.current_balance')}${wrappedTokenBalance}`;
       } else if (parsedValue.lte(minValue)) {
-        return `${t('redeem_page.amount_greater_dust_inclusion')}${minValue} BTC).`;
+        return `${t('redeem_page.amount_greater_dust_inclusion')}${minValue.toHuman()} BTC).`;
       }
 
       if (!address) {
