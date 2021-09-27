@@ -44,7 +44,8 @@ import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import {
   formatDateTimePrecise,
-  shortTxId
+  shortTxId,
+  displayMonetaryAmount
 } from 'common/utils/utils';
 import userIssueRequestsFetcher, { USER_ISSUE_REQUESTS_FETCHER } from 'services/user-issue-requests-fetcher';
 import userIssueRequestsTotalCountFetcher, {

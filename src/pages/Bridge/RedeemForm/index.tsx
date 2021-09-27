@@ -457,7 +457,7 @@ const RedeemForm = (): JSX.Element | null => {
                 width={23}
                 height={23} />
             }
-            value={totalBTC.toHuman()}
+            value={displayMonetaryAmount(totalBTC)}
             unitName='BTC'
             approxUSD={totalBTCInUSD} />
           {premiumRedeemSelected && (

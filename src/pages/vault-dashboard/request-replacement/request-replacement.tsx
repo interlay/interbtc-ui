@@ -9,6 +9,7 @@ import { BitcoinAmount } from '@interlay/monetary-js';
 import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import { displayMonetaryAmount } from 'common/utils/utils';
 import { addReplaceRequestsAction } from 'common/actions/vault.actions';
 import { StoreType } from 'common/types/util.types';
 
@@ -70,7 +71,7 @@ const RequestReplacementModal = (props: Props): JSX.Element => {
             <div className='col-12'>{t('vault.your_have')}</div>
             <div className='col-12'> {lockedDot} DOT</div>
             <div className='col-12 mb-4'>
-              {t('locked')} {lockedBtc} BTC
+              {t('locked')} {displayMonetaryAmount(lockedBtc)} BTC
             </div>
             <div className='col-12 mb-4'>{t('vault.replace_amount')}</div>
             <div className='col-12'>

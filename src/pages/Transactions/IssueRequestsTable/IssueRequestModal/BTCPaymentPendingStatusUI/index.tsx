@@ -52,7 +52,7 @@ const BTCPaymentPendingStatusUI = ({
         <div
           className='text-xl'>
           {t('send')}
-          <span className='text-interlayCalifornia'>&nbsp;{amountBTCToSend.toHuman()}&nbsp;</span>
+          <span className='text-interlayCalifornia'>&nbsp;{displayMonetaryAmount(amountBTCToSend)}&nbsp;</span>
           BTC
         </div>
         <span

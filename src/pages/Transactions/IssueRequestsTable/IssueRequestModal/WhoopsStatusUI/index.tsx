@@ -73,7 +73,9 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
+        // ray test touch <<<
         value={safeRoundEightDecimals(Number(request.btcAmountSubmittedByUser))}
+        // ray test touch >>>
         unitName='BTC'
         approxUSD={getUsdAmount(
           request.btcAmountSubmittedByUser ?
@@ -117,12 +119,16 @@ const WhoopsStatusUI = ({
             height={23} />
         }
         value={safeRoundEightDecimals(
+          // ray test touch <<<
           Number(request.btcAmountSubmittedByUser) - Number(request.executedAmountBTC)
+          // ray test touch >>>
         )}
         unitName='BTC'
         approxUSD={
           getUsdAmount(
+            // ray test touch <<<
             BitcoinAmount.from.BTC((Number(request.btcAmountSubmittedByUser) - Number(request.executedAmountBTC))),
+            // ray test touch >>>
             prices.bitcoin.usd
           )
         } />
@@ -130,7 +136,7 @@ const WhoopsStatusUI = ({
         {t('issue_page.refund_requested_vault')}
         &nbsp;{t('issue_page.refund_vault_to_return')}
         <span className='text-interlayCinnabar'>
-          &nbsp;{request.refundAmountBTC?.toHuman() || '0'}
+          &nbsp;{displayMonetaryAmount(request.refundAmountBTC)}
         </span>
         &nbsp;BTC&nbsp;
         {t('issue_page.refund_vault_to_address')}.
