@@ -71,6 +71,7 @@ const IssueRequestsTable = (): JSX.Element => {
   // eslint-disable-next-line max-len
   // TODO: should be refactored via `https://www.notion.so/interlay/Include-total-count-into-paginated-API-calls-in-index-894b56f288d24aaf8fb1aec36eadf41d`
   const {
+    isIdle: issueRequestsTotalCountIdle,
     isLoading: issueRequestsTotalCountLoading,
     data: issueRequestsTotalCount,
     error: issueRequestsTotalCountError
@@ -87,6 +88,7 @@ const IssueRequestsTable = (): JSX.Element => {
   );
   useErrorHandler(issueRequestsTotalCountError);
   const {
+    isIdle: issueRequestsIdle,
     isLoading: issueRequestsLoading,
     data: issueRequests,
     error: issueRequestsError
@@ -265,7 +267,12 @@ const IssueRequestsTable = (): JSX.Element => {
     }
   );
 
-  if (issueRequestsLoading || issueRequestsTotalCountLoading) {
+  if (
+    issueRequestsIdle ||
+    issueRequestsLoading ||
+    issueRequestsTotalCountIdle ||
+    issueRequestsTotalCountLoading
+  ) {
     return (
       <div
         className={clsx(

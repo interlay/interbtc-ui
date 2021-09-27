@@ -64,6 +64,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
   const {
+    isIdle: redeemRequestsTotalCountIdle,
     isLoading: redeemRequestsTotalCountLoading,
     data: redeemRequestsTotalCount,
     error: redeemRequestsTotalCountError
@@ -80,6 +81,7 @@ const RedeemRequestsTable = (): JSX.Element => {
   );
   useErrorHandler(redeemRequestsTotalCountError);
   const {
+    isIdle: redeemRequestsIdle,
     isLoading: redeemRequestsLoading,
     data: redeemRequests,
     error: redeemRequestsError
@@ -261,7 +263,12 @@ const RedeemRequestsTable = (): JSX.Element => {
     }
   );
 
-  if (redeemRequestsLoading || redeemRequestsTotalCountLoading) {
+  if (
+    redeemRequestsIdle ||
+    redeemRequestsLoading ||
+    redeemRequestsTotalCountIdle ||
+    redeemRequestsTotalCountLoading
+  ) {
     return (
       <div
         className={clsx(

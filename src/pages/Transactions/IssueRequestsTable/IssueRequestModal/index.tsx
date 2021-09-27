@@ -59,9 +59,10 @@ const IssueRequestModal = ({
 
   const focusRef = React.useRef(null);
 
-  const wrappedAmount = (request.executedAmountBTC && !request.executedAmountBTC.isZero()) ?
-    request.executedAmountBTC :
-    request.wrappedAmount;
+  const wrappedTokenAmount =
+    (request.executedAmountBTC && !request.executedAmountBTC.isZero()) ?
+      request.executedAmountBTC :
+      request.wrappedAmount;
   const amountBTCSent =
     request.btcAmountSubmittedByUser ?
       request.btcAmountSubmittedByUser :
@@ -131,7 +132,7 @@ const IssueRequestModal = ({
                   'space-x-1'
                 )}>
                 <span className='text-5xl'>
-                  {wrappedAmount}
+                  {wrappedTokenAmount.toHuman()}
                 </span>
                 <span className='text-2xl'>
                   interBTC
@@ -143,7 +144,7 @@ const IssueRequestModal = ({
                   'block'
                 )}>
                 {`≈ $ ${getUsdAmount(
-                  wrappedAmount || BitcoinAmount.zero,
+                  wrappedTokenAmount || BitcoinAmount.zero,
                   prices.bitcoin.usd
                 )}`}
               </span>
