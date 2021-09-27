@@ -35,6 +35,7 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import InterlayLink from 'components/UI/InterlayLink';
+import { WrappedTokenAmount } from 'config/relay-chains';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
@@ -42,7 +43,8 @@ import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import {
   shortTxId,
-  formatDateTimePrecise
+  formatDateTimePrecise,
+  displayMonetaryAmount
 } from 'common/utils/utils';
 import userRedeemRequestsFetcher, { USER_REDEEM_REQUESTS_FETCHER } from 'services/user-redeem-requests-fetcher';
 import userRedeemRequestsTotalCountFetcher, {
@@ -121,7 +123,12 @@ const RedeemRequestsTable = (): JSX.Element => {
         accessor: 'amountBTC',
         classNames: [
           'text-right'
-        ]
+        ],
+        Cell: function FormattedCell({ value }: { value: WrappedTokenAmount }) {
+          return (
+            <>{displayMonetaryAmount(value)}</>
+          );
+        }
       },
       {
         Header: t('issue_page.btc_transaction'),

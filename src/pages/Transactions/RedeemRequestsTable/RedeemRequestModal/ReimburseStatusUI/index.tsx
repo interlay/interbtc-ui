@@ -71,9 +71,9 @@ const ReimburseStatusUI = ({
           window.bridge.interBtcApi.vaults.getPunishmentFee(),
           window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN)
         ]);
-        const amountPolkaBTC = request ? request.amountBTC : BitcoinAmount.zero;
-        setCollateralTokenAmount(btcDotRate.toCounter(amountPolkaBTC));
-        setPunishmentCollateralTokenAmount(btcDotRate.toCounter(amountPolkaBTC).mul(new Big(punishment)));
+        const wrappedTokenAmount = request ? request.amountBTC : BitcoinAmount.zero;
+        setCollateralTokenAmount(btcDotRate.toCounter(wrappedTokenAmount));
+        setPunishmentCollateralTokenAmount(btcDotRate.toCounter(wrappedTokenAmount).mul(new Big(punishment)));
       } catch (error) {
         handleError(error);
       }

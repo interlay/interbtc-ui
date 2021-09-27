@@ -132,7 +132,7 @@ const IssueRequestModal = ({
                   'space-x-1'
                 )}>
                 <span className='text-5xl'>
-                  {wrappedTokenAmount.toHuman()}
+                  {displayMonetaryAmount(wrappedTokenAmount)}
                 </span>
                 <span className='text-2xl'>
                   interBTC

@@ -115,7 +115,7 @@ const RedeemRequestModal = ({
                   'space-x-1'
                 )}>
                 <span className='text-5xl'>
-                  {request.amountBTC}
+                  {displayMonetaryAmount(request.amountBTC)}
                 </span>
                 <span
                   className={clsx(
