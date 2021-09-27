@@ -6,7 +6,6 @@ import {
 } from '@interlay/interbtc-api';
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from '../../constants';
 import Big from 'big.js';
-import { RelayedBlock } from '../types/util.types';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
 import {
   BitcoinAmount,
@@ -104,14 +103,6 @@ const BtcNetwork =
       bitcoin.networks.testnet :
       bitcoin.networks.regtest;
 
-function defaultBlockData(): RelayedBlock {
-  return {
-    height: '0',
-    hash: '',
-    relayTs: '0'
-  };
-}
-
 const requestsInStore = (
   storeRequests: Issue[] | Redeem[],
   parachainRequests: Issue[] | Redeem[]
@@ -162,7 +153,6 @@ export {
   isPositiveNumeric,
   range,
   BtcNetwork,
-  defaultBlockData,
   requestsInStore,
   copyToClipboard,
   getRandomVaultIdWithCapacity,
