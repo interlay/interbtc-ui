@@ -134,8 +134,8 @@ const IssueRequestsTable = (): JSX.Element => {
           return (
             <>
               {(issueRequest.executedAmountBTC && !issueRequest.executedAmountBTC.isZero()) ?
-                issueRequest.executedAmountBTC.toHuman() :
-                issueRequest.wrappedAmount.toHuman()
+                displayMonetaryAmount(issueRequest.executedAmountBTC) :
+                displayMonetaryAmount(issueRequest.wrappedAmount)
               }
             </>
           );

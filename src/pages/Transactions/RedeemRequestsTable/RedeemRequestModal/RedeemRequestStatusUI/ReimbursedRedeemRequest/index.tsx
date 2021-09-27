@@ -17,7 +17,10 @@ import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterlayLink from 'components/UI/InterlayLink';
 import { COLLATERAL_TOKEN } from 'config/relay-chains';
-import { getUsdAmount } from 'common/utils/utils';
+import {
+  getUsdAmount,
+  displayMonetaryAmount
+} from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
@@ -95,7 +98,7 @@ const ReimbursedRedeemRequest = ({
       </p>
       <p className='font-medium'>
         <span className='text-interlayCinnabar'>
-          {`${burnedBTCAmount.toHuman()} interBTC`}
+          {`${displayMonetaryAmount(burnedBTCAmount)} interBTC`}
         </span>
         <span>
           &nbsp;{`(≈ $${getUsdAmount(burnedBTCAmount, prices.bitcoin.usd)})`}
@@ -108,7 +111,7 @@ const ReimbursedRedeemRequest = ({
       <p className='font-medium'>
         <span className='text-interlayDenim'>{t('redeem_page.recover_receive_dot')}</span>
         <span className='text-interlayDenim'>
-          &nbsp;{`${collateralTokenAmount.toHuman()} DOT`}
+          &nbsp;{`${displayMonetaryAmount(collateralTokenAmount)} DOT`}
         </span>
         <span>
           &nbsp;{`(≈ $${getUsdAmount(collateralTokenAmount, prices.collateralToken.usd)})`}

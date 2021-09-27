@@ -10,7 +10,8 @@ import InterlayTooltip from 'components/UI/InterlayTooltip';
 import {
   copyToClipboard,
   getUsdAmount,
-  safeRoundEightDecimals
+  safeRoundEightDecimals,
+  displayMonetaryAmount
 } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
@@ -57,7 +58,7 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={request.wrappedAmount.toHuman()}
+        value={displayMonetaryAmount(request.wrappedAmount)}
         unitName='interBTC'
         approxUSD={getUsdAmount(request.wrappedAmount, prices.bitcoin.usd)} />
       <PriceInfo
@@ -91,7 +92,7 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={request.executedAmountBTC?.toHuman() || request.wrappedAmount.toString()}
+        value={displayMonetaryAmount(request.executedAmountBTC || request.wrappedAmount)}
         unitName='interBTC'
         approxUSD={
           getUsdAmount(request.executedAmountBTC || request.wrappedAmount, prices.bitcoin.usd)

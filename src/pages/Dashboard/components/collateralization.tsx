@@ -28,7 +28,7 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
   const bridgeLoaded = useSelector((state: StoreType) => state.general.bridgeLoaded);
 
   const [systemCollateralization, setSystemCollateralization] = React.useState('0');
-  const [issuablePolkaBTC, setIssuablePolkaBTC] = React.useState(BitcoinAmount.zero);
+  const [issuableWrappedToken, setIssuableWrappedToken] = React.useState(BitcoinAmount.zero);
   const [secureCollateralThreshold, setSecureCollateralThreshold] = React.useState('150');
   const [failed, setFailed] = React.useState(false);
 
@@ -49,8 +49,8 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
       if (!bridgeLoaded) return;
 
       try {
-        const issuablePolkaBTC = await window.bridge.interBtcApi.vaults.getTotalIssuableAmount();
-        setIssuablePolkaBTC(issuablePolkaBTC);
+        const theIssuableWrappedToken = await window.bridge.interBtcApi.vaults.getTotalIssuableAmount();
+        setIssuableWrappedToken(theIssuableWrappedToken);
       } catch (error) {
         console.log('[Collateralization useEffect] error.message => ', error.message);
         setFailed(true);
@@ -145,11 +145,11 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
           {failed ? (
             <>{t('no_data')}</>
           ) : (
-            issuablePolkaBTC.eq(BitcoinAmount.zero) ? (
+            issuableWrappedToken.eq(BitcoinAmount.zero) ? (
               <>{t('loading')}</>
             ) : (
               <>
-                <span className='inline-block'>{`${displayMonetaryAmount(issuablePolkaBTC)} interBTC`}</span>
+                <span className='inline-block'>{`${displayMonetaryAmount(issuableWrappedToken)} interBTC`}</span>
                 <span className='inline-block'>{t('dashboard.vault.capacity')}</span>
               </>
             )
