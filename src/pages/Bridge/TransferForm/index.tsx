@@ -162,6 +162,7 @@ const TransferForm = (): JSX.Element => {
   };
 
   const validateForm = (value: number): string | undefined => {
+    // TODO: should use wrapped token amount type (e.g. InterBtcAmount or KBtcAmount)
     if (wrappedTokenBalance === BitcoinAmount.zero) {
       return t('insufficient_funds');
     }

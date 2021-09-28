@@ -32,7 +32,10 @@ import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
 import { COLLATERAL_TOKEN } from 'config/relay-chains';
-import { getUsdAmount } from 'common/utils/utils';
+import {
+  getUsdAmount,
+  displayMonetaryAmount
+} from 'common/utils/utils';
 import {
   StoreType,
   ParachainStatus
@@ -48,11 +51,11 @@ import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 
-type BurnForm = {
+type BurnFormData = {
   [WRAPPED_TOKEN_AMOUNT]: string;
 }
 
-const Burn = (): JSX.Element | null => {
+const BurnForm = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -74,7 +77,7 @@ const Burn = (): JSX.Element | null => {
     formState: { errors },
     watch,
     reset
-  } = useForm<BurnForm>({
+  } = useForm<BurnFormData>({
     mode: 'onChange'
   });
   const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT);
@@ -135,7 +138,7 @@ const Burn = (): JSX.Element | null => {
       }
     };
 
-    const onSubmit = async (data: BurnForm) => {
+    const onSubmit = async (data: BurnFormData) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
         await window.bridge.interBtcApi.redeem.burn(
@@ -162,21 +165,23 @@ const Burn = (): JSX.Element | null => {
     };
 
     const validateForm = (value: number): string | undefined => {
-      // TODO: should be `big` type other than `Number`
-      if (value > Number(wrappedTokenBalance)) {
-        return `${t('redeem_page.current_balance')}${wrappedTokenBalance}`;
+      // TODO: should use wrapped token amount type (e.g. InterBtcAmount or KBtcAmount)
+      const bitcoinAmountValue = BitcoinAmount.from.BTC(value);
+
+      if (bitcoinAmountValue.gt(wrappedTokenBalance)) {
+        return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
       }
 
       if (!bridgeLoaded) {
         return 'interBTC must be loaded!';
       }
 
-      if (BitcoinAmount.from.BTC(value).to.Satoshi() === undefined) {
+      if (bitcoinAmountValue.to.Satoshi() === undefined) {
         return 'Invalid interBTC amount input!'; // TODO: should translate
       }
 
-      const polkaBTCAmountInteger = value.toString().split('.')[0];
-      if (polkaBTCAmountInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
+      const wrappedTokenAmountInteger = value.toString().split('.')[0];
+      if (wrappedTokenAmountInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
         return 'Input value is too high!'; // TODO: should translate
       }
 
@@ -286,7 +291,7 @@ const Burn = (): JSX.Element | null => {
   return null;
 };
 
-export default withErrorBoundary(Burn, {
+export default withErrorBoundary(BurnForm, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();
