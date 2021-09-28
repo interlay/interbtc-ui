@@ -18,7 +18,10 @@ import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterlayLink from 'components/UI/InterlayLink';
 import { COLLATERAL_TOKEN } from 'config/relay-chains';
-import { getUsdAmount } from 'common/utils/utils';
+import {
+  getUsdAmount,
+  displayMonetaryAmount
+} from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
@@ -84,7 +87,7 @@ const RetriedRedeemRequest = ({
           {t('redeem_page.recover_receive_dot')}
         </span>
         <span className='text-interlayDenim'>
-          &nbsp;{`${punishmentCollateralTokenAmount.toHuman()} DOT`}
+          &nbsp;{`${displayMonetaryAmount(punishmentCollateralTokenAmount)} DOT`}
         </span>
         <span>
           &nbsp;({`≈ $${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)}`})
@@ -105,7 +108,7 @@ const RetriedRedeemRequest = ({
               width={20}
               height={20} />
           }
-          value={punishmentCollateralTokenAmount.toHuman()}
+          value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
           unitName='DOT'
           approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)} />
         <hr
@@ -126,7 +129,7 @@ const RetriedRedeemRequest = ({
               width={20}
               height={20} />
           }
-          value={punishmentCollateralTokenAmount.toHuman()}
+          value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
           unitName='DOT'
           approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)} />
       </div>

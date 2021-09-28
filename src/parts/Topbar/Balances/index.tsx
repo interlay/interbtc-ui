@@ -20,8 +20,8 @@ const Balances = ({
   wrappedTokenBalance,
   collateralTokenBalance
 }: Props): JSX.Element => {
-  const roundedBalanceDot = displayMonetaryAmount(collateralTokenBalance);
-  const roundedBalanceInterBTC = displayMonetaryAmount(wrappedTokenBalance);
+  const strCollateralTokenBalance = displayMonetaryAmount(collateralTokenBalance);
+  const strWrappedTokenBalance = displayMonetaryAmount(wrappedTokenBalance);
 
   return (
     <div
@@ -39,7 +39,7 @@ const Balances = ({
           fill='currentColor'
           width={30}
           height={23.8} />
-        <span className='font-medium'>{roundedBalanceInterBTC}</span>
+        <span className='font-medium'>{strWrappedTokenBalance}</span>
         <span className='text-sm'>interBTC</span>
       </div>
       <div
@@ -51,7 +51,7 @@ const Balances = ({
         <PolkadotLogoIcon
           width={20}
           height={20} />
-        <span className='font-medium'>{roundedBalanceDot}</span>
+        <span className='font-medium'>{strCollateralTokenBalance}</span>
         <span className='text-sm'>DOT</span>
       </div>
     </div>

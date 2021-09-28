@@ -194,13 +194,13 @@ const IssueForm = (): JSX.Element | null => {
       if (value > MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT) {
         return t('issue_page.validation_max_value');
       } else if (btcAmount.lt(dustValue)) {
-        return `${t('issue_page.validation_min_value')}${dustValue.toHuman()} BTC).`;
+        return `${t('issue_page.validation_min_value')}${displayMonetaryAmount(dustValue)} BTC).`;
       }
 
       const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), btcAmount);
       if (!vaultId) {
         return t('issue_page.maximum_in_single_request', {
-          maxAmount: vaultMaxAmount.toHuman()
+          maxAmount: displayMonetaryAmount(vaultMaxAmount)
         });
       }
 
