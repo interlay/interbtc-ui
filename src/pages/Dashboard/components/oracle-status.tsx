@@ -1,13 +1,20 @@
 
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import Big from 'big.js';
 import clsx from 'clsx';
 import { FaExternalLinkAlt } from 'react-icons/fa';
+import { CollateralUnit } from '@interlay/interbtc-api';
+import {
+  Bitcoin,
+  BitcoinUnit,
+  ExchangeRate,
+  Currency
+} from '@interlay/monetary-js';
 
 import DashboardCard from 'pages/Dashboard/DashboardCard';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
+import { ORACLE_CURRENCY_KEY } from 'config/relay-chains';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { PAGES } from 'utils/constants/links';
 
@@ -28,16 +35,20 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
 
   // TODO: use translations for status
   const [oracleStatus, setOracleStatus] = React.useState(Status.Loading);
-  const [exchangeRate, setExchangeRate] = React.useState('0');
+  const [exchangeRate, setExchangeRate] = React.useState<
+    ExchangeRate<
+      Bitcoin,
+      BitcoinUnit,
+      Currency<CollateralUnit>,
+      CollateralUnit
+    >
+  >();
 
   React.useEffect(() => {
     (async () => {
       try {
-        const oracleStatus = await statsApi.getLatestSubmission({
-          currencyKey: 'DOT'
-        });
-        const exchangeRate = new Big(oracleStatus.exchangeRate);
-        setExchangeRate(exchangeRate.toFixed(2));
+        const oracleStatus = await window.bridge.interBtcIndex.getLatestSubmission(ORACLE_CURRENCY_KEY);
+        setExchangeRate(oracleStatus.exchangeRate);
         const status = oracleStatus.online ? Status.Online : Status.Offline;
         setOracleStatus(status);
       } catch (error) {
@@ -127,7 +138,7 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
                 'font-bold',
                 'mb-1'
               )}>
-              {exchangeRate} DOT/BTC
+              {exchangeRate?.toHuman(5)} DOT/BTC
             </h2>
           </div>
         ) : oracleStatus === Status.Offline ? (
@@ -160,7 +171,7 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
                 'font-bold',
                 'mb-1'
               )}>
-              {exchangeRate} DOT/BTC
+              {exchangeRate?.toHuman(5)} DOT/BTC
             </h2>
           </div>
         ) : oracleStatus === Status.NoData ? (
@@ -193,7 +204,7 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
                 'font-bold',
                 'mb-1'
               )}>
-              {exchangeRate} DOT/BTC
+              {exchangeRate?.toHuman(5)} DOT/BTC
             </h2>
           </div>
         ) : (
@@ -226,7 +237,7 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
                 'font-bold',
                 'mb-1'
               )}>
-              {exchangeRate} DOT/BTC
+              {exchangeRate?.toHuman(5)} DOT/BTC
             </h2>
           </div>
         )}

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
 import OracleStatus from '../components/oracle-status';
-import OracleTable from './OracleTable';
+import OraclesTable from './OraclesTable';
 import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -24,7 +24,7 @@ const Oracles = (): JSX.Element => {
           )} />
       </div>
       <OracleStatus />
-      <OracleTable />
+      <OraclesTable />
     </MainContainer>
   );
 };

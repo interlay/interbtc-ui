@@ -56,7 +56,7 @@ const getCollateralization = (
       Bitcoin,
       BitcoinUnit,
       Currency<CollateralUnit>,
-      CollateralUnit,
+      CollateralUnit
     >
 ) => {
   if (tokens.gt(BitcoinAmount.zero) && btcToDOTRate.toBig().gt(0)) {
