@@ -72,7 +72,7 @@ const ReceivedIssueRequest = ({
             'text-interlayConifer',
             'font-medium'
           )}>
-          {`${request.confirmations}/${stableBitcoinConfirmations}`}
+          {`${request.confirmations ?? 0}/${stableBitcoinConfirmations}`}
         </span>
         <span
           className={clsx(
