@@ -12,10 +12,7 @@ import {
   IssueColumns,
   RedeemColumns
 } from '@interlay/interbtc-index-client';
-import {
-  BTCAmount,
-  Polkadot
-} from '@interlay/monetary-js';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
 import RequestReplacementModal from './request-replacement/request-replacement';
@@ -55,7 +52,7 @@ const VaultDashboard = (): JSX.Element => {
   const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
   const {
     vaultClientLoaded,
-    polkaBtcLoaded,
+    bridgeLoaded,
     address
   } = useSelector((state: StoreType) => state.general);
   const {
@@ -64,8 +61,8 @@ const VaultDashboard = (): JSX.Element => {
     lockedBTC,
     apy
   } = useSelector((state: StoreType) => state.vault);
-  const [capacity, setCapacity] = useState(BTCAmount.zero);
-  const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState(BTCAmount.zero);
+  const [capacity, setCapacity] = useState(BitcoinAmount.zero);
+  const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState(BitcoinAmount.zero);
   const [totalIssueRequests, setTotalIssueRequests] = useState(0);
   const [totalRedeemRequests, setTotalRedeemRequests] = useState(0);
 
@@ -78,12 +75,12 @@ const VaultDashboard = (): JSX.Element => {
 
   useEffect(() => {
     (async () => {
-      if (!polkaBtcLoaded) return;
+      if (!bridgeLoaded) return;
       if (!vaultClientLoaded) return;
       if (!address) return;
 
       try {
-        const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+        const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
         const [
           vault,
           feesPolkaBTC,
@@ -94,12 +91,12 @@ const VaultDashboard = (): JSX.Element => {
           totalIssueRequests,
           totalRedeemRequests
         ] = await Promise.allSettled([
-          window.polkaBTC.interBtcApi.vaults.get(vaultId),
-          window.polkaBTC.interBtcApi.pools.getFeesWrapped(address, Polkadot),
-          window.polkaBTC.interBtcApi.vaults.getIssuedAmount(vaultId),
-          window.polkaBTC.interBtcApi.vaults.getVaultCollateralization(vaultId),
-          window.polkaBTC.interBtcApi.vaults.getAPY(vaultId),
-          window.polkaBTC.interBtcApi.vaults.getIssuableAmount(vaultId),
+          window.bridge.interBtcApi.vaults.get(vaultId),
+          window.bridge.interBtcApi.pools.getFeesWrapped(address),
+          window.bridge.interBtcApi.vaults.getIssuedAmount(vaultId),
+          window.bridge.interBtcApi.vaults.getVaultCollateralization(vaultId),
+          window.bridge.interBtcApi.vaults.getAPY(vaultId),
+          window.bridge.interBtcApi.vaults.getIssuableAmount(vaultId),
           stats.getFilteredTotalIssues({ filterIssueColumns: [{ column: IssueColumns.VaultId, value: address }] }),
           stats.getFilteredTotalRedeems({ filterRedeemColumns: [{ column: RedeemColumns.VaultId, value: address }] })
         ]);
@@ -141,7 +138,7 @@ const VaultDashboard = (): JSX.Element => {
       }
     })();
   }, [
-    polkaBtcLoaded,
+    bridgeLoaded,
     vaultClientLoaded,
     dispatch,
     address,
@@ -229,7 +226,7 @@ const VaultDashboard = (): JSX.Element => {
             onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Decrease)}>
             {t('vault.withdraw_collateral')}
           </InterlayDefaultContainedButton>
-          {lockedBTC.gt(BTCAmount.zero) && (
+          {lockedBTC.gt(BitcoinAmount.zero) && (
             <InterlayCaliforniaContainedButton
               onClick={() => setShowRequestReplacementModal(true)}>
               {t('vault.replace_vault')}

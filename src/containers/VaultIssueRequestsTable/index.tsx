@@ -140,7 +140,7 @@ const VaultIssueRequestsTable = ({
       },
       {
         Header: t('issue_page.amount'),
-        accessor: 'amountInterBTC',
+        accessor: 'wrappedAmount',
         classNames: [
           'text-right'
         ]

@@ -1,28 +1,39 @@
-import {
-  Bitcoin,
-  Polkadot
-} from '@interlay/monetary-js';
+
 import { Dispatch } from 'redux';
 
+import {
+  COLLATERAL_TOKEN,
+  WRAPPED_TOKEN
+} from 'config/relay-chains';
 import { updateTotalsAction } from '../actions/general.actions';
 import { StoreState } from '../types/util.types';
 
 export default async function fetchTotals(dispatch: Dispatch, store: StoreState): Promise<void> {
   const state = store.getState();
-  const { totalLockedDOT, totalInterBTC, polkaBtcLoaded } = state.general;
-  if (!polkaBtcLoaded) return;
+  const {
+    totalLockedCollateralTokenAmount,
+    totalWrappedTokenAmount,
+    bridgeLoaded
+  } = state.general;
+  if (!bridgeLoaded) return;
 
   try {
-    const [latestTotalPolkaBTC, latestTotalLockedDOT] = await Promise.all([
-      window.polkaBTC.interBtcApi.tokens.total(Bitcoin),
-      window.polkaBTC.interBtcApi.tokens.total(Polkadot)
+    const [
+      latestTotalWrappedTokenAmount,
+      latestTotalLockedCollateralTokenAmount
+    ] = await Promise.all([
+      window.bridge.interBtcApi.tokens.total(WRAPPED_TOKEN),
+      window.bridge.interBtcApi.tokens.total(COLLATERAL_TOKEN)
     ]);
 
     // update store only if there is a difference between the latest totals and current totals
-    if (!totalInterBTC.eq(latestTotalPolkaBTC) || !totalLockedDOT.eq(latestTotalLockedDOT)) {
+    if (
+      !totalWrappedTokenAmount.eq(latestTotalWrappedTokenAmount) ||
+      !totalLockedCollateralTokenAmount.eq(latestTotalLockedCollateralTokenAmount)
+    ) {
       dispatch(updateTotalsAction(
-        latestTotalLockedDOT,
-        latestTotalPolkaBTC
+        latestTotalLockedCollateralTokenAmount,
+        latestTotalWrappedTokenAmount
       ));
     }
   } catch (error) {

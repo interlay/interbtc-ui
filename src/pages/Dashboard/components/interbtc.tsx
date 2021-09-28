@@ -7,9 +7,8 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import BN from 'bn.js';
 import clsx from 'clsx';
-import { satToBTC } from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import DashboardCard from 'pages/Dashboard/DashboardCard';
 import LineChartComponent from './line-chart-component';
@@ -23,7 +22,7 @@ import { PAGES } from 'utils/constants/links';
 
 const InterBTC = (): React.ReactElement => {
   const { prices } = useSelector((state: StoreType) => state.general);
-  const totalInterBTC = useSelector((state: StoreType) => state.general.totalInterBTC);
+  const totalWrappedTokenAmount = useSelector((state: StoreType) => state.general.totalWrappedTokenAmount);
 
   const { t } = useTranslation();
   const statsApi = useInterbtcIndex();
@@ -73,7 +72,7 @@ const InterBTC = (): React.ReactElement => {
               'font-bold',
               'mb-1'
             )}>
-            {t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalInterBTC) })}
+            {t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalWrappedTokenAmount) })}
           </h2>
           {/* TODO: add the price API */}
           <h2
@@ -82,7 +81,7 @@ const InterBTC = (): React.ReactElement => {
               'font-bold',
               'mb-1'
             )}>
-            ${getUsdAmount(totalInterBTC, prices.bitcoin.usd)}
+            ${getUsdAmount(totalWrappedTokenAmount, prices.bitcoin.usd)}
           </h2>
         </div>
         <div style={{ display: 'grid', gridRowGap: 10 }}>
@@ -115,8 +114,10 @@ const InterBTC = (): React.ReactElement => {
             { position: 'right', maxTicksLimit: 6 }
           ]}
           data={[
-            cumulativeIssuesPerDay.slice(1).map(dataPoint => Number(satToBTC(new BN(dataPoint.sat)))),
-            pointIssuesPerDay.slice(1).map(sat => Number(satToBTC(new BN(sat))))
+            cumulativeIssuesPerDay.slice(1).map(
+              dataPoint => Number(BitcoinAmount.from.Satoshi(dataPoint.sat).str.BTC())
+            ),
+            pointIssuesPerDay.slice(1).map(sat => Number(BitcoinAmount.from.Satoshi(sat).str.BTC()))
           ]} />
       </div>
     </DashboardCard>

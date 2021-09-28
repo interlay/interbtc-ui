@@ -34,7 +34,7 @@ const ConfirmedIssueRequest = ({
   const { t } = useTranslation();
   const {
     address,
-    polkaBtcLoaded
+    bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
 
   const queryParams = useQueryParams();
@@ -44,7 +44,7 @@ const ConfirmedIssueRequest = ({
   const queryClient = useQueryClient();
   const executeMutation = useMutation<void, Error, Issue>(
     (variables: Issue) => {
-      return window.polkaBTC.interBtcApi.issue.execute('0x' + variables.id, variables.btcTxId);
+      return window.bridge.interBtcApi.issue.execute('0x' + variables.id, variables.btcTxId);
     },
     {
       onSuccess: (_, variables) => {
@@ -60,7 +60,7 @@ const ConfirmedIssueRequest = ({
   );
 
   const handleExecute = (request: Issue) => () => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
 
     executeMutation.mutate(request);
   };

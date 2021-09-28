@@ -1,17 +1,14 @@
 import {
-  uint8ArrayToString,
   bitcoin,
-  reverseEndianness,
   Issue,
   Redeem,
   CurrencyUnit
 } from '@interlay/interbtc-api';
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from '../../constants';
 import Big from 'big.js';
-import { TableDisplayParams, RelayedBlock } from '../types/util.types';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
 import {
-  BTCAmount,
+  BitcoinAmount,
   Currency,
   MonetaryAmount
 } from '@interlay/monetary-js';
@@ -106,26 +103,6 @@ const BtcNetwork =
       bitcoin.networks.testnet :
       bitcoin.networks.regtest;
 
-function reverseHashEndianness(hash: Uint8Array): string {
-  return uint8ArrayToString(reverseEndianness(hash));
-}
-
-function defaultBlockData(): RelayedBlock {
-  return {
-    height: '0',
-    hash: '',
-    relayTs: '0'
-  };
-}
-
-// TODO: should double-check
-function defaultTableDisplayParams<Column>(): TableDisplayParams<Column> {
-  return {
-    page: 0,
-    perPage: 20
-  };
-}
-
 const requestsInStore = (
   storeRequests: Issue[] | Redeem[],
   parachainRequests: Issue[] | Redeem[]
@@ -151,7 +128,10 @@ const copyToClipboard = (text: string): void => {
   navigator.clipboard.writeText(text);
 };
 
-const getRandomVaultIdWithCapacity = (vaults: [AccountId, BTCAmount][], requiredCapacity: BTCAmount): string => {
+const getRandomVaultIdWithCapacity = (
+  vaults: [AccountId, BitcoinAmount][],
+  requiredCapacity: BitcoinAmount
+): string => {
   const filteredVaults = vaults.filter(vault => vault[1].gte(requiredCapacity));
   return filteredVaults.length > 0 ? getRandomArrayElement(filteredVaults)[0].toString() : '';
 };
@@ -173,9 +153,6 @@ export {
   isPositiveNumeric,
   range,
   BtcNetwork,
-  reverseHashEndianness,
-  defaultBlockData,
-  defaultTableDisplayParams,
   requestsInStore,
   copyToClipboard,
   getRandomVaultIdWithCapacity,

@@ -33,7 +33,7 @@ const userIssueRequestsFetcher = async ({ queryKey }: Arguments): Promise<Array<
     throw new Error('Invalid key!');
   }
 
-  return await window.polkaBTC.interBtcIndex.getFilteredIssues({
+  return await window.bridge.interBtcIndex.getFilteredIssues({
     page,
     perPage: limit,
     network: BITCOIN_NETWORK as BitcoinNetwork | undefined,

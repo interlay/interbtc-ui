@@ -6,8 +6,11 @@ import { Redeem } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import InterlayLink from 'components/UI/InterlayLink';
-import { shortAddress } from 'common/utils/utils';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
+import {
+  shortAddress,
+  displayMonetaryAmount
+} from 'common/utils/utils';
 
 interface Props {
   request: Redeem;
@@ -36,7 +39,7 @@ const CompletedRedeemRequest = ({
         )}>
         <span>{t('issue_page.you_received')}</span>
         <span className='text-interlayCinnabar'>
-          {`${request.amountBTC} BTC`}
+          {`${displayMonetaryAmount(request.amountBTC)} BTC`}
         </span>
         .
       </p>

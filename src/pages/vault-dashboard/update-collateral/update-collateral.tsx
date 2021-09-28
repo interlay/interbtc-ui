@@ -10,13 +10,13 @@ import {
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import {
-  Polkadot,
-  PolkadotAmount
-} from '@interlay/monetary-js';
-import { roundTwoDecimals } from '@interlay/interbtc-api';
+  roundTwoDecimals,
+  newMonetaryAmount
+} from '@interlay/interbtc-api';
 
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import {
   updateCollateralAction,
   updateCollateralizationAction
@@ -42,7 +42,7 @@ interface Props {
 
 const UpdateCollateralModal = (props: Props): JSX.Element => {
   const {
-    polkaBtcLoaded,
+    bridgeLoaded,
     vaultClientLoaded,
     address
   } = useSelector((state: StoreType) => state.general);
@@ -65,24 +65,24 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
   const [isCollateralUpdateAllowed, setCollateralUpdateAllowed] = React.useState(false);
 
   const onSubmit = handleSubmit(async () => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!vaultClientLoaded) return;
 
     setUpdatePending(true);
     try {
       if (currentCollateral.gt(newCollateral)) {
         const withdrawAmount = currentCollateral.sub(newCollateral);
-        await window.polkaBTC.interBtcApi.vaults.withdrawCollateral(withdrawAmount);
+        await window.bridge.interBtcApi.vaults.withdrawCollateral(withdrawAmount);
       } else if (currentCollateral.lt(newCollateral)) {
         const depositAmount = newCollateral.sub(currentCollateral);
-        await window.polkaBTC.interBtcApi.vaults.depositCollateral(depositAmount);
+        await window.bridge.interBtcApi.vaults.depositCollateral(depositAmount);
       } else {
         closeModal();
         return;
       }
 
-      const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const balanceLockedDOT = await window.polkaBTC.interBtcApi.tokens.balanceLocked(Polkadot, vaultId);
+      const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+      const balanceLockedDOT = await window.bridge.interBtcApi.tokens.balanceLocked(COLLATERAL_TOKEN, vaultId);
       dispatch(updateCollateralAction(balanceLockedDOT));
       let collateralization;
       try {
@@ -108,11 +108,11 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
   const onChange = async (obj: React.SyntheticEvent) => {
     try {
       const value = (obj.target as HTMLInputElement).value;
-      if (value === '' || !polkaBtcLoaded || Number(value) <= 0 || isNaN(Number(value))) {
+      if (value === '' || !bridgeLoaded || Number(value) <= 0 || isNaN(Number(value))) {
         setCollateralUpdateAllowed(false);
         return;
       }
-      const parsedValue = PolkadotAmount.from.DOT(value);
+      const parsedValue = newMonetaryAmount(value, COLLATERAL_TOKEN);
       if (parsedValue.toBig(parsedValue.currency.rawBase).lte(1)) {
         throw new Error('Please enter an amount greater than 1 Planck');
       }
@@ -130,9 +130,9 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
       }
       setNewCollateral(newCollateral);
 
-      const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+      const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
       const requiredCollateral =
-        await window.polkaBTC.interBtcApi.vaults.getRequiredCollateralForVault(vaultId, Polkadot);
+        await window.bridge.interBtcApi.vaults.getRequiredCollateralForVault(vaultId, COLLATERAL_TOKEN);
 
       // Collateral update only allowed if above required collateral
       const allowed = newCollateral.gte(requiredCollateral);
@@ -140,7 +140,7 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
 
       // Get the updated collateralization
       const newCollateralization =
-        await window.polkaBTC.interBtcApi.vaults.getVaultCollateralization(vaultId, newCollateral);
+        await window.bridge.interBtcApi.vaults.getVaultCollateralization(vaultId, newCollateral);
       if (newCollateralization === undefined) {
         setNewCollateralization('∞');
       } else {

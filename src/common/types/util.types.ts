@@ -6,9 +6,11 @@ import { IssueState } from './issue.types';
 import { RedeemState } from './redeem.types';
 import { VaultState } from './vault.types';
 import {
-  BTCAmount,
-  PolkadotAmount
+  BitcoinAmount,
+  MonetaryAmount,
+  Currency
 } from '@interlay/monetary-js';
+import { CollateralUnit } from '@interlay/interbtc-api';
 
 export interface StatusUpdate {
   id: u256;
@@ -52,20 +54,20 @@ export type Prices = {
   bitcoin: {
     usd: number;
   };
-  polkadot: {
+  collateralToken: {
     usd: number;
   };
 };
 
 export type GeneralState = {
-  polkaBtcLoaded: boolean;
+  bridgeLoaded: boolean;
   vaultClientLoaded: boolean;
   showAccountModal: boolean;
   address: string;
-  totalInterBTC: BTCAmount;
-  totalLockedDOT: PolkadotAmount;
-  balanceInterBTC: BTCAmount;
-  balanceDOT: PolkadotAmount;
+  totalWrappedTokenAmount: BitcoinAmount;
+  totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  wrappedTokenBalance: BitcoinAmount;
+  collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   extensions: string[];
   btcRelayHeight: number;
   bitcoinHeight: number;
@@ -93,15 +95,6 @@ export type StoreState = Store<CombinedState<StoreType>, GeneralActions | Redeem
 export type TimeDataPoint = {
   x: Date;
   y: number;
-};
-
-export type TableDisplayParams<Column> = {
-  page: number;
-  perPage: number;
-  sortBy?: Column;
-  sortAsc?: boolean;
-  filterBy?: Column;
-  searchFilter?: string;
 };
 
 export type RelayedBlock = {

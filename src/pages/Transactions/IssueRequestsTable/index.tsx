@@ -44,7 +44,8 @@ import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import {
   formatDateTimePrecise,
-  shortTxId
+  shortTxId,
+  displayMonetaryAmount
 } from 'common/utils/utils';
 import userIssueRequestsFetcher, { USER_ISSUE_REQUESTS_FETCHER } from 'services/user-issue-requests-fetcher';
 import userIssueRequestsTotalCountFetcher, {
@@ -66,11 +67,12 @@ const IssueRequestsTable = (): JSX.Element => {
   const {
     address,
     extensions,
-    polkaBtcLoaded
+    bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
   // eslint-disable-next-line max-len
   // TODO: should be refactored via `https://www.notion.so/interlay/Include-total-count-into-paginated-API-calls-in-index-894b56f288d24aaf8fb1aec36eadf41d`
   const {
+    isIdle: issueRequestsTotalCountIdle,
     isLoading: issueRequestsTotalCountLoading,
     data: issueRequestsTotalCount,
     error: issueRequestsTotalCountError
@@ -81,12 +83,13 @@ const IssueRequestsTable = (): JSX.Element => {
     ],
     userIssueRequestsTotalCountFetcher,
     {
-      enabled: !!address && !!polkaBtcLoaded,
+      enabled: !!address && !!bridgeLoaded,
       refetchInterval: 10000
     }
   );
   useErrorHandler(issueRequestsTotalCountError);
   const {
+    isIdle: issueRequestsIdle,
     isLoading: issueRequestsLoading,
     data: issueRequests,
     error: issueRequestsError
@@ -99,7 +102,7 @@ const IssueRequestsTable = (): JSX.Element => {
     ],
     userIssueRequestsFetcher,
     {
-      enabled: !!address && !!polkaBtcLoaded,
+      enabled: !!address && !!bridgeLoaded,
       refetchInterval: 10000
     }
   );
@@ -123,16 +126,17 @@ const IssueRequestsTable = (): JSX.Element => {
       },
       {
         Header: `${t('issue_page.amount')} (interBTC)`,
-        accessor: 'amountInterBTC',
+        accessor: 'wrappedAmount',
         classNames: [
           'text-right'
         ],
         Cell: function FormattedCell(props: any) {
+          const issueRequest: Issue = props.row.original;
           return (
             <>
-              {(props.row.original.executedAmountBTC && props.row.original.executedAmountBTC !== '0') ?
-                props.row.original.executedAmountBTC :
-                props.row.original.amountInterBTC
+              {(issueRequest.executedAmountBTC && !issueRequest.executedAmountBTC.isZero()) ?
+                displayMonetaryAmount(issueRequest.executedAmountBTC) :
+                displayMonetaryAmount(issueRequest.wrappedAmount)
               }
             </>
           );
@@ -264,7 +268,12 @@ const IssueRequestsTable = (): JSX.Element => {
     }
   );
 
-  if (issueRequestsLoading || issueRequestsTotalCountLoading) {
+  if (
+    issueRequestsIdle ||
+    issueRequestsLoading ||
+    issueRequestsTotalCountIdle ||
+    issueRequestsTotalCountLoading
+  ) {
     return (
       <div
         className={clsx(

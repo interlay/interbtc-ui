@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { Issue } from '@interlay/interbtc-api';
-import { BTCAmount } from '@interlay/monetary-js';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
@@ -10,7 +10,8 @@ import InterlayTooltip from 'components/UI/InterlayTooltip';
 import {
   copyToClipboard,
   getUsdAmount,
-  safeRoundEightDecimals
+  safeRoundEightDecimals,
+  displayMonetaryAmount
 } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
@@ -57,9 +58,9 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={request.amountInterBTC.toHuman()}
+        value={displayMonetaryAmount(request.wrappedAmount)}
         unitName='interBTC'
-        approxUSD={getUsdAmount(request.amountInterBTC, prices.bitcoin.usd)} />
+        approxUSD={getUsdAmount(request.wrappedAmount, prices.bitcoin.usd)} />
       <PriceInfo
         className='w-full'
         title={
@@ -72,12 +73,14 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
+        // ray test touch <<<
         value={safeRoundEightDecimals(Number(request.btcAmountSubmittedByUser))}
+        // ray test touch >>>
         unitName='BTC'
         approxUSD={getUsdAmount(
           request.btcAmountSubmittedByUser ?
             request.btcAmountSubmittedByUser :
-            BTCAmount.zero, prices.bitcoin.usd
+            BitcoinAmount.zero, prices.bitcoin.usd
         )} />
       <PriceInfo
         className='w-full'
@@ -91,10 +94,10 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={request.executedAmountBTC?.toHuman() || request.amountInterBTC.toString()}
+        value={displayMonetaryAmount(request.executedAmountBTC || request.wrappedAmount)}
         unitName='interBTC'
         approxUSD={
-          getUsdAmount(request.executedAmountBTC || request.amountInterBTC, prices.bitcoin.usd)
+          getUsdAmount(request.executedAmountBTC || request.wrappedAmount, prices.bitcoin.usd)
         } />
       <hr
         className={clsx(
@@ -116,12 +119,16 @@ const WhoopsStatusUI = ({
             height={23} />
         }
         value={safeRoundEightDecimals(
+          // ray test touch <<<
           Number(request.btcAmountSubmittedByUser) - Number(request.executedAmountBTC)
+          // ray test touch >>>
         )}
         unitName='BTC'
         approxUSD={
           getUsdAmount(
-            BTCAmount.from.BTC((Number(request.btcAmountSubmittedByUser) - Number(request.executedAmountBTC))),
+            // ray test touch <<<
+            BitcoinAmount.from.BTC((Number(request.btcAmountSubmittedByUser) - Number(request.executedAmountBTC))),
+            // ray test touch >>>
             prices.bitcoin.usd
           )
         } />
@@ -129,7 +136,7 @@ const WhoopsStatusUI = ({
         {t('issue_page.refund_requested_vault')}
         &nbsp;{t('issue_page.refund_vault_to_return')}
         <span className='text-interlayCinnabar'>
-          &nbsp;{request.refundAmountBTC?.toHuman() || '0'}
+          &nbsp;{displayMonetaryAmount(request.refundAmountBTC)}
         </span>
         &nbsp;BTC&nbsp;
         {t('issue_page.refund_vault_to_address')}.

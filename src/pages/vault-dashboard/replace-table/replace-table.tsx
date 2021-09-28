@@ -1,4 +1,4 @@
-// ray test touch <
+// ray test touch <<
 import * as React from 'react';
 import {
   useSelector,
@@ -10,12 +10,15 @@ import { stripHexPrefix } from '@interlay/interbtc-api';
 
 import { StoreType } from 'common/types/util.types';
 import { addReplaceRequestsAction } from 'common/actions/vault.actions';
-import { shortAddress } from 'common/utils/utils';
+import {
+  shortAddress,
+  displayMonetaryAmount
+} from 'common/utils/utils';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
 const ReplaceTable = (): JSX.Element => {
   const {
-    polkaBtcLoaded,
+    bridgeLoaded,
     address
   } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
@@ -23,14 +26,14 @@ const ReplaceTable = (): JSX.Element => {
   const { t } = useTranslation();
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!dispatch) return;
     if (!address) return;
 
     (async () => {
       try {
-        const vaultId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
-        const requests = await window.polkaBTC.interBtcApi.vaults.mapReplaceRequests(vaultId);
+        const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+        const requests = await window.bridge.interBtcApi.replace.mapReplaceRequests(vaultId);
         if (!requests) return;
 
         dispatch(addReplaceRequestsAction(requests));
@@ -39,7 +42,7 @@ const ReplaceTable = (): JSX.Element => {
       }
     })();
   }, [
-    polkaBtcLoaded,
+    bridgeLoaded,
     dispatch,
     address
   ]);
@@ -83,8 +86,8 @@ const ReplaceTable = (): JSX.Element => {
                     <td>{shortAddress(redeem.oldVault.toString())}</td>
                     <td>{shortAddress(redeem.newVault.toString())}</td>
                     <td>{shortAddress(redeem.btcAddress)}</td>
-                    <td>{redeem.amount.toHuman()}</td>
-                    <td>{redeem.collateral.toHuman()}</td>
+                    <td>{displayMonetaryAmount(redeem.amount)}</td>
+                    <td>{displayMonetaryAmount(redeem.collateral)}</td>
                     <td>{redeem.status.isPending ?
                       t('pending') :
                       redeem.status.isCompleted ?
@@ -107,4 +110,4 @@ const ReplaceTable = (): JSX.Element => {
 };
 
 export default ReplaceTable;
-// ray test touch >
+// ray test touch >>

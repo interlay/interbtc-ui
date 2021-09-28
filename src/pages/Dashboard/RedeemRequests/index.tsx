@@ -6,8 +6,7 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import BN from 'bn.js';
-import { satToBTC } from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -19,7 +18,7 @@ import LineChartComponent from '../components/line-chart-component';
 
 function RedeemRequests(): JSX.Element {
   const {
-    polkaBtcLoaded,
+    bridgeLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
@@ -69,7 +68,7 @@ function RedeemRequests(): JSX.Element {
     };
 
     (async () => {
-      if (!polkaBtcLoaded) return;
+      if (!bridgeLoaded) return;
       try {
         await Promise.all([
           fetchTotalSuccessfulRedeems(),
@@ -82,7 +81,7 @@ function RedeemRequests(): JSX.Element {
       }
     })();
   }, [
-    polkaBtcLoaded,
+    bridgeLoaded,
     statsApi
   ]);
 
@@ -125,13 +124,16 @@ function RedeemRequests(): JSX.Element {
               'font-bold',
               'text-xl'
             )}>
-            {totalRedeemedAmount === '-' ? t('no_data') : satToBTC(new BN(totalRedeemedAmount)).toString()}
+            {totalRedeemedAmount === '-' ?
+              t('no_data') :
+              BitcoinAmount.from.Satoshi(totalRedeemedAmount).str.BTC()}
             &nbsp;BTC
           </h5>
           {totalRedeemedAmount !== '-' && (
             <h5 className='text-textSecondary'>
               $
-              {(prices.bitcoin.usd * parseFloat(satToBTC(new BN(totalRedeemedAmount)).toString())).toLocaleString()}
+              {/* eslint-disable-next-line max-len */}
+              {(prices.bitcoin.usd * Number(BitcoinAmount.from.Satoshi(totalRedeemedAmount).str.BTC())).toLocaleString()}
             </h5>
           )}
           <h5
@@ -176,9 +178,11 @@ function RedeemRequests(): JSX.Element {
             yAxisProps={[{ beginAtZero: true, position: 'left' }, { position: 'right' }]}
             data={[
               cumulativeRedeemsPerDay.map(dataPoint =>
-                satToBTC(new BN(dataPoint.sat)).toNumber()
+                Number(BitcoinAmount.from.Satoshi(dataPoint.sat).str.BTC())
               ),
-              pointRedeemsPerDay.map(amount => satToBTC(new BN(amount)).toNumber())
+              pointRedeemsPerDay.map(
+                amount => Number(BitcoinAmount.from.Satoshi(amount).str.BTC())
+              )
             ]} />
         </div>
       </div>

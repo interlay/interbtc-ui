@@ -24,7 +24,7 @@ interface Props {
 const CollateralLocked = ({ linkButton }: Props): JSX.Element => {
   const {
     prices,
-    totalLockedDOT
+    totalLockedCollateralTokenAmount
   } = useSelector((state: StoreType) => state.general);
 
   const { t } = useTranslation();
@@ -76,7 +76,7 @@ const CollateralLocked = ({ linkButton }: Props): JSX.Element => {
               'font-bold',
               'mb-1'
             )}>
-            {displayMonetaryAmount(totalLockedDOT)} DOT
+            {displayMonetaryAmount(totalLockedCollateralTokenAmount)} DOT
           </h2>
           <h2
             className={clsx(
@@ -84,7 +84,7 @@ const CollateralLocked = ({ linkButton }: Props): JSX.Element => {
               'font-bold',
               'mb-1'
             )}>
-            ${getUsdAmount(totalLockedDOT, prices.polkadot.usd)}
+            ${getUsdAmount(totalLockedCollateralTokenAmount, prices.collateralToken.usd)}
           </h2>
         </div>
         {linkButton && (

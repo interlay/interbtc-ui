@@ -1571,17 +1571,17 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-api@0.26.0":
-  version "0.26.0"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-0.26.0.tgz#363c10d95f756a266e7b9df3949039c39e3802e2"
-  integrity sha512-J5YYx1FcEVSEyY6md+k4BGgn7ebV1LzlpdARECa6JsuNVLZzqAjo6O50f6/ZgqKGN4sV1zWi0Fh6hYJguE3hlw==
+"@interlay/interbtc-api@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-1.0.0.tgz#21080ba1408c497512bb5555b167932d1591bde5"
+  integrity sha512-VKiVZi5iNudSHKt4REqBD7Jr2avp5spJfCPH0sZNm9pA9Vwt1NgAAbRI3nSVa50NgNzNtuwmWX793NYNVCyxVA==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
-    "@interlay/interbtc-types" "0.10.1"
-    "@interlay/monetary-js" "0.2.1"
+    "@interlay/interbtc-types" "0.12.5"
+    "@interlay/monetary-js" "0.4.0"
     "@polkadot/api" "5.3.2"
     "@polkadot/keyring" "6.6.2-6"
-    "@types/big.js" "6.1.1"
+    "@types/big.js" "6.1.2"
     big.js "6.1.1"
     bitcoin-core "^3.0.0"
     bitcoinjs-lib "^5.2.0"
@@ -1592,33 +1592,33 @@
     sinon "^9.0.3"
     ts-mock-imports "^1.3.0"
 
-"@interlay/interbtc-index-client@0.9.0":
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-index-client/-/interbtc-index-client-0.9.0.tgz#247c481053f3579c9e77bdfa9df78851b223f209"
-  integrity sha512-x8W5s5WJNcZ7YH7fe+wbo7TYIhK06o1K9jZNhOHJPixDck0+c1lUa3whFHFXxv71JuwALFEkNaiTLd9UWIqgPg==
+"@interlay/interbtc-index-client@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-index-client/-/interbtc-index-client-1.0.0.tgz#2412554056dba71ad1e348f23a7145252f778922"
+  integrity sha512-LP+GrBEbmDnu25c1Ats0KVStEkM00Y044kZ4lZUWCX5zthYdbHhNjjEdJa+T16KzhVagoVXv0XHAx5XmDoGNAw==
 
-"@interlay/interbtc-types@0.10.1":
-  version "0.10.1"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-0.10.1.tgz#669b2b1ca4b3d0cd5b7ed946756c453d8444b382"
-  integrity sha512-RmGASIIjzvyD/xprfCaDxo5xRx8FLnD1So7CmxI8xR/KDOhrYkGfQPL8gR3N6lmUFpjVHT/Ro1tICS8TMke5/w==
+"@interlay/interbtc-types@0.12.5":
+  version "0.12.5"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-0.12.5.tgz#d78f62700aa6330454b8ee80bfe0b2fb76fc29a2"
+  integrity sha512-6SfMnYHzp9ROFBGVKoNwSPZDjJ6hBZqiz2mfxjNRBQQfx2SUq9xbFg8gS0yudACYXWmF4zs3ceH5v/13e9tmtw==
 
-"@interlay/interbtc@0.26.2":
-  version "0.26.2"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-0.26.2.tgz#0264dc2b376fc09ba1bef7bc08e921a090a33681"
-  integrity sha512-I67G3+3l1R+3OsaXroQ/cZ7Bv2WSLxMw/QmD73YkZ9OTC+8rcGbCCodYfKjMmK3DTIwXfem/AraOldGf4cY5wQ==
+"@interlay/interbtc@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-1.1.0.tgz#3b33c16750b8ee8a354f2f84335ef4c48c95853f"
+  integrity sha512-m7nU4kaIbP29H/uCgWHpBoPtJQt1MKnIWpOZ9am8JMX+H9XY+0z6jViyZ07C7zh8nnAwsyWTcG1lizA1ym4mvQ==
   dependencies:
-    "@interlay/interbtc-api" "0.26.0"
-    "@interlay/interbtc-index-client" "0.9.0"
-    "@interlay/interbtc-types" "0.10.1"
-    "@interlay/monetary-js" "0.2.1"
+    "@interlay/interbtc-api" "1.0.0"
+    "@interlay/interbtc-index-client" "1.0.0"
+    "@interlay/interbtc-types" "0.12.5"
+    "@interlay/monetary-js" "0.4.0"
 
-"@interlay/monetary-js@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@interlay/monetary-js/-/monetary-js-0.2.1.tgz#158c8ec7ee4275abe5be17bea592e2bd33e27dc0"
-  integrity sha512-SBzBnzzNbzAj8RDL+ETe7QX4LxbIEgC4fv6HMdBJiwX0Z+SoRkM+MH66VFugd+pDv96QocXXJ67xVyqGlMoMbA==
+"@interlay/monetary-js@0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@interlay/monetary-js/-/monetary-js-0.4.0.tgz#91f6148e18f799c8922518e93410769e8edb99bb"
+  integrity sha512-J18f8j3lyJwDA635cQVWxi+yoe50N8PerE5vdT8eoSDILYu1sq9VJWE5KqG1dgUDWqfG0Zz/AP5YYDlIcViwDw==
   dependencies:
-    "@types/big.js" "^6.1.1"
-    big.js "^6.1.1"
+    "@types/big.js" "6.1.2"
+    big.js "6.1.1"
     typescript "^4.3.2"
 
 "@istanbuljs/load-nyc-config@^1.0.0":
@@ -3675,10 +3675,10 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/big.js@6.1.1", "@types/big.js@^6.1.1":
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/@types/big.js/-/big.js-6.1.1.tgz#c2be5e81e0cf0c1c31704e3b12f750712f647414"
-  integrity sha512-Zns+nT0hj96ie+GDbL5NeHxhL4wNz8QMxCHqBvxgc4x0hhgQ/o92rPwqxvPBhY3ZYnH8TJGw/8oCkjhOy2Rfzw==
+"@types/big.js@6.1.2":
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/@types/big.js/-/big.js-6.1.2.tgz#68a952b629a6aaa2b5855a2f63363d1e77f6dd91"
+  integrity sha512-h24JIZ52rvSvi2jkpYDk2yLH99VzZoCJiSfDWwjst7TwJVuXN61XVCUlPCzRl7mxKEMsGf8z42Q+J4TZwU3z2w==
 
 "@types/bn.js@^4.11.6":
   version "4.11.6"
@@ -4972,12 +4972,19 @@ axe-core@^4.0.2:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.3.2.tgz#fcf8777b82c62cfc69c7e9f32c0d2226287680e7"
   integrity sha512-5LMaDRWm8ZFPAEdzTYmgjjEdj1YnQcpfrVajO/sn/LhbpGp0Y0H64c2hLZI1gRMxfA+w1S71Uc/nHaOXgcCvGg==
 
-axios@0.21.1, axios@^0.21.1:
+axios@0.21.1:
   version "0.21.1"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
   integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
   dependencies:
     follow-redirects "^1.10.0"
+
+axios@^0.21.1:
+  version "0.21.4"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.4.tgz#c67b90dc0568e5c1cf2b0b858c43ba28e2eda575"
+  integrity sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==
+  dependencies:
+    follow-redirects "^1.14.0"
 
 axobject-query@^2.2.0:
   version "2.2.0"
@@ -8667,6 +8674,11 @@ follow-redirects@^1.0.0, follow-redirects@^1.10.0:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.1.tgz#d9114ded0a1cfdd334e164e6662ad02bfd91ff43"
   integrity sha512-HWqDgT7ZEkqRzBvc2s64vSZ/hfOceEol3ac/7tKwzuvEyWx3/4UegXh5oBOIotkGsObyk3xznnSRVADBgWSQVg==
+
+follow-redirects@^1.14.0:
+  version "1.14.4"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.4.tgz#838fdf48a8bbdd79e52ee51fb1c94e3ed98b9379"
+  integrity sha512-zwGkiSXC1MUJG/qmeIFH2HBJx9u0V46QGUe3YR1fXG8bXQxq7fLj0RjLZQ5nubr9qNJUZrH+xUcwXEoXNpfS+g==
 
 for-in@^1.0.2:
   version "1.0.2"

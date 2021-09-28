@@ -13,16 +13,17 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { btcToSat } from '@interlay/interbtc-api';
 import {
   ExchangeRate,
   Bitcoin,
-  BTCUnit,
-  Polkadot,
-  PolkadotUnit,
-  BTCAmount,
-  PolkadotAmount
+  BitcoinUnit,
+  Currency,
+  BitcoinAmount
 } from '@interlay/monetary-js';
+import {
+  CollateralUnit,
+  newMonetaryAmount
+} from '@interlay/interbtc-api';
 
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterBTCField from '../InterBTCField';
@@ -30,27 +31,31 @@ import SubmitButton from '../SubmitButton';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
-import { getUsdAmount } from 'common/utils/utils';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import {
+  getUsdAmount,
+  displayMonetaryAmount
+} from 'common/utils/utils';
 import {
   StoreType,
   ParachainStatus
 } from 'common/types/util.types';
 import {
-  updateBalancePolkaBTCAction,
-  updateBalanceDOTAction,
+  updateWrappedTokenBalanceAction,
+  updateCollateralTokenBalanceAction,
   showAccountModalAction
 } from 'common/actions/general.actions';
 import STATUSES from 'utils/constants/statuses';
 import { BALANCE_MAX_INTEGER_LENGTH } from '../../../constants';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
-const INTER_BTC_AMOUNT = 'inter-btc-amount';
+const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 
-type BurnForm = {
-  [INTER_BTC_AMOUNT]: string;
+type BurnFormData = {
+  [WRAPPED_TOKEN_AMOUNT]: string;
 }
 
-const Burn = (): JSX.Element | null => {
+const BurnForm = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -59,9 +64,9 @@ const Burn = (): JSX.Element | null => {
 
   const {
     prices,
-    polkaBtcLoaded,
-    balanceInterBTC,
-    balanceDOT,
+    bridgeLoaded,
+    wrappedTokenBalance,
+    collateralTokenBalance,
     parachainStatus,
     address
   } = useSelector((state: StoreType) => state.general);
@@ -72,26 +77,31 @@ const Burn = (): JSX.Element | null => {
     formState: { errors },
     watch,
     reset
-  } = useForm<BurnForm>({
+  } = useForm<BurnFormData>({
     mode: 'onChange'
   });
-  const interBTCAmount = watch(INTER_BTC_AMOUNT);
+  const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT);
 
   const [burnRate, setBurnRate] = React.useState(
-    new ExchangeRate<Polkadot, PolkadotUnit, Bitcoin, BTCUnit>(Polkadot, Bitcoin, new Big(0))
+    new ExchangeRate<
+      Currency<CollateralUnit>,
+      CollateralUnit,
+      Bitcoin,
+      BitcoinUnit
+    >(COLLATERAL_TOKEN, Bitcoin, new Big(0))
   );
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!handleError) return;
 
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const theBurnRate = await window.polkaBTC.interBtcApi.redeem.getBurnExchangeRate();
+        const theBurnRate = await window.bridge.interBtcApi.redeem.getBurnExchangeRate(COLLATERAL_TOKEN);
         setBurnRate(theBurnRate);
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
@@ -100,7 +110,7 @@ const Burn = (): JSX.Element | null => {
       }
     })();
   }, [
-    polkaBtcLoaded,
+    bridgeLoaded,
     handleError
   ]);
 
@@ -128,18 +138,24 @@ const Burn = (): JSX.Element | null => {
       }
     };
 
-    const onSubmit = async (data: BurnForm) => {
+    const onSubmit = async (data: BurnFormData) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
-        await window.polkaBTC.interBtcApi.redeem.burn(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]));
+        await window.bridge.interBtcApi.redeem.burn(
+          BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]),
+          COLLATERAL_TOKEN
+        );
         // TODO: should not manually update the balances everywhere
         // - Should be able to watch the balances in one place and update the context accordingly.
-        dispatch(updateBalancePolkaBTCAction(balanceInterBTC.sub(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]))));
-        const earnedDOT = burnRate.toBase(BTCAmount.from.BTC(data[INTER_BTC_AMOUNT]) || BTCAmount.zero);
-        dispatch(updateBalanceDOTAction(balanceDOT.add(earnedDOT)));
+        dispatch(
+          updateWrappedTokenBalanceAction(wrappedTokenBalance.sub(BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT])))
+        );
+        const earnedCollateralTokenAmount =
+          burnRate.toBase(BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]) || BitcoinAmount.zero);
+        dispatch(updateCollateralTokenBalanceAction(collateralTokenBalance.add(earnedCollateralTokenAmount)));
         toast.success(t('burn_page.successfully_burned'));
         reset({
-          [INTER_BTC_AMOUNT]: ''
+          [WRAPPED_TOKEN_AMOUNT]: ''
         });
         setSubmitStatus(STATUSES.RESOLVED);
       } catch (error) {
@@ -149,31 +165,33 @@ const Burn = (): JSX.Element | null => {
     };
 
     const validateForm = (value: number): string | undefined => {
-      // TODO: should be `big` type other than `Number`
-      if (value > Number(balanceInterBTC)) {
-        return `${t('redeem_page.current_balance')}${balanceInterBTC}`;
+      // TODO: should use wrapped token amount type (e.g. InterBtcAmount or KBtcAmount)
+      const bitcoinAmountValue = BitcoinAmount.from.BTC(value);
+
+      if (bitcoinAmountValue.gt(wrappedTokenBalance)) {
+        return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
       }
 
-      if (!polkaBtcLoaded) {
+      if (!bridgeLoaded) {
         return 'interBTC must be loaded!';
       }
 
-      if (btcToSat(new Big(value)) === undefined) {
+      if (bitcoinAmountValue.to.Satoshi() === undefined) {
         return 'Invalid interBTC amount input!'; // TODO: should translate
       }
 
-      const polkaBTCAmountInteger = value.toString().split('.')[0];
-      if (polkaBTCAmountInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
+      const wrappedTokenAmountInteger = value.toString().split('.')[0];
+      if (wrappedTokenAmountInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
         return 'Input value is too high!'; // TODO: should translate
       }
 
       return undefined;
     };
 
-    const parsedInterBTCAmount = BTCAmount.from.BTC(interBTCAmount || 0);
-    const earnedDOT = burnRate.rate.eq(0) ?
-      PolkadotAmount.zero :
-      burnRate.toBase(parsedInterBTCAmount || BTCAmount.zero);
+    const parsedInterBTCAmount = BitcoinAmount.from.BTC(wrappedTokenAmount || 0);
+    const earnedCollateralTokenAmount = burnRate.rate.eq(0) ?
+      newMonetaryAmount(0, COLLATERAL_TOKEN) :
+      burnRate.toBase(parsedInterBTCAmount || BitcoinAmount.zero);
     const accountSet = !!address;
 
     return (
@@ -190,8 +208,8 @@ const Burn = (): JSX.Element | null => {
             {t('burn_page.burn_interbtc')}
           </h4>
           <InterBTCField
-            id='inter-btc-amount'
-            name={INTER_BTC_AMOUNT}
+            id='wrapped-token-amount'
+            name={WRAPPED_TOKEN_AMOUNT}
             type='number'
             label='interBTC'
             step='any'
@@ -203,9 +221,9 @@ const Burn = (): JSX.Element | null => {
               },
               validate: value => validateForm(value)
             })}
-            approxUSD={`≈ $ ${getUsdAmount(parsedInterBTCAmount || BTCAmount.zero, prices.bitcoin.usd)}`}
-            error={!!errors[INTER_BTC_AMOUNT]}
-            helperText={errors[INTER_BTC_AMOUNT]?.message} />
+            approxUSD={`≈ $ ${getUsdAmount(parsedInterBTCAmount || BitcoinAmount.zero, prices.bitcoin.usd)}`}
+            error={!!errors[WRAPPED_TOKEN_AMOUNT]}
+            helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message} />
           <PriceInfo
             title={
               <h5 className='text-textSecondary'>
@@ -217,9 +235,9 @@ const Burn = (): JSX.Element | null => {
                 width={20}
                 height={20} />
             }
-            value={earnedDOT.toHuman()}
+            value={earnedCollateralTokenAmount.toHuman()}
             unitName='DOT'
-            approxUSD={getUsdAmount(earnedDOT, prices.polkadot.usd)} />
+            approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.collateralToken.usd)} />
           {/* TODO: could componentize */}
           <hr
             className={clsx(
@@ -238,9 +256,9 @@ const Burn = (): JSX.Element | null => {
                 width={20}
                 height={20} />
             }
-            value={earnedDOT.toHuman()}
+            value={earnedCollateralTokenAmount.toHuman()}
             unitName='DOT'
-            approxUSD={getUsdAmount(earnedDOT, prices.polkadot.usd)} />
+            approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.collateralToken.usd)} />
           <SubmitButton
             // TODO: should not check everywhere like this
             disabled={
@@ -273,7 +291,7 @@ const Burn = (): JSX.Element | null => {
   return null;
 };
 
-export default withErrorBoundary(Burn, {
+export default withErrorBoundary(BurnForm, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();

@@ -1,25 +1,27 @@
 
 import clsx from 'clsx';
 import {
-  BTCAmount,
-  PolkadotAmount
+  BitcoinAmount,
+  MonetaryAmount,
+  Currency
 } from '@interlay/monetary-js';
+import { CollateralUnit } from '@interlay/interbtc-api';
 
 import { displayMonetaryAmount } from 'common/utils/utils';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
 interface Props {
-  balanceInterBTC?: BTCAmount;
-  balanceDOT?: PolkadotAmount;
+  wrappedTokenBalance?: BitcoinAmount;
+  collateralTokenBalance?: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
 }
 
 const Balances = ({
-  balanceInterBTC,
-  balanceDOT
+  wrappedTokenBalance,
+  collateralTokenBalance
 }: Props): JSX.Element => {
-  const roundedBalanceDot = displayMonetaryAmount(balanceDOT);
-  const roundedBalanceInterBTC = displayMonetaryAmount(balanceInterBTC);
+  const roundedBalanceDot = displayMonetaryAmount(collateralTokenBalance);
+  const roundedBalanceInterBTC = displayMonetaryAmount(wrappedTokenBalance);
 
   return (
     <div

@@ -6,7 +6,7 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { satToBTC } from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -15,12 +15,11 @@ import IssueRequestsTable from 'containers/IssueRequestsTable';
 import LineChartComponent from '../components/line-chart-component';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
-import BN from 'bn.js';
 import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
 
 function IssueRequests(): JSX.Element {
   const {
-    totalInterBTC,
+    totalWrappedTokenAmount,
     prices
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
@@ -118,10 +117,10 @@ function IssueRequests(): JSX.Element {
             {t('dashboard.issue.issued')}
           </h5>
           <h5>
-            {t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalInterBTC) })}
+            {t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalWrappedTokenAmount) })}
           </h5>
           <h5 className='text-textSecondary'>
-            ${getUsdAmount(totalInterBTC, prices.bitcoin.usd).toLocaleString()}
+            ${getUsdAmount(totalWrappedTokenAmount, prices.bitcoin.usd).toLocaleString()}
           </h5>
           <h5
             className={clsx(
@@ -169,8 +168,8 @@ function IssueRequests(): JSX.Element {
             data={[
               cumulativeIssuesPerDay
                 .slice(1)
-                .map(dataPoint => satToBTC(new BN(dataPoint.sat)).toNumber()),
-              pointIssuesPerDay.slice(1).map(sat => Number(new BN(sat)))
+                .map(dataPoint => Number(BitcoinAmount.from.Satoshi(dataPoint.sat).str.BTC())),
+              pointIssuesPerDay.slice(1).map(sat => Number(BitcoinAmount.from.Satoshi(sat).str.BTC()))
             ]} />
         </div>
       </div>

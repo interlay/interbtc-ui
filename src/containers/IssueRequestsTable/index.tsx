@@ -103,7 +103,7 @@ const IssueRequestsTable = ({
       },
       {
         Header: t('issue_page.amount'),
-        accessor: 'amountInterBTC',
+        accessor: 'wrappedAmount',
         classNames: [
           'text-right'
         ]
@@ -117,7 +117,7 @@ const IssueRequestsTable = ({
       },
       {
         Header: t('issue_page.vault_dot_address'),
-        accessor: 'vaultDOTAddress',
+        accessor: 'vaultParachainAddress',
         classNames: [
           'text-left'
         ],

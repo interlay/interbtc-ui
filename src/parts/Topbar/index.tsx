@@ -32,9 +32,9 @@ const Topbar = (): JSX.Element => {
   const {
     extensions,
     address,
-    polkaBtcLoaded,
-    balanceDOT,
-    balanceInterBTC,
+    bridgeLoaded,
+    collateralTokenBalance,
+    wrappedTokenBalance,
     showAccountModal
   } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
@@ -44,7 +44,7 @@ const Topbar = (): JSX.Element => {
     if (!address) return;
 
     try {
-      const receiverId = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+      const receiverId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
       await window.faucet.fundAccount(receiverId);
       toast.success('Your account has been funded.');
     } catch (error) {
@@ -70,7 +70,7 @@ const Topbar = (): JSX.Element => {
   }, [extensions.length]);
 
   const requestDOT = async () => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     setIsRequestPending(true);
     try {
       await handleRequestDotFromFaucet();
@@ -144,8 +144,8 @@ const Topbar = (): JSX.Element => {
                   {t('request_dot')}
                 </InterlayDenimOutlinedButton>
                 <Balances
-                  balanceDOT={balanceDOT}
-                  balanceInterBTC={balanceInterBTC} />
+                  collateralTokenBalance={collateralTokenBalance}
+                  wrappedTokenBalance={wrappedTokenBalance} />
                 <InterlayDefaultContainedButton
                   className={SMALL_SIZE_BUTTON_CLASS_NAME}
                   onClick={handleAccountModalOpen}>

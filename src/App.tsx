@@ -23,13 +23,14 @@ import {
 import keyring from '@polkadot/ui-keyring';
 import { Keyring } from '@polkadot/api';
 import { createInterbtc } from '@interlay/interbtc';
-import { FaucetClient } from '@interlay/interbtc-api';
+import {
+  FaucetClient,
+  CollateralUnit
+} from '@interlay/interbtc-api';
 import { StatusCode } from '@interlay/interbtc-api/build/src/interfaces';
 import {
-  Bitcoin,
-  BTCAmount,
-  Polkadot,
-  PolkadotAmount
+  MonetaryAmount,
+  Currency
 } from '@interlay/monetary-js';
 
 import Layout from 'parts/Layout';
@@ -37,10 +38,13 @@ import FullLoadingSpinner from 'components/FullLoadingSpinner';
 // TODO: block for now
 // import TransitionWrapper from 'parts/TransitionWrapper';
 import ErrorFallback from 'components/ErrorFallback';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   APP_NAME,
-  ACCOUNT_ID_TYPE_NAME
-} from 'config/general';
+  WRAPPED_TOKEN,
+  COLLATERAL_TOKEN,
+  WrappedTokenAmount
+} from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import './i18n';
 import * as constants from './constants';
@@ -57,8 +61,8 @@ import {
   setInstalledExtensionAction,
   isFaucetLoaded,
   isVaultClientLoaded,
-  updateBalancePolkaBTCAction,
-  updateBalanceDOTAction
+  updateWrappedTokenBalanceAction,
+  updateCollateralTokenBalanceAction
 } from 'common/actions/general.actions';
 // TODO: should clean up
 import './_general.scss';
@@ -109,10 +113,10 @@ const NoMatch = React.lazy(() =>
 
 const App = (): JSX.Element => {
   const {
-    polkaBtcLoaded,
+    bridgeLoaded,
     address,
-    balanceInterBTC,
-    balanceDOT,
+    wrappedTokenBalance,
+    collateralTokenBalance,
     vaultClientLoaded
   } = useSelector((state: StoreType) => state.general);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -122,9 +126,10 @@ const App = (): JSX.Element => {
   // Load the main interBTC API - connection to the interBTC bridge
   const loadPolkaBTC = React.useCallback(async (): Promise<void> => {
     try {
-      window.polkaBTC = await createInterbtc(
+      window.bridge = await createInterbtc(
         constants.PARACHAIN_URL,
         constants.BITCOIN_NETWORK,
+        WRAPPED_TOKEN,
         constants.STATS_URL
       );
       dispatch(isPolkaBtcLoaded(true));
@@ -155,47 +160,46 @@ const App = (): JSX.Element => {
   }, [dispatch]);
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!address) return;
 
-    const id = window.polkaBTC.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+    const id = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
 
     // Maybe load the vault client - only if the current address is also registered as a vault
     (async () => {
       try {
         dispatch(isVaultClientLoaded(false));
-        const vault = await window.polkaBTC.interBtcApi.vaults.get(id);
+        const vault = await window.bridge.interBtcApi.vaults.get(id);
         dispatch(isVaultClientLoaded(!!vault));
       } catch (error) {
         // TODO: should add error handling
-        console.log('No interBTC vault found for the account in the connected Polkadot wallet.');
-        console.log('[App React.useEffect] error.message => ', error.message);
+        console.log('[App React.useEffect 1] error => ', error);
       }
     })();
   }, [
-    polkaBtcLoaded,
+    bridgeLoaded,
     address,
     dispatch
   ]);
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
 
     // Initialize data on app bootstrap
     (async () => {
       try {
         const [
-          totalInterBTC,
-          totalLockedDOT,
+          totalWrappedTokenAmount,
+          totalLockedCollateralTokenAmount,
           btcRelayHeight,
           bitcoinHeight,
           state
         ] = await Promise.all([
-          window.polkaBTC.interBtcApi.tokens.total(Bitcoin),
-          window.polkaBTC.interBtcApi.tokens.total(Polkadot),
-          window.polkaBTC.interBtcApi.btcRelay.getLatestBlockHeight(),
-          window.polkaBTC.interBtcApi.electrsAPI.getLatestBlockHeight(),
-          window.polkaBTC.interBtcApi.system.getStatusCode()
+          window.bridge.interBtcApi.tokens.total(WRAPPED_TOKEN),
+          window.bridge.interBtcApi.tokens.total(COLLATERAL_TOKEN),
+          window.bridge.interBtcApi.btcRelay.getLatestBlockHeight(),
+          window.bridge.interBtcApi.electrsAPI.getLatestBlockHeight(),
+          window.bridge.interBtcApi.system.getStatusCode()
         ]);
 
         const parachainStatus = (state: StatusCode) => {
@@ -212,8 +216,8 @@ const App = (): JSX.Element => {
 
         dispatch(
           initGeneralDataAction(
-            totalInterBTC,
-            totalLockedDOT,
+            totalWrappedTokenAmount,
+            totalLockedCollateralTokenAmount,
             Number(btcRelayHeight),
             bitcoinHeight,
             parachainStatus(state)
@@ -221,23 +225,23 @@ const App = (): JSX.Element => {
         );
       } catch (error) {
         // TODO: should add error handling
-        console.log('[App React.useEffect] error.message => ', error.message);
+        console.log('[App React.useEffect 2] error.message => ', error.message);
       }
     })();
   }, [
     dispatch,
-    polkaBtcLoaded
+    bridgeLoaded
   ]);
 
   // Loads the address for the currently select account and maybe loads the vault and staked relayer dashboards
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
 
     const trySetDefaultAccount = () => {
       if (constants.DEFAULT_ACCOUNT_SEED) {
         const keyring = new Keyring({ type: 'sr25519' });
         const defaultAccountKeyring = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED);
-        window.polkaBTC.interBtcApi.setAccount(defaultAccountKeyring);
+        window.bridge.interBtcApi.setAccount(defaultAccountKeyring);
         dispatch(changeAddressAction(defaultAccountKeyring.address));
       }
     };
@@ -263,22 +267,22 @@ const App = (): JSX.Element => {
 
         const { signer } = await web3FromAddress(newAddress);
         // TODO: could store the active address just in one place (either in `window` object or in redux)
-        window.polkaBTC.interBtcApi.setAccount(newAddress, signer);
+        window.bridge.interBtcApi.setAccount(newAddress, signer);
         dispatch(changeAddressAction(newAddress));
       } catch (error) {
         // TODO: should add error handling
-        console.log('[App React.useEffect] error.message => ', error.message);
+        console.log('[App React.useEffect 3] error.message => ', error.message);
       }
     })();
   }, [
     address,
-    polkaBtcLoaded,
+    bridgeLoaded,
     dispatch
   ]);
 
   // Loads the interBTC bridge and the faucet
   React.useEffect(() => {
-    if (polkaBtcLoaded) return;
+    if (bridgeLoaded) return;
 
     (async () => {
       try {
@@ -298,14 +302,14 @@ const App = (): JSX.Element => {
     loadPolkaBTC,
     loadFaucet,
     isLoading,
-    polkaBtcLoaded,
+    bridgeLoaded,
     dispatch,
     store
   ]);
 
   React.useEffect(() => {
     if (!dispatch) return;
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!address) return;
 
     let unsubscribeFromCollateral: () => void;
@@ -313,30 +317,34 @@ const App = (): JSX.Element => {
     (async () => {
       try {
         unsubscribeFromCollateral =
-          await window.polkaBTC.interBtcApi.tokens.subscribeToBalance(
-            Polkadot,
+          await window.bridge.interBtcApi.tokens.subscribeToBalance(
+            COLLATERAL_TOKEN,
             address,
-            (_, balance: PolkadotAmount) => {
-              if (!balance.eq(balanceDOT)) {
-                dispatch(updateBalanceDOTAction(balance));
+            (_, balance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>) => {
+              if (!balance.eq(collateralTokenBalance)) {
+                dispatch(updateCollateralTokenBalanceAction(balance));
               }
             }
           );
       } catch (error) {
-        console.log('[App React.useEffect] error.message => ', error.message);
+        console.log('[App React.useEffect 4] error.message => ', error.message);
       }
     })();
 
     (async () => {
       try {
         unsubscribeFromWrapped =
-          await window.polkaBTC.interBtcApi.tokens.subscribeToBalance(Bitcoin, address, (_, balance: BTCAmount) => {
-            if (!balance.eq(balanceInterBTC)) {
-              dispatch(updateBalancePolkaBTCAction(balance));
+          await window.bridge.interBtcApi.tokens.subscribeToBalance(
+            WRAPPED_TOKEN,
+            address,
+            (_, balance: WrappedTokenAmount) => {
+              if (!balance.eq(wrappedTokenBalance)) {
+                dispatch(updateWrappedTokenBalanceAction(balance));
+              }
             }
-          });
+          );
       } catch (error) {
-        console.log('[App React.useEffect] error.message => ', error.message);
+        console.log('[App React.useEffect 5] error.message => ', error.message);
       }
     })();
 
@@ -350,10 +358,10 @@ const App = (): JSX.Element => {
     };
   }, [
     dispatch,
-    polkaBtcLoaded,
+    bridgeLoaded,
     address,
-    balanceInterBTC,
-    balanceDOT
+    wrappedTokenBalance,
+    collateralTokenBalance
   ]);
 
   return (

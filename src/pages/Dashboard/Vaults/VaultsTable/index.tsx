@@ -15,16 +15,16 @@ import clsx from 'clsx';
 import {
   roundTwoDecimals,
   VaultExt,
-  VaultStatusExt
+  VaultStatusExt,
+  CollateralUnit
 } from '@interlay/interbtc-api';
 import {
   Bitcoin,
-  BTCAmount,
-  BTCUnit,
+  BitcoinAmount,
+  BitcoinUnit,
   ExchangeRate,
-  Polkadot,
-  PolkadotAmount,
-  PolkadotUnit
+  MonetaryAmount,
+  Currency
 } from '@interlay/monetary-js';
 
 import ErrorFallback from 'components/ErrorFallback';
@@ -38,6 +38,7 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import { shortAddress } from '../../../../common/utils/utils';
 import * as constants from '../../../../constants';
 import genericFetcher, {
@@ -48,11 +49,17 @@ import { Vault } from '../../../../common/types/vault.types';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const getCollateralization = (
-  collateral: PolkadotAmount,
-  tokens: BTCAmount,
-  btcToDOTRate: ExchangeRate<Bitcoin, BTCUnit, Polkadot, PolkadotUnit>
+  collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
+  tokens: BitcoinAmount,
+  btcToDOTRate:
+    ExchangeRate<
+      Bitcoin,
+      BitcoinUnit,
+      Currency<CollateralUnit>,
+      CollateralUnit
+    >
 ) => {
-  if (tokens.gt(BTCAmount.zero) && btcToDOTRate.toBig().gt(0)) {
+  if (tokens.gt(BitcoinAmount.zero) && btcToDOTRate.toBig().gt(0)) {
     const tokensAsCollateral = btcToDOTRate.toCounter(tokens);
     return collateral.toBig().div(tokensAsCollateral.toBig()).mul(100);
   } else {
@@ -82,7 +89,7 @@ const getCollateralizationColor = (
 
 const VaultsTable = (): JSX.Element => {
   const { t } = useTranslation();
-  const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const {
     isLoading: secureCollateralThresholdLoading,
@@ -93,11 +100,12 @@ const VaultsTable = (): JSX.Element => {
       GENERIC_FETCHER,
       'interBtcApi',
       'vaults',
-      'getSecureCollateralThreshold'
+      'getSecureCollateralThreshold',
+      COLLATERAL_TOKEN
     ],
     genericFetcher<Big>(),
     {
-      enabled: !!polkaBtcLoaded
+      enabled: !!bridgeLoaded
     }
   );
   useErrorHandler(secureCollateralThresholdError);
@@ -111,11 +119,12 @@ const VaultsTable = (): JSX.Element => {
       GENERIC_FETCHER,
       'interBtcApi',
       'vaults',
-      'getLiquidationCollateralThreshold'
+      'getLiquidationCollateralThreshold',
+      COLLATERAL_TOKEN
     ],
     genericFetcher<Big>(),
     {
-      enabled: !!polkaBtcLoaded
+      enabled: !!bridgeLoaded
     }
   );
   useErrorHandler(liquidationThresholdError);
@@ -124,17 +133,32 @@ const VaultsTable = (): JSX.Element => {
     isLoading: btcToDOTRateLoading,
     data: btcToDOTRate,
     error: btcToDOTRateError
-  } = useQuery<ExchangeRate<Bitcoin, BTCUnit, Polkadot, PolkadotUnit>, Error>(
+  } = useQuery<
+    ExchangeRate<
+      Bitcoin,
+      BitcoinUnit,
+      Currency<CollateralUnit>,
+      CollateralUnit
+    >,
+    Error
+  >(
     [
       GENERIC_FETCHER,
       'interBtcApi',
       'oracle',
       'getExchangeRate',
-      Polkadot
+      COLLATERAL_TOKEN
     ],
-    genericFetcher<ExchangeRate<Bitcoin, BTCUnit, Polkadot, PolkadotUnit>>(),
+    genericFetcher<
+      ExchangeRate<
+        Bitcoin,
+        BitcoinUnit,
+        Currency<CollateralUnit>,
+        CollateralUnit
+      >
+    >(),
     {
-      enabled: !!polkaBtcLoaded
+      enabled: !!bridgeLoaded
     }
   );
   useErrorHandler(btcToDOTRateError);
@@ -152,7 +176,7 @@ const VaultsTable = (): JSX.Element => {
     ],
     genericFetcher<Array<VaultExt>>(),
     {
-      enabled: !!polkaBtcLoaded
+      enabled: !!bridgeLoaded
     }
   );
   useErrorHandler(vaultsExtError);

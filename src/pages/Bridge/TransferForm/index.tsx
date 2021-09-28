@@ -8,6 +8,8 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
+import { BitcoinAmount } from '@interlay/monetary-js';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import InterBTCField from '../InterBTCField';
 import SubmitButton from '../SubmitButton';
@@ -19,11 +21,15 @@ import InterlayModal, {
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayDefaultOutlinedButton from 'components/buttons/InterlayDefaultOutlinedButton';
 import ErrorModal from 'components/ErrorModal';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import {
   ParachainStatus,
   StoreType
 } from 'common/types/util.types';
-import { getUsdAmount } from 'common/utils/utils';
+import {
+  getUsdAmount,
+  displayMonetaryAmount
+} from 'common/utils/utils';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import STATUSES from 'utils/constants/statuses';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
@@ -31,27 +37,26 @@ import { ReactComponent as AcalaLogoIcon } from 'assets/img/acala-logo.svg';
 import { ReactComponent as PlasmLogoIcon } from 'assets/img/plasm-logo.svg';
 import { ReactComponent as EthereumLogoIcon } from 'assets/img/ethereum-logo.svg';
 import { ReactComponent as CosmosLogoIcon } from 'assets/img/cosmos-logo.svg';
-import { BTCAmount } from '@interlay/monetary-js';
 
-const INTER_BTC_AMOUNT = 'inter-btc-amount';
+const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 const DOT_ADDRESS = 'dot-address';
 
 type TransferFormData = {
-  [INTER_BTC_AMOUNT]: string;
+  [WRAPPED_TOKEN_AMOUNT]: string;
   [DOT_ADDRESS]: string;
 }
 
 const NETWORK_TYPES = Object.freeze({
-  polkaBTC: 'inter-btc',
-  acala: 'acala',
-  plasm: 'plasm',
-  ethereum: 'ethereum',
-  cosmos: 'cosmos'
+  INTER_BTC: 'inter-btc',
+  ACALA: 'acala',
+  PLASM: 'plasm',
+  ETHEREUM: 'ethereum',
+  COSMOS: 'cosmos'
 });
 
 const NETWORK_ITEMS = [
   {
-    type: NETWORK_TYPES.polkaBTC,
+    type: NETWORK_TYPES.INTER_BTC,
     icon: (
       <InterBTCLogoIcon
         width={24}
@@ -60,7 +65,7 @@ const NETWORK_ITEMS = [
     title: 'interBTC'
   },
   {
-    type: NETWORK_TYPES.acala,
+    type: NETWORK_TYPES.ACALA,
     icon: (
       <AcalaLogoIcon
         width={20}
@@ -70,7 +75,7 @@ const NETWORK_ITEMS = [
     disabled: true
   },
   {
-    type: NETWORK_TYPES.plasm,
+    type: NETWORK_TYPES.PLASM,
     icon: (
       <PlasmLogoIcon
         width={20}
@@ -80,7 +85,7 @@ const NETWORK_ITEMS = [
     disabled: true
   },
   {
-    type: NETWORK_TYPES.ethereum,
+    type: NETWORK_TYPES.ETHEREUM,
     icon: (
       <EthereumLogoIcon
         width={20}
@@ -90,7 +95,7 @@ const NETWORK_ITEMS = [
     disabled: true
   },
   {
-    type: NETWORK_TYPES.cosmos,
+    type: NETWORK_TYPES.COSMOS,
     icon: (
       <CosmosLogoIcon
         width={20}
@@ -107,8 +112,8 @@ const TransferForm = (): JSX.Element => {
 
   const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
   const {
-    balanceInterBTC,
-    balanceDOT,
+    wrappedTokenBalance,
+    collateralTokenBalance,
     parachainStatus,
     address
   } = useSelector((state: StoreType) => state.general);
@@ -122,10 +127,10 @@ const TransferForm = (): JSX.Element => {
   } = useForm<TransferFormData>({
     mode: 'onChange'
   });
-  const interBTCAmount = watch(INTER_BTC_AMOUNT);
+  const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT);
 
   const [networkModalOpen, setNetworkModalOpen] = React.useState(false);
-  const [selectedNetworkType, setSelectedNetworkType] = React.useState(NETWORK_TYPES.polkaBTC);
+  const [selectedNetworkType, setSelectedNetworkType] = React.useState(NETWORK_TYPES.INTER_BTC);
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
@@ -140,14 +145,14 @@ const TransferForm = (): JSX.Element => {
   const onSubmit = async (data: TransferFormData) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
-      await window.polkaBTC.interBtcApi.tokens.transfer(
+      await window.bridge.interBtcApi.tokens.transfer(
         data[DOT_ADDRESS],
-        BTCAmount.from.BTC(data[INTER_BTC_AMOUNT])
+        BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT])
       );
       setSubmitStatus(STATUSES.RESOLVED);
       toast.success(t('transfer_page.successfully_transferred'));
       reset({
-        [INTER_BTC_AMOUNT]: '',
+        [WRAPPED_TOKEN_AMOUNT]: '',
         [DOT_ADDRESS]: ''
       });
     } catch (error) {
@@ -157,16 +162,18 @@ const TransferForm = (): JSX.Element => {
   };
 
   const validateForm = (value: number): string | undefined => {
-    if (Number(balanceInterBTC) === 0) {
+    // TODO: should use wrapped token amount type (e.g. InterBtcAmount or KBtcAmount)
+    if (wrappedTokenBalance === BitcoinAmount.zero) {
       return t('insufficient_funds');
     }
 
-    if (Number(balanceDOT) === 0) {
+    if (collateralTokenBalance === newMonetaryAmount(0, COLLATERAL_TOKEN)) {
       return t('insufficient_funds_dot');
     }
 
-    if (value > Number(balanceInterBTC)) {
-      return `${t('redeem_page.current_balance')}${balanceInterBTC}`;
+    const bitcoinAmountValue = BitcoinAmount.from.BTC(value);
+    if (bitcoinAmountValue.gt(wrappedTokenBalance)) {
+      return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
     }
 
     return undefined;
@@ -200,8 +207,8 @@ const TransferForm = (): JSX.Element => {
           {t('transfer_page.transfer_interbtc')}
         </h4>
         <InterBTCField
-          id={INTER_BTC_AMOUNT}
-          name={INTER_BTC_AMOUNT}
+          id={WRAPPED_TOKEN_AMOUNT}
+          name={WRAPPED_TOKEN_AMOUNT}
           type='number'
           label='interBTC'
           step='any'
@@ -213,9 +220,9 @@ const TransferForm = (): JSX.Element => {
             },
             validate: value => validateForm(value)
           })}
-          approxUSD={`≈ $ ${getUsdAmount(BTCAmount.from.BTC(interBTCAmount || '0.00'), usdPrice)}`}
-          error={!!errors[INTER_BTC_AMOUNT]}
-          helperText={errors[INTER_BTC_AMOUNT]?.message} />
+          approxUSD={`≈ $ ${getUsdAmount(BitcoinAmount.from.BTC(wrappedTokenAmount || '0.00'), usdPrice)}`}
+          error={!!errors[WRAPPED_TOKEN_AMOUNT]}
+          helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message} />
         <div>
           <TextField
             id='dot-address'

@@ -16,7 +16,7 @@ import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
 import InterlayLink from 'components/UI/InterlayLink';
-import { APP_NAME } from 'config/general';
+import { APP_NAME } from 'config/relay-chains';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';
 import { shortAddress } from 'common/utils/utils';
@@ -34,7 +34,7 @@ const AccountModal = ({
   onClose
 }: Props): JSX.Element => {
   const {
-    polkaBtcLoaded,
+    bridgeLoaded,
     address,
     extensions
   } = useSelector((state: StoreType) => state.general);
@@ -58,14 +58,14 @@ const AccountModal = ({
   }, [extensions.length]);
 
   const handleAccountSelect = (newAddress: string) => async () => {
-    if (!polkaBtcLoaded) {
+    if (!bridgeLoaded) {
       return;
     }
 
     // TODO: should check when the app being initialized (not check everywhere)
     await web3Enable(APP_NAME);
     const { signer } = await web3FromAddress(newAddress);
-    window.polkaBTC.interBtcApi.setAccount(newAddress, signer);
+    window.bridge.interBtcApi.setAccount(newAddress, signer);
     dispatch(changeAddressAction(newAddress));
 
     onClose();

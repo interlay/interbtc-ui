@@ -1,7 +1,7 @@
 
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { BTCAmount } from '@interlay/monetary-js';
+import { BitcoinAmount } from '@interlay/monetary-js';
 import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
@@ -9,6 +9,7 @@ import clsx from 'clsx';
 import DashboardCard from 'pages/Dashboard/DashboardCard';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import {
   displayMonetaryAmount,
   safeRoundTwoDecimals
@@ -16,25 +17,27 @@ import {
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 
+const TEMP_DISABLE_COLLATERALIZATION_DISPLAY = true; // TODO: remove once lib reimplements collateralization
+
 interface Props {
   linkButton?: boolean;
 }
 
 const Collateralization = ({ linkButton }: Props): JSX.Element => {
   const { t } = useTranslation();
-  const polkaBtcLoaded = useSelector((state: StoreType) => state.general.polkaBtcLoaded);
+  const bridgeLoaded = useSelector((state: StoreType) => state.general.bridgeLoaded);
 
   const [systemCollateralization, setSystemCollateralization] = React.useState('0');
-  const [issuablePolkaBTC, setIssuablePolkaBTC] = React.useState(BTCAmount.zero);
+  const [issuableWrappedToken, setIssuableWrappedToken] = React.useState(BitcoinAmount.zero);
   const [secureCollateralThreshold, setSecureCollateralThreshold] = React.useState('150');
   const [failed, setFailed] = React.useState(false);
 
   React.useEffect(() => {
     (async () => {
-      if (!polkaBtcLoaded) return;
+      if (!bridgeLoaded || TEMP_DISABLE_COLLATERALIZATION_DISPLAY) return;
 
       try {
-        const systemCollateralization = await window.polkaBTC.interBtcApi.vaults.getSystemCollateralization();
+        const systemCollateralization = await window.bridge.interBtcApi.vaults.getSystemCollateralization();
         setSystemCollateralization(systemCollateralization?.mul(100).toString() || '0');
       } catch (error) {
         console.log('[Collateralization useEffect] error.message => ', error.message);
@@ -43,11 +46,11 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
     })();
 
     (async () => {
-      if (!polkaBtcLoaded) return;
+      if (!bridgeLoaded) return;
 
       try {
-        const issuablePolkaBTC = await window.polkaBTC.interBtcApi.vaults.getTotalIssuableAmount();
-        setIssuablePolkaBTC(issuablePolkaBTC);
+        const theIssuableWrappedToken = await window.bridge.interBtcApi.vaults.getTotalIssuableAmount();
+        setIssuableWrappedToken(theIssuableWrappedToken);
       } catch (error) {
         console.log('[Collateralization useEffect] error.message => ', error.message);
         setFailed(true);
@@ -55,10 +58,11 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
     })();
 
     (async () => {
-      if (!polkaBtcLoaded) return;
+      if (!bridgeLoaded) return;
 
       try {
-        const secureCollateralThreshold = await window.polkaBTC.interBtcApi.vaults.getSecureCollateralThreshold();
+        const secureCollateralThreshold =
+          await window.bridge.interBtcApi.vaults.getSecureCollateralThreshold(COLLATERAL_TOKEN);
         setSecureCollateralThreshold(secureCollateralThreshold?.mul(100).toString() || '150');
       } catch (error) {
         console.log('[Collateralization useEffect] error.message => ', error.message);
@@ -76,7 +80,7 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
           'items-center'
         )}>
         <div>
-          {!failed && (
+          {!(failed || TEMP_DISABLE_COLLATERALIZATION_DISPLAY) && (
             <>
               <h1
                 className={clsx(
@@ -141,11 +145,11 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
           {failed ? (
             <>{t('no_data')}</>
           ) : (
-            issuablePolkaBTC.eq(BTCAmount.zero) ? (
+            issuableWrappedToken.eq(BitcoinAmount.zero) ? (
               <>{t('loading')}</>
             ) : (
               <>
-                <span className='inline-block'>{`${displayMonetaryAmount(issuablePolkaBTC)} interBTC`}</span>
+                <span className='inline-block'>{`${displayMonetaryAmount(issuableWrappedToken)} interBTC`}</span>
                 <span className='inline-block'>{t('dashboard.vault.capacity')}</span>
               </>
             )

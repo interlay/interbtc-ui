@@ -25,7 +25,7 @@ const BTCPaymentPendingStatusUI = ({
   const { t } = useTranslation();
   const { prices } = useSelector((state: StoreType) => state.general);
   const { issuePeriod } = useSelector((state: StoreType) => state.issue);
-  const amountBTCToSend = request.amountInterBTC.add(request.bridgeFee);
+  const amountBTCToSend = request.wrappedAmount.add(request.bridgeFee);
   const [initialLeftSeconds, setInitialLeftSeconds] = React.useState<number>();
 
   React.useEffect(() => {
@@ -52,7 +52,7 @@ const BTCPaymentPendingStatusUI = ({
         <div
           className='text-xl'>
           {t('send')}
-          <span className='text-interlayCalifornia'>&nbsp;{amountBTCToSend.toHuman()}&nbsp;</span>
+          <span className='text-interlayCalifornia'>&nbsp;{displayMonetaryAmount(amountBTCToSend)}&nbsp;</span>
           BTC
         </div>
         <span

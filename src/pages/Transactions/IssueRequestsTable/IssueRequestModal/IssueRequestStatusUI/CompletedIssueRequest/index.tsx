@@ -5,7 +5,10 @@ import { Issue } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import InterlayLink from 'components/UI/InterlayLink';
-import { shortAddress } from 'common/utils/utils';
+import {
+  shortAddress,
+  displayMonetaryAmount
+} from 'common/utils/utils';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
 
 interface Props {
@@ -34,7 +37,7 @@ const CompletedIssueRequest = ({
         )}>
         <span>{t('issue_page.you_received')}</span>
         <span className='text-interlayDenim'>
-          {request.executedAmountBTC || request.amountInterBTC} interBTC
+          {displayMonetaryAmount(request.executedAmountBTC || request.wrappedAmount)} interBTC
         </span>
       </p>
       <div

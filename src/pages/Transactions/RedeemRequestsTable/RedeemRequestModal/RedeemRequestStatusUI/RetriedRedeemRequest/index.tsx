@@ -8,16 +8,16 @@ import {
   FaExternalLinkAlt,
   FaExclamationCircle
 } from 'react-icons/fa';
+import { BitcoinAmount } from '@interlay/monetary-js';
 import {
-  BTCAmount,
-  Polkadot,
-  PolkadotAmount
-} from '@interlay/monetary-js';
-import { Redeem } from '@interlay/interbtc-api';
+  Redeem,
+  newMonetaryAmount
+} from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterlayLink from 'components/UI/InterlayLink';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import { getUsdAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
@@ -31,13 +31,16 @@ const RetriedRedeemRequest = ({
 }: Props): JSX.Element => {
   const { t } = useTranslation();
   const {
-    polkaBtcLoaded,
+    bridgeLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
-  const [punishmentDOTAmount, setPunishmentDOTAmount] = React.useState(PolkadotAmount.zero);
+  const [
+    punishmentCollateralTokenAmount,
+    setPunishmentCollateralTokenAmount
+  ] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!request) return;
 
     // TODO: should add loading UX
@@ -47,14 +50,14 @@ const RetriedRedeemRequest = ({
           punishmentFee,
           btcDotRate
         ] = await Promise.all([
-          window.polkaBTC.interBtcApi.vaults.getPunishmentFee(),
-          window.polkaBTC.interBtcApi.oracle.getExchangeRate(Polkadot)
+          window.bridge.interBtcApi.vaults.getPunishmentFee(),
+          window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN)
         ]);
 
-        const btcAmount = request ? request.amountBTC : BTCAmount.zero;
+        const btcAmount = request ? request.amountBTC : BitcoinAmount.zero;
         const theBurnDOTAmount = btcDotRate.toCounter(btcAmount);
         const thePunishmentDOTAmount = theBurnDOTAmount.mul(new Big(punishmentFee));
-        setPunishmentDOTAmount(thePunishmentDOTAmount);
+        setPunishmentCollateralTokenAmount(thePunishmentDOTAmount);
       } catch (error) {
         // TODO: should add error handling UX
         console.log('[RetriedRedeemRequest useEffect] error.message => ', error.message);
@@ -62,7 +65,7 @@ const RetriedRedeemRequest = ({
     })();
   }, [
     request,
-    polkaBtcLoaded
+    bridgeLoaded
   ]);
 
   return (
@@ -81,10 +84,10 @@ const RetriedRedeemRequest = ({
           {t('redeem_page.recover_receive_dot')}
         </span>
         <span className='text-interlayDenim'>
-          &nbsp;{`${punishmentDOTAmount.toHuman()} DOT`}
+          &nbsp;{`${punishmentCollateralTokenAmount.toHuman()} DOT`}
         </span>
         <span>
-          &nbsp;({`≈ $${getUsdAmount(punishmentDOTAmount, prices.polkadot.usd)}`})
+          &nbsp;({`≈ $${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)}`})
         </span>
         <span className='text-interlayDenim'>
           &nbsp;{t('redeem_page.recover_receive_total')}.
@@ -102,9 +105,9 @@ const RetriedRedeemRequest = ({
               width={20}
               height={20} />
           }
-          value={punishmentDOTAmount.toHuman()}
+          value={punishmentCollateralTokenAmount.toHuman()}
           unitName='DOT'
-          approxUSD={getUsdAmount(punishmentDOTAmount, prices.polkadot.usd)} />
+          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)} />
         <hr
           className={clsx(
             'border-t-2',
@@ -123,9 +126,9 @@ const RetriedRedeemRequest = ({
               width={20}
               height={20} />
           }
-          value={punishmentDOTAmount.toHuman()}
+          value={punishmentCollateralTokenAmount.toHuman()}
           unitName='DOT'
-          approxUSD={getUsdAmount(punishmentDOTAmount, prices.polkadot.usd)} />
+          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)} />
       </div>
       <InterlayLink
         className={clsx(

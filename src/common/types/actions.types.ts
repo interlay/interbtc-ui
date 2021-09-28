@@ -1,8 +1,13 @@
 import { StoreType, ParachainStatus, Prices } from './util.types';
-import { Issue, ReplaceRequestExt } from '@interlay/interbtc-api';
 import {
-  BTCAmount,
-  PolkadotAmount
+  Issue,
+  ReplaceRequestExt,
+  CollateralUnit
+} from '@interlay/interbtc-api';
+import {
+  BitcoinAmount,
+  MonetaryAmount,
+  Currency
 } from '@interlay/monetary-js';
 import { H256 } from '@polkadot/types/interfaces';
 
@@ -15,7 +20,7 @@ export const INIT_STATE = 'INIT_STATE';
 export const CHANGE_ADDRESS = 'CHANGE_ADDRESS';
 export const INIT_GENERAL_DATA_ACTION = 'INIT_GENERAL_DATA_ACTION';
 export const UPDATE_BALANCE_POLKA_BTC = 'UPDATE_BALANCE_POLKA_BTC';
-export const UPDATE_BALANCE_DOT = 'UPDATE_BALANCE_DOT';
+export const UPDATE_COLLATERAL_TOKEN_BALANCE = 'UPDATE_COLLATERAL_TOKEN_BALANCE';
 export const SET_INSTALLED_EXTENSION = 'SET_INSTALLED_EXTENSION';
 export const SHOW_ACCOUNT_MODAL = 'SHOW_ACCOUNT_MODAL';
 export const UPDATE_OF_PRICES = 'UPDATE_OF_PRICES';
@@ -24,8 +29,8 @@ export const UPDATE_TOTALS = 'UPDATE_TOTALS';
 
 export interface UpdateTotals {
   type: typeof UPDATE_TOTALS;
-  totalLockedDOT: PolkadotAmount;
-  totalInterBTC: BTCAmount;
+  totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  totalWrappedTokenAmount: BitcoinAmount;
 }
 
 export interface UpdateHeights {
@@ -65,8 +70,8 @@ export interface InitState {
 
 export interface InitGeneralDataAction {
   type: typeof INIT_GENERAL_DATA_ACTION;
-  totalInterBTC: BTCAmount;
-  totalLockedDOT: PolkadotAmount;
+  totalWrappedTokenAmount: BitcoinAmount;
+  totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   btcRelayHeight: number;
   bitcoinHeight: number;
   parachainStatus: ParachainStatus;
@@ -74,12 +79,12 @@ export interface InitGeneralDataAction {
 
 export interface UpdateBalancePolkaBTC {
   type: typeof UPDATE_BALANCE_POLKA_BTC;
-  balanceInterBTC: BTCAmount;
+  wrappedTokenBalance: BitcoinAmount;
 }
 
-export interface UpdateBalanceDOT {
-  type: typeof UPDATE_BALANCE_DOT;
-  balanceDOT: PolkadotAmount;
+export interface UpdateCollateralTokenBalance {
+  type: typeof UPDATE_COLLATERAL_TOKEN_BALANCE;
+  collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
 }
 
 export interface SetInstalledExtension {
@@ -98,7 +103,7 @@ export type GeneralActions =
   | InitGeneralDataAction
   | IsVaultClientLoaded
   | UpdateBalancePolkaBTC
-  | UpdateBalanceDOT
+  | UpdateCollateralTokenBalance
   | SetInstalledExtension
   | ShowAccountModal
   | UpdateOfPrices
@@ -159,12 +164,12 @@ export interface UpdateCollateralization {
 
 export interface UpdateCollateral {
   type: typeof UPDATE_COLLATERAL;
-  collateral: PolkadotAmount;
+  collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
 }
 
 export interface UpdateLockedBTC {
   type: typeof UPDATE_LOCKED_BTC;
-  lockedBTC: BTCAmount;
+  lockedBTC: BitcoinAmount;
 }
 
 export interface UpdateAPY {

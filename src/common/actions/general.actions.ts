@@ -1,7 +1,9 @@
 import {
-  BTCAmount,
-  PolkadotAmount
+  BitcoinAmount,
+  MonetaryAmount,
+  Currency
 } from '@interlay/monetary-js';
+import { CollateralUnit } from '@interlay/interbtc-api';
 
 import {
   IS_POLKA_BTC_LOADED,
@@ -9,7 +11,7 @@ import {
   INIT_GENERAL_DATA_ACTION,
   IS_VAULT_CLIENT_LOADED,
   UPDATE_BALANCE_POLKA_BTC,
-  UPDATE_BALANCE_DOT,
+  UPDATE_COLLATERAL_TOKEN_BALANCE,
   SET_INSTALLED_EXTENSION,
   SHOW_ACCOUNT_MODAL,
   UPDATE_OF_PRICES,
@@ -21,7 +23,7 @@ import {
   InitGeneralDataAction,
   IsVaultClientLoaded,
   UpdateBalancePolkaBTC,
-  UpdateBalanceDOT,
+  UpdateCollateralTokenBalance,
   SetInstalledExtension,
   ShowAccountModal,
   IsFaucetLoaded,
@@ -51,14 +53,16 @@ export const changeAddressAction = (address: string): ChangeAddress => ({
   address
 });
 
-export const updateBalancePolkaBTCAction = (balanceInterBTC: BTCAmount): UpdateBalancePolkaBTC => ({
+export const updateWrappedTokenBalanceAction = (wrappedTokenBalance: BitcoinAmount): UpdateBalancePolkaBTC => ({
   type: UPDATE_BALANCE_POLKA_BTC,
-  balanceInterBTC
+  wrappedTokenBalance
 });
 
-export const updateBalanceDOTAction = (balanceDOT: PolkadotAmount): UpdateBalanceDOT => ({
-  type: UPDATE_BALANCE_DOT,
-  balanceDOT
+export const updateCollateralTokenBalanceAction = (
+  collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>
+): UpdateCollateralTokenBalance => ({
+  type: UPDATE_COLLATERAL_TOKEN_BALANCE,
+  collateralTokenBalance
 });
 
 export const updateOfPricesAction = (prices: Prices): UpdateOfPrices => ({
@@ -67,8 +71,8 @@ export const updateOfPricesAction = (prices: Prices): UpdateOfPrices => ({
 });
 
 export const initGeneralDataAction = (
-  totalInterBTC: BTCAmount,
-  totalLockedDOT: PolkadotAmount,
+  totalWrappedTokenAmount: BitcoinAmount,
+  totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
   btcRelayHeight: number,
   bitcoinHeight: number,
   parachainStatus: ParachainStatus
@@ -76,8 +80,8 @@ export const initGeneralDataAction = (
   type: INIT_GENERAL_DATA_ACTION,
   btcRelayHeight,
   bitcoinHeight,
-  totalInterBTC,
-  totalLockedDOT,
+  totalWrappedTokenAmount,
+  totalLockedCollateralTokenAmount,
   parachainStatus
 });
 
@@ -97,8 +101,11 @@ export const updateHeightsAction = (btcRelayHeight: number, bitcoinHeight: numbe
   bitcoinHeight
 });
 
-export const updateTotalsAction = (totalLockedDOT: PolkadotAmount, totalInterBTC: BTCAmount): UpdateTotals => ({
+export const updateTotalsAction = (
+  totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
+  totalWrappedTokenAmount: BitcoinAmount
+): UpdateTotals => ({
   type: UPDATE_TOTALS,
-  totalLockedDOT,
-  totalInterBTC
+  totalLockedCollateralTokenAmount,
+  totalWrappedTokenAmount
 });

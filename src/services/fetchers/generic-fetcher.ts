@@ -4,30 +4,50 @@
 
 const GENERIC_FETCHER = 'generic-fetcher';
 
-interface Arguments {
-  queryKey: [
-    string,
-    string,
-    string,
-    string
-  ]
-}
+// TODO: should type properly
+// interface Arguments {
+//   queryKey: [
+//     string,
+//     string,
+//     string,
+//     string
+//   ]
+// }
 
-const genericFetcher = <T>() => async ({ queryKey }: Arguments): Promise<T> => {
-  const [
-    _key,
-    arg1,
-    arg2,
-    arg3,
-    ...rest
-  ] = queryKey;
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const genericFetcher = <T>() => async ({ queryKey }: any): Promise<T> => {
+  if (queryKey[1] === 'interBtcApi') {
+    const [
+      _key,
+      arg1,
+      arg2,
+      arg3,
+      ...rest
+    ] = queryKey;
 
-  if (_key !== GENERIC_FETCHER) {
-    throw new Error('Invalid key!');
+    if (_key !== GENERIC_FETCHER) {
+      throw new Error('Invalid key!');
+    }
+
+    // TODO: should type properly
+    return await window.bridge[arg1][arg2][arg3](...rest);
+  }
+  if (queryKey[1] === 'interBtcIndex') {
+    const [
+      _key,
+      arg1,
+      arg2,
+      ...rest
+    ] = queryKey;
+
+    if (_key !== GENERIC_FETCHER) {
+      throw new Error('Invalid key!');
+    }
+
+    return await window.bridge[arg1][arg2](...rest);
   }
 
-  // TODO: should type properly
-  return await window.polkaBTC[arg1][arg2][arg3](...rest);
+  throw new Error('Something went wrong!');
 };
 
 export {

@@ -250,9 +250,7 @@
       "timestamp": "Added to parachain",
       "block_number": "Block {{number}}",
       "relay_is": "BTC Relay is",
-      "blockstream_verify_link": "Verify on blockstream.info",
-      "parachain_block_height": "BTC Parachain block height",
-      "core_block_height": "Core block height"
+      "blockstream_verify_link": "Verify on blockstream.info"
     },
     "oracles": {
       "oracles": "Oracles",

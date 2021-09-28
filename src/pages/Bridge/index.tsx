@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { BTCAmount } from '@interlay/monetary-js';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import IssueForm from './IssueForm';
 import RedeemForm from './RedeemForm';
@@ -14,11 +14,12 @@ import Tabs, {
   Tab,
   TabPanel
 } from 'components/Tabs';
-import { StoreType } from 'common/types/util.types';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters, { QueryParameters } from 'utils/hooks/use-update-query-parameters';
 import TAB_IDS from 'utils/constants/tab-ids';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
+import { StoreType } from 'common/types/util.types';
 
 const TAB_ITEMS_WITHOUT_BURN = [
   {
@@ -45,7 +46,7 @@ const TAB_ITEMS_WITH_BURN = [
 
 const Bridge = (): JSX.Element | null => {
   const { t } = useTranslation();
-  const { polkaBtcLoaded } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const queryParams = useQueryParams();
   const selectedTabId = queryParams.get(QUERY_PARAMETERS.TAB);
@@ -77,17 +78,17 @@ const Bridge = (): JSX.Element | null => {
   ]);
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     (async () => {
       try {
-        const maxBurnableTokens = await window.polkaBTC.interBtcApi.redeem.getMaxBurnableTokens();
-        setBurnable(maxBurnableTokens.gt(BTCAmount.zero));
+        const maxBurnableTokens = await window.bridge.interBtcApi.redeem.getMaxBurnableTokens(COLLATERAL_TOKEN);
+        setBurnable(maxBurnableTokens.gt(BitcoinAmount.zero));
       } catch (error) {
         // TODO: should add error handling
-        console.log('[Application] error.message => ', error.message);
+        console.log('[Application] error => ', error);
       }
     })();
-  }, [polkaBtcLoaded]);
+  }, [bridgeLoaded]);
 
   if (selectedTabId === null) {
     return null;

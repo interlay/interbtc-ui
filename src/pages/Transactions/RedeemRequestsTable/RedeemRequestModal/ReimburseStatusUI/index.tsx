@@ -13,17 +13,17 @@ import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { Redeem } from '@interlay/interbtc-api';
 import {
-  BTCAmount,
-  Polkadot,
-  PolkadotAmount
-} from '@interlay/monetary-js';
+  Redeem,
+  newMonetaryAmount
+} from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import ErrorFallback from 'components/ErrorFallback';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import useQueryParams from 'utils/hooks/use-query-params';
 import { getUsdAmount } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
@@ -42,16 +42,22 @@ const ReimburseStatusUI = ({
 }: Props): JSX.Element => {
   const {
     address,
-    polkaBtcLoaded,
+    bridgeLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
-  const [punishmentDOT, setPunishmentDOT] = React.useState(PolkadotAmount.zero);
-  const [dotAmount, setDOTAmount] = React.useState(PolkadotAmount.zero);
+  const [
+    punishmentCollateralTokenAmount,
+    setPunishmentCollateralTokenAmount
+  ] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
+  const [
+    collateralTokenAmount,
+    setCollateralTokenAmount
+  ] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
   const { t } = useTranslation();
   const handleError = useErrorHandler();
 
   React.useEffect(() => {
-    if (!polkaBtcLoaded) return;
+    if (!bridgeLoaded) return;
     if (!request) return;
     if (!handleError) return;
 
@@ -62,19 +68,19 @@ const ReimburseStatusUI = ({
           punishment,
           btcDotRate
         ] = await Promise.all([
-          window.polkaBTC.interBtcApi.vaults.getPunishmentFee(),
-          window.polkaBTC.interBtcApi.oracle.getExchangeRate(Polkadot)
+          window.bridge.interBtcApi.vaults.getPunishmentFee(),
+          window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN)
         ]);
-        const amountPolkaBTC = request ? request.amountBTC : BTCAmount.zero;
-        setDOTAmount(btcDotRate.toCounter(amountPolkaBTC));
-        setPunishmentDOT(btcDotRate.toCounter(amountPolkaBTC).mul(new Big(punishment)));
+        const wrappedTokenAmount = request ? request.amountBTC : BitcoinAmount.zero;
+        setCollateralTokenAmount(btcDotRate.toCounter(wrappedTokenAmount));
+        setPunishmentCollateralTokenAmount(btcDotRate.toCounter(wrappedTokenAmount).mul(new Big(punishment)));
       } catch (error) {
         handleError(error);
       }
     })();
   }, [
     request,
-    polkaBtcLoaded,
+    bridgeLoaded,
     handleError
   ]);
 
@@ -85,7 +91,7 @@ const ReimburseStatusUI = ({
   const queryClient = useQueryClient();
   const retryMutation = useMutation<void, Error, Redeem>(
     (variables: Redeem) => {
-      return window.polkaBTC.interBtcApi.redeem.cancel(variables.id, false);
+      return window.bridge.interBtcApi.redeem.cancel(variables.id, false);
     },
     {
       onSuccess: () => {
@@ -106,7 +112,7 @@ const ReimburseStatusUI = ({
   );
   const reimburseMutation = useMutation<void, Error, Redeem>(
     (variables: Redeem) => {
-      return window.polkaBTC.interBtcApi.redeem.cancel(variables.id, true);
+      return window.bridge.interBtcApi.redeem.cancel(variables.id, true);
     },
     {
       onSuccess: () => {
@@ -127,7 +133,7 @@ const ReimburseStatusUI = ({
   );
 
   const handleRetry = () => {
-    if (!polkaBtcLoaded) {
+    if (!bridgeLoaded) {
       throw new Error('interBTC is not loaded!');
     }
 
@@ -135,7 +141,7 @@ const ReimburseStatusUI = ({
   };
 
   const handleReimburse = () => {
-    if (!polkaBtcLoaded) {
+    if (!bridgeLoaded) {
       throw new Error('interBTC is not loaded!');
     }
 
@@ -169,9 +175,9 @@ const ReimburseStatusUI = ({
           )}>
           <span>{t('redeem_page.vault_did_not_send')}</span>
           <span className='text-interlayDenim'>
-            &nbsp;{punishmentDOT.toHuman()} DOT
+            &nbsp;{punishmentCollateralTokenAmount.toHuman()} DOT
           </span>
-          <span>&nbsp;{`(≈ $ ${getUsdAmount(punishmentDOT, prices.polkadot.usd)})`}</span>
+          <span>&nbsp;{`(≈ $ ${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)})`}</span>
           <span>&nbsp;{t('redeem_page.compensation')}</span>
           .
         </p>
@@ -189,11 +195,11 @@ const ReimburseStatusUI = ({
           <li className='list-decimal'>
             <p className='text-justify'>
               <span>{t('redeem_page.receive_compensation')}</span>
-              <span className='text-interlayDenim'>&nbsp;{punishmentDOT.toHuman()} DOT</span>
+              <span className='text-interlayDenim'>&nbsp;{punishmentCollateralTokenAmount.toHuman()} DOT</span>
               <span>
                 &nbsp;
                 {t('redeem_page.retry_with_another', {
-                  compensationPrice: getUsdAmount(punishmentDOT, prices.polkadot.usd)
+                  compensationPrice: getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)
                 })}
               </span>
               .
@@ -209,18 +215,18 @@ const ReimburseStatusUI = ({
           <li className='list-decimal'>
             <p className='text-justify'>
               <span>{t('redeem_page.burn_interbtc')}</span>
-              <span className='text-interlayDenim'>&nbsp;{dotAmount.toHuman()} DOT</span>
+              <span className='text-interlayDenim'>&nbsp;{collateralTokenAmount.toHuman()} DOT</span>
               <span>
                 &nbsp;
                 {t('redeem_page.with_added', {
-                  amountPrice: getUsdAmount(dotAmount, prices.polkadot.usd)
+                  amountPrice: getUsdAmount(collateralTokenAmount, prices.collateralToken.usd)
                 })}
               </span>
-              <span className='text-interlayDenim'>&nbsp;{punishmentDOT.toHuman()} DOT</span>
+              <span className='text-interlayDenim'>&nbsp;{punishmentCollateralTokenAmount.toHuman()} DOT</span>
               <span>
                 &nbsp;
                 {t('redeem_page.as_compensation_instead', {
-                  compensationPrice: getUsdAmount(punishmentDOT, prices.polkadot.usd)
+                  compensationPrice: getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)
                 })}
               </span>
             </p>
