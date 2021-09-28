@@ -39,13 +39,16 @@ import InterlayTable, {
 } from 'components/UI/InterlayTable';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
 import { COLLATERAL_TOKEN } from 'config/relay-chains';
-import { shortAddress } from '../../../../common/utils/utils';
+import {
+  shortAddress,
+  displayMonetaryAmount
+} from 'common/utils/utils';
 import * as constants from '../../../../constants';
 import genericFetcher, {
   GENERIC_FETCHER
 } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
-import { Vault } from '../../../../common/types/vault.types';
+import { Vault } from 'common/types/vault.types';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const getCollateralization = (
