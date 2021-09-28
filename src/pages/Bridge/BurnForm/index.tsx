@@ -235,7 +235,7 @@ const BurnForm = (): JSX.Element | null => {
                 width={20}
                 height={20} />
             }
-            value={earnedCollateralTokenAmount.toHuman()}
+            value={displayMonetaryAmount(earnedCollateralTokenAmount)}
             unitName='DOT'
             approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.collateralToken.usd)} />
           {/* TODO: could componentize */}
@@ -256,7 +256,7 @@ const BurnForm = (): JSX.Element | null => {
                 width={20}
                 height={20} />
             }
-            value={earnedCollateralTokenAmount.toHuman()}
+            value={displayMonetaryAmount(earnedCollateralTokenAmount)}
             unitName='DOT'
             approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.collateralToken.usd)} />
           <SubmitButton

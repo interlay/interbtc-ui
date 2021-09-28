@@ -105,7 +105,9 @@ const VaultScoresTable = ({
         ]
       },
       {
+        // ray test touch <<<
         Header: `${t('leaderboard.collateral')} (DOT)`,
+        // ray test touch >>>
         accessor: 'collateral',
         classNames: [
           'text-right'

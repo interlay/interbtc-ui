@@ -472,7 +472,7 @@ const RedeemForm = (): JSX.Element | null => {
                   width={23}
                   height={23} />
               }
-              value={totalDOT.toHuman()}
+              value={displayMonetaryAmount(totalDOT)}
               unitName='DOT'
               approxUSD={totalDOTInUSD} />
           )}

@@ -69,7 +69,7 @@ const RequestReplacementModal = (props: Props): JSX.Element => {
           <div className='row'>
             <div className='col-12 text-center mb-4'>{t('vault.withdraw_your_collateral')}</div>
             <div className='col-12'>{t('vault.your_have')}</div>
-            <div className='col-12'> {lockedDot} DOT</div>
+            <div className='col-12'> {displayMonetaryAmount(lockedDot)} DOT</div>
             <div className='col-12 mb-4'>
               {t('locked')} {displayMonetaryAmount(lockedBtc)} BTC
             </div>

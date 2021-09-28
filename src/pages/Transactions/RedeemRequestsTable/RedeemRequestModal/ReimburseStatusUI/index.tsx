@@ -25,7 +25,10 @@ import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOut
 import ErrorFallback from 'components/ErrorFallback';
 import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import useQueryParams from 'utils/hooks/use-query-params';
-import { getUsdAmount } from 'common/utils/utils';
+import {
+  getUsdAmount,
+  displayMonetaryAmount
+} from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { USER_REDEEM_REQUESTS_FETCHER } from 'services/user-redeem-requests-fetcher';
@@ -175,7 +178,7 @@ const ReimburseStatusUI = ({
           )}>
           <span>{t('redeem_page.vault_did_not_send')}</span>
           <span className='text-interlayDenim'>
-            &nbsp;{punishmentCollateralTokenAmount.toHuman()} DOT
+            &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} DOT
           </span>
           <span>&nbsp;{`(≈ $ ${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)})`}</span>
           <span>&nbsp;{t('redeem_page.compensation')}</span>
@@ -195,7 +198,9 @@ const ReimburseStatusUI = ({
           <li className='list-decimal'>
             <p className='text-justify'>
               <span>{t('redeem_page.receive_compensation')}</span>
-              <span className='text-interlayDenim'>&nbsp;{punishmentCollateralTokenAmount.toHuman()} DOT</span>
+              <span className='text-interlayDenim'>
+                &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} DOT
+              </span>
               <span>
                 &nbsp;
                 {t('redeem_page.retry_with_another', {
@@ -215,14 +220,18 @@ const ReimburseStatusUI = ({
           <li className='list-decimal'>
             <p className='text-justify'>
               <span>{t('redeem_page.burn_interbtc')}</span>
-              <span className='text-interlayDenim'>&nbsp;{collateralTokenAmount.toHuman()} DOT</span>
+              <span className='text-interlayDenim'>
+                &nbsp;{displayMonetaryAmount(collateralTokenAmount)} DOT
+              </span>
               <span>
                 &nbsp;
                 {t('redeem_page.with_added', {
                   amountPrice: getUsdAmount(collateralTokenAmount, prices.collateralToken.usd)
                 })}
               </span>
-              <span className='text-interlayDenim'>&nbsp;{punishmentCollateralTokenAmount.toHuman()} DOT</span>
+              <span className='text-interlayDenim'>
+                &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} DOT
+              </span>
               <span>
                 &nbsp;
                 {t('redeem_page.as_compensation_instead', {

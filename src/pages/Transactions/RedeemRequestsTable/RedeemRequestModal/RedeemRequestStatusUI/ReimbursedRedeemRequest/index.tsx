@@ -134,7 +134,7 @@ const ReimbursedRedeemRequest = ({
               width={20}
               height={20} />
           }
-          value={burnCollateralTokenAmount.toHuman()}
+          value={displayMonetaryAmount(burnCollateralTokenAmount)}
           unitName='DOT'
           approxUSD={getUsdAmount(burnCollateralTokenAmount, prices.collateralToken.usd)} />
         <PriceInfo
@@ -149,7 +149,7 @@ const ReimbursedRedeemRequest = ({
               width={20}
               height={20} />
           }
-          value={punishmentCollateralTokenAmount.toHuman()}
+          value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
           unitName='DOT'
           approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)} />
         <hr
@@ -170,7 +170,7 @@ const ReimbursedRedeemRequest = ({
               width={20}
               height={20} />
           }
-          value={collateralTokenAmount.toHuman()}
+          value={displayMonetaryAmount(collateralTokenAmount)}
           unitName='DOT'
           approxUSD={getUsdAmount(collateralTokenAmount, prices.collateralToken.usd)} />
       </div>
