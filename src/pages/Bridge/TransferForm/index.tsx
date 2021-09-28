@@ -8,6 +8,8 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
+import { BitcoinAmount } from '@interlay/monetary-js';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import InterBTCField from '../InterBTCField';
 import SubmitButton from '../SubmitButton';
@@ -19,11 +21,15 @@ import InterlayModal, {
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayDefaultOutlinedButton from 'components/buttons/InterlayDefaultOutlinedButton';
 import ErrorModal from 'components/ErrorModal';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import {
   ParachainStatus,
   StoreType
 } from 'common/types/util.types';
-import { getUsdAmount } from 'common/utils/utils';
+import {
+  getUsdAmount,
+  displayMonetaryAmount
+} from 'common/utils/utils';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import STATUSES from 'utils/constants/statuses';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
@@ -31,7 +37,6 @@ import { ReactComponent as AcalaLogoIcon } from 'assets/img/acala-logo.svg';
 import { ReactComponent as PlasmLogoIcon } from 'assets/img/plasm-logo.svg';
 import { ReactComponent as EthereumLogoIcon } from 'assets/img/ethereum-logo.svg';
 import { ReactComponent as CosmosLogoIcon } from 'assets/img/cosmos-logo.svg';
-import { BitcoinAmount } from '@interlay/monetary-js';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 const DOT_ADDRESS = 'dot-address';
@@ -157,16 +162,17 @@ const TransferForm = (): JSX.Element => {
   };
 
   const validateForm = (value: number): string | undefined => {
-    if (Number(wrappedTokenBalance) === 0) {
+    if (wrappedTokenBalance === BitcoinAmount.zero) {
       return t('insufficient_funds');
     }
 
-    if (Number(collateralTokenBalance) === 0) {
+    if (collateralTokenBalance === newMonetaryAmount(0, COLLATERAL_TOKEN)) {
       return t('insufficient_funds_dot');
     }
 
-    if (value > Number(wrappedTokenBalance)) {
-      return `${t('redeem_page.current_balance')}${wrappedTokenBalance}`;
+    const bitcoinAmountValue = BitcoinAmount.from.BTC(value);
+    if (bitcoinAmountValue.gt(wrappedTokenBalance)) {
+      return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
     }
 
     return undefined;
