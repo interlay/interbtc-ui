@@ -21,7 +21,10 @@ import InterlayModal, {
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayDefaultOutlinedButton from 'components/buttons/InterlayDefaultOutlinedButton';
 import ErrorModal from 'components/ErrorModal';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import {
+  COLLATERAL_TOKEN,
+  WRAPPED_TOKEN
+} from 'config/relay-chains';
 import {
   ParachainStatus,
   StoreType
@@ -38,11 +41,11 @@ import { ReactComponent as PlasmLogoIcon } from 'assets/img/plasm-logo.svg';
 import { ReactComponent as EthereumLogoIcon } from 'assets/img/ethereum-logo.svg';
 import { ReactComponent as CosmosLogoIcon } from 'assets/img/cosmos-logo.svg';
 
-const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
+const WRAPPED_TOKEN_INPUT_AMOUNT = 'wrapped-token-input-amount';
 const DOT_ADDRESS = 'dot-address';
 
 type TransferFormData = {
-  [WRAPPED_TOKEN_AMOUNT]: string;
+  [WRAPPED_TOKEN_INPUT_AMOUNT]: string;
   [DOT_ADDRESS]: string;
 }
 
@@ -127,7 +130,7 @@ const TransferForm = (): JSX.Element => {
   } = useForm<TransferFormData>({
     mode: 'onChange'
   });
-  const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT);
+  const wrappedTokenAmount = watch(WRAPPED_TOKEN_INPUT_AMOUNT);
 
   const [networkModalOpen, setNetworkModalOpen] = React.useState(false);
   const [selectedNetworkType, setSelectedNetworkType] = React.useState(NETWORK_TYPES.INTER_BTC);
@@ -147,12 +150,12 @@ const TransferForm = (): JSX.Element => {
       setSubmitStatus(STATUSES.PENDING);
       await window.bridge.interBtcApi.tokens.transfer(
         data[DOT_ADDRESS],
-        BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT])
+        newMonetaryAmount(data[WRAPPED_TOKEN_INPUT_AMOUNT], WRAPPED_TOKEN, true)
       );
       setSubmitStatus(STATUSES.RESOLVED);
       toast.success(t('transfer_page.successfully_transferred'));
       reset({
-        [WRAPPED_TOKEN_AMOUNT]: '',
+        [WRAPPED_TOKEN_INPUT_AMOUNT]: '',
         [DOT_ADDRESS]: ''
       });
     } catch (error) {
@@ -207,8 +210,8 @@ const TransferForm = (): JSX.Element => {
           {t('transfer_page.transfer_interbtc')}
         </h4>
         <InterBTCField
-          id={WRAPPED_TOKEN_AMOUNT}
-          name={WRAPPED_TOKEN_AMOUNT}
+          id={WRAPPED_TOKEN_INPUT_AMOUNT}
+          name={WRAPPED_TOKEN_INPUT_AMOUNT}
           type='number'
           label='interBTC'
           step='any'
@@ -221,8 +224,8 @@ const TransferForm = (): JSX.Element => {
             validate: value => validateForm(value)
           })}
           approxUSD={`≈ $ ${getUsdAmount(BitcoinAmount.from.BTC(wrappedTokenAmount || '0.00'), usdPrice)}`}
-          error={!!errors[WRAPPED_TOKEN_AMOUNT]}
-          helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message} />
+          error={!!errors[WRAPPED_TOKEN_INPUT_AMOUNT]}
+          helperText={errors[WRAPPED_TOKEN_INPUT_AMOUNT]?.message} />
         <div>
           <TextField
             id='dot-address'
