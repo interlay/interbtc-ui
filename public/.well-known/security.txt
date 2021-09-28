@@ -1,0 +1,3 @@
+Contact: mailto:security@interlay.io
+Encryption: https://interlay.io/pgp-key.txt
+Expires: 2022-09-30T23:00:00.000Z
