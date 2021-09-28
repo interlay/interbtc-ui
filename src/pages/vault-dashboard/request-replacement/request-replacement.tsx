@@ -40,7 +40,7 @@ const RequestReplacementModal = (props: Props): JSX.Element => {
       const dustValue = await window.bridge.interBtcApi.redeem.getDustValue();
       const amountPolkaBtc = BitcoinAmount.from.BTC(amount);
       if (amountPolkaBtc.lte(dustValue)) {
-        throw new Error(`Please enter an amount greater than Bitcoin dust (${dustValue.toHuman()} BTC)`);
+        throw new Error(`Please enter an amount greater than Bitcoin dust (${displayMonetaryAmount(dustValue)} BTC)`);
       }
       await window.bridge.interBtcApi.replace.request(amountPolkaBtc);
 

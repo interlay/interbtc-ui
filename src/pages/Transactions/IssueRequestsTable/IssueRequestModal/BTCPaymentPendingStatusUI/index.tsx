@@ -120,7 +120,7 @@ const BTCPaymentPendingStatusUI = ({
       </p>
       <QRCode
         className='mx-auto'
-        value={`bitcoin:${request.vaultBTCAddress}?amount=${amountBTCToSend.toHuman()}`} />
+        value={`bitcoin:${request.vaultBTCAddress}?amount=${displayMonetaryAmount(amountBTCToSend)}`} />
       <div
         className={clsx(
           'text-textSecondary'

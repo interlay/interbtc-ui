@@ -245,7 +245,7 @@ const RedeemForm = (): JSX.Element | null => {
             }
             setFormError(WRAPPED_TOKEN_AMOUNT, {
               type: 'manual',
-              message: t('redeem_page.error_max_premium_redeem', { maxPremiumRedeem: maxAmount.toHuman() })
+              message: t('redeem_page.error_max_premium_redeem', { maxPremiumRedeem: displayMonetaryAmount(maxAmount) })
             });
 
             return;
@@ -284,9 +284,9 @@ const RedeemForm = (): JSX.Element | null => {
       const parsedValue = BitcoinAmount.from.BTC(value);
       const minValue = dustValue.add(currentInclusionFee).add(redeemFee);
       if (parsedValue.gt(wrappedTokenBalance)) {
-        return `${t('redeem_page.current_balance')}${wrappedTokenBalance.toHuman()}`;
+        return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
       } else if (parsedValue.lte(minValue)) {
-        return `${t('redeem_page.amount_greater_dust_inclusion')}${minValue.toHuman()} BTC).`;
+        return `${t('redeem_page.amount_greater_dust_inclusion')}${displayMonetaryAmount(minValue)} BTC).`;
       }
 
       if (!address) {

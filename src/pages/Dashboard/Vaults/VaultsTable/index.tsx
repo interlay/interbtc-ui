@@ -348,9 +348,9 @@ const VaultsTable = (): JSX.Element => {
       vaults.push({
         vaultId: shortAddress(vaultExt.id.toString()),
         // TODO: fetch collateral reserved
-        lockedBTC: settledTokens.toHuman(),
-        lockedDOT: vaultCollateral.toHuman(),
-        pendingBTC: unsettledTokens.toHuman(),
+        lockedBTC: displayMonetaryAmount(settledTokens),
+        lockedDOT: displayMonetaryAmount(vaultCollateral),
+        pendingBTC: displayMonetaryAmount(unsettledTokens),
         btcAddress,
         status: statusText,
         unsettledCollateralization: unsettledCollateralization?.toString(),
