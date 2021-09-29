@@ -7,7 +7,6 @@ import { H256 } from '@polkadot/types/interfaces';
 
 import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import {
-  ADD_REPLACE_REQUESTS,
   UPDATE_COLLATERALIZATION,
   UPDATE_COLLATERAL,
   UPDATE_LOCKED_BTC,
@@ -26,8 +25,6 @@ const initialState = {
 
 export const vaultReducer = (state: VaultState = initialState, action: VaultActions): VaultState => {
   switch (action.type) {
-  case ADD_REPLACE_REQUESTS:
-    return { ...state, requests: action.requests };
   case UPDATE_COLLATERALIZATION:
     return { ...state, collateralization: action.collateralization };
   case UPDATE_COLLATERAL:

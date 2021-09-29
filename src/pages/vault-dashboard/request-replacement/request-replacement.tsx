@@ -1,16 +1,18 @@
+
 import * as React from 'react';
 import { Modal } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useQueryClient } from 'react-query';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { displayMonetaryAmount } from 'common/utils/utils';
-import { addReplaceRequestsAction } from 'common/actions/vault.actions';
 import { StoreType } from 'common/types/util.types';
 
 type RequestReplacementForm = {
@@ -24,12 +26,12 @@ interface Props {
 
 const RequestReplacementModal = (props: Props): JSX.Element => {
   const { register, handleSubmit, errors } = useForm<RequestReplacementForm>();
-  const dispatch = useDispatch();
   const { address } = useSelector((state: StoreType) => state.general);
   const lockedDot = useSelector((state: StoreType) => state.vault.collateral);
   const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
   const [isRequestPending, setRequestPending] = React.useState(false);
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
 
   const onSubmit = handleSubmit(async ({ amount }) => {
     setRequestPending(true);
@@ -45,10 +47,13 @@ const RequestReplacementModal = (props: Props): JSX.Element => {
       await window.bridge.interBtcApi.replace.request(amountPolkaBtc);
 
       const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const requests = await window.bridge.interBtcApi.replace.mapReplaceRequests(vaultId);
-      if (!requests) return;
-
-      dispatch(addReplaceRequestsAction(requests));
+      queryClient.invalidateQueries([
+        GENERIC_FETCHER,
+        'interBtcApi',
+        'replace',
+        'mapReplaceRequests',
+        vaultId
+      ]);
       toast.success('Replacement request is submitted');
       props.onClose();
     } catch (error) {

@@ -1,52 +1,76 @@
-// ray test touch <<
-import * as React from 'react';
+
+import { useSelector } from 'react-redux';
+import { useQuery } from 'react-query';
 import {
-  useSelector,
-  useDispatch
-} from 'react-redux';
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
 import { Table } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { stripHexPrefix } from '@interlay/interbtc-api';
+import { H256 } from '@polkadot/types/interfaces';
+import clsx from 'clsx';
+import {
+  stripHexPrefix,
+  ReplaceRequestExt
+} from '@interlay/interbtc-api';
 
+import ErrorFallback from 'components/ErrorFallback';
+import EllipsisLoader from 'components/EllipsisLoader';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
-import { addReplaceRequestsAction } from 'common/actions/vault.actions';
 import {
   shortAddress,
   displayMonetaryAmount
 } from 'common/utils/utils';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 
 const ReplaceTable = (): JSX.Element => {
+  const { t } = useTranslation();
   const {
     bridgeLoaded,
     address
   } = useSelector((state: StoreType) => state.general);
-  const dispatch = useDispatch();
-  const replaceRequests = useSelector((state: StoreType) => state.vault.requests);
-  const { t } = useTranslation();
 
-  React.useEffect(() => {
-    if (!bridgeLoaded) return;
-    if (!dispatch) return;
-    if (!address) return;
+  const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+  const {
+    isIdle: replaceRequestsIdle,
+    isLoading: replaceRequestsLoading,
+    data: replaceRequests,
+    error: replaceRequestsError
+  } = useQuery<Map<H256, ReplaceRequestExt>, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcApi',
+      'replace',
+      'mapReplaceRequests',
+      vaultId
+    ],
+    genericFetcher<Map<H256, ReplaceRequestExt>>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(replaceRequestsError);
 
-    (async () => {
-      try {
-        const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
-        const requests = await window.bridge.interBtcApi.replace.mapReplaceRequests(vaultId);
-        if (!requests) return;
+  if (
+    replaceRequestsIdle ||
+    replaceRequestsLoading
+  ) {
+    return (
+      <div
+        className={clsx(
+          'flex',
+          'justify-center'
+        )}>
+        <EllipsisLoader dotClassName='bg-interlayCalifornia-400' />
+      </div>
+    );
+  }
+  if (replaceRequests === undefined) {
+    throw new Error('Something went wrong!');
+  }
 
-        dispatch(addReplaceRequestsAction(requests));
-      } catch (error) {
-        console.log('[ReplaceTable] error.message => ', error.message);
-      }
-    })();
-  }, [
-    bridgeLoaded,
-    dispatch,
-    address
-  ]);
-
+  // ray test touch <<
   return (
     <div style={{ margin: '40px 0px' }}>
       <div>
@@ -59,7 +83,7 @@ const ReplaceTable = (): JSX.Element => {
           {t('vault.replace_requests')}
         </p>
       </div>
-      {replaceRequests && replaceRequests.size > 0 ? (
+      {replaceRequests.size > 0 ? (
         <>
           <Table
             hover
@@ -107,7 +131,12 @@ const ReplaceTable = (): JSX.Element => {
       )}
     </div>
   );
+  // ray test touch >>
 };
 
-export default ReplaceTable;
-// ray test touch >>
+export default withErrorBoundary(ReplaceTable, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});
