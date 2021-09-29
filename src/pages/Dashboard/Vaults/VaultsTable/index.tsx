@@ -95,6 +95,7 @@ const VaultsTable = (): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const {
+    isIdle: secureCollateralThresholdIdle,
     isLoading: secureCollateralThresholdLoading,
     data: secureCollateralThreshold,
     error: secureCollateralThresholdError
@@ -114,6 +115,7 @@ const VaultsTable = (): JSX.Element => {
   useErrorHandler(secureCollateralThresholdError);
 
   const {
+    isIdle: liquidationThresholdIdle,
     isLoading: liquidationThresholdLoading,
     data: liquidationThreshold,
     error: liquidationThresholdError
@@ -133,6 +135,7 @@ const VaultsTable = (): JSX.Element => {
   useErrorHandler(liquidationThresholdError);
 
   const {
+    isIdle: btcToDOTRateIdle,
     isLoading: btcToDOTRateLoading,
     data: btcToDOTRate,
     error: btcToDOTRateError
@@ -167,6 +170,7 @@ const VaultsTable = (): JSX.Element => {
   useErrorHandler(btcToDOTRateError);
 
   const {
+    isIdle: vaultsExtIdle,
     isLoading: vaultsExtLoading,
     data: vaultsExt,
     error: vaultsExtError
@@ -378,9 +382,13 @@ const VaultsTable = (): JSX.Element => {
 
   const renderTable = () => {
     if (
+      secureCollateralThresholdIdle ||
       secureCollateralThresholdLoading ||
+      liquidationThresholdIdle ||
       liquidationThresholdLoading ||
+      btcToDOTRateIdle ||
       btcToDOTRateLoading ||
+      vaultsExtIdle ||
       vaultsExtLoading
     ) {
       return (
