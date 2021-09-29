@@ -359,7 +359,6 @@
     "successfully_executed": "Successfully executed issue request: {{id}}",
     "expired": "Expired",
     "execute": "Execute",
-    "click_on_issue_request": "Click on an Issue request to view details or update the BTC payment txid.",
     "issue_id": "Issue ID",
     "amount": "Amount",
     "parachain_block": "Parachain Block",
