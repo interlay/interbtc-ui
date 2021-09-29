@@ -18,14 +18,6 @@ function safeRoundTwoDecimals(input: string | number | undefined, defaultValue =
   return safeRound(input, defaultValue, 2);
 }
 
-// TODO: not used for now
-function safeRoundFiveDecimals(input: string | number | undefined, defaultValue = '0'): string {
-  return safeRound(input, defaultValue, 5);
-}
-function safeRoundEightDecimals(input: string | number | undefined, defaultValue = '0'): string {
-  return safeRound(input, defaultValue, 8);
-}
-
 function safeRound(input: string | number | undefined, defaultValue: string, decimals: number) {
   if (input === undefined) return defaultValue;
   try {
@@ -142,8 +134,6 @@ function getRandomArrayElement<T>(array: Array<T>): T {
 
 export {
   safeRoundTwoDecimals,
-  safeRoundFiveDecimals,
-  safeRoundEightDecimals,
   shortAddress,
   shortTxId,
   formatDateTime,
