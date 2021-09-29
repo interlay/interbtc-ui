@@ -1,11 +1,14 @@
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
 import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { Table } from 'react-bootstrap';
+import { useTable } from 'react-table';
 import { useTranslation } from 'react-i18next';
 import { H256 } from '@polkadot/types/interfaces';
 import clsx from 'clsx';
@@ -14,6 +17,14 @@ import {
   ReplaceRequestExt
 } from '@interlay/interbtc-api';
 
+import InterlayTable, {
+  InterlayTableContainer,
+  InterlayThead,
+  InterlayTbody,
+  InterlayTr,
+  InterlayTh,
+  InterlayTd
+} from 'components/UI/InterlayTable';
 import ErrorFallback from 'components/ErrorFallback';
 import EllipsisLoader from 'components/EllipsisLoader';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
@@ -52,6 +63,133 @@ const ReplaceTable = (): JSX.Element => {
   );
   useErrorHandler(replaceRequestsError);
 
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'ID',
+        accessor: 'id',
+        classNames: [
+          'text-center'
+        ],
+        Cell: function FormattedCell({ value }: { value: any; }) {
+          return (
+            <>{stripHexPrefix(value.toString())}</>
+          );
+        }
+      },
+      {
+        Header: t('vault.creation_block'),
+        accessor: 'btcHeight',
+        classNames: [
+          'text-center'
+        ]
+      },
+      {
+        Header: t('vault.old_vault'),
+        accessor: 'oldVault',
+        classNames: [
+          'text-center'
+        ],
+        Cell: function FormattedCell({ value }: { value: any; }) {
+          return (
+            <>{shortAddress(value.toString())}</>
+          );
+        }
+      },
+      {
+        Header: t('vault.new_vault'),
+        accessor: 'newVault',
+        classNames: [
+          'text-center'
+        ],
+        Cell: function FormattedCell({ value }: { value: any; }) {
+          return (
+            <>{shortAddress(value.toString())}</>
+          );
+        }
+      },
+      {
+        Header: t('btc_address'),
+        accessor: 'btcAddress',
+        classNames: [
+          'text-center'
+        ],
+        Cell: function FormattedCell({ value }: { value: any; }) {
+          return (
+            <>{shortAddress(value)}</>
+          );
+        }
+      },
+      {
+        Header: 'interBTC',
+        accessor: 'amount',
+        classNames: [
+          'text-right'
+        ],
+        Cell: function FormattedCell({ value }: { value: any; }) {
+          return (
+            <>{displayMonetaryAmount(value)}</>
+          );
+        }
+      },
+      {
+        Header: t('griefing_collateral'),
+        accessor: 'collateral',
+        classNames: [
+          'text-right'
+        ],
+        Cell: function FormattedCell({ value }: { value: any; }) {
+          return (
+            <>{displayMonetaryAmount(value)}</>
+          );
+        }
+      },
+      {
+        Header: t('status'),
+        accessor: 'status',
+        classNames: [
+          'text-center'
+        ],
+        Cell: function FormattedCell({ value }: { value: any; }) {
+          let label;
+          if (value.isPending) {
+            label = t('pending');
+          } else if (value.isCompleted) {
+            label = t('completed');
+          } else if (value.isCancelled) {
+            label = t('cancelled');
+          } else {
+            label = t('loading_ellipsis');
+          }
+          return (
+            <>{label}</>
+          );
+        }
+      }
+    ],
+    [t]
+  );
+
+  const data =
+    replaceRequests ?
+      [...replaceRequests.entries()].map(([key, value]) => ({
+        id: key,
+        ...value
+      })) :
+      [];
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow
+  } = useTable(
+    {
+      columns,
+      data
+    }
+  );
+
   if (
     replaceRequestsIdle ||
     replaceRequestsLoading
@@ -70,68 +208,70 @@ const ReplaceTable = (): JSX.Element => {
     throw new Error('Something went wrong!');
   }
 
-  // ray test touch <<
   return (
-    <div style={{ margin: '40px 0px' }}>
+    <InterlayTableContainer
+      className={clsx(
+        'space-y-6',
+        'container',
+        'mx-auto'
+      )}>
       <div>
-        <p
-          className='mb-4'
-          style={{
-            fontWeight: 700,
-            fontSize: '26px'
-          }}>
+        <h2
+          className={clsx(
+            'text-2xl',
+            'font-medium'
+          )}>
           {t('vault.replace_requests')}
-        </p>
+        </h2>
       </div>
-      {replaceRequests.size > 0 ? (
-        <>
-          <Table
-            hover
-            responsive
-            size='md'>
-            <thead>
-              <tr>
-                <th>{t('id')}</th>
-                <th>{t('vault.creation_block')}</th>
-                <th>{t('vault.old_vault')}</th>
-                <th>{t('vault.new_vault')}</th>
-                <th>{t('btc_address')}</th>
-                <th>interBTC</th>
-                <th>{t('griefing_collateral')}</th>
-                <th>{t('status')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[...replaceRequests.entries()].map(([id, redeem], index) => {
-                return (
-                  <tr key={index}>
-                    <td>{stripHexPrefix(id.toString())}</td>
-                    <td>{redeem.btcHeight}</td>
-                    <td>{shortAddress(redeem.oldVault.toString())}</td>
-                    <td>{shortAddress(redeem.newVault.toString())}</td>
-                    <td>{shortAddress(redeem.btcAddress)}</td>
-                    <td>{displayMonetaryAmount(redeem.amount)}</td>
-                    <td>{displayMonetaryAmount(redeem.collateral)}</td>
-                    <td>{redeem.status.isPending ?
-                      t('pending') :
-                      redeem.status.isCompleted ?
-                        t('completed') :
-                        redeem.status.isCancelled ?
-                          t('cancelled') :
-                          t('loading_ellipsis')}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </Table>
-        </>
-      ) : (
-        <>{t('empty_data')}</>
-      )}
-    </div>
+      <InterlayTable {...getTableProps()}>
+        <InterlayThead>
+          {headerGroups.map(headerGroup => (
+            // eslint-disable-next-line react/jsx-key
+            <InterlayTr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                // eslint-disable-next-line react/jsx-key
+                <InterlayTh
+                  {...column.getHeaderProps([
+                    {
+                      className: clsx(column.classNames),
+                      style: column.style
+                    }
+                  ])}>
+                  {column.render('Header')}
+                </InterlayTh>
+              ))}
+            </InterlayTr>
+          ))}
+        </InterlayThead>
+        <InterlayTbody {...getTableBodyProps()}>
+          {rows.map(row => {
+            prepareRow(row);
+
+            return (
+              // eslint-disable-next-line react/jsx-key
+              <InterlayTr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return (
+                    // eslint-disable-next-line react/jsx-key
+                    <InterlayTd
+                      {...cell.getCellProps([
+                        {
+                          className: clsx(cell.column.classNames),
+                          style: cell.column.style
+                        }
+                      ])}>
+                      {cell.render('Cell')}
+                    </InterlayTd>
+                  );
+                })}
+              </InterlayTr>
+            );
+          })}
+        </InterlayTbody>
+      </InterlayTable>
+    </InterlayTableContainer>
   );
-  // ray test touch >>
 };
 
 export default withErrorBoundary(ReplaceTable, {
