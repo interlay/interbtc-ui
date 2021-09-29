@@ -129,7 +129,7 @@ const VaultRedeemRequestsTable = ({
       },
       {
         Header: t('user'),
-        accessor: 'userDOTAddress',
+        accessor: 'userParachainAddress',
         classNames: [
           'text-center'
         ],

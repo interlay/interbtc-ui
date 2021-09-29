@@ -126,7 +126,7 @@ const VaultIssueRequestsTable = ({
       },
       {
         Header: t('user'),
-        accessor: 'userDOTAddress',
+        accessor: 'userParachainAddress',
         classNames: [
           'text-center'
         ],
