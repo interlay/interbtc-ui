@@ -18,10 +18,10 @@ function safeRoundTwoDecimals(input: string | number | undefined, defaultValue =
   return safeRound(input, defaultValue, 2);
 }
 
+// TODO: not used for now
 function safeRoundFiveDecimals(input: string | number | undefined, defaultValue = '0'): string {
   return safeRound(input, defaultValue, 5);
 }
-
 function safeRoundEightDecimals(input: string | number | undefined, defaultValue = '0'): string {
   return safeRound(input, defaultValue, 8);
 }

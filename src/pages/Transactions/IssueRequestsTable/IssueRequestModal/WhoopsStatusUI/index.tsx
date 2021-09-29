@@ -10,7 +10,6 @@ import InterlayTooltip from 'components/UI/InterlayTooltip';
 import {
   copyToClipboard,
   getUsdAmount,
-  safeRoundEightDecimals,
   displayMonetaryAmount
 } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
@@ -25,6 +24,13 @@ const WhoopsStatusUI = ({
 }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { prices } = useSelector((state: StoreType) => state.general);
+
+  if (!request.btcAmountSubmittedByUser) {
+    throw new Error('Something went wrong!');
+  }
+  if (!request.executedAmountBTC) {
+    throw new Error('Something went wrong!');
+  }
 
   return (
     <RequestWrapper
@@ -73,9 +79,7 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        // ray test touch <<<
-        value={safeRoundEightDecimals(Number(request.btcAmountSubmittedByUser))}
-        // ray test touch >>>
+        value={displayMonetaryAmount(request.btcAmountSubmittedByUser)}
         unitName='BTC'
         approxUSD={getUsdAmount(
           request.btcAmountSubmittedByUser ?
@@ -118,17 +122,11 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={safeRoundEightDecimals(
-          // ray test touch <<<
-          Number(request.btcAmountSubmittedByUser) - Number(request.executedAmountBTC)
-          // ray test touch >>>
-        )}
+        value={displayMonetaryAmount(request.btcAmountSubmittedByUser.sub(request.executedAmountBTC))}
         unitName='BTC'
         approxUSD={
           getUsdAmount(
-            // ray test touch <<<
-            BitcoinAmount.from.BTC((Number(request.btcAmountSubmittedByUser) - Number(request.executedAmountBTC))),
-            // ray test touch >>>
+            request.btcAmountSubmittedByUser.sub(request.executedAmountBTC),
             prices.bitcoin.usd
           )
         } />
