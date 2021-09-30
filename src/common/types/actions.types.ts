@@ -1,7 +1,6 @@
 import { StoreType, ParachainStatus, Prices } from './util.types';
 import {
   Issue,
-  ReplaceRequestExt,
   CollateralUnit
 } from '@interlay/interbtc-api';
 import {
@@ -9,7 +8,6 @@ import {
   MonetaryAmount,
   Currency
 } from '@interlay/monetary-js';
-import { H256 } from '@polkadot/types/interfaces';
 
 // GENERAL ACTIONS
 
@@ -146,16 +144,10 @@ export type IssueActions =
 
 // VAULT
 
-export const ADD_REPLACE_REQUESTS = 'ADD_REPLACE_REQUESTS';
 export const UPDATE_COLLATERALIZATION = 'UPDATE_COLLATERALIZATION';
 export const UPDATE_COLLATERAL = 'UPDATE_COLLATERAL';
 export const UPDATE_LOCKED_BTC = 'UPDATE_LOCKED_BTC';
 export const UPDATE_APY = 'UPDATE_APY';
-
-export interface AddReplaceRequests {
-  type: typeof ADD_REPLACE_REQUESTS;
-  requests: Map<H256, ReplaceRequestExt>;
-}
 
 export interface UpdateCollateralization {
   type: typeof UPDATE_COLLATERALIZATION;
@@ -178,7 +170,6 @@ export interface UpdateAPY {
 }
 
 export type VaultActions =
-  | AddReplaceRequests
   | UpdateCollateralization
   | UpdateCollateral
   | UpdateLockedBTC

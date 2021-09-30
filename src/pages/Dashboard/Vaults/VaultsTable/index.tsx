@@ -39,13 +39,14 @@ import InterlayTable, {
 } from 'components/UI/InterlayTable';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
 import { COLLATERAL_TOKEN } from 'config/relay-chains';
-import { shortAddress } from '../../../../common/utils/utils';
+import {
+  shortAddress,
+  displayMonetaryAmount
+} from 'common/utils/utils';
 import * as constants from '../../../../constants';
-import genericFetcher, {
-  GENERIC_FETCHER
-} from 'services/fetchers/generic-fetcher';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
-import { Vault } from '../../../../common/types/vault.types';
+import { Vault } from 'common/types/vault.types';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const getCollateralization = (
@@ -92,6 +93,7 @@ const VaultsTable = (): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const {
+    isIdle: secureCollateralThresholdIdle,
     isLoading: secureCollateralThresholdLoading,
     data: secureCollateralThreshold,
     error: secureCollateralThresholdError
@@ -111,6 +113,7 @@ const VaultsTable = (): JSX.Element => {
   useErrorHandler(secureCollateralThresholdError);
 
   const {
+    isIdle: liquidationThresholdIdle,
     isLoading: liquidationThresholdLoading,
     data: liquidationThreshold,
     error: liquidationThresholdError
@@ -130,6 +133,7 @@ const VaultsTable = (): JSX.Element => {
   useErrorHandler(liquidationThresholdError);
 
   const {
+    isIdle: btcToDOTRateIdle,
     isLoading: btcToDOTRateLoading,
     data: btcToDOTRate,
     error: btcToDOTRateError
@@ -164,6 +168,7 @@ const VaultsTable = (): JSX.Element => {
   useErrorHandler(btcToDOTRateError);
 
   const {
+    isIdle: vaultsExtIdle,
     isLoading: vaultsExtLoading,
     data: vaultsExt,
     error: vaultsExtError
@@ -375,9 +380,13 @@ const VaultsTable = (): JSX.Element => {
 
   const renderTable = () => {
     if (
+      secureCollateralThresholdIdle ||
       secureCollateralThresholdLoading ||
+      liquidationThresholdIdle ||
       liquidationThresholdLoading ||
+      btcToDOTRateIdle ||
       btcToDOTRateLoading ||
+      vaultsExtIdle ||
       vaultsExtLoading
     ) {
       return (

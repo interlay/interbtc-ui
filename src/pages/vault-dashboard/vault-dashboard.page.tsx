@@ -16,7 +16,7 @@ import { BitcoinAmount } from '@interlay/monetary-js';
 
 import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
 import RequestReplacementModal from './request-replacement/request-replacement';
-import ReplaceTable from './replace-table/replace-table';
+import ReplaceTable from './ReplaceTable';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';

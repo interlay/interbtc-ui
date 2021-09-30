@@ -318,18 +318,13 @@ const IssueRequestsTable = (): JSX.Element => {
           'container',
           'mx-auto'
         )}>
-        <div>
-          <h2
-            className={clsx(
-              'text-2xl',
-              'font-medium'
-            )}>
-            {t('issue_page.issue_requests')}
-          </h2>
-          <p>
-            {t('issue_page.click_on_issue_request')}
-          </p>
-        </div>
+        <h2
+          className={clsx(
+            'text-2xl',
+            'font-medium'
+          )}>
+          {t('issue_page.issue_requests')}
+        </h2>
         <InterlayTable {...getTableProps()}>
           <InterlayThead>
             {headerGroups.map(headerGroup => (

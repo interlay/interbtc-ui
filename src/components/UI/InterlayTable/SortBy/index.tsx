@@ -20,6 +20,7 @@ const SortByContainer = ({
     {...rest} />
 );
 
+// TODO: not used for now
 const SortBy = ({
   isSorted,
   isSortedDesc
