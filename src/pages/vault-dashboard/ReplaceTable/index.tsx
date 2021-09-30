@@ -10,12 +10,23 @@ import {
 } from 'react-error-boundary';
 import { useTable } from 'react-table';
 import { useTranslation } from 'react-i18next';
-import { H256 } from '@polkadot/types/interfaces';
+import {
+  H256,
+  AccountId
+} from '@polkadot/types/interfaces';
 import clsx from 'clsx';
 import {
   stripHexPrefix,
-  ReplaceRequestExt
+  ReplaceRequestExt,
+  WrappedCurrency
 } from '@interlay/interbtc-api';
+import { ReplaceRequestStatus } from '@interlay/interbtc-api/build/src/interfaces';
+import {
+  MonetaryAmount,
+  Currency,
+  BitcoinUnit,
+  CollateralUnit
+} from '@interlay/monetary-js';
 
 import InterlayTable, {
   InterlayTableContainer,
@@ -71,7 +82,7 @@ const ReplaceTable = (): JSX.Element => {
         classNames: [
           'text-center'
         ],
-        Cell: function FormattedCell({ value }: { value: any; }) {
+        Cell: function FormattedCell({ value }: { value: H256; }) {
           return (
             <>{stripHexPrefix(value.toString())}</>
           );
@@ -90,7 +101,7 @@ const ReplaceTable = (): JSX.Element => {
         classNames: [
           'text-center'
         ],
-        Cell: function FormattedCell({ value }: { value: any; }) {
+        Cell: function FormattedCell({ value }: { value: AccountId; }) {
           return (
             <>{shortAddress(value.toString())}</>
           );
@@ -102,7 +113,7 @@ const ReplaceTable = (): JSX.Element => {
         classNames: [
           'text-center'
         ],
-        Cell: function FormattedCell({ value }: { value: any; }) {
+        Cell: function FormattedCell({ value }: { value: AccountId; }) {
           return (
             <>{shortAddress(value.toString())}</>
           );
@@ -114,7 +125,7 @@ const ReplaceTable = (): JSX.Element => {
         classNames: [
           'text-center'
         ],
-        Cell: function FormattedCell({ value }: { value: any; }) {
+        Cell: function FormattedCell({ value }: { value: string; }) {
           return (
             <>{shortAddress(value)}</>
           );
@@ -126,7 +137,7 @@ const ReplaceTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell({ value }: { value: any; }) {
+        Cell: function FormattedCell({ value }: { value: MonetaryAmount<WrappedCurrency, BitcoinUnit>; }) {
           return (
             <>{displayMonetaryAmount(value)}</>
           );
@@ -138,7 +149,7 @@ const ReplaceTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell({ value }: { value: any; }) {
+        Cell: function FormattedCell({ value }: { value: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>; }) {
           return (
             <>{displayMonetaryAmount(value)}</>
           );
@@ -150,7 +161,7 @@ const ReplaceTable = (): JSX.Element => {
         classNames: [
           'text-center'
         ],
-        Cell: function FormattedCell({ value }: { value: any; }) {
+        Cell: function FormattedCell({ value }: { value: ReplaceRequestStatus; }) {
           let label;
           if (value.isPending) {
             label = t('pending');
