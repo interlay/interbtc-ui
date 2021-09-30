@@ -19,7 +19,8 @@ import InterlayLink from 'components/UI/InterlayLink';
 import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import {
   getUsdAmount,
-  displayMonetaryAmount
+  displayMonetaryAmount,
+  getPolkadotLink
 } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
@@ -182,7 +183,7 @@ const ReimbursedRedeemRequest = ({
           'items-center',
           'text-sm'
         )}
-        href='https://polkadot.js.org/apps/#/explorer'
+        href={getPolkadotLink(request.creationBlock)}
         target='_blank'
         rel='noopener noreferrer'>
         <span>{t('issue_page.view_parachain_block')}</span>

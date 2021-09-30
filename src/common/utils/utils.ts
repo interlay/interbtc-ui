@@ -4,7 +4,7 @@ import {
   Redeem,
   CurrencyUnit
 } from '@interlay/interbtc-api';
-import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK } from '../../constants';
+import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK, PARACHAIN_URL } from '../../constants';
 import Big from 'big.js';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
 import {
@@ -140,6 +140,10 @@ function getRandomArrayElement<T>(array: Array<T>): T {
   return array[Math.floor(Math.random() * array.length)];
 }
 
+function getPolkadotLink(blockHeight: number): string {
+  return `https://polkadot.js.org/apps/?rpc=${PARACHAIN_URL}#/explorer/query/${blockHeight}`;
+}
+
 export {
   safeRoundTwoDecimals,
   safeRoundFiveDecimals,
@@ -156,5 +160,6 @@ export {
   requestsInStore,
   copyToClipboard,
   getRandomVaultIdWithCapacity,
-  getRandomArrayElement
+  getRandomArrayElement,
+  getPolkadotLink
 };
