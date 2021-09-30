@@ -7,7 +7,8 @@ import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import InterlayLink from 'components/UI/InterlayLink';
 import {
   shortAddress,
-  displayMonetaryAmount
+  displayMonetaryAmount,
+  getPolkadotLink
 } from 'common/utils/utils';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
 
@@ -73,7 +74,7 @@ const CompletedIssueRequest = ({
           'items-center',
           'text-sm'
         )}
-        href='https://polkadot.js.org/apps/#/explorer'
+        href={getPolkadotLink(request.creationBlock)}
         target='_blank'
         rel='noopener noreferrer'>
         <span>{t('issue_page.view_parachain_block')}</span>

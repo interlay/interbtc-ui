@@ -9,7 +9,8 @@ import InterlayLink from 'components/UI/InterlayLink';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
 import {
   shortAddress,
-  displayMonetaryAmount
+  displayMonetaryAmount,
+  getPolkadotLink
 } from 'common/utils/utils';
 
 interface Props {
@@ -76,7 +77,7 @@ const CompletedRedeemRequest = ({
           'items-center',
           'text-sm'
         )}
-        href='https://polkadot.js.org/apps/#/explorer'
+        href={getPolkadotLink(request.creationBlock)}
         target='_blank'
         rel='noopener noreferrer'>
         <span>{t('issue_page.view_parachain_block')}</span>
