@@ -30,7 +30,6 @@ import StatusCell from 'components/UI/InterlayTable/StatusCell';
 import InterlayLink from 'components/UI/InterlayLink';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   shortAddress,
   formatDateTimePrecise
@@ -40,6 +39,7 @@ import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
 import * as constants from '../../constants';
 import STATUSES from 'utils/constants/statuses';
+import { WrappedTokenAmount } from 'config/relay-chains';
 
 interface Props {
   totalIssueRequests: number;
@@ -53,7 +53,6 @@ const VaultIssueRequestsTable = ({
   const queryParams = useQueryParams();
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
-  const statsApi = useInterbtcIndex();
   const [data, setData] = React.useState<Issue[]>([]);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
@@ -65,7 +64,6 @@ const VaultIssueRequestsTable = ({
   );
 
   React.useEffect(() => {
-    if (!statsApi) return;
     if (!selectedPage) return;
     if (!handleError) return;
 
@@ -74,7 +72,7 @@ const VaultIssueRequestsTable = ({
     try {
       (async () => {
         setStatus(STATUSES.PENDING);
-        const response = await statsApi.getFilteredIssues({
+        const response = await window.bridge.interBtcIndex.getFilteredIssues({
           page: selectedPageIndex,
           perPage: TABLE_PAGE_LIMIT,
           network: constants.BITCOIN_NETWORK as BitcoinNetwork, // Not sure why cast is necessary here, but TS complains
@@ -88,7 +86,6 @@ const VaultIssueRequestsTable = ({
       handleError(error);
     }
   }, [
-    statsApi,
     selectedPage,
     issueRequestFilter,
     handleError
@@ -143,14 +140,30 @@ const VaultIssueRequestsTable = ({
         accessor: 'wrappedAmount',
         classNames: [
           'text-right'
-        ]
+        ],
+        Cell: function FormattedCell({ value }: {
+          value: WrappedTokenAmount;
+        }) {
+          return (
+            <>
+              {value.toHuman()}
+            </>
+          );
+        }
       },
       {
         Header: t('griefing_collateral'),
         accessor: 'griefingCollateral',
         classNames: [
           'text-right'
-        ]
+        ],
+        Cell: function FormattedCell({ value }) {
+          return (
+            <>
+              {value.toHuman()}
+            </>
+          );
+        }
       },
       {
         Header: t('issue_page.vault_btc_address'),

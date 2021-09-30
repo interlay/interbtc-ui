@@ -33,7 +33,6 @@ import StatusCell from 'components/UI/InterlayTable/StatusCell';
 import InterlayLink from 'components/UI/InterlayLink';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   shortAddress,
   formatDateTimePrecise
@@ -43,6 +42,7 @@ import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
 import * as constants from '../../constants';
 import STATUSES from 'utils/constants/statuses';
+import { WrappedTokenAmount } from 'config/relay-chains';
 
 interface Props {
   totalRedeemRequests: number;
@@ -56,7 +56,6 @@ const VaultRedeemRequestsTable = ({
   const queryParams = useQueryParams();
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
-  const statsApi = useInterbtcIndex();
   const [data, setData] = React.useState<Redeem[]>([]);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
@@ -68,7 +67,6 @@ const VaultRedeemRequestsTable = ({
   );
 
   React.useEffect(() => {
-    if (!statsApi) return;
     if (!selectedPage) return;
     if (!handleError) return;
 
@@ -77,7 +75,7 @@ const VaultRedeemRequestsTable = ({
     try {
       (async () => {
         setStatus(STATUSES.PENDING);
-        const response = await statsApi.getFilteredRedeems({
+        const response = await window.bridge.interBtcIndex.getFilteredRedeems({
           page: selectedPageIndex,
           perPage: TABLE_PAGE_LIMIT,
           network: constants.BITCOIN_NETWORK as BitcoinNetwork, // Not sure why cast is necessary here, but TS complains
@@ -91,7 +89,6 @@ const VaultRedeemRequestsTable = ({
       handleError(error);
     }
   }, [
-    statsApi,
     selectedPage,
     redeemRequestFilter,
     handleError
@@ -146,7 +143,16 @@ const VaultRedeemRequestsTable = ({
         accessor: 'amountBTC',
         classNames: [
           'text-right'
-        ]
+        ],
+        Cell: function FormattedCell({ value }: {
+          value: WrappedTokenAmount;
+        }) {
+          return (
+            <>
+              {value.toHuman()}
+            </>
+          );
+        }
       },
       {
         Header: t('redeem_page.btc_destination_address'),

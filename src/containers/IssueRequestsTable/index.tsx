@@ -30,7 +30,6 @@ import StatusCell from 'components/UI/InterlayTable/StatusCell';
 import InterlayLink from 'components/UI/InterlayLink';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   shortAddress,
   formatDateTimePrecise
@@ -40,6 +39,7 @@ import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
 import * as constants from '../../constants';
 import STATUSES from 'utils/constants/statuses';
+import { WrappedTokenAmount } from 'config/relay-chains';
 
 interface Props {
   totalIssueRequests: number;
@@ -51,14 +51,12 @@ const IssueRequestsTable = ({
   const queryParams = useQueryParams();
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
-  const statsApi = useInterbtcIndex();
   const [data, setData] = React.useState<Issue[]>([]);
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
   const { t } = useTranslation();
 
   React.useEffect(() => {
-    if (!statsApi) return;
     if (!selectedPage) return;
     if (!handleError) return;
 
@@ -67,7 +65,7 @@ const IssueRequestsTable = ({
     try {
       (async () => {
         setStatus(STATUSES.PENDING);
-        const response = await statsApi.getIssues({
+        const response = await window.bridge.interBtcIndex.getIssues({
           page: selectedPageIndex,
           perPage: TABLE_PAGE_LIMIT,
           network: constants.BITCOIN_NETWORK as BitcoinNetwork
@@ -80,7 +78,6 @@ const IssueRequestsTable = ({
       handleError(error);
     }
   }, [
-    statsApi,
     selectedPage,
     handleError
   ]);
@@ -106,7 +103,16 @@ const IssueRequestsTable = ({
         accessor: 'wrappedAmount',
         classNames: [
           'text-right'
-        ]
+        ],
+        Cell: function FormattedCell({ value }: {
+          value: WrappedTokenAmount;
+        }) {
+          return (
+            <>
+              {value.toHuman()}
+            </>
+          );
+        }
       },
       {
         Header: t('issue_page.parachain_block'),
