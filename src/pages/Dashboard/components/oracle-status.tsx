@@ -15,7 +15,6 @@ import DashboardCard from 'pages/Dashboard/DashboardCard';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import { ORACLE_CURRENCY_KEY } from 'config/relay-chains';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { PAGES } from 'utils/constants/links';
 
 enum Status {
@@ -30,7 +29,6 @@ interface Props {
 }
 
 const OracleStatus = ({ linkButton }: Props): JSX.Element => {
-  const statsApi = useInterbtcIndex();
   const { t } = useTranslation();
 
   // TODO: use translations for status
@@ -56,7 +54,7 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
         setOracleStatus(Status.NoData);
       }
     })();
-  }, [statsApi]);
+  }, []);
 
   return (
     <DashboardCard>

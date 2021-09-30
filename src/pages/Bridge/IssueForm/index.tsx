@@ -136,7 +136,7 @@ const IssueForm = (): JSX.Element | null => {
           interbtcIndex.getIssueFee(),
           interbtcIndex.getIssueGriefingCollateral(),
           interbtcIndex.getIssuePeriod(),
-          interbtcIndex.getDustValue(),
+          window.bridge.interBtcIndex.getDustValue(),
           window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN),
           // This data (the vaults) is strictly required to request issue
           window.bridge.interBtcApi.vaults.getVaultsWithIssuableTokens()
@@ -147,7 +147,7 @@ const IssueForm = (): JSX.Element | null => {
         setDepositRate(theDepositRate);
         const issuePeriod = issuePeriodInBlocks * BLOCK_TIME;
         dispatch(updateIssuePeriodAction(issuePeriod));
-        setDustValue(BitcoinAmount.from.Satoshi(JSON.parse(theDustValue)));
+        setDustValue(theDustValue);
         setBTCToDOTRate(theBtcToDot);
 
         let theVaultMaxAmount = BitcoinAmount.zero;
