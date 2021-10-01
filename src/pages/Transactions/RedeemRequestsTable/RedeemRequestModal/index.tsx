@@ -56,6 +56,9 @@ const RedeemRequestModal = ({
     }
   };
 
+  const redeemedWrappedTokenAmount =
+    request.amountBTC.add(request.bridgeFee).add(request.btcTransferFee);
+
   return (
     <InterlayModal
       initialFocus={focusRef}
@@ -115,7 +118,7 @@ const RedeemRequestModal = ({
                   'space-x-1'
                 )}>
                 <span className='text-5xl'>
-                  {displayMonetaryAmount(request.amountBTC)}
+                  {displayMonetaryAmount(redeemedWrappedTokenAmount)}
                 </span>
                 <span
                   className={clsx(

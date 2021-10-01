@@ -21,6 +21,9 @@ const CompletedIssueRequest = ({
 }: Props): JSX.Element => {
   const { t } = useTranslation();
 
+  const issuedWrappedTokenAmount = request.executedAmountBTC ?? request.wrappedAmount;
+  const receivedWrappedTokenAmount = issuedWrappedTokenAmount.sub(request.bridgeFee);
+
   return (
     <RequestWrapper id='CompletedIssueRequest'>
       <h2
@@ -38,7 +41,7 @@ const CompletedIssueRequest = ({
         )}>
         <span>{t('issue_page.you_received')}</span>
         <span className='text-interlayDenim'>
-          {displayMonetaryAmount(request.executedAmountBTC || request.wrappedAmount)} interBTC
+          {displayMonetaryAmount(receivedWrappedTokenAmount)} interBTC
         </span>
       </p>
       <div
