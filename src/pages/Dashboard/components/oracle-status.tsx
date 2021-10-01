@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
@@ -16,6 +15,8 @@ import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOut
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import { ORACLE_CURRENCY_KEY } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
+import { useSelector } from 'react-redux';
+import { StoreType } from 'common/types/util.types';
 
 enum Status {
   Loading,
@@ -31,6 +32,8 @@ interface Props {
 const OracleStatus = ({ linkButton }: Props): JSX.Element => {
   const { t } = useTranslation();
 
+  const bridgeLoaded = useSelector((state: StoreType) => state.general);
+
   // TODO: use translations for status
   const [oracleStatus, setOracleStatus] = React.useState(Status.Loading);
   const [exchangeRate, setExchangeRate] = React.useState<
@@ -44,6 +47,7 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
 
   React.useEffect(() => {
     (async () => {
+      if (!bridgeLoaded) return;
       try {
         const oracleStatus = await window.bridge.interBtcIndex.getLatestSubmission(ORACLE_CURRENCY_KEY);
         setExchangeRate(oracleStatus.exchangeRate);
@@ -54,7 +58,7 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
         setOracleStatus(Status.NoData);
       }
     })();
-  }, []);
+  }, [bridgeLoaded]);
 
   return (
     <DashboardCard>

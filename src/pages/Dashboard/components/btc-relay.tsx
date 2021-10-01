@@ -30,7 +30,7 @@ const BtcRelay = ({
 }: Props): JSX.Element => {
   const { t } = useTranslation();
   // TODO: compute status using blockstream data
-  const { btcRelayHeight, bitcoinHeight } = useSelector((state: StoreType) => state.general);
+  const { btcRelayHeight, bitcoinHeight, bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const [blockstreamTip, setBlockstreamTip] = React.useState('-');
 
@@ -56,6 +56,7 @@ const BtcRelay = ({
 
   React.useEffect(() => {
     (async () => {
+      if (!bridgeLoaded) return;
       try {
         const hash = await window.bridge.interBtcApi.electrsAPI.getLatestBlock();
         setBlockstreamTip(hash);
@@ -63,7 +64,7 @@ const BtcRelay = ({
         console.log('[BtcRelay] error.message => ', error.message);
       }
     })();
-  });
+  }, [bridgeLoaded]);
 
   return (
     <>
