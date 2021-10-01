@@ -132,11 +132,14 @@ const IssueRequestsTable = (): JSX.Element => {
         ],
         Cell: function FormattedCell(props: any) {
           const issueRequest: Issue = props.row.original;
+          const issuedWrappedTokenAmount =
+            (issueRequest.executedAmountBTC && !issueRequest.executedAmountBTC.isZero()) ?
+              issueRequest.executedAmountBTC :
+              issueRequest.wrappedAmount;
           return (
             <>
-              {(issueRequest.executedAmountBTC && !issueRequest.executedAmountBTC.isZero()) ?
-                displayMonetaryAmount(issueRequest.executedAmountBTC) :
-                displayMonetaryAmount(issueRequest.wrappedAmount)
+              {
+                displayMonetaryAmount(issuedWrappedTokenAmount.sub(issueRequest.bridgeFee))
               }
             </>
           );

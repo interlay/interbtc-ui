@@ -59,14 +59,11 @@ const IssueRequestModal = ({
 
   const focusRef = React.useRef(null);
 
-  const wrappedTokenAmount =
+  const issuedWrappedTokenAmount =
     (request.executedAmountBTC && !request.executedAmountBTC.isZero()) ?
       request.executedAmountBTC :
       request.wrappedAmount;
-  const amountBTCSent =
-    request.btcAmountSubmittedByUser ?
-      request.btcAmountSubmittedByUser :
-      request.wrappedAmount.add(request.bridgeFee);
+  const receivedWrappedTokenAmount = issuedWrappedTokenAmount.sub(request.bridgeFee);
 
   return (
     <InterlayModal
@@ -132,7 +129,7 @@ const IssueRequestModal = ({
                   'space-x-1'
                 )}>
                 <span className='text-5xl'>
-                  {displayMonetaryAmount(wrappedTokenAmount)}
+                  {displayMonetaryAmount(receivedWrappedTokenAmount)}
                 </span>
                 <span className='text-2xl'>
                   interBTC
@@ -144,7 +141,7 @@ const IssueRequestModal = ({
                   'block'
                 )}>
                 {`≈ $ ${getUsdAmount(
-                  wrappedTokenAmount || BitcoinAmount.zero,
+                  issuedWrappedTokenAmount || BitcoinAmount.zero,
                   prices.bitcoin.usd
                 )}`}
               </span>
@@ -182,9 +179,9 @@ const IssueRequestModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayMonetaryAmount(amountBTCSent)}
+                value={displayMonetaryAmount(issuedWrappedTokenAmount)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(amountBTCSent, prices.bitcoin.usd)} />
+                approxUSD={getUsdAmount(issuedWrappedTokenAmount, prices.bitcoin.usd)} />
             </div>
             <div className='space-y-4'>
               {/* TODO: could componentize */}
