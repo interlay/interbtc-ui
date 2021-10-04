@@ -2,6 +2,7 @@
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import { ParachainStatus } from 'common/types/util.types';
 
 interface Props {
@@ -25,7 +26,9 @@ const ParachainStatusInfo = ({
           'font-medium',
           className
         )}>
-        {t('interbtc_bridge_loading')}
+        {t('interbtc_bridge_loading', {
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+        })}
       </p>
     );
   case ParachainStatus.Running:
@@ -44,7 +47,9 @@ const ParachainStatusInfo = ({
           {t('issue_redeem_disabled')}
         </p>
         <p>
-          {t('interbtc_bridge_recovery_mode')}
+          {t('interbtc_bridge_recovery_mode', {
+            wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+          })}
         </p>
       </div>
     );

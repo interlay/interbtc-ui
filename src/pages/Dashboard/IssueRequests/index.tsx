@@ -13,6 +13,7 @@ import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import IssueRequestsTable from 'containers/IssueRequestsTable';
 import LineChartComponent from '../components/line-chart-component';
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
 import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
@@ -117,7 +118,10 @@ function IssueRequests(): JSX.Element {
             {t('dashboard.issue.issued')}
           </h5>
           <h5>
-            {t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalWrappedTokenAmount) })}
+            {t('dashboard.issue.total_interbtc', {
+              amount: displayMonetaryAmount(totalWrappedTokenAmount),
+              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+            })}
           </h5>
           <h5 className='text-textSecondary'>
             ${getUsdAmount(totalWrappedTokenAmount, prices.bitcoin.usd).toLocaleString()}
@@ -146,8 +150,12 @@ function IssueRequests(): JSX.Element {
               'd_interlayPaleSky'
             ]}
             label={[
-              t('dashboard.issue.total_issued_chart'),
-              t('dashboard.issue.per_day_issued_chart')
+              t('dashboard.issue.total_issued_chart', {
+                wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+              }),
+              t('dashboard.issue.per_day_issued_chart', {
+                wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+              })
             ]}
             yLabels={
               cumulativeIssuesPerDay

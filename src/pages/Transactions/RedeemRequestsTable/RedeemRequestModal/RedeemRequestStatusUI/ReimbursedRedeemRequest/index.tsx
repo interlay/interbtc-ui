@@ -16,7 +16,10 @@ import {
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterlayLink from 'components/UI/InterlayLink';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import {
+  COLLATERAL_TOKEN,
+  WRAPPED_TOKEN_SYMBOL
+} from 'config/relay-chains';
 import {
   getUsdAmount,
   displayMonetaryAmount,
@@ -95,7 +98,9 @@ const ReimbursedRedeemRequest = ({
         {t('redeem_page.reimburse_success')}
       </h2>
       <p className='w-full'>
-        {t('redeem_page.burn_notice')}
+        {t('redeem_page.burn_notice', {
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+        })}
       </p>
       <p className='font-medium'>
         <span className='text-interlayCinnabar'>
@@ -127,7 +132,9 @@ const ReimbursedRedeemRequest = ({
           className='w-full'
           title={
             <h5 className='text-textSecondary'>
-              {t('redeem_page.compensation_burn')}
+              {t('redeem_page.compensation_burn', {
+                wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+              })}
             </h5>
           }
           unitIcon={

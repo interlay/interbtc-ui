@@ -20,6 +20,7 @@ if (!process.env.REACT_APP_RELAY_CHAIN_NAME) {
 }
 
 let APP_NAME: string;
+let WRAPPED_TOKEN_SYMBOL: string;
 let WRAPPED_TOKEN: Currency<BitcoinUnit>;
 let COLLATERAL_TOKEN: Currency<CollateralUnit>;
 let PRICES_URL: string;
@@ -33,6 +34,7 @@ type WrappedTokenAmount =
 switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
 case POLKADOT: {
   APP_NAME = 'interBTC';
+  WRAPPED_TOKEN_SYMBOL = 'interBTC';
   WRAPPED_TOKEN = InterBtc;
   COLLATERAL_TOKEN = Polkadot as Currency<CollateralUnit>;
   COLLATERAL_TOKEN_SYMBOL = 'polkadot';
@@ -42,6 +44,7 @@ case POLKADOT: {
 }
 case KUSAMA: {
   APP_NAME = 'kBTC';
+  WRAPPED_TOKEN_SYMBOL = 'kBTC';
   WRAPPED_TOKEN = KBtc;
   COLLATERAL_TOKEN = Kusama as Currency<CollateralUnit>;
   COLLATERAL_TOKEN_SYMBOL = 'kusama';
@@ -60,6 +63,7 @@ export type {
 
 export {
   APP_NAME,
+  WRAPPED_TOKEN_SYMBOL,
   WRAPPED_TOKEN,
   COLLATERAL_TOKEN,
   PRICES_URL,

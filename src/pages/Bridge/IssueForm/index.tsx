@@ -35,7 +35,10 @@ import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import {
+  COLLATERAL_TOKEN,
+  WRAPPED_TOKEN_SYMBOL
+} from 'config/relay-chains';
 import {
   BLOCK_TIME,
   BLOCKS_BEHIND_LIMIT
@@ -192,7 +195,9 @@ const IssueForm = (): JSX.Element | null => {
       }
 
       if (value > MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT) {
-        return t('issue_page.validation_max_value');
+        return t('issue_page.validation_max_value', {
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+        });
       } else if (btcAmount.lt(dustValue)) {
         return `${t('issue_page.validation_min_value')}${displayMonetaryAmount(dustValue)} BTC).`;
       }
@@ -200,16 +205,19 @@ const IssueForm = (): JSX.Element | null => {
       const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), btcAmount);
       if (!vaultId) {
         return t('issue_page.maximum_in_single_request', {
-          maxAmount: displayMonetaryAmount(vaultMaxAmount)
+          maxAmount: displayMonetaryAmount(vaultMaxAmount),
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
         });
       }
 
       if (bitcoinHeight - btcRelayHeight > BLOCKS_BEHIND_LIMIT) {
-        return t('issue_page.error_more_than_6_blocks_behind');
+        return t('issue_page.error_more_than_6_blocks_behind', {
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+        });
       }
 
       if (!bridgeLoaded) {
-        return 'interBTC must be loaded!';
+        return 'Bridge must be loaded!';
       }
 
       if (btcAmount === undefined) {
@@ -265,7 +273,9 @@ const IssueForm = (): JSX.Element | null => {
               'text-center',
               'text-interlayDenim'
             )}>
-            {t('issue_page.mint_polka_by_wrapping')}
+            {t('issue_page.mint_polka_by_wrapping', {
+              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+            })}
           </h4>
           <InterBTCField
             id='btc-amount'

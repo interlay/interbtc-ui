@@ -31,7 +31,10 @@ import SubmitButton from '../SubmitButton';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import {
+  COLLATERAL_TOKEN,
+  WRAPPED_TOKEN_SYMBOL
+} from 'config/relay-chains';
 import {
   getUsdAmount,
   displayMonetaryAmount
@@ -173,7 +176,7 @@ const BurnForm = (): JSX.Element | null => {
       }
 
       if (!bridgeLoaded) {
-        return 'interBTC must be loaded!';
+        return 'Bridge must be loaded!';
       }
 
       if (bitcoinAmountValue.to.Satoshi() === undefined) {
@@ -205,7 +208,9 @@ const BurnForm = (): JSX.Element | null => {
               'text-center',
               'text-interlayDenim'
             )}>
-            {t('burn_page.burn_interbtc')}
+            {t('burn_page.burn_interbtc', {
+              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+            })}
           </h4>
           <InterBTCField
             id='wrapped-token-amount'

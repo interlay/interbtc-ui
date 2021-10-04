@@ -17,8 +17,9 @@ import ErrorModal from 'components/ErrorModal';
 import InterlayLink from 'components/UI/InterlayLink';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import useQueryParams from 'utils/hooks/use-query-params';
-import { shortAddress } from 'common/utils/utils';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import { shortAddress } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { USER_ISSUE_REQUESTS_FETCHER } from 'services/user-issue-requests-fetcher';
@@ -109,12 +110,16 @@ const ConfirmedIssueRequest = ({
             'text-justify',
             'text-textSecondary'
           )}>
-          {t('issue_page.receive_interbtc_tokens')}
+          {t('issue_page.receive_interbtc_tokens', {
+            wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+          })}
         </p>
         <InterlayDenimOutlinedButton
           pending={executeMutation.isLoading}
           onClick={handleExecute(request)}>
-          {t('issue_page.claim_interbtc')}
+          {t('issue_page.claim_interbtc', {
+            wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+          })}
         </InterlayDenimOutlinedButton>
       </RequestWrapper>
       {(executeMutation.isError && executeMutation.error) && (

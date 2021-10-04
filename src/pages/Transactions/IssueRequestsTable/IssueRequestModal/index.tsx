@@ -18,6 +18,7 @@ import InterlayModal, {
   InterlayModalInnerWrapper,
   InterlayModalTitle
 } from 'components/UI/InterlayModal';
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
   displayMonetaryAmount,
   getUsdAmount,
@@ -236,7 +237,11 @@ const IssueRequestModal = ({
             </div>
             <p className='space-x-1'>
               <span className='text-interlayCinnabar'>{t('note')}:</span>
-              <span className='text-textSecondary'>{t('issue_page.fully_decentralized')}</span>
+              <span className='text-textSecondary'>
+                {t('issue_page.fully_decentralized', {
+                  wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+                })}
+              </span>
             </p>
           </div>
           <>{renderModalStatusPanel(request)}</>

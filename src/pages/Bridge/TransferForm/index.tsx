@@ -23,7 +23,8 @@ import InterlayDefaultOutlinedButton from 'components/buttons/InterlayDefaultOut
 import ErrorModal from 'components/ErrorModal';
 import {
   COLLATERAL_TOKEN,
-  WRAPPED_TOKEN
+  WRAPPED_TOKEN,
+  WRAPPED_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import {
   ParachainStatus,
@@ -207,7 +208,9 @@ const TransferForm = (): JSX.Element => {
             'text-center',
             'text-interlayDenim'
           )}>
-          {t('transfer_page.transfer_interbtc')}
+          {t('transfer_page.transfer_interbtc', {
+            wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+          })}
         </h4>
         <InterBTCField
           id={WRAPPED_TOKEN_INPUT_AMOUNT}

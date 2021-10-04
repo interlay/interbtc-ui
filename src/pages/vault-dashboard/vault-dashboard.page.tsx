@@ -33,8 +33,9 @@ import BoldParagraph from 'components/BoldParagraph';
 import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
 import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   safeRoundTwoDecimals,
   displayMonetaryAmount
@@ -152,7 +153,9 @@ const VaultDashboard = (): JSX.Element => {
       color: 'text-interlayDenim-800'
     },
     {
-      title: t('vault.fees_earned_interbtc'),
+      title: t('vault.fees_earned_interbtc', {
+        wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+      }),
       value: displayMonetaryAmount(feesEarnedPolkaBTC),
       color: 'text-interlayDenim-800'
     },
@@ -166,7 +169,9 @@ const VaultDashboard = (): JSX.Element => {
       value: displayMonetaryAmount(lockedBTC),
       color: 'text-interlayCalifornia-700'
     }, {
-      title: t('vault.remaining_capacity'),
+      title: t('vault.remaining_capacity', {
+        wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+      }),
       value: displayMonetaryAmount(capacity),
       color: 'text-interlayDenim-800'
     },

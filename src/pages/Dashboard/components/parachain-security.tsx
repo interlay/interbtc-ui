@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import DashboardCard from 'pages/Dashboard/DashboardCard';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import {
   ParachainStatus,
@@ -76,7 +77,9 @@ const ParachainSecurity = ({ linkButton }: Props): JSX.Element => {
               'text-3xl',
               'text-left'
             )}>
-            {t('dashboard.parachain.parachain_is')}&nbsp;
+            {t('dashboard.parachain.parachain_is', {
+              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+            })}&nbsp;
             {parachainState()}
           </h1>
           {linkButton && (
