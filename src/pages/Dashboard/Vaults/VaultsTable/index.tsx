@@ -342,8 +342,10 @@ const VaultsTable = (): JSX.Element => {
           statusText = t('dashboard.vault.undercollateralized');
         }
       }
+      // FIXME: should only display bannedUntil status if the bannedUntil block < current parachain block
+      // Otherwise, should not show this status.
       if (vaultExt.bannedUntil) {
-        statusText = t('dashboard.vault.banned_until', { blockHeight: bannedUntil });
+        statusText = t('dashboard.vault.banned_until', { blockHeight: vaultExt.bannedUntil });
       }
       if (vaultExt.status === VaultStatusExt.Inactive) {
         statusText = t('dashboard.vault.inactive');
