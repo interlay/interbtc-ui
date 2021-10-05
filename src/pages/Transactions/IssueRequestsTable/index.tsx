@@ -37,6 +37,7 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import InterlayLink from 'components/UI/InterlayLink';
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
@@ -125,7 +126,7 @@ const IssueRequestsTable = (): JSX.Element => {
         }
       },
       {
-        Header: `${t('issue_page.amount')} (interBTC)`,
+        Header: `${t('issue_page.amount')} (${WRAPPED_TOKEN_SYMBOL})`,
         accessor: 'wrappedAmount',
         classNames: [
           'text-right'

@@ -5,6 +5,7 @@ import { Issue } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import InterlayLink from 'components/UI/InterlayLink';
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
   shortAddress,
   displayMonetaryAmount,
@@ -41,7 +42,7 @@ const CompletedIssueRequest = ({
         )}>
         <span>{t('issue_page.you_received')}</span>
         <span className='text-interlayDenim'>
-          {displayMonetaryAmount(receivedWrappedTokenAmount)} interBTC
+          {displayMonetaryAmount(receivedWrappedTokenAmount)} {WRAPPED_TOKEN_SYMBOL}
         </span>
       </p>
       <div

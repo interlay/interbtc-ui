@@ -133,7 +133,7 @@ const IssueRequestModal = ({
                   {displayMonetaryAmount(receivedWrappedTokenAmount)}
                 </span>
                 <span className='text-2xl'>
-                  interBTC
+                  {WRAPPED_TOKEN_SYMBOL}
                 </span>
               </h4>
               <span

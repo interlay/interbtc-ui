@@ -17,6 +17,7 @@ import InterlayModal, {
   InterlayModalInnerWrapper,
   InterlayModalTitle
 } from 'components/UI/InterlayModal';
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
   displayMonetaryAmount,
   getUsdAmount,
@@ -125,7 +126,7 @@ const RedeemRequestModal = ({
                     'text-2xl',
                     'text-interlayDenim'
                   )}>
-                  interBTC
+                  {WRAPPED_TOKEN_SYMBOL}
                 </span>
               </h4>
               <span

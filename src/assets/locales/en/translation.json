@@ -199,7 +199,8 @@
     "dot_earned": "DOT earned",
     "burn": "Burn",
     "please_enter_the_amount": "Please enter the amount.",
-    "successfully_burned": "Successfully burned."
+    "successfully_burned": "Successfully burned.",
+    "invalid_input_amount": "Please enter a valid {{wrappedTokenSymbol}} amount!"
   },
   "dashboard": {
     "premium_redeem": "Premium Redeem",

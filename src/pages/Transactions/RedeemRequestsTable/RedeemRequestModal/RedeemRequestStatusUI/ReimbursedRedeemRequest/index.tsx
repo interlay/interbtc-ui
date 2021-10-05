@@ -104,7 +104,7 @@ const ReimbursedRedeemRequest = ({
       </p>
       <p className='font-medium'>
         <span className='text-interlayCinnabar'>
-          {`${displayMonetaryAmount(burnedBTCAmount)} interBTC`}
+          {`${displayMonetaryAmount(burnedBTCAmount)} ${WRAPPED_TOKEN_SYMBOL}`}
         </span>
         <span>
           &nbsp;{`(≈ $${getUsdAmount(burnedBTCAmount, prices.bitcoin.usd)})`}

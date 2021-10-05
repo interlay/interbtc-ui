@@ -66,7 +66,7 @@ const NETWORK_ITEMS = [
         width={24}
         height={19.05} />
     ),
-    title: 'interBTC'
+    title: WRAPPED_TOKEN_SYMBOL
   },
   {
     type: NETWORK_TYPES.ACALA,
@@ -216,7 +216,7 @@ const TransferForm = (): JSX.Element => {
           id={WRAPPED_TOKEN_INPUT_AMOUNT}
           name={WRAPPED_TOKEN_INPUT_AMOUNT}
           type='number'
-          label='interBTC'
+          label={WRAPPED_TOKEN_SYMBOL}
           step='any'
           placeholder='0.00'
           ref={register({

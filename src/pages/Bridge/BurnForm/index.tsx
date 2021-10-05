@@ -180,7 +180,9 @@ const BurnForm = (): JSX.Element | null => {
       }
 
       if (bitcoinAmountValue.to.Satoshi() === undefined) {
-        return 'Invalid interBTC amount input!'; // TODO: should translate
+        return t('burn_page.invalid_input_amount', {
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+        });
       }
 
       const wrappedTokenAmountInteger = value.toString().split('.')[0];
@@ -216,7 +218,7 @@ const BurnForm = (): JSX.Element | null => {
             id='wrapped-token-amount'
             name={WRAPPED_TOKEN_AMOUNT}
             type='number'
-            label='interBTC'
+            label={WRAPPED_TOKEN_SYMBOL}
             step='any'
             placeholder='0.00'
             ref={register({

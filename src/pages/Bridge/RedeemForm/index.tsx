@@ -361,7 +361,7 @@ const RedeemForm = (): JSX.Element | null => {
             id='wrapped-token-amount'
             name={WRAPPED_TOKEN_AMOUNT}
             type='number'
-            label='interBTC'
+            label={WRAPPED_TOKEN_SYMBOL}
             step='any'
             placeholder='0.00'
             min={0}

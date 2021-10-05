@@ -362,7 +362,7 @@ const IssueForm = (): JSX.Element | null => {
                 height={19.05} />
             }
             value={displayMonetaryAmount(wrappedTokenAmount)}
-            unitName='interBTC'
+            unitName={WRAPPED_TOKEN_SYMBOL}
             approxUSD={getUsdAmount(wrappedTokenAmount, prices.bitcoin.usd)} />
           <SubmitButton
             disabled={

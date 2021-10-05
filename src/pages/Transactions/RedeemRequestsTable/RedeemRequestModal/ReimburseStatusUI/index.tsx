@@ -140,7 +140,7 @@ const ReimburseStatusUI = ({
 
   const handleRetry = () => {
     if (!bridgeLoaded) {
-      throw new Error('interBTC is not loaded!');
+      throw new Error('Bridge is not loaded!');
     }
 
     retryMutation.mutate(request);
@@ -148,7 +148,7 @@ const ReimburseStatusUI = ({
 
   const handleReimburse = () => {
     if (!bridgeLoaded) {
-      throw new Error('interBTC is not loaded!');
+      throw new Error('Bridge is not loaded!');
     }
 
     reimburseMutation.mutate(request);

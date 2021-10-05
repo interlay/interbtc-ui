@@ -11,6 +11,7 @@ import { BitcoinAmount } from '@interlay/monetary-js';
 import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
@@ -94,7 +95,7 @@ const RequestReplacementModal = (props: Props): JSX.Element => {
                   <span
                     className='input-group-text'
                     id='basic-addon2'>
-                    interBTC
+                    {WRAPPED_TOKEN_SYMBOL}
                   </span>
                 </div>
                 {errors.amount && (
