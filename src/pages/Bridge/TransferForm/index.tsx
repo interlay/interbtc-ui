@@ -24,7 +24,8 @@ import ErrorModal from 'components/ErrorModal';
 import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN,
-  WRAPPED_TOKEN_SYMBOL
+  WRAPPED_TOKEN_SYMBOL,
+  COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import {
   ParachainStatus,
@@ -172,7 +173,9 @@ const TransferForm = (): JSX.Element => {
     }
 
     if (collateralTokenBalance === newMonetaryAmount(0, COLLATERAL_TOKEN)) {
-      return t('insufficient_funds_dot');
+      return t('insufficient_funds_dot', {
+        collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+      });
     }
 
     const bitcoinAmountValue = BitcoinAmount.from.BTC(value);

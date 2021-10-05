@@ -38,7 +38,10 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import {
+  COLLATERAL_TOKEN,
+  COLLATERAL_TOKEN_SYMBOL
+} from 'config/relay-chains';
 import {
   shortAddress,
   displayMonetaryAmount
@@ -196,7 +199,9 @@ const VaultsTable = (): JSX.Element => {
         ]
       },
       {
-        Header: t('locked_dot'),
+        Header: t('locked_dot', {
+          collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+        }),
         accessor: 'lockedDOT',
         classNames: [
           'text-right'

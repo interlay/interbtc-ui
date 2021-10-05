@@ -18,7 +18,8 @@ import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterlayLink from 'components/UI/InterlayLink';
 import {
   COLLATERAL_TOKEN,
-  WRAPPED_TOKEN_SYMBOL
+  WRAPPED_TOKEN_SYMBOL,
+  COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import {
   getUsdAmount,
@@ -99,7 +100,8 @@ const ReimbursedRedeemRequest = ({
       </h2>
       <p className='w-full'>
         {t('redeem_page.burn_notice', {
-          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
+          collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
         })}
       </p>
       <p className='font-medium'>

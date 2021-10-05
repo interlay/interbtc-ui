@@ -13,7 +13,7 @@ import {
 import DashboardCard from 'pages/Dashboard/DashboardCard';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
-import { ORACLE_CURRENCY_KEY } from 'config/relay-chains';
+import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import { useSelector } from 'react-redux';
 import { StoreType } from 'common/types/util.types';
@@ -49,7 +49,7 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
     (async () => {
       if (!bridgeLoaded) return;
       try {
-        const oracleStatus = await window.bridge.interBtcIndex.getLatestSubmission(ORACLE_CURRENCY_KEY);
+        const oracleStatus = await window.bridge.interBtcIndex.getLatestSubmission(COLLATERAL_TOKEN_SYMBOL);
         setExchangeRate(oracleStatus.exchangeRate);
         const status = oracleStatus.online ? Status.Online : Status.Offline;
         setOracleStatus(status);

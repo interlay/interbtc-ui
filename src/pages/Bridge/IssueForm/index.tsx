@@ -37,7 +37,8 @@ import ErrorFallback from 'components/ErrorFallback';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
 import {
   COLLATERAL_TOKEN,
-  WRAPPED_TOKEN_SYMBOL
+  WRAPPED_TOKEN_SYMBOL,
+  COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import {
   BLOCK_TIME,
@@ -191,7 +192,9 @@ const IssueForm = (): JSX.Element | null => {
       const minimumRequiredCollateralTokenAmount =
         newMonetaryAmount(EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT, COLLATERAL_TOKEN).add(securityDeposit);
       if (collateralTokenBalance.lte(minimumRequiredCollateralTokenAmount)) {
-        return t('insufficient_funds_dot');
+        return t('insufficient_funds_dot', {
+          collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+        });
       }
 
       if (value > MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT) {

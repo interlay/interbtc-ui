@@ -33,7 +33,8 @@ import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
 import {
   COLLATERAL_TOKEN,
-  WRAPPED_TOKEN_SYMBOL
+  WRAPPED_TOKEN_SYMBOL,
+  COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import {
   getUsdAmount,
@@ -185,10 +186,14 @@ const BurnForm = (): JSX.Element | null => {
         });
       }
 
+      // ray test touch <
+      // TODO: double-check if we need
+      // - (https://discord.com/channels/745259537707040778/894390868964933692/894863394149109771)
       const wrappedTokenAmountInteger = value.toString().split('.')[0];
       if (wrappedTokenAmountInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
         return 'Input value is too high!'; // TODO: should translate
       }
+      // ray test touch >
 
       return undefined;
     };
@@ -211,7 +216,8 @@ const BurnForm = (): JSX.Element | null => {
               'text-interlayDenim'
             )}>
             {t('burn_page.burn_interbtc', {
-              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
+              collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
             })}
           </h4>
           <InterBTCField
@@ -234,7 +240,9 @@ const BurnForm = (): JSX.Element | null => {
           <PriceInfo
             title={
               <h5 className='text-textSecondary'>
-                {t('burn_page.dot_earned')}
+                {t('burn_page.dot_earned', {
+                  collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+                })}
               </h5>
             }
             unitIcon={

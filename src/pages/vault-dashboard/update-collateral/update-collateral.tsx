@@ -16,7 +16,10 @@ import {
 
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import {
+  COLLATERAL_TOKEN,
+  COLLATERAL_TOKEN_SYMBOL
+} from 'config/relay-chains';
 import {
   updateCollateralAction,
   updateCollateralizationAction
@@ -191,10 +194,13 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
         <Modal.Body>
           <div className='row'>
             <div className='col-12 my-4'>
-              {t('vault.current_total_collateral', { currentCollateral })}
+              {t('vault.current_total_collateral', {
+                currentCollateral,
+                collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+              })}
             </div>
             <div className='col-12 my-4'>
-              {t('vault.new_total_collateral', { newCollateral })}
+              {t('vault.new_total_collateral')}
             </div>
             <div className='col-12 basic-addon'>
               <div className='input-group'>

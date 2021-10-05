@@ -25,7 +25,8 @@ import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOut
 import ErrorFallback from 'components/ErrorFallback';
 import {
   COLLATERAL_TOKEN,
-  WRAPPED_TOKEN_SYMBOL
+  WRAPPED_TOKEN_SYMBOL,
+  COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import useQueryParams from 'utils/hooks/use-query-params';
 import {
@@ -184,7 +185,11 @@ const ReimburseStatusUI = ({
             &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} DOT
           </span>
           <span>&nbsp;{`(≈ $ ${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)})`}</span>
-          <span>&nbsp;{t('redeem_page.compensation')}</span>
+          <span>
+            &nbsp;{t('redeem_page.compensation', {
+              collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+            })}
+          </span>
           .
         </p>
       </div>

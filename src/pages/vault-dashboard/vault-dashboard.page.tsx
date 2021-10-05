@@ -34,7 +34,10 @@ import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContai
 import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import {
+  WRAPPED_TOKEN_SYMBOL,
+  COLLATERAL_TOKEN_SYMBOL
+} from 'config/relay-chains';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   safeRoundTwoDecimals,
@@ -160,7 +163,9 @@ const VaultDashboard = (): JSX.Element => {
       color: 'text-interlayDenim-800'
     },
     {
-      title: t('vault.locked_dot'),
+      title: t('vault.locked_dot', {
+        collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+      }),
       value: displayMonetaryAmount(collateral),
       color: 'text-interlayDenim-800'
     },

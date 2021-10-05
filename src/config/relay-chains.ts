@@ -24,8 +24,8 @@ let WRAPPED_TOKEN_SYMBOL: string;
 let WRAPPED_TOKEN: Currency<BitcoinUnit>;
 let COLLATERAL_TOKEN: Currency<CollateralUnit>;
 let PRICES_URL: string;
+let RELAY_CHAIN_NAME: string;
 let COLLATERAL_TOKEN_SYMBOL: string;
-let ORACLE_CURRENCY_KEY: string;
 
 type WrappedTokenAmount =
   InterBtcAmount |
@@ -37,9 +37,9 @@ case POLKADOT: {
   WRAPPED_TOKEN_SYMBOL = 'interBTC';
   WRAPPED_TOKEN = InterBtc;
   COLLATERAL_TOKEN = Polkadot as Currency<CollateralUnit>;
-  COLLATERAL_TOKEN_SYMBOL = 'polkadot';
-  PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${COLLATERAL_TOKEN_SYMBOL}&vs_currencies=usd`;
-  ORACLE_CURRENCY_KEY = 'DOT';
+  RELAY_CHAIN_NAME = 'polkadot';
+  PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${RELAY_CHAIN_NAME}&vs_currencies=usd`;
+  COLLATERAL_TOKEN_SYMBOL = 'DOT';
   break;
 }
 case KUSAMA: {
@@ -47,9 +47,9 @@ case KUSAMA: {
   WRAPPED_TOKEN_SYMBOL = 'kBTC';
   WRAPPED_TOKEN = KBtc;
   COLLATERAL_TOKEN = Kusama as Currency<CollateralUnit>;
-  COLLATERAL_TOKEN_SYMBOL = 'kusama';
-  PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${COLLATERAL_TOKEN_SYMBOL}&vs_currencies=usd`;
-  ORACLE_CURRENCY_KEY = 'KSM';
+  RELAY_CHAIN_NAME = 'kusama';
+  PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${RELAY_CHAIN_NAME}&vs_currencies=usd`;
+  COLLATERAL_TOKEN_SYMBOL = 'KSM';
   break;
 }
 default: {
@@ -67,6 +67,6 @@ export {
   WRAPPED_TOKEN,
   COLLATERAL_TOKEN,
   PRICES_URL,
-  COLLATERAL_TOKEN_SYMBOL,
-  ORACLE_CURRENCY_KEY
+  RELAY_CHAIN_NAME,
+  COLLATERAL_TOKEN_SYMBOL
 };

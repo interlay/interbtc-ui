@@ -24,7 +24,7 @@ import InterlayTable, {
 } from 'components/UI/InterlayTable';
 import ErrorFallback from 'components/ErrorFallback';
 import EllipsisLoader from 'components/EllipsisLoader';
-import { ORACLE_CURRENCY_KEY } from 'config/relay-chains';
+import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
 import genericFetcher, {
   GENERIC_FETCHER
 } from 'services/fetchers/generic-fetcher';
@@ -47,7 +47,7 @@ const OracleTable = (): JSX.Element => {
       GENERIC_FETCHER,
       'interBtcIndex',
       'getLatestSubmissionForEachOracle',
-      ORACLE_CURRENCY_KEY
+      COLLATERAL_TOKEN_SYMBOL
     ],
     genericFetcher<Array<CollateralBtcOracleStatus>>(),
     {
