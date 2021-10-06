@@ -1,3 +1,4 @@
+
 import {
   Currency,
   BitcoinUnit,
@@ -9,6 +10,10 @@ import {
   InterBtcAmount // on Polkadot
 } from '@interlay/monetary-js';
 import { CollateralUnit } from '@interlay/interbtc-api';
+import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
+import { ReactComponent as KintsugiLogoIcon } from 'assets/img/kintsugi-logo.svg';
+import { ReactComponent as InterBTCLogoWithTextIcon } from 'assets/img/interbtc-logo-with-text.svg';
+import { ReactComponent as KintsugiLogoWithTextIcon } from 'assets/img/kintsugi-logo-with-text.svg';
 
 import {
   POLKADOT,
@@ -26,6 +31,14 @@ let COLLATERAL_TOKEN: Currency<CollateralUnit>;
 let PRICES_URL: string;
 let RELAY_CHAIN_NAME: string;
 let COLLATERAL_TOKEN_SYMBOL: string;
+let WrappedTokenLogoIcon:
+  React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
+    title?: string | undefined;
+  }>;
+let WrappedTokenLogoWithTextIcon:
+  React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
+    title?: string | undefined;
+  }>;
 
 type WrappedTokenAmount =
   InterBtcAmount |
@@ -40,6 +53,8 @@ case POLKADOT: {
   RELAY_CHAIN_NAME = 'polkadot';
   PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${RELAY_CHAIN_NAME}&vs_currencies=usd`;
   COLLATERAL_TOKEN_SYMBOL = 'DOT';
+  WrappedTokenLogoIcon = InterBTCLogoIcon;
+  WrappedTokenLogoWithTextIcon = InterBTCLogoWithTextIcon;
   break;
 }
 case KUSAMA: {
@@ -50,6 +65,8 @@ case KUSAMA: {
   RELAY_CHAIN_NAME = 'kusama';
   PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${RELAY_CHAIN_NAME}&vs_currencies=usd`;
   COLLATERAL_TOKEN_SYMBOL = 'KSM';
+  WrappedTokenLogoIcon = KintsugiLogoIcon;
+  WrappedTokenLogoWithTextIcon = KintsugiLogoWithTextIcon;
   break;
 }
 default: {
@@ -68,5 +85,7 @@ export {
   COLLATERAL_TOKEN,
   PRICES_URL,
   RELAY_CHAIN_NAME,
-  COLLATERAL_TOKEN_SYMBOL
+  COLLATERAL_TOKEN_SYMBOL,
+  WrappedTokenLogoIcon,
+  WrappedTokenLogoWithTextIcon
 };

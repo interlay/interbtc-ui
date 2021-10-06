@@ -38,7 +38,8 @@ import InterlayTooltip from 'components/UI/InterlayTooltip';
 import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
-  COLLATERAL_TOKEN_SYMBOL
+  COLLATERAL_TOKEN_SYMBOL,
+  WrappedTokenLogoIcon
 } from 'config/relay-chains';
 import {
   BLOCK_TIME,
@@ -59,7 +60,6 @@ import { updateIssuePeriodAction } from 'common/actions/issue.actions';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
-import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const BTC_AMOUNT = 'btc-amount';
@@ -360,9 +360,7 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={
-              <InterBTCLogoIcon
-                width={24}
-                height={19.05} />
+              <WrappedTokenLogoIcon width={24} />
             }
             value={displayMonetaryAmount(wrappedTokenAmount)}
             unitName={WRAPPED_TOKEN_SYMBOL}

@@ -7,9 +7,11 @@ import {
 } from '@interlay/monetary-js';
 import { CollateralUnit } from '@interlay/interbtc-api';
 
-import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import {
+  WRAPPED_TOKEN_SYMBOL,
+  WrappedTokenLogoIcon
+} from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
-import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
 interface Props {
@@ -36,10 +38,9 @@ const Balances = ({
           'items-center',
           'space-x-1'
         )}>
-        <InterBTCLogoIcon
+        <WrappedTokenLogoIcon
           fill='currentColor'
-          width={30}
-          height={23.8} />
+          width={30} />
         <span className='font-medium'>{strWrappedTokenBalance}</span>
         <span className='text-sm'>{WRAPPED_TOKEN_SYMBOL}</span>
       </div>

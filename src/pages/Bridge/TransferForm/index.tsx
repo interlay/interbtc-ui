@@ -25,7 +25,8 @@ import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
-  COLLATERAL_TOKEN_SYMBOL
+  COLLATERAL_TOKEN_SYMBOL,
+  WrappedTokenLogoIcon
 } from 'config/relay-chains';
 import {
   ParachainStatus,
@@ -37,7 +38,6 @@ import {
 } from 'common/utils/utils';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import STATUSES from 'utils/constants/statuses';
-import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as AcalaLogoIcon } from 'assets/img/acala-logo.svg';
 import { ReactComponent as PlasmLogoIcon } from 'assets/img/plasm-logo.svg';
 import { ReactComponent as EthereumLogoIcon } from 'assets/img/ethereum-logo.svg';
@@ -63,9 +63,7 @@ const NETWORK_ITEMS = [
   {
     type: NETWORK_TYPES.INTER_BTC,
     icon: (
-      <InterBTCLogoIcon
-        width={24}
-        height={19.05} />
+      <WrappedTokenLogoIcon width={24} />
     ),
     title: WRAPPED_TOKEN_SYMBOL
   },

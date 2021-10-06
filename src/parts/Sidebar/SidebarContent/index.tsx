@@ -10,8 +10,8 @@ import TestNetBadge from './TestnetBadge';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayLink from 'components/UI/InterlayLink';
 import { INTERLAY_COMPANY_LINK } from 'config/links';
+import { WrappedTokenLogoWithTextIcon } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
-import { ReactComponent as InterBTCHorizontalRGBIcon } from 'assets/img/interbtc-horizontal-rgb.svg';
 import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
 
 interface Props {
@@ -66,9 +66,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
             'px-4'
           )}>
           <InterlayRouterLink to={PAGES.HOME}>
-            <InterBTCHorizontalRGBIcon
-              width={141.6}
-              height={36} />
+            <WrappedTokenLogoWithTextIcon width={141.6} />
           </InterlayRouterLink>
           <TestNetBadge className='ml-2' />
         </div>
