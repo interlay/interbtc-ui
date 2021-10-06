@@ -44,11 +44,11 @@ import { ReactComponent as EthereumLogoIcon } from 'assets/img/ethereum-logo.svg
 import { ReactComponent as CosmosLogoIcon } from 'assets/img/cosmos-logo.svg';
 
 const WRAPPED_TOKEN_INPUT_AMOUNT = 'wrapped-token-input-amount';
-const DOT_ADDRESS = 'dot-address';
+const COLLATERAL_TOKEN_ADDRESS = 'collateral-token-address';
 
 type TransferFormData = {
   [WRAPPED_TOKEN_INPUT_AMOUNT]: string;
-  [DOT_ADDRESS]: string;
+  [COLLATERAL_TOKEN_ADDRESS]: string;
 }
 
 const NETWORK_TYPES = Object.freeze({
@@ -149,14 +149,14 @@ const TransferForm = (): JSX.Element => {
     try {
       setSubmitStatus(STATUSES.PENDING);
       await window.bridge.interBtcApi.tokens.transfer(
-        data[DOT_ADDRESS],
+        data[COLLATERAL_TOKEN_ADDRESS],
         newMonetaryAmount(data[WRAPPED_TOKEN_INPUT_AMOUNT], WRAPPED_TOKEN, true)
       );
       setSubmitStatus(STATUSES.RESOLVED);
       toast.success(t('transfer_page.successfully_transferred'));
       reset({
         [WRAPPED_TOKEN_INPUT_AMOUNT]: '',
-        [DOT_ADDRESS]: ''
+        [COLLATERAL_TOKEN_ADDRESS]: ''
       });
     } catch (error) {
       setSubmitStatus(STATUSES.REJECTED);
@@ -232,8 +232,8 @@ const TransferForm = (): JSX.Element => {
           helperText={errors[WRAPPED_TOKEN_INPUT_AMOUNT]?.message} />
         <div>
           <TextField
-            id='dot-address'
-            name={DOT_ADDRESS}
+            id={COLLATERAL_TOKEN_ADDRESS}
+            name={COLLATERAL_TOKEN_ADDRESS}
             type='text'
             label={t('recipient')}
             placeholder={t('recipient_account')}
@@ -243,8 +243,8 @@ const TransferForm = (): JSX.Element => {
                 message: t('enter_recipient_address')
               }
             })}
-            error={!!errors[DOT_ADDRESS]}
-            helperText={errors[DOT_ADDRESS]?.message} />
+            error={!!errors[COLLATERAL_TOKEN_ADDRESS]}
+            helperText={errors[COLLATERAL_TOKEN_ADDRESS]?.message} />
           {/* TODO: should be a drop-down */}
           <InterlayDenimOutlinedButton
             style={{ display: 'flex' }}

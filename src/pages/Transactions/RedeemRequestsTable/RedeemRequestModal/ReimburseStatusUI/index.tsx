@@ -182,7 +182,7 @@ const ReimburseStatusUI = ({
           )}>
           <span>{t('redeem_page.vault_did_not_send')}</span>
           <span className='text-interlayDenim'>
-            &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} DOT
+            &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
           </span>
           <span>&nbsp;{`(≈ $ ${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)})`}</span>
           <span>
@@ -209,7 +209,7 @@ const ReimburseStatusUI = ({
             <p className='text-justify'>
               <span>{t('redeem_page.receive_compensation')}</span>
               <span className='text-interlayDenim'>
-                &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} DOT
+                &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
               </span>
               <span>
                 &nbsp;
@@ -235,7 +235,7 @@ const ReimburseStatusUI = ({
                 })}
               </span>
               <span className='text-interlayDenim'>
-                &nbsp;{displayMonetaryAmount(collateralTokenAmount)} DOT
+                &nbsp;{displayMonetaryAmount(collateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
               </span>
               <span>
                 &nbsp;
@@ -244,7 +244,7 @@ const ReimburseStatusUI = ({
                 })}
               </span>
               <span className='text-interlayDenim'>
-                &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} DOT
+                &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
               </span>
               <span>
                 &nbsp;

@@ -335,7 +335,7 @@ const IssueForm = (): JSX.Element | null => {
                 height={20} />
             }
             value={displayMonetaryAmount(securityDeposit)}
-            unitName='DOT'
+            unitName={COLLATERAL_TOKEN_SYMBOL}
             approxUSD={getUsdAmount(securityDeposit, prices.collateralToken.usd)}
             tooltip={
               <InterlayTooltip label={t('issue_page.tooltip_security_deposit')}>

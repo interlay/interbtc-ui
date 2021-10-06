@@ -28,7 +28,7 @@ interface Props {
 
 const Collateralization = ({ linkButton }: Props): JSX.Element => {
   const { t } = useTranslation();
-  const bridgeLoaded = useSelector((state: StoreType) => state.general.bridgeLoaded);
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const [systemCollateralization, setSystemCollateralization] = React.useState('0');
   const [issuableWrappedToken, setIssuableWrappedToken] = React.useState(BitcoinAmount.zero);

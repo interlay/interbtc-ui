@@ -121,3 +121,4 @@ dist
 .pnp.*
 .vscode
 /.env.development.local.example
+/.env

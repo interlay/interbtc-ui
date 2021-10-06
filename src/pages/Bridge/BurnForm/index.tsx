@@ -251,7 +251,7 @@ const BurnForm = (): JSX.Element | null => {
                 height={20} />
             }
             value={displayMonetaryAmount(earnedCollateralTokenAmount)}
-            unitName='DOT'
+            unitName={COLLATERAL_TOKEN_SYMBOL}
             approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.collateralToken.usd)} />
           {/* TODO: could componentize */}
           <hr
@@ -272,7 +272,7 @@ const BurnForm = (): JSX.Element | null => {
                 height={20} />
             }
             value={displayMonetaryAmount(earnedCollateralTokenAmount)}
-            unitName='DOT'
+            unitName={COLLATERAL_TOKEN_SYMBOL}
             approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.collateralToken.usd)} />
           <SubmitButton
             // TODO: should not check everywhere like this

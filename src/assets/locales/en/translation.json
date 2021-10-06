@@ -377,7 +377,6 @@
     "stake": "Stake",
     "warning_relayer_not_registered": "Local relayer client running, but relayer is not yet registered with the parachain. The client is already submitting blocks, but voting and reporting features are disabled until registered.",
     "staked_relayer_dashboard": "Relayer Dashboard",
-    "register_dot": "Register (Lock DOT)",
     "stake_locked": "Stake locked",
     "deregister": "Deregister",
     "note_you_can_deregister": "Note: You can only deregister if you are not participating in a vote."
@@ -395,7 +394,7 @@
     "replace_amount": "Replace amount",
     "successfully_updated_collateral": "Successfully updated collateral",
     "deposit_collateral": "Deposit Collateral",
-    "current_total_collateral": "Current Total Collateral {{currentDOTCollateral}} DOT ",
+    "current_total_collateral": "Current Total Collateral {{currentCollateral}} {{collateralTokenSymbol}} ",
     "new_total_collateral": "New Total Collateral",
     "collateral_higher_than_0": "Collateral must be higher than 0",
     "new_collateralization": "New Collateralization:",
@@ -405,7 +404,6 @@
     "tip_collateralization": "Collateralization rate for locked BTC. 'Pending' includes in-progress issue requests.",
     "pending_table_subcell": "Pending: ",
     "locked_dot": "Locked Collateral {{collateralTokenSymbol}}",
-    "fees_earned_dot": "Fees earned DOT",
     "fees_earned_interbtc": "Fees earned {{wrappedTokenSymbol}}",
     "remaining_capacity": "Remaining {{wrappedTokenSymbol}} capacity"
   },

@@ -44,7 +44,8 @@ import {
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   COLLATERAL_TOKEN,
-  WRAPPED_TOKEN_SYMBOL
+  WRAPPED_TOKEN_SYMBOL,
+  COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
@@ -484,7 +485,7 @@ const RedeemForm = (): JSX.Element | null => {
                   height={23} />
               }
               value={displayMonetaryAmount(totalDOT)}
-              unitName='DOT'
+              unitName={COLLATERAL_TOKEN_SYMBOL}
               approxUSD={totalDOTInUSD} />
           )}
           <SubmitButton

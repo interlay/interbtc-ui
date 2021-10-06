@@ -92,7 +92,7 @@ const OracleTable = (): JSX.Element => {
         ],
         Cell: function FormattedCell({ value }: { value: ExchangeRate; }) {
           return (
-            <>1 BTC = {value.toHuman(5)} DOT</>
+            <>1 BTC = {value.toHuman(5)} {COLLATERAL_TOKEN_SYMBOL}</>
           );
         }
       },

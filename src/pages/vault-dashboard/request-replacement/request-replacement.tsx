@@ -11,7 +11,10 @@ import { BitcoinAmount } from '@interlay/monetary-js';
 import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import {
+  WRAPPED_TOKEN_SYMBOL,
+  COLLATERAL_TOKEN_SYMBOL
+} from 'config/relay-chains';
 import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
@@ -75,7 +78,7 @@ const RequestReplacementModal = (props: Props): JSX.Element => {
           <div className='row'>
             <div className='col-12 text-center mb-4'>{t('vault.withdraw_your_collateral')}</div>
             <div className='col-12'>{t('vault.your_have')}</div>
-            <div className='col-12'> {displayMonetaryAmount(lockedDot)} DOT</div>
+            <div className='col-12'> {displayMonetaryAmount(lockedDot)} {COLLATERAL_TOKEN_SYMBOL}</div>
             <div className='col-12 mb-4'>
               {t('locked')} {displayMonetaryAmount(lockedBtc)} BTC
             </div>

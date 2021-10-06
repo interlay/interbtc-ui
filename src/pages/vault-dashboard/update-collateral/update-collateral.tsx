@@ -54,14 +54,14 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
     handleSubmit,
     errors
   } = useForm<UpdateCollateralForm>();
-  // Denoted in DOT
+  // Denoted in collateral token
   const currentCollateral = useSelector((state: StoreType) => state.vault.collateral);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  // Denoted in DOT
+  // Denoted in collateral token
   const [newCollateral, setNewCollateral] = React.useState(currentCollateral);
-  // Denoted in DOT
+  // Denoted in collateral token
   const [newCollateralization, setNewCollateralization] = React.useState('∞');
   const [currentButtonText, setCurrentButtonText] = React.useState('');
   const [isUpdatePending, setUpdatePending] = React.useState(false);
@@ -219,7 +219,7 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
                   <span
                     className='input-group-text'
                     id='basic-addon2'>
-                    DOT
+                    {COLLATERAL_TOKEN_SYMBOL}
                   </span>
                 </div>
               </div>
