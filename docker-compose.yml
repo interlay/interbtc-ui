@@ -13,7 +13,7 @@ services:
       - '9933:9933'
       - '9944:9944'
   bitcoind:
-    image: 'ruimarinho/bitcoin-core:0.20'
+    image: 'ruimarinho/bitcoin-core:0.21'
     command:
       - -regtest
       - -server
@@ -25,7 +25,7 @@ services:
     ports:
       - '18443:18443'
   bitcoin_cli:
-    image: 'ruimarinho/bitcoin-core:0.20'
+    image: 'ruimarinho/bitcoin-core:0.21'
     command:
       - /bin/sh
       - -c
@@ -59,7 +59,7 @@ services:
     ports:
       - '3002:3002'
   oracle:
-    image: "interlayhq/interbtc-clients:oracle-1-0-0"
+    image: "interlayhq/interbtc-clients:oracle-1-0-2"
     command:
       - oracle
       - --keyring
@@ -67,12 +67,14 @@ services:
       - --btc-parachain-url
       - "ws://interbtc:9944"
       - --currency-id
-      - 'DOT'
+      - ${DOCKER_RELAY_CHAIN_CURRENCY}
+      - --blockstream
+      - "https://blockstream.info/testnet/api/"
     environment:
       RUST_LOG: info
     restart: unless-stopped
   faucet:
-    image: "interlayhq/interbtc-clients:faucet-1-0-0"
+    image: "interlayhq/interbtc-clients:faucet-1-0-2"
     command:
       - faucet
       - --keyring
@@ -91,7 +93,7 @@ services:
       - '3035:3035'
     restart: unless-stopped
   vault:
-    image: "interlayhq/interbtc-clients:vault-1-0-0"
+    image: "interlayhq/interbtc-clients:vault-1-0-2"
     command:
       - /bin/sh
       - -c
@@ -101,7 +103,7 @@ services:
           # sleep for 30s to wait for bitcoin to create the Charlie wallet
           # and also to ensure that the issue period and redeem period are set
           sleep 30
-          vault --keyfile="keyfile.json" --keyname=charlie_stash --auto-register-with-collateral 1000000000000000000 --btc-parachain-url 'ws://interbtc:9944' --currency-id 'DOT'
+          vault --keyfile="keyfile.json" --keyname=charlie_stash --auto-register-with-collateral 1000000000000000000 --btc-parachain-url 'ws://interbtc:9944' --currency-id ${DOCKER_RELAY_CHAIN_CURRENCY}
     environment: &client-env
       BITCOIN_RPC_URL: http://bitcoind:18443
       BITCOIN_RPC_USER: rpcuser
@@ -127,7 +129,7 @@ services:
     depends_on:
       - postgres
   index:
-    image: 'registry.gitlab.com/interlay/polkabtc-stats:1.0.0'
+    image: 'registry.gitlab.com/interlay/polkabtc-stats:1.0.3'
     restart: always
     depends_on:
       - postgres
