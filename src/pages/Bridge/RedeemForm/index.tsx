@@ -45,7 +45,8 @@ import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
-  COLLATERAL_TOKEN_SYMBOL
+  COLLATERAL_TOKEN_SYMBOL,
+  CollateralTokenLogoIcon
 } from 'config/relay-chains';
 import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
@@ -65,7 +66,6 @@ import {
   ParachainStatus
 } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
@@ -480,9 +480,7 @@ const RedeemForm = (): JSX.Element | null => {
                 </h5>
               }
               unitIcon={
-                <PolkadotLogoIcon
-                  width={23}
-                  height={23} />
+                <CollateralTokenLogoIcon width={23} />
               }
               value={displayMonetaryAmount(totalDOT)}
               unitName={COLLATERAL_TOKEN_SYMBOL}

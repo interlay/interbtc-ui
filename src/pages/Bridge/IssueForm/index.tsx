@@ -39,7 +39,8 @@ import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
   COLLATERAL_TOKEN_SYMBOL,
-  WrappedTokenLogoIcon
+  WrappedTokenLogoIcon,
+  CollateralTokenLogoIcon
 } from 'config/relay-chains';
 import {
   BLOCK_TIME,
@@ -59,7 +60,6 @@ import {
 import { updateIssuePeriodAction } from 'common/actions/issue.actions';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const BTC_AMOUNT = 'btc-amount';
@@ -330,9 +330,7 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={
-              <PolkadotLogoIcon
-                width={20}
-                height={20} />
+              <CollateralTokenLogoIcon width={20} />
             }
             value={displayMonetaryAmount(securityDeposit)}
             unitName={COLLATERAL_TOKEN_SYMBOL}

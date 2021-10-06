@@ -19,7 +19,8 @@ import InterlayLink from 'components/UI/InterlayLink';
 import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
-  COLLATERAL_TOKEN_SYMBOL
+  COLLATERAL_TOKEN_SYMBOL,
+  CollateralTokenLogoIcon
 } from 'config/relay-chains';
 import {
   getUsdAmount,
@@ -27,7 +28,6 @@ import {
   getPolkadotLink
 } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
 interface Props {
   request: Redeem;
@@ -140,9 +140,7 @@ const ReimbursedRedeemRequest = ({
             </h5>
           }
           unitIcon={
-            <PolkadotLogoIcon
-              width={20}
-              height={20} />
+            <CollateralTokenLogoIcon width={20} />
           }
           value={displayMonetaryAmount(burnCollateralTokenAmount)}
           unitName={COLLATERAL_TOKEN_SYMBOL}
@@ -155,9 +153,7 @@ const ReimbursedRedeemRequest = ({
             </h5>
           }
           unitIcon={
-            <PolkadotLogoIcon
-              width={20}
-              height={20} />
+            <CollateralTokenLogoIcon width={20} />
           }
           value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
           unitName={COLLATERAL_TOKEN_SYMBOL}
@@ -176,9 +172,7 @@ const ReimbursedRedeemRequest = ({
             </h5>
           }
           unitIcon={
-            <PolkadotLogoIcon
-              width={20}
-              height={20} />
+            <CollateralTokenLogoIcon width={20} />
           }
           value={displayMonetaryAmount(collateralTokenAmount)}
           unitName={COLLATERAL_TOKEN_SYMBOL}

@@ -34,7 +34,8 @@ import ErrorFallback from 'components/ErrorFallback';
 import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
-  COLLATERAL_TOKEN_SYMBOL
+  COLLATERAL_TOKEN_SYMBOL,
+  CollateralTokenLogoIcon
 } from 'config/relay-chains';
 import {
   getUsdAmount,
@@ -51,7 +52,6 @@ import {
 } from 'common/actions/general.actions';
 import STATUSES from 'utils/constants/statuses';
 import { BALANCE_MAX_INTEGER_LENGTH } from '../../../constants';
-import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 
@@ -246,9 +246,7 @@ const BurnForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={
-              <PolkadotLogoIcon
-                width={20}
-                height={20} />
+              <CollateralTokenLogoIcon width={20} />
             }
             value={displayMonetaryAmount(earnedCollateralTokenAmount)}
             unitName={COLLATERAL_TOKEN_SYMBOL}
@@ -267,9 +265,7 @@ const BurnForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={
-              <PolkadotLogoIcon
-                width={20}
-                height={20} />
+              <CollateralTokenLogoIcon width={20} />
             }
             value={displayMonetaryAmount(earnedCollateralTokenAmount)}
             unitName={COLLATERAL_TOKEN_SYMBOL}

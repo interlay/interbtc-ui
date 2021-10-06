@@ -14,6 +14,8 @@ import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg
 import { ReactComponent as KintsugiLogoIcon } from 'assets/img/kintsugi-logo.svg';
 import { ReactComponent as InterBTCLogoWithTextIcon } from 'assets/img/interbtc-logo-with-text.svg';
 import { ReactComponent as KintsugiLogoWithTextIcon } from 'assets/img/kintsugi-logo-with-text.svg';
+import { ReactComponent as DOTLogoIcon } from 'assets/img/dot-logo.svg';
+import { ReactComponent as KSMLogoIcon } from 'assets/img/ksm-logo.svg';
 
 import {
   POLKADOT,
@@ -39,6 +41,10 @@ let WrappedTokenLogoWithTextIcon:
   React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
   }>;
+let CollateralTokenLogoIcon:
+  React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
+    title?: string | undefined;
+  }>;
 
 type WrappedTokenAmount =
   InterBtcAmount |
@@ -55,6 +61,7 @@ case POLKADOT: {
   COLLATERAL_TOKEN_SYMBOL = 'DOT';
   WrappedTokenLogoIcon = InterBTCLogoIcon;
   WrappedTokenLogoWithTextIcon = InterBTCLogoWithTextIcon;
+  CollateralTokenLogoIcon = DOTLogoIcon;
   break;
 }
 case KUSAMA: {
@@ -67,6 +74,7 @@ case KUSAMA: {
   COLLATERAL_TOKEN_SYMBOL = 'KSM';
   WrappedTokenLogoIcon = KintsugiLogoIcon;
   WrappedTokenLogoWithTextIcon = KintsugiLogoWithTextIcon;
+  CollateralTokenLogoIcon = KSMLogoIcon;
   break;
 }
 default: {
@@ -87,5 +95,6 @@ export {
   RELAY_CHAIN_NAME,
   COLLATERAL_TOKEN_SYMBOL,
   WrappedTokenLogoIcon,
-  WrappedTokenLogoWithTextIcon
+  WrappedTokenLogoWithTextIcon,
+  CollateralTokenLogoIcon
 };
