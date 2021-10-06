@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   interbtc:
-    image: "interlayhq/interbtc:interbtc-standalone-1.0.3"
+    image: "interlayhq/interbtc:interbtc-standalone-1-0-4"
     command:
       - interbtc-standalone
       - --unsafe-rpc-external
