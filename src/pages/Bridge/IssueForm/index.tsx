@@ -358,7 +358,7 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={
-              <WrappedTokenLogoIcon width={24} />
+              <WrappedTokenLogoIcon width={20} />
             }
             value={displayMonetaryAmount(wrappedTokenAmount)}
             unitName={WRAPPED_TOKEN_SYMBOL}

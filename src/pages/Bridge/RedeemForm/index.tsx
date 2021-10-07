@@ -480,7 +480,7 @@ const RedeemForm = (): JSX.Element | null => {
                 </h5>
               }
               unitIcon={
-                <CollateralTokenLogoIcon width={23} />
+                <CollateralTokenLogoIcon width={20} />
               }
               value={displayMonetaryAmount(totalDOT)}
               unitName={COLLATERAL_TOKEN_SYMBOL}

@@ -63,7 +63,7 @@ const NETWORK_ITEMS = [
   {
     type: NETWORK_TYPES.INTER_BTC,
     icon: (
-      <WrappedTokenLogoIcon width={24} />
+      <WrappedTokenLogoIcon width={20} />
     ),
     title: WRAPPED_TOKEN_SYMBOL
   },

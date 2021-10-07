@@ -51,7 +51,7 @@ const Balances = ({
           'items-center',
           'space-x-1'
         )}>
-        <CollateralTokenLogoIcon width={20} />
+        <CollateralTokenLogoIcon height={28} />
         <span className='font-medium'>{strCollateralTokenBalance}</span>
         <span className='text-sm'>{COLLATERAL_TOKEN_SYMBOL}</span>
       </div>
