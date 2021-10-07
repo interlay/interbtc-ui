@@ -1,5 +1,3 @@
-
-import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
@@ -8,31 +6,70 @@ import LineChartComponent from './line-chart-component';
 import DashboardCard from 'pages/Dashboard/DashboardCard';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { PAGES } from 'utils/constants/links';
+import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
+import { useQuery } from 'react-query';
+import { useErrorHandler } from 'react-error-boundary';
+import EllipsisLoader from 'components/EllipsisLoader';
+import { getLastMidnightTimestamps } from 'common/utils/utils';
 
 interface Props {
   linkButton?: boolean;
 }
 
+interface VaultRegistration {
+  id: string;
+  timestamp: number;
+}
+
 const ActiveVaults = ({ linkButton }: Props): JSX.Element => {
-  const statsApi = useInterbtcIndex();
   const { t } = useTranslation();
 
-  // eslint-disable-next-line no-array-constructor
-  const [totalVaultsPerDay, setTotalVaultsPerDay] = React.useState(new Array<{
-    date: number;
-    count: number;
-  }>());
+  const {
+    isIdle: vaultsIdle,
+    isLoading: vaultsLoading,
+    data: vaultsData,
+    error: vaultsError
+  } = useQuery<GraphqlReturn<Array<VaultRegistration>>, Error>(
+    [
+      GRAPHQL_FETCHER,
+      `query {
+        vaultRegistrations(orderBy: timestamp_ASC) {
+          id
+          timestamp
+        }
+      }
+      `
+    ],
+    graphqlFetcher<Array<VaultRegistration>>()
+  );
+  useErrorHandler(vaultsError);
 
-  React.useEffect(() => {
-    if (!statsApi) return;
+  if (
+    vaultsIdle ||
+    vaultsLoading
+  ) {
+    return (
+      <div
+        className={clsx(
+          'flex',
+          'justify-center'
+        )}>
+        <EllipsisLoader dotClassName='bg-interlayCalifornia-400' />
+      </div>
+    );
+  }
+  if (!vaultsData) {
+    throw new Error('Something went wrong!');
+  }
 
-    (async () => {
-      const res = await statsApi.getRecentDailyVaultCounts({});
-      setTotalVaultsPerDay(res);
-    })();
-  }, [statsApi]);
+  const vaultRegistrations = vaultsData.data.vaultRegistrations;
+  const graphTimestamps = getLastMidnightTimestamps(5, true);
+  const graphData = graphTimestamps.map(
+    timestamp => vaultRegistrations.filter(
+      registration => registration.timestamp <= timestamp
+    ).length
+  );
 
   return (
     <DashboardCard>
@@ -59,7 +96,7 @@ const ActiveVaults = ({ linkButton }: Props): JSX.Element => {
               'font-bold',
               'mb-1'
             )}>
-            {totalVaultsPerDay[totalVaultsPerDay.length - 1]?.count}
+            {vaultRegistrations.length}
           </h2>
         </div>
         {linkButton && (
@@ -75,9 +112,9 @@ const ActiveVaults = ({ linkButton }: Props): JSX.Element => {
       <LineChartComponent
         color='d_interlayDenim'
         label={t('dashboard.vault.total_vaults_chart') as string}
-        yLabels={totalVaultsPerDay.map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}
+        yLabels={graphTimestamps.map(date => new Date(date).toISOString().substring(0, 10))}
         yAxisProps={{ beginAtZero: true, precision: 0 }}
-        data={totalVaultsPerDay.map(dataPoint => dataPoint.count)} />
+        data={graphData} />
     </DashboardCard>
   );
 };

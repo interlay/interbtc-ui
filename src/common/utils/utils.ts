@@ -47,6 +47,19 @@ function formatDateTimePrecise(date: Date): string {
   return date.toDateString().substring(4) + ' ' + date.toTimeString().substring(0, 8);
 }
 
+function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): Array<number> {
+  const midnights: number[] = [];
+  for (let i = 0; i < daysBack; i++) {
+    const dayBoundary = new Date(Date.now() - (startFromTonight ? i - 1 : i) * 3600 * 24 * 1000);
+    dayBoundary.setMilliseconds(0);
+    dayBoundary.setSeconds(0);
+    dayBoundary.setMinutes(0);
+    dayBoundary.setHours(0);
+    midnights.push(dayBoundary.getTime());
+  }
+  return midnights.reverse();
+}
+
 // TODO: replace these functions with internationalization functions
 // always round USD amounts to two decimals
 function getUsdAmount<C extends CurrencyUnit>(
@@ -142,6 +155,7 @@ export {
   shortTxId,
   formatDateTime,
   formatDateTimePrecise,
+  getLastMidnightTimestamps,
   getUsdAmount,
   displayMonetaryAmount,
   isPositiveNumeric,
