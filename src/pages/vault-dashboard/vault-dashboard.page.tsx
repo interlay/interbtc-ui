@@ -214,7 +214,8 @@ const VaultDashboard = (): JSX.Element => {
                 <CardListItemContent
                   className={clsx(
                     'text-2xl',
-                    'font-medium')}>
+                    'font-medium'
+                  )}>
                   {vaultItem.value}
                 </CardListItemContent>
               </CardListItem>

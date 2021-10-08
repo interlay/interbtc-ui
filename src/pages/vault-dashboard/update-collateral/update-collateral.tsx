@@ -20,6 +20,7 @@ import {
   COLLATERAL_TOKEN,
   COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
+import { displayMonetaryAmount } from 'common/utils/utils';
 import {
   updateCollateralAction,
   updateCollateralizationAction
@@ -115,7 +116,7 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
         setCollateralUpdateAllowed(false);
         return;
       }
-      const parsedValue = newMonetaryAmount(value, COLLATERAL_TOKEN);
+      const parsedValue = newMonetaryAmount(value, COLLATERAL_TOKEN, true);
       if (parsedValue.toBig(parsedValue.currency.rawBase).lte(1)) {
         throw new Error('Please enter an amount greater than 1 Planck');
       }
@@ -195,7 +196,7 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
           <div className='row'>
             <div className='col-12 my-4'>
               {t('vault.current_total_collateral', {
-                currentCollateral,
+                currentCollateral: displayMonetaryAmount(currentCollateral),
                 collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
               })}
             </div>
