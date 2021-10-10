@@ -1,6 +1,5 @@
 
 import * as React from 'react';
-import { Modal } from 'react-bootstrap';
 import {
   useDispatch,
   useSelector
@@ -15,12 +14,18 @@ import {
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
+import IconButton from 'components/buttons/IconButton';
 import InterlayLink from 'components/UI/InterlayLink';
+import InterlayModal, {
+  InterlayModalInnerWrapper,
+  InterlayModalTitle
+} from 'components/UI/InterlayModal';
 import { APP_NAME } from 'config/relay-chains';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';
 import { shortAddress } from 'common/utils/utils';
 import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
+import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
 const POLKADOT_EXTENSION = 'https://polkadot.js.org/extension/';
 
@@ -40,6 +45,7 @@ const AccountModal = ({
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const focusRef = React.useRef(null);
 
   const [accounts, setAccounts] = React.useState<InjectedAccountWithMeta[]>();
 
@@ -72,106 +78,135 @@ const AccountModal = ({
   };
 
   return (
-    <Modal
-      show={open}
-      onHide={onClose}
-      size='lg'>
-      <Modal.Header closeButton>
-        <Modal.Title>
+    <InterlayModal
+      initialFocus={focusRef}
+      open={open}
+      onClose={onClose}>
+      <InterlayModalInnerWrapper
+        className={clsx(
+          'p-6',
+          'max-w-lg'
+        )}>
+        <InterlayModalTitle
+          as='h3'
+          className={clsx(
+            'text-lg',
+            'font-medium',
+            'mb-4'
+          )}>
           {extensions.length ? 'Select account' : 'Pick a wallet'}
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body className='account-modal'>
-        {extensions.length ? (
-          <>
-            {/* Create a new account when no accounts are available */}
-            {!accounts?.length && (
-              <p className='mb-4'>
-                {t('no_account')}
-                <InterlayLink
-                  href={POLKADOT_EXTENSION}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  &nbsp;{t('here')}
-                </InterlayLink>
-                .
-              </p>
-            )}
-            {/* List all available accounts */}
-            <ul className='space-y-4'>
-              {accounts?.map(account => (
-                <li
-                  key={account.address}
-                  className={clsx(
-                    'rounded',
-                    'border',
-                    'border-solid',
-                    'shadow-sm',
-                    'hover:bg-gray-100'
-                  )}>
-                  <button
-                    className={clsx(
-                      'p-4',
-                      'flex',
-                      'items-center',
-                      'space-x-1.5',
-                      'w-full'
-                    )}
-                    onClick={handleAccountSelect(account.address)}>
-                    <span
-                      className={clsx(
-                        'rounded-full',
-                        'h-3',
-                        'w-3',
-                        'inline-block',
-                        address === account.address ? 'bg-green-500' : 'bg-transparent'
-                      )} />
-                    <span className='font-medium'>
-                      {account.meta.name}
-                    </span>
-                    <span>
-                      {`(${shortAddress(account.address)})`}
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </>
-        ) : (
-          <>
-            <p className='mb-4'>
-              {t('install_supported_wallets')}
-            </p>
-            <InterlayLink
-              className={clsx(
-                'flex',
-                'items-center',
-                'px-4',
-                'py-2.5',
-                'rounded',
-                'shadow-sm',
-                'border',
-                'border-solid',
-                'border-interlayDenim',
-                'w-1/2'
+        </InterlayModalTitle>
+        <IconButton
+          ref={focusRef}
+          className={clsx(
+            'w-12',
+            'h-12',
+            'absolute',
+            'top-3',
+            'right-3'
+          )}
+          onClick={onClose}>
+          <CloseIcon
+            width={18}
+            height={18}
+            className='text-textSecondary' />
+        </IconButton>
+        <div className='space-y-4'>
+          {extensions.length ? (
+            <>
+              {/* Create a new account when no accounts are available */}
+              {!accounts?.length && (
+                <p>
+                  {t('no_account')}
+                  <InterlayLink
+                    href={POLKADOT_EXTENSION}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    &nbsp;{t('here')}
+                  </InterlayLink>
+                  .
+                </p>
               )}
-              href={POLKADOT_EXTENSION}
-              target='_blank'
-              rel='noopener noreferrer'>
-              <PolkadotExtensionLogoIcon
-                width={30}
-                height={30} />
-              <span style={{ marginLeft: 16 }}>Polkadot.js</span>
-            </InterlayLink>
-          </>
-        )}
-      </Modal.Body>
-      <Modal.Footer>
-        <InterlayMulberryOutlinedButton onClick={onClose}>
-          Close
-        </InterlayMulberryOutlinedButton>
-      </Modal.Footer>
-    </Modal>
+              {/* List all available accounts */}
+              <ul className='space-y-4'>
+                {accounts?.map(account => (
+                  <li
+                    key={account.address}
+                    className={clsx(
+                      'rounded',
+                      'border',
+                      'border-solid',
+                      'shadow-sm',
+                      'hover:bg-gray-100'
+                    )}>
+                    <button
+                      className={clsx(
+                        'p-4',
+                        'flex',
+                        'items-center',
+                        'space-x-1.5',
+                        'w-full'
+                      )}
+                      onClick={handleAccountSelect(account.address)}>
+                      <span
+                        className={clsx(
+                          'rounded-full',
+                          'h-3',
+                          'w-3',
+                          'inline-block',
+                          address === account.address ? 'bg-green-500' : 'bg-transparent'
+                        )} />
+                      <span className='font-medium'>
+                        {account.meta.name}
+                      </span>
+                      <span>
+                        {`(${shortAddress(account.address)})`}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <>
+              <p>
+                {t('install_supported_wallets')}
+              </p>
+              <InterlayLink
+                className={clsx(
+                  'flex',
+                  'items-center',
+                  'px-4',
+                  'py-2.5',
+                  'rounded',
+                  'shadow-sm',
+                  'border',
+                  'border-solid',
+                  'border-interlayDenim',
+                  'w-1/2'
+                )}
+                href={POLKADOT_EXTENSION}
+                target='_blank'
+                rel='noopener noreferrer'>
+                <PolkadotExtensionLogoIcon
+                  width={30}
+                  height={30} />
+                <span style={{ marginLeft: 16 }}>Polkadot.js</span>
+              </InterlayLink>
+            </>
+          )}
+          <div
+            className={clsx(
+              'flex',
+              'justify-end'
+            )}>
+            <InterlayMulberryOutlinedButton onClick={onClose}>
+              Close
+            </InterlayMulberryOutlinedButton>
+          </div>
+        </div>
+      </InterlayModalInnerWrapper>
+    </InterlayModal>
   );
 };
 
