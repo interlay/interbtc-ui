@@ -27,9 +27,18 @@ import {
 } from 'common/actions/vault.actions';
 import { StoreType } from 'common/types/util.types';
 
-// Commenting because moving this to last line causes 3 "used before it was defined" warnings
-// eslint-disable-next-line import/exports-last
-export enum CollateralUpdateStatus {
+const getButtonVariant = (status: CollateralUpdateStatus): string => {
+  switch (status) {
+  case CollateralUpdateStatus.Increase:
+    return 'primary';
+  case CollateralUpdateStatus.Decrease:
+    return 'default';
+  default:
+    return '';
+  }
+};
+
+enum CollateralUpdateStatus {
   Hidden,
   Increase,
   Decrease
@@ -44,7 +53,10 @@ interface Props {
   status: CollateralUpdateStatus;
 }
 
-const UpdateCollateralModal = (props: Props): JSX.Element => {
+const UpdateCollateralModal = ({
+  onClose,
+  status
+}: Props): JSX.Element => {
   const {
     bridgeLoaded,
     vaultClientLoaded,
@@ -105,7 +117,7 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
   });
 
   const closeModal = () => {
-    props.onClose();
+    onClose();
     setNewCollateralization('');
   };
 
@@ -127,9 +139,9 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
       }
 
       let newCollateral = currentCollateral;
-      if (props.status === CollateralUpdateStatus.Increase) {
+      if (status === CollateralUpdateStatus.Increase) {
         newCollateral = newCollateral.add(parsedValue);
-      } else if (props.status === CollateralUpdateStatus.Decrease) {
+      } else if (status === CollateralUpdateStatus.Decrease) {
         newCollateral = newCollateral.sub(parsedValue);
       }
       setNewCollateral(newCollateral);
@@ -156,17 +168,6 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
     }
   };
 
-  const getButtonVariant = (status: CollateralUpdateStatus): string => {
-    switch (status) {
-    case CollateralUpdateStatus.Increase:
-      return 'primary';
-    case CollateralUpdateStatus.Decrease:
-      return 'default';
-    default:
-      return '';
-    }
-  };
-
   const getStatusText = (status: CollateralUpdateStatus): string => {
     switch (status) {
     case CollateralUpdateStatus.Increase:
@@ -186,11 +187,11 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
 
   return (
     <Modal
-      show={props.status !== CollateralUpdateStatus.Hidden}
+      show={status !== CollateralUpdateStatus.Hidden}
       onHide={closeModal}>
       <form onSubmit={onSubmit}>
         <Modal.Header closeButton>
-          <Modal.Title>{getStatusText(props.status)}</Modal.Title>
+          <Modal.Title>{getStatusText(status)}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className='row'>
@@ -235,32 +236,36 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
             </div>
             <div className='col-12'>
               {t('vault.new_collateralization')}
+              &nbsp;
               {
-                // eslint-disable-next-line no-negated-condition
-                newCollateralization !== '∞' ?
+                newCollateralization === '∞' ?
+                  newCollateralization :
                   Number(newCollateralization) > 1000 ?
-                    ' more than 1000%' :
-                    ' ' + roundTwoDecimals(newCollateralization || '0') + '%' :
-                  ' ' + newCollateralization
+                    'more than 1000%' :
+                    roundTwoDecimals(newCollateralization || '0') + '%'
               }
             </div>
           </div>
         </Modal.Body>
-        <Modal.Footer className='row justify-center'>
+        <Modal.Footer className='justify-center'>
           <InterlayDefaultContainedButton
             type='submit'
             style={{ display: 'flex' }}
             className='mx-auto'
-            color={getButtonVariant(props.status)}
+            color={getButtonVariant(status)}
             disabled={!isCollateralUpdateAllowed}
             pending={isUpdatePending}>
-            {props.status === CollateralUpdateStatus.Increase ?
+            {status === CollateralUpdateStatus.Increase ?
               t('vault.deposit_collateral') : t('vault.withdraw_collateral')}
           </InterlayDefaultContainedButton>
         </Modal.Footer>
       </form>
     </Modal>
   );
+};
+
+export {
+  CollateralUpdateStatus
 };
 
 export default UpdateCollateralModal;
