@@ -51,7 +51,7 @@ import {
   updateAPYAction
 } from 'common/actions/vault.actions';
 
-const VaultDashboard = (): JSX.Element => {
+const Vault = (): JSX.Element => {
   const [updateCollateralModalStatus, setUpdateCollateralModalStatus] = useState(CollateralUpdateStatus.Hidden);
   const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
   const {
@@ -205,7 +205,8 @@ const VaultDashboard = (): JSX.Element => {
               'md:grid-cols-3',
               'lg:grid-cols-4',
               'gap-5',
-              '2xl:gap-6')}>
+              '2xl:gap-6'
+            )}>
             {VAULT_ITEMS.map(vaultItem => (
               <CardListItem key={vaultItem.title}>
                 <CardListItemHeader className={vaultItem.color}>
@@ -262,4 +263,4 @@ const VaultDashboard = (): JSX.Element => {
   );
 };
 
-export default VaultDashboard;
+export default Vault;

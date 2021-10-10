@@ -102,7 +102,7 @@ const Parachain = React.lazy(() =>
 );
 // ray test touch >
 const VaultDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'vault' */ 'pages/vault-dashboard/vault-dashboard.page')
+  import(/* webpackChunkName: 'vault' */ 'pages/Vault')
 );
 const Feedback = React.lazy(() =>
   import(/* webpackChunkName: 'feedback' */ 'pages/Feedback')
