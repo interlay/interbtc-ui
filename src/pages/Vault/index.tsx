@@ -15,7 +15,7 @@ import {
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
-import RequestReplacementModal from './request-replacement/request-replacement';
+import RequestReplacementModal from './RequestReplacementModal';
 import ReplaceTable from './ReplaceTable';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -256,9 +256,11 @@ const Vault = (): JSX.Element => {
       <UpdateCollateralModal
         onClose={closeUpdateCollateralModal}
         status={updateCollateralModalStatus} />
+      {/* ray test touch << */}
       <RequestReplacementModal
         onClose={closeRequestReplacementModal}
         show={showRequestReplacementModal} />
+      {/* ray test touch >> */}
     </>
   );
 };
