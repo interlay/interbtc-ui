@@ -16,7 +16,6 @@ import {
 
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import IconButton from 'components/buttons/IconButton';
-import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 import InterlayModal, {
   InterlayModalInnerWrapper,
   InterlayModalTitle
@@ -32,6 +31,7 @@ import {
   updateCollateralizationAction
 } from 'common/actions/vault.actions';
 import { StoreType } from 'common/types/util.types';
+import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
 const getButtonVariant = (status: CollateralUpdateStatus): string => {
   switch (status) {
@@ -206,7 +206,8 @@ const UpdateCollateralModal = ({
           as='h3'
           className={clsx(
             'text-lg',
-            'font-medium'
+            'font-medium',
+            'mb-4'
           )}>
           {getStatusText(status)}
         </InterlayModalTitle>
@@ -253,20 +254,18 @@ const UpdateCollateralModal = ({
                 onChange={onChange}>
               </input>
               <div className='input-group-append'>
-                <span
-                  className='input-group-text'
-                  id='basic-addon2'>
+                <span className='input-group-text'>
                   {COLLATERAL_TOKEN_SYMBOL}
                 </span>
               </div>
             </div>
             {errors.collateral && (
-              <div className='mt-0.5 text-interlayConifer'>
+              <p className='text-interlayConifer'>
                 {errors.collateral.type === 'required' ?
                   t('vault.collateral_is_required') :
                   errors.collateral.message}
                 {errors.collateral.type === 'min' ? t('vault.collateral_higher_than_0') : errors.collateral.message}
-              </div>
+              </p>
             )}
           </div>
           <p>

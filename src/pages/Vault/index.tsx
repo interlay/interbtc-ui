@@ -256,11 +256,9 @@ const Vault = (): JSX.Element => {
       <UpdateCollateralModal
         onClose={closeUpdateCollateralModal}
         status={updateCollateralModalStatus} />
-      {/* ray test touch << */}
       <RequestReplacementModal
         onClose={closeRequestReplacementModal}
         show={showRequestReplacementModal} />
-      {/* ray test touch >> */}
     </>
   );
 };

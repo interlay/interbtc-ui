@@ -1,15 +1,20 @@
 
 import * as React from 'react';
-import { Modal } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useQueryClient } from 'react-query';
+import clsx from 'clsx';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
+import IconButton from 'components/buttons/IconButton';
+import InterlayModal, {
+  InterlayModalInnerWrapper,
+  InterlayModalTitle
+} from 'components/UI/InterlayModal';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   WRAPPED_TOKEN_SYMBOL,
@@ -18,6 +23,7 @@ import {
 import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
+import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
 type RequestReplacementForm = {
   amount: number;
@@ -28,7 +34,10 @@ interface Props {
   show: boolean;
 }
 
-const RequestReplacementModal = (props: Props): JSX.Element => {
+const RequestReplacementModal = ({
+  onClose,
+  show
+}: Props): JSX.Element => {
   const { register, handleSubmit, errors } = useForm<RequestReplacementForm>();
   const { address } = useSelector((state: StoreType) => state.general);
   const lockedDot = useSelector((state: StoreType) => state.vault.collateral);
@@ -36,6 +45,7 @@ const RequestReplacementModal = (props: Props): JSX.Element => {
   const [isRequestPending, setRequestPending] = React.useState(false);
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const focusRef = React.useRef(null);
 
   const onSubmit = handleSubmit(async ({ amount }) => {
     setRequestPending(true);
@@ -59,7 +69,7 @@ const RequestReplacementModal = (props: Props): JSX.Element => {
         vaultId
       ]);
       toast.success('Replacement request is submitted');
-      props.onClose();
+      onClose();
     } catch (error) {
       toast.error(error.toString());
     }
@@ -67,63 +77,99 @@ const RequestReplacementModal = (props: Props): JSX.Element => {
   });
 
   return (
-    <Modal
-      show={props.show}
-      onHide={props.onClose}>
-      <form onSubmit={onSubmit}>
-        <Modal.Header closeButton>
-          <Modal.Title>{t('vault.request_replacement')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className='row'>
-            <div className='col-12 text-center mb-4'>{t('vault.withdraw_your_collateral')}</div>
-            <div className='col-12'>{t('vault.your_have')}</div>
-            <div className='col-12'> {displayMonetaryAmount(lockedDot)} {COLLATERAL_TOKEN_SYMBOL}</div>
-            <div className='col-12 mb-4'>
-              {t('locked')} {displayMonetaryAmount(lockedBtc)} BTC
+    <InterlayModal
+      initialFocus={focusRef}
+      open={show}
+      onClose={onClose}>
+      <InterlayModalInnerWrapper
+        className={clsx(
+          'p-6',
+          'max-w-lg'
+        )}>
+        <InterlayModalTitle
+          as='h3'
+          className={clsx(
+            'text-lg',
+            'font-medium',
+            'mb-4'
+          )}>
+          {t('vault.request_replacement')}
+        </InterlayModalTitle>
+        <IconButton
+          ref={focusRef}
+          className={clsx(
+            'w-12',
+            'h-12',
+            'absolute',
+            'top-3',
+            'right-3'
+          )}
+          onClick={onClose}>
+          <CloseIcon
+            width={18}
+            height={18}
+            className='text-textSecondary' />
+        </IconButton>
+        <form
+          className='space-y-4'
+          onSubmit={onSubmit}>
+          <p>
+            {t('vault.withdraw_your_collateral')}
+          </p>
+          <p>{t('vault.your_have')}</p>
+          <p>
+            {displayMonetaryAmount(lockedDot)} {COLLATERAL_TOKEN_SYMBOL}
+          </p>
+          <p>
+            {t('locked')} {displayMonetaryAmount(lockedBtc)} BTC
+          </p>
+          <p>
+            {t('vault.replace_amount')}
+          </p>
+          <div className='input-group'>
+            <input
+              name='amount'
+              type='float'
+              className={clsx(
+                'form-control',
+                { 'border-interlayCinnabar': errors.amount }
+              )}
+              aria-describedby='basic-addon2'
+              ref={register({
+                required: true
+              })}>
+            </input>
+            <div className='input-group-append'>
+              <span className='input-group-text'>
+                {WRAPPED_TOKEN_SYMBOL}
+              </span>
             </div>
-            <div className='col-12 mb-4'>{t('vault.replace_amount')}</div>
-            <div className='col-12'>
-              <div className='input-group'>
-                <input
-                  name='amount'
-                  type='float'
-                  className={'form-control custom-input' + (errors.amount ? ' border-interlayCinnabar' : '')}
-                  aria-describedby='basic-addon2'
-                  ref={register({
-                    required: true
-                  })}>
-                </input>
-                <div className='input-group-append'>
-                  <span
-                    className='input-group-text'
-                    id='basic-addon2'>
-                    {WRAPPED_TOKEN_SYMBOL}
-                  </span>
-                </div>
-                {errors.amount && (
-                  <div className='-mt-4 text-interlayConifer'>
-                    {errors.amount.type === 'required' ?
-                      'Amount is required' :
-                      errors.amount.message}
-                  </div>
-                )}
-              </div>
-            </div>
+            {errors.amount && (
+              <p className='text-interlayConifer'>
+                {errors.amount.type === 'required' ?
+                  'Amount is required' :
+                  errors.amount.message}
+              </p>
+            )}
           </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <InterlayMulberryOutlinedButton onClick={props.onClose}>
-            {t('cancel')}
-          </InterlayMulberryOutlinedButton>
-          <InterlayCinnabarOutlinedButton
-            type='submit'
-            pending={isRequestPending}>
-            {t('request')}
-          </InterlayCinnabarOutlinedButton>
-        </Modal.Footer>
-      </form>
-    </Modal>
+          <div
+            className={clsx(
+              'flex',
+              'justify-end',
+              'space-x-2'
+            )}>
+            <InterlayMulberryOutlinedButton onClick={onClose}>
+              {t('cancel')}
+            </InterlayMulberryOutlinedButton>
+            <InterlayCinnabarOutlinedButton
+              type='submit'
+              pending={isRequestPending}>
+              {t('request')}
+            </InterlayCinnabarOutlinedButton>
+          </div>
+        </form>
+      </InterlayModalInnerWrapper>
+    </InterlayModal>
   );
 };
 
