@@ -14,7 +14,7 @@ import {
 } from '@interlay/interbtc-index-client';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
-import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
+import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
 import RequestReplacementModal from './request-replacement/request-replacement';
 import ReplaceTable from './ReplaceTable';
 import MainContainer from 'parts/MainContainer';
