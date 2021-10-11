@@ -66,6 +66,8 @@ services:
       - bob
       - --btc-parachain-url
       - "ws://interbtc:9944"
+      - --coingecko
+      - "https://api.coingecko.com/api/v3/"
       - --currency-id
       - ${DOCKER_RELAY_CHAIN_CURRENCY}
       - --blockstream
