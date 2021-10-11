@@ -97,10 +97,10 @@ yarn install && yarn start
 
 > Note: This environment might be unstable. It uses the Bitcoin testnet work.
 
-Copy the content of the `.env.test` file to `.env.development.local`.
+Copy the content of the `.env.testnet` file to `.env.development.local`.
 
 ```bash
-cp .env.test .env.development.local
+cp .env.testnet .env.development.local
 ```
 
 Start the UI:
@@ -161,48 +161,6 @@ You can query the balance of your wallet like so:
 
 ```shell
 bitcoin-cli -regtest -rpcwallet=Alice getbalance
-```
-
-### Test Data (Regtest)
-
-For more advanced interactions with the UI, you may also use the `testdata-gen` toolkit to automated some common actions.
-
-For an overview of actions [check the documentation here](https://github.com/interlay/interbtc-clients/tree/master/testdata-gen#detailed-options).
-
-**Installation**
-
-> Note: This requires a local Rust installation.
-
-```shell
-git clone git@gitlab.com:interlay/interbtc-clients.git
-cd interbtc-clients
-cargo build -p testdata-gen
-# environment variables for bitcoind
-source .env
-```
-
-**Registering a New Vault**
-
-For example, to register `bob` as a vault we can use the following command:
-
-```shell
-testdata-gen --keyring bob register-vault --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --collateral 100000000
-```
-
-**Issue interBTC**
-
-Then when `alice` wants to issue 0.001 interBTC, we need to send the equivalent number of Satoshis to `bob`:
-
-```shell
-testdata-gen --keyring alice send-bitcoin --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --satoshis 100000
-```
-
-**More Options**
-
-Print all the available options with:
-
-```shell
-testdata-gen --help
 ```
 
 ### Docker

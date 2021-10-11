@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   interbtc:
-    image: "interlayhq/interbtc:interbtc-standalone-1-0-4"
+    image: "interlayhq/interbtc:interbtc-standalone-1-0-5"
     command:
       - interbtc-standalone
       - --unsafe-rpc-external
@@ -129,7 +129,7 @@ services:
     depends_on:
       - postgres
   index:
-    image: 'registry.gitlab.com/interlay/polkabtc-stats:1.0.3'
+    image: 'registry.gitlab.com/interlay/polkabtc-stats:1.0.4'
     restart: always
     depends_on:
       - postgres
