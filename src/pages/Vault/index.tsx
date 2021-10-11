@@ -14,8 +14,8 @@ import {
 } from '@interlay/interbtc-index-client';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
-import UpdateCollateralModal, { CollateralUpdateStatus } from './update-collateral/update-collateral';
-import RequestReplacementModal from './request-replacement/request-replacement';
+import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
+import RequestReplacementModal from './RequestReplacementModal';
 import ReplaceTable from './ReplaceTable';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
@@ -33,8 +33,12 @@ import BoldParagraph from 'components/BoldParagraph';
 import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
 import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import {
+  WRAPPED_TOKEN_SYMBOL,
+  COLLATERAL_TOKEN_SYMBOL
+} from 'config/relay-chains';
+import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   safeRoundTwoDecimals,
   displayMonetaryAmount
@@ -47,7 +51,7 @@ import {
   updateAPYAction
 } from 'common/actions/vault.actions';
 
-const VaultDashboard = (): JSX.Element => {
+const Vault = (): JSX.Element => {
   const [updateCollateralModalStatus, setUpdateCollateralModalStatus] = useState(CollateralUpdateStatus.Hidden);
   const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
   const {
@@ -152,12 +156,16 @@ const VaultDashboard = (): JSX.Element => {
       color: 'text-interlayDenim-800'
     },
     {
-      title: t('vault.fees_earned_interbtc'),
+      title: t('vault.fees_earned_interbtc', {
+        wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+      }),
       value: displayMonetaryAmount(feesEarnedPolkaBTC),
       color: 'text-interlayDenim-800'
     },
     {
-      title: t('vault.locked_dot'),
+      title: t('vault.locked_dot', {
+        collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+      }),
       value: displayMonetaryAmount(collateral),
       color: 'text-interlayDenim-800'
     },
@@ -166,7 +174,9 @@ const VaultDashboard = (): JSX.Element => {
       value: displayMonetaryAmount(lockedBTC),
       color: 'text-interlayCalifornia-700'
     }, {
-      title: t('vault.remaining_capacity'),
+      title: t('vault.remaining_capacity', {
+        wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+      }),
       value: displayMonetaryAmount(capacity),
       color: 'text-interlayDenim-800'
     },
@@ -195,7 +205,8 @@ const VaultDashboard = (): JSX.Element => {
               'md:grid-cols-3',
               'lg:grid-cols-4',
               'gap-5',
-              '2xl:gap-6')}>
+              '2xl:gap-6'
+            )}>
             {VAULT_ITEMS.map(vaultItem => (
               <CardListItem key={vaultItem.title}>
                 <CardListItemHeader className={vaultItem.color}>
@@ -204,7 +215,8 @@ const VaultDashboard = (): JSX.Element => {
                 <CardListItemContent
                   className={clsx(
                     'text-2xl',
-                    'font-medium')}>
+                    'font-medium'
+                  )}>
                   {vaultItem.value}
                 </CardListItemContent>
               </CardListItem>
@@ -251,4 +263,4 @@ const VaultDashboard = (): JSX.Element => {
   );
 };
 
-export default VaultDashboard;
+export default Vault;

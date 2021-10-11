@@ -50,7 +50,7 @@ const RedeemRequestsTable = ({
   totalRedeemRequests
 }: Props): JSX.Element | null => {
   const queryParams = useQueryParams();
-  const bridgeLoaded = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
   const [data, setData] = React.useState<Redeem[]>([]);

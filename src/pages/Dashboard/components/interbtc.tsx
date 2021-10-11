@@ -15,6 +15,7 @@ import LineChartComponent from './line-chart-component';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
@@ -72,7 +73,10 @@ const InterBTC = (): React.ReactElement => {
               'font-bold',
               'mb-1'
             )}>
-            {t('dashboard.issue.total_interbtc', { amount: displayMonetaryAmount(totalWrappedTokenAmount) })}
+            {t('dashboard.issue.total_interbtc', {
+              amount: displayMonetaryAmount(totalWrappedTokenAmount),
+              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+            })}
           </h2>
           {/* TODO: add the price API */}
           <h2
@@ -104,7 +108,14 @@ const InterBTC = (): React.ReactElement => {
       <div className='mt-5'>
         <LineChartComponent
           color={['d_interlayCalifornia', 'd_interlayPaleSky']}
-          label={[t('dashboard.issue.total_issued_chart'), t('dashboard.issue.per_day_issued_chart')]}
+          label={[
+            t('dashboard.issue.total_issued_chart', {
+              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+            }),
+            t('dashboard.issue.per_day_issued_chart', {
+              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+            })
+          ]}
           yLabels={cumulativeIssuesPerDay
             .slice(1)
             .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))

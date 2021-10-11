@@ -37,7 +37,8 @@ const ErrorModal = ({
           as='h3'
           className={clsx(
             'text-lg',
-            'font-medium'
+            'font-medium',
+            'mb-4'
           )}>
           {title}
         </InterlayModalTitle>
@@ -59,8 +60,7 @@ const ErrorModal = ({
         <p
           className={clsx(
             'text-base',
-            'break-all',
-            'mt-4'
+            'break-all'
           )}>
           {description}
         </p>

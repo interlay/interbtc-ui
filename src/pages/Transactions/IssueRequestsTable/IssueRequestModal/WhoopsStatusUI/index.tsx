@@ -7,6 +7,7 @@ import { BitcoinAmount } from '@interlay/monetary-js';
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
   copyToClipboard,
   getUsdAmount,
@@ -65,7 +66,7 @@ const WhoopsStatusUI = ({
             height={23} />
         }
         value={displayMonetaryAmount(request.wrappedAmount)}
-        unitName='interBTC'
+        unitName={WRAPPED_TOKEN_SYMBOL}
         approxUSD={getUsdAmount(request.wrappedAmount, prices.bitcoin.usd)} />
       <PriceInfo
         className='w-full'
@@ -99,7 +100,7 @@ const WhoopsStatusUI = ({
             height={23} />
         }
         value={displayMonetaryAmount(request.executedAmountBTC || request.wrappedAmount)}
-        unitName='interBTC'
+        unitName={WRAPPED_TOKEN_SYMBOL}
         approxUSD={
           getUsdAmount(request.executedAmountBTC || request.wrappedAmount, prices.bitcoin.usd)
         } />

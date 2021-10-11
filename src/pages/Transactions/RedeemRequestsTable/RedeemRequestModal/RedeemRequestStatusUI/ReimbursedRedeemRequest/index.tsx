@@ -16,14 +16,18 @@ import {
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterlayLink from 'components/UI/InterlayLink';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import {
+  COLLATERAL_TOKEN,
+  WRAPPED_TOKEN_SYMBOL,
+  COLLATERAL_TOKEN_SYMBOL,
+  CollateralTokenLogoIcon
+} from 'config/relay-chains';
 import {
   getUsdAmount,
   displayMonetaryAmount,
   getPolkadotLink
 } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
 interface Props {
   request: Redeem;
@@ -95,11 +99,14 @@ const ReimbursedRedeemRequest = ({
         {t('redeem_page.reimburse_success')}
       </h2>
       <p className='w-full'>
-        {t('redeem_page.burn_notice')}
+        {t('redeem_page.burn_notice', {
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
+          collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+        })}
       </p>
       <p className='font-medium'>
         <span className='text-interlayCinnabar'>
-          {`${displayMonetaryAmount(burnedBTCAmount)} interBTC`}
+          {`${displayMonetaryAmount(burnedBTCAmount)} ${WRAPPED_TOKEN_SYMBOL}`}
         </span>
         <span>
           &nbsp;{`(≈ $${getUsdAmount(burnedBTCAmount, prices.bitcoin.usd)})`}
@@ -112,7 +119,7 @@ const ReimbursedRedeemRequest = ({
       <p className='font-medium'>
         <span className='text-interlayDenim'>{t('redeem_page.recover_receive_dot')}</span>
         <span className='text-interlayDenim'>
-          &nbsp;{`${displayMonetaryAmount(collateralTokenAmount)} DOT`}
+          &nbsp;{`${displayMonetaryAmount(collateralTokenAmount)} ${COLLATERAL_TOKEN_SYMBOL}`}
         </span>
         <span>
           &nbsp;{`(≈ $${getUsdAmount(collateralTokenAmount, prices.collateralToken.usd)})`}
@@ -127,16 +134,16 @@ const ReimbursedRedeemRequest = ({
           className='w-full'
           title={
             <h5 className='text-textSecondary'>
-              {t('redeem_page.compensation_burn')}
+              {t('redeem_page.compensation_burn', {
+                wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+              })}
             </h5>
           }
           unitIcon={
-            <PolkadotLogoIcon
-              width={20}
-              height={20} />
+            <CollateralTokenLogoIcon width={20} />
           }
           value={displayMonetaryAmount(burnCollateralTokenAmount)}
-          unitName='DOT'
+          unitName={COLLATERAL_TOKEN_SYMBOL}
           approxUSD={getUsdAmount(burnCollateralTokenAmount, prices.collateralToken.usd)} />
         <PriceInfo
           className='w-full'
@@ -146,12 +153,10 @@ const ReimbursedRedeemRequest = ({
             </h5>
           }
           unitIcon={
-            <PolkadotLogoIcon
-              width={20}
-              height={20} />
+            <CollateralTokenLogoIcon width={20} />
           }
           value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
-          unitName='DOT'
+          unitName={COLLATERAL_TOKEN_SYMBOL}
           approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)} />
         <hr
           className={clsx(
@@ -167,12 +172,10 @@ const ReimbursedRedeemRequest = ({
             </h5>
           }
           unitIcon={
-            <PolkadotLogoIcon
-              width={20}
-              height={20} />
+            <CollateralTokenLogoIcon width={20} />
           }
           value={displayMonetaryAmount(collateralTokenAmount)}
-          unitName='DOT'
+          unitName={COLLATERAL_TOKEN_SYMBOL}
           approxUSD={getUsdAmount(collateralTokenAmount, prices.collateralToken.usd)} />
       </div>
       <InterlayLink

@@ -102,7 +102,7 @@ const Parachain = React.lazy(() =>
 );
 // ray test touch >
 const VaultDashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'vault' */ 'pages/vault-dashboard/vault-dashboard.page')
+  import(/* webpackChunkName: 'vault' */ 'pages/Vault')
 );
 const Feedback = React.lazy(() =>
   import(/* webpackChunkName: 'feedback' */ 'pages/Feedback')
@@ -123,7 +123,7 @@ const App = (): JSX.Element => {
   const dispatch = useDispatch();
   const store: StoreState = useStore();
 
-  // Load the main interBTC API - connection to the interBTC bridge
+  // Load the main bridge API - connection to the bridge
   const loadPolkaBTC = React.useCallback(async (): Promise<void> => {
     try {
       window.bridge = await createInterbtc(
@@ -280,7 +280,7 @@ const App = (): JSX.Element => {
     dispatch
   ]);
 
-  // Loads the interBTC bridge and the faucet
+  // Loads the bridge and the faucet
   React.useEffect(() => {
     if (bridgeLoaded) return;
 

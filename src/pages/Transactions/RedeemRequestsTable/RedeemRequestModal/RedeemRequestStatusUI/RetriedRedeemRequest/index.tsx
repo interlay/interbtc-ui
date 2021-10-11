@@ -17,14 +17,17 @@ import {
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterlayLink from 'components/UI/InterlayLink';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import {
+  COLLATERAL_TOKEN,
+  COLLATERAL_TOKEN_SYMBOL,
+  CollateralTokenLogoIcon
+} from 'config/relay-chains';
 import {
   getUsdAmount,
   displayMonetaryAmount,
   getPolkadotLink
 } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
 interface Props {
   request: Redeem;
@@ -88,7 +91,7 @@ const RetriedRedeemRequest = ({
           {t('redeem_page.recover_receive_dot')}
         </span>
         <span className='text-interlayDenim'>
-          &nbsp;{`${displayMonetaryAmount(punishmentCollateralTokenAmount)} DOT`}
+          &nbsp;{`${displayMonetaryAmount(punishmentCollateralTokenAmount)} ${COLLATERAL_TOKEN_SYMBOL}`}
         </span>
         <span>
           &nbsp;({`≈ $${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)}`})
@@ -105,12 +108,10 @@ const RetriedRedeemRequest = ({
             </h5>
           }
           unitIcon={
-            <PolkadotLogoIcon
-              width={20}
-              height={20} />
+            <CollateralTokenLogoIcon width={20} />
           }
           value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
-          unitName='DOT'
+          unitName={COLLATERAL_TOKEN_SYMBOL}
           approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)} />
         <hr
           className={clsx(
@@ -126,12 +127,10 @@ const RetriedRedeemRequest = ({
             </h5>
           }
           unitIcon={
-            <PolkadotLogoIcon
-              width={20}
-              height={20} />
+            <CollateralTokenLogoIcon width={20} />
           }
           value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
-          unitName='DOT'
+          unitName={COLLATERAL_TOKEN_SYMBOL}
           approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)} />
       </div>
       <InterlayLink

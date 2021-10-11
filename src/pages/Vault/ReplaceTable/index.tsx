@@ -39,6 +39,7 @@ import InterlayTable, {
 import ErrorFallback from 'components/ErrorFallback';
 import EllipsisLoader from 'components/EllipsisLoader';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import {
@@ -132,7 +133,7 @@ const ReplaceTable = (): JSX.Element => {
         }
       },
       {
-        Header: 'interBTC',
+        Header: WRAPPED_TOKEN_SYMBOL,
         accessor: 'amount',
         classNames: [
           'text-right'

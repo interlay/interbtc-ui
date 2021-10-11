@@ -9,7 +9,7 @@ import {
 } from 'components/TextField';
 import InterlayInput, { Props as InterlayInputProps } from 'components/UI/InterlayInput';
 
-interface CustomInterBTCFieldProps {
+interface CustomProps {
   label: string;
   error?: boolean;
   helperText?: JSX.Element | string;
@@ -18,7 +18,7 @@ interface CustomInterBTCFieldProps {
 }
 
 type Ref = HTMLInputElement;
-const InterBTCField = React.forwardRef<Ref, CustomInterBTCFieldProps & InterlayInputProps>(({
+const InterBTCField = React.forwardRef<Ref, CustomProps & InterlayInputProps>(({
   id,
   label,
   error,

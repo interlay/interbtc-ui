@@ -120,5 +120,5 @@ dist
 .yarn/install-state.gz
 .pnp.*
 .vscode
-/.env
 /.env.development.local.example
+/.env
