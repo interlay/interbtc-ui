@@ -283,7 +283,7 @@
     "you_received": "You have received",
     "contact_team": "Contact the team for debugging if you think this is an error.",
     "you_did_not_send": "You did not send the BTC transaction in time or transferred amount did not not meet the requested amount of {{wrappedTokenSymbol}}.",
-    "waiting_deposit": "If you have already made the payment, please wait for a few minutes for it to be confirmed in the table below.",
+    "waiting_deposit": "If you have already made the payment, please wait for a few minutes for it to be confirmed.",
     "deposit": "Deposit",
     "fully_decentralized": "{{wrappedTokenSymbol}} is a fully decentralized system. Please make sure you send the right amount of BTC, we cannot guarantee that the vault will return the additional BTC that you sent by mistake.",
     "view_parachain_block": "View Parachain Block",
