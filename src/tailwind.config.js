@@ -138,6 +138,12 @@ module.exports = {
   ],
   darkMode: 'class',
   theme: {
+    fontFamily: {
+      airbnbCereal: [
+        'airbnb-cereal',
+        'ui-sans-serif'
+      ]
+    },
     extend: {
       colors: {
         interlayDenim: {
@@ -290,9 +296,6 @@ module.exports = {
         textPrimary: theme('colors.gray.900'),
         textSecondary: theme('colors.gray.400')
       }),
-      backgroundColor: theme => ({
-        default: theme('colors.gray.50')
-      }),
       // ray test touch >>
       // MEMO: inspired by https://material-ui.com/customization/default-theme/
       zIndex: {
@@ -323,9 +326,7 @@ module.exports = {
     require('tailwindcss-pseudo-elements'),
     plugin(function ({
       addBase,
-      // ray test touch <<
-      // theme,
-      // ray test touch >>
+      theme,
       addVariant,
       addUtilities
     }) {
@@ -343,12 +344,10 @@ module.exports = {
 
       // MEMO: inspired by https://tailwindcss.com/docs/adding-base-styles#using-a-plugin
       addBase({
-        // ray test touch <<
         body: {
-          // color: theme('textColor.textPrimary'),
-          // backgroundColor: theme('backgroundColor.default')
+          color: theme('textColor.textPrimary'),
+          fontFamily: theme('fontFamily.airbnbCereal')
         }
-        // ray test touch >>
       });
 
       // MEMO: inspired by https://github.com/tailwindlabs/tailwindcss/issues/493#issuecomment-610907147

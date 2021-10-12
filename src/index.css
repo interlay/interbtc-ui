@@ -2,3 +2,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* MEMO: https://drafts.csswg.org/css-fonts/#font-weight-numeric-values */
+/* TODO: could optimize font loading more for less FOUT & FOIT */
+/* MEMO: inspired by https://css-tricks.com/snippets/css/using-font-face/ */
+@font-face {
+  font-family: "airbnb-cereal";
+  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealLight.ttf") format("truetype");
+  font-weight: 300; /* light */
+  font-style: normal;
+}
+@font-face {
+  font-family: "airbnb-cereal";
+  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealBook.ttf") format("truetype");
+  font-weight: 400; /* book */
+  font-style: normal;
+}
+@font-face {
+  font-family: "airbnb-cereal";
+  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealMedium.ttf") format("truetype");
+  font-weight: 500; /* medium */
+  font-style: normal;
+}
+@font-face {
+  font-family: "airbnb-cereal";
+  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealBold.ttf") format("truetype");
+  font-weight: 700; /* bold */
+  font-style: normal;
+}
+/* TODO: not used for now */
+/* @font-face {
+  font-family: "airbnb-cereal";
+  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealExtraBold.ttf") format("truetype");
+  font-weight: 800; extra bold
+  font-style: normal;
+} */
+/* TODO: not used for now */
+/* @font-face {
+  font-family: "airbnb-cereal";
+  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealExtraBold.ttf") format("truetype");
+  font-weight: 900; black
+  font-style: normal;
+} */
