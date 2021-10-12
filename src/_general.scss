@@ -1,31 +1,3 @@
-// ray test touch <
+// ray test touch <<
 @import "custom";
-
-// MEMO inspired by https://stackoverflow.com/questions/3790935/can-i-hide-the-html5-number-input-s-spin-box
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-/* Firefox */
-input[type="number"] {
-  -moz-appearance: textfield;
-}
-
-.fade-in-animation {
-  animation: fade-keyframes 0.5s ease-in;
-}
-
-@keyframes fade-keyframes {
-  0% {
-    opacity: 0;
-  }
-  20% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-// ray test touch >
+// ray test touch >>
