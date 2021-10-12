@@ -31,7 +31,6 @@
     "chart.js": "^2.9.4",
     "clsx": "^1.1.1",
     "i18next": "^19.8.4",
-    "node-sass": "^4.14.1",
     "qrcode.react": "^1.0.1",
     "react": "^17.0.1",
     "react-chartjs-2": "^2.11.1",
