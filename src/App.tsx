@@ -67,8 +67,6 @@ import {
   updateWrappedTokenBalanceAction,
   updateCollateralTokenBalanceAction
 } from 'common/actions/general.actions';
-// TODO: should clean up
-import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Bridge = React.lazy(() =>
