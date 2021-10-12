@@ -49,8 +49,8 @@ function formatDateTimePrecise(date: Date): string {
 
 function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): Array<number> {
   const midnights: number[] = [];
-  for (let i = 0; i < daysBack; i++) {
-    const dayBoundary = new Date(Date.now() - (startFromTonight ? i - 1 : i) * 3600 * 24 * 1000);
+  for (let index = 0; index < daysBack; index++) {
+    const dayBoundary = new Date(Date.now() - (startFromTonight ? index - 1 : index) * 3600 * 24 * 1000);
     dayBoundary.setMilliseconds(0);
     dayBoundary.setSeconds(0);
     dayBoundary.setMinutes(0);

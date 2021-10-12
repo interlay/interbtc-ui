@@ -1,17 +1,20 @@
 import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
+import { useQuery } from 'react-query';
+import { useErrorHandler } from 'react-error-boundary';
 
 import LineChartComponent from './line-chart-component';
 import DashboardCard from 'pages/Dashboard/DashboardCard';
+import EllipsisLoader from 'components/EllipsisLoader';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import { PAGES } from 'utils/constants/links';
-import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import { useQuery } from 'react-query';
-import { useErrorHandler } from 'react-error-boundary';
-import EllipsisLoader from 'components/EllipsisLoader';
 import { getLastMidnightTimestamps } from 'common/utils/utils';
+import graphqlFetcher, {
+  GraphqlReturn,
+  GRAPHQL_FETCHER
+} from 'services/fetchers/graphql-fetcher';
 
 interface Props {
   linkButton?: boolean;
@@ -28,7 +31,7 @@ const ActiveVaults = ({ linkButton }: Props): JSX.Element => {
   const {
     isIdle: vaultsIdle,
     isLoading: vaultsLoading,
-    data: vaultsData,
+    data: vaults,
     error: vaultsError
   } = useQuery<GraphqlReturn<Array<VaultRegistration>>, Error>(
     [
@@ -38,8 +41,7 @@ const ActiveVaults = ({ linkButton }: Props): JSX.Element => {
           id
           timestamp
         }
-      }
-      `
+      }`
     ],
     graphqlFetcher<Array<VaultRegistration>>()
   );
@@ -59,11 +61,11 @@ const ActiveVaults = ({ linkButton }: Props): JSX.Element => {
       </div>
     );
   }
-  if (!vaultsData) {
+  if (!vaults) {
     throw new Error('Something went wrong!');
   }
 
-  const vaultRegistrations = vaultsData.data.vaultRegistrations;
+  const vaultRegistrations = vaults.data.vaultRegistrations;
   const graphTimestamps = getLastMidnightTimestamps(5, true);
   const graphData = graphTimestamps.map(
     timestamp => vaultRegistrations.filter(
