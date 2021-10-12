@@ -131,6 +131,20 @@ const INTERLAY_HAITI = Object.freeze({
   900: '#0d0516'
 });
 
+// MAIN COLORS/DARK BLUE
+const KINTSUGI_MIDNIGHT = Object.freeze({
+  50: '#f2f3f5',
+  100: '#e6e7eb',
+  200: '#c0c4cc',
+  300: '#9ba1ad',
+  400: '#4f5a70',
+  500: '#041333',
+  600: '#04112e',
+  700: '#030e26',
+  800: '#020b1f',
+  900: '#020919'
+});
+
 module.exports = {
   purge: [
     './src/**/*.{js,jsx,ts,tsx}',
@@ -289,14 +303,24 @@ module.exports = {
           700: INTERLAY_MULBERRY[700],
           800: INTERLAY_MULBERRY[800],
           900: INTERLAY_MULBERRY[900]
+        },
+        kintsugiMidnight: {
+          50: KINTSUGI_MIDNIGHT[50],
+          100: KINTSUGI_MIDNIGHT[100],
+          200: KINTSUGI_MIDNIGHT[200],
+          300: KINTSUGI_MIDNIGHT[300],
+          400: KINTSUGI_MIDNIGHT[400],
+          DEFAULT: KINTSUGI_MIDNIGHT[500],
+          600: KINTSUGI_MIDNIGHT[600],
+          700: KINTSUGI_MIDNIGHT[700],
+          800: KINTSUGI_MIDNIGHT[800],
+          900: KINTSUGI_MIDNIGHT[900]
         }
       },
-      // ray test touch <<
       textColor: theme => ({
-        textPrimary: theme('colors.gray.900'),
-        textSecondary: theme('colors.gray.400')
+        textPrimary: theme('colors.interlayHaiti'),
+        textSecondary: theme('colors.interlayHaiti.300')
       }),
-      // ray test touch >>
       // MEMO: inspired by https://material-ui.com/customization/default-theme/
       zIndex: {
         interlayMobileStepper: 1000,

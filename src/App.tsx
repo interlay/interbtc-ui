@@ -380,9 +380,7 @@ const App = (): JSX.Element => {
       <Layout
         className={clsx(
           'bg-interlayHaiti-50',
-          // ray test touch <<
-          'dark:bg-interlayHaiti'
-          // ray test touch >>
+          'dark:bg-kintsugiMidnight'
         )}>
         <Route
           render={({ location }) => (
