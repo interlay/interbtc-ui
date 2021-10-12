@@ -136,7 +136,7 @@ module.exports = {
     './src/**/*.{js,jsx,ts,tsx}',
     './public/index.html'
   ],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -285,6 +285,7 @@ module.exports = {
           900: INTERLAY_MULBERRY[900]
         }
       },
+      // ray test touch <<
       textColor: theme => ({
         textPrimary: theme('colors.gray.900'),
         textSecondary: theme('colors.gray.400')
@@ -292,6 +293,7 @@ module.exports = {
       backgroundColor: theme => ({
         default: theme('colors.gray.50')
       }),
+      // ray test touch >>
       // MEMO: inspired by https://material-ui.com/customization/default-theme/
       zIndex: {
         interlayMobileStepper: 1000,
@@ -321,7 +323,9 @@ module.exports = {
     require('tailwindcss-pseudo-elements'),
     plugin(function ({
       addBase,
-      theme,
+      // ray test touch <<
+      // theme,
+      // ray test touch >>
       addVariant,
       addUtilities
     }) {
@@ -339,10 +343,12 @@ module.exports = {
 
       // MEMO: inspired by https://tailwindcss.com/docs/adding-base-styles#using-a-plugin
       addBase({
+        // ray test touch <<
         body: {
-          color: theme('textColor.textPrimary'),
-          backgroundColor: theme('backgroundColor.default')
+          // color: theme('textColor.textPrimary'),
+          // backgroundColor: theme('backgroundColor.default')
         }
+        // ray test touch >>
       });
 
       // MEMO: inspired by https://github.com/tailwindlabs/tailwindcss/issues/493#issuecomment-610907147

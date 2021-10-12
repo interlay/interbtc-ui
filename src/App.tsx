@@ -22,6 +22,7 @@ import {
 } from '@polkadot/extension-dapp';
 import keyring from '@polkadot/ui-keyring';
 import { Keyring } from '@polkadot/api';
+import clsx from 'clsx';
 import { createInterbtc } from '@interlay/interbtc';
 import {
   FaucetClient,
@@ -46,6 +47,8 @@ import {
   WrappedTokenAmount
 } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
+import { CLASS_NAMES } from 'utils/constants/styles';
+import { KUSAMA } from 'utils/constants/relay-chain-names';
 import './i18n';
 import * as constants from './constants';
 import startFetchingLiveData from 'common/live-data/live-data';
@@ -365,12 +368,22 @@ const App = (): JSX.Element => {
   ]);
 
   return (
-    <>
+    <div
+      className={clsx(
+        // MEMO: inspired by https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually
+        { [CLASS_NAMES.DARK]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+      )}>
       <ToastContainer
         position='top-right'
         autoClose={5000}
         hideProgressBar={false} />
-      <Layout>
+      <Layout
+        className={clsx(
+          'bg-interlayHaiti-50',
+          // ray test touch <<
+          'dark:bg-interlayHaiti'
+          // ray test touch >>
+        )}>
         <Route
           render={({ location }) => (
             // TODO: block for now
@@ -430,7 +443,7 @@ const App = (): JSX.Element => {
             // </TransitionWrapper>
           )} />
       </Layout>
-    </>
+    </div>
   );
 };
 
