@@ -51,14 +51,14 @@ const PriceInfo = ({
         <span className='font-medium'>
           {value}
         </span>
-        <span className='text-textSecondary'>
+        <span className='text-interlaySecondaryInLightMode'>
           {unitName}
         </span>
       </div>
       <span
         className={clsx(
           'block',
-          'text-textSecondary'
+          'text-interlaySecondaryInLightMode'
         )}>
         {`≈ $ ${approxUSD}`}
       </span>

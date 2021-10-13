@@ -30,7 +30,7 @@ const InterlayInput = React.forwardRef<Ref, Props>(({
       { 'focus:border-secondary-300': color === COLORS.secondary },
       { 'focus:ring-secondary-200': color === COLORS.secondary },
       'focus:ring-opacity-50',
-      'text-textPrimary',
+      'text-interlayPrimaryInLightMode',
       'bg-white',
       'block',
       'w-full',

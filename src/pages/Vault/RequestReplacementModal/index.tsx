@@ -108,7 +108,7 @@ const RequestReplacementModal = ({
           <CloseIcon
             width={18}
             height={18}
-            className='text-textSecondary' />
+            className='text-interlaySecondaryInLightMode' />
         </IconButton>
         <form
           className='space-y-4'

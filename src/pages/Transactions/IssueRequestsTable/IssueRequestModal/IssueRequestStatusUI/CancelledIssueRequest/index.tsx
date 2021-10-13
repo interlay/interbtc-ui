@@ -32,7 +32,7 @@ const CancelledIssueRequest = (): JSX.Element => {
         )} />
       <p
         className={clsx(
-          'text-textSecondary',
+          'text-interlaySecondaryInLightMode',
           'text-justify'
         )}>
         {t('issue_page.you_did_not_send', {
@@ -55,7 +55,7 @@ const CancelledIssueRequest = (): JSX.Element => {
         <p
           className={clsx(
             'text-justify',
-            'text-textSecondary'
+            'text-interlaySecondaryInLightMode'
           )}>
           {t('issue_page.contact_team')}
         </p>

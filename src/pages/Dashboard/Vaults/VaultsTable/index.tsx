@@ -427,7 +427,7 @@ const VaultsTable = (): JSX.Element => {
                     <InterlayTooltip label={column.tooltip}>
                       <InformationCircleIcon
                         className={clsx(
-                          'text-textSecondary',
+                          'text-interlaySecondaryInLightMode',
                           'inline-block',
                           'ml-1',
                           'w-5',

@@ -239,7 +239,7 @@ const BurnForm = (): JSX.Element | null => {
             helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message} />
           <PriceInfo
             title={
-              <h5 className='text-textSecondary'>
+              <h5 className='text-interlaySecondaryInLightMode'>
                 {t('burn_page.dot_earned', {
                   collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
                 })}
@@ -256,11 +256,11 @@ const BurnForm = (): JSX.Element | null => {
             className={clsx(
               'border-t-2',
               'my-2.5',
-              'border-textSecondary'
+              'border-interlaySecondaryInLightMode'
             )} />
           <PriceInfo
             title={
-              <h5 className='text-textPrimary'>
+              <h5 className='text-interlayPrimaryInLightMode'>
                 {t('you_will_receive')}
               </h5>
             }

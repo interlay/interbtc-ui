@@ -111,7 +111,7 @@ const IssueRequestModal = ({
           <CloseIcon
             width={18}
             height={18}
-            className='text-textSecondary' />
+            className='text-interlaySecondaryInLightMode' />
         </IconButton>
         <div
           className={clsx(
@@ -138,7 +138,7 @@ const IssueRequestModal = ({
               </h4>
               <span
                 className={clsx(
-                  'text-textSecondary',
+                  'text-interlaySecondaryInLightMode',
                   'block'
                 )}>
                 {`≈ $ ${getUsdAmount(
@@ -150,7 +150,7 @@ const IssueRequestModal = ({
             <div>
               <PriceInfo
                 title={
-                  <h5 className='text-textSecondary'>
+                  <h5 className='text-interlaySecondaryInLightMode'>
                     {t('bridge_fee')}
                   </h5>
                 }
@@ -167,11 +167,11 @@ const IssueRequestModal = ({
                 className={clsx(
                   'border-t-2',
                   'my-2.5',
-                  'border-textSecondary'
+                  'border-interlaySecondaryInLightMode'
                 )} />
               <PriceInfo
                 title={
-                  <h5 className='text-textSecondary'>
+                  <h5 className='text-interlaySecondaryInLightMode'>
                     {t('total_deposit')}
                   </h5>
                 }
@@ -191,7 +191,7 @@ const IssueRequestModal = ({
                   'flex',
                   'justify-between'
                 )}>
-                <span className='text-textSecondary'>
+                <span className='text-interlaySecondaryInLightMode'>
                   {t('issue_page.destination_address')}
                 </span>
                 <span className='font-medium'>
@@ -203,7 +203,7 @@ const IssueRequestModal = ({
                   'flex',
                   'justify-between'
                 )}>
-                <span className='text-textSecondary'>
+                <span className='text-interlaySecondaryInLightMode'>
                   {t('issue_page.parachain_block')}
                 </span>
                 <span className='font-medium'>
@@ -215,7 +215,7 @@ const IssueRequestModal = ({
                   'flex',
                   'justify-between'
                 )}>
-                <span className='text-textSecondary'>
+                <span className='text-interlaySecondaryInLightMode'>
                   {t('issue_page.vault_dot_address')}
                 </span>
                 <span className='font-medium'>
@@ -227,7 +227,7 @@ const IssueRequestModal = ({
                   'flex',
                   'justify-between'
                 )}>
-                <span className='text-textSecondary'>
+                <span className='text-interlaySecondaryInLightMode'>
                   {t('issue_page.vault_btc_address')}
                 </span>
                 <span className='font-medium'>
@@ -237,7 +237,7 @@ const IssueRequestModal = ({
             </div>
             <p className='space-x-1'>
               <span className='text-interlayCinnabar'>{t('note')}:</span>
-              <span className='text-textSecondary'>
+              <span className='text-interlaySecondaryInLightMode'>
                 {t('issue_page.fully_decentralized', {
                   wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
                 })}

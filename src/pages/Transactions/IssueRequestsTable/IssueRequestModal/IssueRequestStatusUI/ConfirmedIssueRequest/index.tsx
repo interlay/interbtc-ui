@@ -86,7 +86,7 @@ const ConfirmedIssueRequest = ({
             'text-interlayConifer'
           )} />
         <p className='space-x-1'>
-          <span className='text-textSecondary'>{t('issue_page.btc_transaction')}:</span>
+          <span className='text-interlaySecondaryInLightMode'>{t('issue_page.btc_transaction')}:</span>
           <span className='font-medium'>{shortAddress(request.btcTxId || '')}</span>
         </p>
         <InterlayLink
@@ -108,7 +108,7 @@ const ConfirmedIssueRequest = ({
         <p
           className={clsx(
             'text-justify',
-            'text-textSecondary'
+            'text-interlaySecondaryInLightMode'
           )}>
           {t('issue_page.receive_interbtc_tokens', {
             wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL

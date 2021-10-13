@@ -85,7 +85,7 @@ const CompletedRedeemRequest = ({
       </InterlayLink>
       {/* TODO: could componentize */}
       <p className='space-x-1'>
-        <span className='text-textSecondary'>{t('issue_page.btc_transaction')}:</span>
+        <span className='text-interlaySecondaryInLightMode'>{t('issue_page.btc_transaction')}:</span>
         <span className='font-medium'>{shortAddress(request.btcTxId || '')}</span>
       </p>
       <InterlayLink

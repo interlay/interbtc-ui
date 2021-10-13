@@ -60,7 +60,7 @@ const InterBTCField = React.forwardRef<Ref, CustomProps & InterlayInputProps>(({
           className={clsx(
             'block',
             'text-xl',
-            'text-textSecondary',
+            'text-interlaySecondaryInLightMode',
             'text-right',
             'absolute',
             'right-4',

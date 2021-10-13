@@ -47,7 +47,7 @@ const WhoopsStatusUI = ({
         </h2>
         <p
           className={clsx(
-            'text-textSecondary',
+            'text-interlaySecondaryInLightMode',
             'text-sm'
           )}>
           {t('issue_page.refund_sent_more_btc')}
@@ -56,7 +56,7 @@ const WhoopsStatusUI = ({
       <PriceInfo
         className='w-full'
         title={
-          <h5 className='text-textSecondary'>
+          <h5 className='text-interlaySecondaryInLightMode'>
             {t('issue_page.refund_requested')}
           </h5>
         }
@@ -108,13 +108,13 @@ const WhoopsStatusUI = ({
         className={clsx(
           'border-t-2',
           'my-2.5',
-          'border-textSecondary',
+          'border-interlaySecondaryInLightMode',
           'w-full'
         )} />
       <PriceInfo
         className='w-full'
         title={
-          <h5 className='text-textPrimary'>
+          <h5 className='text-interlayPrimaryInLightMode'>
             {t('issue_page.refund_difference')}
           </h5>
         }
@@ -131,7 +131,7 @@ const WhoopsStatusUI = ({
             prices.bitcoin.usd
           )
         } />
-      <p className='text-textSecondary'>
+      <p className='text-interlaySecondaryInLightMode'>
         {t('issue_page.refund_requested_vault')}
         &nbsp;{t('issue_page.refund_vault_to_return')}
         <span className='text-interlayCinnabar'>

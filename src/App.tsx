@@ -48,7 +48,10 @@ import {
 } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import { CLASS_NAMES } from 'utils/constants/styles';
-import { KUSAMA } from 'utils/constants/relay-chain-names';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import './i18n';
 import * as constants from './constants';
 import startFetchingLiveData from 'common/live-data/live-data';
@@ -377,8 +380,10 @@ const App = (): JSX.Element => {
         hideProgressBar={false} />
       <Layout
         className={clsx(
-          'bg-interlayHaiti-50',
-          'dark:bg-kintsugiMidnight'
+          { 'text-interlayPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+          { 'dark:text-kintsugiPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+          { 'bg-interlayHaiti-50': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+          { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
         )}>
         <Route
           render={({ location }) => (

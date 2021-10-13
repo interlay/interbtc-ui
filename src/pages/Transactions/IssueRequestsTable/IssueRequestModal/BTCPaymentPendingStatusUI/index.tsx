@@ -57,7 +57,7 @@ const BTCPaymentPendingStatusUI = ({
         </div>
         <span
           className={clsx(
-            'text-textSecondary',
+            'text-interlaySecondaryInLightMode',
             'block'
           )}>
           {`≈ $ ${getUsdAmount(amountBTCToSend, prices.bitcoin.usd)}`}
@@ -67,7 +67,7 @@ const BTCPaymentPendingStatusUI = ({
         <p
           className={clsx(
             'text-center',
-            'text-textSecondary'
+            'text-interlaySecondaryInLightMode'
           )}>
           {t('issue_page.single_transaction')}
         </p>
@@ -97,7 +97,7 @@ const BTCPaymentPendingStatusUI = ({
             )}>
             <span
               className={clsx(
-                'text-textSecondary',
+                'text-interlaySecondaryInLightMode',
                 'capitalize'
               )}>
               {t('issue_page.within')}
@@ -109,7 +109,7 @@ const BTCPaymentPendingStatusUI = ({
       <p className='space-x-1'>
         <span
           className={clsx(
-            'text-textSecondary',
+            'text-interlaySecondaryInLightMode',
             'break-all'
           )}>
           {t('issue_page.warning_mbtc_wallets')}
@@ -123,7 +123,7 @@ const BTCPaymentPendingStatusUI = ({
         value={`bitcoin:${request.vaultBTCAddress}?amount=${displayMonetaryAmount(amountBTCToSend)}`} />
       <div
         className={clsx(
-          'text-textSecondary'
+          'text-interlaySecondaryInLightMode'
         )}>
         <div
           className={clsx(

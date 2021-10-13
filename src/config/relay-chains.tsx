@@ -51,6 +51,7 @@ type WrappedTokenAmount =
   KBtcAmount;
 
 switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
+// Interlay
 case POLKADOT: {
   APP_NAME = 'interBTC';
   WRAPPED_TOKEN_SYMBOL = 'interBTC';
@@ -64,6 +65,7 @@ case POLKADOT: {
   CollateralTokenLogoIcon = DOTLogoIcon;
   break;
 }
+// Kintsugi
 case KUSAMA: {
   APP_NAME = 'kBTC';
   WRAPPED_TOKEN_SYMBOL = 'kBTC';

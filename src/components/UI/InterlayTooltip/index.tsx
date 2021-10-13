@@ -19,7 +19,7 @@ const InterlayTooltip = React.forwardRef<Ref, Props>((props, ref): JSX.Element =
         'backdrop-blur-2xl',
         'bg-white',
         'bg-opacity-70',
-        'text-textPrimary',
+        'text-interlayPrimaryInLightMode',
         'border',
         'border-interlayHaiti-100',
         'whitespace-normal',

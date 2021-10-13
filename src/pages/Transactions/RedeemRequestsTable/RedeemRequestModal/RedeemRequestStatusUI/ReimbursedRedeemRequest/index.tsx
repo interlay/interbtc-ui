@@ -133,7 +133,7 @@ const ReimbursedRedeemRequest = ({
         <PriceInfo
           className='w-full'
           title={
-            <h5 className='text-textSecondary'>
+            <h5 className='text-interlaySecondaryInLightMode'>
               {t('redeem_page.compensation_burn', {
                 wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
               })}
@@ -148,7 +148,7 @@ const ReimbursedRedeemRequest = ({
         <PriceInfo
           className='w-full'
           title={
-            <h5 className='text-textSecondary'>
+            <h5 className='text-interlaySecondaryInLightMode'>
               {t('redeem_page.compensation_payment')}
             </h5>
           }
@@ -162,12 +162,12 @@ const ReimbursedRedeemRequest = ({
           className={clsx(
             'border-t-2',
             'my-2.5',
-            'border-textSecondary'
+            'border-interlaySecondaryInLightMode'
           )} />
         <PriceInfo
           className='w-full'
           title={
-            <h5 className='text-textSecondary'>
+            <h5 className='text-interlaySecondaryInLightMode'>
               {t('you_received')}
             </h5>
           }

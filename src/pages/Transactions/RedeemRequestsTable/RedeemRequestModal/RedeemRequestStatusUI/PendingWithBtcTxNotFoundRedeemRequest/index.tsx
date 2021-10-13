@@ -59,7 +59,7 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({
           'items-center',
           'space-x-1'
         )}>
-        <span className='text-textSecondary'>
+        <span className='text-interlaySecondaryInLightMode'>
           {t('redeem_page.vault_has_time_to_complete')}
         </span>
         {initialLeftSeconds && <Timer initialLeftSeconds={initialLeftSeconds} />}

@@ -103,7 +103,7 @@ const RetriedRedeemRequest = ({
       <div className='w-full'>
         <PriceInfo
           title={
-            <h5 className='text-textSecondary'>
+            <h5 className='text-interlaySecondaryInLightMode'>
               {t('redeem_page.compensation_payment')}
             </h5>
           }
@@ -117,12 +117,12 @@ const RetriedRedeemRequest = ({
           className={clsx(
             'border-t-2',
             'my-2.5',
-            'border-textSecondary'
+            'border-interlaySecondaryInLightMode'
           )} />
         <PriceInfo
           className='w-full'
           title={
-            <h5 className='text-textSecondary'>
+            <h5 className='text-interlaySecondaryInLightMode'>
               {t('you_received')}
             </h5>
           }
@@ -162,7 +162,7 @@ const RetriedRedeemRequest = ({
         <p
           className={clsx(
             'text-justify',
-            'text-textSecondary'
+            'text-interlaySecondaryInLightMode'
           )}>
           {t('redeem_page.retry_new_redeem')}
         </p>

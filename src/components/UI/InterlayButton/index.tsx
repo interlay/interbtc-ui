@@ -58,7 +58,7 @@ const InterlayButton = ({
           [clsx(
             'bg-gray-300',
             'hover:bg-gray-400',
-            'text-textPrimary'
+            'text-interlayPrimaryInLightMode'
           )]: variant === VARIANTS.contained && color === COLORS.default && !disabledOrPending
         },
         {
@@ -72,7 +72,7 @@ const InterlayButton = ({
           [clsx(
             'bg-secondary',
             'hover:bg-secondary-600',
-            'text-textPrimary'
+            'text-interlayPrimaryInLightMode'
           )]: variant === VARIANTS.contained && color === COLORS.secondary && !disabledOrPending
         },
         {
@@ -92,7 +92,7 @@ const InterlayButton = ({
         { 'bg-transparent': variant === VARIANTS.text },
         {
           [clsx(
-            'text-textPrimary',
+            'text-interlayPrimaryInLightMode',
             'hover:bg-black',
             'hover:bg-opacity-5'
           )]: variant === VARIANTS.text && color === COLORS.default && !disabledOrPending
@@ -120,7 +120,7 @@ const InterlayButton = ({
         },
         {
           [clsx(
-            'text-textPrimary',
+            'text-interlayPrimaryInLightMode',
             'border-black',
             'border-opacity-25',
             'hover:bg-black',

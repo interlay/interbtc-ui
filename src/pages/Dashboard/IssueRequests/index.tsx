@@ -123,7 +123,7 @@ function IssueRequests(): JSX.Element {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
             })}
           </h5>
-          <h5 className='text-textSecondary'>
+          <h5 className='text-interlaySecondaryInLightMode'>
             ${getUsdAmount(totalWrappedTokenAmount, prices.bitcoin.usd).toLocaleString()}
           </h5>
           <h5

@@ -61,7 +61,7 @@ const InterlayTh = ({
 }: React.ComponentPropsWithRef<'th'>): JSX.Element => (
   <th
     className={clsx(
-      'text-textSecondary',
+      'text-interlaySecondaryInLightMode',
       'text-base',
       'p-2',
       className

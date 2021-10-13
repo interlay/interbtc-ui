@@ -131,7 +131,6 @@ const INTERLAY_HAITI = Object.freeze({
   900: '#0d0516'
 });
 
-// MAIN COLORS/DARK BLUE
 const KINTSUGI_MIDNIGHT = Object.freeze({
   50: '#f2f3f5',
   100: '#e6e7eb',
@@ -654,8 +653,10 @@ module.exports = {
         }
       },
       textColor: theme => ({
-        textPrimary: theme('colors.interlayHaiti'),
-        textSecondary: theme('colors.interlayHaiti.300')
+        interlayPrimaryInLightMode: theme('colors.interlayHaiti'),
+        interlaySecondaryInLightMode: theme('colors.interlayHaiti.300'),
+        kintsugiPrimaryInDarkMode: theme('colors.white'),
+        kintsugiSecondaryInDarkMode: theme('colors.kintsugiAlto')
       }),
       // MEMO: inspired by https://material-ui.com/customization/default-theme/
       zIndex: {
@@ -705,7 +706,6 @@ module.exports = {
       // MEMO: inspired by https://tailwindcss.com/docs/adding-base-styles#using-a-plugin
       addBase({
         body: {
-          color: theme('textColor.textPrimary'),
           fontFamily: theme('fontFamily.airbnbCereal')
         }
       });

@@ -177,7 +177,7 @@ const ReimburseStatusUI = ({
         </h2>
         <p
           className={clsx(
-            'text-textSecondary',
+            'text-interlaySecondaryInLightMode',
             'text-justify'
           )}>
           <span>{t('redeem_page.vault_did_not_send')}</span>
@@ -203,7 +203,7 @@ const ReimburseStatusUI = ({
           className={clsx(
             'space-y-3',
             'ml-6',
-            'text-textSecondary'
+            'text-interlaySecondaryInLightMode'
           )}>
           <li className='list-decimal'>
             <p className='text-justify'>

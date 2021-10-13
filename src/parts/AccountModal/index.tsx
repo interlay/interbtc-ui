@@ -109,7 +109,7 @@ const AccountModal = ({
           <CloseIcon
             width={18}
             height={18}
-            className='text-textSecondary' />
+            className='text-interlaySecondaryInLightMode' />
         </IconButton>
         <div className='space-y-4'>
           {extensions.length ? (

@@ -413,7 +413,7 @@ const RedeemForm = (): JSX.Element | null => {
                 <InterlayTooltip label={t('redeem_page.premium_redeem_info')}>
                   <InformationCircleIcon
                     className={clsx(
-                      'text-textSecondary',
+                      'text-interlaySecondaryInLightMode',
                       'w-5',
                       'h-5'
                     )} />
@@ -426,7 +426,7 @@ const RedeemForm = (): JSX.Element | null => {
           )}
           <PriceInfo
             title={
-              <h5 className='text-textSecondary'>
+              <h5 className='text-interlaySecondaryInLightMode'>
                 {t('bridge_fee')}
               </h5>
             }
@@ -440,7 +440,7 @@ const RedeemForm = (): JSX.Element | null => {
             approxUSD={redeemFeeInUSD} />
           <PriceInfo
             title={
-              <h5 className='text-textSecondary'>
+              <h5 className='text-interlaySecondaryInLightMode'>
                 {t('bitcoin_network_fee')}
               </h5>
             }
@@ -456,11 +456,11 @@ const RedeemForm = (): JSX.Element | null => {
             className={clsx(
               'border-t-2',
               'my-2.5',
-              'border-textSecondary'
+              'border-interlaySecondaryInLightMode'
             )} />
           <PriceInfo
             title={
-              <h5 className='text-textPrimary'>
+              <h5 className='text-interlayPrimaryInLightMode'>
                 {t('you_will_receive')}
               </h5>
             }

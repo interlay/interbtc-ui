@@ -130,7 +130,7 @@ function RedeemRequests(): JSX.Element {
             &nbsp;BTC
           </h5>
           {totalRedeemedAmount !== '-' && (
-            <h5 className='text-textSecondary'>
+            <h5 className='text-interlaySecondaryInLightMode'>
               $
               {/* eslint-disable-next-line max-len */}
               {(prices.bitcoin.usd * Number(BitcoinAmount.from.Satoshi(totalRedeemedAmount).str.BTC())).toLocaleString()}

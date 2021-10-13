@@ -102,7 +102,7 @@ const RedeemRequestModal = ({
           <CloseIcon
             width={18}
             height={18}
-            className='text-textSecondary' />
+            className='text-interlaySecondaryInLightMode' />
         </IconButton>
         <div
           className={clsx(
@@ -131,7 +131,7 @@ const RedeemRequestModal = ({
               </h4>
               <span
                 className={clsx(
-                  'text-textSecondary',
+                  'text-interlaySecondaryInLightMode',
                   'block'
                 )}>
                 {`≈ $ ${getUsdAmount(request.amountBTC || BitcoinAmount.zero, prices.bitcoin.usd)}`}
@@ -140,7 +140,7 @@ const RedeemRequestModal = ({
             <div>
               <PriceInfo
                 title={
-                  <h5 className='text-textSecondary'>
+                  <h5 className='text-interlaySecondaryInLightMode'>
                     {t('bridge_fee')}
                   </h5>
                 }
@@ -154,7 +154,7 @@ const RedeemRequestModal = ({
                 approxUSD={getUsdAmount(request.bridgeFee, prices.bitcoin.usd)} />
               <PriceInfo
                 title={
-                  <h5 className='text-textSecondary'>
+                  <h5 className='text-interlaySecondaryInLightMode'>
                     {t('bitcoin_network_fee')}
                   </h5>
                 }
@@ -170,11 +170,11 @@ const RedeemRequestModal = ({
                 className={clsx(
                   'border-t-2',
                   'my-2.5',
-                  'border-textSecondary'
+                  'border-interlaySecondaryInLightMode'
                 )} />
               <PriceInfo
                 title={
-                  <h5 className='text-textSecondary'>
+                  <h5 className='text-interlaySecondaryInLightMode'>
                     {t('you_will_receive')}
                   </h5>
                 }
@@ -193,7 +193,7 @@ const RedeemRequestModal = ({
                   'flex',
                   'justify-between'
                 )}>
-                <span className='text-textSecondary'>
+                <span className='text-interlaySecondaryInLightMode'>
                   {t('issue_page.destination_address')}
                 </span>
                 <span className='font-medium'>
@@ -205,7 +205,7 @@ const RedeemRequestModal = ({
                   'flex',
                   'justify-between'
                 )}>
-                <span className='text-textSecondary'>
+                <span className='text-interlaySecondaryInLightMode'>
                   {t('issue_page.parachain_block')}
                 </span>
                 <span className='font-medium'>
@@ -217,7 +217,7 @@ const RedeemRequestModal = ({
                   'flex',
                   'justify-between'
                 )}>
-                <span className='text-textSecondary'>
+                <span className='text-interlaySecondaryInLightMode'>
                   {t('issue_page.vault_dot_address')}
                 </span>
                 <span className='font-medium'>

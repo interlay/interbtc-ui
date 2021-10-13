@@ -63,7 +63,7 @@ const SubmittedRedeemRequestModal = ({
           <CloseIcon
             width={18}
             height={18}
-            className='text-textSecondary' />
+            className='text-interlaySecondaryInLightMode' />
         </IconButton>
         <div
           className={clsx(
@@ -111,7 +111,7 @@ const SubmittedRedeemRequestModal = ({
               <span
                 className={clsx(
                   'block',
-                  'text-textSecondary',
+                  'text-interlaySecondaryInLightMode',
                   'text-2xl',
                   'text-center'
                 )}>
@@ -121,7 +121,7 @@ const SubmittedRedeemRequestModal = ({
             <div>
               <label
                 htmlFor='user-btc-address'
-                className='text-textSecondary'>
+                className='text-interlaySecondaryInLightMode'>
                 {t('redeem_page.btc_destination_address')}
               </label>
               <span
@@ -140,7 +140,7 @@ const SubmittedRedeemRequestModal = ({
             </div>
             <div>
               <p>{t('redeem_page.we_will_inform_you_btc')}</p>
-              <p className='text-textSecondary'>{t('redeem_page.typically_takes')}</p>
+              <p className='text-interlaySecondaryInLightMode'>{t('redeem_page.typically_takes')}</p>
             </div>
           </div>
           <InterlayRouterLink

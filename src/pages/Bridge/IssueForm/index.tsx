@@ -301,7 +301,7 @@ const IssueForm = (): JSX.Element | null => {
           <ParachainStatusInfo status={parachainStatus} />
           <PriceInfo
             title={
-              <h5 className='text-textSecondary'>
+              <h5 className='text-interlaySecondaryInLightMode'>
                 {t('bridge_fee')}
               </h5>
             }
@@ -317,7 +317,7 @@ const IssueForm = (): JSX.Element | null => {
               <InterlayTooltip label={t('issue_page.tooltip_bridge_fee')}>
                 <InformationCircleIcon
                   className={clsx(
-                    'text-textSecondary',
+                    'text-interlaySecondaryInLightMode',
                     'w-5',
                     'h-5'
                   )} />
@@ -325,7 +325,7 @@ const IssueForm = (): JSX.Element | null => {
             } />
           <PriceInfo
             title={
-              <h5 className='text-textSecondary'>
+              <h5 className='text-interlaySecondaryInLightMode'>
                 {t('issue_page.security_deposit')}
               </h5>
             }
@@ -339,7 +339,7 @@ const IssueForm = (): JSX.Element | null => {
               <InterlayTooltip label={t('issue_page.tooltip_security_deposit')}>
                 <InformationCircleIcon
                   className={clsx(
-                    'text-textSecondary',
+                    'text-interlaySecondaryInLightMode',
                     'w-5',
                     'h-5'
                   )} />
@@ -349,11 +349,11 @@ const IssueForm = (): JSX.Element | null => {
             className={clsx(
               'border-t-2',
               'my-2.5',
-              'border-textSecondary'
+              'border-interlaySecondaryInLightMode'
             )} />
           <PriceInfo
             title={
-              <h5 className='text-textPrimary'>
+              <h5 className='text-interlayPrimaryInLightMode'>
                 {t('you_will_receive')}
               </h5>
             }

@@ -43,7 +43,7 @@ const InterlayDefaultOutlinedButton = React.forwardRef<Ref, Props>(({
           'text-black',
           'text-opacity-25'
         ) : clsx(
-          'text-textPrimary',
+          'text-interlayPrimaryInLightMode',
           'border-interlayPaleSky-300',
           'hover:bg-interlayPaleSky',
           'hover:bg-opacity-5'
