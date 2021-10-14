@@ -44,7 +44,8 @@ const InterlayDefaultContainedButton = React.forwardRef<Ref, Props>(({
           'text-black',
           'text-opacity-25'
         ) : clsx(
-          'text-interlayPrimaryInLightMode',
+          'text-black',
+          'text-opacity-90',
           'bg-interlayPaleSky-100',
           'hover:bg-interlayPaleSky-200'
         ),

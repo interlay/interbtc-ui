@@ -40,13 +40,24 @@ const InterlayDefaultOutlinedButton = React.forwardRef<Ref, Props>(({
         disabledOrPending ? clsx(
           'border-black',
           'border-opacity-10',
+          'dark:border-white',
+          'dark:border-opacity-10',
           'text-black',
-          'text-opacity-25'
+          'text-opacity-25',
+          'dark:text-white',
+          'dark:text-opacity-30'
         ) : clsx(
-          'text-interlayPrimaryInLightMode',
-          'border-interlayPaleSky-300',
-          'hover:bg-interlayPaleSky',
-          'hover:bg-opacity-5'
+          'text-black',
+          'text-opacity-90',
+          'dark:text-white',
+          'border-black',
+          'border-opacity-25',
+          'dark:border-white',
+          'dark:border-opacity-25',
+          'hover:bg-black',
+          'hover:bg-opacity-5',
+          'dark:hover:bg-white',
+          'dark:hover:bg-opacity-10'
         ),
 
         'rounded',

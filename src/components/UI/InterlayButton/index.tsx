@@ -27,6 +27,7 @@ interface CustomProps {
   pending?: boolean;
 }
 
+// TODO: not used for now
 // MEMO: inspired by https://material-ui.com/components/buttons/
 const InterlayButton = ({
   variant = VARIANTS.text,
