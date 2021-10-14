@@ -15,6 +15,10 @@ import InterlayModal, {
 } from 'components/UI/InterlayModal';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import {
   PAGES,
   QUERY_PARAMETERS
 } from 'utils/constants/links';
@@ -58,7 +62,10 @@ const SubmittedIssueRequestModal = ({
           <CloseIcon
             width={18}
             height={18}
-            className='text-interlaySecondaryInLightMode' />
+            className={clsx(
+              { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )} />
         </IconButton>
         <div
           className={clsx(

@@ -305,7 +305,11 @@ const IssueForm = (): JSX.Element | null => {
           <ParachainStatusInfo status={parachainStatus} />
           <PriceInfo
             title={
-              <h5 className='text-interlaySecondaryInLightMode'>
+              <h5
+                className={clsx(
+                  { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
                 {t('bridge_fee')}
               </h5>
             }
@@ -321,7 +325,8 @@ const IssueForm = (): JSX.Element | null => {
               <InterlayTooltip label={t('issue_page.tooltip_bridge_fee')}>
                 <InformationCircleIcon
                   className={clsx(
-                    'text-interlaySecondaryInLightMode',
+                    { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                     'w-5',
                     'h-5'
                   )} />
@@ -329,7 +334,11 @@ const IssueForm = (): JSX.Element | null => {
             } />
           <PriceInfo
             title={
-              <h5 className='text-interlaySecondaryInLightMode'>
+              <h5
+                className={clsx(
+                  { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
                 {t('issue_page.security_deposit')}
               </h5>
             }
@@ -343,7 +352,8 @@ const IssueForm = (): JSX.Element | null => {
               <InterlayTooltip label={t('issue_page.tooltip_security_deposit')}>
                 <InformationCircleIcon
                   className={clsx(
-                    'text-interlaySecondaryInLightMode',
+                    { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                     'w-5',
                     'h-5'
                   )} />
@@ -353,7 +363,8 @@ const IssueForm = (): JSX.Element | null => {
             className={clsx(
               'border-t-2',
               'my-2.5',
-              'border-interlaySecondaryInLightMode'
+              { 'border-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )} />
           <PriceInfo
             title={

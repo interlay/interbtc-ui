@@ -1,6 +1,11 @@
 
 import clsx from 'clsx';
 
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+
 interface Props {
   title: JSX.Element;
   unitIcon: JSX.Element;
@@ -51,14 +56,19 @@ const PriceInfo = ({
         <span className='font-medium'>
           {value}
         </span>
-        <span className='text-interlaySecondaryInLightMode'>
+        <span
+          className={clsx(
+            { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+          )}>
           {unitName}
         </span>
       </div>
       <span
         className={clsx(
           'block',
-          'text-interlaySecondaryInLightMode'
+          { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+          { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
         )}>
         {`≈ $ ${approxUSD}`}
       </span>

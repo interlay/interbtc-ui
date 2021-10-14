@@ -51,7 +51,8 @@ const WhoopsStatusUI = ({
         </h2>
         <p
           className={clsx(
-            'text-interlaySecondaryInLightMode',
+            { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'text-sm'
           )}>
           {t('issue_page.refund_sent_more_btc')}
@@ -60,7 +61,11 @@ const WhoopsStatusUI = ({
       <PriceInfo
         className='w-full'
         title={
-          <h5 className='text-interlaySecondaryInLightMode'>
+          <h5
+            className={clsx(
+              { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )}>
             {t('issue_page.refund_requested')}
           </h5>
         }
@@ -112,7 +117,8 @@ const WhoopsStatusUI = ({
         className={clsx(
           'border-t-2',
           'my-2.5',
-          'border-interlaySecondaryInLightMode',
+          { 'border-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+          { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
           'w-full'
         )} />
       <PriceInfo
@@ -139,7 +145,11 @@ const WhoopsStatusUI = ({
             prices.bitcoin.usd
           )
         } />
-      <p className='text-interlaySecondaryInLightMode'>
+      <p
+        className={clsx(
+          { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+          { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+        )}>
         {t('issue_page.refund_requested_vault')}
         &nbsp;{t('issue_page.refund_vault_to_return')}
         <span className='text-interlayCinnabar'>

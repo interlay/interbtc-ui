@@ -20,6 +20,10 @@ import InterlayModal, {
 } from 'components/UI/InterlayModal';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import {
   displayMonetaryAmount,
   getUsdAmount,
   shortAddress
@@ -111,7 +115,10 @@ const IssueRequestModal = ({
           <CloseIcon
             width={18}
             height={18}
-            className='text-interlaySecondaryInLightMode' />
+            className={clsx(
+              { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )} />
         </IconButton>
         <div
           className={clsx(
@@ -138,7 +145,8 @@ const IssueRequestModal = ({
               </h4>
               <span
                 className={clsx(
-                  'text-interlaySecondaryInLightMode',
+                  { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                   'block'
                 )}>
                 {`≈ $ ${getUsdAmount(
@@ -150,7 +158,11 @@ const IssueRequestModal = ({
             <div>
               <PriceInfo
                 title={
-                  <h5 className='text-interlaySecondaryInLightMode'>
+                  <h5
+                    className={clsx(
+                      { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                      { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                    )}>
                     {t('bridge_fee')}
                   </h5>
                 }
@@ -167,11 +179,16 @@ const IssueRequestModal = ({
                 className={clsx(
                   'border-t-2',
                   'my-2.5',
-                  'border-interlaySecondaryInLightMode'
+                  { 'border-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )} />
               <PriceInfo
                 title={
-                  <h5 className='text-interlaySecondaryInLightMode'>
+                  <h5
+                    className={clsx(
+                      { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                      { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                    )}>
                     {t('total_deposit')}
                   </h5>
                 }
@@ -191,7 +208,11 @@ const IssueRequestModal = ({
                   'flex',
                   'justify-between'
                 )}>
-                <span className='text-interlaySecondaryInLightMode'>
+                <span
+                  className={clsx(
+                    { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  )}>
                   {t('issue_page.destination_address')}
                 </span>
                 <span className='font-medium'>
@@ -203,7 +224,11 @@ const IssueRequestModal = ({
                   'flex',
                   'justify-between'
                 )}>
-                <span className='text-interlaySecondaryInLightMode'>
+                <span
+                  className={clsx(
+                    { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  )}>
                   {t('issue_page.parachain_block')}
                 </span>
                 <span className='font-medium'>
@@ -215,7 +240,11 @@ const IssueRequestModal = ({
                   'flex',
                   'justify-between'
                 )}>
-                <span className='text-interlaySecondaryInLightMode'>
+                <span
+                  className={clsx(
+                    { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  )}>
                   {t('issue_page.vault_dot_address')}
                 </span>
                 <span className='font-medium'>
@@ -227,7 +256,11 @@ const IssueRequestModal = ({
                   'flex',
                   'justify-between'
                 )}>
-                <span className='text-interlaySecondaryInLightMode'>
+                <span
+                  className={clsx(
+                    { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  )}>
                   {t('issue_page.vault_btc_address')}
                 </span>
                 <span className='font-medium'>
@@ -237,7 +270,11 @@ const IssueRequestModal = ({
             </div>
             <p className='space-x-1'>
               <span className='text-interlayCinnabar'>{t('note')}:</span>
-              <span className='text-interlaySecondaryInLightMode'>
+              <span
+                className={clsx(
+                  { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
                 {t('issue_page.fully_decentralized', {
                   wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
                 })}

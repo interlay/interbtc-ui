@@ -8,13 +8,17 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
+import LineChartComponent from '../components/line-chart-component';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import RedeemRequestsTable from 'containers/RedeemRequestsTable';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
-import LineChartComponent from '../components/line-chart-component';
 
 function RedeemRequests(): JSX.Element {
   const {
@@ -130,7 +134,11 @@ function RedeemRequests(): JSX.Element {
             &nbsp;BTC
           </h5>
           {totalRedeemedAmount !== '-' && (
-            <h5 className='text-interlaySecondaryInLightMode'>
+            <h5
+              className={clsx(
+                { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              )}>
               $
               {/* eslint-disable-next-line max-len */}
               {(prices.bitcoin.usd * Number(BitcoinAmount.from.Satoshi(totalRedeemedAmount).str.BTC())).toLocaleString()}

@@ -23,6 +23,10 @@ import {
   CollateralTokenLogoIcon
 } from 'config/relay-chains';
 import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import {
   getUsdAmount,
   displayMonetaryAmount,
   getPolkadotLink
@@ -103,7 +107,11 @@ const RetriedRedeemRequest = ({
       <div className='w-full'>
         <PriceInfo
           title={
-            <h5 className='text-interlaySecondaryInLightMode'>
+            <h5
+              className={clsx(
+                { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              )}>
               {t('redeem_page.compensation_payment')}
             </h5>
           }
@@ -117,12 +125,17 @@ const RetriedRedeemRequest = ({
           className={clsx(
             'border-t-2',
             'my-2.5',
-            'border-interlaySecondaryInLightMode'
+            { 'border-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )} />
         <PriceInfo
           className='w-full'
           title={
-            <h5 className='text-interlaySecondaryInLightMode'>
+            <h5
+              className={clsx(
+                { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              )}>
               {t('you_received')}
             </h5>
           }
@@ -162,7 +175,8 @@ const RetriedRedeemRequest = ({
         <p
           className={clsx(
             'text-justify',
-            'text-interlaySecondaryInLightMode'
+            { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           {t('redeem_page.retry_new_redeem')}
         </p>

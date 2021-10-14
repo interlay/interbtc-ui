@@ -243,7 +243,11 @@ const BurnForm = (): JSX.Element | null => {
             helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message} />
           <PriceInfo
             title={
-              <h5 className='text-interlaySecondaryInLightMode'>
+              <h5
+                className={clsx(
+                  { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
                 {t('burn_page.dot_earned', {
                   collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
                 })}
@@ -260,7 +264,8 @@ const BurnForm = (): JSX.Element | null => {
             className={clsx(
               'border-t-2',
               'my-2.5',
-              'border-interlaySecondaryInLightMode'
+              { 'border-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )} />
           <PriceInfo
             title={

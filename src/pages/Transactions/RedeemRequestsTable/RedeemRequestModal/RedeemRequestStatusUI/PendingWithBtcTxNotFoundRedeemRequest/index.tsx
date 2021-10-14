@@ -8,6 +8,10 @@ import { Redeem } from '@interlay/interbtc-api';
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import Timer from 'components/Timer';
 import { BLOCK_TIME } from 'config/parachain';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
@@ -59,7 +63,11 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({
           'items-center',
           'space-x-1'
         )}>
-        <span className='text-interlaySecondaryInLightMode'>
+        <span
+          className={clsx(
+            { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+          )}>
           {t('redeem_page.vault_has_time_to_complete')}
         </span>
         {initialLeftSeconds && <Timer initialLeftSeconds={initialLeftSeconds} />}

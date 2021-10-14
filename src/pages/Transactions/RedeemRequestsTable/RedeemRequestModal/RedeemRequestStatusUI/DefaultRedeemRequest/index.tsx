@@ -6,6 +6,10 @@ import clsx from 'clsx';
 import { Redeem } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 
@@ -74,7 +78,13 @@ const DefaultRedeemRequest = ({
         </span>
       </div>
       <p className='space-x-1'>
-        <span className='text-interlaySecondaryInLightMode'>{t('issue_page.btc_transaction')}:</span>
+        <span
+          className={clsx(
+            { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+          )}>
+          {t('issue_page.btc_transaction')}:
+        </span>
         <span className='font-medium'>{shortAddress(request.btcTxId || '')}</span>
       </p>
     </RequestWrapper>

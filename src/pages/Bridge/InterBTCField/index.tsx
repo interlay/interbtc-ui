@@ -8,6 +8,10 @@ import {
   TextFieldContainer
 } from 'components/TextField';
 import InterlayInput, { Props as InterlayInputProps } from 'components/UI/InterlayInput';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 
 interface CustomProps {
   label: string;
@@ -60,7 +64,8 @@ const InterBTCField = React.forwardRef<Ref, CustomProps & InterlayInputProps>(({
           className={clsx(
             'block',
             'text-xl',
-            'text-interlaySecondaryInLightMode',
+            { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'text-right',
             'absolute',
             'right-4',

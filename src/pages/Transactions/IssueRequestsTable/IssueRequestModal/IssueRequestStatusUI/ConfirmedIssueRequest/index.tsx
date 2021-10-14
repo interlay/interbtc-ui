@@ -19,9 +19,13 @@ import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutline
 import useQueryParams from 'utils/hooks/use-query-params';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
-import { shortAddress } from 'common/utils/utils';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
+import { shortAddress } from 'common/utils/utils';
 import { USER_ISSUE_REQUESTS_FETCHER } from 'services/user-issue-requests-fetcher';
 import { StoreType } from 'common/types/util.types';
 
@@ -86,7 +90,13 @@ const ConfirmedIssueRequest = ({
             'text-interlayConifer'
           )} />
         <p className='space-x-1'>
-          <span className='text-interlaySecondaryInLightMode'>{t('issue_page.btc_transaction')}:</span>
+          <span
+            className={clsx(
+              { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )}>
+            {t('issue_page.btc_transaction')}:
+          </span>
           <span className='font-medium'>{shortAddress(request.btcTxId || '')}</span>
         </p>
         <InterlayLink
@@ -108,7 +118,8 @@ const ConfirmedIssueRequest = ({
         <p
           className={clsx(
             'text-justify',
-            'text-interlaySecondaryInLightMode'
+            { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           {t('issue_page.receive_interbtc_tokens', {
             wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL

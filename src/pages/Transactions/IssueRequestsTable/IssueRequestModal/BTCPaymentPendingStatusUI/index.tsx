@@ -8,6 +8,10 @@ import { Issue } from '@interlay/interbtc-api';
 
 import Timer from 'components/Timer';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import { StoreType } from 'common/types/util.types';
 import {
   copyToClipboard,
@@ -57,7 +61,8 @@ const BTCPaymentPendingStatusUI = ({
         </div>
         <span
           className={clsx(
-            'text-interlaySecondaryInLightMode',
+            { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'block'
           )}>
           {`≈ $ ${getUsdAmount(amountBTCToSend, prices.bitcoin.usd)}`}
@@ -67,7 +72,8 @@ const BTCPaymentPendingStatusUI = ({
         <p
           className={clsx(
             'text-center',
-            'text-interlaySecondaryInLightMode'
+            { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           {t('issue_page.single_transaction')}
         </p>
@@ -97,7 +103,8 @@ const BTCPaymentPendingStatusUI = ({
             )}>
             <span
               className={clsx(
-                'text-interlaySecondaryInLightMode',
+                { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                 'capitalize'
               )}>
               {t('issue_page.within')}
@@ -109,7 +116,8 @@ const BTCPaymentPendingStatusUI = ({
       <p className='space-x-1'>
         <span
           className={clsx(
-            'text-interlaySecondaryInLightMode',
+            { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'break-all'
           )}>
           {t('issue_page.warning_mbtc_wallets')}
@@ -123,7 +131,8 @@ const BTCPaymentPendingStatusUI = ({
         value={`bitcoin:${request.vaultBTCAddress}?amount=${displayMonetaryAmount(amountBTCToSend)}`} />
       <div
         className={clsx(
-          'text-interlaySecondaryInLightMode'
+          { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+          { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
         )}>
         <div
           className={clsx(

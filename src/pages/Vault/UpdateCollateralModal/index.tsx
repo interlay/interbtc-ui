@@ -25,6 +25,10 @@ import {
   COLLATERAL_TOKEN,
   COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import {
   updateCollateralAction,
@@ -224,7 +228,10 @@ const UpdateCollateralModal = ({
           <CloseIcon
             width={18}
             height={18}
-            className='text-interlaySecondaryInLightMode' />
+            className={clsx(
+              { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )} />
         </IconButton>
         <form
           onSubmit={onSubmit}

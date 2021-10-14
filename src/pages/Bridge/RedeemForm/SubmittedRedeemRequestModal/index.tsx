@@ -13,13 +13,17 @@ import InterlayModal, {
 } from 'components/UI/InterlayModal';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import {
-  displayMonetaryAmount,
-  getUsdAmount
-} from 'common/utils/utils';
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import {
   PAGES,
   QUERY_PARAMETERS
 } from 'utils/constants/links';
+import {
+  displayMonetaryAmount,
+  getUsdAmount
+} from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
@@ -63,7 +67,10 @@ const SubmittedRedeemRequestModal = ({
           <CloseIcon
             width={18}
             height={18}
-            className='text-interlaySecondaryInLightMode' />
+            className={clsx(
+              { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )} />
         </IconButton>
         <div
           className={clsx(
@@ -111,7 +118,8 @@ const SubmittedRedeemRequestModal = ({
               <span
                 className={clsx(
                   'block',
-                  'text-interlaySecondaryInLightMode',
+                  { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                   'text-2xl',
                   'text-center'
                 )}>
@@ -121,7 +129,10 @@ const SubmittedRedeemRequestModal = ({
             <div>
               <label
                 htmlFor='user-btc-address'
-                className='text-interlaySecondaryInLightMode'>
+                className={clsx(
+                  { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
                 {t('redeem_page.btc_destination_address')}
               </label>
               <span
@@ -140,7 +151,13 @@ const SubmittedRedeemRequestModal = ({
             </div>
             <div>
               <p>{t('redeem_page.we_will_inform_you_btc')}</p>
-              <p className='text-interlaySecondaryInLightMode'>{t('redeem_page.typically_takes')}</p>
+              <p
+                className={clsx(
+                  { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
+                {t('redeem_page.typically_takes')}
+              </p>
             </div>
           </div>
           <InterlayRouterLink

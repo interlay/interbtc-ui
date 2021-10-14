@@ -417,7 +417,8 @@ const RedeemForm = (): JSX.Element | null => {
                 <InterlayTooltip label={t('redeem_page.premium_redeem_info')}>
                   <InformationCircleIcon
                     className={clsx(
-                      'text-interlaySecondaryInLightMode',
+                      { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                      { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                       'w-5',
                       'h-5'
                     )} />
@@ -430,7 +431,11 @@ const RedeemForm = (): JSX.Element | null => {
           )}
           <PriceInfo
             title={
-              <h5 className='text-interlaySecondaryInLightMode'>
+              <h5
+                className={clsx(
+                  { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
                 {t('bridge_fee')}
               </h5>
             }
@@ -444,7 +449,11 @@ const RedeemForm = (): JSX.Element | null => {
             approxUSD={redeemFeeInUSD} />
           <PriceInfo
             title={
-              <h5 className='text-interlaySecondaryInLightMode'>
+              <h5
+                className={clsx(
+                  { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
                 {t('bitcoin_network_fee')}
               </h5>
             }
@@ -460,7 +469,8 @@ const RedeemForm = (): JSX.Element | null => {
             className={clsx(
               'border-t-2',
               'my-2.5',
-              'border-interlaySecondaryInLightMode'
+              { 'border-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )} />
           <PriceInfo
             title={

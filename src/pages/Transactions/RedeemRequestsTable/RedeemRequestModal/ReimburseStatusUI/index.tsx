@@ -28,6 +28,10 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import useQueryParams from 'utils/hooks/use-query-params';
 import {
   getUsdAmount,
@@ -177,7 +181,8 @@ const ReimburseStatusUI = ({
         </h2>
         <p
           className={clsx(
-            'text-interlaySecondaryInLightMode',
+            { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'text-justify'
           )}>
           <span>{t('redeem_page.vault_did_not_send')}</span>
@@ -203,7 +208,8 @@ const ReimburseStatusUI = ({
           className={clsx(
             'space-y-3',
             'ml-6',
-            'text-interlaySecondaryInLightMode'
+            { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           <li className='list-decimal'>
             <p className='text-justify'>
