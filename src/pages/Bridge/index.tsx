@@ -85,7 +85,7 @@ const Bridge = (): JSX.Element | null => {
         setBurnable(maxBurnableTokens.gt(BitcoinAmount.zero));
       } catch (error) {
         // TODO: should add error handling
-        console.log('[Application] error => ', error);
+        console.log('[Bridge] error => ', error);
       }
     })();
   }, [bridgeLoaded]);

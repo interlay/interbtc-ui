@@ -42,7 +42,12 @@ import {
   BTC_ADDRESS_REGEX
 } from '../../../constants';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import {
+  COLLATERAL_TOKEN,
+  WRAPPED_TOKEN_SYMBOL,
+  COLLATERAL_TOKEN_SYMBOL,
+  CollateralTokenLogoIcon
+} from 'config/relay-chains';
 import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
@@ -61,7 +66,6 @@ import {
   ParachainStatus
 } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
@@ -245,7 +249,11 @@ const RedeemForm = (): JSX.Element | null => {
             }
             setFormError(WRAPPED_TOKEN_AMOUNT, {
               type: 'manual',
-              message: t('redeem_page.error_max_premium_redeem', { maxPremiumRedeem: displayMonetaryAmount(maxAmount) })
+              message:
+                t('redeem_page.error_max_premium_redeem', {
+                  maxPremiumRedeem: displayMonetaryAmount(maxAmount),
+                  wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+                })
             });
 
             return;
@@ -294,11 +302,13 @@ const RedeemForm = (): JSX.Element | null => {
       }
 
       if (!bridgeLoaded) {
-        return 'interBTC must be loaded!';
+        return 'Bridge must be loaded!';
       }
 
       if (bitcoinHeight - btcRelayHeight > BLOCKS_BEHIND_LIMIT) {
-        return t('issue_page.error_more_than_6_blocks_behind');
+        return t('redeem_page.error_more_than_6_blocks_behind', {
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+        });
       }
 
       const polkaBTCAmountInteger = value.toString().split('.')[0];
@@ -344,13 +354,15 @@ const RedeemForm = (): JSX.Element | null => {
               'text-center',
               'text-interlayDenim'
             )}>
-            {t('redeem_page.you_will_receive')}
+            {t('redeem_page.you_will_receive', {
+              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+            })}
           </h4>
           <InterBTCField
             id='wrapped-token-amount'
             name={WRAPPED_TOKEN_AMOUNT}
             type='number'
-            label='interBTC'
+            label={WRAPPED_TOKEN_SYMBOL}
             step='any'
             placeholder='0.00'
             min={0}
@@ -468,12 +480,10 @@ const RedeemForm = (): JSX.Element | null => {
                 </h5>
               }
               unitIcon={
-                <PolkadotLogoIcon
-                  width={23}
-                  height={23} />
+                <CollateralTokenLogoIcon width={20} />
               }
               value={displayMonetaryAmount(totalDOT)}
-              unitName='DOT'
+              unitName={COLLATERAL_TOKEN_SYMBOL}
               approxUSD={totalDOTInUSD} />
           )}
           <SubmitButton

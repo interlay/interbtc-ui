@@ -3,7 +3,7 @@ import { Dispatch } from 'redux';
 
 import {
   PRICES_URL,
-  COLLATERAL_TOKEN_SYMBOL
+  RELAY_CHAIN_NAME
 } from 'config/relay-chains';
 import { updateOfPricesAction } from '../actions/general.actions';
 import { StoreState } from '../types/util.types';
@@ -18,11 +18,11 @@ const fetchPrices = async (dispatch: Dispatch, store: StoreState): Promise<void>
     // Update the store only if the price is actually changed
     if (
       prices.bitcoin.usd !== storePrices.bitcoin.usd ||
-      prices[COLLATERAL_TOKEN_SYMBOL].usd !== storePrices.collateralToken.usd
+      prices[RELAY_CHAIN_NAME].usd !== storePrices.collateralToken.usd
     ) {
       dispatch(updateOfPricesAction({
         bitcoin: prices.bitcoin,
-        collateralToken: prices[COLLATERAL_TOKEN_SYMBOL]
+        collateralToken: prices[RELAY_CHAIN_NAME]
       }));
     }
   } catch (error) {

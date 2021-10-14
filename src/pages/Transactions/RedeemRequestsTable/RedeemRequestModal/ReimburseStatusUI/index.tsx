@@ -23,7 +23,11 @@ import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import ErrorFallback from 'components/ErrorFallback';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import {
+  COLLATERAL_TOKEN,
+  WRAPPED_TOKEN_SYMBOL,
+  COLLATERAL_TOKEN_SYMBOL
+} from 'config/relay-chains';
 import useQueryParams from 'utils/hooks/use-query-params';
 import {
   getUsdAmount,
@@ -137,7 +141,7 @@ const ReimburseStatusUI = ({
 
   const handleRetry = () => {
     if (!bridgeLoaded) {
-      throw new Error('interBTC is not loaded!');
+      throw new Error('Bridge is not loaded!');
     }
 
     retryMutation.mutate(request);
@@ -145,7 +149,7 @@ const ReimburseStatusUI = ({
 
   const handleReimburse = () => {
     if (!bridgeLoaded) {
-      throw new Error('interBTC is not loaded!');
+      throw new Error('Bridge is not loaded!');
     }
 
     reimburseMutation.mutate(request);
@@ -178,16 +182,22 @@ const ReimburseStatusUI = ({
           )}>
           <span>{t('redeem_page.vault_did_not_send')}</span>
           <span className='text-interlayDenim'>
-            &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} DOT
+            &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
           </span>
           <span>&nbsp;{`(≈ $ ${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)})`}</span>
-          <span>&nbsp;{t('redeem_page.compensation')}</span>
+          <span>
+            &nbsp;{t('redeem_page.compensation', {
+              collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+            })}
+          </span>
           .
         </p>
       </div>
       <div className='space-y-2'>
         <h5 className='font-medium'>
-          {t('redeem_page.to_redeem_interbtc')}
+          {t('redeem_page.to_redeem_interbtc', {
+            wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+          })}
         </h5>
         <ul
           className={clsx(
@@ -199,7 +209,7 @@ const ReimburseStatusUI = ({
             <p className='text-justify'>
               <span>{t('redeem_page.receive_compensation')}</span>
               <span className='text-interlayDenim'>
-                &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} DOT
+                &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
               </span>
               <span>
                 &nbsp;
@@ -219,9 +229,13 @@ const ReimburseStatusUI = ({
           </li>
           <li className='list-decimal'>
             <p className='text-justify'>
-              <span>{t('redeem_page.burn_interbtc')}</span>
+              <span>
+                {t('redeem_page.burn_interbtc', {
+                  wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+                })}
+              </span>
               <span className='text-interlayDenim'>
-                &nbsp;{displayMonetaryAmount(collateralTokenAmount)} DOT
+                &nbsp;{displayMonetaryAmount(collateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
               </span>
               <span>
                 &nbsp;
@@ -230,7 +244,7 @@ const ReimburseStatusUI = ({
                 })}
               </span>
               <span className='text-interlayDenim'>
-                &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} DOT
+                &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
               </span>
               <span>
                 &nbsp;

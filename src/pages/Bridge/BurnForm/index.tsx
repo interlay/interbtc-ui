@@ -31,7 +31,12 @@ import SubmitButton from '../SubmitButton';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import {
+  COLLATERAL_TOKEN,
+  WRAPPED_TOKEN_SYMBOL,
+  COLLATERAL_TOKEN_SYMBOL,
+  CollateralTokenLogoIcon
+} from 'config/relay-chains';
 import {
   getUsdAmount,
   displayMonetaryAmount
@@ -47,7 +52,6 @@ import {
 } from 'common/actions/general.actions';
 import STATUSES from 'utils/constants/statuses';
 import { BALANCE_MAX_INTEGER_LENGTH } from '../../../constants';
-import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 
@@ -173,17 +177,23 @@ const BurnForm = (): JSX.Element | null => {
       }
 
       if (!bridgeLoaded) {
-        return 'interBTC must be loaded!';
+        return 'Bridge must be loaded!';
       }
 
       if (bitcoinAmountValue.to.Satoshi() === undefined) {
-        return 'Invalid interBTC amount input!'; // TODO: should translate
+        return t('burn_page.invalid_input_amount', {
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+        });
       }
 
+      // ray test touch <
+      // TODO: double-check if we need
+      // - (https://discord.com/channels/745259537707040778/894390868964933692/894863394149109771)
       const wrappedTokenAmountInteger = value.toString().split('.')[0];
       if (wrappedTokenAmountInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
         return 'Input value is too high!'; // TODO: should translate
       }
+      // ray test touch >
 
       return undefined;
     };
@@ -205,13 +215,16 @@ const BurnForm = (): JSX.Element | null => {
               'text-center',
               'text-interlayDenim'
             )}>
-            {t('burn_page.burn_interbtc')}
+            {t('burn_page.burn_interbtc', {
+              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
+              collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+            })}
           </h4>
           <InterBTCField
             id='wrapped-token-amount'
             name={WRAPPED_TOKEN_AMOUNT}
             type='number'
-            label='interBTC'
+            label={WRAPPED_TOKEN_SYMBOL}
             step='any'
             placeholder='0.00'
             ref={register({
@@ -227,16 +240,16 @@ const BurnForm = (): JSX.Element | null => {
           <PriceInfo
             title={
               <h5 className='text-textSecondary'>
-                {t('burn_page.dot_earned')}
+                {t('burn_page.dot_earned', {
+                  collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+                })}
               </h5>
             }
             unitIcon={
-              <PolkadotLogoIcon
-                width={20}
-                height={20} />
+              <CollateralTokenLogoIcon width={20} />
             }
             value={displayMonetaryAmount(earnedCollateralTokenAmount)}
-            unitName='DOT'
+            unitName={COLLATERAL_TOKEN_SYMBOL}
             approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.collateralToken.usd)} />
           {/* TODO: could componentize */}
           <hr
@@ -252,12 +265,10 @@ const BurnForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={
-              <PolkadotLogoIcon
-                width={20}
-                height={20} />
+              <CollateralTokenLogoIcon width={20} />
             }
             value={displayMonetaryAmount(earnedCollateralTokenAmount)}
-            unitName='DOT'
+            unitName={COLLATERAL_TOKEN_SYMBOL}
             approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.collateralToken.usd)} />
           <SubmitButton
             // TODO: should not check everywhere like this

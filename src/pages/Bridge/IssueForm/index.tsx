@@ -35,7 +35,13 @@ import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import {
+  COLLATERAL_TOKEN,
+  WRAPPED_TOKEN_SYMBOL,
+  COLLATERAL_TOKEN_SYMBOL,
+  WrappedTokenLogoIcon,
+  CollateralTokenLogoIcon
+} from 'config/relay-chains';
 import {
   BLOCK_TIME,
   BLOCKS_BEHIND_LIMIT
@@ -54,8 +60,6 @@ import {
 import { updateIssuePeriodAction } from 'common/actions/issue.actions';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import { ReactComponent as PolkadotLogoIcon } from 'assets/img/polkadot-logo.svg';
-import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const BTC_AMOUNT = 'btc-amount';
@@ -186,13 +190,17 @@ const IssueForm = (): JSX.Element | null => {
 
       const securityDeposit = btcToDOTRate.toCounter(btcAmount).mul(depositRate);
       const minimumRequiredCollateralTokenAmount =
-        newMonetaryAmount(EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT, COLLATERAL_TOKEN).add(securityDeposit);
+        newMonetaryAmount(EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT, COLLATERAL_TOKEN, true).add(securityDeposit);
       if (collateralTokenBalance.lte(minimumRequiredCollateralTokenAmount)) {
-        return t('insufficient_funds_dot');
+        return t('insufficient_funds_dot', {
+          collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+        });
       }
 
       if (value > MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT) {
-        return t('issue_page.validation_max_value');
+        return t('issue_page.validation_max_value', {
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+        });
       } else if (btcAmount.lt(dustValue)) {
         return `${t('issue_page.validation_min_value')}${displayMonetaryAmount(dustValue)} BTC).`;
       }
@@ -200,16 +208,19 @@ const IssueForm = (): JSX.Element | null => {
       const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), btcAmount);
       if (!vaultId) {
         return t('issue_page.maximum_in_single_request', {
-          maxAmount: displayMonetaryAmount(vaultMaxAmount)
+          maxAmount: displayMonetaryAmount(vaultMaxAmount),
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
         });
       }
 
       if (bitcoinHeight - btcRelayHeight > BLOCKS_BEHIND_LIMIT) {
-        return t('issue_page.error_more_than_6_blocks_behind');
+        return t('issue_page.error_more_than_6_blocks_behind', {
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+        });
       }
 
       if (!bridgeLoaded) {
-        return 'interBTC must be loaded!';
+        return 'Bridge must be loaded!';
       }
 
       if (btcAmount === undefined) {
@@ -265,7 +276,9 @@ const IssueForm = (): JSX.Element | null => {
               'text-center',
               'text-interlayDenim'
             )}>
-            {t('issue_page.mint_polka_by_wrapping')}
+            {t('issue_page.mint_polka_by_wrapping', {
+              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+            })}
           </h4>
           <InterBTCField
             id='btc-amount'
@@ -317,12 +330,10 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={
-              <PolkadotLogoIcon
-                width={20}
-                height={20} />
+              <CollateralTokenLogoIcon width={20} />
             }
             value={displayMonetaryAmount(securityDeposit)}
-            unitName='DOT'
+            unitName={COLLATERAL_TOKEN_SYMBOL}
             approxUSD={getUsdAmount(securityDeposit, prices.collateralToken.usd)}
             tooltip={
               <InterlayTooltip label={t('issue_page.tooltip_security_deposit')}>
@@ -347,12 +358,10 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={
-              <InterBTCLogoIcon
-                width={24}
-                height={19.05} />
+              <WrappedTokenLogoIcon width={20} />
             }
             value={displayMonetaryAmount(wrappedTokenAmount)}
-            unitName='interBTC'
+            unitName={WRAPPED_TOKEN_SYMBOL}
             approxUSD={getUsdAmount(wrappedTokenAmount, prices.bitcoin.usd)} />
           <SubmitButton
             disabled={

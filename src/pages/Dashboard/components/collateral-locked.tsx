@@ -9,6 +9,7 @@ import LineChartComponent from './line-chart-component';
 import DashboardCard from 'pages/Dashboard/DashboardCard';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
+import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   getUsdAmount,
@@ -76,7 +77,7 @@ const CollateralLocked = ({ linkButton }: Props): JSX.Element => {
               'font-bold',
               'mb-1'
             )}>
-            {displayMonetaryAmount(totalLockedCollateralTokenAmount)} DOT
+            {displayMonetaryAmount(totalLockedCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
           </h2>
           <h2
             className={clsx(

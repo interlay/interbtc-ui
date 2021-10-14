@@ -18,6 +18,7 @@ import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutline
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { StoreType } from 'common/types/util.types';
 
@@ -141,7 +142,9 @@ const Topbar = (): JSX.Element => {
                   className={SMALL_SIZE_BUTTON_CLASS_NAME}
                   pending={isRequestPending}
                   onClick={requestDOT}>
-                  {t('request_dot')}
+                  {t('request_dot', {
+                    collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+                  })}
                 </InterlayDenimOutlinedButton>
                 <Balances
                   collateralTokenBalance={collateralTokenBalance}

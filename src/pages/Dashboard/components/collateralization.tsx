@@ -9,7 +9,10 @@ import clsx from 'clsx';
 import DashboardCard from 'pages/Dashboard/DashboardCard';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import {
+  COLLATERAL_TOKEN,
+  WRAPPED_TOKEN_SYMBOL
+} from 'config/relay-chains';
 import {
   displayMonetaryAmount,
   safeRoundTwoDecimals
@@ -25,7 +28,7 @@ interface Props {
 
 const Collateralization = ({ linkButton }: Props): JSX.Element => {
   const { t } = useTranslation();
-  const bridgeLoaded = useSelector((state: StoreType) => state.general.bridgeLoaded);
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const [systemCollateralization, setSystemCollateralization] = React.useState('0');
   const [issuableWrappedToken, setIssuableWrappedToken] = React.useState(BitcoinAmount.zero);
@@ -149,7 +152,9 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
               <>{t('loading')}</>
             ) : (
               <>
-                <span className='inline-block'>{`${displayMonetaryAmount(issuableWrappedToken)} interBTC`}</span>
+                <span className='inline-block'>
+                  {`${displayMonetaryAmount(issuableWrappedToken)} ${WRAPPED_TOKEN_SYMBOL}`}
+                </span>
                 <span className='inline-block'>{t('dashboard.vault.capacity')}</span>
               </>
             )

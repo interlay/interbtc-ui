@@ -1,6 +1,5 @@
 
 import * as React from 'react';
-import { Modal } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import {
@@ -9,23 +8,43 @@ import {
 } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
+import clsx from 'clsx';
 import {
   roundTwoDecimals,
   newMonetaryAmount
 } from '@interlay/interbtc-api';
 
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
+import IconButton from 'components/buttons/IconButton';
+import InterlayModal, {
+  InterlayModalInnerWrapper,
+  InterlayModalTitle
+} from 'components/UI/InterlayModal';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import {
+  COLLATERAL_TOKEN,
+  COLLATERAL_TOKEN_SYMBOL
+} from 'config/relay-chains';
+import { displayMonetaryAmount } from 'common/utils/utils';
 import {
   updateCollateralAction,
   updateCollateralizationAction
 } from 'common/actions/vault.actions';
 import { StoreType } from 'common/types/util.types';
+import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
-// Commenting because moving this to last line causes 3 "used before it was defined" warnings
-// eslint-disable-next-line import/exports-last
-export enum CollateralUpdateStatus {
+const getButtonVariant = (status: CollateralUpdateStatus): string => {
+  switch (status) {
+  case CollateralUpdateStatus.Increase:
+    return 'primary';
+  case CollateralUpdateStatus.Decrease:
+    return 'default';
+  default:
+    return '';
+  }
+};
+
+enum CollateralUpdateStatus {
   Hidden,
   Increase,
   Decrease
@@ -40,7 +59,10 @@ interface Props {
   status: CollateralUpdateStatus;
 }
 
-const UpdateCollateralModal = (props: Props): JSX.Element => {
+const UpdateCollateralModal = ({
+  onClose,
+  status
+}: Props): JSX.Element => {
   const {
     bridgeLoaded,
     vaultClientLoaded,
@@ -51,14 +73,15 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
     handleSubmit,
     errors
   } = useForm<UpdateCollateralForm>();
-  // Denoted in DOT
+  // Denoted in collateral token
   const currentCollateral = useSelector((state: StoreType) => state.vault.collateral);
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const focusRef = React.useRef(null);
 
-  // Denoted in DOT
+  // Denoted in collateral token
   const [newCollateral, setNewCollateral] = React.useState(currentCollateral);
-  // Denoted in DOT
+  // Denoted in collateral token
   const [newCollateralization, setNewCollateralization] = React.useState('∞');
   const [currentButtonText, setCurrentButtonText] = React.useState('');
   const [isUpdatePending, setUpdatePending] = React.useState(false);
@@ -101,18 +124,18 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
   });
 
   const closeModal = () => {
-    props.onClose();
+    onClose();
     setNewCollateralization('');
   };
 
-  const onChange = async (obj: React.SyntheticEvent) => {
+  const onChange = async (event: React.SyntheticEvent) => {
     try {
-      const value = (obj.target as HTMLInputElement).value;
+      const value = (event.target as HTMLInputElement).value;
       if (value === '' || !bridgeLoaded || Number(value) <= 0 || isNaN(Number(value))) {
         setCollateralUpdateAllowed(false);
         return;
       }
-      const parsedValue = newMonetaryAmount(value, COLLATERAL_TOKEN);
+      const parsedValue = newMonetaryAmount(value, COLLATERAL_TOKEN, true);
       if (parsedValue.toBig(parsedValue.currency.rawBase).lte(1)) {
         throw new Error('Please enter an amount greater than 1 Planck');
       }
@@ -123,9 +146,9 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
       }
 
       let newCollateral = currentCollateral;
-      if (props.status === CollateralUpdateStatus.Increase) {
+      if (status === CollateralUpdateStatus.Increase) {
         newCollateral = newCollateral.add(parsedValue);
-      } else if (props.status === CollateralUpdateStatus.Decrease) {
+      } else if (status === CollateralUpdateStatus.Decrease) {
         newCollateral = newCollateral.sub(parsedValue);
       }
       setNewCollateral(newCollateral);
@@ -152,17 +175,6 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
     }
   };
 
-  const getButtonVariant = (status: CollateralUpdateStatus): string => {
-    switch (status) {
-    case CollateralUpdateStatus.Increase:
-      return 'primary';
-    case CollateralUpdateStatus.Decrease:
-      return 'default';
-    default:
-      return '';
-    }
-  };
-
   const getStatusText = (status: CollateralUpdateStatus): string => {
     switch (status) {
     case CollateralUpdateStatus.Increase:
@@ -181,79 +193,110 @@ const UpdateCollateralModal = (props: Props): JSX.Element => {
   };
 
   return (
-    <Modal
-      show={props.status !== CollateralUpdateStatus.Hidden}
-      onHide={closeModal}>
-      <form onSubmit={onSubmit}>
-        <Modal.Header closeButton>
-          <Modal.Title>{getStatusText(props.status)}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className='row'>
-            <div className='col-12 my-4'>
-              {t('vault.current_total_collateral', { currentCollateral })}
-            </div>
-            <div className='col-12 my-4'>
-              {t('vault.new_total_collateral', { newCollateral })}
-            </div>
-            <div className='col-12 basic-addon'>
-              <div className='input-group'>
-                <input
-                  name='collateral'
-                  type='float'
-                  className={'form-control custom-input' + (errors.collateral ? ' border-interlayCinnabar' : '')}
-                  aria-describedby='basic-addon2'
-                  ref={register({
-                    required: true,
-                    min: 0
-                  })}
-                  onChange={onChange}>
-                </input>
-                <div className='input-group-append'>
-                  <span
-                    className='input-group-text'
-                    id='basic-addon2'>
-                    DOT
-                  </span>
-                </div>
+    <InterlayModal
+      initialFocus={focusRef}
+      open={status !== CollateralUpdateStatus.Hidden}
+      onClose={closeModal}>
+      <InterlayModalInnerWrapper
+        className={clsx(
+          'p-6',
+          'max-w-lg'
+        )}>
+        <InterlayModalTitle
+          as='h3'
+          className={clsx(
+            'text-lg',
+            'font-medium',
+            'mb-4'
+          )}>
+          {getStatusText(status)}
+        </InterlayModalTitle>
+        <IconButton
+          ref={focusRef}
+          className={clsx(
+            'w-12',
+            'h-12',
+            'absolute',
+            'top-3',
+            'right-3'
+          )}
+          onClick={onClose}>
+          <CloseIcon
+            width={18}
+            height={18}
+            className='text-textSecondary' />
+        </IconButton>
+        <form
+          onSubmit={onSubmit}
+          className={clsx(
+            'space-y-4'
+          )}>
+          <p>
+            {t('vault.current_total_collateral', {
+              currentCollateral: displayMonetaryAmount(currentCollateral),
+              collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+            })}
+          </p>
+          <p>
+            {t('vault.new_total_collateral')}
+          </p>
+          <div>
+            <div className='input-group'>
+              <input
+                name='collateral'
+                type='float'
+                className={'form-control custom-input' + (errors.collateral ? ' border-interlayCinnabar' : '')}
+                aria-describedby='basic-addon2'
+                ref={register({
+                  required: true,
+                  min: 0
+                })}
+                onChange={onChange}>
+              </input>
+              <div className='input-group-append'>
+                <span className='input-group-text'>
+                  {COLLATERAL_TOKEN_SYMBOL}
+                </span>
               </div>
-              {errors.collateral && (
-                <div className='mt-0.5 text-interlayConifer'>
-                  {errors.collateral.type === 'required' ?
-                    t('vault.collateral_is_required') :
-                    errors.collateral.message}
-                  {errors.collateral.type === 'min' ? t('vault.collateral_higher_than_0') : errors.collateral.message}
-                </div>
-              )}
             </div>
-            <div className='col-12'>
-              {t('vault.new_collateralization')}
-              {
-                // eslint-disable-next-line no-negated-condition
-                newCollateralization !== '∞' ?
-                  Number(newCollateralization) > 1000 ?
-                    ' more than 1000%' :
-                    ' ' + roundTwoDecimals(newCollateralization || '0') + '%' :
-                  ' ' + newCollateralization
-              }
-            </div>
+            {errors.collateral && (
+              <p className='text-interlayConifer'>
+                {errors.collateral.type === 'required' ?
+                  t('vault.collateral_is_required') :
+                  errors.collateral.message}
+                {errors.collateral.type === 'min' ? t('vault.collateral_higher_than_0') : errors.collateral.message}
+              </p>
+            )}
           </div>
-        </Modal.Body>
-        <Modal.Footer className='row justify-center'>
+          <p>
+            {t('vault.new_collateralization')}
+            &nbsp;
+            {
+              newCollateralization === '∞' ?
+                newCollateralization :
+                Number(newCollateralization) > 1000 ?
+                  'more than 1000%' :
+                  roundTwoDecimals(newCollateralization || '0') + '%'
+            }
+          </p>
           <InterlayDefaultContainedButton
             type='submit'
             style={{ display: 'flex' }}
             className='mx-auto'
-            color={getButtonVariant(props.status)}
+            color={getButtonVariant(status)}
             disabled={!isCollateralUpdateAllowed}
             pending={isUpdatePending}>
-            {props.status === CollateralUpdateStatus.Increase ?
+            {status === CollateralUpdateStatus.Increase ?
               t('vault.deposit_collateral') : t('vault.withdraw_collateral')}
           </InterlayDefaultContainedButton>
-        </Modal.Footer>
-      </form>
-    </Modal>
+        </form>
+      </InterlayModalInnerWrapper>
+    </InterlayModal>
   );
+};
+
+export {
+  CollateralUpdateStatus
 };
 
 export default UpdateCollateralModal;

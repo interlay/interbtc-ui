@@ -7,6 +7,7 @@ import {
 } from 'react-icons/fa';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 
 const CancelledIssueRequest = (): JSX.Element => {
   const { t } = useTranslation();
@@ -34,7 +35,9 @@ const CancelledIssueRequest = (): JSX.Element => {
           'text-textSecondary',
           'text-justify'
         )}>
-        {t('issue_page.you_did_not_send')}
+        {t('issue_page.you_did_not_send', {
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+        })}
       </p>
       {/* TODO: could componentize */}
       <div>

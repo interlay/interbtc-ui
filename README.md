@@ -8,7 +8,8 @@
 
 ## About
 
-The interBTC UI connects the Polkadot ecosystem with Bitcoin. It allows the creation of interBTC, a fungible token that represents Bitcoin in the Polkadot ecosystem. interBTC is backed by Bitcoin 1:1 and allows redeeming of the equivalent amount of Bitcoins by relying on a collateralized third-party.
+The Interlay UI connects the Polkadot ecosystem with Bitcoin. It allows the creation of interBTC, a fungible token that represents Bitcoin in the Polkadot ecosystem. interBTC is backed by Bitcoin 1:1 and allows redeeming of the equivalent amount of Bitcoins by relying on a collateralized third-party.
+Similarly, the Kintsugi UI connects Kusama to Bitcoin using the kBTC token.
 In comparison to other bridge constructions (like tBTC, wBTC, or RenVM) _anyone_ can become an intermediary by depositing collateral making interBTC the only truly open system.
 
 The bridge itself follows the detailed specification: <a href="https://interlay.gitlab.io/polkabtc-spec/" target="_blank"><strong>Explore the specification »</strong></a>
@@ -38,143 +39,74 @@ git@gitlab.com:interlay/interbtc-ui.git
 cd interbtc-ui
 ```
 
+You can configure the application to use certain networks like the official test network, staging network, as well as a local environment.
 Please make use of the `.env.*` files to set build variables. The priority of these are [defined here](https://create-react-app.dev/docs/adding-custom-environment-variables/#what-other-env-files-can-be-used).
 
-### Regtest
+### Local Development
 
-> Note: By default use, regtest for local development.
 
-In one terminal, start the BTC-Parachain, Bitcoin regtest, vaults and relayers:
+To achieve this, create a file `.env.development.local` and fill it with the following contents for either the Interlay or Kintsugi network versions:
+
+#### Interlay Network
 
 ```bash
-yarn compose:regtest
+REACT_APP_RELAY_CHAIN_NAME="polkadot"
+DOCKER_RELAY_CHAIN_CURRENCY=DOT
+```
+
+#### Kintsugi Network
+
+```bash
+REACT_APP_RELAY_CHAIN_NAME="kusama"
+DOCKER_RELAY_CHAIN_CURRENCY=KSM
+```
+
+#### Starting the UI Locally
+
+> Note: By default, use regtest for local development.
+
+In one terminal, start the bridge, Bitcoin regtest, Vaults and oracles:
+
+```bash
+docker-compose --env-file .env.development.local up
 ```
 
 On another terminal, start the UI:
 
 ```bash
-yarn install && REACT_APP_BITCOIN_NETWORK=regtest yarn start
+yarn install && yarn start
 ```
 
-### Testnet
+### Connecting to the Interlay Development Environment
 
-In one terminal, start the BTC-Parachain, Bitcoin regtest, vaults and relayers:
+> Note: This environment might be unstable. It uses the Bitcoin testnet work.
+
+Copy the content of the `.env.dev` file to `.env.development.local`.
 
 ```bash
-yarn compose:testnet
+cp .env.dev .env.development.local
 ```
 
-On another terminal, start the UI:
+Start the UI:
 
 ```bash
-yarn install && REACT_APP_BITCOIN_NETWORK=testnet yarn start
+yarn install && yarn start
 ```
 
-## Detailed Starting Guide
+### Connecting to the Interlay Testnetwork
 
-> Note: The detailed starting guide requires you to have a Rust installation and requires you to build all the dependencies manually. This will take about two hours if you are doing this the first time. For most people, the docker-compose setup in the Quickstart guide above is recommended.
+> Note: This environment might be unstable. It uses the Bitcoin testnet work.
 
-If you wish to run the BTC-Parachain, its clients and Bitcoin without using docker, follow these steps.
-
-### Prerequisites
-
-**BTC Parachain**
-
-You need to have an instance of the BTC Parachain running. Follow the instructions at the [BTC-Parachain repository](https://gitlab.com/interlay/interbtc). Once you have successfully build the BTC Parachain, start a development server from the root folder of the BTC Parachain repository.
+Copy the content of the `.env.testnet` file to `.env.development.local`.
 
 ```bash
-./target/release/btc-parachain --dev
+cp .env.testnet .env.development.local
 ```
 
-If you want to reset the development chain, execute the following command.
+Start the UI:
 
 ```bash
-./target/release/btc-parachain purge-chain --dev
-```
-
-**Clients**
-
-In order to automatically submit block headers, run the [staked-relayer](https://gitlab.com/interlay/interbtc-clients/-/tree/dev/staked-relayer) client software.
-
-```shell
-staked-relayer --keyring=eve --polka-btc-url 'ws://localhost:9944'
-```
-
-The architecture also relies upon collateralized vaults; use the [vault](https://gitlab.com/interlay/interbtc-clients/-/tree/dev/vault) client to register automatically.
-
-```shell
-vault --keyring=charlie --network=testnet --auto-register-with-collateral 100000000 --polka-btc-url 'ws://localhost:9944'
-```
-
-Issue requests (BTC -> interBTC) can be executed solely through the UI but a vault client is required to redeem (interBTC -> BTC).
-
-Lastly, we require a price oracle to compute the exchange rate (BTC <> DOT), the [oracle](https://gitlab.com/interlay/interbtc-clients/-/tree/dev/oracle) client can automatically feed this from an integrated data source (e.g. [CoinGecko](https://www.coingecko.com/en/coins/polkadot/btc)).
-
-```shell
-oracle --keyring=bob --polka-btc-url 'ws://localhost:9944' --coingecko
-```
-
-### Regtest
-
-**Bitcoin**
-
-Download and start [Bitcoin Core](https://bitcoin.org/en/bitcoin-core/).
-
-```shell
-bitcoind -regtest -server
-```
-
-**Electrs**
-
-We make heavy use of the [Blockstream API](https://github.com/interlay/electrs) in the UI to watch for payments made on Bitcoin.
-
-```shell
-electrs -vvvv --network regtest --jsonrpc-import --cors "*" --cookie "rpcuser:rpcpassword" --daemon-rpc-addr localhost:18443 --http-addr "[::0]:3002" --index-unspendables
-```
-
-Start the app with:
-
-```shell
-yarn install
-REACT_APP_BITCOIN_NETWORK=regtest yarn start
-```
-
-### Testnet
-
-To run against Bitcoin testnet first start your daemon:
-
-```shell
-bitcoind -testnet -server
-```
-
-Start the app with:
-
-```shell
-yarn install
-REACT_APP_BITCOIN_NETWORK=testnet yarn start
-```
-
-> Note: This is only supported on Linux due to issues with `network_mode: "host"` on Mac.
-
-### Docker Installation
-
-Clone this repository and enter into the root folder.
-
-```bash
-git@gitlab.com:interlay/interbtc-ui.git
-cd interbtc-ui
-```
-
-Install the required dependencies.
-
-```bash
-docker build -t interbtc:ui .
-```
-
-Start the development server. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-```bash
-docker run -it -p 3000:3000 interbtc:ui
+yarn install && yarn start
 ```
 
 ### Test
@@ -229,48 +161,6 @@ You can query the balance of your wallet like so:
 
 ```shell
 bitcoin-cli -regtest -rpcwallet=Alice getbalance
-```
-
-### Test Data (Regtest)
-
-For more advanced interactions with the UI, you may also use the `testdata-gen` toolkit to automated some common actions.
-
-For an overview of actions [check the documentation here](https://github.com/interlay/interbtc-clients/tree/master/testdata-gen#detailed-options).
-
-**Installation**
-
-> Note: This requires a local Rust installation.
-
-```shell
-git clone git@gitlab.com:interlay/interbtc-clients.git
-cd interbtc-clients
-cargo build -p testdata-gen
-# environment variables for bitcoind
-source .env
-```
-
-**Registering a New Vault**
-
-For example, to register `bob` as a vault we can use the following command:
-
-```shell
-testdata-gen --keyring bob register-vault --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --collateral 100000000
-```
-
-**Issue interBTC**
-
-Then when `alice` wants to issue 0.001 interBTC, we need to send the equivalent number of Satoshis to `bob`:
-
-```shell
-testdata-gen --keyring alice send-bitcoin --btc-address "bcrt1qu0a2tc422uurm39g4p2n5wfpy65fwypnz7p9aw" --satoshis 100000
-```
-
-**More Options**
-
-Print all the available options with:
-
-```shell
-testdata-gen --help
 ```
 
 ### Docker
