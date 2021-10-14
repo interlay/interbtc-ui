@@ -9,6 +9,10 @@ import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import {
   copyToClipboard,
   getUsdAmount,
   displayMonetaryAmount
@@ -114,7 +118,11 @@ const WhoopsStatusUI = ({
       <PriceInfo
         className='w-full'
         title={
-          <h5 className='text-interlayPrimaryInLightMode'>
+          <h5
+            className={clsx(
+              { 'text-interlayPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'dark:text-kintsugiPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )}>
             {t('issue_page.refund_difference')}
           </h5>
         }

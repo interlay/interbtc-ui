@@ -46,6 +46,10 @@ import {
   BLOCK_TIME,
   BLOCKS_BEHIND_LIMIT
 } from 'config/parachain';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   displayMonetaryAmount,
@@ -353,7 +357,11 @@ const IssueForm = (): JSX.Element | null => {
             )} />
           <PriceInfo
             title={
-              <h5 className='text-interlayPrimaryInLightMode'>
+              <h5
+                className={clsx(
+                  { 'text-interlayPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
                 {t('you_will_receive')}
               </h5>
             }

@@ -4,6 +4,11 @@ import Tooltip, { TooltipProps } from '@reach/tooltip';
 import clsx from 'clsx';
 import '@reach/tooltip/styles.css';
 
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+
 type Ref = HTMLDivElement;
 const InterlayTooltip = React.forwardRef<Ref, Props>((props, ref): JSX.Element => {
   return (
@@ -19,7 +24,9 @@ const InterlayTooltip = React.forwardRef<Ref, Props>((props, ref): JSX.Element =
         'backdrop-blur-2xl',
         'bg-white',
         'bg-opacity-70',
-        'text-interlayPrimaryInLightMode',
+        { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+        { 'text-interlayPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+        { 'dark:text-kintsugiPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'border',
         'border-interlayHaiti-100',
         'whitespace-normal',

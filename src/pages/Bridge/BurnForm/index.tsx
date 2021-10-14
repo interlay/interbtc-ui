@@ -38,6 +38,12 @@ import {
   CollateralTokenLogoIcon
 } from 'config/relay-chains';
 import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import STATUSES from 'utils/constants/statuses';
+import { BALANCE_MAX_INTEGER_LENGTH } from '../../../constants';
+import {
   getUsdAmount,
   displayMonetaryAmount
 } from 'common/utils/utils';
@@ -50,8 +56,6 @@ import {
   updateCollateralTokenBalanceAction,
   showAccountModalAction
 } from 'common/actions/general.actions';
-import STATUSES from 'utils/constants/statuses';
-import { BALANCE_MAX_INTEGER_LENGTH } from '../../../constants';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 
@@ -260,7 +264,11 @@ const BurnForm = (): JSX.Element | null => {
             )} />
           <PriceInfo
             title={
-              <h5 className='text-interlayPrimaryInLightMode'>
+              <h5
+                className={clsx(
+                  { 'text-interlayPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
                 {t('you_will_receive')}
               </h5>
             }
