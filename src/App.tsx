@@ -22,7 +22,6 @@ import {
 } from '@polkadot/extension-dapp';
 import keyring from '@polkadot/ui-keyring';
 import { Keyring } from '@polkadot/api';
-import clsx from 'clsx';
 import { createInterbtc } from '@interlay/interbtc';
 import {
   FaucetClient,
@@ -372,17 +371,19 @@ const App = (): JSX.Element => {
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
       // MEMO: inspired by https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually
       document.body.classList.add(CLASS_NAMES.DARK);
+      document.body.classList.add('dark:text-kintsugiPrimaryInDarkMode');
+      document.body.classList.add('dark:bg-kintsugiMidnight');
+    } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
+      document.body.classList.add(CLASS_NAMES.LIGHT);
+      document.body.classList.add('text-interlayPrimaryInLightMode');
+      document.body.classList.add('bg-interlayHaiti-50');
+    } else {
+      throw new Error('Something went wrong!');
     }
   }, []);
 
   return (
-    <div
-      className={clsx(
-        { 'text-interlayPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-        { 'dark:text-kintsugiPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        { 'bg-interlayHaiti-50': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-        { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-      )}>
+    <>
       <ToastContainer
         position='top-right'
         autoClose={5000}
@@ -447,7 +448,7 @@ const App = (): JSX.Element => {
             // </TransitionWrapper>
           )} />
       </Layout>
-    </div>
+    </>
   );
 };
 

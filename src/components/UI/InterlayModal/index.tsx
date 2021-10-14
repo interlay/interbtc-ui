@@ -7,6 +7,11 @@ import {
 import { PropsOf } from '@headlessui/react/dist/types';
 import clsx from 'clsx';
 
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+
 const InterlayModalTitle = (props: PropsOf<typeof Dialog.Title>): JSX.Element => (
   <Dialog.Title {...props} />
 );
@@ -28,7 +33,8 @@ const InterlayModalInnerWrapper = React.forwardRef<Ref, React.ComponentPropsWith
       'transform',
       'w-full',
       'my-8',
-      'bg-white',
+      { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+      { 'dark:bg-kintsugiViolet': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'rounded-lg',
       className
     )}
