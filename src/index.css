@@ -16,6 +16,7 @@ body {
 }
 /* MEMO: `light` and `dark` are hardcoded */
 /* https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually */
+/* https://github.com/hipstersmoothie/storybook-dark-mode#darklight-class */
 body.light {
   /* MEMO: inspired by https://web.dev/prefers-color-scheme/#invert-vector-graphics-and-icons */
   --icon-filter_hover: invert(60%);

@@ -24,7 +24,8 @@ const parameters = {
     // Override the default light theme
     light: { ...themes.normal },
     darkClass: CLASS_NAMES.DARK,
-    lightClass: CLASS_NAMES.LIGHT
+    lightClass: CLASS_NAMES.LIGHT,
+    classTarget: 'html'
   }
 };
 

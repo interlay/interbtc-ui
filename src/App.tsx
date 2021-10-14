@@ -370,7 +370,7 @@ const App = (): JSX.Element => {
   React.useEffect(() => {
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
       // MEMO: inspired by https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually
-      document.body.classList.add(CLASS_NAMES.DARK);
+      document.documentElement.classList.add(CLASS_NAMES.DARK);
       document.body.classList.add('dark:text-kintsugiPrimaryInDarkMode');
       document.body.classList.add('dark:bg-kintsugiMidnight');
     } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
