@@ -1,6 +1,8 @@
 
 import clsx from 'clsx';
 
+import { KUSAMA } from 'utils/constants/relay-chain-names';
+
 const DashboardCard = ({
   className,
   ...rest
@@ -23,6 +25,7 @@ const DashboardCard = ({
       'min-w-0',
       'break-words',
       'bg-white',
+      { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'bg-clip-border',
       'rounded-lg',
       'border',

@@ -11,6 +11,7 @@ import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayLink from 'components/UI/InterlayLink';
 import { INTERLAY_COMPANY_LINK } from 'config/links';
 import { WrappedTokenLogoWithTextIcon } from 'config/relay-chains';
+import { KUSAMA } from 'utils/constants/relay-chain-names';
 import { PAGES } from 'utils/constants/links';
 import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
 
@@ -46,7 +47,8 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
         'flex-1',
         'flex',
         'flex-col',
-        'bg-white'
+        'bg-white',
+        { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
       )}>
       {onSmallScreen && <CloseButton onClick={onClose} />}
       <div

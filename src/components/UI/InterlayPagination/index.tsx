@@ -2,6 +2,8 @@
 import ReactPaginate, { ReactPaginateProps } from 'react-paginate';
 import clsx from 'clsx';
 
+import { KUSAMA } from 'utils/constants/relay-chain-names';
+
 const focusStyling = clsx(
   'focus:outline-none',
   'focus:ring',
@@ -32,7 +34,10 @@ const InterlayPagination = ({
         'border',
         'border-gray-300',
         'bg-white',
+        // ray test touch <<
+        { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-gray-700',
+        // ray test touch >>
         'text-sm',
         'font-medium'
       )}
@@ -59,7 +64,10 @@ const InterlayPagination = ({
         'border-gray-300',
         'bg-white',
         'hover:bg-gray-50',
+        // ray test touch <<
+        { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-gray-500',
+        // ray test touch >>
         'text-sm',
         'font-medium'
       )}
@@ -77,7 +85,10 @@ const InterlayPagination = ({
         'border-gray-300',
         'bg-white',
         'hover:bg-gray-50',
+        // ray test touch <<
+        { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-gray-500',
+        // ray test touch >>
         'text-sm',
         'font-medium'
       )}
@@ -95,7 +106,10 @@ const InterlayPagination = ({
         'border-gray-300',
         'bg-white',
         'hover:bg-gray-50',
+        // ray test touch <<
+        { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-gray-500',
+        // ray test touch >>
         'text-sm',
         'font-medium'
       )}
@@ -110,9 +124,11 @@ const InterlayPagination = ({
         'inline-flex',
         'items-center',
         'border',
+        // ray test touch <<
         'border-interlayDenim',
         'bg-interlayDenim-50',
         'text-interlayDenim-600',
+        // ray test touch >>
         'text-sm',
         'font-medium'
       )}

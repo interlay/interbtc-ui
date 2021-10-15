@@ -15,6 +15,7 @@ import Tabs, {
   TabPanel
 } from 'components/Tabs';
 import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import { KUSAMA } from 'utils/constants/relay-chain-names';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters, { QueryParameters } from 'utils/hooks/use-update-query-parameters';
 import TAB_IDS from 'utils/constants/tab-ids';
@@ -109,6 +110,7 @@ const Bridge = (): JSX.Element | null => {
       <div
         className={clsx(
           'bg-white',
+          { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
           'mx-auto',
           'w-full',
           'md:max-w-xl',

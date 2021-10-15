@@ -8,6 +8,7 @@ import clsx from 'clsx';
 
 import SidebarContent from './SidebarContent';
 import OpenButton from './OpenButton';
+
 interface Props {
   className?: string;
   children: React.ReactNode;
@@ -108,8 +109,7 @@ const Sidebar = ({
         className={clsx(
           'hidden',
           'md:flex',
-          'md:flex-shrink-0',
-          'bg-white'
+          'md:flex-shrink-0'
         )}>
         <div
           className={clsx(

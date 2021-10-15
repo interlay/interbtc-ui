@@ -48,9 +48,11 @@ const Template: Story<TabsProps> = args => {
                 'px-4',
                 'py-2.5',
                 'uppercase',
+                // ray test touch <<
                 selected ?
                   'text-white bg-pink-600' :
                   'text-pink-600 bg-white'
+                // ray test touch >>
               )}
               key={tabItem.id}
               id={tabItem.id}
