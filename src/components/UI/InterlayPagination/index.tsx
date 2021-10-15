@@ -2,7 +2,10 @@
 import ReactPaginate, { ReactPaginateProps } from 'react-paginate';
 import clsx from 'clsx';
 
-import { KUSAMA } from 'utils/constants/relay-chain-names';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 
 const focusStyling = clsx(
   'focus:outline-none',
@@ -33,11 +36,12 @@ const InterlayPagination = ({
         'items-center',
         'border',
         'border-gray-300',
+        { 'dark:border-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'bg-white',
-        // ray test touch <<
         { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        'text-gray-700',
-        // ray test touch >>
+        { 'text-interlayPrimaryInLightMode':
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+        { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-sm',
         'font-medium'
       )}
@@ -62,12 +66,13 @@ const InterlayPagination = ({
         'rounded-l-md',
         'border',
         'border-gray-300',
+        { 'dark:border-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'bg-white',
         'hover:bg-gray-50',
-        // ray test touch <<
         { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        'text-gray-500',
-        // ray test touch >>
+        { 'text-interlayPrimaryInLightMode':
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+        { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-sm',
         'font-medium'
       )}
@@ -83,12 +88,13 @@ const InterlayPagination = ({
         'hidden',
         'border',
         'border-gray-300',
+        { 'dark:border-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'bg-white',
         'hover:bg-gray-50',
-        // ray test touch <<
         { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        'text-gray-500',
-        // ray test touch >>
+        { 'text-interlayPrimaryInLightMode':
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+        { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-sm',
         'font-medium'
       )}
@@ -104,12 +110,13 @@ const InterlayPagination = ({
         'rounded-r-md',
         'border',
         'border-gray-300',
+        { 'dark:border-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'bg-white',
         'hover:bg-gray-50',
-        // ray test touch <<
         { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        'text-gray-500',
-        // ray test touch >>
+        { 'text-interlayPrimaryInLightMode':
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+        { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-sm',
         'font-medium'
       )}
@@ -124,11 +131,11 @@ const InterlayPagination = ({
         'inline-flex',
         'items-center',
         'border',
-        // ray test touch <<
         'border-interlayDenim',
+        { 'dark:border-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'bg-interlayDenim-50',
         'text-interlayDenim-600',
-        // ray test touch >>
+        { 'dark:text-kintsugiPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-sm',
         'font-medium'
       )}
