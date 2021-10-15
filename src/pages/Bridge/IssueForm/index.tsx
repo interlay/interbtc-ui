@@ -307,7 +307,8 @@ const IssueForm = (): JSX.Element | null => {
             title={
               <h5
                 className={clsx(
-                  { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'text-interlaySecondaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
                   { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}>
                 {t('bridge_fee')}
@@ -325,7 +326,8 @@ const IssueForm = (): JSX.Element | null => {
               <InterlayTooltip label={t('issue_page.tooltip_bridge_fee')}>
                 <InformationCircleIcon
                   className={clsx(
-                    { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'text-interlaySecondaryInLightMode':
+                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
                     { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                     'w-5',
                     'h-5'
@@ -336,7 +338,8 @@ const IssueForm = (): JSX.Element | null => {
             title={
               <h5
                 className={clsx(
-                  { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'text-interlaySecondaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
                   { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}>
                 {t('issue_page.security_deposit')}
@@ -352,7 +355,8 @@ const IssueForm = (): JSX.Element | null => {
               <InterlayTooltip label={t('issue_page.tooltip_security_deposit')}>
                 <InformationCircleIcon
                   className={clsx(
-                    { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'text-interlaySecondaryInLightMode':
+                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
                     { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                     'w-5',
                     'h-5'
@@ -363,14 +367,16 @@ const IssueForm = (): JSX.Element | null => {
             className={clsx(
               'border-t-2',
               'my-2.5',
-              { 'border-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'border-interlaySecondaryInLightMode':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
               { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )} />
           <PriceInfo
             title={
               <h5
                 className={clsx(
-                  { 'text-interlayPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'text-interlayPrimaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
                   { 'dark:text-kintsugiPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}>
                 {t('you_will_receive')}

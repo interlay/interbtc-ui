@@ -65,7 +65,8 @@ const InterlayTh = ({
 }: React.ComponentPropsWithRef<'th'>): JSX.Element => (
   <th
     className={clsx(
-      { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+      { 'text-interlaySecondaryInLightMode':
+        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
       { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'text-base',
       'p-2',

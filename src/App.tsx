@@ -373,12 +373,11 @@ const App = (): JSX.Element => {
       document.documentElement.classList.add(CLASS_NAMES.DARK);
       document.body.classList.add('dark:text-kintsugiPrimaryInDarkMode');
       document.body.classList.add('dark:bg-kintsugiMidnight');
-    } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
-      document.body.classList.add(CLASS_NAMES.LIGHT);
+    }
+
+    if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production') {
       document.body.classList.add('text-interlayPrimaryInLightMode');
       document.body.classList.add('bg-interlayHaiti-50');
-    } else {
-      throw new Error('Something went wrong!');
     }
   }, []);
 

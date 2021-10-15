@@ -109,7 +109,8 @@ const RetriedRedeemRequest = ({
           title={
             <h5
               className={clsx(
-                { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                { 'text-interlaySecondaryInLightMode':
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
                 { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
               )}>
               {t('redeem_page.compensation_payment')}
@@ -125,7 +126,8 @@ const RetriedRedeemRequest = ({
           className={clsx(
             'border-t-2',
             'my-2.5',
-            { 'border-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'border-interlaySecondaryInLightMode':
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
             { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )} />
         <PriceInfo
@@ -133,7 +135,8 @@ const RetriedRedeemRequest = ({
           title={
             <h5
               className={clsx(
-                { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                { 'text-interlaySecondaryInLightMode':
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
                 { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
               )}>
               {t('you_received')}
@@ -175,7 +178,8 @@ const RetriedRedeemRequest = ({
         <p
           className={clsx(
             'text-justify',
-            { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'text-interlaySecondaryInLightMode':
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
             { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           {t('redeem_page.retry_new_redeem')}

@@ -431,7 +431,8 @@ const VaultsTable = (): JSX.Element => {
                     <InterlayTooltip label={column.tooltip}>
                       <InformationCircleIcon
                         className={clsx(
-                          { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                          // eslint-disable-next-line max-len
+                          { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
                           // eslint-disable-next-line max-len
                           { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                           'inline-block',

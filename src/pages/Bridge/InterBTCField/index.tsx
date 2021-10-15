@@ -64,7 +64,8 @@ const InterBTCField = React.forwardRef<Ref, CustomProps & InterlayInputProps>(({
           className={clsx(
             'block',
             'text-xl',
-            { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'text-interlaySecondaryInLightMode':
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
             { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'text-right',
             'absolute',

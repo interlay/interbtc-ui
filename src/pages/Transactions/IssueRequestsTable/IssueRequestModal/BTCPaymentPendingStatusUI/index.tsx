@@ -61,7 +61,8 @@ const BTCPaymentPendingStatusUI = ({
         </div>
         <span
           className={clsx(
-            { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'text-interlaySecondaryInLightMode':
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
             { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'block'
           )}>
@@ -72,7 +73,8 @@ const BTCPaymentPendingStatusUI = ({
         <p
           className={clsx(
             'text-center',
-            { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'text-interlaySecondaryInLightMode':
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
             { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           {t('issue_page.single_transaction')}
@@ -103,7 +105,8 @@ const BTCPaymentPendingStatusUI = ({
             )}>
             <span
               className={clsx(
-                { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                { 'text-interlaySecondaryInLightMode':
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
                 { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                 'capitalize'
               )}>
@@ -116,7 +119,8 @@ const BTCPaymentPendingStatusUI = ({
       <p className='space-x-1'>
         <span
           className={clsx(
-            { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'text-interlaySecondaryInLightMode':
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
             { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'break-all'
           )}>
@@ -131,7 +135,8 @@ const BTCPaymentPendingStatusUI = ({
         value={`bitcoin:${request.vaultBTCAddress}?amount=${displayMonetaryAmount(amountBTCToSend)}`} />
       <div
         className={clsx(
-          { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+          { 'text-interlaySecondaryInLightMode':
+            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
           { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
         )}>
         <div

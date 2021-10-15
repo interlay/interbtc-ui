@@ -51,7 +51,8 @@ const WhoopsStatusUI = ({
         </h2>
         <p
           className={clsx(
-            { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'text-interlaySecondaryInLightMode':
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
             { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'text-sm'
           )}>
@@ -63,7 +64,8 @@ const WhoopsStatusUI = ({
         title={
           <h5
             className={clsx(
-              { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'text-interlaySecondaryInLightMode':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
               { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )}>
             {t('issue_page.refund_requested')}
@@ -117,7 +119,8 @@ const WhoopsStatusUI = ({
         className={clsx(
           'border-t-2',
           'my-2.5',
-          { 'border-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+          { 'border-interlaySecondaryInLightMode':
+            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
           { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
           'w-full'
         )} />
@@ -126,7 +129,8 @@ const WhoopsStatusUI = ({
         title={
           <h5
             className={clsx(
-              { 'text-interlayPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'text-interlayPrimaryInLightMode':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
               { 'dark:text-kintsugiPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )}>
             {t('issue_page.refund_difference')}
@@ -147,7 +151,8 @@ const WhoopsStatusUI = ({
         } />
       <p
         className={clsx(
-          { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+          { 'text-interlaySecondaryInLightMode':
+            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
           { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
         )}>
         {t('issue_page.refund_requested_vault')}
