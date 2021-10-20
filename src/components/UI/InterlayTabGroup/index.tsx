@@ -16,7 +16,8 @@ const InterlayTabList = ({
       'flex',
       'p-1',
       'space-x-1',
-      'bg-blue-900/20',
+      'bg-blue-900',
+      'bg-opacity-20',
       'rounded-xl',
       className
     )}
@@ -52,7 +53,8 @@ const InterlayTab = ({
           ) :
           clsx(
             'text-blue-100',
-            'hover:bg-white/[0.12]',
+            'hover:bg-white',
+            'hover:bg-opacity-10',
             'hover:text-white'
           ),
         className
