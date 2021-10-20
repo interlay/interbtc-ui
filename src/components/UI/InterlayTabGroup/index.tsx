@@ -3,6 +3,8 @@ import { Tab } from '@headlessui/react';
 import { Props } from '@headlessui/react/dist/types';
 import clsx from 'clsx';
 
+import { POLKADOT } from 'utils/constants/relay-chain-names';
+
 const InterlayTabGroup = Tab.Group;
 const InterlayTabPanels = Tab.Panels;
 
@@ -16,7 +18,8 @@ const InterlayTabList = ({
       'flex',
       'p-1',
       'space-x-1',
-      'bg-blue-900',
+      { 'bg-interlayDenim-900':
+        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
       'bg-opacity-20',
       'rounded-xl',
       className
@@ -37,13 +40,15 @@ const InterlayTab = ({
         'text-sm',
         'leading-5',
         'font-medium',
-        'text-blue-700',
+        { 'text-interlayDenim-700':
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
         'rounded-lg',
 
         'focus:outline-none',
         'focus:ring-2',
         'ring-offset-2',
-        'ring-offset-blue-400',
+        { 'ring-offset-interlayDenim-400':
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
         'ring-white',
         'ring-opacity-60',
         selected ?
@@ -52,7 +57,8 @@ const InterlayTab = ({
             'shadow'
           ) :
           clsx(
-            'text-blue-100',
+            { 'text-interlayDenim-100':
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
             'hover:bg-white',
             'hover:bg-opacity-10',
             'hover:text-white'
@@ -70,16 +76,6 @@ const InterlayTabPanel = ({
 }: InterlayTabPanelProps): JSX.Element => (
   <Tab.Panel
     className={clsx(
-      'bg-white',
-      'rounded-xl',
-      'p-3',
-
-      'focus:outline-none',
-      'focus:ring-2',
-      'ring-offset-2',
-      'ring-offset-blue-400',
-      'ring-white',
-      'ring-opacity-60',
       className
     )}
     {...rest} />
