@@ -17,7 +17,10 @@ import InterlayTabGroup, {
   InterlayTabPanel
 } from 'components/UI/InterlayTabGroup';
 import { COLLATERAL_TOKEN } from 'config/relay-chains';
-import { KUSAMA } from 'utils/constants/relay-chain-names';
+import {
+  KUSAMA,
+  POLKADOT
+} from 'utils/constants/relay-chain-names';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters, { QueryParameters } from 'utils/hooks/use-update-query-parameters';
 import TAB_IDS from 'utils/constants/tab-ids';
@@ -138,7 +141,9 @@ const Bridge = (): JSX.Element | null => {
             className={clsx(
               'border-t-2',
               'my-2',
-              'border-interlayDenim'
+              { 'border-interlayDenim':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              { 'dark:border-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )} />
           <InterlayTabPanels className='mt-2'>
             <InterlayTabPanel>
