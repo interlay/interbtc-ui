@@ -87,11 +87,30 @@ const Template: Story = args => (
               {posts.map(post => (
                 <li
                   key={post.id}
-                  className='relative p-3 rounded-md hover:bg-coolGray-100'>
-                  <h3 className='text-sm font-medium leading-5'>
+                  className={clsx(
+                    'relative',
+                    'p-3',
+                    'rounded-md',
+                    'hover:bg-coolGray-100'
+                  )}>
+                  <h3
+                    className={clsx(
+                      'text-sm',
+                      'font-medium',
+                      'leading-5'
+                    )}>
                     {post.title}
                   </h3>
-                  <ul className='flex mt-1 space-x-1 text-xs font-normal leading-4 text-coolGray-500'>
+                  <ul
+                    className={clsx(
+                      'flex',
+                      'mt-1',
+                      'space-x-1',
+                      'text-xs',
+                      'font-normal',
+                      'leading-4',
+                      'text-coolGray-500'
+                    )}>
                     <li>{post.date}</li>
                     <li>&middot;</li>
                     <li>{post.commentCount} comments</li>
