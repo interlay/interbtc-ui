@@ -27,6 +27,7 @@ import {
 } from '@interlay/monetary-js';
 
 import SubmitButton from '../SubmitButton';
+import FormTitle from '../FormTitle';
 import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
 import InterBTCField from 'pages/Bridge/InterBTCField';
 import PriceInfo from 'pages/Bridge/PriceInfo';
@@ -274,16 +275,11 @@ const IssueForm = (): JSX.Element | null => {
         <form
           className='space-y-8'
           onSubmit={handleSubmit(onSubmit)}>
-          <h4
-            className={clsx(
-              'font-medium',
-              'text-center',
-              'text-interlayDenim'
-            )}>
+          <FormTitle>
             {t('issue_page.mint_polka_by_wrapping', {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
             })}
-          </h4>
+          </FormTitle>
           <InterBTCField
             id='btc-amount'
             name={BTC_AMOUNT}

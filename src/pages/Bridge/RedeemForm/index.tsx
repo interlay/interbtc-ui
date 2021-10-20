@@ -27,6 +27,7 @@ import {
 } from '@interlay/monetary-js';
 
 import SubmitButton from '../SubmitButton';
+import FormTitle from '../FormTitle';
 import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
 import InterBTCField from 'pages/Bridge/InterBTCField';
 import PriceInfo from 'pages/Bridge/PriceInfo';
@@ -352,16 +353,11 @@ const RedeemForm = (): JSX.Element | null => {
         <form
           className='space-y-8'
           onSubmit={handleSubmit(onSubmit)}>
-          <h4
-            className={clsx(
-              'font-medium',
-              'text-center',
-              'text-interlayDenim'
-            )}>
+          <FormTitle>
             {t('redeem_page.you_will_receive', {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
             })}
-          </h4>
+          </FormTitle>
           <InterBTCField
             id='wrapped-token-amount'
             name={WRAPPED_TOKEN_AMOUNT}

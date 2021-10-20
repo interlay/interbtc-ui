@@ -13,6 +13,7 @@ import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import InterBTCField from '../InterBTCField';
 import SubmitButton from '../SubmitButton';
+import FormTitle from '../FormTitle';
 import TextField from 'components/TextField';
 import InterlayModal, {
   InterlayModalTitle,
@@ -203,16 +204,11 @@ const TransferForm = (): JSX.Element => {
       <form
         className='space-y-8'
         onSubmit={handleSubmit(onSubmit)}>
-        <h4
-          className={clsx(
-            'font-medium',
-            'text-center',
-            'text-interlayDenim'
-          )}>
+        <FormTitle>
           {t('transfer_page.transfer_interbtc', {
             wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
           })}
-        </h4>
+        </FormTitle>
         <InterBTCField
           id={WRAPPED_TOKEN_INPUT_AMOUNT}
           name={WRAPPED_TOKEN_INPUT_AMOUNT}

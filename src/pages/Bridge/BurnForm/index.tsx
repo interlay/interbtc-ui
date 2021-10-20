@@ -28,6 +28,7 @@ import {
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterBTCField from '../InterBTCField';
 import SubmitButton from '../SubmitButton';
+import FormTitle from '../FormTitle';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
@@ -213,17 +214,12 @@ const BurnForm = (): JSX.Element | null => {
         <form
           className='space-y-8'
           onSubmit={handleSubmit(onSubmit)}>
-          <h4
-            className={clsx(
-              'font-medium',
-              'text-center',
-              'text-interlayDenim'
-            )}>
+          <FormTitle>
             {t('burn_page.burn_interbtc', {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
               collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
             })}
-          </h4>
+          </FormTitle>
           <InterBTCField
             id='wrapped-token-amount'
             name={WRAPPED_TOKEN_AMOUNT}
