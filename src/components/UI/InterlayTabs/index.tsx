@@ -1,5 +1,6 @@
 
 import { Tab } from '@headlessui/react';
+import { Props } from '@headlessui/react/dist/types';
 import clsx from 'clsx';
 
 const categories = {
@@ -53,6 +54,70 @@ const categories = {
   ]
 };
 
+const InterlayTabGroup = Tab.Group;
+const InterlayTabList = Tab.List;
+const InterlayTabPanels = Tab.Panels;
+
+type InterlayTabProps = Props<typeof Tab>;
+const InterlayTab = ({
+  className,
+  ...rest
+}: InterlayTabProps): JSX.Element => (
+  <Tab
+    className={({ selected }) =>
+      clsx(
+        'w-full',
+        'py-2.5',
+        'text-sm',
+        'leading-5',
+        'font-medium',
+        'text-blue-700',
+        'rounded-lg',
+
+        'focus:outline-none',
+        'focus:ring-2',
+        'ring-offset-2',
+        'ring-offset-blue-400',
+        'ring-white',
+        'ring-opacity-60',
+        selected ?
+          clsx(
+            'bg-white',
+            'shadow'
+          ) :
+          clsx(
+            'text-blue-100',
+            'hover:bg-white/[0.12]',
+            'hover:text-white'
+          ),
+        className
+      )
+    }
+    {...rest} />
+);
+
+type InterlayTabPanelProps = Props<typeof Tab.Panel>;
+const InterlayTabPanel = ({
+  className,
+  ...rest
+}: InterlayTabPanelProps): JSX.Element => (
+  <Tab.Panel
+    className={clsx(
+      'bg-white',
+      'rounded-xl',
+      'p-3',
+
+      'focus:outline-none',
+      'focus:ring-2',
+      'ring-offset-2',
+      'ring-offset-blue-400',
+      'ring-white',
+      'ring-opacity-60',
+      className
+    )}
+    {...rest} />
+);
+
 const InterlayTabs = (): JSX.Element => {
   return (
     <div
@@ -63,8 +128,8 @@ const InterlayTabs = (): JSX.Element => {
         'py-16',
         'sm:px-0'
       )}>
-      <Tab.Group>
-        <Tab.List
+      <InterlayTabGroup>
+        <InterlayTabList
           className={clsx(
             'flex',
             'p-1',
@@ -73,56 +138,14 @@ const InterlayTabs = (): JSX.Element => {
             'rounded-xl'
           )}>
           {Object.keys(categories).map(category => (
-            <Tab
-              key={category}
-              className={({ selected }) =>
-                clsx(
-                  'w-full',
-                  'py-2.5',
-                  'text-sm',
-                  'leading-5',
-                  'font-medium',
-                  'text-blue-700',
-                  'rounded-lg',
-
-                  'focus:outline-none',
-                  'focus:ring-2',
-                  'ring-offset-2',
-                  'ring-offset-blue-400',
-                  'ring-white',
-                  'ring-opacity-60',
-                  selected ?
-                    clsx(
-                      'bg-white',
-                      'shadow'
-                    ) :
-                    clsx(
-                      'text-blue-100',
-                      'hover:bg-white/[0.12]',
-                      'hover:text-white'
-                    )
-                )
-              }>
+            <InterlayTab key={category}>
               {category}
-            </Tab>
+            </InterlayTab>
           ))}
-        </Tab.List>
-        <Tab.Panels className='mt-2'>
+        </InterlayTabList>
+        <InterlayTabPanels className='mt-2'>
           {Object.values(categories).map((posts, index) => (
-            <Tab.Panel
-              key={index}
-              className={clsx(
-                'bg-white',
-                'rounded-xl',
-                'p-3',
-
-                'focus:outline-none',
-                'focus:ring-2',
-                'ring-offset-2',
-                'ring-offset-blue-400',
-                'ring-white',
-                'ring-opacity-60'
-              )}>
+            <InterlayTabPanel key={index}>
               <ul>
                 {posts.map(post => (
                   <li
@@ -141,12 +164,20 @@ const InterlayTabs = (): JSX.Element => {
                   </li>
                 ))}
               </ul>
-            </Tab.Panel>
+            </InterlayTabPanel>
           ))}
-        </Tab.Panels>
-      </Tab.Group>
+        </InterlayTabPanels>
+      </InterlayTabGroup>
     </div>
   );
+};
+
+export {
+  InterlayTabGroup,
+  InterlayTabList,
+  InterlayTabPanels,
+  InterlayTab,
+  InterlayTabPanel
 };
 
 export default InterlayTabs;
