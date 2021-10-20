@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import {
   Story,
   Meta
@@ -20,4 +19,3 @@ export default {
   title: 'UI/InterlayTabs',
   component: InterlayTabs
 } as Meta;
-// ray test touch >>

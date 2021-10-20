@@ -118,6 +118,7 @@ const Bridge = (): JSX.Element | null => {
           'p-10',
           'md:rounded-lg'
         )}>
+        {/* ray test touch << */}
         <>
           <Tabs
             className={clsx(
@@ -186,6 +187,7 @@ const Bridge = (): JSX.Element | null => {
             <BurnForm />
           </TabPanel>
         )}
+        {/* ray test touch >> */}
       </div>
     </MainContainer>
   );
