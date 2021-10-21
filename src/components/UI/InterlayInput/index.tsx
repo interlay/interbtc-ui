@@ -16,7 +16,6 @@ interface CustomProps {
 }
 
 type Ref = HTMLInputElement;
-
 const InterlayInput = React.forwardRef<Ref, Props>(({
   color = COLORS.primary,
   className,

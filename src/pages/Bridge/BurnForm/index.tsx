@@ -26,7 +26,7 @@ import {
 } from '@interlay/interbtc-api';
 
 import PriceInfo from 'pages/Bridge/PriceInfo';
-import InterBTCField from '../InterBTCField';
+import WrappedTokenField from '../WrappedTokenField';
 import SubmitButton from '../SubmitButton';
 import FormTitle from '../FormTitle';
 import EllipsisLoader from 'components/EllipsisLoader';
@@ -220,13 +220,10 @@ const BurnForm = (): JSX.Element | null => {
               collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
             })}
           </FormTitle>
-          <InterBTCField
-            id='wrapped-token-amount'
+          <WrappedTokenField
+            id={WRAPPED_TOKEN_AMOUNT}
             name={WRAPPED_TOKEN_AMOUNT}
-            type='number'
             label={WRAPPED_TOKEN_SYMBOL}
-            step='any'
-            placeholder='0.00'
             ref={register({
               required: {
                 value: true,

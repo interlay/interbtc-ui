@@ -29,7 +29,7 @@ import {
 import SubmitButton from '../SubmitButton';
 import FormTitle from '../FormTitle';
 import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
-import InterBTCField from 'pages/Bridge/InterBTCField';
+import WrappedTokenField from 'pages/Bridge/WrappedTokenField';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import ParachainStatusInfo from 'pages/Bridge/ParachainStatusInfo';
 import EllipsisLoader from 'components/EllipsisLoader';
@@ -280,13 +280,10 @@ const IssueForm = (): JSX.Element | null => {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
             })}
           </FormTitle>
-          <InterBTCField
-            id='btc-amount'
+          <WrappedTokenField
+            id={BTC_AMOUNT}
             name={BTC_AMOUNT}
-            type='number'
             label='BTC'
-            step='any'
-            placeholder='0.00'
             min={0}
             ref={register({
               required: {

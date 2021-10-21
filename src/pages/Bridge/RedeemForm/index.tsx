@@ -29,7 +29,7 @@ import {
 import SubmitButton from '../SubmitButton';
 import FormTitle from '../FormTitle';
 import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
-import InterBTCField from 'pages/Bridge/InterBTCField';
+import WrappedTokenField from 'pages/Bridge/WrappedTokenField';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import ParachainStatusInfo from 'pages/Bridge/ParachainStatusInfo';
 import Toggle from 'components/Toggle';
@@ -358,13 +358,10 @@ const RedeemForm = (): JSX.Element | null => {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
             })}
           </FormTitle>
-          <InterBTCField
-            id='wrapped-token-amount'
+          <WrappedTokenField
+            id={WRAPPED_TOKEN_AMOUNT}
             name={WRAPPED_TOKEN_AMOUNT}
-            type='number'
             label={WRAPPED_TOKEN_SYMBOL}
-            step='any'
-            placeholder='0.00'
             min={0}
             ref={register({
               required: {

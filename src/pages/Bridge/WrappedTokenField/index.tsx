@@ -7,7 +7,7 @@ import {
   TextFieldLabel,
   TextFieldContainer
 } from 'components/TextField';
-import InterlayInput, { Props as InterlayInputProps } from 'components/UI/InterlayInput';
+import NumberInput, { Props as NumberInputProps } from 'components/NumberInput';
 import {
   POLKADOT,
   KUSAMA
@@ -22,7 +22,7 @@ interface CustomProps {
 }
 
 type Ref = HTMLInputElement;
-const InterBTCField = React.forwardRef<Ref, CustomProps & InterlayInputProps>(({
+const WrappedTokenField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
   id,
   label,
   error,
@@ -34,7 +34,7 @@ const InterBTCField = React.forwardRef<Ref, CustomProps & InterlayInputProps>(({
   return (
     <div className='space-y-1.5'>
       <TextFieldContainer className='relative'>
-        <InterlayInput
+        <NumberInput
           ref={ref}
           id={id}
           className={clsx(
@@ -84,6 +84,6 @@ const InterBTCField = React.forwardRef<Ref, CustomProps & InterlayInputProps>(({
     </div>
   );
 });
-InterBTCField.displayName = 'InterBTCField';
+WrappedTokenField.displayName = 'WrappedTokenField';
 
-export default InterBTCField;
+export default WrappedTokenField;
