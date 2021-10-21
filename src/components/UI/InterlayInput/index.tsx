@@ -27,10 +27,12 @@ const InterlayInput = React.forwardRef<Ref, Props>(({
     type='text'
     className={clsx(
       'focus:ring',
+      // ray test touch <<
       { 'focus:border-primary-300': color === COLORS.primary },
       { 'focus:ring-primary-200': color === COLORS.primary },
       { 'focus:border-secondary-300': color === COLORS.secondary },
       { 'focus:ring-secondary-200': color === COLORS.secondary },
+      // ray test touch >>
       'focus:ring-opacity-50',
       'text-black',
       'text-opacity-90',

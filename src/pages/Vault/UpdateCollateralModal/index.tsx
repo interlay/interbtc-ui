@@ -14,6 +14,8 @@ import {
   newMonetaryAmount
 } from '@interlay/interbtc-api';
 
+import ErrorMessage from 'components/ErrorMessage';
+import NumberInput from 'components/NumberInput';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import IconButton from 'components/buttons/IconButton';
 import InterlayModal, {
@@ -54,8 +56,10 @@ enum CollateralUpdateStatus {
   Decrease
 }
 
-type UpdateCollateralForm = {
-  collateral: string;
+const COLLATERAL = 'collateral';
+
+type UpdateCollateralFormData = {
+  [COLLATERAL]: string;
 };
 
 interface Props {
@@ -70,13 +74,14 @@ const UpdateCollateralModal = ({
   const {
     bridgeLoaded,
     vaultClientLoaded,
-    address
+    address,
+    collateralTokenBalance
   } = useSelector((state: StoreType) => state.general);
   const {
     register,
     handleSubmit,
     errors
-  } = useForm<UpdateCollateralForm>();
+  } = useForm<UpdateCollateralFormData>();
   // Denoted in collateral token
   const currentCollateral = useSelector((state: StoreType) => state.vault.collateral);
   const dispatch = useDispatch();
@@ -132,6 +137,7 @@ const UpdateCollateralModal = ({
     setNewCollateralization('');
   };
 
+  // ray test touch <<
   const onChange = async (event: React.SyntheticEvent) => {
     try {
       const value = (event.target as HTMLInputElement).value;
@@ -178,6 +184,7 @@ const UpdateCollateralModal = ({
       console.log('[UpdateCollateralModal onChange] error.message => ', error.message);
     }
   };
+  // ray test touch >>
 
   const getStatusText = (status: CollateralUpdateStatus): string => {
     switch (status) {
@@ -194,6 +201,19 @@ const UpdateCollateralModal = ({
     default:
       return currentButtonText || '';
     }
+  };
+
+  const validateAmount = (value: string): string | undefined => {
+    const collateralTokenAmount = newMonetaryAmount(value, COLLATERAL_TOKEN, true);
+    if (collateralTokenAmount.lte(newMonetaryAmount(0, COLLATERAL_TOKEN, true))) {
+      return t('vault.collateral_higher_than_0');
+    }
+
+    if (collateralTokenAmount.gt(collateralTokenBalance)) {
+      return t(`Amount must be less than ${COLLATERAL_TOKEN_SYMBOL} balance!`);
+    }
+
+    return undefined;
   };
 
   return (
@@ -249,32 +269,22 @@ const UpdateCollateralModal = ({
             {t('vault.new_total_collateral')}
           </p>
           <div>
-            <div className='input-group'>
-              <input
-                name='collateral'
-                type='float'
-                className={'form-control custom-input' + (errors.collateral ? ' border-interlayCinnabar' : '')}
-                aria-describedby='basic-addon2'
-                ref={register({
-                  required: true,
-                  min: 0
-                })}
-                onChange={onChange}>
-              </input>
-              <div className='input-group-append'>
-                <span className='input-group-text'>
-                  {COLLATERAL_TOKEN_SYMBOL}
-                </span>
-              </div>
-            </div>
-            {errors.collateral && (
-              <p className='text-interlayConifer'>
-                {errors.collateral.type === 'required' ?
-                  t('vault.collateral_is_required') :
-                  errors.collateral.message}
-                {errors.collateral.type === 'min' ? t('vault.collateral_higher_than_0') : errors.collateral.message}
-              </p>
-            )}
+            <NumberInput
+              name={COLLATERAL}
+              title={COLLATERAL}
+              min={0}
+              ref={register({
+                required: {
+                  value: true,
+                  message: t('vault.collateral_is_required')
+                },
+                validate: value => validateAmount(value)
+              })}
+              onChange={onChange}>
+            </NumberInput>
+            <ErrorMessage>
+              {errors[COLLATERAL]?.message}
+            </ErrorMessage>
           </div>
           <p>
             {t('vault.new_collateralization')}
