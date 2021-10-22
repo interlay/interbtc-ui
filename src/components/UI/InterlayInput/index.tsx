@@ -3,6 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 
 import { KUSAMA } from 'utils/constants/relay-chain-names';
+import styles from './interlay-input.module.css';
 
 const COLORS = Object.freeze({
   primary: 'primary',
@@ -25,6 +26,7 @@ const InterlayInput = React.forwardRef<Ref, Props>(({
     ref={ref}
     type='text'
     className={clsx(
+      styles.interlayInput,
       'focus:ring',
       // ray test touch <<
       { 'focus:border-primary-300': color === COLORS.primary },

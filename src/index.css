@@ -84,19 +84,6 @@ img[src*=".svg"]:hover {
 } */
 
 /* TODO: should scope it into components */
-/* MEMO inspired by https://stackoverflow.com/questions/3790935/can-i-hide-the-html5-number-input-s-spin-box */
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-/* Firefox */
-input[type="number"] {
-  -moz-appearance: textfield;
-}
-
-/* TODO: should scope it into components */
 .fade-in-animation {
   animation: fade-keyframes 0.5s ease-in;
 }
