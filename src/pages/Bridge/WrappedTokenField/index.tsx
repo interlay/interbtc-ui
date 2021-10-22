@@ -77,7 +77,8 @@ const WrappedTokenField = React.forwardRef<Ref, CustomProps & NumberInputProps>(
       </TextFieldContainer>
       <TextFieldHelperText
         className={clsx(
-          { 'text-interlayCinnabar': error }
+          { 'text-interlayCinnabar': error },
+          'h-6'
         )}>
         {helperText}
       </TextFieldHelperText>
