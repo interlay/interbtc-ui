@@ -3,6 +3,10 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import { ParachainStatus } from 'common/types/util.types';
 
 interface Props {
@@ -22,7 +26,9 @@ const ParachainStatusInfo = ({
       <p
         className={clsx(
           'text-sm',
-          'text-interlayDenim',
+          { 'text-interlayDenim':
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+          { 'dark:text-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
           'font-medium',
           className
         )}>

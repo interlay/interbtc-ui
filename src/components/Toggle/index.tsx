@@ -3,6 +3,11 @@ import { Switch } from '@headlessui/react';
 import { Props as HeadlessUIProps } from '@headlessui/react/dist/types';
 import clsx from 'clsx';
 
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+
 const Toggle = ({
   checked,
   className,
@@ -14,7 +19,12 @@ const Toggle = ({
       checked={checked}
       onChange={onChange}
       className={clsx(
-        checked ? 'bg-primary-600' : 'bg-gray-200',
+        checked ?
+          clsx(
+            { 'bg-interlayDenim-600':
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+            { 'dark:bg-kintsugiMidnight-600': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+          ) : 'bg-gray-200',
         'relative',
         'inline-flex',
         'flex-shrink-0',
@@ -30,7 +40,10 @@ const Toggle = ({
         'focus:outline-none',
         'focus:ring-2',
         'focus:ring-offset-2',
-        'focus:ring-primary',
+        { 'focus:ring-interlayDenim':
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+        { 'dark:focus:ring-kintsugiMidnight':
+          process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         className
       )}
       {...rest}>

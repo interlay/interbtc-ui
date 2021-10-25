@@ -11,7 +11,10 @@ import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayLink from 'components/UI/InterlayLink';
 import { INTERLAY_COMPANY_LINK } from 'config/links';
 import { WrappedTokenLogoWithTextIcon } from 'config/relay-chains';
-import { KUSAMA } from 'utils/constants/relay-chain-names';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import { PAGES } from 'utils/constants/links';
 import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
 
@@ -42,12 +45,15 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
         ) : clsx(
           'h-0',
           'border-r',
-          'border-interlayHaiti-100'
+          'border-black',
+          'border-opacity-25',
+          'dark:border-white',
+          'dark:border-opacity-25'
         ),
         'flex-1',
         'flex',
         'flex-col',
-        'bg-white',
+        { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
         { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
       )}>
       {onSmallScreen && <CloseButton onClick={onClose} />}
@@ -97,7 +103,10 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           'flex-shrink-0',
           'flex',
           'border-t',
-          'border-interlayHaiti-100',
+          'border-black',
+          'border-opacity-25',
+          'dark:border-white',
+          'dark:border-opacity-25',
           'p-4'
         )}>
         <InterlayLink
@@ -115,6 +124,11 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
             {t('built_by')}
           </span>
           <InterlayLogoIcon
+            className={clsx(
+              { 'text-interlayHaiti':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              { 'dark:text-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )}
             width={130}
             height={29.21} />
         </InterlayLink>

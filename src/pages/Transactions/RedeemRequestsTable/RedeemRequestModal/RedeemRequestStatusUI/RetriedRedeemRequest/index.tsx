@@ -4,10 +4,7 @@ import { useSelector } from 'react-redux';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import {
-  FaExternalLinkAlt,
-  FaExclamationCircle
-} from 'react-icons/fa';
+import { FaExclamationCircle } from 'react-icons/fa';
 import { BitcoinAmount } from '@interlay/monetary-js';
 import {
   Redeem,
@@ -16,7 +13,9 @@ import {
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
-import InterlayLink from 'components/UI/InterlayLink';
+import ExternalLink from 'components/ExternalLink';
+import PrimaryColorSpan from 'components/PrimaryColorSpan';
+import Hr2 from 'components/hrs/Hr2';
 import {
   COLLATERAL_TOKEN,
   COLLATERAL_TOKEN_SYMBOL,
@@ -91,27 +90,27 @@ const RetriedRedeemRequest = ({
       </h2>
       <p className='w-full'>{t('redeem_page.compensation_notice')}</p>
       <p className='font-medium'>
-        <span className='text-interlayDenim'>
+        <PrimaryColorSpan>
           {t('redeem_page.recover_receive_dot')}
-        </span>
-        <span className='text-interlayDenim'>
+        </PrimaryColorSpan>
+        <PrimaryColorSpan>
           &nbsp;{`${displayMonetaryAmount(punishmentCollateralTokenAmount)} ${COLLATERAL_TOKEN_SYMBOL}`}
-        </span>
+        </PrimaryColorSpan>
         <span>
           &nbsp;({`≈ $${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)}`})
         </span>
-        <span className='text-interlayDenim'>
+        <PrimaryColorSpan>
           &nbsp;{t('redeem_page.recover_receive_total')}.
-        </span>
+        </PrimaryColorSpan>
       </p>
       <div className='w-full'>
         <PriceInfo
           title={
             <h5
               className={clsx(
-                { 'text-interlaySecondaryInLightMode':
+                { 'text-interlayTextSecondaryInLightMode':
                   process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
               )}>
               {t('redeem_page.compensation_payment')}
             </h5>
@@ -122,22 +121,19 @@ const RetriedRedeemRequest = ({
           value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
           unitName={COLLATERAL_TOKEN_SYMBOL}
           approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)} />
-        <hr
+        <Hr2
           className={clsx(
             'border-t-2',
-            'my-2.5',
-            { 'border-interlaySecondaryInLightMode':
-              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-            { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            'my-2.5'
           )} />
         <PriceInfo
           className='w-full'
           title={
             <h5
               className={clsx(
-                { 'text-interlaySecondaryInLightMode':
+                { 'text-interlayTextSecondaryInLightMode':
                   process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
               )}>
               {t('you_received')}
             </h5>
@@ -149,20 +145,11 @@ const RetriedRedeemRequest = ({
           unitName={COLLATERAL_TOKEN_SYMBOL}
           approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)} />
       </div>
-      <InterlayLink
-        className={clsx(
-          'text-interlayDenim',
-          'space-x-1.5',
-          'inline-flex',
-          'items-center',
-          'text-sm'
-        )}
-        href={getPolkadotLink(request.creationBlock)}
-        target='_blank'
-        rel='noopener noreferrer'>
-        <span>{t('issue_page.view_parachain_block')}</span>
-        <FaExternalLinkAlt />
-      </InterlayLink>
+      <ExternalLink
+        className='text-sm'
+        href={getPolkadotLink(request.creationBlock)}>
+        {t('issue_page.view_parachain_block')}
+      </ExternalLink>
       <div className='w-full'>
         <h6
           className={clsx(
@@ -178,9 +165,9 @@ const RetriedRedeemRequest = ({
         <p
           className={clsx(
             'text-justify',
-            { 'text-interlaySecondaryInLightMode':
+            { 'text-interlayTextSecondaryInLightMode':
               process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           {t('redeem_page.retry_new_redeem')}
         </p>

@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
 import DashboardCard from 'pages/Dashboard/DashboardCard';
+import ExternalLink from 'components/ExternalLink';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
-import InterlayLink from 'components/UI/InterlayLink';
 import { BTC_BLOCK_API } from 'config/bitcoin';
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
@@ -164,30 +164,28 @@ const BtcRelay = ({
                   'xl:mb-2'
                 )}>
                 {blockstreamTip !== '-' && (
-                  <InterlayLink
-                    className={clsx(
-                      'text-interlayDenim',
-                      'space-x-1.5',
-                      'inline-flex',
-                      'items-center'
-                    )}
-                    href={`${BTC_BLOCK_API}${blockstreamTip}`}
-                    target='_blank'
-                    rel='noopener noreferrer'>
-                    <span>{t('dashboard.relay.blockstream_verify_link')}</span>
-                    <FaExternalLinkAlt />
-                  </InterlayLink>
+                  <ExternalLink href={`${BTC_BLOCK_API}${blockstreamTip}`}>
+                    {t('dashboard.relay.blockstream_verify_link')}
+                  </ExternalLink>
                 )}
               </h1>
             </div>
           </div>
-          <div className='mt-6 flex justify-center items-center'>
+          <div
+            className={clsx(
+              'mt-6',
+              'flex',
+              'justify-center',
+              'items-center'
+            )}>
             <div
               className={clsx(
                 'w-64',
                 'h-64',
                 'ring-4',
+                // ray test touch <<
                 'ring-interlayDenim',
+                // ray test touch >>
                 'rounded-full',
                 'inline-flex',
                 'flex-col',
@@ -199,7 +197,9 @@ const BtcRelay = ({
                 className={clsx(
                   'font-bold',
                   'text-3xl',
+                  // ray test touch <<
                   'text-interlayDenim',
+                  // ray test touch >>
                   'text-center'
                 )}>
                 {t('blockstream')}

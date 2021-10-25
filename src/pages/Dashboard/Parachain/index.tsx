@@ -5,6 +5,7 @@ import ParachainSecurity from '../components/parachain-security';
 import TimerIncrement from 'parts/TimerIncrement';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
+import Hr1 from 'components/hrs/Hr1';
 
 const Parachain = (): JSX.Element => {
   const { t } = useTranslation();
@@ -15,11 +16,7 @@ const Parachain = (): JSX.Element => {
         <PageTitle
           mainTitle={t('dashboard.parachain.parachain')}
           subTitle={<TimerIncrement />} />
-        <hr
-          className={clsx(
-            'border-interlayDenim',
-            'mt-2'
-          )} />
+        <Hr1 className='mt-2' />
       </div>
       <div
         className={clsx(

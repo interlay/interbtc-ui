@@ -5,16 +5,13 @@ import {
   useMutation,
   useQueryClient
 } from 'react-query';
-import {
-  FaCheckCircle,
-  FaExternalLinkAlt
-} from 'react-icons/fa';
+import { FaCheckCircle } from 'react-icons/fa';
 import clsx from 'clsx';
 import { Issue } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import ErrorModal from 'components/ErrorModal';
-import InterlayLink from 'components/UI/InterlayLink';
+import ExternalLink from 'components/ExternalLink';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import useQueryParams from 'utils/hooks/use-query-params';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
@@ -92,36 +89,25 @@ const ConfirmedIssueRequest = ({
         <p className='space-x-1'>
           <span
             className={clsx(
-              { 'text-interlaySecondaryInLightMode':
+              { 'text-interlayTextSecondaryInLightMode':
                 process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )}>
             {t('issue_page.btc_transaction')}:
           </span>
           <span className='font-medium'>{shortAddress(request.btcTxId || '')}</span>
         </p>
-        <InterlayLink
-          className={clsx(
-            'text-interlayDenim',
-            'space-x-1.5',
-            'inline-flex',
-            'items-center',
-            'text-sm'
-          )}
-          href={`${BTC_TRANSACTION_API}${request.btcTxId}`}
-          target='_blank'
-          rel='noopener noreferrer'>
-          <span>
-            {t('issue_page.view_on_block_explorer')}
-          </span>
-          <FaExternalLinkAlt />
-        </InterlayLink>
+        <ExternalLink
+          className='text-sm'
+          href={`${BTC_TRANSACTION_API}${request.btcTxId}`}>
+          {t('issue_page.view_on_block_explorer')}
+        </ExternalLink>
         <p
           className={clsx(
             'text-justify',
-            { 'text-interlaySecondaryInLightMode':
+            { 'text-interlayTextSecondaryInLightMode':
               process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           {t('issue_page.receive_interbtc_tokens', {
             wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL

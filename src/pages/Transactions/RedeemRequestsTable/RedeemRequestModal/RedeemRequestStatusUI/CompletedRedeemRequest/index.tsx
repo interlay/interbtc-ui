@@ -1,11 +1,11 @@
 
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { FaExternalLinkAlt } from 'react-icons/fa';
 import { Redeem } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import InterlayLink from 'components/UI/InterlayLink';
+import ExternalLink from 'components/ExternalLink';
+import PrimaryColorSpan from 'components/PrimaryColorSpan';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
 import {
   POLKADOT,
@@ -43,9 +43,9 @@ const CompletedRedeemRequest = ({
           'font-medium'
         )}>
         <span>{t('issue_page.you_received')}</span>
-        <span className='text-interlayCinnabar'>
+        <PrimaryColorSpan>
           {`${displayMonetaryAmount(request.amountBTC)} BTC`}
-        </span>
+        </PrimaryColorSpan>
         .
       </p>
       {/* TODO: could componentize */}
@@ -73,46 +73,28 @@ const CompletedRedeemRequest = ({
           {request.creationBlock}
         </span>
       </div>
-      <InterlayLink
-        className={clsx(
-          'text-interlayDenim',
-          'space-x-1.5',
-          'inline-flex',
-          'items-center',
-          'text-sm'
-        )}
-        href={getPolkadotLink(request.creationBlock)}
-        target='_blank'
-        rel='noopener noreferrer'>
-        <span>{t('issue_page.view_parachain_block')}</span>
-        <FaExternalLinkAlt />
-      </InterlayLink>
+      <ExternalLink
+        className='text-sm'
+        href={getPolkadotLink(request.creationBlock)}>
+        {t('issue_page.view_parachain_block')}
+      </ExternalLink>
       {/* TODO: could componentize */}
       <p className='space-x-1'>
         <span
           className={clsx(
-            { 'text-interlaySecondaryInLightMode':
+            { 'text-interlayTextSecondaryInLightMode':
               process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           {t('issue_page.btc_transaction')}:
         </span>
         <span className='font-medium'>{shortAddress(request.btcTxId || '')}</span>
       </p>
-      <InterlayLink
-        className={clsx(
-          'text-interlayDenim',
-          'space-x-1.5',
-          'inline-flex',
-          'items-center',
-          'text-sm'
-        )}
-        href={`${BTC_TRANSACTION_API}${request.btcTxId}`}
-        target='_blank'
-        rel='noopener noreferrer'>
-        <span>{t('issue_page.view_on_block_explorer')}</span>
-        <FaExternalLinkAlt />
-      </InterlayLink>
+      <ExternalLink
+        className='text-sm'
+        href={`${BTC_TRANSACTION_API}${request.btcTxId}`}>
+        {t('issue_page.view_on_block_explorer')}
+      </ExternalLink>
     </RequestWrapper>
   );
 };

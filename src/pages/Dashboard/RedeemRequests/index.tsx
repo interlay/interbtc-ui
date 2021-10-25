@@ -13,6 +13,7 @@ import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import RedeemRequestsTable from 'containers/RedeemRequestsTable';
+import Hr1 from 'components/hrs/Hr1';
 import {
   POLKADOT,
   KUSAMA
@@ -95,11 +96,7 @@ function RedeemRequests(): JSX.Element {
         <PageTitle
           mainTitle={t('dashboard.redeem.redeem')}
           subTitle={<TimerIncrement />} />
-        <hr
-          className={clsx(
-            'border-interlayDenim',
-            'mt-2'
-          )} />
+        <Hr1 className='mt-2' />
       </div>
       <div
         className={clsx(
@@ -136,9 +133,9 @@ function RedeemRequests(): JSX.Element {
           {totalRedeemedAmount !== '-' && (
             <h5
               className={clsx(
-                { 'text-interlaySecondaryInLightMode':
+                { 'text-interlayTextSecondaryInLightMode':
                   process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
               )}>
               $
               {/* eslint-disable-next-line max-len */}

@@ -9,7 +9,6 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { useTable } from 'react-table';
-import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import {
@@ -18,7 +17,8 @@ import {
 } from '@interlay/interbtc-api';
 
 import ErrorFallback from 'components/ErrorFallback';
-import EllipsisLoader from 'components/EllipsisLoader';
+import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
+import ExternalLink from 'components/ExternalLink';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -28,7 +28,6 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import InterlayPagination from 'components/UI/InterlayPagination';
-import InterlayLink from 'components/UI/InterlayLink';
 import useQueryParams from 'utils/hooks/use-query-params';
 import { BTC_BLOCK_API } from 'config/bitcoin';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
@@ -109,19 +108,9 @@ const BlocksTable = (): JSX.Element => {
         Cell: function FormattedCell({ value }: { value: number; }) {
           const hash = reverseEndiannessHex(stripHexPrefix(value));
           return (
-            <InterlayLink
-              className={clsx(
-                'text-interlayDenim',
-                'space-x-1.5',
-                'inline-flex',
-                'items-center'
-              )}
-              href={`${BTC_BLOCK_API}${hash}`}
-              target='_blank'
-              rel='noopener noreferrer'>
-              <span>{hash}</span>
-              <FaExternalLinkAlt />
-            </InterlayLink>
+            <ExternalLink href={`${BTC_BLOCK_API}${hash}`}>
+              {hash}
+            </ExternalLink>
           );
         }
       },
@@ -163,13 +152,7 @@ const BlocksTable = (): JSX.Element => {
     totalRelayedBlocksCountLoading
   ) {
     return (
-      <div
-        className={clsx(
-          'flex',
-          'justify-center'
-        )}>
-        <EllipsisLoader dotClassName='bg-interlayCalifornia-400' />
-      </div>
+      <PrimaryColorEllipsisLoader />
     );
   }
   if (!blocks) {

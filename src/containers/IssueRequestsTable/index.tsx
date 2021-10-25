@@ -4,7 +4,6 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useTable } from 'react-table';
-import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
 import {
   useErrorHandler,
@@ -16,8 +15,9 @@ import {
   IssueStatus
 } from '@interlay/interbtc-api';
 
-import EllipsisLoader from 'components/EllipsisLoader';
+import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
+import ExternalLink from 'components/ExternalLink';
 import InterlayPagination from 'components/UI/InterlayPagination';
 import InterlayTable, {
   InterlayTableContainer,
@@ -28,7 +28,6 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import StatusCell from 'components/UI/InterlayTable/StatusCell';
-import InterlayLink from 'components/UI/InterlayLink';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import {
@@ -147,19 +146,9 @@ const IssueRequestsTable = ({
         ],
         Cell: function FormattedCell({ value }: { value: string; }) {
           return (
-            <InterlayLink
-              className={clsx(
-                'text-interlayDenim',
-                'space-x-1.5',
-                'inline-flex',
-                'items-center'
-              )}
-              href={`${BTC_ADDRESS_API}${value}`}
-              target='_blank'
-              rel='noopener noreferrer'>
-              <span>{shortAddress(value)}</span>
-              <FaExternalLinkAlt />
-            </InterlayLink>
+            <ExternalLink href={`${BTC_ADDRESS_API}${value}`}>
+              {shortAddress(value)}
+            </ExternalLink>
           );
         }
       },
@@ -217,13 +206,7 @@ const IssueRequestsTable = ({
         {t('issue_page.recent_requests')}
       </h2>
       {(status === STATUSES.IDLE || status === STATUSES.PENDING) && (
-        <div
-          className={clsx(
-            'flex',
-            'justify-center'
-          )}>
-          <EllipsisLoader dotClassName='bg-interlayCalifornia-400' />
-        </div>
+        <PrimaryColorEllipsisLoader />
       )}
       {status === STATUSES.RESOLVED && (
         <InterlayTable {...getTableProps()}>

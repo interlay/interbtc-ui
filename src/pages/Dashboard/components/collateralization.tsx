@@ -87,7 +87,9 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
             <>
               <h1
                 className={clsx(
+                  // ray test touch <<
                   'text-interlayDenim',
+                  // ray test touch >>
                   'text-sm',
                   'xl:text-base',
                   'mb-1',
@@ -136,13 +138,17 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
           'justify-center',
           'items-center',
           'border-2',
+          // ray test touch <<
           'border-interlayDenim'
+          // ray test touch >>
         )}>
         <h1
           className={clsx(
             'font-bold',
             'text-2xl',
+            // ray test touch <<
             'text-interlayDenim',
+            // ray test touch >>
             'text-center'
           )}>
           {failed ? (
