@@ -289,7 +289,7 @@ const IssueRequestsTable = (): JSX.Element => {
     );
   }
 
-  const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number }) => {
+  const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number; }) => {
     updateQueryParameters({
       [QUERY_PARAMETERS.ISSUE_REQUESTS_PAGE]: (newSelectedPageIndex + 1).toString()
     });

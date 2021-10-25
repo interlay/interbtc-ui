@@ -291,7 +291,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     );
   }
 
-  const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number }) => {
+  const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number; }) => {
     updateQueryParameters({
       [QUERY_PARAMETERS.REDEEM_REQUESTS_PAGE]: (newSelectedPageIndex + 1).toString()
     });

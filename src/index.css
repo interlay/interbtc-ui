@@ -1,4 +1,100 @@
 
 @tailwind base;
+
+/* MEMO: inspired by https://web.dev/prefers-color-scheme */
+:root {
+  color-scheme: light dark;
+}
+body {
+  --duration: 0.5s;
+  --timing: ease;
+
+  /* MEMO: inspired by https://web.dev/prefers-color-scheme/#smooth-transitions-between-modes */
+  transition:
+    color var(--duration) var(--timing),
+    background-color var(--duration) var(--timing);
+}
+/* MEMO: `light` and `dark` are hardcoded */
+/* https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually */
+/* https://github.com/hipstersmoothie/storybook-dark-mode#darklight-class */
+body.light {
+  /* MEMO: inspired by https://web.dev/prefers-color-scheme/#invert-vector-graphics-and-icons */
+  --icon-filter_hover: invert(60%);
+}
+body.dark {
+  /* MEMO: inspired by https://web.dev/prefers-color-scheme/#re-colorize-and-darken-photographic-images */
+  --image-filter: grayscale(50%);
+  /* MEMO: inspired by https://web.dev/prefers-color-scheme/#invert-vector-graphics-and-icons */
+  --icon-filter: invert(100%);
+  --icon-filter_hover: invert(40%);
+}
+body.dark img:not([src*=".svg"]) {
+  filter: var(--image-filter);
+}
+body.dark img[src*=".svg"] {
+  filter: var(--icon-filter);
+}
+img[src*=".svg"]:hover {
+  filter: var(--icon-filter_hover);
+}
+
 @tailwind components;
 @tailwind utilities;
+
+/* MEMO: https://drafts.csswg.org/css-fonts/#font-weight-numeric-values */
+/* TODO: could optimize font loading more for less FOUT & FOIT */
+/* MEMO: inspired by https://css-tricks.com/snippets/css/using-font-face/ */
+@font-face {
+  font-family: "airbnb-cereal";
+  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealLight.ttf") format("truetype");
+  font-weight: 300; /* light */
+  font-style: normal;
+}
+@font-face {
+  font-family: "airbnb-cereal";
+  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealBook.ttf") format("truetype");
+  font-weight: 400; /* book */
+  font-style: normal;
+}
+@font-face {
+  font-family: "airbnb-cereal";
+  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealMedium.ttf") format("truetype");
+  font-weight: 500; /* medium */
+  font-style: normal;
+}
+@font-face {
+  font-family: "airbnb-cereal";
+  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealBold.ttf") format("truetype");
+  font-weight: 700; /* bold */
+  font-style: normal;
+}
+/* TODO: not used for now */
+/* @font-face {
+  font-family: "airbnb-cereal";
+  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealExtraBold.ttf") format("truetype");
+  font-weight: 800; extra bold
+  font-style: normal;
+} */
+/* TODO: not used for now */
+/* @font-face {
+  font-family: "airbnb-cereal";
+  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealExtraBold.ttf") format("truetype");
+  font-weight: 900; black
+  font-style: normal;
+} */
+
+/* TODO: should scope it into components */
+.fade-in-animation {
+  animation: fade-keyframes 0.5s ease-in;
+}
+@keyframes fade-keyframes {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

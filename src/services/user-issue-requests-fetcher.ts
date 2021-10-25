@@ -18,7 +18,7 @@ interface Arguments {
     string,
     number,
     number
-  ]
+  ];
 }
 
 const userIssueRequestsFetcher = async ({ queryKey }: Arguments): Promise<Array<Issue>> => {

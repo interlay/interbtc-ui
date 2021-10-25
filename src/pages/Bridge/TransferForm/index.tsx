@@ -11,8 +11,9 @@ import { toast } from 'react-toastify';
 import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 
-import InterBTCField from '../InterBTCField';
+import WrappedTokenField from '../WrappedTokenField';
 import SubmitButton from '../SubmitButton';
+import FormTitle from '../FormTitle';
 import TextField from 'components/TextField';
 import InterlayModal, {
   InterlayModalTitle,
@@ -203,23 +204,15 @@ const TransferForm = (): JSX.Element => {
       <form
         className='space-y-8'
         onSubmit={handleSubmit(onSubmit)}>
-        <h4
-          className={clsx(
-            'font-medium',
-            'text-center',
-            'text-interlayDenim'
-          )}>
+        <FormTitle>
           {t('transfer_page.transfer_interbtc', {
             wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
           })}
-        </h4>
-        <InterBTCField
+        </FormTitle>
+        <WrappedTokenField
           id={WRAPPED_TOKEN_INPUT_AMOUNT}
           name={WRAPPED_TOKEN_INPUT_AMOUNT}
-          type='number'
           label={WRAPPED_TOKEN_SYMBOL}
-          step='any'
-          placeholder='0.00'
           ref={register({
             required: {
               value: true,

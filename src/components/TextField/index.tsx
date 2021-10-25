@@ -21,7 +21,7 @@ const TextField = React.forwardRef<Ref, Props>(({
   required,
   ...rest
 }, ref): JSX.Element => (
-  <TextFieldContainer>
+  <TextFieldContainer className='space-y-0.5'>
     {label && (
       <TextFieldLabel
         htmlFor={id}
@@ -44,14 +44,13 @@ const TextField = React.forwardRef<Ref, Props>(({
         }
       )}
       {...rest} />
-    {helperText && (
-      <TextFieldHelperText
-        className={clsx(
-          { 'text-interlayCinnabar': error }
-        )}>
-        {helperText}
-      </TextFieldHelperText>
-    )}
+    <TextFieldHelperText
+      className={clsx(
+        { 'text-interlayCinnabar': error },
+        'h-6'
+      )}>
+      {helperText}
+    </TextFieldHelperText>
   </TextFieldContainer>
 ));
 TextField.displayName = 'TextField';

@@ -29,7 +29,7 @@ const InterBTC = (): React.ReactElement => {
   const statsApi = useInterbtcIndex();
 
   // eslint-disable-next-line no-array-constructor
-  const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number }>());
+  const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number; }>());
   const pointIssuesPerDay = useMemo(
     () =>
       cumulativeIssuesPerDay.map((dataPoint, i) => {

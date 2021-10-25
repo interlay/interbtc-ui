@@ -46,6 +46,11 @@ import {
   WrappedTokenAmount
 } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
+import { CLASS_NAMES } from 'utils/constants/styles';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import './i18n';
 import * as constants from './constants';
 import startFetchingLiveData from 'common/live-data/live-data';
@@ -64,8 +69,6 @@ import {
   updateWrappedTokenBalanceAction,
   updateCollateralTokenBalanceAction
 } from 'common/actions/general.actions';
-// TODO: should clean up
-import './_general.scss';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Bridge = React.lazy(() =>
@@ -363,6 +366,20 @@ const App = (): JSX.Element => {
     wrappedTokenBalance,
     collateralTokenBalance
   ]);
+
+  React.useEffect(() => {
+    if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
+      // MEMO: inspired by https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually
+      document.documentElement.classList.add(CLASS_NAMES.DARK);
+      document.body.classList.add('dark:text-kintsugiPrimaryInDarkMode');
+      document.body.classList.add('dark:bg-kintsugiMidnight');
+    }
+
+    if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production') {
+      document.body.classList.add('text-interlayPrimaryInLightMode');
+      document.body.classList.add('bg-interlayHaiti-50');
+    }
+  }, []);
 
   return (
     <>

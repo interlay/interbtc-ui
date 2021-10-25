@@ -21,9 +21,13 @@ import InterlayModal, {
   InterlayModalTitle
 } from 'components/UI/InterlayModal';
 import { APP_NAME } from 'config/relay-chains';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';
-import { shortAddress } from 'common/utils/utils';
 import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
 import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
@@ -109,7 +113,11 @@ const AccountModal = ({
           <CloseIcon
             width={18}
             height={18}
-            className='text-textSecondary' />
+            className={clsx(
+              { 'text-interlaySecondaryInLightMode':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )} />
         </IconButton>
         <div className='space-y-4'>
           {extensions.length ? (

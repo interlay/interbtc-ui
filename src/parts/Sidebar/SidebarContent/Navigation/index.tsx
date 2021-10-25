@@ -87,10 +87,7 @@ const Navigation = ({
       className={clsx(
         'px-2',
         'space-y-1',
-        { [clsx(
-          'flex-1',
-          'bg-white'
-        )]: !onSmallScreen },
+        { 'flex-1': !onSmallScreen },
         className
       )}
       {...rest}>

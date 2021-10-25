@@ -7,6 +7,7 @@ import * as React from 'react';
 import { useAsyncDebounce } from 'react-table';
 import clsx from 'clsx';
 
+// TODO: not used for now
 function GlobalFilter({
   preGlobalFilteredRows,
   globalFilter,
