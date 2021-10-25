@@ -9,7 +9,7 @@ import InterlayPagination, { Props } from './';
 const PER_PAGE = 10;
 
 const Template: Story<Props> = args => {
-  const handlePageChange = ({ selected }: { selected: number }) => {
+  const handlePageChange = ({ selected }: { selected: number; }) => {
     const offset = Math.ceil(selected * PER_PAGE);
     console.log('[handlePageChange] selected => ', selected);
     console.log('[handlePageChange] offset => ', offset);

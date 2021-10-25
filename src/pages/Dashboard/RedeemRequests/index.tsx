@@ -32,7 +32,7 @@ function RedeemRequests(): JSX.Element {
   const [totalRedeemRequests, setTotalRedeemRequests] = useState(0);
   const [totalRedeemedAmount, setTotalRedeemedAmount] = useState('-');
   // eslint-disable-next-line no-array-constructor
-  const [cumulativeRedeemsPerDay, setCumulativeRedeemsPerDay] = useState(new Array<{ date: number; sat: number }>());
+  const [cumulativeRedeemsPerDay, setCumulativeRedeemsPerDay] = useState(new Array<{ date: number; sat: number; }>());
   const pointRedeemsPerDay = useMemo(
     () =>
       cumulativeRedeemsPerDay.map((dataPoint, i) => {

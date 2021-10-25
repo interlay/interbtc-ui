@@ -27,7 +27,7 @@ import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 const queryString = require('query-string');
 
 interface CustomProps {
-  request: Issue
+  request: Issue;
 }
 
 const SubmittedIssueRequestModal = ({

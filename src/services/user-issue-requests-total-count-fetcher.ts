@@ -14,7 +14,7 @@ interface Arguments {
   queryKey: [
     string,
     string
-  ]
+  ];
 }
 
 // TODO: should create fetchers in a granular way

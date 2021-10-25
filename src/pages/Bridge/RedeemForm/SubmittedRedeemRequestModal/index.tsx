@@ -30,7 +30,7 @@ import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 const queryString = require('query-string');
 
 interface CustomProps {
-  request: Redeem
+  request: Redeem;
 }
 
 const SubmittedRedeemRequestModal = ({

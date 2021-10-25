@@ -34,7 +34,7 @@ function IssueRequests(): JSX.Element {
   const [totalIssueRequests, setTotalIssueRequests] = useState(0);
 
   // eslint-disable-next-line no-array-constructor
-  const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number }>());
+  const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number; }>());
   const pointIssuesPerDay = useMemo(
     () => cumulativeIssuesPerDay.map((dataPoint, index) => {
       if (index === 0) return 0;

@@ -15,7 +15,7 @@ interface Props {
     cancelled: boolean;
     isExpired: boolean;
     reimbursed: boolean;
-  }
+  };
 }
 
 const StatusCell = ({

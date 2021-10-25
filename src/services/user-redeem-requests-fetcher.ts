@@ -18,7 +18,7 @@ interface Arguments {
     string,
     number,
     number
-  ]
+  ];
 }
 
 const userRedeemRequestsFetcher = async ({ queryKey }: Arguments): Promise<Array<Redeem>> => {
