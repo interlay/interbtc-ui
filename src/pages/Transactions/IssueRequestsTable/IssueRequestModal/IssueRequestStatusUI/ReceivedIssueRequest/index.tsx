@@ -6,8 +6,12 @@ import { Issue } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import InterlayLink from 'components/UI/InterlayLink';
-import { shortAddress } from 'common/utils/utils';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import { shortAddress } from 'common/utils/utils';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 
 interface Props {
@@ -84,7 +88,14 @@ const ReceivedIssueRequest = ({
         </span>
       </div>
       <p className='space-x-1'>
-        <span className='text-textSecondary'>{t('issue_page.btc_transaction')}:</span>
+        <span
+          className={clsx(
+            { 'text-interlaySecondaryInLightMode':
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+          )}>
+          {t('issue_page.btc_transaction')}:
+        </span>
         <span className='font-medium'>{shortAddress(request.btcTxId || '')}</span>
       </p>
       <InterlayLink

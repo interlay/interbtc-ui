@@ -217,7 +217,7 @@ const VaultRedeemRequestsTable = ({
     }
   );
 
-  const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number }) => {
+  const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number; }) => {
     updateQueryParameters({
       [QUERY_PARAMETERS.PAGE]: (newSelectedPageIndex + 1).toString()
     });

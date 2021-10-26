@@ -9,6 +9,10 @@ import PriceInfo from 'pages/Bridge/PriceInfo';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import {
   copyToClipboard,
   getUsdAmount,
   displayMonetaryAmount
@@ -47,7 +51,9 @@ const WhoopsStatusUI = ({
         </h2>
         <p
           className={clsx(
-            'text-textSecondary',
+            { 'text-interlaySecondaryInLightMode':
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'text-sm'
           )}>
           {t('issue_page.refund_sent_more_btc')}
@@ -56,7 +62,12 @@ const WhoopsStatusUI = ({
       <PriceInfo
         className='w-full'
         title={
-          <h5 className='text-textSecondary'>
+          <h5
+            className={clsx(
+              { 'text-interlaySecondaryInLightMode':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )}>
             {t('issue_page.refund_requested')}
           </h5>
         }
@@ -108,13 +119,20 @@ const WhoopsStatusUI = ({
         className={clsx(
           'border-t-2',
           'my-2.5',
-          'border-textSecondary',
+          { 'border-interlaySecondaryInLightMode':
+            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+          { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
           'w-full'
         )} />
       <PriceInfo
         className='w-full'
         title={
-          <h5 className='text-textPrimary'>
+          <h5
+            className={clsx(
+              { 'text-interlayPrimaryInLightMode':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              { 'dark:text-kintsugiPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )}>
             {t('issue_page.refund_difference')}
           </h5>
         }
@@ -131,7 +149,12 @@ const WhoopsStatusUI = ({
             prices.bitcoin.usd
           )
         } />
-      <p className='text-textSecondary'>
+      <p
+        className={clsx(
+          { 'text-interlaySecondaryInLightMode':
+            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+          { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+        )}>
         {t('issue_page.refund_requested_vault')}
         &nbsp;{t('issue_page.refund_vault_to_return')}
         <span className='text-interlayCinnabar'>

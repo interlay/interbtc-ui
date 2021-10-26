@@ -15,6 +15,10 @@ import InterlayModal, {
 } from 'components/UI/InterlayModal';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import {
   PAGES,
   QUERY_PARAMETERS
 } from 'utils/constants/links';
@@ -23,7 +27,7 @@ import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 const queryString = require('query-string');
 
 interface CustomProps {
-  request: Issue
+  request: Issue;
 }
 
 const SubmittedIssueRequestModal = ({
@@ -58,7 +62,11 @@ const SubmittedIssueRequestModal = ({
           <CloseIcon
             width={18}
             height={18}
-            className='text-textSecondary' />
+            className={clsx(
+              { 'text-interlaySecondaryInLightMode':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )} />
         </IconButton>
         <div
           className={clsx(

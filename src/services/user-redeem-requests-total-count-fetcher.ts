@@ -14,7 +14,7 @@ interface Arguments {
   queryKey: [
     string,
     string
-  ]
+  ];
 }
 
 const userRedeemRequestsTotalCountFetcher = async ({ queryKey }: Arguments): Promise<number> => {

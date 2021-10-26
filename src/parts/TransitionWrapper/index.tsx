@@ -9,7 +9,7 @@ import './transition-wrapper.css';
 
 interface Props {
   location: Location;
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 /**

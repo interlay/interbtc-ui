@@ -8,6 +8,8 @@ import { useQueryClient } from 'react-query';
 import clsx from 'clsx';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
+import ErrorMessage from 'components/ErrorMessage';
+import NumberInput from 'components/NumberInput';
 import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
 import IconButton from 'components/buttons/IconButton';
@@ -20,13 +22,19 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
-import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import { displayMonetaryAmount } from 'common/utils/utils';
+import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
-type RequestReplacementForm = {
-  amount: number;
+const AMOUNT = 'amount';
+
+type RequestReplacementFormData = {
+  [AMOUNT]: number;
 };
 
 interface Props {
@@ -38,8 +46,11 @@ const RequestReplacementModal = ({
   onClose,
   show
 }: Props): JSX.Element => {
-  const { register, handleSubmit, errors } = useForm<RequestReplacementForm>();
-  const { address } = useSelector((state: StoreType) => state.general);
+  const { register, handleSubmit, errors } = useForm<RequestReplacementFormData>();
+  const {
+    address,
+    wrappedTokenBalance
+  } = useSelector((state: StoreType) => state.general);
   const lockedDot = useSelector((state: StoreType) => state.vault.collateral);
   const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
   const [isRequestPending, setRequestPending] = React.useState(false);
@@ -47,14 +58,14 @@ const RequestReplacementModal = ({
   const queryClient = useQueryClient();
   const focusRef = React.useRef(null);
 
-  const onSubmit = handleSubmit(async ({ amount }) => {
+  const onSubmit = handleSubmit(async data => {
     setRequestPending(true);
     try {
-      if (BitcoinAmount.from.BTC(amount).to.Satoshi() === undefined) {
+      if (BitcoinAmount.from.BTC(data[AMOUNT]).to.Satoshi() === undefined) {
         throw new Error('Amount to convert is less than 1 satoshi.');
       }
       const dustValue = await window.bridge.interBtcApi.redeem.getDustValue();
-      const amountPolkaBtc = BitcoinAmount.from.BTC(amount);
+      const amountPolkaBtc = BitcoinAmount.from.BTC(data[AMOUNT]);
       if (amountPolkaBtc.lte(dustValue)) {
         throw new Error(`Please enter an amount greater than Bitcoin dust (${displayMonetaryAmount(dustValue)} BTC)`);
       }
@@ -75,6 +86,19 @@ const RequestReplacementModal = ({
     }
     setRequestPending(false);
   });
+
+  const validateAmount = (value: string): string | undefined => {
+    const wrappedTokenAmount = BitcoinAmount.from.BTC(value);
+    if (wrappedTokenAmount.lte(BitcoinAmount.zero)) {
+      return t('Amount must be greater than zero!');
+    }
+
+    if (wrappedTokenAmount.gt(wrappedTokenBalance)) {
+      return t(`Amount must be less than ${WRAPPED_TOKEN_SYMBOL} balance!`);
+    }
+
+    return undefined;
+  };
 
   return (
     <InterlayModal
@@ -108,7 +132,11 @@ const RequestReplacementModal = ({
           <CloseIcon
             width={18}
             height={18}
-            className='text-textSecondary' />
+            className={clsx(
+              { 'text-interlaySecondaryInLightMode':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )} />
         </IconButton>
         <form
           className='space-y-4'
@@ -126,31 +154,22 @@ const RequestReplacementModal = ({
           <p>
             {t('vault.replace_amount')}
           </p>
-          <div className='input-group'>
-            <input
-              name='amount'
-              type='float'
-              className={clsx(
-                'form-control',
-                { 'border-interlayCinnabar': errors.amount }
-              )}
-              aria-describedby='basic-addon2'
+          <div>
+            <NumberInput
+              name={AMOUNT}
+              title={AMOUNT}
+              min={0}
               ref={register({
-                required: true
+                required: {
+                  value: true,
+                  message: t('Amount is required!')
+                },
+                validate: value => validateAmount(value)
               })}>
-            </input>
-            <div className='input-group-append'>
-              <span className='input-group-text'>
-                {WRAPPED_TOKEN_SYMBOL}
-              </span>
-            </div>
-            {errors.amount && (
-              <p className='text-interlayConifer'>
-                {errors.amount.type === 'required' ?
-                  'Amount is required' :
-                  errors.amount.message}
-              </p>
-            )}
+            </NumberInput>
+            <ErrorMessage>
+              {errors[AMOUNT]?.message}
+            </ErrorMessage>
           </div>
           <div
             className={clsx(

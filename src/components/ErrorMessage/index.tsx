@@ -1,0 +1,29 @@
+
+import clsx from 'clsx';
+
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+
+const ErrorMessage = ({
+  className,
+  ...rest
+}: React.ComponentPropsWithRef<'p'>): JSX.Element => (
+  <p
+    className={clsx(
+      { 'text-interlayCinnabar':
+        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+      { 'dark:text-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+      'text-xs',
+      'px-0.5',
+      'py-0.5',
+      'h-6',
+      'flex',
+      'items-center',
+      className
+    )}
+    {...rest} />
+);
+
+export default ErrorMessage;

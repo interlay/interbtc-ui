@@ -19,6 +19,10 @@ import InterlayModal, {
 } from 'components/UI/InterlayModal';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import {
   displayMonetaryAmount,
   getUsdAmount,
   shortAddress
@@ -102,7 +106,11 @@ const RedeemRequestModal = ({
           <CloseIcon
             width={18}
             height={18}
-            className='text-textSecondary' />
+            className={clsx(
+              { 'text-interlaySecondaryInLightMode':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )} />
         </IconButton>
         <div
           className={clsx(
@@ -131,7 +139,9 @@ const RedeemRequestModal = ({
               </h4>
               <span
                 className={clsx(
-                  'text-textSecondary',
+                  { 'text-interlaySecondaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                   'block'
                 )}>
                 {`≈ $ ${getUsdAmount(request.amountBTC || BitcoinAmount.zero, prices.bitcoin.usd)}`}
@@ -140,7 +150,12 @@ const RedeemRequestModal = ({
             <div>
               <PriceInfo
                 title={
-                  <h5 className='text-textSecondary'>
+                  <h5
+                    className={clsx(
+                      { 'text-interlaySecondaryInLightMode':
+                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                      { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                    )}>
                     {t('bridge_fee')}
                   </h5>
                 }
@@ -154,7 +169,12 @@ const RedeemRequestModal = ({
                 approxUSD={getUsdAmount(request.bridgeFee, prices.bitcoin.usd)} />
               <PriceInfo
                 title={
-                  <h5 className='text-textSecondary'>
+                  <h5
+                    className={clsx(
+                      { 'text-interlaySecondaryInLightMode':
+                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                      { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                    )}>
                     {t('bitcoin_network_fee')}
                   </h5>
                 }
@@ -170,11 +190,18 @@ const RedeemRequestModal = ({
                 className={clsx(
                   'border-t-2',
                   'my-2.5',
-                  'border-textSecondary'
+                  { 'border-interlaySecondaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                  { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )} />
               <PriceInfo
                 title={
-                  <h5 className='text-textSecondary'>
+                  <h5
+                    className={clsx(
+                      { 'text-interlaySecondaryInLightMode':
+                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                      { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                    )}>
                     {t('you_will_receive')}
                   </h5>
                 }
@@ -193,7 +220,12 @@ const RedeemRequestModal = ({
                   'flex',
                   'justify-between'
                 )}>
-                <span className='text-textSecondary'>
+                <span
+                  className={clsx(
+                    { 'text-interlaySecondaryInLightMode':
+                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  )}>
                   {t('issue_page.destination_address')}
                 </span>
                 <span className='font-medium'>
@@ -205,7 +237,12 @@ const RedeemRequestModal = ({
                   'flex',
                   'justify-between'
                 )}>
-                <span className='text-textSecondary'>
+                <span
+                  className={clsx(
+                    { 'text-interlaySecondaryInLightMode':
+                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  )}>
                   {t('issue_page.parachain_block')}
                 </span>
                 <span className='font-medium'>
@@ -217,7 +254,12 @@ const RedeemRequestModal = ({
                   'flex',
                   'justify-between'
                 )}>
-                <span className='text-textSecondary'>
+                <span
+                  className={clsx(
+                    { 'text-interlaySecondaryInLightMode':
+                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  )}>
                   {t('issue_page.vault_dot_address')}
                 </span>
                 <span className='font-medium'>

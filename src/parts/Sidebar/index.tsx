@@ -8,13 +8,16 @@ import clsx from 'clsx';
 
 import SidebarContent from './SidebarContent';
 import OpenButton from './OpenButton';
+
 interface Props {
+  className?: string;
   children: React.ReactNode;
 }
 
 const ON_SMALL_SCREEN_CLASS_NAME = 'md:hidden';
 
 const Sidebar = ({
+  className,
   children
 }: Props): JSX.Element => {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
@@ -32,7 +35,7 @@ const Sidebar = ({
         'h-screen',
         'flex',
         'overflow-hidden',
-        'bg-white'
+        className
       )}>
       <Transition.Root
         show={sidebarOpen}

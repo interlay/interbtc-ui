@@ -6,12 +6,16 @@ import Sidebar from 'parts/Sidebar';
 import Topbar from 'parts/Topbar';
 
 interface Props {
+  className?: string;
   children: React.ReactNode;
 }
 
-const Layout = ({ children }: Props): JSX.Element => {
+const Layout = ({
+  className,
+  children
+}: Props): JSX.Element => {
   return (
-    <Sidebar>
+    <Sidebar className={className}>
       <div
         className={clsx(
           'relative',

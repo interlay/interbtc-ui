@@ -43,6 +43,10 @@ import {
   COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import {
   shortAddress,
   displayMonetaryAmount
 } from 'common/utils/utils';
@@ -427,7 +431,10 @@ const VaultsTable = (): JSX.Element => {
                     <InterlayTooltip label={column.tooltip}>
                       <InformationCircleIcon
                         className={clsx(
-                          'text-textSecondary',
+                          // eslint-disable-next-line max-len
+                          { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                          // eslint-disable-next-line max-len
+                          { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                           'inline-block',
                           'ml-1',
                           'w-5',

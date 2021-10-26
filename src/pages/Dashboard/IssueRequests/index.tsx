@@ -8,12 +8,16 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
+import LineChartComponent from '../components/line-chart-component';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import IssueRequestsTable from 'containers/IssueRequestsTable';
-import LineChartComponent from '../components/line-chart-component';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
 import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
@@ -29,7 +33,7 @@ function IssueRequests(): JSX.Element {
   const [totalSuccessfulIssues, setTotalSuccessfulIssues] = useState('-');
 
   // eslint-disable-next-line no-array-constructor
-  const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number }>());
+  const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number; }>());
   const pointIssuesPerDay = useMemo(
     () => cumulativeIssuesPerDay.map((dataPoint, index) => {
       if (index === 0) return 0;
@@ -116,7 +120,12 @@ function IssueRequests(): JSX.Element {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
             })}
           </h5>
-          <h5 className='text-textSecondary'>
+          <h5
+            className={clsx(
+              { 'text-interlaySecondaryInLightMode':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )}>
             ${getUsdAmount(totalWrappedTokenAmount, prices.bitcoin.usd).toLocaleString()}
           </h5>
           <h5

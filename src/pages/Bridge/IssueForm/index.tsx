@@ -27,8 +27,9 @@ import {
 } from '@interlay/monetary-js';
 
 import SubmitButton from '../SubmitButton';
+import FormTitle from '../FormTitle';
 import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
-import InterBTCField from 'pages/Bridge/InterBTCField';
+import WrappedTokenField from 'pages/Bridge/WrappedTokenField';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import ParachainStatusInfo from 'pages/Bridge/ParachainStatusInfo';
 import EllipsisLoader from 'components/EllipsisLoader';
@@ -46,6 +47,10 @@ import {
   BLOCK_TIME,
   BLOCKS_BEHIND_LIMIT
 } from 'config/parachain';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   displayMonetaryAmount,
@@ -270,23 +275,15 @@ const IssueForm = (): JSX.Element | null => {
         <form
           className='space-y-8'
           onSubmit={handleSubmit(onSubmit)}>
-          <h4
-            className={clsx(
-              'font-medium',
-              'text-center',
-              'text-interlayDenim'
-            )}>
+          <FormTitle>
             {t('issue_page.mint_polka_by_wrapping', {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
             })}
-          </h4>
-          <InterBTCField
-            id='btc-amount'
+          </FormTitle>
+          <WrappedTokenField
+            id={BTC_AMOUNT}
             name={BTC_AMOUNT}
-            type='number'
             label='BTC'
-            step='any'
-            placeholder='0.00'
             min={0}
             ref={register({
               required: {
@@ -301,7 +298,12 @@ const IssueForm = (): JSX.Element | null => {
           <ParachainStatusInfo status={parachainStatus} />
           <PriceInfo
             title={
-              <h5 className='text-textSecondary'>
+              <h5
+                className={clsx(
+                  { 'text-interlaySecondaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
                 {t('bridge_fee')}
               </h5>
             }
@@ -317,7 +319,9 @@ const IssueForm = (): JSX.Element | null => {
               <InterlayTooltip label={t('issue_page.tooltip_bridge_fee')}>
                 <InformationCircleIcon
                   className={clsx(
-                    'text-textSecondary',
+                    { 'text-interlaySecondaryInLightMode':
+                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                     'w-5',
                     'h-5'
                   )} />
@@ -325,7 +329,12 @@ const IssueForm = (): JSX.Element | null => {
             } />
           <PriceInfo
             title={
-              <h5 className='text-textSecondary'>
+              <h5
+                className={clsx(
+                  { 'text-interlaySecondaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
                 {t('issue_page.security_deposit')}
               </h5>
             }
@@ -339,7 +348,9 @@ const IssueForm = (): JSX.Element | null => {
               <InterlayTooltip label={t('issue_page.tooltip_security_deposit')}>
                 <InformationCircleIcon
                   className={clsx(
-                    'text-textSecondary',
+                    { 'text-interlaySecondaryInLightMode':
+                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                     'w-5',
                     'h-5'
                   )} />
@@ -349,11 +360,18 @@ const IssueForm = (): JSX.Element | null => {
             className={clsx(
               'border-t-2',
               'my-2.5',
-              'border-textSecondary'
+              { 'border-interlaySecondaryInLightMode':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )} />
           <PriceInfo
             title={
-              <h5 className='text-textPrimary'>
+              <h5
+                className={clsx(
+                  { 'text-interlayPrimaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                  { 'dark:text-kintsugiPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
                 {t('you_will_receive')}
               </h5>
             }

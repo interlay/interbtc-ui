@@ -1,7 +1,11 @@
 
 import * as React from 'react';
-
 import clsx from 'clsx';
+
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 
 const InterlayTableContainer = ({
   className,
@@ -61,7 +65,9 @@ const InterlayTh = ({
 }: React.ComponentPropsWithRef<'th'>): JSX.Element => (
   <th
     className={clsx(
-      'text-textSecondary',
+      { 'text-interlaySecondaryInLightMode':
+        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+      { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'text-base',
       'p-2',
       className

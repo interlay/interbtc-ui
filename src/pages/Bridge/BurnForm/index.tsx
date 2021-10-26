@@ -26,8 +26,9 @@ import {
 } from '@interlay/interbtc-api';
 
 import PriceInfo from 'pages/Bridge/PriceInfo';
-import InterBTCField from '../InterBTCField';
+import WrappedTokenField from '../WrappedTokenField';
 import SubmitButton from '../SubmitButton';
+import FormTitle from '../FormTitle';
 import EllipsisLoader from 'components/EllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
@@ -37,6 +38,12 @@ import {
   COLLATERAL_TOKEN_SYMBOL,
   CollateralTokenLogoIcon
 } from 'config/relay-chains';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import STATUSES from 'utils/constants/statuses';
+import { BALANCE_MAX_INTEGER_LENGTH } from '../../../constants';
 import {
   getUsdAmount,
   displayMonetaryAmount
@@ -50,8 +57,6 @@ import {
   updateCollateralTokenBalanceAction,
   showAccountModalAction
 } from 'common/actions/general.actions';
-import STATUSES from 'utils/constants/statuses';
-import { BALANCE_MAX_INTEGER_LENGTH } from '../../../constants';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 
@@ -209,24 +214,16 @@ const BurnForm = (): JSX.Element | null => {
         <form
           className='space-y-8'
           onSubmit={handleSubmit(onSubmit)}>
-          <h4
-            className={clsx(
-              'font-medium',
-              'text-center',
-              'text-interlayDenim'
-            )}>
+          <FormTitle>
             {t('burn_page.burn_interbtc', {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
               collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
             })}
-          </h4>
-          <InterBTCField
-            id='wrapped-token-amount'
+          </FormTitle>
+          <WrappedTokenField
+            id={WRAPPED_TOKEN_AMOUNT}
             name={WRAPPED_TOKEN_AMOUNT}
-            type='number'
             label={WRAPPED_TOKEN_SYMBOL}
-            step='any'
-            placeholder='0.00'
             ref={register({
               required: {
                 value: true,
@@ -239,7 +236,12 @@ const BurnForm = (): JSX.Element | null => {
             helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message} />
           <PriceInfo
             title={
-              <h5 className='text-textSecondary'>
+              <h5
+                className={clsx(
+                  { 'text-interlaySecondaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
                 {t('burn_page.dot_earned', {
                   collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
                 })}
@@ -256,11 +258,18 @@ const BurnForm = (): JSX.Element | null => {
             className={clsx(
               'border-t-2',
               'my-2.5',
-              'border-textSecondary'
+              { 'border-interlaySecondaryInLightMode':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )} />
           <PriceInfo
             title={
-              <h5 className='text-textPrimary'>
+              <h5
+                className={clsx(
+                  { 'text-interlayPrimaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                  { 'dark:text-kintsugiPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
                 {t('you_will_receive')}
               </h5>
             }

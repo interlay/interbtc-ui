@@ -33,7 +33,19 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 0,
     '@typescript-eslint/explicit-member-accessibility': 0,
     '@typescript-eslint/indent': 0,
-    '@typescript-eslint/member-delimiter-style': 0,
+    '@typescript-eslint/member-delimiter-style': [
+      'error',
+      {
+        multiline: {
+          delimiter: 'semi',
+          requireLast: true
+        },
+        singleline: {
+          delimiter: 'semi',
+          requireLast: true
+        }
+      }
+    ],
     '@typescript-eslint/no-explicit-any': 0,
     '@typescript-eslint/no-var-requires': 0,
     '@typescript-eslint/no-use-before-define': 0,
@@ -45,7 +57,19 @@ module.exports = {
         argsIgnorePattern: '^_'
       }
     ],
-    'new-cap': ['error', { capIsNew: false }],
+    '@typescript-eslint/type-annotation-spacing': [
+      'error',
+      {
+        before: false,
+        after: true,
+        overrides: {
+          arrow: {
+            before: true,
+            after: true
+          }
+        }
+      }
+    ],
 
     // JS ESLinting rules
     'comma-dangle': [
@@ -125,6 +149,11 @@ module.exports = {
       'error',
       'never'
     ],
+    'import/exports-last': 'error',
+    'require-jsdoc': 0, // TODO: `0` for now but later should be on by being removed
+    // TODO: double-check
+    // "prettier/prettier": 2
+    'new-cap': ['error', { capIsNew: false }],
 
     // React ESLinting rules
     'react/jsx-uses-react': 'off',
@@ -176,10 +205,6 @@ module.exports = {
         nonEmpty: 'after-props'
       }
     ],
-    'react/jsx-props-no-multi-spaces': 'error',
-    'import/exports-last': 'error',
-    'require-jsdoc': 0 // TODO: `0` for now but later should be on by being removed
-    // TODO: double-check
-    // "prettier/prettier": 2
+    'react/jsx-props-no-multi-spaces': 'error'
   }
 };

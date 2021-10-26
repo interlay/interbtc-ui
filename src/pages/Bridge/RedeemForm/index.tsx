@@ -27,8 +27,9 @@ import {
 } from '@interlay/monetary-js';
 
 import SubmitButton from '../SubmitButton';
+import FormTitle from '../FormTitle';
 import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
-import InterBTCField from 'pages/Bridge/InterBTCField';
+import WrappedTokenField from 'pages/Bridge/WrappedTokenField';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import ParachainStatusInfo from 'pages/Bridge/ParachainStatusInfo';
 import Toggle from 'components/Toggle';
@@ -49,13 +50,17 @@ import {
   CollateralTokenLogoIcon
 } from 'config/relay-chains';
 import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
+import STATUSES from 'utils/constants/statuses';
 import {
   displayMonetaryAmount,
   getUsdAmount,
   getRandomVaultIdWithCapacity
 } from 'common/utils/utils';
-import STATUSES from 'utils/constants/statuses';
 import { togglePremiumRedeemAction } from 'common/actions/redeem.actions';
 import {
   updateWrappedTokenBalanceAction,
@@ -348,23 +353,15 @@ const RedeemForm = (): JSX.Element | null => {
         <form
           className='space-y-8'
           onSubmit={handleSubmit(onSubmit)}>
-          <h4
-            className={clsx(
-              'font-medium',
-              'text-center',
-              'text-interlayDenim'
-            )}>
+          <FormTitle>
             {t('redeem_page.you_will_receive', {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
             })}
-          </h4>
-          <InterBTCField
-            id='wrapped-token-amount'
+          </FormTitle>
+          <WrappedTokenField
+            id={WRAPPED_TOKEN_AMOUNT}
             name={WRAPPED_TOKEN_AMOUNT}
-            type='number'
             label={WRAPPED_TOKEN_SYMBOL}
-            step='any'
-            placeholder='0.00'
             min={0}
             ref={register({
               required: {
@@ -413,7 +410,9 @@ const RedeemForm = (): JSX.Element | null => {
                 <InterlayTooltip label={t('redeem_page.premium_redeem_info')}>
                   <InformationCircleIcon
                     className={clsx(
-                      'text-textSecondary',
+                      { 'text-interlaySecondaryInLightMode':
+                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                      { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                       'w-5',
                       'h-5'
                     )} />
@@ -426,7 +425,12 @@ const RedeemForm = (): JSX.Element | null => {
           )}
           <PriceInfo
             title={
-              <h5 className='text-textSecondary'>
+              <h5
+                className={clsx(
+                  { 'text-interlaySecondaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
                 {t('bridge_fee')}
               </h5>
             }
@@ -440,7 +444,12 @@ const RedeemForm = (): JSX.Element | null => {
             approxUSD={redeemFeeInUSD} />
           <PriceInfo
             title={
-              <h5 className='text-textSecondary'>
+              <h5
+                className={clsx(
+                  { 'text-interlaySecondaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
                 {t('bitcoin_network_fee')}
               </h5>
             }
@@ -456,11 +465,18 @@ const RedeemForm = (): JSX.Element | null => {
             className={clsx(
               'border-t-2',
               'my-2.5',
-              'border-textSecondary'
+              { 'border-interlaySecondaryInLightMode':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )} />
           <PriceInfo
             title={
-              <h5 className='text-textPrimary'>
+              <h5
+                className={clsx(
+                  { 'text-interlayPrimaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                  { 'dark:text-kintsugiPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
                 {t('you_will_receive')}
               </h5>
             }

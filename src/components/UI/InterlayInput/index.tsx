@@ -2,6 +2,9 @@
 import * as React from 'react';
 import clsx from 'clsx';
 
+import { KUSAMA } from 'utils/constants/relay-chain-names';
+import styles from './interlay-input.module.css';
+
 const COLORS = Object.freeze({
   primary: 'primary',
   secondary: 'secondary'
@@ -14,7 +17,6 @@ interface CustomProps {
 }
 
 type Ref = HTMLInputElement;
-
 const InterlayInput = React.forwardRef<Ref, Props>(({
   color = COLORS.primary,
   className,
@@ -24,18 +26,27 @@ const InterlayInput = React.forwardRef<Ref, Props>(({
     ref={ref}
     type='text'
     className={clsx(
+      styles.interlayInput,
       'focus:ring',
+      // ray test touch <<
       { 'focus:border-primary-300': color === COLORS.primary },
       { 'focus:ring-primary-200': color === COLORS.primary },
       { 'focus:border-secondary-300': color === COLORS.secondary },
       { 'focus:ring-secondary-200': color === COLORS.secondary },
+      // ray test touch >>
       'focus:ring-opacity-50',
-      'text-textPrimary',
+      'text-black',
+      'text-opacity-90',
+      'dark:text-white',
       'bg-white',
+      { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'block',
       'w-full',
       'text-base',
-      'border-gray-300',
+      'border-black',
+      'border-opacity-25',
+      'dark:border-white',
+      'dark:border-opacity-25',
       'shadow-sm',
       'rounded-md',
       'placeholder-gray-400',
