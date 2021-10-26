@@ -1,8 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import * as React from 'react';
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
@@ -10,9 +10,7 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { BitcoinNetwork } from '@interlay/interbtc-index-client';
 import {
-  Issue,
   IssueStatus
 } from '@interlay/interbtc-api';
 
@@ -38,79 +36,45 @@ import {
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
-import * as constants from '../../constants';
-import STATUSES from 'utils/constants/statuses';
-import { WrappedTokenAmount } from 'config/relay-chains';
+import issueRequestsQuery from 'services/queries/issueRequests';
+import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 
-interface Props {
-  totalIssueRequests: number;
-}
-
-const IssueRequestsTable = ({
-  totalIssueRequests
-}: Props): JSX.Element | null => {
+const IssueRequestsTable = (): JSX.Element | null => {
   const queryParams = useQueryParams();
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
-  const [data, setData] = React.useState<Issue[]>([]);
-  const [status, setStatus] = React.useState(STATUSES.IDLE);
-  const handleError = useErrorHandler();
   const { t } = useTranslation();
-
-  React.useEffect(() => {
-    if (!selectedPage) return;
-    if (!handleError) return;
-    if (!bridgeLoaded) return;
-
-    const selectedPageIndex = selectedPage - 1;
-
-    try {
-      (async () => {
-        setStatus(STATUSES.PENDING);
-        const response = await window.bridge.interBtcIndex.getIssues({
-          page: selectedPageIndex,
-          perPage: TABLE_PAGE_LIMIT,
-          network: constants.BITCOIN_NETWORK as BitcoinNetwork
-        });
-        setStatus(STATUSES.RESOLVED);
-        setData(response);
-      })();
-    } catch (error) {
-      setStatus(STATUSES.REJECTED);
-      handleError(error);
-    }
-  }, [
-    bridgeLoaded,
-    selectedPage,
-    handleError
-  ]);
 
   const columns = React.useMemo(
     () => [
       {
         Header: t('date'),
-        accessor: 'creationTimestamp',
+        accessor: '',
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }: { value: number; }) {
+        Cell: function FormattedCell({ row: { original: issue } }: any) {
+          let date;
+          if (issue.execution) date = issue.execution.timestamp;
+          else if (issue.cancellation) date = issue.cancellation.timestamp;
+          else date = issue.request.timestamp;
           return (
             <>
-              {formatDateTimePrecise(new Date(Number(value)))}
+              {formatDateTimePrecise(new Date(Number(date)))}
             </>
           );
         }
       },
       {
         Header: t('issue_page.amount'),
-        accessor: 'wrappedAmount',
+        accessor: '',
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell({ value }: {
-          value: WrappedTokenAmount;
-        }) {
+        Cell: function FormattedCell({ row: { original: issue } }: any) {
+          let value;
+          if (issue.execution) value = issue.execution.executedAmountWrapped;
+          else value = issue.request.requestedAmountWrapped;
           return (
             <>
               {value.toHuman()}
@@ -120,10 +84,21 @@ const IssueRequestsTable = ({
       },
       {
         Header: t('issue_page.parachain_block'),
-        accessor: 'creationBlock',
+        accessor: '',
         classNames: [
           'text-right'
-        ]
+        ],
+        Cell: function FormattedCell({ row: { original: issue } }: any) {
+          let height;
+          if (issue.execution) height = issue.execution.height.absolute;
+          else if (issue.cancellation) height = issue.cancellation.height.absolute;
+          else height = issue.request.height.absolute;
+          return (
+            <>
+              {height}
+            </>
+          );
+        }
       },
       {
         Header: t('issue_page.vault_dot_address'),
@@ -141,7 +116,7 @@ const IssueRequestsTable = ({
       },
       {
         Header: t('issue_page.vault_btc_address'),
-        accessor: 'vaultBTCAddress',
+        accessor: 'vaultBackingAddress',
         classNames: [
           'text-left'
         ],
@@ -185,6 +160,53 @@ const IssueRequestsTable = ({
     [t]
   );
 
+  const selectedPageIndex = selectedPage - 1;
+
+  // TODO: Type graphql returns properly
+  const {
+    isIdle: issuesIdle,
+    isLoading: issuesLoading,
+    data: issuesData,
+    error: issuesError
+  } = useQuery<GraphqlReturn<any>, Error>(
+    [
+      GRAPHQL_FETCHER,
+      issueRequestsQuery,
+      {
+        limit: TABLE_PAGE_LIMIT,
+        offset: selectedPageIndex * TABLE_PAGE_LIMIT
+      }
+    ],
+    graphqlFetcher<any>()
+  );
+  const {
+    isIdle: issuesCountIdle,
+    isLoading: issuesCountLoading,
+    data: issuesCountData,
+    error: issuesCountError
+  } = useQuery<GraphqlReturn<any>, Error>(
+    [
+      GRAPHQL_FETCHER,
+      `{
+        issuesConnection {
+          totalCount
+        }
+      }`
+    ],
+    graphqlFetcher<any>()
+  );
+  useErrorHandler(issuesError);
+  useErrorHandler(issuesCountError);
+
+  const anyIdle = issuesIdle || issuesLoading || issuesCountIdle || issuesCountLoading;
+  if (!anyIdle && (!issuesData || !issuesCountData)) {
+    throw new Error('Something went wrong!');
+  }
+
+  const totalIssueCount = issuesCountData?.data?.issuesConnection?.totalCount;
+  const rawIssues = issuesData?.data?.issues || [];
+  const issues = rawIssues.map(processIssueAmounts);
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -194,7 +216,7 @@ const IssueRequestsTable = ({
   } = useTable(
     {
       columns,
-      data
+      data: issues
     }
   );
 
@@ -204,8 +226,7 @@ const IssueRequestsTable = ({
     });
   };
 
-  const selectedPageIndex = selectedPage - 1;
-  const pageCount = Math.ceil(totalIssueRequests / TABLE_PAGE_LIMIT);
+  const pageCount = Math.ceil(totalIssueCount / TABLE_PAGE_LIMIT);
 
   return (
     <InterlayTableContainer className='space-y-6'>
@@ -216,7 +237,7 @@ const IssueRequestsTable = ({
         )}>
         {t('issue_page.recent_requests')}
       </h2>
-      {(status === STATUSES.IDLE || status === STATUSES.PENDING) && (
+      {anyIdle && (
         <div
           className={clsx(
             'flex',
@@ -225,7 +246,7 @@ const IssueRequestsTable = ({
           <EllipsisLoader dotClassName='bg-interlayCalifornia-400' />
         </div>
       )}
-      {status === STATUSES.RESOLVED && (
+      {!anyIdle && (
         <InterlayTable {...getTableProps()}>
           <InterlayThead>
             {headerGroups.map(headerGroup => (

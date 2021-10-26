@@ -27,7 +27,6 @@ function IssueRequests(): JSX.Element {
   const statsApi = useInterbtcIndex();
 
   const [totalSuccessfulIssues, setTotalSuccessfulIssues] = useState('-');
-  const [totalIssueRequests, setTotalIssueRequests] = useState(0);
 
   // eslint-disable-next-line no-array-constructor
   const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number }>());
@@ -39,15 +38,11 @@ function IssueRequests(): JSX.Element {
     [cumulativeIssuesPerDay]
   );
 
-  const [fetchTotalSuccessfulIssues, fetchTotalIssues] = useMemo(
+  const [fetchTotalSuccessfulIssues] = useMemo(
     () => [
       async () => {
         const res = await statsApi.getTotalSuccessfulIssues();
         if (res) setTotalSuccessfulIssues(res.toString());
-      },
-      async () => {
-        const res = await statsApi.getTotalIssues();
-        setTotalIssueRequests(res);
       }
     ],
     [statsApi] // To silence the compiler
@@ -74,13 +69,11 @@ function IssueRequests(): JSX.Element {
   useEffect(() => {
     try {
       fetchTotalSuccessfulIssues();
-      fetchTotalIssues();
     } catch (error) {
       console.error('[IssueRequests useEffect] error.message => ', error.message);
     }
   }, [
-    fetchTotalSuccessfulIssues,
-    fetchTotalIssues
+    fetchTotalSuccessfulIssues
   ]);
 
   return (
@@ -181,7 +174,7 @@ function IssueRequests(): JSX.Element {
             ]} />
         </div>
       </div>
-      <IssueRequestsTable totalIssueRequests={totalIssueRequests} />
+      <IssueRequestsTable />
     </MainContainer>
   );
 }

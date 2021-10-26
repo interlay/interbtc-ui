@@ -1,3 +1,4 @@
+import { payments, networks } from 'bitcoinjs-lib';
 import {
   bitcoin,
   Issue,
@@ -101,13 +102,6 @@ function range(start: number, end: number): number[] {
   return Array.from({ length: end - start }, (_, k) => k + start);
 }
 
-const BtcNetwork =
-  BITCOIN_NETWORK === 'mainnet' ?
-    bitcoin.networks.bitcoin :
-    BITCOIN_NETWORK === 'testnet' ?
-      bitcoin.networks.testnet :
-      bitcoin.networks.regtest;
-
 const requestsInStore = (
   storeRequests: Issue[] | Redeem[],
   parachainRequests: Issue[] | Redeem[]
@@ -127,6 +121,34 @@ const requestsInStore = (
     }
   });
   return inStore;
+};
+
+const btcAddressFromEventToString = (
+  addressObject: string,
+  network: 'mainnet' | 'regtest' | 'testnet'
+): string => {
+  const parsedAddress = JSON.parse(addressObject);
+  const hash = Buffer.from(
+    Object.values<string>(parsedAddress)[0].substring(2),
+    'hex'
+  );
+  const paymentType = Object.keys(parsedAddress)[0].toUpperCase();
+  const payment =
+    paymentType === 'P2WPKHV0' ?
+      payments.p2wpkh :
+      paymentType === 'P2PKH' ?
+        payments.p2pkh :
+        paymentType === 'P2SH' ?
+          payments.p2sh :
+          () => {
+            throw new Error('Invalid address type');
+          };
+  return (
+    payment({
+      hash,
+      network: networks[network === 'mainnet' ? 'bitcoin' : network]
+    }).address || ''
+  );
 };
 
 const copyToClipboard = (text: string): void => {
@@ -160,7 +182,7 @@ export {
   displayMonetaryAmount,
   isPositiveNumeric,
   range,
-  BtcNetwork,
+  btcAddressFromEventToString,
   requestsInStore,
   copyToClipboard,
   getRandomVaultIdWithCapacity,
