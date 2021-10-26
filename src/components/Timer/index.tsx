@@ -1,5 +1,6 @@
 
 import * as React from 'react';
+import clsx from 'clsx';
 
 // TODO: should use a package like `date-fns` instead of manually calculating
 const formatTime = (leftSeconds: number): string => {
@@ -14,11 +15,15 @@ const formatTime = (leftSeconds: number): string => {
   return leftSeconds > 0 ? d + ' Days ' + h + ':' + m + ':' + s : '00:00:00';
 };
 
-interface Props {
+interface CustomProps {
   initialLeftSeconds: number;
 }
 
-const Timer = ({ initialLeftSeconds }: Props): JSX.Element => {
+const Timer = ({
+  initialLeftSeconds,
+  className,
+  ...rest
+}: CustomProps & React.ComponentPropsWithRef<'span'>): JSX.Element => {
   const [leftSeconds, setLeftSeconds] = React.useState(initialLeftSeconds);
 
   React.useEffect(() => {
@@ -30,7 +35,16 @@ const Timer = ({ initialLeftSeconds }: Props): JSX.Element => {
     return () => clearInterval(timerId);
   }, []);
 
-  return <span>{formatTime(leftSeconds)}</span>;
+  return (
+    <span
+      className={clsx(
+        'whitespace-nowrap',
+        className
+      )}
+      {...rest}>
+      {formatTime(leftSeconds)}
+    </span>
+  );
 };
 
 export default Timer;

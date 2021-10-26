@@ -59,7 +59,7 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({
       <p
         className={clsx(
           'flex',
-          'justify-center',
+          'justify-between',
           'items-center',
           'space-x-1'
         )}>
@@ -67,11 +67,20 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({
           className={clsx(
             { 'text-interlaySecondaryInLightMode':
               process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+            'flex-1'
           )}>
           {t('redeem_page.vault_has_time_to_complete')}
         </span>
-        {initialLeftSeconds && <Timer initialLeftSeconds={initialLeftSeconds} />}
+        {initialLeftSeconds && (
+          <Timer
+            initialLeftSeconds={initialLeftSeconds}
+            className={clsx(
+              'flex-shrink-0',
+              'flex-1',
+              'text-center'
+            )} />
+        )}
       </p>
       <div
         className={clsx(
