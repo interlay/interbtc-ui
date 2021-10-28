@@ -1,6 +1,10 @@
 
 import clsx from 'clsx';
 
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
 const FullLoadingSpinner = (): JSX.Element => (
@@ -17,7 +21,9 @@ const FullLoadingSpinner = (): JSX.Element => (
     )}>
     <SpinIcon
       className={clsx(
-        'text-interlayDenim',
+        { 'text-interlayDenim':
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+        { 'text-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'animate-spin',
         'w-9',
         'h-9'

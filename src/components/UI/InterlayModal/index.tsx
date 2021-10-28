@@ -12,7 +12,8 @@ import {
   KUSAMA
 } from 'utils/constants/relay-chain-names';
 
-const InterlayModalTitle = (props: PropsOf<typeof Dialog.Title>): JSX.Element => (
+type InterlayModalTitleProps = PropsOf<typeof Dialog.Title>;
+const InterlayModalTitle = (props: InterlayModalTitleProps): JSX.Element => (
   <Dialog.Title {...props} />
 );
 
@@ -124,5 +125,9 @@ export interface Props {
   children: React.ReactNode;
   initialFocus?: React.MutableRefObject<HTMLElement | null> | undefined;
 }
+
+export type {
+  InterlayModalTitleProps
+};
 
 export default InterlayModal;

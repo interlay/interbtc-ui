@@ -38,6 +38,10 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   safeRoundTwoDecimals,
@@ -152,22 +156,19 @@ const Vault = (): JSX.Element => {
   const VAULT_ITEMS = [
     {
       title: t('collateralization'),
-      value: `${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`,
-      color: 'text-interlayDenim-800'
+      value: `${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`
     },
     {
       title: t('vault.fees_earned_interbtc', {
         wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
       }),
-      value: displayMonetaryAmount(feesEarnedPolkaBTC),
-      color: 'text-interlayDenim-800'
+      value: displayMonetaryAmount(feesEarnedPolkaBTC)
     },
     {
       title: t('vault.locked_dot', {
         collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
       }),
-      value: displayMonetaryAmount(collateral),
-      color: 'text-interlayDenim-800'
+      value: displayMonetaryAmount(collateral)
     },
     {
       title: t('locked_btc'),
@@ -177,13 +178,11 @@ const Vault = (): JSX.Element => {
       title: t('vault.remaining_capacity', {
         wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
       }),
-      value: displayMonetaryAmount(capacity),
-      color: 'text-interlayDenim-800'
+      value: displayMonetaryAmount(capacity)
     },
     {
       title: t('apy'),
-      value: `~${safeRoundTwoDecimals(apy)}%`,
-      color: 'text-interlayDenim-800'
+      value: `≈${safeRoundTwoDecimals(apy)}%`
     }
   ];
 
@@ -209,7 +208,12 @@ const Vault = (): JSX.Element => {
             )}>
             {VAULT_ITEMS.map(vaultItem => (
               <CardListItem key={vaultItem.title}>
-                <CardListItemHeader className={vaultItem.color}>
+                <CardListItemHeader
+                  className={clsx(
+                    { 'text-interlayDenim':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    { 'dark:text-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  )}>
                   {vaultItem.title}
                 </CardListItemHeader>
                 <CardListItemContent

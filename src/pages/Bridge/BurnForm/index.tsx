@@ -29,9 +29,10 @@ import PriceInfo from 'pages/Bridge/PriceInfo';
 import WrappedTokenField from '../WrappedTokenField';
 import SubmitButton from '../SubmitButton';
 import FormTitle from '../FormTitle';
-import EllipsisLoader from 'components/EllipsisLoader';
+import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
+import Hr2 from 'components/hrs/Hr2';
 import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
@@ -125,13 +126,7 @@ const BurnForm = (): JSX.Element | null => {
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
     return (
-      <div
-        className={clsx(
-          'flex',
-          'justify-center'
-        )}>
-        <EllipsisLoader dotClassName='bg-interlayDenim-400' />
-      </div>
+      <PrimaryColorEllipsisLoader />
     );
   }
 
@@ -238,9 +233,9 @@ const BurnForm = (): JSX.Element | null => {
             title={
               <h5
                 className={clsx(
-                  { 'text-interlaySecondaryInLightMode':
+                  { 'text-interlayTextSecondaryInLightMode':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}>
                 {t('burn_page.dot_earned', {
                   collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
@@ -253,22 +248,18 @@ const BurnForm = (): JSX.Element | null => {
             value={displayMonetaryAmount(earnedCollateralTokenAmount)}
             unitName={COLLATERAL_TOKEN_SYMBOL}
             approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.collateralToken.usd)} />
-          {/* TODO: could componentize */}
-          <hr
+          <Hr2
             className={clsx(
               'border-t-2',
-              'my-2.5',
-              { 'border-interlaySecondaryInLightMode':
-                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-              { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              'my-2.5'
             )} />
           <PriceInfo
             title={
               <h5
                 className={clsx(
-                  { 'text-interlayPrimaryInLightMode':
+                  { 'text-interlayTextPrimaryInLightMode':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                  { 'dark:text-kintsugiPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}>
                 {t('you_will_receive')}
               </h5>

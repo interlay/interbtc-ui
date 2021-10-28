@@ -80,9 +80,9 @@ const DefaultRedeemRequest = ({
       <p className='space-x-1'>
         <span
           className={clsx(
-            { 'text-interlaySecondaryInLightMode':
+            { 'text-interlayTextSecondaryInLightMode':
               process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           {t('issue_page.btc_transaction')}:
         </span>

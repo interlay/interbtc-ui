@@ -36,7 +36,9 @@ const ActiveCollators = (): JSX.Element => {
         <div>
           <h1
             className={clsx(
+              // ray test touch <<
               'text-interlayDenim',
+              // ray test touch >>
               'text-sm',
               'xl:text-base',
               'mb-1',

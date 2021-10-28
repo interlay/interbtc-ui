@@ -15,6 +15,7 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import SidebarNavLink from './SidebarNavLink';
+import Hr2 from 'components/hrs/Hr2';
 import { INTERLAY_DOCS_LINK } from 'config/links';
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
@@ -94,12 +95,7 @@ const Navigation = ({
       {NAVIGATION_ITEMS.map(navigationItem => {
         if (navigationItem.separator) {
           return (
-            <hr
-              key={navigationItem.name}
-              className={clsx(
-                'border-t',
-                'border-gray-200'
-              )} />
+            <Hr2 key={navigationItem.name} />
           );
         }
 

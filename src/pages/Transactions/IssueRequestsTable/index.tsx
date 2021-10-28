@@ -10,8 +10,7 @@ import { useQuery } from 'react-query';
 import {
   FaCheck,
   FaRegTimesCircle,
-  FaRegClock,
-  FaExternalLinkAlt
+  FaRegClock
 } from 'react-icons/fa';
 import {
   useSelector,
@@ -25,8 +24,9 @@ import {
 } from '@interlay/interbtc-api';
 
 import IssueRequestModal from './IssueRequestModal';
-import EllipsisLoader from 'components/EllipsisLoader';
+import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
+import ExternalLink from 'components/ExternalLink';
 import InterlayPagination from 'components/UI/InterlayPagination';
 import InterlayTable, {
   InterlayTableContainer,
@@ -36,7 +36,6 @@ import InterlayTable, {
   InterlayTh,
   InterlayTd
 } from 'components/UI/InterlayTable';
-import InterlayLink from 'components/UI/InterlayLink';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
@@ -157,22 +156,13 @@ const IssueRequestsTable = (): JSX.Element => {
           return (
             <>
               {issueRequest.btcTxId ? (
-                <InterlayLink
-                  className={clsx(
-                    'text-interlayDenim',
-                    'space-x-1.5',
-                    'inline-flex',
-                    'items-center'
-                  )}
+                <ExternalLink
                   href={`${BTC_TRANSACTION_API}${issueRequest.btcTxId}`}
                   onClick={event => {
                     event.stopPropagation();
-                  }}
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <span>{shortTxId(issueRequest.btcTxId)}</span>
-                  <FaExternalLinkAlt />
-                </InterlayLink>
+                  }}>
+                  {shortTxId(issueRequest.btcTxId)}
+                </ExternalLink>
               ) : (
                 (
                   issueRequest.status === IssueStatus.Expired ||
@@ -279,13 +269,7 @@ const IssueRequestsTable = (): JSX.Element => {
     issueRequestsTotalCountLoading
   ) {
     return (
-      <div
-        className={clsx(
-          'flex',
-          'justify-center'
-        )}>
-        <EllipsisLoader dotClassName='bg-interlayCalifornia-400' />
-      </div>
+      <PrimaryColorEllipsisLoader />
     );
   }
 

@@ -23,6 +23,7 @@ import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import ErrorFallback from 'components/ErrorFallback';
+import PrimaryColorSpan from 'components/PrimaryColorSpan';
 import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
@@ -181,16 +182,20 @@ const ReimburseStatusUI = ({
         </h2>
         <p
           className={clsx(
-            { 'text-interlaySecondaryInLightMode':
+            { 'text-interlayTextSecondaryInLightMode':
               process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'text-justify'
           )}>
-          <span>{t('redeem_page.vault_did_not_send')}</span>
-          <span className='text-interlayDenim'>
-            &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
+          <span>
+            {t('redeem_page.vault_did_not_send')}
           </span>
-          <span>&nbsp;{`(≈ $ ${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)})`}</span>
+          <PrimaryColorSpan>
+            &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
+          </PrimaryColorSpan>
+          <span>
+            &nbsp;{`(≈ $ ${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)})`}
+          </span>
           <span>
             &nbsp;{t('redeem_page.compensation', {
               collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
@@ -209,16 +214,18 @@ const ReimburseStatusUI = ({
           className={clsx(
             'space-y-3',
             'ml-6',
-            { 'text-interlaySecondaryInLightMode':
+            { 'text-interlayTextSecondaryInLightMode':
               process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           <li className='list-decimal'>
             <p className='text-justify'>
-              <span>{t('redeem_page.receive_compensation')}</span>
-              <span className='text-interlayDenim'>
-                &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
+              <span>
+                {t('redeem_page.receive_compensation')}
               </span>
+              <PrimaryColorSpan>
+                &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
+              </PrimaryColorSpan>
               <span>
                 &nbsp;
                 {t('redeem_page.retry_with_another', {
@@ -242,18 +249,18 @@ const ReimburseStatusUI = ({
                   wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
                 })}
               </span>
-              <span className='text-interlayDenim'>
+              <PrimaryColorSpan>
                 &nbsp;{displayMonetaryAmount(collateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
-              </span>
+              </PrimaryColorSpan>
               <span>
                 &nbsp;
                 {t('redeem_page.with_added', {
                   amountPrice: getUsdAmount(collateralTokenAmount, prices.collateralToken.usd)
                 })}
               </span>
-              <span className='text-interlayDenim'>
+              <PrimaryColorSpan>
                 &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
-              </span>
+              </PrimaryColorSpan>
               <span>
                 &nbsp;
                 {t('redeem_page.as_compensation_instead', {

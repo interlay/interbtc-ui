@@ -28,7 +28,7 @@ import {
 } from '@interlay/monetary-js';
 
 import ErrorFallback from 'components/ErrorFallback';
-import EllipsisLoader from 'components/EllipsisLoader';
+import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -401,13 +401,7 @@ const VaultsTable = (): JSX.Element => {
       vaultsExtLoading
     ) {
       return (
-        <div
-          className={clsx(
-            'flex',
-            'justify-center'
-          )}>
-          <EllipsisLoader dotClassName='bg-interlayCalifornia-400' />
-        </div>
+        <PrimaryColorEllipsisLoader />
       );
     }
 
@@ -432,9 +426,9 @@ const VaultsTable = (): JSX.Element => {
                       <InformationCircleIcon
                         className={clsx(
                           // eslint-disable-next-line max-len
-                          { 'text-interlaySecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                          { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
                           // eslint-disable-next-line max-len
-                          { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                          { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                           'inline-block',
                           'ml-1',
                           'w-5',

@@ -3,6 +3,10 @@ import clsx from 'clsx';
 import { MenuIcon } from '@heroicons/react/outline';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 
 const OpenButton = ({
   onClick
@@ -11,8 +15,14 @@ const OpenButton = ({
     className={clsx(
       'focus:outline-none',
       'focus:ring',
-      'focus:border-interlayDenim-300',
-      'focus:ring-interlayDenim-200',
+      { 'focus:border-interlayDenim-300':
+        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+      { 'focus:ring-interlayDenim-200':
+        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+      { 'dark:focus:border-kintsugiMidnight-300':
+        process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+      { 'dark:focus:ring-kintsugiMidnight-200':
+        process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'focus:ring-opacity-50',
 
       '-ml-0.5',
@@ -21,8 +31,12 @@ const OpenButton = ({
       'w-12',
       'justify-center',
       'rounded-md',
-      'text-interlayHaiti-400',
-      'hover:text-interlayHaiti'
+      { 'text-interlayTextPrimaryInLightMode':
+        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+      { 'hover:text-interlayTextSecondaryInLightMode':
+        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+      { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+      { 'dark:hover:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
     )}
     onClick={onClick}>
     <span className='sr-only'>Open sidebar</span>

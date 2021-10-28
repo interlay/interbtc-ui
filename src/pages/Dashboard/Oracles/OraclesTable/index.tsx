@@ -23,7 +23,7 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import ErrorFallback from 'components/ErrorFallback';
-import EllipsisLoader from 'components/EllipsisLoader';
+import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
 import genericFetcher, {
   GENERIC_FETCHER
@@ -144,13 +144,7 @@ const OracleTable = (): JSX.Element => {
 
   if (oraclesIdle || oraclesLoading) {
     return (
-      <div
-        className={clsx(
-          'flex',
-          'justify-center'
-        )}>
-        <EllipsisLoader dotClassName='bg-interlayCalifornia-400' />
-      </div>
+      <PrimaryColorEllipsisLoader />
     );
   }
   if (!oracles) {

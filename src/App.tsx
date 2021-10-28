@@ -371,12 +371,12 @@ const App = (): JSX.Element => {
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
       // MEMO: inspired by https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually
       document.documentElement.classList.add(CLASS_NAMES.DARK);
-      document.body.classList.add('dark:text-kintsugiPrimaryInDarkMode');
-      document.body.classList.add('dark:bg-kintsugiMidnight');
+      document.body.classList.add('dark:text-kintsugiTextPrimaryInDarkMode');
+      document.body.classList.add('dark:bg-kintsugiMidnight-400');
     }
 
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production') {
-      document.body.classList.add('text-interlayPrimaryInLightMode');
+      document.body.classList.add('text-interlayTextPrimaryInLightMode');
       document.body.classList.add('bg-interlayHaiti-50');
     }
   }, []);
@@ -392,10 +392,7 @@ const App = (): JSX.Element => {
           render={({ location }) => (
             // TODO: block for now
             // <TransitionWrapper location={location}>
-            <React.Suspense
-              fallback={
-                <FullLoadingSpinner />
-              }>
+            <React.Suspense fallback={<FullLoadingSpinner />}>
               <Switch location={location}>
                 <Route path={PAGES.FEEDBACK}>
                   <Feedback />

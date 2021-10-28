@@ -37,7 +37,7 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import ErrorFallback from 'components/ErrorFallback';
-import EllipsisLoader from 'components/EllipsisLoader';
+import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
@@ -207,13 +207,7 @@ const ReplaceTable = (): JSX.Element => {
     replaceRequestsLoading
   ) {
     return (
-      <div
-        className={clsx(
-          'flex',
-          'justify-center'
-        )}>
-        <EllipsisLoader dotClassName='bg-interlayCalifornia-400' />
-      </div>
+      <PrimaryColorEllipsisLoader />
     );
   }
   if (replaceRequests === undefined) {

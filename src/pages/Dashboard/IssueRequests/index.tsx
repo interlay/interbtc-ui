@@ -13,6 +13,7 @@ import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import IssueRequestsTable from 'containers/IssueRequestsTable';
+import Hr1 from 'components/hrs/Hr1';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
   POLKADOT,
@@ -93,11 +94,7 @@ function IssueRequests(): JSX.Element {
         <PageTitle
           mainTitle={t('issue_page.issue_requests')}
           subTitle={<TimerIncrement />} />
-        <hr
-          className={clsx(
-            'border-interlayCalifornia',
-            'mt-2'
-          )} />
+        <Hr1 className='mt-2' />
       </div>
       <div
         className={clsx(
@@ -115,7 +112,9 @@ function IssueRequests(): JSX.Element {
           )}>
           <h5
             className={clsx(
+              // ray test touch <<
               'text-interlayDenim',
+              // ray test touch >>
               'font-bold',
               'text-xl'
             )}>
@@ -129,9 +128,9 @@ function IssueRequests(): JSX.Element {
           </h5>
           <h5
             className={clsx(
-              { 'text-interlaySecondaryInLightMode':
+              { 'text-interlayTextSecondaryInLightMode':
                 process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )}>
             ${getUsdAmount(totalWrappedTokenAmount, prices.bitcoin.usd).toLocaleString()}
           </h5>
