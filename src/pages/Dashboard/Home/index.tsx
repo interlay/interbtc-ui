@@ -11,7 +11,7 @@ import ParachainSecurity from '../components/parachain-security';
 import BtcRelay from '../components/btc-relay';
 import OracleStatus from '../components/oracle-status';
 import ActiveVaults from '../components/active-vaults';
-import ActiveCollators from '../components/active-collators';
+import ActiveCollators from './ActiveCollators';
 
 const Home = (): JSX.Element => {
   const { t } = useTranslation();

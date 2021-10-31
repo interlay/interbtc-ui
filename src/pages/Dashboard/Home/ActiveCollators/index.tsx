@@ -2,7 +2,7 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
-import LineChartComponent from './line-chart-component';
+import LineChartComponent from 'pages/Dashboard/components/line-chart-component';
 import DashboardCard from 'pages/Dashboard/DashboardCard';
 import { range } from 'common/utils/utils';
 
