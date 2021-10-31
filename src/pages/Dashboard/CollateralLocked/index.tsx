@@ -1,21 +1,29 @@
 
-import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
+import { useQuery } from 'react-query';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
+import { CollateralTimeData } from '@interlay/interbtc-index-client';
 
 import LineChartComponent from '../components/line-chart-component';
 import DashboardCard from 'pages/Dashboard/DashboardCard';
+import ErrorFallback from 'components/ErrorFallback';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   getUsdAmount,
   displayMonetaryAmount
 } from 'common/utils/utils';
 import { PAGES } from 'utils/constants/links';
+import genericFetcher, {
+  GENERIC_FETCHER
+} from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
@@ -25,32 +33,37 @@ interface Props {
 const CollateralLocked = ({ linkButton }: Props): JSX.Element => {
   const {
     prices,
-    totalLockedCollateralTokenAmount
+    totalLockedCollateralTokenAmount,
+    bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
-
   const { t } = useTranslation();
-  const statsApi = useInterbtcIndex();
 
-  const [cumulativeCollateralPerDay, setCumulativeCollateralPerDay] = React.useState(
-    // eslint-disable-next-line no-array-constructor
-    new Array<{
-      date: number;
-      amount: number;
-    }>()
+  const {
+    isIdle: cumulativeCollateralPerDayIdle,
+    isLoading: cumulativeCollateralPerDayLoading,
+    data: cumulativeCollateralPerDay,
+    error: cumulativeCollateralPerDayError
+  } = useQuery<Array<CollateralTimeData>, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'getRecentDailyCollateralLocked',
+      { daysBack: 6 }
+    ],
+    genericFetcher<Array<CollateralTimeData>>(),
+    {
+      enabled: !!bridgeLoaded
+    }
   );
+  useErrorHandler(cumulativeCollateralPerDayError);
 
-  React.useEffect(() => {
-    if (!statsApi) return;
-
-    (async () => {
-      try {
-        const result = await statsApi.getRecentDailyCollateralLocked({ daysBack: 6 });
-        setCumulativeCollateralPerDay(result);
-      } catch (error) {
-        console.log('[CollateralLocked] error.message => ', error.message);
-      }
-    })();
-  }, [statsApi]);
+  // TODO: should use skeleton loaders
+  if (cumulativeCollateralPerDayIdle || cumulativeCollateralPerDayLoading) {
+    return <>Loading...</>;
+  }
+  if (cumulativeCollateralPerDay === undefined) {
+    throw new Error('Something went wrong!');
+  }
 
   return (
     <DashboardCard>
@@ -118,4 +131,9 @@ const CollateralLocked = ({ linkButton }: Props): JSX.Element => {
   );
 };
 
-export default CollateralLocked;
+export default withErrorBoundary(CollateralLocked, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});
