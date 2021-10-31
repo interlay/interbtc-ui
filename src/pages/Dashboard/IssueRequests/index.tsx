@@ -9,7 +9,6 @@ import clsx from 'clsx';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import LineChartComponent from '../components/line-chart-component';
-import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import IssueRequestsTable from 'containers/IssueRequestsTable';
@@ -89,7 +88,7 @@ function IssueRequests(): JSX.Element {
   ]);
 
   return (
-    <MainContainer className='fade-in-animation'>
+    <>
       <div>
         <PageTitle
           mainTitle={t('issue_page.issue_requests')}
@@ -190,7 +189,7 @@ function IssueRequests(): JSX.Element {
         </div>
       </div>
       <IssueRequestsTable totalIssueRequests={totalIssueRequests} />
-    </MainContainer>
+    </>
   );
 }
 

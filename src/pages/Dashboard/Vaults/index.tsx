@@ -7,7 +7,6 @@ import ActiveVaults from '../components/active-vaults';
 import CollateralLocked from '../components/collateral-locked';
 import Collateralization from '../components/collateralization';
 import TimerIncrement from 'parts/TimerIncrement';
-import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import Hr1 from 'components/hrs/Hr1';
 
@@ -15,7 +14,7 @@ const Vaults = (): JSX.Element => {
   const { t } = useTranslation();
 
   return (
-    <MainContainer className='fade-in-animation'>
+    <>
       <div>
         <PageTitle
           mainTitle={t('dashboard.vault.vaults')}
@@ -33,7 +32,7 @@ const Vaults = (): JSX.Element => {
         <Collateralization />
       </div>
       <VaultsTable />
-    </MainContainer>
+    </>
   );
 };
 

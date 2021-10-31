@@ -3,7 +3,6 @@ import clsx from 'clsx';
 
 import ParachainSecurity from '../components/parachain-security';
 import TimerIncrement from 'parts/TimerIncrement';
-import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import Hr1 from 'components/hrs/Hr1';
 
@@ -11,7 +10,7 @@ const Parachain = (): JSX.Element => {
   const { t } = useTranslation();
 
   return (
-    <MainContainer className='fade-in-animation'>
+    <>
       <div>
         <PageTitle
           mainTitle={t('dashboard.parachain.parachain')}
@@ -26,7 +25,7 @@ const Parachain = (): JSX.Element => {
         )}>
         <ParachainSecurity />
       </div>
-    </MainContainer>
+    </>
   );
 };
 
