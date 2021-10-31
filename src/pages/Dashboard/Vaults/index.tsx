@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import VaultsTable from './VaultsTable';
 import ActiveVaults from '../components/active-vaults';
-import CollateralLocked from '../components/collateral-locked';
+import CollateralLocked from '../CollateralLocked';
 import Collateralization from '../components/collateralization';
 import TimerIncrement from 'parts/TimerIncrement';
 import PageTitle from 'parts/PageTitle';

@@ -64,6 +64,7 @@ const WrappedToken = (): JSX.Element => {
   if (cumulativeIssuesPerDay === undefined) {
     throw new Error('Something went wrong!');
   }
+
   const converted = cumulativeIssuesPerDay.map(item => ({
     date: item.date.getTime(),
     sat: Number(item.btc.toString())

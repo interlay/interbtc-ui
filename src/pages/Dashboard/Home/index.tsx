@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import WrappedToken from './WrappedToken';
-import CollateralLocked from '../components/collateral-locked';
+import CollateralLocked from '../CollateralLocked';
 import Collateralization from '../components/collateralization';
 import ParachainSecurity from '../components/parachain-security';
 import BtcRelay from '../components/btc-relay';

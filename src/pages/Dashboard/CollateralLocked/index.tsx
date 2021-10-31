@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
 
-import LineChartComponent from './line-chart-component';
+import LineChartComponent from '../components/line-chart-component';
 import DashboardCard from 'pages/Dashboard/DashboardCard';
-import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
+import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
