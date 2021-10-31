@@ -21,7 +21,7 @@ import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { PAGES } from 'utils/constants/links';
 
-const InterBTC = (): React.ReactElement => {
+const WrappedToken = (): JSX.Element => {
   const { prices } = useSelector((state: StoreType) => state.general);
   const totalWrappedTokenAmount = useSelector((state: StoreType) => state.general.totalWrappedTokenAmount);
 
@@ -137,4 +137,4 @@ const InterBTC = (): React.ReactElement => {
   );
 };
 
-export default InterBTC;
+export default WrappedToken;

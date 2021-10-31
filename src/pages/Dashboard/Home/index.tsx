@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
-import InterBTC from '../components/interbtc';
+import WrappedToken from '../components/interbtc';
 import CollateralLocked from '../components/collateral-locked';
 import Collateralization from '../components/collateralization';
 import ParachainSecurity from '../components/parachain-security';
@@ -30,7 +30,7 @@ const Home = (): JSX.Element => {
           'lg:gap-10',
           'xl:grid-cols-3'
         )}>
-        <InterBTC />
+        <WrappedToken />
         <CollateralLocked linkButton />
         <Collateralization linkButton />
         <ParachainSecurity linkButton />
