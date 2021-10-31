@@ -57,112 +57,120 @@ const WrappedToken = (): JSX.Element => {
   );
   useErrorHandler(cumulativeIssuesPerDayError);
 
-  // TODO: should use skeleton loaders
-  if (cumulativeIssuesPerDayIdle || cumulativeIssuesPerDayLoading) {
-    return <>Loading...</>;
-  }
-  if (cumulativeIssuesPerDay === undefined) {
-    throw new Error('Something went wrong!');
-  }
-
-  const converted = cumulativeIssuesPerDay.map(item => ({
-    date: item.date.getTime(),
-    sat: Number(item.btc.toString())
-  }));
-
-  const pointIssuesPerDay = converted.map((dataPoint, i) => {
-    if (i === 0) {
-      return 0;
-    } else {
-      return dataPoint.sat - converted[i - 1].sat;
+  const renderContent = () => {
+    // TODO: should use skeleton loaders
+    if (cumulativeIssuesPerDayIdle || cumulativeIssuesPerDayLoading) {
+      return <>Loading...</>;
     }
-  });
+    if (cumulativeIssuesPerDay === undefined) {
+      throw new Error('Something went wrong!');
+    }
+
+    const converted = cumulativeIssuesPerDay.map(item => ({
+      date: item.date.getTime(),
+      sat: Number(item.btc.toString())
+    }));
+
+    const pointIssuesPerDay = converted.map((dataPoint, i) => {
+      if (i === 0) {
+        return 0;
+      } else {
+        return dataPoint.sat - converted[i - 1].sat;
+      }
+    });
+
+    return (
+      <>
+        <div
+          className={clsx(
+            'flex',
+            'justify-between',
+            'items-center'
+          )}>
+          <div>
+            <h1
+              className={clsx(
+                // ray test touch <<
+                'text-interlayDenim',
+                // ray test touch >>
+                'text-sm',
+                'xl:text-base',
+                'mb-1',
+                'xl:mb-2'
+              )}>
+              {t('dashboard.issue.issued')}
+            </h1>
+            <h2
+              className={clsx(
+                'text-base',
+                'font-bold',
+                'mb-1'
+              )}>
+              {t('dashboard.issue.total_interbtc', {
+                amount: displayMonetaryAmount(totalWrappedTokenAmount),
+                wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+              })}
+            </h2>
+            {/* TODO: add the price API */}
+            <h2
+              className={clsx(
+                'text-base',
+                'font-bold',
+                'mb-1'
+              )}>
+              ${getUsdAmount(totalWrappedTokenAmount, prices.bitcoin.usd)}
+            </h2>
+          </div>
+          <div style={{ display: 'grid', gridRowGap: 10 }}>
+            <InterlayRouterLink to={PAGES.DASHBOARD_ISSUE_REQUESTS}>
+              <InterlayDenimOutlinedButton
+                endIcon={<FaExternalLinkAlt />}
+                className='w-full'>
+                VIEW ALL ISSUED
+              </InterlayDenimOutlinedButton>
+            </InterlayRouterLink>
+            <InterlayRouterLink to={PAGES.DASHBOARD_REDEEM_REQUESTS}>
+              <InterlayCaliforniaOutlinedButton
+                endIcon={<FaExternalLinkAlt />}
+                className='w-full'>
+                VIEW ALL REDEEMED
+              </InterlayCaliforniaOutlinedButton>
+            </InterlayRouterLink>
+          </div>
+        </div>
+        <div className='mt-5'>
+          <LineChartComponent
+            color={['d_interlayCalifornia', 'd_interlayPaleSky']}
+            label={[
+              t('dashboard.issue.total_issued_chart', {
+                wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+              }),
+              t('dashboard.issue.per_day_issued_chart', {
+                wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+              })
+            ]}
+            yLabels={converted
+              .slice(1)
+              .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))
+            }
+            yAxisProps={[
+              { beginAtZero: true, position: 'left', maxTicksLimit: 6 },
+              { position: 'right', maxTicksLimit: 6 }
+            ]}
+            data={[
+              converted.slice(1).map(
+                dataPoint => Number(BitcoinAmount.from.Satoshi(dataPoint.sat).str.BTC())
+              ),
+              pointIssuesPerDay.slice(1).map(sat => Number(BitcoinAmount.from.Satoshi(sat).str.BTC()))
+            ]} />
+        </div>
+      </>
+    );
+  };
 
   return (
     <DashboardCard>
-      <div
-        className={clsx(
-          'flex',
-          'justify-between',
-          'items-center'
-        )}>
-        <div>
-          <h1
-            className={clsx(
-              // ray test touch <<
-              'text-interlayDenim',
-              // ray test touch >>
-              'text-sm',
-              'xl:text-base',
-              'mb-1',
-              'xl:mb-2'
-            )}>
-            {t('dashboard.issue.issued')}
-          </h1>
-          <h2
-            className={clsx(
-              'text-base',
-              'font-bold',
-              'mb-1'
-            )}>
-            {t('dashboard.issue.total_interbtc', {
-              amount: displayMonetaryAmount(totalWrappedTokenAmount),
-              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
-            })}
-          </h2>
-          {/* TODO: add the price API */}
-          <h2
-            className={clsx(
-              'text-base',
-              'font-bold',
-              'mb-1'
-            )}>
-            ${getUsdAmount(totalWrappedTokenAmount, prices.bitcoin.usd)}
-          </h2>
-        </div>
-        <div style={{ display: 'grid', gridRowGap: 10 }}>
-          <InterlayRouterLink to={PAGES.DASHBOARD_ISSUE_REQUESTS}>
-            <InterlayDenimOutlinedButton
-              endIcon={<FaExternalLinkAlt />}
-              className='w-full'>
-              VIEW ALL ISSUED
-            </InterlayDenimOutlinedButton>
-          </InterlayRouterLink>
-          <InterlayRouterLink to={PAGES.DASHBOARD_REDEEM_REQUESTS}>
-            <InterlayCaliforniaOutlinedButton
-              endIcon={<FaExternalLinkAlt />}
-              className='w-full'>
-              VIEW ALL REDEEMED
-            </InterlayCaliforniaOutlinedButton>
-          </InterlayRouterLink>
-        </div>
-      </div>
-      <div className='mt-5'>
-        <LineChartComponent
-          color={['d_interlayCalifornia', 'd_interlayPaleSky']}
-          label={[
-            t('dashboard.issue.total_issued_chart', {
-              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
-            }),
-            t('dashboard.issue.per_day_issued_chart', {
-              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
-            })
-          ]}
-          yLabels={converted
-            .slice(1)
-            .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))
-          }
-          yAxisProps={[
-            { beginAtZero: true, position: 'left', maxTicksLimit: 6 },
-            { position: 'right', maxTicksLimit: 6 }
-          ]}
-          data={[
-            converted.slice(1).map(
-              dataPoint => Number(BitcoinAmount.from.Satoshi(dataPoint.sat).str.BTC())
-            ),
-            pointIssuesPerDay.slice(1).map(sat => Number(BitcoinAmount.from.Satoshi(sat).str.BTC()))
-          ]} />
-      </div>
+      {renderContent()}
     </DashboardCard>
   );
 };
