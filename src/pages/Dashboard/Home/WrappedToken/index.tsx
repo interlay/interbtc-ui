@@ -11,7 +11,7 @@ import clsx from 'clsx';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import DashboardCard from 'pages/Dashboard/DashboardCard';
-import LineChartComponent from './line-chart-component';
+import LineChartComponent from '../../components/line-chart-component';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
