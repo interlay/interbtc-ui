@@ -1,12 +1,18 @@
 
-import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { BitcoinAmount } from '@interlay/monetary-js';
 import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
+import { useQuery } from 'react-query';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
+import Big from 'big.js';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import DashboardCard from 'pages/Dashboard/DashboardCard';
+import ErrorFallback from 'components/ErrorFallback';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import {
@@ -18,6 +24,7 @@ import {
   safeRoundTwoDecimals
 } from 'common/utils/utils';
 import { PAGES } from 'utils/constants/links';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
 const TEMP_DISABLE_COLLATERALIZATION_DISPLAY = true; // TODO: remove once lib reimplements collateralization
@@ -30,137 +37,181 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
-  const [systemCollateralization, setSystemCollateralization] = React.useState('0');
-  const [issuableWrappedToken, setIssuableWrappedToken] = React.useState(BitcoinAmount.zero);
-  const [secureCollateralThreshold, setSecureCollateralThreshold] = React.useState('150');
+  const {
+    isIdle: systemCollateralizationIdle,
+    isLoading: systemCollateralizationLoading,
+    data: systemCollateralization,
+    error: systemCollateralizationError
+  } = useQuery<Big, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcApi',
+      'vaults',
+      'getSystemCollateralization'
+    ],
+    genericFetcher<Big>(),
+    {
+      enabled: !!bridgeLoaded && !TEMP_DISABLE_COLLATERALIZATION_DISPLAY
+    }
+  );
+  useErrorHandler(systemCollateralizationError);
 
-  React.useEffect(() => {
-    (async () => {
-      if (!bridgeLoaded || TEMP_DISABLE_COLLATERALIZATION_DISPLAY) return;
+  const {
+    isIdle: issuableWrappedTokenIdle,
+    isLoading: issuableWrappedTokenLoading,
+    data: issuableWrappedToken,
+    error: issuableWrappedTokenError
+  } = useQuery<BitcoinAmount, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcApi',
+      'vaults',
+      'getTotalIssuableAmount'
+    ],
+    genericFetcher<BitcoinAmount>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(issuableWrappedTokenError);
 
-      try {
-        const systemCollateralization = await window.bridge.interBtcApi.vaults.getSystemCollateralization();
-        setSystemCollateralization(systemCollateralization?.mul(100).toString() || '0');
-      } catch (error) {
-        console.log('[Collateralization useEffect] error.message => ', error.message);
-      }
-    })();
+  const {
+    isIdle: secureCollateralThresholdIdle,
+    isLoading: secureCollateralThresholdLoading,
+    data: secureCollateralThreshold,
+    error: secureCollateralThresholdError
+  } = useQuery<Big, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcApi',
+      'vaults',
+      'getSecureCollateralThreshold',
+      COLLATERAL_TOKEN
+    ],
+    genericFetcher<Big>(),
+    {
+      enabled: !!bridgeLoaded && !TEMP_DISABLE_COLLATERALIZATION_DISPLAY
+    }
+  );
+  useErrorHandler(secureCollateralThresholdError);
 
-    (async () => {
-      if (!bridgeLoaded) return;
+  const renderContent = () => {
+    // TODO: should use skeleton loaders
+    if (systemCollateralizationIdle || systemCollateralizationLoading) {
+      return <>Loading...</>;
+    }
+    if (issuableWrappedTokenIdle || issuableWrappedTokenLoading) {
+      return <>Loading...</>;
+    }
+    if (secureCollateralThresholdIdle || secureCollateralThresholdLoading) {
+      return <>Loading...</>;
+    }
+    if (issuableWrappedToken === undefined) {
+      throw new Error('Something went wrong!');
+    }
 
-      try {
-        const theIssuableWrappedToken = await window.bridge.interBtcApi.vaults.getTotalIssuableAmount();
-        setIssuableWrappedToken(theIssuableWrappedToken);
-      } catch (error) {
-        console.log('[Collateralization useEffect] error.message => ', error.message);
-      }
-    })();
+    const systemCollateralizationLabel = systemCollateralization?.mul(100).toString() || '0';
+    const secureCollateralThresholdLabel = secureCollateralThreshold?.mul(100).toString() || '150';
 
-    (async () => {
-      if (!bridgeLoaded) return;
-
-      try {
-        const secureCollateralThreshold =
-          await window.bridge.interBtcApi.vaults.getSecureCollateralThreshold(COLLATERAL_TOKEN);
-        setSecureCollateralThreshold(secureCollateralThreshold?.mul(100).toString() || '150');
-      } catch (error) {
-        console.log('[Collateralization useEffect] error.message => ', error.message);
-      }
-    })();
-  });
-
-  return (
-    <DashboardCard>
-      <div
-        className={clsx(
-          'flex',
-          'justify-between',
-          'items-center'
-        )}>
-        <div>
-          {!TEMP_DISABLE_COLLATERALIZATION_DISPLAY && (
-            <>
-              <h1
-                className={clsx(
-                  // ray test touch <<
-                  'text-interlayDenim',
-                  // ray test touch >>
-                  'text-sm',
-                  'xl:text-base',
-                  'mb-1',
-                  'xl:mb-2'
-                )}>
-                {t('dashboard.vault.collateralization')}
-              </h1>
-              <h2
-                className={clsx(
-                  'text-base',
-                  'font-bold',
-                  'mb-1'
-                )}>
-                {safeRoundTwoDecimals(systemCollateralization)}%
-              </h2>
-              <h2
-                className={clsx(
-                  'text-base',
-                  'font-bold',
-                  'mb-1'
-                )}>
-                {t('dashboard.vault.secure_threshold', {
-                  threshold: safeRoundTwoDecimals(secureCollateralThreshold)
-                })}
-              </h2>
-            </>
+    return (
+      <>
+        <div
+          className={clsx(
+            'flex',
+            'justify-between',
+            'items-center'
+          )}>
+          <div>
+            {!TEMP_DISABLE_COLLATERALIZATION_DISPLAY && (
+              <>
+                <h1
+                  className={clsx(
+                    // ray test touch <<
+                    'text-interlayDenim',
+                    // ray test touch >>
+                    'text-sm',
+                    'xl:text-base',
+                    'mb-1',
+                    'xl:mb-2'
+                  )}>
+                  {t('dashboard.vault.collateralization')}
+                </h1>
+                <h2
+                  className={clsx(
+                    'text-base',
+                    'font-bold',
+                    'mb-1'
+                  )}>
+                  {safeRoundTwoDecimals(systemCollateralizationLabel)}%
+                </h2>
+                <h2
+                  className={clsx(
+                    'text-base',
+                    'font-bold',
+                    'mb-1'
+                  )}>
+                  {t('dashboard.vault.secure_threshold', {
+                    threshold: safeRoundTwoDecimals(secureCollateralThresholdLabel)
+                  })}
+                </h2>
+              </>
+            )}
+          </div>
+          {linkButton && (
+            <InterlayRouterLink to={PAGES.DASHBOARD_VAULTS}>
+              <InterlayDenimOutlinedButton
+                endIcon={<FaExternalLinkAlt />}
+                className='w-full'>
+                VIEW VAULTS
+              </InterlayDenimOutlinedButton>
+            </InterlayRouterLink>
           )}
         </div>
-        {linkButton && (
-          <InterlayRouterLink to={PAGES.DASHBOARD_VAULTS}>
-            <InterlayDenimOutlinedButton
-              endIcon={<FaExternalLinkAlt />}
-              className='w-full'>
-              VIEW VAULTS
-            </InterlayDenimOutlinedButton>
-          </InterlayRouterLink>
-        )}
-      </div>
-      <div
-        className={clsx(
-          'mx-auto',
-          'w-60',
-          'h-60',
-          'rounded-full',
-          'flex',
-          'justify-center',
-          'items-center',
-          'border-2',
-          // ray test touch <<
-          'border-interlayDenim'
-          // ray test touch >>
-        )}>
-        <h1
+        <div
           className={clsx(
-            'font-bold',
-            'text-2xl',
+            'mx-auto',
+            'w-60',
+            'h-60',
+            'rounded-full',
+            'flex',
+            'justify-center',
+            'items-center',
+            'border-2',
             // ray test touch <<
-            'text-interlayDenim',
+            'border-interlayDenim'
             // ray test touch >>
-            'text-center'
           )}>
-          {issuableWrappedToken.eq(BitcoinAmount.zero) ? (
-            <>{t('loading')}</>
-          ) : (
+          <h1
+            className={clsx(
+              'font-bold',
+              'text-2xl',
+              // ray test touch <<
+              'text-interlayDenim',
+              // ray test touch >>
+              'text-center'
+            )}>
             <>
               <span className='inline-block'>
                 {`${displayMonetaryAmount(issuableWrappedToken)} ${WRAPPED_TOKEN_SYMBOL}`}
               </span>
               <span className='inline-block'>{t('dashboard.vault.capacity')}</span>
             </>
-          )}
-        </h1>
-      </div>
+          </h1>
+        </div>
+      </>
+    );
+  };
+
+  return (
+    <DashboardCard>
+      {renderContent()}
     </DashboardCard>
   );
 };
 
-export default Collateralization;
+export default withErrorBoundary(Collateralization, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});
