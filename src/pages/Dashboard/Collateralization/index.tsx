@@ -33,7 +33,6 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
   const [systemCollateralization, setSystemCollateralization] = React.useState('0');
   const [issuableWrappedToken, setIssuableWrappedToken] = React.useState(BitcoinAmount.zero);
   const [secureCollateralThreshold, setSecureCollateralThreshold] = React.useState('150');
-  const [failed, setFailed] = React.useState(false);
 
   React.useEffect(() => {
     (async () => {
@@ -44,7 +43,6 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
         setSystemCollateralization(systemCollateralization?.mul(100).toString() || '0');
       } catch (error) {
         console.log('[Collateralization useEffect] error.message => ', error.message);
-        setFailed(true);
       }
     })();
 
@@ -56,7 +54,6 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
         setIssuableWrappedToken(theIssuableWrappedToken);
       } catch (error) {
         console.log('[Collateralization useEffect] error.message => ', error.message);
-        setFailed(true);
       }
     })();
 
@@ -69,7 +66,6 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
         setSecureCollateralThreshold(secureCollateralThreshold?.mul(100).toString() || '150');
       } catch (error) {
         console.log('[Collateralization useEffect] error.message => ', error.message);
-        setFailed(true);
       }
     })();
   });
@@ -83,7 +79,7 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
           'items-center'
         )}>
         <div>
-          {!(failed || TEMP_DISABLE_COLLATERALIZATION_DISPLAY) && (
+          {!TEMP_DISABLE_COLLATERALIZATION_DISPLAY && (
             <>
               <h1
                 className={clsx(
@@ -151,19 +147,15 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
             // ray test touch >>
             'text-center'
           )}>
-          {failed ? (
-            <>{t('no_data')}</>
+          {issuableWrappedToken.eq(BitcoinAmount.zero) ? (
+            <>{t('loading')}</>
           ) : (
-            issuableWrappedToken.eq(BitcoinAmount.zero) ? (
-              <>{t('loading')}</>
-            ) : (
-              <>
-                <span className='inline-block'>
-                  {`${displayMonetaryAmount(issuableWrappedToken)} ${WRAPPED_TOKEN_SYMBOL}`}
-                </span>
-                <span className='inline-block'>{t('dashboard.vault.capacity')}</span>
-              </>
-            )
+            <>
+              <span className='inline-block'>
+                {`${displayMonetaryAmount(issuableWrappedToken)} ${WRAPPED_TOKEN_SYMBOL}`}
+              </span>
+              <span className='inline-block'>{t('dashboard.vault.capacity')}</span>
+            </>
           )}
         </h1>
       </div>
