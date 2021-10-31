@@ -1,21 +1,34 @@
 
-import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
+import { useQuery } from 'react-query';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import DashboardCard from 'pages/Dashboard/DashboardCard';
 import LineChartComponent from '../../components/line-chart-component';
-import InterlayRouterLink from 'components/UI/InterlayRouterLink';
+import ErrorFallback from 'components/ErrorFallback';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
+import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
 import { PAGES } from 'utils/constants/links';
+import genericFetcher, {
+  GENERIC_FETCHER
+} from 'services/fetchers/generic-fetcher';
+import { StoreType } from 'common/types/util.types';
+
+// TODO: should be imported
+interface BTCTimeData {
+  date: Date;
+  btc: BitcoinAmount;
+}
 
 const WrappedToken = (): JSX.Element => {
   const {
@@ -23,30 +36,44 @@ const WrappedToken = (): JSX.Element => {
     totalWrappedTokenAmount,
     bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
-
   const { t } = useTranslation();
-  const statsApi = useInterbtcIndex();
 
-  const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = React.useState<Array<{ date: number; sat: number; }>>([]);
+  const {
+    isIdle: cumulativeIssuesPerDayIdle,
+    isLoading: cumulativeIssuesPerDayLoading,
+    data: cumulativeIssuesPerDay,
+    error: cumulativeIssuesPerDayError
+  } = useQuery<Array<BTCTimeData>, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'getRecentDailyIssues',
+      { daysBack: 6 }
+    ],
+    genericFetcher<Array<BTCTimeData>>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(cumulativeIssuesPerDayError);
 
-  React.useEffect(() => {
-    if (!bridgeLoaded) return;
-    if (!statsApi) return;
+  // TODO: should use skeleton loaders
+  if (cumulativeIssuesPerDayIdle || cumulativeIssuesPerDayLoading) {
+    return <>Loading...</>;
+  }
+  if (cumulativeIssuesPerDay === undefined) {
+    throw new Error('Something went wrong!');
+  }
+  const converted = cumulativeIssuesPerDay.map(item => ({
+    date: item.date.getTime(),
+    sat: Number(item.btc.toString())
+  }));
 
-    (async () => {
-      const res = await statsApi.getRecentDailyIssues({ daysBack: 6 });
-      setCumulativeIssuesPerDay(res);
-    })();
-  }, [
-    bridgeLoaded,
-    statsApi
-  ]);
-
-  const pointIssuesPerDay = cumulativeIssuesPerDay.map((dataPoint, i) => {
+  const pointIssuesPerDay = converted.map((dataPoint, i) => {
     if (i === 0) {
       return 0;
     } else {
-      return dataPoint.sat - cumulativeIssuesPerDay[i - 1].sat;
+      return dataPoint.sat - converted[i - 1].sat;
     }
   });
 
@@ -120,7 +147,7 @@ const WrappedToken = (): JSX.Element => {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
             })
           ]}
-          yLabels={cumulativeIssuesPerDay
+          yLabels={converted
             .slice(1)
             .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))
           }
@@ -129,7 +156,7 @@ const WrappedToken = (): JSX.Element => {
             { position: 'right', maxTicksLimit: 6 }
           ]}
           data={[
-            cumulativeIssuesPerDay.slice(1).map(
+            converted.slice(1).map(
               dataPoint => Number(BitcoinAmount.from.Satoshi(dataPoint.sat).str.BTC())
             ),
             pointIssuesPerDay.slice(1).map(sat => Number(BitcoinAmount.from.Satoshi(sat).str.BTC()))
@@ -139,4 +166,9 @@ const WrappedToken = (): JSX.Element => {
   );
 };
 
-export default WrappedToken;
+export default withErrorBoundary(WrappedToken, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});

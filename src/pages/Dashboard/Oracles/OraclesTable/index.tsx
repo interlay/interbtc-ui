@@ -14,6 +14,8 @@ import clsx from 'clsx';
 import { CollateralBtcOracleStatus } from '@interlay/interbtc/build/oracleTypes';
 import { ExchangeRate } from '@interlay/monetary-js';
 
+import ErrorFallback from 'components/ErrorFallback';
+import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -22,8 +24,6 @@ import InterlayTable, {
   InterlayTh,
   InterlayTd
 } from 'components/UI/InterlayTable';
-import ErrorFallback from 'components/ErrorFallback';
-import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
 import genericFetcher, {
   GENERIC_FETCHER
