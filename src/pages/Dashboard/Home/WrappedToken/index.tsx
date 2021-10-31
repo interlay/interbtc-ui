@@ -1,9 +1,5 @@
 
-import {
-  useEffect,
-  useMemo,
-  useState
-} from 'react';
+import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
@@ -22,31 +18,37 @@ import { StoreType } from 'common/types/util.types';
 import { PAGES } from 'utils/constants/links';
 
 const WrappedToken = (): JSX.Element => {
-  const { prices } = useSelector((state: StoreType) => state.general);
-  const totalWrappedTokenAmount = useSelector((state: StoreType) => state.general.totalWrappedTokenAmount);
+  const {
+    prices,
+    totalWrappedTokenAmount,
+    bridgeLoaded
+  } = useSelector((state: StoreType) => state.general);
 
   const { t } = useTranslation();
   const statsApi = useInterbtcIndex();
 
-  // eslint-disable-next-line no-array-constructor
-  const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number; }>());
-  const pointIssuesPerDay = useMemo(
-    () =>
-      cumulativeIssuesPerDay.map((dataPoint, i) => {
-        if (i === 0) return 0;
-        return dataPoint.sat - cumulativeIssuesPerDay[i - 1].sat;
-      }),
-    [cumulativeIssuesPerDay]
-  );
+  const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = React.useState<Array<{ date: number; sat: number; }>>([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
+    if (!bridgeLoaded) return;
     if (!statsApi) return;
 
     (async () => {
       const res = await statsApi.getRecentDailyIssues({ daysBack: 6 });
       setCumulativeIssuesPerDay(res);
     })();
-  }, [statsApi]);
+  }, [
+    bridgeLoaded,
+    statsApi
+  ]);
+
+  const pointIssuesPerDay = cumulativeIssuesPerDay.map((dataPoint, i) => {
+    if (i === 0) {
+      return 0;
+    } else {
+      return dataPoint.sat - cumulativeIssuesPerDay[i - 1].sat;
+    }
+  });
 
   return (
     <DashboardCard>
