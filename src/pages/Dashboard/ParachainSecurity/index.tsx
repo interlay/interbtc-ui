@@ -22,7 +22,7 @@ const ParachainSecurity = ({ linkButton }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
 
-  const parachainState = () => {
+  const getParachainStatus = () => {
     switch (parachainStatus) {
     case ParachainStatus.Running:
       return (
@@ -86,7 +86,7 @@ const ParachainSecurity = ({ linkButton }: Props): JSX.Element => {
             {t('dashboard.parachain.parachain_is', {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
             })}&nbsp;
-            {parachainState()}
+            {getParachainStatus()}
           </h1>
           {linkButton && (
             <InterlayRouterLink to={PAGES.DASHBOARD_PARACHAIN}>
