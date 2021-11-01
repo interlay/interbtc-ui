@@ -29,7 +29,7 @@ interface Props {
   linkButton?: boolean;
 }
 
-const OracleStatus = ({ linkButton }: Props): JSX.Element => {
+const OracleStatusCard = ({ linkButton }: Props): JSX.Element => {
   const { t } = useTranslation();
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
@@ -248,4 +248,4 @@ const OracleStatus = ({ linkButton }: Props): JSX.Element => {
   );
 };
 
-export default OracleStatus;
+export default OracleStatusCard;
