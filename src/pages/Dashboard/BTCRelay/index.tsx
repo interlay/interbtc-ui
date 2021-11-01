@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
 import BlocksTable from './BlocksTable';
-import BtcRelay from '../components/btc-relay';
+import BTCRelayCard from '../BTCRelayCard';
 import TimerIncrement from 'parts/TimerIncrement';
 import PageTitle from 'parts/PageTitle';
 import Hr1 from 'components/hrs/Hr1';
@@ -25,7 +25,7 @@ const BTCRelay = (): JSX.Element => {
           'grid-cols-2',
           'gap-7'
         )}>
-        <BtcRelay displayBlockstreamData />
+        <BTCRelayCard displayBlockstreamData />
       </div>
       <BlocksTable />
     </>

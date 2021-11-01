@@ -24,7 +24,7 @@ interface Props {
   displayBlockstreamData?: boolean;
 }
 
-const BtcRelay = ({
+const BTCRelayCard = ({
   linkButton,
   displayBlockstreamData
 }: Props): JSX.Element => {
@@ -220,4 +220,4 @@ const BtcRelay = ({
   );
 };
 
-export default BtcRelay;
+export default BTCRelayCard;

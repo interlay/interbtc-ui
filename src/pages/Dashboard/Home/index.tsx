@@ -8,7 +8,7 @@ import WrappedToken from './WrappedToken';
 import CollateralLocked from '../CollateralLocked';
 import Collateralization from '../Collateralization';
 import ParachainSecurity from '../ParachainSecurity';
-import BtcRelay from '../components/btc-relay';
+import BTCRelayCard from '../BTCRelayCard';
 import OracleStatus from '../components/oracle-status';
 import ActiveVaults from '../components/active-vaults';
 import ActiveCollators from './ActiveCollators';
@@ -34,7 +34,7 @@ const Home = (): JSX.Element => {
         <CollateralLocked linkButton />
         <Collateralization linkButton />
         <ParachainSecurity linkButton />
-        <BtcRelay linkButton />
+        <BTCRelayCard linkButton />
         <OracleStatus linkButton />
         <ActiveVaults linkButton />
         <ActiveCollators />
