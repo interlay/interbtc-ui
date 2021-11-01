@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
 import VaultsTable from './VaultsTable';
-import ActiveVaults from '../components/active-vaults';
+import ActiveVaultsCard from '../ActiveVaultsCard';
 import CollateralLockedCard from '../CollateralLockedCard';
 import CollateralizationCard from '../CollateralizationCard';
 import TimerIncrement from 'parts/TimerIncrement';
@@ -27,7 +27,7 @@ const Vaults = (): JSX.Element => {
           'grid-cols-3',
           'gap-7'
         )}>
-        <ActiveVaults />
+        <ActiveVaultsCard />
         <CollateralLockedCard />
         <CollateralizationCard />
       </div>

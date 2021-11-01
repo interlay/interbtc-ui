@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
 
-import LineChartComponent from './line-chart-component';
+import LineChartComponent from '../components/line-chart-component';
 import DashboardCard from 'pages/Dashboard/DashboardCard';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
@@ -15,7 +15,7 @@ interface Props {
   linkButton?: boolean;
 }
 
-const ActiveVaults = ({ linkButton }: Props): JSX.Element => {
+const ActiveVaultsCard = ({ linkButton }: Props): JSX.Element => {
   const statsApi = useInterbtcIndex();
   const { t } = useTranslation();
 
@@ -84,4 +84,4 @@ const ActiveVaults = ({ linkButton }: Props): JSX.Element => {
   );
 };
 
-export default ActiveVaults;
+export default ActiveVaultsCard;

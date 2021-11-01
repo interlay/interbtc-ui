@@ -10,7 +10,7 @@ import CollateralizationCard from '../CollateralizationCard';
 import ParachainSecurityCard from '../ParachainSecurityCard';
 import BTCRelayCard from '../BTCRelayCard';
 import OracleStatusCard from '../OracleStatusCard';
-import ActiveVaults from '../components/active-vaults';
+import ActiveVaultsCard from '../ActiveVaultsCard';
 import ActiveCollatorsCard from './ActiveCollatorsCard';
 
 const Home = (): JSX.Element => {
@@ -36,7 +36,7 @@ const Home = (): JSX.Element => {
         <ParachainSecurityCard linkButton />
         <BTCRelayCard linkButton />
         <OracleStatusCard linkButton />
-        <ActiveVaults linkButton />
+        <ActiveVaultsCard linkButton />
         <ActiveCollatorsCard />
       </div>
     </>
