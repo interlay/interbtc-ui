@@ -27,7 +27,7 @@ import { PAGES } from 'utils/constants/links';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
-const TEMP_DISABLE_COLLATERALIZATION_DISPLAY = true; // TODO: remove once lib reimplements collateralization
+const TEMP_COLLATERALIZATION_DISPLAY_DISABLED = true; // TODO: remove once lib reimplements collateralization
 
 interface Props {
   linkButton?: boolean;
@@ -51,7 +51,7 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
     ],
     genericFetcher<Big>(),
     {
-      enabled: !!bridgeLoaded && !TEMP_DISABLE_COLLATERALIZATION_DISPLAY
+      enabled: !!bridgeLoaded && !TEMP_COLLATERALIZATION_DISPLAY_DISABLED
     }
   );
   useErrorHandler(systemCollateralizationError);
@@ -90,20 +90,26 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
     ],
     genericFetcher<Big>(),
     {
-      enabled: !!bridgeLoaded && !TEMP_DISABLE_COLLATERALIZATION_DISPLAY
+      enabled: !!bridgeLoaded && !TEMP_COLLATERALIZATION_DISPLAY_DISABLED
     }
   );
   useErrorHandler(secureCollateralThresholdError);
 
   const renderContent = () => {
     // TODO: should use skeleton loaders
-    if (systemCollateralizationIdle || systemCollateralizationLoading) {
+    if (
+      !TEMP_COLLATERALIZATION_DISPLAY_DISABLED &&
+      (systemCollateralizationIdle || systemCollateralizationLoading)
+    ) {
       return <>Loading...</>;
     }
     if (issuableWrappedTokenIdle || issuableWrappedTokenLoading) {
       return <>Loading...</>;
     }
-    if (secureCollateralThresholdIdle || secureCollateralThresholdLoading) {
+    if (
+      !TEMP_COLLATERALIZATION_DISPLAY_DISABLED &&
+      (secureCollateralThresholdIdle || secureCollateralThresholdLoading)
+    ) {
       return <>Loading...</>;
     }
     if (issuableWrappedToken === undefined) {
@@ -122,7 +128,7 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
             'items-center'
           )}>
           <div>
-            {!TEMP_DISABLE_COLLATERALIZATION_DISPLAY && (
+            {!TEMP_COLLATERALIZATION_DISPLAY_DISABLED && (
               <>
                 <h1
                   className={clsx(
