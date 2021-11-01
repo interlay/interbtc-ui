@@ -31,7 +31,6 @@ const ParachainSecurity = ({ linkButton }: Props): JSX.Element => {
           className='font-bold text-interlayConifer'>
           {t('dashboard.parachain.secure')}
         </span>
-
       );
     case ParachainStatus.Loading:
       return (

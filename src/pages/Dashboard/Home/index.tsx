@@ -7,7 +7,7 @@ import TimerIncrement from 'parts/TimerIncrement';
 import WrappedToken from './WrappedToken';
 import CollateralLocked from '../CollateralLocked';
 import Collateralization from '../Collateralization';
-import ParachainSecurity from '../components/parachain-security';
+import ParachainSecurity from '../ParachainSecurity';
 import BtcRelay from '../components/btc-relay';
 import OracleStatus from '../components/oracle-status';
 import ActiveVaults from '../components/active-vaults';
