@@ -80,20 +80,26 @@ const OracleStatusCard = ({ linkButton }: Props): JSX.Element => {
             {t('dashboard.oracles.oracles_are')}&nbsp;
             {oracleStatus === Status.Online ? (
               <span
-                id='oracle-text'
-                className='font-bold text-interlayConifer'>
+                className={clsx(
+                  'font-bold',
+                  'text-interlayConifer'
+                )}>
                 {t('dashboard.oracles.online')}
               </span>
             ) : oracleStatus === Status.Offline ? (
               <span
-                id='oracle-text'
-                className='font-bold text-interlayCinnabar'>
+                className={clsx(
+                  'font-bold',
+                  'text-interlayCinnabar'
+                )}>
                 {t('dashboard.oracles.offline')}
               </span>
             ) : (
               <span
-                id='oracle-text'
-                className='font-bold text-interlayPaleSky'>
+                className={clsx(
+                  'font-bold',
+                  'text-interlayPaleSky'
+                )}>
                 {t('dashboard.oracles.loading')}
               </span>
             )}
@@ -122,16 +128,14 @@ const OracleStatusCard = ({ linkButton }: Props): JSX.Element => {
               'flex-col',
               'items-center',
               'justify-center'
-            )}
-            id='oracle-circle'>
+            )}>
             <h1
               className={clsx(
                 'font-bold',
                 'text-3xl',
                 'text-center',
                 'text-interlayConifer'
-              )}
-              id='oracle-circle-text'>
+              )}>
               {t('online')}
             </h1>
             <h2
@@ -155,16 +159,14 @@ const OracleStatusCard = ({ linkButton }: Props): JSX.Element => {
               'flex-col',
               'items-center',
               'justify-center'
-            )}
-            id='oracle-circle'>
+            )}>
             <h1
               className={clsx(
                 'font-bold',
                 'text-3xl',
                 'text-center',
                 'text-interlayCinnabar'
-              )}
-              id='oracle-circle-text'>
+              )}>
               {t('offline')}
             </h1>
             <h2
@@ -188,16 +190,14 @@ const OracleStatusCard = ({ linkButton }: Props): JSX.Element => {
               'flex-col',
               'items-center',
               'justify-center'
-            )}
-            id='oracle-circle'>
+            )}>
             <h1
               className={clsx(
                 'font-bold',
                 'text-3xl',
                 'text-center',
                 'text-interlayPaleSky'
-              )}
-              id='oracle-circle-text'>
+              )}>
               {t('no_data')}
             </h1>
             <h2
@@ -221,16 +221,14 @@ const OracleStatusCard = ({ linkButton }: Props): JSX.Element => {
               'flex-col',
               'items-center',
               'justify-center'
-            )}
-            id='oracle-circle'>
+            )}>
             <h1
               className={clsx(
                 'font-bold',
                 'text-3xl',
                 'text-center',
                 'text-interlayPaleSky'
-              )}
-              id='oracle-circle-text'>
+              )}>
               {t('loading')}
             </h1>
             <h2
