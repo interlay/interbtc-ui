@@ -21,13 +21,6 @@ import genericFetcher, {
 } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
-enum Status {
-  Loading,
-  Online,
-  Offline,
-  NoData
-}
-
 interface Props {
   linkButton?: boolean;
 }
@@ -67,6 +60,98 @@ const OracleStatusCard = ({ linkButton }: Props): JSX.Element => {
     const exchangeRate = collateralBtcOracleStatus.exchangeRate;
     const oracleStatus = collateralBtcOracleStatus.online;
 
+    let statusText;
+    let statusCircle;
+    if (oracleStatus === true) {
+      statusText = (
+        <span
+          className={clsx(
+            'font-bold',
+            'text-interlayConifer'
+          )}>
+          {t('dashboard.oracles.online')}
+        </span>
+      );
+
+      statusCircle = (
+        <div
+          className={clsx(
+            'w-64',
+            'h-64',
+            'ring-4',
+            'ring-interlayConifer',
+            'rounded-full',
+            'inline-flex',
+            'flex-col',
+            'items-center',
+            'justify-center'
+          )}>
+          <h1
+            className={clsx(
+              'font-bold',
+              'text-3xl',
+              'text-center',
+              'text-interlayConifer'
+            )}>
+            {t('online')}
+          </h1>
+          <h2
+            className={clsx(
+              'text-base',
+              'font-bold',
+              'mb-1'
+            )}>
+            {exchangeRate?.toHuman(5)} {COLLATERAL_TOKEN_SYMBOL}/BTC
+          </h2>
+        </div>
+      );
+    } else if (oracleStatus === false) {
+      statusText = (
+        <span
+          className={clsx(
+            'font-bold',
+            'text-interlayCinnabar'
+          )}>
+          {t('dashboard.oracles.offline')}
+        </span>
+      );
+
+      statusCircle = (
+        <div
+          className={clsx(
+            'w-64',
+            'h-64',
+            'ring-4',
+            'ring-interlayCinnabar',
+            'rounded-full',
+            'inline-flex',
+            'flex-col',
+            'items-center',
+            'justify-center'
+          )}>
+          <h1
+            className={clsx(
+              'font-bold',
+              'text-3xl',
+              'text-center',
+              'text-interlayCinnabar'
+            )}>
+            {t('offline')}
+          </h1>
+          <h2
+            className={clsx(
+              'text-base',
+              'font-bold',
+              'mb-1'
+            )}>
+            {exchangeRate?.toHuman(5)} {COLLATERAL_TOKEN_SYMBOL}/BTC
+          </h2>
+        </div>
+      );
+    } else {
+      throw new Error('Something went wrong!');
+    }
+
     return (
       <>
         <div
@@ -85,31 +170,7 @@ const OracleStatusCard = ({ linkButton }: Props): JSX.Element => {
                 'xl:mb-2'
               )}>
               {t('dashboard.oracles.oracles_are')}&nbsp;
-              {oracleStatus === true ? (
-                <span
-                  className={clsx(
-                    'font-bold',
-                    'text-interlayConifer'
-                  )}>
-                  {t('dashboard.oracles.online')}
-                </span>
-              ) : oracleStatus === false ? (
-                <span
-                  className={clsx(
-                    'font-bold',
-                    'text-interlayCinnabar'
-                  )}>
-                  {t('dashboard.oracles.offline')}
-                </span>
-              ) : (
-                <span
-                  className={clsx(
-                    'font-bold',
-                    'text-interlayPaleSky'
-                  )}>
-                  {t('dashboard.oracles.loading')}
-                </span>
-              )}
+              {statusText}
             </h1>
           </div>
           {linkButton && (
@@ -122,132 +183,14 @@ const OracleStatusCard = ({ linkButton }: Props): JSX.Element => {
             </InterlayRouterLink>
           )}
         </div>
-        <div className='mt-6 flex justify-center items-center'>
-          {oracleStatus === true ? (
-            <div
-              className={clsx(
-                'w-64',
-                'h-64',
-                'ring-4',
-                'ring-interlayConifer',
-                'rounded-full',
-                'inline-flex',
-                'flex-col',
-                'items-center',
-                'justify-center'
-              )}>
-              <h1
-                className={clsx(
-                  'font-bold',
-                  'text-3xl',
-                  'text-center',
-                  'text-interlayConifer'
-                )}>
-                {t('online')}
-              </h1>
-              <h2
-                className={clsx(
-                  'text-base',
-                  'font-bold',
-                  'mb-1'
-                )}>
-                {exchangeRate?.toHuman(5)} {COLLATERAL_TOKEN_SYMBOL}/BTC
-              </h2>
-            </div>
-          ) : oracleStatus === false ? (
-            <div
-              className={clsx(
-                'w-64',
-                'h-64',
-                'ring-4',
-                'ring-interlayCinnabar',
-                'rounded-full',
-                'inline-flex',
-                'flex-col',
-                'items-center',
-                'justify-center'
-              )}>
-              <h1
-                className={clsx(
-                  'font-bold',
-                  'text-3xl',
-                  'text-center',
-                  'text-interlayCinnabar'
-                )}>
-                {t('offline')}
-              </h1>
-              <h2
-                className={clsx(
-                  'text-base',
-                  'font-bold',
-                  'mb-1'
-                )}>
-                {exchangeRate?.toHuman(5)} {COLLATERAL_TOKEN_SYMBOL}/BTC
-              </h2>
-            </div>
-          ) : oracleStatus === Status.NoData ? (
-            <div
-              className={clsx(
-                'w-64',
-                'h-64',
-                'ring-4',
-                'ring-interlayPaleSky',
-                'rounded-full',
-                'inline-flex',
-                'flex-col',
-                'items-center',
-                'justify-center'
-              )}>
-              <h1
-                className={clsx(
-                  'font-bold',
-                  'text-3xl',
-                  'text-center',
-                  'text-interlayPaleSky'
-                )}>
-                {t('no_data')}
-              </h1>
-              <h2
-                className={clsx(
-                  'text-base',
-                  'font-bold',
-                  'mb-1'
-                )}>
-                {exchangeRate?.toHuman(5)} {COLLATERAL_TOKEN_SYMBOL}/BTC
-              </h2>
-            </div>
-          ) : (
-            <div
-              className={clsx(
-                'w-64',
-                'h-64',
-                'ring-4',
-                'ring-interlayPaleSky',
-                'rounded-full',
-                'inline-flex',
-                'flex-col',
-                'items-center',
-                'justify-center'
-              )}>
-              <h1
-                className={clsx(
-                  'font-bold',
-                  'text-3xl',
-                  'text-center',
-                  'text-interlayPaleSky'
-                )}>
-                {t('loading')}
-              </h1>
-              <h2
-                className={clsx(
-                  'text-base',
-                  'font-bold',
-                  'mb-1'
-                )}>
-                {exchangeRate?.toHuman(5)} {COLLATERAL_TOKEN_SYMBOL}/BTC
-              </h2>
-            </div>
-          )}
+        <div
+          className={clsx(
+            'mt-6',
+            'flex',
+            'justify-center',
+            'items-center'
+          )}>
+          {statusCircle}
         </div>
       </>
     );
