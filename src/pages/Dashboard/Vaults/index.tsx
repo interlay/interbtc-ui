@@ -4,8 +4,8 @@ import clsx from 'clsx';
 
 import VaultsTable from './VaultsTable';
 import ActiveVaults from '../components/active-vaults';
-import CollateralLocked from '../CollateralLocked';
-import Collateralization from '../Collateralization';
+import CollateralLockedCard from '../CollateralLockedCard';
+import CollateralizationCard from '../CollateralizationCard';
 import TimerIncrement from 'parts/TimerIncrement';
 import PageTitle from 'parts/PageTitle';
 import Hr1 from 'components/hrs/Hr1';
@@ -28,8 +28,8 @@ const Vaults = (): JSX.Element => {
           'gap-7'
         )}>
         <ActiveVaults />
-        <CollateralLocked />
-        <Collateralization />
+        <CollateralLockedCard />
+        <CollateralizationCard />
       </div>
       <VaultsTable />
     </>

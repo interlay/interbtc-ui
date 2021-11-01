@@ -33,7 +33,7 @@ interface Props {
   linkButton?: boolean;
 }
 
-const Collateralization = ({ linkButton }: Props): JSX.Element => {
+const CollateralizationCard = ({ linkButton }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
@@ -215,7 +215,7 @@ const Collateralization = ({ linkButton }: Props): JSX.Element => {
   );
 };
 
-export default withErrorBoundary(Collateralization, {
+export default withErrorBoundary(CollateralizationCard, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();

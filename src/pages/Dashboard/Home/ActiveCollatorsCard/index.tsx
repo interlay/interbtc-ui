@@ -6,7 +6,7 @@ import LineChartComponent from 'pages/Dashboard/components/line-chart-component'
 import DashboardCard from 'pages/Dashboard/DashboardCard';
 import { range } from 'common/utils/utils';
 
-const ActiveCollators = (): JSX.Element => {
+const ActiveCollatorsCard = (): JSX.Element => {
   const { t } = useTranslation();
 
   // TODO: this function should be removed once real data is pulled in
@@ -66,4 +66,4 @@ const ActiveCollators = (): JSX.Element => {
   );
 };
 
-export default ActiveCollators;
+export default ActiveCollatorsCard;

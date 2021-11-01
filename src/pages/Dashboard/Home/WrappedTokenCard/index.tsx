@@ -30,7 +30,7 @@ interface BTCTimeData {
   btc: BitcoinAmount;
 }
 
-const WrappedToken = (): JSX.Element => {
+const WrappedTokenCard = (): JSX.Element => {
   const {
     prices,
     totalWrappedTokenAmount,
@@ -175,7 +175,7 @@ const WrappedToken = (): JSX.Element => {
   );
 };
 
-export default withErrorBoundary(WrappedToken, {
+export default withErrorBoundary(WrappedTokenCard, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();

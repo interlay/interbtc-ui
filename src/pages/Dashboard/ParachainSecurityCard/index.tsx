@@ -18,7 +18,7 @@ interface Props {
   linkButton?: boolean;
 }
 
-const ParachainSecurity = ({ linkButton }: Props): JSX.Element => {
+const ParachainSecurityCard = ({ linkButton }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
 
@@ -101,4 +101,4 @@ const ParachainSecurity = ({ linkButton }: Props): JSX.Element => {
   );
 };
 
-export default ParachainSecurity;
+export default ParachainSecurityCard;

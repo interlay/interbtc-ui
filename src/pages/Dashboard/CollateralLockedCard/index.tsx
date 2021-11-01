@@ -30,7 +30,7 @@ interface Props {
   linkButton?: boolean;
 }
 
-const CollateralLocked = ({ linkButton }: Props): JSX.Element => {
+const CollateralLockedCard = ({ linkButton }: Props): JSX.Element => {
   const {
     prices,
     totalLockedCollateralTokenAmount,
@@ -139,7 +139,7 @@ const CollateralLocked = ({ linkButton }: Props): JSX.Element => {
   );
 };
 
-export default withErrorBoundary(CollateralLocked, {
+export default withErrorBoundary(CollateralLockedCard, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();

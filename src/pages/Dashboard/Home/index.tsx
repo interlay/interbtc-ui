@@ -4,14 +4,14 @@ import clsx from 'clsx';
 
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
-import WrappedToken from './WrappedToken';
-import CollateralLocked from '../CollateralLocked';
-import Collateralization from '../Collateralization';
-import ParachainSecurity from '../ParachainSecurity';
+import WrappedTokenCard from './WrappedTokenCard';
+import CollateralLockedCard from '../CollateralLockedCard';
+import CollateralizationCard from '../CollateralizationCard';
+import ParachainSecurityCard from '../ParachainSecurityCard';
 import BTCRelayCard from '../BTCRelayCard';
 import OracleStatus from '../components/oracle-status';
 import ActiveVaults from '../components/active-vaults';
-import ActiveCollators from './ActiveCollators';
+import ActiveCollatorsCard from './ActiveCollatorsCard';
 
 const Home = (): JSX.Element => {
   const { t } = useTranslation();
@@ -30,14 +30,14 @@ const Home = (): JSX.Element => {
           'lg:gap-10',
           'xl:grid-cols-3'
         )}>
-        <WrappedToken />
-        <CollateralLocked linkButton />
-        <Collateralization linkButton />
-        <ParachainSecurity linkButton />
+        <WrappedTokenCard />
+        <CollateralLockedCard linkButton />
+        <CollateralizationCard linkButton />
+        <ParachainSecurityCard linkButton />
         <BTCRelayCard linkButton />
         <OracleStatus linkButton />
         <ActiveVaults linkButton />
-        <ActiveCollators />
+        <ActiveCollatorsCard />
       </div>
     </>
   );
