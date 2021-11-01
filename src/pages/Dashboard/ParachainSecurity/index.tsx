@@ -27,34 +27,41 @@ const ParachainSecurity = ({ linkButton }: Props): JSX.Element => {
     case ParachainStatus.Running:
       return (
         <span
-          id='parachain-text'
-          className='font-bold text-interlayConifer'>
+          className={clsx(
+            'font-bold',
+            'text-interlayConifer'
+          )}>
           {t('dashboard.parachain.secure')}
         </span>
       );
     case ParachainStatus.Loading:
       return (
         <span
-          id='parachain-text'
-          className='font-bold text-interlayPaleSky'>
+          className={clsx(
+            'font-bold',
+            'text-interlayPaleSky'
+          )}>
           {t('loading')}
         </span>
-
       );
     case ParachainStatus.Error:
     case ParachainStatus.Shutdown:
       return (
         <span
-          id='parachain-text'
-          className='font-bold text-interlayCalifornia'>
+          className={clsx(
+            'font-bold',
+            'text-interlayCalifornia'
+          )}>
           {t('dashboard.parachain.halted')}
         </span>
       );
     default:
       return (
         <span
-          id='parachain-text'
-          className='font-bold text-interlayPaleSky'>
+          className={clsx(
+            'font-bold',
+            'text-interlayPaleSky'
+          )}>
           {t('no_data')}
         </span>
       );
