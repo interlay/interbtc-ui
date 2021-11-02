@@ -1,7 +1,6 @@
 import {
   useState,
-  useEffect,
-  useMemo
+  useEffect
 } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -18,9 +17,12 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
+import {
+  displayMonetaryAmount,
+  getUsdAmount
+} from 'common/utils/utils';
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
-import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
 
 function IssueRequests(): JSX.Element {
   const {
@@ -35,57 +37,35 @@ function IssueRequests(): JSX.Element {
 
   // eslint-disable-next-line no-array-constructor
   const [cumulativeIssuesPerDay, setCumulativeIssuesPerDay] = useState(new Array<{ date: number; sat: number; }>());
-  const pointIssuesPerDay = useMemo(
-    () => cumulativeIssuesPerDay.map((dataPoint, index) => {
-      if (index === 0) return 0;
-      return dataPoint.sat - cumulativeIssuesPerDay[index - 1].sat;
-    }),
-    [cumulativeIssuesPerDay]
-  );
 
-  const [fetchTotalSuccessfulIssues, fetchTotalIssues] = useMemo(
-    () => [
-      async () => {
+  useEffect(() => {
+    if (!statsApi) return;
+
+    try {
+      (() => async () => {
+        const res = await statsApi.getRecentDailyIssues({ daysBack: 6 });
+        setCumulativeIssuesPerDay(res);
+      })();
+      (async () => {
         const res = await statsApi.getTotalSuccessfulIssues();
         if (res) setTotalSuccessfulIssues(res.toString());
-      },
-      async () => {
+      })();
+      (async () => {
         const res = await statsApi.getTotalIssues();
         setTotalIssueRequests(res);
-      }
-    ],
-    [statsApi] // To silence the compiler
-  );
-
-  const fetchIssuesLastDays = useMemo(
-    () => async () => {
-      const res = await statsApi.getRecentDailyIssues({ daysBack: 6 });
-      setCumulativeIssuesPerDay(res);
-    },
-    [statsApi] // To silence the compiler
-  );
-
-  useEffect(() => {
-    try {
-      fetchIssuesLastDays();
+      })();
     } catch (error) {
       console.error('[IssueRequests useEffect] error.message => ', error.message);
     }
-  }, [
-    fetchIssuesLastDays
-  ]);
+  }, [statsApi]);
 
-  useEffect(() => {
-    try {
-      fetchTotalSuccessfulIssues();
-      fetchTotalIssues();
-    } catch (error) {
-      console.error('[IssueRequests useEffect] error.message => ', error.message);
+  const pointIssuesPerDay = cumulativeIssuesPerDay.map((dataPoint, index) => {
+    if (index === 0) {
+      return 0;
+    } else {
+      return dataPoint.sat - cumulativeIssuesPerDay[index - 1].sat;
     }
-  }, [
-    fetchTotalSuccessfulIssues,
-    fetchTotalIssues
-  ]);
+  });
 
   return (
     <>
