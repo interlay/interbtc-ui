@@ -50,7 +50,7 @@ import {
   shortAddress,
   displayMonetaryAmount
 } from 'common/utils/utils';
-import * as constants from '../../../../constants';
+import * as constants from '../../../../../constants';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { Vault } from 'common/types/vault.types';

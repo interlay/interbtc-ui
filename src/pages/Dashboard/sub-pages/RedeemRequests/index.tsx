@@ -9,7 +9,7 @@ import {
 import { useQuery } from 'react-query';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
-import LineChart from '../LineChart';
+import LineChart from '../../LineChart';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import RedeemRequestsTable from 'containers/RedeemRequestsTable';
