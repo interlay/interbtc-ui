@@ -1,7 +1,6 @@
 import {
   useState,
-  useEffect,
-  useMemo
+  useEffect
 } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -33,14 +32,6 @@ const RedeemRequests = (): JSX.Element => {
   const [totalRedeemedAmount, setTotalRedeemedAmount] = useState('-');
   // eslint-disable-next-line no-array-constructor
   const [cumulativeRedeemsPerDay, setCumulativeRedeemsPerDay] = useState(new Array<{ date: number; sat: number; }>());
-  const pointRedeemsPerDay = useMemo(
-    () =>
-      cumulativeRedeemsPerDay.map((dataPoint, i) => {
-        if (i === 0) return 0;
-        return dataPoint.sat - cumulativeRedeemsPerDay[i - 1].sat;
-      }),
-    [cumulativeRedeemsPerDay]
-  );
   /**
    * TODO: should not use `useMemo` as it's not the case like expensive array calculation.
    * - should double-check `useMemo` and `useCallback` cases
@@ -88,6 +79,14 @@ const RedeemRequests = (): JSX.Element => {
     bridgeLoaded,
     statsApi
   ]);
+
+  const pointRedeemsPerDay = cumulativeRedeemsPerDay.map((dataPoint, i) => {
+    if (i === 0) {
+      return 0;
+    } else {
+      return dataPoint.sat - cumulativeRedeemsPerDay[i - 1].sat;
+    }
+  });
 
   return (
     <>
