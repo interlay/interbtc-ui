@@ -29,6 +29,7 @@ import genericFetcher, {
 } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
+// TODO: duplicated
 // TODO: should be imported
 interface BTCTimeData {
   date: Date;
@@ -81,10 +82,10 @@ const IssueRequests = (): JSX.Element => {
   useErrorHandler(totalSuccessfulIssuesError);
 
   const {
-    isIdle: totalIssuesIdle,
-    isLoading: totalIssuesLoading,
-    data: totalIssues,
-    error: totalIssuesError
+    isIdle: totalIssueRequestsIdle,
+    isLoading: totalIssueRequestsLoading,
+    data: totalIssueRequests,
+    error: totalIssueRequestsError
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
@@ -96,7 +97,7 @@ const IssueRequests = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(totalIssuesError);
+  useErrorHandler(totalIssueRequestsError);
 
   const renderUpperContent = () => {
     // TODO: should use skeleton loaders
@@ -225,15 +226,15 @@ const IssueRequests = (): JSX.Element => {
 
   const renderLowerContent = () => {
     // TODO: should use skeleton loaders
-    if (totalIssuesIdle || totalIssuesLoading) {
+    if (totalIssueRequestsIdle || totalIssueRequestsLoading) {
       return <>Loading...</>;
     }
-    if (totalIssues === undefined) {
+    if (totalIssueRequests === undefined) {
       throw new Error('Something went wrong!');
     }
 
     return (
-      <IssueRequestsTable totalIssueRequests={totalIssues} />
+      <IssueRequestsTable totalIssueRequests={totalIssueRequests} />
     );
   };
 

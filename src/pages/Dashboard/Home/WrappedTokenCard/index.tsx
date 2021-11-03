@@ -24,6 +24,7 @@ import genericFetcher, {
 } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
+// TODO: duplicated
 // TODO: should be imported
 interface BTCTimeData {
   date: Date;
