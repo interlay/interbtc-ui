@@ -20,7 +20,7 @@ import {
 import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import { StoreType } from 'common/types/util.types';
 
-function RedeemRequests(): JSX.Element {
+const RedeemRequests = (): JSX.Element => {
   const {
     bridgeLoaded,
     prices
@@ -172,7 +172,10 @@ function RedeemRequests(): JSX.Element {
             'sm:flex-1'
           )}>
           <LineChartComponent
-            color={['d_interlayCalifornia', 'd_interlayPaleSky']}
+            color={[
+              'd_interlayCalifornia',
+              'd_interlayPaleSky'
+            ]}
             label={[
               t('dashboard.redeem.total_redeemed_chart'),
               t('dashboard.redeem.per_day_redeemed_chart')
@@ -194,6 +197,6 @@ function RedeemRequests(): JSX.Element {
       <RedeemRequestsTable totalRedeemRequests={totalRedeemRequests} />
     </>
   );
-}
+};
 
 export default RedeemRequests;

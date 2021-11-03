@@ -35,7 +35,7 @@ interface BTCTimeData {
   btc: BitcoinAmount;
 }
 
-function IssueRequests(): JSX.Element {
+const IssueRequests = (): JSX.Element => {
   const {
     totalWrappedTokenAmount,
     prices,
@@ -252,7 +252,7 @@ function IssueRequests(): JSX.Element {
       {/* ray test touch > */}
     </>
   );
-}
+};
 
 export default withErrorBoundary(IssueRequests, {
   FallbackComponent: ErrorFallback,
