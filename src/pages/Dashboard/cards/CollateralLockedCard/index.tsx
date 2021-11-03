@@ -10,7 +10,7 @@ import {
 } from 'react-error-boundary';
 import { CollateralTimeData } from '@interlay/interbtc-index-client';
 
-import LineChartComponent from '../../components/line-chart-component';
+import LineChart from '../../LineChart';
 import DashboardCard from '../DashboardCard';
 import ErrorFallback from 'components/ErrorFallback';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
@@ -115,7 +115,7 @@ const CollateralLockedCard = ({ linkButton }: Props): JSX.Element => {
           )}
         </div>
         <div className='mt-5'>
-          <LineChartComponent
+          <LineChart
             color='d_interlayDenim'
             label={t('dashboard.vault.total_collateral_locked') as string}
             yLabels={cumulativeCollateralPerDay

@@ -2,7 +2,7 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
-import LineChartComponent from 'pages/Dashboard/components/line-chart-component';
+import LineChart from 'pages/Dashboard/LineChart';
 import DashboardCard from 'pages/Dashboard/cards/DashboardCard';
 import { range } from 'common/utils/utils';
 
@@ -56,7 +56,7 @@ const ActiveCollatorsCard = (): JSX.Element => {
           </h2>
         </div>
       </div>
-      <LineChartComponent
+      <LineChart
         color='d_interlayDenim'
         label={t('dashboard.collators.total_collators_chart') as string}
         yLabels={dates}

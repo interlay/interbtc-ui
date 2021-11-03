@@ -9,7 +9,7 @@ import {
 import { useQuery } from 'react-query';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
-import LineChartComponent from '../components/line-chart-component';
+import LineChart from '../LineChart';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import IssueRequestsTable from 'containers/IssueRequestsTable';
@@ -183,7 +183,7 @@ const IssueRequests = (): JSX.Element => {
           )}>
           {/* ray test touch < */}
           {/* TODO: create a component */}
-          <LineChartComponent
+          <LineChart
             color={[
               'd_interlayDenim',
               'd_interlayPaleSky'

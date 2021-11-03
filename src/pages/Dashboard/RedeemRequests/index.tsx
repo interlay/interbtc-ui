@@ -9,7 +9,7 @@ import {
 import { useQuery } from 'react-query';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
-import LineChartComponent from '../components/line-chart-component';
+import LineChart from '../LineChart';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import RedeemRequestsTable from 'containers/RedeemRequestsTable';
@@ -215,7 +215,7 @@ const RedeemRequests = (): JSX.Element => {
             'rounded',
             'sm:flex-1'
           )}>
-          <LineChartComponent
+          <LineChart
             color={[
               'd_interlayCalifornia',
               'd_interlayPaleSky'

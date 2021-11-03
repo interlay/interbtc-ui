@@ -10,7 +10,7 @@ import {
 } from 'react-error-boundary';
 import { VaultCountTimeData } from '@interlay/interbtc-index-client';
 
-import LineChartComponent from '../../components/line-chart-component';
+import LineChart from '../../LineChart';
 import DashboardCard from '../DashboardCard';
 import ErrorFallback from 'components/ErrorFallback';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
@@ -97,7 +97,7 @@ const ActiveVaultsCard = ({ linkButton }: Props): JSX.Element => {
             </InterlayRouterLink>
           )}
         </div>
-        <LineChartComponent
+        <LineChart
           color='d_interlayDenim'
           label={t('dashboard.vault.total_vaults_chart') as string}
           yLabels={totalVaultsPerDay.map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}

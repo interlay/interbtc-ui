@@ -11,7 +11,7 @@ import {
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import DashboardCard from 'pages/Dashboard/cards/DashboardCard';
-import LineChartComponent from 'pages/Dashboard/components/line-chart-component';
+import LineChart from 'pages/Dashboard/LineChart';
 import ErrorFallback from 'components/ErrorFallback';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
@@ -143,7 +143,7 @@ const WrappedTokenCard = (): JSX.Element => {
           </div>
         </div>
         <div className='mt-5'>
-          <LineChartComponent
+          <LineChart
             color={['d_interlayCalifornia', 'd_interlayPaleSky']}
             label={[
               t('dashboard.issue.total_issued_chart', {
