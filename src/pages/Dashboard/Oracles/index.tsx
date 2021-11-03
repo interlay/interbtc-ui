@@ -1,7 +1,7 @@
 
 import { useTranslation } from 'react-i18next';
 
-import OracleStatusCard from '../OracleStatusCard';
+import OracleStatusCard from '../cards/OracleStatusCard';
 import OraclesTable from './OraclesTable';
 import TimerIncrement from 'parts/TimerIncrement';
 import PageTitle from 'parts/PageTitle';

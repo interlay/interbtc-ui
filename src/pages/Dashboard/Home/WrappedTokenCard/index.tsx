@@ -10,8 +10,8 @@ import {
 } from 'react-error-boundary';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
-import DashboardCard from 'pages/Dashboard/DashboardCard';
-import LineChartComponent from '../../components/line-chart-component';
+import DashboardCard from 'pages/Dashboard/cards/DashboardCard';
+import LineChartComponent from 'pages/Dashboard/components/line-chart-component';
 import ErrorFallback from 'components/ErrorFallback';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
@@ -67,10 +67,13 @@ const WrappedTokenCard = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
+    // ray test touch <<<
     const converted = cumulativeIssuesPerDay.map(item => ({
       date: item.date.getTime(),
-      sat: Number(item.btc.toString())
+      sat: Number(item.btc.toString()) // item.btc.str.Satoshi()
     }));
+    console.log('ray : ***** converted => ', converted);
+    // ray test touch >>>
 
     const pointIssuesPerDay = converted.map((dataPoint, i) => {
       if (i === 0) {

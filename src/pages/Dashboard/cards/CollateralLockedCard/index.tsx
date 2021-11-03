@@ -10,8 +10,8 @@ import {
 } from 'react-error-boundary';
 import { CollateralTimeData } from '@interlay/interbtc-index-client';
 
-import LineChartComponent from '../components/line-chart-component';
-import DashboardCard from 'pages/Dashboard/DashboardCard';
+import LineChartComponent from '../../components/line-chart-component';
+import DashboardCard from '../DashboardCard';
 import ErrorFallback from 'components/ErrorFallback';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';

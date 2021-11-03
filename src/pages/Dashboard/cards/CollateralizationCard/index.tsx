@@ -11,7 +11,7 @@ import {
 import Big from 'big.js';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
-import DashboardCard from 'pages/Dashboard/DashboardCard';
+import DashboardCard from '../DashboardCard';
 import ErrorFallback from 'components/ErrorFallback';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';

@@ -10,7 +10,7 @@ import {
 } from 'react-error-boundary';
 import { CollateralBtcOracleStatus } from '@interlay/interbtc/build/oracleTypes';
 
-import DashboardCard from 'pages/Dashboard/DashboardCard';
+import DashboardCard from '../DashboardCard';
 import ErrorFallback from 'components/ErrorFallback';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
 import BlocksTable from './BlocksTable';
-import BTCRelayCard from '../BTCRelayCard';
+import BTCRelayCard from '../cards/BTCRelayCard';
 import TimerIncrement from 'parts/TimerIncrement';
 import PageTitle from 'parts/PageTitle';
 import Hr1 from 'components/hrs/Hr1';

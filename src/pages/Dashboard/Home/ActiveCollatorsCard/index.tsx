@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import LineChartComponent from 'pages/Dashboard/components/line-chart-component';
-import DashboardCard from 'pages/Dashboard/DashboardCard';
+import DashboardCard from 'pages/Dashboard/cards/DashboardCard';
 import { range } from 'common/utils/utils';
 
 const ActiveCollatorsCard = (): JSX.Element => {

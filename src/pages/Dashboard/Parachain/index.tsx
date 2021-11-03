@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import ParachainSecurityCard from '../ParachainSecurityCard';
+import ParachainSecurityCard from '../cards/ParachainSecurityCard';
 import TimerIncrement from 'parts/TimerIncrement';
 import PageTitle from 'parts/PageTitle';
 import Hr1 from 'components/hrs/Hr1';
