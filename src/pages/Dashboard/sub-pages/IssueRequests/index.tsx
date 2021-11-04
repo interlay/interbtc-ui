@@ -113,7 +113,7 @@ const IssueRequests = (): JSX.Element => {
 
     const converted = cumulativeIssuesPerDay.map(item => ({
       date: item.date.getTime(),
-      sat: Number(item.btc.toString())
+      sat: Number(item.btc.str.Satoshi())
     }));
 
     const pointIssuesPerDay = converted.map((dataPoint, i) => {

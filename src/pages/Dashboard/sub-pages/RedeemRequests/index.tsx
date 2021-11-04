@@ -131,7 +131,7 @@ const RedeemRequests = (): JSX.Element => {
 
     const converted = cumulativeRedeemsPerDay.map(item => ({
       date: item.date.getTime(),
-      sat: Number(item.btc.toString())
+      sat: Number(item.btc.str.Satoshi())
     }));
 
     const pointRedeemsPerDay = converted.map((dataPoint, i) => {

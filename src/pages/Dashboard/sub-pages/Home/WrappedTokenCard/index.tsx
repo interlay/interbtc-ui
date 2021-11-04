@@ -67,13 +67,10 @@ const WrappedTokenCard = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
-    // ray test touch <<<
     const converted = cumulativeIssuesPerDay.map(item => ({
       date: item.date.getTime(),
-      sat: Number(item.btc.toString()) // item.btc.str.Satoshi()
+      sat: Number(item.btc.str.Satoshi())
     }));
-    console.log('ray : ***** converted => ', converted);
-    // ray test touch >>>
 
     const pointIssuesPerDay = converted.map((dataPoint, i) => {
       if (i === 0) {
