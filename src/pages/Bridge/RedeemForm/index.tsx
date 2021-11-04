@@ -55,7 +55,6 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import STATUSES from 'utils/constants/statuses';
 import {
   displayMonetaryAmount,
@@ -85,7 +84,6 @@ type RedeemFormData = {
 const RedeemForm = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const interbtcIndex = useInterbtcIndex();
 
   const handleError = useErrorHandler();
 
@@ -162,7 +160,7 @@ const RedeemForm = (): JSX.Element | null => {
         ] = await Promise.allSettled([
           window.bridge.interBtcApi.redeem.getDustValue(),
           window.bridge.interBtcApi.vaults.getPremiumRedeemVaults(),
-          interbtcIndex.getPremiumRedeemFee(),
+          window.bridge.interBtcIndex.getPremiumRedeemFee(),
           window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN),
           window.bridge.interBtcApi.redeem.getFeeRate(),
           window.bridge.interBtcApi.redeem.getCurrentInclusionFee()
@@ -199,7 +197,6 @@ const RedeemForm = (): JSX.Element | null => {
       }
     })();
   }, [
-    interbtcIndex,
     bridgeLoaded,
     handleError
   ]);
@@ -370,7 +367,7 @@ const RedeemForm = (): JSX.Element | null => {
             helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message} />
           <ParachainStatusInfo status={parachainStatus} />
           <TextField
-            id='btc-address'
+            id={BTC_ADDRESS}
             name={BTC_ADDRESS}
             type='text'
             label='BTC Address'

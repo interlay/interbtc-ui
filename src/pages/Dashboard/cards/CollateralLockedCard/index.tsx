@@ -1,8 +1,6 @@
 
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { FaExternalLinkAlt } from 'react-icons/fa';
-import clsx from 'clsx';
 import { useQuery } from 'react-query';
 import {
   useErrorHandler,
@@ -12,9 +10,12 @@ import { CollateralTimeData } from '@interlay/interbtc-index-client';
 
 import LineChart from '../../LineChart';
 import DashboardCard from '../DashboardCard';
+import Stats, {
+  StatsDt,
+  StatsDd,
+  StatsRouterLink
+} from '../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
-import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
-import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
   getUsdAmount,
@@ -27,10 +28,10 @@ import genericFetcher, {
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
-  linkButton?: boolean;
+  hasLinks?: boolean;
 }
 
-const CollateralLockedCard = ({ linkButton }: Props): JSX.Element => {
+const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
   const {
     prices,
     totalLockedCollateralTokenAmount,
@@ -68,66 +69,44 @@ const CollateralLockedCard = ({ linkButton }: Props): JSX.Element => {
 
     return (
       <>
-        <div
-          className={clsx(
-            'flex',
-            'justify-between',
-            'items-center'
-          )}>
-          <div>
-            <h1
-              className={clsx(
-                // ray test touch <<
-                'text-interlayDenim',
-                // ray test touch >>
-                'text-sm',
-                'xl:text-base',
-                'mb-1',
-                'xl:mb-2'
-              )}>
-              {t('dashboard.vault.locked_collateral')}
-            </h1>
-            <h2
-              className={clsx(
-                'text-base',
-                'font-bold',
-                'mb-1'
-              )}>
-              {displayMonetaryAmount(totalLockedCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
-            </h2>
-            <h2
-              className={clsx(
-                'text-base',
-                'font-bold',
-                'mb-1'
-              )}>
-              ${getUsdAmount(totalLockedCollateralTokenAmount, prices.collateralToken.usd)}
-            </h2>
-          </div>
-          {linkButton && (
-            <InterlayRouterLink to={PAGES.DASHBOARD_VAULTS}>
-              <InterlayDenimOutlinedButton
-                endIcon={<FaExternalLinkAlt />}
-                className='w-full'>
-                VIEW ALL VAULTS
-              </InterlayDenimOutlinedButton>
-            </InterlayRouterLink>
-          )}
-        </div>
-        <div className='mt-5'>
-          <LineChart
-            color='d_interlayDenim'
-            label={t('dashboard.vault.total_collateral_locked') as string}
-            yLabels={cumulativeCollateralPerDay
-              .slice(1)
-              .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}
-            yAxisProps={[
-              { beginAtZero: true, precision: 0 }
-            ]}
-            data={
-              cumulativeCollateralPerDay.slice(1).map(dataPoint => dataPoint.amount)
-            } />
-        </div>
+        <Stats
+          leftPart={
+            <>
+              <StatsDt>
+                {t('dashboard.vault.locked_collateral')}
+              </StatsDt>
+              <StatsDd>
+                {displayMonetaryAmount(totalLockedCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
+              </StatsDd>
+              <StatsDd>
+                ${getUsdAmount(totalLockedCollateralTokenAmount, prices.collateralToken.usd)}
+              </StatsDd>
+            </>
+          }
+          rightPart={
+            <>
+              {hasLinks && (
+                <StatsRouterLink to={PAGES.DASHBOARD_VAULTS}>
+                  View vaults
+                </StatsRouterLink>
+              )}
+            </>
+          } />
+        <LineChart
+          color='d_interlayDenim'
+          label={t('dashboard.vault.total_collateral_locked') as string}
+          yLabels={cumulativeCollateralPerDay
+            .slice(1)
+            .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}
+          yAxisProps={[
+            {
+              beginAtZero: true,
+              precision: 0
+            }
+          ]}
+          data={
+            cumulativeCollateralPerDay.slice(1).map(dataPoint => dataPoint.amount)
+          } />
       </>
     );
   };

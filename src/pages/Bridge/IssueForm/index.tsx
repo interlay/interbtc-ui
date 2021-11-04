@@ -52,7 +52,6 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   displayMonetaryAmount,
   getRandomVaultIdWithCapacity,
@@ -81,7 +80,6 @@ type IssueFormData = {
 const IssueForm = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const interbtcIndex = useInterbtcIndex();
 
   const handleError = useErrorHandler();
 
@@ -143,9 +141,9 @@ const IssueForm = (): JSX.Element | null => {
         ] = await Promise.all([
           // Loading this data is not strictly required as long as the constantly set values did
           // not change. However, you will not see the correct value for the security deposit.
-          interbtcIndex.getIssueFee(),
-          interbtcIndex.getIssueGriefingCollateral(),
-          interbtcIndex.getIssuePeriod(),
+          window.bridge.interBtcIndex.getIssueFee(),
+          window.bridge.interBtcIndex.getIssueGriefingCollateral(),
+          window.bridge.interBtcIndex.getIssuePeriod(),
           window.bridge.interBtcIndex.getDustValue(),
           window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN),
           // This data (the vaults) is strictly required to request issue
@@ -172,7 +170,6 @@ const IssueForm = (): JSX.Element | null => {
       }
     })();
   }, [
-    interbtcIndex,
     bridgeLoaded,
     dispatch,
     handleError

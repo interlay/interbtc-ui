@@ -12,6 +12,10 @@ import { Issue } from '@interlay/interbtc-api';
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import ExternalLink from 'components/ExternalLink';
 import ErrorFallback from 'components/ErrorFallback';
+import Ring48, {
+  Ring48Title,
+  Ring48Value
+} from 'components/Ring48';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
 import {
   POLKADOT,
@@ -103,7 +107,7 @@ const ReceivedIssueRequest = ({
   const requestConfirmations = parachainHeight - Number(request.creationBlock);
 
   return (
-    <RequestWrapper id='ReceivedIssueRequest'>
+    <RequestWrapper>
       <h2
         className={clsx(
           'text-3xl',
@@ -111,37 +115,20 @@ const ReceivedIssueRequest = ({
         )}>
         {t('received')}
       </h2>
-      <div
-        className={clsx(
-          'w-48',
-          'h-48',
-          'ring-4',
-          'ring-interlayConifer',
-          'rounded-full',
-          'inline-flex',
-          'flex-col',
-          'items-center',
-          'justify-center'
-        )}>
-        <span>{t('issue_page.waiting_for')}</span>
-        <span>{t('confirmations')}</span>
-        <span
-          className={clsx(
-            'text-2xl',
-            'text-interlayConifer',
-            'font-medium'
-          )}>
+      <Ring48 className='ring-interlayConifer'>
+        <Ring48Title>
+          {t('issue_page.waiting_for')}
+        </Ring48Title>
+        <Ring48Title>
+          {t('confirmations')}
+        </Ring48Title>
+        <Ring48Value className='text-interlayConifer'>
           {`${request.confirmations ?? 0}/${stableBitcoinConfirmations}`}
-        </span>
-        <span
-          className={clsx(
-            'text-2xl',
-            'text-interlayConifer',
-            'font-medium'
-          )}>
+        </Ring48Value>
+        <Ring48Value className='text-interlayConifer'>
           {`${requestConfirmations}/${stableParachainConfirmations}`}
-        </span>
-      </div>
+        </Ring48Value>
+      </Ring48>
       <p className='space-x-1'>
         <span
           className={clsx(

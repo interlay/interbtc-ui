@@ -166,10 +166,17 @@ const AccountModal = ({
                   'border-solid'
                 )}
                 href={POLKADOT_EXTENSION}>
-                <PolkadotExtensionLogoIcon
-                  width={30}
-                  height={30} />
-                <span>Polkadot.js</span>
+                <div
+                  className={clsx(
+                    'inline-flex',
+                    'items-center',
+                    'space-x-1.5'
+                  )}>
+                  <PolkadotExtensionLogoIcon
+                    width={30}
+                    height={30} />
+                  <span>Polkadot.js</span>
+                </div>
               </ExternalLink>
             </>
           )}

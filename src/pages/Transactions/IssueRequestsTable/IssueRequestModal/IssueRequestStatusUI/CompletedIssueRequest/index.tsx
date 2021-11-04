@@ -5,6 +5,10 @@ import { Issue } from '@interlay/interbtc-api';
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import ExternalLink from 'components/ExternalLink';
 import PrimaryColorSpan from 'components/PrimaryColorSpan';
+import Ring48, {
+  Ring48Title,
+  Ring48Value
+} from 'components/Ring48';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
 import {
@@ -30,7 +34,7 @@ const CompletedIssueRequest = ({
   const receivedWrappedTokenAmount = issuedWrappedTokenAmount.sub(request.bridgeFee);
 
   return (
-    <RequestWrapper id='CompletedIssueRequest'>
+    <RequestWrapper>
       <h2
         className={clsx(
           'text-3xl',
@@ -49,30 +53,15 @@ const CompletedIssueRequest = ({
           {displayMonetaryAmount(receivedWrappedTokenAmount)} {WRAPPED_TOKEN_SYMBOL}
         </PrimaryColorSpan>
       </p>
-      <div
-        className={clsx(
-          'w-48',
-          'h-48',
-          'ring-4',
-          'ring-interlayConifer',
-          'rounded-full',
-          'inline-flex',
-          'flex-col',
-          'items-center',
-          'justify-center'
-        )}>
-        <span className='mt-4'>
+      <Ring48 className='ring-interlayConifer'>
+        <Ring48Title>
           {t('issue_page.in_parachain_block')}
-        </span>
-        <span
-          className={clsx(
-            'text-2xl',
-            'text-interlayConifer',
-            'font-medium'
-          )}>
+        </Ring48Title>
+        <Ring48Value
+          className='text-interlayConifer'>
           {request.creationBlock}
-        </span>
-      </div>
+        </Ring48Value>
+      </Ring48>
       <ExternalLink
         className='text-sm'
         href={getPolkadotLink(request.creationBlock)}>

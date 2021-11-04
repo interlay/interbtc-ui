@@ -161,9 +161,7 @@ const ReimburseStatusUI = ({
   };
 
   return (
-    <RequestWrapper
-      id='ReimburseStatusUI'
-      className='lg:px-12'>
+    <RequestWrapper className='lg:px-12'>
       <div className='space-y-1'>
         <h2
           className={clsx(

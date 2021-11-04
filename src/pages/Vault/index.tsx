@@ -42,7 +42,6 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   safeRoundTwoDecimals,
   displayMonetaryAmount
@@ -75,7 +74,6 @@ const Vault = (): JSX.Element => {
   const [totalRedeemRequests, setTotalRedeemRequests] = useState(0);
 
   const dispatch = useDispatch();
-  const stats = useInterbtcIndex();
   const { t } = useTranslation();
 
   const closeUpdateCollateralModal = () => setUpdateCollateralModalStatus(CollateralUpdateStatus.Hidden);
@@ -105,8 +103,14 @@ const Vault = (): JSX.Element => {
           window.bridge.interBtcApi.vaults.getVaultCollateralization(vaultId),
           window.bridge.interBtcApi.vaults.getAPY(vaultId),
           window.bridge.interBtcApi.vaults.getIssuableAmount(vaultId),
-          stats.getFilteredTotalIssues({ filterIssueColumns: [{ column: IssueColumns.VaultId, value: address }] }),
-          stats.getFilteredTotalRedeems({ filterRedeemColumns: [{ column: RedeemColumns.VaultId, value: address }] })
+          window
+            .bridge
+            .interBtcIndex
+            .getFilteredTotalIssues({ filterIssueColumns: [{ column: IssueColumns.VaultId, value: address }] }),
+          window
+            .bridge
+            .interBtcIndex
+            .getFilteredTotalRedeems({ filterRedeemColumns: [{ column: RedeemColumns.VaultId, value: address }] })
         ]);
 
         if (vault.status === 'fulfilled') {
@@ -149,8 +153,7 @@ const Vault = (): JSX.Element => {
     bridgeLoaded,
     vaultClientLoaded,
     dispatch,
-    address,
-    stats
+    address
   ]);
 
   const VAULT_ITEMS = [

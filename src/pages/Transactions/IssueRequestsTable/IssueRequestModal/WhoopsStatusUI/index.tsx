@@ -39,9 +39,7 @@ const WhoopsStatusUI = ({
   }
 
   return (
-    <RequestWrapper
-      id='WhoopsStatusUI'
-      className='px-12'>
+    <RequestWrapper className='px-12'>
       <div className='text-center'>
         <h2
           className={clsx(

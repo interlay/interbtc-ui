@@ -654,6 +654,9 @@ module.exports = {
       borderRadius: [
         'first',
         'last'
+      ],
+      textColor: [
+        'important'
       ]
     }
   },

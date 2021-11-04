@@ -1,8 +1,11 @@
 
-import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
-import LineChart from 'pages/Dashboard/LineChart';
+import LineChart from '../../../LineChart';
+import Stats, {
+  StatsDt,
+  StatsDd
+} from '../../../Stats';
 import DashboardCard from 'pages/Dashboard/cards/DashboardCard';
 import { range } from 'common/utils/utils';
 
@@ -27,35 +30,17 @@ const ActiveCollatorsCard = (): JSX.Element => {
 
   return (
     <DashboardCard>
-      <div
-        className={clsx(
-          'flex',
-          'justify-between',
-          'items-center'
-        )}>
-        <div>
-          <h1
-            className={clsx(
-              // ray test touch <<
-              'text-interlayDenim',
-              // ray test touch >>
-              'text-sm',
-              'xl:text-base',
-              'mb-1',
-              'xl:mb-2'
-            )}>
-            {t('dashboard.collators.active_collators')}
-          </h1>
-          <h2
-            className={clsx(
-              'text-base',
-              'font-bold',
-              'mb-1'
-            )}>
-            3
-          </h2>
-        </div>
-      </div>
+      <Stats
+        leftPart={
+          <>
+            <StatsDt>
+              {t('dashboard.collators.active_collators')}
+            </StatsDt>
+            <StatsDd>
+              3
+            </StatsDd>
+          </>
+        } />
       <LineChart
         color='d_interlayDenim'
         label={t('dashboard.collators.total_collators_chart') as string}

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
 import BlocksTable from './BlocksTable';
+import BlockstreamCard from './BlockstreamCard';
 import BTCRelayCard from '../../cards/BTCRelayCard';
 import TimerIncrement from 'parts/TimerIncrement';
 import PageTitle from 'parts/PageTitle';
@@ -25,7 +26,8 @@ const BTCRelay = (): JSX.Element => {
           'grid-cols-2',
           'gap-7'
         )}>
-        <BTCRelayCard displayBlockstreamData />
+        <BTCRelayCard />
+        <BlockstreamCard />
       </div>
       <BlocksTable />
     </>

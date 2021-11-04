@@ -1,7 +1,6 @@
 
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
 import { useQuery } from 'react-query';
 import {
@@ -12,9 +11,16 @@ import Big from 'big.js';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import DashboardCard from '../DashboardCard';
+import Stats, {
+  StatsDt,
+  StatsDd,
+  StatsRouterLink
+} from '../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
-import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
-import InterlayRouterLink from 'components/UI/InterlayRouterLink';
+import Ring64, {
+  Ring64Title,
+  Ring64Value
+} from 'components/Ring64';
 import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN_SYMBOL
@@ -30,10 +36,10 @@ import { StoreType } from 'common/types/util.types';
 const TEMP_COLLATERALIZATION_DISPLAY_DISABLED = true; // TODO: remove once lib reimplements collateralization
 
 interface Props {
-  linkButton?: boolean;
+  hasLinks?: boolean;
 }
 
-const CollateralizationCard = ({ linkButton }: Props): JSX.Element => {
+const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
@@ -121,89 +127,49 @@ const CollateralizationCard = ({ linkButton }: Props): JSX.Element => {
 
     return (
       <>
-        <div
-          className={clsx(
-            'flex',
-            'justify-between',
-            'items-center'
-          )}>
-          <div>
-            {!TEMP_COLLATERALIZATION_DISPLAY_DISABLED && (
-              <>
-                <h1
-                  className={clsx(
-                    // ray test touch <<
-                    'text-interlayDenim',
-                    // ray test touch >>
-                    'text-sm',
-                    'xl:text-base',
-                    'mb-1',
-                    'xl:mb-2'
-                  )}>
-                  {t('dashboard.vault.collateralization')}
-                </h1>
-                <h2
-                  className={clsx(
-                    'text-base',
-                    'font-bold',
-                    'mb-1'
-                  )}>
-                  {safeRoundTwoDecimals(systemCollateralizationLabel)}%
-                </h2>
-                <h2
-                  className={clsx(
-                    'text-base',
-                    'font-bold',
-                    'mb-1'
-                  )}>
-                  {t('dashboard.vault.secure_threshold', {
-                    threshold: safeRoundTwoDecimals(secureCollateralThresholdLabel)
-                  })}
-                </h2>
-              </>
-            )}
-          </div>
-          {linkButton && (
-            <InterlayRouterLink to={PAGES.DASHBOARD_VAULTS}>
-              <InterlayDenimOutlinedButton
-                endIcon={<FaExternalLinkAlt />}
-                className='w-full'>
-                VIEW VAULTS
-              </InterlayDenimOutlinedButton>
-            </InterlayRouterLink>
-          )}
-        </div>
-        <div
+        <Stats
+          leftPart={
+            <>
+              {!TEMP_COLLATERALIZATION_DISPLAY_DISABLED && (
+                <>
+                  <StatsDt>
+                    {t('dashboard.vault.collateralization')}
+                  </StatsDt>
+                  <StatsDd>
+                    {safeRoundTwoDecimals(systemCollateralizationLabel)}%
+                  </StatsDd>
+                  <StatsDd>
+                    {t('dashboard.vault.secure_threshold', {
+                      threshold: safeRoundTwoDecimals(secureCollateralThresholdLabel)
+                    })}
+                  </StatsDd>
+                </>
+              )}
+            </>
+          }
+          rightPart={
+            <>
+              {hasLinks && (
+                <StatsRouterLink to={PAGES.DASHBOARD_VAULTS}>
+                  View vaults
+                </StatsRouterLink>
+              )}
+            </>
+          } />
+        <Ring64
           className={clsx(
             'mx-auto',
-            'w-60',
-            'h-60',
-            'rounded-full',
-            'flex',
-            'justify-center',
-            'items-center',
-            'border-2',
             // ray test touch <<
-            'border-interlayDenim'
+            'ring-interlayDenim'
             // ray test touch >>
           )}>
-          <h1
-            className={clsx(
-              'font-bold',
-              'text-2xl',
-              // ray test touch <<
-              'text-interlayDenim',
-              // ray test touch >>
-              'text-center'
-            )}>
-            <>
-              <span className='inline-block'>
-                {`${displayMonetaryAmount(issuableWrappedToken)} ${WRAPPED_TOKEN_SYMBOL}`}
-              </span>
-              <span className='inline-block'>{t('dashboard.vault.capacity')}</span>
-            </>
-          </h1>
-        </div>
+          <Ring64Title className='text-interlayDenim'>
+            {t('dashboard.vault.capacity')}
+          </Ring64Title>
+          <Ring64Value>
+            {`${displayMonetaryAmount(issuableWrappedToken)} ${WRAPPED_TOKEN_SYMBOL}`}
+          </Ring64Value>
+        </Ring64>
       </>
     );
   };

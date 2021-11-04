@@ -28,14 +28,9 @@ const ExternalLink = ({
       target='_blank'
       rel='noopener noreferrer'
       {...rest}>
-      <div
-        className={clsx(
-          'inline-flex',
-          'items-center',
-          'space-x-1.5'
-        )}>
+      <span>
         {children}
-      </div>
+      </span>
       <FaExternalLinkAlt />
     </InterlayLink>
   );
