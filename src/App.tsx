@@ -83,27 +83,6 @@ const Staking = React.lazy(() =>
 const Dashboard = React.lazy(() =>
   import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard')
 );
-// ray test touch <
-// TODO: nested routing
-const Vaults = React.lazy(() =>
-  import(/* webpackChunkName: 'vaults' */ 'pages/Dashboard/Vaults')
-);
-const IssueRequests = React.lazy(() =>
-  import(/* webpackChunkName: 'issue' */ 'pages/Dashboard/IssueRequests')
-);
-const RedeemRequests = React.lazy(() =>
-  import(/* webpackChunkName: 'redeem' */ 'pages/Dashboard/RedeemRequests')
-);
-const BTCRelay = React.lazy(() =>
-  import(/* webpackChunkName: 'relay' */ 'pages/Dashboard/BTCRelay')
-);
-const Oracles = React.lazy(() =>
-  import(/* webpackChunkName: 'oracles' */ 'pages/Dashboard/Oracles')
-);
-const Parachain = React.lazy(() =>
-  import(/* webpackChunkName: 'parachain' */ 'pages/Dashboard/Parachain')
-);
-// ray test touch >
 const VaultDashboard = React.lazy(() =>
   import(/* webpackChunkName: 'vault' */ 'pages/Vault')
 );
@@ -402,24 +381,6 @@ const App = (): JSX.Element => {
                     <VaultDashboard />
                   </Route>
                 )}
-                <Route path={PAGES.DASHBOARD_VAULTS}>
-                  <Vaults />
-                </Route>
-                <Route path={PAGES.DASHBOARD_PARACHAIN}>
-                  <Parachain />
-                </Route>
-                <Route path={PAGES.DASHBOARD_ORACLES}>
-                  <Oracles />
-                </Route>
-                <Route path={PAGES.DASHBOARD_ISSUE_REQUESTS}>
-                  <IssueRequests />
-                </Route>
-                <Route path={PAGES.DASHBOARD_REDEEM_REQUESTS}>
-                  <RedeemRequests />
-                </Route>
-                <Route path={PAGES.DASHBOARD_RELAY}>
-                  <BTCRelay />
-                </Route>
                 <Route path={PAGES.DASHBOARD}>
                   <Dashboard />
                 </Route>
