@@ -100,6 +100,25 @@ const VaultsTable = (): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const {
+    isIdle: parachainHeightIdle,
+    isLoading: parachainHeightLoading,
+    data: parachainHeight,
+    error: parachainHeightError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcApi',
+      'system',
+      'getCurrentActiveBlockNumber'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(parachainHeightError);
+
+  const {
     isIdle: secureCollateralThresholdIdle,
     isLoading: secureCollateralThresholdLoading,
     data: secureCollateralThreshold,
@@ -296,7 +315,6 @@ const VaultsTable = (): JSX.Element => {
           }
           if (
             value === constants.VAULT_STATUS_THEFT ||
-            value === constants.VAULT_STATUS_AUCTION ||
             value === constants.VAULT_STATUS_LIQUIDATED
           ) {
             statusClassName = clsx(
@@ -337,12 +355,7 @@ const VaultsTable = (): JSX.Element => {
       // ray test touch <
       // TODO: format via `FormattedCell`
       let statusText;
-      if (vaultExt.status === VaultStatusExt.CommittedTheft) {
-        statusText = t('dashboard.vault.theft');
-      }
-      if (vaultExt.status === VaultStatusExt.Liquidated) {
-        statusText = t('dashboard.vault.liquidated');
-      }
+      console.log(vaultExt.status === VaultStatusExt.CommittedTheft);
       if (settledCollateralization) {
         if (settledCollateralization.lt(liquidationThreshold)) {
           statusText = t('dashboard.vault.liquidation');
@@ -351,15 +364,24 @@ const VaultsTable = (): JSX.Element => {
           statusText = t('dashboard.vault.undercollateralized');
         }
       }
-      // FIXME: should only display bannedUntil status if the bannedUntil block < current parachain block
+      // Should only display bannedUntil status if the bannedUntil block < current parachain block
       // Otherwise, should not show this status.
-      if (vaultExt.bannedUntil) {
+      if (vaultExt.bannedUntil && parachainHeight < vaultExt.bannedUntil) {
         statusText = t('dashboard.vault.banned_until', { blockHeight: vaultExt.bannedUntil });
       }
       if (vaultExt.status === VaultStatusExt.Inactive) {
         statusText = t('dashboard.vault.inactive');
       }
-      statusText = t('dashboard.vault.active');
+      if (vaultExt.status === VaultStatusExt.CommittedTheft) {
+        statusText = t('dashboard.vault.theft');
+      }
+      if (vaultExt.status === VaultStatusExt.Liquidated) {
+        statusText = t('dashboard.vault.liquidated');
+      }
+      // Default to active, but do not overwrite
+      if (!statusText) {
+        statusText = t('dashboard.vault.active');
+      }
 
       vaults.push({
         vaultId: shortAddress(vaultExt.id.toString()),
@@ -391,6 +413,8 @@ const VaultsTable = (): JSX.Element => {
 
   const renderTable = () => {
     if (
+      parachainHeightIdle ||
+      parachainHeightLoading ||
       secureCollateralThresholdIdle ||
       secureCollateralThresholdLoading ||
       liquidationThresholdIdle ||
