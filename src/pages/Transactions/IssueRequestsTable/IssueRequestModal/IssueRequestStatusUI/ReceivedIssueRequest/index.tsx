@@ -80,7 +80,7 @@ const ReceivedIssueRequest = ({
       GENERIC_FETCHER,
       'interBtcApi',
       'system',
-      'getCurrentBlockNumber'
+      'getCurrentActiveBlockNumber'
     ],
     genericFetcher<number>(),
     {
