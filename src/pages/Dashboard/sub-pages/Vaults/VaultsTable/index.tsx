@@ -355,7 +355,6 @@ const VaultsTable = (): JSX.Element => {
       // ray test touch <
       // TODO: format via `FormattedCell`
       let statusText;
-      console.log(vaultExt.status === VaultStatusExt.CommittedTheft);
       if (settledCollateralization) {
         if (settledCollateralization.lt(liquidationThreshold)) {
           statusText = t('dashboard.vault.liquidation');
