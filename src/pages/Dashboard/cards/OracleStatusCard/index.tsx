@@ -2,7 +2,6 @@
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useQuery } from 'react-query';
 import {
   useErrorHandler,
@@ -11,9 +10,16 @@ import {
 import { CollateralBtcOracleStatus } from '@interlay/interbtc/build/oracleTypes';
 
 import DashboardCard from '../DashboardCard';
+import Stats, {
+  StatsDt,
+  StatsDd,
+  StatsRouterLink
+} from '../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
-import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
-import InterlayRouterLink from 'components/UI/InterlayRouterLink';
+import Ring64, {
+  Ring64Title,
+  Ring64Value
+} from 'components/Ring64';
 import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import genericFetcher, {
@@ -22,10 +28,10 @@ import genericFetcher, {
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
-  linkButton?: boolean;
+  hasLinks?: boolean;
 }
 
-const OracleStatusCard = ({ linkButton }: Props): JSX.Element => {
+const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
@@ -61,137 +67,60 @@ const OracleStatusCard = ({ linkButton }: Props): JSX.Element => {
     const oracleStatus = collateralBtcOracleStatus.online;
 
     let statusText;
-    let statusCircle;
+    let statusCircleText;
     if (oracleStatus === true) {
-      statusText = (
-        <span
-          className={clsx(
-            'font-bold',
-            'text-interlayConifer'
-          )}>
-          {t('dashboard.oracles.online')}
-        </span>
-      );
-
-      statusCircle = (
-        <div
-          className={clsx(
-            'w-64',
-            'h-64',
-            'ring-4',
-            'ring-interlayConifer',
-            'rounded-full',
-            'inline-flex',
-            'flex-col',
-            'items-center',
-            'justify-center'
-          )}>
-          <h1
-            className={clsx(
-              'font-bold',
-              'text-3xl',
-              'text-center',
-              'text-interlayConifer'
-            )}>
-            {t('online')}
-          </h1>
-          <h2
-            className={clsx(
-              'text-base',
-              'font-bold',
-              'mb-1'
-            )}>
-            {exchangeRate?.toHuman(5)} {COLLATERAL_TOKEN_SYMBOL}/BTC
-          </h2>
-        </div>
-      );
+      statusText = t('dashboard.oracles.online');
+      statusCircleText = t('online');
     } else if (oracleStatus === false) {
-      statusText = (
-        <span
-          className={clsx(
-            'font-bold',
-            'text-interlayCinnabar'
-          )}>
-          {t('dashboard.oracles.offline')}
-        </span>
-      );
-
-      statusCircle = (
-        <div
-          className={clsx(
-            'w-64',
-            'h-64',
-            'ring-4',
-            'ring-interlayCinnabar',
-            'rounded-full',
-            'inline-flex',
-            'flex-col',
-            'items-center',
-            'justify-center'
-          )}>
-          <h1
-            className={clsx(
-              'font-bold',
-              'text-3xl',
-              'text-center',
-              'text-interlayCinnabar'
-            )}>
-            {t('offline')}
-          </h1>
-          <h2
-            className={clsx(
-              'text-base',
-              'font-bold',
-              'mb-1'
-            )}>
-            {exchangeRate?.toHuman(5)} {COLLATERAL_TOKEN_SYMBOL}/BTC
-          </h2>
-        </div>
-      );
+      statusText = t('dashboard.oracles.offline');
+      statusCircleText = t('offline');
     } else {
       throw new Error('Something went wrong!');
     }
 
     return (
       <>
-        <div
+        <Stats
+          leftPart={
+            <>
+              <StatsDt>
+                {t('dashboard.oracles.oracles_are')}
+              </StatsDt>
+              <StatsDd
+                className={clsx(
+                  { 'text-interlayConifer': oracleStatus === true },
+                  { 'text-interlayCinnabar': oracleStatus === false }
+                )}>
+                {statusText}
+              </StatsDd>
+            </>
+          }
+          rightPart={
+            <>
+              {hasLinks && (
+                <StatsRouterLink to={PAGES.DASHBOARD_ORACLES}>
+                  View oracles
+                </StatsRouterLink>
+              )}
+            </>
+          } />
+        <Ring64
           className={clsx(
-            'flex',
-            'justify-between',
-            'items-center'
+            'mx-auto',
+            { 'ring-interlayConifer': oracleStatus === true },
+            { 'ring-interlayCinnabar': oracleStatus === false }
           )}>
-          <div>
-            <h1
-              className={clsx(
-                'font-bold',
-                'text-sm',
-                'xl:text-base',
-                'mb-1',
-                'xl:mb-2'
-              )}>
-              {t('dashboard.oracles.oracles_are')}&nbsp;
-              {statusText}
-            </h1>
-          </div>
-          {linkButton && (
-            <InterlayRouterLink to={PAGES.DASHBOARD_ORACLES}>
-              <InterlayConiferOutlinedButton
-                endIcon={<FaExternalLinkAlt />}
-                className='w-full'>
-                VIEW ORACLES
-              </InterlayConiferOutlinedButton>
-            </InterlayRouterLink>
-          )}
-        </div>
-        <div
-          className={clsx(
-            'mt-6',
-            'flex',
-            'justify-center',
-            'items-center'
-          )}>
-          {statusCircle}
-        </div>
+          <Ring64Title
+            className={clsx(
+              { 'text-interlayConifer': oracleStatus === true },
+              { 'text-interlayCinnabar': oracleStatus === false }
+            )}>
+            {statusCircleText}
+          </Ring64Title>
+          <Ring64Value>
+            {exchangeRate.toHuman(5)} {COLLATERAL_TOKEN_SYMBOL}/BTC
+          </Ring64Value>
+        </Ring64>
       </>
     );
   };

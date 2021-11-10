@@ -31,12 +31,12 @@ const Home = (): JSX.Element => {
           'xl:grid-cols-3'
         )}>
         <WrappedTokenCard />
-        <CollateralLockedCard linkButton />
-        <CollateralizationCard linkButton />
-        <ParachainSecurityCard linkButton />
-        <BTCRelayCard linkButton />
-        <OracleStatusCard linkButton />
-        <ActiveVaultsCard linkButton />
+        <CollateralLockedCard hasLinks />
+        <CollateralizationCard hasLinks />
+        <ParachainSecurityCard hasLinks />
+        <BTCRelayCard hasLinks />
+        <OracleStatusCard hasLinks />
+        <ActiveVaultsCard hasLinks />
         <ActiveCollatorsCard />
       </div>
     </>

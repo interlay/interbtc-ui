@@ -112,7 +112,7 @@ export default function LineChart(propsArg: ChartProps): React.ReactElement {
     }
   };
   return (
-    <div className='mt-5'>
+    <div>
       <Line {...chartProps} />
     </div>
   );

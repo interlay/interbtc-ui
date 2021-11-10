@@ -28,6 +28,8 @@ import { StoreType } from 'common/types/util.types';
 
 const queryString = require('query-string');
 
+const USER_BTC_ADDRESS = 'user-btc-address';
+
 interface CustomProps {
   request: Redeem;
 }
@@ -113,7 +115,7 @@ const SubmittedRedeemRequestModal = ({
             </div>
             <div>
               <label
-                htmlFor='user-btc-address'
+                htmlFor={USER_BTC_ADDRESS}
                 className={clsx(
                   { 'text-interlayTextSecondaryInLightMode':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
@@ -122,7 +124,7 @@ const SubmittedRedeemRequestModal = ({
                 {t('redeem_page.btc_destination_address')}
               </label>
               <span
-                id='user-btc-address'
+                id={USER_BTC_ADDRESS}
                 // TODO: could componentize
                 className={clsx(
                   'block',

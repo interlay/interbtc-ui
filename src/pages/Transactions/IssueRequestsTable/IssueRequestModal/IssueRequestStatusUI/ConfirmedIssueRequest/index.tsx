@@ -69,9 +69,7 @@ const ConfirmedIssueRequest = ({
 
   return (
     <>
-      <RequestWrapper
-        id='ConfirmedIssueRequest'
-        className='px-12'>
+      <RequestWrapper className='px-12'>
         <h2
           className={clsx(
             'text-3xl',

@@ -17,9 +17,7 @@ const CancelledIssueRequest = (): JSX.Element => {
   const { t } = useTranslation();
 
   return (
-    <RequestWrapper
-      id='CancelledIssueRequest'
-      className='px-12'>
+    <RequestWrapper className='px-12'>
       <h2
         className={clsx(
           'text-3xl',

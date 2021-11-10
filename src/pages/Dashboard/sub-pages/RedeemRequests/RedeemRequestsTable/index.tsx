@@ -4,16 +4,18 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useTable } from 'react-table';
-import clsx from 'clsx';
+import { useQuery } from 'react-query';
 import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
+import clsx from 'clsx';
 import { BitcoinNetwork } from '@interlay/interbtc-index-client';
 import {
   Redeem,
   RedeemStatus
 } from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
@@ -28,6 +30,7 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import StatusCell from 'components/UI/InterlayTable/StatusCell';
+import { BTC_ADDRESS_API } from 'config/bitcoin';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import {
@@ -36,18 +39,14 @@ import {
 } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import { BTC_ADDRESS_API } from 'config/bitcoin';
-import * as constants from '../../constants';
 import STATUSES from 'utils/constants/statuses';
-import { BitcoinAmount } from '@interlay/monetary-js';
+import * as constants from '../../../../../constants';
+import genericFetcher, {
+  GENERIC_FETCHER
+} from 'services/fetchers/generic-fetcher';
+import { StoreType } from 'common/types/util.types';
 
-interface Props {
-  totalRedeemRequests: number;
-}
-
-const RedeemRequestsTable = ({
-  totalRedeemRequests
-}: Props): JSX.Element | null => {
+const RedeemRequestsTable = (): JSX.Element => {
   const queryParams = useQueryParams();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
@@ -187,14 +186,113 @@ const RedeemRequestsTable = ({
     }
   );
 
-  const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number; }) => {
-    updateQueryParameters({
-      [QUERY_PARAMETERS.PAGE]: (newSelectedPageIndex + 1).toString()
-    });
-  };
+  const {
+    isIdle: totalRedeemRequestsIdle,
+    isLoading: totalRedeemRequestsLoading,
+    data: totalRedeemRequests,
+    error: totalRedeemRequestsError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'getTotalRedeems'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(totalRedeemRequestsError);
 
-  const selectedPageIndex = selectedPage - 1;
-  const pageCount = Math.ceil(totalRedeemRequests / TABLE_PAGE_LIMIT);
+  const renderContent = () => {
+    if (
+      (status === STATUSES.IDLE || status === STATUSES.PENDING) ||
+      (totalRedeemRequestsIdle || totalRedeemRequestsLoading)
+    ) {
+      return <PrimaryColorEllipsisLoader />;
+    }
+    if (totalRedeemRequests === undefined) {
+      throw new Error('Something went wrong!');
+    }
+
+    if (status === STATUSES.RESOLVED) {
+      const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number; }) => {
+        updateQueryParameters({
+          [QUERY_PARAMETERS.PAGE]: (newSelectedPageIndex + 1).toString()
+        });
+      };
+
+      const selectedPageIndex = selectedPage - 1;
+      const pageCount = Math.ceil(totalRedeemRequests / TABLE_PAGE_LIMIT);
+
+      return (
+        <>
+          <InterlayTable {...getTableProps()}>
+            <InterlayThead>
+              {headerGroups.map(headerGroup => (
+                // eslint-disable-next-line react/jsx-key
+                <InterlayTr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map(column => (
+                    // eslint-disable-next-line react/jsx-key
+                    <InterlayTh
+                      {...column.getHeaderProps([
+                        {
+                          className: clsx(column.classNames),
+                          style: column.style
+                        }
+                      ])}>
+                      {column.render('Header')}
+                    </InterlayTh>
+                  ))}
+                </InterlayTr>
+              ))}
+            </InterlayThead>
+            <InterlayTbody {...getTableBodyProps()}>
+              {rows.map(row => {
+                prepareRow(row);
+
+                return (
+                  // eslint-disable-next-line react/jsx-key
+                  <InterlayTr {...row.getRowProps()}>
+                    {row.cells.map(cell => {
+                      return (
+                        // eslint-disable-next-line react/jsx-key
+                        <InterlayTd
+                          {...cell.getCellProps([
+                            {
+                              className: clsx(cell.column.classNames),
+                              style: cell.column.style
+                            }
+                          ])}>
+                          {cell.render('Cell')}
+                        </InterlayTd>
+                      );
+                    })}
+                  </InterlayTr>
+                );
+              })}
+            </InterlayTbody>
+          </InterlayTable>
+          {pageCount > 0 && (
+            <div
+              className={clsx(
+                'flex',
+                'justify-end'
+              )}>
+              <InterlayPagination
+                pageCount={pageCount}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={5}
+                onPageChange={handlePageChange}
+                forcePage={selectedPageIndex} />
+            </div>
+          )}
+        </>
+      );
+    }
+
+    throw new Error('Something went wrong!');
+  };
 
   return (
     <InterlayTableContainer className='space-y-6'>
@@ -205,71 +303,7 @@ const RedeemRequestsTable = ({
         )}>
         {t('issue_page.recent_requests')}
       </h2>
-      {(status === STATUSES.IDLE || status === STATUSES.PENDING) && (
-        <PrimaryColorEllipsisLoader />
-      )}
-      {status === STATUSES.RESOLVED && (
-        <InterlayTable {...getTableProps()}>
-          <InterlayThead>
-            {headerGroups.map(headerGroup => (
-              // eslint-disable-next-line react/jsx-key
-              <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
-                  // eslint-disable-next-line react/jsx-key
-                  <InterlayTh
-                    {...column.getHeaderProps([
-                      {
-                        className: clsx(column.classNames),
-                        style: column.style
-                      }
-                    ])}>
-                    {column.render('Header')}
-                  </InterlayTh>
-                ))}
-              </InterlayTr>
-            ))}
-          </InterlayThead>
-          <InterlayTbody {...getTableBodyProps()}>
-            {rows.map(row => {
-              prepareRow(row);
-
-              return (
-                // eslint-disable-next-line react/jsx-key
-                <InterlayTr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
-                    return (
-                      // eslint-disable-next-line react/jsx-key
-                      <InterlayTd
-                        {...cell.getCellProps([
-                          {
-                            className: clsx(cell.column.classNames),
-                            style: cell.column.style
-                          }
-                        ])}>
-                        {cell.render('Cell')}
-                      </InterlayTd>
-                    );
-                  })}
-                </InterlayTr>
-              );
-            })}
-          </InterlayTbody>
-        </InterlayTable>
-      )}
-      {pageCount > 0 && (
-        <div
-          className={clsx(
-            'flex',
-            'justify-end'
-          )}>
-          <InterlayPagination
-            pageCount={pageCount}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={5}
-            onPageChange={handlePageChange}
-            forcePage={selectedPageIndex} />
-        </div>
-      )}
+      {renderContent()}
     </InterlayTableContainer>
   );
 };

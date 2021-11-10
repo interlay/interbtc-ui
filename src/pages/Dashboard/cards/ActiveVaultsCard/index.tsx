@@ -1,8 +1,6 @@
 
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { FaExternalLinkAlt } from 'react-icons/fa';
-import clsx from 'clsx';
 import { useQuery } from 'react-query';
 import {
   useErrorHandler,
@@ -11,10 +9,13 @@ import {
 import { VaultCountTimeData } from '@interlay/interbtc-index-client';
 
 import LineChart from '../../LineChart';
+import Stats, {
+  StatsDt,
+  StatsDd,
+  StatsRouterLink
+} from '../../Stats';
 import DashboardCard from '../DashboardCard';
 import ErrorFallback from 'components/ErrorFallback';
-import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
-import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import { PAGES } from 'utils/constants/links';
 import genericFetcher, {
   GENERIC_FETCHER
@@ -22,10 +23,10 @@ import genericFetcher, {
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
-  linkButton?: boolean;
+  hasLinks?: boolean;
 }
 
-const ActiveVaultsCard = ({ linkButton }: Props): JSX.Element => {
+const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
@@ -59,44 +60,26 @@ const ActiveVaultsCard = ({ linkButton }: Props): JSX.Element => {
 
     return (
       <>
-        <div
-          className={clsx(
-            'flex',
-            'justify-between',
-            'items-center'
-          )}>
-          <div>
-            <h1
-              className={clsx(
-                // ray test touch <<
-                'text-interlayDenim',
-                // ray test touch >>
-                'text-sm',
-                'xl:text-base',
-                'mb-1',
-                'xl:mb-2'
-              )}>
-              {t('dashboard.vault.active_vaults')}
-            </h1>
-            <h2
-              className={clsx(
-                'text-base',
-                'font-bold',
-                'mb-1'
-              )}>
-              {totalVaultsPerDay[totalVaultsPerDay.length - 1]?.count}
-            </h2>
-          </div>
-          {linkButton && (
-            <InterlayRouterLink to={PAGES.DASHBOARD_VAULTS}>
-              <InterlayDenimOutlinedButton
-                endIcon={<FaExternalLinkAlt />}
-                className='w-full'>
-                VIEW ALL VAULTS
-              </InterlayDenimOutlinedButton>
-            </InterlayRouterLink>
-          )}
-        </div>
+        <Stats
+          leftPart={
+            <>
+              <StatsDt>
+                {t('dashboard.vault.active_vaults')}
+              </StatsDt>
+              <StatsDd>
+                {totalVaultsPerDay[totalVaultsPerDay.length - 1]?.count}
+              </StatsDd>
+            </>
+          }
+          rightPart={
+            <>
+              {hasLinks && (
+                <StatsRouterLink to={PAGES.DASHBOARD_VAULTS}>
+                  View vaults
+                </StatsRouterLink>
+              )}
+            </>
+          } />
         <LineChart
           color='d_interlayDenim'
           label={t('dashboard.vault.total_vaults_chart') as string}

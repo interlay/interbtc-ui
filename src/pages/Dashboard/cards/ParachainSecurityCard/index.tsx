@@ -1,12 +1,14 @@
 
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { FaExternalLinkAlt } from 'react-icons/fa';
 import clsx from 'clsx';
 
 import DashboardCard from '../DashboardCard';
-import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
-import InterlayRouterLink from 'components/UI/InterlayRouterLink';
+import Stats, { StatsRouterLink } from '../../Stats';
+import Ring64, {
+  Ring64Title,
+  Ring64Value
+} from 'components/Ring64';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import {
@@ -15,88 +17,68 @@ import {
 } from 'common/types/util.types';
 
 interface Props {
-  linkButton?: boolean;
+  hasLinks?: boolean;
 }
 
-const ParachainSecurityCard = ({ linkButton }: Props): JSX.Element => {
+const ParachainSecurityCard = ({ hasLinks }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
 
-  const getParachainStatus = () => {
+  const getParachainStatusText = () => {
     switch (parachainStatus) {
     case ParachainStatus.Running:
-      return (
-        <span
-          className={clsx(
-            'font-bold',
-            'text-interlayConifer'
-          )}>
-          {t('dashboard.parachain.secure')}
-        </span>
-      );
+      return t('dashboard.parachain.secure');
     case ParachainStatus.Loading:
-      return (
-        <span
-          className={clsx(
-            'font-bold',
-            'text-interlayPaleSky'
-          )}>
-          {t('loading')}
-        </span>
-      );
+      return t('loading');
     case ParachainStatus.Error:
     case ParachainStatus.Shutdown:
-      return (
-        <span
-          className={clsx(
-            'font-bold',
-            'text-interlayCalifornia'
-          )}>
-          {t('dashboard.parachain.halted')}
-        </span>
-      );
+      return t('dashboard.parachain.halted');
     default:
-      return (
-        <span
-          className={clsx(
-            'font-bold',
-            'text-interlayPaleSky'
-          )}>
-          {t('no_data')}
-        </span>
-      );
+      return t('no_data');
     }
   };
 
   return (
     <DashboardCard>
-      <div
+      <Stats
+        rightPart={
+          <>
+            {hasLinks && (
+              <StatsRouterLink to={PAGES.DASHBOARD_PARACHAIN}>
+                Status updates
+              </StatsRouterLink>
+            )}
+          </>
+        } />
+      <Ring64
         className={clsx(
-          'h-64',
-          'grid',
-          'place-items-center'
+          'mx-auto',
+          { 'ring-interlayPaleSky': parachainStatus === ParachainStatus.Loading },
+          { 'ring-interlayConifer': parachainStatus === ParachainStatus.Running },
+          {
+            'ring-interlayCalifornia':
+              parachainStatus === ParachainStatus.Error ||
+              parachainStatus === ParachainStatus.Shutdown
+          }
         )}>
-        <div>
-          <h1
-            className={clsx(
-              'font-bold',
-              'text-3xl',
-              'text-left'
-            )}>
-            {t('dashboard.parachain.parachain_is', {
-              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
-            })}&nbsp;
-            {getParachainStatus()}
-          </h1>
-          {linkButton && (
-            <InterlayRouterLink to={PAGES.DASHBOARD_PARACHAIN}>
-              <InterlayConiferOutlinedButton endIcon={<FaExternalLinkAlt />}>
-                STATUS UPDATES
-              </InterlayConiferOutlinedButton>
-            </InterlayRouterLink>
-          )}
-        </div>
-      </div>
+        <Ring64Title
+          className={clsx(
+            { 'text-interlayPaleSky': parachainStatus === ParachainStatus.Loading },
+            { 'text-interlayConifer': parachainStatus === ParachainStatus.Running },
+            {
+              'text-interlayCalifornia':
+                parachainStatus === ParachainStatus.Error ||
+                parachainStatus === ParachainStatus.Shutdown
+            }
+          )}>
+          {getParachainStatusText()}
+        </Ring64Title>
+        <Ring64Value>
+          {t('dashboard.parachain.parachain_is', {
+            wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+          })}
+        </Ring64Value>
+      </Ring64>
     </DashboardCard>
   );
 };

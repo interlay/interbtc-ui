@@ -11,28 +11,24 @@ const DashboardCard = ({
   ...rest
 }: React.ComponentPropsWithRef<'div'>): JSX.Element => (
   <div
-    // TODO: hardcoded
     style={{
       minHeight: 384
     }}
     className={clsx(
-      'px-5',
-      'py-4',
-      'xl:py-7',
-      'shadow',
-      // MEMO: bootstrap card style
-      'relative',
       'flex',
       'flex-col',
-      'min-w-0',
-      'break-words',
+      'justify-between',
+      'px-4',
+      'py-5',
+      'xl:py-6',
       { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
       { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-      'bg-clip-border',
-      'rounded-lg',
       'border',
-      'border-solid',
       'border-gray-200',
+      'overflow-hidden',
+      'shadow',
+      'sm:rounded-lg',
+      'space-y-5',
       className
     )}
     {...rest} />
