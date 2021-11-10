@@ -1,6 +1,4 @@
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -53,7 +51,6 @@ import {
 import * as constants from '../../../../../constants';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
-import { Vault } from 'common/types/vault.types';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const getCollateralization = (
@@ -78,8 +75,8 @@ const getCollateralization = (
 const getCollateralizationColor = (
   collateralization: string | undefined,
   secureCollateralThreshold: Big
-): string | null => {
-  if (collateralization === undefined) return null;
+): string | undefined => {
+  if (collateralization === undefined) return undefined;
 
   if (new Big(collateralization).gte(secureCollateralThreshold)) {
     return clsx(
@@ -94,6 +91,17 @@ const getCollateralizationColor = (
     );
   }
 };
+
+interface Vault {
+  vaultId: string;
+  lockedBTC: string;
+  lockedDOT: string;
+  pendingBTC: string;
+  btcAddress: string;
+  status: string;
+  unsettledCollateralization: string | undefined;
+  settledCollateralization: string | undefined;
+}
 
 const VaultsTable = (): JSX.Element => {
   const { t } = useTranslation();
@@ -198,14 +206,14 @@ const VaultsTable = (): JSX.Element => {
     isLoading: vaultsExtLoading,
     data: vaultsExt,
     error: vaultsExtError
-  } = useQuery<Array<VaultExt>, Error>(
+  } = useQuery<Array<VaultExt<BitcoinUnit>>, Error>(
     [
       GENERIC_FETCHER,
       'interBtcApi',
       'vaults',
       'list'
     ],
-    genericFetcher<Array<VaultExt>>(),
+    genericFetcher<Array<VaultExt<BitcoinUnit>>>(),
     {
       enabled: !!bridgeLoaded
     }
@@ -252,10 +260,10 @@ const VaultsTable = (): JSX.Element => {
           'text-left'
         ],
         tooltip: t('vault.tip_collateralization'),
-        Cell: function FormattedCell(props: any) {
+        Cell: function FormattedCell({ row: { original } }: { row: { original: Vault; }; }) {
           if (
-            props.row.original.unsettledCollateralization === undefined &&
-            props.row.original.settledCollateralization === undefined
+            original.unsettledCollateralization === undefined &&
+            original.settledCollateralization === undefined
           ) {
             return (
               <span>∞</span>
@@ -267,23 +275,23 @@ const VaultsTable = (): JSX.Element => {
                   <div>
                     <p
                       className={getCollateralizationColor(
-                        props.row.original.settledCollateralization,
+                        original.settledCollateralization,
                         secureCollateralThreshold
                       )}>
-                      {props.row.original.settledCollateralization === undefined ?
+                      {original.settledCollateralization === undefined ?
                         '∞' :
-                        roundTwoDecimals(props.row.original.settledCollateralization.toString()) + '%'}
+                        roundTwoDecimals(original.settledCollateralization.toString()) + '%'}
                     </p>
                     <p className='text-xs'>
                       <span>{t('vault.pending_table_subcell')}</span>
                       <span
                         className={getCollateralizationColor(
-                          props.row.original.unsettledCollateralization,
+                          original.unsettledCollateralization,
                           secureCollateralThreshold
                         )}>
-                        {props.row.original.unsettledCollateralization === undefined ?
+                        {original.unsettledCollateralization === undefined ?
                           '∞' :
-                          roundTwoDecimals(props.row.original.unsettledCollateralization.toString()) + '%'}
+                          roundTwoDecimals(original.unsettledCollateralization.toString()) + '%'}
                       </span>
                     </p>
                   </div>
@@ -299,7 +307,7 @@ const VaultsTable = (): JSX.Element => {
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }) {
+        Cell: function FormattedCell({ value }: { value: string; }) {
           let statusClassName;
           if (value === constants.VAULT_STATUS_ACTIVE) {
             statusClassName = clsx(
@@ -335,12 +343,13 @@ const VaultsTable = (): JSX.Element => {
     ]
   );
 
-  const vaults: Vault[] = [];
+  const vaults: Array<Vault> = [];
   if (
     vaultsExt &&
     btcToDOTRate &&
     liquidationThreshold &&
-    secureCollateralThreshold
+    secureCollateralThreshold &&
+    parachainHeight
   ) {
     for (const vaultExt of vaultsExt) {
       const vaultCollateral = vaultExt.backingCollateral;
@@ -431,10 +440,12 @@ const VaultsTable = (): JSX.Element => {
     return (
       <InterlayTable {...getTableProps()}>
         <InterlayThead>
-          {headerGroups.map(headerGroup => (
+          {/* TODO: should type properly */}
+          {headerGroups.map((headerGroup: any) => (
             // eslint-disable-next-line react/jsx-key
             <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
+              {/* TODO: should type properly */}
+              {headerGroup.headers.map((column: any) => (
                 // eslint-disable-next-line react/jsx-key
                 <InterlayTh
                   {...column.getHeaderProps([
@@ -465,13 +476,15 @@ const VaultsTable = (): JSX.Element => {
           ))}
         </InterlayThead>
         <InterlayTbody {...getTableBodyProps()}>
-          {rows.map(row => {
+          {/* TODO: should type properly */}
+          {rows.map((row: any) => {
             prepareRow(row);
 
             return (
               // eslint-disable-next-line react/jsx-key
               <InterlayTr {...row.getRowProps()}>
-                {row.cells.map(cell => {
+                {/* TODO: should type properly */}
+                {row.cells.map((cell: any) => {
                   return (
                     // eslint-disable-next-line react/jsx-key
                     <InterlayTd
@@ -493,9 +506,7 @@ const VaultsTable = (): JSX.Element => {
     );
   };
 
-  // ray test touch <
   // TODO: should add pagination
-  // ray test touch >
   return (
     <InterlayTableContainer className='space-y-6'>
       <h2
