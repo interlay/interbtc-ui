@@ -34,9 +34,9 @@ const ActiveVaults = ({ linkButton }: Props): JSX.Element => {
     [
       GRAPHQL_FETCHER,
       `query {
-        vaultRegistrations(orderBy: timestamp_ASC) {
+        vaults(orderBy: registrationTimestamp_ASC) {
           id
-          timestamp
+          registrationTimestamp
         }
       }
       `
@@ -63,7 +63,7 @@ const ActiveVaults = ({ linkButton }: Props): JSX.Element => {
     throw new Error('Something went wrong!');
   }
 
-  const vaultRegistrations = vaultsData.data.vaultRegistrations;
+  const vaultRegistrations = vaultsData.data.vaults;
   const graphTimestamps = getLastMidnightTimestamps(5, true);
   const graphData = graphTimestamps.map(
     timestamp => vaultRegistrations.filter(

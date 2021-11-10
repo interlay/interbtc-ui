@@ -42,8 +42,8 @@ export {
 
 export type GraphqlReturn<T> = {
   data: {
-    [key: string]: T
-  }
+    [key: string]: T;
+  };
 }
 
 export default graphqlFetcher;

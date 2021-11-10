@@ -1,9 +1,9 @@
 const query = `
   query ($limit: Int!, $offset: Int) {
-    issues(orderBy: request_timestamp_DESC, limit: $limit, offset: $offset) {
+    redeems(orderBy: createdAt_ASC, limit: $limit, offset: $offset) {
       id
       request {
-        amountWrapped
+        requestedAmountBacking
         timestamp
         height {
           absolute
@@ -12,21 +12,21 @@ const query = `
       }
       userParachainAddress
       vaultParachainAddress
-      vaultBackingAddress
-      vaultWalletPubkey
+      userBackingAddress
       bridgeFee
-      griefingCollateral
+      collateralPremium
       status
       execution {
         height {
           absolute
           active
         }
-        amountWrapped
         timestamp
       }
       cancellation {
         timestamp
+        slashedCollateral
+        reimbursed
         height {
           absolute
           active
