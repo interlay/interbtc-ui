@@ -271,8 +271,8 @@
       "active_relayers": "Active Relayers",
       "relayers": "Relayers",
       "parachain_is": "{{wrappedTokenSymbol}} Bridge",
-      "secure": "secure",
-      "halted": "halted",
+      "secure": "Secure",
+      "halted": "Halted",
       "slashed": "Slashed",
       "bonding": "In bonding period"
     }
