@@ -17,6 +17,10 @@ import { useTranslation } from 'react-i18next';
 import SidebarNavLink from './SidebarNavLink';
 import Hr2 from 'components/hrs/Hr2';
 import { INTERLAY_DOCS_LINK } from 'config/links';
+import {
+  KUSAMA,
+  POLKADOT
+} from 'utils/constants/relay-chain-names';
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 
@@ -74,6 +78,18 @@ interface CustomProps {
   onSmallScreen?: boolean;
 }
 
+const textClassesForSelected = clsx(
+  { 'text-interlayDenim-700':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+  { 'dark:text-kintsugiMidnight-700':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+);
+const textClassesForUnselected = clsx(
+  { 'text-interlayTextPrimaryInLightMode':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+  { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+);
+
 const Navigation = ({
   onSmallScreen = false,
   className,
@@ -119,13 +135,18 @@ const Navigation = ({
             className={clsx(
               match?.isExact ?
                 clsx(
-                  'bg-interlayHaiti-100',
-                  'text-gray-900'
+                  textClassesForSelected,
+                  { 'bg-interlayHaiti-50':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                  { 'dark:bg-white':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 ) :
                 clsx(
-                  'text-gray-600',
-                  'hover:bg-interlayHaiti-50',
-                  'hover:text-gray-900'
+                  textClassesForUnselected,
+                  { 'hover:bg-interlayHaiti-50':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                  { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                  { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 ),
               'group',
               'flex',
@@ -139,11 +160,8 @@ const Navigation = ({
             <navigationItem.icon
               className={clsx(
                 match?.isExact ?
-                  'text-gray-500' :
-                  clsx(
-                    'text-gray-400',
-                    'group-hover:text-gray-500'
-                  ),
+                  textClassesForSelected :
+                  textClassesForUnselected,
                 onSmallScreen ? 'mr-4' : 'mr-3',
                 'flex-shrink-0',
                 'w-6',

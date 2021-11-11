@@ -132,7 +132,7 @@ const UpdateCollateralModal = ({
     setNewCollateralization('');
   };
 
-  // ray test touch <<
+  // ray test touch <
   const onChange = async (event: React.SyntheticEvent) => {
     try {
       const value = (event.target as HTMLInputElement).value;
@@ -179,7 +179,7 @@ const UpdateCollateralModal = ({
       console.log('[UpdateCollateralModal onChange] error.message => ', error.message);
     }
   };
-  // ray test touch >>
+  // ray test touch >
 
   const getStatusText = (status: CollateralUpdateStatus): string => {
     switch (status) {
