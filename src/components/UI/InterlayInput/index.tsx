@@ -34,10 +34,14 @@ const InterlayInput = React.forwardRef<Ref, Props>(({
       'block',
       'w-full',
       'text-base',
+
+      // TODO: could be reused
+      // MEMO: inspired by https://mui.com/components/buttons/
       'border-black',
       'border-opacity-25',
       'dark:border-white',
       'dark:border-opacity-25',
+
       'shadow-sm',
       'rounded-md',
       'placeholder-gray-400',

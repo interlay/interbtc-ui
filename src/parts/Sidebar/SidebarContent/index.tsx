@@ -45,6 +45,9 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
         ) : clsx(
           'h-0',
           'border-r',
+
+          // TODO: could be reused
+          // MEMO: inspired by https://mui.com/components/buttons/
           'border-black',
           'border-opacity-25',
           'dark:border-white',
@@ -103,11 +106,14 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           'flex-shrink-0',
           'flex',
           'border-t',
+          'p-4',
+
+          // TODO: could be reused
+          // MEMO: inspired by https://mui.com/components/buttons/
           'border-black',
           'border-opacity-25',
           'dark:border-white',
-          'dark:border-opacity-25',
-          'p-4'
+          'dark:border-opacity-25'
         )}>
         <InterlayLink
           className={clsx(

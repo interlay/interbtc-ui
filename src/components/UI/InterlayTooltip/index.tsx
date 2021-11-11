@@ -29,10 +29,14 @@ const InterlayTooltip = React.forwardRef<Ref, Props>((props, ref): JSX.Element =
           process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
         { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'border',
+
+        // TODO: could be reused
+        // MEMO: inspired by https://mui.com/components/buttons/
         'border-black',
         'border-opacity-25',
         'dark:border-white',
         'dark:border-opacity-25',
+
         'whitespace-normal',
         'z-interlayTooltip',
         'shadow-md'
