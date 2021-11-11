@@ -226,7 +226,7 @@ const UpdateCollateralModal = ({
           className={clsx(
             'text-lg',
             'font-medium',
-            'mb-4'
+            'mb-6'
           )}>
           {getStatusText(status)}
         </InterlayModalTitle>

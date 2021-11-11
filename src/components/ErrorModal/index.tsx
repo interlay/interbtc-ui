@@ -37,7 +37,7 @@ const ErrorModal = ({
           className={clsx(
             'text-lg',
             'font-medium',
-            'mb-4'
+            'mb-6'
           )}>
           {title}
         </InterlayModalTitle>

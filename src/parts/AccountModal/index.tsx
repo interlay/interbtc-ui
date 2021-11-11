@@ -48,8 +48,10 @@ const AccountModal = ({
 
   const [accounts, setAccounts] = React.useState<InjectedAccountWithMeta[]>();
 
+  const extensionWalletAvailable = extensions.length > 0;
+
   React.useEffect(() => {
-    if (!extensions.length) return;
+    if (!extensionWalletAvailable) return;
 
     (async () => {
       try {
@@ -60,7 +62,7 @@ const AccountModal = ({
         console.log('[AccountModal] error.message => ', error.message);
       }
     })();
-  }, [extensions.length]);
+  }, [extensionWalletAvailable]);
 
   const handleAccountSelect = (newAddress: string) => async () => {
     if (!bridgeLoaded) {
@@ -74,6 +76,86 @@ const AccountModal = ({
     dispatch(changeAddressAction(newAddress));
 
     onClose();
+  };
+
+  const renderContent = () => {
+    if (extensionWalletAvailable) {
+      return (
+        <>
+          {accounts !== undefined && accounts.length > 0 ? (
+            // List all available accounts
+            <ul className='space-y-4'>
+              {accounts.map(account => (
+                <li
+                  key={account.address}
+                  className={clsx(
+                    'rounded',
+                    'border',
+                    'border-solid',
+                    'shadow-sm',
+                    'hover:bg-gray-100'
+                  )}>
+                  <button
+                    className={clsx(
+                      'p-4',
+                      'flex',
+                      'items-center',
+                      'space-x-1.5',
+                      'w-full'
+                    )}
+                    onClick={handleAccountSelect(account.address)}>
+                    <span
+                      className={clsx(
+                        'rounded-full',
+                        'h-3',
+                        'w-3',
+                        'inline-block',
+                        address === account.address ? 'bg-green-500' : 'bg-transparent'
+                      )} />
+                    <span className='font-medium'>
+                      {account.meta.name}
+                    </span>
+                    <span>
+                      {`(${shortAddress(account.address)})`}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            // Create a new account when no accounts are available
+            <p>
+              {t('no_account')}
+              <ExternalLink href={POLKADOT_EXTENSION}>
+                &nbsp;{t('here')}
+              </ExternalLink>
+              .
+            </p>
+          )}
+        </>
+      );
+    } else {
+      return (
+        <>
+          <p>
+            {t('install_supported_wallets')}
+          </p>
+          <ExternalLink href={POLKADOT_EXTENSION}>
+            <span
+              className={clsx(
+                'inline-flex',
+                'items-center',
+                'space-x-1.5'
+              )}>
+              <PolkadotExtensionLogoIcon
+                width={30}
+                height={30} />
+              <span>Polkadot.js</span>
+            </span>
+          </ExternalLink>
+        </>
+      );
+    }
   };
 
   return (
@@ -91,95 +173,18 @@ const AccountModal = ({
           className={clsx(
             'text-lg',
             'font-medium',
-            'mb-4'
+            'mb-6'
           )}>
-          {extensions.length ? 'Select account' : 'Pick a wallet'}
+          {extensionWalletAvailable ?
+            'Select account' :
+            'Pick a wallet'
+          }
         </InterlayModalTitle>
         <CloseIconButton
           ref={focusRef}
           onClick={onClose} />
         <div className='space-y-4'>
-          {extensions.length ? (
-            <>
-              {/* Create a new account when no accounts are available */}
-              {!accounts?.length && (
-                <p>
-                  {t('no_account')}
-                  <ExternalLink href={POLKADOT_EXTENSION}>
-                    &nbsp;{t('here')}
-                  </ExternalLink>
-                  .
-                </p>
-              )}
-              {/* List all available accounts */}
-              <ul className='space-y-4'>
-                {accounts?.map(account => (
-                  <li
-                    key={account.address}
-                    className={clsx(
-                      'rounded',
-                      'border',
-                      'border-solid',
-                      'shadow-sm',
-                      'hover:bg-gray-100'
-                    )}>
-                    <button
-                      className={clsx(
-                        'p-4',
-                        'flex',
-                        'items-center',
-                        'space-x-1.5',
-                        'w-full'
-                      )}
-                      onClick={handleAccountSelect(account.address)}>
-                      <span
-                        className={clsx(
-                          'rounded-full',
-                          'h-3',
-                          'w-3',
-                          'inline-block',
-                          address === account.address ? 'bg-green-500' : 'bg-transparent'
-                        )} />
-                      <span className='font-medium'>
-                        {account.meta.name}
-                      </span>
-                      <span>
-                        {`(${shortAddress(account.address)})`}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </>
-          ) : (
-            <>
-              <p>
-                {t('install_supported_wallets')}
-              </p>
-              <ExternalLink
-                className={clsx(
-                  'px-4',
-                  'py-2.5',
-                  'rounded',
-                  'shadow-sm',
-                  'border',
-                  'border-solid'
-                )}
-                href={POLKADOT_EXTENSION}>
-                <div
-                  className={clsx(
-                    'inline-flex',
-                    'items-center',
-                    'space-x-1.5'
-                  )}>
-                  <PolkadotExtensionLogoIcon
-                    width={30}
-                    height={30} />
-                  <span>Polkadot.js</span>
-                </div>
-              </ExternalLink>
-            </>
-          )}
+          {renderContent()}
           <div
             className={clsx(
               'flex',

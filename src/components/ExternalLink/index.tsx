@@ -28,7 +28,7 @@ const ExternalLink = ({
       target='_blank'
       rel='noopener noreferrer'
       {...rest}>
-      <span>
+      <span className='inline-flex'>
         {children}
       </span>
       <FaExternalLinkAlt />

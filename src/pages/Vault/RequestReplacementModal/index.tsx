@@ -110,7 +110,7 @@ const RequestReplacementModal = ({
           className={clsx(
             'text-lg',
             'font-medium',
-            'mb-4'
+            'mb-6'
           )}>
           {t('vault.request_replacement')}
         </InterlayModalTitle>
