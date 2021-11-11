@@ -20,7 +20,12 @@ import InterlayModal, {
   InterlayModalInnerWrapper,
   InterlayModalTitle
 } from 'components/UI/InterlayModal';
+import InterlayButtonBase from 'components/UI/InterlayButtonBase';
 import { APP_NAME } from 'config/relay-chains';
+import {
+  KUSAMA,
+  POLKADOT
+} from 'utils/constants/relay-chain-names';
 import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';
@@ -85,42 +90,60 @@ const AccountModal = ({
           {accounts !== undefined && accounts.length > 0 ? (
             // List all available accounts
             <ul className='space-y-4'>
-              {accounts.map(account => (
-                <li
-                  key={account.address}
-                  className={clsx(
-                    'rounded',
-                    'border',
-                    'border-solid',
-                    'shadow-sm',
-                    'hover:bg-gray-100'
-                  )}>
-                  <button
+              {accounts.map(account => {
+                const selected = address === account.address;
+
+                return (
+                  <li
+                    key={account.address}
                     className={clsx(
-                      'p-4',
-                      'flex',
-                      'items-center',
-                      'space-x-1.5',
-                      'w-full'
-                    )}
-                    onClick={handleAccountSelect(account.address)}>
-                    <span
+                      'rounded',
+                      'border',
+                      'border-solid',
+                      'shadow-sm',
+                      // TODO: could be reused
+                      selected ? clsx(
+                        { 'text-interlayDenim-700':
+                          // eslint-disable-next-line max-len
+                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                        { 'dark:text-kintsugiMidnight-700':
+                          process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                        { 'bg-interlayHaiti-50':
+                          // eslint-disable-next-line max-len
+                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                        { 'dark:bg-white':
+                          process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                      ) : clsx(
+                        { 'text-interlayTextPrimaryInLightMode':
+                          // eslint-disable-next-line max-len
+                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                        // eslint-disable-next-line max-len
+                        { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                        { 'hover:bg-interlayHaiti-50':
+                          // eslint-disable-next-line max-len
+                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                        { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                        { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                      )
+                    )}>
+                    <InterlayButtonBase
                       className={clsx(
-                        'rounded-full',
-                        'h-3',
-                        'w-3',
-                        'inline-block',
-                        address === account.address ? 'bg-green-500' : 'bg-transparent'
-                      )} />
-                    <span className='font-medium'>
-                      {account.meta.name}
-                    </span>
-                    <span>
-                      {`(${shortAddress(account.address)})`}
-                    </span>
-                  </button>
-                </li>
-              ))}
+                        'px-5',
+                        'py-3',
+                        'space-x-1.5',
+                        'w-full'
+                      )}
+                      onClick={handleAccountSelect(account.address)}>
+                      <span className='font-medium'>
+                        {account.meta.name}
+                      </span>
+                      <span>
+                        {`(${shortAddress(account.address)})`}
+                      </span>
+                    </InterlayButtonBase>
+                  </li>
+                );
+              })}
             </ul>
           ) : (
             // Create a new account when no accounts are available

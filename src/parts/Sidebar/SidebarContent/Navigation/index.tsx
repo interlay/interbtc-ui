@@ -78,6 +78,7 @@ interface CustomProps {
   onSmallScreen?: boolean;
 }
 
+// TODO: could be reused
 const textClassesForSelected = clsx(
   { 'text-interlayDenim-700':
     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
