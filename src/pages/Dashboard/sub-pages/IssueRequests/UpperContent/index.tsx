@@ -16,6 +16,10 @@ import Stats, {
 import ErrorFallback from 'components/ErrorFallback';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import {
   displayMonetaryAmount,
   getUsdAmount
 } from 'common/utils/utils';
@@ -65,9 +69,13 @@ const UpperContent = (): JSX.Element => {
       <Stats
         leftPart={
           <>
-            {/* ray test touch << */}
-            <StatsDt className='!text-interlayDenim'>
-              {/* ray test touch >> */}
+            <StatsDt
+              className={clsx(
+                { '!text-interlayDenim':
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                { 'dark:!text-kintsugiMidnight':
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              )}>
               {t('dashboard.issue.issued')}
             </StatsDt>
             <StatsDd>

@@ -25,11 +25,15 @@ import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN_SYMBOL
 } from 'config/relay-chains';
+import { PAGES } from 'utils/constants/links';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import {
   displayMonetaryAmount,
   safeRoundTwoDecimals
 } from 'common/utils/utils';
-import { PAGES } from 'utils/constants/links';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
@@ -159,11 +163,18 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
         <Ring64
           className={clsx(
             'mx-auto',
-            // ray test touch <<
-            'ring-interlayDenim'
-            // ray test touch >>
+            { 'ring-interlayDenim':
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+            { 'dark:ring-kintsugiMidnight':
+              process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
-          <Ring64Title className='text-interlayDenim'>
+          <Ring64Title
+            className={clsx(
+              { 'text-interlayDenim':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              { 'dark:text-kintsugiMidnight':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )}>
             {t('dashboard.vault.capacity')}
           </Ring64Title>
           <Ring64Value>
