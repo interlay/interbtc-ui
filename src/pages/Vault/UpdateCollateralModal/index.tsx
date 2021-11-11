@@ -17,7 +17,7 @@ import {
 import ErrorMessage from 'components/ErrorMessage';
 import NumberInput from 'components/NumberInput';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import IconButton from 'components/buttons/IconButton';
+import CloseIconButton from 'components/buttons/CloseIconButton';
 import InterlayModal, {
   InterlayModalInnerWrapper,
   InterlayModalTitle
@@ -27,17 +27,12 @@ import {
   COLLATERAL_TOKEN,
   COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import {
   updateCollateralAction,
   updateCollateralizationAction
 } from 'common/actions/vault.actions';
 import { StoreType } from 'common/types/util.types';
-import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
 const getButtonVariant = (status: CollateralUpdateStatus): string => {
   switch (status) {
@@ -235,25 +230,9 @@ const UpdateCollateralModal = ({
           )}>
           {getStatusText(status)}
         </InterlayModalTitle>
-        <IconButton
+        <CloseIconButton
           ref={focusRef}
-          className={clsx(
-            'w-12',
-            'h-12',
-            'absolute',
-            'top-3',
-            'right-3'
-          )}
-          onClick={onClose}>
-          <CloseIcon
-            width={18}
-            height={18}
-            className={clsx(
-              { 'text-interlaySecondaryInLightMode':
-                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-            )} />
-        </IconButton>
+          onClick={onClose} />
         <form
           onSubmit={onSubmit}
           className={clsx(

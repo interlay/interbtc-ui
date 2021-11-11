@@ -66,7 +66,7 @@ const InterlayTab = ({
           clsx(
             { 'text-interlayDenim-100':
               process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'hover:bg-white',
             'hover:bg-opacity-10',
             'hover:text-white'

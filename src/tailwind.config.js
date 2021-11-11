@@ -3,6 +3,7 @@
 // @ts-nocheck
 
 const plugin = require('tailwindcss/plugin');
+const colors = require('tailwindcss/colors');
 
 // MEMO: inspired by https://javisperez.github.io/tailwindcolorshades
 const INTERLAY_DENIM = Object.freeze({
@@ -447,30 +448,6 @@ module.exports = {
           800: INTERLAY_HAITI[800],
           900: INTERLAY_HAITI[900]
         },
-        primary: {
-          50: INTERLAY_DENIM[50],
-          100: INTERLAY_DENIM[100],
-          200: INTERLAY_DENIM[200],
-          300: INTERLAY_DENIM[300],
-          400: INTERLAY_DENIM[400],
-          DEFAULT: INTERLAY_DENIM[500],
-          600: INTERLAY_DENIM[600],
-          700: INTERLAY_DENIM[700],
-          800: INTERLAY_DENIM[800],
-          900: INTERLAY_DENIM[900]
-        },
-        secondary: {
-          50: INTERLAY_MULBERRY[50],
-          100: INTERLAY_MULBERRY[100],
-          200: INTERLAY_MULBERRY[200],
-          300: INTERLAY_MULBERRY[300],
-          400: INTERLAY_MULBERRY[400],
-          DEFAULT: INTERLAY_MULBERRY[500],
-          600: INTERLAY_MULBERRY[600],
-          700: INTERLAY_MULBERRY[700],
-          800: INTERLAY_MULBERRY[800],
-          900: INTERLAY_MULBERRY[900]
-        },
         kintsugiMidnight: {
           50: KINTSUGI_MIDNIGHT[50],
           100: KINTSUGI_MIDNIGHT[100],
@@ -650,14 +627,12 @@ module.exports = {
           700: KINTSUGI_APPLE[700],
           800: KINTSUGI_APPLE[800],
           900: KINTSUGI_APPLE[900]
-        }
+        },
+        interlayTextPrimaryInLightMode: INTERLAY_HAITI[500],
+        interlayTextSecondaryInLightMode: INTERLAY_HAITI[300],
+        kintsugiTextPrimaryInDarkMode: colors.white,
+        kintsugiTextSecondaryInDarkMode: KINTSUGI_ALTO[500]
       },
-      textColor: theme => ({
-        interlayPrimaryInLightMode: theme('colors.interlayHaiti'),
-        interlaySecondaryInLightMode: theme('colors.interlayHaiti.300'),
-        kintsugiPrimaryInDarkMode: theme('colors.white'),
-        kintsugiSecondaryInDarkMode: theme('colors.kintsugiAlto')
-      }),
       // MEMO: inspired by https://material-ui.com/customization/default-theme/
       zIndex: {
         interlayMobileStepper: 1000,
@@ -679,6 +654,9 @@ module.exports = {
       borderRadius: [
         'first',
         'last'
+      ],
+      textColor: [
+        'important'
       ]
     }
   },

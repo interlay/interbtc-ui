@@ -6,6 +6,10 @@ import clsx from 'clsx';
 import { Redeem } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
+import Ring48, {
+  Ring48Title,
+  Ring48Value
+} from 'components/Ring48';
 import {
   POLKADOT,
   KUSAMA
@@ -50,39 +54,23 @@ const DefaultRedeemRequest = ({
         )}>
         {t('received')}
       </h2>
-      <div
-        className={clsx(
-          'w-48',
-          'h-48',
-          'ring-4',
-          'ring-interlayCalifornia',
-          'rounded-full',
-          'inline-flex',
-          'flex-col',
-          'items-center',
-          'justify-center'
-        )}>
-        <span className='mt-4'>
+      <Ring48 className='ring-interlayCalifornia'>
+        <Ring48Title>
           {t('redeem_page.waiting_for')}
-        </span>
-        <span>
+        </Ring48Title>
+        <Ring48Title>
           {t('confirmations')}
-        </span>
-        <span
-          className={clsx(
-            'text-2xl',
-            'text-interlayConifer',
-            'font-medium'
-          )}>
+        </Ring48Title>
+        <Ring48Value className='text-interlayConifer'>
           {`${request.confirmations}/${stableBitcoinConfirmations}`}
-        </span>
-      </div>
+        </Ring48Value>
+      </Ring48>
       <p className='space-x-1'>
         <span
           className={clsx(
-            { 'text-interlaySecondaryInLightMode':
+            { 'text-interlayTextSecondaryInLightMode':
               process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           {t('issue_page.btc_transaction')}:
         </span>

@@ -1,6 +1,6 @@
-const query = `
+const query = (where?: string): string => `
   query ($limit: Int!, $offset: Int) {
-    issues(orderBy: request_timestamp_DESC, limit: $limit, offset: $offset) {
+    issues(orderBy: request_timestamp_DESC, limit: $limit, offset: $offset, where:{${where ? `, ${where}` : ''}}) {
       id
       request {
         amountWrapped
@@ -17,6 +17,22 @@ const query = `
       bridgeFee
       griefingCollateral
       status
+      refund {
+        amountPaid
+        btcAddress
+        btcFee
+        executionHeight {
+          absolute
+          active
+        }
+        executionTimestamp
+        id
+        requestHeight {
+          absolute
+          active
+        }
+        requestTimestamp
+      }
       execution {
         height {
           absolute

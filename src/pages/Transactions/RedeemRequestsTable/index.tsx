@@ -11,8 +11,7 @@ import { useQuery } from 'react-query';
 import {
   FaCheck,
   FaRegTimesCircle,
-  FaRegClock,
-  FaExternalLinkAlt
+  FaRegClock
 } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -23,8 +22,9 @@ import {
 } from '@interlay/interbtc-api';
 
 import RedeemRequestModal from './RedeemRequestModal';
-import EllipsisLoader from 'components/EllipsisLoader';
+import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
+import ExternalLink from 'components/ExternalLink';
 import InterlayPagination from 'components/UI/InterlayPagination';
 import InterlayTable, {
   InterlayTableContainer,
@@ -34,7 +34,6 @@ import InterlayTable, {
   InterlayTh,
   InterlayTd
 } from 'components/UI/InterlayTable';
-import InterlayLink from 'components/UI/InterlayLink';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
@@ -153,24 +152,14 @@ const RedeemRequestsTable = (): JSX.Element => {
                     t('redeem_page.failed')
                   ) : (
                     <>
-                      {/* TODO: could componentize */}
                       {redeemRequest.btcTxId ? (
-                        <InterlayLink
-                          className={clsx(
-                            'text-interlayDenim',
-                            'space-x-1.5',
-                            'inline-flex',
-                            'items-center'
-                          )}
+                        <ExternalLink
                           href={`${BTC_TRANSACTION_API}${redeemRequest.btcTxId}`}
                           onClick={event => {
                             event.stopPropagation();
-                          }}
-                          target='_blank'
-                          rel='noopener noreferrer'>
-                          <span>{shortTxId(redeemRequest.btcTxId)}</span>
-                          <FaExternalLinkAlt />
-                        </InterlayLink>
+                          }}>
+                          {shortTxId(redeemRequest.btcTxId)}
+                        </ExternalLink>
                       ) : (
                         `${t('pending')}...`
                       )}
@@ -281,13 +270,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     redeemRequestsTotalCountLoading
   ) {
     return (
-      <div
-        className={clsx(
-          'flex',
-          'justify-center'
-        )}>
-        <EllipsisLoader dotClassName='bg-interlayCalifornia-400' />
-      </div>
+      <PrimaryColorEllipsisLoader />
     );
   }
 

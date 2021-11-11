@@ -4,9 +4,6 @@ import { useSelector } from 'react-redux';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import {
-  FaExternalLinkAlt
-} from 'react-icons/fa';
 import { BitcoinAmount } from '@interlay/monetary-js';
 import {
   Redeem,
@@ -15,7 +12,9 @@ import {
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
-import InterlayLink from 'components/UI/InterlayLink';
+import ExternalLink from 'components/ExternalLink';
+import PrimaryColorSpan from 'components/PrimaryColorSpan';
+import Hr2 from 'components/hrs/Hr2';
 import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
@@ -121,16 +120,18 @@ const ReimbursedRedeemRequest = ({
         .
       </p>
       <p className='font-medium'>
-        <span className='text-interlayDenim'>{t('redeem_page.recover_receive_dot')}</span>
-        <span className='text-interlayDenim'>
+        <PrimaryColorSpan>
+          {t('redeem_page.recover_receive_dot')}
+        </PrimaryColorSpan>
+        <PrimaryColorSpan>
           &nbsp;{`${displayMonetaryAmount(collateralTokenAmount)} ${COLLATERAL_TOKEN_SYMBOL}`}
-        </span>
+        </PrimaryColorSpan>
         <span>
           &nbsp;{`(≈ $${getUsdAmount(collateralTokenAmount, prices.collateralToken.usd)})`}
         </span>
-        <span className='text-interlayDenim'>
+        <PrimaryColorSpan>
           &nbsp;{t('redeem_page.recover_receive_total')}
-        </span>
+        </PrimaryColorSpan>
         .
       </p>
       <div className='w-full'>
@@ -139,9 +140,9 @@ const ReimbursedRedeemRequest = ({
           title={
             <h5
               className={clsx(
-                { 'text-interlaySecondaryInLightMode':
+                { 'text-interlayTextSecondaryInLightMode':
                   process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
               )}>
               {t('redeem_page.compensation_burn', {
                 wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
@@ -159,9 +160,9 @@ const ReimbursedRedeemRequest = ({
           title={
             <h5
               className={clsx(
-                { 'text-interlaySecondaryInLightMode':
+                { 'text-interlayTextSecondaryInLightMode':
                   process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
               )}>
               {t('redeem_page.compensation_payment')}
             </h5>
@@ -172,22 +173,19 @@ const ReimbursedRedeemRequest = ({
           value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
           unitName={COLLATERAL_TOKEN_SYMBOL}
           approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)} />
-        <hr
+        <Hr2
           className={clsx(
             'border-t-2',
-            'my-2.5',
-            { 'border-interlaySecondaryInLightMode':
-              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-            { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            'my-2.5'
           )} />
         <PriceInfo
           className='w-full'
           title={
             <h5
               className={clsx(
-                { 'text-interlaySecondaryInLightMode':
+                { 'text-interlayTextSecondaryInLightMode':
                   process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
               )}>
               {t('you_received')}
             </h5>
@@ -199,20 +197,11 @@ const ReimbursedRedeemRequest = ({
           unitName={COLLATERAL_TOKEN_SYMBOL}
           approxUSD={getUsdAmount(collateralTokenAmount, prices.collateralToken.usd)} />
       </div>
-      <InterlayLink
-        className={clsx(
-          'text-interlayDenim',
-          'space-x-1.5',
-          'inline-flex',
-          'items-center',
-          'text-sm'
-        )}
-        href={getPolkadotLink(request.creationBlock)}
-        target='_blank'
-        rel='noopener noreferrer'>
-        <span>{t('issue_page.view_parachain_block')}</span>
-        <FaExternalLinkAlt />
-      </InterlayLink>
+      <ExternalLink
+        className='text-sm'
+        href={getPolkadotLink(request.creationBlock)}>
+        {t('issue_page.view_parachain_block')}
+      </ExternalLink>
     </RequestWrapper>
   );
 };

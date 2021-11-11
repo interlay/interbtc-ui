@@ -2,23 +2,14 @@
 import * as React from 'react';
 import clsx from 'clsx';
 
-import { KUSAMA } from 'utils/constants/relay-chain-names';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import styles from './interlay-input.module.css';
-
-const COLORS = Object.freeze({
-  primary: 'primary',
-  secondary: 'secondary'
-});
-
-const COLOR_VALUES = Object.values(COLORS);
-
-interface CustomProps {
-  color?: typeof COLOR_VALUES[number];
-}
 
 type Ref = HTMLInputElement;
 const InterlayInput = React.forwardRef<Ref, Props>(({
-  color = COLORS.primary,
   className,
   ...rest
 }: Props, ref): JSX.Element => (
@@ -28,12 +19,12 @@ const InterlayInput = React.forwardRef<Ref, Props>(({
     className={clsx(
       styles.interlayInput,
       'focus:ring',
-      // ray test touch <<
-      { 'focus:border-primary-300': color === COLORS.primary },
-      { 'focus:ring-primary-200': color === COLORS.primary },
-      { 'focus:border-secondary-300': color === COLORS.secondary },
-      { 'focus:ring-secondary-200': color === COLORS.secondary },
-      // ray test touch >>
+      { 'focus:border-interlayDenim-300':
+        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+      { 'focus:ring-interlayDenim-200':
+        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+      { 'dark:focus:border-kintsugiMidnight-300': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+      { 'dark:focus:ring-kintsugiMidnight-200': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'focus:ring-opacity-50',
       'text-black',
       'text-opacity-90',
@@ -56,6 +47,6 @@ const InterlayInput = React.forwardRef<Ref, Props>(({
 ));
 InterlayInput.displayName = 'InterlayInput';
 
-export type Props = CustomProps & React.ComponentPropsWithRef<'input'>;
+export type Props = React.ComponentPropsWithRef<'input'>;
 
 export default InterlayInput;

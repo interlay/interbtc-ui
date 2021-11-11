@@ -10,6 +10,7 @@ import RedeemForm from './RedeemForm';
 import TransferForm from './TransferForm';
 import BurnForm from './BurnForm';
 import MainContainer from 'parts/MainContainer';
+import Hr1 from 'components/hrs/Hr1';
 import InterlayTabGroup, {
   InterlayTabList,
   InterlayTabPanels,
@@ -114,7 +115,7 @@ const Bridge = (): JSX.Element | null => {
     <MainContainer>
       <div
         className={clsx(
-          'bg-white',
+          { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
           { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
           'mx-auto',
           'w-full',
@@ -137,13 +138,10 @@ const Bridge = (): JSX.Element | null => {
               </InterlayTab>
             )))}
           </InterlayTabList>
-          <hr
+          <Hr1
             className={clsx(
               'border-t-2',
-              'my-2',
-              { 'border-interlayDenim':
-                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-              { 'dark:border-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              'my-2'
             )} />
           <InterlayTabPanels className='mt-2'>
             <InterlayTabPanel>

@@ -7,6 +7,10 @@ import { Redeem } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import Timer from 'components/Timer';
+import Ring48, {
+  Ring48Title,
+  Ring48Value
+} from 'components/Ring48';
 import { BLOCK_TIME } from 'config/parachain';
 import {
   POLKADOT,
@@ -65,9 +69,9 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({
         )}>
         <span
           className={clsx(
-            { 'text-interlaySecondaryInLightMode':
+            { 'text-interlayTextSecondaryInLightMode':
               process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'flex-1'
           )}>
           {t('redeem_page.vault_has_time_to_complete')}
@@ -82,34 +86,14 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({
             )} />
         )}
       </p>
-      <div
-        className={clsx(
-          'w-48',
-          'h-48',
-          'ring-4',
-          'ring-interlayPaleSky',
-          'rounded-full',
-          'inline-flex',
-          'flex-col',
-          'items-center',
-          'justify-center'
-        )}>
-        <span
-          className={clsx(
-            'mt-4',
-            'text-2xl',
-            'font-medium'
-          )}>
+      <Ring48 className='ring-interlayPaleSky'>
+        <Ring48Title>
           {t('redeem_page.waiting_for')}
-        </span>
-        <span
-          className={clsx(
-            'text-2xl',
-            'font-medium'
-          )}>
+        </Ring48Title>
+        <Ring48Value>
           {t('nav_vault')}
-        </span>
-      </div>
+        </Ring48Value>
+      </Ring48>
     </RequestWrapper>
   );
 };

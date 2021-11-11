@@ -1,4 +1,3 @@
-
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import {
@@ -17,9 +16,7 @@ const CancelledIssueRequest = (): JSX.Element => {
   const { t } = useTranslation();
 
   return (
-    <RequestWrapper
-      id='CancelledIssueRequest'
-      className='px-12'>
+    <RequestWrapper className='px-12'>
       <h2
         className={clsx(
           'text-3xl',
@@ -36,9 +33,9 @@ const CancelledIssueRequest = (): JSX.Element => {
         )} />
       <p
         className={clsx(
-          { 'text-interlaySecondaryInLightMode':
+          { 'text-interlayTextSecondaryInLightMode':
             process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-          { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+          { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
           'text-justify'
         )}>
         {t('issue_page.you_did_not_send', {
@@ -61,9 +58,9 @@ const CancelledIssueRequest = (): JSX.Element => {
         <p
           className={clsx(
             'text-justify',
-            { 'text-interlaySecondaryInLightMode':
+            { 'text-interlayTextSecondaryInLightMode':
               process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           {t('issue_page.contact_team')}
         </p>

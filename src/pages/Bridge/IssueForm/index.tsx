@@ -32,9 +32,10 @@ import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
 import WrappedTokenField from 'pages/Bridge/WrappedTokenField';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import ParachainStatusInfo from 'pages/Bridge/ParachainStatusInfo';
-import EllipsisLoader from 'components/EllipsisLoader';
+import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
+import Hr2 from 'components/hrs/Hr2';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
 import {
   COLLATERAL_TOKEN,
@@ -51,7 +52,6 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
 import {
   displayMonetaryAmount,
   getRandomVaultIdWithCapacity,
@@ -80,7 +80,6 @@ type IssueFormData = {
 const IssueForm = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const interbtcIndex = useInterbtcIndex();
 
   const handleError = useErrorHandler();
 
@@ -142,9 +141,9 @@ const IssueForm = (): JSX.Element | null => {
         ] = await Promise.all([
           // Loading this data is not strictly required as long as the constantly set values did
           // not change. However, you will not see the correct value for the security deposit.
-          interbtcIndex.getIssueFee(),
-          interbtcIndex.getIssueGriefingCollateral(),
-          interbtcIndex.getIssuePeriod(),
+          window.bridge.interBtcIndex.getIssueFee(),
+          window.bridge.interBtcIndex.getIssueGriefingCollateral(),
+          window.bridge.interBtcIndex.getIssuePeriod(),
           window.bridge.interBtcIndex.getDustValue(),
           window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN),
           // This data (the vaults) is strictly required to request issue
@@ -171,7 +170,6 @@ const IssueForm = (): JSX.Element | null => {
       }
     })();
   }, [
-    interbtcIndex,
     bridgeLoaded,
     dispatch,
     handleError
@@ -179,13 +177,7 @@ const IssueForm = (): JSX.Element | null => {
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
     return (
-      <div
-        className={clsx(
-          'flex',
-          'justify-center'
-        )}>
-        <EllipsisLoader dotClassName='bg-interlayDenim-400' />
-      </div>
+      <PrimaryColorEllipsisLoader />
     );
   }
 
@@ -300,9 +292,9 @@ const IssueForm = (): JSX.Element | null => {
             title={
               <h5
                 className={clsx(
-                  { 'text-interlaySecondaryInLightMode':
+                  { 'text-interlayTextSecondaryInLightMode':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}>
                 {t('bridge_fee')}
               </h5>
@@ -319,9 +311,9 @@ const IssueForm = (): JSX.Element | null => {
               <InterlayTooltip label={t('issue_page.tooltip_bridge_fee')}>
                 <InformationCircleIcon
                   className={clsx(
-                    { 'text-interlaySecondaryInLightMode':
+                    { 'text-interlayTextSecondaryInLightMode':
                       process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                    { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                     'w-5',
                     'h-5'
                   )} />
@@ -331,9 +323,9 @@ const IssueForm = (): JSX.Element | null => {
             title={
               <h5
                 className={clsx(
-                  { 'text-interlaySecondaryInLightMode':
+                  { 'text-interlayTextSecondaryInLightMode':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}>
                 {t('issue_page.security_deposit')}
               </h5>
@@ -348,29 +340,26 @@ const IssueForm = (): JSX.Element | null => {
               <InterlayTooltip label={t('issue_page.tooltip_security_deposit')}>
                 <InformationCircleIcon
                   className={clsx(
-                    { 'text-interlaySecondaryInLightMode':
+                    { 'text-interlayTextSecondaryInLightMode':
                       process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                    { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                     'w-5',
                     'h-5'
                   )} />
               </InterlayTooltip>
             } />
-          <hr
+          <Hr2
             className={clsx(
               'border-t-2',
-              'my-2.5',
-              { 'border-interlaySecondaryInLightMode':
-                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-              { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              'my-2.5'
             )} />
           <PriceInfo
             title={
               <h5
                 className={clsx(
-                  { 'text-interlayPrimaryInLightMode':
+                  { 'text-interlayTextPrimaryInLightMode':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                  { 'dark:text-kintsugiPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}>
                 {t('you_will_receive')}
               </h5>

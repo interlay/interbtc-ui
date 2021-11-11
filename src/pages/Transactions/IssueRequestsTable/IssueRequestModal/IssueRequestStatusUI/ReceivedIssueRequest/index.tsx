@@ -1,54 +1,111 @@
-import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { FaExternalLinkAlt } from 'react-icons/fa';
-import { Issue } from '@interlay/interbtc-api';
+import { useSelector } from 'react-redux';
+import { useQuery } from 'react-query';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import InterlayLink from 'components/UI/InterlayLink';
+import ExternalLink from 'components/ExternalLink';
+import ErrorFallback from 'components/ErrorFallback';
+import Ring48, {
+  Ring48Title,
+  Ring48Value
+} from 'components/Ring48';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
 import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
 import { shortAddress } from 'common/utils/utils';
-import useInterbtcIndex from 'common/hooks/use-interbtc-index';
+import genericFetcher, {
+  GENERIC_FETCHER
+} from 'services/fetchers/generic-fetcher';
+import { StoreType } from 'common/types/util.types';
 
 interface Props {
-  request: Issue;
+  request: any;
 }
 
 const ReceivedIssueRequest = ({
   request
 }: Props): JSX.Element => {
   const { t } = useTranslation();
-  const interbtcIndex = useInterbtcIndex();
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
-  const [stableBitcoinConfirmations, setStableBitcoinConfirmations] = React.useState(1);
-  const [stableParachainConfirmations, setStableParachainConfirmations] = React.useState(100);
-  const [requestConfirmations, setRequestConfirmations] = React.useState(0);
+  const {
+    isIdle: stableBitcoinConfirmationsIdle,
+    isLoading: stableBitcoinConfirmationsLoading,
+    data: stableBitcoinConfirmations = 1, // TODO: double-check
+    error: stableBitcoinConfirmationsError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'getBtcConfirmations'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(stableBitcoinConfirmationsError);
 
-  React.useEffect(() => {
-    if (!request.creationBlock) return;
+  const {
+    isIdle: stableParachainConfirmationsIdle,
+    isLoading: stableParachainConfirmationsLoading,
+    data: stableParachainConfirmations = 100, // TODO: double-check
+    error: stableParachainConfirmationsError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcApi',
+      'btcRelay',
+      'getStableParachainConfirmations'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(stableParachainConfirmationsError);
 
-    (async () => {
-      const [
-        theStableBitcoinConfirmations,
-        theStableParachainConfirmations,
-        parachainHeight
-      ] = await Promise.all([
-        interbtcIndex.getBtcConfirmations(),
-        window.bridge.interBtcApi.btcRelay.getStableParachainConfirmations(),
-        window.bridge.interBtcApi.system.getCurrentBlockNumber()
-      ]);
-      setStableBitcoinConfirmations(theStableBitcoinConfirmations);
-      setStableParachainConfirmations(theStableParachainConfirmations);
-      setRequestConfirmations(parachainHeight - Number(request.creationBlock));
-    })();
-  }, [interbtcIndex, request.creationBlock]);
+  const {
+    isIdle: parachainHeightIdle,
+    isLoading: parachainHeightLoading,
+    data: parachainHeight = 0, // TODO: double-check
+    error: parachainHeightError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcApi',
+      'system',
+      'getCurrentActiveBlockNumber'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(parachainHeightError);
+
+  // TODO: should use skeleton loaders
+  if (stableBitcoinConfirmationsIdle || stableBitcoinConfirmationsLoading) {
+    return <>Loading...</>;
+  }
+  if (stableParachainConfirmationsIdle || stableParachainConfirmationsLoading) {
+    return <>Loading...</>;
+  }
+  if (parachainHeightIdle || parachainHeightLoading) {
+    return <>Loading...</>;
+  }
+
+  const requestConfirmations = parachainHeight - Number(request.request.height.active);
 
   return (
-    <RequestWrapper id='ReceivedIssueRequest'>
+    <RequestWrapper>
       <h2
         className={clsx(
           'text-3xl',
@@ -56,66 +113,43 @@ const ReceivedIssueRequest = ({
         )}>
         {t('received')}
       </h2>
-      <div
-        className={clsx(
-          'w-48',
-          'h-48',
-          'ring-4',
-          'ring-interlayConifer',
-          'rounded-full',
-          'inline-flex',
-          'flex-col',
-          'items-center',
-          'justify-center'
-        )}>
-        <span>{t('issue_page.waiting_for')}</span>
-        <span>{t('confirmations')}</span>
-        <span
-          className={clsx(
-            'text-2xl',
-            'text-interlayConifer',
-            'font-medium'
-          )}>
+      <Ring48 className='ring-interlayConifer'>
+        <Ring48Title>
+          {t('issue_page.waiting_for')}
+        </Ring48Title>
+        <Ring48Title>
+          {t('confirmations')}
+        </Ring48Title>
+        <Ring48Value className='text-interlayConifer'>
           {`${request.confirmations ?? 0}/${stableBitcoinConfirmations}`}
-        </span>
-        <span
-          className={clsx(
-            'text-2xl',
-            'text-interlayConifer',
-            'font-medium'
-          )}>
+        </Ring48Value>
+        <Ring48Value className='text-interlayConifer'>
           {`${requestConfirmations}/${stableParachainConfirmations}`}
-        </span>
-      </div>
+        </Ring48Value>
+      </Ring48>
       <p className='space-x-1'>
         <span
           className={clsx(
-            { 'text-interlaySecondaryInLightMode':
+            { 'text-interlayTextSecondaryInLightMode':
               process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           {t('issue_page.btc_transaction')}:
         </span>
-        <span className='font-medium'>{shortAddress(request.btcTxId || '')}</span>
+        <span className='font-medium'>{shortAddress(request.backingPayment.btcTxId || '')}</span>
       </p>
-      <InterlayLink
-        className={clsx(
-          'text-interlayDenim',
-          'space-x-1.5',
-          'inline-flex',
-          'items-center',
-          'text-sm'
-        )}
-        href={`${BTC_TRANSACTION_API}${request.btcTxId}`}
-        target='_blank'
-        rel='noopener noreferrer'>
-        <span>
-          {t('issue_page.view_on_block_explorer')}
-        </span>
-        <FaExternalLinkAlt />
-      </InterlayLink>
+      <ExternalLink
+        className='text-sm'
+        href={`${BTC_TRANSACTION_API}${request.backingPayment.btcTxId}`}>
+        {t('issue_page.view_on_block_explorer')}
+      </ExternalLink>
     </RequestWrapper>
   );
 };
 
-export default ReceivedIssueRequest;
+export default withErrorBoundary(ReceivedIssueRequest, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});

@@ -1,11 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { Issue } from '@interlay/interbtc-api';
-import { BitcoinAmount } from '@interlay/monetary-js';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
+import Hr2 from 'components/hrs/Hr2';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
@@ -21,7 +20,7 @@ import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 
 interface Props {
-  request: Issue;
+  request: any;
 }
 
 const WhoopsStatusUI = ({
@@ -30,17 +29,15 @@ const WhoopsStatusUI = ({
   const { t } = useTranslation();
   const { prices } = useSelector((state: StoreType) => state.general);
 
-  if (!request.btcAmountSubmittedByUser) {
+  if (!request.backingPayment?.amount) {
     throw new Error('Something went wrong!');
   }
-  if (!request.executedAmountBTC) {
+  if (!request.execution?.amountWrapped) {
     throw new Error('Something went wrong!');
   }
 
   return (
-    <RequestWrapper
-      id='WhoopsStatusUI'
-      className='px-12'>
+    <RequestWrapper className='px-12'>
       <div className='text-center'>
         <h2
           className={clsx(
@@ -51,9 +48,9 @@ const WhoopsStatusUI = ({
         </h2>
         <p
           className={clsx(
-            { 'text-interlaySecondaryInLightMode':
+            { 'text-interlayTextSecondaryInLightMode':
               process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'text-sm'
           )}>
           {t('issue_page.refund_sent_more_btc')}
@@ -64,9 +61,9 @@ const WhoopsStatusUI = ({
         title={
           <h5
             className={clsx(
-              { 'text-interlaySecondaryInLightMode':
+              { 'text-interlayTextSecondaryInLightMode':
                 process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )}>
             {t('issue_page.refund_requested')}
           </h5>
@@ -76,9 +73,9 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={displayMonetaryAmount(request.wrappedAmount)}
+        value={displayMonetaryAmount(request.request.amountWrapped)}
         unitName={WRAPPED_TOKEN_SYMBOL}
-        approxUSD={getUsdAmount(request.wrappedAmount, prices.bitcoin.usd)} />
+        approxUSD={getUsdAmount(request.request.amountWrapped, prices.bitcoin.usd)} />
       <PriceInfo
         className='w-full'
         title={
@@ -91,12 +88,10 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={displayMonetaryAmount(request.btcAmountSubmittedByUser)}
+        value={displayMonetaryAmount(request.backingPayment.amount)}
         unitName='BTC'
         approxUSD={getUsdAmount(
-          request.btcAmountSubmittedByUser ?
-            request.btcAmountSubmittedByUser :
-            BitcoinAmount.zero, prices.bitcoin.usd
+          request.backingPayment.amount, prices.bitcoin.usd
         )} />
       <PriceInfo
         className='w-full'
@@ -110,18 +105,15 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={displayMonetaryAmount(request.executedAmountBTC || request.wrappedAmount)}
+        value={displayMonetaryAmount(request.execution.amountWrapped)}
         unitName={WRAPPED_TOKEN_SYMBOL}
         approxUSD={
-          getUsdAmount(request.executedAmountBTC || request.wrappedAmount, prices.bitcoin.usd)
+          getUsdAmount(request.execution.amountWrapped, prices.bitcoin.usd)
         } />
-      <hr
+      <Hr2
         className={clsx(
           'border-t-2',
           'my-2.5',
-          { 'border-interlaySecondaryInLightMode':
-            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-          { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
           'w-full'
         )} />
       <PriceInfo
@@ -129,9 +121,9 @@ const WhoopsStatusUI = ({
         title={
           <h5
             className={clsx(
-              { 'text-interlayPrimaryInLightMode':
+              { 'text-interlayTextPrimaryInLightMode':
                 process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-              { 'dark:text-kintsugiPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )}>
             {t('issue_page.refund_difference')}
           </h5>
@@ -141,24 +133,24 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={displayMonetaryAmount(request.btcAmountSubmittedByUser.sub(request.executedAmountBTC))}
+        value={displayMonetaryAmount(request.backingPayment.amountWrapped.sub(request.execution.amountWrapped))}
         unitName='BTC'
         approxUSD={
           getUsdAmount(
-            request.btcAmountSubmittedByUser.sub(request.executedAmountBTC),
+            request.backingPayment.amountWrapped.sub(request.execution.amountWrapped),
             prices.bitcoin.usd
           )
         } />
       <p
         className={clsx(
-          { 'text-interlaySecondaryInLightMode':
+          { 'text-interlayTextSecondaryInLightMode':
             process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-          { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+          { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
         )}>
         {t('issue_page.refund_requested_vault')}
         &nbsp;{t('issue_page.refund_vault_to_return')}
         <span className='text-interlayCinnabar'>
-          &nbsp;{displayMonetaryAmount(request.refundAmountBTC)}
+          &nbsp;{displayMonetaryAmount(request.refund.amountPaid)}
         </span>
         &nbsp;BTC&nbsp;
         {t('issue_page.refund_vault_to_address')}.
@@ -176,7 +168,7 @@ const WhoopsStatusUI = ({
             'w-full'
           )}
           onClick={() => copyToClipboard('1')}>
-          {request.refundBtcAddress}
+          {request.refund.btcAddress}
         </span>
       </InterlayTooltip>
     </RequestWrapper>

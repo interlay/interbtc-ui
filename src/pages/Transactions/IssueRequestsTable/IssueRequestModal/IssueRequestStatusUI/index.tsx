@@ -1,6 +1,4 @@
-
 import {
-  Issue,
   IssueStatus
 } from '@interlay/interbtc-api';
 
@@ -10,7 +8,7 @@ import ReceivedIssueRequest from './ReceivedIssueRequest';
 import ConfirmedIssueRequest from './ConfirmedIssueRequest';
 
 interface Props {
-  request: Issue;
+  request: any;
 }
 
 const IssueRequestStatusUI = ({

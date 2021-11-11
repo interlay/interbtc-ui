@@ -5,16 +5,12 @@ import {
   useMutation,
   useQueryClient
 } from 'react-query';
-import {
-  FaCheckCircle,
-  FaExternalLinkAlt
-} from 'react-icons/fa';
+import { FaCheckCircle } from 'react-icons/fa';
 import clsx from 'clsx';
-import { Issue } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import ErrorModal from 'components/ErrorModal';
-import InterlayLink from 'components/UI/InterlayLink';
+import ExternalLink from 'components/ExternalLink';
 import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
 import useQueryParams from 'utils/hooks/use-query-params';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
@@ -26,11 +22,11 @@ import {
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { shortAddress } from 'common/utils/utils';
-import { USER_ISSUE_REQUESTS_FETCHER } from 'services/user-issue-requests-fetcher';
 import { StoreType } from 'common/types/util.types';
+import { ISSUE_FETCHER } from 'services/fetchers/issue-request-fetcher';
 
 interface Props {
-  request: Issue;
+  request: any;
 }
 
 const ConfirmedIssueRequest = ({
@@ -38,7 +34,6 @@ const ConfirmedIssueRequest = ({
 }: Props): JSX.Element => {
   const { t } = useTranslation();
   const {
-    address,
     bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
 
@@ -47,16 +42,15 @@ const ConfirmedIssueRequest = ({
   const selectedPageIndex = selectedPage - 1;
 
   const queryClient = useQueryClient();
-  const executeMutation = useMutation<void, Error, Issue>(
-    (variables: Issue) => {
-      return window.bridge.interBtcApi.issue.execute('0x' + variables.id, variables.btcTxId);
+  const executeMutation = useMutation<void, Error, any>(
+    (variables: any) => {
+      return window.bridge.interBtcApi.issue.execute('0x' + variables.id, variables.backingPayment.btcTxId);
     },
     {
       onSuccess: (_, variables) => {
         queryClient.invalidateQueries([
-          USER_ISSUE_REQUESTS_FETCHER,
-          address,
-          selectedPageIndex,
+          ISSUE_FETCHER,
+          selectedPageIndex * TABLE_PAGE_LIMIT,
           TABLE_PAGE_LIMIT
         ]);
         toast.success(t('issue_page.successfully_executed', { id: variables.id }));
@@ -64,7 +58,7 @@ const ConfirmedIssueRequest = ({
     }
   );
 
-  const handleExecute = (request: Issue) => () => {
+  const handleExecute = (request: any) => () => {
     if (!bridgeLoaded) return;
 
     executeMutation.mutate(request);
@@ -72,9 +66,7 @@ const ConfirmedIssueRequest = ({
 
   return (
     <>
-      <RequestWrapper
-        id='ConfirmedIssueRequest'
-        className='px-12'>
+      <RequestWrapper className='px-12'>
         <h2
           className={clsx(
             'text-3xl',
@@ -92,36 +84,25 @@ const ConfirmedIssueRequest = ({
         <p className='space-x-1'>
           <span
             className={clsx(
-              { 'text-interlaySecondaryInLightMode':
+              { 'text-interlayTextSecondaryInLightMode':
                 process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )}>
             {t('issue_page.btc_transaction')}:
           </span>
-          <span className='font-medium'>{shortAddress(request.btcTxId || '')}</span>
+          <span className='font-medium'>{shortAddress(request.backingPayment.btcTxId || '')}</span>
         </p>
-        <InterlayLink
-          className={clsx(
-            'text-interlayDenim',
-            'space-x-1.5',
-            'inline-flex',
-            'items-center',
-            'text-sm'
-          )}
-          href={`${BTC_TRANSACTION_API}${request.btcTxId}`}
-          target='_blank'
-          rel='noopener noreferrer'>
-          <span>
-            {t('issue_page.view_on_block_explorer')}
-          </span>
-          <FaExternalLinkAlt />
-        </InterlayLink>
+        <ExternalLink
+          className='text-sm'
+          href={`${BTC_TRANSACTION_API}${request.backingPayment.btcTxId}`}>
+          {t('issue_page.view_on_block_explorer')}
+        </ExternalLink>
         <p
           className={clsx(
             'text-justify',
-            { 'text-interlaySecondaryInLightMode':
+            { 'text-interlayTextSecondaryInLightMode':
               process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-            { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           {t('issue_page.receive_interbtc_tokens', {
             wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL

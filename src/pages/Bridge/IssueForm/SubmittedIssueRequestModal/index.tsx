@@ -8,21 +8,16 @@ import
 BTCPaymentPendingStatusUI
   from 'pages/Transactions/IssueRequestsTable/IssueRequestModal/BTCPaymentPendingStatusUI';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import IconButton from 'components/buttons/IconButton';
+import CloseIconButton from 'components/buttons/CloseIconButton';
 import InterlayModal, {
   Props as ModalProps,
   InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
-import {
   PAGES,
   QUERY_PARAMETERS
 } from 'utils/constants/links';
-import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
 const queryString = require('query-string');
 
@@ -49,25 +44,9 @@ const SubmittedIssueRequestModal = ({
           'p-8',
           'max-w-lg'
         )}>
-        <IconButton
+        <CloseIconButton
           ref={focusRef}
-          className={clsx(
-            'w-12',
-            'h-12',
-            'absolute',
-            'top-3',
-            'right-3'
-          )}
-          onClick={onClose}>
-          <CloseIcon
-            width={18}
-            height={18}
-            className={clsx(
-              { 'text-interlaySecondaryInLightMode':
-                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-            )} />
-        </IconButton>
+          onClick={onClose} />
         <div
           className={clsx(
             'flex',

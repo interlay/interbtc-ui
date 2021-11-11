@@ -13,23 +13,18 @@ import {
 } from '@polkadot/extension-dapp';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
+import ExternalLink from 'components/ExternalLink';
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
-import IconButton from 'components/buttons/IconButton';
-import InterlayLink from 'components/UI/InterlayLink';
+import CloseIconButton from 'components/buttons/CloseIconButton';
 import InterlayModal, {
   InterlayModalInnerWrapper,
   InterlayModalTitle
 } from 'components/UI/InterlayModal';
 import { APP_NAME } from 'config/relay-chains';
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
 import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';
 import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
-import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
 const POLKADOT_EXTENSION = 'https://polkadot.js.org/extension/';
 
@@ -100,25 +95,9 @@ const AccountModal = ({
           )}>
           {extensions.length ? 'Select account' : 'Pick a wallet'}
         </InterlayModalTitle>
-        <IconButton
+        <CloseIconButton
           ref={focusRef}
-          className={clsx(
-            'w-12',
-            'h-12',
-            'absolute',
-            'top-3',
-            'right-3'
-          )}
-          onClick={onClose}>
-          <CloseIcon
-            width={18}
-            height={18}
-            className={clsx(
-              { 'text-interlaySecondaryInLightMode':
-                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-            )} />
-        </IconButton>
+          onClick={onClose} />
         <div className='space-y-4'>
           {extensions.length ? (
             <>
@@ -126,12 +105,9 @@ const AccountModal = ({
               {!accounts?.length && (
                 <p>
                   {t('no_account')}
-                  <InterlayLink
-                    href={POLKADOT_EXTENSION}
-                    target='_blank'
-                    rel='noopener noreferrer'>
+                  <ExternalLink href={POLKADOT_EXTENSION}>
                     &nbsp;{t('here')}
-                  </InterlayLink>
+                  </ExternalLink>
                   .
                 </p>
               )}
@@ -180,27 +156,28 @@ const AccountModal = ({
               <p>
                 {t('install_supported_wallets')}
               </p>
-              <InterlayLink
+              <ExternalLink
                 className={clsx(
-                  'flex',
-                  'items-center',
                   'px-4',
                   'py-2.5',
                   'rounded',
                   'shadow-sm',
                   'border',
-                  'border-solid',
-                  'border-interlayDenim',
-                  'w-1/2'
+                  'border-solid'
                 )}
-                href={POLKADOT_EXTENSION}
-                target='_blank'
-                rel='noopener noreferrer'>
-                <PolkadotExtensionLogoIcon
-                  width={30}
-                  height={30} />
-                <span style={{ marginLeft: 16 }}>Polkadot.js</span>
-              </InterlayLink>
+                href={POLKADOT_EXTENSION}>
+                <div
+                  className={clsx(
+                    'inline-flex',
+                    'items-center',
+                    'space-x-1.5'
+                  )}>
+                  <PolkadotExtensionLogoIcon
+                    width={30}
+                    height={30} />
+                  <span>Polkadot.js</span>
+                </div>
+              </ExternalLink>
             </>
           )}
           <div

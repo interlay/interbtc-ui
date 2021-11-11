@@ -23,11 +23,11 @@ function decodeIssueValues(issue: any): any {
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const issueFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
-  const [key, offset, limit, stableBtcConfirmations] = queryKey as IssueFetcherParams;
+  const [key, offset, limit, stableBtcConfirmations, where] = queryKey as IssueFetcherParams;
   if (key !== ISSUE_FETCHER) throw new Error('Invalid key!');
   const issuesData = await graphqlFetcher<Array<any>>()({ queryKey: [
     GRAPHQL_FETCHER,
-    issueRequestsQuery,
+    issueRequestsQuery(where),
     {
       limit,
       offset
@@ -86,6 +86,7 @@ export type IssueFetcherParams = [
   offset: number,
   limit: number,
   stableBtcConfirmations: number,
+  where?: string
 ]
 
 export {

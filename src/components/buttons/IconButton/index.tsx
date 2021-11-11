@@ -3,6 +3,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
 type CustomProps = {
@@ -25,8 +29,14 @@ const IconButton = React.forwardRef<Ref, Props>(({
       className={clsx(
         'focus:outline-none',
         'focus:ring',
-        'focus:border-primary-300',
-        'focus:ring-primary-200',
+        { 'focus:border-interlayDenim-300':
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+        { 'focus:ring-interlayDenim-200':
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+        { 'dark:focus:border-kintsugiMidnight-300':
+          process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+        { 'dark:focus:ring-kintsugiMidnight-200':
+          process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'focus:ring-opacity-50',
 
         'rounded-full',

@@ -5,7 +5,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import clsx from 'clsx';
 import { Redeem } from '@interlay/interbtc-api';
 
-import IconButton from 'components/buttons/IconButton';
+import CloseIconButton from 'components/buttons/CloseIconButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import InterlayModal, {
   Props as ModalProps,
@@ -25,9 +25,10 @@ import {
   getUsdAmount
 } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
 const queryString = require('query-string');
+
+const USER_BTC_ADDRESS = 'user-btc-address';
 
 interface CustomProps {
   request: Redeem;
@@ -54,25 +55,9 @@ const SubmittedRedeemRequestModal = ({
           'p-8',
           'max-w-lg'
         )}>
-        <IconButton
+        <CloseIconButton
           ref={focusRef}
-          className={clsx(
-            'w-12',
-            'h-12',
-            'absolute',
-            'top-3',
-            'right-3'
-          )}
-          onClick={onClose}>
-          <CloseIcon
-            width={18}
-            height={18}
-            className={clsx(
-              { 'text-interlaySecondaryInLightMode':
-                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-            )} />
-        </IconButton>
+          onClick={onClose} />
         <div
           className={clsx(
             'flex',
@@ -119,9 +104,9 @@ const SubmittedRedeemRequestModal = ({
               <span
                 className={clsx(
                   'block',
-                  { 'text-interlaySecondaryInLightMode':
+                  { 'text-interlayTextSecondaryInLightMode':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                   'text-2xl',
                   'text-center'
                 )}>
@@ -130,16 +115,16 @@ const SubmittedRedeemRequestModal = ({
             </div>
             <div>
               <label
-                htmlFor='user-btc-address'
+                htmlFor={USER_BTC_ADDRESS}
                 className={clsx(
-                  { 'text-interlaySecondaryInLightMode':
+                  { 'text-interlayTextSecondaryInLightMode':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}>
                 {t('redeem_page.btc_destination_address')}
               </label>
               <span
-                id='user-btc-address'
+                id={USER_BTC_ADDRESS}
                 // TODO: could componentize
                 className={clsx(
                   'block',
@@ -156,9 +141,9 @@ const SubmittedRedeemRequestModal = ({
               <p>{t('redeem_page.we_will_inform_you_btc')}</p>
               <p
                 className={clsx(
-                  { 'text-interlaySecondaryInLightMode':
+                  { 'text-interlayTextSecondaryInLightMode':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}>
                 {t('redeem_page.typically_takes')}
               </p>

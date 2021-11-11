@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -10,12 +11,15 @@ import { BitcoinAmount } from '@interlay/monetary-js';
 
 import RedeemRequestStatusUI from './RedeemRequestStatusUI';
 import ReimburseStatusUI from './ReimburseStatusUI';
+import RequestModalTitle from '../../RequestModalTitle';
 import PriceInfo from 'pages/Bridge/PriceInfo';
-import IconButton from 'components/buttons/IconButton';
+import PrimaryColorSpan from 'components/PrimaryColorSpan';
+import CloseIconButton from 'components/buttons/CloseIconButton';
+import Hr1 from 'components/hrs/Hr1';
+import Hr2 from 'components/hrs/Hr2';
 import InterlayModal, {
   Props as ModalProps,
-  InterlayModalInnerWrapper,
-  InterlayModalTitle
+  InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
@@ -29,7 +33,6 @@ import {
 } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
 interface CustomProps {
   request: Redeem;
@@ -74,44 +77,17 @@ const RedeemRequestModal = ({
           'p-12',
           'max-w-5xl'
         )}>
-        <InterlayModalTitle
-          as='h3'
-          className={clsx(
-            'text-lg',
-            'font-medium',
-            'break-words',
-            'text-base',
-            'text-interlayCalifornia',
-            'text-center',
-            'uppercase'
-          )}>
+        <RequestModalTitle>
           {t('issue_page.request', { id: request.id })}
-        </InterlayModalTitle>
-        <hr
+        </RequestModalTitle>
+        <Hr1
           className={clsx(
             'border-t-2',
-            'my-2',
-            'border-interlayCalifornia'
+            'my-2'
           )} />
-        <IconButton
+        <CloseIconButton
           ref={focusRef}
-          className={clsx(
-            'w-12',
-            'h-12',
-            'absolute',
-            'top-3',
-            'right-3'
-          )}
-          onClick={onClose}>
-          <CloseIcon
-            width={18}
-            height={18}
-            className={clsx(
-              { 'text-interlaySecondaryInLightMode':
-                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-            )} />
-        </IconButton>
+          onClick={onClose} />
         <div
           className={clsx(
             'grid',
@@ -126,22 +102,18 @@ const RedeemRequestModal = ({
                   'font-medium',
                   'space-x-1'
                 )}>
-                <span className='text-5xl'>
+                <PrimaryColorSpan className='text-5xl'>
                   {displayMonetaryAmount(redeemedWrappedTokenAmount)}
-                </span>
-                <span
-                  className={clsx(
-                    'text-2xl',
-                    'text-interlayDenim'
-                  )}>
+                </PrimaryColorSpan>
+                <PrimaryColorSpan className='text-2xl'>
                   {WRAPPED_TOKEN_SYMBOL}
-                </span>
+                </PrimaryColorSpan>
               </h4>
               <span
                 className={clsx(
-                  { 'text-interlaySecondaryInLightMode':
+                  { 'text-interlayTextSecondaryInLightMode':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                   'block'
                 )}>
                 {`≈ $ ${getUsdAmount(request.amountBTC || BitcoinAmount.zero, prices.bitcoin.usd)}`}
@@ -152,9 +124,9 @@ const RedeemRequestModal = ({
                 title={
                   <h5
                     className={clsx(
-                      { 'text-interlaySecondaryInLightMode':
+                      { 'text-interlayTextSecondaryInLightMode':
                         process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                      { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                      { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                     )}>
                     {t('bridge_fee')}
                   </h5>
@@ -171,9 +143,9 @@ const RedeemRequestModal = ({
                 title={
                   <h5
                     className={clsx(
-                      { 'text-interlaySecondaryInLightMode':
+                      { 'text-interlayTextSecondaryInLightMode':
                         process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                      { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                      { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                     )}>
                     {t('bitcoin_network_fee')}
                   </h5>
@@ -186,21 +158,18 @@ const RedeemRequestModal = ({
                 value={displayMonetaryAmount(request.btcTransferFee)}
                 unitName='BTC'
                 approxUSD={getUsdAmount(request.btcTransferFee, prices.bitcoin.usd)} />
-              <hr
+              <Hr2
                 className={clsx(
                   'border-t-2',
-                  'my-2.5',
-                  { 'border-interlaySecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                  { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  'my-2.5'
                 )} />
               <PriceInfo
                 title={
                   <h5
                     className={clsx(
-                      { 'text-interlaySecondaryInLightMode':
+                      { 'text-interlayTextSecondaryInLightMode':
                         process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                      { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                      { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                     )}>
                     {t('you_will_receive')}
                   </h5>
@@ -222,9 +191,9 @@ const RedeemRequestModal = ({
                 )}>
                 <span
                   className={clsx(
-                    { 'text-interlaySecondaryInLightMode':
+                    { 'text-interlayTextSecondaryInLightMode':
                       process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                    { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}>
                   {t('issue_page.destination_address')}
                 </span>
@@ -239,9 +208,9 @@ const RedeemRequestModal = ({
                 )}>
                 <span
                   className={clsx(
-                    { 'text-interlaySecondaryInLightMode':
+                    { 'text-interlayTextSecondaryInLightMode':
                       process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                    { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}>
                   {t('issue_page.parachain_block')}
                 </span>
@@ -256,9 +225,9 @@ const RedeemRequestModal = ({
                 )}>
                 <span
                   className={clsx(
-                    { 'text-interlaySecondaryInLightMode':
+                    { 'text-interlayTextSecondaryInLightMode':
                       process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                    { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}>
                   {t('issue_page.vault_dot_address')}
                 </span>

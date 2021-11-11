@@ -1,24 +1,25 @@
+
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import {
-  Issue,
   IssueStatus
 } from '@interlay/interbtc-api';
-import { BitcoinAmount } from '@interlay/monetary-js';
 
 import BTCPaymentPendingStatusUI from './BTCPaymentPendingStatusUI';
 import IssueRequestStatusUI from './IssueRequestStatusUI';
 import WhoopsStatusUI from './WhoopsStatusUI';
+import RequestModalTitle from '../../RequestModalTitle';
 import PriceInfo from 'pages/Bridge/PriceInfo';
-import IconButton from 'components/buttons/IconButton';
+import CloseIconButton from 'components/buttons/CloseIconButton';
+import Hr1 from 'components/hrs/Hr1';
+import Hr2 from 'components/hrs/Hr2';
 import InterlayModal, {
   Props as ModalProps,
-  InterlayModalInnerWrapper,
-  InterlayModalTitle
+  InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
-import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import { WrappedTokenAmount, WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
   POLKADOT,
   KUSAMA
@@ -30,9 +31,8 @@ import {
 } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
-const renderModalStatusPanel = (request: Issue) => {
+const renderModalStatusPanel = (request: any) => {
   switch (request.status) {
   case IssueStatus.PendingWithBtcTxNotFound: {
     return <BTCPaymentPendingStatusUI request={request} />;
@@ -47,7 +47,7 @@ const renderModalStatusPanel = (request: Issue) => {
 };
 
 interface CustomProps {
-  request: Issue;
+  request: any;
 }
 
 const IssueRequestModal = ({
@@ -64,11 +64,10 @@ const IssueRequestModal = ({
 
   const focusRef = React.useRef(null);
 
-  const issuedWrappedTokenAmount =
-    (request.executedAmountBTC && !request.executedAmountBTC.isZero()) ?
-      request.executedAmountBTC :
-      request.wrappedAmount;
-  const receivedWrappedTokenAmount = issuedWrappedTokenAmount.sub(request.bridgeFee);
+  const receivedWrappedTokenAmount = request.execution ? request.execution.amountWrapped :
+    request.request.amountWrapped;
+  const sentBackingTokenAmount = (receivedWrappedTokenAmount as WrappedTokenAmount)
+    .add(request.bridgeFee as WrappedTokenAmount);
 
   return (
     <InterlayModal
@@ -80,47 +79,17 @@ const IssueRequestModal = ({
           'p-12',
           'max-w-5xl'
         )}>
-        {/* TODO: could componentize */}
-        <InterlayModalTitle
-          as='h3'
-          className={clsx(
-            'text-lg',
-            'font-medium',
-            'break-words',
-            'text-base',
-            'text-interlayDenim',
-            'text-center',
-            'uppercase'
-          )}>
+        <RequestModalTitle>
           {t('issue_page.request', { id: request.id })}
-        </InterlayModalTitle>
-        {/* TODO: could componentize */}
-        <hr
+        </RequestModalTitle>
+        <Hr1
           className={clsx(
             'border-t-2',
-            'my-2',
-            'border-interlayDenim'
+            'my-2'
           )} />
-        {/* TODO: could componentize */}
-        <IconButton
+        <CloseIconButton
           ref={focusRef}
-          className={clsx(
-            'w-12',
-            'h-12',
-            'absolute',
-            'top-3',
-            'right-3'
-          )}
-          onClick={onClose}>
-          <CloseIcon
-            width={18}
-            height={18}
-            className={clsx(
-              { 'text-interlaySecondaryInLightMode':
-                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-              { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-            )} />
-        </IconButton>
+          onClick={onClose} />
         <div
           className={clsx(
             'grid',
@@ -134,7 +103,9 @@ const IssueRequestModal = ({
               <h4
                 className={clsx(
                   'font-medium',
-                  'text-interlayDenim',
+                  { 'text-interlayDenim':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                  { 'dark:text-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                   'space-x-1'
                 )}>
                 <span className='text-5xl'>
@@ -146,13 +117,13 @@ const IssueRequestModal = ({
               </h4>
               <span
                 className={clsx(
-                  { 'text-interlaySecondaryInLightMode':
+                  { 'text-interlayTextSecondaryInLightMode':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                   'block'
                 )}>
                 {`≈ $ ${getUsdAmount(
-                  issuedWrappedTokenAmount || BitcoinAmount.zero,
+                  receivedWrappedTokenAmount,
                   prices.bitcoin.usd
                 )}`}
               </span>
@@ -162,9 +133,9 @@ const IssueRequestModal = ({
                 title={
                   <h5
                     className={clsx(
-                      { 'text-interlaySecondaryInLightMode':
+                      { 'text-interlayTextSecondaryInLightMode':
                         process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                      { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                      { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                     )}>
                     {t('bridge_fee')}
                   </h5>
@@ -177,22 +148,18 @@ const IssueRequestModal = ({
                 value={displayMonetaryAmount(request.bridgeFee)}
                 unitName='BTC'
                 approxUSD={getUsdAmount(request.bridgeFee, prices.bitcoin.usd)} />
-              {/* TODO: could componentize */}
-              <hr
+              <Hr2
                 className={clsx(
                   'border-t-2',
-                  'my-2.5',
-                  { 'border-interlaySecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                  { 'dark:border-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  'my-2.5'
                 )} />
               <PriceInfo
                 title={
                   <h5
                     className={clsx(
-                      { 'text-interlaySecondaryInLightMode':
+                      { 'text-interlayTextSecondaryInLightMode':
                         process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                      { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                      { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                     )}>
                     {t('total_deposit')}
                   </h5>
@@ -202,9 +169,9 @@ const IssueRequestModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayMonetaryAmount(issuedWrappedTokenAmount)}
+                value={displayMonetaryAmount(sentBackingTokenAmount)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(issuedWrappedTokenAmount, prices.bitcoin.usd)} />
+                approxUSD={getUsdAmount(sentBackingTokenAmount, prices.bitcoin.usd)} />
             </div>
             <div className='space-y-4'>
               {/* TODO: could componentize */}
@@ -215,9 +182,9 @@ const IssueRequestModal = ({
                 )}>
                 <span
                   className={clsx(
-                    { 'text-interlaySecondaryInLightMode':
+                    { 'text-interlayTextSecondaryInLightMode':
                       process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                    { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}>
                   {t('issue_page.destination_address')}
                 </span>
@@ -232,14 +199,14 @@ const IssueRequestModal = ({
                 )}>
                 <span
                   className={clsx(
-                    { 'text-interlaySecondaryInLightMode':
+                    { 'text-interlayTextSecondaryInLightMode':
                       process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                    { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}>
                   {t('issue_page.parachain_block')}
                 </span>
                 <span className='font-medium'>
-                  {request.creationBlock}
+                  {request.request.height.active}
                 </span>
               </div>
               <div
@@ -249,9 +216,9 @@ const IssueRequestModal = ({
                 )}>
                 <span
                   className={clsx(
-                    { 'text-interlaySecondaryInLightMode':
+                    { 'text-interlayTextSecondaryInLightMode':
                       process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                    { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}>
                   {t('issue_page.vault_dot_address')}
                 </span>
@@ -266,14 +233,14 @@ const IssueRequestModal = ({
                 )}>
                 <span
                   className={clsx(
-                    { 'text-interlaySecondaryInLightMode':
+                    { 'text-interlayTextSecondaryInLightMode':
                       process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                    { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                    { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}>
                   {t('issue_page.vault_btc_address')}
                 </span>
                 <span className='font-medium'>
-                  {shortAddress(request.vaultBTCAddress)}
+                  {shortAddress(request.vaultBackingAddress)}
                 </span>
               </div>
             </div>
@@ -281,9 +248,9 @@ const IssueRequestModal = ({
               <span className='text-interlayCinnabar'>{t('note')}:</span>
               <span
                 className={clsx(
-                  { 'text-interlaySecondaryInLightMode':
+                  { 'text-interlayTextSecondaryInLightMode':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                  { 'dark:text-kintsugiSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}>
                 {t('issue_page.fully_decentralized', {
                   wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
