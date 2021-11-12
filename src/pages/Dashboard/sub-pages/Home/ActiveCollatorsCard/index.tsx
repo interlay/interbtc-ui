@@ -45,9 +45,11 @@ const ActiveCollatorsCard = (): JSX.Element => {
         colors={['d_interlayDenim']}
         labels={[t('dashboard.collators.total_collators_chart')]}
         yLabels={dates}
-        yAxisProps={[{
-          beginAtZero: true,
-          precision: 0
+        yAxes={[{
+          ticks: {
+            beginAtZero: true,
+            precision: 0
+          }
         }]}
         datasets={[data]} />
     </DashboardCard>

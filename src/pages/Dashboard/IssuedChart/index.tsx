@@ -86,15 +86,19 @@ const IssuedChart = (): JSX.Element => {
           .slice(1)
           .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))
       }
-      yAxisProps={[
+      yAxes={[
         {
-          beginAtZero: true,
           position: 'left',
-          maxTicksLimit: 6
+          ticks: {
+            beginAtZero: true,
+            maxTicksLimit: 6
+          }
         },
         {
           position: 'right',
-          maxTicksLimit: 6
+          ticks: {
+            maxTicksLimit: 6
+          }
         }
       ]}
       datasets={[

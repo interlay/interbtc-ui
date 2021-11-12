@@ -79,15 +79,19 @@ const RedeemedChart = (): JSX.Element => {
         converted
           .map(dataPoint => new Date(dataPoint.date).toLocaleDateString())
       }
-      yAxisProps={[
+      yAxes={[
         {
-          beginAtZero: true,
           position: 'left',
-          maxTicksLimit: 6
+          ticks: {
+            beginAtZero: true,
+            maxTicksLimit: 6
+          }
         },
         {
           position: 'right',
-          maxTicksLimit: 6
+          ticks: {
+            maxTicksLimit: 6
+          }
         }
       ]}
       datasets={[

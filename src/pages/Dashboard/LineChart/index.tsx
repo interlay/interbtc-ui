@@ -1,18 +1,20 @@
 
 import { Line } from 'react-chartjs-2';
 
-interface YAxisConfig {
-  beginAtZero?: boolean;
+interface YAxis {
   position?: string;
-  precision?: number;
-  maxTicksLimit?: number;
+  ticks: {
+    beginAtZero?: boolean;
+    precision?: number;
+    maxTicksLimit?: number;
+  };
 }
 
 interface Props {
   colors: string[];
   labels: string[];
   yLabels: string[];
-  yAxisProps: YAxisConfig[];
+  yAxes: YAxis[];
   datasets: number[][];
 }
 
@@ -40,7 +42,7 @@ const LineChart = ({
   colors,
   labels,
   yLabels,
-  yAxisProps,
+  yAxes,
   datasets
 }: Props): JSX.Element => {
   const data = {
@@ -80,16 +82,11 @@ const LineChart = ({
           }
         }
       ],
-      yAxes: yAxisProps.map((yArgs, index) => ({
+      yAxes: yAxes.map((yAxis, index) => ({
         id: index.toString(),
         type: 'linear',
         display: true,
-        ticks: {
-          ...(yArgs.beginAtZero ? { beginAtZero: true } : {}),
-          ...(yArgs.precision === undefined ? {} : { precision: yArgs.precision }),
-          ...(yArgs.maxTicksLimit === undefined ? {} : { maxTicksLimit: yArgs.maxTicksLimit })
-        },
-        ...(yArgs.position === undefined ? {} : { position: yArgs.position })
+        ...yAxis
       }))
     }
   };

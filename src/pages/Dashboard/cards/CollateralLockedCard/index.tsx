@@ -98,10 +98,12 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
           yLabels={cumulativeCollateralPerDay
             .slice(1)
             .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}
-          yAxisProps={[
+          yAxes={[
             {
-              beginAtZero: true,
-              precision: 0
+              ticks: {
+                beginAtZero: true,
+                precision: 0
+              }
             }
           ]}
           datasets={[cumulativeCollateralPerDay.slice(1).map(dataPoint => dataPoint.amount)]} />
