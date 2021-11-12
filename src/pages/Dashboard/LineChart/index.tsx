@@ -35,7 +35,10 @@ function getAccentColor(color: string): string {
     accentColor = '#075abc';
     break;
   default:
-    accentColor = '#6b7280';
+    // ray test touch <<
+    accentColor = 'red';
+    // accentColor = '#6b7280';
+    // ray test touch >>
     break;
   }
   return accentColor;
@@ -45,12 +48,12 @@ function getAccentColor(color: string): string {
 const LineChart = (props: Props): JSX.Element => {
   const internalProps =
     typeof props.color === 'string' ? // meaning propsArg isn't SingleAxisProps
-      ((propsArg: SingleAxisProps) => ({
-        color: [propsArg.color],
-        label: [propsArg.label],
-        yLabels: propsArg.yLabels,
-        yAxisProps: [propsArg.yAxisProps === undefined ? {} : propsArg.yAxisProps],
-        data: [propsArg.data]
+      ((props: SingleAxisProps) => ({
+        color: [props.color],
+        label: [props.label],
+        yLabels: props.yLabels,
+        yAxisProps: [props.yAxisProps === undefined ? {} : props.yAxisProps],
+        data: [props.data]
       }))(props as SingleAxisProps) :
       (props as MultiAxisProps);
 
@@ -76,43 +79,42 @@ const LineChart = (props: Props): JSX.Element => {
     }))
   };
 
-  const chartProps = {
-    data,
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      legend: {
-        labels: {
-          fontSize: 9
-        }
-      },
-      scales: {
-        xAxes: [
-          {
-            gridLines: {
-              display: false
-            }
-          }
-        ],
-        yAxes: internalProps.yAxisProps.map((yArgs, index) => ({
-          id: index.toString(),
-          type: 'linear',
-          display: true,
-          ticks: {
-            ...(yArgs.beginAtZero ? { beginAtZero: true } : {}),
-            ...(yArgs.precision === undefined ? {} : { precision: yArgs.precision }),
-            ...(yArgs.max === undefined ? {} : { max: yArgs.max }),
-            ...(yArgs.maxTicksLimit === undefined ? {} : { maxTicksLimit: yArgs.maxTicksLimit })
-          },
-          ...(yArgs.position === undefined ? {} : { position: yArgs.position })
-        }))
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    legend: {
+      labels: {
+        fontSize: 9
       }
+    },
+    scales: {
+      xAxes: [
+        {
+          gridLines: {
+            display: false
+          }
+        }
+      ],
+      yAxes: internalProps.yAxisProps.map((yArgs, index) => ({
+        id: index.toString(),
+        type: 'linear',
+        display: true,
+        ticks: {
+          ...(yArgs.beginAtZero ? { beginAtZero: true } : {}),
+          ...(yArgs.precision === undefined ? {} : { precision: yArgs.precision }),
+          ...(yArgs.max === undefined ? {} : { max: yArgs.max }),
+          ...(yArgs.maxTicksLimit === undefined ? {} : { maxTicksLimit: yArgs.maxTicksLimit })
+        },
+        ...(yArgs.position === undefined ? {} : { position: yArgs.position })
+      }))
     }
   };
 
   return (
     <div>
-      <Line {...chartProps} />
+      <Line
+        data={data}
+        options={options} />
     </div>
   );
 };

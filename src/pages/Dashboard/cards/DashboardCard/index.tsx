@@ -25,14 +25,12 @@ const DashboardCard = ({
       { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'border',
 
-      // ray test touch <<<
       // TODO: could be reused
       // MEMO: inspired by https://mui.com/components/buttons/
       'border-black',
       'border-opacity-25',
       'dark:border-white',
       'dark:border-opacity-25',
-      // ray test touch >>>
 
       'overflow-hidden',
       'shadow',
