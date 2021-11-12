@@ -36,20 +36,26 @@ function getAccentColor(color: string): string {
 }
 
 // TODO: should refactor by using a better package
-const LineChart = (props: Props): JSX.Element => {
+const LineChart = ({
+  colors,
+  labels,
+  yLabels,
+  yAxisProps,
+  datasets
+}: Props): JSX.Element => {
   const data = {
-    labels: props.yLabels,
-    datasets: props.datasets.map((dataset, index) => ({
-      label: props.labels[index],
+    labels: yLabels,
+    datasets: datasets.map((dataset, index) => ({
+      label: labels[index],
       yAxisID: index.toString(),
       fill: false,
-      borderColor: getAccentColor(props.colors[index]),
+      borderColor: getAccentColor(colors[index]),
       borderWidth: 2,
       borderDash: [],
       borderDashOffset: 0.0,
-      pointBackgroundColor: getAccentColor(props.colors[index]),
+      pointBackgroundColor: getAccentColor(colors[index]),
       pointBorderColor: 'rgba(255,255,255,0)',
-      pointHoverBackgroundColor: getAccentColor(props.colors[index]),
+      pointHoverBackgroundColor: getAccentColor(colors[index]),
       pointBorderWidth: 20,
       pointHoverRadius: 4,
       pointHoverBorderWidth: 15,
@@ -74,7 +80,7 @@ const LineChart = (props: Props): JSX.Element => {
           }
         }
       ],
-      yAxes: props.yAxisProps.map((yArgs, index) => ({
+      yAxes: yAxisProps.map((yArgs, index) => ({
         id: index.toString(),
         type: 'linear',
         display: true,
