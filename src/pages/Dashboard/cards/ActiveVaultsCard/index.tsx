@@ -81,14 +81,14 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
             </>
           } />
         <LineChart
-          color='d_interlayDenim'
-          label={t('dashboard.vault.total_vaults_chart') as string}
+          color={['d_interlayDenim']}
+          label={[t('dashboard.vault.total_vaults_chart')]}
           yLabels={totalVaultsPerDay.map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}
-          yAxisProps={{
+          yAxisProps={[{
             beginAtZero: true,
             precision: 0
-          }}
-          data={totalVaultsPerDay.map(dataPoint => dataPoint.count)} />
+          }]}
+          data={[totalVaultsPerDay.map(dataPoint => dataPoint.count)]} />
       </>
     );
   };

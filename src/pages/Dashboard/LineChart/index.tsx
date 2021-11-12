@@ -9,21 +9,13 @@ interface YAxisConfig {
   maxTicksLimit?: number;
 }
 
-interface SingleAxisProps {
-  color: string;
-  label: string;
-  yLabels: string[];
-  yAxisProps?: YAxisConfig;
-  data: number[];
-}
-interface MultiAxisProps {
+interface Props {
   color: string[];
   label: string[];
   yLabels: string[];
   yAxisProps: YAxisConfig[];
   data: number[][];
 }
-type Props = SingleAxisProps | MultiAxisProps;
 
 function getAccentColor(color: string): string {
   let accentColor;
@@ -46,30 +38,19 @@ function getAccentColor(color: string): string {
 
 // TODO: should refactor by using a better package
 const LineChart = (props: Props): JSX.Element => {
-  const internalProps =
-    typeof props.color === 'string' ? // meaning propsArg isn't SingleAxisProps
-      ((props: SingleAxisProps) => ({
-        color: [props.color],
-        label: [props.label],
-        yLabels: props.yLabels,
-        yAxisProps: [props.yAxisProps === undefined ? {} : props.yAxisProps],
-        data: [props.data]
-      }))(props as SingleAxisProps) :
-      (props as MultiAxisProps);
-
   const data = {
-    labels: internalProps.yLabels,
-    datasets: internalProps.data.map((dataset, index) => ({
-      label: internalProps.label[index],
+    labels: props.yLabels,
+    datasets: props.data.map((dataset, index) => ({
+      label: props.label[index],
       yAxisID: index.toString(),
       fill: false,
-      borderColor: getAccentColor(internalProps.color[index]),
+      borderColor: getAccentColor(props.color[index]),
       borderWidth: 2,
       borderDash: [],
       borderDashOffset: 0.0,
-      pointBackgroundColor: getAccentColor(internalProps.color[index]),
+      pointBackgroundColor: getAccentColor(props.color[index]),
       pointBorderColor: 'rgba(255,255,255,0)',
-      pointHoverBackgroundColor: getAccentColor(internalProps.color[index]),
+      pointHoverBackgroundColor: getAccentColor(props.color[index]),
       pointBorderWidth: 20,
       pointHoverRadius: 4,
       pointHoverBorderWidth: 15,
@@ -80,7 +61,6 @@ const LineChart = (props: Props): JSX.Element => {
   };
 
   const options = {
-    responsive: true,
     maintainAspectRatio: false,
     legend: {
       labels: {
@@ -95,7 +75,7 @@ const LineChart = (props: Props): JSX.Element => {
           }
         }
       ],
-      yAxes: internalProps.yAxisProps.map((yArgs, index) => ({
+      yAxes: props.yAxisProps.map((yArgs, index) => ({
         id: index.toString(),
         type: 'linear',
         display: true,

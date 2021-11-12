@@ -93,8 +93,8 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
             </>
           } />
         <LineChart
-          color='d_interlayDenim'
-          label={t('dashboard.vault.total_collateral_locked') as string}
+          color={['d_interlayDenim']}
+          label={[t('dashboard.vault.total_collateral_locked')]}
           yLabels={cumulativeCollateralPerDay
             .slice(1)
             .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}
@@ -104,9 +104,7 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
               precision: 0
             }
           ]}
-          data={
-            cumulativeCollateralPerDay.slice(1).map(dataPoint => dataPoint.amount)
-          } />
+          data={[cumulativeCollateralPerDay.slice(1).map(dataPoint => dataPoint.amount)]} />
       </>
     );
   };
