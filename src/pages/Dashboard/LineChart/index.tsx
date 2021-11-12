@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Line } from 'react-chartjs-2';
 
 interface YAxisConfig {
@@ -44,7 +44,7 @@ function getAccents(color: string): {
 }
 
 // TODO: should refactor by using a better package
-export default function LineChart(propsArg: ChartProps): React.ReactElement {
+const LineChart = (propsArg: ChartProps): JSX.Element => {
   const props =
     typeof propsArg.color === 'string' ? // meaning propsArg isn't SingleAxisProps
       ((propsArg: SingleAxisProps) => ({
@@ -116,4 +116,6 @@ export default function LineChart(propsArg: ChartProps): React.ReactElement {
       <Line {...chartProps} />
     </div>
   );
-}
+};
+
+export default LineChart;
