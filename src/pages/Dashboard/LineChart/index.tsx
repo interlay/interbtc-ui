@@ -25,22 +25,20 @@ interface MultiAxisProps {
 }
 type Props = SingleAxisProps | MultiAxisProps;
 
-function getAccents(color: string): {
-  color: string;
-} {
-  const accent = { color: '' };
+function getAccentColor(color: string): string {
+  let accentColor;
   switch (color) {
   case 'd_interlayCalifornia':
-    accent.color = '#ff9900';
+    accentColor = '#ff9900';
     break;
   case 'd_interlayDenim':
-    accent.color = '#075abc';
+    accentColor = '#075abc';
     break;
   default:
-    accent.color = '#6b7280';
+    accentColor = '#6b7280';
     break;
   }
-  return accent;
+  return accentColor;
 }
 
 // TODO: should refactor by using a better package
@@ -62,13 +60,13 @@ const LineChart = (props: Props): JSX.Element => {
       label: internalProps.label[index],
       yAxisID: index.toString(),
       fill: false,
-      borderColor: getAccents(internalProps.color[index]).color,
+      borderColor: getAccentColor(internalProps.color[index]),
       borderWidth: 2,
       borderDash: [],
       borderDashOffset: 0.0,
-      pointBackgroundColor: getAccents(internalProps.color[index]).color,
+      pointBackgroundColor: getAccentColor(internalProps.color[index]),
       pointBorderColor: 'rgba(255,255,255,0)',
-      pointHoverBackgroundColor: getAccents(internalProps.color[index]).color,
+      pointHoverBackgroundColor: getAccentColor(internalProps.color[index]),
       pointBorderWidth: 20,
       pointHoverRadius: 4,
       pointHoverBorderWidth: 15,
