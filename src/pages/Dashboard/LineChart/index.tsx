@@ -23,7 +23,7 @@ interface MultiAxisProps {
   yAxisProps: YAxisConfig[];
   data: number[][];
 }
-type ChartProps = SingleAxisProps | MultiAxisProps;
+type Props = SingleAxisProps | MultiAxisProps;
 
 function getAccents(color: string): {
   color: string;
@@ -44,31 +44,31 @@ function getAccents(color: string): {
 }
 
 // TODO: should refactor by using a better package
-const LineChart = (propsArg: ChartProps): JSX.Element => {
-  const props =
-    typeof propsArg.color === 'string' ? // meaning propsArg isn't SingleAxisProps
+const LineChart = (props: Props): JSX.Element => {
+  const internalProps =
+    typeof props.color === 'string' ? // meaning propsArg isn't SingleAxisProps
       ((propsArg: SingleAxisProps) => ({
         color: [propsArg.color],
         label: [propsArg.label],
         yLabels: propsArg.yLabels,
         yAxisProps: [propsArg.yAxisProps === undefined ? {} : propsArg.yAxisProps],
         data: [propsArg.data]
-      }))(propsArg as SingleAxisProps) :
-      (propsArg as MultiAxisProps);
+      }))(props as SingleAxisProps) :
+      (props as MultiAxisProps);
 
   const data = {
-    labels: props.yLabels,
-    datasets: props.data.map((dataset, i) => ({
-      label: props.label[i],
-      yAxisID: i.toString(),
+    labels: internalProps.yLabels,
+    datasets: internalProps.data.map((dataset, index) => ({
+      label: internalProps.label[index],
+      yAxisID: index.toString(),
       fill: false,
-      borderColor: getAccents(props.color[i]).color,
+      borderColor: getAccents(internalProps.color[index]).color,
       borderWidth: 2,
       borderDash: [],
       borderDashOffset: 0.0,
-      pointBackgroundColor: getAccents(props.color[i]).color,
+      pointBackgroundColor: getAccents(internalProps.color[index]).color,
       pointBorderColor: 'rgba(255,255,255,0)',
-      pointHoverBackgroundColor: getAccents(props.color[i]).color,
+      pointHoverBackgroundColor: getAccents(internalProps.color[index]).color,
       pointBorderWidth: 20,
       pointHoverRadius: 4,
       pointHoverBorderWidth: 15,
@@ -96,8 +96,8 @@ const LineChart = (propsArg: ChartProps): JSX.Element => {
             }
           }
         ],
-        yAxes: props.yAxisProps.map((yArgs, i) => ({
-          id: i.toString(),
+        yAxes: internalProps.yAxisProps.map((yArgs, index) => ({
+          id: index.toString(),
           type: 'linear',
           display: true,
           ticks: {
@@ -111,6 +111,7 @@ const LineChart = (propsArg: ChartProps): JSX.Element => {
       }
     }
   };
+
   return (
     <div>
       <Line {...chartProps} />
