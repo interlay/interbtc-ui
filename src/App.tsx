@@ -86,9 +86,6 @@ const Dashboard = React.lazy(() =>
 const VaultDashboard = React.lazy(() =>
   import(/* webpackChunkName: 'vault' */ 'pages/Vault')
 );
-const Feedback = React.lazy(() =>
-  import(/* webpackChunkName: 'feedback' */ 'pages/Feedback')
-);
 const NoMatch = React.lazy(() =>
   import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
 );
@@ -373,9 +370,6 @@ const App = (): JSX.Element => {
             // <TransitionWrapper location={location}>
             <React.Suspense fallback={<FullLoadingSpinner />}>
               <Switch location={location}>
-                <Route path={PAGES.FEEDBACK}>
-                  <Feedback />
-                </Route>
                 {vaultClientLoaded && (
                   <Route path={PAGES.VAULT}>
                     <VaultDashboard />

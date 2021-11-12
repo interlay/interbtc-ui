@@ -8,7 +8,6 @@ import {
   BookOpenIcon,
   RefreshIcon,
   ChartSquareBarIcon,
-  ChatAltIcon,
   ChipIcon
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
@@ -56,11 +55,6 @@ const NAVIGATION_ITEMS = [
     link: '#',
     icon: () => null,
     separator: true
-  },
-  {
-    name: 'nav_feedback',
-    link: PAGES.FEEDBACK,
-    icon: ChatAltIcon
   },
   {
     name: 'nav_docs',
