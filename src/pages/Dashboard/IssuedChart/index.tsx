@@ -69,11 +69,11 @@ const IssuedChart = (): JSX.Element => {
 
   return (
     <LineChart
-      color={[
+      colors={[
         'd_interlayDenim',
         'd_interlayPaleSky'
       ]}
-      label={[
+      labels={[
         t('dashboard.issue.total_issued_chart', {
           wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
         }),
@@ -97,7 +97,7 @@ const IssuedChart = (): JSX.Element => {
           maxTicksLimit: 6
         }
       ]}
-      data={[
+      datasets={[
         converted
           .slice(1)
           .map(dataPoint => Number(BitcoinAmount.from.Satoshi(dataPoint.sat).str.BTC())),

@@ -42,14 +42,14 @@ const ActiveCollatorsCard = (): JSX.Element => {
           </>
         } />
       <LineChart
-        color={['d_interlayDenim']}
-        label={[t('dashboard.collators.total_collators_chart')]}
+        colors={['d_interlayDenim']}
+        labels={[t('dashboard.collators.total_collators_chart')]}
         yLabels={dates}
         yAxisProps={[{
           beginAtZero: true,
           precision: 0
         }]}
-        data={[data]} />
+        datasets={[data]} />
     </DashboardCard>
   );
 };

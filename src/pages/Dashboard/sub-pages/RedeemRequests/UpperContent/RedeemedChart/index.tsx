@@ -67,11 +67,11 @@ const RedeemedChart = (): JSX.Element => {
 
   return (
     <LineChart
-      color={[
+      colors={[
         'd_interlayCalifornia',
         'd_interlayPaleSky'
       ]}
-      label={[
+      labels={[
         t('dashboard.redeem.total_redeemed_chart'),
         t('dashboard.redeem.per_day_redeemed_chart')
       ]}
@@ -82,13 +82,15 @@ const RedeemedChart = (): JSX.Element => {
       yAxisProps={[
         {
           beginAtZero: true,
-          position: 'left'
+          position: 'left',
+          maxTicksLimit: 6
         },
         {
-          position: 'right'
+          position: 'right',
+          maxTicksLimit: 6
         }
       ]}
-      data={[
+      datasets={[
         converted
           .map(dataPoint =>
             Number(BitcoinAmount.from.Satoshi(dataPoint.sat).str.BTC())

@@ -5,16 +5,15 @@ interface YAxisConfig {
   beginAtZero?: boolean;
   position?: string;
   precision?: number;
-  max?: number;
   maxTicksLimit?: number;
 }
 
 interface Props {
-  color: string[];
-  label: string[];
+  colors: string[];
+  labels: string[];
   yLabels: string[];
   yAxisProps: YAxisConfig[];
-  data: number[][];
+  datasets: number[][];
 }
 
 function getAccentColor(color: string): string {
@@ -40,17 +39,17 @@ function getAccentColor(color: string): string {
 const LineChart = (props: Props): JSX.Element => {
   const data = {
     labels: props.yLabels,
-    datasets: props.data.map((dataset, index) => ({
-      label: props.label[index],
+    datasets: props.datasets.map((dataset, index) => ({
+      label: props.labels[index],
       yAxisID: index.toString(),
       fill: false,
-      borderColor: getAccentColor(props.color[index]),
+      borderColor: getAccentColor(props.colors[index]),
       borderWidth: 2,
       borderDash: [],
       borderDashOffset: 0.0,
-      pointBackgroundColor: getAccentColor(props.color[index]),
+      pointBackgroundColor: getAccentColor(props.colors[index]),
       pointBorderColor: 'rgba(255,255,255,0)',
-      pointHoverBackgroundColor: getAccentColor(props.color[index]),
+      pointHoverBackgroundColor: getAccentColor(props.colors[index]),
       pointBorderWidth: 20,
       pointHoverRadius: 4,
       pointHoverBorderWidth: 15,
@@ -82,7 +81,6 @@ const LineChart = (props: Props): JSX.Element => {
         ticks: {
           ...(yArgs.beginAtZero ? { beginAtZero: true } : {}),
           ...(yArgs.precision === undefined ? {} : { precision: yArgs.precision }),
-          ...(yArgs.max === undefined ? {} : { max: yArgs.max }),
           ...(yArgs.maxTicksLimit === undefined ? {} : { maxTicksLimit: yArgs.maxTicksLimit })
         },
         ...(yArgs.position === undefined ? {} : { position: yArgs.position })
