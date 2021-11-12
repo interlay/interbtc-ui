@@ -1,5 +1,16 @@
 
+// TODO: should refactor by using a better package (https://github.com/recharts/recharts)
 import { Line } from 'react-chartjs-2';
+import useDarkMode from 'use-dark-mode';
+
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import {
+  INTERLAY_TEXT_PRIMARY_IN_LIGHT_MODE,
+  KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE
+} from 'utils/constants/colors';
 
 interface YAxis {
   position?: string;
@@ -16,83 +27,76 @@ interface Props {
   yLabels: string[];
   yAxes: YAxis[];
   datasets: number[][];
+  wrapperClassName?: string;
 }
 
-function getAccentColor(color: string): string {
-  let accentColor;
-  switch (color) {
-  case 'd_interlayCalifornia':
-    accentColor = '#ff9900';
-    break;
-  case 'd_interlayDenim':
-    accentColor = '#075abc';
-    break;
-  default:
-    // ray test touch <<
-    accentColor = 'red';
-    // accentColor = '#6b7280';
-    // ray test touch >>
-    break;
-  }
-  return accentColor;
-}
-
-// TODO: should refactor by using a better package
 const LineChart = ({
   colors,
   labels,
   yLabels,
   yAxes,
-  datasets
+  datasets,
+  wrapperClassName
 }: Props): JSX.Element => {
+  const { value: darkMode } = useDarkMode();
+
   const data = {
     labels: yLabels,
     datasets: datasets.map((dataset, index) => ({
       label: labels[index],
       yAxisID: index.toString(),
       fill: false,
-      borderColor: getAccentColor(colors[index]),
-      borderWidth: 2,
-      borderDash: [],
-      borderDashOffset: 0.0,
-      pointBackgroundColor: getAccentColor(colors[index]),
-      pointBorderColor: 'rgba(255,255,255,0)',
-      pointHoverBackgroundColor: getAccentColor(colors[index]),
-      pointBorderWidth: 20,
-      pointHoverRadius: 4,
-      pointHoverBorderWidth: 15,
-      pointRadius: 4,
-      data: dataset,
-      backgroundColor: 'rgba(255,255,255,0)'
+      borderWidth: 1,
+      borderColor: colors[index],
+      pointBackgroundColor: colors[index],
+      pointHoverBackgroundColor: colors[index],
+      data: dataset
     }))
   };
+
+  let textPrimaryColor;
+  if (!darkMode && (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production')) {
+    textPrimaryColor = INTERLAY_TEXT_PRIMARY_IN_LIGHT_MODE;
+  } else if (darkMode && process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
+    textPrimaryColor = KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE;
+  } else {
+    throw new Error('Something went wrong!');
+  }
 
   const options = {
     maintainAspectRatio: false,
     legend: {
       labels: {
-        fontSize: 9
+        fontSize: 12,
+        fontColor: textPrimaryColor
       }
     },
     scales: {
       xAxes: [
         {
-          gridLines: {
-            display: false
+          ticks: {
+            fontColor: textPrimaryColor
           }
         }
       ],
-      yAxes: yAxes.map((yAxis, index) => ({
+      yAxes: yAxes.map(({
+        ticks,
+        ...rest
+      }, index) => ({
         id: index.toString(),
         type: 'linear',
         display: true,
-        ...yAxis
+        ticks: {
+          fontColor: colors[index],
+          ...ticks
+        },
+        ...rest
       }))
     }
   };
 
   return (
-    <div>
+    <div className={wrapperClassName}>
       <Line
         data={data}
         options={options} />

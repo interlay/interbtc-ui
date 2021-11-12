@@ -6,6 +6,7 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
+import useDarkMode from 'use-dark-mode';
 import { CollateralTimeData } from '@interlay/interbtc-index-client';
 
 import LineChart from '../../LineChart';
@@ -18,10 +19,18 @@ import Stats, {
 import ErrorFallback from 'components/ErrorFallback';
 import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import {
+  INTERLAY_DENIM,
+  KINTSUGI_MIDNIGHT
+} from 'utils/constants/colors';
+import { PAGES } from 'utils/constants/links';
+import {
   getUsdAmount,
   displayMonetaryAmount
 } from 'common/utils/utils';
-import { PAGES } from 'utils/constants/links';
 import genericFetcher, {
   GENERIC_FETCHER
 } from 'services/fetchers/generic-fetcher';
@@ -38,6 +47,7 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
     bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
+  const { value: darkMode } = useDarkMode();
 
   const {
     isIdle: cumulativeCollateralPerDayIdle,
@@ -67,6 +77,15 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
+    let chartLineColor;
+    if (!darkMode && (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production')) {
+      chartLineColor = INTERLAY_DENIM[500];
+    } else if (darkMode && process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
+      chartLineColor = KINTSUGI_MIDNIGHT[500];
+    } else {
+      throw new Error('Something went wrong!');
+    }
+
     return (
       <>
         <Stats
@@ -93,7 +112,8 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
             </>
           } />
         <LineChart
-          colors={['d_interlayDenim']}
+          wrapperClassName='h-full'
+          colors={[chartLineColor]}
           labels={[t('dashboard.vault.total_collateral_locked')]}
           yLabels={cumulativeCollateralPerDay
             .slice(1)

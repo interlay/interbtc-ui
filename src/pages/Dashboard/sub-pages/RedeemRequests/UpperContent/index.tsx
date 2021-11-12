@@ -15,6 +15,10 @@ import Stats, {
   StatsDd
 } from '../../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import genericFetcher, {
   GENERIC_FETCHER
 } from 'services/fetchers/generic-fetcher';
@@ -87,7 +91,13 @@ const UpperContent = (): JSX.Element => {
       <Stats
         leftPart={
           <>
-            <StatsDt className='!text-interlayCalifornia'>
+            <StatsDt
+              className={clsx(
+                { '!text-interlayDenim':
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                { 'dark:!text-kintsugiMidnight':
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              )}>
               {t('dashboard.redeem.total_redeemed')}
             </StatsDt>
             <StatsDd>

@@ -6,6 +6,7 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
+import useDarkMode from 'use-dark-mode';
 import { VaultCountTimeData } from '@interlay/interbtc-index-client';
 
 import LineChart from '../../LineChart';
@@ -16,6 +17,14 @@ import Stats, {
 } from '../../Stats';
 import DashboardCard from '../DashboardCard';
 import ErrorFallback from 'components/ErrorFallback';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import {
+  INTERLAY_DENIM,
+  KINTSUGI_MIDNIGHT
+} from 'utils/constants/colors';
 import { PAGES } from 'utils/constants/links';
 import genericFetcher, {
   GENERIC_FETCHER
@@ -29,6 +38,7 @@ interface Props {
 const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
+  const { value: darkMode } = useDarkMode();
 
   const {
     isIdle: totalVaultsPerDayIdle,
@@ -58,6 +68,15 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
+    let chartLineColor;
+    if (!darkMode && (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production')) {
+      chartLineColor = INTERLAY_DENIM[500];
+    } else if (darkMode && process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
+      chartLineColor = KINTSUGI_MIDNIGHT[500];
+    } else {
+      throw new Error('Something went wrong!');
+    }
+
     return (
       <>
         <Stats
@@ -81,7 +100,8 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
             </>
           } />
         <LineChart
-          colors={['d_interlayDenim']}
+          wrapperClassName='h-full'
+          colors={[chartLineColor]}
           labels={[t('dashboard.vault.total_vaults_chart')]}
           yLabels={totalVaultsPerDay.map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}
           yAxes={[
