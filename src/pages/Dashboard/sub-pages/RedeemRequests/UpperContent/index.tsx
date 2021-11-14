@@ -15,6 +15,7 @@ import Stats, {
   StatsDd
 } from '../../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
+import Panel from 'components/Panel';
 import {
   POLKADOT,
   KUSAMA
@@ -82,11 +83,13 @@ const UpperContent = (): JSX.Element => {
   // const redeemSuccessRate = totalSuccessfulRedeems / totalRedeemRequests;
 
   return (
-    <div
+    <Panel
       className={clsx(
         'grid',
         'sm:grid-cols-2',
-        'gap-5'
+        'gap-5',
+        'px-4',
+        'py-5'
       )}>
       <Stats
         leftPart={
@@ -123,14 +126,8 @@ const UpperContent = (): JSX.Element => {
             </StatsDd> */}
           </>
         } />
-      <div
-        className={clsx(
-          'border',
-          'rounded'
-        )}>
-        <RedeemedChart />
-      </div>
-    </div>
+      <RedeemedChart />
+    </Panel>
   );
 };
 
