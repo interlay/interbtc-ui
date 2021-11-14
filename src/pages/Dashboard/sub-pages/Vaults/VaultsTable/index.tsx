@@ -25,6 +25,7 @@ import {
   Currency
 } from '@interlay/monetary-js';
 
+import SectionTitle from 'parts/SectionTitle';
 import ErrorFallback from 'components/ErrorFallback';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import InterlayTable, {
@@ -509,13 +510,9 @@ const VaultsTable = (): JSX.Element => {
   // TODO: should add pagination
   return (
     <InterlayTableContainer className='space-y-6'>
-      <h2
-        className={clsx(
-          'text-2xl',
-          'font-medium'
-        )}>
+      <SectionTitle>
         {t('dashboard.vault.active_vaults')}
-      </h2>
+      </SectionTitle>
       {renderTable()}
     </InterlayTableContainer>
   );

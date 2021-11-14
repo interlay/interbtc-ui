@@ -28,6 +28,9 @@ import {
   CollateralUnit
 } from '@interlay/monetary-js';
 
+import SectionTitle from 'parts/SectionTitle';
+import ErrorFallback from 'components/ErrorFallback';
+import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -36,8 +39,6 @@ import InterlayTable, {
   InterlayTh,
   InterlayTd
 } from 'components/UI/InterlayTable';
-import ErrorFallback from 'components/ErrorFallback';
-import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
@@ -221,15 +222,9 @@ const ReplaceTable = (): JSX.Element => {
         'container',
         'mx-auto'
       )}>
-      <div>
-        <h2
-          className={clsx(
-            'text-2xl',
-            'font-medium'
-          )}>
-          {t('vault.replace_requests')}
-        </h2>
-      </div>
+      <SectionTitle>
+        {t('vault.replace_requests')}
+      </SectionTitle>
       <InterlayTable {...getTableProps()}>
         <InterlayThead>
           {headerGroups.map(headerGroup => (

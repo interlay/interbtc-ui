@@ -14,6 +14,7 @@ import clsx from 'clsx';
 import { CollateralBtcOracleStatus } from '@interlay/interbtc/build/oracleTypes';
 import { ExchangeRate } from '@interlay/monetary-js';
 
+import SectionTitle from 'parts/SectionTitle';
 import ErrorFallback from 'components/ErrorFallback';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import InterlayTable, {
@@ -158,15 +159,9 @@ const OracleTable = (): JSX.Element => {
         'container',
         'mx-auto'
       )}>
-      <div>
-        <h2
-          className={clsx(
-            'text-2xl',
-            'font-medium'
-          )}>
-          {t('dashboard.relay.blocks')}
-        </h2>
-      </div>
+      <SectionTitle>
+        {t('dashboard.relay.blocks')}
+      </SectionTitle>
       <InterlayTable {...getTableProps()}>
         <InterlayThead>
           {headerGroups.map(headerGroup => (
