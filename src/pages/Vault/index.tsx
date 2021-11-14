@@ -1,7 +1,4 @@
-import {
-  useState,
-  useEffect
-} from 'react';
+import * as React from 'react';
 import {
   useSelector,
   useDispatch
@@ -55,8 +52,8 @@ import {
 } from 'common/actions/vault.actions';
 
 const Vault = (): JSX.Element => {
-  const [updateCollateralModalStatus, setUpdateCollateralModalStatus] = useState(CollateralUpdateStatus.Hidden);
-  const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
+  const [updateCollateralModalStatus, setUpdateCollateralModalStatus] = React.useState(CollateralUpdateStatus.Hidden);
+  const [showRequestReplacementModal, setShowRequestReplacementModal] = React.useState(false);
   const {
     vaultClientLoaded,
     bridgeLoaded,
@@ -68,10 +65,10 @@ const Vault = (): JSX.Element => {
     lockedBTC,
     apy
   } = useSelector((state: StoreType) => state.vault);
-  const [capacity, setCapacity] = useState(BitcoinAmount.zero);
-  const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState(BitcoinAmount.zero);
-  const [totalIssueRequests, setTotalIssueRequests] = useState(0);
-  const [totalRedeemRequests, setTotalRedeemRequests] = useState(0);
+  const [capacity, setCapacity] = React.useState(BitcoinAmount.zero);
+  const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = React.useState(BitcoinAmount.zero);
+  const [totalIssueRequests, setTotalIssueRequests] = React.useState(0);
+  const [totalRedeemRequests, setTotalRedeemRequests] = React.useState(0);
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -79,7 +76,7 @@ const Vault = (): JSX.Element => {
   const closeUpdateCollateralModal = () => setUpdateCollateralModalStatus(CollateralUpdateStatus.Hidden);
   const closeRequestReplacementModal = () => setShowRequestReplacementModal(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     (async () => {
       if (!bridgeLoaded) return;
       if (!vaultClientLoaded) return;
@@ -146,7 +143,7 @@ const Vault = (): JSX.Element => {
           setCapacity(issuableAmount.value);
         }
       } catch (error) {
-        console.log('[VaultDashboard useEffect] error.message => ', error.message);
+        console.log('[VaultDashboard React.useEffect] error.message => ', error.message);
       }
     })();
   }, [
@@ -200,6 +197,7 @@ const Vault = (): JSX.Element => {
             {address}
           </BoldParagraph>
         </div>
+        {/* ray test touch << */}
         <CardListContainer>
           <CardListHeader>Vault Stats</CardListHeader>
           <CardList
@@ -230,6 +228,7 @@ const Vault = (): JSX.Element => {
             ))}
           </CardList>
         </CardListContainer>
+        {/* ray test touch >> */}
         <div
           className={clsx(
             'grid',
