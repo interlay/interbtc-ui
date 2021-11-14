@@ -17,19 +17,14 @@ import ReplaceTable from './ReplaceTable';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
+import SectionTitle from 'parts/SectionTitle';
 import VaultIssueRequestsTable from 'containers/VaultIssueRequestsTable';
 import VaultRedeemRequestsTable from 'containers/VaultRedeemRequestsTable';
-import CardList, {
-  CardListItem,
-  CardListItemHeader,
-  CardListItemContent,
-  CardListHeader,
-  CardListContainer
-} from 'components/CardList';
 import BoldParagraph from 'components/BoldParagraph';
 import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
 import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
+import Panel from 'components/Panel';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   WRAPPED_TOKEN_SYMBOL,
@@ -197,38 +192,49 @@ const Vault = (): JSX.Element => {
             {address}
           </BoldParagraph>
         </div>
-        {/* ray test touch << */}
-        <CardListContainer>
-          <CardListHeader>Vault Stats</CardListHeader>
-          <CardList
+        <div className='space-y-6'>
+          <SectionTitle>Vault Stats</SectionTitle>
+          <div
             className={clsx(
+              'grid',
               'md:grid-cols-3',
               'lg:grid-cols-4',
               'gap-5',
               '2xl:gap-6'
             )}>
-            {VAULT_ITEMS.map(vaultItem => (
-              <CardListItem key={vaultItem.title}>
-                <CardListItemHeader
+            {VAULT_ITEMS.map(item => (
+              <Panel
+                key={item.title}
+                className={clsx(
+                  'px-4',
+                  'py-5'
+                )}>
+                <dt
                   className={clsx(
+                    'text-sm',
+                    'font-medium',
+                    'truncate',
+                    { 'text-interlayTextPrimaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  )}>
+                  {item.title}
+                </dt>
+                <dd
+                  className={clsx(
+                    'mt-1',
+                    'text-3xl',
+                    'font-semibold',
                     { 'text-interlayDenim':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
                     { 'dark:text-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}>
-                  {vaultItem.title}
-                </CardListItemHeader>
-                <CardListItemContent
-                  className={clsx(
-                    'text-2xl',
-                    'font-medium'
-                  )}>
-                  {vaultItem.value}
-                </CardListItemContent>
-              </CardListItem>
+                  {item.value}
+                </dd>
+              </Panel>
             ))}
-          </CardList>
-        </CardListContainer>
-        {/* ray test touch >> */}
+          </div>
+        </div>
         <div
           className={clsx(
             'grid',
