@@ -1,10 +1,11 @@
 import issueRequestsQuery from 'services/queries/issueRequests';
 import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import { BitcoinAmount, KusamaAmount } from '@interlay/monetary-js';
-import { IssueStatus } from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
+import { newMonetaryAmount, IssueStatus } from '@interlay/interbtc-api';
 import { btcAddressFromEventToString } from 'common/utils/utils';
 import { BITCOIN_NETWORK } from '../../constants';
 import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 
 const ISSUE_FETCHER = 'issue-fetcher';
 
@@ -12,7 +13,7 @@ const ISSUE_FETCHER = 'issue-fetcher';
 function decodeIssueValues(issue: any): any {
   issue.request.amountWrapped = BitcoinAmount.from.Satoshi(issue.request.amountWrapped);
   issue.bridgeFee = BitcoinAmount.from.Satoshi(issue.bridgeFee);
-  issue.griefingCollateral = KusamaAmount.from.Planck(issue.griefingCollateral);
+  issue.griefingCollateral = newMonetaryAmount(issue.griefingCollateral, COLLATERAL_TOKEN);
   if (issue.execution) {
     issue.execution.amountWrapped =
       BitcoinAmount.from.Satoshi(issue.execution.amountWrapped);

@@ -1,28 +1,35 @@
 import redeemRequestQuery from 'services/queries/redeemRequests';
 import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import { BitcoinAmount, KusamaAmount } from '@interlay/monetary-js';
-import { RedeemStatus } from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
+import { newMonetaryAmount, RedeemStatus } from '@interlay/interbtc-api';
 import { btcAddressFromEventToString } from 'common/utils/utils';
 import { BITCOIN_NETWORK } from '../../constants';
 import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
+
+const REDEEM_FETCHER = 'redeem-fetcher';
 
 // TODO: type graphql query return
 function decodeRedeemValues(redeem: any): any {
   redeem.request.requestedAmountBacking = BitcoinAmount.from.Satoshi(redeem.request.requestedAmountBacking);
   redeem.bridgeFee = BitcoinAmount.from.Satoshi(redeem.bridgeFee);
   // TODO: get actual vault collateral when it's added to events
-  redeem.collateralPremium = KusamaAmount.from.Planck(redeem.collateralPremium);
+  redeem.collateralPremium = newMonetaryAmount(redeem.collateralPremium, COLLATERAL_TOKEN);
   if (redeem.cancellation) {
     redeem.cancellation.slashedCollateral =
-      KusamaAmount.from.Planck(redeem.cancellation.slashedCollateral);
+      newMonetaryAmount(redeem.cancellation.slashedCollateral, COLLATERAL_TOKEN);
   }
   redeem.userBackingAddress = btcAddressFromEventToString(redeem.userBackingAddress, BITCOIN_NETWORK);
+  return redeem;
 }
 
-const redeemFetcher = async ({ offset, limit, stableBtcConfirmations }: RedeemFetcherParams): Promise<Array<any>> => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const redeemFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
+  const [key, offset, limit, stableBtcConfirmations, where] = queryKey as RedeemFetcherParams;
+  if (key !== REDEEM_FETCHER) throw new Error('Invalid key!');
   const redeemsData = await graphqlFetcher<Array<any>>()({ queryKey: [
     GRAPHQL_FETCHER,
-    redeemRequestQuery,
+    redeemRequestQuery(where),
     {
       limit,
       offset
@@ -77,10 +84,16 @@ export function setRedeemStatus(
   return redeem;
 }
 
-export type RedeemFetcherParams = {
-  offset: number;
-  limit: number;
-  stableBtcConfirmations: number;
-}
+export type RedeemFetcherParams = [
+  key: typeof REDEEM_FETCHER,
+  offset: number,
+  limit: number,
+  stableBtcConfirmations: number,
+  where?: string,
+]
+
+export {
+  REDEEM_FETCHER
+};
 
 export default redeemFetcher;

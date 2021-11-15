@@ -38,7 +38,7 @@ const UpperContent = (): JSX.Element => {
   } = useQuery<GraphqlReturn<any>, Error>(
     [
       GRAPHQL_FETCHER,
-      issueCountQuery
+      issueCountQuery('status_eq: Completed')
     ],
     graphqlFetcher<any>()
   );

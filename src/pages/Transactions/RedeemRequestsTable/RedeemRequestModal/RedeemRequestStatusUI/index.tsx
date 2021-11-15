@@ -1,6 +1,4 @@
-
 import {
-  Redeem,
   RedeemStatus
 } from '@interlay/interbtc-api';
 
@@ -11,7 +9,7 @@ import PendingWithBtcTxNotFoundRedeemRequest from './PendingWithBtcTxNotFoundRed
 import DefaultRedeemRequest from './DefaultRedeemRequest';
 
 interface Props {
-  request: Redeem;
+  request: any;
 }
 
 const RedeemRequestStatusUI = ({

@@ -129,7 +129,7 @@ const IssueRequestsTable = (): JSX.Element => {
   const {
     isIdle: issueRequestsIdle,
     isLoading: issueRequestsLoading,
-    data: issueRequests,
+    data: issueRequestsData,
     error: issueRequestsError
   } = useQuery<any, Error>(
     [
@@ -217,11 +217,12 @@ const IssueRequestsTable = (): JSX.Element => {
       },
       {
         Header: t('issue_page.confirmations'),
-        accessor: 'backingPayment.confirmations',
+        accessor: '',
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell({ value }: { value: number; }) {
+        Cell: function FormattedCell({ row: { original: issue } }: any) {
+          const value = issue.backingPayment.confirmations;
           return (
             <>
               {value === undefined ?
@@ -298,7 +299,7 @@ const IssueRequestsTable = (): JSX.Element => {
     issueRequestsLoading;
 
   if (!anyIdle && (
-    issueRequests === undefined ||
+    issueRequestsData === undefined ||
     issueRequestsTotalCountData === undefined ||
     stableBtcConfirmations === undefined ||
     stableParachainConfirmations === undefined ||
@@ -307,7 +308,7 @@ const IssueRequestsTable = (): JSX.Element => {
     throw new Error('Something went wrong!');
   }
 
-  const issues = anyIdle ? [] : issueRequests.map(
+  const issues = anyIdle ? [] : issueRequestsData.map(
     (issue: any) => setIssueStatus(
       issue,
       // anyIdle = false, therefore stableBtcConfirmations !== undefined

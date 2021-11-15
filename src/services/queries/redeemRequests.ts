@@ -1,6 +1,6 @@
-const query = `
+const query = (where?: string): string => `
   query ($limit: Int!, $offset: Int) {
-    redeems(orderBy: createdAt_ASC, limit: $limit, offset: $offset) {
+    redeems(orderBy: request_timestamp_DESC, limit: $limit, offset: $offset, where:{${where ? `, ${where}` : ''}}) {
       id
       request {
         requestedAmountBacking

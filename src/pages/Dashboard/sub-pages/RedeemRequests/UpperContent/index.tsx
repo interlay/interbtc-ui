@@ -1,4 +1,3 @@
-
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import {
@@ -19,6 +18,8 @@ import genericFetcher, {
   GENERIC_FETCHER
 } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
+import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
+import redeemCountQuery from 'services/queries/redeemRequestCount';
 
 const UpperContent = (): JSX.Element => {
   const {
@@ -30,18 +31,14 @@ const UpperContent = (): JSX.Element => {
   const {
     isIdle: totalSuccessfulRedeemsIdle,
     isLoading: totalSuccessfulRedeemsLoading,
-    data: totalSuccessfulRedeems,
+    data: totalSuccessfulRedeemsData,
     error: totalSuccessfulRedeemsError
-  } = useQuery<number, Error>(
+  } = useQuery<GraphqlReturn<any>, Error>(
     [
-      GENERIC_FETCHER,
-      'interBtcIndex',
-      'getTotalSuccessfulRedeems'
+      GRAPHQL_FETCHER,
+      redeemCountQuery('status_eq: Completed')
     ],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
+    graphqlFetcher<any>()
   );
   useErrorHandler(totalSuccessfulRedeemsError);
 
@@ -73,6 +70,10 @@ const UpperContent = (): JSX.Element => {
   if (totalRedeemedAmount === undefined) {
     throw new Error('Something went wrong!');
   }
+  if (totalSuccessfulRedeemsData === undefined) {
+    throw new Error('Something went wrong!');
+  }
+  const totalSuccessfulRedeems = totalSuccessfulRedeemsData.data.redeemsConnection.totalCount;
 
   // TODO: add this again when the network is stable
   // const redeemSuccessRate = totalSuccessfulRedeems / totalRedeemRequests;

@@ -11,6 +11,7 @@ import {
 } from 'react-error-boundary';
 import { IssueStatus } from '@interlay/interbtc-api';
 
+import { displayMonetaryAmount } from 'common/utils/utils';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
 import ExternalLink from 'components/ExternalLink';
@@ -62,24 +63,6 @@ const IssueRequestsTable = (): JSX.Element => {
         }
       },
       {
-        Header: t('issue_page.parachain_block'),
-        accessor: '',
-        classNames: [
-          'text-right'
-        ],
-        Cell: function FormattedCell({ row: { original: issue } }: any) {
-          let height;
-          if (issue.execution) height = issue.execution.height.active;
-          else if (issue.cancellation) height = issue.cancellation.height.active;
-          else height = issue.request.height.active;
-          return (
-            <>
-              {height}
-            </>
-          );
-        }
-      },
-      {
         Header: t('last_update'),
         accessor: '',
         classNames: [
@@ -93,6 +76,24 @@ const IssueRequestsTable = (): JSX.Element => {
           return (
             <>
               {formatDateTimePrecise(new Date(date))}
+            </>
+          );
+        }
+      },
+      {
+        Header: t('issue_page.parachain_block'),
+        accessor: '',
+        classNames: [
+          'text-right'
+        ],
+        Cell: function FormattedCell({ row: { original: issue } }: any) {
+          let height;
+          if (issue.execution) height = issue.execution.height.active;
+          else if (issue.cancellation) height = issue.cancellation.height.active;
+          else height = issue.request.height.active;
+          return (
+            <>
+              {height}
             </>
           );
         }
@@ -234,7 +235,7 @@ const IssueRequestsTable = (): JSX.Element => {
   } = useQuery<GraphqlReturn<any>, Error>(
     [
       GRAPHQL_FETCHER,
-      issueCountQuery
+      issueCountQuery()
     ],
     graphqlFetcher<any>()
   );
@@ -306,7 +307,6 @@ const IssueRequestsTable = (): JSX.Element => {
         });
       };
 
-      const selectedPageIndex = selectedPage - 1;
       const totalIssueCount = issuesCountData.data.issuesConnection.totalCount;
       const pageCount = Math.ceil(totalIssueCount / TABLE_PAGE_LIMIT);
 

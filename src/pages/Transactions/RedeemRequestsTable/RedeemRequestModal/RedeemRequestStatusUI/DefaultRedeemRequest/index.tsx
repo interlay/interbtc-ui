@@ -1,9 +1,7 @@
-
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { Redeem } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import Ring48, {
@@ -18,7 +16,7 @@ import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
-  request: Redeem;
+  request: any;
 }
 
 const DefaultRedeemRequest = ({
@@ -62,7 +60,7 @@ const DefaultRedeemRequest = ({
           {t('confirmations')}
         </Ring48Title>
         <Ring48Value className='text-interlayConifer'>
-          {`${request.confirmations}/${stableBitcoinConfirmations}`}
+          {`${request.backingPayment.confirmations || 0}/${stableBitcoinConfirmations}`}
         </Ring48Value>
       </Ring48>
       <p className='space-x-1'>
@@ -74,7 +72,7 @@ const DefaultRedeemRequest = ({
           )}>
           {t('issue_page.btc_transaction')}:
         </span>
-        <span className='font-medium'>{shortAddress(request.btcTxId || '')}</span>
+        <span className='font-medium'>{shortAddress(request.backingPayment.btcTxId || '')}</span>
       </p>
     </RequestWrapper>
   );

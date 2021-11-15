@@ -1609,9 +1609,15 @@
   resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-0.12.5.tgz#d78f62700aa6330454b8ee80bfe0b2fb76fc29a2"
   integrity sha512-6SfMnYHzp9ROFBGVKoNwSPZDjJ6hBZqiz2mfxjNRBQQfx2SUq9xbFg8gS0yudACYXWmF4zs3ceH5v/13e9tmtw==
 
-"@interlay/interbtc@link:../interbtc-js":
-  version "0.0.0"
-  uid ""
+"@interlay/interbtc@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-1.2.0.tgz#5c511a13a54a7e211bd4b9d49c72ebb33d68d106"
+  integrity sha512-a2tA5ntQSIQk1CKoN8xJy+9Wsqx0EatGtEd3aa1VueFdvUB6jlKSkIrjlwJNLcRtZcuO3wOOkGYbdVh7Y0xtJw==
+  dependencies:
+    "@interlay/interbtc-api" "1.2.0"
+    "@interlay/interbtc-index-client" "1.0.0"
+    "@interlay/interbtc-types" "0.12.5"
+    "@interlay/monetary-js" "0.4.0"
 
 "@interlay/monetary-js@0.4.0":
   version "0.4.0"

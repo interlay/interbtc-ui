@@ -49,7 +49,7 @@ export default async function getTxDetailsForRequest(
       ]
     });
     txDetails.confirmedAtParachainActiveBlock =
-      confirmedAtParachainActiveBlock?.data?.relayedBlocks[0].relayedAtHeight.active;
+      confirmedAtParachainActiveBlock?.data?.relayedBlocks[0]?.relayedAtHeight.active;
   }
 
   return txDetails;
