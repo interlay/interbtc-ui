@@ -24,6 +24,8 @@ import genericFetcher, {
   GENERIC_FETCHER
 } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
+import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
+import bitcoinBlockRelayedHeightQuery from 'services/queries/bitcoinBlockRelayedHeight';
 
 interface Props {
   request: any;
@@ -91,6 +93,26 @@ const ReceivedIssueRequest = ({
   );
   useErrorHandler(parachainHeightError);
 
+  const {
+    isIdle: bitcoinConfirmationParachainHeightIdle,
+    isLoading: bitcoinConfirmationParachainHeightLoading,
+    data: bitcoinConfirmationParachainHeightData,
+    error: bitcoinConfirmationParachainHeightError
+  } = useQuery<GraphqlReturn<any>, Error>(
+    [
+      GRAPHQL_FETCHER,
+      bitcoinBlockRelayedHeightQuery(),
+      {
+        backingHeight: request.backingPayment.blockHeight
+      }
+    ],
+    graphqlFetcher<any>(),
+    {
+      enabled: !!stableBitcoinConfirmations && (request.backingPayment.confirmations >= stableBitcoinConfirmations)
+    }
+  );
+  useErrorHandler(bitcoinConfirmationParachainHeightError);
+
   // TODO: should use skeleton loaders
   if (stableBitcoinConfirmationsIdle || stableBitcoinConfirmationsLoading) {
     return <>Loading...</>;
@@ -101,8 +123,15 @@ const ReceivedIssueRequest = ({
   if (parachainHeightIdle || parachainHeightLoading) {
     return <>Loading...</>;
   }
+  if (bitcoinConfirmationParachainHeightIdle || bitcoinConfirmationParachainHeightLoading) {
+    return <>Loading...</>;
+  }
 
-  const requestConfirmations = parachainHeight - Number(request.request.height.active);
+  const btcConfBlocks = bitcoinConfirmationParachainHeightData?.data?.relayedBlocks || [];
+  const bitcoinConfirmationParachainHeight = btcConfBlocks[0]?.relayedAtHeight?.active as number | undefined;
+  const requestConfirmations = bitcoinConfirmationParachainHeight ?
+    parachainHeight - bitcoinConfirmationParachainHeight :
+    0;
 
   return (
     <RequestWrapper>
@@ -121,7 +150,7 @@ const ReceivedIssueRequest = ({
           {t('confirmations')}
         </Ring48Title>
         <Ring48Value className='text-interlayConifer'>
-          {`${request.confirmations ?? 0}/${stableBitcoinConfirmations}`}
+          {`${request.backingPayment.confirmations ?? 0}/${stableBitcoinConfirmations}`}
         </Ring48Value>
         <Ring48Value className='text-interlayConifer'>
           {`${requestConfirmations}/${stableParachainConfirmations}`}

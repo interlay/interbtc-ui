@@ -4,6 +4,7 @@ const query = (where?: string): string => `
       id
       request {
         amountWrapped
+        bridgeFeeWrapped
         timestamp
         height {
           absolute
@@ -14,7 +15,6 @@ const query = (where?: string): string => `
       vaultParachainAddress
       vaultBackingAddress
       vaultWalletPubkey
-      bridgeFee
       griefingCollateral
       status
       refund {
@@ -39,6 +39,7 @@ const query = (where?: string): string => `
           active
         }
         amountWrapped
+        bridgeFeeWrapped
         timestamp
       }
       cancellation {

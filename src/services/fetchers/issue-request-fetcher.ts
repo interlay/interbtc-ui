@@ -12,11 +12,11 @@ const ISSUE_FETCHER = 'issue-fetcher';
 // TODO: type graphql query return
 function decodeIssueValues(issue: any): any {
   issue.request.amountWrapped = BitcoinAmount.from.Satoshi(issue.request.amountWrapped);
-  issue.bridgeFee = BitcoinAmount.from.Satoshi(issue.bridgeFee);
+  issue.request.bridgeFeeWrapped = BitcoinAmount.from.Satoshi(issue.request.bridgeFeeWrapped);
   issue.griefingCollateral = newMonetaryAmount(issue.griefingCollateral, COLLATERAL_TOKEN);
   if (issue.execution) {
-    issue.execution.amountWrapped =
-      BitcoinAmount.from.Satoshi(issue.execution.amountWrapped);
+    issue.execution.amountWrapped = BitcoinAmount.from.Satoshi(issue.execution.amountWrapped);
+    issue.execution.bridgeFeeWrapped = BitcoinAmount.from.Satoshi(issue.execution.bridgeFeeWrapped);
   }
   issue.vaultBackingAddress = btcAddressFromEventToString(issue.vaultBackingAddress, BITCOIN_NETWORK);
   return issue;

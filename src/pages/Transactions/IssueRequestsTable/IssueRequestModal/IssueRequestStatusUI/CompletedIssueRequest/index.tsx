@@ -56,12 +56,12 @@ const CompletedIssueRequest = ({
         </Ring48Title>
         <Ring48Value
           className='text-interlayConifer'>
-          {request.creationBlock}
+          {request.execution.height.active}
         </Ring48Value>
       </Ring48>
       <ExternalLink
         className='text-sm'
-        href={getPolkadotLink(request.execution.height.active)}>
+        href={getPolkadotLink(request.execution.height.absolute)}>
         {t('issue_page.view_parachain_block')}
       </ExternalLink>
       <p className='space-x-1'>

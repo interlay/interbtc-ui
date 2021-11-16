@@ -66,8 +66,9 @@ const IssueRequestModal = ({
 
   const receivedWrappedTokenAmount = request.execution ? request.execution.amountWrapped :
     request.request.amountWrapped;
+  const bridgeFee = request.execution ? request.execution.bridgeFeeWrapped : request.request.bridgeFeeWrapped;
   const sentBackingTokenAmount = (receivedWrappedTokenAmount as WrappedTokenAmount)
-    .add(request.bridgeFee as WrappedTokenAmount);
+    .add(bridgeFee as WrappedTokenAmount);
 
   return (
     <InterlayModal
@@ -145,9 +146,9 @@ const IssueRequestModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayMonetaryAmount(request.bridgeFee)}
+                value={displayMonetaryAmount(bridgeFee)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(request.bridgeFee, prices.bitcoin.usd)} />
+                approxUSD={getUsdAmount(bridgeFee, prices.bitcoin.usd)} />
               <Hr2
                 className={clsx(
                   'border-t-2',
