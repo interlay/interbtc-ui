@@ -71,7 +71,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     [
       GENERIC_FETCHER,
       'interBtcIndex',
-      'getParachainConfirmations'
+      'getBtcConfirmations'
     ],
     genericFetcher<number>()
   );
@@ -101,7 +101,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     [
       GENERIC_FETCHER,
       'interBtcIndex',
-      'getBtcConfirmations'
+      'getParachainConfirmations'
     ],
     genericFetcher<number>()
   );

@@ -14,6 +14,7 @@ const query = (where?: string): string => `
       vaultParachainAddress
       userBackingAddress
       bridgeFee
+      btcTransferFee
       collateralPremium
       status
       execution {

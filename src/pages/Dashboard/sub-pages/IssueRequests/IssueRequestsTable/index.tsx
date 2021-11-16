@@ -176,7 +176,7 @@ const IssueRequestsTable = (): JSX.Element => {
     [
       GENERIC_FETCHER,
       'interBtcIndex',
-      'getParachainConfirmations'
+      'getBtcConfirmations'
     ],
     genericFetcher<number>()
   );
@@ -204,7 +204,7 @@ const IssueRequestsTable = (): JSX.Element => {
     [
       GENERIC_FETCHER,
       'interBtcIndex',
-      'getBtcConfirmations'
+      'getParachainConfirmations'
     ],
     genericFetcher<number>()
   );

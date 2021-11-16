@@ -13,6 +13,7 @@ const REDEEM_FETCHER = 'redeem-fetcher';
 function decodeRedeemValues(redeem: any): any {
   redeem.request.requestedAmountBacking = BitcoinAmount.from.Satoshi(redeem.request.requestedAmountBacking);
   redeem.bridgeFee = BitcoinAmount.from.Satoshi(redeem.bridgeFee);
+  redeem.btcTransferFee = BitcoinAmount.from.Satoshi(redeem.btcTransferFee);
   // TODO: get actual vault collateral when it's added to events
   redeem.collateralPremium = newMonetaryAmount(redeem.collateralPremium, COLLATERAL_TOKEN);
   if (redeem.cancellation) {
@@ -57,8 +58,8 @@ export function setRedeemStatus(
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   redeem: any,
   stableBtcConfirmations: number,
-  stableParachainConfirmations: number,
-  parachainActiveHeight: number
+  _stableParachainConfirmations: number,
+  _parachainActiveHeight: number
 ): any {
   if (redeem.status !== 'Pending') {
     // ideally this would be auto-decoded, for now set by hand
@@ -73,9 +74,7 @@ export function setRedeemStatus(
   } else if (!redeem.backingPayment.confirmations) {
     redeem.status = RedeemStatus.PendingWithBtcTxNotIncluded;
   } else if (
-    redeem.backingPayment.confirmations < stableBtcConfirmations ||
-    redeem.backingPayment.confirmedAtParachainActiveBlock === undefined ||
-    redeem.backingPayment.confirmedAtParachainActiveBlock + stableParachainConfirmations < parachainActiveHeight
+    redeem.backingPayment.confirmations < stableBtcConfirmations // ignore parachain confirmations for UI purposes?
   ) {
     redeem.status = RedeemStatus.PendingWithTooFewConfirmations;
   } else {

@@ -75,8 +75,11 @@ export function setIssueStatus(
     issue.backingPayment.confirmedAtParachainActiveBlock === undefined ||
     issue.backingPayment.confirmedAtParachainActiveBlock + stableParachainConfirmations < parachainActiveHeight
   ) {
+    // eslint-disable-next-line max-len
+    console.log(`Setting as too few confirmations... backing confs ${issue.backingPayment.confirmations}, required: ${stableBtcConfirmations}; confirmedAtParachainActiveBlock: ${issue.backingPayment.confirmedAtParachainActiveBlock}, stableParachainConfirmations: ${stableParachainConfirmations}, required sum/height: ${parachainActiveHeight}`);
     issue.status = IssueStatus.PendingWithTooFewConfirmations;
   } else {
+    console.log(`Setting as enough confirmations!`);
     issue.status = IssueStatus.PendingWithEnoughConfirmations;
   }
   return issue;
