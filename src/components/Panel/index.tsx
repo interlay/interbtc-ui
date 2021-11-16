@@ -16,7 +16,7 @@ const Panel = ({
       'overflow-hidden',
       'sm:rounded-lg',
       { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-      { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+      { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'border',
       // TODO: could be reused
       // MEMO: inspired by https://mui.com/components/buttons/

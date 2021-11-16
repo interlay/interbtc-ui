@@ -25,7 +25,7 @@ const InterlayRouterLink = ({
     className={clsx(
       { 'text-interlayDenim':
         process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-      { 'dark:text-kintsugiMidnight':
+      { 'dark:text-kintsugiAlto':
         process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'hover:underline',
       'space-x-1.5',

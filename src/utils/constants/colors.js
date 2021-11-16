@@ -1,6 +1,3 @@
-
-const colors = require('tailwindcss/colors');
-
 // MEMO: inspired by https://javisperez.github.io/tailwindcolorshades
 const INTERLAY_DENIM = Object.freeze({
   50: '#f3f7fc',
@@ -309,9 +306,23 @@ const KINTSUGI_APPLE = Object.freeze({
   900: '#004f00'
 });
 
+// GOLDEN COLORS/ORANGE
+const KINTSUGI_OCHRE = Object.freeze({
+  50: '#fdf9f4',
+  100: '#fcf2e9',
+  200: '#f6dfc9',
+  300: '#f1cba9',
+  400: '#e7a468',
+  500: '#dc7d27',
+  600: '#c67123',
+  700: '#a55e1d',
+  800: '#844b17',
+  900: '#6c3d13'
+});
+
 const INTERLAY_TEXT_PRIMARY_IN_LIGHT_MODE = INTERLAY_HAITI[500];
 const INTERLAY_TEXT_SECONDARY_IN_LIGHT_MODE = INTERLAY_HAITI[300];
-const KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE = colors.white;
+const KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE = KINTSUGI_ALTO[50];
 const KINTSUGI_TEXT_SECONDARY_IN_DARK_MODE = KINTSUGI_ALTO[500];
 
 module.exports = {
@@ -340,6 +351,7 @@ module.exports = {
   KINTSUGI_CURIOUS_BLUE,
   KINTSUGI_LAVENDER_PURPLE,
   KINTSUGI_APPLE,
+  KINTSUGI_OCHRE,
 
   INTERLAY_TEXT_PRIMARY_IN_LIGHT_MODE,
   INTERLAY_TEXT_SECONDARY_IN_LIGHT_MODE,

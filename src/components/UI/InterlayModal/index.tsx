@@ -35,7 +35,7 @@ const InterlayModalInnerWrapper = React.forwardRef<Ref, React.ComponentPropsWith
       'w-full',
       'my-8',
       { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-      { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+      { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'rounded-lg',
       className
     )}

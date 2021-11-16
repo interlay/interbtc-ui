@@ -348,7 +348,7 @@ const App = (): JSX.Element => {
       // MEMO: inspired by https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually
       document.documentElement.classList.add(CLASS_NAMES.DARK);
       document.body.classList.add('dark:text-kintsugiTextPrimaryInDarkMode');
-      document.body.classList.add('dark:bg-kintsugiMidnight-400');
+      document.body.classList.add('dark:bg-kintsugiMidnight-900');
     }
 
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production') {

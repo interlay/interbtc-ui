@@ -57,7 +57,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
         'flex',
         'flex-col',
         { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-        { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+        { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
       )}>
       {onSmallScreen && <CloseButton onClick={onClose} />}
       <div
@@ -83,7 +83,9 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           <InterlayRouterLink to={PAGES.HOME}>
             <WrappedTokenLogoWithTextIcon width={141.6} />
           </InterlayRouterLink>
-          <TestNetBadge className='ml-2' />
+          {process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet' && (
+            <TestNetBadge className='ml-2' />
+          )}
         </div>
         <Navigation
           onSmallScreen={onSmallScreen}

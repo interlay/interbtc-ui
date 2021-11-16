@@ -42,7 +42,7 @@ const InterlayPagination = ({
         'border-gray-300',
         { 'dark:border-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'bg-white',
-        { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+        { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         { 'text-interlayTextPrimaryInLightMode':
           process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
         { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
@@ -73,7 +73,7 @@ const InterlayPagination = ({
         { 'dark:border-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'bg-white',
         'hover:bg-gray-50',
-        { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+        { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         { 'text-interlayTextPrimaryInLightMode':
           process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
         { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
@@ -95,7 +95,7 @@ const InterlayPagination = ({
         { 'dark:border-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'bg-white',
         'hover:bg-gray-50',
-        { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+        { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         { 'text-interlayTextPrimaryInLightMode':
           process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
         { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
@@ -117,7 +117,7 @@ const InterlayPagination = ({
         { 'dark:border-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'bg-white',
         'hover:bg-gray-50',
-        { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+        { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         { 'text-interlayTextPrimaryInLightMode':
           process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
         { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },

@@ -18,7 +18,7 @@ const FormTitle = ({
       '',
       { 'text-interlayDenim':
         process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-      { 'dark:text-kintsugiMidnight':
+      { 'dark:text-kintsugiTextSecondaryInDarkMode':
         process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       className
     )}
