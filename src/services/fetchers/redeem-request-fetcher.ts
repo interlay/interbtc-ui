@@ -58,9 +58,12 @@ export function setRedeemStatus(
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   redeem: any,
   stableBtcConfirmations: number,
-  _stableParachainConfirmations: number,
-  _parachainActiveHeight: number
+  stableParachainConfirmations: number,
+  parachainActiveHeight: number
 ): any {
+  stableParachainConfirmations = Number(stableParachainConfirmations);
+  stableBtcConfirmations = Number(stableBtcConfirmations);
+  parachainActiveHeight = Number(parachainActiveHeight);
   if (redeem.status !== 'Pending') {
     // ideally this would be auto-decoded, for now set by hand
     if (redeem.status === 'Expired') redeem.status = RedeemStatus.Expired;
@@ -74,7 +77,9 @@ export function setRedeemStatus(
   } else if (!redeem.backingPayment.confirmations) {
     redeem.status = RedeemStatus.PendingWithBtcTxNotIncluded;
   } else if (
-    redeem.backingPayment.confirmations < stableBtcConfirmations // ignore parachain confirmations for UI purposes?
+    redeem.backingPayment.confirmations < stableBtcConfirmations ||
+    redeem.backingPayment.confirmedAtParachainActiveBlock === undefined ||
+    redeem.backingPayment.confirmedAtParachainActiveBlock + stableParachainConfirmations > parachainActiveHeight
   ) {
     redeem.status = RedeemStatus.PendingWithTooFewConfirmations;
   } else {

@@ -58,6 +58,9 @@ export function setIssueStatus(
   stableParachainConfirmations: number,
   parachainActiveHeight: number
 ): any {
+  stableParachainConfirmations = Number(stableParachainConfirmations);
+  stableBtcConfirmations = Number(stableBtcConfirmations);
+  parachainActiveHeight = Number(parachainActiveHeight);
   if (issue.status !== 'Pending') {
     // ideally this would be auto-decoded, for now set by hand
     if (issue.status === 'Expired') issue.status = IssueStatus.Expired;
@@ -73,13 +76,10 @@ export function setIssueStatus(
   } else if (
     issue.backingPayment.confirmations < stableBtcConfirmations ||
     issue.backingPayment.confirmedAtParachainActiveBlock === undefined ||
-    issue.backingPayment.confirmedAtParachainActiveBlock + stableParachainConfirmations < parachainActiveHeight
+    issue.backingPayment.confirmedAtParachainActiveBlock + stableParachainConfirmations > parachainActiveHeight
   ) {
-    // eslint-disable-next-line max-len
-    console.log(`Setting as too few confirmations... backing confs ${issue.backingPayment.confirmations}, required: ${stableBtcConfirmations}; confirmedAtParachainActiveBlock: ${issue.backingPayment.confirmedAtParachainActiveBlock}, stableParachainConfirmations: ${stableParachainConfirmations}, required sum/height: ${parachainActiveHeight}`);
     issue.status = IssueStatus.PendingWithTooFewConfirmations;
   } else {
-    console.log(`Setting as enough confirmations!`);
     issue.status = IssueStatus.PendingWithEnoughConfirmations;
   }
   return issue;
