@@ -84,7 +84,7 @@ const UpdateCollateralModal = ({
   const [isUpdatePending, setUpdatePending] = React.useState(false);
   const [isCollateralUpdateAllowed, setCollateralUpdateAllowed] = React.useState(false);
 
-  const onSubmit = handleSubmit(async () => {
+  const onSubmit = async () => {
     if (!bridgeLoaded) return;
     if (!vaultClientLoaded) return;
 
@@ -115,19 +115,15 @@ const UpdateCollateralModal = ({
       toast.success(t('vault.successfully_updated_collateral'));
       onClose();
     } catch (error) {
-      toast.error(error.toString());
+      toast.error(error.message);
     }
     setUpdatePending(false);
-  });
+  };
 
   // ray test touch <
   const onChange = async (event: React.SyntheticEvent) => {
     try {
       const value = (event.target as HTMLInputElement).value;
-      if (value === '' || !bridgeLoaded || Number(value) <= 0 || isNaN(Number(value))) {
-        setCollateralUpdateAllowed(false);
-        return;
-      }
       const parsedValue = newMonetaryAmount(value, COLLATERAL_TOKEN, true);
       if (parsedValue.toBig(parsedValue.currency.rawBase).lte(1)) {
         throw new Error('Please enter an amount greater than 1 Planck');
@@ -179,6 +175,10 @@ const UpdateCollateralModal = ({
       return t(`Amount must be less than ${COLLATERAL_TOKEN_SYMBOL} balance!`);
     }
 
+    if (!bridgeLoaded) {
+      return 'Bridge must be loaded!';
+    }
+
     return undefined;
   };
 
@@ -214,7 +214,7 @@ const UpdateCollateralModal = ({
           ref={focusRef}
           onClick={onClose} />
         <form
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           className='space-y-4'>
           <p>
             {t('vault.current_total_collateral', {
