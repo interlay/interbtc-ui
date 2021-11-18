@@ -154,24 +154,20 @@ const UpdateCollateralModal = ({
   );
   useErrorHandler(vaultCollateralizationError);
 
-  const onSubmit = async () => {
+  const onSubmit = async (data: UpdateCollateralFormData) => {
     if (!bridgeLoaded) return;
     if (!vaultClientLoaded) return;
 
     try {
-      // ray test touch <<
       setSubmitStatus(STATUSES.PENDING);
-      if (currentTotalCollateralTokenAmount.gt(newCollateralTokenAmount)) {
-        const withdrawAmount = currentTotalCollateralTokenAmount.sub(newCollateralTokenAmount);
-        await window.bridge.interBtcApi.vaults.withdrawCollateral(withdrawAmount);
-      } else if (currentTotalCollateralTokenAmount.lt(newCollateralTokenAmount)) {
-        const depositAmount = newCollateralTokenAmount.sub(currentTotalCollateralTokenAmount);
-        await window.bridge.interBtcApi.vaults.depositCollateral(depositAmount);
+      const collateralTokenAmount = newMonetaryAmount(data[COLLATERAL_TOKEN_AMOUNT], COLLATERAL_TOKEN, true);
+      if (collateralUpdateStatus === CollateralUpdateStatus.Deposit) {
+        await window.bridge.interBtcApi.vaults.depositCollateral(collateralTokenAmount);
+      } else if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw) {
+        await window.bridge.interBtcApi.vaults.withdrawCollateral(collateralTokenAmount);
       } else {
-        onClose();
-        return;
+        throw new Error('Something went wrong!');
       }
-      // ray test touch >>
 
       const balanceLockedDOT = await window.bridge.interBtcApi.tokens.balanceLocked(COLLATERAL_TOKEN, vaultId);
       dispatch(updateCollateralAction(balanceLockedDOT));
@@ -193,7 +189,7 @@ const UpdateCollateralModal = ({
     }
   };
 
-  const validateAmount = (value: string): string | undefined => {
+  const validateCollateralTokenAmount = (value: string): string | undefined => {
     const collateralTokenAmount = newMonetaryAmount(value || '0', COLLATERAL_TOKEN, true);
     if (collateralTokenAmount.lte(newMonetaryAmount(0, COLLATERAL_TOKEN, true))) {
       return t('vault.collateral_higher_than_0');
@@ -314,7 +310,7 @@ const UpdateCollateralModal = ({
                   value: true,
                   message: t('vault.collateral_is_required')
                 },
-                validate: value => validateAmount(value)
+                validate: value => validateCollateralTokenAmount(value)
               })}>
             </NumberInput>
             <ErrorMessage>
@@ -337,6 +333,7 @@ export {
   CollateralUpdateStatus
 };
 
+// TODO: not working on modals
 export default withErrorBoundary(UpdateCollateralModal, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
