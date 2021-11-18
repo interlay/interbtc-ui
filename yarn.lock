@@ -1578,14 +1578,14 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-api@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-1.0.0.tgz#21080ba1408c497512bb5555b167932d1591bde5"
-  integrity sha512-VKiVZi5iNudSHKt4REqBD7Jr2avp5spJfCPH0sZNm9pA9Vwt1NgAAbRI3nSVa50NgNzNtuwmWX793NYNVCyxVA==
+"@interlay/interbtc-api@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-1.3.0.tgz#6353928841782c2603f7eb3e1df700611789e63a"
+  integrity sha512-/rH0Kck8GbmegbUIIxaQW0lONkgfRwFj+VGYh6yoes+8TMjLSBuJ3/lHeiKUb6Ne1mdYQL5SIVxyQY02ckgNVA==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
     "@interlay/interbtc-types" "0.12.5"
-    "@interlay/monetary-js" "0.4.0"
+    "@interlay/monetary-js" "0.5.0"
     "@polkadot/api" "5.3.2"
     "@polkadot/keyring" "6.6.2-6"
     "@types/big.js" "6.1.2"
@@ -1609,24 +1609,15 @@
   resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-0.12.5.tgz#d78f62700aa6330454b8ee80bfe0b2fb76fc29a2"
   integrity sha512-6SfMnYHzp9ROFBGVKoNwSPZDjJ6hBZqiz2mfxjNRBQQfx2SUq9xbFg8gS0yudACYXWmF4zs3ceH5v/13e9tmtw==
 
-"@interlay/interbtc@1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-1.1.1.tgz#0cf2b809f1c2100fbad659ec96aa85d048528069"
-  integrity sha512-gfzrZSq+n3l4Ccc13MVQdrHxu5ZiiMbgTFKN0i7OcezkbMv3kRDVVQfrvAnclREdJ3aGcAWjvKOurWRgAQQemQ==
+"@interlay/interbtc@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-1.3.0.tgz#bb77104d8c192d9750e8c0b00782058344155ad7"
+  integrity sha512-oJNSvy+t6bXwEJU6pPH+8qbHDtvyAUhXX4xzTey0Z1ov0leWSH3Ty72+EJ3BUaFBDR462MDWqOE1ovtT/FWhYg==
   dependencies:
-    "@interlay/interbtc-api" "1.0.0"
+    "@interlay/interbtc-api" "1.3.0"
     "@interlay/interbtc-index-client" "1.0.0"
     "@interlay/interbtc-types" "0.12.5"
-    "@interlay/monetary-js" "0.4.0"
-
-"@interlay/monetary-js@0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@interlay/monetary-js/-/monetary-js-0.4.0.tgz#91f6148e18f799c8922518e93410769e8edb99bb"
-  integrity sha512-J18f8j3lyJwDA635cQVWxi+yoe50N8PerE5vdT8eoSDILYu1sq9VJWE5KqG1dgUDWqfG0Zz/AP5YYDlIcViwDw==
-  dependencies:
-    "@types/big.js" "6.1.2"
-    big.js "6.1.1"
-    typescript "^4.3.2"
+    "@interlay/monetary-js" "0.5.0"
 
 "@interlay/monetary-js@0.5.0":
   version "0.5.0"
