@@ -1628,6 +1628,15 @@
     big.js "6.1.1"
     typescript "^4.3.2"
 
+"@interlay/monetary-js@0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@interlay/monetary-js/-/monetary-js-0.5.0.tgz#9d07934777269db96bfc94c54d5616970f954948"
+  integrity sha512-igICP/Pat9rukMu+S8zf57vkdzltdl/gdqTu+ObB46I9OttpAcIwvGiXxuPTeRZSt1+9d+VbXKYLsbeEeX4KLA==
+  dependencies:
+    "@types/big.js" "6.1.2"
+    big.js "6.1.1"
+    typescript "^4.3.2"
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
