@@ -288,7 +288,7 @@ const Vault = (): JSX.Element => {
       )}
       <RequestReplacementModal
         onClose={handleRequestReplacementModalClose}
-        show={requestReplacementModalOpen} />
+        open={requestReplacementModalOpen} />
     </>
   );
 };

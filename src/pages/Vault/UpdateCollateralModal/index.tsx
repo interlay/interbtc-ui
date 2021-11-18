@@ -81,7 +81,6 @@ const UpdateCollateralModal = ({
   const [newCollateral, setNewCollateral] = React.useState(currentCollateral);
   // Denoted in collateral token
   const [newCollateralization, setNewCollateralization] = React.useState('∞');
-  const [currentButtonText, setCurrentButtonText] = React.useState('');
   const [isUpdatePending, setUpdatePending] = React.useState(false);
   const [isCollateralUpdateAllowed, setCollateralUpdateAllowed] = React.useState(false);
 
@@ -174,23 +173,6 @@ const UpdateCollateralModal = ({
   };
   // ray test touch >
 
-  const getStatusText = (status: CollateralUpdateStatus): string => {
-    switch (status) {
-    case CollateralUpdateStatus.Deposit:
-      if (currentButtonText !== t('vault.deposit_collateral')) {
-        setCurrentButtonText(t('vault.deposit_collateral'));
-      }
-      return t('vault.deposit_collateral');
-    case CollateralUpdateStatus.Withdraw:
-      if (currentButtonText !== t('vault.withdraw_collateral')) {
-        setCurrentButtonText(t('vault.withdraw_collateral'));
-      }
-      return t('vault.withdraw_collateral');
-    default:
-      return currentButtonText || '';
-    }
-  };
-
   const validateAmount = (value: string): string | undefined => {
     const collateralTokenAmount = newMonetaryAmount(value, COLLATERAL_TOKEN, true);
     if (collateralTokenAmount.lte(newMonetaryAmount(0, COLLATERAL_TOKEN, true))) {
@@ -204,11 +186,11 @@ const UpdateCollateralModal = ({
     return undefined;
   };
 
-  let submitButtonText;
+  let collateralUpdateStatusText;
   if (collateralUpdateStatus === CollateralUpdateStatus.Deposit) {
-    submitButtonText = t('vault.deposit_collateral');
+    collateralUpdateStatusText = t('vault.deposit_collateral');
   } else if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw) {
-    submitButtonText = t('vault.withdraw_collateral');
+    collateralUpdateStatusText = t('vault.withdraw_collateral');
   } else {
     throw new Error('Something went wrong!');
   }
@@ -230,7 +212,7 @@ const UpdateCollateralModal = ({
             'font-medium',
             'mb-6'
           )}>
-          {getStatusText(collateralUpdateStatus)}
+          {collateralUpdateStatusText}
         </InterlayModalTitle>
         <CloseIconButton
           ref={focusRef}
@@ -287,7 +269,7 @@ const UpdateCollateralModal = ({
             )}
             disabled={!isCollateralUpdateAllowed}
             pending={isUpdatePending}>
-            {submitButtonText}
+            {collateralUpdateStatusText}
           </InterlayDefaultContainedButton>
         </form>
       </InterlayModalInnerWrapper>
