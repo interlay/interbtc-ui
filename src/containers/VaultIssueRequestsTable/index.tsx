@@ -29,18 +29,18 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import StatusCell from 'components/UI/InterlayTable/StatusCell';
+import { BTC_ADDRESS_API } from 'config/bitcoin';
+import { WrappedTokenAmount } from 'config/relay-chains';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
+import { QUERY_PARAMETERS } from 'utils/constants/links';
+import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
+import STATUSES from 'utils/constants/statuses';
 import {
   shortAddress,
   formatDateTimePrecise
 } from 'common/utils/utils';
-import { QUERY_PARAMETERS } from 'utils/constants/links';
-import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import { BTC_ADDRESS_API } from 'config/bitcoin';
 import * as constants from '../../constants';
-import STATUSES from 'utils/constants/statuses';
-import { WrappedTokenAmount } from 'config/relay-chains';
 
 interface Props {
   totalIssueRequests: number;
