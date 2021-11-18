@@ -380,6 +380,9 @@ module.exports = {
       ],
       textColor: [
         'important'
+      ],
+      display: [
+        'important'
       ]
     }
   },

@@ -34,37 +34,27 @@ import {
 } from 'common/actions/vault.actions';
 import { StoreType } from 'common/types/util.types';
 
-const getButtonVariant = (status: CollateralUpdateStatus): string => {
-  switch (status) {
-  case CollateralUpdateStatus.Increase:
-    return 'primary';
-  case CollateralUpdateStatus.Decrease:
-    return 'default';
-  default:
-    return '';
-  }
-};
-
 enum CollateralUpdateStatus {
-  Hidden,
-  Increase,
-  Decrease
+  Close,
+  Deposit,
+  Withdraw
 }
 
 const COLLATERAL = 'collateral';
-
 type UpdateCollateralFormData = {
   [COLLATERAL]: string;
 };
 
 interface Props {
+  open: boolean;
   onClose: () => void;
-  status: CollateralUpdateStatus;
+  collateralUpdateStatus: CollateralUpdateStatus;
 }
 
 const UpdateCollateralModal = ({
+  open,
   onClose,
-  status
+  collateralUpdateStatus
 }: Props): JSX.Element => {
   const {
     bridgeLoaded,
@@ -72,13 +62,17 @@ const UpdateCollateralModal = ({
     address,
     collateralTokenBalance
   } = useSelector((state: StoreType) => state.general);
+  // Denoted in collateral token
+  const currentCollateral = useSelector((state: StoreType) => state.vault.collateral);
+
   const {
     register,
     handleSubmit,
-    errors
-  } = useForm<UpdateCollateralFormData>();
-  // Denoted in collateral token
-  const currentCollateral = useSelector((state: StoreType) => state.vault.collateral);
+    formState: { errors }
+  } = useForm<UpdateCollateralFormData>({
+    mode: 'onChange'
+  });
+
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const focusRef = React.useRef(null);
@@ -129,7 +123,6 @@ const UpdateCollateralModal = ({
 
   const closeModal = () => {
     onClose();
-    setNewCollateralization('');
   };
 
   // ray test touch <
@@ -151,9 +144,9 @@ const UpdateCollateralModal = ({
       }
 
       let newCollateral = currentCollateral;
-      if (status === CollateralUpdateStatus.Increase) {
+      if (collateralUpdateStatus === CollateralUpdateStatus.Deposit) {
         newCollateral = newCollateral.add(parsedValue);
-      } else if (status === CollateralUpdateStatus.Decrease) {
+      } else if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw) {
         newCollateral = newCollateral.sub(parsedValue);
       }
       setNewCollateral(newCollateral);
@@ -183,12 +176,12 @@ const UpdateCollateralModal = ({
 
   const getStatusText = (status: CollateralUpdateStatus): string => {
     switch (status) {
-    case CollateralUpdateStatus.Increase:
+    case CollateralUpdateStatus.Deposit:
       if (currentButtonText !== t('vault.deposit_collateral')) {
         setCurrentButtonText(t('vault.deposit_collateral'));
       }
       return t('vault.deposit_collateral');
-    case CollateralUpdateStatus.Decrease:
+    case CollateralUpdateStatus.Withdraw:
       if (currentButtonText !== t('vault.withdraw_collateral')) {
         setCurrentButtonText(t('vault.withdraw_collateral'));
       }
@@ -211,10 +204,19 @@ const UpdateCollateralModal = ({
     return undefined;
   };
 
+  let submitButtonText;
+  if (collateralUpdateStatus === CollateralUpdateStatus.Deposit) {
+    submitButtonText = t('vault.deposit_collateral');
+  } else if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw) {
+    submitButtonText = t('vault.withdraw_collateral');
+  } else {
+    throw new Error('Something went wrong!');
+  }
+
   return (
     <InterlayModal
       initialFocus={focusRef}
-      open={status !== CollateralUpdateStatus.Hidden}
+      open={open}
       onClose={closeModal}>
       <InterlayModalInnerWrapper
         className={clsx(
@@ -228,27 +230,28 @@ const UpdateCollateralModal = ({
             'font-medium',
             'mb-6'
           )}>
-          {getStatusText(status)}
+          {getStatusText(collateralUpdateStatus)}
         </InterlayModalTitle>
         <CloseIconButton
           ref={focusRef}
           onClick={onClose} />
         <form
           onSubmit={onSubmit}
-          className={clsx(
-            'space-y-4'
-          )}>
+          className='space-y-4'>
           <p>
             {t('vault.current_total_collateral', {
               currentCollateral: displayMonetaryAmount(currentCollateral),
               collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
             })}
           </p>
-          <p>
-            {t('vault.new_total_collateral')}
-          </p>
           <div>
+            <label
+              htmlFor={COLLATERAL}
+              className='text-sm'>
+              {t('vault.new_total_collateral')}
+            </label>
             <NumberInput
+              id={COLLATERAL}
               name={COLLATERAL}
               title={COLLATERAL}
               min={0}
@@ -278,13 +281,13 @@ const UpdateCollateralModal = ({
           </p>
           <InterlayDefaultContainedButton
             type='submit'
-            style={{ display: 'flex' }}
-            className='mx-auto'
-            color={getButtonVariant(status)}
+            className={clsx(
+              '!flex',
+              'mx-auto'
+            )}
             disabled={!isCollateralUpdateAllowed}
             pending={isUpdatePending}>
-            {status === CollateralUpdateStatus.Increase ?
-              t('vault.deposit_collateral') : t('vault.withdraw_collateral')}
+            {submitButtonText}
           </InterlayDefaultContainedButton>
         </form>
       </InterlayModalInnerWrapper>

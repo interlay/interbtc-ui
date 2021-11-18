@@ -47,8 +47,8 @@ import {
 } from 'common/actions/vault.actions';
 
 const Vault = (): JSX.Element => {
-  const [updateCollateralModalStatus, setUpdateCollateralModalStatus] = React.useState(CollateralUpdateStatus.Hidden);
-  const [showRequestReplacementModal, setShowRequestReplacementModal] = React.useState(false);
+  const [collateralUpdateStatus, setCollateralUpdateStatus] = React.useState(CollateralUpdateStatus.Close);
+  const [requestReplacementModalOpen, setRequestReplacementModalOpen] = React.useState(false);
   const {
     vaultClientLoaded,
     bridgeLoaded,
@@ -68,8 +68,21 @@ const Vault = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const closeUpdateCollateralModal = () => setUpdateCollateralModalStatus(CollateralUpdateStatus.Hidden);
-  const closeRequestReplacementModal = () => setShowRequestReplacementModal(false);
+  const handleUpdateCollateralModalClose = () => {
+    setCollateralUpdateStatus(CollateralUpdateStatus.Close);
+  };
+  const handleDepositCollateralModalOpen = () => {
+    setCollateralUpdateStatus(CollateralUpdateStatus.Deposit);
+  };
+  const handleWithdrawCollateralModalOpen = () => {
+    setCollateralUpdateStatus(CollateralUpdateStatus.Withdraw);
+  };
+  const handleRequestReplacementModalClose = () => {
+    setRequestReplacementModalOpen(false);
+  };
+  const handleRequestReplacementModalOpen = () => {
+    setRequestReplacementModalOpen(true);
+  };
 
   React.useEffect(() => {
     (async () => {
@@ -242,17 +255,16 @@ const Vault = (): JSX.Element => {
             'gap-10'
           )}>
           <InterlayDenimContainedButton
-            // TODO: should not use inlined functions
-            onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Increase)}>
+            onClick={handleDepositCollateralModalOpen}>
             {t('vault.deposit_collateral')}
           </InterlayDenimContainedButton>
           <InterlayDefaultContainedButton
-            onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Decrease)}>
+            onClick={handleWithdrawCollateralModalOpen}>
             {t('vault.withdraw_collateral')}
           </InterlayDefaultContainedButton>
           {lockedBTC.gt(BitcoinAmount.zero) && (
             <InterlayCaliforniaContainedButton
-              onClick={() => setShowRequestReplacementModal(true)}>
+              onClick={handleRequestReplacementModalOpen}>
               {t('vault.replace_vault')}
             </InterlayCaliforniaContainedButton>
           )}
@@ -265,12 +277,18 @@ const Vault = (): JSX.Element => {
           vaultAddress={address} />
         <ReplaceTable />
       </MainContainer>
-      <UpdateCollateralModal
-        onClose={closeUpdateCollateralModal}
-        status={updateCollateralModalStatus} />
+      {collateralUpdateStatus !== CollateralUpdateStatus.Close && (
+        <UpdateCollateralModal
+          open={
+            collateralUpdateStatus === CollateralUpdateStatus.Deposit ||
+            collateralUpdateStatus === CollateralUpdateStatus.Withdraw
+          }
+          onClose={handleUpdateCollateralModalClose}
+          collateralUpdateStatus={collateralUpdateStatus} />
+      )}
       <RequestReplacementModal
-        onClose={closeRequestReplacementModal}
-        show={showRequestReplacementModal} />
+        onClose={handleRequestReplacementModalClose}
+        show={requestReplacementModalOpen} />
     </>
   );
 };
