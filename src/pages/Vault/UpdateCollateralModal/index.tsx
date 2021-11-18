@@ -90,9 +90,6 @@ const UpdateCollateralModal = ({
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const focusRef = React.useRef(null);
-
-  // Denoted in collateral token
-  const [newCollateralization, setNewCollateralization] = React.useState('∞');
   const [isUpdatePending, setUpdatePending] = React.useState(false);
 
   const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
@@ -118,6 +115,43 @@ const UpdateCollateralModal = ({
   );
   useErrorHandler(requiredCollateralTokenAmountError);
 
+  const collateralTokenAmount = newMonetaryAmount(strCollateralTokenAmount || '0', COLLATERAL_TOKEN, true);
+  let newCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  let labelText;
+  let collateralUpdateStatusText: string;
+  if (collateralUpdateStatus === CollateralUpdateStatus.Deposit) {
+    collateralUpdateStatusText = t('vault.deposit_collateral');
+    newCollateralTokenAmount = currentTotalCollateralTokenAmount.add(collateralTokenAmount);
+    labelText = 'Deposit Collateral';
+  } else if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw) {
+    collateralUpdateStatusText = t('vault.withdraw_collateral');
+    newCollateralTokenAmount = currentTotalCollateralTokenAmount.sub(collateralTokenAmount);
+    labelText = 'Withdraw Collateral';
+  } else {
+    throw new Error('Something went wrong!');
+  }
+
+  const {
+    isIdle: vaultCollateralizationIdle,
+    isLoading: vaultCollateralizationLoading,
+    data: vaultCollateralization,
+    error: vaultCollateralizationError
+  } = useQuery<Big, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcApi',
+      'vaults',
+      'getVaultCollateralization',
+      vaultId,
+      newCollateralTokenAmount
+    ],
+    genericFetcher<Big>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(vaultCollateralizationError);
+
   const onSubmit = async () => {
     if (!bridgeLoaded) return;
     if (!vaultClientLoaded) return;
@@ -137,13 +171,13 @@ const UpdateCollateralModal = ({
 
       const balanceLockedDOT = await window.bridge.interBtcApi.tokens.balanceLocked(COLLATERAL_TOKEN, vaultId);
       dispatch(updateCollateralAction(balanceLockedDOT));
-      let collateralization;
-      try {
-        collateralization = new Big(parseFloat(newCollateralization) / 100);
-      } catch {
-        collateralization = undefined;
+
+      if (vaultCollateralization === undefined) {
+        throw new Error('Something went wrong!');
       }
-      dispatch(updateCollateralizationAction(collateralization?.mul(100).toString()));
+      // The vault API returns collateralization as a regular number rather than a percentage
+      const strVaultCollateralizationPercentage = vaultCollateralization.mul(100).toString();
+      dispatch(updateCollateralizationAction(strVaultCollateralizationPercentage));
 
       toast.success(t('vault.successfully_updated_collateral'));
       onClose();
@@ -165,16 +199,6 @@ const UpdateCollateralModal = ({
       // Decide if we withdraw or add collateral
       if (!currentTotalCollateralTokenAmount) {
         throw new Error('Couldn\'t fetch current vault collateral');
-      }
-
-      // Get the updated collateralization
-      const newCollateralization =
-        await window.bridge.interBtcApi.vaults.getVaultCollateralization(vaultId, newCollateralTokenAmount);
-      if (newCollateralization === undefined) {
-        setNewCollateralization('∞');
-      } else {
-        // The vault API returns collateralization as a regular number rather than a percentage
-        setNewCollateralization(newCollateralization.mul(100).toString());
       }
     } catch (error) {
       console.log('[UpdateCollateralModal onChange] error.message => ', error.message);
@@ -208,23 +232,12 @@ const UpdateCollateralModal = ({
     return undefined;
   };
 
-  const collateralTokenAmount = newMonetaryAmount(strCollateralTokenAmount || '0', COLLATERAL_TOKEN, true);
-  let newCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
-  let collateralUpdateStatusText: string;
-  if (collateralUpdateStatus === CollateralUpdateStatus.Deposit) {
-    collateralUpdateStatusText = t('vault.deposit_collateral');
-    newCollateralTokenAmount = currentTotalCollateralTokenAmount.add(collateralTokenAmount);
-  } else if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw) {
-    collateralUpdateStatusText = t('vault.withdraw_collateral');
-    newCollateralTokenAmount = currentTotalCollateralTokenAmount.sub(collateralTokenAmount);
-  } else {
-    throw new Error('Something went wrong!');
-  }
-
   const renderSubmitButton = () => {
     const initializing =
       requiredCollateralTokenAmountIdle ||
-      requiredCollateralTokenAmountLoading;
+      requiredCollateralTokenAmountLoading ||
+      vaultCollateralizationIdle ||
+      vaultCollateralizationLoading;
     const buttonText =
       initializing ?
         'Loading...' :
@@ -242,6 +255,25 @@ const UpdateCollateralModal = ({
         {buttonText}
       </InterlayDefaultContainedButton>
     );
+  };
+
+  const renderNewCollateralizationLabel = () => {
+    if (vaultCollateralizationIdle || vaultCollateralizationLoading) {
+      // TODO: should use skeleton loaders
+      return 'Loading...';
+    }
+
+    if (vaultCollateralization === undefined) {
+      return '∞';
+    }
+
+    // The vault API returns collateralization as a regular number rather than a percentage
+    const strVaultCollateralizationPercentage = vaultCollateralization.mul(100).toString();
+    if (Number(strVaultCollateralizationPercentage) > 1000) {
+      return 'more than 1000%';
+    } else {
+      return `${roundTwoDecimals(strVaultCollateralizationPercentage || '0')}%`;
+    }
   };
 
   return (
@@ -279,7 +311,7 @@ const UpdateCollateralModal = ({
             <label
               htmlFor={COLLATERAL_TOKEN_AMOUNT}
               className='text-sm'>
-              {t('vault.new_total_collateral')}
+              {labelText}
             </label>
             <NumberInput
               id={COLLATERAL_TOKEN_AMOUNT}
@@ -302,13 +334,7 @@ const UpdateCollateralModal = ({
           <p>
             {t('vault.new_collateralization')}
             &nbsp;
-            {
-              newCollateralization === '∞' ?
-                newCollateralization :
-                Number(newCollateralization) > 1000 ?
-                  'more than 1000%' :
-                  roundTwoDecimals(newCollateralization || '0') + '%'
-            }
+            {renderNewCollateralizationLabel()}
           </p>
           {renderSubmitButton()}
         </form>
