@@ -97,7 +97,7 @@ const UpdateCollateralModal = ({
         const depositAmount = newCollateral.sub(currentCollateral);
         await window.bridge.interBtcApi.vaults.depositCollateral(depositAmount);
       } else {
-        closeModal();
+        onClose();
         return;
       }
 
@@ -113,16 +113,12 @@ const UpdateCollateralModal = ({
       dispatch(updateCollateralizationAction(collateralization?.mul(100).toString()));
 
       toast.success(t('vault.successfully_updated_collateral'));
-      closeModal();
+      onClose();
     } catch (error) {
       toast.error(error.toString());
     }
     setUpdatePending(false);
   });
-
-  const closeModal = () => {
-    onClose();
-  };
 
   // ray test touch <
   const onChange = async (event: React.SyntheticEvent) => {
@@ -199,7 +195,7 @@ const UpdateCollateralModal = ({
     <InterlayModal
       initialFocus={focusRef}
       open={open}
-      onClose={closeModal}>
+      onClose={onClose}>
       <InterlayModalInnerWrapper
         className={clsx(
           'p-6',
