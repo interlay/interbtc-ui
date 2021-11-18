@@ -247,7 +247,7 @@ const UpdateCollateralModal = ({
   const renderNewCollateralizationLabel = () => {
     if (vaultCollateralizationIdle || vaultCollateralizationLoading) {
       // TODO: should use skeleton loaders
-      return 'Loading...';
+      return '-';
     }
 
     if (vaultCollateralization === undefined) {
@@ -261,6 +261,17 @@ const UpdateCollateralModal = ({
     } else {
       return `${roundTwoDecimals(strVaultCollateralizationPercentage || '0')}%`;
     }
+  };
+
+  const renderRequiredCollateralTokenAmount = () => {
+    if (requiredCollateralTokenAmountIdle || requiredCollateralTokenAmountLoading) {
+      return '-';
+    }
+
+    if (requiredCollateralTokenAmount === undefined) {
+      throw new Error('Something went wrong');
+    }
+    return `${displayMonetaryAmount(requiredCollateralTokenAmount)} ${COLLATERAL_TOKEN_SYMBOL}`;
   };
 
   return (
@@ -293,6 +304,9 @@ const UpdateCollateralModal = ({
               currentCollateral: displayMonetaryAmount(currentTotalCollateralTokenAmount),
               collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
             })}
+          </p>
+          <p>
+            Minimum Required Collateral {renderRequiredCollateralTokenAmount()}
           </p>
           <div>
             <label
