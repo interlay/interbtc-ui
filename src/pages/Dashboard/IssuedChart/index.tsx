@@ -85,8 +85,8 @@ const IssuedChart = (): JSX.Element => {
     firstChartLineColor = INTERLAY_DENIM[500];
     secondChartLineColor = INTERLAY_MULBERRY[500];
   } else if (darkMode && process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
-    firstChartLineColor = KINTSUGI_MIDNIGHT[500];
-    secondChartLineColor = KINTSUGI_PRAIRIE_SAND[500];
+    firstChartLineColor = KINTSUGI_MIDNIGHT[200];
+    secondChartLineColor = KINTSUGI_PRAIRIE_SAND[400];
   } else {
     throw new Error('Something went wrong!');
   }

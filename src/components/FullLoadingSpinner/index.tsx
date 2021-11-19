@@ -23,7 +23,7 @@ const FullLoadingSpinner = (): JSX.Element => (
       className={clsx(
         { 'text-interlayDenim':
           process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-        { 'text-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+        { 'text-kintsugiOchre': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'animate-spin',
         'w-9',
         'h-9'

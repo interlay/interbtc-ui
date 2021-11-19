@@ -98,7 +98,7 @@ const UpperContent = (): JSX.Element => {
               className={clsx(
                 { '!text-interlayDenim':
                   process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                { 'dark:!text-kintsugiMidnight':
+                { 'dark:!text-kintsugiSupernova-400':
                   process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
               )}>
               {t('dashboard.redeem.total_redeemed')}

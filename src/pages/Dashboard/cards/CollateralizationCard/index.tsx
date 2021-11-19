@@ -165,14 +165,14 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
             'mx-auto',
             { 'ring-interlayDenim':
               process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-            { 'dark:ring-kintsugiMidnight':
+            { 'dark:ring-kintsugiOchre':
               process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           <Ring64Title
             className={clsx(
               { 'text-interlayDenim':
                 process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-              { 'dark:text-kintsugiMidnight':
+              { 'dark:text-kintsugiOchre':
                 process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )}>
             {t('dashboard.vault.capacity')}

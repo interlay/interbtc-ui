@@ -30,7 +30,7 @@ const InterlayInput = React.forwardRef<Ref, Props>(({
       'text-opacity-90',
       'dark:text-white',
       'bg-white',
-      { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+      { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'block',
       'w-full',
       'text-base',
