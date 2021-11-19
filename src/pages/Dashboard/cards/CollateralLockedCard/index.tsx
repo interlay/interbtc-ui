@@ -1,4 +1,3 @@
-
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
@@ -35,7 +34,6 @@ interface Props {
 const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
   const {
     prices,
-    totalLockedCollateralTokenAmount,
     bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
@@ -67,6 +65,10 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
     if (cumulativeCollateralPerDay === undefined) {
       throw new Error('Something went wrong!');
     }
+    const totalLockedCollateralTokenAmount = newMonetaryAmount(
+      cumulativeCollateralPerDay.slice(-1)[0].amount,
+      COLLATERAL_TOKEN
+    );
 
     return (
       <>
