@@ -76,14 +76,14 @@ const BlockstreamCard = (): JSX.Element => {
             'mx-auto',
             { 'ring-interlayDenim':
               process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-            { 'dark:ring-kintsugiMidnight':
+            { 'dark:ring-kintsugiSupernova-400':
               process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           <Ring64Title
             className={clsx(
               { 'text-interlayDenim':
                 process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-              { 'dark:text-kintsugiMidnight':
+              { 'dark:text-kintsugiSupernova-400':
                 process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )}>
             {t('blockstream')}

@@ -137,7 +137,7 @@ const InterlayPagination = ({
         'border',
         { 'border-interlayDenim':
           process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-        { 'dark:border-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+        { 'dark:border-kintsugiSupernova-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         { 'bg-interlayDenim-50':
           process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
         { 'dark:bg-kintsugiMidnight-50': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
