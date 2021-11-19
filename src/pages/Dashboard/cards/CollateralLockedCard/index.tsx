@@ -7,6 +7,7 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { CollateralTimeData } from '@interlay/interbtc-index-client';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import LineChart from '../../LineChart';
 import DashboardCard from '../DashboardCard';
@@ -16,7 +17,7 @@ import Stats, {
   StatsRouterLink
 } from '../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
-import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
+import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
   getUsdAmount,
   displayMonetaryAmount
@@ -105,7 +106,9 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
             }
           ]}
           data={
-            cumulativeCollateralPerDay.slice(1).map(dataPoint => dataPoint.amount)
+            cumulativeCollateralPerDay.slice(1).map(
+              dataPoint => newMonetaryAmount(dataPoint.amount, COLLATERAL_TOKEN).toBig(COLLATERAL_TOKEN.base).toNumber()
+            )
           } />
       </>
     );
