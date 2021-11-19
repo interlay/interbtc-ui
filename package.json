@@ -1,13 +1,13 @@
 {
   "name": "interbtc-ui",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.1",
     "@headlessui/react": "^1.1.1",
     "@heroicons/react": "^1.0.3",
-    "@interlay/interbtc": "1.2.0",
-    "@interlay/monetary-js": "0.4.0",
+    "@interlay/interbtc": "1.3.0",
+    "@interlay/monetary-js": "0.5.0",
     "@polkadot/api": "5.3.2",
     "@polkadot/extension-dapp": "0.38.1",
     "@polkadot/types": "5.3.2",

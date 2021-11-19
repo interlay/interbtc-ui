@@ -124,7 +124,7 @@ const Topbar = (): JSX.Element => {
                   className='hover:no-underline'
                   target='_blank'
                   rel='noopener noreferrer'
-                  href='https://testnet-faucet.mempool.co'>
+                  href='https://bitcoinfaucet.uo1.net'>
                   <InterlayCaliforniaOutlinedButton
                     className={SMALL_SIZE_BUTTON_CLASS_NAME}
                     endIcon={
