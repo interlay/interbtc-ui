@@ -38,10 +38,15 @@ const InterlayCaliforniaOutlinedButton = React.forwardRef<Ref, Props>(({
         'font-medium',
 
         disabledOrPending ? clsx(
+          // TODO: could be reused
           'border-black',
           'border-opacity-10',
+          'dark:border-white',
+          'dark:border-opacity-10',
           'text-black',
-          'text-opacity-25'
+          'text-opacity-25',
+          'dark:text-white',
+          'dark:text-opacity-30'
         ) : clsx(
           'text-interlayCalifornia',
           'border-interlayCalifornia',

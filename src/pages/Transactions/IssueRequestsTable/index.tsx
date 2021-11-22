@@ -24,6 +24,7 @@ import {
 } from '@interlay/interbtc-api';
 
 import IssueRequestModal from './IssueRequestModal';
+import SectionTitle from 'parts/SectionTitle';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
 import ExternalLink from 'components/ExternalLink';
@@ -306,13 +307,9 @@ const IssueRequestsTable = (): JSX.Element => {
           'container',
           'mx-auto'
         )}>
-        <h2
-          className={clsx(
-            'text-2xl',
-            'font-medium'
-          )}>
+        <SectionTitle>
           {t('issue_page.issue_requests')}
-        </h2>
+        </SectionTitle>
         <InterlayTable {...getTableProps()}>
           <InterlayThead>
             {headerGroups.map(headerGroup => (

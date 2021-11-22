@@ -16,6 +16,7 @@ import {
   stripHexPrefix
 } from '@interlay/interbtc-api';
 
+import SectionTitle from 'parts/SectionTitle';
 import ErrorFallback from 'components/ErrorFallback';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import ExternalLink from 'components/ExternalLink';
@@ -177,15 +178,9 @@ const BlocksTable = (): JSX.Element => {
         'container',
         'mx-auto'
       )}>
-      <div>
-        <h2
-          className={clsx(
-            'text-2xl',
-            'font-medium'
-          )}>
-          {t('dashboard.relay.blocks')}
-        </h2>
-      </div>
+      <SectionTitle>
+        {t('dashboard.relay.blocks')}
+      </SectionTitle>
       <InterlayTable {...getTableProps()}>
         <InterlayThead>
           {headerGroups.map(headerGroup => (

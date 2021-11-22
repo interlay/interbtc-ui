@@ -22,6 +22,7 @@ import {
 } from '@interlay/interbtc-api';
 
 import RedeemRequestModal from './RedeemRequestModal';
+import SectionTitle from 'parts/SectionTitle';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
 import ExternalLink from 'components/ExternalLink';
@@ -303,13 +304,9 @@ const RedeemRequestsTable = (): JSX.Element => {
           'container',
           'mx-auto'
         )}>
-        <h2
-          className={clsx(
-            'text-2xl',
-            'font-medium'
-          )}>
+        <SectionTitle>
           {t('redeem_requests')}
-        </h2>
+        </SectionTitle>
         <InterlayTable {...getTableProps()}>
           <InterlayThead>
             {headerGroups.map(headerGroup => (

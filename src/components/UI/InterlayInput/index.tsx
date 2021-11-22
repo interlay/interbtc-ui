@@ -30,14 +30,18 @@ const InterlayInput = React.forwardRef<Ref, Props>(({
       'text-opacity-90',
       'dark:text-white',
       'bg-white',
-      { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+      { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'block',
       'w-full',
       'text-base',
+
+      // TODO: could be reused
+      // MEMO: inspired by https://mui.com/components/buttons/
       'border-black',
       'border-opacity-25',
       'dark:border-white',
       'dark:border-opacity-25',
+
       'shadow-sm',
       'rounded-md',
       'placeholder-gray-400',

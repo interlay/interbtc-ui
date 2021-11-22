@@ -17,6 +17,7 @@ import {
 } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
+import SectionTitle from 'parts/SectionTitle';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
 import ExternalLink from 'components/ExternalLink';
@@ -296,13 +297,9 @@ const RedeemRequestsTable = (): JSX.Element => {
 
   return (
     <InterlayTableContainer className='space-y-6'>
-      <h2
-        className={clsx(
-          'text-2xl',
-          'font-medium'
-        )}>
+      <SectionTitle>
         {t('issue_page.recent_requests')}
-      </h2>
+      </SectionTitle>
       {renderContent()}
     </InterlayTableContainer>
   );

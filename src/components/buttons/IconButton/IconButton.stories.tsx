@@ -3,10 +3,10 @@ import {
   Story,
   Meta
 } from '@storybook/react';
+import clsx from 'clsx';
 
 import IconButton, { Props } from '.';
 import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
-import clsx from 'clsx';
 
 const Template: Story<Props> = args => <IconButton {...args} />;
 

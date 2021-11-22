@@ -7,15 +7,26 @@ import {
   useSelector
 } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
 import Big from 'big.js';
 import clsx from 'clsx';
 import {
   roundTwoDecimals,
-  newMonetaryAmount
+  newMonetaryAmount,
+  CollateralUnit
 } from '@interlay/interbtc-api';
+import {
+  MonetaryAmount,
+  Currency
+} from '@interlay/monetary-js';
 
 import ErrorMessage from 'components/ErrorMessage';
 import NumberInput from 'components/NumberInput';
+import ErrorFallback from 'components/ErrorFallback';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import CloseIconButton from 'components/buttons/CloseIconButton';
 import InterlayModal, {
@@ -28,43 +39,35 @@ import {
   COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
+import STATUSES from 'utils/constants/statuses';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import {
   updateCollateralAction,
   updateCollateralizationAction
 } from 'common/actions/vault.actions';
 import { StoreType } from 'common/types/util.types';
 
-const getButtonVariant = (status: CollateralUpdateStatus): string => {
-  switch (status) {
-  case CollateralUpdateStatus.Increase:
-    return 'primary';
-  case CollateralUpdateStatus.Decrease:
-    return 'default';
-  default:
-    return '';
-  }
-};
-
 enum CollateralUpdateStatus {
-  Hidden,
-  Increase,
-  Decrease
+  Close,
+  Deposit,
+  Withdraw
 }
 
-const COLLATERAL = 'collateral';
-
+const COLLATERAL_TOKEN_AMOUNT = 'collateral-token-amount';
 type UpdateCollateralFormData = {
-  [COLLATERAL]: string;
+  [COLLATERAL_TOKEN_AMOUNT]: string;
 };
 
 interface Props {
+  open: boolean;
   onClose: () => void;
-  status: CollateralUpdateStatus;
+  collateralUpdateStatus: CollateralUpdateStatus;
 }
 
 const UpdateCollateralModal = ({
+  open,
   onClose,
-  status
+  collateralUpdateStatus
 }: Props): JSX.Element => {
   const {
     bridgeLoaded,
@@ -72,150 +75,210 @@ const UpdateCollateralModal = ({
     address,
     collateralTokenBalance
   } = useSelector((state: StoreType) => state.general);
+  // Denoted in collateral token
+  const currentTotalCollateralTokenAmount = useSelector((state: StoreType) => state.vault.collateral);
+
   const {
     register,
     handleSubmit,
-    errors
-  } = useForm<UpdateCollateralFormData>();
-  // Denoted in collateral token
-  const currentCollateral = useSelector((state: StoreType) => state.vault.collateral);
+    formState: { errors },
+    watch
+  } = useForm<UpdateCollateralFormData>({
+    mode: 'onChange'
+  });
+  const strCollateralTokenAmount = watch(COLLATERAL_TOKEN_AMOUNT);
+
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const focusRef = React.useRef(null);
+  const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
+  const handleError = useErrorHandler();
 
-  // Denoted in collateral token
-  const [newCollateral, setNewCollateral] = React.useState(currentCollateral);
-  // Denoted in collateral token
-  const [newCollateralization, setNewCollateralization] = React.useState('∞');
-  const [currentButtonText, setCurrentButtonText] = React.useState('');
-  const [isUpdatePending, setUpdatePending] = React.useState(false);
-  const [isCollateralUpdateAllowed, setCollateralUpdateAllowed] = React.useState(false);
+  const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
 
-  const onSubmit = handleSubmit(async () => {
+  const {
+    isIdle: requiredCollateralTokenAmountIdle,
+    isLoading: requiredCollateralTokenAmountLoading,
+    data: requiredCollateralTokenAmount,
+    error: requiredCollateralTokenAmountError
+  } = useQuery<MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcApi',
+      'vaults',
+      'getRequiredCollateralForVault',
+      vaultId,
+      COLLATERAL_TOKEN
+    ],
+    genericFetcher<MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(requiredCollateralTokenAmountError);
+
+  const collateralTokenAmount = newMonetaryAmount(strCollateralTokenAmount || '0', COLLATERAL_TOKEN, true);
+  let newCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  let labelText;
+  let collateralUpdateStatusText: string;
+  if (collateralUpdateStatus === CollateralUpdateStatus.Deposit) {
+    collateralUpdateStatusText = t('vault.deposit_collateral');
+    newCollateralTokenAmount = currentTotalCollateralTokenAmount.add(collateralTokenAmount);
+    labelText = 'Deposit Collateral';
+  } else if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw) {
+    collateralUpdateStatusText = t('vault.withdraw_collateral');
+    newCollateralTokenAmount = currentTotalCollateralTokenAmount.sub(collateralTokenAmount);
+    labelText = 'Withdraw Collateral';
+  } else {
+    throw new Error('Something went wrong!');
+  }
+
+  const {
+    isIdle: vaultCollateralizationIdle,
+    isLoading: vaultCollateralizationLoading,
+    data: vaultCollateralization,
+    error: vaultCollateralizationError
+  } = useQuery<Big, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcApi',
+      'vaults',
+      'getVaultCollateralization',
+      vaultId,
+      newCollateralTokenAmount
+    ],
+    genericFetcher<Big>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(vaultCollateralizationError);
+
+  const onSubmit = async (data: UpdateCollateralFormData) => {
     if (!bridgeLoaded) return;
     if (!vaultClientLoaded) return;
 
-    setUpdatePending(true);
     try {
-      if (currentCollateral.gt(newCollateral)) {
-        const withdrawAmount = currentCollateral.sub(newCollateral);
-        await window.bridge.interBtcApi.vaults.withdrawCollateral(withdrawAmount);
-      } else if (currentCollateral.lt(newCollateral)) {
-        const depositAmount = newCollateral.sub(currentCollateral);
-        await window.bridge.interBtcApi.vaults.depositCollateral(depositAmount);
+      setSubmitStatus(STATUSES.PENDING);
+      const collateralTokenAmount = newMonetaryAmount(data[COLLATERAL_TOKEN_AMOUNT], COLLATERAL_TOKEN, true);
+      if (collateralUpdateStatus === CollateralUpdateStatus.Deposit) {
+        await window.bridge.interBtcApi.vaults.depositCollateral(collateralTokenAmount);
+      } else if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw) {
+        await window.bridge.interBtcApi.vaults.withdrawCollateral(collateralTokenAmount);
       } else {
-        closeModal();
-        return;
+        throw new Error('Something went wrong!');
       }
 
-      const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
       const balanceLockedDOT = await window.bridge.interBtcApi.tokens.balanceLocked(COLLATERAL_TOKEN, vaultId);
       dispatch(updateCollateralAction(balanceLockedDOT));
-      let collateralization;
-      try {
-        collateralization = new Big(parseFloat(newCollateralization) / 100);
-      } catch {
-        collateralization = undefined;
+
+      if (vaultCollateralization === undefined) {
+        throw new Error('Something went wrong!');
       }
-      dispatch(updateCollateralizationAction(collateralization?.mul(100).toString()));
+      // The vault API returns collateralization as a regular number rather than a percentage
+      const strVaultCollateralizationPercentage = vaultCollateralization.mul(100).toString();
+      dispatch(updateCollateralizationAction(strVaultCollateralizationPercentage));
 
       toast.success(t('vault.successfully_updated_collateral'));
-      closeModal();
+      setSubmitStatus(STATUSES.RESOLVED);
+      onClose();
     } catch (error) {
-      toast.error(error.toString());
-    }
-    setUpdatePending(false);
-  });
-
-  const closeModal = () => {
-    onClose();
-    setNewCollateralization('');
-  };
-
-  // ray test touch <<
-  const onChange = async (event: React.SyntheticEvent) => {
-    try {
-      const value = (event.target as HTMLInputElement).value;
-      if (value === '' || !bridgeLoaded || Number(value) <= 0 || isNaN(Number(value))) {
-        setCollateralUpdateAllowed(false);
-        return;
-      }
-      const parsedValue = newMonetaryAmount(value, COLLATERAL_TOKEN, true);
-      if (parsedValue.toBig(parsedValue.currency.rawBase).lte(1)) {
-        throw new Error('Please enter an amount greater than 1 Planck');
-      }
-
-      // Decide if we withdraw or add collateral
-      if (!currentCollateral) {
-        throw new Error('Couldn\'t fetch current vault collateral');
-      }
-
-      let newCollateral = currentCollateral;
-      if (status === CollateralUpdateStatus.Increase) {
-        newCollateral = newCollateral.add(parsedValue);
-      } else if (status === CollateralUpdateStatus.Decrease) {
-        newCollateral = newCollateral.sub(parsedValue);
-      }
-      setNewCollateral(newCollateral);
-
-      const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
-      const requiredCollateral =
-        await window.bridge.interBtcApi.vaults.getRequiredCollateralForVault(vaultId, COLLATERAL_TOKEN);
-
-      // Collateral update only allowed if above required collateral
-      const allowed = newCollateral.gte(requiredCollateral);
-      setCollateralUpdateAllowed(allowed);
-
-      // Get the updated collateralization
-      const newCollateralization =
-        await window.bridge.interBtcApi.vaults.getVaultCollateralization(vaultId, newCollateral);
-      if (newCollateralization === undefined) {
-        setNewCollateralization('∞');
-      } else {
-        // The vault API returns collateralization as a regular number rather than a percentage
-        setNewCollateralization(newCollateralization.mul(100).toString());
-      }
-    } catch (error) {
-      console.log('[UpdateCollateralModal onChange] error.message => ', error.message);
-    }
-  };
-  // ray test touch >>
-
-  const getStatusText = (status: CollateralUpdateStatus): string => {
-    switch (status) {
-    case CollateralUpdateStatus.Increase:
-      if (currentButtonText !== t('vault.deposit_collateral')) {
-        setCurrentButtonText(t('vault.deposit_collateral'));
-      }
-      return t('vault.deposit_collateral');
-    case CollateralUpdateStatus.Decrease:
-      if (currentButtonText !== t('vault.withdraw_collateral')) {
-        setCurrentButtonText(t('vault.withdraw_collateral'));
-      }
-      return t('vault.withdraw_collateral');
-    default:
-      return currentButtonText || '';
+      toast.error(error.message);
+      handleError(error);
+      setSubmitStatus(STATUSES.REJECTED);
     }
   };
 
-  const validateAmount = (value: string): string | undefined => {
-    const collateralTokenAmount = newMonetaryAmount(value, COLLATERAL_TOKEN, true);
+  const validateCollateralTokenAmount = (value: string): string | undefined => {
+    const collateralTokenAmount = newMonetaryAmount(value || '0', COLLATERAL_TOKEN, true);
     if (collateralTokenAmount.lte(newMonetaryAmount(0, COLLATERAL_TOKEN, true))) {
       return t('vault.collateral_higher_than_0');
     }
 
+    if (collateralTokenAmount.toBig(collateralTokenAmount.currency.rawBase).lte(1)) {
+      return 'Please enter an amount greater than 1 Planck';
+    }
+
     if (collateralTokenAmount.gt(collateralTokenBalance)) {
-      return t(`Amount must be less than ${COLLATERAL_TOKEN_SYMBOL} balance!`);
+      return t(`Must be less than ${COLLATERAL_TOKEN_SYMBOL} balance!`);
+    }
+
+    if (!bridgeLoaded) {
+      return 'Bridge must be loaded!';
+    }
+
+    // Collateral update only allowed if above required collateral
+    if (
+      requiredCollateralTokenAmount !== undefined &&
+      newCollateralTokenAmount.lt(requiredCollateralTokenAmount)
+    ) {
+      // eslint-disable-next-line max-len
+      return 'Please enter an amount that maintains the collateralization of your Vault above the Secure Collateral Threshold.';
     }
 
     return undefined;
   };
 
+  const renderSubmitButton = () => {
+    const initializing =
+      requiredCollateralTokenAmountIdle ||
+      requiredCollateralTokenAmountLoading ||
+      vaultCollateralizationIdle ||
+      vaultCollateralizationLoading;
+    const buttonText =
+      initializing ?
+        'Loading...' :
+        collateralUpdateStatusText;
+
+    return (
+      <InterlayDefaultContainedButton
+        type='submit'
+        className={clsx(
+          '!flex',
+          'mx-auto'
+        )}
+        disabled={initializing}
+        pending={submitStatus === STATUSES.PENDING}>
+        {buttonText}
+      </InterlayDefaultContainedButton>
+    );
+  };
+
+  const renderNewCollateralizationLabel = () => {
+    if (vaultCollateralizationIdle || vaultCollateralizationLoading) {
+      // TODO: should use skeleton loaders
+      return '-';
+    }
+
+    if (vaultCollateralization === undefined) {
+      return '∞';
+    }
+
+    // The vault API returns collateralization as a regular number rather than a percentage
+    const strVaultCollateralizationPercentage = vaultCollateralization.mul(100).toString();
+    if (Number(strVaultCollateralizationPercentage) > 1000) {
+      return 'more than 1000%';
+    } else {
+      return `${roundTwoDecimals(strVaultCollateralizationPercentage || '0')}%`;
+    }
+  };
+
+  const renderRequiredCollateralTokenAmount = () => {
+    if (requiredCollateralTokenAmountIdle || requiredCollateralTokenAmountLoading) {
+      return '-';
+    }
+
+    if (requiredCollateralTokenAmount === undefined) {
+      throw new Error('Something went wrong');
+    }
+    return `${displayMonetaryAmount(requiredCollateralTokenAmount)} ${COLLATERAL_TOKEN_SYMBOL}`;
+  };
+
   return (
     <InterlayModal
       initialFocus={focusRef}
-      open={status !== CollateralUpdateStatus.Hidden}
-      onClose={closeModal}>
+      open={open}
+      onClose={onClose}>
       <InterlayModalInnerWrapper
         className={clsx(
           'p-6',
@@ -226,66 +289,54 @@ const UpdateCollateralModal = ({
           className={clsx(
             'text-lg',
             'font-medium',
-            'mb-4'
+            'mb-6'
           )}>
-          {getStatusText(status)}
+          {collateralUpdateStatusText}
         </InterlayModalTitle>
         <CloseIconButton
           ref={focusRef}
           onClick={onClose} />
         <form
-          onSubmit={onSubmit}
-          className={clsx(
-            'space-y-4'
-          )}>
+          onSubmit={handleSubmit(onSubmit)}
+          className='space-y-4'>
           <p>
             {t('vault.current_total_collateral', {
-              currentCollateral: displayMonetaryAmount(currentCollateral),
+              currentCollateral: displayMonetaryAmount(currentTotalCollateralTokenAmount),
               collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
             })}
           </p>
           <p>
-            {t('vault.new_total_collateral')}
+            Minimum Required Collateral {renderRequiredCollateralTokenAmount()}
           </p>
           <div>
+            <label
+              htmlFor={COLLATERAL_TOKEN_AMOUNT}
+              className='text-sm'>
+              {labelText}
+            </label>
             <NumberInput
-              name={COLLATERAL}
-              title={COLLATERAL}
+              id={COLLATERAL_TOKEN_AMOUNT}
+              name={COLLATERAL_TOKEN_AMOUNT}
+              title={COLLATERAL_TOKEN_AMOUNT}
               min={0}
               ref={register({
                 required: {
                   value: true,
                   message: t('vault.collateral_is_required')
                 },
-                validate: value => validateAmount(value)
-              })}
-              onChange={onChange}>
+                validate: value => validateCollateralTokenAmount(value)
+              })}>
             </NumberInput>
             <ErrorMessage>
-              {errors[COLLATERAL]?.message}
+              {errors[COLLATERAL_TOKEN_AMOUNT]?.message}
             </ErrorMessage>
           </div>
           <p>
             {t('vault.new_collateralization')}
             &nbsp;
-            {
-              newCollateralization === '∞' ?
-                newCollateralization :
-                Number(newCollateralization) > 1000 ?
-                  'more than 1000%' :
-                  roundTwoDecimals(newCollateralization || '0') + '%'
-            }
+            {renderNewCollateralizationLabel()}
           </p>
-          <InterlayDefaultContainedButton
-            type='submit'
-            style={{ display: 'flex' }}
-            className='mx-auto'
-            color={getButtonVariant(status)}
-            disabled={!isCollateralUpdateAllowed}
-            pending={isUpdatePending}>
-            {status === CollateralUpdateStatus.Increase ?
-              t('vault.deposit_collateral') : t('vault.withdraw_collateral')}
-          </InterlayDefaultContainedButton>
+          {renderSubmitButton()}
         </form>
       </InterlayModalInnerWrapper>
     </InterlayModal>
@@ -296,4 +347,10 @@ export {
   CollateralUpdateStatus
 };
 
-export default UpdateCollateralModal;
+// TODO: not working on modals
+export default withErrorBoundary(UpdateCollateralModal, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});

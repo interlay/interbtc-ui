@@ -276,7 +276,8 @@ const TransferForm = (): JSX.Element => {
             as='h3'
             className={clsx(
               'text-md',
-              'font-medium'
+              'font-medium',
+              'mb-6'
             )}>
             Select a network
           </InterlayModalTitle>

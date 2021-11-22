@@ -37,7 +37,8 @@ const Template: Story<Props> = args => {
             as='h3'
             className={clsx(
               'text-lg',
-              'font-medium'
+              'font-medium',
+              'mb-6'
             )}>
             Payment successful
           </InterlayModalTitle>
