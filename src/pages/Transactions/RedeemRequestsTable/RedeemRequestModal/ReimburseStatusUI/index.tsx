@@ -20,7 +20,7 @@ import {
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
+import InterlayDenimOrKintsugiMidnightOutlinedButton from 'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import ErrorFallback from 'components/ErrorFallback';
 import PrimaryColorSpan from 'components/PrimaryColorSpan';
@@ -266,13 +266,13 @@ const ReimburseStatusUI = ({
                 })}
               </span>
             </p>
-            <InterlayDenimOutlinedButton
+            <InterlayDenimOrKintsugiMidnightOutlinedButton
               className='w-full'
               disabled={retryMutation.isLoading}
               pending={reimburseMutation.isLoading}
               onClick={handleReimburse}>
               {t('redeem_page.reimburse')}
-            </InterlayDenimOutlinedButton>
+            </InterlayDenimOrKintsugiMidnightOutlinedButton>
           </li>
         </ul>
       </div>
