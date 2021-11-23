@@ -20,7 +20,9 @@ import {
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import InterlayDenimOrKintsugiMidnightOutlinedButton from 'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
+import
+InterlayDenimOrKintsugiMidnightOutlinedButton from
+  'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import ErrorFallback from 'components/ErrorFallback';
 import PrimaryColorSpan from 'components/PrimaryColorSpan';

@@ -19,7 +19,9 @@ import InterlayModal, {
   InterlayModalTitle,
   InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
-import InterlayDenimOrKintsugiMidnightOutlinedButton from 'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
+import
+InterlayDenimOrKintsugiMidnightOutlinedButton from
+  'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import InterlayDefaultOutlinedButton from 'components/buttons/InterlayDefaultOutlinedButton';
 import ErrorModal from 'components/ErrorModal';
 import {
