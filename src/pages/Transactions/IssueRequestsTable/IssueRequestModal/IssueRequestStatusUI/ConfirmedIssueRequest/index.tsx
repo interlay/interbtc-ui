@@ -12,7 +12,7 @@ import { Issue } from '@interlay/interbtc-api';
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import ErrorModal from 'components/ErrorModal';
 import ExternalLink from 'components/ExternalLink';
-import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
+import InterlayDenimOrKintsugiMidnightOutlinedButton from 'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import useQueryParams from 'utils/hooks/use-query-params';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
@@ -111,13 +111,13 @@ const ConfirmedIssueRequest = ({
             wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
           })}
         </p>
-        <InterlayDenimOutlinedButton
+        <InterlayDenimOrKintsugiMidnightOutlinedButton
           pending={executeMutation.isLoading}
           onClick={handleExecute(request)}>
           {t('issue_page.claim_interbtc', {
             wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
           })}
-        </InterlayDenimOutlinedButton>
+        </InterlayDenimOrKintsugiMidnightOutlinedButton>
       </RequestWrapper>
       {(executeMutation.isError && executeMutation.error) && (
         <ErrorModal

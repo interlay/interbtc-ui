@@ -19,7 +19,7 @@ import InterlayModal, {
   InterlayModalTitle,
   InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
-import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
+import InterlayDenimOrKintsugiMidnightOutlinedButton from 'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import InterlayDefaultOutlinedButton from 'components/buttons/InterlayDefaultOutlinedButton';
 import ErrorModal from 'components/ErrorModal';
 import {
@@ -239,7 +239,7 @@ const TransferForm = (): JSX.Element => {
             error={!!errors[COLLATERAL_TOKEN_ADDRESS]}
             helperText={errors[COLLATERAL_TOKEN_ADDRESS]?.message} />
           {/* TODO: should be a drop-down */}
-          <InterlayDenimOutlinedButton
+          <InterlayDenimOrKintsugiMidnightOutlinedButton
             style={{ display: 'flex' }}
             className={clsx(
               'ml-auto',
@@ -248,7 +248,7 @@ const TransferForm = (): JSX.Element => {
             startIcon={selectedNetworkItem.icon}
             onClick={handleNetworkModalOpen}>
             {selectedNetworkItem.title}
-          </InterlayDenimOutlinedButton>
+          </InterlayDenimOrKintsugiMidnightOutlinedButton>
         </div>
         <SubmitButton
           disabled={

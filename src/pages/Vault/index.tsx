@@ -21,7 +21,9 @@ import SectionTitle from 'parts/SectionTitle';
 import VaultIssueRequestsTable from 'containers/VaultIssueRequestsTable';
 import VaultRedeemRequestsTable from 'containers/VaultRedeemRequestsTable';
 import BoldParagraph from 'components/BoldParagraph';
-import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
+import
+InterlayDenimOrKintsugiMidnightContainedButton
+  from 'components/buttons/InterlayDenimOrKintsugiMidnightContainedButton';
 import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import Panel from 'components/Panel';
@@ -254,10 +256,10 @@ const Vault = (): JSX.Element => {
             'grid-cols-3',
             'gap-10'
           )}>
-          <InterlayDenimContainedButton
+          <InterlayDenimOrKintsugiMidnightContainedButton
             onClick={handleDepositCollateralModalOpen}>
             {t('vault.deposit_collateral')}
-          </InterlayDenimContainedButton>
+          </InterlayDenimOrKintsugiMidnightContainedButton>
           <InterlayDefaultContainedButton
             onClick={handleWithdrawCollateralModalOpen}>
             {t('vault.withdraw_collateral')}
