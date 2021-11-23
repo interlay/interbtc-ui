@@ -12,7 +12,9 @@ import { Issue } from '@interlay/interbtc-api';
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import ErrorModal from 'components/ErrorModal';
 import ExternalLink from 'components/ExternalLink';
-import InterlayDenimOrKintsugiMidnightOutlinedButton from 'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
+import
+InterlayDenimOrKintsugiMidnightOutlinedButton from
+  'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import useQueryParams from 'utils/hooks/use-query-params';
 import { BTC_TRANSACTION_API } from 'config/bitcoin';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';

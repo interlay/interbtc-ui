@@ -14,7 +14,9 @@ import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import Balances from './Balances';
 import AccountModal from 'parts/AccountModal';
 import InterlayLink from 'components/UI/InterlayLink';
-import InterlayDenimOrKintsugiMidnightOutlinedButton from 'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
+import
+InterlayDenimOrKintsugiMidnightOutlinedButton from
+  'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
