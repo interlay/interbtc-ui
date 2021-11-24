@@ -1,4 +1,3 @@
-
 import clsx from 'clsx';
 import {
   BitcoinAmount,
@@ -7,25 +6,32 @@ import {
 } from '@interlay/monetary-js';
 import { CollateralUnit } from '@interlay/interbtc-api';
 
+import DropDown from 'components/DropDown';
+
 import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon,
   COLLATERAL_TOKEN_SYMBOL,
-  CollateralTokenLogoIcon
+  CollateralTokenLogoIcon,
+  GOVERNANCE_TOKEN_SYMBOL,
+  GovernanceTokenLogoIcon
 } from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
 
 interface Props {
   wrappedTokenBalance?: BitcoinAmount;
   collateralTokenBalance?: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  governanceTokenBalance?: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
 }
 
 const Balances = ({
   wrappedTokenBalance,
-  collateralTokenBalance
+  collateralTokenBalance,
+  governanceTokenBalance
 }: Props): JSX.Element => {
   const strCollateralTokenBalance = displayMonetaryAmount(collateralTokenBalance);
   const strWrappedTokenBalance = displayMonetaryAmount(wrappedTokenBalance);
+  const strGovernanceTokenBalance = displayMonetaryAmount(governanceTokenBalance);
 
   return (
     <div
@@ -39,11 +45,9 @@ const Balances = ({
           'items-center',
           'space-x-1'
         )}>
-        <WrappedTokenLogoIcon
-          fill='currentColor'
-          width={30} />
-        <span className='font-medium'>{strWrappedTokenBalance}</span>
-        <span className='text-sm'>{WRAPPED_TOKEN_SYMBOL}</span>
+        <CollateralTokenLogoIcon
+          fill='green'
+          height={30} />
       </div>
       <div
         className={clsx(
@@ -51,10 +55,35 @@ const Balances = ({
           'items-center',
           'space-x-1'
         )}>
-        <CollateralTokenLogoIcon height={28} />
-        <span className='font-medium'>{strCollateralTokenBalance}</span>
-        <span className='text-sm'>{COLLATERAL_TOKEN_SYMBOL}</span>
+        <WrappedTokenLogoIcon
+          fill='blue'
+          width={30} />
       </div>
+      <div
+        className={clsx(
+          'flex',
+          'items-center',
+          'space-x-1'
+        )}>
+        <GovernanceTokenLogoIcon
+          fill='red'
+          width={30} />
+      </div>
+      <DropDown
+        options={[
+          {
+            label: `${strCollateralTokenBalance} ${COLLATERAL_TOKEN_SYMBOL}`,
+            value: strCollateralTokenBalance
+          },
+          {
+            label: `${strWrappedTokenBalance} ${WRAPPED_TOKEN_SYMBOL}`,
+            value: strWrappedTokenBalance
+          },
+          {
+            label: `${strGovernanceTokenBalance} ${GOVERNANCE_TOKEN_SYMBOL}`,
+            value: strGovernanceTokenBalance
+          }
+        ]} />
     </div>
   );
 };
