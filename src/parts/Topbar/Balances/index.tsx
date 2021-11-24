@@ -46,7 +46,7 @@ const Balances = ({
           'space-x-1'
         )}>
         <CollateralTokenLogoIcon
-          fill='green'
+          fill='currentColor'
           height={30} />
       </div>
       <div
@@ -56,7 +56,7 @@ const Balances = ({
           'space-x-1'
         )}>
         <WrappedTokenLogoIcon
-          fill='blue'
+          fill='currentColor'
           width={30} />
       </div>
       <div
@@ -66,7 +66,7 @@ const Balances = ({
           'space-x-1'
         )}>
         <GovernanceTokenLogoIcon
-          fill='red'
+          fill='currentColor'
           width={30} />
       </div>
       <DropDown
