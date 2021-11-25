@@ -1,12 +1,9 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-// TODO: should type properly
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 
 import * as React from 'react';
 import clsx from 'clsx';
 
 // TODO: not used for now
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 function NumberRangeColumnFilter({
   column: {
     filterValue = [],
@@ -14,7 +11,8 @@ function NumberRangeColumnFilter({
     setFilter,
     id
   }
-}) {
+// TODO: should type properly
+}: any) {
   const [
     min,
     max
