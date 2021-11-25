@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
+
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +8,10 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { BitcoinNetwork, IssueColumns } from '@interlay/interbtc-index-client';
+import {
+  BitcoinNetwork,
+  IssueColumns
+} from '@interlay/interbtc-index-client';
 import {
   Issue,
   IssueStatus
@@ -30,7 +32,10 @@ import InterlayTable, {
 } from 'components/UI/InterlayTable';
 import StatusCell from 'components/UI/InterlayTable/StatusCell';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
-import { WrappedTokenAmount } from 'config/relay-chains';
+import {
+  WrappedTokenAmount,
+  CollateralTokenAmount
+} from 'config/relay-chains';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
@@ -41,6 +46,7 @@ import {
   formatDateTimePrecise
 } from 'common/utils/utils';
 import * as constants from '../../../constants';
+import { StoreType } from 'common/types/util.types';
 
 interface Props {
   totalIssueRequests: number;
@@ -161,7 +167,9 @@ const VaultIssueRequestsTable = ({
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell({ value }) {
+        Cell: function FormattedCell({ value }: {
+          value: CollateralTokenAmount;
+        }) {
           return (
             <>
               {value.toHuman()}
@@ -238,10 +246,12 @@ const VaultIssueRequestsTable = ({
       {status === STATUSES.RESOLVED && (
         <InterlayTable {...getTableProps()}>
           <InterlayThead>
-            {headerGroups.map(headerGroup => (
+            {/* TODO: should type properly */}
+            {headerGroups.map((headerGroup: any) => (
               // eslint-disable-next-line react/jsx-key
               <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
+                {/* TODO: should type properly */}
+                {headerGroup.headers.map((column: any) => (
                   // eslint-disable-next-line react/jsx-key
                   <InterlayTh
                     {...column.getHeaderProps([
@@ -257,13 +267,15 @@ const VaultIssueRequestsTable = ({
             ))}
           </InterlayThead>
           <InterlayTbody {...getTableBodyProps()}>
-            {rows.map(row => {
+            {/* TODO: should type properly */}
+            {rows.map((row: any) => {
               prepareRow(row);
 
               return (
                 // eslint-disable-next-line react/jsx-key
                 <InterlayTr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
+                  {/* TODO: should type properly */}
+                  {row.cells.map((cell: any) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
                       <InterlayTd

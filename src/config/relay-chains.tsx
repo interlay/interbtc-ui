@@ -5,9 +5,11 @@ import {
   KBtc, // on Kusama
   Kusama, // on Kusama
   KBtcAmount, // on Kusama
+  KusamaAmount, // on Kusama
   InterBtc, // on Polkadot
   Polkadot, // on Polkadot
-  InterBtcAmount // on Polkadot
+  InterBtcAmount, // on Polkadot
+  PolkadotAmount // on Polkadot
 } from '@interlay/monetary-js';
 import { CollateralUnit } from '@interlay/interbtc-api';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
@@ -49,6 +51,9 @@ let CollateralTokenLogoIcon:
 type WrappedTokenAmount =
   InterBtcAmount |
   KBtcAmount;
+type CollateralTokenAmount =
+  PolkadotAmount |
+  KusamaAmount
 
 switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
 // Interlay
@@ -85,7 +90,8 @@ default: {
 }
 
 export type {
-  WrappedTokenAmount
+  WrappedTokenAmount,
+  CollateralTokenAmount
 };
 
 export {
