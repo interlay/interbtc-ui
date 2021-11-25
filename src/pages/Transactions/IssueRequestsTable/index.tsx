@@ -70,6 +70,7 @@ const IssueRequestsTable = (): JSX.Element => {
     extensions,
     bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
+  // ray test touch <<
   // eslint-disable-next-line max-len
   // TODO: should be refactored via `https://www.notion.so/interlay/Include-total-count-into-paginated-API-calls-in-index-894b56f288d24aaf8fb1aec36eadf41d`
   const {
@@ -89,6 +90,7 @@ const IssueRequestsTable = (): JSX.Element => {
     }
   );
   useErrorHandler(issueRequestsTotalCountError);
+  // ray test touch >>
   const {
     isIdle: issueRequestsIdle,
     isLoading: issueRequestsLoading,

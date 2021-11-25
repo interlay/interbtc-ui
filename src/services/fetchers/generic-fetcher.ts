@@ -1,7 +1,4 @@
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-
 const GENERIC_FETCHER = 'generic-fetcher';
 
 // TODO: should type properly
@@ -30,7 +27,7 @@ const genericFetcher = <T>() => async ({ queryKey }: any): Promise<T> => {
     }
 
     // TODO: should type properly
-    return await window.bridge[arg1][arg2][arg3](...rest);
+    return await (window.bridge as any)[arg1][arg2][arg3](...rest);
   }
   if (queryKey[1] === 'interBtcIndex') {
     const [
@@ -44,7 +41,8 @@ const genericFetcher = <T>() => async ({ queryKey }: any): Promise<T> => {
       throw new Error('Invalid key!');
     }
 
-    return await window.bridge[arg1][arg2](...rest);
+    // TODO: should type properly
+    return await (window.bridge as any)[arg1][arg2](...rest);
   }
 
   throw new Error('Something went wrong!');
