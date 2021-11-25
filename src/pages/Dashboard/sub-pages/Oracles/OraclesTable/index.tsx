@@ -1,6 +1,4 @@
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import {
@@ -12,7 +10,13 @@ import { useTable } from 'react-table';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { CollateralBtcOracleStatus } from '@interlay/interbtc/build/oracleTypes';
-import { ExchangeRate } from '@interlay/monetary-js';
+import {
+  ExchangeRate,
+  Bitcoin,
+  BitcoinUnit,
+  Currency
+} from '@interlay/monetary-js';
+import { CollateralUnit } from '@interlay/interbtc-api';
 
 import SectionTitle from 'parts/SectionTitle';
 import ErrorFallback from 'components/ErrorFallback';
@@ -91,7 +95,14 @@ const OracleTable = (): JSX.Element => {
         classNames: [
           'text-center'
         ],
-        Cell: function FormattedCell({ value }: { value: ExchangeRate; }) {
+        Cell: function FormattedCell({ value }: {
+          value: ExchangeRate<
+            Bitcoin,
+            BitcoinUnit,
+            Currency<CollateralUnit>,
+            CollateralUnit
+          >;
+        }) {
           return (
             <>1 BTC = {value.toHuman(5)} {COLLATERAL_TOKEN_SYMBOL}</>
           );
@@ -164,10 +175,12 @@ const OracleTable = (): JSX.Element => {
       </SectionTitle>
       <InterlayTable {...getTableProps()}>
         <InterlayThead>
-          {headerGroups.map(headerGroup => (
+          {/* TODO: should type properly */}
+          {headerGroups.map((headerGroup: any) => (
             // eslint-disable-next-line react/jsx-key
             <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
+              {/* TODO: should type properly */}
+              {headerGroup.headers.map((column: any) => (
                 // eslint-disable-next-line react/jsx-key
                 <InterlayTh
                   {...column.getHeaderProps([
@@ -183,13 +196,15 @@ const OracleTable = (): JSX.Element => {
           ))}
         </InterlayThead>
         <InterlayTbody {...getTableBodyProps()}>
-          {rows.map(row => {
+          {/* TODO: should type properly */}
+          {rows.map((row: any) => {
             prepareRow(row);
 
             return (
               // eslint-disable-next-line react/jsx-key
               <InterlayTr {...row.getRowProps()}>
-                {row.cells.map(cell => {
+                {/* TODO: should type properly */}
+                {row.cells.map((cell: any) => {
                   return (
                     // eslint-disable-next-line react/jsx-key
                     <InterlayTd
