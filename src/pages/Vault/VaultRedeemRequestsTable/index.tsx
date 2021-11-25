@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
+
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -32,6 +31,8 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import StatusCell from 'components/UI/InterlayTable/StatusCell';
+import { WrappedTokenAmount } from 'config/relay-chains';
+import { BTC_ADDRESS_API } from 'config/bitcoin';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import {
@@ -40,10 +41,9 @@ import {
 } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import { BTC_ADDRESS_API } from 'config/bitcoin';
-import * as constants from '../../../constants';
 import STATUSES from 'utils/constants/statuses';
-import { WrappedTokenAmount } from 'config/relay-chains';
+import * as constants from '../../../constants';
+import { StoreType } from 'common/types/util.types';
 
 interface Props {
   totalRedeemRequests: number;
@@ -227,10 +227,12 @@ const VaultRedeemRequestsTable = ({
       {status === STATUSES.RESOLVED && (
         <InterlayTable {...getTableProps()}>
           <InterlayThead>
-            {headerGroups.map(headerGroup => (
+            {/* TODO: should type properly */}
+            {headerGroups.map((headerGroup: any) => (
               // eslint-disable-next-line react/jsx-key
               <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
+                {/* TODO: should type properly */}
+                {headerGroup.headers.map((column: any) => (
                   // eslint-disable-next-line react/jsx-key
                   <InterlayTh
                     {...column.getHeaderProps([
@@ -246,13 +248,15 @@ const VaultRedeemRequestsTable = ({
             ))}
           </InterlayThead>
           <InterlayTbody {...getTableBodyProps()}>
-            {rows.map(row => {
+            {/* TODO: should type properly */}
+            {rows.map((row: any) => {
               prepareRow(row);
 
               return (
                 // eslint-disable-next-line react/jsx-key
                 <InterlayTr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
+                  {/* TODO: should type properly */}
+                  {row.cells.map((cell: any) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
                       <InterlayTd
