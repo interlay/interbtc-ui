@@ -14,12 +14,12 @@ import { BitcoinAmount } from '@interlay/monetary-js';
 import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
 import RequestReplacementModal from './RequestReplacementModal';
 import ReplaceTable from './ReplaceTable';
+import VaultIssueRequestsTable from './VaultIssueRequestsTable';
+import VaultRedeemRequestsTable from './VaultRedeemRequestsTable';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import SectionTitle from 'parts/SectionTitle';
-import VaultIssueRequestsTable from 'containers/VaultIssueRequestsTable';
-import VaultRedeemRequestsTable from 'containers/VaultRedeemRequestsTable';
 import BoldParagraph from 'components/BoldParagraph';
 import
 InterlayDenimOrKintsugiMidnightContainedButton
