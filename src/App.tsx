@@ -35,8 +35,6 @@ import {
 
 import Layout from 'parts/Layout';
 import FullLoadingSpinner from 'components/FullLoadingSpinner';
-// TODO: block for now
-// import TransitionWrapper from 'parts/TransitionWrapper';
 import ErrorFallback from 'components/ErrorFallback';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
@@ -366,8 +364,6 @@ const App = (): JSX.Element => {
       <Layout>
         <Route
           render={({ location }) => (
-            // TODO: block for now
-            // <TransitionWrapper location={location}>
             <React.Suspense fallback={<FullLoadingSpinner />}>
               <Switch location={location}>
                 {vaultClientLoaded && (
@@ -396,7 +392,6 @@ const App = (): JSX.Element => {
                 </Route>
               </Switch>
             </React.Suspense>
-            // </TransitionWrapper>
           )} />
       </Layout>
     </>
