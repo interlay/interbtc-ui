@@ -1,6 +1,6 @@
 {
   "name": "interbtc-ui",
-  "version": "2.4.3",
+  "version": "2.4.4",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.1",
