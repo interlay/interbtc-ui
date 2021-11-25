@@ -1,6 +1,4 @@
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
@@ -18,14 +16,14 @@ import clsx from 'clsx';
 import {
   stripHexPrefix,
   ReplaceRequestExt,
-  WrappedCurrency
+  WrappedCurrency,
+  CollateralUnit
 } from '@interlay/interbtc-api';
 import { ReplaceRequestStatus } from '@interlay/interbtc-api/build/src/interfaces';
 import {
   MonetaryAmount,
   Currency,
-  BitcoinUnit,
-  CollateralUnit
+  BitcoinUnit
 } from '@interlay/monetary-js';
 
 import SectionTitle from 'parts/SectionTitle';
@@ -227,10 +225,12 @@ const ReplaceTable = (): JSX.Element => {
       </SectionTitle>
       <InterlayTable {...getTableProps()}>
         <InterlayThead>
-          {headerGroups.map(headerGroup => (
+          {/* TODO: should type properly */}
+          {headerGroups.map((headerGroup: any) => (
             // eslint-disable-next-line react/jsx-key
             <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
+              {/* TODO: should type properly */}
+              {headerGroup.headers.map((column: any) => (
                 // eslint-disable-next-line react/jsx-key
                 <InterlayTh
                   {...column.getHeaderProps([
@@ -246,13 +246,15 @@ const ReplaceTable = (): JSX.Element => {
           ))}
         </InterlayThead>
         <InterlayTbody {...getTableBodyProps()}>
-          {rows.map(row => {
+          {/* TODO: should type properly */}
+          {rows.map((row: any) => {
             prepareRow(row);
 
             return (
               // eslint-disable-next-line react/jsx-key
               <InterlayTr {...row.getRowProps()}>
-                {row.cells.map(cell => {
+                {/* TODO: should type properly */}
+                {row.cells.map((cell: any) => {
                   return (
                     // eslint-disable-next-line react/jsx-key
                     <InterlayTd
