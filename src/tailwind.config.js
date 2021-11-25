@@ -1,6 +1,3 @@
-// TODO: should type properly
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 
 const plugin = require('tailwindcss/plugin');
 
