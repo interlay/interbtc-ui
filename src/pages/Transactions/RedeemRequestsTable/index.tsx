@@ -1,6 +1,4 @@
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import * as React from 'react';
 import { useTable } from 'react-table';
 import {
@@ -20,7 +18,10 @@ import {
   Redeem,
   RedeemStatus
 } from '@interlay/interbtc-api';
-import { RedeemColumns } from '@interlay/interbtc-index-client';
+import {
+  RedeemColumns,
+  BitcoinNetwork
+} from '@interlay/interbtc-index-client';
 
 import RedeemRequestModal from './RedeemRequestModal';
 import SectionTitle from 'parts/SectionTitle';
@@ -292,6 +293,9 @@ const RedeemRequestsTable = (): JSX.Element => {
       <PrimaryColorEllipsisLoader />
     );
   }
+  if (redeemRequestsTotalCount === undefined) {
+    throw new Error('Something went wrong!');
+  }
 
   const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number; }) => {
     updateQueryParameters({
@@ -327,10 +331,12 @@ const RedeemRequestsTable = (): JSX.Element => {
         </SectionTitle>
         <InterlayTable {...getTableProps()}>
           <InterlayThead>
-            {headerGroups.map(headerGroup => (
+            {/* TODO: should type properly */}
+            {headerGroups.map((headerGroup: any) => (
               // eslint-disable-next-line react/jsx-key
               <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
+                {/* TODO: should type properly */}
+                {headerGroup.headers.map((column: any) => (
                   // eslint-disable-next-line react/jsx-key
                   <InterlayTh
                     {...column.getHeaderProps([
@@ -346,7 +352,8 @@ const RedeemRequestsTable = (): JSX.Element => {
             ))}
           </InterlayThead>
           <InterlayTbody {...getTableBodyProps()}>
-            {rows.map(row => {
+            {/* TODO: should type properly */}
+            {rows.map((row: any) => {
               prepareRow(row);
 
               const {
@@ -363,7 +370,8 @@ const RedeemRequestsTable = (): JSX.Element => {
                   )}
                   {...restRowProps}
                   onClick={handleRowClick(row.original.id)}>
-                  {row.cells.map(cell => {
+                  {/* TODO: should type properly */}
+                  {row.cells.map((cell: any) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
                       <InterlayTd
