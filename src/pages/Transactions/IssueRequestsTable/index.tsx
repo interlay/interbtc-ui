@@ -22,7 +22,10 @@ import {
   Issue,
   IssueStatus
 } from '@interlay/interbtc-api';
-import { IssueColumns } from '@interlay/interbtc-index-client';
+import {
+  IssueColumns,
+  BitcoinNetwork
+} from '@interlay/interbtc-index-client';
 
 import IssueRequestModal from './IssueRequestModal';
 import SectionTitle from 'parts/SectionTitle';
@@ -49,7 +52,7 @@ import {
   shortTxId,
   displayMonetaryAmount
 } from 'common/utils/utils';
-import userIssueRequestsFetcher, { USER_ISSUE_REQUESTS_FETCHER } from 'services/user-issue-requests-fetcher';
+import { BITCOIN_NETWORK } from '../../../constants';
 import genericFetcher, {
   GENERIC_FETCHER
 } from 'services/fetchers/generic-fetcher';
@@ -104,12 +107,20 @@ const IssueRequestsTable = (): JSX.Element => {
     error: issueRequestsError
   } = useQuery<Array<Issue>, Error>(
     [
-      USER_ISSUE_REQUESTS_FETCHER,
-      address,
-      selectedPageIndex,
-      TABLE_PAGE_LIMIT
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'getFilteredIssues',
+      {
+        page: selectedPageIndex,
+        perPage: TABLE_PAGE_LIMIT,
+        network: BITCOIN_NETWORK as BitcoinNetwork | undefined,
+        filterIssueColumns: [{
+          column: IssueColumns.Requester,
+          value: address
+        }] // Filter by requester == address
+      }
     ],
-    userIssueRequestsFetcher,
+    genericFetcher<Array<Issue>>(),
     {
       enabled: !!address && !!bridgeLoaded,
       refetchInterval: 10000

@@ -8,6 +8,10 @@ import {
 import { FaCheckCircle } from 'react-icons/fa';
 import clsx from 'clsx';
 import { Issue } from '@interlay/interbtc-api';
+import {
+  IssueColumns,
+  BitcoinNetwork
+} from '@interlay/interbtc-index-client';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import ErrorModal from 'components/ErrorModal';
@@ -22,10 +26,11 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
+import { shortAddress } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import { shortAddress } from 'common/utils/utils';
-import { USER_ISSUE_REQUESTS_FETCHER } from 'services/user-issue-requests-fetcher';
+import { BITCOIN_NETWORK } from '../../../../../../constants';
+import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
@@ -53,10 +58,18 @@ const ConfirmedIssueRequest = ({
     {
       onSuccess: (_, variables) => {
         queryClient.invalidateQueries([
-          USER_ISSUE_REQUESTS_FETCHER,
-          address,
-          selectedPageIndex,
-          TABLE_PAGE_LIMIT
+          GENERIC_FETCHER,
+          'interBtcIndex',
+          'getFilteredIssues',
+          {
+            page: selectedPageIndex,
+            perPage: TABLE_PAGE_LIMIT,
+            network: BITCOIN_NETWORK as BitcoinNetwork | undefined,
+            filterIssueColumns: [{
+              column: IssueColumns.Requester,
+              value: address
+            }] // Filter by requester == address
+          }
         ]);
         toast.success(t('issue_page.successfully_executed', { id: variables.id }));
       }
