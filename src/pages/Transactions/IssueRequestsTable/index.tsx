@@ -22,6 +22,7 @@ import {
   Issue,
   IssueStatus
 } from '@interlay/interbtc-api';
+import { IssueColumns } from '@interlay/interbtc-index-client';
 
 import IssueRequestModal from './IssueRequestModal';
 import SectionTitle from 'parts/SectionTitle';
@@ -49,9 +50,9 @@ import {
   displayMonetaryAmount
 } from 'common/utils/utils';
 import userIssueRequestsFetcher, { USER_ISSUE_REQUESTS_FETCHER } from 'services/user-issue-requests-fetcher';
-import userIssueRequestsTotalCountFetcher, {
-  USER_ISSUE_REQUESTS_TOTAL_COUNT_FETCHER
-} from 'services/user-issue-requests-total-count-fetcher';
+import genericFetcher, {
+  GENERIC_FETCHER
+} from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 
@@ -70,9 +71,7 @@ const IssueRequestsTable = (): JSX.Element => {
     extensions,
     bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
-  // ray test touch <<
-  // eslint-disable-next-line max-len
-  // TODO: should be refactored via `https://www.notion.so/interlay/Include-total-count-into-paginated-API-calls-in-index-894b56f288d24aaf8fb1aec36eadf41d`
+
   const {
     isIdle: issueRequestsTotalCountIdle,
     isLoading: issueRequestsTotalCountLoading,
@@ -80,17 +79,24 @@ const IssueRequestsTable = (): JSX.Element => {
     error: issueRequestsTotalCountError
   } = useQuery<number, Error>(
     [
-      USER_ISSUE_REQUESTS_TOTAL_COUNT_FETCHER,
-      address
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'getFilteredTotalIssues',
+      {
+        filterIssueColumns: [{
+          column: IssueColumns.Requester,
+          value: address
+        }]
+      }
     ],
-    userIssueRequestsTotalCountFetcher,
+    genericFetcher<number>(),
     {
       enabled: !!address && !!bridgeLoaded,
       refetchInterval: 10000
     }
   );
   useErrorHandler(issueRequestsTotalCountError);
-  // ray test touch >>
+
   const {
     isIdle: issueRequestsIdle,
     isLoading: issueRequestsLoading,
