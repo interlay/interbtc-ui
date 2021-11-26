@@ -20,6 +20,7 @@ import {
   Redeem,
   RedeemStatus
 } from '@interlay/interbtc-api';
+import { RedeemColumns } from '@interlay/interbtc-index-client';
 
 import RedeemRequestModal from './RedeemRequestModal';
 import SectionTitle from 'parts/SectionTitle';
@@ -47,9 +48,9 @@ import {
   displayMonetaryAmount
 } from 'common/utils/utils';
 import userRedeemRequestsFetcher, { USER_REDEEM_REQUESTS_FETCHER } from 'services/user-redeem-requests-fetcher';
-import userRedeemRequestsTotalCountFetcher, {
-  USER_REDEEM_REQUESTS_TOTAL_COUNT_FETCHER
-} from 'services/user-redeem-requests-total-count-fetcher';
+import genericFetcher, {
+  GENERIC_FETCHER
+} from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
 const RedeemRequestsTable = (): JSX.Element => {
@@ -65,6 +66,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     address,
     bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
+
   const {
     isIdle: redeemRequestsTotalCountIdle,
     isLoading: redeemRequestsTotalCountLoading,
@@ -72,16 +74,24 @@ const RedeemRequestsTable = (): JSX.Element => {
     error: redeemRequestsTotalCountError
   } = useQuery<number, Error>(
     [
-      USER_REDEEM_REQUESTS_TOTAL_COUNT_FETCHER,
-      address
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'getFilteredTotalRedeems',
+      {
+        filterRedeemColumns: [{
+          column: RedeemColumns.Requester,
+          value: address
+        }]
+      }
     ],
-    userRedeemRequestsTotalCountFetcher,
+    genericFetcher<number>(),
     {
       enabled: !!address && !!bridgeLoaded,
       refetchInterval: 10000
     }
   );
   useErrorHandler(redeemRequestsTotalCountError);
+
   const {
     isIdle: redeemRequestsIdle,
     isLoading: redeemRequestsLoading,
