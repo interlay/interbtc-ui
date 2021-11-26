@@ -112,7 +112,7 @@ const IssueRequestsTable = (): JSX.Element => {
       {
         page: selectedPageIndex,
         perPage: TABLE_PAGE_LIMIT,
-        network: BITCOIN_NETWORK as BitcoinNetwork | undefined,
+        network: BITCOIN_NETWORK as BitcoinNetwork,
         filterIssueColumns: [{
           column: IssueColumns.Requester,
           value: address

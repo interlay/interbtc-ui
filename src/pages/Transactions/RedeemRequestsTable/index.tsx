@@ -47,7 +47,7 @@ import {
   formatDateTimePrecise,
   displayMonetaryAmount
 } from 'common/utils/utils';
-import userRedeemRequestsFetcher, { USER_REDEEM_REQUESTS_FETCHER } from 'services/user-redeem-requests-fetcher';
+import { BITCOIN_NETWORK } from '../../../constants';
 import genericFetcher, {
   GENERIC_FETCHER
 } from 'services/fetchers/generic-fetcher';
@@ -99,12 +99,20 @@ const RedeemRequestsTable = (): JSX.Element => {
     error: redeemRequestsError
   } = useQuery<Array<Redeem>, Error>(
     [
-      USER_REDEEM_REQUESTS_FETCHER,
-      address,
-      selectedPageIndex,
-      TABLE_PAGE_LIMIT
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'getFilteredRedeems',
+      {
+        page: selectedPageIndex,
+        perPage: TABLE_PAGE_LIMIT,
+        network: BITCOIN_NETWORK as BitcoinNetwork,
+        filterRedeemColumns: [{
+          column: RedeemColumns.Requester,
+          value: address
+        }] // Filter by requester == address
+      }
     ],
-    userRedeemRequestsFetcher,
+    genericFetcher<Array<Redeem>>(),
     {
       enabled: !!address && !!bridgeLoaded,
       refetchInterval: 10000

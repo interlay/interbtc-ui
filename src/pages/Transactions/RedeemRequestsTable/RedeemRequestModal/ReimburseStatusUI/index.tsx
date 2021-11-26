@@ -18,6 +18,10 @@ import {
   newMonetaryAmount
 } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
+import {
+  RedeemColumns,
+  BitcoinNetwork
+} from '@interlay/interbtc-index-client';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import
@@ -42,7 +46,8 @@ import {
 } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import { USER_REDEEM_REQUESTS_FETCHER } from 'services/user-redeem-requests-fetcher';
+import { BITCOIN_NETWORK } from '../../../../../constants';
+import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
@@ -110,10 +115,18 @@ const ReimburseStatusUI = ({
     {
       onSuccess: () => {
         queryClient.invalidateQueries([
-          USER_REDEEM_REQUESTS_FETCHER,
-          address,
-          selectedPageIndex,
-          TABLE_PAGE_LIMIT
+          GENERIC_FETCHER,
+          'interBtcIndex',
+          'getFilteredRedeems',
+          {
+            page: selectedPageIndex,
+            perPage: TABLE_PAGE_LIMIT,
+            network: BITCOIN_NETWORK as BitcoinNetwork,
+            filterRedeemColumns: [{
+              column: RedeemColumns.Requester,
+              value: address
+            }] // Filter by requester == address
+          }
         ]);
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();
@@ -131,10 +144,18 @@ const ReimburseStatusUI = ({
     {
       onSuccess: () => {
         queryClient.invalidateQueries([
-          USER_REDEEM_REQUESTS_FETCHER,
-          address,
-          selectedPageIndex,
-          TABLE_PAGE_LIMIT
+          GENERIC_FETCHER,
+          'interBtcIndex',
+          'getFilteredRedeems',
+          {
+            page: selectedPageIndex,
+            perPage: TABLE_PAGE_LIMIT,
+            network: BITCOIN_NETWORK as BitcoinNetwork,
+            filterRedeemColumns: [{
+              column: RedeemColumns.Requester,
+              value: address
+            }] // Filter by requester == address
+          }
         ]);
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();
