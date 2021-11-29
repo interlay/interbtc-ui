@@ -70,7 +70,14 @@ import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/i
 const BTC_AMOUNT = 'btc-amount';
 
 // TODO: should handle correctly later
-const EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT = 0.2;
+let EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT: number;
+if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
+  EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT = 0.2;
+} else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
+  EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT = 0.01;
+} else {
+  throw new Error('Something went wrong!');
+}
 const MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT = 1;
 
 type IssueFormData = {

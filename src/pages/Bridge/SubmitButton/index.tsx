@@ -1,15 +1,15 @@
 
 import clsx from 'clsx';
 
-import InterlayDenimContainedButton, {
-  Props as InterlayDenimContainedButtonProps
-} from 'components/buttons/InterlayDenimContainedButton';
+import InterlayDenimOrKintsugiMidnightContainedButton, {
+  Props as InterlayDenimOrKintsugiMidnightContainedButtonProps
+} from 'components/buttons/InterlayDenimOrKintsugiMidnightContainedButton';
 
 const SubmitButton = ({
   className,
   ...rest
-}: InterlayDenimContainedButtonProps): JSX.Element => (
-  <InterlayDenimContainedButton
+}: InterlayDenimOrKintsugiMidnightContainedButtonProps): JSX.Element => (
+  <InterlayDenimOrKintsugiMidnightContainedButton
     type='submit'
     className={clsx(
       'w-full',

@@ -10,6 +10,16 @@ import { BitcoinAmount } from '@interlay/monetary-js';
 
 import LineChart from '../../../../LineChart';
 import ErrorFallback from 'components/ErrorFallback';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import {
+  INTERLAY_DENIM,
+  INTERLAY_MULBERRY,
+  KINTSUGI_MIDNIGHT,
+  KINTSUGI_PRAIRIE_SAND
+} from 'utils/constants/colors';
 import genericFetcher, {
   GENERIC_FETCHER
 } from 'services/fetchers/generic-fetcher';
@@ -65,13 +75,26 @@ const RedeemedChart = (): JSX.Element => {
     }
   });
 
+  let firstChartLineColor;
+  let secondChartLineColor;
+  if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production') {
+    firstChartLineColor = INTERLAY_DENIM[500];
+    secondChartLineColor = INTERLAY_MULBERRY[500];
+  } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
+    firstChartLineColor = KINTSUGI_MIDNIGHT[500];
+    secondChartLineColor = KINTSUGI_PRAIRIE_SAND[500];
+  } else {
+    throw new Error('Something went wrong!');
+  }
+
   return (
     <LineChart
-      color={[
-        'd_interlayCalifornia',
-        'd_interlayPaleSky'
+      wrapperClassName='h-full'
+      colors={[
+        firstChartLineColor,
+        secondChartLineColor
       ]}
-      label={[
+      labels={[
         t('dashboard.redeem.total_redeemed_chart'),
         t('dashboard.redeem.per_day_redeemed_chart')
       ]}
@@ -79,16 +102,22 @@ const RedeemedChart = (): JSX.Element => {
         converted
           .map(dataPoint => new Date(dataPoint.date).toLocaleDateString())
       }
-      yAxisProps={[
+      yAxes={[
         {
-          beginAtZero: true,
-          position: 'left'
+          position: 'left',
+          ticks: {
+            beginAtZero: true,
+            maxTicksLimit: 6
+          }
         },
         {
-          position: 'right'
+          position: 'right',
+          ticks: {
+            maxTicksLimit: 6
+          }
         }
       ]}
-      data={[
+      datasets={[
         converted
           .map(dataPoint =>
             Number(BitcoinAmount.from.Satoshi(dataPoint.sat).str.BTC())

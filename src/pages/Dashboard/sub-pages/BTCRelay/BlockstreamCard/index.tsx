@@ -17,6 +17,10 @@ import Ring64, {
   Ring64Value
 } from 'components/Ring64';
 import { BTC_BLOCK_API } from 'config/bitcoin';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
@@ -70,11 +74,18 @@ const BlockstreamCard = (): JSX.Element => {
         <Ring64
           className={clsx(
             'mx-auto',
-            // ray test touch <<
-            'ring-interlayDenim'
-            // ray test touch >>
+            { 'ring-interlayDenim':
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+            { 'dark:ring-kintsugiSupernova-400':
+              process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
-          <Ring64Title className='text-interlayDenim'>
+          <Ring64Title
+            className={clsx(
+              { 'text-interlayDenim':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              { 'dark:text-kintsugiSupernova-400':
+                process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )}>
             {t('blockstream')}
           </Ring64Title>
           <Ring64Value>

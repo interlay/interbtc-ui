@@ -1,5 +1,5 @@
+
 import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
 
 import ParachainSecurityCard from '../../cards/ParachainSecurityCard';
 import TimerIncrement from 'parts/TimerIncrement';
@@ -17,14 +17,7 @@ const Parachain = (): JSX.Element => {
           subTitle={<TimerIncrement />} />
         <Hr1 className='mt-2' />
       </div>
-      <div
-        className={clsx(
-          'grid',
-          'grid-cols-2',
-          'gap-7'
-        )}>
-        <ParachainSecurityCard />
-      </div>
+      <ParachainSecurityCard />
     </>
   );
 };

@@ -7,6 +7,7 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { CollateralTimeData } from '@interlay/interbtc-index-client';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import LineChart from '../../LineChart';
 import DashboardCard from '../DashboardCard';
@@ -16,12 +17,23 @@ import Stats, {
   StatsRouterLink
 } from '../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
-import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
+import {
+  COLLATERAL_TOKEN_SYMBOL,
+  COLLATERAL_TOKEN
+} from 'config/relay-chains';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import {
+  INTERLAY_DENIM,
+  KINTSUGI_SUPERNOVA
+} from 'utils/constants/colors';
+import { PAGES } from 'utils/constants/links';
 import {
   getUsdAmount,
   displayMonetaryAmount
 } from 'common/utils/utils';
-import { PAGES } from 'utils/constants/links';
 import genericFetcher, {
   GENERIC_FETCHER
 } from 'services/fetchers/generic-fetcher';
@@ -67,6 +79,15 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
+    let chartLineColor;
+    if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production') {
+      chartLineColor = INTERLAY_DENIM[500];
+    } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
+      chartLineColor = KINTSUGI_SUPERNOVA[500];
+    } else {
+      throw new Error('Something went wrong!');
+    }
+
     return (
       <>
         <Stats
@@ -93,20 +114,25 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
             </>
           } />
         <LineChart
-          color='d_interlayDenim'
-          label={t('dashboard.vault.total_collateral_locked') as string}
+          wrapperClassName='h-full'
+          colors={[chartLineColor]}
+          labels={[t('dashboard.vault.total_collateral_locked')]}
           yLabels={cumulativeCollateralPerDay
             .slice(1)
             .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}
-          yAxisProps={[
+          yAxes={[
             {
-              beginAtZero: true,
-              precision: 0
+              ticks: {
+                beginAtZero: true,
+                precision: 0
+              }
             }
           ]}
-          data={
-            cumulativeCollateralPerDay.slice(1).map(dataPoint => dataPoint.amount)
-          } />
+          datasets={[
+            cumulativeCollateralPerDay.slice(1).map(
+              dataPoint => displayMonetaryAmount(newMonetaryAmount(dataPoint.amount, COLLATERAL_TOKEN))
+            )
+          ]} />
       </>
     );
   };

@@ -14,7 +14,9 @@ import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import Balances from './Balances';
 import AccountModal from 'parts/AccountModal';
 import InterlayLink from 'components/UI/InterlayLink';
-import InterlayDenimOutlinedButton from 'components/buttons/InterlayDenimOutlinedButton';
+import
+InterlayDenimOrKintsugiMidnightOutlinedButton from
+  'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
@@ -138,14 +140,14 @@ const Topbar = (): JSX.Element => {
                     {t('request_btc')}
                   </InterlayCaliforniaOutlinedButton>
                 </InterlayLink>
-                <InterlayDenimOutlinedButton
+                <InterlayDenimOrKintsugiMidnightOutlinedButton
                   className={SMALL_SIZE_BUTTON_CLASS_NAME}
                   pending={isRequestPending}
                   onClick={requestDOT}>
                   {t('request_dot', {
                     collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
                   })}
-                </InterlayDenimOutlinedButton>
+                </InterlayDenimOrKintsugiMidnightOutlinedButton>
                 <Balances
                   collateralTokenBalance={collateralTokenBalance}
                   wrappedTokenBalance={wrappedTokenBalance} />

@@ -1,4 +1,3 @@
-
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import {
@@ -14,6 +13,14 @@ import Stats, {
 } from '../../Stats';
 import DashboardCard from '../DashboardCard';
 import ErrorFallback from 'components/ErrorFallback';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import {
+  INTERLAY_DENIM,
+  KINTSUGI_SUNDOWN
+} from 'utils/constants/colors';
 import { PAGES } from 'utils/constants/links';
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import { getLastMidnightTimestamps } from 'common/utils/utils';
@@ -67,6 +74,15 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
       ).length
     );
 
+    let chartLineColor;
+    if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production') {
+      chartLineColor = INTERLAY_DENIM[500];
+    } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
+      chartLineColor = KINTSUGI_SUNDOWN[500];
+    } else {
+      throw new Error('Something went wrong!');
+    }
+
     return (
       <>
         <Stats
@@ -90,11 +106,19 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
             </>
           } />
         <LineChart
-          color='d_interlayDenim'
-          label={t('dashboard.vault.total_vaults_chart') as string}
+          wrapperClassName='h-full'
+          colors={[chartLineColor]}
+          labels={[t('dashboard.vault.total_vaults_chart')]}
           yLabels={graphTimestamps.map(date => new Date(date).toISOString().substring(0, 10))}
-          yAxisProps={{ beginAtZero: true, precision: 0 }}
-          data={graphData} />
+          yAxes={[
+            {
+              ticks: {
+                beginAtZero: true,
+                precision: 0
+              }
+            }
+          ]}
+          datasets={[graphData]} />
       </>
     );
   };

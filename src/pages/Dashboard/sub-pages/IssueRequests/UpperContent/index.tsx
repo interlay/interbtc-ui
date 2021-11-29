@@ -14,7 +14,12 @@ import Stats, {
   StatsDd
 } from '../../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
+import Panel from 'components/Panel';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import {
   displayMonetaryAmount,
   getUsdAmount
@@ -54,18 +59,24 @@ const UpperContent = (): JSX.Element => {
   const totalSuccessfulIssues = totalSuccessfulIssuesData.data.issuesConnection.totalCount;
 
   return (
-    <div
+    <Panel
       className={clsx(
         'grid',
         'sm:grid-cols-2',
-        'gap-5'
+        'gap-5',
+        'px-4',
+        'py-5'
       )}>
       <Stats
         leftPart={
           <>
-            {/* ray test touch << */}
-            <StatsDt className='!text-interlayDenim'>
-              {/* ray test touch >> */}
+            <StatsDt
+              className={clsx(
+                { '!text-interlayDenim':
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                { 'dark:!text-kintsugiSupernova-400':
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              )}>
               {t('dashboard.issue.issued')}
             </StatsDt>
             <StatsDd>
@@ -85,14 +96,8 @@ const UpperContent = (): JSX.Element => {
             </StatsDd>
           </>
         } />
-      <div
-        className={clsx(
-          'border',
-          'rounded'
-        )}>
-        <IssuedChart />
-      </div>
-    </div>
+      <IssuedChart />
+    </Panel>
   );
 };
 

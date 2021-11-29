@@ -14,6 +14,11 @@ import Stats, {
   StatsDd
 } from '../../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
+import Panel from 'components/Panel';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import genericFetcher, {
   GENERIC_FETCHER
 } from 'services/fetchers/generic-fetcher';
@@ -79,16 +84,24 @@ const UpperContent = (): JSX.Element => {
   // const redeemSuccessRate = totalSuccessfulRedeems / totalRedeemRequests;
 
   return (
-    <div
+    <Panel
       className={clsx(
         'grid',
         'sm:grid-cols-2',
-        'gap-5'
+        'gap-5',
+        'px-4',
+        'py-5'
       )}>
       <Stats
         leftPart={
           <>
-            <StatsDt className='!text-interlayCalifornia'>
+            <StatsDt
+              className={clsx(
+                { '!text-interlayDenim':
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                { 'dark:!text-kintsugiSupernova-400':
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              )}>
               {t('dashboard.redeem.total_redeemed')}
             </StatsDt>
             <StatsDd>
@@ -114,14 +127,8 @@ const UpperContent = (): JSX.Element => {
             </StatsDd> */}
           </>
         } />
-      <div
-        className={clsx(
-          'border',
-          'rounded'
-        )}>
-        <RedeemedChart />
-      </div>
-    </div>
+      <RedeemedChart />
+    </Panel>
   );
 };
 

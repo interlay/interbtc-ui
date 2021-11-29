@@ -1,119 +1,104 @@
-import React from 'react';
+
+// TODO: should refactor by using a better package (https://github.com/recharts/recharts)
 import { Line } from 'react-chartjs-2';
 
-interface YAxisConfig {
-  beginAtZero?: boolean;
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import {
+  INTERLAY_TEXT_PRIMARY_IN_LIGHT_MODE,
+  KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE
+} from 'utils/constants/colors';
+
+interface YAxis {
   position?: string;
-  precision?: number;
-  max?: number;
-  maxTicksLimit?: number;
+  ticks: {
+    beginAtZero?: boolean;
+    precision?: number;
+    maxTicksLimit?: number;
+  };
 }
 
-interface SingleAxisProps {
-  color: string;
-  label: string;
+interface Props {
+  colors: string[];
+  labels: string[];
   yLabels: string[];
-  yAxisProps?: YAxisConfig;
-  data: number[];
-}
-interface MultiAxisProps {
-  color: string[];
-  label: string[];
-  yLabels: string[];
-  yAxisProps: YAxisConfig[];
-  data: number[][];
-}
-type ChartProps = SingleAxisProps | MultiAxisProps;
-
-function getAccents(color: string): {
-  color: string;
-} {
-  const accent = { color: '' };
-  switch (color) {
-  case 'd_interlayCalifornia':
-    accent.color = '#ff9900';
-    break;
-  case 'd_interlayDenim':
-    accent.color = '#075abc';
-    break;
-  default:
-    accent.color = '#6b7280';
-    break;
-  }
-  return accent;
+  yAxes: YAxis[];
+  datasets: number[][] | string[][];
+  wrapperClassName?: string;
 }
 
-// TODO: should refactor by using a better package
-export default function LineChart(propsArg: ChartProps): React.ReactElement {
-  const props =
-    typeof propsArg.color === 'string' ? // meaning propsArg isn't SingleAxisProps
-      ((propsArg: SingleAxisProps) => ({
-        color: [propsArg.color],
-        label: [propsArg.label],
-        yLabels: propsArg.yLabels,
-        yAxisProps: [propsArg.yAxisProps === undefined ? {} : propsArg.yAxisProps],
-        data: [propsArg.data]
-      }))(propsArg as SingleAxisProps) :
-      (propsArg as MultiAxisProps);
-
+const LineChart = ({
+  colors,
+  labels,
+  yLabels,
+  yAxes,
+  datasets,
+  wrapperClassName
+}: Props): JSX.Element => {
   const data = {
-    labels: props.yLabels,
-    datasets: props.data.map((dataset, i) => ({
-      label: props.label[i],
-      yAxisID: i.toString(),
+    labels: yLabels,
+    datasets: datasets.map((dataset: number[] | string[], index: number) => ({
+      label: labels[index],
+      yAxisID: index.toString(),
       fill: false,
-      borderColor: getAccents(props.color[i]).color,
-      borderWidth: 2,
-      borderDash: [],
-      borderDashOffset: 0.0,
-      pointBackgroundColor: getAccents(props.color[i]).color,
-      pointBorderColor: 'rgba(255,255,255,0)',
-      pointHoverBackgroundColor: getAccents(props.color[i]).color,
-      pointBorderWidth: 20,
-      pointHoverRadius: 4,
-      pointHoverBorderWidth: 15,
-      pointRadius: 4,
-      data: dataset,
-      backgroundColor: 'rgba(255,255,255,0)'
+      borderWidth: 1,
+      borderColor: colors[index],
+      pointBackgroundColor: colors[index],
+      pointHoverBackgroundColor: colors[index],
+      data: dataset
     }))
   };
 
-  const chartProps = {
-    data,
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      legend: {
-        labels: {
-          fontSize: 9
-        }
-      },
-      scales: {
-        xAxes: [
-          {
-            gridLines: {
-              display: false
-            }
-          }
-        ],
-        yAxes: props.yAxisProps.map((yArgs, i) => ({
-          id: i.toString(),
-          type: 'linear',
-          display: true,
-          ticks: {
-            ...(yArgs.beginAtZero ? { beginAtZero: true } : {}),
-            ...(yArgs.precision === undefined ? {} : { precision: yArgs.precision }),
-            ...(yArgs.max === undefined ? {} : { max: yArgs.max }),
-            ...(yArgs.maxTicksLimit === undefined ? {} : { maxTicksLimit: yArgs.maxTicksLimit })
-          },
-          ...(yArgs.position === undefined ? {} : { position: yArgs.position })
-        }))
+  let textPrimaryColor;
+  if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production') {
+    textPrimaryColor = INTERLAY_TEXT_PRIMARY_IN_LIGHT_MODE;
+  } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
+    textPrimaryColor = KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE;
+  } else {
+    throw new Error('Something went wrong!');
+  }
+
+  const options = {
+    maintainAspectRatio: false,
+    legend: {
+      labels: {
+        fontSize: 12,
+        fontColor: textPrimaryColor
       }
+    },
+    scales: {
+      xAxes: [
+        {
+          ticks: {
+            fontColor: textPrimaryColor
+          }
+        }
+      ],
+      yAxes: yAxes.map(({
+        ticks,
+        ...rest
+      }, index) => ({
+        id: index.toString(),
+        type: 'linear',
+        display: true,
+        ticks: {
+          fontColor: colors[index],
+          ...ticks
+        },
+        ...rest
+      }))
     }
   };
+
   return (
-    <div>
-      <Line {...chartProps} />
+    <div className={wrapperClassName}>
+      <Line
+        data={data}
+        options={options} />
     </div>
   );
-}
+};
+
+export default LineChart;
