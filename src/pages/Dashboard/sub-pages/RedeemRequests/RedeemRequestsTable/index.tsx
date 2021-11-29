@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useTable } from 'react-table';
 import { useQuery } from 'react-query';
@@ -9,9 +10,7 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import clsx from 'clsx';
-import {
-  RedeemStatus
-} from '@interlay/interbtc-api';
+import { RedeemStatus } from '@interlay/interbtc-api';
 
 import SectionTitle from 'parts/SectionTitle';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
@@ -40,10 +39,15 @@ import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import genericFetcher, {
   GENERIC_FETCHER
 } from 'services/fetchers/generic-fetcher';
-import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import redeemFetcher, { REDEEM_FETCHER, setRedeemStatus } from 'services/fetchers/redeem-request-fetcher';
+import graphqlFetcher, {
+  GraphqlReturn,
+  GRAPHQL_FETCHER
+} from 'services/fetchers/graphql-fetcher';
+import redeemFetcher, {
+  REDEEM_FETCHER,
+  getRedeemWithStatus
+} from 'services/fetchers/redeem-request-fetcher';
 import redeemCountQuery from 'services/queries/redeemRequestCount';
-import { useSelector } from 'react-redux';
 import { StoreType } from 'common/types/util.types';
 
 const RedeemRequestsTable = (): JSX.Element => {
@@ -278,7 +282,7 @@ const RedeemRequestsTable = (): JSX.Element => {
   }
 
   const redeems = anyIdle ? [] : redeemsData.map(
-    (issue: any) => setRedeemStatus(
+    (issue: any) => getRedeemWithStatus(
       issue,
       // anyIdle = false, therefore stableBtcConfirmations !== undefined
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

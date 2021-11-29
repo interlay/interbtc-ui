@@ -44,7 +44,7 @@ import {
 import redeemCountQuery from 'services/queries/redeemRequestCount';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import redeemFetcher, { REDEEM_FETCHER, setRedeemStatus } from 'services/fetchers/redeem-request-fetcher';
+import redeemFetcher, { REDEEM_FETCHER, getRedeemWithStatus } from 'services/fetchers/redeem-request-fetcher';
 import { useSelector } from 'react-redux';
 import { StoreType } from 'common/types/util.types';
 
@@ -321,7 +321,7 @@ const RedeemRequestsTable = (): JSX.Element => {
   }
 
   const redeems = anyIdle ? [] : redeemRequestsData.map(
-    (issue: any) => setRedeemStatus(
+    (issue: any) => getRedeemWithStatus(
       issue,
       // anyIdle = false, therefore stableBtcConfirmations !== undefined
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

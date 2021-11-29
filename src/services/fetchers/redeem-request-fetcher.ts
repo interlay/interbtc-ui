@@ -53,8 +53,8 @@ const redeemFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
   }));
 };
 
-// TODO: get graphql types to audo-decode enum? Can e.g. Relay do that?
-export function setRedeemStatus(
+// TODO: get graphql types to auto-decode enum? Can e.g. Relay do that?
+export function getRedeemWithStatus(
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   redeem: any,
   stableBtcConfirmations: number,
