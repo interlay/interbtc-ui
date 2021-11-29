@@ -22,7 +22,10 @@ import {
   KINTSUGI_SUNDOWN
 } from 'utils/constants/colors';
 import { PAGES } from 'utils/constants/links';
-import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
+import graphqlFetcher, {
+  GraphqlReturn,
+  GRAPHQL_FETCHER
+} from 'services/fetchers/graphql-fetcher';
 import { getLastMidnightTimestamps } from 'common/utils/utils';
 
 interface Props {
@@ -40,7 +43,7 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
   const {
     isIdle: vaultsIdle,
     isLoading: vaultsLoading,
-    data: vaultsData,
+    data: vaults,
     error: vaultsError
   } = useQuery<GraphqlReturn<Array<VaultRegistration>>, Error>(
     [
@@ -50,8 +53,7 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
           id
           registrationTimestamp
         }
-      }
-      `
+      }`
     ],
     graphqlFetcher<Array<VaultRegistration>>()
   );
@@ -62,11 +64,11 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
     if (vaultsIdle || vaultsLoading) {
       return <>Loading...</>;
     }
-    if (vaultsData === undefined) {
+    if (vaults === undefined) {
       throw new Error('Something went wrong!');
     }
 
-    const vaultRegistrations = vaultsData.data.vaults;
+    const vaultRegistrations = vaults.data.vaults;
     const graphTimestamps = getLastMidnightTimestamps(5, true);
     const graphData = graphTimestamps.map(
       timestamp => vaultRegistrations.filter(
