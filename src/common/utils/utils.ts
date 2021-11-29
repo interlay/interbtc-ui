@@ -52,14 +52,15 @@ function formatDateTimePrecise(date: Date): string {
 
 function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): Array<number> {
   const midnights: number[] = [];
-  for (let i = 0; i < daysBack; i++) {
-    const dayBoundary = new Date(Date.now() - (startFromTonight ? i - 1 : i) * 3600 * 24 * 1000);
+  for (let index = 0; index < daysBack; index++) {
+    const dayBoundary = new Date(Date.now() - (startFromTonight ? index - 1 : index) * 3600 * 24 * 1000);
     dayBoundary.setMilliseconds(0);
     dayBoundary.setSeconds(0);
     dayBoundary.setMinutes(0);
     dayBoundary.setHours(0);
     midnights.push(dayBoundary.getTime());
   }
+
   return midnights.reverse();
 }
 
@@ -127,6 +128,7 @@ const requestsInStore = (
 
 const btcAddressFromEventToString = (
   addressObject: string,
+  // TODO: hardcoded
   network: 'mainnet' | 'regtest' | 'testnet'
 ): string => {
   const parsedAddress = JSON.parse(addressObject);
@@ -135,6 +137,7 @@ const btcAddressFromEventToString = (
     'hex'
   );
   const paymentType = Object.keys(parsedAddress)[0].toUpperCase();
+
   let payment;
   switch (paymentType) {
   case 'P2WPKHV0':
@@ -147,13 +150,13 @@ const btcAddressFromEventToString = (
     payment = payments.p2sh;
     break;
   default:
-    payment = () => {
-      throw new Error('Invalid address type');
-    };
+    throw new Error('Something went wrong!');
   }
+
   return (
     payment({
       hash,
+      // TODO: hardcoded
       network: networks[network === 'mainnet' ? 'bitcoin' : network]
     }).address || ''
   );
