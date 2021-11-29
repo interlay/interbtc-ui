@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
+
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -64,10 +63,9 @@ const IssueRequestsTable = (): JSX.Element => {
         ],
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: issue } }: any) {
-          const date = issue.request.timestamp;
           return (
             <>
-              {formatDateTimePrecise(new Date(date))}
+              {formatDateTimePrecise(new Date(issue.request.timestamp))}
             </>
           );
         }
@@ -276,7 +274,7 @@ const IssueRequestsTable = (): JSX.Element => {
       GRAPHQL_FETCHER,
       issueCountQuery()
     ],
-    graphqlFetcher<any>()
+    graphqlFetcher<GraphqlReturn<any>>()
   );
   useErrorHandler(issuesCountError);
 
@@ -343,10 +341,12 @@ const IssueRequestsTable = (): JSX.Element => {
       <>
         <InterlayTable {...getTableProps()}>
           <InterlayThead>
-            {headerGroups.map(headerGroup => (
+            {/* TODO: should type properly */}
+            {headerGroups.map((headerGroup: any) => (
               // eslint-disable-next-line react/jsx-key
               <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
+                {/* TODO: should type properly */}
+                {headerGroup.headers.map((column: any) => (
                   // eslint-disable-next-line react/jsx-key
                   <InterlayTh
                     {...column.getHeaderProps([
@@ -362,13 +362,15 @@ const IssueRequestsTable = (): JSX.Element => {
             ))}
           </InterlayThead>
           <InterlayTbody {...getTableBodyProps()}>
-            {rows.map(row => {
+            {/* TODO: should type properly */}
+            {rows.map((row: any) => {
               prepareRow(row);
 
               return (
                 // eslint-disable-next-line react/jsx-key
                 <InterlayTr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
+                  {/* TODO: should type properly */}
+                  {row.cells.map((cell: any) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
                       <InterlayTd

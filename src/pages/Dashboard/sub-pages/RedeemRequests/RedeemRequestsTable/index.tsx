@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
+
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -52,9 +51,9 @@ import { StoreType } from 'common/types/util.types';
 
 const RedeemRequestsTable = (): JSX.Element => {
   const queryParams = useQueryParams();
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
   const columns = React.useMemo(
@@ -64,11 +63,11 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: [
           'text-left'
         ],
+        // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
-          const date = redeem.request.timestamp;
           return (
             <>
-              {formatDateTimePrecise(new Date(date))}
+              {formatDateTimePrecise(new Date(redeem.request.timestamp))}
             </>
           );
         }
@@ -78,11 +77,17 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: [
           'text-left'
         ],
+        // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
           let date;
-          if (redeem.execution) date = redeem.execution.timestamp;
-          else if (redeem.cancellation) date = redeem.cancellation.timestamp;
-          else date = redeem.request.timestamp;
+          if (redeem.execution) {
+            date = redeem.execution.timestamp;
+          } else if (redeem.cancellation) {
+            date = redeem.cancellation.timestamp;
+          } else {
+            date = redeem.request.timestamp;
+          }
+
           return (
             <>
               {formatDateTimePrecise(new Date(date))}
@@ -95,11 +100,17 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
+        // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
           let height;
-          if (redeem.execution) height = redeem.execution.height.active;
-          else if (redeem.cancellation) height = redeem.cancellation.height.active;
-          else height = redeem.request.height.active;
+          if (redeem.execution) {
+            height = redeem.execution.height.active;
+          } else if (redeem.cancellation) {
+            height = redeem.cancellation.height.active;
+          } else {
+            height = redeem.request.height.active;
+          }
+
           return (
             <>
               {height}
@@ -112,6 +123,7 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
+        // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
           return (
             <>
@@ -170,8 +182,6 @@ const RedeemRequestsTable = (): JSX.Element => {
     [t]
   );
 
-  const selectedPageIndex = selectedPage - 1;
-
   const {
     isIdle: stableBtcConfirmationsIdle,
     isLoading: stableBtcConfirmationsLoading,
@@ -191,10 +201,10 @@ const RedeemRequestsTable = (): JSX.Element => {
   useErrorHandler(stableBtcConfirmationsError);
 
   const {
-    isIdle: latestActiveBlockIdle,
-    isLoading: latestActiveBlockLoading,
+    isIdle: latestParachainActiveBlockIdle,
+    isLoading: latestParachainActiveBlockLoading,
     data: latestParachainActiveBlock,
-    error: latestActiveBlockError
+    error: latestParachainActiveBlockError
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
@@ -206,7 +216,7 @@ const RedeemRequestsTable = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(latestActiveBlockError);
+  useErrorHandler(latestParachainActiveBlockError);
 
   const {
     isIdle: stableParachainConfirmationsIdle,
@@ -226,12 +236,14 @@ const RedeemRequestsTable = (): JSX.Element => {
   );
   useErrorHandler(stableParachainConfirmationsError);
 
-  // TODO: type graphql returns properly
+  const selectedPageIndex = selectedPage - 1;
+
   const {
     isIdle: redeemsIdle,
     isLoading: redeemsLoading,
-    data: redeemsData,
+    data: redeems,
     error: redeemsError
+  // TODO: should type properly (`Relay`)
   } = useQuery<any, Error>(
     [
       REDEEM_FETCHER,
@@ -245,50 +257,39 @@ const RedeemRequestsTable = (): JSX.Element => {
     }
   );
   useErrorHandler(redeemsError);
+
   const {
     isIdle: redeemsCountIdle,
     isLoading: redeemsCountLoading,
-    data: redeemsCountData,
+    data: redeemsCount,
     error: redeemsCountError
+  // TODO: should type properly (`Relay`)
   } = useQuery<GraphqlReturn<any>, Error>(
     [
       GRAPHQL_FETCHER,
       redeemCountQuery()
     ],
-    graphqlFetcher<any>()
+    graphqlFetcher<GraphqlReturn<any>>()
   );
   useErrorHandler(redeemsCountError);
 
-  const anyIdle =
-    stableBtcConfirmationsIdle ||
-    stableBtcConfirmationsLoading ||
-    stableParachainConfirmationsIdle ||
-    stableParachainConfirmationsLoading ||
-    latestActiveBlockLoading ||
-    latestActiveBlockIdle ||
-    redeemsIdle ||
-    redeemsLoading ||
-    redeemsCountIdle ||
-    redeemsCountLoading;
-
-  if (!anyIdle && (
-    redeemsData === undefined ||
-    redeemsCountData === undefined ||
-    stableBtcConfirmations === undefined ||
-    stableParachainConfirmations === undefined ||
-    latestParachainActiveBlock === undefined
-  )) {
-    throw new Error('Something went wrong!');
-  }
-
-  const redeems = anyIdle ? [] : redeemsData.map(
-    (issue: any) => getRedeemWithStatus(
-      issue,
-      // anyIdle = false, therefore stableBtcConfirmations !== undefined
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      stableBtcConfirmations!, stableParachainConfirmations!, latestParachainActiveBlock!
-    )
-  );
+  const data =
+    (
+      redeems === undefined ||
+      stableBtcConfirmations === undefined ||
+      stableParachainConfirmations === undefined ||
+      latestParachainActiveBlock === undefined
+    ) ?
+      [] :
+      redeems.map(
+        // TODO: should type properly (`Relay`)
+        (redeem: any) => getRedeemWithStatus(
+          redeem,
+          stableBtcConfirmations,
+          stableParachainConfirmations,
+          latestParachainActiveBlock
+        )
+      );
 
   const {
     getTableProps,
@@ -299,13 +300,27 @@ const RedeemRequestsTable = (): JSX.Element => {
   } = useTable(
     {
       columns,
-      data: redeems
+      data
     }
   );
 
   const renderContent = () => {
-    if (anyIdle) {
+    if (
+      stableBtcConfirmationsIdle ||
+      stableBtcConfirmationsLoading ||
+      stableParachainConfirmationsIdle ||
+      stableParachainConfirmationsLoading ||
+      latestParachainActiveBlockIdle ||
+      latestParachainActiveBlockLoading ||
+      redeemsIdle ||
+      redeemsLoading ||
+      redeemsCountIdle ||
+      redeemsCountLoading
+    ) {
       return <PrimaryColorEllipsisLoader />;
+    }
+    if (redeemsCount === undefined) {
+      throw new Error('Something went wrong!');
     }
 
     const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number; }) => {
@@ -314,16 +329,18 @@ const RedeemRequestsTable = (): JSX.Element => {
       });
     };
 
-    const totalRedeemCount = redeemsCountData?.data?.redeemsConnection?.totalCount || 0;
+    const totalRedeemCount = redeemsCount.data.redeemsConnection.totalCount || 0;
     const pageCount = Math.ceil(totalRedeemCount / TABLE_PAGE_LIMIT);
 
     return (
       <>
         <InterlayTable {...getTableProps()}>
           <InterlayThead>
+            {/* TODO: should type properly */}
             {headerGroups.map((headerGroup: any) => (
               // eslint-disable-next-line react/jsx-key
               <InterlayTr {...headerGroup.getHeaderGroupProps()}>
+                {/* TODO: should type properly */}
                 {headerGroup.headers.map((column: any) => (
                   // eslint-disable-next-line react/jsx-key
                   <InterlayTh
@@ -340,12 +357,14 @@ const RedeemRequestsTable = (): JSX.Element => {
             ))}
           </InterlayThead>
           <InterlayTbody {...getTableBodyProps()}>
+            {/* TODO: should type properly */}
             {rows.map((row: any) => {
               prepareRow(row);
 
               return (
                 // eslint-disable-next-line react/jsx-key
                 <InterlayTr {...row.getRowProps()}>
+                  {/* TODO: should type properly */}
                   {row.cells.map((cell: any) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
