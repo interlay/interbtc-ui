@@ -34,7 +34,10 @@ import {
 } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
+import graphqlFetcher, {
+  GraphqlReturn,
+  GRAPHQL_FETCHER
+} from 'services/fetchers/graphql-fetcher';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import issueFetcher, { ISSUE_FETCHER, setIssueStatus } from 'services/fetchers/issue-request-fetcher';
 import issueCountQuery from 'services/queries/issueRequestCount';
@@ -209,7 +212,7 @@ const IssueRequestsTable = (): JSX.Element => {
     genericFetcher<number>()
   );
 
-  // TODO: Type graphql returns properly
+  // TODO: type graphql returns properly
   const {
     isIdle: issuesIdle,
     isLoading: issuesLoading,

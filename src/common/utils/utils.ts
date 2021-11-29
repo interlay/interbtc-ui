@@ -4,7 +4,10 @@ import {
   Redeem,
   CurrencyUnit
 } from '@interlay/interbtc-api';
-import { NUMERIC_STRING_REGEX, PARACHAIN_URL } from '../../constants';
+import {
+  NUMERIC_STRING_REGEX,
+  PARACHAIN_URL
+} from '../../constants';
 import Big from 'big.js';
 import { AccountId } from '@polkadot/types/interfaces/runtime';
 import {

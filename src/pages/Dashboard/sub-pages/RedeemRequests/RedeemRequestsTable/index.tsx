@@ -210,7 +210,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     genericFetcher<number>()
   );
 
-  // TODO: Type graphql returns properly
+  // TODO: type graphql returns properly
   const {
     isIdle: redeemsIdle,
     isLoading: redeemsLoading,
