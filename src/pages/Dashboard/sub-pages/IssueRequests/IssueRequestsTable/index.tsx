@@ -1,9 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
+import { useQuery } from 'react-query';
 import clsx from 'clsx';
 import {
   useErrorHandler,
@@ -11,7 +12,6 @@ import {
 } from 'react-error-boundary';
 import { IssueStatus } from '@interlay/interbtc-api';
 
-import { displayMonetaryAmount } from 'common/utils/utils';
 import SectionTitle from 'parts/SectionTitle';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import ErrorFallback from 'components/ErrorFallback';
@@ -31,7 +31,8 @@ import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import {
   shortAddress,
-  formatDateTimePrecise
+  formatDateTimePrecise,
+  displayMonetaryAmount
 } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
@@ -40,16 +41,18 @@ import graphqlFetcher, {
   GRAPHQL_FETCHER
 } from 'services/fetchers/graphql-fetcher';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import issueFetcher, { ISSUE_FETCHER, setIssueStatus } from 'services/fetchers/issue-request-fetcher';
+import issueFetcher, {
+  ISSUE_FETCHER,
+  getIssueWithStatus
+} from 'services/fetchers/issue-request-fetcher';
 import issueCountQuery from 'services/queries/issueRequestCount';
-import { useSelector } from 'react-redux';
 import { StoreType } from 'common/types/util.types';
 
 const IssueRequestsTable = (): JSX.Element => {
   const queryParams = useQueryParams();
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
   const columns = React.useMemo(
@@ -59,6 +62,7 @@ const IssueRequestsTable = (): JSX.Element => {
         classNames: [
           'text-left'
         ],
+        // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: issue } }: any) {
           const date = issue.request.timestamp;
           return (
@@ -73,11 +77,17 @@ const IssueRequestsTable = (): JSX.Element => {
         classNames: [
           'text-left'
         ],
+        // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: issue } }: any) {
           let date;
-          if (issue.execution) date = issue.execution.timestamp;
-          else if (issue.cancellation) date = issue.cancellation.timestamp;
-          else date = issue.request.timestamp;
+          if (issue.execution) {
+            date = issue.execution.timestamp;
+          } else if (issue.cancellation) {
+            date = issue.cancellation.timestamp;
+          } else {
+            date = issue.request.timestamp;
+          }
+
           return (
             <>
               {formatDateTimePrecise(new Date(date))}
@@ -90,11 +100,17 @@ const IssueRequestsTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
+        // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: issue } }: any) {
           let height;
-          if (issue.execution) height = issue.execution.height.active;
-          else if (issue.cancellation) height = issue.cancellation.height.active;
-          else height = issue.request.height.active;
+          if (issue.execution) {
+            height = issue.execution.height.active;
+          } else if (issue.cancellation) {
+            height = issue.cancellation.height.active;
+          } else {
+            height = issue.request.height.active;
+          }
+
           return (
             <>
               {height}
@@ -107,13 +123,18 @@ const IssueRequestsTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
+        // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: issue } }: any) {
-          let value;
-          if (issue.execution) value = issue.execution.amountWrapped;
-          else value = issue.request.amountWrapped;
+          let wrappedTokenAmount;
+          if (issue.execution) {
+            wrappedTokenAmount = issue.execution.amountWrapped;
+          } else {
+            wrappedTokenAmount = issue.request.amountWrapped;
+          }
+
           return (
             <>
-              {displayMonetaryAmount(value)}
+              {displayMonetaryAmount(wrappedTokenAmount)}
             </>
           );
         }
@@ -168,8 +189,6 @@ const IssueRequestsTable = (): JSX.Element => {
     [t]
   );
 
-  const selectedPageIndex = selectedPage - 1;
-
   const {
     isIdle: stableBtcConfirmationsIdle,
     isLoading: stableBtcConfirmationsLoading,
@@ -208,7 +227,7 @@ const IssueRequestsTable = (): JSX.Element => {
 
   const {
     isIdle: stableParachainConfirmationsIdle,
-    isLoading: stablePrachainConfirmationsLoading,
+    isLoading: stableParachainConfirmationsLoading,
     data: stableParachainConfirmations,
     error: stableParachainConfirmationsError
   } = useQuery<number, Error>(
@@ -224,12 +243,14 @@ const IssueRequestsTable = (): JSX.Element => {
   );
   useErrorHandler(stableParachainConfirmationsError);
 
-  // TODO: type graphql returns properly
+  const selectedPageIndex = selectedPage - 1;
+
   const {
     isIdle: issuesIdle,
     isLoading: issuesLoading,
-    data: issuesData,
+    data: issues,
     error: issuesError
+  // TODO: should type properly (`Relay`)
   } = useQuery<any, Error>(
     [
       ISSUE_FETCHER,
@@ -243,11 +264,13 @@ const IssueRequestsTable = (): JSX.Element => {
     }
   );
   useErrorHandler(issuesError);
+
   const {
     isIdle: issuesCountIdle,
     isLoading: issuesCountLoading,
-    data: issuesCountData,
+    data: issuesCount,
     error: issuesCountError
+  // TODO: should type properly (`Relay`)
   } = useQuery<GraphqlReturn<any>, Error>(
     [
       GRAPHQL_FETCHER,
@@ -257,36 +280,23 @@ const IssueRequestsTable = (): JSX.Element => {
   );
   useErrorHandler(issuesCountError);
 
-  const anyIdle =
-    stableBtcConfirmationsIdle ||
-    stableBtcConfirmationsLoading ||
-    stableParachainConfirmationsIdle ||
-    stablePrachainConfirmationsLoading ||
-    latestActiveBlockLoading ||
-    latestActiveBlockIdle ||
-    issuesIdle ||
-    issuesLoading ||
-    issuesCountIdle ||
-    issuesCountLoading;
-
-  if (!anyIdle && (
-    issuesData === undefined ||
-    issuesCountData === undefined ||
-    stableBtcConfirmations === undefined ||
-    stableParachainConfirmations === undefined ||
-    latestParachainActiveBlock === undefined
-  )) {
-    throw new Error('Something went wrong!');
-  }
-
-  const issues = anyIdle ? [] : issuesData.map(
-    (issue: any) => setIssueStatus(
-      issue,
-      // anyIdle = false, therefore stableBtcConfirmations !== undefined
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      stableBtcConfirmations!, stableParachainConfirmations!, latestParachainActiveBlock!
-    )
-  );
+  const data =
+    (
+      issues === undefined ||
+      stableBtcConfirmations === undefined ||
+      stableParachainConfirmations === undefined ||
+      latestParachainActiveBlock === undefined
+    ) ?
+      [] :
+      issues.map(
+        // TODO: should type properly (`Relay`)
+        (issue: any) => getIssueWithStatus(
+          issue,
+          stableBtcConfirmations,
+          stableParachainConfirmations,
+          latestParachainActiveBlock
+        )
+      );
 
   const {
     getTableProps,
@@ -297,13 +307,27 @@ const IssueRequestsTable = (): JSX.Element => {
   } = useTable(
     {
       columns,
-      data: issues
+      data
     }
   );
 
   const renderContent = () => {
-    if (anyIdle) {
+    if (
+      stableBtcConfirmationsIdle ||
+      stableBtcConfirmationsLoading ||
+      stableParachainConfirmationsIdle ||
+      stableParachainConfirmationsLoading ||
+      latestActiveBlockIdle ||
+      latestActiveBlockLoading ||
+      issuesIdle ||
+      issuesLoading ||
+      issuesCountIdle ||
+      issuesCountLoading
+    ) {
       return <PrimaryColorEllipsisLoader />;
+    }
+    if (issuesCount === undefined) {
+      throw new Error('Something went wrong!');
     }
 
     const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number; }) => {
@@ -312,7 +336,7 @@ const IssueRequestsTable = (): JSX.Element => {
       });
     };
 
-    const totalIssueCount = issuesCountData?.data?.issuesConnection?.totalCount || 0;
+    const totalIssueCount = issuesCount.data.issuesConnection.totalCount || 0;
     const pageCount = Math.ceil(totalIssueCount / TABLE_PAGE_LIMIT);
 
     return (

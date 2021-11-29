@@ -50,7 +50,7 @@ import { showAccountModalAction } from 'common/actions/general.actions';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import issueCountQuery from 'services/queries/issueRequestCount';
-import issueFetcher, { ISSUE_FETCHER, setIssueStatus } from 'services/fetchers/issue-request-fetcher';
+import issueFetcher, { ISSUE_FETCHER, getIssueWithStatus } from 'services/fetchers/issue-request-fetcher';
 
 const IssueRequestsTable = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -314,7 +314,7 @@ const IssueRequestsTable = (): JSX.Element => {
   }
 
   const issues = anyIdle ? [] : issueRequestsData.map(
-    (issue: any) => setIssueStatus(
+    (issue: any) => getIssueWithStatus(
       issue,
       // anyIdle = false, therefore stableBtcConfirmations !== undefined
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

@@ -50,8 +50,8 @@ const issueFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
   }));
 };
 
-// TODO: get graphql types to audo-decode enum? Can e.g. Relay do that?
-export function setIssueStatus(
+// TODO: get graphql types to auto-decode enum? Can e.g. Relay do that?
+export function getIssueWithStatus(
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   issue: any,
   stableBtcConfirmations: number,
@@ -61,14 +61,22 @@ export function setIssueStatus(
   stableParachainConfirmations = Number(stableParachainConfirmations);
   stableBtcConfirmations = Number(stableBtcConfirmations);
   parachainActiveHeight = Number(parachainActiveHeight);
+
   if (issue.status !== 'Pending') {
     // ideally this would be auto-decoded, for now set by hand
-    if (issue.status === 'Expired') issue.status = IssueStatus.Expired;
-    else if (issue.status === 'Completed') issue.status = IssueStatus.Completed;
-    else if (issue.status === 'Cancelled') issue.status = IssueStatus.Cancelled;
-    else if (issue.status === 'RequestedRefund') issue.status = IssueStatus.RequestedRefund;
+    if (issue.status === 'Expired') {
+      issue.status = IssueStatus.Expired;
+    } else if (issue.status === 'Completed') {
+      issue.status = IssueStatus.Completed;
+    } else if (issue.status === 'Cancelled') {
+      issue.status = IssueStatus.Cancelled;
+    } else if (issue.status === 'RequestedRefund') {
+      issue.status = IssueStatus.RequestedRefund;
+    }
+
     return issue;
   }
+
   if (!issue.backingPayment || !issue.backingPayment.btcTxId) {
     issue.status = IssueStatus.PendingWithBtcTxNotFound;
   } else if (!issue.backingPayment.confirmations) {
@@ -82,6 +90,7 @@ export function setIssueStatus(
   } else {
     issue.status = IssueStatus.PendingWithEnoughConfirmations;
   }
+
   return issue;
 }
 
