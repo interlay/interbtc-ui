@@ -25,7 +25,10 @@ import {
   getUsdAmount
 } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
+import graphqlFetcher, {
+  GraphqlReturn,
+  GRAPHQL_FETCHER
+} from 'services/fetchers/graphql-fetcher';
 import issueCountQuery from 'services/queries/issueRequestCount';
 
 const UpperContent = (): JSX.Element => {
@@ -38,8 +41,9 @@ const UpperContent = (): JSX.Element => {
   const {
     isIdle: totalSuccessfulIssuesIdle,
     isLoading: totalSuccessfulIssuesLoading,
-    data: totalSuccessfulIssuesData,
+    data: totalSuccessfulIssues,
     error: totalSuccessfulIssuesError
+  // TODO: should type properly (`Relay`)
   } = useQuery<GraphqlReturn<any>, Error>(
     [
       GRAPHQL_FETCHER,
@@ -53,10 +57,10 @@ const UpperContent = (): JSX.Element => {
   if (totalSuccessfulIssuesIdle || totalSuccessfulIssuesLoading) {
     return <>Loading...</>;
   }
-  if (!totalSuccessfulIssuesData) {
+  if (totalSuccessfulIssues === undefined) {
     throw new Error('Something went wrong!');
   }
-  const totalSuccessfulIssues = totalSuccessfulIssuesData.data.issuesConnection.totalCount;
+  const totalCount = totalSuccessfulIssues.data.issuesConnection.totalCount;
 
   return (
     <Panel
@@ -92,7 +96,7 @@ const UpperContent = (): JSX.Element => {
               {t('dashboard.issue.issue_requests')}
             </StatsDt>
             <StatsDd>
-              {totalSuccessfulIssues}
+              {totalCount}
             </StatsDd>
           </>
         } />
