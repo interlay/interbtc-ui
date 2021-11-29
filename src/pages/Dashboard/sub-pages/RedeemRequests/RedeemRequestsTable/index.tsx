@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// // @ts-nocheck
+// @ts-nocheck
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTable } from 'react-table';
@@ -42,18 +42,20 @@ import genericFetcher, {
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import redeemFetcher, { REDEEM_FETCHER, setRedeemStatus } from 'services/fetchers/redeem-request-fetcher';
 import redeemCountQuery from 'services/queries/redeemRequestCount';
+import { useSelector } from 'react-redux';
+import { StoreType } from 'common/types/util.types';
 
 const RedeemRequestsTable = (): JSX.Element => {
   const queryParams = useQueryParams();
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
   const columns = React.useMemo(
     () => [
       {
         Header: t('date_created'),
-        accessor: '',
         classNames: [
           'text-left'
         ],
@@ -68,7 +70,6 @@ const RedeemRequestsTable = (): JSX.Element => {
       },
       {
         Header: t('last_update'),
-        accessor: '',
         classNames: [
           'text-left'
         ],
@@ -86,7 +87,6 @@ const RedeemRequestsTable = (): JSX.Element => {
       },
       {
         Header: t('parachain_block'),
-        accessor: '',
         classNames: [
           'text-right'
         ],
@@ -104,7 +104,6 @@ const RedeemRequestsTable = (): JSX.Element => {
       },
       {
         Header: t('redeem_page.amount'),
-        accessor: '',
         classNames: [
           'text-right'
         ],
@@ -169,18 +168,22 @@ const RedeemRequestsTable = (): JSX.Element => {
   const selectedPageIndex = selectedPage - 1;
 
   const {
-    isIdle: btcConfirmationsIdle,
-    isLoading: btcConfirmationsLoading,
+    isIdle: stableBtcConfirmationsIdle,
+    isLoading: stableBtcConfirmationsLoading,
     data: stableBtcConfirmations,
-    error: btcConfirmationsError
+    error: stableBtcConfirmationsError
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
       'interBtcIndex',
       'getBtcConfirmations'
     ],
-    genericFetcher<number>()
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
   );
+  useErrorHandler(stableBtcConfirmationsError);
 
   const {
     isIdle: latestActiveBlockIdle,
@@ -193,22 +196,30 @@ const RedeemRequestsTable = (): JSX.Element => {
       'interBtcIndex',
       'latestParachainActiveBlock'
     ],
-    genericFetcher<number>()
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
   );
+  useErrorHandler(latestActiveBlockError);
 
   const {
-    isIdle: parachainConfirmationsIdle,
-    isLoading: parachainConfirmationsLoading,
+    isIdle: stableParachainConfirmationsIdle,
+    isLoading: stableParachainConfirmationsLoading,
     data: stableParachainConfirmations,
-    error: parachainConfirmationsError
+    error: stableParachainConfirmationsError
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
       'interBtcIndex',
       'getParachainConfirmations'
     ],
-    genericFetcher<number>()
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
   );
+  useErrorHandler(stableParachainConfirmationsError);
 
   // TODO: type graphql returns properly
   const {
@@ -228,6 +239,7 @@ const RedeemRequestsTable = (): JSX.Element => {
       enabled: stableBtcConfirmations !== undefined
     }
   );
+  useErrorHandler(redeemsError);
   const {
     isIdle: redeemsCountIdle,
     isLoading: redeemsCountLoading,
@@ -240,17 +252,13 @@ const RedeemRequestsTable = (): JSX.Element => {
     ],
     graphqlFetcher<any>()
   );
-  useErrorHandler(redeemsError);
   useErrorHandler(redeemsCountError);
-  useErrorHandler(btcConfirmationsError);
-  useErrorHandler(parachainConfirmationsError);
-  useErrorHandler(latestActiveBlockError);
 
   const anyIdle =
-    btcConfirmationsIdle ||
-    btcConfirmationsLoading ||
-    parachainConfirmationsIdle ||
-    parachainConfirmationsLoading ||
+    stableBtcConfirmationsIdle ||
+    stableBtcConfirmationsLoading ||
+    stableParachainConfirmationsIdle ||
+    stableParachainConfirmationsLoading ||
     latestActiveBlockLoading ||
     latestActiveBlockIdle ||
     redeemsIdle ||
@@ -295,89 +303,79 @@ const RedeemRequestsTable = (): JSX.Element => {
       return <PrimaryColorEllipsisLoader />;
     }
 
-    if (
-      redeemsData &&
-      redeemsCountData &&
-      stableParachainConfirmations &&
-      stableParachainConfirmations &&
-      latestParachainActiveBlock
-    ) {
-      const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number; }) => {
-        updateQueryParameters({
-          [QUERY_PARAMETERS.PAGE]: (newSelectedPageIndex + 1).toString()
-        });
-      };
+    const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number; }) => {
+      updateQueryParameters({
+        [QUERY_PARAMETERS.PAGE]: (newSelectedPageIndex + 1).toString()
+      });
+    };
 
-      const totalRedeemCount = redeemsCountData.data.redeemsConnection.totalCount;
-      const pageCount = Math.ceil(totalRedeemCount / TABLE_PAGE_LIMIT);
+    const totalRedeemCount = redeemsCountData?.data?.redeemsConnection?.totalCount || 0;
+    const pageCount = Math.ceil(totalRedeemCount / TABLE_PAGE_LIMIT);
 
-      return (
-        <>
-          <InterlayTable {...getTableProps()}>
-            <InterlayThead>
-              {headerGroups.map((headerGroup: any) => (
-                // eslint-disable-next-line react/jsx-key
-                <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column: any) => (
-                    // eslint-disable-next-line react/jsx-key
-                    <InterlayTh
-                      {...column.getHeaderProps([
-                        {
-                          className: clsx(column.classNames),
-                          style: column.style
-                        }
-                      ])}>
-                      {column.render('Header')}
-                    </InterlayTh>
-                  ))}
-                </InterlayTr>
-              ))}
-            </InterlayThead>
-            <InterlayTbody {...getTableBodyProps()}>
-              {rows.map((row: any) => {
-                prepareRow(row);
-
-                return (
+    return (
+      <>
+        <InterlayTable {...getTableProps()}>
+          <InterlayThead>
+            {headerGroups.map((headerGroup: any) => (
+              // eslint-disable-next-line react/jsx-key
+              <InterlayTr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column: any) => (
                   // eslint-disable-next-line react/jsx-key
-                  <InterlayTr {...row.getRowProps()}>
-                    {row.cells.map((cell: any) => {
-                      return (
-                        // eslint-disable-next-line react/jsx-key
-                        <InterlayTd
-                          {...cell.getCellProps([
-                            {
-                              className: clsx(cell.column.classNames),
-                              style: cell.column.style
-                            }
-                          ])}>
-                          {cell.render('Cell')}
-                        </InterlayTd>
-                      );
-                    })}
-                  </InterlayTr>
-                );
-              })}
-            </InterlayTbody>
-          </InterlayTable>
-          {pageCount > 0 && (
-            <div
-              className={clsx(
-                'flex',
-                'justify-end'
-              )}>
-              <InterlayPagination
-                pageCount={pageCount}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={5}
-                onPageChange={handlePageChange}
-                forcePage={selectedPageIndex} />
-            </div>
-          )}
-        </>
-      );
-    }
+                  <InterlayTh
+                    {...column.getHeaderProps([
+                      {
+                        className: clsx(column.classNames),
+                        style: column.style
+                      }
+                    ])}>
+                    {column.render('Header')}
+                  </InterlayTh>
+                ))}
+              </InterlayTr>
+            ))}
+          </InterlayThead>
+          <InterlayTbody {...getTableBodyProps()}>
+            {rows.map((row: any) => {
+              prepareRow(row);
 
-    throw new Error('Something went wrong!');
+              return (
+                // eslint-disable-next-line react/jsx-key
+                <InterlayTr {...row.getRowProps()}>
+                  {row.cells.map((cell: any) => {
+                    return (
+                      // eslint-disable-next-line react/jsx-key
+                      <InterlayTd
+                        {...cell.getCellProps([
+                          {
+                            className: clsx(cell.column.classNames),
+                            style: cell.column.style
+                          }
+                        ])}>
+                        {cell.render('Cell')}
+                      </InterlayTd>
+                    );
+                  })}
+                </InterlayTr>
+              );
+            })}
+          </InterlayTbody>
+        </InterlayTable>
+        {pageCount > 0 && (
+          <div
+            className={clsx(
+              'flex',
+              'justify-end'
+            )}>
+            <InterlayPagination
+              pageCount={pageCount}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={handlePageChange}
+              forcePage={selectedPageIndex} />
+          </div>
+        )}
+      </>
+    );
   };
 
   return (

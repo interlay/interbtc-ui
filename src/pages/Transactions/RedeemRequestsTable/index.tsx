@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// // @ts-nocheck
 import * as React from 'react';
 import { useTable } from 'react-table';
 import {
@@ -59,7 +57,8 @@ const RedeemRequestsTable = (): JSX.Element => {
   const updateQueryParameters = useUpdateQueryParameters();
 
   const {
-    address
+    address,
+    bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
 
   const {
@@ -73,7 +72,10 @@ const RedeemRequestsTable = (): JSX.Element => {
       'interBtcIndex',
       'getBtcConfirmations'
     ],
-    genericFetcher<number>()
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
   );
   useErrorHandler(btcConfirmationsError);
 
@@ -88,7 +90,10 @@ const RedeemRequestsTable = (): JSX.Element => {
       'interBtcIndex',
       'latestParachainActiveBlock'
     ],
-    genericFetcher<number>()
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
   );
   useErrorHandler(latestActiveBlockError);
 
@@ -103,7 +108,10 @@ const RedeemRequestsTable = (): JSX.Element => {
       'interBtcIndex',
       'getParachainConfirmations'
     ],
-    genericFetcher<number>()
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
   );
   useErrorHandler(parachainConfirmationsError);
 
@@ -117,7 +125,10 @@ const RedeemRequestsTable = (): JSX.Element => {
       GRAPHQL_FETCHER,
       redeemCountQuery(`userParachainAddress_eq: "${address}"`)
     ],
-    graphqlFetcher<any>()
+    graphqlFetcher<any>(),
+    {
+      enabled: !!bridgeLoaded
+    }
   );
   useErrorHandler(redeemRequestsTotalCountError);
   const {
@@ -144,7 +155,6 @@ const RedeemRequestsTable = (): JSX.Element => {
     () => [
       {
         Header: t('issue_page.updated'),
-        accessor: '',
         classNames: [
           'text-left'
         ],
@@ -162,7 +172,6 @@ const RedeemRequestsTable = (): JSX.Element => {
       },
       {
         Header: `${t('redeem_page.amount')} (${WRAPPED_TOKEN_SYMBOL})`,
-        accessor: '',
         classNames: [
           'text-right'
         ],
@@ -176,7 +185,6 @@ const RedeemRequestsTable = (): JSX.Element => {
       },
       {
         Header: t('issue_page.btc_transaction'),
-        accessor: '',
         classNames: [
           'text-right'
         ],
@@ -212,7 +220,6 @@ const RedeemRequestsTable = (): JSX.Element => {
       },
       {
         Header: t('issue_page.confirmations'),
-        accessor: '',
         classNames: [
           'text-right'
         ],
@@ -358,9 +365,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     });
   };
 
-  // cf. ../IssueRequestsTable/index.tsx for justification
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const totalIssueCount = redeemRequestsTotalCountData!.data.redeemsConnection.totalCount;
+  const totalIssueCount = redeemRequestsTotalCountData?.data?.redeemsConnection?.totalCount || 0;
   const pageCount = Math.ceil(totalIssueCount / TABLE_PAGE_LIMIT);
   const selectedRedeemRequest = redeems.find((redeemRequest: any) => redeemRequest.id === selectedRedeemRequestId);
 

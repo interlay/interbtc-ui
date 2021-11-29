@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// // @ts-nocheck
 import * as React from 'react';
 import { useTable } from 'react-table';
 import {
@@ -65,7 +63,8 @@ const IssueRequestsTable = (): JSX.Element => {
 
   const {
     address,
-    extensions
+    extensions,
+    bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
 
   const {
@@ -79,7 +78,10 @@ const IssueRequestsTable = (): JSX.Element => {
       'interBtcIndex',
       'getBtcConfirmations'
     ],
-    genericFetcher<number>()
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
   );
   useErrorHandler(btcConfirmationsError);
 
@@ -94,7 +96,10 @@ const IssueRequestsTable = (): JSX.Element => {
       'interBtcIndex',
       'latestParachainActiveBlock'
     ],
-    genericFetcher<number>()
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
   );
   useErrorHandler(latestActiveBlockError);
 
@@ -109,7 +114,10 @@ const IssueRequestsTable = (): JSX.Element => {
       'interBtcIndex',
       'getParachainConfirmations'
     ],
-    genericFetcher<number>()
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
   );
   useErrorHandler(parachainConfirmationsError);
 
@@ -150,7 +158,6 @@ const IssueRequestsTable = (): JSX.Element => {
     () => [
       {
         Header: t('issue_page.updated'),
-        accessor: '',
         classNames: [
           'text-left'
         ],
@@ -168,7 +175,6 @@ const IssueRequestsTable = (): JSX.Element => {
       },
       {
         Header: `${t('issue_page.amount')} (${WRAPPED_TOKEN_SYMBOL})`,
-        accessor: '',
         classNames: [
           'text-right'
         ],
@@ -185,7 +191,6 @@ const IssueRequestsTable = (): JSX.Element => {
       },
       {
         Header: t('issue_page.btc_transaction'),
-        accessor: '',
         classNames: [
           'text-right'
         ],
@@ -217,7 +222,6 @@ const IssueRequestsTable = (): JSX.Element => {
       },
       {
         Header: t('issue_page.confirmations'),
-        accessor: '',
         classNames: [
           'text-right'
         ],
@@ -358,10 +362,7 @@ const IssueRequestsTable = (): JSX.Element => {
     }
   };
 
-  // see above: we know that, if (!idle && !data) we error, so we have (idle || data)
-  // and if(idle) we returned above -> therefore data is defined.
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const totalIssueCount = issueRequestsTotalCountData!.data.issuesConnection.totalCount;
+  const totalIssueCount = issueRequestsTotalCountData?.data?.issuesConnection?.totalCount || 0;
   const pageCount = Math.ceil(totalIssueCount / TABLE_PAGE_LIMIT);
   const selectedIssueRequest = issues.find((issueRequest: any) => issueRequest.id === selectedIssueRequestId);
 

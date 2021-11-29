@@ -135,16 +135,22 @@ const btcAddressFromEventToString = (
     'hex'
   );
   const paymentType = Object.keys(parsedAddress)[0].toUpperCase();
-  const payment =
-    paymentType === 'P2WPKHV0' ?
-      payments.p2wpkh :
-      paymentType === 'P2PKH' ?
-        payments.p2pkh :
-        paymentType === 'P2SH' ?
-          payments.p2sh :
-          () => {
-            throw new Error('Invalid address type');
-          };
+  let payment;
+  switch (paymentType) {
+  case 'P2WPKHV0':
+    payment = payments.p2wpkh;
+    break;
+  case 'P2PKH':
+    payment = payments.p2pkh;
+    break;
+  case 'P2SH':
+    payment = payments.p2sh;
+    break;
+  default:
+    payment = () => {
+      throw new Error('Invalid address type');
+    };
+  }
   return (
     payment({
       hash,

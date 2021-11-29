@@ -118,7 +118,7 @@ services:
       POSTGRES_USER: 'user'
       POSTGRES_PASSWORD: 'password'
     ports:
-      - '5433:5432'
+      - '5432:5432'
   flyway:
     image: 'flyway/flyway:7'
     command: 'migrate'
@@ -130,23 +130,23 @@ services:
       - ${PWD}/node_modules/@interlay/interbtc-index-client/sql:/flyway/sql
     depends_on:
       - postgres
-  # index:
-  #   image: 'registry.gitlab.com/interlay/polkabtc-stats:1.0.4'
-  #   restart: always
-  #   depends_on:
-  #     - postgres
-  #     - flyway
-  #   command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 1; done; yarn start'
-  #   environment:
-  #     MONITOR: '1'
-  #     LOG_PRETTY_PRINT: '1'
-  #     SYNC_DB_SCHEMA: '1'
-  #     ENDPOINT_URL: 'ws://interbtc:9944'
-  #     BTC_NETWORK: 'http://electrs:3002'
-  #     PGHOST: 'postgres'
-  #     PGPORT: '5432'
-  #     PGDATABASE: 'postgres'
-  #     PGUSER: 'user'
-  #     PGPASSWORD: 'password'
-  #   ports:
-  #     - '3007:3007'
+  index:
+    image: 'registry.gitlab.com/interlay/polkabtc-stats:1.0.4'
+    restart: always
+    depends_on:
+      - postgres
+      - flyway
+    command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 1; done; yarn start'
+    environment:
+      MONITOR: '1'
+      LOG_PRETTY_PRINT: '1'
+      SYNC_DB_SCHEMA: '1'
+      ENDPOINT_URL: 'ws://interbtc:9944'
+      BTC_NETWORK: 'http://electrs:3002'
+      PGHOST: 'postgres'
+      PGPORT: '5432'
+      PGDATABASE: 'postgres'
+      PGUSER: 'user'
+      PGPASSWORD: 'password'
+    ports:
+      - '3007:3007'

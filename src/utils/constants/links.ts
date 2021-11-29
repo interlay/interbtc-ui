@@ -18,7 +18,6 @@ const PAGES = Object.freeze({
 const QUERY_PARAMETERS = Object.freeze({
   TAB: 'tab',
   PAGE: 'page',
-  CURSOR: 'cursor',
   ISSUE_REQUESTS_PAGE: 'issueRequestPage',
   REDEEM_REQUESTS_PAGE: 'redeemRequestPage',
   ISSUE_REQUEST_ID: 'issueRequestId',

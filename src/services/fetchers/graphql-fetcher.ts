@@ -2,14 +2,6 @@ import { HYDRA_URL } from '../../constants';
 
 const GRAPHQL_FETCHER = 'graphql-fetcher';
 
-// interface GraphqlArguments {
-//   queryKey: [
-//     typeof GRAPHQL_FETCHER,
-//     string,
-//     any
-//   ]
-// }
-
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const graphqlFetcher = <T>() => async ({ queryKey }: any): Promise<GraphqlReturn<T>> => {
   const [
