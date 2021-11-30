@@ -4,9 +4,7 @@ import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
-import {
-  newMonetaryAmount
-} from '@interlay/interbtc-api';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
@@ -30,6 +28,7 @@ import {
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
+  // TODO: should type properly (`Relay`)
   request: any;
 }
 
