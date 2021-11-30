@@ -1,19 +1,24 @@
-import redeemRequestQuery from 'services/queries/redeemRequests';
-import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import { BitcoinAmount } from '@interlay/monetary-js';
-import { newMonetaryAmount, RedeemStatus } from '@interlay/interbtc-api';
+import {
+  newMonetaryAmount,
+  RedeemStatus
+} from '@interlay/interbtc-api';
+
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import { btcAddressFromEventToString } from 'common/utils/utils';
 import { BITCOIN_NETWORK } from '../../constants';
+import redeemRequestQuery from 'services/queries/redeemRequests';
+import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
 
 const REDEEM_FETCHER = 'redeem-fetcher';
 
-// TODO: type graphql query return
+// TODO: should type properly (`Relay`)
 function decodeRedeemValues(redeem: any): any {
   redeem.request.requestedAmountBacking = BitcoinAmount.from.Satoshi(redeem.request.requestedAmountBacking);
   redeem.bridgeFee = BitcoinAmount.from.Satoshi(redeem.bridgeFee);
   redeem.btcTransferFee = BitcoinAmount.from.Satoshi(redeem.btcTransferFee);
+
   // TODO: get actual vault collateral when it's added to events
   redeem.collateralPremium = newMonetaryAmount(redeem.collateralPremium, COLLATERAL_TOKEN);
   if (redeem.cancellation) {
@@ -21,13 +26,24 @@ function decodeRedeemValues(redeem: any): any {
       newMonetaryAmount(redeem.cancellation.slashedCollateral, COLLATERAL_TOKEN);
   }
   redeem.userBackingAddress = btcAddressFromEventToString(redeem.userBackingAddress, BITCOIN_NETWORK);
+
   return redeem;
 }
 
+// TODO: should type properly (`Relay`)
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const redeemFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
-  const [key, offset, limit, stableBtcConfirmations, where] = queryKey as RedeemFetcherParams;
+  const [
+    key,
+    offset,
+    limit,
+    stableBtcConfirmations,
+    where
+  ] = queryKey as RedeemFetcherParams;
+
   if (key !== REDEEM_FETCHER) throw new Error('Invalid key!');
+
+  // TODO: should type properly (`Relay`)
   const redeemsData = await graphqlFetcher<Array<any>>()({ queryKey: [
     GRAPHQL_FETCHER,
     redeemRequestQuery(where),
@@ -37,8 +53,8 @@ const redeemFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
     }
   ] });
 
-  // TODO: type graphql returns
-  const redeems = redeemsData?.data?.redeems || [];
+  // TODO: should type properly (`Relay`)
+  const redeems = redeemsData.data.redeems || [];
 
   return await Promise.all(redeems.map(async redeem => {
     redeem = decodeRedeemValues(redeem);
@@ -47,14 +63,14 @@ const redeemFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
       redeem.id,
       redeem.vaultBackingAddress,
       stableBtcConfirmations,
-      true // use op_return
+      true // Use op_return
     );
     return redeem;
   }));
 };
 
-// TODO: get graphql types to auto-decode enum? Can e.g. Relay do that?
-export function getRedeemWithStatus(
+// TODO: should type properly (`Relay`)
+function getRedeemWithStatus(
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   redeem: any,
   stableBtcConfirmations: number,
@@ -64,6 +80,7 @@ export function getRedeemWithStatus(
   stableParachainConfirmations = Number(stableParachainConfirmations);
   stableBtcConfirmations = Number(stableBtcConfirmations);
   parachainActiveHeight = Number(parachainActiveHeight);
+
   if (redeem.status !== 'Pending') {
     // ideally this would be auto-decoded, for now set by hand
     if (redeem.status === 'Expired') redeem.status = RedeemStatus.Expired;
@@ -72,6 +89,7 @@ export function getRedeemWithStatus(
     else if (redeem.status === 'Reimbursed') redeem.status = RedeemStatus.Reimbursed;
     return redeem;
   }
+
   if (!redeem.backingPayment || !redeem.backingPayment.btcTxId) {
     redeem.status = RedeemStatus.PendingWithBtcTxNotFound;
   } else if (!redeem.backingPayment.confirmations) {
@@ -88,7 +106,7 @@ export function getRedeemWithStatus(
   return redeem;
 }
 
-export type RedeemFetcherParams = [
+type RedeemFetcherParams = [
   key: typeof REDEEM_FETCHER,
   offset: number,
   limit: number,
@@ -97,7 +115,12 @@ export type RedeemFetcherParams = [
 ]
 
 export {
+  getRedeemWithStatus,
   REDEEM_FETCHER
+};
+
+export type {
+  RedeemFetcherParams
 };
 
 export default redeemFetcher;

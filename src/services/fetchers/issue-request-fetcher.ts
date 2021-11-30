@@ -20,6 +20,7 @@ function decodeIssueValues(issue: any): any {
     issue.execution.bridgeFeeWrapped = BitcoinAmount.from.Satoshi(issue.execution.bridgeFeeWrapped);
   }
   issue.vaultBackingAddress = btcAddressFromEventToString(issue.vaultBackingAddress, BITCOIN_NETWORK);
+
   return issue;
 }
 
