@@ -50,7 +50,7 @@ const issueFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
   });
 
   // TODO: should type properly (`Relay`)
-  const issues = issuesData.data.issues || [];
+  const issues = issuesData?.data?.issues || [];
 
   return await Promise.all(issues.map(async issue => {
     issue = decodeIssueValues(issue);

@@ -54,7 +54,7 @@ const redeemFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
   ] });
 
   // TODO: should type properly (`Relay`)
-  const redeems = redeemsData.data.redeems || [];
+  const redeems = redeemsData?.data?.redeems || [];
 
   return await Promise.all(redeems.map(async redeem => {
     redeem = decodeRedeemValues(redeem);
