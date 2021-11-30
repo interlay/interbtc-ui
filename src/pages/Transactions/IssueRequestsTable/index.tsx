@@ -16,9 +16,7 @@ import {
 } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import {
-  IssueStatus
-} from '@interlay/interbtc-api';
+import { IssueStatus } from '@interlay/interbtc-api';
 
 import IssueRequestModal from './IssueRequestModal';
 import SectionTitle from 'parts/SectionTitle';
@@ -48,9 +46,15 @@ import {
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
+import graphqlFetcher, {
+  GraphqlReturn,
+  GRAPHQL_FETCHER
+} from 'services/fetchers/graphql-fetcher';
 import issueCountQuery from 'services/queries/issueRequestCount';
-import issueFetcher, { ISSUE_FETCHER, getIssueWithStatus } from 'services/fetchers/issue-request-fetcher';
+import issueFetcher, {
+  ISSUE_FETCHER,
+  getIssueWithStatus
+} from 'services/fetchers/issue-request-fetcher';
 
 const IssueRequestsTable = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -71,7 +75,7 @@ const IssueRequestsTable = (): JSX.Element => {
   const {
     isIdle: btcConfirmationsIdle,
     isLoading: btcConfirmationsLoading,
-    data: stableBtcConfirmations,
+    data: btcConfirmations,
     error: btcConfirmationsError
   } = useQuery<number, Error>(
     [
@@ -87,10 +91,10 @@ const IssueRequestsTable = (): JSX.Element => {
   useErrorHandler(btcConfirmationsError);
 
   const {
-    isIdle: latestActiveBlockIdle,
-    isLoading: latestActiveBlockLoading,
+    isIdle: latestParachainActiveBlockIdle,
+    isLoading: latestParachainActiveBlockLoading,
     data: latestParachainActiveBlock,
-    error: latestActiveBlockError
+    error: latestParachainActiveBlockError
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
@@ -102,12 +106,12 @@ const IssueRequestsTable = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(latestActiveBlockError);
+  useErrorHandler(latestParachainActiveBlockError);
 
   const {
     isIdle: parachainConfirmationsIdle,
     isLoading: parachainConfirmationsLoading,
-    data: stableParachainConfirmations,
+    data: parachainConfirmations,
     error: parachainConfirmationsError
   } = useQuery<number, Error>(
     [
@@ -125,32 +129,35 @@ const IssueRequestsTable = (): JSX.Element => {
   const {
     isIdle: issueRequestsTotalCountIdle,
     isLoading: issueRequestsTotalCountLoading,
-    data: issueRequestsTotalCountData,
+    data: issueRequestsTotalCount,
     error: issueRequestsTotalCountError
+  // TODO: should type properly (`Relay`)
   } = useQuery<GraphqlReturn<any>, Error>(
     [
       GRAPHQL_FETCHER,
       issueCountQuery(`userParachainAddress_eq: "${address}"`)
     ],
-    graphqlFetcher<any>()
+    graphqlFetcher<GraphqlReturn<any>>()
   );
   useErrorHandler(issueRequestsTotalCountError);
+
   const {
     isIdle: issueRequestsIdle,
     isLoading: issueRequestsLoading,
-    data: issueRequestsData,
+    data: issueRequests,
     error: issueRequestsError
+  // TODO: should type properly (`Relay`)
   } = useQuery<any, Error>(
     [
       ISSUE_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
-      stableBtcConfirmations,
-      `userParachainAddress_eq: "${address}"` // WHERE condition
+      btcConfirmations,
+      `userParachainAddress_eq: "${address}"` // `WHERE` condition
     ],
     issueFetcher,
     {
-      enabled: stableBtcConfirmations !== undefined
+      enabled: btcConfirmations !== undefined
     }
   );
   useErrorHandler(issueRequestsError);
@@ -162,11 +169,17 @@ const IssueRequestsTable = (): JSX.Element => {
         classNames: [
           'text-left'
         ],
+        // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: issue } }: any) {
           let date;
-          if (issue.execution) date = issue.execution.timestamp;
-          else if (issue.cancellation) date = issue.cancellation.timestamp;
-          else date = issue.request.timestamp;
+          if (issue.execution) {
+            date = issue.execution.timestamp;
+          } else if (issue.cancellation) {
+            date = issue.cancellation.timestamp;
+          } else {
+            date = issue.request.timestamp;
+          }
+
           return (
             <>
               {formatDateTimePrecise(new Date(date))}
@@ -179,13 +192,18 @@ const IssueRequestsTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
+        // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: issue } }: any) {
-          let value;
-          if (issue.execution) value = issue.execution.amountWrapped;
-          else value = issue.request.amountWrapped;
+          let wrappedTokenAmount;
+          if (issue.execution) {
+            wrappedTokenAmount = issue.execution.amountWrapped;
+          } else {
+            wrappedTokenAmount = issue.request.amountWrapped;
+          }
+
           return (
             <>
-              {displayMonetaryAmount(value)}
+              {displayMonetaryAmount(wrappedTokenAmount)}
             </>
           );
         }
@@ -195,8 +213,8 @@ const IssueRequestsTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell(props: any) {
-          const issueRequest: any = props.row.original;
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: issueRequest } }: any) {
           return (
             <>
               {issueRequest.backingPayment.btcTxId ? (
@@ -226,6 +244,7 @@ const IssueRequestsTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
+        // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: issue } }: any) {
           const value = issue.backingPayment.confirmations;
           return (
@@ -291,36 +310,23 @@ const IssueRequestsTable = (): JSX.Element => {
     [t]
   );
 
-  const anyIdle =
-    btcConfirmationsIdle ||
-    btcConfirmationsLoading ||
-    parachainConfirmationsIdle ||
-    parachainConfirmationsLoading ||
-    latestActiveBlockLoading ||
-    latestActiveBlockIdle ||
-    issueRequestsTotalCountIdle ||
-    issueRequestsTotalCountLoading ||
-    issueRequestsIdle ||
-    issueRequestsLoading;
-
-  if (!anyIdle && (
-    issueRequestsData === undefined ||
-    issueRequestsTotalCountData === undefined ||
-    stableBtcConfirmations === undefined ||
-    stableParachainConfirmations === undefined ||
-    latestParachainActiveBlock === undefined
-  )) {
-    throw new Error('Something went wrong!');
-  }
-
-  const issues = anyIdle ? [] : issueRequestsData.map(
-    (issue: any) => getIssueWithStatus(
-      issue,
-      // anyIdle = false, therefore stableBtcConfirmations !== undefined
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      stableBtcConfirmations!, stableParachainConfirmations!, latestParachainActiveBlock!
-    )
-  );
+  const data =
+    (
+      issueRequests === undefined ||
+      btcConfirmations === undefined ||
+      parachainConfirmations === undefined ||
+      latestParachainActiveBlock === undefined
+    ) ?
+      [] :
+      issueRequests.map(
+        // TODO: should type properly (`Relay`)
+        (issueRequest: any) => getIssueWithStatus(
+          issueRequest,
+          btcConfirmations,
+          parachainConfirmations,
+          latestParachainActiveBlock
+        )
+      );
 
   const {
     getTableProps,
@@ -331,14 +337,28 @@ const IssueRequestsTable = (): JSX.Element => {
   } = useTable(
     {
       columns,
-      data: issues
+      data
     }
   );
 
-  if (anyIdle) {
+  if (
+    btcConfirmationsIdle ||
+    btcConfirmationsLoading ||
+    parachainConfirmationsIdle ||
+    parachainConfirmationsLoading ||
+    latestParachainActiveBlockIdle ||
+    latestParachainActiveBlockLoading ||
+    issueRequestsTotalCountIdle ||
+    issueRequestsTotalCountLoading ||
+    issueRequestsIdle ||
+    issueRequestsLoading
+  ) {
     return (
       <PrimaryColorEllipsisLoader />
     );
+  }
+  if (issueRequestsTotalCount === undefined) {
+    throw new Error('Something went wrong!');
   }
 
   const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number; }) => {
@@ -363,9 +383,10 @@ const IssueRequestsTable = (): JSX.Element => {
     }
   };
 
-  const totalIssueCount = issueRequestsTotalCountData?.data?.issuesConnection?.totalCount || 0;
-  const pageCount = Math.ceil(totalIssueCount / TABLE_PAGE_LIMIT);
-  const selectedIssueRequest = issues.find((issueRequest: any) => issueRequest.id === selectedIssueRequestId);
+  const totalCount = issueRequestsTotalCount.data.issuesConnection.totalCount || 0;
+  const pageCount = Math.ceil(totalCount / TABLE_PAGE_LIMIT);
+  // TODO: should type properly (`Relay`)
+  const selectedIssueRequest = data.find((issueRequest: any) => issueRequest.id === selectedIssueRequestId);
 
   return (
     <>
@@ -380,9 +401,11 @@ const IssueRequestsTable = (): JSX.Element => {
         </SectionTitle>
         <InterlayTable {...getTableProps()}>
           <InterlayThead>
+            {/* TODO: should type properly */}
             {headerGroups.map((headerGroup: any) => (
               // eslint-disable-next-line react/jsx-key
               <InterlayTr {...headerGroup.getHeaderGroupProps()}>
+                {/* TODO: should type properly */}
                 {headerGroup.headers.map((column: any) => (
                   // eslint-disable-next-line react/jsx-key
                   <InterlayTh
@@ -399,6 +422,7 @@ const IssueRequestsTable = (): JSX.Element => {
             ))}
           </InterlayThead>
           <InterlayTbody {...getTableBodyProps()}>
+            {/* TODO: should type properly */}
             {rows.map((row: any) => {
               prepareRow(row);
 
@@ -416,6 +440,7 @@ const IssueRequestsTable = (): JSX.Element => {
                   )}
                   {...restRowProps}
                   onClick={handleRowClick(row.original.id)}>
+                  {/* TODO: should type properly */}
                   {row.cells.map((cell: any) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
