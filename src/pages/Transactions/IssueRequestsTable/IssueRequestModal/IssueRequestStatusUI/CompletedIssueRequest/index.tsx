@@ -21,6 +21,7 @@ import {
 } from 'common/utils/utils';
 
 interface Props {
+  // TODO: should type properly (`Relay`)
   request: any;
 }
 
@@ -30,6 +31,7 @@ const CompletedIssueRequest = ({
   const { t } = useTranslation();
 
   const receivedWrappedTokenAmount = request.execution.amountWrapped;
+
   return (
     <RequestWrapper>
       <h2
