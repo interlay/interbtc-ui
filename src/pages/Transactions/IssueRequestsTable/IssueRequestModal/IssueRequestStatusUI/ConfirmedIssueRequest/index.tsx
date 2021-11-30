@@ -24,10 +24,11 @@ import {
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { shortAddress } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
 import { ISSUE_FETCHER } from 'services/fetchers/issue-request-fetcher';
+import { StoreType } from 'common/types/util.types';
 
 interface Props {
+  // TODO: should type properly (`Relay`)
   request: any;
 }
 
@@ -35,15 +36,14 @@ const ConfirmedIssueRequest = ({
   request
 }: Props): JSX.Element => {
   const { t } = useTranslation();
-  const {
-    bridgeLoaded
-  } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const queryParams = useQueryParams();
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const selectedPageIndex = selectedPage - 1;
 
   const queryClient = useQueryClient();
+  // TODO: should type properly (`Relay`)
   const executeMutation = useMutation<void, Error, any>(
     (variables: any) => {
       return window.bridge.interBtcApi.issue.execute('0x' + variables.id, variables.backingPayment.btcTxId);
@@ -60,6 +60,7 @@ const ConfirmedIssueRequest = ({
     }
   );
 
+  // TODO: should type properly (`Relay`)
   const handleExecute = (request: any) => () => {
     if (!bridgeLoaded) return;
 
