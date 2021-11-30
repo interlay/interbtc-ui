@@ -24,7 +24,7 @@ const InterlayTabList = ({
       { 'bg-interlayDenim-900':
         process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
       'bg-opacity-20',
-      { 'dark:bg-kintsugiMidnight-900': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+      { 'dark:bg-kintsugiMidnight-100': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       { 'dark:bg-opacity-20': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'rounded-xl',
       className
@@ -55,7 +55,7 @@ const InterlayTab = ({
         'ring-offset-2',
         { 'ring-offset-interlayDenim-400':
           process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-        { 'dark:ring-offset-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+        { 'dark:ring-offset-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'ring-white',
         'ring-opacity-60',
         selected ?
@@ -91,7 +91,7 @@ const InterlayTabPanel = ({
       'ring-offset-2',
       { 'ring-offset-interlayDenim-400':
         process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-      { 'dark:ring-offset-kintsugiMidnight-400':
+      { 'dark:ring-offset-kintsugiMidnight':
         process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'ring-white',
       'ring-opacity-60',

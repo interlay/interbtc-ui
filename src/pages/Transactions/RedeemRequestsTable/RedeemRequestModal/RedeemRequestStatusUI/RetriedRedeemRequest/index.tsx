@@ -1,15 +1,10 @@
-
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { BitcoinAmount } from '@interlay/monetary-js';
-import {
-  Redeem,
-  newMonetaryAmount
-} from '@interlay/interbtc-api';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
@@ -33,7 +28,8 @@ import {
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
-  request: Redeem;
+  // TODO: should type properly (`Relay`)
+  request: any;
 }
 
 const RetriedRedeemRequest = ({
@@ -64,7 +60,7 @@ const RetriedRedeemRequest = ({
           window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN)
         ]);
 
-        const btcAmount = request ? request.amountBTC : BitcoinAmount.zero;
+        const btcAmount = request.request.requestedAmountBacking;
         const theBurnDOTAmount = btcDotRate.toCounter(btcAmount);
         const thePunishmentDOTAmount = theBurnDOTAmount.mul(new Big(punishmentFee));
         setPunishmentCollateralTokenAmount(thePunishmentDOTAmount);
@@ -147,7 +143,7 @@ const RetriedRedeemRequest = ({
       </div>
       <ExternalLink
         className='text-sm'
-        href={getPolkadotLink(request.creationBlock)}>
+        href={getPolkadotLink(request.request.height.absolute)}>
         {t('issue_page.view_parachain_block')}
       </ExternalLink>
       <div className='w-full'>

@@ -10,6 +10,7 @@ import RedeemForm from './RedeemForm';
 import TransferForm from './TransferForm';
 import BurnForm from './BurnForm';
 import MainContainer from 'parts/MainContainer';
+import Panel from 'components/Panel';
 import Hr1 from 'components/hrs/Hr1';
 import InterlayTabGroup, {
   InterlayTabList,
@@ -18,10 +19,6 @@ import InterlayTabGroup, {
   InterlayTabPanel
 } from 'components/UI/InterlayTabGroup';
 import { COLLATERAL_TOKEN } from 'config/relay-chains';
-import {
-  KUSAMA,
-  POLKADOT
-} from 'utils/constants/relay-chain-names';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters, { QueryParameters } from 'utils/hooks/use-update-query-parameters';
 import TAB_IDS from 'utils/constants/tab-ids';
@@ -113,16 +110,12 @@ const Bridge = (): JSX.Element | null => {
 
   return (
     <MainContainer>
-      <div
+      <Panel
         className={clsx(
-          { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-          { 'dark:bg-kintsugiMidnight-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
           'mx-auto',
           'w-full',
           'md:max-w-xl',
-          'shadow',
-          'p-10',
-          'md:rounded-lg'
+          'p-10'
         )}>
         <InterlayTabGroup
           defaultIndex={selectedTabIndex}
@@ -160,7 +153,7 @@ const Bridge = (): JSX.Element | null => {
             )}
           </InterlayTabPanels>
         </InterlayTabGroup>
-      </div>
+      </Panel>
     </MainContainer>
   );
 };

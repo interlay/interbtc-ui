@@ -35,8 +35,6 @@ import {
 
 import Layout from 'parts/Layout';
 import FullLoadingSpinner from 'components/FullLoadingSpinner';
-// TODO: block for now
-// import TransitionWrapper from 'parts/TransitionWrapper';
 import ErrorFallback from 'components/ErrorFallback';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
@@ -85,9 +83,6 @@ const Dashboard = React.lazy(() =>
 );
 const VaultDashboard = React.lazy(() =>
   import(/* webpackChunkName: 'vault' */ 'pages/Vault')
-);
-const Feedback = React.lazy(() =>
-  import(/* webpackChunkName: 'feedback' */ 'pages/Feedback')
 );
 const NoMatch = React.lazy(() =>
   import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
@@ -351,7 +346,7 @@ const App = (): JSX.Element => {
       // MEMO: inspired by https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually
       document.documentElement.classList.add(CLASS_NAMES.DARK);
       document.body.classList.add('dark:text-kintsugiTextPrimaryInDarkMode');
-      document.body.classList.add('dark:bg-kintsugiMidnight-400');
+      document.body.classList.add('dark:bg-kintsugiMidnight-900');
     }
 
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production') {
@@ -369,13 +364,8 @@ const App = (): JSX.Element => {
       <Layout>
         <Route
           render={({ location }) => (
-            // TODO: block for now
-            // <TransitionWrapper location={location}>
             <React.Suspense fallback={<FullLoadingSpinner />}>
               <Switch location={location}>
-                <Route path={PAGES.FEEDBACK}>
-                  <Feedback />
-                </Route>
                 {vaultClientLoaded && (
                   <Route path={PAGES.VAULT}>
                     <VaultDashboard />
@@ -402,7 +392,6 @@ const App = (): JSX.Element => {
                 </Route>
               </Switch>
             </React.Suspense>
-            // </TransitionWrapper>
           )} />
       </Layout>
     </>

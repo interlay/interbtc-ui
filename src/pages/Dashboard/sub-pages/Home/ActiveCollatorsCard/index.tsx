@@ -7,6 +7,14 @@ import Stats, {
   StatsDd
 } from '../../../Stats';
 import DashboardCard from 'pages/Dashboard/cards/DashboardCard';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import {
+  INTERLAY_DENIM,
+  KINTSUGI_APPLE
+} from 'utils/constants/colors';
 import { range } from 'common/utils/utils';
 
 const ActiveCollatorsCard = (): JSX.Element => {
@@ -21,12 +29,23 @@ const ActiveCollatorsCard = (): JSX.Element => {
     return date;
   };
 
+  // TODO: hardcoded
   const data = [3, 3, 3, 3, 3];
   const dates = range(0, 5).map(i =>
     dateToMidnightTemp(new Date(Date.now() - 86400 * 1000 * i))
       .toISOString()
       .substring(0, 10)
   );
+
+  let chartLineColor;
+  // TODO: should add dark mode check
+  if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production') {
+    chartLineColor = INTERLAY_DENIM[500];
+  } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
+    chartLineColor = KINTSUGI_APPLE[300];
+  } else {
+    throw new Error('Something went wrong!');
+  }
 
   return (
     <DashboardCard>
@@ -42,11 +61,17 @@ const ActiveCollatorsCard = (): JSX.Element => {
           </>
         } />
       <LineChart
-        color='d_interlayDenim'
-        label={t('dashboard.collators.total_collators_chart') as string}
+        wrapperClassName='h-full'
+        colors={[chartLineColor]}
+        labels={[t('dashboard.collators.total_collators_chart')]}
         yLabels={dates}
-        yAxisProps={{ beginAtZero: true, precision: 0 }}
-        data={data} />
+        yAxes={[{
+          ticks: {
+            beginAtZero: true,
+            precision: 0
+          }
+        }]}
+        datasets={[data]} />
     </DashboardCard>
   );
 };

@@ -3,6 +3,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
 interface CustomProps {
@@ -12,7 +16,7 @@ interface CustomProps {
 }
 
 type Ref = HTMLButtonElement;
-const InterlayDenimOutlinedButton = React.forwardRef<Ref, Props>(({
+const InterlayDenimOrKintsugiMidnightOutlinedButton = React.forwardRef<Ref, Props>(({
   className,
   children,
   startIcon,
@@ -30,22 +34,48 @@ const InterlayDenimOutlinedButton = React.forwardRef<Ref, Props>(({
       className={clsx(
         'focus:outline-none',
         'focus:ring',
-        'focus:border-interlayDenim-300',
-        'focus:ring-interlayDenim-200',
+        {
+          [clsx(
+            'focus:border-interlayDenim-300',
+            'focus:ring-interlayDenim-200'
+          )]: process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production'
+        },
+        {
+          [clsx(
+            'dark:focus:border-kintsugiSupernova-300',
+            'dark:focus:ring-kintsugiSupernova-200'
+          )]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA
+        },
         'focus:ring-opacity-50',
 
         'border',
         'font-medium',
 
         disabledOrPending ? clsx(
+          // TODO: could be reused
           'border-black',
           'border-opacity-10',
+          'dark:border-white',
+          'dark:border-opacity-10',
           'text-black',
-          'text-opacity-25'
+          'text-opacity-25',
+          'dark:text-white',
+          'dark:text-opacity-30'
         ) : clsx(
-          'text-interlayDenim',
-          'border-interlayDenim',
-          'hover:bg-interlayDenim',
+          {
+            [clsx(
+              'text-interlayDenim',
+              'border-interlayDenim',
+              'hover:bg-interlayDenim'
+            )]: process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production'
+          },
+          {
+            [clsx(
+              'text-kintsugiSupernova',
+              'dark:border-kintsugiSupernova',
+              'dark:hover:bg-kintsugiSupernova'
+            )]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA
+          },
           'hover:bg-opacity-5'
         ),
 
@@ -76,8 +106,8 @@ const InterlayDenimOutlinedButton = React.forwardRef<Ref, Props>(({
     </InterlayButtonBase>
   );
 });
-InterlayDenimOutlinedButton.displayName = 'InterlayDenimOutlinedButton';
+InterlayDenimOrKintsugiMidnightOutlinedButton.displayName = 'InterlayDenimOrKintsugiMidnightOutlinedButton';
 
 export type Props = CustomProps & InterlayButtonBaseProps;
 
-export default InterlayDenimOutlinedButton;
+export default InterlayDenimOrKintsugiMidnightOutlinedButton;

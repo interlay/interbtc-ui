@@ -14,6 +14,10 @@ import {
   INTERLAY_GITHUB_LINK,
   INTERLAY_EMAIL_LINK
 } from 'config/links';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 
 const SOCIAL_MEDIA_ITEMS = [
   {
@@ -78,12 +82,16 @@ const SocialMediaContainer = ({
           'w-6',
           'h-6',
           'ring-1',
-          'ring-interlayHaiti',
+          { 'ring-interlayHaiti':
+            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+          { 'dark:ring-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
           'rounded-full',
           'm-1',
           'grid',
           'place-items-center',
-          'text-interlayHaiti'
+          { 'text-interlayHaiti':
+            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+          { 'dark:text-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
         )}
         href={socialMediaItem.link}
         target='_blank'

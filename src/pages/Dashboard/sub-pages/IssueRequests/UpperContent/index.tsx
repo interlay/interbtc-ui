@@ -14,21 +14,27 @@ import Stats, {
   StatsDd
 } from '../../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
+import Panel from 'components/Panel';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import {
   displayMonetaryAmount,
   getUsdAmount
 } from 'common/utils/utils';
-import genericFetcher, {
-  GENERIC_FETCHER
-} from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
+import graphqlFetcher, {
+  GraphqlReturn,
+  GRAPHQL_FETCHER
+} from 'services/fetchers/graphql-fetcher';
+import issueCountQuery from 'services/queries/issue-count-query';
 
 const UpperContent = (): JSX.Element => {
   const {
     totalWrappedTokenAmount,
-    prices,
-    bridgeLoaded
+    prices
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
@@ -37,16 +43,13 @@ const UpperContent = (): JSX.Element => {
     isLoading: totalSuccessfulIssuesLoading,
     data: totalSuccessfulIssues,
     error: totalSuccessfulIssuesError
-  } = useQuery<number, Error>(
+  // TODO: should type properly (`Relay`)
+  } = useQuery<GraphqlReturn<any>, Error>(
     [
-      GENERIC_FETCHER,
-      'interBtcIndex',
-      'getTotalSuccessfulIssues'
+      GRAPHQL_FETCHER,
+      issueCountQuery('status_eq: Completed')
     ],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
+    graphqlFetcher<GraphqlReturn<any>>()
   );
   useErrorHandler(totalSuccessfulIssuesError);
 
@@ -54,20 +57,30 @@ const UpperContent = (): JSX.Element => {
   if (totalSuccessfulIssuesIdle || totalSuccessfulIssuesLoading) {
     return <>Loading...</>;
   }
+  if (totalSuccessfulIssues === undefined) {
+    throw new Error('Something went wrong!');
+  }
+  const totalSuccessfulIssueCount = totalSuccessfulIssues.data.issuesConnection.totalCount;
 
   return (
-    <div
+    <Panel
       className={clsx(
         'grid',
         'sm:grid-cols-2',
-        'gap-5'
+        'gap-5',
+        'px-4',
+        'py-5'
       )}>
       <Stats
         leftPart={
           <>
-            {/* ray test touch << */}
-            <StatsDt className='!text-interlayDenim'>
-              {/* ray test touch >> */}
+            <StatsDt
+              className={clsx(
+                { '!text-interlayDenim':
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                { 'dark:!text-kintsugiSupernova-400':
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              )}>
               {t('dashboard.issue.issued')}
             </StatsDt>
             <StatsDd>
@@ -83,18 +96,12 @@ const UpperContent = (): JSX.Element => {
               {t('dashboard.issue.issue_requests')}
             </StatsDt>
             <StatsDd>
-              {totalSuccessfulIssues}
+              {totalSuccessfulIssueCount}
             </StatsDd>
           </>
         } />
-      <div
-        className={clsx(
-          'border',
-          'rounded'
-        )}>
-        <IssuedChart />
-      </div>
-    </div>
+      <IssuedChart />
+    </Panel>
   );
 };
 

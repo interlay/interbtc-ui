@@ -11,6 +11,16 @@ import { BitcoinAmount } from '@interlay/monetary-js';
 import LineChart from '../LineChart';
 import ErrorFallback from 'components/ErrorFallback';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
+import {
+  INTERLAY_DENIM,
+  INTERLAY_MULBERRY,
+  KINTSUGI_MIDNIGHT,
+  KINTSUGI_PRAIRIE_SAND
+} from 'utils/constants/colors';
 import genericFetcher, {
   GENERIC_FETCHER
 } from 'services/fetchers/generic-fetcher';
@@ -67,13 +77,26 @@ const IssuedChart = (): JSX.Element => {
     }
   });
 
+  let firstChartLineColor;
+  let secondChartLineColor;
+  if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production') {
+    firstChartLineColor = INTERLAY_DENIM[500];
+    secondChartLineColor = INTERLAY_MULBERRY[500];
+  } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
+    firstChartLineColor = KINTSUGI_MIDNIGHT[200];
+    secondChartLineColor = KINTSUGI_PRAIRIE_SAND[400];
+  } else {
+    throw new Error('Something went wrong!');
+  }
+
   return (
     <LineChart
-      color={[
-        'd_interlayDenim',
-        'd_interlayPaleSky'
+      wrapperClassName='h-full'
+      colors={[
+        firstChartLineColor,
+        secondChartLineColor
       ]}
-      label={[
+      labels={[
         t('dashboard.issue.total_issued_chart', {
           wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
         }),
@@ -86,18 +109,22 @@ const IssuedChart = (): JSX.Element => {
           .slice(1)
           .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))
       }
-      yAxisProps={[
+      yAxes={[
         {
-          beginAtZero: true,
           position: 'left',
-          maxTicksLimit: 6
+          ticks: {
+            beginAtZero: true,
+            maxTicksLimit: 6
+          }
         },
         {
           position: 'right',
-          maxTicksLimit: 6
+          ticks: {
+            maxTicksLimit: 6
+          }
         }
       ]}
-      data={[
+      datasets={[
         converted
           .slice(1)
           .map(dataPoint => Number(BitcoinAmount.from.Satoshi(dataPoint.sat).str.BTC())),

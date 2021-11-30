@@ -34,12 +34,12 @@ type RequestReplacementFormData = {
 
 interface Props {
   onClose: () => void;
-  show: boolean;
+  open: boolean;
 }
 
 const RequestReplacementModal = ({
   onClose,
-  show
+  open
 }: Props): JSX.Element => {
   const { register, handleSubmit, errors } = useForm<RequestReplacementFormData>();
   const {
@@ -98,7 +98,7 @@ const RequestReplacementModal = ({
   return (
     <InterlayModal
       initialFocus={focusRef}
-      open={show}
+      open={open}
       onClose={onClose}>
       <InterlayModalInnerWrapper
         className={clsx(
@@ -110,7 +110,7 @@ const RequestReplacementModal = ({
           className={clsx(
             'text-lg',
             'font-medium',
-            'mb-4'
+            'mb-6'
           )}>
           {t('vault.request_replacement')}
         </InterlayModalTitle>

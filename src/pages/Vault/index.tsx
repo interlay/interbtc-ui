@@ -1,7 +1,4 @@
-import {
-  useState,
-  useEffect
-} from 'react';
+import * as React from 'react';
 import {
   useSelector,
   useDispatch
@@ -20,19 +17,16 @@ import ReplaceTable from './ReplaceTable';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
+import SectionTitle from 'parts/SectionTitle';
 import VaultIssueRequestsTable from 'containers/VaultIssueRequestsTable';
 import VaultRedeemRequestsTable from 'containers/VaultRedeemRequestsTable';
-import CardList, {
-  CardListItem,
-  CardListItemHeader,
-  CardListItemContent,
-  CardListHeader,
-  CardListContainer
-} from 'components/CardList';
 import BoldParagraph from 'components/BoldParagraph';
-import InterlayDenimContainedButton from 'components/buttons/InterlayDenimContainedButton';
+import
+InterlayDenimOrKintsugiMidnightContainedButton
+  from 'components/buttons/InterlayDenimOrKintsugiMidnightContainedButton';
 import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
+import Panel from 'components/Panel';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   WRAPPED_TOKEN_SYMBOL,
@@ -55,8 +49,8 @@ import {
 } from 'common/actions/vault.actions';
 
 const Vault = (): JSX.Element => {
-  const [updateCollateralModalStatus, setUpdateCollateralModalStatus] = useState(CollateralUpdateStatus.Hidden);
-  const [showRequestReplacementModal, setShowRequestReplacementModal] = useState(false);
+  const [collateralUpdateStatus, setCollateralUpdateStatus] = React.useState(CollateralUpdateStatus.Close);
+  const [requestReplacementModalOpen, setRequestReplacementModalOpen] = React.useState(false);
   const {
     vaultClientLoaded,
     bridgeLoaded,
@@ -68,18 +62,31 @@ const Vault = (): JSX.Element => {
     lockedBTC,
     apy
   } = useSelector((state: StoreType) => state.vault);
-  const [capacity, setCapacity] = useState(BitcoinAmount.zero);
-  const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = useState(BitcoinAmount.zero);
-  const [totalIssueRequests, setTotalIssueRequests] = useState(0);
-  const [totalRedeemRequests, setTotalRedeemRequests] = useState(0);
+  const [capacity, setCapacity] = React.useState(BitcoinAmount.zero);
+  const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = React.useState(BitcoinAmount.zero);
+  const [totalIssueRequests, setTotalIssueRequests] = React.useState(0);
+  const [totalRedeemRequests, setTotalRedeemRequests] = React.useState(0);
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const closeUpdateCollateralModal = () => setUpdateCollateralModalStatus(CollateralUpdateStatus.Hidden);
-  const closeRequestReplacementModal = () => setShowRequestReplacementModal(false);
+  const handleUpdateCollateralModalClose = () => {
+    setCollateralUpdateStatus(CollateralUpdateStatus.Close);
+  };
+  const handleDepositCollateralModalOpen = () => {
+    setCollateralUpdateStatus(CollateralUpdateStatus.Deposit);
+  };
+  const handleWithdrawCollateralModalOpen = () => {
+    setCollateralUpdateStatus(CollateralUpdateStatus.Withdraw);
+  };
+  const handleRequestReplacementModalClose = () => {
+    setRequestReplacementModalOpen(false);
+  };
+  const handleRequestReplacementModalOpen = () => {
+    setRequestReplacementModalOpen(true);
+  };
 
-  useEffect(() => {
+  React.useEffect(() => {
     (async () => {
       if (!bridgeLoaded) return;
       if (!vaultClientLoaded) return;
@@ -146,7 +153,7 @@ const Vault = (): JSX.Element => {
           setCapacity(issuableAmount.value);
         }
       } catch (error) {
-        console.log('[VaultDashboard useEffect] error.message => ', error.message);
+        console.log('[VaultDashboard React.useEffect] error.message => ', error.message);
       }
     })();
   }, [
@@ -200,54 +207,66 @@ const Vault = (): JSX.Element => {
             {address}
           </BoldParagraph>
         </div>
-        <CardListContainer>
-          <CardListHeader>Vault Stats</CardListHeader>
-          <CardList
+        <div className='space-y-6'>
+          <SectionTitle>Vault Stats</SectionTitle>
+          <div
             className={clsx(
+              'grid',
               'md:grid-cols-3',
               'lg:grid-cols-4',
               'gap-5',
               '2xl:gap-6'
             )}>
-            {VAULT_ITEMS.map(vaultItem => (
-              <CardListItem key={vaultItem.title}>
-                <CardListItemHeader
+            {VAULT_ITEMS.map(item => (
+              <Panel
+                key={item.title}
+                className={clsx(
+                  'px-4',
+                  'py-5'
+                )}>
+                <dt
                   className={clsx(
+                    'text-sm',
+                    'font-medium',
+                    'truncate',
+                    { 'text-interlayTextPrimaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  )}>
+                  {item.title}
+                </dt>
+                <dd
+                  className={clsx(
+                    'mt-1',
+                    'text-3xl',
+                    'font-semibold',
                     { 'text-interlayDenim':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                    { 'dark:text-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                    { 'dark:text-kintsugiSupernova-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}>
-                  {vaultItem.title}
-                </CardListItemHeader>
-                <CardListItemContent
-                  className={clsx(
-                    'text-2xl',
-                    'font-medium'
-                  )}>
-                  {vaultItem.value}
-                </CardListItemContent>
-              </CardListItem>
+                  {item.value}
+                </dd>
+              </Panel>
             ))}
-          </CardList>
-        </CardListContainer>
+          </div>
+        </div>
         <div
           className={clsx(
             'grid',
             'grid-cols-3',
             'gap-10'
           )}>
-          <InterlayDenimContainedButton
-            // TODO: should not use inlined functions
-            onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Increase)}>
+          <InterlayDenimOrKintsugiMidnightContainedButton
+            onClick={handleDepositCollateralModalOpen}>
             {t('vault.deposit_collateral')}
-          </InterlayDenimContainedButton>
+          </InterlayDenimOrKintsugiMidnightContainedButton>
           <InterlayDefaultContainedButton
-            onClick={() => setUpdateCollateralModalStatus(CollateralUpdateStatus.Decrease)}>
+            onClick={handleWithdrawCollateralModalOpen}>
             {t('vault.withdraw_collateral')}
           </InterlayDefaultContainedButton>
           {lockedBTC.gt(BitcoinAmount.zero) && (
             <InterlayCaliforniaContainedButton
-              onClick={() => setShowRequestReplacementModal(true)}>
+              onClick={handleRequestReplacementModalOpen}>
               {t('vault.replace_vault')}
             </InterlayCaliforniaContainedButton>
           )}
@@ -260,12 +279,18 @@ const Vault = (): JSX.Element => {
           vaultAddress={address} />
         <ReplaceTable />
       </MainContainer>
-      <UpdateCollateralModal
-        onClose={closeUpdateCollateralModal}
-        status={updateCollateralModalStatus} />
+      {collateralUpdateStatus !== CollateralUpdateStatus.Close && (
+        <UpdateCollateralModal
+          open={
+            collateralUpdateStatus === CollateralUpdateStatus.Deposit ||
+            collateralUpdateStatus === CollateralUpdateStatus.Withdraw
+          }
+          onClose={handleUpdateCollateralModalClose}
+          collateralUpdateStatus={collateralUpdateStatus} />
+      )}
       <RequestReplacementModal
-        onClose={closeRequestReplacementModal}
-        show={showRequestReplacementModal} />
+        onClose={handleRequestReplacementModalClose}
+        open={requestReplacementModalOpen} />
     </>
   );
 };

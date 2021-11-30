@@ -1,14 +1,10 @@
-
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { BitcoinAmount } from '@interlay/monetary-js';
-import {
-  Redeem,
-  newMonetaryAmount
-} from '@interlay/interbtc-api';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
@@ -33,7 +29,8 @@ import {
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
-  request: Redeem;
+  // TODO: should type properly (`Relay`)
+  request: any;
 }
 
 const ReimbursedRedeemRequest = ({
@@ -70,9 +67,7 @@ const ReimbursedRedeemRequest = ({
           window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN)
         ]);
 
-        const burnedBTCAmount = request ?
-          request.amountBTC.add(request.bridgeFee) :
-          BitcoinAmount.zero;
+        const burnedBTCAmount = request.request.requestedAmountBacking.add(request.bridgeFee);
         const theBurnDOTAmount = btcDotRate.toCounter(burnedBTCAmount);
         const thePunishmentDOTAmount = theBurnDOTAmount.mul(new Big(punishmentFee));
         const theDOTAmount = theBurnDOTAmount.add(thePunishmentDOTAmount);
@@ -199,7 +194,7 @@ const ReimbursedRedeemRequest = ({
       </div>
       <ExternalLink
         className='text-sm'
-        href={getPolkadotLink(request.creationBlock)}>
+        href={getPolkadotLink(request.request.height.absolute)}>
         {t('issue_page.view_parachain_block')}
       </ExternalLink>
     </RequestWrapper>

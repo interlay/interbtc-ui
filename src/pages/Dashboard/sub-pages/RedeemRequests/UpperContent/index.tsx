@@ -1,4 +1,3 @@
-
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import {
@@ -15,10 +14,20 @@ import Stats, {
   StatsDd
 } from '../../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
+import Panel from 'components/Panel';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import genericFetcher, {
   GENERIC_FETCHER
 } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
+import graphqlFetcher, {
+  GraphqlReturn,
+  GRAPHQL_FETCHER
+} from 'services/fetchers/graphql-fetcher';
+import redeemCountQuery from 'services/queries/redeem-count-query';
 
 const UpperContent = (): JSX.Element => {
   const {
@@ -32,16 +41,12 @@ const UpperContent = (): JSX.Element => {
     isLoading: totalSuccessfulRedeemsLoading,
     data: totalSuccessfulRedeems,
     error: totalSuccessfulRedeemsError
-  } = useQuery<number, Error>(
+  } = useQuery<GraphqlReturn<any>, Error>(
     [
-      GENERIC_FETCHER,
-      'interBtcIndex',
-      'getTotalSuccessfulRedeems'
+      GRAPHQL_FETCHER,
+      redeemCountQuery('status_eq: Completed')
     ],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
+    graphqlFetcher<GraphqlReturn<any>>()
   );
   useErrorHandler(totalSuccessfulRedeemsError);
 
@@ -64,30 +69,44 @@ const UpperContent = (): JSX.Element => {
   useErrorHandler(totalRedeemedAmountError);
 
   // TODO: should use skeleton loaders
-  if (totalSuccessfulRedeemsIdle || totalSuccessfulRedeemsLoading) {
-    return <>Loading...</>;
-  }
-  if (totalRedeemedAmountIdle || totalRedeemedAmountLoading) {
+  if (
+    totalSuccessfulRedeemsIdle ||
+    totalSuccessfulRedeemsLoading ||
+    totalRedeemedAmountIdle ||
+    totalRedeemedAmountLoading
+  ) {
     return <>Loading...</>;
   }
   if (totalRedeemedAmount === undefined) {
     throw new Error('Something went wrong!');
   }
+  if (totalSuccessfulRedeems === undefined) {
+    throw new Error('Something went wrong!');
+  }
+  const totalSuccessfulRedeemCount = totalSuccessfulRedeems.data.redeemsConnection.totalCount;
 
   // TODO: add this again when the network is stable
   // const redeemSuccessRate = totalSuccessfulRedeems / totalRedeemRequests;
 
   return (
-    <div
+    <Panel
       className={clsx(
         'grid',
         'sm:grid-cols-2',
-        'gap-5'
+        'gap-5',
+        'px-4',
+        'py-5'
       )}>
       <Stats
         leftPart={
           <>
-            <StatsDt className='!text-interlayCalifornia'>
+            <StatsDt
+              className={clsx(
+                { '!text-interlayDenim':
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                { 'dark:!text-kintsugiSupernova-400':
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              )}>
               {t('dashboard.redeem.total_redeemed')}
             </StatsDt>
             <StatsDd>
@@ -102,7 +121,7 @@ const UpperContent = (): JSX.Element => {
               {t('dashboard.redeem.total_redeems')}
             </StatsDt>
             <StatsDd>
-              {totalSuccessfulRedeems}
+              {totalSuccessfulRedeemCount}
             </StatsDd>
             {/* TODO: add this again when the network is stable */}
             {/* <StatsDt className='!text-interlayConifer'>
@@ -113,14 +132,8 @@ const UpperContent = (): JSX.Element => {
             </StatsDd> */}
           </>
         } />
-      <div
-        className={clsx(
-          'border',
-          'rounded'
-        )}>
-        <RedeemedChart />
-      </div>
-    </div>
+      <RedeemedChart />
+    </Panel>
   );
 };
 

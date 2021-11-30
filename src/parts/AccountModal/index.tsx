@@ -20,7 +20,12 @@ import InterlayModal, {
   InterlayModalInnerWrapper,
   InterlayModalTitle
 } from 'components/UI/InterlayModal';
+import InterlayButtonBase from 'components/UI/InterlayButtonBase';
 import { APP_NAME } from 'config/relay-chains';
+import {
+  KUSAMA,
+  POLKADOT
+} from 'utils/constants/relay-chain-names';
 import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';
@@ -48,8 +53,10 @@ const AccountModal = ({
 
   const [accounts, setAccounts] = React.useState<InjectedAccountWithMeta[]>();
 
+  const extensionWalletAvailable = extensions.length > 0;
+
   React.useEffect(() => {
-    if (!extensions.length) return;
+    if (!extensionWalletAvailable) return;
 
     (async () => {
       try {
@@ -60,7 +67,7 @@ const AccountModal = ({
         console.log('[AccountModal] error.message => ', error.message);
       }
     })();
-  }, [extensions.length]);
+  }, [extensionWalletAvailable]);
 
   const handleAccountSelect = (newAddress: string) => async () => {
     if (!bridgeLoaded) {
@@ -74,6 +81,104 @@ const AccountModal = ({
     dispatch(changeAddressAction(newAddress));
 
     onClose();
+  };
+
+  const renderContent = () => {
+    if (extensionWalletAvailable) {
+      return (
+        <>
+          {accounts !== undefined && accounts.length > 0 ? (
+            // List all available accounts
+            <ul className='space-y-4'>
+              {accounts.map(account => {
+                const selected = address === account.address;
+
+                return (
+                  <li
+                    key={account.address}
+                    className={clsx(
+                      'rounded',
+                      'border',
+                      'border-solid',
+                      'shadow-sm',
+                      // TODO: could be reused
+                      selected ? clsx(
+                        { 'text-interlayDenim-700':
+                          // eslint-disable-next-line max-len
+                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                        { 'dark:text-kintsugiMidnight-700':
+                          process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                        { 'bg-interlayHaiti-50':
+                          // eslint-disable-next-line max-len
+                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                        { 'dark:bg-white':
+                          process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                      ) : clsx(
+                        { 'text-interlayTextPrimaryInLightMode':
+                          // eslint-disable-next-line max-len
+                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                        // eslint-disable-next-line max-len
+                        { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                        { 'hover:bg-interlayHaiti-50':
+                          // eslint-disable-next-line max-len
+                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                        { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                        { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                      )
+                    )}>
+                    <InterlayButtonBase
+                      className={clsx(
+                        'px-5',
+                        'py-3',
+                        'space-x-1.5',
+                        'w-full'
+                      )}
+                      onClick={handleAccountSelect(account.address)}>
+                      <span className='font-medium'>
+                        {account.meta.name}
+                      </span>
+                      <span>
+                        {`(${shortAddress(account.address)})`}
+                      </span>
+                    </InterlayButtonBase>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            // Create a new account when no accounts are available
+            <p>
+              {t('no_account')}
+              <ExternalLink href={POLKADOT_EXTENSION}>
+                &nbsp;{t('here')}
+              </ExternalLink>
+              .
+            </p>
+          )}
+        </>
+      );
+    } else {
+      return (
+        <>
+          <p>
+            {t('install_supported_wallets')}
+          </p>
+          <ExternalLink href={POLKADOT_EXTENSION}>
+            <span
+              className={clsx(
+                'inline-flex',
+                'items-center',
+                'space-x-1.5'
+              )}>
+              <PolkadotExtensionLogoIcon
+                width={30}
+                height={30} />
+              <span>Polkadot.js</span>
+            </span>
+          </ExternalLink>
+        </>
+      );
+    }
   };
 
   return (
@@ -91,95 +196,18 @@ const AccountModal = ({
           className={clsx(
             'text-lg',
             'font-medium',
-            'mb-4'
+            'mb-6'
           )}>
-          {extensions.length ? 'Select account' : 'Pick a wallet'}
+          {extensionWalletAvailable ?
+            'Select account' :
+            'Pick a wallet'
+          }
         </InterlayModalTitle>
         <CloseIconButton
           ref={focusRef}
           onClick={onClose} />
         <div className='space-y-4'>
-          {extensions.length ? (
-            <>
-              {/* Create a new account when no accounts are available */}
-              {!accounts?.length && (
-                <p>
-                  {t('no_account')}
-                  <ExternalLink href={POLKADOT_EXTENSION}>
-                    &nbsp;{t('here')}
-                  </ExternalLink>
-                  .
-                </p>
-              )}
-              {/* List all available accounts */}
-              <ul className='space-y-4'>
-                {accounts?.map(account => (
-                  <li
-                    key={account.address}
-                    className={clsx(
-                      'rounded',
-                      'border',
-                      'border-solid',
-                      'shadow-sm',
-                      'hover:bg-gray-100'
-                    )}>
-                    <button
-                      className={clsx(
-                        'p-4',
-                        'flex',
-                        'items-center',
-                        'space-x-1.5',
-                        'w-full'
-                      )}
-                      onClick={handleAccountSelect(account.address)}>
-                      <span
-                        className={clsx(
-                          'rounded-full',
-                          'h-3',
-                          'w-3',
-                          'inline-block',
-                          address === account.address ? 'bg-green-500' : 'bg-transparent'
-                        )} />
-                      <span className='font-medium'>
-                        {account.meta.name}
-                      </span>
-                      <span>
-                        {`(${shortAddress(account.address)})`}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </>
-          ) : (
-            <>
-              <p>
-                {t('install_supported_wallets')}
-              </p>
-              <ExternalLink
-                className={clsx(
-                  'px-4',
-                  'py-2.5',
-                  'rounded',
-                  'shadow-sm',
-                  'border',
-                  'border-solid'
-                )}
-                href={POLKADOT_EXTENSION}>
-                <div
-                  className={clsx(
-                    'inline-flex',
-                    'items-center',
-                    'space-x-1.5'
-                  )}>
-                  <PolkadotExtensionLogoIcon
-                    width={30}
-                    height={30} />
-                  <span>Polkadot.js</span>
-                </div>
-              </ExternalLink>
-            </>
-          )}
+          {renderContent()}
           <div
             className={clsx(
               'flex',
