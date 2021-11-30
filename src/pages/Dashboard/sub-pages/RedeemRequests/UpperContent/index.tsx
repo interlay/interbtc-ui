@@ -83,7 +83,7 @@ const UpperContent = (): JSX.Element => {
   if (totalSuccessfulRedeems === undefined) {
     throw new Error('Something went wrong!');
   }
-  const totalCount = totalSuccessfulRedeems.data.redeemsConnection.totalCount;
+  const totalSuccessfulRedeemCount = totalSuccessfulRedeems.data.redeemsConnection.totalCount;
 
   // TODO: add this again when the network is stable
   // const redeemSuccessRate = totalSuccessfulRedeems / totalRedeemRequests;
@@ -121,7 +121,7 @@ const UpperContent = (): JSX.Element => {
               {t('dashboard.redeem.total_redeems')}
             </StatsDt>
             <StatsDd>
-              {totalCount}
+              {totalSuccessfulRedeemCount}
             </StatsDd>
             {/* TODO: add this again when the network is stable */}
             {/* <StatsDt className='!text-interlayConifer'>
