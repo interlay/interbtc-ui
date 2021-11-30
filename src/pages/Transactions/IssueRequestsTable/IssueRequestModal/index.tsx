@@ -2,9 +2,7 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import {
-  IssueStatus
-} from '@interlay/interbtc-api';
+import { IssueStatus } from '@interlay/interbtc-api';
 
 import BTCPaymentPendingStatusUI from './BTCPaymentPendingStatusUI';
 import IssueRequestStatusUI from './IssueRequestStatusUI';
@@ -18,7 +16,10 @@ import InterlayModal, {
   Props as ModalProps,
   InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
-import { WrappedTokenAmount, WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import {
+  WrappedTokenAmount,
+  WRAPPED_TOKEN_SYMBOL
+} from 'config/relay-chains';
 import {
   POLKADOT,
   KUSAMA
@@ -31,6 +32,7 @@ import {
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 
+// TODO: should type properly (`Relay`)
 const renderModalStatusPanel = (request: any) => {
   switch (request.status) {
   case IssueStatus.PendingWithBtcTxNotFound: {
@@ -46,6 +48,7 @@ const renderModalStatusPanel = (request: any) => {
 };
 
 interface CustomProps {
+  // TODO: should type properly (`Relay`)
   request: any;
 }
 
@@ -63,11 +66,18 @@ const IssueRequestModal = ({
 
   const focusRef = React.useRef(null);
 
-  const receivedWrappedTokenAmount = request.execution ? request.execution.amountWrapped :
-    request.request.amountWrapped;
-  const bridgeFee = request.execution ? request.execution.bridgeFeeWrapped : request.request.bridgeFeeWrapped;
-  const sentBackingTokenAmount = (receivedWrappedTokenAmount as WrappedTokenAmount)
-    .add(bridgeFee as WrappedTokenAmount);
+  const receivedWrappedTokenAmount =
+    request.execution ?
+      request.execution.amountWrapped :
+      request.request.amountWrapped;
+  const bridgeFee =
+    request.execution ?
+      request.execution.bridgeFeeWrapped :
+      request.request.bridgeFeeWrapped;
+  const sentBackingTokenAmount =
+    // TODO: double-check
+    (receivedWrappedTokenAmount as WrappedTokenAmount)
+      .add(bridgeFee as WrappedTokenAmount);
 
   return (
     <InterlayModal
