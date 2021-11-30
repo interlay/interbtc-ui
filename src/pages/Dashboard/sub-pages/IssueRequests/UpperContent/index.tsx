@@ -60,7 +60,7 @@ const UpperContent = (): JSX.Element => {
   if (totalSuccessfulIssues === undefined) {
     throw new Error('Something went wrong!');
   }
-  const totalCount = totalSuccessfulIssues.data.issuesConnection.totalCount;
+  const totalSuccessfulIssueCount = totalSuccessfulIssues.data.issuesConnection.totalCount;
 
   return (
     <Panel
@@ -96,7 +96,7 @@ const UpperContent = (): JSX.Element => {
               {t('dashboard.issue.issue_requests')}
             </StatsDt>
             <StatsDd>
-              {totalCount}
+              {totalSuccessfulIssueCount}
             </StatsDd>
           </>
         } />

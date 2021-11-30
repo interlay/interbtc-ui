@@ -379,8 +379,8 @@ const RedeemRequestsTable = (): JSX.Element => {
     });
   };
 
-  const totalCount = redeemRequestsTotalCount.data.redeemsConnection.totalCount || 0;
-  const pageCount = Math.ceil(totalCount / TABLE_PAGE_LIMIT);
+  const totalSuccessfulRedeemCount = redeemRequestsTotalCount.data.redeemsConnection.totalCount || 0;
+  const pageCount = Math.ceil(totalSuccessfulRedeemCount / TABLE_PAGE_LIMIT);
   const selectedRedeemRequest = data.find((redeemRequest: any) => redeemRequest.id === selectedRedeemRequestId);
 
   return (

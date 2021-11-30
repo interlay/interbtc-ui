@@ -383,8 +383,8 @@ const IssueRequestsTable = (): JSX.Element => {
     }
   };
 
-  const totalCount = issueRequestsTotalCount.data.issuesConnection.totalCount || 0;
-  const pageCount = Math.ceil(totalCount / TABLE_PAGE_LIMIT);
+  const totalSuccessfulIssueCount = issueRequestsTotalCount.data.issuesConnection.totalCount || 0;
+  const pageCount = Math.ceil(totalSuccessfulIssueCount / TABLE_PAGE_LIMIT);
   // TODO: should type properly (`Relay`)
   const selectedIssueRequest = data.find((issueRequest: any) => issueRequest.id === selectedIssueRequestId);
 
