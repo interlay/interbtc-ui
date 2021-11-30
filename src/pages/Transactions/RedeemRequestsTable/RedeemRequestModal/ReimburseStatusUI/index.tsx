@@ -13,10 +13,7 @@ import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
-import {
-  Redeem,
-  newMonetaryAmount
-} from '@interlay/interbtc-api';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
@@ -46,7 +43,8 @@ import { USER_REDEEM_REQUESTS_FETCHER } from 'services/user-redeem-requests-fetc
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
-  request: Redeem;
+  // TODO: should type properly (`Relay`)
+  request: any;
   onClose: () => void;
 }
 
@@ -85,7 +83,7 @@ const ReimburseStatusUI = ({
           window.bridge.interBtcApi.vaults.getPunishmentFee(),
           window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN)
         ]);
-        const wrappedTokenAmount = request ? request.amountBTC : BitcoinAmount.zero;
+        const wrappedTokenAmount = request ? request.request.requestedAmountBacking : BitcoinAmount.zero;
         setCollateralTokenAmount(btcDotRate.toCounter(wrappedTokenAmount));
         setPunishmentCollateralTokenAmount(btcDotRate.toCounter(wrappedTokenAmount).mul(new Big(punishment)));
       } catch (error) {
@@ -103,8 +101,9 @@ const ReimburseStatusUI = ({
   const selectedPageIndex = selectedPage - 1;
 
   const queryClient = useQueryClient();
-  const retryMutation = useMutation<void, Error, Redeem>(
-    (variables: Redeem) => {
+  // TODO: should type properly (`Relay`)
+  const retryMutation = useMutation<void, Error, any>(
+    (variables: any) => {
       return window.bridge.interBtcApi.redeem.cancel(variables.id, false);
     },
     {
@@ -124,8 +123,9 @@ const ReimburseStatusUI = ({
       }
     }
   );
-  const reimburseMutation = useMutation<void, Error, Redeem>(
-    (variables: Redeem) => {
+  // TODO: should type properly (`Relay`)
+  const reimburseMutation = useMutation<void, Error, any>(
+    (variables: any) => {
       return window.bridge.interBtcApi.redeem.cancel(variables.id, true);
     },
     {

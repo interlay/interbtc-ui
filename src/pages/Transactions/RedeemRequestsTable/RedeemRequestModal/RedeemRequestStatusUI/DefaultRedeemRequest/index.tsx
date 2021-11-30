@@ -1,9 +1,8 @@
-
-import * as React from 'react';
+import { useQuery } from 'react-query';
+import { useErrorHandler } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { Redeem } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import Ring48, {
@@ -16,9 +15,11 @@ import {
 } from 'utils/constants/relay-chain-names';
 import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 
 interface Props {
-  request: Redeem;
+  // TODO: should type properly (`Relay`)
+  request: any;
 }
 
 const DefaultRedeemRequest = ({
@@ -26,24 +27,79 @@ const DefaultRedeemRequest = ({
 }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
-  const [stableBitcoinConfirmations, setStableBitcoinConfirmations] = React.useState(1);
 
-  React.useEffect(() => {
-    if (!bridgeLoaded) return;
+  const {
+    isIdle: stableBitcoinConfirmationsIdle,
+    isLoading: stableBitcoinConfirmationsLoading,
+    data: stableBitcoinConfirmations = 1, // TODO: double-check
+    error: stableBitcoinConfirmationsError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'getBtcConfirmations'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(stableBitcoinConfirmationsError);
 
-    // TODO: should add loading UX
-    (async () => {
-      try {
-        const theStableBitcoinConfirmations =
-          await window.bridge.interBtcApi.btcRelay.getStableBitcoinConfirmations();
+  const {
+    isIdle: stableParachainConfirmationsIdle,
+    isLoading: stableParachainConfirmationsLoading,
+    data: stableParachainConfirmations = 100, // TODO: double-check
+    error: stableParachainConfirmationsError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcApi',
+      'btcRelay',
+      'getStableParachainConfirmations'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(stableParachainConfirmationsError);
 
-        setStableBitcoinConfirmations(theStableBitcoinConfirmations);
-      } catch (error) {
-        // TODO: should add error handling UX
-        console.log('[RedeemRequestStatusUI useEffect] error.message => ', error.message);
-      }
-    })();
-  }, [bridgeLoaded]);
+  const {
+    isIdle: parachainHeightIdle,
+    isLoading: parachainHeightLoading,
+    data: parachainHeight = 0, // TODO: double-check
+    error: parachainHeightError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcApi',
+      'system',
+      'getCurrentActiveBlockNumber'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(parachainHeightError);
+
+  // TODO: should use skeleton loaders
+  if (
+    stableBitcoinConfirmationsIdle ||
+    stableBitcoinConfirmationsLoading ||
+    stableParachainConfirmationsIdle ||
+    stableParachainConfirmationsLoading ||
+    parachainHeightIdle ||
+    parachainHeightLoading
+  ) {
+    return <>Loading...</>;
+  }
+
+  const requestConfirmations =
+    request.backingPayment.confirmedAtParachainActiveBlock ?
+      parachainHeight - request.backingPayment.confirmedAtParachainActiveBlock :
+      0;
 
   return (
     <RequestWrapper>
@@ -62,7 +118,10 @@ const DefaultRedeemRequest = ({
           {t('confirmations')}
         </Ring48Title>
         <Ring48Value className='text-interlayConifer'>
-          {`${request.confirmations}/${stableBitcoinConfirmations}`}
+          {`${request.backingPayment.confirmations || 0}/${stableBitcoinConfirmations}`}
+        </Ring48Value>
+        <Ring48Value className='text-interlayConifer'>
+          {`${requestConfirmations}/${stableParachainConfirmations}`}
         </Ring48Value>
       </Ring48>
       <p className='space-x-1'>
@@ -74,7 +133,7 @@ const DefaultRedeemRequest = ({
           )}>
           {t('issue_page.btc_transaction')}:
         </span>
-        <span className='font-medium'>{shortAddress(request.btcTxId || '')}</span>
+        <span className='font-medium'>{shortAddress(request.backingPayment.btcTxId || '')}</span>
       </p>
     </RequestWrapper>
   );

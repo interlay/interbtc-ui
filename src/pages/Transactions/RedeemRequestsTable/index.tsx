@@ -1,6 +1,3 @@
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import * as React from 'react';
 import { useTable } from 'react-table';
 import {
@@ -16,10 +13,7 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import {
-  Redeem,
-  RedeemStatus
-} from '@interlay/interbtc-api';
+import { RedeemStatus } from '@interlay/interbtc-api';
 
 import RedeemRequestModal from './RedeemRequestModal';
 import SectionTitle from 'parts/SectionTitle';
@@ -46,10 +40,16 @@ import {
   formatDateTimePrecise,
   displayMonetaryAmount
 } from 'common/utils/utils';
-import userRedeemRequestsFetcher, { USER_REDEEM_REQUESTS_FETCHER } from 'services/user-redeem-requests-fetcher';
-import userRedeemRequestsTotalCountFetcher, {
-  USER_REDEEM_REQUESTS_TOTAL_COUNT_FETCHER
-} from 'services/user-redeem-requests-total-count-fetcher';
+import redeemCountQuery from 'services/queries/redeem-count-query';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import graphqlFetcher, {
+  GraphqlReturn,
+  GRAPHQL_FETCHER
+} from 'services/fetchers/graphql-fetcher';
+import redeemFetcher, {
+  REDEEM_FETCHER,
+  getRedeemWithStatus
+} from 'services/fetchers/redeem-request-fetcher';
 import { StoreType } from 'common/types/util.types';
 
 const RedeemRequestsTable = (): JSX.Element => {
@@ -65,39 +65,93 @@ const RedeemRequestsTable = (): JSX.Element => {
     address,
     bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
+
+  const {
+    isIdle: btcConfirmationsIdle,
+    isLoading: btcConfirmationsLoading,
+    data: btcConfirmations,
+    error: btcConfirmationsError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'getBtcConfirmations'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(btcConfirmationsError);
+
+  const {
+    isIdle: latestParachainActiveBlockIdle,
+    isLoading: latestParachainActiveBlockLoading,
+    data: latestParachainActiveBlock,
+    error: latestParachainActiveBlockError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'latestParachainActiveBlock'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(latestParachainActiveBlockError);
+
+  const {
+    isIdle: parachainConfirmationsIdle,
+    isLoading: parachainConfirmationsLoading,
+    data: parachainConfirmations,
+    error: parachainConfirmationsError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'getParachainConfirmations'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(parachainConfirmationsError);
+
   const {
     isIdle: redeemRequestsTotalCountIdle,
     isLoading: redeemRequestsTotalCountLoading,
     data: redeemRequestsTotalCount,
     error: redeemRequestsTotalCountError
-  } = useQuery<number, Error>(
+  // TODO: should type properly (`Relay`)
+  } = useQuery<GraphqlReturn<any>, Error>(
     [
-      USER_REDEEM_REQUESTS_TOTAL_COUNT_FETCHER,
-      address
+      GRAPHQL_FETCHER,
+      redeemCountQuery(`userParachainAddress_eq: "${address}"`)
     ],
-    userRedeemRequestsTotalCountFetcher,
-    {
-      enabled: !!address && !!bridgeLoaded,
-      refetchInterval: 10000
-    }
+    graphqlFetcher<GraphqlReturn<any>>()
   );
   useErrorHandler(redeemRequestsTotalCountError);
+
   const {
     isIdle: redeemRequestsIdle,
     isLoading: redeemRequestsLoading,
     data: redeemRequests,
     error: redeemRequestsError
-  } = useQuery<Array<Redeem>, Error>(
+  // TODO: should type properly (`Relay`)
+  } = useQuery<any, Error>(
     [
-      USER_REDEEM_REQUESTS_FETCHER,
-      address,
-      selectedPageIndex,
-      TABLE_PAGE_LIMIT
+      REDEEM_FETCHER,
+      selectedPageIndex * TABLE_PAGE_LIMIT, // offset
+      TABLE_PAGE_LIMIT, // limit
+      btcConfirmations,
+      `userParachainAddress_eq: "${address}"` // WHERE condition
     ],
-    userRedeemRequestsFetcher,
+    redeemFetcher,
     {
-      enabled: !!address && !!bridgeLoaded,
-      refetchInterval: 10000
+      enabled: btcConfirmations !== undefined
     }
   );
   useErrorHandler(redeemRequestsError);
@@ -106,42 +160,48 @@ const RedeemRequestsTable = (): JSX.Element => {
     () => [
       {
         Header: t('issue_page.updated'),
-        accessor: 'creationTimestamp',
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }: { value: number; }) {
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: redeem } }: any) {
+          let date;
+          if (redeem.execution) {
+            date = redeem.execution.timestamp;
+          } else if (redeem.cancellation) {
+            date = redeem.cancellation.timestamp;
+          } else {
+            date = redeem.request.timestamp;
+          }
+
           return (
             <>
-              {value ? formatDateTimePrecise(new Date(Number(value))) : t('pending')}
+              {formatDateTimePrecise(new Date(date))}
             </>
           );
         }
       },
       {
         Header: `${t('redeem_page.amount')} (${WRAPPED_TOKEN_SYMBOL})`,
-        accessor: 'amountBTC',
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell(props: any) {
-          const redeemRequest: Redeem = props.row.original;
-          const redeemedWrappedTokenAmount =
-            redeemRequest.amountBTC.add(redeemRequest.bridgeFee).add(redeemRequest.btcTransferFee);
-
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: redeem } }: any) {
           return (
-            <>{displayMonetaryAmount(redeemedWrappedTokenAmount)}</>
+            <>
+              {displayMonetaryAmount(redeem.request.requestedAmountBacking)}
+            </>
           );
         }
       },
       {
         Header: t('issue_page.btc_transaction'),
-        accessor: 'btcTxId',
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell(props: any) {
-          const redeemRequest: Redeem = props.row.original;
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: redeemRequest } }: any) {
           return (
             <>
               {
@@ -153,13 +213,13 @@ const RedeemRequestsTable = (): JSX.Element => {
                     t('redeem_page.failed')
                   ) : (
                     <>
-                      {redeemRequest.btcTxId ? (
+                      {redeemRequest.backingPayment.btcTxId ? (
                         <ExternalLink
-                          href={`${BTC_TRANSACTION_API}${redeemRequest.btcTxId}`}
+                          href={`${BTC_TRANSACTION_API}${redeemRequest.backingPayment.btcTxId}`}
                           onClick={event => {
                             event.stopPropagation();
                           }}>
-                          {shortTxId(redeemRequest.btcTxId)}
+                          {shortTxId(redeemRequest.backingPayment.btcTxId)}
                         </ExternalLink>
                       ) : (
                         `${t('pending')}...`
@@ -172,11 +232,12 @@ const RedeemRequestsTable = (): JSX.Element => {
       },
       {
         Header: t('issue_page.confirmations'),
-        accessor: 'confirmations',
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell({ value }: { value: number; }) {
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: redeem } }: any) {
+          const value = redeem.backingPayment.confirmations;
           return (
             <>
               {value === undefined ?
@@ -249,7 +310,23 @@ const RedeemRequestsTable = (): JSX.Element => {
     [t]
   );
 
-  const data = redeemRequests ?? [];
+  const data =
+    (
+      redeemRequests === undefined ||
+      btcConfirmations === undefined ||
+      parachainConfirmations === undefined ||
+      latestParachainActiveBlock === undefined
+    ) ?
+      [] :
+      redeemRequests.map(
+        // TODO: should type properly (`Relay`)
+        (redeem: any) => getRedeemWithStatus(
+          redeem,
+          btcConfirmations,
+          parachainConfirmations,
+          latestParachainActiveBlock
+        )
+      );
 
   const {
     getTableProps,
@@ -265,6 +342,12 @@ const RedeemRequestsTable = (): JSX.Element => {
   );
 
   if (
+    btcConfirmationsIdle ||
+    btcConfirmationsLoading ||
+    parachainConfirmationsIdle ||
+    parachainConfirmationsLoading ||
+    latestParachainActiveBlockIdle ||
+    latestParachainActiveBlockLoading ||
     redeemRequestsIdle ||
     redeemRequestsLoading ||
     redeemRequestsTotalCountIdle ||
@@ -273,6 +356,9 @@ const RedeemRequestsTable = (): JSX.Element => {
     return (
       <PrimaryColorEllipsisLoader />
     );
+  }
+  if (redeemRequestsTotalCount === undefined) {
+    throw new Error('Something went wrong!');
   }
 
   const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number; }) => {
@@ -293,8 +379,9 @@ const RedeemRequestsTable = (): JSX.Element => {
     });
   };
 
-  const pageCount = Math.ceil(redeemRequestsTotalCount / TABLE_PAGE_LIMIT);
-  const selectedRedeemRequest = data.find(redeemRequest => redeemRequest.id === selectedRedeemRequestId);
+  const totalSuccessfulRedeemCount = redeemRequestsTotalCount.data.redeemsConnection.totalCount || 0;
+  const pageCount = Math.ceil(totalSuccessfulRedeemCount / TABLE_PAGE_LIMIT);
+  const selectedRedeemRequest = data.find((redeemRequest: any) => redeemRequest.id === selectedRedeemRequestId);
 
   return (
     <>
@@ -309,10 +396,12 @@ const RedeemRequestsTable = (): JSX.Element => {
         </SectionTitle>
         <InterlayTable {...getTableProps()}>
           <InterlayThead>
-            {headerGroups.map(headerGroup => (
+            {/* TODO: should type properly */}
+            {headerGroups.map((headerGroup: any) => (
               // eslint-disable-next-line react/jsx-key
               <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
+                {/* TODO: should type properly */}
+                {headerGroup.headers.map((column: any) => (
                   // eslint-disable-next-line react/jsx-key
                   <InterlayTh
                     {...column.getHeaderProps([
@@ -328,7 +417,8 @@ const RedeemRequestsTable = (): JSX.Element => {
             ))}
           </InterlayThead>
           <InterlayTbody {...getTableBodyProps()}>
-            {rows.map(row => {
+            {/* TODO: should type properly */}
+            {rows.map((row: any) => {
               prepareRow(row);
 
               const {
@@ -345,7 +435,8 @@ const RedeemRequestsTable = (): JSX.Element => {
                   )}
                   {...restRowProps}
                   onClick={handleRowClick(row.original.id)}>
-                  {row.cells.map(cell => {
+                  {/* TODO: should type properly */}
+                  {row.cells.map((cell: any) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
                       <InterlayTd

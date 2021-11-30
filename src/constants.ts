@@ -34,6 +34,7 @@ export const DEFAULT_ACCOUNT_SEED = process.env.REACT_APP_DEFAULT_ACCOUNT_SEED;
 export const FAUCET_URL = process.env.REACT_APP_FAUCET_URL || 'http://localhost:3035';
 
 export const STATS_URL = process.env.REACT_APP_STATS_SERVER_URL || 'http://localhost:3007';
+export const HYDRA_URL = process.env.REACT_APP_HYDRA_URL || 'http://localhost:4000/graphql';
 
 export const FEEDBACK_URL = 'https://forms.gle/2eKFnq4j1fkBgejW7';
 

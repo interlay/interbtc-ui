@@ -1,4 +1,3 @@
-
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import {
@@ -24,6 +23,11 @@ import genericFetcher, {
   GENERIC_FETCHER
 } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
+import graphqlFetcher, {
+  GraphqlReturn,
+  GRAPHQL_FETCHER
+} from 'services/fetchers/graphql-fetcher';
+import redeemCountQuery from 'services/queries/redeem-count-query';
 
 const UpperContent = (): JSX.Element => {
   const {
@@ -37,16 +41,12 @@ const UpperContent = (): JSX.Element => {
     isLoading: totalSuccessfulRedeemsLoading,
     data: totalSuccessfulRedeems,
     error: totalSuccessfulRedeemsError
-  } = useQuery<number, Error>(
+  } = useQuery<GraphqlReturn<any>, Error>(
     [
-      GENERIC_FETCHER,
-      'interBtcIndex',
-      'getTotalSuccessfulRedeems'
+      GRAPHQL_FETCHER,
+      redeemCountQuery('status_eq: Completed')
     ],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
+    graphqlFetcher<GraphqlReturn<any>>()
   );
   useErrorHandler(totalSuccessfulRedeemsError);
 
@@ -69,15 +69,21 @@ const UpperContent = (): JSX.Element => {
   useErrorHandler(totalRedeemedAmountError);
 
   // TODO: should use skeleton loaders
-  if (totalSuccessfulRedeemsIdle || totalSuccessfulRedeemsLoading) {
-    return <>Loading...</>;
-  }
-  if (totalRedeemedAmountIdle || totalRedeemedAmountLoading) {
+  if (
+    totalSuccessfulRedeemsIdle ||
+    totalSuccessfulRedeemsLoading ||
+    totalRedeemedAmountIdle ||
+    totalRedeemedAmountLoading
+  ) {
     return <>Loading...</>;
   }
   if (totalRedeemedAmount === undefined) {
     throw new Error('Something went wrong!');
   }
+  if (totalSuccessfulRedeems === undefined) {
+    throw new Error('Something went wrong!');
+  }
+  const totalSuccessfulRedeemCount = totalSuccessfulRedeems.data.redeemsConnection.totalCount;
 
   // TODO: add this again when the network is stable
   // const redeemSuccessRate = totalSuccessfulRedeems / totalRedeemRequests;
@@ -115,7 +121,7 @@ const UpperContent = (): JSX.Element => {
               {t('dashboard.redeem.total_redeems')}
             </StatsDt>
             <StatsDd>
-              {totalSuccessfulRedeems}
+              {totalSuccessfulRedeemCount}
             </StatsDd>
             {/* TODO: add this again when the network is stable */}
             {/* <StatsDt className='!text-interlayConifer'>
