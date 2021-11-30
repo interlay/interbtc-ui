@@ -7,7 +7,7 @@ import {
 import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import { btcAddressFromEventToString } from 'common/utils/utils';
 import { BITCOIN_NETWORK } from '../../constants';
-import redeemRequestQuery from 'services/queries/redeemRequests';
+import redeemRequestQuery from 'services/queries/redeem-request-query';
 import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
 
