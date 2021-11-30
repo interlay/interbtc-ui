@@ -19,6 +19,7 @@ import {
 } from 'common/utils/utils';
 
 interface Props {
+  // TODO: should type properly (`Relay`)
   request: any;
 }
 
@@ -29,11 +30,13 @@ const BTCPaymentPendingStatusUI = ({
   const { t } = useTranslation();
   const { prices } = useSelector((state: StoreType) => state.general);
   const { issuePeriod } = useSelector((state: StoreType) => state.issue);
-  const amountBTCToSend = (request.wrappedAmount || request.request.amountWrapped)
-    .add(request.bridgeFee || request.request.bridgeFeeWrapped);
+  const amountBTCToSend =
+    (request.wrappedAmount || request.request.amountWrapped)
+      .add(request.bridgeFee || request.request.bridgeFeeWrapped);
   const [initialLeftSeconds, setInitialLeftSeconds] = React.useState<number>();
 
   React.useEffect(() => {
+    // TODO: double-check `request.request?.timestamp`
     // Date.now() is an approximation, used with the parachain response until we can get the block timestamp later
     const requestCreationTimestamp = request.request?.timestamp ?? Date.now();
 
@@ -41,7 +44,7 @@ const BTCPaymentPendingStatusUI = ({
     const theInitialLeftSeconds = requestTimestamp + issuePeriod - Math.floor(Date.now() / 1000);
     setInitialLeftSeconds(theInitialLeftSeconds);
   }, [
-    request,
+    request.request,
     issuePeriod
   ]);
 
@@ -133,9 +136,8 @@ const BTCPaymentPendingStatusUI = ({
       </p>
       <QRCode
         className='mx-auto'
-        value={`bitcoin:${
-          request.vaultBTCAddress || request.vaultBackingAddress
-        }?amount=${displayMonetaryAmount(amountBTCToSend)}`} />
+        // eslint-disable-next-line max-len
+        value={`bitcoin:${request.vaultBTCAddress || request.vaultBackingAddress}?amount=${displayMonetaryAmount(amountBTCToSend)}`} />
       <div
         className={clsx(
           { 'text-interlayTextSecondaryInLightMode':
