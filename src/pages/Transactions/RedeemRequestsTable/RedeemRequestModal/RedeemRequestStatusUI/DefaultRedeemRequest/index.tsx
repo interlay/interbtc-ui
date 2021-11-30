@@ -1,3 +1,5 @@
+import { useQuery } from 'react-query';
+import { useErrorHandler } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
@@ -13,11 +15,10 @@ import {
 } from 'utils/constants/relay-chain-names';
 import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import { useQuery } from 'react-query';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { useErrorHandler } from 'react-error-boundary';
 
 interface Props {
+  // TODO: should type properly (`Relay`)
   request: any;
 }
 
@@ -84,19 +85,21 @@ const DefaultRedeemRequest = ({
   useErrorHandler(parachainHeightError);
 
   // TODO: should use skeleton loaders
-  if (stableBitcoinConfirmationsIdle || stableBitcoinConfirmationsLoading) {
-    return <>Loading...</>;
-  }
-  if (stableParachainConfirmationsIdle || stableParachainConfirmationsLoading) {
-    return <>Loading...</>;
-  }
-  if (parachainHeightIdle || parachainHeightLoading) {
+  if (
+    stableBitcoinConfirmationsIdle ||
+    stableBitcoinConfirmationsLoading ||
+    stableParachainConfirmationsIdle ||
+    stableParachainConfirmationsLoading ||
+    parachainHeightIdle ||
+    parachainHeightLoading
+  ) {
     return <>Loading...</>;
   }
 
-  const requestConfirmations = request.backingPayment.confirmedAtParachainActiveBlock ?
-    parachainHeight - request.backingPayment.confirmedAtParachainActiveBlock :
-    0;
+  const requestConfirmations =
+    request.backingPayment.confirmedAtParachainActiveBlock ?
+      parachainHeight - request.backingPayment.confirmedAtParachainActiveBlock :
+      0;
 
   return (
     <RequestWrapper>
