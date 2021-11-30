@@ -2,9 +2,7 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import {
-  RedeemStatus
-} from '@interlay/interbtc-api';
+import { RedeemStatus } from '@interlay/interbtc-api';
 
 import RedeemRequestStatusUI from './RedeemRequestStatusUI';
 import ReimburseStatusUI from './ReimburseStatusUI';
@@ -32,6 +30,7 @@ import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 
 interface CustomProps {
+  // TODO: should type properly (`Relay`)
   request: any;
 }
 
@@ -46,6 +45,7 @@ const RedeemRequestModal = ({
 
   const focusRef = React.useRef(null);
 
+  // TODO: should type properly (`Relay`)
   const renderModalStatusPanel = (request: any) => {
     switch (request.status) {
     case RedeemStatus.Expired: {
