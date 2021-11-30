@@ -1,7 +1,11 @@
-import { stripHexPrefix, ElectrsAPI } from '@interlay/interbtc-api';
+import {
+  stripHexPrefix,
+  ElectrsAPI
+} from '@interlay/interbtc-api';
+
 import graphqlFetcher, { GRAPHQL_FETCHER } from './graphql-fetcher';
 
-export type TxDetails = {
+type TxDetails = {
   btcTxId?: string;
   blockHeight?: number;
   confirmations?: number;
@@ -9,7 +13,7 @@ export type TxDetails = {
   confirmedAtParachainActiveBlock?: number;
 };
 
-export default async function getTxDetailsForRequest(
+async function getTxDetailsForRequest(
   electrsAPI: ElectrsAPI,
   requestId: string,
   recipient: string,
@@ -18,17 +22,23 @@ export default async function getTxDetailsForRequest(
 ): Promise<TxDetails> {
   const txDetails: TxDetails = {};
   try {
-    txDetails.btcTxId = await (useOpReturn ?
-      electrsAPI.getTxIdByOpReturn(stripHexPrefix(requestId), recipient) :
-      electrsAPI.getEarliestPaymentToRecipientAddressTxId(recipient));
+    txDetails.btcTxId =
+    await (
+      useOpReturn ?
+        electrsAPI.getTxIdByOpReturn(stripHexPrefix(requestId), recipient) :
+        electrsAPI.getEarliestPaymentToRecipientAddressTxId(recipient)
+    );
     txDetails.amount = await electrsAPI.getUtxoAmount(txDetails.btcTxId, recipient);
-  } catch (e) {
+  } catch (error) {
     // no tx found, return null
     return txDetails;
   }
 
   // tx has been found, get confirmations
-  const { confirmations, blockHeight } = await electrsAPI.getTransactionStatus(txDetails.btcTxId);
+  const {
+    confirmations,
+    blockHeight
+  } = await electrsAPI.getTransactionStatus(txDetails.btcTxId);
   txDetails.confirmations = confirmations;
   txDetails.blockHeight = blockHeight;
 
@@ -54,3 +64,9 @@ export default async function getTxDetailsForRequest(
 
   return txDetails;
 }
+
+export type {
+  TxDetails
+};
+
+export default getTxDetailsForRequest;
