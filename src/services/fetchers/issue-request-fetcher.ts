@@ -4,7 +4,7 @@ import { newMonetaryAmount, IssueStatus } from '@interlay/interbtc-api';
 import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import { btcAddressFromEventToString } from 'common/utils/utils';
 import { BITCOIN_NETWORK } from '../../constants';
-import issueRequestsQuery from 'services/queries/issueRequests';
+import issueRequestsQuery from 'services/queries/issue-requests-query';
 import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
 
