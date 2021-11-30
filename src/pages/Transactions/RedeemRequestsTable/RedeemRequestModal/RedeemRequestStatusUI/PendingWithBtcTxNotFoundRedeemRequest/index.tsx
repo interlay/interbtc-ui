@@ -17,6 +17,7 @@ import {
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
+  // TODO: should type properly (`Relay`)
   request: any;
 }
 
