@@ -10,11 +10,10 @@ import {
   FaRegTimesCircle,
   FaRegClock
 } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import {
-  RedeemStatus
-} from '@interlay/interbtc-api';
+import { RedeemStatus } from '@interlay/interbtc-api';
 
 import RedeemRequestModal from './RedeemRequestModal';
 import SectionTitle from 'parts/SectionTitle';
@@ -43,9 +42,14 @@ import {
 } from 'common/utils/utils';
 import redeemCountQuery from 'services/queries/redeemRequestCount';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import redeemFetcher, { REDEEM_FETCHER, getRedeemWithStatus } from 'services/fetchers/redeem-request-fetcher';
-import { useSelector } from 'react-redux';
+import graphqlFetcher, {
+  GraphqlReturn,
+  GRAPHQL_FETCHER
+} from 'services/fetchers/graphql-fetcher';
+import redeemFetcher, {
+  REDEEM_FETCHER,
+  getRedeemWithStatus
+} from 'services/fetchers/redeem-request-fetcher';
 import { StoreType } from 'common/types/util.types';
 
 const RedeemRequestsTable = (): JSX.Element => {
@@ -65,7 +69,7 @@ const RedeemRequestsTable = (): JSX.Element => {
   const {
     isIdle: btcConfirmationsIdle,
     isLoading: btcConfirmationsLoading,
-    data: stableBtcConfirmations,
+    data: btcConfirmations,
     error: btcConfirmationsError
   } = useQuery<number, Error>(
     [
@@ -81,10 +85,10 @@ const RedeemRequestsTable = (): JSX.Element => {
   useErrorHandler(btcConfirmationsError);
 
   const {
-    isIdle: latestActiveBlockIdle,
-    isLoading: latestActiveBlockLoading,
+    isIdle: latestParachainActiveBlockIdle,
+    isLoading: latestParachainActiveBlockLoading,
     data: latestParachainActiveBlock,
-    error: latestActiveBlockError
+    error: latestParachainActiveBlockError
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
@@ -96,12 +100,12 @@ const RedeemRequestsTable = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(latestActiveBlockError);
+  useErrorHandler(latestParachainActiveBlockError);
 
   const {
     isIdle: parachainConfirmationsIdle,
     isLoading: parachainConfirmationsLoading,
-    data: stableParachainConfirmations,
+    data: parachainConfirmations,
     error: parachainConfirmationsError
   } = useQuery<number, Error>(
     [
@@ -119,35 +123,35 @@ const RedeemRequestsTable = (): JSX.Element => {
   const {
     isIdle: redeemRequestsTotalCountIdle,
     isLoading: redeemRequestsTotalCountLoading,
-    data: redeemRequestsTotalCountData,
+    data: redeemRequestsTotalCount,
     error: redeemRequestsTotalCountError
+  // TODO: should type properly (`Relay`)
   } = useQuery<GraphqlReturn<any>, Error>(
     [
       GRAPHQL_FETCHER,
       redeemCountQuery(`userParachainAddress_eq: "${address}"`)
     ],
-    graphqlFetcher<any>(),
-    {
-      enabled: !!bridgeLoaded
-    }
+    graphqlFetcher<GraphqlReturn<any>>()
   );
   useErrorHandler(redeemRequestsTotalCountError);
+
   const {
     isIdle: redeemRequestsIdle,
     isLoading: redeemRequestsLoading,
-    data: redeemRequestsData,
+    data: redeemRequests,
     error: redeemRequestsError
+  // TODO: should type properly (`Relay`)
   } = useQuery<any, Error>(
     [
       REDEEM_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
-      stableBtcConfirmations,
+      btcConfirmations,
       `userParachainAddress_eq: "${address}"` // WHERE condition
     ],
     redeemFetcher,
     {
-      enabled: stableBtcConfirmations !== undefined
+      enabled: btcConfirmations !== undefined
     }
   );
   useErrorHandler(redeemRequestsError);
@@ -159,11 +163,17 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: [
           'text-left'
         ],
+        // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
           let date;
-          if (redeem.execution) date = redeem.execution.timestamp;
-          else if (redeem.cancellation) date = redeem.cancellation.timestamp;
-          else date = redeem.request.timestamp;
+          if (redeem.execution) {
+            date = redeem.execution.timestamp;
+          } else if (redeem.cancellation) {
+            date = redeem.cancellation.timestamp;
+          } else {
+            date = redeem.request.timestamp;
+          }
+
           return (
             <>
               {formatDateTimePrecise(new Date(date))}
@@ -176,6 +186,7 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
+        // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
           return (
             <>
@@ -189,8 +200,8 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell(props: any) {
-          const redeemRequest: any = props.row.original;
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: redeemRequest } }: any) {
           return (
             <>
               {
@@ -224,6 +235,7 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
+        // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
           const value = redeem.backingPayment.confirmations;
           return (
@@ -298,36 +310,23 @@ const RedeemRequestsTable = (): JSX.Element => {
     [t]
   );
 
-  const anyIdle =
-    btcConfirmationsIdle ||
-    btcConfirmationsLoading ||
-    parachainConfirmationsIdle ||
-    parachainConfirmationsLoading ||
-    latestActiveBlockLoading ||
-    latestActiveBlockIdle ||
-    redeemRequestsIdle ||
-    redeemRequestsLoading ||
-    redeemRequestsTotalCountIdle ||
-    redeemRequestsTotalCountLoading;
-
-  if (!anyIdle && (
-    redeemRequestsData === undefined ||
-    redeemRequestsTotalCountData === undefined ||
-    stableBtcConfirmations === undefined ||
-    stableParachainConfirmations === undefined ||
-    latestParachainActiveBlock === undefined
-  )) {
-    throw new Error('Something went wrong!');
-  }
-
-  const redeems = anyIdle ? [] : redeemRequestsData.map(
-    (issue: any) => getRedeemWithStatus(
-      issue,
-      // anyIdle = false, therefore stableBtcConfirmations !== undefined
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      stableBtcConfirmations!, stableParachainConfirmations!, latestParachainActiveBlock!
-    )
-  );
+  const data =
+    (
+      redeemRequests === undefined ||
+      btcConfirmations === undefined ||
+      parachainConfirmations === undefined ||
+      latestParachainActiveBlock === undefined
+    ) ?
+      [] :
+      redeemRequests.map(
+        // TODO: should type properly (`Relay`)
+        (redeem: any) => getRedeemWithStatus(
+          redeem,
+          btcConfirmations,
+          parachainConfirmations,
+          latestParachainActiveBlock
+        )
+      );
 
   const {
     getTableProps,
@@ -338,14 +337,28 @@ const RedeemRequestsTable = (): JSX.Element => {
   } = useTable(
     {
       columns,
-      data: redeems
+      data
     }
   );
 
-  if (anyIdle) {
+  if (
+    btcConfirmationsIdle ||
+    btcConfirmationsLoading ||
+    parachainConfirmationsIdle ||
+    parachainConfirmationsLoading ||
+    latestParachainActiveBlockIdle ||
+    latestParachainActiveBlockLoading ||
+    redeemRequestsIdle ||
+    redeemRequestsLoading ||
+    redeemRequestsTotalCountIdle ||
+    redeemRequestsTotalCountLoading
+  ) {
     return (
       <PrimaryColorEllipsisLoader />
     );
+  }
+  if (redeemRequestsTotalCount === undefined) {
+    throw new Error('Something went wrong!');
   }
 
   const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number; }) => {
@@ -366,9 +379,9 @@ const RedeemRequestsTable = (): JSX.Element => {
     });
   };
 
-  const totalIssueCount = redeemRequestsTotalCountData?.data?.redeemsConnection?.totalCount || 0;
-  const pageCount = Math.ceil(totalIssueCount / TABLE_PAGE_LIMIT);
-  const selectedRedeemRequest = redeems.find((redeemRequest: any) => redeemRequest.id === selectedRedeemRequestId);
+  const totalCount = redeemRequestsTotalCount.data.redeemsConnection.totalCount || 0;
+  const pageCount = Math.ceil(totalCount / TABLE_PAGE_LIMIT);
+  const selectedRedeemRequest = data.find((redeemRequest: any) => redeemRequest.id === selectedRedeemRequestId);
 
   return (
     <>
@@ -383,9 +396,11 @@ const RedeemRequestsTable = (): JSX.Element => {
         </SectionTitle>
         <InterlayTable {...getTableProps()}>
           <InterlayThead>
+            {/* TODO: should type properly */}
             {headerGroups.map((headerGroup: any) => (
               // eslint-disable-next-line react/jsx-key
               <InterlayTr {...headerGroup.getHeaderGroupProps()}>
+                {/* TODO: should type properly */}
                 {headerGroup.headers.map((column: any) => (
                   // eslint-disable-next-line react/jsx-key
                   <InterlayTh
@@ -402,6 +417,7 @@ const RedeemRequestsTable = (): JSX.Element => {
             ))}
           </InterlayThead>
           <InterlayTbody {...getTableBodyProps()}>
+            {/* TODO: should type properly */}
             {rows.map((row: any) => {
               prepareRow(row);
 
@@ -419,6 +435,7 @@ const RedeemRequestsTable = (): JSX.Element => {
                   )}
                   {...restRowProps}
                   onClick={handleRowClick(row.original.id)}>
+                  {/* TODO: should type properly */}
                   {row.cells.map((cell: any) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
