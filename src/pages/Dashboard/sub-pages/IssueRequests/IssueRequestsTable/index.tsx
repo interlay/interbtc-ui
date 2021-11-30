@@ -44,7 +44,7 @@ import issueFetcher, {
   ISSUE_FETCHER,
   getIssueWithStatus
 } from 'services/fetchers/issue-request-fetcher';
-import issueCountQuery from 'services/queries/issueRequestCount';
+import issueCountQuery from 'services/queries/issue-count-query';
 import { StoreType } from 'common/types/util.types';
 
 const IssueRequestsTable = (): JSX.Element => {

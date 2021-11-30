@@ -50,7 +50,7 @@ import graphqlFetcher, {
   GraphqlReturn,
   GRAPHQL_FETCHER
 } from 'services/fetchers/graphql-fetcher';
-import issueCountQuery from 'services/queries/issueRequestCount';
+import issueCountQuery from 'services/queries/issue-count-query';
 import issueFetcher, {
   ISSUE_FETCHER,
   getIssueWithStatus
