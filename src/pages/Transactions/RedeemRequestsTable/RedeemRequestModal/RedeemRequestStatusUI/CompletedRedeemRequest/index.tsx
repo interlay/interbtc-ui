@@ -20,6 +20,7 @@ import {
 } from 'common/utils/utils';
 
 interface Props {
+  // TODO: should type properly (`Relay`)
   request: any;
 }
 
