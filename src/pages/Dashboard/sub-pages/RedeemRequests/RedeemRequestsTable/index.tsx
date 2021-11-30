@@ -46,7 +46,7 @@ import redeemFetcher, {
   REDEEM_FETCHER,
   getRedeemWithStatus
 } from 'services/fetchers/redeem-request-fetcher';
-import redeemCountQuery from 'services/queries/redeemRequestCount';
+import redeemCountQuery from 'services/queries/redeem-count-query';
 import { StoreType } from 'common/types/util.types';
 
 const RedeemRequestsTable = (): JSX.Element => {

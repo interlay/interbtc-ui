@@ -1,4 +1,4 @@
-const query = (where?: string): string => `
+const redeemCountQuery = (where?: string): string => `
   {
     redeemsConnection(orderBy: id_ASC, where: {${where ? `, ${where}` : ''}}) {
       totalCount
@@ -6,4 +6,4 @@ const query = (where?: string): string => `
   }
 `;
 
-export default query;
+export default redeemCountQuery;

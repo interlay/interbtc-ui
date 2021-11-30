@@ -40,7 +40,7 @@ import {
   formatDateTimePrecise,
   displayMonetaryAmount
 } from 'common/utils/utils';
-import redeemCountQuery from 'services/queries/redeemRequestCount';
+import redeemCountQuery from 'services/queries/redeem-count-query';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import graphqlFetcher, {
   GraphqlReturn,

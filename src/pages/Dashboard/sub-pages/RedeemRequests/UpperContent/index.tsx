@@ -27,7 +27,7 @@ import graphqlFetcher, {
   GraphqlReturn,
   GRAPHQL_FETCHER
 } from 'services/fetchers/graphql-fetcher';
-import redeemCountQuery from 'services/queries/redeemRequestCount';
+import redeemCountQuery from 'services/queries/redeem-count-query';
 
 const UpperContent = (): JSX.Element => {
   const {
