@@ -1,15 +1,16 @@
-import issueRequestsQuery from 'services/queries/issueRequests';
-import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount, IssueStatus } from '@interlay/interbtc-api';
+
+import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import { btcAddressFromEventToString } from 'common/utils/utils';
 import { BITCOIN_NETWORK } from '../../constants';
+import issueRequestsQuery from 'services/queries/issueRequests';
+import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
 
 const ISSUE_FETCHER = 'issue-fetcher';
 
-// TODO: type graphql query return
+// TODO: should type properly (`Relay`)
 function decodeIssueValues(issue: any): any {
   issue.request.amountWrapped = BitcoinAmount.from.Satoshi(issue.request.amountWrapped);
   issue.request.bridgeFeeWrapped = BitcoinAmount.from.Satoshi(issue.request.bridgeFeeWrapped);
@@ -22,21 +23,33 @@ function decodeIssueValues(issue: any): any {
   return issue;
 }
 
+// TODO: should type properly (`Relay`)
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const issueFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
-  const [key, offset, limit, stableBtcConfirmations, where] = queryKey as IssueFetcherParams;
-  if (key !== ISSUE_FETCHER) throw new Error('Invalid key!');
-  const issuesData = await graphqlFetcher<Array<any>>()({ queryKey: [
-    GRAPHQL_FETCHER,
-    issueRequestsQuery(where),
-    {
-      limit,
-      offset
-    }
-  ] });
+  const [
+    key,
+    offset,
+    limit,
+    stableBtcConfirmations,
+    where
+  ] = queryKey as IssueFetcherParams;
 
-  // TODO: type graphql returns
-  const issues = issuesData?.data?.issues || [];
+  if (key !== ISSUE_FETCHER) throw new Error('Invalid key!');
+
+  // TODO: should type properly (`Relay`)
+  const issuesData = await graphqlFetcher<Array<any>>()({
+    queryKey: [
+      GRAPHQL_FETCHER,
+      issueRequestsQuery(where),
+      {
+        limit,
+        offset
+      }
+    ]
+  });
+
+  // TODO: should type properly (`Relay`)
+  const issues = issuesData.data.issues || [];
 
   return await Promise.all(issues.map(async issue => {
     issue = decodeIssueValues(issue);
@@ -50,8 +63,8 @@ const issueFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
   }));
 };
 
-// TODO: get graphql types to auto-decode enum? Can e.g. Relay do that?
-export function getIssueWithStatus(
+// TODO: should type properly (`Relay`)
+function getIssueWithStatus(
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   issue: any,
   stableBtcConfirmations: number,
@@ -94,7 +107,7 @@ export function getIssueWithStatus(
   return issue;
 }
 
-export type IssueFetcherParams = [
+type IssueFetcherParams = [
   queryKey: string,
   offset: number,
   limit: number,
@@ -103,7 +116,12 @@ export type IssueFetcherParams = [
 ]
 
 export {
+  getIssueWithStatus,
   ISSUE_FETCHER
+};
+
+export type {
+  IssueFetcherParams
 };
 
 export default issueFetcher;
