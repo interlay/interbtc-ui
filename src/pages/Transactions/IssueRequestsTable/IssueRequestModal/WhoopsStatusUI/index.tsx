@@ -20,6 +20,7 @@ import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 
 interface Props {
+  // TODO: should type properly (`Relay`)
   request: any;
 }
 
@@ -90,9 +91,7 @@ const WhoopsStatusUI = ({
         }
         value={displayMonetaryAmount(request.backingPayment.amount)}
         unitName='BTC'
-        approxUSD={getUsdAmount(
-          request.backingPayment.amount, prices.bitcoin.usd
-        )} />
+        approxUSD={getUsdAmount(request.backingPayment.amount, prices.bitcoin.usd)} />
       <PriceInfo
         className='w-full'
         title={
