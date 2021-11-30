@@ -26,6 +26,7 @@ import genericFetcher, {
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
+  // TODO: should type properly (`Relay`)
   request: any;
 }
 
@@ -102,9 +103,10 @@ const ReceivedIssueRequest = ({
     return <>Loading...</>;
   }
 
-  const requestConfirmations = request.backingPayment.confirmedAtParachainActiveBlock ?
-    parachainHeight - request.backingPayment.confirmedAtParachainActiveBlock :
-    0;
+  const requestConfirmations =
+    request.backingPayment.confirmedAtParachainActiveBlock ?
+      parachainHeight - request.backingPayment.confirmedAtParachainActiveBlock :
+      0;
 
   return (
     <RequestWrapper>
