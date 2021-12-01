@@ -42,7 +42,7 @@ const Toggle = ({
         'focus:ring-offset-2',
         { 'focus:ring-interlayDenim':
           process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-        { 'dark:focus:ring-kintsugiSupernova-400':
+        { 'dark:focus:ring-kintsugiSupernova':
           process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         className
       )}

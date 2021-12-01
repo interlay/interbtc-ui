@@ -78,7 +78,7 @@ const UpperContent = (): JSX.Element => {
               className={clsx(
                 { '!text-interlayDenim':
                   process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-                { 'dark:!text-kintsugiSupernova-400':
+                { 'dark:!text-kintsugiSupernova':
                   process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
               )}>
               {t('dashboard.issue.issued')}
