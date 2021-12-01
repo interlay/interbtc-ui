@@ -5,6 +5,7 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
+import useDarkMode from 'use-dark-mode';
 import { CollateralTimeData } from '@interlay/interbtc-index-client';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 
@@ -48,6 +49,7 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
     bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
+  const { value: darkMode } = useDarkMode();
 
   const {
     isIdle: cumulativeCollateralPerDayIdle,
@@ -82,9 +84,9 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
     );
 
     let chartLineColor;
-    if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production') {
+    if (!darkMode && (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production')) {
       chartLineColor = INTERLAY_DENIM[500];
-    } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
+    } else if (darkMode && process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
       chartLineColor = KINTSUGI_SUPERNOVA[500];
     } else {
       throw new Error('Something went wrong!');

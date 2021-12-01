@@ -6,6 +6,7 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { useQuery } from 'react-query';
+import useDarkMode from 'use-dark-mode';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import LineChart from '../../../../LineChart';
@@ -35,6 +36,7 @@ interface BTCTimeData {
 const RedeemedChart = (): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
+  const { value: darkMode } = useDarkMode();
 
   const {
     isIdle: cumulativeRedeemsPerDayIdle,
@@ -77,10 +79,10 @@ const RedeemedChart = (): JSX.Element => {
 
   let firstChartLineColor;
   let secondChartLineColor;
-  if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production') {
+  if (!darkMode && (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production')) {
     firstChartLineColor = INTERLAY_DENIM[500];
     secondChartLineColor = INTERLAY_MULBERRY[500];
-  } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
+  } else if (darkMode && process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
     firstChartLineColor = KINTSUGI_MIDNIGHT[500];
     secondChartLineColor = KINTSUGI_PRAIRIE_SAND[500];
   } else {
