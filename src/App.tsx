@@ -342,21 +342,18 @@ const App = (): JSX.Element => {
   ]);
 
   React.useEffect(() => {
-    if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production') {
-      // ray test touch <<
+    if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
       document.documentElement.classList.add(CLASS_NAMES.LIGHT);
       document.documentElement.classList.remove(CLASS_NAMES.DARK);
-      // ray test touch >>
       document.body.classList.add('text-interlayTextPrimaryInLightMode');
       document.body.classList.add('bg-interlayHaiti-50');
     }
 
+    // TODO: should check dark mode as well
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
       // MEMO: inspired by https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually
-      // ray test touch <<
       document.documentElement.classList.add(CLASS_NAMES.DARK);
       document.documentElement.classList.remove(CLASS_NAMES.LIGHT);
-      // ray test touch >>
       document.body.classList.add('dark:text-kintsugiTextPrimaryInDarkMode');
       document.body.classList.add('dark:bg-kintsugiMidnight-900');
     }

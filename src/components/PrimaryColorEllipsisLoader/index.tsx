@@ -16,7 +16,7 @@ const PrimaryColorEllipsisLoader = (): JSX.Element => (
     <EllipsisLoader
       dotClassName={clsx(
         { 'bg-interlayDenim':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:bg-kintsugiOchre': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
       )} />
   </div>

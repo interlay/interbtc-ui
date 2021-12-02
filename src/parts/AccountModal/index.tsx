@@ -104,24 +104,20 @@ const AccountModal = ({
                       // TODO: could be reused
                       selected ? clsx(
                         { 'text-interlayDenim-700':
-                          // eslint-disable-next-line max-len
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                         { 'dark:text-kintsugiMidnight-700':
                           process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                         { 'bg-interlayHaiti-50':
-                          // eslint-disable-next-line max-len
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                         { 'dark:bg-white':
                           process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                       ) : clsx(
                         { 'text-interlayTextPrimaryInLightMode':
-                          // eslint-disable-next-line max-len
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                         // eslint-disable-next-line max-len
                         { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                         { 'hover:bg-interlayHaiti-50':
-                          // eslint-disable-next-line max-len
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                         { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                         { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                       )

@@ -13,7 +13,7 @@ const Hr2 = ({
   <hr
     className={clsx(
       { 'border-interlayTextSecondaryInLightMode':
-        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
       { 'dark:border-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       className
     )}

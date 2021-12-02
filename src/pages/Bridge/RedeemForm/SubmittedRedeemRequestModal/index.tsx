@@ -105,7 +105,7 @@ const SubmittedRedeemRequestModal = ({
                 className={clsx(
                   'block',
                   { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                   'text-2xl',
                   'text-center'
@@ -118,7 +118,7 @@ const SubmittedRedeemRequestModal = ({
                 htmlFor={USER_BTC_ADDRESS}
                 className={clsx(
                   { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}>
                 {t('redeem_page.btc_destination_address')}
@@ -142,7 +142,7 @@ const SubmittedRedeemRequestModal = ({
               <p
                 className={clsx(
                   { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}>
                 {t('redeem_page.typically_takes')}

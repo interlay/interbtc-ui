@@ -75,13 +75,13 @@ interface CustomProps {
 // TODO: could be reused
 const textClassesForSelected = clsx(
   { 'text-interlayDenim-700':
-    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-kintsugiMidnight-700':
     process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 const textClassesForUnselected = clsx(
   { 'text-interlayTextPrimaryInLightMode':
-    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 
@@ -132,14 +132,14 @@ const Navigation = ({
                 clsx(
                   textClassesForSelected,
                   { 'bg-interlayHaiti-50':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:bg-white':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 ) :
                 clsx(
                   textClassesForUnselected,
                   { 'hover:bg-interlayHaiti-50':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                   { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 ),

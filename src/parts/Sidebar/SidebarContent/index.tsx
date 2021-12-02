@@ -57,7 +57,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
         'flex-1',
         'flex',
         'flex-col',
-        { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+        { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
       )}>
       {onSmallScreen && <CloseButton onClick={onClose} />}
@@ -136,7 +136,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           <InterlayLogoIcon
             className={clsx(
               { 'text-interlayHaiti':
-                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
               { 'dark:text-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )}
             width={130}

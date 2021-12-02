@@ -136,7 +136,7 @@ const ReimbursedRedeemRequest = ({
             <h5
               className={clsx(
                 { 'text-interlayTextSecondaryInLightMode':
-                  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                 { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
               )}>
               {t('redeem_page.compensation_burn', {
@@ -156,7 +156,7 @@ const ReimbursedRedeemRequest = ({
             <h5
               className={clsx(
                 { 'text-interlayTextSecondaryInLightMode':
-                  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                 { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
               )}>
               {t('redeem_page.compensation_payment')}
@@ -179,7 +179,7 @@ const ReimbursedRedeemRequest = ({
             <h5
               className={clsx(
                 { 'text-interlayTextSecondaryInLightMode':
-                  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                 { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
               )}>
               {t('you_received')}

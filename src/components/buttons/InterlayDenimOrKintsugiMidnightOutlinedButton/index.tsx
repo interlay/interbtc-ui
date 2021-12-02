@@ -38,7 +38,7 @@ const InterlayDenimOrKintsugiMidnightOutlinedButton = React.forwardRef<Ref, Prop
           [clsx(
             'focus:border-interlayDenim-300',
             'focus:ring-interlayDenim-200'
-          )]: process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production'
+          )]: process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT
         },
         {
           [clsx(
@@ -68,7 +68,7 @@ const InterlayDenimOrKintsugiMidnightOutlinedButton = React.forwardRef<Ref, Prop
               'border-interlayDenim',
               'hover:bg-interlayDenim',
               'hover:bg-opacity-5'
-            )]: process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production'
+            )]: process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT
           },
           {
             [clsx(

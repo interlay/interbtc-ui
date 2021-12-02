@@ -15,7 +15,7 @@ const Panel = ({
       'shadow',
       'overflow-hidden',
       'sm:rounded-lg',
-      { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+      { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
       { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'border',
       // TODO: could be reused

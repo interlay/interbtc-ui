@@ -22,7 +22,7 @@ const InterlayTabList = ({
       'p-1',
       'space-x-1',
       { 'bg-interlayDenim-900':
-        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
       'bg-opacity-20',
       { 'dark:bg-kintsugiMidnight-100': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       { 'dark:bg-opacity-20': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
@@ -46,7 +46,7 @@ const InterlayTab = ({
         'leading-5',
         'font-medium',
         { 'text-interlayDenim-700':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:text-kintsugiMidnight-700': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'rounded-lg',
 
@@ -54,7 +54,7 @@ const InterlayTab = ({
         'focus:ring-2',
         'ring-offset-2',
         { 'ring-offset-interlayDenim-400':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:ring-offset-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'ring-white',
         'ring-opacity-60',
@@ -65,7 +65,7 @@ const InterlayTab = ({
           ) :
           clsx(
             { 'text-interlayDenim-100':
-              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
             { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'hover:bg-white',
             'hover:bg-opacity-10',
@@ -90,7 +90,7 @@ const InterlayTabPanel = ({
       'focus:ring-2',
       'ring-offset-2',
       { 'ring-offset-interlayDenim-400':
-        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
       { 'dark:ring-offset-kintsugiMidnight':
         process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'ring-white',

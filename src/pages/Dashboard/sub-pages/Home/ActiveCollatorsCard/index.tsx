@@ -1,6 +1,5 @@
 
 import { useTranslation } from 'react-i18next';
-import useDarkMode from 'use-dark-mode';
 
 import LineChart from '../../../LineChart';
 import Stats, {
@@ -20,7 +19,6 @@ import { range } from 'common/utils/utils';
 
 const ActiveCollatorsCard = (): JSX.Element => {
   const { t } = useTranslation();
-  const { value: darkMode } = useDarkMode();
 
   // TODO: this function should be removed once real data is pulled in
   const dateToMidnightTemp = (date: Date): Date => {
@@ -40,10 +38,10 @@ const ActiveCollatorsCard = (): JSX.Element => {
   );
 
   let chartLineColor;
-  // TODO: should add dark mode check
-  if (!darkMode && (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production')) {
+  if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
     chartLineColor = INTERLAY_DENIM[500];
-  } else if (darkMode && process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
+  // TODO: should check dark mode as well
+  } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
     chartLineColor = KINTSUGI_APPLE[300];
   } else {
     throw new Error('Something went wrong!');

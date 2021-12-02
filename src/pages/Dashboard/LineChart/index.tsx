@@ -1,7 +1,6 @@
 
 // TODO: should refactor by using a better package (https://github.com/recharts/recharts)
 import { Line } from 'react-chartjs-2';
-import useDarkMode from 'use-dark-mode';
 
 import {
   POLKADOT,
@@ -38,8 +37,6 @@ const LineChart = ({
   datasets,
   wrapperClassName
 }: Props): JSX.Element => {
-  const { value: darkMode } = useDarkMode();
-
   const data = {
     labels: yLabels,
     datasets: datasets.map((dataset: number[] | string[], index: number) => ({
@@ -55,9 +52,10 @@ const LineChart = ({
   };
 
   let textPrimaryColor;
-  if (!darkMode && (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production')) {
+  if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
     textPrimaryColor = INTERLAY_TEXT_PRIMARY_IN_LIGHT_MODE;
-  } else if (darkMode && process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
+  // TODO: should check dark mode as well
+  } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
     textPrimaryColor = KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE;
   } else {
     throw new Error('Something went wrong!');

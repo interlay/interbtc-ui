@@ -88,7 +88,7 @@ const ConfirmedIssueRequest = ({
           <span
             className={clsx(
               { 'text-interlayTextSecondaryInLightMode':
-                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
               { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )}>
             {t('issue_page.btc_transaction')}:
@@ -104,7 +104,7 @@ const ConfirmedIssueRequest = ({
           className={clsx(
             'text-justify',
             { 'text-interlayTextSecondaryInLightMode':
-              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
             { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           {t('issue_page.receive_interbtc_tokens', {

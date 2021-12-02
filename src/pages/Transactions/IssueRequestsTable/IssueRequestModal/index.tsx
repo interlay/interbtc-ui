@@ -114,7 +114,7 @@ const IssueRequestModal = ({
                 className={clsx(
                   'font-medium',
                   { 'text-interlayDenim':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                   'space-x-1'
                 )}>
@@ -128,7 +128,7 @@ const IssueRequestModal = ({
               <span
                 className={clsx(
                   { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                   'block'
                 )}>
@@ -144,7 +144,7 @@ const IssueRequestModal = ({
                   <h5
                     className={clsx(
                       { 'text-interlayTextSecondaryInLightMode':
-                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                       { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                     )}>
                     {t('bridge_fee')}
@@ -168,7 +168,7 @@ const IssueRequestModal = ({
                   <h5
                     className={clsx(
                       { 'text-interlayTextSecondaryInLightMode':
-                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                       { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                     )}>
                     {t('total_deposit')}
@@ -193,7 +193,7 @@ const IssueRequestModal = ({
                 <span
                   className={clsx(
                     { 'text-interlayTextSecondaryInLightMode':
-                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                     { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}>
                   {t('issue_page.destination_address')}
@@ -210,7 +210,7 @@ const IssueRequestModal = ({
                 <span
                   className={clsx(
                     { 'text-interlayTextSecondaryInLightMode':
-                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                     { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}>
                   {t('issue_page.parachain_block')}
@@ -227,7 +227,7 @@ const IssueRequestModal = ({
                 <span
                   className={clsx(
                     { 'text-interlayTextSecondaryInLightMode':
-                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                     { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}>
                   {t('issue_page.vault_dot_address')}
@@ -244,7 +244,7 @@ const IssueRequestModal = ({
                 <span
                   className={clsx(
                     { 'text-interlayTextSecondaryInLightMode':
-                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                     { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}>
                   {t('issue_page.vault_btc_address')}
@@ -259,7 +259,7 @@ const IssueRequestModal = ({
               <span
                 className={clsx(
                   { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}>
                 {t('issue_page.fully_decentralized', {

@@ -27,7 +27,7 @@ const ParachainStatusInfo = ({
         className={clsx(
           'text-sm',
           { 'text-interlayDenim':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
           { 'dark:text-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
           'font-medium',
           className

@@ -30,9 +30,9 @@ const IconButton = React.forwardRef<Ref, Props>(({
         'focus:outline-none',
         'focus:ring',
         { 'focus:border-interlayDenim-300':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'focus:ring-interlayDenim-200':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:focus:border-kintsugiMidnight-300':
           process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         { 'dark:focus:ring-kintsugiMidnight-200':

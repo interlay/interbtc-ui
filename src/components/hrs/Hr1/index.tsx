@@ -13,7 +13,7 @@ const Hr1 = ({
   <hr
     className={clsx(
       { 'border-interlayDenim':
-        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
       { 'dark:border-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       className
     )}

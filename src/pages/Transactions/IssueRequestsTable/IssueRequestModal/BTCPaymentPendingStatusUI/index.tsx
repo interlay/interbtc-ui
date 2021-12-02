@@ -66,7 +66,7 @@ const BTCPaymentPendingStatusUI = ({
         <span
           className={clsx(
             { 'text-interlayTextSecondaryInLightMode':
-              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
             { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'block'
           )}>
@@ -78,7 +78,7 @@ const BTCPaymentPendingStatusUI = ({
           className={clsx(
             'text-center',
             { 'text-interlayTextSecondaryInLightMode':
-              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
             { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           {t('issue_page.single_transaction')}
@@ -110,7 +110,7 @@ const BTCPaymentPendingStatusUI = ({
             <span
               className={clsx(
                 { 'text-interlayTextSecondaryInLightMode':
-                  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                 { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                 'capitalize'
               )}>
@@ -124,7 +124,7 @@ const BTCPaymentPendingStatusUI = ({
         <span
           className={clsx(
             { 'text-interlayTextSecondaryInLightMode':
-              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
             { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'break-all'
           )}>
@@ -141,7 +141,7 @@ const BTCPaymentPendingStatusUI = ({
       <div
         className={clsx(
           { 'text-interlayTextSecondaryInLightMode':
-            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
           { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
         )}>
         <div

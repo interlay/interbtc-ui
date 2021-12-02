@@ -26,7 +26,7 @@ const InterlayTooltip = React.forwardRef<Ref, Props>((props, ref): JSX.Element =
         'bg-opacity-70',
         { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         { 'text-interlayTextPrimaryInLightMode':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'border',
 

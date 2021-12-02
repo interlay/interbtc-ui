@@ -109,7 +109,7 @@ const RedeemRequestModal = ({
               <span
                 className={clsx(
                   { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                   'block'
                 )}>
@@ -122,7 +122,7 @@ const RedeemRequestModal = ({
                   <h5
                     className={clsx(
                       { 'text-interlayTextSecondaryInLightMode':
-                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                       { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                     )}>
                     {t('bridge_fee')}
@@ -141,7 +141,7 @@ const RedeemRequestModal = ({
                   <h5
                     className={clsx(
                       { 'text-interlayTextSecondaryInLightMode':
-                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                       { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                     )}>
                     {t('bitcoin_network_fee')}
@@ -165,7 +165,7 @@ const RedeemRequestModal = ({
                   <h5
                     className={clsx(
                       { 'text-interlayTextSecondaryInLightMode':
-                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                       { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                     )}>
                     {t('you_will_receive')}
@@ -189,7 +189,7 @@ const RedeemRequestModal = ({
                 <span
                   className={clsx(
                     { 'text-interlayTextSecondaryInLightMode':
-                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                     { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}>
                   {t('issue_page.destination_address')}
@@ -206,7 +206,7 @@ const RedeemRequestModal = ({
                 <span
                   className={clsx(
                     { 'text-interlayTextSecondaryInLightMode':
-                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                     { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}>
                   {t('issue_page.parachain_block')}
@@ -223,7 +223,7 @@ const RedeemRequestModal = ({
                 <span
                   className={clsx(
                     { 'text-interlayTextSecondaryInLightMode':
-                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                     { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}>
                   {t('issue_page.vault_dot_address')}

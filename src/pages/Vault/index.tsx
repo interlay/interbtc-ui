@@ -230,7 +230,7 @@ const Vault = (): JSX.Element => {
                     'font-medium',
                     'truncate',
                     { 'text-interlayTextPrimaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                     { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}>
                   {item.title}
@@ -241,7 +241,7 @@ const Vault = (): JSX.Element => {
                     'text-3xl',
                     'font-semibold',
                     { 'text-interlayDenim':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                     { 'dark:text-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}>
                   {item.value}

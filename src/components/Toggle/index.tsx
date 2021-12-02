@@ -22,7 +22,7 @@ const Toggle = ({
         checked ?
           clsx(
             { 'bg-interlayDenim-600':
-              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
             { 'dark:bg-kintsugiMidnight-600': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           ) : 'bg-gray-200',
         'relative',
@@ -41,7 +41,7 @@ const Toggle = ({
         'focus:ring-2',
         'focus:ring-offset-2',
         { 'focus:ring-interlayDenim':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:focus:ring-kintsugiSupernova':
           process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         className
