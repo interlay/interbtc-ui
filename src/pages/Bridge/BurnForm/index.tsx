@@ -90,7 +90,7 @@ const BurnForm = (): JSX.Element | null => {
   } = useForm<BurnFormData>({
     mode: 'onChange'
   });
-  const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT);
+  const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT) || '0';
 
   const [burnRate, setBurnRate] = React.useState(
     new ExchangeRate<
@@ -186,22 +186,28 @@ const BurnForm = (): JSX.Element | null => {
         });
       }
 
-      // ray test touch <
       // TODO: double-check if we need
       // - (https://discord.com/channels/745259537707040778/894390868964933692/894863394149109771)
       const wrappedTokenAmountInteger = value.toString().split('.')[0];
       if (wrappedTokenAmountInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
         return 'Input value is too high!'; // TODO: should translate
       }
-      // ray test touch >
 
       return undefined;
     };
 
-    const parsedInterBTCAmount = BitcoinAmount.from.BTC(wrappedTokenAmount || 0);
-    const earnedCollateralTokenAmount = burnRate.rate.eq(0) ?
-      newMonetaryAmount(0, COLLATERAL_TOKEN) :
-      burnRate.toBase(parsedInterBTCAmount || BitcoinAmount.zero);
+    // ray test touch <<
+    const parsedWrappedTokenAmount = BitcoinAmount.from.BTC(wrappedTokenAmount);
+    console.log('ray : ***** burnRate.rate.toString() => ', burnRate.rate.toString());
+    console.log('ray : ***** parsedWrappedTokenAmount.toString() => ', parsedWrappedTokenAmount.toString());
+    console.log('ray : ***** parsedWrappedTokenAmount.str.BTC() => ', parsedWrappedTokenAmount.str.BTC());
+    console.log('ray : ***** burnRate.toString() => ', burnRate.toString());
+    const earnedCollateralTokenAmount =
+      burnRate.rate.eq(0) ?
+        newMonetaryAmount(0, COLLATERAL_TOKEN) :
+        burnRate.toBase(parsedWrappedTokenAmount);
+    console.log('ray : ***** earnedCollateralTokenAmount.toString() => ', earnedCollateralTokenAmount.toString());
+    // ray test touch >>
     const accountSet = !!address;
 
     return (
@@ -226,7 +232,7 @@ const BurnForm = (): JSX.Element | null => {
               },
               validate: value => validateForm(value)
             })}
-            approxUSD={`≈ $ ${getUsdAmount(parsedInterBTCAmount || BitcoinAmount.zero, prices.bitcoin.usd)}`}
+            approxUSD={`≈ $ ${getUsdAmount(parsedWrappedTokenAmount || BitcoinAmount.zero, prices.bitcoin.usd)}`}
             error={!!errors[WRAPPED_TOKEN_AMOUNT]}
             helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message} />
           <PriceInfo
