@@ -100,9 +100,9 @@ const Balances = ({
                       'items-center',
                       'space-x-3'
                     )}>
-                    {currentToken?.icon}
+                    {currentToken.icon}
                     <SelectText>
-                      {currentToken?.balance} {currentToken?.symbol}
+                      {currentToken.balance} {currentToken.symbol}
                     </SelectText>
                   </span>
                 </SelectButton>
