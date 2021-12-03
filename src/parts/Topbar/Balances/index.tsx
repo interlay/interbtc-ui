@@ -5,7 +5,10 @@ import {
   MonetaryAmount,
   Currency
 } from '@interlay/monetary-js';
-import { CollateralUnit } from '@interlay/interbtc-api';
+import {
+  CollateralUnit,
+  CurrencyUnit
+} from '@interlay/interbtc-api';
 
 import Select, {
   SelectButton,
@@ -30,7 +33,7 @@ interface Props {
   wrappedTokenBalance?: BitcoinAmount;
   collateralTokenBalance?: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   // TODO: Add GovernanceUnit type to lib
-  governanceTokenBalance?: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  governanceTokenBalance?: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
 }
 
 interface TokenOption {
