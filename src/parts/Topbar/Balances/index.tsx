@@ -24,6 +24,7 @@ import {
   GovernanceTokenLogoIcon
 } from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
+import { TokenType } from 'common/types/util.types';
 
 interface Props {
   wrappedTokenBalance?: BitcoinAmount;
@@ -32,28 +33,35 @@ interface Props {
   governanceTokenBalance?: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
 }
 
+interface TokenOption {
+  type: TokenType;
+  balance: string;
+  symbol: string;
+  icon: JSX.Element;
+}
+
 const Balances = ({
   wrappedTokenBalance,
   collateralTokenBalance,
   governanceTokenBalance
 }: Props): JSX.Element => {
-  const tokenOptions = [
+  const tokenOptions: Array<TokenOption> = [
     {
-      type: 'collateral',
+      type: TokenType.COLLATERAL,
       balance: displayMonetaryAmount(collateralTokenBalance),
       icon: <CollateralTokenLogoIcon
         width={26} />,
       symbol: COLLATERAL_TOKEN_SYMBOL
     },
     {
-      type: 'wrapped',
+      type: TokenType.WRAPPED,
       balance: displayMonetaryAmount(wrappedTokenBalance),
       icon: <WrappedTokenLogoIcon
         width={26} />,
       symbol: WRAPPED_TOKEN_SYMBOL
     },
     {
-      type: 'governance',
+      type: TokenType.GOVERNANCE,
       balance: displayMonetaryAmount(governanceTokenBalance),
       icon: <GovernanceTokenLogoIcon
         width={26} />,
@@ -61,11 +69,13 @@ const Balances = ({
     }
   ];
 
-  const [currentToken, setCurrentToken] = useState<any>(tokenOptions.find(token => token.type === 'collateral'));
+  const getTokenOption = (type: TokenType) => tokenOptions.find(token => token.type === type);
 
-  const handleSelectToken = (selectedToken: any) => {
+  const [currentToken, setCurrentToken] = useState<TokenOption | undefined>(getTokenOption(TokenType.COLLATERAL));
+
+  const handleSelectToken = (selectedToken: TokenType) => {
     console.log(selectedToken);
-    setCurrentToken(tokenOptions.find(token => token.type === selectedToken));
+    setCurrentToken(getTokenOption(selectedToken));
   };
 
   return (
@@ -74,63 +84,65 @@ const Balances = ({
         'flex',
         'space-x-2'
       )}>
-      <Select
-        value={currentToken}
-        onChange={handleSelectToken}>
-        {({ open }) => (
-          <>
-            <SelectBody
-              className={clsx(
-                'w-44'
-              )}>
-              <SelectButton>
-                <span
-                  className={clsx(
-                    'flex',
-                    'items-center',
-                    'space-x-3'
-                  )}>
-                  {currentToken.icon}
-                  <SelectText>
-                    {currentToken.balance} {currentToken.symbol}
-                  </SelectText>
-                </span>
-              </SelectButton>
-              <SelectOptions open={open}>
-                {tokenOptions.map((tokenOption: any) => {
-                  return (
-                    <SelectOption
-                      key={tokenOption.type}
-                      value={tokenOption.type}>
-                      {({
-                        selected,
-                        active
-                      }) => (
-                        <>
-                          <div
-                            className={clsx(
-                              'flex',
-                              'items-center',
-                              'space-x-3'
-                            )}>
-                            {tokenOption.icon}
-                            <SelectText selected={selected}>
-                              {tokenOption.balance} {tokenOption.symbol}
-                            </SelectText>
-                          </div>
-                          {selected ? (
-                            <SelectCheck active={active} />
-                          ) : null}
-                        </>
-                      )}
-                    </SelectOption>
-                  );
-                })}
-              </SelectOptions>
-            </SelectBody>
-          </>
-        )}
-      </Select>
+      {currentToken &&
+        <Select
+          value={currentToken}
+          onChange={handleSelectToken}>
+          {({ open }) => (
+            <>
+              <SelectBody
+                className={clsx(
+                  'w-44'
+                )}>
+                <SelectButton>
+                  <span
+                    className={clsx(
+                      'flex',
+                      'items-center',
+                      'space-x-3'
+                    )}>
+                    {currentToken?.icon}
+                    <SelectText>
+                      {currentToken?.balance} {currentToken?.symbol}
+                    </SelectText>
+                  </span>
+                </SelectButton>
+                <SelectOptions open={open}>
+                  {tokenOptions.map((tokenOption: TokenOption) => {
+                    return (
+                      <SelectOption
+                        key={tokenOption.type}
+                        value={tokenOption.type}>
+                        {({
+                          selected,
+                          active
+                        }) => (
+                          <>
+                            <div
+                              className={clsx(
+                                'flex',
+                                'items-center',
+                                'space-x-3'
+                              )}>
+                              {tokenOption.icon}
+                              <SelectText selected={selected}>
+                                {tokenOption.balance} {tokenOption.symbol}
+                              </SelectText>
+                            </div>
+                            {selected ? (
+                              <SelectCheck active={active} />
+                            ) : null}
+                          </>
+                        )}
+                      </SelectOption>
+                    );
+                  })}
+                </SelectOptions>
+              </SelectBody>
+            </>
+          )}
+        </Select>
+      }
     </div>
   );
 };
