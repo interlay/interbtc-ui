@@ -74,7 +74,6 @@ const Balances = ({
   const [currentToken, setCurrentToken] = useState<TokenOption | undefined>(getTokenOption(TokenType.COLLATERAL));
 
   const handleSelectToken = (selectedToken: TokenType) => {
-    console.log(selectedToken);
     setCurrentToken(getTokenOption(selectedToken));
   };
 
