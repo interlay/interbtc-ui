@@ -28,6 +28,7 @@ import { displayMonetaryAmount } from 'common/utils/utils';
 interface Props {
   wrappedTokenBalance?: BitcoinAmount;
   collateralTokenBalance?: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  // TODO: Add GovernanceUnit type to lib
   governanceTokenBalance?: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
 }
 

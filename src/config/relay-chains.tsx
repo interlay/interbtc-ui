@@ -12,7 +12,7 @@ import {
 } from '@interlay/monetary-js';
 import { CollateralUnit, CurrencyUnit } from '@interlay/interbtc-api';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
-import { ReactComponent as KintsugiLogoIcon } from 'assets/img/kintsugi-logo.svg';
+import { ReactComponent as KintsugiLogoIcon } from 'assets/img/kintsugi-logo-rev.svg';
 import { ReactComponent as InterBTCLogoWithTextIcon } from 'assets/img/interbtc-logo-with-text.svg';
 import { ReactComponent as KintsugiLogoWithTextIcon } from 'assets/img/kintsugi-logo-with-text.svg';
 import { ReactComponent as DOTLogoIcon } from 'assets/img/dot-logo.svg';
