@@ -85,7 +85,7 @@ const Balances = ({
       )}>
       {currentToken &&
         <Select
-          value={currentToken}
+          value={currentToken.type}
           onChange={handleSelectToken}>
           {({ open }) => (
             <>
@@ -115,24 +115,28 @@ const Balances = ({
                         {({
                           selected,
                           active
-                        }) => (
-                          <>
-                            <div
-                              className={clsx(
-                                'flex',
-                                'items-center',
-                                'space-x-3'
-                              )}>
-                              {tokenOption.icon}
-                              <SelectText selected={selected}>
-                                {tokenOption.balance} {tokenOption.symbol}
-                              </SelectText>
-                            </div>
-                            {selected ? (
-                              <SelectCheck active={active} />
-                            ) : null}
-                          </>
-                        )}
+                        }) => {
+                          console.log(selected);
+                          return (
+                            <>
+                              <div
+                                className={clsx(
+                                  'flex',
+                                  'items-center',
+                                  'space-x-3'
+                                )}>
+                                {tokenOption.icon}
+                                <SelectText selected={selected}>
+                                  {tokenOption.balance} {tokenOption.symbol}
+                                </SelectText>
+                              </div>
+                              {selected ? (
+                                <SelectCheck
+                                  active={active} />
+                              ) : null}
+                            </>
+                          );
+                        }}
                       </SelectOption>
                     );
                   })}
