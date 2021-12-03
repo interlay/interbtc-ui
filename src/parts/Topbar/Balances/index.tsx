@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import clsx from 'clsx';
 import {
   BitcoinAmount,
@@ -6,8 +7,14 @@ import {
 } from '@interlay/monetary-js';
 import { CollateralUnit } from '@interlay/interbtc-api';
 
-import DropDown from 'components/DropDown';
-
+import Select, {
+  SelectButton,
+  SelectOptions,
+  SelectOption,
+  SelectBody,
+  SelectCheck,
+  SelectText
+} from 'components/Select';
 import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon,
@@ -29,9 +36,36 @@ const Balances = ({
   collateralTokenBalance,
   governanceTokenBalance
 }: Props): JSX.Element => {
-  const strCollateralTokenBalance = displayMonetaryAmount(collateralTokenBalance);
-  const strWrappedTokenBalance = displayMonetaryAmount(wrappedTokenBalance);
-  const strGovernanceTokenBalance = displayMonetaryAmount(governanceTokenBalance);
+  const tokenOptions = [
+    {
+      type: 'collateral',
+      balance: displayMonetaryAmount(collateralTokenBalance),
+      icon: <CollateralTokenLogoIcon
+        width={26} />,
+      symbol: COLLATERAL_TOKEN_SYMBOL
+    },
+    {
+      type: 'wrapped',
+      balance: displayMonetaryAmount(wrappedTokenBalance),
+      icon: <WrappedTokenLogoIcon
+        width={26} />,
+      symbol: WRAPPED_TOKEN_SYMBOL
+    },
+    {
+      type: 'governance',
+      balance: displayMonetaryAmount(governanceTokenBalance),
+      icon: <GovernanceTokenLogoIcon
+        width={26} />,
+      symbol: GOVERNANCE_TOKEN_SYMBOL
+    }
+  ];
+
+  const [currentToken, setCurrentToken] = useState<any>(tokenOptions.find(token => token.type === 'collateral'));
+
+  const handleSelectToken = (selectedToken: any) => {
+    console.log(selectedToken);
+    setCurrentToken(tokenOptions.find(token => token.type === selectedToken));
+  };
 
   return (
     <div
@@ -39,51 +73,63 @@ const Balances = ({
         'flex',
         'space-x-2'
       )}>
-      <div
-        className={clsx(
-          'flex',
-          'items-center',
-          'space-x-1'
-        )}>
-        <CollateralTokenLogoIcon
-          fill='currentColor'
-          height={30} />
-      </div>
-      <div
-        className={clsx(
-          'flex',
-          'items-center',
-          'space-x-1'
-        )}>
-        <WrappedTokenLogoIcon
-          fill='currentColor'
-          width={30} />
-      </div>
-      <div
-        className={clsx(
-          'flex',
-          'items-center',
-          'space-x-1'
-        )}>
-        <GovernanceTokenLogoIcon
-          fill='currentColor'
-          width={30} />
-      </div>
-      <DropDown
-        options={[
-          {
-            label: `${strCollateralTokenBalance} ${COLLATERAL_TOKEN_SYMBOL}`,
-            value: strCollateralTokenBalance
-          },
-          {
-            label: `${strWrappedTokenBalance} ${WRAPPED_TOKEN_SYMBOL}`,
-            value: strWrappedTokenBalance
-          },
-          {
-            label: `${strGovernanceTokenBalance} ${GOVERNANCE_TOKEN_SYMBOL}`,
-            value: strGovernanceTokenBalance
-          }
-        ]} />
+      <Select
+        value={currentToken}
+        onChange={handleSelectToken}>
+        {({ open }) => (
+          <>
+            <SelectBody
+              className={clsx(
+                'w-44'
+              )}>
+              <SelectButton>
+                <span
+                  className={clsx(
+                    'flex',
+                    'items-center',
+                    'space-x-3'
+                  )}>
+                  {currentToken.icon}
+                  <SelectText>
+                    {currentToken.balance} {currentToken.symbol}
+                  </SelectText>
+                </span>
+              </SelectButton>
+              <SelectOptions open={open}>
+                {tokenOptions.map((tokenOption: any) => {
+                  return (
+                    <SelectOption
+                      key={tokenOption.type}
+                      value={tokenOption.type}>
+                      {({
+                        selected,
+                        active
+                      }) => (
+                        <>
+                          <div
+                            className={clsx(
+                              'flex',
+                              'items-center',
+                              'space-x-3'
+                            )}>
+                            {tokenOption.icon}
+                            <SelectText selected={selected}>
+                              {tokenOption.balance} {tokenOption.symbol}
+                            </SelectText>
+                          </div>
+                          {selected ? (
+                            <SelectCheck active={active} />
+                          ) : null}
+                        </>
+                      )}
+                    </SelectOption>
+                  );
+                })}
+              </SelectOptions>
+            </SelectBody>
+          </>
+        )}
+      </Select>
     </div>
   );
 };

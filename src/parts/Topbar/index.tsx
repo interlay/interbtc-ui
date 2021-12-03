@@ -26,7 +26,7 @@ import { StoreType } from 'common/types/util.types';
 
 // TODO: could create a specific prop
 const SMALL_SIZE_BUTTON_CLASS_NAME = clsx(
-  'leading-4',
+  'leading-7',
   '!px-3'
 );
 
