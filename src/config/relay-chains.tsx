@@ -1,25 +1,32 @@
 import {
   Currency,
   BitcoinUnit,
-  KBtc, // on Kusama,
+  KBtc, // on Kusama
   Kusama, // on Kusama
   KBtcAmount, // on Kusama
   Kintsugi, // On Kusama
   InterBtc, // on Polkadot
   Polkadot, // on Polkadot
-  InterBtcAmount, // on Polkadot,
+  InterBtcAmount, // on Polkadot
   Interlay // On Polkadot
 } from '@interlay/monetary-js';
-import { CollateralUnit, CurrencyUnit } from '@interlay/interbtc-api';
+import {
+  CollateralUnit,
+  CurrencyUnit
+} from '@interlay/interbtc-api';
+
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as KintsugiLogoIcon } from 'assets/img/kintsugi-logo-rev.svg';
+import { ReactComponent as KintsugiTokenIcon } from 'assets/img/kint-rev.svg';
 import { ReactComponent as InterBTCLogoWithTextIcon } from 'assets/img/interbtc-logo-with-text.svg';
 import { ReactComponent as KintsugiLogoWithTextIcon } from 'assets/img/kintsugi-logo-with-text.svg';
 import { ReactComponent as DOTLogoIcon } from 'assets/img/dot-logo.svg';
 import { ReactComponent as KSMLogoIcon } from 'assets/img/ksm-logo.svg';
 import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
-
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 
 if (!process.env.REACT_APP_RELAY_CHAIN_NAME) {
   throw new Error('Undefined relay chain name environment variable!');
@@ -34,28 +41,30 @@ let PRICES_URL: string;
 let RELAY_CHAIN_NAME: string;
 let COLLATERAL_TOKEN_SYMBOL: string;
 let GOVERNANCE_TOKEN_SYMBOL: string;
-let WrappedTokenLogoIcon: React.FunctionComponent<
-  React.SVGProps<SVGSVGElement> & {
+let WrappedTokenLogoIcon:
+  React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
   }
 >;
-let WrappedTokenLogoWithTextIcon: React.FunctionComponent<
-  React.SVGProps<SVGSVGElement> & {
+let WrappedTokenLogoWithTextIcon:
+  React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
   }
 >;
-let CollateralTokenLogoIcon: React.FunctionComponent<
-  React.SVGProps<SVGSVGElement> & {
+let CollateralTokenLogoIcon:
+  React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
   }
 >;
-let GovernanceTokenLogoIcon: React.FunctionComponent<
-  React.SVGProps<SVGSVGElement> & {
+let GovernanceTokenLogoIcon:
+  React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
   }
 >;
 
-type WrappedTokenAmount = InterBtcAmount | KBtcAmount;
+type WrappedTokenAmount =
+  InterBtcAmount |
+  KBtcAmount;
 
 switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
 // Interlay
@@ -90,7 +99,7 @@ case KUSAMA: {
   WrappedTokenLogoIcon = KintsugiLogoIcon;
   WrappedTokenLogoWithTextIcon = KintsugiLogoWithTextIcon;
   CollateralTokenLogoIcon = KSMLogoIcon;
-  GovernanceTokenLogoIcon = KintsugiLogoIcon;
+  GovernanceTokenLogoIcon = KintsugiTokenIcon;
   break;
 }
 default: {
