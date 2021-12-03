@@ -44,23 +44,19 @@ let GOVERNANCE_TOKEN_SYMBOL: string;
 let WrappedTokenLogoIcon:
   React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
-  }
->;
+  }>;
 let WrappedTokenLogoWithTextIcon:
   React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
-  }
->;
+  }>;
 let CollateralTokenLogoIcon:
   React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
-  }
->;
+  }>;
 let GovernanceTokenLogoIcon:
   React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
-  }
->;
+  }>;
 
 type WrappedTokenAmount =
   InterBtcAmount |
