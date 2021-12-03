@@ -20,8 +20,8 @@ import {
   KUSAMA
 } from 'utils/constants/relay-chain-names';
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
-import { ReactComponent as KintsugiLogoIcon } from 'assets/img/kintsugi-logo-rev.svg';
-import { ReactComponent as KintsugiTokenIcon } from 'assets/img/kint-rev.svg';
+import { ReactComponent as KintsugiLogoIcon } from 'assets/img/kintsugi-logo-reversed.svg';
+import { ReactComponent as KintsugiTokenIcon } from 'assets/img/kbtc-logo-reversed.svg';
 import { ReactComponent as InterBTCLogoWithTextIcon } from 'assets/img/interbtc-logo-with-text.svg';
 import { ReactComponent as KintsugiLogoWithTextIcon } from 'assets/img/kintsugi-logo-with-text.svg';
 import { ReactComponent as DOTLogoIcon } from 'assets/img/dot-logo.svg';
