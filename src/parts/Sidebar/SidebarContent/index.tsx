@@ -18,11 +18,6 @@ import {
 import { PAGES } from 'utils/constants/links';
 import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
 
-// TODO: not used for now
-// const DarkModeToggle = React.lazy(() =>
-//   import(/* webpackChunkName: 'dark-mode-toggle' */ 'containers/DarkModeToggle')
-// );
-
 interface Props {
   onSmallScreen?: boolean;
   onClose: () => void;
@@ -91,18 +86,6 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
         <Navigation
           onSmallScreen={onSmallScreen}
           className='mt-5' />
-        {/* TODO: not used for now */}
-        {/* {process.env.NODE_ENV !== 'production' && (
-          <React.Suspense fallback={null}>
-            <div
-              className={clsx(
-                'flex',
-                'justify-center'
-              )}>
-              <DarkModeToggle />
-            </div>
-          </React.Suspense>
-        )} */}
         <SocialMediaContainer className='p-2' />
       </div>
       <div
