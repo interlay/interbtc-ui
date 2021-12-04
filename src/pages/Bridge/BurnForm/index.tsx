@@ -199,6 +199,9 @@ const BurnForm = (): JSX.Element | null => {
     // ray test touch <<
     const parsedWrappedTokenAmount = BitcoinAmount.from.BTC(wrappedTokenAmount);
     console.log('ray : ***** burnRate.rate.toString() => ', burnRate.rate.toString());
+    console.log('ray : ***** burnRate.base.name => ', burnRate.base.name);
+    console.log('ray : ***** burnRate.counter.name => ', burnRate.counter.name);
+    console.log('ray : ***** burnRate.rate.toNumber() => ', burnRate.rate.toNumber());
     console.log('ray : ***** parsedWrappedTokenAmount.toString() => ', parsedWrappedTokenAmount.toString());
     console.log('ray : ***** parsedWrappedTokenAmount.str.BTC() => ', parsedWrappedTokenAmount.str.BTC());
     console.log('ray : ***** burnRate.toString() => ', burnRate.toString());
@@ -206,7 +209,10 @@ const BurnForm = (): JSX.Element | null => {
       burnRate.rate.eq(0) ?
         newMonetaryAmount(0, COLLATERAL_TOKEN) :
         burnRate.toBase(parsedWrappedTokenAmount);
-    console.log('ray : ***** earnedCollateralTokenAmount.toString() => ', earnedCollateralTokenAmount.toString());
+    console.log('ray : ***** earnedCollateralTokenAmount.toString() => ', earnedCollateralTokenAmount.toHuman());
+    console.log('ray : ***** earnedCollateralTokenAmount.currency.name => ', earnedCollateralTokenAmount.currency.name);
+    // eslint-disable-next-line max-len
+    console.log('ray : ***** earnedCollateralTokenAmount.currency.rawBase => ', earnedCollateralTokenAmount.currency.rawBase);
     // ray test touch >>
     const accountSet = !!address;
 
