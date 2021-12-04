@@ -61,10 +61,10 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({
       </h2>
       <p
         className={clsx(
-          'flex',
-          'justify-between',
+          'grid',
+          'grid-cols-2',
           'items-center',
-          'space-x-1'
+          'gap-1'
         )}>
         <span
           className={clsx(
