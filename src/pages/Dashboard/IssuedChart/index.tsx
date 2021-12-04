@@ -82,7 +82,7 @@ const IssuedChart = (): JSX.Element => {
   if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
     firstChartLineColor = INTERLAY_DENIM[500];
     secondChartLineColor = INTERLAY_MULBERRY[500];
-  // TODO: should check dark mode as well
+  // MEMO: should check dark mode as well
   } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
     firstChartLineColor = KINTSUGI_MIDNIGHT[200];
     secondChartLineColor = KINTSUGI_PRAIRIE_SAND[400];

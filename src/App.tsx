@@ -349,7 +349,7 @@ const App = (): JSX.Element => {
       document.body.classList.add('bg-interlayHaiti-50');
     }
 
-    // TODO: should check dark mode as well
+    // MEMO: should check dark mode as well
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
       // MEMO: inspired by https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually
       document.documentElement.classList.add(CLASS_NAMES.DARK);
