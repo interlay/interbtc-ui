@@ -22,7 +22,7 @@ interface Props {
   tokenOptions: Array<TokenOption>;
 }
 
-const BalanceSelector = ({
+const TokenSelector = ({
   tokenOptions
 }: Props): JSX.Element => {
   const getTokenOption = useCallback((type: TokenType) =>
@@ -119,4 +119,4 @@ const BalanceSelector = ({
   );
 };
 
-export default BalanceSelector;
+export default TokenSelector;
