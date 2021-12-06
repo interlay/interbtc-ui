@@ -19,7 +19,7 @@ import {
 } from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import { TokenType } from 'common/types/util.types';
-import BalanceSelector from './BalanceSelector';
+import TokenSelector from './TokenSelector';
 
 interface Props {
   wrappedTokenBalance?: BitcoinAmount;
@@ -72,7 +72,7 @@ const Balances = ({
 
   return (
     <>
-      {tokenOptions ? <BalanceSelector tokenOptions={tokenOptions} /> : null}
+      {tokenOptions ? <TokenSelector tokenOptions={tokenOptions} /> : null}
     </>
   );
 };
