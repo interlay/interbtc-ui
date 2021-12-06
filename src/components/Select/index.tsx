@@ -10,7 +10,10 @@ import {
   SelectorIcon
 } from '@heroicons/react/solid';
 
-import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
+import {
+  KUSAMA,
+  POLKADOT
+} from 'utils/constants/relay-chain-names';
 
 type SelectLabelProps = Props<typeof Listbox.Label>;
 
