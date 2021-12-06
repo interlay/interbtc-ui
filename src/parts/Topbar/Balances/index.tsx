@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import * as React from 'react';
 import {
   BitcoinAmount,
   MonetaryAmount,
@@ -40,9 +40,9 @@ const Balances = ({
   collateralTokenBalance,
   governanceTokenBalance
 }: Props): JSX.Element => {
-  const [tokenOptions, setTokenOptions] = useState<Array<TokenOption> | undefined>(undefined);
+  const [tokenOptions, setTokenOptions] = React.useState<Array<TokenOption> | undefined>(undefined);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const tokenOptions: Array<TokenOption> = [
       {
         type: TokenType.COLLATERAL,
