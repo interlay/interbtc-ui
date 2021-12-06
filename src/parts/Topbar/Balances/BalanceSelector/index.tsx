@@ -54,67 +54,67 @@ const BalanceSelector = ({
         'flex',
         'space-x-2'
       )}>
-
-      <Select
-        key={currentToken?.balance}
-        value={currentToken?.type}
-        onChange={handleSelectToken}>
-        {({ open }) => (
-          <>
-            <SelectBody
-              className={clsx(
-                'w-44'
-              )}>
-              <SelectButton>
-                <span
-                  className={clsx(
-                    'flex',
-                    'items-center',
-                    'space-x-3'
-                  )}>
-                  {currentToken?.icon}
-                  <SelectText>
-                    {currentToken?.balance} {currentToken?.symbol}
-                  </SelectText>
-                </span>
-              </SelectButton>
-              <SelectOptions open={open}>
-                {tokenOptions.map((tokenOption: TokenOption) => {
-                  return (
-                    <SelectOption
-                      key={tokenOption.type}
-                      value={tokenOption.type}>
-                      {({
-                        selected,
-                        active
-                      }) => (
-                        <>
-                          <div
-                            className={clsx(
-                              'flex',
-                              'items-center',
-                              'space-x-3'
-                            )}>
-                            {tokenOption.icon}
-                            <SelectText selected={selected}>
-                              {tokenOption.balance} {tokenOption.symbol}
-                            </SelectText>
-                          </div>
-                          {selected ? (
-                            <SelectCheck
-                              active={active} />
-                          ) : null}
-                        </>
-                      )}
-                    </SelectOption>
-                  );
-                })}
-              </SelectOptions>
-            </SelectBody>
-          </>
-        )}
-      </Select>
-
+      {currentToken &&
+        <Select
+          key={currentToken.type}
+          value={currentToken.type}
+          onChange={handleSelectToken}>
+          {({ open }) => (
+            <>
+              <SelectBody
+                className={clsx(
+                  'w-44'
+                )}>
+                <SelectButton>
+                  <span
+                    className={clsx(
+                      'flex',
+                      'items-center',
+                      'space-x-3'
+                    )}>
+                    {currentToken.icon}
+                    <SelectText>
+                      {currentToken.balance} {currentToken.symbol}
+                    </SelectText>
+                  </span>
+                </SelectButton>
+                <SelectOptions open={open}>
+                  {tokenOptions.map((tokenOption: TokenOption) => {
+                    return (
+                      <SelectOption
+                        key={tokenOption.type}
+                        value={tokenOption.type}>
+                        {({
+                          selected,
+                          active
+                        }) => (
+                          <>
+                            <div
+                              className={clsx(
+                                'flex',
+                                'items-center',
+                                'space-x-3'
+                              )}>
+                              {tokenOption.icon}
+                              <SelectText selected={selected}>
+                                {tokenOption.balance} {tokenOption.symbol}
+                              </SelectText>
+                            </div>
+                            {selected ? (
+                              <SelectCheck
+                                active={active} />
+                            ) : null}
+                          </>
+                        )}
+                      </SelectOption>
+                    );
+                  })}
+                </SelectOptions>
+              </SelectBody>
+            </>
+          )}
+        </Select>
+      }
     </div>
   );
 };
