@@ -13,7 +13,7 @@ const ErrorMessage = ({
   <p
     className={clsx(
       { 'text-interlayCinnabar':
-        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
       { 'dark:text-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'text-xs',
       'px-0.5',

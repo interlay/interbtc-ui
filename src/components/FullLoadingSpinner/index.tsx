@@ -22,7 +22,7 @@ const FullLoadingSpinner = (): JSX.Element => (
     <SpinIcon
       className={clsx(
         { 'text-interlayDenim':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'text-kintsugiOchre': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'animate-spin',
         'w-9',

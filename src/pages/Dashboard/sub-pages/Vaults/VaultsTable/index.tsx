@@ -461,7 +461,7 @@ const VaultsTable = (): JSX.Element => {
                       <InformationCircleIcon
                         className={clsx(
                           // eslint-disable-next-line max-len
-                          { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                          { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                           // eslint-disable-next-line max-len
                           { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                           'inline-block',

@@ -34,7 +34,7 @@ const CancelledIssueRequest = (): JSX.Element => {
       <p
         className={clsx(
           { 'text-interlayTextSecondaryInLightMode':
-            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
           { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
           'text-justify'
         )}>
@@ -59,7 +59,7 @@ const CancelledIssueRequest = (): JSX.Element => {
           className={clsx(
             'text-justify',
             { 'text-interlayTextSecondaryInLightMode':
-              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
             { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           {t('issue_page.contact_team')}

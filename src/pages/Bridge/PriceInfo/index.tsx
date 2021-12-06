@@ -59,7 +59,7 @@ const PriceInfo = ({
         <span
           className={clsx(
             { 'text-interlayTextSecondaryInLightMode':
-              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
             { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           {unitName}
@@ -69,7 +69,7 @@ const PriceInfo = ({
         className={clsx(
           'block',
           { 'text-interlayTextSecondaryInLightMode':
-            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
           { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
         )}>
         {`≈ $ ${approxUSD}`}

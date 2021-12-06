@@ -18,10 +18,6 @@ import {
 import { PAGES } from 'utils/constants/links';
 import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
 
-const DarkModeToggle = React.lazy(() =>
-  import(/* webpackChunkName: 'dark-mode-toggle' */ 'containers/DarkModeToggle')
-);
-
 interface Props {
   onSmallScreen?: boolean;
   onClose: () => void;
@@ -56,7 +52,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
         'flex-1',
         'flex',
         'flex-col',
-        { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+        { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
       )}>
       {onSmallScreen && <CloseButton onClick={onClose} />}
@@ -90,17 +86,6 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
         <Navigation
           onSmallScreen={onSmallScreen}
           className='mt-5' />
-        {process.env.NODE_ENV !== 'production' && (
-          <React.Suspense fallback={null}>
-            <div
-              className={clsx(
-                'flex',
-                'justify-center'
-              )}>
-              <DarkModeToggle />
-            </div>
-          </React.Suspense>
-        )}
         <SocialMediaContainer className='p-2' />
       </div>
       <div
@@ -134,7 +119,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           <InterlayLogoIcon
             className={clsx(
               { 'text-interlayHaiti':
-                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
               { 'dark:text-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )}
             width={130}

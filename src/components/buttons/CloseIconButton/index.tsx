@@ -30,7 +30,7 @@ const CloseIconButton = React.forwardRef<Ref, IconButtonProps>(({
       height={18}
       className={clsx(
         { 'text-interlayTextSecondaryInLightMode':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
       )} />
   </IconButton>

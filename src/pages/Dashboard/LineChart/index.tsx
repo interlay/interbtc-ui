@@ -52,8 +52,9 @@ const LineChart = ({
   };
 
   let textPrimaryColor;
-  if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production') {
+  if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
     textPrimaryColor = INTERLAY_TEXT_PRIMARY_IN_LIGHT_MODE;
+  // MEMO: should check dark mode as well
   } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
     textPrimaryColor = KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE;
   } else {

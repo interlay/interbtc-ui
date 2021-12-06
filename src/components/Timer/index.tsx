@@ -27,6 +27,7 @@ const Timer = ({
   const [leftSeconds, setLeftSeconds] = React.useState(initialLeftSeconds);
 
   React.useEffect(() => {
+    // TODO: should avoid unnecessary rendering (if `initialLeftSeconds` is not greater than zero)
     // TODO: should use `useInterval`
     const timerId = setInterval(() => {
       setLeftSeconds(prev => prev - 1);

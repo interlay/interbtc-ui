@@ -83,14 +83,14 @@ const SocialMediaContainer = ({
           'h-6',
           'ring-1',
           { 'ring-interlayHaiti':
-            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
           { 'dark:ring-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
           'rounded-full',
           'm-1',
           'grid',
           'place-items-center',
           { 'text-interlayHaiti':
-            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
           { 'dark:text-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
         )}
         href={socialMediaItem.link}

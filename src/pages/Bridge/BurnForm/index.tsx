@@ -234,7 +234,7 @@ const BurnForm = (): JSX.Element | null => {
               <h5
                 className={clsx(
                   { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}>
                 {t('burn_page.dot_earned', {
@@ -258,7 +258,7 @@ const BurnForm = (): JSX.Element | null => {
               <h5
                 className={clsx(
                   { 'text-interlayTextPrimaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}>
                 {t('you_will_receive')}

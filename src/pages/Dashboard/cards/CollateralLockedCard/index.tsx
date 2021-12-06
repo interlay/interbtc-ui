@@ -82,8 +82,9 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
     );
 
     let chartLineColor;
-    if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production') {
+    if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
       chartLineColor = INTERLAY_DENIM[500];
+    // MEMO: should check dark mode as well
     } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
       chartLineColor = KINTSUGI_SUPERNOVA[500];
     } else {

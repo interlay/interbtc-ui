@@ -38,9 +38,9 @@ const ActiveCollatorsCard = (): JSX.Element => {
   );
 
   let chartLineColor;
-  // TODO: should add dark mode check
-  if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production') {
+  if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
     chartLineColor = INTERLAY_DENIM[500];
+  // MEMO: should check dark mode as well
   } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
     chartLineColor = KINTSUGI_APPLE[300];
   } else {

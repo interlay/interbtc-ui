@@ -22,8 +22,8 @@ const RequestModalTitle = ({
       'break-words',
       'text-base',
       { 'text-interlayDenim':
-        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT || process.env.NODE_ENV !== 'production' },
-      { 'dark:text-kintsugiSupernova-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+      { 'dark:text-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'text-center',
       'uppercase',
       className
