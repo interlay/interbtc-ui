@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import * as React from 'react';
 import clsx from 'clsx';
 
 import { TokenType } from 'common/types/util.types';
@@ -25,10 +25,10 @@ interface Props {
 const TokenSelector = ({
   tokenOptions
 }: Props): JSX.Element => {
-  const getTokenOption = useCallback((type: TokenType) =>
+  const getTokenOption = React.useCallback((type: TokenType) =>
     tokenOptions.find(token => token.type === type), [tokenOptions]);
 
-  const [currentToken, setCurrentToken] = useState<TokenOption | undefined>(
+  const [currentToken, setCurrentToken] = React.useState<TokenOption | undefined>(
     getTokenOption(TokenType.COLLATERAL));
 
   const handleSelectToken = (selectedToken: TokenType) => {
@@ -38,7 +38,7 @@ const TokenSelector = ({
   // This is required to ensure that the displayed balance from the selected
   // token options is kept updated, e.g. if a token is funded or if the initial
   // balance is updated afer the first render.
-  useEffect(() => {
+  React.useEffect(() => {
     if (!currentToken || !tokenOptions) {
       return;
     }
