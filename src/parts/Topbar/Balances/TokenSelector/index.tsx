@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import clsx from 'clsx';
 
 import { TokenType } from 'common/types/util.types';
@@ -25,10 +25,10 @@ interface Props {
 const TokenSelector = ({
   tokenOptions
 }: Props): JSX.Element => {
-  const getTokenOption = React.useCallback((type: TokenType) =>
+  const getTokenOption = useCallback((type: TokenType) =>
     tokenOptions.find(token => token.type === type), [tokenOptions]);
 
-  const [currentToken, setCurrentToken] = React.useState<TokenOption | undefined>(
+  const [currentToken, setCurrentToken] = useState<TokenOption | undefined>(
     getTokenOption(TokenType.COLLATERAL));
 
   const handleSelectToken = (selectedToken: TokenType) => {
@@ -37,21 +37,24 @@ const TokenSelector = ({
 
   // This is required to ensure that the displayed balance from the selected
   // token options is kept updated, e.g. if a token is funded or if the initial
-  // balance is updated after the first render.
-  React.useEffect(() => {
-    if (!currentToken) {
+  // balance is updated afer the first render.
+  useEffect(() => {
+    if (!currentToken || !tokenOptions) {
       return;
     }
 
     const selectedTokenType = currentToken.type;
-    console.log('selectedTokenType', selectedTokenType);
 
     setCurrentToken(getTokenOption(selectedTokenType));
-  }, [currentToken, getTokenOption]);
+  }, [tokenOptions, currentToken, getTokenOption]);
 
   return (
-    <>
-      {currentToken && (
+    <div
+      className={clsx(
+        'flex',
+        'space-x-2'
+      )}>
+      {currentToken &&
         <Select
           key={currentToken.type}
           value={currentToken.type}
@@ -60,7 +63,7 @@ const TokenSelector = ({
             <>
               <SelectBody
                 className={clsx(
-                  'w-52'
+                  'w-44'
                 )}>
                 <SelectButton>
                   <span
@@ -111,8 +114,8 @@ const TokenSelector = ({
             </>
           )}
         </Select>
-      )}
-    </>
+      }
+    </div>
   );
 };
 
