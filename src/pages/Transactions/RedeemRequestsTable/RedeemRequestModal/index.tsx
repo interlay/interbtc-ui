@@ -1,8 +1,13 @@
+
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { RedeemStatus } from '@interlay/interbtc-api';
+import {
+  Redeem,
+  RedeemStatus
+} from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import RedeemRequestStatusUI from './RedeemRequestStatusUI';
 import ReimburseStatusUI from './ReimburseStatusUI';
@@ -30,8 +35,7 @@ import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 
 interface CustomProps {
-  // TODO: should type properly (`Relay`)
-  request: any;
+  request: Redeem;
 }
 
 const RedeemRequestModal = ({
@@ -45,8 +49,7 @@ const RedeemRequestModal = ({
 
   const focusRef = React.useRef(null);
 
-  // TODO: should type properly (`Relay`)
-  const renderModalStatusPanel = (request: any) => {
+  const renderModalStatusPanel = (request: Redeem) => {
     switch (request.status) {
     case RedeemStatus.Expired: {
       return (
@@ -62,7 +65,7 @@ const RedeemRequestModal = ({
   };
 
   const redeemedWrappedTokenAmount =
-    request.request.requestedAmountBacking.add(request.bridgeFee).add(request.btcTransferFee);
+    request.amountBTC.add(request.bridgeFee).add(request.btcTransferFee);
 
   return (
     <InterlayModal
@@ -113,7 +116,7 @@ const RedeemRequestModal = ({
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                   'block'
                 )}>
-                {`≈ $ ${getUsdAmount(redeemedWrappedTokenAmount, prices.bitcoin.usd)}`}
+                {`≈ $ ${getUsdAmount(request.amountBTC || BitcoinAmount.zero, prices.bitcoin.usd)}`}
               </span>
             </div>
             <div>
@@ -176,9 +179,9 @@ const RedeemRequestModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayMonetaryAmount(request.request.requestedAmountBacking)}
+                value={displayMonetaryAmount(request.amountBTC)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(request.request.requestedAmountBacking, prices.bitcoin.usd)} />
+                approxUSD={getUsdAmount(request.amountBTC, prices.bitcoin.usd)} />
             </div>
             <div className='space-y-4'>
               <div
@@ -195,7 +198,7 @@ const RedeemRequestModal = ({
                   {t('issue_page.destination_address')}
                 </span>
                 <span className='font-medium'>
-                  {shortAddress(request.userBackingAddress || '')}
+                  {shortAddress(request.userBTCAddress || '')}
                 </span>
               </div>
               <div
@@ -212,7 +215,7 @@ const RedeemRequestModal = ({
                   {t('issue_page.parachain_block')}
                 </span>
                 <span className='font-medium'>
-                  {request.request.height.active}
+                  {request.creationBlock}
                 </span>
               </div>
               <div

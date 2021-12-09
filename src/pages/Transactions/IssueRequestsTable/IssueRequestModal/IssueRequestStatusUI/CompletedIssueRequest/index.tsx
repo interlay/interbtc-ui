@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { Issue } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import ExternalLink from 'components/ExternalLink';
@@ -21,8 +22,7 @@ import {
 } from 'common/utils/utils';
 
 interface Props {
-  // TODO: should type properly (`Relay`)
-  request: any;
+  request: Issue;
 }
 
 const CompletedIssueRequest = ({
@@ -30,7 +30,8 @@ const CompletedIssueRequest = ({
 }: Props): JSX.Element => {
   const { t } = useTranslation();
 
-  const receivedWrappedTokenAmount = request.execution.amountWrapped;
+  const issuedWrappedTokenAmount = request.executedAmountBTC ?? request.wrappedAmount;
+  const receivedWrappedTokenAmount = issuedWrappedTokenAmount.sub(request.bridgeFee);
 
   return (
     <RequestWrapper>
@@ -58,12 +59,12 @@ const CompletedIssueRequest = ({
         </Ring48Title>
         <Ring48Value
           className='text-interlayConifer'>
-          {request.execution.height.active}
+          {request.creationBlock}
         </Ring48Value>
       </Ring48>
       <ExternalLink
         className='text-sm'
-        href={getPolkadotLink(request.execution.height.absolute)}>
+        href={getPolkadotLink(request.creationBlock)}>
         {t('issue_page.view_parachain_block')}
       </ExternalLink>
       <p className='space-x-1'>
@@ -75,11 +76,11 @@ const CompletedIssueRequest = ({
           )}>
           {t('issue_page.btc_transaction')}:
         </span>
-        <span className='font-medium'>{shortAddress(request.backingPayment.btcTxId || '')}</span>
+        <span className='font-medium'>{shortAddress(request.btcTxId || '')}</span>
       </p>
       <ExternalLink
         className='text-sm'
-        href={`${BTC_TRANSACTION_API}${request.backingPayment.btcTxId}`}>
+        href={`${BTC_TRANSACTION_API}${request.btcTxId}`}>
         {t('issue_page.view_on_block_explorer')}
       </ExternalLink>
     </RequestWrapper>
