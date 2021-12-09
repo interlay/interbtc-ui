@@ -1,5 +1,7 @@
+
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { Redeem } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import ExternalLink from 'components/ExternalLink';
@@ -20,8 +22,7 @@ import {
 } from 'common/utils/utils';
 
 interface Props {
-  // TODO: should type properly (`Relay`)
-  request: any;
+  request: Redeem;
 }
 
 const CompletedRedeemRequest = ({
@@ -47,7 +48,7 @@ const CompletedRedeemRequest = ({
         )}>
         <span>{t('issue_page.you_received')}</span>
         <PrimaryColorSpan>
-          {`${displayMonetaryAmount(request.request.requestedAmountBacking)} BTC`}
+          {`${displayMonetaryAmount(request.amountBTC)} BTC`}
         </PrimaryColorSpan>
         .
       </p>
@@ -56,12 +57,12 @@ const CompletedRedeemRequest = ({
           {t('issue_page.in_parachain_block')}
         </Ring48Title>
         <Ring48Value className='text-interlayConifer'>
-          {request.request.height.active}
+          {request.creationBlock}
         </Ring48Value>
       </Ring48>
       <ExternalLink
         className='text-sm'
-        href={getPolkadotLink(request.request.height.absolute)}>
+        href={getPolkadotLink(request.creationBlock)}>
         {t('issue_page.view_parachain_block')}
       </ExternalLink>
       {/* TODO: could componentize */}
@@ -74,11 +75,11 @@ const CompletedRedeemRequest = ({
           )}>
           {t('issue_page.btc_transaction')}:
         </span>
-        <span className='font-medium'>{shortAddress(request.backingPayment.btcTxId || '')}</span>
+        <span className='font-medium'>{shortAddress(request.btcTxId || '')}</span>
       </p>
       <ExternalLink
         className='text-sm'
-        href={`${BTC_TRANSACTION_API}${request.backingPayment.btcTxId}`}>
+        href={`${BTC_TRANSACTION_API}${request.btcTxId}`}>
         {t('issue_page.view_on_block_explorer')}
       </ExternalLink>
     </RequestWrapper>
