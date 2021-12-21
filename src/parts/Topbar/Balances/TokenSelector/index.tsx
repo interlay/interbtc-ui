@@ -63,7 +63,7 @@ const TokenSelector = ({
             <>
               <SelectBody
                 className={clsx(
-                  'w-44'
+                  'w-52'
                 )}>
                 <SelectButton>
                   <span
