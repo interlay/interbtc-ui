@@ -12,7 +12,7 @@ type Ref = HTMLInputElement;
 const InterlayInput = React.forwardRef<Ref, Props>(({
   className,
   ...rest
-}: Props, ref): JSX.Element => (
+}, ref): JSX.Element => (
   <input
     ref={ref}
     type='text'

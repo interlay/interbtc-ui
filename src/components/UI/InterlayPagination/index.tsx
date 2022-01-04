@@ -144,7 +144,6 @@ const InterlayPagination = ({
         { 'text-interlayDenim-600':
           process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:text-kintsugiMidnight-600': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-sm',
         'font-medium'
       )}
