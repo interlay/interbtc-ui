@@ -104,11 +104,11 @@ const SelectButton = ({
   </Listbox.Button>
 );
 
-interface CustomSelectOptionsProps {
+interface SelectOptionsCustomProps {
   open: boolean;
 }
 
-type SelectOptionsProps = CustomSelectOptionsProps & Props<typeof Listbox.Options>;
+type SelectOptionsProps = SelectOptionsCustomProps & Props<typeof Listbox.Options>;
 
 const SelectOptions = ({
   open,
@@ -236,7 +236,7 @@ const SelectCheck = ({
   </span>
 );
 
-interface CustomSelectTextProps {
+interface SelectTextCustomProps {
   selected?: boolean;
 }
 
@@ -244,7 +244,7 @@ const SelectText = ({
   selected = false,
   className,
   ...rest
-}: CustomSelectTextProps & React.ComponentPropsWithRef<'span'>): JSX.Element => (
+}: SelectTextCustomProps & React.ComponentPropsWithRef<'span'>): JSX.Element => (
   <span
     className={clsx(
       selected ?

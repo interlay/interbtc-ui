@@ -39,22 +39,19 @@ const TokenSelector = ({
   // token options is kept updated, e.g. if a token is funded or if the initial
   // balance is updated after the first render.
   React.useEffect(() => {
-    if (!currentToken || !tokenOptions) {
+    if (!currentToken) {
       return;
     }
 
     const selectedTokenType = currentToken.type;
+    console.log('selectedTokenType', selectedTokenType);
 
     setCurrentToken(getTokenOption(selectedTokenType));
-  }, [tokenOptions, currentToken, getTokenOption]);
+  }, [currentToken, getTokenOption]);
 
   return (
-    <div
-      className={clsx(
-        'flex',
-        'space-x-2'
-      )}>
-      {currentToken &&
+    <>
+      {currentToken && (
         <Select
           key={currentToken.type}
           value={currentToken.type}
@@ -114,8 +111,8 @@ const TokenSelector = ({
             </>
           )}
         </Select>
-      }
-    </div>
+      )}
+    </>
   );
 };
 
