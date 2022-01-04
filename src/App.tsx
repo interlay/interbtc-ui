@@ -72,6 +72,9 @@ import 'react-toastify/dist/ReactToastify.css';
 const Bridge = React.lazy(() =>
   import(/* webpackChunkName: 'bridge' */ 'pages/Bridge')
 );
+const Transfer = React.lazy(() =>
+  import(/* webpackChunkName: 'bridge' */ 'pages/Transfer')
+);
 const Transactions = React.lazy(() =>
   import(/* webpackChunkName: 'transactions' */ 'pages/Transactions')
 );
@@ -111,14 +114,14 @@ const App = (): JSX.Element => {
       );
       dispatch(isPolkaBtcLoaded(true));
       setIsLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       toast.warn('Unable to connect to the BTC-Parachain.');
       console.log('[loadPolkaBTC] error.message => ', error.message);
     }
 
     try {
       startFetchingLiveData(dispatch, store);
-    } catch (error) {
+    } catch (error: any) {
       console.log('[loadPolkaBTC] error.message => ', error.message);
     }
   }, [
@@ -131,7 +134,7 @@ const App = (): JSX.Element => {
     try {
       window.faucet = new FaucetClient(constants.FAUCET_URL);
       dispatch(isFaucetLoaded(true));
-    } catch (error) {
+    } catch (error: any) {
       console.log('[loadFaucet] error.message => ', error.message);
     }
   }, [dispatch]);
@@ -200,7 +203,7 @@ const App = (): JSX.Element => {
             parachainStatus(state)
           )
         );
-      } catch (error) {
+      } catch (error: any) {
         // TODO: should add error handling
         console.log('[App React.useEffect 2] error.message => ', error.message);
       }
@@ -246,7 +249,8 @@ const App = (): JSX.Element => {
         // TODO: could store the active address just in one place (either in `window` object or in redux)
         window.bridge.interBtcApi.setAccount(newAddress, signer);
         dispatch(changeAddressAction(newAddress));
-      } catch (error) {
+        // Catch clause variable type annotation has to be either any or unknown
+      } catch (error: any) {
         // TODO: should add error handling
         console.log('[App React.useEffect 3] error.message => ', error.message);
       }
@@ -270,7 +274,7 @@ const App = (): JSX.Element => {
         await loadPolkaBTC();
         await loadFaucet();
         keyring.loadAll({});
-      } catch (error) {
+      } catch (error: any) {
         console.log(error.message);
       }
     })();
@@ -303,7 +307,7 @@ const App = (): JSX.Element => {
               }
             }
           );
-      } catch (error) {
+      } catch (error: any) {
         console.log('[App React.useEffect 4] error.message => ', error.message);
       }
     })();
@@ -320,7 +324,7 @@ const App = (): JSX.Element => {
               }
             }
           );
-      } catch (error) {
+      } catch (error: any) {
         console.log('[App React.useEffect 5] error.message => ', error.message);
       }
     })();
@@ -386,6 +390,9 @@ const App = (): JSX.Element => {
                 </Route>
                 <Route path={PAGES.BRIDGE}>
                   <Bridge />
+                </Route>
+                <Route path={PAGES.TRANSFER}>
+                  <Transfer />
                 </Route>
                 <Redirect
                   exact

@@ -8,7 +8,8 @@ import {
   BookOpenIcon,
   RefreshIcon,
   ChartSquareBarIcon,
-  ChipIcon
+  ChipIcon,
+  SwitchHorizontalIcon
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
@@ -28,6 +29,11 @@ const NAVIGATION_ITEMS = [
     name: 'nav_bridge',
     link: PAGES.BRIDGE,
     icon: RefreshIcon
+  },
+  {
+    name: 'nav_transfer',
+    link: PAGES.TRANSFER,
+    icon: SwitchHorizontalIcon
   },
   {
     name: 'nav_transactions',

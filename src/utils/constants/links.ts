@@ -2,6 +2,7 @@
 const PAGES = Object.freeze({
   HOME: '/',
   BRIDGE: '/bridge',
+  TRANSFER: '/transfer',
   TRANSACTIONS: '/transactions',
   STAKING: '/staking',
   DASHBOARD: '/dashboard',
