@@ -50,11 +50,7 @@ const TokenSelector = ({
   }, [currentToken, getTokenOption]);
 
   return (
-    <div
-      className={clsx(
-        'flex',
-        'space-x-2'
-      )}>
+    <>
       {currentToken && (
         <Select
           key={currentToken.type}
@@ -116,7 +112,7 @@ const TokenSelector = ({
           )}
         </Select>
       )}
-    </div>
+    </>
   );
 };
 
