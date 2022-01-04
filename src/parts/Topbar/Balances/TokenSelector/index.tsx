@@ -39,14 +39,15 @@ const TokenSelector = ({
   // token options is kept updated, e.g. if a token is funded or if the initial
   // balance is updated afer the first render.
   React.useEffect(() => {
-    if (!currentToken || !tokenOptions) {
+    if (!currentToken) {
       return;
     }
 
     const selectedTokenType = currentToken.type;
+    console.log('selectedTokenType', selectedTokenType);
 
     setCurrentToken(getTokenOption(selectedTokenType));
-  }, [tokenOptions, currentToken, getTokenOption]);
+  }, [currentToken, getTokenOption]);
 
   return (
     <div
