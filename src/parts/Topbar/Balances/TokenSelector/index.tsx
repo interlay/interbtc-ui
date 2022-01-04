@@ -37,7 +37,7 @@ const TokenSelector = ({
 
   // This is required to ensure that the displayed balance from the selected
   // token options is kept updated, e.g. if a token is funded or if the initial
-  // balance is updated afer the first render.
+  // balance is updated after the first render.
   React.useEffect(() => {
     if (!currentToken || !tokenOptions) {
       return;
