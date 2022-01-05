@@ -1,7 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
 
-import { TokenType } from 'common/types/util.types';
 import Select, {
   SelectButton,
   SelectOptions,
@@ -10,6 +9,7 @@ import Select, {
   SelectCheck,
   SelectText
 } from 'components/Select';
+import { TokenType } from 'common/types/util.types';
 
 interface TokenOption {
   type: TokenType;
@@ -25,11 +25,13 @@ interface Props {
 const TokenSelector = ({
   tokenOptions
 }: Props): JSX.Element => {
-  const getTokenOption = React.useCallback((type: TokenType) =>
-    tokenOptions.find(token => token.type === type), [tokenOptions]);
+  const getTokenOption =
+    React.useCallback(
+      (type: TokenType) => tokenOptions.find(token => token.type === type),
+      [tokenOptions]
+    );
 
-  const [currentToken, setCurrentToken] = React.useState<TokenOption | undefined>(
-    getTokenOption(TokenType.COLLATERAL));
+  const [currentToken, setCurrentToken] = React.useState<TokenOption | undefined>(getTokenOption(TokenType.COLLATERAL));
 
   const handleSelectToken = (selectedToken: TokenType) => {
     setCurrentToken(getTokenOption(selectedToken));
@@ -44,10 +46,12 @@ const TokenSelector = ({
     }
 
     const selectedTokenType = currentToken.type;
-    console.log('selectedTokenType', selectedTokenType);
 
     setCurrentToken(getTokenOption(selectedTokenType));
-  }, [currentToken, getTokenOption]);
+  }, [
+    currentToken,
+    getTokenOption
+  ]);
 
   return (
     <>
