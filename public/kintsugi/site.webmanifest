@@ -1,15 +1,15 @@
 {
-  "name": "interBTC: Trustless and open DeFi",
-  "short_name": "interBTC",
+  "name": "kBTC: Trustless and open DeFi",
+  "short_name": "kBTC",
   "icons": [
     {
-      "src": "/interlay/android-chrome-192x192.png",
+      "src": "/kintsugi/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/interlay/android-chrome-512x512.png",
-      "sizes": "512x512",
+      "src": "/kintsugi/android-chrome-384x384.png",
+      "sizes": "384x384",
       "type": "image/png"
     }
   ],
