@@ -129,6 +129,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
     </div>
   );
 });
+
 SidebarContent.displayName = 'SidebarContent';
 
 export default SidebarContent;
