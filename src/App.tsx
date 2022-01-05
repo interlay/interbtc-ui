@@ -37,6 +37,7 @@ import {
   Currency
 } from '@interlay/monetary-js';
 
+import InterlayHelmet from 'parts/InterlayHelmet';
 import Layout from 'parts/Layout';
 import FullLoadingSpinner from 'components/FullLoadingSpinner';
 import ErrorFallback from 'components/ErrorFallback';
@@ -369,6 +370,7 @@ const App = (): JSX.Element => {
 
   return (
     <>
+      <InterlayHelmet />
       <ToastContainer
         position='top-right'
         autoClose={5000}
