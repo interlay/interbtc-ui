@@ -1,61 +1,79 @@
-
-import clsx from 'clsx';
+import * as React from 'react';
 import {
   BitcoinAmount,
   MonetaryAmount,
   Currency
 } from '@interlay/monetary-js';
-import { CollateralUnit } from '@interlay/interbtc-api';
+import {
+  CollateralUnit,
+  CurrencyUnit
+} from '@interlay/interbtc-api';
 
+import TokenSelector from './TokenSelector';
 import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon,
   COLLATERAL_TOKEN_SYMBOL,
-  CollateralTokenLogoIcon
+  CollateralTokenLogoIcon,
+  GOVERNANCE_TOKEN_SYMBOL,
+  GovernanceTokenLogoIcon
 } from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
+import { TokenType } from 'common/types/util.types';
 
 interface Props {
   wrappedTokenBalance?: BitcoinAmount;
   collateralTokenBalance?: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  // TODO: Add GovernanceUnit type to lib
+  governanceTokenBalance?: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
+}
+
+interface TokenOption {
+  type: TokenType;
+  balance: string;
+  symbol: string;
+  icon: JSX.Element;
 }
 
 const Balances = ({
   wrappedTokenBalance,
-  collateralTokenBalance
+  collateralTokenBalance,
+  governanceTokenBalance
 }: Props): JSX.Element => {
-  const strCollateralTokenBalance = displayMonetaryAmount(collateralTokenBalance);
-  const strWrappedTokenBalance = displayMonetaryAmount(wrappedTokenBalance);
+  const [tokenOptions, setTokenOptions] = React.useState<Array<TokenOption> | undefined>(undefined);
+
+  React.useEffect(() => {
+    const tokenOptions: Array<TokenOption> = [
+      {
+        type: TokenType.COLLATERAL,
+        balance: displayMonetaryAmount(collateralTokenBalance),
+        icon: <CollateralTokenLogoIcon
+          width={26} />,
+        symbol: COLLATERAL_TOKEN_SYMBOL
+      },
+      {
+        type: TokenType.WRAPPED,
+        balance: displayMonetaryAmount(wrappedTokenBalance),
+        icon: <WrappedTokenLogoIcon
+          width={26} />,
+        symbol: WRAPPED_TOKEN_SYMBOL
+      },
+      {
+        type: TokenType.GOVERNANCE,
+        balance: displayMonetaryAmount(governanceTokenBalance),
+        icon: <GovernanceTokenLogoIcon
+          width={26} />,
+        symbol: GOVERNANCE_TOKEN_SYMBOL
+      }
+    ];
+
+    setTokenOptions(tokenOptions);
+  }, [collateralTokenBalance, governanceTokenBalance, wrappedTokenBalance]);
 
   return (
-    <div
-      className={clsx(
-        'flex',
-        'space-x-2'
-      )}>
-      <div
-        className={clsx(
-          'flex',
-          'items-center',
-          'space-x-1'
-        )}>
-        <WrappedTokenLogoIcon
-          fill='currentColor'
-          width={30} />
-        <span className='font-medium'>{strWrappedTokenBalance}</span>
-        <span className='text-sm'>{WRAPPED_TOKEN_SYMBOL}</span>
-      </div>
-      <div
-        className={clsx(
-          'flex',
-          'items-center',
-          'space-x-1'
-        )}>
-        <CollateralTokenLogoIcon height={28} />
-        <span className='font-medium'>{strCollateralTokenBalance}</span>
-        <span className='text-sm'>{COLLATERAL_TOKEN_SYMBOL}</span>
-      </div>
-    </div>
+    <>
+      {tokenOptions ? <TokenSelector tokenOptions={tokenOptions} /> : null}
+    </>
   );
 };
 

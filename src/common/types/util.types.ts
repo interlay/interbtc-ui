@@ -103,3 +103,9 @@ export type RelayedBlock = {
   // eslint-disable-next-line camelcase
   relayTs: string;
 };
+
+export enum TokenType {
+  COLLATERAL = 'collateral',
+  GOVERNANCE = 'governance',
+  WRAPPED = 'wrapped'
+}
