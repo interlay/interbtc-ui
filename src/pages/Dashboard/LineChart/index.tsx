@@ -8,7 +8,11 @@ import {
 } from 'utils/constants/relay-chain-names';
 import {
   INTERLAY_TEXT_PRIMARY_IN_LIGHT_MODE,
-  KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE
+  KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE,
+  INTERLAY_GRID_LINE_COLOR,
+  INTERLAY_ZERO_LINE_COLOR,
+  KINTSUGI_GRID_LINE_COLOR,
+  KINTSUGI_ZERO_LINE_COLOR
 } from 'utils/constants/colors';
 
 interface YAxis {
@@ -56,13 +60,13 @@ const LineChart = ({
   let zeroLineColor: string;
   if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
     textPrimaryColor = INTERLAY_TEXT_PRIMARY_IN_LIGHT_MODE;
-    gridLineColor = 'rgba(0, 0, 0, 0.1)';
-    zeroLineColor = 'rgba(0, 0, 0, 0.25)';
+    gridLineColor = INTERLAY_GRID_LINE_COLOR;
+    zeroLineColor = INTERLAY_ZERO_LINE_COLOR;
   // MEMO: should check dark mode as well
   } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
     textPrimaryColor = KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE;
-    gridLineColor = 'rgba(255, 255, 255, 0.1)';
-    zeroLineColor = 'rgba(255, 255, 255, 0.25)';
+    gridLineColor = KINTSUGI_GRID_LINE_COLOR;
+    zeroLineColor = KINTSUGI_ZERO_LINE_COLOR;
   } else {
     throw new Error('Something went wrong!');
   }
