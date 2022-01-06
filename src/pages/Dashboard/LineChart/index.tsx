@@ -51,12 +51,18 @@ const LineChart = ({
     }))
   };
 
-  let textPrimaryColor;
+  let textPrimaryColor: string;
+  let gridLineColor: string;
+  let zeroLineColor: string;
   if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
     textPrimaryColor = INTERLAY_TEXT_PRIMARY_IN_LIGHT_MODE;
+    gridLineColor = 'rgba(0, 0, 0, 0.1)';
+    zeroLineColor = 'rgba(0, 0, 0, 0.25)';
   // MEMO: should check dark mode as well
   } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
     textPrimaryColor = KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE;
+    gridLineColor = 'rgba(255, 255, 255, 0.1)';
+    zeroLineColor = 'rgba(255, 255, 255, 0.25)';
   } else {
     throw new Error('Something went wrong!');
   }
@@ -72,6 +78,10 @@ const LineChart = ({
     scales: {
       xAxes: [
         {
+          gridLines: {
+            color: gridLineColor,
+            zeroLineColor
+          },
           ticks: {
             fontColor: textPrimaryColor
           }
@@ -87,6 +97,10 @@ const LineChart = ({
         ticks: {
           fontColor: colors[index],
           ...ticks
+        },
+        gridLines: {
+          color: gridLineColor,
+          zeroLineColor
         },
         ...rest
       }))
