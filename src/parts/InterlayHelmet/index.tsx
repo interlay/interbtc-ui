@@ -1,60 +1,46 @@
 
 import { Helmet } from 'react-helmet-async';
 
-import { APP_NAME } from 'config/relay-chains';
 import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
-
-let folderName: string;
-let domain: string;
-let imageName: string;
-if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
-  folderName = 'interlay';
-  domain = 'https://bridge.interlay.io';
-  imageName = 'interbtc-meta-image.jpg';
-} else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
-  folderName = 'kintsugi';
-  domain = '';
-  imageName = 'kbtc-meta-image.jpg';
-} else {
-  throw new Error('Something went wrong!');
-}
+  APP_NAME,
+  PUBLIC_ASSETS_FOLDER_NAME,
+  APP_DOMAIN,
+  OPEN_GRAPH_IMAGE_FILE_NAME
+} from 'config/relay-chains';
 
 const InterlayHelmet = (): JSX.Element => (
   <Helmet>
     <link
       rel='apple-touch-icon'
       sizes='180x180'
-      href={`/${folderName}/apple-touch-icon.png`} />
+      href={`/${PUBLIC_ASSETS_FOLDER_NAME}/apple-touch-icon.png`} />
     <link
       rel='icon'
       type='image/png'
       sizes='32x32'
-      href={`/${folderName}/favicon-32x32.png`} />
+      href={`/${PUBLIC_ASSETS_FOLDER_NAME}/favicon-32x32.png`} />
     <link
       rel='icon'
       type='image/png'
       sizes='16x16'
-      href={`/${folderName}/favicon-16x16.png`} />
+      href={`/${PUBLIC_ASSETS_FOLDER_NAME}/favicon-16x16.png`} />
     {/*
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     */}
     <link
       rel='mask-icon'
-      href={`/${folderName}/safari-pinned-tab.svg`}
+      href={`/${PUBLIC_ASSETS_FOLDER_NAME}/safari-pinned-tab.svg`}
       color='#5bbad5' />
     <link
       rel='shortcut icon'
-      href={`/${folderName}/favicon.ico`} />
+      href={`/${PUBLIC_ASSETS_FOLDER_NAME}/favicon.ico`} />
     <meta
       name='msapplication-config'
-      content={`/${folderName}/browserconfig.xml`} />
+      content={`/${PUBLIC_ASSETS_FOLDER_NAME}/browserconfig.xml`} />
     <link
       rel='manifest'
-      href={`/${folderName}/site.webmanifest`} />
+      href={`/${PUBLIC_ASSETS_FOLDER_NAME}/site.webmanifest`} />
     <title>{APP_NAME}</title>
     {/* Primary Meta Tags */}
     <meta
@@ -69,7 +55,7 @@ const InterlayHelmet = (): JSX.Element => (
       content='website' />
     <meta
       property='og:url'
-      content={domain} />
+      content={APP_DOMAIN} />
     <meta
       property='og:title'
       content={APP_NAME} />
@@ -78,7 +64,7 @@ const InterlayHelmet = (): JSX.Element => (
       content={`${APP_NAME}: Trustless and open DeFi access for your Bitcoin`} />
     <meta
       property='og:image'
-      content={`${domain}/${folderName}/${imageName}`} />
+      content={`${APP_DOMAIN}/${PUBLIC_ASSETS_FOLDER_NAME}/${OPEN_GRAPH_IMAGE_FILE_NAME}`} />
     <meta
       property='og:image:width'
       content='1200' />
@@ -91,7 +77,7 @@ const InterlayHelmet = (): JSX.Element => (
       content='summary_large_image' />
     <meta
       property='twitter:url'
-      content={domain} />
+      content={APP_DOMAIN} />
     <meta
       property='twitter:title'
       content={APP_NAME} />
@@ -100,7 +86,7 @@ const InterlayHelmet = (): JSX.Element => (
       content={`${APP_NAME}: Trustless and open DeFi access for your Bitcoin`} />
     <meta
       property='twitter:image'
-      content={`${domain}/${folderName}/${imageName}`} />
+      content={`${APP_DOMAIN}/${PUBLIC_ASSETS_FOLDER_NAME}/${OPEN_GRAPH_IMAGE_FILE_NAME}`} />
   </Helmet>
 );
 
