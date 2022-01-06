@@ -16,7 +16,7 @@ import {
   KUSAMA
 } from 'utils/constants/relay-chain-names';
 import { PAGES } from 'utils/constants/links';
-import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
+import { ReactComponent as InterlayLogoWithTextIcon } from 'assets/img/interlay-logo-with-text.svg';
 
 interface Props {
   onSmallScreen?: boolean;
@@ -116,7 +116,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           <span className='font-medium'>
             {t('built_by')}
           </span>
-          <InterlayLogoIcon
+          <InterlayLogoWithTextIcon
             className={clsx(
               { 'text-interlayHaiti':
                 process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
@@ -129,6 +129,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
     </div>
   );
 });
+
 SidebarContent.displayName = 'SidebarContent';
 
 export default SidebarContent;
