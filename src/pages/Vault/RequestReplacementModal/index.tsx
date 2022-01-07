@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { useQueryClient } from 'react-query';
 import clsx from 'clsx';
 import { BitcoinAmount } from '@interlay/monetary-js';
+import { CollateralCurrency } from '@interlay/interbtc-api';
 
 import ErrorMessage from 'components/ErrorMessage';
 import NumberInput from 'components/NumberInput';
@@ -20,7 +21,8 @@ import InterlayModal, {
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   WRAPPED_TOKEN_SYMBOL,
-  COLLATERAL_TOKEN_SYMBOL
+  COLLATERAL_TOKEN_SYMBOL,
+  COLLATERAL_TOKEN
 } from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
@@ -64,7 +66,7 @@ const RequestReplacementModal = ({
       if (amountPolkaBtc.lte(dustValue)) {
         throw new Error(`Please enter an amount greater than Bitcoin dust (${displayMonetaryAmount(dustValue)} BTC)`);
       }
-      await window.bridge.interBtcApi.replace.request(amountPolkaBtc);
+      await window.bridge.interBtcApi.replace.request(amountPolkaBtc, COLLATERAL_TOKEN as CollateralCurrency);
 
       const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
       queryClient.invalidateQueries([

@@ -10,6 +10,7 @@ import {
   RedeemColumns
 } from '@interlay/interbtc-index-client';
 import { BitcoinAmount } from '@interlay/monetary-js';
+import { CollateralIdLiteral, newAccountId, tickerToCurrencyIdLiteral, WrappedIdLiteral } from '@interlay/interbtc-api';
 
 import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
 import RequestReplacementModal from './RequestReplacementModal';
@@ -30,7 +31,9 @@ import Panel from 'components/Panel';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   WRAPPED_TOKEN_SYMBOL,
-  COLLATERAL_TOKEN_SYMBOL
+  COLLATERAL_TOKEN_SYMBOL,
+  WRAPPED_TOKEN,
+  COLLATERAL_TOKEN
 } from 'config/relay-chains';
 import {
   POLKADOT,
@@ -94,6 +97,8 @@ const Vault = (): JSX.Element => {
 
       try {
         const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+        const collateralIdLiteral = tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker) as CollateralIdLiteral;
+        const wrappedIdLiteral = tickerToCurrencyIdLiteral(WRAPPED_TOKEN.ticker) as WrappedIdLiteral;
         const [
           vault,
           feesPolkaBTC,
@@ -104,12 +109,16 @@ const Vault = (): JSX.Element => {
           totalIssueRequests,
           totalRedeemRequests
         ] = await Promise.allSettled([
-          window.bridge.interBtcApi.vaults.get(vaultId),
-          window.bridge.interBtcApi.pools.getFeesWrapped(address),
-          window.bridge.interBtcApi.vaults.getIssuedAmount(vaultId),
-          window.bridge.interBtcApi.vaults.getVaultCollateralization(vaultId),
-          window.bridge.interBtcApi.vaults.getAPY(vaultId),
-          window.bridge.interBtcApi.vaults.getIssuableAmount(vaultId),
+          window.bridge.interBtcApi.vaults.get(vaultId, collateralIdLiteral),
+          window.bridge.interBtcApi.pools.getFeesWrapped(
+            newAccountId(window.bridge.interBtcApi.api, address),
+            collateralIdLiteral,
+            wrappedIdLiteral
+          ),
+          window.bridge.interBtcApi.vaults.getIssuedAmount(vaultId, collateralIdLiteral),
+          window.bridge.interBtcApi.vaults.getVaultCollateralization(vaultId, collateralIdLiteral),
+          window.bridge.interBtcApi.vaults.getAPY(vaultId, collateralIdLiteral),
+          window.bridge.interBtcApi.vaults.getIssuableAmount(vaultId, collateralIdLiteral),
           window
             .bridge
             .interBtcIndex

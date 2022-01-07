@@ -22,12 +22,12 @@ import {
 } from '@polkadot/extension-dapp';
 import keyring from '@polkadot/ui-keyring';
 import { Keyring } from '@polkadot/api';
+import { CollateralCurrency, tickerToCurrencyIdLiteral, SecurityStatusCode } from '@interlay/interbtc-api';
 import { createInterbtc } from '@interlay/interbtc';
 import {
   FaucetClient,
   CollateralUnit
 } from '@interlay/interbtc-api';
-import { StatusCode } from '@interlay/interbtc-api/build/src/interfaces';
 import {
   MonetaryAmount,
   Currency
@@ -105,8 +105,9 @@ const App = (): JSX.Element => {
     try {
       window.bridge = await createInterbtc(
         constants.PARACHAIN_URL,
-        constants.BITCOIN_NETWORK,
+        COLLATERAL_TOKEN as CollateralCurrency,
         WRAPPED_TOKEN,
+        constants.BITCOIN_NETWORK,
         constants.STATS_URL
       );
       dispatch(isPolkaBtcLoaded(true));
@@ -129,7 +130,7 @@ const App = (): JSX.Element => {
   // Load the connection to the faucet - only for testnet purposes
   const loadFaucet = React.useCallback(async (): Promise<void> => {
     try {
-      window.faucet = new FaucetClient(constants.FAUCET_URL);
+      window.faucet = new FaucetClient(window.bridge.interBtcApi.api, constants.FAUCET_URL);
       dispatch(isFaucetLoaded(true));
     } catch (error) {
       console.log('[loadFaucet] error.message => ', error.message);
@@ -146,7 +147,10 @@ const App = (): JSX.Element => {
     (async () => {
       try {
         dispatch(isVaultClientLoaded(false));
-        const vault = await window.bridge.interBtcApi.vaults.get(id);
+        const vault = await window.bridge.interBtcApi.vaults.get(
+          id,
+          tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker)
+        );
         dispatch(isVaultClientLoaded(!!vault));
       } catch (error) {
         // TODO: should add error handling
@@ -179,7 +183,7 @@ const App = (): JSX.Element => {
           window.bridge.interBtcApi.system.getStatusCode()
         ]);
 
-        const parachainStatus = (state: StatusCode) => {
+        const parachainStatus = (state: SecurityStatusCode) => {
           if (state.isError) {
             return ParachainStatus.Error;
           } else if (state.isRunning) {

@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { BitcoinAmount } from '@interlay/monetary-js';
+import { CollateralCurrency } from '@interlay/interbtc-api';
 
 import IssueForm from './IssueForm';
 import RedeemForm from './RedeemForm';
@@ -85,7 +86,9 @@ const Bridge = (): JSX.Element | null => {
     if (!bridgeLoaded) return;
     (async () => {
       try {
-        const maxBurnableTokens = await window.bridge.interBtcApi.redeem.getMaxBurnableTokens(COLLATERAL_TOKEN);
+        const maxBurnableTokens = await window.bridge.interBtcApi.redeem.getMaxBurnableTokens(
+          COLLATERAL_TOKEN as CollateralCurrency
+        );
         setBurnable(maxBurnableTokens.gt(BitcoinAmount.zero));
       } catch (error) {
         // TODO: should add error handling
