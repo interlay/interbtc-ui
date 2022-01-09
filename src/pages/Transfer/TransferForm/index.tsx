@@ -11,7 +11,8 @@ import { toast } from 'react-toastify';
 import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 
-import WrappedTokenField from '../WrappedTokenField';
+import TokenAmountField from '../TokenAmountField';
+import Balances from '../../../parts/Topbar/Balances';
 import SubmitButton from '../SubmitButton';
 import FormTitle from '../FormTitle';
 import TextField from 'components/TextField';
@@ -35,10 +36,7 @@ import {
   ParachainStatus,
   StoreType
 } from 'common/types/util.types';
-import {
-  getUsdAmount,
-  displayMonetaryAmount
-} from 'common/utils/utils';
+import { displayMonetaryAmount } from 'common/utils/utils';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import STATUSES from 'utils/constants/statuses';
 import { ReactComponent as AcalaLogoIcon } from 'assets/img/acala-logo.svg';
@@ -116,7 +114,7 @@ const TransferForm = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
+  // TODO (this ticket): Add governance token balance to state.general
   const {
     wrappedTokenBalance,
     collateralTokenBalance,
@@ -128,15 +126,14 @@ const TransferForm = (): JSX.Element => {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
     reset
   } = useForm<TransferFormData>({
     mode: 'onChange'
   });
-  const wrappedTokenAmount = watch(WRAPPED_TOKEN_INPUT_AMOUNT);
 
   const [networkModalOpen, setNetworkModalOpen] = React.useState(false);
   const [selectedNetworkType, setSelectedNetworkType] = React.useState(NETWORK_TYPES.INTER_BTC);
+  // const [activeToken, setActiveToken] = React.useState<number>(0);
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
@@ -147,6 +144,8 @@ const TransferForm = (): JSX.Element => {
   const handleNetworkModalClose = () => {
     setNetworkModalOpen(false);
   };
+
+  // const callbackFunction(token: )
 
   const onSubmit = async (data: TransferFormData) => {
     try {
@@ -201,30 +200,39 @@ const TransferForm = (): JSX.Element => {
     }
   };
 
+  // TODO: export token type from Balances
+  const beACallback = (token: any) => {
+    console.log('callback', token);
+  };
+
   return (
     <>
       <form
         className='space-y-8'
         onSubmit={handleSubmit(onSubmit)}>
         <FormTitle>
-          {t('transfer_page.transfer_interbtc', {
-            wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
-          })}
+          {t('transfer_page.transfer_currency')}
         </FormTitle>
-        <WrappedTokenField
-          id={WRAPPED_TOKEN_INPUT_AMOUNT}
-          name={WRAPPED_TOKEN_INPUT_AMOUNT}
-          label={WRAPPED_TOKEN_SYMBOL}
-          ref={register({
-            required: {
-              value: true,
-              message: t('redeem_page.please_enter_amount')
-            },
-            validate: value => validateForm(value)
-          })}
-          approxUSD={`≈ $ ${getUsdAmount(BitcoinAmount.from.BTC(wrappedTokenAmount || '0.00'), usdPrice)}`}
-          error={!!errors[WRAPPED_TOKEN_INPUT_AMOUNT]}
-          helperText={errors[WRAPPED_TOKEN_INPUT_AMOUNT]?.message} />
+        <p>Balance: TBC</p>
+        <div
+          className={clsx(
+            'flex',
+            'gap-2'
+          )}>
+          <Balances callbackFunction={beACallback} />
+          <TokenAmountField
+            id={WRAPPED_TOKEN_INPUT_AMOUNT}
+            name={WRAPPED_TOKEN_INPUT_AMOUNT}
+            ref={register({
+              required: {
+                value: true,
+                message: t('redeem_page.please_enter_amount')
+              },
+              validate: value => validateForm(value)
+            })}
+            error={!!errors[WRAPPED_TOKEN_INPUT_AMOUNT]}
+            helperText={errors[WRAPPED_TOKEN_INPUT_AMOUNT]?.message} />
+        </div>
         <div>
           <TextField
             id={COLLATERAL_TOKEN_ADDRESS}

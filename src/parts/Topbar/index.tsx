@@ -36,8 +36,6 @@ const Topbar = (): JSX.Element => {
     extensions,
     address,
     bridgeLoaded,
-    collateralTokenBalance,
-    wrappedTokenBalance,
     showAccountModal
   } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
@@ -50,7 +48,7 @@ const Topbar = (): JSX.Element => {
       const receiverId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
       await window.faucet.fundAccount(receiverId);
       toast.success('Your account has been funded.');
-    } catch (error) {
+    } catch (error: any) {
       toast.error(`Funding failed. ${error.message}`);
     }
   };
@@ -65,7 +63,7 @@ const Topbar = (): JSX.Element => {
       try {
         const theAccounts = await web3Accounts();
         setAccounts(theAccounts);
-      } catch (error) {
+      } catch (error: any) {
         // TODO: should add error handling properly
         console.log('[Topbar] error.message => ', error.message);
       }
@@ -77,7 +75,7 @@ const Topbar = (): JSX.Element => {
     setIsRequestPending(true);
     try {
       await handleRequestDotFromFaucet();
-    } catch (error) {
+    } catch (error: any) {
       console.log('[requestDOT] error.message => ', error.message);
     }
     setIsRequestPending(false);
@@ -148,9 +146,7 @@ const Topbar = (): JSX.Element => {
                     collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
                   })}
                 </InterlayDenimOrKintsugiMidnightOutlinedButton>
-                <Balances
-                  collateralTokenBalance={collateralTokenBalance}
-                  wrappedTokenBalance={wrappedTokenBalance} />
+                <Balances />
                 <InterlayDefaultContainedButton
                   className={SMALL_SIZE_BUTTON_CLASS_NAME}
                   onClick={handleAccountModalOpen}>

@@ -20,38 +20,24 @@ interface TokenOption {
 
 interface Props {
   tokenOptions: Array<TokenOption>;
+  showBalance?: boolean;
+  currentToken: TokenOption;
+  onChange?: (type: TokenType) => void;
 }
 
 const TokenSelector = ({
-  tokenOptions
+  tokenOptions,
+  currentToken,
+  onChange,
+  showBalance = true
 }: Props): JSX.Element => {
-  const getTokenOption =
-    React.useCallback(
-      (type: TokenType) => tokenOptions.find(token => token.type === type),
-      [tokenOptions]
-    );
-
-  const [currentToken, setCurrentToken] = React.useState<TokenOption | undefined>(getTokenOption(TokenType.COLLATERAL));
-
   const handleSelectToken = (selectedToken: TokenType) => {
-    setCurrentToken(getTokenOption(selectedToken));
+    console.log('handle select from here', selectedToken);
+
+    if (!onChange) return;
+
+    onChange(selectedToken);
   };
-
-  // This is required to ensure that the displayed balance from the selected
-  // token options is kept updated, e.g. if a token is funded or if the initial
-  // balance is updated after the first render.
-  React.useEffect(() => {
-    if (!currentToken) {
-      return;
-    }
-
-    const selectedTokenType = currentToken.type;
-
-    setCurrentToken(getTokenOption(selectedTokenType));
-  }, [
-    currentToken,
-    getTokenOption
-  ]);
 
   return (
     <>
@@ -75,7 +61,7 @@ const TokenSelector = ({
                     )}>
                     {currentToken.icon}
                     <SelectText>
-                      {currentToken.balance} {currentToken.symbol}
+                      {showBalance && (currentToken.balance)} {currentToken.symbol}
                     </SelectText>
                   </span>
                 </SelectButton>
@@ -98,7 +84,7 @@ const TokenSelector = ({
                               )}>
                               {tokenOption.icon}
                               <SelectText selected={selected}>
-                                {tokenOption.balance} {tokenOption.symbol}
+                                {showBalance && (tokenOption.balance)} {tokenOption.symbol}
                               </SelectText>
                             </div>
                             {selected ? (

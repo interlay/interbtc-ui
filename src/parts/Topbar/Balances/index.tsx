@@ -1,32 +1,20 @@
 import * as React from 'react';
 import {
-  BitcoinAmount,
-  MonetaryAmount,
-  Currency
-} from '@interlay/monetary-js';
-import {
-  CollateralUnit,
-  CurrencyUnit
-} from '@interlay/interbtc-api';
+  useSelector
+} from 'react-redux';
 
 import TokenSelector from './TokenSelector';
 import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon,
   COLLATERAL_TOKEN_SYMBOL,
-  CollateralTokenLogoIcon,
-  GOVERNANCE_TOKEN_SYMBOL,
-  GovernanceTokenLogoIcon
+  CollateralTokenLogoIcon
 } from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
-import { TokenType } from 'common/types/util.types';
-
-interface Props {
-  wrappedTokenBalance?: BitcoinAmount;
-  collateralTokenBalance?: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
-  // TODO: Add GovernanceUnit type to lib
-  governanceTokenBalance?: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
-}
+import {
+  TokenType,
+  StoreType
+} from 'common/types/util.types';
 
 interface TokenOption {
   type: TokenType;
@@ -35,12 +23,41 @@ interface TokenOption {
   icon: JSX.Element;
 }
 
-const Balances = ({
-  wrappedTokenBalance,
-  collateralTokenBalance,
-  governanceTokenBalance
-}: Props): JSX.Element => {
+interface Props {
+  callbackFunction?: (token: TokenOption) => void;
+}
+
+const Balances = ({ callbackFunction }: Props): JSX.Element => {
   const [tokenOptions, setTokenOptions] = React.useState<Array<TokenOption> | undefined>(undefined);
+  const [currentToken, setCurrentToken] = React.useState<TokenOption | undefined>(undefined);
+
+  const getTokenOption =
+    React.useCallback(
+      (type: TokenType) => tokenOptions?.find(token => token.type === type),
+      [tokenOptions]
+    );
+
+  React.useEffect(() => {
+    if (!tokenOptions) return;
+
+    if (!currentToken) {
+      setCurrentToken(getTokenOption(TokenType.COLLATERAL));
+    }
+  }, [tokenOptions, currentToken, getTokenOption]);
+
+  const {
+    collateralTokenBalance,
+    wrappedTokenBalance
+  } = useSelector((state: StoreType) => state.general);
+
+  const handleUpdateToken = (tokenType: TokenType) => {
+    const token = getTokenOption(tokenType);
+    setCurrentToken(token);
+
+    if (callbackFunction && token) {
+      callbackFunction(token);
+    }
+  };
 
   React.useEffect(() => {
     const tokenOptions: Array<TokenOption> = [
@@ -57,22 +74,30 @@ const Balances = ({
         icon: <WrappedTokenLogoIcon
           width={26} />,
         symbol: WRAPPED_TOKEN_SYMBOL
-      },
-      {
-        type: TokenType.GOVERNANCE,
-        balance: displayMonetaryAmount(governanceTokenBalance),
-        icon: <GovernanceTokenLogoIcon
-          width={26} />,
-        symbol: GOVERNANCE_TOKEN_SYMBOL
       }
     ];
 
     setTokenOptions(tokenOptions);
-  }, [collateralTokenBalance, governanceTokenBalance, wrappedTokenBalance]);
+  }, [collateralTokenBalance, wrappedTokenBalance]);
+
+  // If tokenOptions change while a current token is set,
+  // reset currentToken to get updated values. This happens
+  // when the balance updates after the initial render.
+  React.useEffect(() => {
+    if (!currentToken) return;
+
+    setCurrentToken(getTokenOption(currentToken.type));
+  }, [currentToken, getTokenOption, tokenOptions]);
 
   return (
     <>
-      {tokenOptions ? <TokenSelector tokenOptions={tokenOptions} /> : null}
+      {tokenOptions && currentToken ?
+        <TokenSelector
+          tokenOptions={tokenOptions}
+          currentToken={currentToken}
+          onChange={handleUpdateToken} /> :
+        null
+      }
     </>
   );
 };

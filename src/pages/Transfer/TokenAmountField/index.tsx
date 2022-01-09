@@ -14,17 +14,15 @@ import {
 } from 'utils/constants/relay-chain-names';
 
 interface CustomProps {
-  label: string;
   error?: boolean;
   helperText?: JSX.Element | string;
   required?: boolean;
-  approxUSD: string;
+  approxUSD?: string;
 }
 
 type Ref = HTMLInputElement;
-const WrappedTokenField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
+const TokenAmountField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
   id,
-  label,
   error,
   helperText,
   required,
@@ -32,14 +30,17 @@ const WrappedTokenField = React.forwardRef<Ref, CustomProps & NumberInputProps>(
   ...rest
 }, ref): JSX.Element => {
   return (
-    <div className='space-y-1.5'>
+    <div
+      className={clsx(
+        'flex-1'
+      )}>
       <TextFieldContainer className='relative'>
         <NumberInput
           ref={ref}
           id={id}
           className={clsx(
             'text-5xl',
-            'pr-36',
+            'text-right',
             {
               [clsx(
                 'border-interlayCinnabar',
@@ -58,12 +59,11 @@ const WrappedTokenField = React.forwardRef<Ref, CustomProps & NumberInputProps>(
             'top-2'
           )}
           required={required}>
-          {label}
         </TextFieldLabel>
         <span
           className={clsx(
             'block',
-            'text-xl',
+            'text-5xl',
             { 'text-interlayTextSecondaryInLightMode':
               process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
             { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
@@ -85,6 +85,6 @@ const WrappedTokenField = React.forwardRef<Ref, CustomProps & NumberInputProps>(
     </div>
   );
 });
-WrappedTokenField.displayName = 'WrappedTokenField';
+TokenAmountField.displayName = 'TokenAmountField';
 
-export default WrappedTokenField;
+export default TokenAmountField;
