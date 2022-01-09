@@ -43,7 +43,11 @@ const Balances = ({ callbackFunction }: Props): JSX.Element => {
     if (!currentToken) {
       setCurrentToken(getTokenOption(TokenType.COLLATERAL));
     }
-  }, [tokenOptions, currentToken, getTokenOption]);
+
+    if (callbackFunction && currentToken) {
+      callbackFunction(currentToken);
+    }
+  }, [tokenOptions, currentToken, getTokenOption, callbackFunction]);
 
   const {
     collateralTokenBalance,

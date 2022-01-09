@@ -133,7 +133,7 @@ const TransferForm = (): JSX.Element => {
 
   const [networkModalOpen, setNetworkModalOpen] = React.useState(false);
   const [selectedNetworkType, setSelectedNetworkType] = React.useState(NETWORK_TYPES.INTER_BTC);
-  // const [activeToken, setActiveToken] = React.useState<number>(0);
+  const [activeTokenBalance, setActiveTokenBalance] = React.useState<number>(0);
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
@@ -144,8 +144,6 @@ const TransferForm = (): JSX.Element => {
   const handleNetworkModalClose = () => {
     setNetworkModalOpen(false);
   };
-
-  // const callbackFunction(token: )
 
   const onSubmit = async (data: TransferFormData) => {
     try {
@@ -202,7 +200,7 @@ const TransferForm = (): JSX.Element => {
 
   // TODO: export token type from Balances
   const beACallback = (token: any) => {
-    console.log('callback', token);
+    setActiveTokenBalance(token.balance);
   };
 
   return (
@@ -213,7 +211,7 @@ const TransferForm = (): JSX.Element => {
         <FormTitle>
           {t('transfer_page.transfer_currency')}
         </FormTitle>
-        <p>Balance: TBC</p>
+        <p>Balance: {activeTokenBalance}</p>
         <div
           className={clsx(
             'flex',

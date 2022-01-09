@@ -22,7 +22,7 @@ interface Props {
   tokenOptions: Array<TokenOption>;
   showBalance?: boolean;
   currentToken: TokenOption;
-  onChange?: (type: TokenType) => void;
+  onChange: (type: TokenType) => void;
 }
 
 const TokenSelector = ({
@@ -31,21 +31,13 @@ const TokenSelector = ({
   onChange,
   showBalance = true
 }: Props): JSX.Element => {
-  const handleSelectToken = (selectedToken: TokenType) => {
-    console.log('handle select from here', selectedToken);
-
-    if (!onChange) return;
-
-    onChange(selectedToken);
-  };
-
   return (
     <>
       {currentToken && (
         <Select
           key={currentToken.type}
           value={currentToken.type}
-          onChange={handleSelectToken}>
+          onChange={onChange}>
           {({ open }) => (
             <>
               <SelectBody
