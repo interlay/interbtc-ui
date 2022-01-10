@@ -21,6 +21,7 @@ import {
   BitcoinAmount
 } from '@interlay/monetary-js';
 import {
+  CollateralCurrency,
   CollateralUnit,
   newMonetaryAmount
 } from '@interlay/interbtc-api';
@@ -94,11 +95,11 @@ const BurnForm = (): JSX.Element | null => {
 
   const [burnRate, setBurnRate] = React.useState(
     new ExchangeRate<
-      Currency<CollateralUnit>,
-      CollateralUnit,
       Bitcoin,
-      BitcoinUnit
-    >(COLLATERAL_TOKEN, Bitcoin, new Big(0))
+      BitcoinUnit,
+      Currency<CollateralUnit>,
+      CollateralUnit
+    >(Bitcoin, COLLATERAL_TOKEN, new Big(0))
   );
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
@@ -147,7 +148,7 @@ const BurnForm = (): JSX.Element | null => {
         setSubmitStatus(STATUSES.PENDING);
         await window.bridge.interBtcApi.redeem.burn(
           BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]),
-          COLLATERAL_TOKEN
+          COLLATERAL_TOKEN as CollateralCurrency
         );
         // TODO: should not manually update the balances everywhere
         // - Should be able to watch the balances in one place and update the context accordingly.
@@ -155,7 +156,7 @@ const BurnForm = (): JSX.Element | null => {
           updateWrappedTokenBalanceAction(wrappedTokenBalance.sub(BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT])))
         );
         const earnedCollateralTokenAmount =
-          burnRate.toBase(BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]) || BitcoinAmount.zero);
+          burnRate.toCounter(BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]) || BitcoinAmount.zero);
         dispatch(updateCollateralTokenBalanceAction(collateralTokenBalance.add(earnedCollateralTokenAmount)));
         toast.success(t('burn_page.successfully_burned'));
         reset({
@@ -201,7 +202,7 @@ const BurnForm = (): JSX.Element | null => {
     const parsedInterBTCAmount = BitcoinAmount.from.BTC(wrappedTokenAmount || 0);
     const earnedCollateralTokenAmount = burnRate.rate.eq(0) ?
       newMonetaryAmount(0, COLLATERAL_TOKEN) :
-      burnRate.toBase(parsedInterBTCAmount || BitcoinAmount.zero);
+      burnRate.toCounter(parsedInterBTCAmount || BitcoinAmount.zero);
     const accountSet = !!address;
 
     return (

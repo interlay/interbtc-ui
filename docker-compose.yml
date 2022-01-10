@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   interbtc:
-    image: "interlayhq/interbtc:interbtc-standalone-1-0-5"
+    image: "interlayhq/interbtc:interbtc-standalone-1.5.9"
     command:
       - interbtc-standalone
       - --unsafe-rpc-external
@@ -59,7 +59,7 @@ services:
     ports:
       - '3002:3002'
   oracle:
-    image: "interlayhq/interbtc-clients:oracle-1-0-2"
+    image: "interlayhq/interbtc-clients:oracle-1-5-0"
     command:
       - oracle
       - --keyring
@@ -76,7 +76,7 @@ services:
       RUST_LOG: info
     restart: unless-stopped
   faucet:
-    image: "interlayhq/interbtc-clients:faucet-1-0-2"
+    image: "interlayhq/interbtc-clients:faucet-1-5-0"
     command:
       - faucet
       - --keyring
@@ -95,7 +95,7 @@ services:
       - '3035:3035'
     restart: unless-stopped
   vault:
-    image: "interlayhq/interbtc-clients:vault-1-0-2"
+    image: "interlayhq/interbtc-clients:vault-1-5-0"
     command:
       - /bin/sh
       - -c
