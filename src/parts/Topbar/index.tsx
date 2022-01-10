@@ -10,7 +10,10 @@ import { ExternalLinkIcon } from '@heroicons/react/outline';
 import clsx from 'clsx';
 import { web3Accounts } from '@polkadot/extension-dapp';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { CollateralIdLiteral, tickerToCurrencyIdLiteral } from '@interlay/interbtc-api';
+import {
+  CollateralIdLiteral,
+  tickerToCurrencyIdLiteral
+} from '@interlay/interbtc-api';
 
 import Balances from './Balances';
 import AccountModal from 'parts/AccountModal';
