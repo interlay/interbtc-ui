@@ -8,7 +8,11 @@ import {
 } from 'utils/constants/relay-chain-names';
 import {
   INTERLAY_TEXT_PRIMARY_IN_LIGHT_MODE,
-  KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE
+  KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE,
+  INTERLAY_GRID_LINE_COLOR,
+  INTERLAY_ZERO_LINE_COLOR,
+  KINTSUGI_GRID_LINE_COLOR,
+  KINTSUGI_ZERO_LINE_COLOR
 } from 'utils/constants/colors';
 
 interface YAxis {
@@ -51,12 +55,18 @@ const LineChart = ({
     }))
   };
 
-  let textPrimaryColor;
+  let textPrimaryColor: string;
+  let gridLineColor: string;
+  let zeroLineColor: string;
   if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
     textPrimaryColor = INTERLAY_TEXT_PRIMARY_IN_LIGHT_MODE;
+    gridLineColor = INTERLAY_GRID_LINE_COLOR;
+    zeroLineColor = INTERLAY_ZERO_LINE_COLOR;
   // MEMO: should check dark mode as well
   } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
     textPrimaryColor = KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE;
+    gridLineColor = KINTSUGI_GRID_LINE_COLOR;
+    zeroLineColor = KINTSUGI_ZERO_LINE_COLOR;
   } else {
     throw new Error('Something went wrong!');
   }
@@ -72,6 +82,10 @@ const LineChart = ({
     scales: {
       xAxes: [
         {
+          gridLines: {
+            color: gridLineColor,
+            zeroLineColor
+          },
           ticks: {
             fontColor: textPrimaryColor
           }
@@ -87,6 +101,10 @@ const LineChart = ({
         ticks: {
           fontColor: colors[index],
           ...ticks
+        },
+        gridLines: {
+          color: gridLineColor,
+          zeroLineColor
         },
         ...rest
       }))
