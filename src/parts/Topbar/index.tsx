@@ -21,7 +21,10 @@ InterlayDenimOrKintsugiMidnightOutlinedButton from
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
+import {
+  COLLATERAL_TOKEN,
+  COLLATERAL_TOKEN_SYMBOL
+} from 'config/relay-chains';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { StoreType } from 'common/types/util.types';
 

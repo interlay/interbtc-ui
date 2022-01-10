@@ -22,7 +22,11 @@ import {
 } from '@polkadot/extension-dapp';
 import keyring from '@polkadot/ui-keyring';
 import { Keyring } from '@polkadot/api';
-import { CollateralCurrency, tickerToCurrencyIdLiteral, SecurityStatusCode } from '@interlay/interbtc-api';
+import {
+  CollateralCurrency,
+  tickerToCurrencyIdLiteral,
+  SecurityStatusCode
+} from '@interlay/interbtc-api';
 import { createInterbtc } from '@interlay/interbtc';
 import {
   FaucetClient,

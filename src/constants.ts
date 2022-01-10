@@ -29,7 +29,6 @@ export const BTC_ADDRESS_REGEX =
       BTC_TESTNET_REGEX :
       BTC_REGTEST_REGEX;
 
-export const COLLATERAL_TOKEN = process.env.DOCKER_RELAY_CHAIN_CURRENCY || 'KSM';
 export const PARACHAIN_URL = process.env.REACT_APP_PARACHAIN_URL || 'ws://127.0.0.1:9944';
 export const DEFAULT_ACCOUNT_SEED = process.env.REACT_APP_DEFAULT_ACCOUNT_SEED;
 export const FAUCET_URL = process.env.REACT_APP_FAUCET_URL || 'http://localhost:3035';

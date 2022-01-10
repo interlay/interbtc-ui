@@ -10,7 +10,12 @@ import {
   RedeemColumns
 } from '@interlay/interbtc-index-client';
 import { BitcoinAmount } from '@interlay/monetary-js';
-import { CollateralIdLiteral, newAccountId, tickerToCurrencyIdLiteral, WrappedIdLiteral } from '@interlay/interbtc-api';
+import {
+  CollateralIdLiteral,
+  newAccountId,
+  tickerToCurrencyIdLiteral,
+  WrappedIdLiteral
+} from '@interlay/interbtc-api';
 
 import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
 import RequestReplacementModal from './RequestReplacementModal';
