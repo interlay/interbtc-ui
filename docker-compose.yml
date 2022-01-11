@@ -4,8 +4,8 @@ services:
     image: "interlayhq/interbtc:interbtc-standalone-1.5.9"
     command:
       - interbtc-standalone
-      - --unsafe-rpc-external
-      - --unsafe-ws-external
+      - --rpc-external
+      - --ws-external
       - --rpc-methods
       - Unsafe
       - --dev
@@ -63,32 +63,28 @@ services:
     command:
       - oracle
       - --keyring
-      - bob
+      - charlie
       - --btc-parachain-url
-      - "ws://interbtc:9944"
+      - 'ws://interbtc:9944'
+      - --currency-id 
+      - ${DOCKER_RELAY_CHAIN_CURRENCY}
       - --coingecko
       - "https://api.coingecko.com/api/v3/"
-      - --currency-id
-      - ${DOCKER_RELAY_CHAIN_CURRENCY}
       - --blockstream
       - "https://blockstream.info/testnet/api/"
+    environment:
+        RUST_LOG: info
     environment:
       RUST_LOG: info
     restart: unless-stopped
   faucet:
     image: "interlayhq/interbtc-clients:faucet-1-5-0"
     command:
-      - faucet
-      - --keyring
-      - ferdie
-      - --btc-parachain-url
-      - "ws://interbtc:9944"
-      - --user-allowance
-      - "1"
-      - --vault-allowance
-      - "500"
-      - --http-addr
-      - "[::0]:3035"
+        - /bin/sh
+        - -c
+        - |
+            echo '{"bob_stash": "0x1a7d114100653850c65edecda8a9b2b4dd65d900edef8e70b1a6ecdcda967056"}' > keyfile.json
+            faucet --keyfile="keyfile.json" --keyname=bob_stash --btc-parachain-url 'ws://interbtc:9944' --user-allowance 1 --vault-allowance 500 --http-addr '[::0]:3036'
     environment:
       RUST_LOG: info
     ports:
@@ -100,12 +96,13 @@ services:
       - /bin/sh
       - -c
       - |
-          echo '{"charlie_stash": "0x66256c4e2f90e273bf387923a9a7860f2e9f47a1848d6263de512f7fb110fc08"}' > keyfile.json
+          # charlie_stash
+          echo '{"vault_1": "0x66256c4e2f90e273bf387923a9a7860f2e9f47a1848d6263de512f7fb110fc08"}' > keyfile.json
           echo "Sleeping..."
           # sleep for 30s to wait for bitcoin to create the Charlie wallet
           # and also to ensure that the issue period and redeem period are set
           sleep 30
-          vault --keyfile="keyfile.json" --keyname=charlie_stash --auto-register-with-collateral 1000000000000000000 --btc-parachain-url 'ws://interbtc:9944' --currency-id ${DOCKER_RELAY_CHAIN_CURRENCY}
+          vault --keyfile="keyfile.json" --keyname="vault_1" --auto-register-with-collateral 1000000000000 --btc-parachain-url 'ws://interbtc:9944' --collateral-currency-id ${DOCKER_RELAY_CHAIN_CURRENCY} --wrapped-currency-id 'INTERBTC'
     environment: &client-env
       BITCOIN_RPC_URL: http://bitcoind:18443
       BITCOIN_RPC_USER: rpcuser
@@ -131,7 +128,7 @@ services:
     depends_on:
       - postgres
   index:
-    image: 'registry.gitlab.com/interlay/polkabtc-stats:1.0.4'
+    image: 'registry.gitlab.com/interlay/polkabtc-stats:1.5.0'
     restart: always
     depends_on:
       - postgres
