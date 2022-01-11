@@ -279,7 +279,7 @@
     }
   },
   "issue_page": {
-    "maximum_in_single_request": "The maximum you can issue in a single request is {{maxAmount}} {{wrappedTokenSymbol}}. Please enter a lower amount.",
+    "maximum_in_single_request": "We have reached maximum capacity ({{maxAmount}} {{wrappedTokenSymbol}}) of the bridge. Please enter a lower amount.",
     "request": "Request id  #{{id}}",
     "you_received": "You have received",
     "contact_team": "Contact the team for debugging if you think this is an error.",
