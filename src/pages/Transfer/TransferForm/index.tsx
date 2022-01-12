@@ -26,6 +26,10 @@ import {
 } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import STATUSES from 'utils/constants/statuses';
+import {
+  KUSAMA,
+  POLKADOT
+} from 'utils/constants/relay-chain-names';
 
 const TRANSFER_AMOUNT = 'wrapped-token-input-amount';
 const RECIPIENT_ADDRESS = 'collateral-token-address';
@@ -119,31 +123,39 @@ const TransferForm = (): JSX.Element => {
         <FormTitle>
           {t('transfer_page.transfer_currency')}
         </FormTitle>
-        <p className='text-right'>Balance: {activeToken?.balance}</p>
-        <div
-          className={clsx(
-            'flex',
-            'gap-2'
-          )}>
-          {/* TODO: use forwardRef to pull in select value as form data */}
-          <Balances
-            variant='formField'
-            showBalances={false}
-            callbackFunction={handleTokenChange} />
-          {/* Disallow negative values if possible.Can be done on submit.
-          May be an example in the issue form. */}
-          <TokenAmountField
-            id={TRANSFER_AMOUNT}
-            name={TRANSFER_AMOUNT}
-            ref={register({
-              required: {
-                value: true,
-                message: t('redeem_page.please_enter_amount')
-              },
-              validate: value => validateForm(value)
-            })}
-            error={!!errors[TRANSFER_AMOUNT]}
-            helperText={errors[TRANSFER_AMOUNT]?.message} />
+        <div>
+          <p
+            className={clsx(
+              'text-right',
+              { 'text-interlayDenim':
+        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'dark:text-kintsugiOchre':
+        process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )}>Balance: {activeToken?.balance}
+          </p>
+          <div
+            className={clsx(
+              'flex',
+              'gap-2'
+            )}>
+            {/* TODO: use forwardRef to pull in select value as form data */}
+            <Balances
+              variant='formField'
+              showBalances={false}
+              callbackFunction={handleTokenChange} />
+            <TokenAmountField
+              id={TRANSFER_AMOUNT}
+              name={TRANSFER_AMOUNT}
+              ref={register({
+                required: {
+                  value: true,
+                  message: t('redeem_page.please_enter_amount')
+                },
+                validate: value => validateForm(value)
+              })}
+              error={!!errors[TRANSFER_AMOUNT]}
+              helperText={errors[TRANSFER_AMOUNT]?.message} />
+          </div>
         </div>
         <div>
           <TextField

@@ -44,7 +44,7 @@ const TokenSelector = ({
             <>
               <SelectBody
                 className={clsx(
-                  variant === 'formField' ? 'w-56' : 'w-52'
+                  variant === 'formField' ? 'w-60' : 'w-52'
                 )}>
                 <SelectButton>
                   <span
@@ -52,7 +52,7 @@ const TokenSelector = ({
                       'flex',
                       variant === 'formField' ? 'text-xl' : null,
                       'items-center',
-                      'space-x-3'
+                      variant === 'formField' ? null : 'space-x-3'
                     )}>
                     {currentToken.icon}
                     <SelectText>
@@ -78,7 +78,8 @@ const TokenSelector = ({
                               className={clsx(
                                 'flex',
                                 'items-center',
-                                'space-x-3'
+                                variant === 'formField' ? 'text-xl' : null,
+                                variant === 'formField' ? null : 'space-x-3'
                               )}>
                               {tokenOption.icon}
                               <SelectText selected={selected}>
