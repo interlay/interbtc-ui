@@ -8,6 +8,7 @@ import {
   QueryClient
 } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { HelmetProvider } from 'react-helmet-async';
 
 import App from './App';
 import { configureStore } from './store';
@@ -24,7 +25,9 @@ ReactDOM.render(
     <Provider store={store}>
       <Router>
         <QueryClientProvider client={queryClient}>
-          <App />
+          <HelmetProvider>
+            <App />
+          </HelmetProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </Router>
