@@ -85,6 +85,7 @@ const TokenAmountField = React.forwardRef<Ref, CustomProps & NumberInputProps>((
     </div>
   );
 });
+
 TokenAmountField.displayName = 'TokenAmountField';
 
 export default TokenAmountField;

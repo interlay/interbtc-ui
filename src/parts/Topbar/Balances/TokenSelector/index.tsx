@@ -19,17 +19,19 @@ interface TokenOption {
 }
 
 interface Props {
+  variant: string;
   tokenOptions: Array<TokenOption>;
-  showBalance?: boolean;
+  showBalances: boolean;
   currentToken: TokenOption;
   onChange: (type: TokenType) => void;
 }
 
 const TokenSelector = ({
+  variant,
   tokenOptions,
   currentToken,
   onChange,
-  showBalance = true
+  showBalances
 }: Props): JSX.Element => {
   return (
     <>
@@ -42,18 +44,22 @@ const TokenSelector = ({
             <>
               <SelectBody
                 className={clsx(
-                  'w-52'
+                  variant === 'formField' ? 'w-58' : 'w-52'
                 )}>
                 <SelectButton>
                   <span
                     className={clsx(
                       'flex',
+                      variant === 'formField' ? 'text-xl' : null,
                       'items-center',
                       'space-x-3'
                     )}>
                     {currentToken.icon}
                     <SelectText>
-                      {showBalance && (currentToken.balance)} {currentToken.symbol}
+                      {showBalances && (
+                        currentToken.balance
+                      )}&nbsp;
+                      {currentToken.symbol}
                     </SelectText>
                   </span>
                 </SelectButton>
@@ -76,7 +82,7 @@ const TokenSelector = ({
                               )}>
                               {tokenOption.icon}
                               <SelectText selected={selected}>
-                                {showBalance && (tokenOption.balance)} {tokenOption.symbol}
+                                {showBalances && (tokenOption.balance)} {tokenOption.symbol}
                               </SelectText>
                             </div>
                             {selected ? (
