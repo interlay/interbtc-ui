@@ -8,7 +8,8 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
-import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { newMonetaryAmount, CurrencyUnit } from '@interlay/interbtc-api';
+import { Currency } from '@interlay/monetary-js';
 
 import TokenAmountField from '../TokenAmountField';
 import {
@@ -65,7 +66,7 @@ const TransferForm = (): JSX.Element => {
 
       await window.bridge.interBtcApi.tokens.transfer(
         data[RECIPIENT_ADDRESS],
-        newMonetaryAmount(data[TRANSFER_AMOUNT], activeToken.token, true)
+        newMonetaryAmount(data[TRANSFER_AMOUNT], activeToken.token as Currency<CurrencyUnit>, true)
       );
 
       setSubmitStatus(STATUSES.RESOLVED);

@@ -12,7 +12,9 @@ import {
   // CollateralToken,
   COLLATERAL_TOKEN,
   COLLATERAL_TOKEN_SYMBOL,
-  CollateralTokenLogoIcon
+  CollateralTokenLogoIcon,
+  WrappedToken,
+  CollateralToken
 } from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import {
@@ -28,9 +30,7 @@ const VARIANTS = Object.freeze({
 const BALANCE_VARIANTS = Object.values(VARIANTS);
 
 interface TokenOption {
-  // TODO: fix this type issue
-  // token: WrappedToken | CollateralToken;
-  token: any;
+  token: WrappedToken | CollateralToken;
   type: TokenType;
   balance: string;
   symbol: string;
