@@ -8,9 +8,14 @@ import { VaultState } from './vault.types';
 import {
   BitcoinAmount,
   MonetaryAmount,
-  Currency
+  Currency,
+  BitcoinUnit,
+  Polkadot
 } from '@interlay/monetary-js';
-import { CollateralUnit } from '@interlay/interbtc-api';
+import {
+  CollateralUnit,
+  CurrencyUnit
+} from '@interlay/interbtc-api';
 
 export interface StatusUpdate {
   id: u256;
@@ -103,6 +108,13 @@ export type RelayedBlock = {
   // eslint-disable-next-line camelcase
   relayTs: string;
 };
+
+export type WrappedToken = Currency<BitcoinUnit>;
+export type CollateralToken = Polkadot;
+export type GovernanceToken = Currency<CurrencyUnit>;
+
+// TODO (this ticket): only need one of these types
+export enum TempTokenType { WrappedToken, CollateralToken }
 
 export enum TokenType {
   COLLATERAL = 'collateral',
