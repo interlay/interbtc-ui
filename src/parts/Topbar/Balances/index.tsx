@@ -109,9 +109,9 @@ const Balances = ({
     variant
   ]);
 
-  // If tokenOptions change while a current token is set,
-  // reset currentToken to get updated values. This happens
-  // when the balance updates after the initial render.
+  // Reset currentToken to get updated values if tokenOptions change
+  // while a current token is set. This will always happen because
+  // the token balances update after the initial render.
   React.useEffect(() => {
     if (!currentToken) return;
 
