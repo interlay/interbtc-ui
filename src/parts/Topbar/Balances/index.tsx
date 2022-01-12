@@ -5,9 +5,11 @@ import {
 
 import TokenSelector from './TokenSelector';
 import {
+  // WrappedToken,
   WRAPPED_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon,
+  // CollateralToken,
   COLLATERAL_TOKEN,
   COLLATERAL_TOKEN_SYMBOL,
   CollateralTokenLogoIcon
@@ -26,6 +28,8 @@ const VARIANTS = Object.freeze({
 const BALANCE_VARIANTS = Object.values(VARIANTS);
 
 interface TokenOption {
+  // TODO: fix this type issue
+  // token: WrappedToken | CollateralToken;
   token: any;
   type: TokenType;
   balance: string;
@@ -83,7 +87,7 @@ const Balances = ({
   React.useEffect(() => {
     const tokenOptions: Array<TokenOption> = [
       {
-        token: COLLATERAL_TOKEN,
+        token: WRAPPED_TOKEN,
         type: TokenType.COLLATERAL,
         balance: displayMonetaryAmount(collateralTokenBalance),
         icon:
@@ -92,7 +96,7 @@ const Balances = ({
         symbol: COLLATERAL_TOKEN_SYMBOL
       },
       {
-        token: WRAPPED_TOKEN,
+        token: COLLATERAL_TOKEN,
         type: TokenType.WRAPPED,
         balance: displayMonetaryAmount(wrappedTokenBalance),
         icon: <WrappedTokenLogoIcon

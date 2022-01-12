@@ -32,10 +32,13 @@ if (!process.env.REACT_APP_RELAY_CHAIN_NAME) {
   throw new Error('Undefined relay chain name environment variable!');
 }
 
+type WrappedToken = Currency<BitcoinUnit>;
+type CollateralToken = Currency<CollateralUnit>;
+
 let APP_NAME: string;
 let WRAPPED_TOKEN_SYMBOL: string;
-let WRAPPED_TOKEN: Currency<BitcoinUnit>;
-let COLLATERAL_TOKEN: Currency<CollateralUnit>;
+let WRAPPED_TOKEN: WrappedToken;
+let COLLATERAL_TOKEN: CollateralToken;
 let GOVERNANCE_TOKEN: Currency<CurrencyUnit>;
 let PRICES_URL: string;
 let RELAY_CHAIN_NAME: string;
@@ -112,7 +115,11 @@ default: {
 }
 }
 
-export type { WrappedTokenAmount };
+export type {
+  CollateralToken,
+  WrappedToken,
+  WrappedTokenAmount
+};
 
 export {
   APP_NAME,
