@@ -138,7 +138,7 @@
     "valid_btc_address": "Please enter a valid BTC address (Supported: p2sh, p2pkh or p2wpkh in bech32 format).",
     "enter_btc": "Please enter your Bitcoin address.",
     "you_have": "You have",
-    "current_balance": "Please enter an amount smaller than your current balance: ",
+    "current_balance": "Please enter an amount smaller than your current balance: {{ currentBalance }}",
     "amount_greater_dust_inclusion": "Please enter an amount above the combined Bridge Fee, Bitcoin Network Fee, and Bitcoin Dust limit (",
     "request_processed": "Request being processed...",
     "processed_by_vault": "Your redeem request is being processed by Vault:",
