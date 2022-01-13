@@ -120,6 +120,7 @@ const App = (): JSX.Element => {
       );
       dispatch(isPolkaBtcLoaded(true));
       setIsLoading(false);
+      // NB: Catch clause variable type annotation has to be either any or unknown
     } catch (error: any) {
       toast.warn('Unable to connect to the BTC-Parachain.');
       console.log('[loadPolkaBTC] error.message => ', error.message);
@@ -258,7 +259,6 @@ const App = (): JSX.Element => {
         // TODO: could store the active address just in one place (either in `window` object or in redux)
         window.bridge.interBtcApi.setAccount(newAddress, signer);
         dispatch(changeAddressAction(newAddress));
-        // Catch clause variable type annotation has to be either any or unknown
       } catch (error: any) {
         // TODO: should add error handling
         console.log('[App React.useEffect 3] error.message => ', error.message);
