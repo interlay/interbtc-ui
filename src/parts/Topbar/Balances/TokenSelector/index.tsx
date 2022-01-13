@@ -44,7 +44,7 @@ const TokenSelector = ({
             <>
               <SelectBody
                 className={clsx(
-                  variant === 'formField' ? 'w-60' : 'w-52'
+                  variant === 'formField' ? 'w-56' : 'w-52'
                 )}>
                 <SelectButton>
                   <span

@@ -126,6 +126,7 @@ const TransferForm = (): JSX.Element => {
         <div>
           <p
             className={clsx(
+              'mb-2',
               'text-right',
               { 'text-interlayDenim':
         process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },

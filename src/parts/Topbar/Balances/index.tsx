@@ -5,11 +5,9 @@ import {
 
 import TokenSelector from './TokenSelector';
 import {
-  // WrappedToken,
   WRAPPED_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon,
-  // CollateralToken,
   COLLATERAL_TOKEN,
   COLLATERAL_TOKEN_SYMBOL,
   CollateralTokenLogoIcon,
