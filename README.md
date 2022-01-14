@@ -77,6 +77,24 @@ On another terminal, start the UI:
 yarn install && yarn start
 ```
 
+### Alternative Local Development Setup
+From this repo, run:
+```
+rm -rf node_modules
+docker-compose down -v
+yarn install
+docker-compose --env-file .env.regtest up
+```
+
+In another terminal, with the docker-compose services running, in the latest master branch from the lib (https://github.com/interlay/interbtc-api/) run: `yarn install && USER_1_URI="//Charlie" yarn initialize`
+
+Then start the UI in another terminal:
+```
+set -a
+source .env.regtest
+yarn start-regtest
+```
+
 ### Connecting to the Interlay Development Environment
 
 > Note: This environment might be unstable. It uses the Bitcoin testnet work.
