@@ -57,7 +57,7 @@ let GovernanceTokenLogoIcon:
   React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
   }>;
-let PUBLIC_ASSETS_FOLDER_NAME: string;
+let PARACHAIN_NAME: string;
 let APP_DOMAIN: string;
 let OPEN_GRAPH_IMAGE_FILE_NAME: string;
 
@@ -82,7 +82,7 @@ case POLKADOT: {
   WrappedTokenLogoWithTextIcon = InterBTCLogoWithTextIcon;
   CollateralTokenLogoIcon = DOTLogoIcon;
   GovernanceTokenLogoIcon = InterlayLogoIcon;
-  PUBLIC_ASSETS_FOLDER_NAME = 'interlay';
+  PARACHAIN_NAME = 'interlay';
   APP_DOMAIN = 'https://bridge.interlay.io';
   OPEN_GRAPH_IMAGE_FILE_NAME = 'interbtc-meta-image.jpg';
   break;
@@ -102,7 +102,7 @@ case KUSAMA: {
   WrappedTokenLogoWithTextIcon = KintsugiLogoWithTextIcon;
   CollateralTokenLogoIcon = KSMLogoIcon;
   GovernanceTokenLogoIcon = KBTCLogoIcon;
-  PUBLIC_ASSETS_FOLDER_NAME = 'kintsugi';
+  PARACHAIN_NAME = 'kintsugi';
   APP_DOMAIN = ''; // TODO: should add the Kintsugi app domain once it's set up
   OPEN_GRAPH_IMAGE_FILE_NAME = 'kbtc-meta-image.jpg';
   break;
@@ -128,7 +128,7 @@ export {
   WrappedTokenLogoWithTextIcon,
   CollateralTokenLogoIcon,
   GovernanceTokenLogoIcon,
-  PUBLIC_ASSETS_FOLDER_NAME,
+  PARACHAIN_NAME,
   APP_DOMAIN,
   OPEN_GRAPH_IMAGE_FILE_NAME
 };

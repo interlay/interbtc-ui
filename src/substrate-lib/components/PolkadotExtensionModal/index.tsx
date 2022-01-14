@@ -8,6 +8,7 @@ import InterlayModal, {
   InterlayModalInnerWrapper,
   InterlayModalTitle
 } from 'components/UI/InterlayModal';
+import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
@@ -32,9 +33,17 @@ const PolkadotExtensionModal = ({
           className={clsx(
             'text-lg',
             'font-medium',
-            'mb-6'
+            'mb-6',
+            'flex',
+            'items-center',
+            'space-x-2'
           )}>
-          Pick a wallet
+          <PolkadotExtensionLogoIcon
+            width={30}
+            height={30} />
+          <span>
+            Pick a wallet
+          </span>
         </InterlayModalTitle>
         <PolkadotJSExtensionAnnotation />
       </InterlayModalInnerWrapper>

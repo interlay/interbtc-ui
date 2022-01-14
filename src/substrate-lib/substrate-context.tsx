@@ -26,8 +26,9 @@ import ErrorFallback from 'components/ErrorFallback';
 import config from 'config/connection';
 import {
   APP_NAME,
-  RELAY_CHAIN_NAME
+  PARACHAIN_NAME
 } from 'config/relay-chains';
+import capitalizeFirstLetter from 'utils/helpers/capitalize-first-letter';
 
 const UNABLE_TO_INITIALIZE_OPTIONS_MORE_THAN_ONCE = 'Unable to initialize options more than once';
 
@@ -284,7 +285,7 @@ const SubstrateProvider = ({
   case ApiStatus.ConnectInit:
   case ApiStatus.Connecting:
     return (
-      <FullLoadingSpinner text={`Connecting to ${RELAY_CHAIN_NAME}`} />
+      <FullLoadingSpinner text={`Connecting to ${capitalizeFirstLetter(PARACHAIN_NAME)} parachain...`} />
     );
   case ApiStatus.Ready:
     break;
