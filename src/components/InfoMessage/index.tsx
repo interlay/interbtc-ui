@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import clsx from 'clsx';
 
 const InfoMessage = ({
@@ -18,4 +17,3 @@ const InfoMessage = ({
 );
 
 export default InfoMessage;
-// ray test touch >>

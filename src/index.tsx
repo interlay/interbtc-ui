@@ -9,9 +9,7 @@ import {
 } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { HelmetProvider } from 'react-helmet-async';
-// ray test touch <<
 import { SubstrateProvider } from 'substrate-lib';
-// ray test touch >>
 
 import App from './App';
 import { configureStore } from './store';
@@ -29,11 +27,9 @@ ReactDOM.render(
       <Router>
         <QueryClientProvider client={queryClient}>
           <HelmetProvider>
-            {/* ray test touch << */}
             <SubstrateProvider>
               <App />
             </SubstrateProvider>
-            {/* ray test touch >> */}
           </HelmetProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>

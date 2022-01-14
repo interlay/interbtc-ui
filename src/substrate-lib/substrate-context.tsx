@@ -85,7 +85,7 @@ interface SubstrateStateContextInterface {
 }
 
 const parsedQuery = queryString.parse(window.location.search);
-const connectedSocket = parsedQuery.rpc || config.PROVIDER_SOCKET;
+const connectedSocket = parsedQuery.rpc || config.PARACHAIN_URL;
 // eslint-disable-next-line no-console
 console.log(`Connected socket: ${connectedSocket}`);
 

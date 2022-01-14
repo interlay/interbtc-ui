@@ -1,4 +1,4 @@
 {
-  "PROVIDER_SOCKET": "wss://dev-node.substrate.dev",
+  "PARACHAIN_URL": "wss://dev-node.substrate.dev",
   "DEVELOPMENT_KEYRING": false
 }

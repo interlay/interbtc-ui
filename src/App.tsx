@@ -92,11 +92,9 @@ const NoMatch = React.lazy(() =>
   import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
 );
 
-// ray test touch <<
 const DeveloperConsole = React.lazy(() =>
   import(/* webpackChunkName: 'developer-console' */ 'substrate-lib/components/DeveloperConsole')
 );
-// ray test touch >>
 
 const App = (): JSX.Element => {
   const {
@@ -408,13 +406,11 @@ const App = (): JSX.Element => {
             </React.Suspense>
           )} />
       </Layout>
-      {/* ray test touch << */}
       {process.env.NODE_ENV !== 'production' && (
-        <React.Suspense fallback={<FullLoadingSpinner />}>
+        <React.Suspense fallback={null}>
           <DeveloperConsole />
         </React.Suspense>
       )}
-      {/* ray test touch >> */}
     </>
   );
 };

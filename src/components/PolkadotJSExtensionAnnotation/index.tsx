@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import InfoMessage from 'components/InfoMessage';
 import InterlayLink from 'components/UI/InterlayLink';
 
@@ -18,4 +17,3 @@ const PolkadotJSExtensionAnnotation = (): JSX.Element => (
 );
 
 export default PolkadotJSExtensionAnnotation;
-// ray test touch >>
