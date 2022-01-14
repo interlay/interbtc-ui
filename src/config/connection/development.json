@@ -1,0 +1,4 @@
+{
+  "PROVIDER_SOCKET": "wss://api-dev.interlay.io/parachain",
+  "DEVELOPMENT_KEYRING": false
+}

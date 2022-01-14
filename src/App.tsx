@@ -20,7 +20,6 @@ import {
   web3Enable,
   web3FromAddress
 } from '@polkadot/extension-dapp';
-import keyring from '@polkadot/ui-keyring';
 import { Keyring } from '@polkadot/api';
 import {
   CollateralCurrency,
@@ -63,7 +62,7 @@ import {
   StoreState
 } from 'common/types/util.types';
 import {
-  isPolkaBtcLoaded,
+  isBridgeLoaded,
   changeAddressAction,
   initGeneralDataAction,
   setInstalledExtensionAction,
@@ -93,6 +92,12 @@ const NoMatch = React.lazy(() =>
   import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
 );
 
+// ray test touch <<
+const DeveloperConsole = React.lazy(() =>
+  import(/* webpackChunkName: 'developer-console' */ 'substrate-lib/components/DeveloperConsole')
+);
+// ray test touch >>
+
 const App = (): JSX.Element => {
   const {
     bridgeLoaded,
@@ -101,12 +106,11 @@ const App = (): JSX.Element => {
     collateralTokenBalance,
     vaultClientLoaded
   } = useSelector((state: StoreType) => state.general);
-  const [isLoading, setIsLoading] = React.useState(true);
   const dispatch = useDispatch();
   const store: StoreState = useStore();
 
   // Load the main bridge API - connection to the bridge
-  const loadPolkaBTC = React.useCallback(async (): Promise<void> => {
+  const loadBridge = React.useCallback(async (): Promise<void> => {
     try {
       window.bridge = await createInterbtc(
         constants.PARACHAIN_URL,
@@ -115,17 +119,16 @@ const App = (): JSX.Element => {
         constants.BITCOIN_NETWORK,
         constants.STATS_URL
       );
-      dispatch(isPolkaBtcLoaded(true));
-      setIsLoading(false);
+      dispatch(isBridgeLoaded(true));
     } catch (error) {
       toast.warn('Unable to connect to the BTC-Parachain.');
-      console.log('[loadPolkaBTC] error.message => ', error.message);
+      console.log('[loadBridge 1] error.message => ', error.message);
     }
 
     try {
       startFetchingLiveData(dispatch, store);
     } catch (error) {
-      console.log('[loadPolkaBTC] error.message => ', error.message);
+      console.log('[loadBridge 2] error.message => ', error.message);
     }
   }, [
     dispatch,
@@ -142,13 +145,32 @@ const App = (): JSX.Element => {
     }
   }, [dispatch]);
 
+  // Loads the bridge and the faucet
   React.useEffect(() => {
+    if (bridgeLoaded) return;
+
+    (async () => {
+      try {
+        await loadBridge();
+        await loadFaucet();
+      } catch (error) {
+        console.log('[App React.useEffect 6] error.message => ', error.message);
+      }
+    })();
+  }, [
+    loadBridge,
+    loadFaucet,
+    bridgeLoaded
+  ]);
+
+  // Maybe load the vault client - only if the current address is also registered as a vault
+  React.useEffect(() => {
+    if (!dispatch) return;
     if (!bridgeLoaded) return;
     if (!address) return;
 
     const id = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
 
-    // Maybe load the vault client - only if the current address is also registered as a vault
     (async () => {
       try {
         dispatch(isVaultClientLoaded(false));
@@ -159,7 +181,7 @@ const App = (): JSX.Element => {
         dispatch(isVaultClientLoaded(!!vault));
       } catch (error) {
         // TODO: should add error handling
-        console.log('[App React.useEffect 1] error => ', error);
+        console.log('[App React.useEffect 1] error.message => ', error.message);
       }
     })();
   }, [
@@ -168,10 +190,11 @@ const App = (): JSX.Element => {
     dispatch
   ]);
 
+  // Initialize data on app bootstrap
   React.useEffect(() => {
+    if (!dispatch) return;
     if (!bridgeLoaded) return;
 
-    // Initialize data on app bootstrap
     (async () => {
       try {
         const [
@@ -219,8 +242,10 @@ const App = (): JSX.Element => {
     bridgeLoaded
   ]);
 
-  // Loads the address for the currently select account and maybe loads the vault and staked relayer dashboards
+  // ray test touch <<<
+  // Loads the address for the currently select account
   React.useEffect(() => {
+    if (!dispatch) return;
     if (!bridgeLoaded) return;
 
     const trySetDefaultAccount = () => {
@@ -252,7 +277,6 @@ const App = (): JSX.Element => {
         const newAddress = matchedAccount ? address : accounts[0].address;
 
         const { signer } = await web3FromAddress(newAddress);
-        // TODO: could store the active address just in one place (either in `window` object or in redux)
         window.bridge.interBtcApi.setAccount(newAddress, signer);
         dispatch(changeAddressAction(newAddress));
       } catch (error) {
@@ -265,34 +289,9 @@ const App = (): JSX.Element => {
     bridgeLoaded,
     dispatch
   ]);
+  // ray test touch >>>
 
-  // Loads the bridge and the faucet
-  React.useEffect(() => {
-    if (bridgeLoaded) return;
-
-    (async () => {
-      try {
-        // TODO: should avoid any race condition
-        setTimeout(() => {
-          if (isLoading) setIsLoading(false);
-        }, 3000);
-        await loadPolkaBTC();
-        await loadFaucet();
-        keyring.loadAll({});
-      } catch (error) {
-        console.log(error.message);
-      }
-    })();
-    startFetchingLiveData(dispatch, store);
-  }, [
-    loadPolkaBTC,
-    loadFaucet,
-    isLoading,
-    bridgeLoaded,
-    dispatch,
-    store
-  ]);
-
+  // Subscribes to balances
   React.useEffect(() => {
     if (!dispatch) return;
     if (!bridgeLoaded) return;
@@ -350,6 +349,7 @@ const App = (): JSX.Element => {
     collateralTokenBalance
   ]);
 
+  // Color schemes according to Interlay vs. Kintsugi
   React.useEffect(() => {
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
       document.documentElement.classList.add(CLASS_NAMES.LIGHT);
@@ -408,6 +408,13 @@ const App = (): JSX.Element => {
             </React.Suspense>
           )} />
       </Layout>
+      {/* ray test touch << */}
+      {process.env.NODE_ENV !== 'production' && (
+        <React.Suspense fallback={<FullLoadingSpinner />}>
+          <DeveloperConsole />
+        </React.Suspense>
+      )}
+      {/* ray test touch >> */}
     </>
   );
 };
