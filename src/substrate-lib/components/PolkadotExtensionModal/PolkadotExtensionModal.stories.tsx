@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import * as React from 'react';
 import {
   Story,
@@ -38,4 +37,3 @@ export default {
   title: 'PolkadotExtensionModal',
   component: PolkadotExtensionModal
 } as Meta;
-// ray test touch >>

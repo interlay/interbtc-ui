@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import * as React from 'react';
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc';
 import { Keyring } from '@polkadot/ui-keyring/Keyring';
@@ -368,4 +367,3 @@ export {
   ErrorBoundaryWrappedSubstrateProvider as SubstrateProvider,
   useSubstrate
 };
-// ray test touch >>

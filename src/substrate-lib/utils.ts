@@ -1,5 +1,4 @@
 
-// ray test touch <<
 const utils = {
   paramConversion: {
     num: [
@@ -20,4 +19,3 @@ const utils = {
 };
 
 export default utils;
-// ray test touch >>

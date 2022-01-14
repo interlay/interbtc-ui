@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import {
   SubstrateProvider,
   useSubstrate
@@ -11,4 +10,3 @@ export {
   SubstrateProvider,
   utils
 };
-// ray test touch >>

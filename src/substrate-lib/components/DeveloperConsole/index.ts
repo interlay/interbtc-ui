@@ -1,5 +1,4 @@
 
-// ray test touch <<
 // This component will simply add utility functions to your developer console.
 import { Keyring } from '@polkadot/ui-keyring/Keyring';
 import { ApiPromise } from '@polkadot/api';
@@ -43,4 +42,3 @@ const DeveloperConsole = (): null => {
 };
 
 export default DeveloperConsole;
-// ray test touch >>

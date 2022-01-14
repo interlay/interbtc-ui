@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import * as React from 'react';
 import clsx from 'clsx';
 
@@ -46,4 +45,3 @@ const PolkadotExtensionModal = ({
 export type Props = Omit<ModalProps, 'children' | 'onClose'>;
 
 export default PolkadotExtensionModal;
-// ray test touch >>
