@@ -5,6 +5,10 @@ import useUnmount from 'react-use/lib/useUnmount';
 import format from 'date-fns/format';
 
 import TXToast from 'components/tx-toasts/TXToast';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import { useCount } from 'contexts/count-context';
 import { ReactComponent as WarningOutlineIcon } from 'assets/img/icons/warning-outline.svg';
 
@@ -32,11 +36,8 @@ const RejectedTXToast = ({
   return (
     <TXToast
       className={clsx(
-        // ray test touch <<
-        // TODO: kintsugi dark mode
-        '!bg-interlayCinnabar',
-        'dark:!bg-kintsugiThunderbird',
-        // ray test touch >>
+        { '!bg-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+        { 'dark:!bg-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         '!bg-opacity-5',
         'dark:!bg-opacity-5'
       )}
@@ -44,11 +45,8 @@ const RejectedTXToast = ({
       message={
         <span
           className={clsx(
-            // ray test touch <<
-            // TODO: kintsugi dark mode
-            'text-interlayCinnabar',
-            'dark:text-kintsugiThunderbird'
-            // ray test touch >>
+            { 'text-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           {message || 'Transaction failed.'}
         </span>
@@ -56,11 +54,8 @@ const RejectedTXToast = ({
       icon={
         <WarningOutlineIcon
           className={clsx(
-            // ray test touch <<
-            // TODO: kintsugi dark mode
-            'text-interlayCinnabar',
-            'dark:text-kintsugiThunderbird'
-            // ray test touch >>
+            { 'text-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}
           width={22}
           height={19} />

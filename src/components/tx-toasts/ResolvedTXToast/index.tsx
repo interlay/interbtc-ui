@@ -5,6 +5,10 @@ import format from 'date-fns/format';
 import clsx from 'clsx';
 
 import TXToast from 'components/tx-toasts/TXToast';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import { useCount } from 'contexts/count-context';
 import { ReactComponent as CheckIcon } from 'assets/img/icons/check.svg';
 
@@ -33,11 +37,8 @@ const ResolvedTXToast = ({
       message={
         <span
           className={clsx(
-            // ray test touch <<
-            // TODO: kintsugi dark mode
-            'text-interlayConifer',
-            'dark:text-kintsugiApple'
-            // ray test touch >>
+            { 'text-interlayConifer': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiApple': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           Successfully done.
         </span>
@@ -45,11 +46,8 @@ const ResolvedTXToast = ({
       icon={
         <CheckIcon
           className={clsx(
-            // ray test touch <<
-            // TODO: kintsugi dark mode
-            'text-interlayConifer',
-            'dark:text-kintsugiApple'
-            // ray test touch >>
+            { 'text-interlayConifer': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiApple': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}
           width={18}
           height={13} />

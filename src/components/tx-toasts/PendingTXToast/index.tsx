@@ -6,6 +6,10 @@ import format from 'date-fns/format';
 import clsx from 'clsx';
 
 import TXToast from 'components/tx-toasts/TXToast';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import { useCount } from 'contexts/count-context';
 import { ReactComponent as HistoryIcon } from 'assets/img/icons/history.svg';
 
@@ -40,11 +44,8 @@ const PendingTXToast = ({
       message={
         <span
           className={clsx(
-            // ray test touch <<
-            // TODO: kintsugi dark mode
-            'text-interlayTextPrimaryInLightMode',
-            'dark:text-kintsugiTextPrimaryInDarkMode'
-            // ray test touch >>
+            { 'text-interlayTextPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
           Your transaction has started.
         </span>
@@ -52,11 +53,8 @@ const PendingTXToast = ({
       icon={
         <HistoryIcon
           className={clsx(
-            // ray test touch <<
-            // TODO: kintsugi dark mode
-            'text-interlayTextPrimaryInLightMode',
-            'dark:text-kintsugiTextPrimaryInDarkMode'
-            // ray test touch >>
+            { 'text-interlayTextPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}
           width={24}
           height={24} />

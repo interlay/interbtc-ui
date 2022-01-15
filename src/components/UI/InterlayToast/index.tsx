@@ -4,6 +4,10 @@ import toast from 'react-hot-toast';
 import { Toast } from 'react-hot-toast/dist/core/types';
 
 import IconButton from 'components/buttons/IconButton';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
 
 interface CustomProps {
@@ -27,11 +31,8 @@ const InterlayToast = ({
   return (
     <div
       className={clsx(
-        // ray test touch <<
-        // TODO: kintsugi dark mode
-        'text-interlayTextPrimaryInLightMode',
-        'dark:text-kintsugiTextPrimaryInDarkMode',
-        // ray test touch >>
+        { 'text-interlayTextPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+        { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
 
         // TODO: could be reused
         'border',
@@ -67,11 +68,8 @@ const InterlayToast = ({
           width={18}
           height={18}
           className={clsx(
-            // ray test touch <<
-            // TODO: kintsugi dark mode
-            'text-interlayTextSecondaryInLightMode',
-            'dark:text-kintsugiTextSecondaryInDarkMode'
-            // ray test touch >>
+            { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )} />
       </IconButton>
     </div>

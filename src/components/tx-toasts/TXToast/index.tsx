@@ -4,6 +4,10 @@ import { Toast } from 'react-hot-toast/dist/core/types';
 import clsx from 'clsx';
 
 import InterlayToast from 'components/UI/InterlayToast';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 import { ReactComponent as TimerIcon } from 'assets/img/icons/timer.svg';
 
 interface Props {
@@ -45,11 +49,8 @@ const TXToast = ({
             'flex',
             'items-center',
             'space-x-1',
-            // ray test touch <<
-            // TODO: kintsugi dark mode
-            'text-interlayTextSecondaryInLightMode',
-            'dark:text-kintsugiTextSecondaryInDarkMode',
-            // ray test touch >>
+            { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'font-medium',
             'text-xs'
           )}>
