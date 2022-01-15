@@ -17,6 +17,9 @@ import {
   persistor
 } from './store';
 import reportWebVitals from './reportWebVitals';
+// ray test touch <<
+import TransactionToaster from 'components/tx-toasts/TransactionToaster';
+// ray test touch >>
 import './index.css';
 
 window.isFetchingActive = false;
@@ -33,6 +36,7 @@ ReactDOM.render(
               loading={null}
               persistor={persistor}>
               <App />
+              <TransactionToaster />
             </PersistGate>
           </Provider>
         </HelmetProvider>
