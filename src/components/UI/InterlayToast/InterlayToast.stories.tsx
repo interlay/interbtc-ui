@@ -5,12 +5,12 @@ import {
   Meta
 } from '@storybook/react';
 
-import FarmersOnlyToast from '.';
+import InterlayToast from '.';
 
 const Template: Story = args => (
-  <FarmersOnlyToast {...args}>
+  <InterlayToast {...args}>
     Hi
-  </FarmersOnlyToast>
+  </InterlayToast>
 );
 
 const Default = Template.bind({});
@@ -21,7 +21,7 @@ export {
 };
 
 export default {
-  title: 'UI/FarmersOnlyToast',
-  component: FarmersOnlyToast
+  title: 'UI/InterlayToast',
+  component: InterlayToast
 } as Meta;
 // ray test touch >>

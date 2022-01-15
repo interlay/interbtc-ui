@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Toast } from 'react-hot-toast/dist/core/types';
 import clsx from 'clsx';
 
-import FarmersOnlyToast from 'components/UI/FarmersOnlyToast';
+import InterlayToast from 'components/UI/InterlayToast';
 import { ReactComponent as TimerIcon } from 'assets/img/icons/timer.svg';
 
 interface Props {
@@ -25,7 +25,7 @@ const TXToast = ({
   className
 }: Props): JSX.Element => {
   return (
-    <FarmersOnlyToast
+    <InterlayToast
       t={t}
       className={clsx(
         'space-x-2.5',
@@ -58,7 +58,7 @@ const TXToast = ({
           <span>{count} sec</span>
         </p>
       </div>
-    </FarmersOnlyToast>
+    </InterlayToast>
   );
 };
 

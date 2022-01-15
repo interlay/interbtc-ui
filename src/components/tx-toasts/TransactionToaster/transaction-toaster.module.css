@@ -1,6 +1,4 @@
 
-/* ray test touch << */
-.farmersOnlyToasterContainer div[aria-live="polite"] {
+.interlayToasterContainer div[aria-live="polite"] {
   margin: 0;
 }
-/* ray test touch >> */

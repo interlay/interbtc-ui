@@ -13,7 +13,7 @@ interface CustomProps {
 
 type Props = React.ComponentPropsWithRef<'div'> & CustomProps;
 
-const FarmersOnlyToast = ({
+const InterlayToast = ({
   t,
   children,
   className,
@@ -73,5 +73,5 @@ const FarmersOnlyToast = ({
   );
 };
 
-export default FarmersOnlyToast;
+export default InterlayToast;
 // ray test touch >>

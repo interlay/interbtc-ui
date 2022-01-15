@@ -23,7 +23,7 @@ const TransactionToaster = ({
   <CountProvider>
     <Toaster
       position={position || 'top-right'}
-      containerClassName={styles.farmersOnlyToasterContainer}
+      containerClassName={styles.interlayToasterContainer}
       toastOptions={{
         style: {
           background: 'none'
