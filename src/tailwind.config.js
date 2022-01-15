@@ -389,14 +389,28 @@ module.exports = {
       ],
       borderRadius: [
         'first',
-        'last'
+        'last',
+        // ray test touch <<
+        'important'
+        // ray test touch >>
       ],
       textColor: [
         'important'
       ],
       display: [
         'important'
+      ],
+      // ray test touch <<
+      backgroundColor: [
+        'important'
+      ],
+      boxShadow: [
+        'important'
+      ],
+      padding: [
+        'important'
       ]
+      // ray test touch >>
     }
   },
   plugins: [

@@ -2,6 +2,7 @@
 import { Toast } from 'react-hot-toast/dist/core/types';
 import useUnmount from 'react-use/lib/useUnmount';
 import format from 'date-fns/format';
+import clsx from 'clsx';
 
 import TXToast from 'components/tx-toasts/TXToast';
 import { useCount } from 'contexts/count-context';
@@ -30,17 +31,26 @@ const ResolvedTXToast = ({
     <TXToast
       t={t}
       message={
-        // ray test touch <<
-        <span className='text-farmersOnlyBilbao'>
+        <span
+          className={clsx(
+            // ray test touch <<
+            // TODO: kintsugi dark mode
+            'text-interlayConifer',
+            'dark:text-kintsugiApple'
+            // ray test touch >>
+          )}>
           Successfully done.
         </span>
-        // ray test touch >>
       }
       icon={
         <CheckIcon
-          // ray test touch <<
-          className='text-farmersOnlyBilbao'
-          // ray test touch >>
+          className={clsx(
+            // ray test touch <<
+            // TODO: kintsugi dark mode
+            'text-interlayConifer',
+            'dark:text-kintsugiApple'
+            // ray test touch >>
+          )}
           width={18}
           height={13} />
       }

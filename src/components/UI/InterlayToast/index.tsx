@@ -67,8 +67,11 @@ const InterlayToast = ({
           width={18}
           height={18}
           className={clsx(
-            'text-farmersOnlyTextSecondaryInLightMode',
-            'dark:text-farmersOnlyTextSecondaryInDarkMode'
+            // ray test touch <<
+            // TODO: kintsugi dark mode
+            'text-interlayTextSecondaryInLightMode',
+            'dark:text-kintsugiTextSecondaryInDarkMode'
+            // ray test touch >>
           )} />
       </IconButton>
     </div>

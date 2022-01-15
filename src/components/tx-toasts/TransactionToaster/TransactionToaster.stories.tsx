@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import {
   Story,
   Meta
@@ -60,4 +59,3 @@ export default {
   title: 'TransactionToaster',
   component: TransactionToaster
 } as Meta;
-// ray test touch >>

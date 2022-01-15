@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import * as React from 'react';
 
 type Action =
@@ -95,4 +94,3 @@ export {
   CountProvider,
   useCount
 };
-// ray test touch >>

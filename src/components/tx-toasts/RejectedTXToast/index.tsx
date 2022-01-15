@@ -33,8 +33,9 @@ const RejectedTXToast = ({
     <TXToast
       className={clsx(
         // ray test touch <<
-        '!bg-farmersOnlyPersianRed',
-        'dark:!bg-farmersOnlySunsetOrange',
+        // TODO: kintsugi dark mode
+        '!bg-interlayCinnabar',
+        'dark:!bg-kintsugiThunderbird',
         // ray test touch >>
         '!bg-opacity-5',
         'dark:!bg-opacity-5'
@@ -44,8 +45,9 @@ const RejectedTXToast = ({
         <span
           className={clsx(
             // ray test touch <<
-            'text-farmersOnlyPersianRed',
-            'dark:text-farmersOnlySunsetOrange'
+            // TODO: kintsugi dark mode
+            'text-interlayCinnabar',
+            'dark:text-kintsugiThunderbird'
             // ray test touch >>
           )}>
           {message || 'Transaction failed.'}
@@ -55,8 +57,9 @@ const RejectedTXToast = ({
         <WarningOutlineIcon
           className={clsx(
             // ray test touch <<
-            'text-farmersOnlyPersianRed',
-            'dark:text-farmersOnlySunsetOrange'
+            // TODO: kintsugi dark mode
+            'text-interlayCinnabar',
+            'dark:text-kintsugiThunderbird'
             // ray test touch >>
           )}
           width={22}
