@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import clsx from 'clsx';
 import toast from 'react-hot-toast';
 import { Toast } from 'react-hot-toast/dist/core/types';
@@ -28,8 +27,11 @@ const InterlayToast = ({
   return (
     <div
       className={clsx(
-        'text-farmersOnlyTextPrimaryInLightMode',
-        'dark:text-farmersOnlyTextPrimaryInDarkMode',
+        // ray test touch <<
+        // TODO: kintsugi dark mode
+        'text-interlayTextPrimaryInLightMode',
+        'dark:text-kintsugiTextPrimaryInDarkMode',
+        // ray test touch >>
 
         // TODO: could be reused
         'border',
@@ -74,4 +76,3 @@ const InterlayToast = ({
 };
 
 export default InterlayToast;
-// ray test touch >>

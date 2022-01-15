@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import { Toast } from 'react-hot-toast/dist/core/types';
 import clsx from 'clsx';
 import useUnmount from 'react-use/lib/useUnmount';
@@ -33,8 +32,10 @@ const RejectedTXToast = ({
   return (
     <TXToast
       className={clsx(
+        // ray test touch <<
         '!bg-farmersOnlyPersianRed',
         'dark:!bg-farmersOnlySunsetOrange',
+        // ray test touch >>
         '!bg-opacity-5',
         'dark:!bg-opacity-5'
       )}
@@ -42,8 +43,10 @@ const RejectedTXToast = ({
       message={
         <span
           className={clsx(
+            // ray test touch <<
             'text-farmersOnlyPersianRed',
             'dark:text-farmersOnlySunsetOrange'
+            // ray test touch >>
           )}>
           {message || 'Transaction failed.'}
         </span>
@@ -51,8 +54,10 @@ const RejectedTXToast = ({
       icon={
         <WarningOutlineIcon
           className={clsx(
+            // ray test touch <<
             'text-farmersOnlyPersianRed',
             'dark:text-farmersOnlySunsetOrange'
+            // ray test touch >>
           )}
           width={22}
           height={19} />
@@ -63,4 +68,3 @@ const RejectedTXToast = ({
 };
 
 export default RejectedTXToast;
-// ray test touch >>

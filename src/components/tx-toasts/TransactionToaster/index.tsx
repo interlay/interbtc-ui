@@ -29,7 +29,7 @@ const TransactionToaster = ({
           background: 'none'
         },
         className: clsx(
-          'z-farmersOnlySnackbar',
+          'z-interlaySnackbar',
           '!shadow-none',
           '!rounded-lg',
           '!p-0',

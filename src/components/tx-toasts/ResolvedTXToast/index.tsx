@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import { Toast } from 'react-hot-toast/dist/core/types';
 import useUnmount from 'react-use/lib/useUnmount';
 import format from 'date-fns/format';
@@ -31,13 +30,17 @@ const ResolvedTXToast = ({
     <TXToast
       t={t}
       message={
+        // ray test touch <<
         <span className='text-farmersOnlyBilbao'>
           Successfully done.
         </span>
+        // ray test touch >>
       }
       icon={
         <CheckIcon
+          // ray test touch <<
           className='text-farmersOnlyBilbao'
+          // ray test touch >>
           width={18}
           height={13} />
       }
@@ -47,4 +50,3 @@ const ResolvedTXToast = ({
 };
 
 export default ResolvedTXToast;
-// ray test touch >>

@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import { Toast } from 'react-hot-toast/dist/core/types';
 import useInterval from 'react-use/lib/useInterval';
 import useMount from 'react-use/lib/useMount';
@@ -41,8 +40,11 @@ const PendingTXToast = ({
       message={
         <span
           className={clsx(
-            'text-farmersOnlyTextPrimaryInLightMode',
-            'dark:text-farmersOnlyTextPrimaryInDarkMode'
+            // ray test touch <<
+            // TODO: kintsugi dark mode
+            'text-interlayTextPrimaryInLightMode',
+            'dark:text-kintsugiTextPrimaryInDarkMode'
+            // ray test touch >>
           )}>
           Your transaction has started.
         </span>
@@ -50,8 +52,11 @@ const PendingTXToast = ({
       icon={
         <HistoryIcon
           className={clsx(
-            'text-farmersOnlyTextPrimaryInLightMode',
-            'dark:text-farmersOnlyTextPrimaryInDarkMode'
+            // ray test touch <<
+            // TODO: kintsugi dark mode
+            'text-interlayTextPrimaryInLightMode',
+            'dark:text-kintsugiTextPrimaryInDarkMode'
+            // ray test touch >>
           )}
           width={24}
           height={24} />
@@ -62,4 +67,3 @@ const PendingTXToast = ({
 };
 
 export default PendingTXToast;
-// ray test touch >>

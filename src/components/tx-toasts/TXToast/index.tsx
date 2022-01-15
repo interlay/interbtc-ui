@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import * as React from 'react';
 import { Toast } from 'react-hot-toast/dist/core/types';
 import clsx from 'clsx';
@@ -46,8 +45,11 @@ const TXToast = ({
             'flex',
             'items-center',
             'space-x-1',
-            'text-farmersOnlyTextSecondaryInLightMode',
-            'dark:text-farmersOnlyTextSecondaryInDarkMode',
+            // ray test touch <<
+            // TODO: kintsugi dark mode
+            'text-interlayTextSecondaryInLightMode',
+            'dark:text-kintsugiTextSecondaryInDarkMode',
+            // ray test touch >>
             'font-medium',
             'text-xs'
           )}>
@@ -63,4 +65,3 @@ const TXToast = ({
 };
 
 export default TXToast;
-// ray test touch >>
