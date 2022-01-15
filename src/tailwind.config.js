@@ -2,6 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
+const colors = require('tailwindcss/colors');
 const plugin = require('tailwindcss/plugin');
 
 const {
@@ -368,6 +369,10 @@ module.exports = {
         interlayTextSecondaryInLightMode: INTERLAY_TEXT_SECONDARY_IN_LIGHT_MODE,
         kintsugiTextPrimaryInDarkMode: KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE,
         kintsugiTextSecondaryInDarkMode: KINTSUGI_TEXT_SECONDARY_IN_DARK_MODE
+      },
+      backgroundColor: {
+        paperInLightMode: colors.white,
+        paperInDarkMode: KINTSUGI_MIDNIGHT[500]
       },
       // MEMO: inspired by https://material-ui.com/customization/default-theme/
       zIndex: {
