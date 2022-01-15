@@ -401,6 +401,9 @@ module.exports = {
       backgroundColor: [
         'important'
       ],
+      backgroundOpacity: [
+        'important'
+      ],
       boxShadow: [
         'important'
       ],
