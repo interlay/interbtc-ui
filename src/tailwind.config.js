@@ -390,9 +390,7 @@ module.exports = {
       borderRadius: [
         'first',
         'last',
-        // ray test touch <<
         'important'
-        // ray test touch >>
       ],
       textColor: [
         'important'
@@ -400,7 +398,6 @@ module.exports = {
       display: [
         'important'
       ],
-      // ray test touch <<
       backgroundColor: [
         'important'
       ],
@@ -410,7 +407,6 @@ module.exports = {
       padding: [
         'important'
       ]
-      // ray test touch >>
     }
   },
   plugins: [
