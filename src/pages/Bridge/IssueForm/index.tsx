@@ -12,6 +12,9 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
+// ray test touch <<
+import toast from 'react-hot-toast';
+// ray test touch >>
 import { AccountId } from '@polkadot/types/interfaces';
 import {
   Issue,
@@ -29,12 +32,17 @@ import {
 import SubmitButton from '../SubmitButton';
 import FormTitle from '../FormTitle';
 import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
-import WrappedTokenField from 'pages/Bridge/WrappedTokenField';
-import PriceInfo from 'pages/Bridge/PriceInfo';
-import ParachainStatusInfo from 'pages/Bridge/ParachainStatusInfo';
+import WrappedTokenField from '../WrappedTokenField';
+import PriceInfo from '../PriceInfo';
+import ParachainStatusInfo from '../ParachainStatusInfo';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
-import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
+// ray test touch <<
+// import ErrorModal from 'components/ErrorModal';
+import PendingTXToast from 'components/tx-toasts/PendingTXToast';
+import ResolvedTXToast from 'components/tx-toasts/ResolvedTXToast';
+import RejectedTXToast from 'components/tx-toasts/RejectedTXToast';
+// ray test touch >>
 import Hr2 from 'components/hrs/Hr2';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
 import {
@@ -126,8 +134,10 @@ const IssueForm = (): JSX.Element | null => {
   const [vaults, setVaults] = React.useState<Map<AccountId, BitcoinAmount>>();
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero);
   const [vaultMaxAmount, setVaultMaxAmount] = React.useState(BitcoinAmount.zero);
-  const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
-  const [submitError, setSubmitError] = React.useState<Error | null>(null);
+  // ray test touch <<
+  // const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
+  // const [submitError, setSubmitError] = React.useState<Error | null>(null);
+  // ray test touch >>
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
 
   React.useEffect(() => {
@@ -249,17 +259,54 @@ const IssueForm = (): JSX.Element | null => {
     };
 
     const onSubmit = async (data: IssueFormData) => {
+      // ray test touch <<
+      let toastId = '';
+      // ray test touch >>
       try {
         const wrappedTokenAmount = BitcoinAmount.from.BTC(data[BTC_AMOUNT]);
-        setSubmitStatus(STATUSES.PENDING);
+        // ray test touch <<
+        // setSubmitStatus(STATUSES.PENDING);
+        toastId = toast(
+          t => <PendingTXToast t={t} />,
+          {
+            duration: Infinity
+          }
+        );
+        // ray test touch >>
         const result = await window.bridge.interBtcApi.issue.request(wrappedTokenAmount);
         // TODO: handle issue aggregation
         const issueRequest = result[0];
         handleSubmittedRequestModalOpen(issueRequest);
-        setSubmitStatus(STATUSES.RESOLVED);
+        // ray test touch <<
+        // setSubmitStatus(STATUSES.RESOLVED);
+        toast(
+          t => <ResolvedTXToast t={t} />,
+          {
+            duration: 2000,
+            id: toastId
+          }
+        );
+        // ray test touch >>
       } catch (error) {
-        setSubmitStatus(STATUSES.REJECTED);
-        setSubmitError(error);
+        // ray test touch <<
+        // setSubmitStatus(STATUSES.REJECTED);
+        // setSubmitError(error);
+        const errorMessage =
+          typeof error === 'string' ?
+            error :
+            error.message;
+        toast(
+          t => (
+            <RejectedTXToast
+              t={t}
+              message={errorMessage} />
+          ),
+          {
+            duration: 4000,
+            id: toastId
+          }
+        );
+        // ray test touch >>
       }
     };
 
@@ -383,12 +430,15 @@ const IssueForm = (): JSX.Element | null => {
               parachainStatus !== ParachainStatus.Running ||
               !address
             }
-            pending={submitStatus === STATUSES.PENDING}
+            // ray test touch <<
+            // pending={submitStatus === STATUSES.PENDING}
+            // ray test touch >>
             onClick={handleConfirmClick}>
             {accountSet ? t('confirm') : t('connect_wallet')}
           </SubmitButton>
         </form>
-        {(submitStatus === STATUSES.REJECTED && submitError) && (
+        {/* ray test touch << */}
+        {/* {(submitStatus === STATUSES.REJECTED && submitError) && (
           <ErrorModal
             open={!!submitError}
             onClose={() => {
@@ -401,7 +451,8 @@ const IssueForm = (): JSX.Element | null => {
                 submitError :
                 submitError.message
             } />
-        )}
+        )} */}
+        {/* ray test touch >> */}
         {submittedRequest && (
           <SubmittedIssueRequestModal
             open={!!submittedRequest}
