@@ -9,7 +9,7 @@
     "@interlay/interbtc": "1.5.0",
     "@polkadot/api": "6.9.2",
     "@polkadot/extension-dapp": "0.41.2",
-    "@polkadot/types": "6.9.2",
+    "@polkadot/types": "6.12.1",
     "@polkadot/ui-keyring": "0.87.5",
     "@reach/tooltip": "^0.16.0",
     "@tailwindcss/forms": "^0.3.2",
