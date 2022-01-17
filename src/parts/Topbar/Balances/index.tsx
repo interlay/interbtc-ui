@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import {
   useSelector
@@ -85,20 +86,20 @@ const Balances = ({
   React.useEffect(() => {
     const tokenOptions: Array<TokenOption> = [
       {
-        token: WRAPPED_TOKEN,
+        token: COLLATERAL_TOKEN,
         type: TokenType.COLLATERAL,
         balance: displayMonetaryAmount(collateralTokenBalance),
         icon:
         <CollateralTokenLogoIcon
-          height={variant === 'formField' ? 62 : 26} />,
+          height={variant === 'formField' ? 42 : 26} />,
         symbol: COLLATERAL_TOKEN_SYMBOL
       },
       {
-        token: COLLATERAL_TOKEN,
+        token: WRAPPED_TOKEN,
         type: TokenType.WRAPPED,
         balance: displayMonetaryAmount(wrappedTokenBalance),
         icon: <WrappedTokenLogoIcon
-          height={variant === 'formField' ? 62 : 26} />,
+          height={variant === 'formField' ? 42 : 26} />,
         symbol: WRAPPED_TOKEN_SYMBOL
       }
     ];
