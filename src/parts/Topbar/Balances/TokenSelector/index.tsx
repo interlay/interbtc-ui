@@ -49,7 +49,7 @@ const TokenSelector = ({
                 <SelectButton>
                   <span
                     className={clsx(
-                      variant === 'formField' ? 'py-4' : null,
+                      variant === 'formField' ? 'py-2' : null,
                       'flex',
                       variant === 'formField' ? 'text-xl' : null,
                       'items-center',
