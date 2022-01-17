@@ -91,7 +91,7 @@ const Balances = ({
         balance: displayMonetaryAmount(collateralTokenBalance),
         icon:
         <CollateralTokenLogoIcon
-          height={variant === 'formField' ? 42 : 26} />,
+          height={variant === 'formField' ? 46 : 26} />,
         symbol: COLLATERAL_TOKEN_SYMBOL
       },
       {
@@ -99,7 +99,7 @@ const Balances = ({
         type: TokenType.WRAPPED,
         balance: displayMonetaryAmount(wrappedTokenBalance),
         icon: <WrappedTokenLogoIcon
-          height={variant === 'formField' ? 42 : 26} />,
+          height={variant === 'formField' ? 46 : 26} />,
         symbol: WRAPPED_TOKEN_SYMBOL
       }
     ];
