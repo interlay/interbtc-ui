@@ -2,6 +2,7 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import {
   QueryClientProvider,
@@ -11,27 +12,33 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { HelmetProvider } from 'react-helmet-async';
 
 import App from './App';
-import { configureStore } from './store';
+import {
+  store,
+  persistor
+} from './store';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
 
-const store = configureStore();
 window.isFetchingActive = false;
 
 const queryClient = new QueryClient();
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <Router>
-        <QueryClientProvider client={queryClient}>
-          <HelmetProvider>
-            <App />
-          </HelmetProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      </Router>
-    </Provider>
+    <Router>
+      <QueryClientProvider client={queryClient}>
+        <HelmetProvider>
+          <Provider store={store}>
+            <PersistGate
+              loading={null}
+              persistor={persistor}>
+              <App />
+            </PersistGate>
+          </Provider>
+        </HelmetProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );

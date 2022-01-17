@@ -5,7 +5,6 @@ import {
 import { IssueState } from '../types/issue.types';
 
 const initialState = {
-  address: '',
   issuePeriod: 86400
 };
 
