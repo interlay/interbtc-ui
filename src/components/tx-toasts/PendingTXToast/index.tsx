@@ -2,7 +2,6 @@
 import { Toast } from 'react-hot-toast/dist/core/types';
 import useInterval from 'react-use/lib/useInterval';
 import useMount from 'react-use/lib/useMount';
-import format from 'date-fns/format';
 import clsx from 'clsx';
 
 import TXToast from 'components/tx-toasts/TXToast';
@@ -36,10 +35,6 @@ const PendingTXToast = ({
     dispatch({ type: 'set-start-time' });
   });
 
-  // ray test touch <<
-  const startTime = state.startTime ? format(state.startTime, 'p') : '';
-  // ray test touch >>
-
   return (
     <TXToast
       t={t}
@@ -61,7 +56,7 @@ const PendingTXToast = ({
           width={24}
           height={24} />
       }
-      startTime={startTime}
+      startTime={state.startTime}
       count={state.count} />
   );
 };

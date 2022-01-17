@@ -1,7 +1,6 @@
 
 import { Toast } from 'react-hot-toast/dist/core/types';
 import useUnmount from 'react-use/lib/useUnmount';
-import format from 'date-fns/format';
 import clsx from 'clsx';
 
 import TXToast from 'components/tx-toasts/TXToast';
@@ -29,10 +28,6 @@ const ResolvedTXToast = ({
     dispatch({ type: 'reset-count' });
   });
 
-  // ray test touch <<
-  const startTime = state.startTime ? format(state.startTime, 'p') : '';
-  // ray test touch >>
-
   return (
     <TXToast
       t={t}
@@ -54,7 +49,7 @@ const ResolvedTXToast = ({
           width={18}
           height={13} />
       }
-      startTime={startTime}
+      startTime={state.startTime}
       count={state.count} />
   );
 };

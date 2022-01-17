@@ -1,6 +1,7 @@
 
 import * as React from 'react';
 import { Toast } from 'react-hot-toast/dist/core/types';
+import format from 'date-fns/format';
 import clsx from 'clsx';
 
 import InterlayToast from 'components/UI/InterlayToast';
@@ -14,9 +15,7 @@ interface Props {
   t: Toast;
   message: React.ReactNode;
   icon: React.ReactNode;
-  // ray test touch <<
-  startTime: string; // TODO: double-check
-  // ray test touch >>
+  startTime: Date | null;
   count: number;
   className?: string;
 }
@@ -29,6 +28,8 @@ const TXToast = ({
   count,
   className
 }: Props): JSX.Element => {
+  const startTimeLabel = startTime ? format(startTime, 'p') : '';
+
   return (
     <InterlayToast
       t={t}
@@ -56,9 +57,7 @@ const TXToast = ({
             'font-medium',
             'text-xs'
           )}>
-          {/* ray test touch << */}
-          <span>{startTime} fm</span>
-          {/* ray test touch >> */}
+          <span>{startTimeLabel} fm</span>
           <TimerIcon
             width={14}
             height={17} />
