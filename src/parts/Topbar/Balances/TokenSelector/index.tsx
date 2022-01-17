@@ -44,7 +44,7 @@ const TokenSelector = ({
             <>
               <SelectBody
                 className={clsx(
-                  showBalances ? 'w-52' : 'w-48'
+                  'w-52'
                 )}>
                 <SelectButton>
                   <span
@@ -53,13 +53,15 @@ const TokenSelector = ({
                       'flex',
                       variant === 'formField' ? 'text-xl' : null,
                       'items-center',
-                      variant === 'formField' ? null : 'space-x-3'
+                      'space-x-3'
                     )}>
                     {currentToken.icon}
                     <SelectText>
                       {showBalances && (
-                        currentToken.balance
-                      )}&nbsp;
+                        <span>
+                          {currentToken.balance}&nbsp;
+                        </span>
+                      )}
                       {currentToken.symbol}
                     </SelectText>
                   </span>
@@ -80,7 +82,7 @@ const TokenSelector = ({
                                 'flex',
                                 'items-center',
                                 variant === 'formField' ? 'text-xl' : null,
-                                variant === 'formField' ? null : 'space-x-3'
+                                'space-x-3'
                               )}>
                               {tokenOption.icon}
                               <SelectText selected={selected}>
