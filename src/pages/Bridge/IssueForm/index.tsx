@@ -260,13 +260,13 @@ const IssueForm = (): JSX.Element | null => {
 
     const onSubmit = async (data: IssueFormData) => {
       // ray test touch <<
-      let toastId = '';
+      let toastID = '';
       // ray test touch >>
       try {
         const wrappedTokenAmount = BitcoinAmount.from.BTC(data[BTC_AMOUNT]);
         // ray test touch <<
         // setSubmitStatus(STATUSES.PENDING);
-        toastId = toast(
+        toastID = toast(
           t => <PendingTXToast t={t} />,
           {
             duration: Infinity
@@ -283,7 +283,7 @@ const IssueForm = (): JSX.Element | null => {
           t => <ResolvedTXToast t={t} />,
           {
             duration: 2000,
-            id: toastId
+            id: toastID
           }
         );
         // ray test touch >>
@@ -303,7 +303,7 @@ const IssueForm = (): JSX.Element | null => {
           ),
           {
             duration: 4000,
-            id: toastId
+            id: toastID
           }
         );
         // ray test touch >>

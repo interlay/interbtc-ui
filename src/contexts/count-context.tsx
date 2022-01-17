@@ -2,16 +2,15 @@
 import * as React from 'react';
 
 type Action =
-  { type: 'increment-count'; } |
-  { type: 'decrement-count'; } |
-  { type: 'reset-count'; } |
-  { type: 'set-start-time'; } |
-  { type: 'reset-start-time'; };
+  { type: 'add-toast-info'; toastID: string; } |
+  { type: 'remove-toast-info'; toastID: string; } |
+  { type: 'increment-count'; toastID: string; };
 type Dispatch = (action: Action) => void;
-type State = {
+type ToastInfo = {
   count: number;
   startTime: Date | null;
 };
+type State = Map<string, ToastInfo>;
 type CountProviderProps = { children: React.ReactNode; };
 
 interface CountStateContextInterface {
@@ -24,34 +23,30 @@ const CountStateContext = React.createContext<CountStateContextInterface | undef
 function countReducer(state: State, action: Action) {
   switch (action.type) {
   case 'increment-count': {
-    return {
-      ...state,
-      count: state.count + 1
-    };
+    const toastInfo = state.get(action.toastID);
+    if (toastInfo === undefined) {
+      return new Map(state);
+    }
+
+    state.set(action.toastID, {
+      ...toastInfo,
+      count: toastInfo.count + 1
+    });
+
+    return new Map(state);
   }
-  case 'decrement-count': {
-    return {
-      ...state,
-      count: state.count - 1
-    };
+  case 'remove-toast-info': {
+    state.delete(action.toastID);
+
+    return new Map(state);
   }
-  case 'reset-count': {
-    return {
-      ...state,
-      count: 0
-    };
-  }
-  case 'set-start-time': {
-    return {
-      ...state,
+  case 'add-toast-info': {
+    state.set(action.toastID, {
+      count: 0,
       startTime: new Date()
-    };
-  }
-  case 'reset-start-time': {
-    return {
-      ...state,
-      startTime: null
-    };
+    });
+
+    return new Map(state);
   }
   default: {
     throw new Error(`Unhandled action type: ${action}!`);
@@ -63,10 +58,7 @@ function CountProvider({ children }: CountProviderProps): JSX.Element {
   const [state, dispatch] =
     React.useReducer(
       countReducer,
-      {
-        count: 0,
-        startTime: null
-      }
+      new Map<string, ToastInfo>()
     );
   // NOTE: you *might* need to memoize this value
   // Learn more in http://kcd.im/optimize-context

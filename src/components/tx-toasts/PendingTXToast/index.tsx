@@ -18,7 +18,7 @@ interface Props {
 
 const PendingTXToast = ({
   t
-}: Props): JSX.Element => {
+}: Props): JSX.Element | null => {
   const {
     state,
     dispatch
@@ -26,14 +26,25 @@ const PendingTXToast = ({
 
   useInterval(
     () => {
-      dispatch({ type: 'increment-count' });
+      dispatch({
+        type: 'increment-count',
+        toastID: t.id
+      });
     },
     1000
   );
 
   useMount(() => {
-    dispatch({ type: 'set-start-time' });
+    dispatch({
+      type: 'add-toast-info',
+      toastID: t.id
+    });
   });
+
+  const toastInfo = state.get(t.id);
+  if (toastInfo === undefined) {
+    return null;
+  }
 
   return (
     <TXToast
@@ -56,8 +67,8 @@ const PendingTXToast = ({
           width={24}
           height={24} />
       }
-      startTime={state.startTime}
-      count={state.count} />
+      startTime={toastInfo.startTime}
+      count={toastInfo.count} />
   );
 };
 

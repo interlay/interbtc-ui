@@ -19,16 +19,23 @@ interface Props {
 const RejectedTXToast = ({
   t,
   message
-}: Props): JSX.Element => {
+}: Props): JSX.Element | null => {
   const {
     state,
     dispatch
   } = useCount();
 
   useUnmount(() => {
-    dispatch({ type: 'reset-start-time' });
-    dispatch({ type: 'reset-count' });
+    dispatch({
+      type: 'remove-toast-info',
+      toastID: t.id
+    });
   });
+
+  const toastInfo = state.get(t.id);
+  if (toastInfo === undefined) {
+    return null;
+  }
 
   return (
     <TXToast
@@ -57,8 +64,8 @@ const RejectedTXToast = ({
           width={22}
           height={19} />
       }
-      startTime={state.startTime}
-      count={state.count} />
+      startTime={toastInfo.startTime}
+      count={toastInfo.count} />
   );
 };
 
