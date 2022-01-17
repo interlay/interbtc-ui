@@ -46,6 +46,7 @@ const StatsRouterLink = ({
     className={clsx(
       'text-sm',
       'font-medium',
+      'hover:underline',
       className
     )}
     to={to}
