@@ -29,7 +29,9 @@ const ResolvedTXToast = ({
     dispatch({ type: 'reset-count' });
   });
 
+  // ray test touch <<
   const startTime = state.startTime ? format(state.startTime, 'p') : '';
+  // ray test touch >>
 
   return (
     <TXToast

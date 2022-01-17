@@ -14,7 +14,9 @@ interface Props {
   t: Toast;
   message: React.ReactNode;
   icon: React.ReactNode;
+  // ray test touch <<
   startTime: string; // TODO: double-check
+  // ray test touch >>
   count: number;
   className?: string;
 }
@@ -54,7 +56,9 @@ const TXToast = ({
             'font-medium',
             'text-xs'
           )}>
+          {/* ray test touch << */}
           <span>{startTime} fm</span>
+          {/* ray test touch >> */}
           <TimerIcon
             width={14}
             height={17} />

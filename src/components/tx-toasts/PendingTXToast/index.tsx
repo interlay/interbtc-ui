@@ -36,7 +36,9 @@ const PendingTXToast = ({
     dispatch({ type: 'set-start-time' });
   });
 
+  // ray test touch <<
   const startTime = state.startTime ? format(state.startTime, 'p') : '';
+  // ray test touch >>
 
   return (
     <TXToast
