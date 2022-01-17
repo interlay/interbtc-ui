@@ -17,7 +17,7 @@ type TXType = 'Resolved' | 'Rejected';
 
 const notifyTXPendingToast = (txType: TXType) => () => {
   if (txType === 'Resolved') {
-    toastIDForResolvedTX = toast(
+    txToastIDForResolvedTX = toast(
       t => <PendingTXToast t={t} />,
       {
         duration: Infinity
@@ -26,7 +26,7 @@ const notifyTXPendingToast = (txType: TXType) => () => {
   }
 
   if (txType === 'Rejected') {
-    toastIDForRejectedTX = toast(
+    txToastIDForRejectedTX = toast(
       t => <PendingTXToast t={t} />,
       {
         duration: Infinity
@@ -40,11 +40,11 @@ const notifyTXResolvedToast = () => {
     t => <ResolvedTXToast t={t} />,
     {
       duration: 2000,
-      id: toastIDForResolvedTX
+      id: txToastIDForResolvedTX
     }
   );
 
-  toastIDForResolvedTX = '';
+  txToastIDForResolvedTX = '';
 };
 
 const notifyTXRejectedToast = () => {
@@ -52,15 +52,15 @@ const notifyTXRejectedToast = () => {
     t => <RejectedTXToast t={t} />,
     {
       duration: 4000,
-      id: toastIDForRejectedTX
+      id: txToastIDForRejectedTX
     }
   );
 
-  toastIDForRejectedTX = '';
+  txToastIDForRejectedTX = '';
 };
 
-let toastIDForResolvedTX: string;
-let toastIDForRejectedTX: string;
+let txToastIDForResolvedTX: string;
+let txToastIDForRejectedTX: string;
 const TIMER_THRESHOLD = 5;
 
 const Template: Story = args => {
@@ -69,7 +69,7 @@ const Template: Story = args => {
 
   useInterval(
     () => {
-      if (toastIDForResolvedTX) {
+      if (txToastIDForResolvedTX) {
         setCountForResolvedTX(prev => prev + 1);
         if (countForResolvedTX === TIMER_THRESHOLD) {
           notifyTXResolvedToast();
@@ -77,7 +77,7 @@ const Template: Story = args => {
         }
       }
 
-      if (toastIDForRejectedTX) {
+      if (txToastIDForRejectedTX) {
         setCountForRejectedTX(prev => prev + 1);
         if (countForRejectedTX === TIMER_THRESHOLD) {
           notifyTXRejectedToast();
@@ -98,12 +98,12 @@ const Template: Story = args => {
         )}>
         <button
           onClick={notifyTXPendingToast('Resolved')}
-          disabled={!!toastIDForResolvedTX}>
+          disabled={!!txToastIDForResolvedTX}>
           ResolvedTXToast
         </button>
         <button
           onClick={notifyTXPendingToast('Rejected')}
-          disabled={!!toastIDForRejectedTX}>
+          disabled={!!txToastIDForRejectedTX}>
           RejectedTXToast
         </button>
       </div>

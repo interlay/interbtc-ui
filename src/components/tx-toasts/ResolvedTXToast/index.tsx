@@ -8,7 +8,7 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
-import { useCount } from 'contexts/count-context';
+import { useTXToastInfoSet } from 'contexts/tx-toast-info-set-context';
 import { ReactComponent as CheckIcon } from 'assets/img/icons/check.svg';
 
 interface Props {
@@ -21,17 +21,17 @@ const ResolvedTXToast = ({
   const {
     state,
     dispatch
-  } = useCount();
+  } = useTXToastInfoSet();
 
   useUnmount(() => {
     dispatch({
-      type: 'remove-toast-info',
-      toastID: t.id
+      type: 'remove-tx-toast-info',
+      txToastID: t.id
     });
   });
 
-  const toastInfo = state.get(t.id);
-  if (toastInfo === undefined) {
+  const txToastInfo = state.get(t.id);
+  if (txToastInfo === undefined) {
     return null;
   }
 
@@ -56,8 +56,8 @@ const ResolvedTXToast = ({
           width={18}
           height={13} />
       }
-      startTime={toastInfo.startTime}
-      count={toastInfo.count} />
+      startTime={txToastInfo.startTime}
+      count={txToastInfo.count} />
   );
 };
 

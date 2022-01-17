@@ -6,7 +6,7 @@ import {
 } from 'react-hot-toast';
 import clsx from 'clsx';
 
-import { CountProvider } from 'contexts/count-context';
+import { TXToastInfoSetProvider } from 'contexts/tx-toast-info-set-context';
 import styles from './transaction-toaster.module.css';
 
 interface Props {
@@ -19,7 +19,7 @@ const TransactionToaster = ({
   position,
   toastOptions
 }: Props): JSX.Element => (
-  <CountProvider>
+  <TXToastInfoSetProvider>
     <Toaster
       position={position || 'top-right'}
       containerClassName={styles.interlayToasterContainer}
@@ -38,7 +38,7 @@ const TransactionToaster = ({
         ),
         ...toastOptions
       }} />
-  </CountProvider>
+  </TXToastInfoSetProvider>
 );
 
 export default TransactionToaster;
