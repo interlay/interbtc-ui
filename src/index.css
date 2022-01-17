@@ -5,7 +5,7 @@
 :root {
   color-scheme: light dark;
 }
-body {
+html {
   --duration: 0.5s;
   --timing: ease;
 
@@ -17,21 +17,21 @@ body {
 /* MEMO: `light` and `dark` are hardcoded */
 /* https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually */
 /* https://github.com/hipstersmoothie/storybook-dark-mode#darklight-class */
-body.light {
+html.light {
   /* MEMO: inspired by https://web.dev/prefers-color-scheme/#invert-vector-graphics-and-icons */
   --icon-filter_hover: invert(60%);
 }
-body.dark {
+html.dark {
   /* MEMO: inspired by https://web.dev/prefers-color-scheme/#re-colorize-and-darken-photographic-images */
   --image-filter: grayscale(50%);
   /* MEMO: inspired by https://web.dev/prefers-color-scheme/#invert-vector-graphics-and-icons */
   --icon-filter: invert(100%);
   --icon-filter_hover: invert(40%);
 }
-body.dark img:not([src*=".svg"]) {
+html.dark img:not([src*=".svg"]) {
   filter: var(--image-filter);
 }
-body.dark img[src*=".svg"] {
+html.dark img[src*=".svg"] {
   filter: var(--icon-filter);
 }
 img[src*=".svg"]:hover {
