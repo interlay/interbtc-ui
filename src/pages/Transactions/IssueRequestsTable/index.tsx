@@ -134,8 +134,8 @@ const IssueRequestsTable = (): JSX.Element => {
         Cell: function FormattedCell(props: any) {
           const issueRequest: Issue = props.row.original;
           const issuedWrappedTokenAmount =
-            (issueRequest.executedAmountBTC && !issueRequest.executedAmountBTC.isZero()) ?
-              issueRequest.executedAmountBTC :
+            (issueRequest.executedAmountWrapped && !issueRequest.executedAmountWrapped.isZero()) ?
+              issueRequest.executedAmountWrapped :
               issueRequest.wrappedAmount;
           return (
             <>

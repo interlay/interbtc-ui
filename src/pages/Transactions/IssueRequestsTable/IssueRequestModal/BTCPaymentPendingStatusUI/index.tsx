@@ -91,8 +91,8 @@ const BTCPaymentPendingStatusUI = ({
               'cursor-pointer',
               'text-center'
             )}
-            onClick={() => copyToClipboard(request.vaultBTCAddress)}>
-            {request.vaultBTCAddress}
+            onClick={() => copyToClipboard(request.vaultWrappedAddress)}>
+            {request.vaultWrappedAddress}
           </span>
         </InterlayTooltip>
         {initialLeftSeconds && (
@@ -132,7 +132,7 @@ const BTCPaymentPendingStatusUI = ({
       </p>
       <QRCode
         className='mx-auto'
-        value={`bitcoin:${request.vaultBTCAddress}?amount=${displayMonetaryAmount(amountBTCToSend)}`} />
+        value={`bitcoin:${request.vaultWrappedAddress}?amount=${displayMonetaryAmount(amountBTCToSend)}`} />
       <div
         className={clsx(
           { 'text-interlayTextSecondaryInLightMode':

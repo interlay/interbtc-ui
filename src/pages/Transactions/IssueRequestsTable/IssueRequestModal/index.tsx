@@ -67,8 +67,8 @@ const IssueRequestModal = ({
   const focusRef = React.useRef(null);
 
   const issuedWrappedTokenAmount =
-    (request.executedAmountBTC && !request.executedAmountBTC.isZero()) ?
-      request.executedAmountBTC :
+    (request.executedAmountWrapped && !request.executedAmountWrapped.isZero()) ?
+      request.executedAmountWrapped :
       request.wrappedAmount;
   const receivedWrappedTokenAmount = issuedWrappedTokenAmount.sub(request.bridgeFee);
 
@@ -226,7 +226,7 @@ const IssueRequestModal = ({
                   {t('issue_page.vault_dot_address')}
                 </span>
                 <span className='font-medium'>
-                  {shortAddress(request.vaultParachainAddress)}
+                  {shortAddress(request.vaultId.accountId.toString())}
                 </span>
               </div>
               <div
@@ -243,7 +243,7 @@ const IssueRequestModal = ({
                   {t('issue_page.vault_btc_address')}
                 </span>
                 <span className='font-medium'>
-                  {shortAddress(request.vaultBTCAddress)}
+                  {shortAddress(request.vaultWrappedAddress)}
                 </span>
               </div>
             </div>

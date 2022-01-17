@@ -34,7 +34,7 @@ const WhoopsStatusUI = ({
   if (!request.btcAmountSubmittedByUser) {
     throw new Error('Something went wrong!');
   }
-  if (!request.executedAmountBTC) {
+  if (!request.executedAmountWrapped) {
     throw new Error('Something went wrong!');
   }
 
@@ -109,10 +109,10 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={displayMonetaryAmount(request.executedAmountBTC || request.wrappedAmount)}
+        value={displayMonetaryAmount(request.executedAmountWrapped || request.wrappedAmount)}
         unitName={WRAPPED_TOKEN_SYMBOL}
         approxUSD={
-          getUsdAmount(request.executedAmountBTC || request.wrappedAmount, prices.bitcoin.usd)
+          getUsdAmount(request.executedAmountWrapped || request.wrappedAmount, prices.bitcoin.usd)
         } />
       <Hr2
         className={clsx(
@@ -137,11 +137,11 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={displayMonetaryAmount(request.btcAmountSubmittedByUser.sub(request.executedAmountBTC))}
+        value={displayMonetaryAmount(request.btcAmountSubmittedByUser.sub(request.executedAmountWrapped))}
         unitName='BTC'
         approxUSD={
           getUsdAmount(
-            request.btcAmountSubmittedByUser.sub(request.executedAmountBTC),
+            request.btcAmountSubmittedByUser.sub(request.executedAmountWrapped),
             prices.bitcoin.usd
           )
         } />
@@ -154,7 +154,7 @@ const WhoopsStatusUI = ({
         {t('issue_page.refund_requested_vault')}
         &nbsp;{t('issue_page.refund_vault_to_return')}
         <span className='text-interlayCinnabar'>
-          &nbsp;{displayMonetaryAmount(request.refundAmountBTC)}
+          &nbsp;{displayMonetaryAmount(request.refundAmountWrapped)}
         </span>
         &nbsp;BTC&nbsp;
         {t('issue_page.refund_vault_to_address')}.

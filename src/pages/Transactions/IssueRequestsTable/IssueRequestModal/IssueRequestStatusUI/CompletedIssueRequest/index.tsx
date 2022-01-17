@@ -30,7 +30,7 @@ const CompletedIssueRequest = ({
 }: Props): JSX.Element => {
   const { t } = useTranslation();
 
-  const issuedWrappedTokenAmount = request.executedAmountBTC ?? request.wrappedAmount;
+  const issuedWrappedTokenAmount = request.executedAmountWrapped ?? request.wrappedAmount;
   const receivedWrappedTokenAmount = issuedWrappedTokenAmount.sub(request.bridgeFee);
 
   return (

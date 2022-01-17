@@ -126,14 +126,14 @@ const RedeemRequestsTable = (): JSX.Element => {
       },
       {
         Header: t('issue_page.vault_dot_address'),
-        accessor: 'vaultParachainAddress',
+        accessor: 'vaultId',
         classNames: [
           'text-left'
         ],
         Cell: function FormattedCell({ value }: { value: string; }) {
           return (
             <>
-              {shortAddress(value)}
+              {shortAddress(value.accountId.toString())}
             </>
           );
         }

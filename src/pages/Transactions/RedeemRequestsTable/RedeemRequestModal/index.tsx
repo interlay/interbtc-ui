@@ -232,7 +232,7 @@ const RedeemRequestModal = ({
                   {t('issue_page.vault_dot_address')}
                 </span>
                 <span className='font-medium'>
-                  {shortAddress(request.vaultParachainAddress || '')}
+                  {shortAddress(request.vaultId.accountId.toString() || '')}
                 </span>
               </div>
             </div>
