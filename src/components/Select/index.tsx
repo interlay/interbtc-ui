@@ -14,7 +14,13 @@ import {
   KUSAMA,
   POLKADOT
 } from 'utils/constants/relay-chain-names';
-import { TOKENS_VARIANTS } from '../Tokens';
+
+const VARIANTS = Object.freeze({
+  optionSelector: 'optionSelector',
+  formField: 'formField'
+});
+
+const SELECT_VARIANTS = Object.values(VARIANTS);
 
 type SelectLabelProps = Props<typeof Listbox.Label>;
 
@@ -35,7 +41,7 @@ const SelectLabel = ({
 );
 
 interface SelectButtonCustomProps {
-  variant?: typeof TOKENS_VARIANTS[number];
+  variant?: typeof SELECT_VARIANTS[number];
 }
 
 type SelectButtonProps = SelectButtonCustomProps & Props<typeof Listbox.Button>;
@@ -112,7 +118,7 @@ const SelectButton = ({
 
 interface SelectOptionsCustomProps {
   open: boolean;
-  variant?: typeof TOKENS_VARIANTS[number];
+  variant?: typeof SELECT_VARIANTS[number];
 }
 
 type SelectOptionsProps = SelectOptionsCustomProps & Props<typeof Listbox.Options>;
@@ -282,6 +288,7 @@ const Select = ({
 export type SelectProps = Props<typeof Listbox>;
 
 export {
+  SELECT_VARIANTS,
   SelectLabel,
   SelectButton,
   SelectOptions,

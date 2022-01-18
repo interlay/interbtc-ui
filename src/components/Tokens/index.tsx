@@ -5,6 +5,8 @@ import {
 } from 'react-redux';
 
 import TokenSelector from './TokenSelector';
+import { SELECT_VARIANTS } from 'components/Select';
+
 import {
   WRAPPED_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
@@ -21,13 +23,6 @@ import {
   StoreType
 } from 'common/types/util.types';
 
-const VARIANTS = Object.freeze({
-  optionSelector: 'optionSelector',
-  formField: 'formField'
-});
-
-const TOKENS_VARIANTS = Object.values(VARIANTS);
-
 interface TokenOption {
   token: WrappedToken | CollateralToken;
   type: TokenType;
@@ -37,13 +32,13 @@ interface TokenOption {
 }
 
 interface Props {
-  variant?: typeof TOKENS_VARIANTS[number];
+  variant?: typeof SELECT_VARIANTS[number];
   callbackFunction?: (token: TokenOption) => void;
   showBalances?: boolean;
 }
 
 const Tokens = ({
-  variant = VARIANTS.optionSelector,
+  variant = 'optionSelector',
   callbackFunction,
   showBalances = true
 }: Props): JSX.Element => {
@@ -137,6 +132,5 @@ const Tokens = ({
 
 export type { TokenOption };
 export {
-  Tokens,
-  TOKENS_VARIANTS
+  Tokens
 };
