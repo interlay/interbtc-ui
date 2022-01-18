@@ -28,25 +28,31 @@ function txToastInfoSetReducer(state: State, action: Action) {
       return new Map(state);
     }
 
-    state.set(action.txToastID, {
+    const newState = new Map(state);
+
+    newState.set(action.txToastID, {
       ...txToastInfo,
       count: txToastInfo.count + 1
     });
 
-    return new Map(state);
+    return newState;
   }
   case 'remove-tx-toast-info': {
-    state.delete(action.txToastID);
+    const newState = new Map(state);
 
-    return new Map(state);
+    newState.delete(action.txToastID);
+
+    return newState;
   }
   case 'add-tx-toast-info': {
-    state.set(action.txToastID, {
+    const newState = new Map(state);
+
+    newState.set(action.txToastID, {
       count: 0,
       startTime: new Date()
     });
 
-    return new Map(state);
+    return newState;
   }
   default: {
     throw new Error(`Unhandled action type: ${action}!`);
