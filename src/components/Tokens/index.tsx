@@ -26,7 +26,7 @@ const VARIANTS = Object.freeze({
   formField: 'formField'
 });
 
-const BALANCE_VARIANTS = Object.values(VARIANTS);
+const TOKENS_VARIANTS = Object.values(VARIANTS);
 
 interface TokenOption {
   token: WrappedToken | CollateralToken;
@@ -37,12 +37,12 @@ interface TokenOption {
 }
 
 interface Props {
-  variant?: typeof BALANCE_VARIANTS[number];
+  variant?: typeof TOKENS_VARIANTS[number];
   callbackFunction?: (token: TokenOption) => void;
   showBalances?: boolean;
 }
 
-const Balances = ({
+const Tokens = ({
   variant = VARIANTS.optionSelector,
   callbackFunction,
   showBalances = true
@@ -68,7 +68,6 @@ const Balances = ({
     }
   }, [tokenOptions, currentToken, getTokenOption, callbackFunction]);
 
-  // TODO (this ticket): Add governance token balance to state.general
   const {
     collateralTokenBalance,
     wrappedTokenBalance
@@ -138,6 +137,6 @@ const Balances = ({
 
 export type { TokenOption };
 export {
-  Balances,
-  BALANCE_VARIANTS
+  Tokens,
+  TOKENS_VARIANTS
 };

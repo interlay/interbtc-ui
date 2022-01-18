@@ -15,7 +15,7 @@ import {
   tickerToCurrencyIdLiteral
 } from '@interlay/interbtc-api';
 
-import { Balances } from 'components/Balances';
+import { Tokens } from 'components/Tokens';
 import AccountModal from 'parts/AccountModal';
 import InterlayLink from 'components/UI/InterlayLink';
 import
@@ -154,7 +154,7 @@ const Topbar = (): JSX.Element => {
                     collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
                   })}
                 </InterlayDenimOrKintsugiMidnightOutlinedButton>
-                <Balances />
+                <Tokens />
                 <InterlayDefaultContainedButton
                   className={SMALL_SIZE_BUTTON_CLASS_NAME}
                   onClick={handleAccountModalOpen}>

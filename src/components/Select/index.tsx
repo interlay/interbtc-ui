@@ -14,7 +14,7 @@ import {
   KUSAMA,
   POLKADOT
 } from 'utils/constants/relay-chain-names';
-import { BALANCE_VARIANTS } from '../Balances';
+import { TOKENS_VARIANTS } from '../Tokens';
 
 type SelectLabelProps = Props<typeof Listbox.Label>;
 
@@ -35,7 +35,7 @@ const SelectLabel = ({
 );
 
 interface SelectButtonCustomProps {
-  variant?: typeof BALANCE_VARIANTS[number];
+  variant?: typeof TOKENS_VARIANTS[number];
 }
 
 type SelectButtonProps = SelectButtonCustomProps & Props<typeof Listbox.Button>;
@@ -112,7 +112,7 @@ const SelectButton = ({
 
 interface SelectOptionsCustomProps {
   open: boolean;
-  variant?: typeof BALANCE_VARIANTS[number];
+  variant?: typeof TOKENS_VARIANTS[number];
 }
 
 type SelectOptionsProps = SelectOptionsCustomProps & Props<typeof Listbox.Options>;

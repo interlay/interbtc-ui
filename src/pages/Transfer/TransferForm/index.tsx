@@ -13,9 +13,9 @@ import { Currency } from '@interlay/monetary-js';
 
 import TokenAmountField from '../TokenAmountField';
 import {
-  Balances,
+  Tokens,
   TokenOption
-} from 'components/Balances';
+} from 'components/Tokens';
 import SubmitButton from 'components/SubmitButton';
 import FormTitle from 'components/FormTitle';
 import TextField from 'components/TextField';
@@ -140,7 +140,7 @@ const TransferForm = (): JSX.Element => {
               'gap-2'
             )}>
             {/* TODO: use forwardRef to pull in select value as form data */}
-            <Balances
+            <Tokens
               variant='formField'
               showBalances={false}
               callbackFunction={handleTokenChange} />
