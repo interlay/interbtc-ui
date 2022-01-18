@@ -28,6 +28,10 @@ function txToastInfoSetReducer(state: State, action: Action) {
       return new Map(state);
     }
 
+    // MEMO: inspired by
+    // - https://stackoverflow.com/questions/57883677/how-to-immutably-update-a-map-in-javascript
+    // eslint-disable-next-line max-len
+    // - https://stackoverflow.com/questions/62381992/when-i-increment-the-counter-it-increases-by-2-not-one-i-am-using-react-context
     const newState = new Map(state);
 
     newState.set(action.txToastID, {
