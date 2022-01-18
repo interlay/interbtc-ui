@@ -15,7 +15,7 @@ import TokenAmountField from '../TokenAmountField';
 import {
   Balances,
   TokenOption
-} from '../../../parts/Topbar/Balances';
+} from 'components/Balances';
 import SubmitButton from 'components/SubmitButton';
 import FormTitle from 'components/FormTitle';
 import TextField from 'components/TextField';

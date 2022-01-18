@@ -14,7 +14,7 @@ import {
   KUSAMA,
   POLKADOT
 } from 'utils/constants/relay-chain-names';
-import { BALANCE_VARIANTS } from '../../parts/Topbar/Balances';
+import { BALANCE_VARIANTS } from '../Balances';
 
 type SelectLabelProps = Props<typeof Listbox.Label>;
 
