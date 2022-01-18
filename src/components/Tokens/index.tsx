@@ -55,6 +55,7 @@ const Tokens = ({
     if (!tokenOptions) return;
 
     if (!currentToken) {
+      // Set collateral token as default
       setCurrentToken(getTokenOption(TokenType.COLLATERAL));
     }
 
