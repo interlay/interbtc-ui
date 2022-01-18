@@ -90,8 +90,10 @@ const TransferForm = (): JSX.Element => {
   const validateForm = React.useCallback((value: number): string | undefined => {
     if (!activeToken) return;
 
-    // TODO: convert to newMonetaryAmount and check that instead of string
-    return parseFloat(activeToken.balance) < value ? t('insufficient_funds') : undefined;
+    const balance = newMonetaryAmount(activeToken.balance, activeToken.token as Currency<CurrencyUnit>, true);
+    const transferAmount = newMonetaryAmount(value, activeToken.token as Currency<CurrencyUnit>, true);
+
+    return balance < transferAmount ? t('insufficient_funds') : undefined;
   }, [activeToken, t]);
 
   const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
