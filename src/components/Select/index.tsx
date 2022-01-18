@@ -85,7 +85,7 @@ const SelectButton = ({
       },
       {
         [clsx(
-          variant === 'formField' ? 'dark:bg-kintsugiMidnight' : 'dark:bg-kintsugiMidnight-900',
+          variant === VARIANTS.formField ? 'dark:bg-kintsugiMidnight' : 'dark:bg-kintsugiMidnight-900',
           'dark:focus:border-kintsugiSupernova-300',
           'dark:focus:ring-kintsugiSupernova-200'
         )]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA
@@ -168,7 +168,7 @@ const SelectOptions = ({
         },
         {
           [clsx(
-            variant === 'formField' ? 'dark:bg-kintsugiMidnight' : 'dark:bg-kintsugiMidnight-900'
+            variant === VARIANTS.formField ? 'dark:bg-kintsugiMidnight' : 'dark:bg-kintsugiMidnight-900'
           )]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA
         },
         className
