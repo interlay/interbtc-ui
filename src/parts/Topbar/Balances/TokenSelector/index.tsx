@@ -1,4 +1,3 @@
-import * as React from 'react';
 import clsx from 'clsx';
 
 import Select, {
@@ -37,6 +36,7 @@ const TokenSelector = ({
     <>
       {currentToken && (
         <Select
+          variant={variant}
           key={currentToken.type}
           value={currentToken.type}
           onChange={onChange}>
@@ -46,7 +46,7 @@ const TokenSelector = ({
                 className={clsx(
                   'w-52'
                 )}>
-                <SelectButton>
+                <SelectButton variant={variant}>
                   <span
                     className={clsx(
                       variant === 'formField' ? 'py-2' : null,
@@ -66,7 +66,9 @@ const TokenSelector = ({
                     </SelectText>
                   </span>
                 </SelectButton>
-                <SelectOptions open={open}>
+                <SelectOptions
+                  open={open}
+                  variant={variant}>
                   {tokenOptions.map((tokenOption: TokenOption) => {
                     return (
                       <SelectOption

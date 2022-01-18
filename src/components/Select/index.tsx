@@ -14,6 +14,7 @@ import {
   KUSAMA,
   POLKADOT
 } from 'utils/constants/relay-chain-names';
+import { BALANCE_VARIANTS } from '../../parts/Topbar/Balances';
 
 type SelectLabelProps = Props<typeof Listbox.Label>;
 
@@ -33,11 +34,16 @@ const SelectLabel = ({
     {...rest} />
 );
 
-type SelectButtonProps = Props<typeof Listbox.Button>;
+interface SelectButtonCustomProps {
+  variant?: typeof BALANCE_VARIANTS[number];
+}
+
+type SelectButtonProps = SelectButtonCustomProps & Props<typeof Listbox.Button>;
 
 const SelectButton = ({
   className,
   children,
+  variant = 'optionSelector',
   ...rest
 }: SelectButtonProps): JSX.Element => (
   <Listbox.Button
@@ -73,7 +79,7 @@ const SelectButton = ({
       },
       {
         [clsx(
-          'dark:bg-kintsugiMidnight-900',
+          variant === 'formField' ? 'dark:bg-kintsugiMidnight' : 'dark:bg-kintsugiMidnight-900',
           'dark:focus:border-kintsugiSupernova-300',
           'dark:focus:ring-kintsugiSupernova-200'
         )]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA
@@ -106,6 +112,7 @@ const SelectButton = ({
 
 interface SelectOptionsCustomProps {
   open: boolean;
+  variant?: typeof BALANCE_VARIANTS[number];
 }
 
 type SelectOptionsProps = SelectOptionsCustomProps & Props<typeof Listbox.Options>;
@@ -113,6 +120,7 @@ type SelectOptionsProps = SelectOptionsCustomProps & Props<typeof Listbox.Option
 const SelectOptions = ({
   open,
   className,
+  variant = 'optionSelector',
   ...rest
 }: SelectOptionsProps): JSX.Element => (
   <Transition
@@ -154,7 +162,7 @@ const SelectOptions = ({
         },
         {
           [clsx(
-            'dark:bg-kintsugiMidnight-900'
+            variant === 'formField' ? 'dark:bg-kintsugiMidnight' : 'dark:bg-kintsugiMidnight-900'
           )]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA
         },
         className
