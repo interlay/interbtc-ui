@@ -28,8 +28,8 @@ import {
 
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import WrappedTokenField from '../WrappedTokenField';
-import SubmitButton from '../SubmitButton';
-import FormTitle from '../FormTitle';
+import SubmitButton from 'components/SubmitButton';
+import FormTitle from 'components/FormTitle';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
@@ -163,7 +163,7 @@ const BurnForm = (): JSX.Element | null => {
           [WRAPPED_TOKEN_AMOUNT]: ''
         });
         setSubmitStatus(STATUSES.RESOLVED);
-      } catch (error) {
+      } catch (error: any) {
         setSubmitStatus(STATUSES.REJECTED);
         setSubmitError(error);
       }

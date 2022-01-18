@@ -26,8 +26,8 @@ import {
   Currency
 } from '@interlay/monetary-js';
 
-import SubmitButton from '../SubmitButton';
-import FormTitle from '../FormTitle';
+import SubmitButton from 'components/SubmitButton';
+import FormTitle from 'components/FormTitle';
 import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
 import WrappedTokenField from 'pages/Bridge/WrappedTokenField';
 import PriceInfo from 'pages/Bridge/PriceInfo';
@@ -257,7 +257,7 @@ const IssueForm = (): JSX.Element | null => {
         const issueRequest = result[0];
         handleSubmittedRequestModalOpen(issueRequest);
         setSubmitStatus(STATUSES.RESOLVED);
-      } catch (error) {
+      } catch (error: any) {
         setSubmitStatus(STATUSES.REJECTED);
         setSubmitError(error);
       }

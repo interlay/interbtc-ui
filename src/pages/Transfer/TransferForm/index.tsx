@@ -16,8 +16,8 @@ import {
   Balances,
   TokenOption
 } from '../../../parts/Topbar/Balances';
-import SubmitButton from '../SubmitButton';
-import FormTitle from '../FormTitle';
+import SubmitButton from 'components/SubmitButton';
+import FormTitle from 'components/FormTitle';
 import TextField from 'components/TextField';
 import ErrorModal from 'components/ErrorModal';
 import {

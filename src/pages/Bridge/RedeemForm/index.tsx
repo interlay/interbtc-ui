@@ -26,8 +26,8 @@ import {
   Currency
 } from '@interlay/monetary-js';
 
-import SubmitButton from '../SubmitButton';
-import FormTitle from '../FormTitle';
+import SubmitButton from 'components/SubmitButton';
+import FormTitle from 'components/FormTitle';
 import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
 import WrappedTokenField from 'pages/Bridge/WrappedTokenField';
 import PriceInfo from 'pages/Bridge/PriceInfo';
@@ -279,7 +279,7 @@ const RedeemForm = (): JSX.Element | null => {
         dispatch(
           updateWrappedTokenBalanceAction(wrappedTokenBalance.sub(BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT])))
         );
-      } catch (error) {
+      } catch (error: any) {
         setSubmitStatus(STATUSES.REJECTED);
         setSubmitError(error);
       }
