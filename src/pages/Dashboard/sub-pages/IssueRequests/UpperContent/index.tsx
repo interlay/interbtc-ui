@@ -24,17 +24,16 @@ import {
   displayMonetaryAmount,
   getUsdAmount
 } from 'common/utils/utils';
+import genericFetcher, {
+  GENERIC_FETCHER
+} from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
-import graphqlFetcher, {
-  GraphqlReturn,
-  GRAPHQL_FETCHER
-} from 'services/fetchers/graphql-fetcher';
-import issueCountQuery from 'services/queries/issue-count-query';
 
 const UpperContent = (): JSX.Element => {
   const {
     totalWrappedTokenAmount,
-    prices
+    prices,
+    bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
@@ -43,13 +42,16 @@ const UpperContent = (): JSX.Element => {
     isLoading: totalSuccessfulIssuesLoading,
     data: totalSuccessfulIssues,
     error: totalSuccessfulIssuesError
-  // TODO: should type properly (`Relay`)
-  } = useQuery<GraphqlReturn<any>, Error>(
+  } = useQuery<number, Error>(
     [
-      GRAPHQL_FETCHER,
-      issueCountQuery('status_eq: Completed')
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'getTotalSuccessfulIssues'
     ],
-    graphqlFetcher<GraphqlReturn<any>>()
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
   );
   useErrorHandler(totalSuccessfulIssuesError);
 
@@ -57,10 +59,6 @@ const UpperContent = (): JSX.Element => {
   if (totalSuccessfulIssuesIdle || totalSuccessfulIssuesLoading) {
     return <>Loading...</>;
   }
-  if (totalSuccessfulIssues === undefined) {
-    throw new Error('Something went wrong!');
-  }
-  const totalSuccessfulIssueCount = totalSuccessfulIssues.data.issuesConnection.totalCount;
 
   return (
     <Panel
@@ -96,7 +94,7 @@ const UpperContent = (): JSX.Element => {
               {t('dashboard.issue.issue_requests')}
             </StatsDt>
             <StatsDd>
-              {totalSuccessfulIssueCount}
+              {totalSuccessfulIssues}
             </StatsDd>
           </>
         } />

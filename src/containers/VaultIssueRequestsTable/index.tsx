@@ -171,7 +171,7 @@ const VaultIssueRequestsTable = ({
       },
       {
         Header: t('issue_page.vault_btc_address'),
-        accessor: 'vaultBTCAddress',
+        accessor: 'vaultWrappedAddress',
         classNames: [
           'text-left'
         ],

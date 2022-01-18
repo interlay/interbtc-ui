@@ -97,7 +97,7 @@
     "test": "node -e \"console.log('Tests are not ready yet!')\"",
     "lint-and-type-check": "yarn lint && yarn type-check",
     "eject": "react-scripts eject",
-    "compose:regtest": "yarn install && docker-compose up",
+    "compose:regtest": "docker-compose --env-file .env.development.local up",
     "compose:testnet": "docker-compose -f ./docker-compose.testnet.yml up",
     "compose:down": "docker-compose down --remove-orphans -v",
     "storybook": "start-storybook -p 6006 -s public",

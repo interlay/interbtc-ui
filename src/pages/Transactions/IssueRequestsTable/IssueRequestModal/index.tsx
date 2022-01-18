@@ -1,8 +1,13 @@
+
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { IssueStatus } from '@interlay/interbtc-api';
+import {
+  Issue,
+  IssueStatus
+} from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import BTCPaymentPendingStatusUI from './BTCPaymentPendingStatusUI';
 import IssueRequestStatusUI from './IssueRequestStatusUI';
@@ -16,10 +21,7 @@ import InterlayModal, {
   Props as ModalProps,
   InterlayModalInnerWrapper
 } from 'components/UI/InterlayModal';
-import {
-  WrappedTokenAmount,
-  WRAPPED_TOKEN_SYMBOL
-} from 'config/relay-chains';
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
   POLKADOT,
   KUSAMA
@@ -32,8 +34,7 @@ import {
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 
-// TODO: should type properly (`Relay`)
-const renderModalStatusPanel = (request: any) => {
+const renderModalStatusPanel = (request: Issue) => {
   switch (request.status) {
   case IssueStatus.PendingWithBtcTxNotFound: {
     return <BTCPaymentPendingStatusUI request={request} />;
@@ -48,8 +49,7 @@ const renderModalStatusPanel = (request: any) => {
 };
 
 interface CustomProps {
-  // TODO: should type properly (`Relay`)
-  request: any;
+  request: Issue;
 }
 
 const IssueRequestModal = ({
@@ -66,18 +66,11 @@ const IssueRequestModal = ({
 
   const focusRef = React.useRef(null);
 
-  const receivedWrappedTokenAmount =
-    request.execution ?
-      request.execution.amountWrapped :
-      request.request.amountWrapped;
-  const bridgeFee =
-    request.execution ?
-      request.execution.bridgeFeeWrapped :
-      request.request.bridgeFeeWrapped;
-  const sentBackingTokenAmount =
-    // TODO: double-check
-    (receivedWrappedTokenAmount as WrappedTokenAmount)
-      .add(bridgeFee as WrappedTokenAmount);
+  const issuedWrappedTokenAmount =
+    (request.executedAmountWrapped && !request.executedAmountWrapped.isZero()) ?
+      request.executedAmountWrapped :
+      request.wrappedAmount;
+  const receivedWrappedTokenAmount = issuedWrappedTokenAmount.sub(request.bridgeFee);
 
   return (
     <InterlayModal
@@ -133,7 +126,7 @@ const IssueRequestModal = ({
                   'block'
                 )}>
                 {`≈ $ ${getUsdAmount(
-                  receivedWrappedTokenAmount,
+                  issuedWrappedTokenAmount || BitcoinAmount.zero,
                   prices.bitcoin.usd
                 )}`}
               </span>
@@ -155,9 +148,9 @@ const IssueRequestModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayMonetaryAmount(bridgeFee)}
+                value={displayMonetaryAmount(request.bridgeFee)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(bridgeFee, prices.bitcoin.usd)} />
+                approxUSD={getUsdAmount(request.bridgeFee, prices.bitcoin.usd)} />
               <Hr2
                 className={clsx(
                   'border-t-2',
@@ -179,9 +172,9 @@ const IssueRequestModal = ({
                     width={23}
                     height={23} />
                 }
-                value={displayMonetaryAmount(sentBackingTokenAmount)}
+                value={displayMonetaryAmount(issuedWrappedTokenAmount)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(sentBackingTokenAmount, prices.bitcoin.usd)} />
+                approxUSD={getUsdAmount(issuedWrappedTokenAmount, prices.bitcoin.usd)} />
             </div>
             <div className='space-y-4'>
               {/* TODO: could componentize */}
@@ -216,7 +209,7 @@ const IssueRequestModal = ({
                   {t('issue_page.parachain_block')}
                 </span>
                 <span className='font-medium'>
-                  {request.request.height.active}
+                  {request.creationBlock}
                 </span>
               </div>
               <div
@@ -233,7 +226,7 @@ const IssueRequestModal = ({
                   {t('issue_page.vault_dot_address')}
                 </span>
                 <span className='font-medium'>
-                  {shortAddress(request.vaultParachainAddress)}
+                  {shortAddress(request.vaultId.accountId.toString())}
                 </span>
               </div>
               <div
@@ -250,7 +243,7 @@ const IssueRequestModal = ({
                   {t('issue_page.vault_btc_address')}
                 </span>
                 <span className='font-medium'>
-                  {shortAddress(request.vaultBackingAddress)}
+                  {shortAddress(request.vaultWrappedAddress)}
                 </span>
               </div>
             </div>

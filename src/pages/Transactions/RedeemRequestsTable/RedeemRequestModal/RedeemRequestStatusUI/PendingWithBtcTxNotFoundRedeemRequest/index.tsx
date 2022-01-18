@@ -1,7 +1,9 @@
+
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { Redeem } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import Timer from 'components/Timer';
@@ -17,8 +19,7 @@ import {
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
-  // TODO: should type properly (`Relay`)
-  request: any;
+  request: Redeem;
 }
 
 const PendingWithBtcTxNotFoundRedeemRequest = ({
@@ -37,7 +38,7 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({
     (async () => {
       try {
         const redeemPeriod = await window.bridge.interBtcApi.redeem.getRedeemPeriod();
-        const requestTimestamp = Math.floor(new Date(request.request.timestamp).getTime() / 1000);
+        const requestTimestamp = Math.floor(new Date(Number(request.creationTimestamp)).getTime() / 1000);
         const theInitialLeftSeconds = requestTimestamp + (redeemPeriod * BLOCK_TIME) - Math.floor(Date.now() / 1000);
         setInitialLeftSeconds(theInitialLeftSeconds);
       } catch (error) {
