@@ -168,6 +168,8 @@ const SelectOptions = ({
         },
         {
           [clsx(
+            // This is needed because the form field is rendered in a card with a different coloured
+            // background to the version in the top bar.
             variant === VARIANTS.formField ? 'dark:bg-kintsugiMidnight' : 'dark:bg-kintsugiMidnight-900'
           )]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA
         },
