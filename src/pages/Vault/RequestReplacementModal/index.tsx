@@ -37,17 +37,16 @@ type RequestReplacementFormData = {
 interface Props {
   onClose: () => void;
   open: boolean;
+  vaultAddress: string;
 }
 
 const RequestReplacementModal = ({
   onClose,
-  open
+  open,
+  vaultAddress
 }: Props): JSX.Element => {
   const { register, handleSubmit, errors } = useForm<RequestReplacementFormData>();
-  const {
-    address,
-    wrappedTokenBalance
-  } = useSelector((state: StoreType) => state.general);
+  const { wrappedTokenBalance } = useSelector((state: StoreType) => state.general);
   const lockedDot = useSelector((state: StoreType) => state.vault.collateral);
   const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
   const [isRequestPending, setRequestPending] = React.useState(false);
@@ -68,7 +67,7 @@ const RequestReplacementModal = ({
       }
       await window.bridge.interBtcApi.replace.request(amountPolkaBtc, COLLATERAL_TOKEN as CollateralCurrency);
 
-      const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+      const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
       queryClient.invalidateQueries([
         GENERIC_FETCHER,
         'interBtcApi',

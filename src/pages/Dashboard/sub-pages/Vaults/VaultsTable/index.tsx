@@ -450,7 +450,7 @@ const VaultsTable = (): JSX.Element => {
     }
 
     const handleRowClick = (vaultId: string) => () => {
-      history.push(PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT_ID}`, vaultId));
+      history.push(PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT_ADDRESS}`, vaultId));
     };
 
     return (

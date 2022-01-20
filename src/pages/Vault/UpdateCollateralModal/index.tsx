@@ -62,16 +62,17 @@ interface Props {
   open: boolean;
   onClose: () => void;
   collateralUpdateStatus: CollateralUpdateStatus;
+  vaultAddress: string;
 }
 
 const UpdateCollateralModal = ({
   open,
   onClose,
-  collateralUpdateStatus
+  collateralUpdateStatus,
+  vaultAddress
 }: Props): JSX.Element => {
   const {
     bridgeLoaded,
-    address,
     collateralTokenBalance
   } = useSelector((state: StoreType) => state.general);
   // Denoted in collateral token
@@ -93,7 +94,7 @@ const UpdateCollateralModal = ({
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
 
-  const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+  const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
 
   const {
     isIdle: requiredCollateralTokenAmountIdle,

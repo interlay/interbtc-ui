@@ -1,6 +1,6 @@
 
 const URL_PARAMETERS = Object.freeze({
-  VAULT_ID: 'vaultId'
+  VAULT_ADDRESS: 'vaultAddress'
 });
 
 const PAGES = Object.freeze({
@@ -16,7 +16,7 @@ const PAGES = Object.freeze({
   DASHBOARD_ISSUE_REQUESTS: '/dashboard/issue-requests',
   DASHBOARD_REDEEM_REQUESTS: '/dashboard/redeem-requests',
   DASHBOARD_RELAY: '/dashboard/relay',
-  VAULT: `/vault/:${URL_PARAMETERS.VAULT_ID}`,
+  VAULT: `/vault/:${URL_PARAMETERS.VAULT_ADDRESS}`,
   FEEDBACK: '/feedback'
 });
 
