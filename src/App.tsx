@@ -103,8 +103,7 @@ const App = (): JSX.Element => {
     collateralTokenBalance,
     collateralTokenTransferableBalance,
     governanceTokenBalance,
-    governanceTokenTransferableBalance,
-    vaultClientLoaded
+    governanceTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
   const [isLoading, setIsLoading] = React.useState(true);
   const dispatch = useDispatch();
@@ -426,11 +425,9 @@ const App = (): JSX.Element => {
             <React.Suspense fallback={<FullLoadingSpinner />}>
               <Switch location={location}>
                 {/* ray test touch <<< */}
-                {vaultClientLoaded && (
-                  <Route path={PAGES.VAULT}>
-                    <Vault />
-                  </Route>
-                )}
+                <Route path={PAGES.VAULT}>
+                  <Vault />
+                </Route>
                 {/* ray test touch >>> */}
                 <Route path={PAGES.DASHBOARD}>
                   <Dashboard />
