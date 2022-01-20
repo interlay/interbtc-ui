@@ -78,7 +78,7 @@ const Bridge = React.lazy(() =>
   import(/* webpackChunkName: 'bridge' */ 'pages/Bridge')
 );
 const Transfer = React.lazy(() =>
-  import(/* webpackChunkName: 'bridge' */ 'pages/Transfer')
+  import(/* webpackChunkName: 'transfer' */ 'pages/Transfer')
 );
 const Transactions = React.lazy(() =>
   import(/* webpackChunkName: 'transactions' */ 'pages/Transactions')
