@@ -87,7 +87,7 @@ const Staking = React.lazy(() =>
 const Dashboard = React.lazy(() =>
   import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard')
 );
-const VaultDashboard = React.lazy(() =>
+const Vault = React.lazy(() =>
   import(/* webpackChunkName: 'vault' */ 'pages/Vault')
 );
 const NoMatch = React.lazy(() =>
@@ -428,7 +428,7 @@ const App = (): JSX.Element => {
                 {/* ray test touch <<< */}
                 {vaultClientLoaded && (
                   <Route path={PAGES.VAULT}>
-                    <VaultDashboard />
+                    <Vault />
                   </Route>
                 )}
                 {/* ray test touch >>> */}
