@@ -16,9 +16,7 @@ const PAGES = Object.freeze({
   DASHBOARD_ISSUE_REQUESTS: '/dashboard/issue-requests',
   DASHBOARD_REDEEM_REQUESTS: '/dashboard/redeem-requests',
   DASHBOARD_RELAY: '/dashboard/relay',
-  // ray test touch <<<
   VAULT: `/vault/:${URL_PARAMETERS.VAULT_ID}`,
-  // ray test touch >>>
   FEEDBACK: '/feedback'
 });
 
