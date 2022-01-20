@@ -11,13 +11,14 @@ const PAGES = Object.freeze({
   STAKING: '/staking',
   DASHBOARD: '/dashboard',
   DASHBOARD_VAULTS: '/dashboard/vaults',
-  DASHBOARD_VAULT: `/dashboard/vault/:${URL_PARAMETERS.VAULT_ID}`,
   DASHBOARD_PARACHAIN: '/dashboard/parachain',
   DASHBOARD_ORACLES: '/dashboard/oracles',
   DASHBOARD_ISSUE_REQUESTS: '/dashboard/issue-requests',
   DASHBOARD_REDEEM_REQUESTS: '/dashboard/redeem-requests',
   DASHBOARD_RELAY: '/dashboard/relay',
-  VAULT: '/vault',
+  // ray test touch <<<
+  VAULT: `/vault/:${URL_PARAMETERS.VAULT_ID}`,
+  // ray test touch >>>
   FEEDBACK: '/feedback'
 });
 

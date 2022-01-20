@@ -15,9 +15,6 @@ const Home = React.lazy(() =>
 const Vaults = React.lazy(() =>
   import(/* webpackChunkName: 'vaults' */ './sub-pages/Vaults')
 );
-const Vault = React.lazy(() =>
-  import(/* webpackChunkName: 'vault' */ './sub-pages/Vault')
-);
 const Parachain = React.lazy(() =>
   import(/* webpackChunkName: 'parachain' */ './sub-pages/Parachain')
 );
@@ -42,9 +39,6 @@ const Dashboard = (): JSX.Element => {
       <Switch>
         <Route path={PAGES.DASHBOARD_VAULTS}>
           <Vaults />
-        </Route>
-        <Route path={PAGES.DASHBOARD_VAULT}>
-          <Vault />
         </Route>
         <Route path={PAGES.DASHBOARD_PARACHAIN}>
           <Parachain />

@@ -55,7 +55,9 @@ const NAVIGATION_ITEMS = [
   },
   {
     name: 'nav_vault',
+    // ray test touch <<<
     link: PAGES.VAULT,
+    // ray test touch >>>
     icon: ChipIcon
   },
   {
@@ -128,12 +130,12 @@ const Navigation = ({
           );
         }
 
-        // ray test touch <<
+        // ray test touch <<<
         // TODO: could disable the vault link rather than hiding
         if (navigationItem.link === PAGES.VAULT && !vaultClientLoaded) {
           return null;
         }
-        // ray test touch >>
+        // ray test touch >>>
 
         const match = matchPath(location.pathname, {
           path: navigationItem.link,

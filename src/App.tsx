@@ -425,13 +425,13 @@ const App = (): JSX.Element => {
           render={({ location }) => (
             <React.Suspense fallback={<FullLoadingSpinner />}>
               <Switch location={location}>
-                {/* ray test touch << */}
+                {/* ray test touch <<< */}
                 {vaultClientLoaded && (
                   <Route path={PAGES.VAULT}>
                     <VaultDashboard />
                   </Route>
                 )}
-                {/* ray test touch >> */}
+                {/* ray test touch >>> */}
                 <Route path={PAGES.DASHBOARD}>
                   <Dashboard />
                 </Route>
