@@ -121,6 +121,8 @@ const App = (): JSX.Element => {
       );
       dispatch(isPolkaBtcLoaded(true));
       setIsLoading(false);
+      // NOTE: Catch clause variable type annotation must be 'any' or 'unknown'. Use of any here
+      // and throughout is to resolve type errors.
     } catch (error: any) {
       toast.warn('Unable to connect to the BTC-Parachain.');
       console.log('[loadPolkaBTC] error.message => ', error.message);
