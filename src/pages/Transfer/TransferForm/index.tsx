@@ -75,13 +75,6 @@ const TransferForm = (): JSX.Element => {
       );
 
       setSubmitStatus(STATUSES.RESOLVED);
-
-      toast.success(t('transfer_page.successfully_transferred'));
-
-      reset({
-        [TRANSFER_AMOUNT]: '',
-        [RECIPIENT_ADDRESS]: ''
-      });
     } catch (error: any) {
       setSubmitStatus(STATUSES.REJECTED);
       setSubmitError(error);
@@ -116,11 +109,22 @@ const TransferForm = (): JSX.Element => {
     setAccountSet(!!address);
   }, [address]);
 
+  // This ensures that triggering the notification and clearing
+  // the form happen at the same time.
   React.useEffect(() => {
+    if (submitStatus !== STATUSES.RESOLVED) return;
+
+    toast.success(t('transfer_page.successfully_transferred'));
+
     reset({
-      [TRANSFER_AMOUNT]: ''
+      [TRANSFER_AMOUNT]: '',
+      [RECIPIENT_ADDRESS]: ''
     });
-  }, [activeToken, reset]);
+  }, [
+    submitStatus,
+    reset,
+    t
+  ]);
 
   return (
     <>
