@@ -1,7 +1,8 @@
 import { StoreType, ParachainStatus, Prices } from './util.types';
 import {
   Issue,
-  CollateralUnit
+  CollateralUnit,
+  CurrencyUnit
 } from '@interlay/interbtc-api';
 import {
   BitcoinAmount,
@@ -19,6 +20,7 @@ export const CHANGE_ADDRESS = 'CHANGE_ADDRESS';
 export const INIT_GENERAL_DATA_ACTION = 'INIT_GENERAL_DATA_ACTION';
 export const UPDATE_BALANCE_POLKA_BTC = 'UPDATE_BALANCE_POLKA_BTC';
 export const UPDATE_COLLATERAL_TOKEN_BALANCE = 'UPDATE_COLLATERAL_TOKEN_BALANCE';
+export const UPDATE_GOVERNANCE_TOKEN_BALANCE = 'UPDATE_GOVERNANCE_TOKEN_BALANCE';
 export const SET_INSTALLED_EXTENSION = 'SET_INSTALLED_EXTENSION';
 export const SHOW_ACCOUNT_MODAL = 'SHOW_ACCOUNT_MODAL';
 export const UPDATE_OF_PRICES = 'UPDATE_OF_PRICES';
@@ -85,6 +87,11 @@ export interface UpdateCollateralTokenBalance {
   collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
 }
 
+export interface UpdateGovernanceTokenBalance {
+  type: typeof UPDATE_GOVERNANCE_TOKEN_BALANCE;
+  governanceTokenBalance: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
+}
+
 export interface SetInstalledExtension {
   type: typeof SET_INSTALLED_EXTENSION;
   extensions: string[];
@@ -102,6 +109,7 @@ export type GeneralActions =
   | IsVaultClientLoaded
   | UpdateBalancePolkaBTC
   | UpdateCollateralTokenBalance
+  | UpdateGovernanceTokenBalance
   | SetInstalledExtension
   | ShowAccountModal
   | UpdateOfPrices

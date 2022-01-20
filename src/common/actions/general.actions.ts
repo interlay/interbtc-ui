@@ -3,7 +3,10 @@ import {
   MonetaryAmount,
   Currency
 } from '@interlay/monetary-js';
-import { CollateralUnit } from '@interlay/interbtc-api';
+import {
+  CollateralUnit,
+  CurrencyUnit
+} from '@interlay/interbtc-api';
 
 import {
   IS_POLKA_BTC_LOADED,
@@ -12,6 +15,7 @@ import {
   IS_VAULT_CLIENT_LOADED,
   UPDATE_BALANCE_POLKA_BTC,
   UPDATE_COLLATERAL_TOKEN_BALANCE,
+  UPDATE_GOVERNANCE_TOKEN_BALANCE,
   SET_INSTALLED_EXTENSION,
   SHOW_ACCOUNT_MODAL,
   UPDATE_OF_PRICES,
@@ -24,6 +28,7 @@ import {
   IsVaultClientLoaded,
   UpdateBalancePolkaBTC,
   UpdateCollateralTokenBalance,
+  UpdateGovernanceTokenBalance,
   SetInstalledExtension,
   ShowAccountModal,
   IsFaucetLoaded,
@@ -63,6 +68,13 @@ export const updateCollateralTokenBalanceAction = (
 ): UpdateCollateralTokenBalance => ({
   type: UPDATE_COLLATERAL_TOKEN_BALANCE,
   collateralTokenBalance
+});
+
+export const updateGovernanceTokenBalanceAction = (
+  governanceTokenBalance: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>
+): UpdateGovernanceTokenBalance => ({
+  type: UPDATE_GOVERNANCE_TOKEN_BALANCE,
+  governanceTokenBalance
 });
 
 export const updateOfPricesAction = (prices: Prices): UpdateOfPrices => ({
