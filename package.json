@@ -12,7 +12,7 @@
     "@polkadot/types": "6.9.2",
     "@polkadot/ui-keyring": "0.87.5",
     "@reach/tooltip": "^0.16.0",
-    "@tailwindcss/forms": "^0.3.2",
+    "@tailwindcss/forms": "^0.4.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
