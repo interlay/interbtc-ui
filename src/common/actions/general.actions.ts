@@ -85,6 +85,7 @@ export const updateOfPricesAction = (prices: Prices): UpdateOfPrices => ({
 export const initGeneralDataAction = (
   totalWrappedTokenAmount: BitcoinAmount,
   totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
+  totalGovernanceTokenAmount: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>,
   btcRelayHeight: number,
   bitcoinHeight: number,
   parachainStatus: ParachainStatus
@@ -94,6 +95,7 @@ export const initGeneralDataAction = (
   bitcoinHeight,
   totalWrappedTokenAmount,
   totalLockedCollateralTokenAmount,
+  totalGovernanceTokenAmount,
   parachainStatus
 });
 

@@ -72,6 +72,7 @@ export interface InitGeneralDataAction {
   type: typeof INIT_GENERAL_DATA_ACTION;
   totalWrappedTokenAmount: BitcoinAmount;
   totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  totalGovernanceTokenAmount: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
   btcRelayHeight: number;
   bitcoinHeight: number;
   parachainStatus: ParachainStatus;
