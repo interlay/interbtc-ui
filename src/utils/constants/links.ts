@@ -1,4 +1,8 @@
 
+const URL_PARAMETERS = Object.freeze({
+  VAULT_ID: 'vaultId'
+});
+
 const PAGES = Object.freeze({
   HOME: '/',
   BRIDGE: '/bridge',
@@ -7,6 +11,7 @@ const PAGES = Object.freeze({
   STAKING: '/staking',
   DASHBOARD: '/dashboard',
   DASHBOARD_VAULTS: '/dashboard/vaults',
+  DASHBOARD_VAULT: `/dashboard/vault/:${URL_PARAMETERS.VAULT_ID}`,
   DASHBOARD_PARACHAIN: '/dashboard/parachain',
   DASHBOARD_ORACLES: '/dashboard/oracles',
   DASHBOARD_ISSUE_REQUESTS: '/dashboard/issue-requests',
@@ -27,5 +32,6 @@ const QUERY_PARAMETERS = Object.freeze({
 
 export {
   PAGES,
-  QUERY_PARAMETERS
+  QUERY_PARAMETERS,
+  URL_PARAMETERS
 };
