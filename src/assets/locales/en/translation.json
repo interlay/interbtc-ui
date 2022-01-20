@@ -431,5 +431,8 @@
       "chain": "The chain will be upgraded."
     },
     "info": "More info here."
+  },
+  "validation": {
+    "invalid_polkadot_address": "Enter a valid Polkadot address"
   }
 }
