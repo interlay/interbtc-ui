@@ -63,20 +63,8 @@ const TransferForm = (): JSX.Element => {
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
 
-  const validateAddress = (address: string): boolean => {
-    const addressValid = isValidPolkadotAddress(address);
-    console.log(addressValid);
-
-    if (addressValid) {
-      return true;
-    }
-
-    return false;
-  };
-
   const onSubmit = async (data: TransferFormData) => {
     if (!activeToken) return;
-    if (!validateAddress(data[RECIPIENT_ADDRESS])) return;
 
     try {
       setSubmitStatus(STATUSES.PENDING);
@@ -100,7 +88,7 @@ const TransferForm = (): JSX.Element => {
     }
   };
 
-  const validateForm = React.useCallback((value: number): string | undefined => {
+  const validateTransferAmount = React.useCallback((value: number): string | undefined => {
     if (!activeToken) return;
 
     const balance = newMonetaryAmount(activeToken.balance, activeToken.token as Currency<CurrencyUnit>, true);
@@ -108,6 +96,10 @@ const TransferForm = (): JSX.Element => {
 
     return balance < transferAmount ? t('insufficient_funds') : undefined;
   }, [activeToken, t]);
+
+  const validateAddress = React.useCallback((address: string): string | undefined => {
+    return isValidPolkadotAddress(address) ? undefined : t('validation.invalid_polkadot_address');
+  }, [t]);
 
   const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!accountSet) {
@@ -167,7 +159,7 @@ const TransferForm = (): JSX.Element => {
                   value: true,
                   message: t('redeem_page.please_enter_amount')
                 },
-                validate: value => validateForm(value)
+                validate: value => validateTransferAmount(value)
               })}
               error={!!errors[TRANSFER_AMOUNT]}
               helperText={errors[TRANSFER_AMOUNT]?.message} />
@@ -184,7 +176,8 @@ const TransferForm = (): JSX.Element => {
               required: {
                 value: true,
                 message: t('enter_recipient_address')
-              }
+              },
+              validate: value => validateAddress(value)
             })}
             error={!!errors[RECIPIENT_ADDRESS]}
             helperText={errors[RECIPIENT_ADDRESS]?.message} />
