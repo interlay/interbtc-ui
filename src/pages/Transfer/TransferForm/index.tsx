@@ -25,6 +25,7 @@ import {
   StoreType
 } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
+import isValidPolkadotAddress from 'utils/validation/validate-address';
 import STATUSES from 'utils/constants/statuses';
 import {
   KUSAMA,
@@ -62,8 +63,20 @@ const TransferForm = (): JSX.Element => {
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
 
+  const validateAddress = (address: string): boolean => {
+    const addressValid = isValidPolkadotAddress(address);
+    console.log(addressValid);
+
+    if (addressValid) {
+      return true;
+    }
+
+    return false;
+  };
+
   const onSubmit = async (data: TransferFormData) => {
     if (!activeToken) return;
+    if (!validateAddress(data[RECIPIENT_ADDRESS])) return;
 
     try {
       setSubmitStatus(STATUSES.PENDING);
