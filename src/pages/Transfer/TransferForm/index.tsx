@@ -87,7 +87,7 @@ const TransferForm = (): JSX.Element => {
     const balance = newMonetaryAmount(activeToken.balance, activeToken.token as Currency<CurrencyUnit>, true);
     const transferAmount = newMonetaryAmount(value, activeToken.token as Currency<CurrencyUnit>, true);
 
-    return balance < transferAmount ? t('insufficient_funds') : undefined;
+    return balance.lt(transferAmount) ? t('insufficient_funds') : undefined;
   }, [activeToken, t]);
 
   const validateAddress = React.useCallback((address: string): string | undefined => {
