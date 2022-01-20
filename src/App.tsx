@@ -116,7 +116,6 @@ const App = (): JSX.Element => {
         constants.PARACHAIN_URL,
         COLLATERAL_TOKEN as CollateralCurrency,
         WRAPPED_TOKEN,
-        GOVERNANCE_TOKEN as any,
         constants.BITCOIN_NETWORK,
         constants.STATS_URL
       );
