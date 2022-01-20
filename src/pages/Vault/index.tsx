@@ -1,5 +1,4 @@
 
-// ray test touch <<
 import * as React from 'react';
 import {
   useSelector,
@@ -62,9 +61,6 @@ const Vault = (): JSX.Element => {
   const [collateralUpdateStatus, setCollateralUpdateStatus] = React.useState(CollateralUpdateStatus.Close);
   const [requestReplacementModalOpen, setRequestReplacementModalOpen] = React.useState(false);
   const {
-    // ray test touch <<
-    vaultClientLoaded,
-    // ray test touch >>
     bridgeLoaded,
     address
   } = useSelector((state: StoreType) => state.general);
@@ -101,9 +97,6 @@ const Vault = (): JSX.Element => {
   React.useEffect(() => {
     (async () => {
       if (!bridgeLoaded) return;
-      // ray test touch <<
-      if (!vaultClientLoaded) return;
-      // ray test touch >>
       if (!address) return;
 
       try {
@@ -178,9 +171,6 @@ const Vault = (): JSX.Element => {
     })();
   }, [
     bridgeLoaded,
-    // ray test touch <<
-    vaultClientLoaded,
-    // ray test touch >>
     dispatch,
     address
   ]);
@@ -318,4 +308,3 @@ const Vault = (): JSX.Element => {
 };
 
 export default Vault;
-// ray test touch >>
