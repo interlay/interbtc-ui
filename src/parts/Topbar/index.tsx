@@ -45,6 +45,7 @@ const Topbar = (): JSX.Element => {
     bridgeLoaded,
     collateralTokenBalance,
     wrappedTokenBalance,
+    governanceTokenBalance,
     showAccountModal
   } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
@@ -158,7 +159,8 @@ const Topbar = (): JSX.Element => {
                 </InterlayDenimOrKintsugiMidnightOutlinedButton>
                 <Balances
                   collateralTokenBalance={collateralTokenBalance}
-                  wrappedTokenBalance={wrappedTokenBalance} />
+                  wrappedTokenBalance={wrappedTokenBalance}
+                  governanceTokenBalance={governanceTokenBalance} />
                 <InterlayDefaultContainedButton
                   className={SMALL_SIZE_BUTTON_CLASS_NAME}
                   onClick={handleAccountModalOpen}>
