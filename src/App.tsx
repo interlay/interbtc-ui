@@ -347,7 +347,7 @@ const App = (): JSX.Element => {
 
     (async () => {
       try {
-        unsubscribeFromCollateral =
+        unsubscribeFromGovernance =
           await window.bridge.interBtcApi.tokens.subscribeToBalance(
             GOVERNANCE_TOKEN,
             address,
