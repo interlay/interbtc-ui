@@ -128,10 +128,12 @@ const Navigation = ({
           );
         }
 
+        // ray test touch <<
         // TODO: could disable the vault link rather than hiding
         if (navigationItem.link === PAGES.VAULT && !vaultClientLoaded) {
           return null;
         }
+        // ray test touch >>
 
         const match = matchPath(location.pathname, {
           path: navigationItem.link,

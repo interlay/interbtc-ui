@@ -71,7 +71,9 @@ const UpdateCollateralModal = ({
 }: Props): JSX.Element => {
   const {
     bridgeLoaded,
+    // ray test touch <<
     vaultClientLoaded,
+    // ray test touch >>
     address,
     collateralTokenBalance
   } = useSelector((state: StoreType) => state.general);
@@ -156,7 +158,9 @@ const UpdateCollateralModal = ({
 
   const onSubmit = async (data: UpdateCollateralFormData) => {
     if (!bridgeLoaded) return;
+    // ray test touch <<
     if (!vaultClientLoaded) return;
+    // ray test touch >>
 
     try {
       setSubmitStatus(STATUSES.PENDING);

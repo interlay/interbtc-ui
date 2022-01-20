@@ -40,7 +40,7 @@ import {
   shortAddress,
   formatDateTimePrecise
 } from 'common/utils/utils';
-import * as constants from '../../constants';
+import * as constants from '../../../constants';
 
 interface Props {
   totalIssueRequests: number;

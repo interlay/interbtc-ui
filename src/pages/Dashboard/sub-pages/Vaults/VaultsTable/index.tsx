@@ -234,7 +234,12 @@ const VaultsTable = (): JSX.Element => {
         accessor: 'vaultId',
         classNames: [
           'text-left'
-        ]
+        ],
+        Cell: function FormattedCell({ value }: { value: string; }) {
+          return (
+            <>{shortAddress(value)}</>
+          );
+        }
       },
       {
         Header: t('locked_dot', {
@@ -399,7 +404,7 @@ const VaultsTable = (): JSX.Element => {
       }
 
       vaults.push({
-        vaultId: shortAddress(vaultExt.id.toString()),
+        vaultId: vaultExt.id.accountId.toString(),
         // TODO: fetch collateral reserved
         lockedBTC: displayMonetaryAmount(settledTokens),
         lockedDOT: displayMonetaryAmount(vaultCollateral),
