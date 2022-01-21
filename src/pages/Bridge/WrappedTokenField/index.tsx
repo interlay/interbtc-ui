@@ -32,8 +32,7 @@ const WrappedTokenField = React.forwardRef<Ref, CustomProps & NumberInputProps>(
   ...rest
 }, ref): JSX.Element => {
   return (
-    <div
-      className='space-y-1.5'>
+    <div className='space-y-1.5'>
       <TextFieldContainer className='relative'>
         <NumberInput
           ref={ref}
