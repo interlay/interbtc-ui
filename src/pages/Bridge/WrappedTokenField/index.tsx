@@ -31,6 +31,25 @@ const WrappedTokenField = React.forwardRef<Ref, CustomProps & NumberInputProps>(
   approxUSD,
   ...rest
 }, ref): JSX.Element => {
+  // `onWheel` prop can't be used with prevent default because
+  // React implements passive event listeners.
+  const disableChangeOnWheel = (event: MouseEvent) => {
+    event.preventDefault();
+  };
+
+  React.useEffect(() => {
+    // NOTE: This would normally be handled using `createRef` rather than `getELementById`
+    // but we can't do that here because ref is already being used by React Hook Form.
+    if (!id) return;
+
+    const input = document.getElementById(id);
+    input?.addEventListener('wheel', (event: MouseEvent) => disableChangeOnWheel(event), { passive: false });
+
+    return () => {
+      input?.removeEventListener('wheel', (event: MouseEvent) => disableChangeOnWheel(event));
+    };
+  }, [id]);
+
   return (
     <div className='space-y-1.5'>
       <TextFieldContainer className='relative'>
