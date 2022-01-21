@@ -37,21 +37,24 @@ const WrappedTokenField = React.forwardRef<Ref, CustomProps & NumberInputProps>(
     event.preventDefault();
   };
 
-  React.useEffect(() => {
-    // NOTE: This would normally be handled using `createRef` rather than `getElementById`
-    // but we can't do that here because ref is already being used by React Hook Form.
-    if (!id) return;
+  const inputParent = React.useRef<HTMLDivElement | null>(null);
 
-    const input = document.getElementById(id);
-    input?.addEventListener('wheel', (event: MouseEvent) => disableChangeOnWheel(event), { passive: false });
+  React.useEffect(() => {
+    if (!inputParent || !inputParent.current) return;
+    const currentInputParent = inputParent.current;
+
+    currentInputParent.addEventListener('wheel', (event: MouseEvent) =>
+      disableChangeOnWheel(event), { passive: false });
 
     return () => {
-      input?.removeEventListener('wheel', (event: MouseEvent) => disableChangeOnWheel(event));
+      currentInputParent.removeEventListener('wheel', (event: MouseEvent) => disableChangeOnWheel(event));
     };
-  }, [id]);
+  });
 
   return (
-    <div className='space-y-1.5'>
+    <div
+      ref={inputParent}
+      className='space-y-1.5'>
       <TextFieldContainer className='relative'>
         <NumberInput
           ref={ref}
