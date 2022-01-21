@@ -47,7 +47,8 @@ const WrappedTokenField = React.forwardRef<Ref, CustomProps & NumberInputProps>(
       disableChangeOnWheel(event), { passive: false });
 
     return () => {
-      currentInputParent.removeEventListener('wheel', (event: MouseEvent) => disableChangeOnWheel(event));
+      currentInputParent.removeEventListener('wheel', (event: MouseEvent) =>
+        disableChangeOnWheel(event));
     };
   });
 
