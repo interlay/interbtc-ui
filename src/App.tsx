@@ -24,6 +24,7 @@ import keyring from '@polkadot/ui-keyring';
 import { Keyring } from '@polkadot/api';
 import {
   CollateralCurrency,
+  CurrencyUnit,
   tickerToCurrencyIdLiteral,
   SecurityStatusCode
 } from '@interlay/interbtc-api';
@@ -46,6 +47,7 @@ import {
   APP_NAME,
   WRAPPED_TOKEN,
   COLLATERAL_TOKEN,
+  GOVERNANCE_TOKEN,
   WrappedTokenAmount
 } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
@@ -70,7 +72,8 @@ import {
   isFaucetLoaded,
   isVaultClientLoaded,
   updateWrappedTokenBalanceAction,
-  updateCollateralTokenBalanceAction
+  updateCollateralTokenBalanceAction,
+  updateGovernanceTokenBalanceAction
 } from 'common/actions/general.actions';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -99,6 +102,7 @@ const App = (): JSX.Element => {
     address,
     wrappedTokenBalance,
     collateralTokenBalance,
+    governanceTokenBalance,
     vaultClientLoaded
   } = useSelector((state: StoreType) => state.general);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -117,14 +121,16 @@ const App = (): JSX.Element => {
       );
       dispatch(isPolkaBtcLoaded(true));
       setIsLoading(false);
-    } catch (error) {
+      // NOTE: Catch clause variable type annotation must be 'any' or 'unknown'. Use of any here
+      // and throughout is to resolve type errors.
+    } catch (error: any) {
       toast.warn('Unable to connect to the BTC-Parachain.');
       console.log('[loadPolkaBTC] error.message => ', error.message);
     }
 
     try {
       startFetchingLiveData(dispatch, store);
-    } catch (error) {
+    } catch (error: any) {
       console.log('[loadPolkaBTC] error.message => ', error.message);
     }
   }, [
@@ -137,7 +143,7 @@ const App = (): JSX.Element => {
     try {
       window.faucet = new FaucetClient(window.bridge.interBtcApi.api, constants.FAUCET_URL);
       dispatch(isFaucetLoaded(true));
-    } catch (error) {
+    } catch (error: any) {
       console.log('[loadFaucet] error.message => ', error.message);
     }
   }, [dispatch]);
@@ -177,12 +183,14 @@ const App = (): JSX.Element => {
         const [
           totalWrappedTokenAmount,
           totalLockedCollateralTokenAmount,
+          totalGovernanceTokenAmount,
           btcRelayHeight,
           bitcoinHeight,
           state
         ] = await Promise.all([
           window.bridge.interBtcApi.tokens.total(WRAPPED_TOKEN),
           window.bridge.interBtcApi.tokens.total(COLLATERAL_TOKEN),
+          window.bridge.interBtcApi.tokens.total(GOVERNANCE_TOKEN),
           window.bridge.interBtcApi.btcRelay.getLatestBlockHeight(),
           window.bridge.interBtcApi.electrsAPI.getLatestBlockHeight(),
           window.bridge.interBtcApi.system.getStatusCode()
@@ -204,12 +212,13 @@ const App = (): JSX.Element => {
           initGeneralDataAction(
             totalWrappedTokenAmount,
             totalLockedCollateralTokenAmount,
+            totalGovernanceTokenAmount,
             Number(btcRelayHeight),
             bitcoinHeight,
             parachainStatus(state)
           )
         );
-      } catch (error) {
+      } catch (error: any) {
         // TODO: should add error handling
         console.log('[App React.useEffect 2] error.message => ', error.message);
       }
@@ -255,7 +264,7 @@ const App = (): JSX.Element => {
         // TODO: could store the active address just in one place (either in `window` object or in redux)
         window.bridge.interBtcApi.setAccount(newAddress, signer);
         dispatch(changeAddressAction(newAddress));
-      } catch (error) {
+      } catch (error: any) {
         // TODO: should add error handling
         console.log('[App React.useEffect 3] error.message => ', error.message);
       }
@@ -279,7 +288,7 @@ const App = (): JSX.Element => {
         await loadPolkaBTC();
         await loadFaucet();
         keyring.loadAll({});
-      } catch (error) {
+      } catch (error: any) {
         console.log(error.message);
       }
     })();
@@ -300,6 +309,8 @@ const App = (): JSX.Element => {
 
     let unsubscribeFromCollateral: () => void;
     let unsubscribeFromWrapped: () => void;
+    let unsubscribeFromGovernance: () => void;
+
     (async () => {
       try {
         unsubscribeFromCollateral =
@@ -312,7 +323,7 @@ const App = (): JSX.Element => {
               }
             }
           );
-      } catch (error) {
+      } catch (error: any) {
         console.log('[App React.useEffect 4] error.message => ', error.message);
       }
     })();
@@ -329,8 +340,25 @@ const App = (): JSX.Element => {
               }
             }
           );
-      } catch (error) {
+      } catch (error: any) {
         console.log('[App React.useEffect 5] error.message => ', error.message);
+      }
+    })();
+
+    (async () => {
+      try {
+        unsubscribeFromGovernance =
+          await window.bridge.interBtcApi.tokens.subscribeToBalance(
+            GOVERNANCE_TOKEN,
+            address,
+            (_, balance: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>) => {
+              if (!balance.eq(governanceTokenBalance)) {
+                dispatch(updateGovernanceTokenBalanceAction(balance));
+              }
+            }
+          );
+      } catch (error: any) {
+        console.log('[App React.useEffect 4] error.message => ', error.message);
       }
     })();
 
@@ -341,13 +369,17 @@ const App = (): JSX.Element => {
       if (unsubscribeFromWrapped) {
         unsubscribeFromWrapped();
       }
+      if (unsubscribeFromGovernance) {
+        unsubscribeFromGovernance();
+      }
     };
   }, [
     dispatch,
     bridgeLoaded,
     address,
     wrappedTokenBalance,
-    collateralTokenBalance
+    collateralTokenBalance,
+    governanceTokenBalance
   ]);
 
   React.useEffect(() => {
