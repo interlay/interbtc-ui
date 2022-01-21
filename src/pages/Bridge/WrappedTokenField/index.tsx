@@ -31,14 +31,14 @@ const WrappedTokenField = React.forwardRef<Ref, CustomProps & NumberInputProps>(
   approxUSD,
   ...rest
 }, ref): JSX.Element => {
-  // `onWheel` prop can't be used with prevent default because
+  // `onWheel` prop can't be used with `preventDefault` because
   // React implements passive event listeners.
   const disableChangeOnWheel = (event: MouseEvent) => {
     event.preventDefault();
   };
 
   React.useEffect(() => {
-    // NOTE: This would normally be handled using `createRef` rather than `getELementById`
+    // NOTE: This would normally be handled using `createRef` rather than `getElementById`
     // but we can't do that here because ref is already being used by React Hook Form.
     if (!id) return;
 
