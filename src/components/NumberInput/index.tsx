@@ -14,6 +14,7 @@ const NumberInput = React.forwardRef<Ref, InterlayInputProps>((props, ref): JSX.
 
   React.useEffect(() => {
     if (!inputParent || !inputParent.current) return;
+
     const currentInputParent = inputParent.current;
 
     currentInputParent.addEventListener('wheel', (event: MouseEvent) =>
