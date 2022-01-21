@@ -34,12 +34,13 @@ if (!process.env.REACT_APP_RELAY_CHAIN_NAME) {
 
 type WrappedToken = Currency<BitcoinUnit>;
 type CollateralToken = Currency<CollateralUnit>;
+type GovernanceToken = Currency<CurrencyUnit>
 
 let APP_NAME: string;
 let WRAPPED_TOKEN_SYMBOL: string;
 let WRAPPED_TOKEN: WrappedToken;
 let COLLATERAL_TOKEN: CollateralToken;
-let GOVERNANCE_TOKEN: Currency<CurrencyUnit>;
+let GOVERNANCE_TOKEN: GovernanceToken;
 let PRICES_URL: string;
 let RELAY_CHAIN_NAME: string;
 let COLLATERAL_TOKEN_SYMBOL: string;
@@ -118,6 +119,7 @@ default: {
 export type {
   CollateralToken,
   WrappedToken,
+  GovernanceToken,
   WrappedTokenAmount
 };
 

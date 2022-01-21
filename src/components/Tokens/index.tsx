@@ -8,14 +8,18 @@ import TokenSelector from './TokenSelector';
 import { SELECT_VARIANTS } from 'components/Select';
 
 import {
+  WrappedToken,
   WRAPPED_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon,
+  CollateralToken,
   COLLATERAL_TOKEN,
   COLLATERAL_TOKEN_SYMBOL,
   CollateralTokenLogoIcon,
-  WrappedToken,
-  CollateralToken
+  GovernanceToken,
+  GOVERNANCE_TOKEN,
+  GOVERNANCE_TOKEN_SYMBOL,
+  GovernanceTokenLogoIcon
 } from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import {
@@ -24,7 +28,7 @@ import {
 } from 'common/types/util.types';
 
 interface TokenOption {
-  token: WrappedToken | CollateralToken;
+  token: WrappedToken | CollateralToken | GovernanceToken;
   type: TokenType;
   balance: string;
   symbol: string;
@@ -66,7 +70,8 @@ const Tokens = ({
 
   const {
     collateralTokenBalance,
-    wrappedTokenBalance
+    wrappedTokenBalance,
+    governanceTokenBalance
   } = useSelector((state: StoreType) => state.general);
 
   const handleUpdateToken = (tokenType: TokenType) => {
@@ -96,6 +101,14 @@ const Tokens = ({
         icon: <WrappedTokenLogoIcon
           height={variant === 'formField' ? 46 : 26} />,
         symbol: WRAPPED_TOKEN_SYMBOL
+      },
+      {
+        token: GOVERNANCE_TOKEN,
+        type: TokenType.GOVERNANCE,
+        balance: displayMonetaryAmount(governanceTokenBalance),
+        icon: <GovernanceTokenLogoIcon
+          height={variant === 'formField' ? 46 : 26} />,
+        symbol: GOVERNANCE_TOKEN_SYMBOL
       }
     ];
 
@@ -104,6 +117,7 @@ const Tokens = ({
   [
     collateralTokenBalance,
     wrappedTokenBalance,
+    governanceTokenBalance,
     variant
   ]);
 
