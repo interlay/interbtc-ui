@@ -10,7 +10,7 @@ const isValidPolkadotAddress = (address: string): boolean => {
     );
 
     return true;
-  } catch (error: any) {
+  } catch {
     return false;
   }
 };
