@@ -27,7 +27,6 @@ const InterlayRouterLink = ({
         process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
       { 'dark:text-kintsugiSupernova':
         process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-      'hover:underline',
       'space-x-1.5',
       'inline-flex',
       'items-center',

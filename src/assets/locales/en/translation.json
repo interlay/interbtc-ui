@@ -99,7 +99,6 @@
   "address": "Account",
   "recipient_account": "Enter recipient account",
   "date": "Date",
-  "date_created": "Date created",
   "enter_recipient_address": "Please enter the recipient address.",
   "blockstream": "Blockstream",
   "insufficient_funds_dot": "Insufficient funds to pay for {{collateralTokenSymbol}} fees.",

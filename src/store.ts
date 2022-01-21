@@ -1,10 +1,13 @@
 import { createLogger } from 'redux-logger';
-import { applyMiddleware, createStore } from 'redux';
+import {
+  applyMiddleware,
+  createStore
+} from 'redux';
+import { persistStore } from 'redux-persist';
 import { InterBtc } from '@interlay/interbtc';
 import { FaucetClient } from '@interlay/interbtc-api';
 
 import { rootReducer } from './common/reducers/index';
-import { StoreState } from './common/types/util.types';
 
 declare global {
   interface Window {
@@ -14,9 +17,11 @@ declare global {
   }
 }
 
-export const configureStore = (): StoreState => {
-  const storeLogger = createLogger();
-  const store = createStore(rootReducer, undefined, applyMiddleware(storeLogger));
+const storeLogger = createLogger();
+const store = createStore(rootReducer, undefined, applyMiddleware(storeLogger));
+const persistor = persistStore(store);
 
-  return store;
+export {
+  store,
+  persistor
 };

@@ -1585,10 +1585,10 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-api@1.5.10":
-  version "1.5.10"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-1.5.10.tgz#1ca4fc50cdb2ad5973c83a21e6aff3e8022401d0"
-  integrity sha512-X3cE1idkF4V26JRaQOUrAddaJweOZuddS9/eSQcH+0JPMbGAppS0lTNZQJOeIS4BtS/Ll2W4vFSMYRDbwpWBWQ==
+"@interlay/interbtc-api@1.5.12":
+  version "1.5.12"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-1.5.12.tgz#ffeaceef903524f856d199fcf21c308320b7c85d"
+  integrity sha512-n0+bHDUB/rTBP2g89Wyyz0/IRX2HkWiItBf+e6JIkqep9t6VXE9oZ4kFF9vHlrl0F1lrqyQleSykwgyDB9X9Qw==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
     "@interlay/interbtc-types" "1.5.10"
@@ -1620,12 +1620,12 @@
   resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-1.5.10.tgz#8ff123e7886df06776e090deacca5c1b84ecf315"
   integrity sha512-7pUzNKmNeHi74uJl9WBoYzwyKh8+X18wZz9MVDvx58SgkDiEjUpyeafjhcmVhJptaB+OwPJ1V76RDbJRxr0T4w==
 
-"@interlay/interbtc@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-1.5.0.tgz#e8b59fffe837cde338e1075beef693d7ecdf968f"
-  integrity sha512-pbvip4Ahnvk4UuRk+pqAUBs/cae4R/c+7SeXJSSjOtfPXTNuQd9d4X1rK1ZtxxRFXepqzuw8AEnmskRtZ3WR/w==
+"@interlay/interbtc@1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-1.5.1.tgz#1856114ad2cf7a8f93fecf37cafb315d45826349"
+  integrity sha512-8sh91zHBizKYYkB42oaHUZXEpaVqxMubm5Zhui8yO2skuIzAlw2BhVGozIxeQUEx9v8oDa8rPkCZIsuEYdbHVA==
   dependencies:
-    "@interlay/interbtc-api" "1.5.10"
+    "@interlay/interbtc-api" "1.5.12"
     "@interlay/interbtc-index-client" "1.5.0"
     "@interlay/interbtc-types" "1.3.0"
     "@interlay/monetary-js" "0.5.1"
@@ -14472,18 +14472,7 @@ react-fast-compare@^3.0.1, react-fast-compare@^3.2.0:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.0.tgz#641a9da81b6a6320f270e89724fb45a0b39e43bb"
   integrity sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==
 
-react-helmet-async@^1.0.7:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/react-helmet-async/-/react-helmet-async-1.2.2.tgz#38d58d32ebffbc01ba42b5ad9142f85722492389"
-  integrity sha512-XgSQezeCbLfCxdZhDA3T/g27XZKnOYyOkruopTLSJj8RvFZwdXnM4djnfYaiBSDzOidDgTo1jcEozoRu/+P9UQ==
-  dependencies:
-    "@babel/runtime" "^7.12.5"
-    invariant "^2.2.4"
-    prop-types "^15.7.2"
-    react-fast-compare "^3.2.0"
-    shallowequal "^1.1.0"
-
-react-helmet-async@^1.2.2:
+react-helmet-async@^1.0.7, react-helmet-async@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/react-helmet-async/-/react-helmet-async-1.2.2.tgz#38d58d32ebffbc01ba42b5ad9142f85722492389"
   integrity sha512-XgSQezeCbLfCxdZhDA3T/g27XZKnOYyOkruopTLSJj8RvFZwdXnM4djnfYaiBSDzOidDgTo1jcEozoRu/+P9UQ==
@@ -14871,6 +14860,11 @@ redux-logger@^3.0.6:
   integrity sha1-91VZZvMJjzyIYExEnPC69XeCdL8=
   dependencies:
     deep-diff "^0.3.5"
+
+redux-persist@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/redux-persist/-/redux-persist-6.0.0.tgz#b4d2972f9859597c130d40d4b146fecdab51b3a8"
+  integrity sha512-71LLMbUq2r02ng2We9S215LtPu3fY0KgaGE0k8WRgl6RkqxtGfl7HUozz1Dftwsb0D/5mZ8dwAaPbtnzfvbEwQ==
 
 redux@^4.0.0, redux@^4.0.5:
   version "4.1.2"

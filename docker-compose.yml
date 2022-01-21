@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   interbtc:
-    image: "interlayhq/interbtc:interbtc-standalone-1.5.9"
+    image: "interlayhq/interbtc:interbtc-standalone-1.5.13"
     command:
       - interbtc-standalone
       - --rpc-external
@@ -66,7 +66,7 @@ services:
       - charlie
       - --btc-parachain-url
       - 'ws://interbtc:9944'
-      - --currency-id 
+      - --currency-id
       - ${DOCKER_RELAY_CHAIN_CURRENCY}
       - --coingecko
       - "https://api.coingecko.com/api/v3/"

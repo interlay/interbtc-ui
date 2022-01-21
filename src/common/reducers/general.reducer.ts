@@ -1,13 +1,17 @@
 import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import {
+  COLLATERAL_TOKEN,
+  GOVERNANCE_TOKEN
+} from 'config/relay-chains';
 import {
   IS_POLKA_BTC_LOADED,
   IS_VAULT_CLIENT_LOADED,
   INIT_GENERAL_DATA_ACTION,
   CHANGE_ADDRESS,
   UPDATE_COLLATERAL_TOKEN_BALANCE,
+  UPDATE_GOVERNANCE_TOKEN_BALANCE,
   UPDATE_BALANCE_POLKA_BTC,
   GeneralActions,
   SET_INSTALLED_EXTENSION,
@@ -28,6 +32,7 @@ const initialState = {
   totalLockedCollateralTokenAmount: newMonetaryAmount(0, COLLATERAL_TOKEN),
   wrappedTokenBalance: BitcoinAmount.zero,
   collateralTokenBalance: newMonetaryAmount(0, COLLATERAL_TOKEN),
+  governanceTokenBalance: newMonetaryAmount(0, GOVERNANCE_TOKEN),
   extensions: [],
   btcRelayHeight: 0,
   bitcoinHeight: 0,
@@ -67,6 +72,8 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
     return { ...state, vaultClientLoaded: action.isLoaded };
   case UPDATE_COLLATERAL_TOKEN_BALANCE:
     return { ...state, collateralTokenBalance: action.collateralTokenBalance };
+  case UPDATE_GOVERNANCE_TOKEN_BALANCE:
+    return { ...state, governanceTokenBalance: action.governanceTokenBalance };
   case UPDATE_BALANCE_POLKA_BTC:
     return { ...state, wrappedTokenBalance: action.wrappedTokenBalance };
   case SHOW_ACCOUNT_MODAL:

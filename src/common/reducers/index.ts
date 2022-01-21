@@ -1,12 +1,26 @@
+
 import { combineReducers } from 'redux';
-import { generalReducer as general } from './general.reducer';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+
+import { generalReducer } from './general.reducer';
 import { redeemReducer as redeem } from './redeem.reducer';
 import { issueReducer as issue } from './issue.reducer';
 import { vaultReducer as vault } from './vault.reducer';
 
-export const rootReducer = combineReducers({
-  general,
+const generalPersistConfig = {
+  key: 'general',
+  storage: storage,
+  whitelist: ['address']
+};
+
+const rootReducer = combineReducers({
+  general: persistReducer(generalPersistConfig, generalReducer),
   redeem,
   issue,
   vault
 });
+
+export {
+  rootReducer
+};

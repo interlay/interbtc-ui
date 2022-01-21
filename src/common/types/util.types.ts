@@ -10,7 +10,10 @@ import {
   MonetaryAmount,
   Currency
 } from '@interlay/monetary-js';
-import { CollateralUnit } from '@interlay/interbtc-api';
+import {
+  CollateralUnit,
+  CurrencyUnit
+} from '@interlay/interbtc-api';
 
 export interface StatusUpdate {
   id: u256;
@@ -68,6 +71,7 @@ export type GeneralState = {
   totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   wrappedTokenBalance: BitcoinAmount;
   collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  governanceTokenBalance: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
   extensions: string[];
   btcRelayHeight: number;
   bitcoinHeight: number;
