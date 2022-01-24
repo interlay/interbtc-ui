@@ -26,7 +26,7 @@ import {
   StoreType
 } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
-import isValidPolkadotAddress from 'utils/helpers/validate-address';
+import isValidPolkadotAddress from 'utils/helpers/is-valid-polkadot-address';
 import STATUSES from 'utils/constants/statuses';
 import {
   KUSAMA,
