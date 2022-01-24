@@ -279,7 +279,7 @@ const RedeemForm = (): JSX.Element | null => {
         dispatch(
           updateWrappedTokenBalanceAction(wrappedTokenBalance.sub(BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT])))
         );
-      } catch (error: any) {
+      } catch (error) {
         setSubmitStatus(STATUSES.REJECTED);
         setSubmitError(error);
       }

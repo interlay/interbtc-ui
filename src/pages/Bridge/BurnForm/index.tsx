@@ -163,7 +163,7 @@ const BurnForm = (): JSX.Element | null => {
           [WRAPPED_TOKEN_AMOUNT]: ''
         });
         setSubmitStatus(STATUSES.RESOLVED);
-      } catch (error: any) {
+      } catch (error) {
         setSubmitStatus(STATUSES.REJECTED);
         setSubmitError(error);
       }

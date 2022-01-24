@@ -56,7 +56,7 @@ const Topbar = (): JSX.Element => {
       const receiverId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
       await window.faucet.fundAccount(receiverId, collateralIdLiteral);
       toast.success('Your account has been funded.');
-    } catch (error: any) {
+    } catch (error) {
       toast.error(`Funding failed. ${error.message}`);
     }
   };
@@ -71,7 +71,7 @@ const Topbar = (): JSX.Element => {
       try {
         const theAccounts = await web3Accounts();
         setAccounts(theAccounts);
-      } catch (error: any) {
+      } catch (error) {
         // TODO: should add error handling properly
         console.log('[Topbar] error.message => ', error.message);
       }
@@ -83,7 +83,7 @@ const Topbar = (): JSX.Element => {
     setIsRequestPending(true);
     try {
       await handleRequestDotFromFaucet();
-    } catch (error: any) {
+    } catch (error) {
       console.log('[requestDOT] error.message => ', error.message);
     }
     setIsRequestPending(false);

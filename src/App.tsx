@@ -126,14 +126,14 @@ const App = (): JSX.Element => {
       setIsLoading(false);
       // NOTE: Catch clause variable type annotation must be 'any' or 'unknown'. Use of any here
       // and throughout is to resolve type errors.
-    } catch (error: any) {
+    } catch (error) {
       toast.warn('Unable to connect to the BTC-Parachain.');
       console.log('[loadPolkaBTC] error.message => ', error.message);
     }
 
     try {
       startFetchingLiveData(dispatch, store);
-    } catch (error: any) {
+    } catch (error) {
       console.log('[loadPolkaBTC] error.message => ', error.message);
     }
   }, [
@@ -146,7 +146,7 @@ const App = (): JSX.Element => {
     try {
       window.faucet = new FaucetClient(window.bridge.interBtcApi.api, constants.FAUCET_URL);
       dispatch(isFaucetLoaded(true));
-    } catch (error: any) {
+    } catch (error) {
       console.log('[loadFaucet] error.message => ', error.message);
     }
   }, [dispatch]);
@@ -221,7 +221,7 @@ const App = (): JSX.Element => {
             parachainStatus(state)
           )
         );
-      } catch (error: any) {
+      } catch (error) {
         // TODO: should add error handling
         console.log('[App React.useEffect 2] error.message => ', error.message);
       }
@@ -267,7 +267,7 @@ const App = (): JSX.Element => {
         // TODO: could store the active address just in one place (either in `window` object or in redux)
         window.bridge.interBtcApi.setAccount(newAddress, signer);
         dispatch(changeAddressAction(newAddress));
-      } catch (error: any) {
+      } catch (error) {
         // TODO: should add error handling
         console.log('[App React.useEffect 3] error.message => ', error.message);
       }
@@ -291,7 +291,7 @@ const App = (): JSX.Element => {
         await loadPolkaBTC();
         await loadFaucet();
         keyring.loadAll({});
-      } catch (error: any) {
+      } catch (error) {
         console.log(error.message);
       }
     })();
@@ -326,7 +326,7 @@ const App = (): JSX.Element => {
               }
             }
           );
-      } catch (error: any) {
+      } catch (error) {
         console.log('[App React.useEffect 4] error.message => ', error.message);
       }
     })();
@@ -343,7 +343,7 @@ const App = (): JSX.Element => {
               }
             }
           );
-      } catch (error: any) {
+      } catch (error) {
         console.log('[App React.useEffect 5] error.message => ', error.message);
       }
     })();
@@ -360,7 +360,7 @@ const App = (): JSX.Element => {
               }
             }
           );
-      } catch (error: any) {
+      } catch (error) {
         console.log('[App React.useEffect 4] error.message => ', error.message);
       }
     })();

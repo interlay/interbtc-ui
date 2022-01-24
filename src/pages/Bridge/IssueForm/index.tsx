@@ -257,7 +257,7 @@ const IssueForm = (): JSX.Element | null => {
         const issueRequest = result[0];
         handleSubmittedRequestModalOpen(issueRequest);
         setSubmitStatus(STATUSES.RESOLVED);
-      } catch (error: any) {
+      } catch (error) {
         setSubmitStatus(STATUSES.REJECTED);
         setSubmitError(error);
       }

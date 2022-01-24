@@ -76,7 +76,7 @@ const TransferForm = (): JSX.Element => {
       );
 
       setSubmitStatus(STATUSES.RESOLVED);
-    } catch (error: any) {
+    } catch (error) {
       setSubmitStatus(STATUSES.REJECTED);
       setSubmitError(error);
     }
