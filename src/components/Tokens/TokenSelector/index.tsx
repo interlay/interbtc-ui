@@ -7,7 +7,8 @@ import Select, {
   SelectOption,
   SelectBody,
   SelectCheck,
-  SelectText
+  SelectText,
+  SELECT_VARIANTS
 } from 'components/Select';
 import { TokenType } from 'common/types/util.types';
 
@@ -50,11 +51,15 @@ const TokenSelector = ({
                 <SelectButton variant={variant}>
                   <span
                     className={clsx(
-                      variant === 'formField' ? 'py-2' : null,
                       'flex',
-                      variant === 'formField' ? 'text-xl' : null,
                       'items-center',
-                      'space-x-3'
+                      'space-x-3',
+                      {
+                        [clsx(
+                          'text-xl',
+                          'py-2'
+                        )]: variant === SELECT_VARIANTS.formField
+                      }
                     )}>
                     {currentToken.icon}
                     <SelectText>
@@ -84,8 +89,12 @@ const TokenSelector = ({
                               className={clsx(
                                 'flex',
                                 'items-center',
-                                variant === 'formField' ? 'text-xl' : null,
-                                'space-x-3'
+                                'space-x-3',
+                                {
+                                  [clsx(
+                                    'text-xl'
+                                  )]: variant === SELECT_VARIANTS.formField
+                                }
                               )}>
                               {tokenOption.icon}
                               <SelectText selected={selected}>

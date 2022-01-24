@@ -15,12 +15,12 @@ import {
   POLKADOT
 } from 'utils/constants/relay-chain-names';
 
-const VARIANTS = Object.freeze({
+const SELECT_VARIANTS = Object.freeze({
   optionSelector: 'optionSelector',
   formField: 'formField'
 });
 
-const SELECT_VARIANTS = Object.values(VARIANTS);
+const SELECT_VARIANT_VALUES = Object.values(SELECT_VARIANTS);
 
 type SelectLabelProps = Props<typeof Listbox.Label>;
 
@@ -41,7 +41,7 @@ const SelectLabel = ({
 );
 
 interface SelectButtonCustomProps {
-  variant?: typeof SELECT_VARIANTS[number];
+  variant?: SelectVariants;
 }
 
 type SelectButtonProps = SelectButtonCustomProps & Props<typeof Listbox.Button>;
@@ -85,10 +85,15 @@ const SelectButton = ({
       },
       {
         [clsx(
-          variant === VARIANTS.formField ? 'dark:bg-kintsugiMidnight' : 'dark:bg-kintsugiMidnight-900',
+          'dark:bg-kintsugiMidnight-900',
           'dark:focus:border-kintsugiSupernova-300',
           'dark:focus:ring-kintsugiSupernova-200'
         )]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA
+      },
+      {
+        [clsx(
+          'dark:bg-kintsugiMidnight'
+        )]: variant === SELECT_VARIANTS.formField
       },
       className
     )}
@@ -118,7 +123,7 @@ const SelectButton = ({
 
 interface SelectOptionsCustomProps {
   open: boolean;
-  variant?: typeof SELECT_VARIANTS[number];
+  variant?: typeof SELECT_VARIANT_VALUES[number];
 }
 
 type SelectOptionsProps = SelectOptionsCustomProps & Props<typeof Listbox.Options>;
@@ -126,7 +131,7 @@ type SelectOptionsProps = SelectOptionsCustomProps & Props<typeof Listbox.Option
 const SelectOptions = ({
   open,
   className,
-  variant = 'optionSelector',
+  variant = SELECT_VARIANTS.optionSelector,
   ...rest
 }: SelectOptionsProps): JSX.Element => (
   <Transition
@@ -168,10 +173,13 @@ const SelectOptions = ({
         },
         {
           [clsx(
-            // This is needed because the form field is rendered in a card with a different coloured
-            // background to the version in the top bar.
-            variant === VARIANTS.formField ? 'dark:bg-kintsugiMidnight' : 'dark:bg-kintsugiMidnight-900'
+            'dark:bg-kintsugiMidnight'
           )]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA
+        },
+        {
+          [clsx(
+            'dark:bg-kintsugiMidnight-900'
+          )]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && variant === SELECT_VARIANTS.formField
         },
         className
       )}
@@ -288,9 +296,11 @@ const Select = ({
 };
 
 export type SelectProps = Props<typeof Listbox>;
+export type SelectVariants = typeof SELECT_VARIANT_VALUES[number];
 
 export {
   SELECT_VARIANTS,
+  SELECT_VARIANT_VALUES,
   SelectLabel,
   SelectButton,
   SelectOptions,

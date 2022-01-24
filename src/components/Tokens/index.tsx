@@ -5,7 +5,10 @@ import {
 } from 'react-redux';
 
 import TokenSelector from './TokenSelector';
-import { SELECT_VARIANTS } from 'components/Select';
+import {
+  SelectVariants,
+  SELECT_VARIANTS
+} from 'components/Select';
 
 import {
   WrappedToken,
@@ -36,7 +39,7 @@ interface TokenOption {
 }
 
 interface Props {
-  variant?: typeof SELECT_VARIANTS[number];
+  variant?: SelectVariants;
   callbackFunction?: (token: TokenOption) => void;
   showBalances?: boolean;
 }
@@ -91,7 +94,7 @@ const Tokens = ({
         balance: displayMonetaryAmount(collateralTokenBalance),
         icon:
         <CollateralTokenLogoIcon
-          height={variant === 'formField' ? 46 : 26} />,
+          height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
         symbol: COLLATERAL_TOKEN_SYMBOL
       },
       {
@@ -99,7 +102,7 @@ const Tokens = ({
         type: TokenType.WRAPPED,
         balance: displayMonetaryAmount(wrappedTokenBalance),
         icon: <WrappedTokenLogoIcon
-          height={variant === 'formField' ? 46 : 26} />,
+          height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
         symbol: WRAPPED_TOKEN_SYMBOL
       },
       {
@@ -107,7 +110,7 @@ const Tokens = ({
         type: TokenType.GOVERNANCE,
         balance: displayMonetaryAmount(governanceTokenBalance),
         icon: <GovernanceTokenLogoIcon
-          height={variant === 'formField' ? 46 : 26} />,
+          height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
         symbol: GOVERNANCE_TOKEN_SYMBOL
       }
     ];
