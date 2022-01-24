@@ -32,8 +32,8 @@ import {
   POLKADOT
 } from 'utils/constants/relay-chain-names';
 
-const TRANSFER_AMOUNT = 'wrapped-token-input-amount';
-const RECIPIENT_ADDRESS = 'collateral-token-address';
+const TRANSFER_AMOUNT = 'transfer-amount';
+const RECIPIENT_ADDRESS = 'recipient-address';
 
 type TransferFormData = {
   [TRANSFER_AMOUNT]: string;
