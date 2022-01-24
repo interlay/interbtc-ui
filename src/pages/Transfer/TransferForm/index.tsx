@@ -7,6 +7,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { withErrorBoundary } from 'react-error-boundary';
 import { toast } from 'react-toastify';
 import { newMonetaryAmount, CurrencyUnit } from '@interlay/interbtc-api';
 import { Currency } from '@interlay/monetary-js';
@@ -16,6 +17,7 @@ import {
   Tokens,
   TokenOption
 } from 'components/Tokens';
+import ErrorFallback from 'components/ErrorFallback';
 import SubmitButton from 'components/SubmitButton';
 import FormTitle from 'components/FormTitle';
 import TextField from 'components/TextField';
@@ -217,4 +219,10 @@ const TransferForm = (): JSX.Element => {
   );
 };
 
-export default TransferForm;
+export default withErrorBoundary(TransferForm, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});
+
