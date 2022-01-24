@@ -15,7 +15,7 @@ import {
   tickerToCurrencyIdLiteral
 } from '@interlay/interbtc-api';
 
-import { Tokens } from 'components/Tokens';
+import Tokens from 'components/Tokens';
 import AccountModal from 'parts/AccountModal';
 import InterlayLink from 'components/UI/InterlayLink';
 import

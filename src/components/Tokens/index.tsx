@@ -149,6 +149,4 @@ const Tokens = ({
 };
 
 export type { TokenOption };
-export {
-  Tokens
-};
+export default Tokens;
