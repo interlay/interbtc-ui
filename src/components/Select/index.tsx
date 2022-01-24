@@ -15,6 +15,13 @@ import {
   POLKADOT
 } from 'utils/constants/relay-chain-names';
 
+const SELECT_VARIANTS = Object.freeze({
+  optionSelector: 'optionSelector',
+  formField: 'formField'
+});
+
+const SELECT_VARIANT_VALUES = Object.values(SELECT_VARIANTS);
+
 type SelectLabelProps = Props<typeof Listbox.Label>;
 
 const SelectLabel = ({
@@ -33,11 +40,16 @@ const SelectLabel = ({
     {...rest} />
 );
 
-type SelectButtonProps = Props<typeof Listbox.Button>;
+interface SelectButtonCustomProps {
+  variant?: SelectVariants;
+}
+
+type SelectButtonProps = SelectButtonCustomProps & Props<typeof Listbox.Button>;
 
 const SelectButton = ({
   className,
   children,
+  variant = 'optionSelector',
   ...rest
 }: SelectButtonProps): JSX.Element => (
   <Listbox.Button
@@ -78,6 +90,11 @@ const SelectButton = ({
           'dark:focus:ring-kintsugiSupernova-200'
         )]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA
       },
+      {
+        [clsx(
+          'dark:bg-kintsugiMidnight'
+        )]: variant === SELECT_VARIANTS.formField
+      },
       className
     )}
     {...rest}>
@@ -106,6 +123,7 @@ const SelectButton = ({
 
 interface SelectOptionsCustomProps {
   open: boolean;
+  variant?: typeof SELECT_VARIANT_VALUES[number];
 }
 
 type SelectOptionsProps = SelectOptionsCustomProps & Props<typeof Listbox.Options>;
@@ -113,6 +131,7 @@ type SelectOptionsProps = SelectOptionsCustomProps & Props<typeof Listbox.Option
 const SelectOptions = ({
   open,
   className,
+  variant = SELECT_VARIANTS.optionSelector,
   ...rest
 }: SelectOptionsProps): JSX.Element => (
   <Transition
@@ -154,8 +173,13 @@ const SelectOptions = ({
         },
         {
           [clsx(
-            'dark:bg-kintsugiMidnight-900'
+            'dark:bg-kintsugiMidnight'
           )]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA
+        },
+        {
+          [clsx(
+            'dark:bg-kintsugiMidnight-900'
+          )]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && variant === SELECT_VARIANTS.formField
         },
         className
       )}
@@ -272,8 +296,11 @@ const Select = ({
 };
 
 export type SelectProps = Props<typeof Listbox>;
+export type SelectVariants = typeof SELECT_VARIANT_VALUES[number];
 
 export {
+  SELECT_VARIANTS,
+  SELECT_VARIANT_VALUES,
   SelectLabel,
   SelectButton,
   SelectOptions,

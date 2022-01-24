@@ -8,7 +8,6 @@ import { CollateralCurrency } from '@interlay/interbtc-api';
 
 import IssueForm from './IssueForm';
 import RedeemForm from './RedeemForm';
-import TransferForm from './TransferForm';
 import BurnForm from './BurnForm';
 import MainContainer from 'parts/MainContainer';
 import Panel from 'components/Panel';
@@ -34,10 +33,6 @@ const TAB_ITEMS_WITHOUT_BURN = [
   {
     id: TAB_IDS.redeem,
     label: 'redeem'
-  },
-  {
-    id: TAB_IDS.transfer,
-    label: 'transfer'
   }
 ];
 
@@ -145,9 +140,6 @@ const Bridge = (): JSX.Element | null => {
             </InterlayTabPanel>
             <InterlayTabPanel>
               <RedeemForm />
-            </InterlayTabPanel>
-            <InterlayTabPanel>
-              <TransferForm />
             </InterlayTabPanel>
             {burnable && (
               <InterlayTabPanel>

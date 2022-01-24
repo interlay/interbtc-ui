@@ -1,4 +1,4 @@
-import * as React from 'react';
+
 import clsx from 'clsx';
 
 import Select, {
@@ -7,7 +7,8 @@ import Select, {
   SelectOption,
   SelectBody,
   SelectCheck,
-  SelectText
+  SelectText,
+  SELECT_VARIANTS
 } from 'components/Select';
 import { TokenType } from 'common/types/util.types';
 
@@ -19,67 +20,61 @@ interface TokenOption {
 }
 
 interface Props {
+  variant: string;
   tokenOptions: Array<TokenOption>;
+  showBalances: boolean;
+  currentToken: TokenOption;
+  onChange: (type: TokenType) => void;
 }
 
 const TokenSelector = ({
-  tokenOptions
+  variant,
+  tokenOptions,
+  currentToken,
+  onChange,
+  showBalances
 }: Props): JSX.Element => {
-  const getTokenOption =
-    React.useCallback(
-      (type: TokenType) => tokenOptions.find(token => token.type === type),
-      [tokenOptions]
-    );
-
-  const [currentToken, setCurrentToken] = React.useState<TokenOption | undefined>(getTokenOption(TokenType.COLLATERAL));
-
-  const handleSelectToken = (selectedToken: TokenType) => {
-    setCurrentToken(getTokenOption(selectedToken));
-  };
-
-  // This is required to ensure that the displayed balance from the selected
-  // token options is kept updated, e.g. if a token is funded or if the initial
-  // balance is updated after the first render.
-  React.useEffect(() => {
-    if (!currentToken) {
-      return;
-    }
-
-    const selectedTokenType = currentToken.type;
-
-    setCurrentToken(getTokenOption(selectedTokenType));
-  }, [
-    currentToken,
-    getTokenOption
-  ]);
-
   return (
     <>
       {currentToken && (
         <Select
+          variant={variant}
           key={currentToken.type}
           value={currentToken.type}
-          onChange={handleSelectToken}>
+          onChange={onChange}>
           {({ open }) => (
             <>
               <SelectBody
                 className={clsx(
                   'w-52'
                 )}>
-                <SelectButton>
+                <SelectButton variant={variant}>
                   <span
                     className={clsx(
                       'flex',
                       'items-center',
-                      'space-x-3'
+                      'space-x-3',
+                      {
+                        [clsx(
+                          'text-xl',
+                          'py-2'
+                        )]: variant === SELECT_VARIANTS.formField
+                      }
                     )}>
                     {currentToken.icon}
                     <SelectText>
-                      {currentToken.balance} {currentToken.symbol}
+                      {showBalances && (
+                        <span>
+                          {currentToken.balance}&nbsp;
+                        </span>
+                      )}
+                      {currentToken.symbol}
                     </SelectText>
                   </span>
                 </SelectButton>
-                <SelectOptions open={open}>
+                <SelectOptions
+                  open={open}
+                  variant={variant}>
                   {tokenOptions.map((tokenOption: TokenOption) => {
                     return (
                       <SelectOption
@@ -94,11 +89,16 @@ const TokenSelector = ({
                               className={clsx(
                                 'flex',
                                 'items-center',
-                                'space-x-3'
+                                'space-x-3',
+                                {
+                                  [clsx(
+                                    'text-xl'
+                                  )]: variant === SELECT_VARIANTS.formField
+                                }
                               )}>
                               {tokenOption.icon}
                               <SelectText selected={selected}>
-                                {tokenOption.balance} {tokenOption.symbol}
+                                {showBalances && (tokenOption.balance)} {tokenOption.symbol}
                               </SelectText>
                             </div>
                             {selected ? (

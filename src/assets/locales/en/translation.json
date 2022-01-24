@@ -72,6 +72,7 @@
   "issue": "Issue",
   "redeem": "Redeem",
   "nav_bridge": "Bridge",
+  "nav_transfer": "Transfer",
   "nav_transactions": "Transactions",
   "nav_staking": "Staking",
   "nav_dashboard": "Dashboard",
@@ -136,7 +137,7 @@
     "valid_btc_address": "Please enter a valid BTC address (Supported: p2sh, p2pkh or p2wpkh in bech32 format).",
     "enter_btc": "Please enter your Bitcoin address.",
     "you_have": "You have",
-    "current_balance": "Please enter an amount smaller than your current balance: ",
+    "current_balance": "Please enter an amount smaller than your current balance: {{ currentBalance }}",
     "amount_greater_dust_inclusion": "Please enter an amount above the combined Bridge Fee, Bitcoin Network Fee, and Bitcoin Dust limit (",
     "request_processed": "Request being processed...",
     "processed_by_vault": "Your redeem request is being processed by Vault:",
@@ -186,7 +187,7 @@
   },
   "transfer_page": {
     "successfully_transferred": "Successfully transferred.",
-    "transfer_interbtc": "Transfer {{wrappedTokenSymbol}}"
+    "transfer_currency": "Transfer"
   },
   "burn_page": {
     "burn_interbtc": "Burn {{wrappedTokenSymbol}} in exchange for {{collateralTokenSymbol}}",
@@ -429,5 +430,8 @@
       "chain": "The chain will be upgraded."
     },
     "info": "More info here."
+  },
+  "validation": {
+    "invalid_polkadot_address": "Enter a valid Polkadot address"
   }
 }
