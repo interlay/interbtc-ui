@@ -89,7 +89,7 @@ case POLKADOT: {
   GovernanceTokenLogoIcon = InterlayLogoIcon;
   PUBLIC_ASSETS_FOLDER_NAME = 'interlay';
   APP_DOMAIN = 'https://bridge.interlay.io';
-  CROWDLOAN_DOMAIN = ''; // TODO: should add the Kintsugi app domain once it's set up
+  CROWDLOAN_DOMAIN = 'https://crowdloan.interlay.io/';
   OPEN_GRAPH_IMAGE_FILE_NAME = 'interbtc-meta-image.jpg';
   break;
 }
