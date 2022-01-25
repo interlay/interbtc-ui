@@ -142,6 +142,7 @@ const Navigation = ({
         if (navigationItem.disabled) {
           return (
             <p
+              key={navigationItem.name}
               className={clsx(
                 textClasses,
                 textClassesForDisabled,
