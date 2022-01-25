@@ -190,7 +190,11 @@ const Navigation = ({
               )}
               aria-hidden='true' />
             {navigationItem.link === CROWDLOAN_DOMAIN ?
-              t(navigationItem.name, { governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL }) :
+            // TODO: not the nicest way of handling contextual navigation text, but
+            // other solutions involve substantial refactoring of the navigation
+              t(navigationItem.name,
+                { governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL }
+              ) :
               t(navigationItem.name)}
           </SidebarNavLink>
         );
