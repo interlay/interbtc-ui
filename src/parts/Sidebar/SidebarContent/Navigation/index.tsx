@@ -71,6 +71,8 @@ const NAVIGATION_ITEMS = [
     link: CROWDLOAN_DOMAIN,
     icon: CashIcon,
     external: true,
+    // This will suppress the link on testnet
+    suppress: process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet',
     rest: {
       target: '_blank',
       rel: 'noopener noreferrer'
@@ -132,6 +134,10 @@ const Navigation = ({
 
         // TODO: could disable the vault link rather than hiding
         if (navigationItem.link === PAGES.VAULT && !vaultClientLoaded) {
+          return null;
+        }
+
+        if (navigationItem.suppress) {
           return null;
         }
 
