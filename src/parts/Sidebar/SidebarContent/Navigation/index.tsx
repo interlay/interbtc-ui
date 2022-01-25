@@ -16,14 +16,15 @@ import { useTranslation } from 'react-i18next';
 
 import SidebarNavLink from './SidebarNavLink';
 import Hr2 from 'components/hrs/Hr2';
-import {
-  INTERLAY_DOCS_LINK,
-  KINTSUGI_CROWDLOAN_LINK
-} from 'config/links';
+import { INTERLAY_DOCS_LINK } from 'config/links';
 import {
   KUSAMA,
   POLKADOT
 } from 'utils/constants/relay-chain-names';
+import {
+  GOVERNANCE_TOKEN_SYMBOL,
+  CROWDLOAN_DOMAIN
+} from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 
@@ -66,8 +67,8 @@ const NAVIGATION_ITEMS = [
     separator: true
   },
   {
-    name: 'nav_kintsugi_crowdloan',
-    link: KINTSUGI_CROWDLOAN_LINK,
+    name: 'nav_crowdloan',
+    link: CROWDLOAN_DOMAIN,
     icon: CashIcon,
     external: true,
     rest: {
@@ -182,7 +183,9 @@ const Navigation = ({
                 'h-6'
               )}
               aria-hidden='true' />
-            {t(navigationItem.name)}
+            {navigationItem.link === CROWDLOAN_DOMAIN ?
+              t(navigationItem.name, { governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL }) :
+              t(navigationItem.name)}
           </SidebarNavLink>
         );
       })}

@@ -37,6 +37,7 @@ type CollateralToken = Currency<CollateralUnit>;
 type GovernanceToken = Currency<CurrencyUnit>
 
 let APP_NAME: string;
+let CROWDLOAN_DOMAIN: string;
 let WRAPPED_TOKEN_SYMBOL: string;
 let WRAPPED_TOKEN: WrappedToken;
 let COLLATERAL_TOKEN: CollateralToken;
@@ -88,6 +89,7 @@ case POLKADOT: {
   GovernanceTokenLogoIcon = InterlayLogoIcon;
   PUBLIC_ASSETS_FOLDER_NAME = 'interlay';
   APP_DOMAIN = 'https://bridge.interlay.io';
+  CROWDLOAN_DOMAIN = ''; // TODO: should add the Kintsugi app domain once it's set up
   OPEN_GRAPH_IMAGE_FILE_NAME = 'interbtc-meta-image.jpg';
   break;
 }
@@ -108,6 +110,7 @@ case KUSAMA: {
   GovernanceTokenLogoIcon = KBTCLogoIcon;
   PUBLIC_ASSETS_FOLDER_NAME = 'kintsugi';
   APP_DOMAIN = ''; // TODO: should add the Kintsugi app domain once it's set up
+  CROWDLOAN_DOMAIN = 'https://claim-kint.interlay.io';
   OPEN_GRAPH_IMAGE_FILE_NAME = 'kbtc-meta-image.jpg';
   break;
 }
@@ -125,6 +128,7 @@ export type {
 
 export {
   APP_NAME,
+  CROWDLOAN_DOMAIN,
   WRAPPED_TOKEN,
   COLLATERAL_TOKEN,
   GOVERNANCE_TOKEN,
