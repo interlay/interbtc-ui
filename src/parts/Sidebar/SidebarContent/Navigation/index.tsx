@@ -137,7 +137,8 @@ const Navigation = ({
       {
         name: 'nav_transfer',
         link: PAGES.TRANSFER,
-        icon: SwitchHorizontalIcon
+        icon: SwitchHorizontalIcon,
+        hidden: false
       },
       {
         name: 'nav_transactions',
