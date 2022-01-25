@@ -72,7 +72,7 @@ const NAVIGATION_ITEMS = [
     icon: CashIcon,
     external: true,
     // This will suppress the link on testnet
-    suppress: process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet',
+    suppress: process.env.REACT_APP_BITCOIN_NETWORK === 'testnet',
     rest: {
       target: '_blank',
       rel: 'noopener noreferrer'
