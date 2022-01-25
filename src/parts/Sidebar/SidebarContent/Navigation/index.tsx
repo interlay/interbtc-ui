@@ -1,5 +1,6 @@
 
 import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { matchPath } from 'react-router';
 import {
   ClipboardListIcon,
@@ -21,6 +22,7 @@ import {
   POLKADOT
 } from 'utils/constants/relay-chain-names';
 import { PAGES } from 'utils/constants/links';
+import { StoreType } from 'common/types/util.types';
 
 const NAVIGATION_ITEMS = [
   {
@@ -122,6 +124,7 @@ const Navigation = ({
 }: CustomProps & React.ComponentPropsWithRef<'nav'>): JSX.Element => {
   const location = useLocation();
   const { t } = useTranslation();
+  const { vaultClientLoaded } = useSelector((state: StoreType) => state.general);
 
   return (
     <nav
@@ -133,6 +136,11 @@ const Navigation = ({
       )}
       {...rest}>
       {NAVIGATION_ITEMS.map(navigationItem => {
+        // TODO: use suppress flag when available
+        if (navigationItem.link === PAGES.VAULT && !vaultClientLoaded) {
+          return null;
+        }
+
         if (navigationItem.separator) {
           return (
             <Hr2 key={navigationItem.name} />
