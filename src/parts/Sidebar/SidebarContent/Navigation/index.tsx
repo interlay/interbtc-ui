@@ -151,7 +151,8 @@ const Navigation = ({
               <navigationItem.icon
                 className={clsx(
                   textClassesForDisabled,
-                  navigationIconClasses
+                  navigationIconClasses,
+                  onSmallScreen ? 'mr-4' : 'mr-3'
                 )}
                 aria-hidden='true' />
               {t(navigationItem.name)}
