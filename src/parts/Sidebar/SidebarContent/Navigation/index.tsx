@@ -87,7 +87,6 @@ const textClasses = clsx(
   'items-center',
   'px-2',
   'py-2',
-  'font-light',
   'rounded-md'
 );
 
@@ -146,7 +145,8 @@ const Navigation = ({
               className={clsx(
                 textClasses,
                 textClassesForDisabled,
-                onSmallScreen ? 'text-base' : 'text-sm'
+                onSmallScreen ? 'text-base' : 'text-sm',
+                'font-light'
               )}>
               <navigationItem.icon
                 className={clsx(
@@ -189,7 +189,9 @@ const Navigation = ({
                   { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 ),
               onSmallScreen ? 'text-base' : 'text-sm',
-              textClasses
+              textClasses,
+              'font-medium'
+
             )}>
             <navigationItem.icon
               className={clsx(
