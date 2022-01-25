@@ -1,10 +1,9 @@
 
 import { useLocation } from 'react-router-dom';
 import { matchPath } from 'react-router';
-import { useSelector } from 'react-redux';
 import {
   ClipboardListIcon,
-  // CashIcon,
+  CashIcon,
   BookOpenIcon,
   RefreshIcon,
   ChartSquareBarIcon,
@@ -22,13 +21,13 @@ import {
   POLKADOT
 } from 'utils/constants/relay-chain-names';
 import { PAGES } from 'utils/constants/links';
-import { StoreType } from 'common/types/util.types';
 
 const NAVIGATION_ITEMS = [
   {
     name: 'nav_bridge',
     link: PAGES.BRIDGE,
-    icon: RefreshIcon
+    icon: RefreshIcon,
+    disabled: true
   },
   {
     name: 'nav_transfer',
@@ -38,23 +37,26 @@ const NAVIGATION_ITEMS = [
   {
     name: 'nav_transactions',
     link: PAGES.TRANSACTIONS,
-    icon: ClipboardListIcon
+    icon: ClipboardListIcon,
+    disabled: true
   },
-  // TODO: blocked for now
-  // {
-  //   name: 'nav_staking',
-  //   link: PAGES.STAKING,
-  //   icon: CashIcon
-  // },
+  {
+    name: 'nav_staking',
+    link: PAGES.STAKING,
+    icon: CashIcon,
+    disabled: true
+  },
   {
     name: 'nav_dashboard',
     link: PAGES.DASHBOARD,
-    icon: ChartSquareBarIcon
+    icon: ChartSquareBarIcon,
+    disabled: true
   },
   {
     name: 'nav_vault',
     link: PAGES.VAULT,
-    icon: ChipIcon
+    icon: ChipIcon,
+    disabled: true
   },
   {
     name: 'separator',
@@ -85,10 +87,17 @@ const textClassesForSelected = clsx(
   { 'dark:text-kintsugiMidnight-700':
     process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
+
 const textClassesForUnselected = clsx(
   { 'text-interlayTextPrimaryInLightMode':
     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+);
+
+const textClassesForDisabled = clsx(
+  { 'text-gray-500':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'dark:text-gray-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 
 const Navigation = ({
@@ -98,7 +107,6 @@ const Navigation = ({
 }: CustomProps & React.ComponentPropsWithRef<'nav'>): JSX.Element => {
   const location = useLocation();
   const { t } = useTranslation();
-  const { vaultClientLoaded } = useSelector((state: StoreType) => state.general);
 
   return (
     <nav
@@ -116,9 +124,32 @@ const Navigation = ({
           );
         }
 
-        // TODO: could disable the vault link rather than hiding
-        if (navigationItem.link === PAGES.VAULT && !vaultClientLoaded) {
-          return null;
+        if (navigationItem.disabled) {
+          return (
+            <p
+              className={clsx(
+                textClassesForDisabled,
+                'group',
+                'flex',
+                'items-center',
+                'px-2',
+                'py-2',
+                onSmallScreen ? 'text-base' : 'text-sm',
+                'font-light',
+                'rounded-md'
+              )}>
+              <navigationItem.icon
+                className={clsx(
+                  textClassesForDisabled,
+                  onSmallScreen ? 'mr-4' : 'mr-3',
+                  'flex-shrink-0',
+                  'w-6',
+                  'h-6'
+                )}
+                aria-hidden='true' />
+              {t(navigationItem.name)}
+            </p>
+          );
         }
 
         const match = matchPath(location.pathname, {
