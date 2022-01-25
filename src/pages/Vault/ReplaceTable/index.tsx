@@ -58,7 +58,7 @@ const ReplaceTable = ({
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
-  const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
+  const vaultId = window.bridge?.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
   const {
     isIdle: replaceRequestsIdle,
     isLoading: replaceRequestsLoading,
