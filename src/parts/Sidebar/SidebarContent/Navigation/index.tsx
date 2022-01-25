@@ -81,6 +81,16 @@ interface CustomProps {
 }
 
 // TODO: could be reused
+const textClasses = clsx(
+  'group',
+  'flex',
+  'items-center',
+  'px-2',
+  'py-2',
+  'font-light',
+  'rounded-md'
+);
+
 const textClassesForSelected = clsx(
   { 'text-interlayDenim-700':
     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
@@ -98,6 +108,12 @@ const textClassesForDisabled = clsx(
   { 'text-gray-500':
     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-gray-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+);
+
+const navigationIconClasses = clsx(
+  'flex-shrink-0',
+  'w-6',
+  'h-6'
 );
 
 const Navigation = ({
@@ -128,23 +144,14 @@ const Navigation = ({
           return (
             <p
               className={clsx(
+                textClasses,
                 textClassesForDisabled,
-                'group',
-                'flex',
-                'items-center',
-                'px-2',
-                'py-2',
-                onSmallScreen ? 'text-base' : 'text-sm',
-                'font-light',
-                'rounded-md'
+                onSmallScreen ? 'text-base' : 'text-sm'
               )}>
               <navigationItem.icon
                 className={clsx(
                   textClassesForDisabled,
-                  onSmallScreen ? 'mr-4' : 'mr-3',
-                  'flex-shrink-0',
-                  'w-6',
-                  'h-6'
+                  navigationIconClasses
                 )}
                 aria-hidden='true' />
               {t(navigationItem.name)}
@@ -180,14 +187,8 @@ const Navigation = ({
                   { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                   { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 ),
-              'group',
-              'flex',
-              'items-center',
-              'px-2',
-              'py-2',
               onSmallScreen ? 'text-base' : 'text-sm',
-              'font-medium',
-              'rounded-md'
+              textClasses
             )}>
             <navigationItem.icon
               className={clsx(
@@ -195,9 +196,7 @@ const Navigation = ({
                   textClassesForSelected :
                   textClassesForUnselected,
                 onSmallScreen ? 'mr-4' : 'mr-3',
-                'flex-shrink-0',
-                'w-6',
-                'h-6'
+                navigationIconClasses
               )}
               aria-hidden='true' />
             {t(navigationItem.name)}
