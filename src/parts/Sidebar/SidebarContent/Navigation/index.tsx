@@ -4,7 +4,7 @@ import { matchPath } from 'react-router';
 import { useSelector } from 'react-redux';
 import {
   ClipboardListIcon,
-  // CashIcon,
+  CashIcon,
   BookOpenIcon,
   RefreshIcon,
   ChartSquareBarIcon,
@@ -16,7 +16,10 @@ import { useTranslation } from 'react-i18next';
 
 import SidebarNavLink from './SidebarNavLink';
 import Hr2 from 'components/hrs/Hr2';
-import { INTERLAY_DOCS_LINK } from 'config/links';
+import {
+  INTERLAY_DOCS_LINK,
+  KINTSUGI_CROWDLOAN_LINK
+} from 'config/links';
 import {
   KUSAMA,
   POLKADOT
@@ -61,6 +64,16 @@ const NAVIGATION_ITEMS = [
     link: '#',
     icon: () => null,
     separator: true
+  },
+  {
+    name: 'nav_kintsugi_crowdloan',
+    link: KINTSUGI_CROWDLOAN_LINK,
+    icon: CashIcon,
+    external: true,
+    rest: {
+      target: '_blank',
+      rel: 'noopener noreferrer'
+    }
   },
   {
     name: 'nav_docs',
