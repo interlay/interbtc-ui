@@ -79,6 +79,7 @@
   "nav_vault": "Vault",
   "nav_feedback": "Feedback",
   "nav_docs": "Docs",
+  "nav_terms_and_conditions": "Terms and Conditions",
   "report_bug": "Report a bug:",
   "request_dot": "{{collateralTokenSymbol}} Faucet",
   "request_btc": "BTC Faucet",
