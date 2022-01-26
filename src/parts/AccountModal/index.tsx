@@ -21,7 +21,10 @@ import InterlayModal, {
   InterlayModalTitle
 } from 'components/UI/InterlayModal';
 import InterlayButtonBase from 'components/UI/InterlayButtonBase';
-import { APP_NAME } from 'config/relay-chains';
+import {
+  APP_NAME,
+  TERMS_AND_CONDITIONS_LINK
+} from 'config/relay-chains';
 import {
   KUSAMA,
   POLKADOT
@@ -158,6 +161,8 @@ const AccountModal = ({
         <>
           <p>
             {t('install_supported_wallets')}
+            <ExternalLink href={TERMS_AND_CONDITIONS_LINK}>terms and conditions</ExternalLink>
+            .
           </p>
           <ExternalLink href={POLKADOT_EXTENSION}>
             <span

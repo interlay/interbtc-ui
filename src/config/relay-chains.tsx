@@ -17,7 +17,9 @@ import {
 
 import {
   INTERLAY_CROWDLOAN_LINK,
-  KINTSUGI_CROWDLOAN_LINK
+  KINTSUGI_CROWDLOAN_LINK,
+  INTERLAY_TERMS_AND_CONDITIONS_LINK,
+  KINTSUGI_TERMS_AND_CONDITIONS_LINK
 } from 'config/links';
 import {
   POLKADOT,
@@ -42,6 +44,7 @@ type GovernanceToken = Currency<CurrencyUnit>
 
 let APP_NAME: string;
 let CROWDLOAN_DOMAIN: string;
+let TERMS_AND_CONDITIONS_LINK: string;
 let WRAPPED_TOKEN_SYMBOL: string;
 let WRAPPED_TOKEN: WrappedToken;
 let COLLATERAL_TOKEN: CollateralToken;
@@ -78,6 +81,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
 // Interlay
 case POLKADOT: {
   APP_NAME = 'interBTC';
+  TERMS_AND_CONDITIONS_LINK = INTERLAY_TERMS_AND_CONDITIONS_LINK;
   WRAPPED_TOKEN = InterBtc;
   COLLATERAL_TOKEN = Polkadot as Currency<CollateralUnit>;
   // TODO: Add GovernanceUnit type to lib following upgrade i.e. Currency<GovernanceUnit>
@@ -100,6 +104,7 @@ case POLKADOT: {
 // Kintsugi
 case KUSAMA: {
   APP_NAME = 'kBTC';
+  TERMS_AND_CONDITIONS_LINK = KINTSUGI_TERMS_AND_CONDITIONS_LINK;
   WRAPPED_TOKEN = KBtc;
   COLLATERAL_TOKEN = Kusama as Currency<CollateralUnit>;
   GOVERNANCE_TOKEN = Kintsugi as Currency<CurrencyUnit>;
@@ -133,6 +138,7 @@ export type {
 export {
   APP_NAME,
   CROWDLOAN_DOMAIN,
+  TERMS_AND_CONDITIONS_LINK,
   WRAPPED_TOKEN,
   COLLATERAL_TOKEN,
   GOVERNANCE_TOKEN,
