@@ -76,7 +76,7 @@ const NAVIGATION_ITEMS = [
     icon: CashIcon,
     external: true,
     // This will suppress the link on testnet
-    suppress: process.env.REACT_APP_BITCOIN_NETWORK === 'testnet',
+    suppressed: process.env.REACT_APP_BITCOIN_NETWORK === 'testnet',
     rest: {
       target: '_blank',
       rel: 'noopener noreferrer'
@@ -152,8 +152,14 @@ const Navigation = ({
       )}
       {...rest}>
       {NAVIGATION_ITEMS.map(navigationItem => {
-        // TODO: use suppress flag when available
+        // TODO: can't use suppressed flag here as the nav array is initialised outside the component
+        // function and doesn't have access to `vaultClientLoaded.` Refactoring at this stage would
+        // require too many changes, but this should be addressed next time we work on the navigation.
         if (navigationItem.link === PAGES.VAULT && !vaultClientLoaded) {
+          return null;
+        }
+
+        if (navigationItem.suppressed) {
           return null;
         }
 
@@ -183,10 +189,6 @@ const Navigation = ({
               {t(navigationItem.name)}
             </p>
           );
-        }
-
-        if (navigationItem.suppress) {
-          return null;
         }
 
         const match = matchPath(location.pathname, {
