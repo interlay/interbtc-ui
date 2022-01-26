@@ -10,7 +10,8 @@ const KINTSUGI_CROWDLOAN_LINK = 'https://claim-kint.interlay.io';
 
 // TODO: placeholders
 const INTERLAY_TERMS_AND_CONDITIONS_LINK = '';
-const KINTSUGI_TERMS_AND_CONDITIONS_LINK = '';
+const KINTSUGI_TERMS_AND_CONDITIONS_LINK =
+  'https://drive.google.com/file/d/1TuTu49EoTdEoZX8LrysdgbDmuHS0uAvr/view?usp=sharing ';
 
 export {
   INTERLAY_COMPANY_LINK,
