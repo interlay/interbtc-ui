@@ -26,7 +26,7 @@ import {
 } from 'utils/constants/relay-chain-names';
 import {
   GOVERNANCE_TOKEN_SYMBOL,
-  CROWDLOAN_DOMAIN
+  CROWDLOAN_LINK
 } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
@@ -125,7 +125,7 @@ const Navigation = ({
       },
       {
         name: 'nav_crowdloan',
-        link: CROWDLOAN_DOMAIN,
+        link: CROWDLOAN_LINK,
         icon: CashIcon,
         external: true,
         // This will suppress the link on testnet
@@ -242,7 +242,7 @@ const Navigation = ({
                 navigationIconClasses
               )}
               aria-hidden='true' />
-            {navigationItem.link === CROWDLOAN_DOMAIN ?
+            {navigationItem.link === CROWDLOAN_LINK ?
             // TODO: not the nicest way of handling contextual navigation text, but
             // other solutions involve substantial refactoring of the navigation
               t(navigationItem.name,
