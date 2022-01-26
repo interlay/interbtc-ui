@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { matchPath } from 'react-router';
@@ -29,82 +30,6 @@ import {
 } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
-
-const NAVIGATION_ITEMS = [
-  {
-    name: 'nav_bridge',
-    link: PAGES.BRIDGE,
-    icon: RefreshIcon,
-    disabled: true
-  },
-  {
-    name: 'nav_transfer',
-    link: PAGES.TRANSFER,
-    icon: SwitchHorizontalIcon
-  },
-  {
-    name: 'nav_transactions',
-    link: PAGES.TRANSACTIONS,
-    icon: ClipboardListIcon,
-    disabled: true
-  },
-  {
-    name: 'nav_staking',
-    link: PAGES.STAKING,
-    icon: CashIcon,
-    disabled: true
-  },
-  {
-    name: 'nav_dashboard',
-    link: PAGES.DASHBOARD,
-    icon: ChartSquareBarIcon,
-    disabled: true
-  },
-  {
-    name: 'nav_vault',
-    link: PAGES.VAULT,
-    icon: ChipIcon,
-    disabled: true
-  },
-  {
-    name: 'separator',
-    link: '#',
-    icon: () => null,
-    separator: true
-  },
-  {
-    name: 'nav_crowdloan',
-    link: CROWDLOAN_DOMAIN,
-    icon: CashIcon,
-    external: true,
-    // This will suppress the link on testnet
-    suppressed: process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet',
-    rest: {
-      target: '_blank',
-      rel: 'noopener noreferrer'
-    }
-  },
-  {
-    name: 'nav_docs',
-    link: INTERLAY_DOCS_LINK,
-    icon: BookOpenIcon,
-    external: true,
-    rest: {
-      target: '_blank',
-      rel: 'noopener noreferrer'
-    }
-  },
-  {
-    name: 'nav_terms_and_conditions',
-    link: TERMS_AND_CONDITIONS_LINK,
-    icon: DocumentTextIcon,
-    external: true,
-    rest: {
-      target: '_blank',
-      rel: 'noopener noreferrer'
-    }
-  }
-];
 
 interface CustomProps {
   onSmallScreen?: boolean;
@@ -154,6 +79,85 @@ const Navigation = ({
   const { t } = useTranslation();
   const { vaultClientLoaded } = useSelector((state: StoreType) => state.general);
 
+  const NAVIGATION_ITEMS = React.useMemo(() => {
+    return [
+      {
+        name: 'nav_bridge',
+        link: PAGES.BRIDGE,
+        icon: RefreshIcon,
+        disabled: true
+      },
+      {
+        name: 'nav_transfer',
+        link: PAGES.TRANSFER,
+        icon: SwitchHorizontalIcon
+      },
+      {
+        name: 'nav_transactions',
+        link: PAGES.TRANSACTIONS,
+        icon: ClipboardListIcon,
+        disabled: true
+      },
+      {
+        name: 'nav_staking',
+        link: PAGES.STAKING,
+        icon: CashIcon,
+        disabled: true
+      },
+      {
+        name: 'nav_dashboard',
+        link: PAGES.DASHBOARD,
+        icon: ChartSquareBarIcon,
+        disabled: true
+      },
+      {
+        name: 'nav_vault',
+        link: PAGES.VAULT,
+        icon: ChipIcon,
+        disabled: true,
+        hidden: !vaultClientLoaded
+      },
+      {
+        name: 'separator',
+        link: '#',
+        icon: () => null,
+        separator: true
+      },
+      {
+        name: 'nav_crowdloan',
+        link: CROWDLOAN_DOMAIN,
+        icon: CashIcon,
+        external: true,
+        // This will suppress the link on testnet
+        hidden: process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet',
+        rest: {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
+      },
+      {
+        name: 'nav_docs',
+        link: INTERLAY_DOCS_LINK,
+        icon: BookOpenIcon,
+        external: true,
+        rest: {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
+      },
+      {
+        name: 'nav_terms_and_conditions',
+        link: TERMS_AND_CONDITIONS_LINK,
+        icon: DocumentTextIcon,
+        external: true,
+        rest: {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
+      }
+    ];
+  }, [vaultClientLoaded]);
+
   return (
     <nav
       className={clsx(
@@ -164,14 +168,7 @@ const Navigation = ({
       )}
       {...rest}>
       {NAVIGATION_ITEMS.map(navigationItem => {
-        // TODO: can't use suppressed flag here as the nav array is initialised outside the component
-        // function and doesn't have access to `vaultClientLoaded.` Refactoring at this stage would
-        // require too many changes, but this should be addressed next time we work on the navigation.
-        if (navigationItem.link === PAGES.VAULT && !vaultClientLoaded) {
-          return null;
-        }
-
-        if (navigationItem.suppressed) {
+        if (navigationItem.hidden) {
           return null;
         }
 
