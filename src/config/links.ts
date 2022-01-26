@@ -5,6 +5,8 @@ const INTERLAY_DISCORD_LINK = 'https://discord.gg/KgCYK3MKSf';
 const INTERLAY_GITHUB_LINK = 'https://github.com/interlay';
 const INTERLAY_TWITTER_LINK = 'https://twitter.com/interlayHQ';
 const INTERLAY_DOCS_LINK = 'https://docs.interlay.io';
+const INTERLAY_CROWDLOAN_LINK = 'https://crowdloan.interlay.io/';
+const KINTSUGI_CROWDLOAN_LINK = 'https://claim-kint.interlay.io';
 
 export {
   INTERLAY_COMPANY_LINK,
@@ -12,5 +14,7 @@ export {
   INTERLAY_DISCORD_LINK,
   INTERLAY_GITHUB_LINK,
   INTERLAY_TWITTER_LINK,
-  INTERLAY_DOCS_LINK
+  INTERLAY_DOCS_LINK,
+  INTERLAY_CROWDLOAN_LINK,
+  KINTSUGI_CROWDLOAN_LINK
 };

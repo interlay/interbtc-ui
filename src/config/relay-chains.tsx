@@ -16,6 +16,10 @@ import {
 } from '@interlay/interbtc-api';
 
 import {
+  INTERLAY_CROWDLOAN_LINK,
+  KINTSUGI_CROWDLOAN_LINK
+} from 'config/links';
+import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
@@ -89,7 +93,7 @@ case POLKADOT: {
   GovernanceTokenLogoIcon = InterlayLogoIcon;
   PUBLIC_ASSETS_FOLDER_NAME = 'interlay';
   APP_DOMAIN = 'https://bridge.interlay.io';
-  CROWDLOAN_DOMAIN = 'https://crowdloan.interlay.io/';
+  CROWDLOAN_DOMAIN = INTERLAY_CROWDLOAN_LINK;
   OPEN_GRAPH_IMAGE_FILE_NAME = 'interbtc-meta-image.jpg';
   break;
 }
@@ -110,7 +114,7 @@ case KUSAMA: {
   GovernanceTokenLogoIcon = KBTCLogoIcon;
   PUBLIC_ASSETS_FOLDER_NAME = 'kintsugi';
   APP_DOMAIN = ''; // TODO: should add the Kintsugi app domain once it's set up
-  CROWDLOAN_DOMAIN = 'https://claim-kint.interlay.io';
+  CROWDLOAN_DOMAIN = KINTSUGI_CROWDLOAN_LINK;
   OPEN_GRAPH_IMAGE_FILE_NAME = 'kbtc-meta-image.jpg';
   break;
 }
