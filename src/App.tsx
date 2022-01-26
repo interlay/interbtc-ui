@@ -77,24 +77,24 @@ import {
 } from 'common/actions/general.actions';
 import 'react-toastify/dist/ReactToastify.css';
 
-// const Bridge = React.lazy(() =>
-//   import(/* webpackChunkName: 'bridge' */ 'pages/Bridge')
-// );
+const Bridge = React.lazy(() =>
+  import(/* webpackChunkName: 'bridge' */ 'pages/Bridge')
+);
 const Transfer = React.lazy(() =>
   import(/* webpackChunkName: 'transfer' */ 'pages/Transfer')
 );
-// const Transactions = React.lazy(() =>
-//   import(/* webpackChunkName: 'transactions' */ 'pages/Transactions')
-// );
-// const Staking = React.lazy(() =>
-//   import(/* webpackChunkName: 'staking' */ 'pages/Staking')
-// );
-// const Dashboard = React.lazy(() =>
-//   import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard')
-// );
-// const VaultDashboard = React.lazy(() =>
-//   import(/* webpackChunkName: 'vault' */ 'pages/Vault')
-// );
+const Transactions = React.lazy(() =>
+  import(/* webpackChunkName: 'transactions' */ 'pages/Transactions')
+);
+const Staking = React.lazy(() =>
+  import(/* webpackChunkName: 'staking' */ 'pages/Staking')
+);
+const Dashboard = React.lazy(() =>
+  import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard')
+);
+const VaultDashboard = React.lazy(() =>
+  import(/* webpackChunkName: 'vault' */ 'pages/Vault')
+);
 const NoMatch = React.lazy(() =>
   import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
 );
@@ -105,7 +105,8 @@ const App = (): JSX.Element => {
     address,
     wrappedTokenBalance,
     collateralTokenBalance,
-    governanceTokenBalance
+    governanceTokenBalance,
+    vaultClientLoaded
   } = useSelector((state: StoreType) => state.general);
   const [isLoading, setIsLoading] = React.useState(true);
   const dispatch = useDispatch();
@@ -414,7 +415,7 @@ const App = (): JSX.Element => {
           render={({ location }) => (
             <React.Suspense fallback={<FullLoadingSpinner />}>
               <Switch location={location}>
-                {/* {vaultClientLoaded && (
+                {vaultClientLoaded && (
                   <Route path={PAGES.VAULT}>
                     <VaultDashboard />
                   </Route>
@@ -430,14 +431,14 @@ const App = (): JSX.Element => {
                 </Route>
                 <Route path={PAGES.BRIDGE}>
                   <Bridge />
-                </Route> */}
+                </Route>
                 <Route path={PAGES.TRANSFER}>
                   <Transfer />
                 </Route>
                 <Redirect
                   exact
                   from={PAGES.HOME}
-                  to={PAGES.TRANSFER} />
+                  to={PAGES.BRIDGE} />
                 <Route path='*'>
                   <NoMatch />
                 </Route>
