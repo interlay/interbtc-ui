@@ -2,11 +2,11 @@ import {
   bitcoin,
   Issue,
   Redeem,
-  CurrencyUnit
+  CurrencyUnit,
+  InterbtcPrimitivesVaultId
 } from '@interlay/interbtc-api';
 import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK, PARACHAIN_URL } from '../../constants';
 import Big from 'big.js';
-import { AccountId } from '@polkadot/types/interfaces/runtime';
 import {
   BitcoinAmount,
   Currency,
@@ -121,11 +121,14 @@ const copyToClipboard = (text: string): void => {
 };
 
 const getRandomVaultIdWithCapacity = (
-  vaults: [AccountId, BitcoinAmount][],
+  vaults: [InterbtcPrimitivesVaultId, BitcoinAmount][],
   requiredCapacity: BitcoinAmount
-): string => {
+): InterbtcPrimitivesVaultId => {
   const filteredVaults = vaults.filter(vault => vault[1].gte(requiredCapacity));
-  return filteredVaults.length > 0 ? getRandomArrayElement(filteredVaults)[0].toString() : '';
+  if (filteredVaults.length === 0) {
+    throw new Error('No available vaults with required issue capacity.');
+  }
+  return getRandomArrayElement(filteredVaults)[0];
 };
 
 function getRandomArrayElement<T>(array: Array<T>): T {
