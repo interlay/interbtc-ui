@@ -1,5 +1,5 @@
 
-import React from 'react';
+import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { matchPath } from 'react-router';
