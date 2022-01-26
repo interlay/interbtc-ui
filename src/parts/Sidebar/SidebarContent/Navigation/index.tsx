@@ -9,7 +9,8 @@ import {
   RefreshIcon,
   ChartSquareBarIcon,
   ChipIcon,
-  SwitchHorizontalIcon
+  SwitchHorizontalIcon,
+  DocumentTextIcon
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import SidebarNavLink from './SidebarNavLink';
 import Hr2 from 'components/hrs/Hr2';
 import { INTERLAY_DOCS_LINK } from 'config/links';
+import { TERMS_AND_CONDITIONS_LINK } from 'config/relay-chains';
 import {
   KUSAMA,
   POLKADOT
@@ -70,6 +72,16 @@ const NAVIGATION_ITEMS = [
     name: 'nav_docs',
     link: INTERLAY_DOCS_LINK,
     icon: BookOpenIcon,
+    external: true,
+    rest: {
+      target: '_blank',
+      rel: 'noopener noreferrer'
+    }
+  },
+  {
+    name: 'nav_terms_and_conditions',
+    link: TERMS_AND_CONDITIONS_LINK,
+    icon: DocumentTextIcon,
     external: true,
     rest: {
       target: '_blank',
