@@ -27,7 +27,7 @@ import {
 } from '@interlay/interbtc-api';
 
 import PriceInfo from 'pages/Bridge/PriceInfo';
-import TokenField from '../TokenField';
+import TokenField from 'components/TokenField';
 import SubmitButton from 'components/SubmitButton';
 import FormTitle from 'components/FormTitle';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';

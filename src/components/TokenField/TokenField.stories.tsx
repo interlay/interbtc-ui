@@ -4,7 +4,7 @@ import {
   Meta
 } from '@storybook/react';
 
-import TokenField, { Props } from './';
+import TokenField, { Props } from '.';
 
 const Template: Story<Props> = args => <TokenField {...args} />;
 

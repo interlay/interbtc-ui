@@ -29,7 +29,7 @@ import {
 import SubmitButton from 'components/SubmitButton';
 import FormTitle from 'components/FormTitle';
 import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
-import TokenField from 'pages/Bridge/TokenField';
+import TokenField from 'components/TokenField';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import ParachainStatusInfo from 'pages/Bridge/ParachainStatusInfo';
 import Toggle from 'components/Toggle';
