@@ -29,7 +29,7 @@ import {
 import SubmitButton from 'components/SubmitButton';
 import FormTitle from 'components/FormTitle';
 import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
-import WrappedTokenField from 'pages/Bridge/WrappedTokenField';
+import TokenField from 'pages/Bridge/TokenField';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import ParachainStatusInfo from 'pages/Bridge/ParachainStatusInfo';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
@@ -279,7 +279,7 @@ const IssueForm = (): JSX.Element | null => {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
             })}
           </FormTitle>
-          <WrappedTokenField
+          <TokenField
             id={BTC_AMOUNT}
             name={BTC_AMOUNT}
             label='BTC'
