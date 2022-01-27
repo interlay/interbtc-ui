@@ -135,7 +135,6 @@ const RequestReplacementModal = ({
           <div>
             <NumberInput
               name={AMOUNT}
-              title={AMOUNT}
               min={0}
               ref={register({
                 required: {

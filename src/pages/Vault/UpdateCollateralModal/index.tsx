@@ -322,7 +322,6 @@ const UpdateCollateralModal = ({
             <NumberInput
               id={COLLATERAL_TOKEN_AMOUNT}
               name={COLLATERAL_TOKEN_AMOUNT}
-              title={COLLATERAL_TOKEN_AMOUNT}
               min={0}
               ref={register({
                 required: {

@@ -22,8 +22,8 @@ const UnstakeButton = ({
     startIcon={
       <LockClosedIcon
         className={clsx(
-          'w-6',
-          'h-6'
+          'w-5',
+          'h-5'
         )} />
     }
     disabled
