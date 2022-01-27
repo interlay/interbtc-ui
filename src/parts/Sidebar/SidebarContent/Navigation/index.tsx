@@ -5,7 +5,7 @@ import { matchPath } from 'react-router';
 import { useSelector } from 'react-redux';
 import {
   ClipboardListIcon,
-  // CashIcon,
+  CashIcon,
   BookOpenIcon,
   RefreshIcon,
   ChartSquareBarIcon,
