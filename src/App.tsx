@@ -20,7 +20,6 @@ import {
   web3Enable,
   web3FromAddress
 } from '@polkadot/extension-dapp';
-// import keyring from '@polkadot/ui-keyring';
 import { Keyring } from '@polkadot/api';
 import {
   CollateralCurrency,
@@ -124,9 +123,6 @@ const App = (): JSX.Element => {
       );
       dispatch(isPolkaBtcLoaded(true));
       setIsLoading(false);
-
-      // NOTE: Catch clause variable type annotation must be 'any' or 'unknown'. Use of any here
-      // and throughout is to resolve type errors.
     } catch (error) {
       toast.warn('Unable to connect to the BTC-Parachain.');
       console.log('[loadPolkaBTC] error.message => ', error.message);
@@ -294,8 +290,6 @@ const App = (): JSX.Element => {
         if (process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet') {
           await loadFaucet();
         }
-
-        // keyring.loadAll({});
       } catch (error) {
         console.log(error.message);
       }
