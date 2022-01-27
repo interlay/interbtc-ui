@@ -25,11 +25,13 @@ import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultCo
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
-  COLLATERAL_TOKEN,
-  COLLATERAL_TOKEN_SYMBOL
+  GOVERNANCE_TOKEN,
+  GOVERNANCE_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { StoreType } from 'common/types/util.types';
+// FIXME: name clash for constants so had to use relative path
+import * as constants from '../../constants';
 
 // TODO: could create a specific prop
 const SMALL_SIZE_BUTTON_CLASS_NAME = clsx(
@@ -48,13 +50,13 @@ const Topbar = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const handleRequestDotFromFaucet = async (): Promise<void> => {
+  const handleRequestFromFaucet = async (): Promise<void> => {
     if (!address) return;
 
     try {
-      const collateralIdLiteral = tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker) as CollateralIdLiteral;
+      const governanceIdLiteral = tickerToCurrencyIdLiteral(GOVERNANCE_TOKEN.ticker) as CollateralIdLiteral;
       const receiverId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
-      await window.faucet.fundAccount(receiverId, collateralIdLiteral);
+      await window.faucet.fundAccount(receiverId, governanceIdLiteral);
       toast.success('Your account has been funded.');
     } catch (error) {
       toast.error(`Funding failed. ${error.message}`);
@@ -69,7 +71,7 @@ const Topbar = (): JSX.Element => {
 
     (async () => {
       try {
-        const theAccounts = await web3Accounts();
+        const theAccounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
         setAccounts(theAccounts);
       } catch (error) {
         // TODO: should add error handling properly
@@ -78,13 +80,13 @@ const Topbar = (): JSX.Element => {
     })();
   }, [extensions.length]);
 
-  const requestDOT = async () => {
+  const requestFunds = async () => {
     if (!bridgeLoaded) return;
     setIsRequestPending(true);
     try {
-      await handleRequestDotFromFaucet();
+      await handleRequestFromFaucet();
     } catch (error) {
-      console.log('[requestDOT] error.message => ', error.message);
+      console.log('[requestFunds] error.message => ', error.message);
     }
     setIsRequestPending(false);
   };
@@ -128,32 +130,36 @@ const Topbar = (): JSX.Element => {
               </InterlayDefaultContainedButton>
             ) : (
               <>
-                <InterlayLink
-                  className='hover:no-underline'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  href='https://bitcoinfaucet.uo1.net'>
-                  <InterlayCaliforniaOutlinedButton
-                    className={SMALL_SIZE_BUTTON_CLASS_NAME}
-                    endIcon={
-                      <ExternalLinkIcon
-                        className={clsx(
-                          'w-4',
-                          'h-4',
-                          'ml-1'
-                        )} />
-                    }>
-                    {t('request_btc')}
-                  </InterlayCaliforniaOutlinedButton>
-                </InterlayLink>
-                <InterlayDenimOrKintsugiMidnightOutlinedButton
-                  className={SMALL_SIZE_BUTTON_CLASS_NAME}
-                  pending={isRequestPending}
-                  onClick={requestDOT}>
-                  {t('request_dot', {
-                    collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
-                  })}
-                </InterlayDenimOrKintsugiMidnightOutlinedButton>
+                {process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet' && (
+                  <>
+                    <InterlayLink
+                      className='hover:no-underline'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      href='https://bitcoinfaucet.uo1.net'>
+                      <InterlayCaliforniaOutlinedButton
+                        className={SMALL_SIZE_BUTTON_CLASS_NAME}
+                        endIcon={
+                          <ExternalLinkIcon
+                            className={clsx(
+                              'w-4',
+                              'h-4',
+                              'ml-1'
+                            )} />
+                        }>
+                        {t('request_btc')}
+                      </InterlayCaliforniaOutlinedButton>
+                    </InterlayLink>
+                    <InterlayDenimOrKintsugiMidnightOutlinedButton
+                      className={SMALL_SIZE_BUTTON_CLASS_NAME}
+                      pending={isRequestPending}
+                      onClick={requestFunds}>
+                      {t('request_funds', {
+                        tokenSymbol: GOVERNANCE_TOKEN_SYMBOL
+                      })}
+                    </InterlayDenimOrKintsugiMidnightOutlinedButton>
+                  </>
+                )}
                 <Tokens />
                 <InterlayDefaultContainedButton
                   className={SMALL_SIZE_BUTTON_CLASS_NAME}

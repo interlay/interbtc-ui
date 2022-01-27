@@ -20,7 +20,6 @@ import {
   web3Enable,
   web3FromAddress
 } from '@polkadot/extension-dapp';
-import keyring from '@polkadot/ui-keyring';
 import { Keyring } from '@polkadot/api';
 import {
   CollateralCurrency,
@@ -124,8 +123,6 @@ const App = (): JSX.Element => {
       );
       dispatch(isPolkaBtcLoaded(true));
       setIsLoading(false);
-      // NOTE: Catch clause variable type annotation must be 'any' or 'unknown'. Use of any here
-      // and throughout is to resolve type errors.
     } catch (error) {
       toast.warn('Unable to connect to the BTC-Parachain.');
       console.log('[loadPolkaBTC] error.message => ', error.message);
@@ -231,13 +228,13 @@ const App = (): JSX.Element => {
     bridgeLoaded
   ]);
 
-  // Loads the address for the currently select account and maybe loads the vault and staked relayer dashboards
+  // Loads the address for the currently select account and maybe loads the vault dashboard
   React.useEffect(() => {
     if (!bridgeLoaded) return;
 
     const trySetDefaultAccount = () => {
       if (constants.DEFAULT_ACCOUNT_SEED) {
-        const keyring = new Keyring({ type: 'sr25519' });
+        const keyring = new Keyring({ type: 'sr25519', ss58Format: constants.SS58_FORMAT });
         const defaultAccountKeyring = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED);
         window.bridge.interBtcApi.setAccount(defaultAccountKeyring);
         dispatch(changeAddressAction(defaultAccountKeyring.address));
@@ -254,7 +251,7 @@ const App = (): JSX.Element => {
 
         dispatch(setInstalledExtensionAction(theExtensions.map(extension => extension.name)));
 
-        const accounts = await web3Accounts();
+        const accounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
         if (accounts.length === 0) {
           dispatch(changeAddressAction(''));
           return;
@@ -289,8 +286,10 @@ const App = (): JSX.Element => {
           if (isLoading) setIsLoading(false);
         }, 3000);
         await loadPolkaBTC();
-        await loadFaucet();
-        keyring.loadAll({});
+        // Only load faucet on testnet
+        if (process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet') {
+          await loadFaucet();
+        }
       } catch (error) {
         console.log(error.message);
       }
