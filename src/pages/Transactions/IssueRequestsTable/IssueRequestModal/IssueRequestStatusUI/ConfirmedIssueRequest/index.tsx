@@ -48,6 +48,9 @@ const ConfirmedIssueRequest = ({
   const queryClient = useQueryClient();
   const executeMutation = useMutation<void, Error, Issue>(
     (variables: Issue) => {
+      if (!variables.btcTxId) {
+        throw new Error('Bitcoin transaction ID not identified yet.');
+      }
       return window.bridge.interBtcApi.issue.execute('0x' + variables.id, variables.btcTxId);
     },
     {
