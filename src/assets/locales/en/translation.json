@@ -41,7 +41,6 @@
   "locked": "Locked: ",
   "request": "Request",
   "no_registered_vaults": "No registered vaults",
-  "no_registered_relayers": "No registered relayers",
   "update": "Update",
   "collateralization": "Collateralization",
   "fees_earned": "Fees earned",
@@ -202,7 +201,6 @@
   "dashboard": {
     "premium_redeem": "Premium Redeem",
     "error_unable_to_compute_collateral": "Unable to compute collateralization rate.",
-    "no-registered": "No registered staked relayers",
     "dashboard": "Dashboard",
     "issues": "Issue Requests",
     "total_locked": "Total locked",
@@ -373,16 +371,6 @@
     "no_feedback": "Don't give feedback",
     "give_feedback": "Give feedback",
     "feedback": "Feedback"
-  },
-  "relayer": {
-    "registration": "Registration",
-    "please_note": "Please note there is a default waiting period before bonding.",
-    "stake": "Stake",
-    "warning_relayer_not_registered": "Local relayer client running, but relayer is not yet registered with the parachain. The client is already submitting blocks, but voting and reporting features are disabled until registered.",
-    "staked_relayer_dashboard": "Relayer Dashboard",
-    "stake_locked": "Stake locked",
-    "deregister": "Deregister",
-    "note_you_can_deregister": "Note: You can only deregister if you are not participating in a vote."
   },
   "vault": {
     "creation_block": "Creation Block",
