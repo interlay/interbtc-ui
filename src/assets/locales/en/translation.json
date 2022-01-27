@@ -81,7 +81,7 @@
   "nav_docs": "Docs",
   "nav_terms_and_conditions": "Terms and Conditions",
   "report_bug": "Report a bug:",
-  "request_dot": "{{collateralTokenSymbol}} Faucet",
+  "request_funds": "{{tokenSymbol}} Faucet",
   "request_btc": "BTC Faucet",
   "no_pending_status": "No pending status updates",
   "bridge_fee": "Bridge Fee",
