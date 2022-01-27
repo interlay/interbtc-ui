@@ -51,6 +51,7 @@ let RELAY_CHAIN_NAME: string;
 let BRIDGE_PARACHAIN_NAME: string;
 let COLLATERAL_TOKEN_SYMBOL: string;
 let GOVERNANCE_TOKEN_SYMBOL: string;
+<<<<<<< HEAD
 let RelayChainLogoIcon:
   React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
@@ -59,6 +60,9 @@ let BridgeParachainLogoIcon:
   React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
   }>;
+=======
+let VOTE_GOVERNANCE_TOKEN_SYMBOL: string;
+>>>>>>> 276dfed5 (feat: componentize BalancesUI)
 let WrappedTokenLogoIcon:
   React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
@@ -95,6 +99,7 @@ case POLKADOT: {
   WRAPPED_TOKEN_SYMBOL = 'interBTC';
   COLLATERAL_TOKEN_SYMBOL = 'DOT';
   GOVERNANCE_TOKEN_SYMBOL = 'INTR';
+  VOTE_GOVERNANCE_TOKEN_SYMBOL = 'vINTR';
   RELAY_CHAIN_NAME = 'polkadot';
   BRIDGE_PARACHAIN_NAME = 'interlay';
   // eslint-disable-next-line max-len
@@ -120,6 +125,7 @@ case KUSAMA: {
   WRAPPED_TOKEN_SYMBOL = 'kBTC';
   COLLATERAL_TOKEN_SYMBOL = 'KSM';
   GOVERNANCE_TOKEN_SYMBOL = 'KINT';
+  VOTE_GOVERNANCE_TOKEN_SYMBOL = 'vKINT';
   RELAY_CHAIN_NAME = 'kusama';
   BRIDGE_PARACHAIN_NAME = 'kintsugi';
   // eslint-disable-next-line max-len
@@ -156,6 +162,7 @@ export {
   WRAPPED_TOKEN_SYMBOL,
   COLLATERAL_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
+  VOTE_GOVERNANCE_TOKEN_SYMBOL,
   RELAY_CHAIN_NAME,
   BRIDGE_PARACHAIN_NAME,
   PRICES_URL,

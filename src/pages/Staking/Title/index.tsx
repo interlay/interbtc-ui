@@ -2,6 +2,7 @@
 import clsx from 'clsx';
 
 import Hr1 from 'components/hrs/Hr1';
+import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
   POLKADOT,
   KUSAMA
@@ -13,12 +14,13 @@ const Title = (): JSX.Element => (
       className={clsx(
         'font-medium',
         'text-base',
-        { 'text-interlayDenim':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+        // TODO: placeholder color
+        { 'text-interlayDenim': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+        // TODO: placeholder color
         { 'dark:text-kintsugiOchre': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-center'
       )}>
-      Stake KINT
+      Stake {GOVERNANCE_TOKEN_SYMBOL}
     </h3>
     <Hr1
       className={clsx(

@@ -2,9 +2,82 @@
 import clsx from 'clsx';
 
 import {
+  GOVERNANCE_TOKEN_SYMBOL,
+  VOTE_GOVERNANCE_TOKEN_SYMBOL
+} from 'config/relay-chains';
+import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
+
+const Label = ({
+  className,
+  ...rest
+}: React.ComponentPropsWithRef<'span'>) => (
+  <span
+    className={clsx(
+      'block',
+      'text-sm',
+      className
+    )}
+    {...rest} />
+);
+
+interface AmountCustomProps {
+  value: string;
+  tokenSymbol: string;
+}
+
+const Amount = ({
+  className,
+  value,
+  tokenSymbol,
+  ...rest
+}: AmountCustomProps & React.ComponentPropsWithRef<'div'>) => (
+  <div
+    className={clsx(
+      'space-x-1',
+      // TODO: placeholder color
+      { 'text-interlayDenim': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+      // TODO: placeholder color
+      { 'dark:text-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+      className
+    )}
+    {...rest}>
+    <span
+      className={clsx(
+        'text-xl',
+        'font-medium'
+      )}>
+      {value}
+    </span>
+    <span className='text-sm'>
+      {tokenSymbol}
+    </span>
+  </div>
+);
+
+interface BalanceItemCustomProps {
+  label: string;
+  value: string;
+  tokenSymbol: string;
+}
+
+const BalanceItem = ({
+  label,
+  value,
+  tokenSymbol,
+  ...rest
+}: BalanceItemCustomProps & React.ComponentPropsWithRef<'div'>) => (
+  <div {...rest}>
+    <Label>
+      {label}
+    </Label>
+    <Amount
+      value={value}
+      tokenSymbol={tokenSymbol} />
+  </div>
+);
 
 const BalancesUI = (): JSX.Element => {
   return (
@@ -21,24 +94,14 @@ const BalancesUI = (): JSX.Element => {
         'grid-cols-2',
         'gap-7'
       )}>
-      {/* ray test touch << */}
-      <div>
-        <span className='block'>
-          My KINT Balance
-        </span>
-        <span className='block'>
-          245.535 KINT
-        </span>
-      </div>
-      <div>
-        <span className='block'>
-          My Staked KINT
-        </span>
-        <span className='block'>
-          26.00 vKINT
-        </span>
-      </div>
-      {/* ray test touch >> */}
+      <BalanceItem
+        label={`My ${GOVERNANCE_TOKEN_SYMBOL} Balance`}
+        value='245.535'
+        tokenSymbol={GOVERNANCE_TOKEN_SYMBOL} />
+      <BalanceItem
+        label={`My Staked ${GOVERNANCE_TOKEN_SYMBOL}`}
+        value='26.00'
+        tokenSymbol={VOTE_GOVERNANCE_TOKEN_SYMBOL} />
     </div>
   );
 };

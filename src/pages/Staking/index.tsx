@@ -17,9 +17,7 @@ const Staking = (): JSX.Element => {
           'p-10'
         )}>
         <Title />
-        {/* ray test touch << */}
         <BalancesUI />
-        {/* ray test touch >> */}
       </Panel>
     </MainContainer>
   );
