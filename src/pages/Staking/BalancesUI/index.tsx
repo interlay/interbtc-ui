@@ -18,6 +18,10 @@ const Label = ({
     className={clsx(
       'block',
       'text-sm',
+      // TODO: placeholder color
+      { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+      // TODO: placeholder color
+      { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       className
     )}
     {...rest} />
