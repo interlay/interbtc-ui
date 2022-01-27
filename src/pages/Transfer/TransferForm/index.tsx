@@ -189,7 +189,7 @@ const TransferForm = (): JSX.Element => {
         </div>
         <SubmitButton
           disabled={
-            parachainStatus !== ParachainStatus.Running
+            parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)
           }
           pending={submitStatus === STATUSES.PENDING}
           onClick={handleConfirmClick}>
