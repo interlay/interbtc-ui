@@ -288,7 +288,10 @@ const App = (): JSX.Element => {
           if (isLoading) setIsLoading(false);
         }, 3000);
         await loadPolkaBTC();
-        await loadFaucet();
+        // Only load faucet on testnet
+        if (process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet') {
+          await loadFaucet();
+        }
         keyring.loadAll({});
       } catch (error) {
         console.log(error.message);
