@@ -1585,14 +1585,14 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-api@1.5.12":
-  version "1.5.12"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-1.5.12.tgz#ffeaceef903524f856d199fcf21c308320b7c85d"
-  integrity sha512-n0+bHDUB/rTBP2g89Wyyz0/IRX2HkWiItBf+e6JIkqep9t6VXE9oZ4kFF9vHlrl0F1lrqyQleSykwgyDB9X9Qw==
+"@interlay/interbtc-api@1.5.16":
+  version "1.5.16"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-1.5.16.tgz#4b0c1d7181043f16b0fb86ba5e1e3a1ff9013c73"
+  integrity sha512-6EcHWnDVG2zWS0zWO3Xd/dRmY1ajp0/EEYrBGMJIFK3Op5RrZrpmPO4aXZWrxbQW5bdJzvApM5yYEBxlEioBHA==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
     "@interlay/interbtc-types" "1.5.10"
-    "@interlay/monetary-js" "0.5.1"
+    "@interlay/monetary-js" "0.5.3"
     "@polkadot/api" "6.9.2"
     "@types/big.js" "6.1.2"
     big.js "6.1.1"
@@ -1605,10 +1605,10 @@
     sinon "^9.0.3"
     ts-mock-imports "^1.3.0"
 
-"@interlay/interbtc-index-client@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-index-client/-/interbtc-index-client-1.5.0.tgz#3e4b8a687df67dabafc686b9408344c7fd7ea214"
-  integrity sha512-8R0v2FVjp3MXWoB01wt9pCMwZx7CcU7yWucijakehiYFJUaboOq4DMkpYG4q5MCiOpQ+RaHWHzl/K0q5T9Jl9A==
+"@interlay/interbtc-index-client@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-index-client/-/interbtc-index-client-1.6.0.tgz#2f3fbc3bcc29e76fab773f68f8fe1411a441d26a"
+  integrity sha512-MnyutEkgOvHnse++mul+HNuGCb3GlNPcO0xRXAeC4yTSeyCKihlOC1MfIiymedieVkksnUt19lq3xS60SyKaOw==
 
 "@interlay/interbtc-types@1.3.0":
   version "1.3.0"
@@ -1620,20 +1620,20 @@
   resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-1.5.10.tgz#8ff123e7886df06776e090deacca5c1b84ecf315"
   integrity sha512-7pUzNKmNeHi74uJl9WBoYzwyKh8+X18wZz9MVDvx58SgkDiEjUpyeafjhcmVhJptaB+OwPJ1V76RDbJRxr0T4w==
 
-"@interlay/interbtc@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-1.5.1.tgz#1856114ad2cf7a8f93fecf37cafb315d45826349"
-  integrity sha512-8sh91zHBizKYYkB42oaHUZXEpaVqxMubm5Zhui8yO2skuIzAlw2BhVGozIxeQUEx9v8oDa8rPkCZIsuEYdbHVA==
+"@interlay/interbtc@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-1.5.4.tgz#d6082f1d7d616ff8427c7dd6ec2596991babb8f5"
+  integrity sha512-lpB9QNdeoBpBaNOBKIu/s/6v821IlADTFDCvm9BIWo7uswRQ92S6vTCsmbZzTP9ERy1oHdBa9qit7Tveh2GGBA==
   dependencies:
-    "@interlay/interbtc-api" "1.5.12"
-    "@interlay/interbtc-index-client" "1.5.0"
+    "@interlay/interbtc-api" "1.5.16"
+    "@interlay/interbtc-index-client" "1.6.0"
     "@interlay/interbtc-types" "1.3.0"
-    "@interlay/monetary-js" "0.5.1"
+    "@interlay/monetary-js" "0.5.3"
 
-"@interlay/monetary-js@0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@interlay/monetary-js/-/monetary-js-0.5.1.tgz#66eb5e7b180a6511bb61c0e1488286d761954467"
-  integrity sha512-vCRuGulU2ZD/OKoqQRbA5hsKBUQODPdv9pF4WacGyeO17UAhGZGFz0DHntZZuZzjjhcpQCLaW8d4SaFg53dK8A==
+"@interlay/monetary-js@0.5.3":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@interlay/monetary-js/-/monetary-js-0.5.3.tgz#57e7232394b0ddce483fe73d768b61ad0d3f2fae"
+  integrity sha512-d3RWoskAT+dWOOxD9ae0RKa6UeR7pFlk1ax7IAOIvrBMnvYOR2nGzVGGsbRhAkmJvk5oKErbUm6RIykH5f7R9A==
   dependencies:
     "@types/big.js" "6.1.2"
     big.js "6.1.1"
