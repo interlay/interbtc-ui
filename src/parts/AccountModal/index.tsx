@@ -33,6 +33,8 @@ import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';
 import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
+// FIXME: name clash for constants so had to use relative path
+import * as constants from '../../constants';
 
 const POLKADOT_EXTENSION = 'https://polkadot.js.org/extension/';
 
@@ -63,7 +65,7 @@ const AccountModal = ({
 
     (async () => {
       try {
-        const theAccounts = await web3Accounts();
+        const theAccounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
         setAccounts(theAccounts);
       } catch (error) {
         // TODO: should add error handling properly

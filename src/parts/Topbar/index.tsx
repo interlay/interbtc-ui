@@ -30,6 +30,8 @@ import {
 } from 'config/relay-chains';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { StoreType } from 'common/types/util.types';
+// FIXME: name clash for constants so had to use relative path
+import * as constants from '../../constants';
 
 // TODO: could create a specific prop
 const SMALL_SIZE_BUTTON_CLASS_NAME = clsx(
@@ -69,7 +71,7 @@ const Topbar = (): JSX.Element => {
 
     (async () => {
       try {
-        const theAccounts = await web3Accounts();
+        const theAccounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
         setAccounts(theAccounts);
       } catch (error) {
         // TODO: should add error handling properly
