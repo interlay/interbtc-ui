@@ -22,7 +22,7 @@ interface CustomProps {
 }
 
 type Ref = HTMLInputElement;
-const TokenField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
+const TokenField = React.forwardRef<Ref, Props>(({
   id,
   label,
   error,
@@ -86,5 +86,7 @@ const TokenField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
   );
 });
 TokenField.displayName = 'TokenField';
+
+export type Props = CustomProps & NumberInputProps;
 
 export default TokenField;
