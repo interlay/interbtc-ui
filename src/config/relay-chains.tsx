@@ -99,7 +99,7 @@ case POLKADOT: {
 }
 // Kintsugi
 case KUSAMA: {
-  APP_NAME = 'kBTC';
+  APP_NAME = 'KINT';
   TERMS_AND_CONDITIONS_LINK = KINTSUGI_TERMS_AND_CONDITIONS_LINK;
   WRAPPED_TOKEN = KBtc;
   COLLATERAL_TOKEN = Kusama as Currency<CollateralUnit>;
