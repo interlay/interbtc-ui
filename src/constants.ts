@@ -38,13 +38,6 @@ export const STATS_URL = process.env.REACT_APP_STATS_SERVER_URL || 'http://local
 export const FEEDBACK_URL = 'https://forms.gle/2eKFnq4j1fkBgejW7';
 
 // ######################################
-// STAKED RELAYER
-// ######################################
-export const STAKED_RELAYER_OK = 'Ok';
-export const STAKED_RELAYER_OFFLINE = 'Offline';
-export const STAKED_RELAYER_SLASHED = 'Slashed';
-
-// ######################################
 // VAULT
 // ######################################
 export const VAULT_STATUS_ACTIVE = 'Active';

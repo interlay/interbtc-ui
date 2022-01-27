@@ -230,7 +230,7 @@ const App = (): JSX.Element => {
     bridgeLoaded
   ]);
 
-  // Loads the address for the currently select account and maybe loads the vault and staked relayer dashboards
+  // Loads the address for the currently select account and maybe loads the vault dashboard
   React.useEffect(() => {
     if (!bridgeLoaded) return;
 
@@ -292,6 +292,7 @@ const App = (): JSX.Element => {
         if (process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet') {
           await loadFaucet();
         }
+
         keyring.loadAll({});
       } catch (error) {
         console.log(error.message);
