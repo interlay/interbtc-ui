@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import Title from './Title';
 import BalancesUI from './BalancesUI';
 import UnstakeButton from './UnstakeButton';
+import GovernanceTokenField from './GovernanceTokenField';
 import MainContainer from 'parts/MainContainer';
 import Panel from 'components/Panel';
 
@@ -21,6 +22,7 @@ const Staking = (): JSX.Element => {
         <Title />
         <BalancesUI />
         <UnstakeButton />
+        <GovernanceTokenField />
       </Panel>
     </MainContainer>
   );
