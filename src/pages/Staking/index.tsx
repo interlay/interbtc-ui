@@ -9,6 +9,7 @@ import InformationUI from './InformationUI';
 import MainContainer from 'parts/MainContainer';
 import Panel from 'components/Panel';
 import TokenField from 'components/TokenField';
+import SubmitButton from 'components/SubmitButton';
 import {
   GOVERNANCE_TOKEN_SYMBOL,
   VOTE_GOVERNANCE_TOKEN_SYMBOL
@@ -55,6 +56,9 @@ const Staking = (): JSX.Element => {
           label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
           value={`156.43  ${GOVERNANCE_TOKEN_SYMBOL}`}
           tooltip='Estimated Rewards' />
+        <SubmitButton>
+          Add more stake
+        </SubmitButton>
       </Panel>
     </MainContainer>
   );
