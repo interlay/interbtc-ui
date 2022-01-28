@@ -127,6 +127,10 @@ const TransferForm = (): JSX.Element => {
     t
   ]);
 
+  React.useEffect(() => {
+    console.log(activeToken);
+  }, [activeToken]);
+
   return (
     <>
       <form
@@ -144,7 +148,7 @@ const TransferForm = (): JSX.Element => {
         process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
               { 'dark:text-kintsugiOchre':
         process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-            )}>Balance: {activeToken?.balance}
+            )}>Transferable balance: {activeToken?.transferableBalance}
           </p>
           <div
             className={clsx(

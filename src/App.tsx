@@ -30,7 +30,8 @@ import {
 import { createInterbtc } from '@interlay/interbtc';
 import {
   FaucetClient,
-  CollateralUnit
+  CollateralUnit,
+  newAccountId
 } from '@interlay/interbtc-api';
 import {
   MonetaryAmount,
@@ -71,8 +72,11 @@ import {
   isFaucetLoaded,
   isVaultClientLoaded,
   updateWrappedTokenBalanceAction,
+  updateWrappedTokenTransferableBalanceAction,
   updateCollateralTokenBalanceAction,
-  updateGovernanceTokenBalanceAction
+  updateCollateralTokenTransferableBalanceAction,
+  updateGovernanceTokenBalanceAction,
+  updateGovernanceTokenTransferableBalanceAction
 } from 'common/actions/general.actions';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -103,8 +107,11 @@ const App = (): JSX.Element => {
     bridgeLoaded,
     address,
     wrappedTokenBalance,
+    wrappedTokenTransferableBalance,
     collateralTokenBalance,
+    collateralTokenTransferableBalance,
     governanceTokenBalance,
+    governanceTokenTransferableBalance,
     vaultClientLoaded
   } = useSelector((state: StoreType) => state.general);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -310,8 +317,11 @@ const App = (): JSX.Element => {
     if (!address) return;
 
     let unsubscribeFromCollateral: () => void;
+    let unsubscribeFromCollateralTransferable: () => void;
     let unsubscribeFromWrapped: () => void;
+    let unsubscribeFromWrappedTransferable: () => void;
     let unsubscribeFromGovernance: () => void;
+    let unsubscribeFromGovernanceTransferable: () => void;
 
     (async () => {
       try {
@@ -327,6 +337,24 @@ const App = (): JSX.Element => {
           );
       } catch (error) {
         console.log('[App React.useEffect 4] error.message => ', error.message);
+      }
+    })();
+
+    (async () => {
+      try {
+        unsubscribeFromCollateralTransferable = async () => {
+          const accountId = newAccountId(window.bridge.interBtcApi.api, address);
+          const balanceTransferable =
+            await window.bridge.interBtcApi.tokens.balanceTransferable(
+              COLLATERAL_TOKEN, accountId
+            );
+
+          if (!balanceTransferable.eq(collateralTokenTransferableBalance)) {
+            dispatch(updateCollateralTokenTransferableBalanceAction(balanceTransferable));
+          }
+        };
+      } catch (error) {
+        console.log('[App React.useEffect 5] error.message => ', error.message);
       }
     })();
 
@@ -349,6 +377,25 @@ const App = (): JSX.Element => {
 
     (async () => {
       try {
+        unsubscribeFromWrappedTransferable = async () => {
+          const accountId = newAccountId(window.bridge.interBtcApi.api, address);
+
+          const balanceTransferable =
+            await window.bridge.interBtcApi.tokens.balanceTransferable(
+              WRAPPED_TOKEN, accountId
+            ) as WrappedTokenAmount;
+
+          if (!balanceTransferable.eq(wrappedTokenTransferableBalance)) {
+            dispatch(updateWrappedTokenTransferableBalanceAction(balanceTransferable));
+          }
+        };
+      } catch (error) {
+        console.log('[App React.useEffect 5] error.message => ', error.message);
+      }
+    })();
+
+    (async () => {
+      try {
         unsubscribeFromGovernance =
           await window.bridge.interBtcApi.tokens.subscribeToBalance(
             GOVERNANCE_TOKEN,
@@ -364,15 +411,43 @@ const App = (): JSX.Element => {
       }
     })();
 
+    (async () => {
+      try {
+        unsubscribeFromGovernanceTransferable = async () => {
+          const accountId = newAccountId(window.bridge.interBtcApi.api, address);
+
+          const balanceTransferable =
+            await window.bridge.interBtcApi.tokens.balanceTransferable(
+              GOVERNANCE_TOKEN, accountId
+            );
+
+          if (!balanceTransferable.eq(governanceTokenTransferableBalance)) {
+            dispatch(updateGovernanceTokenTransferableBalanceAction(balanceTransferable));
+          }
+        };
+      } catch (error) {
+        console.log('[App React.useEffect 5] error.message => ', error.message);
+      }
+    })();
+
     return () => {
       if (unsubscribeFromCollateral) {
         unsubscribeFromCollateral();
       }
+      if (unsubscribeFromCollateralTransferable) {
+        unsubscribeFromCollateralTransferable();
+      }
       if (unsubscribeFromWrapped) {
         unsubscribeFromWrapped();
       }
+      if (unsubscribeFromWrappedTransferable) {
+        unsubscribeFromWrappedTransferable();
+      }
       if (unsubscribeFromGovernance) {
         unsubscribeFromGovernance();
+      }
+      if (unsubscribeFromGovernanceTransferable) {
+        unsubscribeFromGovernanceTransferable();
       }
     };
   }, [
@@ -380,8 +455,11 @@ const App = (): JSX.Element => {
     bridgeLoaded,
     address,
     wrappedTokenBalance,
+    wrappedTokenTransferableBalance,
     collateralTokenBalance,
-    governanceTokenBalance
+    collateralTokenTransferableBalance,
+    governanceTokenBalance,
+    governanceTokenTransferableBalance
   ]);
 
   React.useEffect(() => {

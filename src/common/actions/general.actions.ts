@@ -14,8 +14,11 @@ import {
   INIT_GENERAL_DATA_ACTION,
   IS_VAULT_CLIENT_LOADED,
   UPDATE_BALANCE_POLKA_BTC,
+  UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE,
   UPDATE_COLLATERAL_TOKEN_BALANCE,
+  UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
   UPDATE_GOVERNANCE_TOKEN_BALANCE,
+  UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE,
   SET_INSTALLED_EXTENSION,
   SHOW_ACCOUNT_MODAL,
   UPDATE_OF_PRICES,
@@ -27,8 +30,11 @@ import {
   InitGeneralDataAction,
   IsVaultClientLoaded,
   UpdateBalancePolkaBTC,
+  UpdateWrappedTokenTransferableBalance,
   UpdateCollateralTokenBalance,
+  UpdateCollateralTokenTransferableBalance,
   UpdateGovernanceTokenBalance,
+  UpdateGovernanceTokenTransferableBalance,
   SetInstalledExtension,
   ShowAccountModal,
   IsFaucetLoaded,
@@ -63,11 +69,24 @@ export const updateWrappedTokenBalanceAction = (wrappedTokenBalance: BitcoinAmou
   wrappedTokenBalance
 });
 
+export const updateWrappedTokenTransferableBalanceAction =
+  (wrappedTokenTransferableBalance: BitcoinAmount): UpdateWrappedTokenTransferableBalance => ({
+    type: UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE,
+    wrappedTokenTransferableBalance
+  });
+
 export const updateCollateralTokenBalanceAction = (
   collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>
 ): UpdateCollateralTokenBalance => ({
   type: UPDATE_COLLATERAL_TOKEN_BALANCE,
   collateralTokenBalance
+});
+
+export const updateCollateralTokenTransferableBalanceAction = (
+  collateralTokenTransferableBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>
+): UpdateCollateralTokenTransferableBalance => ({
+  type: UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
+  collateralTokenTransferableBalance
 });
 
 export const updateGovernanceTokenBalanceAction = (
@@ -77,12 +96,20 @@ export const updateGovernanceTokenBalanceAction = (
   governanceTokenBalance
 });
 
+export const updateGovernanceTokenTransferableBalanceAction = (
+  governanceTokenTransferableBalance: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>
+): UpdateGovernanceTokenTransferableBalance => ({
+  type: UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE,
+  governanceTokenTransferableBalance
+});
+
 export const updateOfPricesAction = (prices: Prices): UpdateOfPrices => ({
   type: UPDATE_OF_PRICES,
   prices
 });
 
 export const initGeneralDataAction = (
+  // TODO: add transferable amounts here?
   totalWrappedTokenAmount: BitcoinAmount,
   totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
   totalGovernanceTokenAmount: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>,

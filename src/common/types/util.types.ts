@@ -70,8 +70,11 @@ export type GeneralState = {
   totalWrappedTokenAmount: BitcoinAmount;
   totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   wrappedTokenBalance: BitcoinAmount;
+  wrappedTokenTransferableBalance: BitcoinAmount;
   collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  collateralTokenTransferableBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   governanceTokenBalance: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
+  governanceTokenTransferableBalance: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
   extensions: string[];
   btcRelayHeight: number;
   bitcoinHeight: number;
