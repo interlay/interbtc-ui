@@ -43,21 +43,22 @@ const Staking = (): JSX.Element => {
         </div>
         <ExtendLockTimeUI />
         <InformationUI
-          label='New unlock Date'
+          label='New unlock date'
           value='Dec 16, 2023'
-          tooltip='New unlock Date' />
+          tooltip='Your original lock date plus the extended lock time.' />
         <InformationUI
           label='New total stake'
           value={`40.00 ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
-          tooltip='New total stake' />
+          tooltip='Your total stake after this transaction.' />
         <InformationUI
           label='Estimated APY'
           value='12.24%'
-          tooltip='Estimated APY' />
+          // eslint-disable-next-line max-len
+          tooltip={`The estimated amount of KINT you will receive as rewards. Depends on your proportion of the total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}.`} />
         <InformationUI
           label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
           value={`156.43  ${GOVERNANCE_TOKEN_SYMBOL}`}
-          tooltip='Estimated Rewards' />
+          tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} />
         <SubmitButton>
           Add more stake
         </SubmitButton>
