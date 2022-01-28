@@ -2,14 +2,14 @@
 import * as React from 'react';
 import InterlayInput, { Props as InterlayInputProps } from 'components/UI/InterlayInput';
 
+// `onWheel` prop can't be used with `preventDefault` because
+// React implements passive event listeners.
+const disableChangeOnWheel = (event: MouseEvent) => {
+  event.preventDefault();
+};
+
 type Ref = HTMLInputElement;
 const NumberInput = React.forwardRef<Ref, InterlayInputProps>((props, ref): JSX.Element => {
-  // `onWheel` prop can't be used with `preventDefault` because
-  // React implements passive event listeners.
-  const disableChangeOnWheel = (event: MouseEvent) => {
-    event.preventDefault();
-  };
-
   const inputParent = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
@@ -17,14 +17,12 @@ const NumberInput = React.forwardRef<Ref, InterlayInputProps>((props, ref): JSX.
 
     const currentInputParent = inputParent.current;
 
-    currentInputParent.addEventListener('wheel', (event: MouseEvent) =>
-      disableChangeOnWheel(event), { passive: false });
+    currentInputParent.addEventListener('wheel', disableChangeOnWheel, { passive: false });
 
     return () => {
-      currentInputParent.removeEventListener('wheel', (event: MouseEvent) =>
-        disableChangeOnWheel(event));
+      currentInputParent.removeEventListener('wheel', disableChangeOnWheel);
     };
-  });
+  }, []);
 
   return (
     <div ref={inputParent}>
