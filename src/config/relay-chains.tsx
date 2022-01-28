@@ -80,7 +80,7 @@ type WrappedTokenAmount =
 switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
 // Interlay
 case POLKADOT: {
-  APP_NAME = 'interBTC';
+  APP_NAME = 'Interlay';
   TERMS_AND_CONDITIONS_LINK = INTERLAY_TERMS_AND_CONDITIONS_LINK;
   WRAPPED_TOKEN = InterBtc;
   COLLATERAL_TOKEN = Polkadot as Currency<CollateralUnit>;
@@ -98,12 +98,12 @@ case POLKADOT: {
   PUBLIC_ASSETS_FOLDER_NAME = 'interlay';
   APP_DOMAIN = 'https://bridge.interlay.io';
   CROWDLOAN_LINK = INTERLAY_CROWDLOAN_LINK;
-  OPEN_GRAPH_IMAGE_FILE_NAME = 'interbtc-meta-image.jpg';
+  OPEN_GRAPH_IMAGE_FILE_NAME = 'interlay-meta-image.jpg';
   break;
 }
 // Kintsugi
 case KUSAMA: {
-  APP_NAME = 'kBTC';
+  APP_NAME = 'Kintsugi';
   TERMS_AND_CONDITIONS_LINK = KINTSUGI_TERMS_AND_CONDITIONS_LINK;
   WRAPPED_TOKEN = KBtc;
   COLLATERAL_TOKEN = Kusama as Currency<CollateralUnit>;
@@ -120,7 +120,7 @@ case KUSAMA: {
   PUBLIC_ASSETS_FOLDER_NAME = 'kintsugi';
   APP_DOMAIN = ''; // TODO: should add the Kintsugi app domain once it's set up
   CROWDLOAN_LINK = KINTSUGI_CROWDLOAN_LINK;
-  OPEN_GRAPH_IMAGE_FILE_NAME = 'kbtc-meta-image.jpg';
+  OPEN_GRAPH_IMAGE_FILE_NAME = 'kintsugi-meta-image.jpg';
   break;
 }
 default: {
