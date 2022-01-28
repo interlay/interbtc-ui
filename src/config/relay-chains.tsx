@@ -94,7 +94,7 @@ case POLKADOT: {
   GovernanceTokenLogoIcon = InterlayLogoIcon;
   PUBLIC_ASSETS_FOLDER_NAME = 'interlay';
   APP_DOMAIN = 'https://bridge.interlay.io';
-  OPEN_GRAPH_IMAGE_FILE_NAME = 'interbtc-meta-image.jpg';
+  OPEN_GRAPH_IMAGE_FILE_NAME = 'interlay-meta-image.jpg';
   break;
 }
 // Kintsugi
