@@ -42,53 +42,66 @@ const ExtendLockTimeUI = ({
   }, []);
 
   return (
-    <div
-      className={clsx(
-        'flex',
-        'justify-between',
-        className
-      )}
-      {...rest}>
+    <div>
       <div
         className={clsx(
-          'inline-flex',
-          'items-center',
-          'space-x-1',
-          // TODO: placeholder color
-          { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-          // TODO: placeholder color
-          { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-        )}>
-        <span>Extend lock time in weeks</span>
-        <span className='text-xs'>(Optional):</span>
-      </div>
-      <div
-        className={clsx(
-          'inline-flex',
-          'items-center',
-          'space-x-2.5'
-        )}>
-        <NumberInput
-          ref={extendingWeeksInputRef}
-          id={EXTENDING_LOCK_TIME}
-          name={EXTENDING_LOCK_TIME}
-          className='!w-12'
-          placeholder='0'
-          pattern='/d+'
-          step={1}
-          min={0}
-          max={MAX_EXTENDING_LOCK_TIME} />
-        <span
+          'flex',
+          'justify-between',
+          className
+        )}
+        {...rest}>
+        <div
           className={clsx(
-            'text-xs',
+            'inline-flex',
+            'items-center',
+            'space-x-1',
             // TODO: placeholder color
             { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
             // TODO: placeholder color
             { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )}>
-          Weeks
-        </span>
+          <span>Extend lock time in weeks</span>
+          <span className='text-xs'>(Optional):</span>
+        </div>
+        <div
+          className={clsx(
+            'inline-flex',
+            'items-center',
+            'space-x-2.5'
+          )}>
+          <NumberInput
+            ref={extendingWeeksInputRef}
+            id={EXTENDING_LOCK_TIME}
+            name={EXTENDING_LOCK_TIME}
+            className='!w-12'
+            placeholder='0'
+            pattern='/d+'
+            step={1}
+            min={0}
+            max={MAX_EXTENDING_LOCK_TIME} />
+          <span
+            className={clsx(
+              'text-xs',
+              // TODO: placeholder color
+              { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              // TODO: placeholder color
+              { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )}>
+            Weeks
+          </span>
+        </div>
       </div>
+      <label
+        htmlFor={EXTENDING_LOCK_TIME}
+        className={clsx(
+          'text-xs',
+          // TODO: placeholder color
+          { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+          // TODO: placeholder color
+          { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+        )}>
+        Max {MAX_EXTENDING_LOCK_TIME} Weeks
+      </label>
     </div>
   );
 };
