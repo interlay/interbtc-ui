@@ -94,7 +94,7 @@ case POLKADOT: {
   GovernanceTokenLogoIcon = InterlayLogoIcon;
   PUBLIC_ASSETS_FOLDER_NAME = 'interlay';
   APP_DOMAIN = 'https://bridge.interlay.io';
-  OPEN_GRAPH_IMAGE_FILE_NAME = 'interbtc-meta-image.jpg';
+  OPEN_GRAPH_IMAGE_FILE_NAME = 'interlay-meta-image.jpg';
   break;
 }
 // Kintsugi
@@ -115,7 +115,7 @@ case KUSAMA: {
   GovernanceTokenLogoIcon = KBTCLogoIcon;
   PUBLIC_ASSETS_FOLDER_NAME = 'kintsugi';
   APP_DOMAIN = ''; // TODO: should add the Kintsugi app domain once it's set up
-  OPEN_GRAPH_IMAGE_FILE_NAME = 'kbtc-meta-image.jpg';
+  OPEN_GRAPH_IMAGE_FILE_NAME = 'kintsugi-meta-image.jpg';
   break;
 }
 default: {
