@@ -329,8 +329,7 @@ const UpdateCollateralModal = ({
                   message: t('vault.collateral_is_required')
                 },
                 validate: value => validateCollateralTokenAmount(value)
-              })}>
-            </NumberInput>
+              })} />
             <ErrorMessage>
               {errors[COLLATERAL_TOKEN_AMOUNT]?.message}
             </ErrorMessage>

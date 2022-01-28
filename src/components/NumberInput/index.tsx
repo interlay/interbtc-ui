@@ -25,6 +25,7 @@ const NumberInput = React.forwardRef<Ref, InterlayInputProps>((props, ref): JSX.
         disableChangeOnWheel(event));
     };
   });
+
   return (
     <div ref={inputParent}>
       <InterlayInput

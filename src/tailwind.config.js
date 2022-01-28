@@ -396,6 +396,9 @@ module.exports = {
       ],
       display: [
         'important'
+      ],
+      width: [
+        'important'
       ]
     }
   },

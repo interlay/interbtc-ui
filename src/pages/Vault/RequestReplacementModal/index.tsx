@@ -142,8 +142,7 @@ const RequestReplacementModal = ({
                   message: t('Amount is required!')
                 },
                 validate: value => validateAmount(value)
-              })}>
-            </NumberInput>
+              })} />
             <ErrorMessage>
               {errors[AMOUNT]?.message}
             </ErrorMessage>
