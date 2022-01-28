@@ -77,7 +77,7 @@ type WrappedTokenAmount =
 switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
 // Interlay
 case POLKADOT: {
-  APP_NAME = 'interBTC';
+  APP_NAME = 'Interlay';
   TERMS_AND_CONDITIONS_LINK = INTERLAY_TERMS_AND_CONDITIONS_LINK;
   WRAPPED_TOKEN = InterBtc;
   COLLATERAL_TOKEN = Polkadot as Currency<CollateralUnit>;
