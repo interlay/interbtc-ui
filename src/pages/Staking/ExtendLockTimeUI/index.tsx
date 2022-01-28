@@ -11,6 +11,7 @@ import {
 const EXTENDING_LOCK_TIME = 'extending-lock-time';
 const MAX_EXTENDING_LOCK_TIME = 56;
 
+// MEMO: inspired by https://medium.com/codex/making-html-5-numeric-inputs-only-accept-integers-d3d117973d56
 const intRx = /\d/;
 const handleExtendingLockTimeChange = (event: KeyboardEvent) => {
   if (

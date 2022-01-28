@@ -39,7 +39,7 @@ const Staking = (): JSX.Element => {
             name={STAKING_GOVERNANCE_TOKEN_AMOUNT}
             label={GOVERNANCE_TOKEN_SYMBOL}
             approxUSD='≈ $ 325.12'
-            value='14.00' />
+            defaultValue='14.00' />
         </div>
         <ExtendLockTimeUI />
         <InformationUI
