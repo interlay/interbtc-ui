@@ -40,7 +40,6 @@ import InterlayTooltip from 'components/UI/InterlayTooltip';
 import {
   GOVERNANCE_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
-  COLLATERAL_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
   WrappedTokenLogoIcon,
   GovernanceTokenLogoIcon
@@ -342,7 +341,7 @@ const IssueForm = (): JSX.Element | null => {
               <GovernanceTokenLogoIcon width={20} />
             }
             value={displayMonetaryAmount(securityDeposit)}
-            unitName={COLLATERAL_TOKEN_SYMBOL}
+            unitName={GOVERNANCE_TOKEN_SYMBOL}
             approxUSD={getUsdAmount(securityDeposit, prices.collateralToken.usd)}
             tooltip={
               <InterlayTooltip label={t('issue_page.tooltip_security_deposit')}>
