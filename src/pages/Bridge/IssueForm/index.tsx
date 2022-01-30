@@ -43,7 +43,7 @@ import {
   COLLATERAL_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
   WrappedTokenLogoIcon,
-  CollateralTokenLogoIcon
+  GovernanceTokenLogoIcon
 } from 'config/relay-chains';
 import {
   BLOCK_TIME,
@@ -339,7 +339,7 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={
-              <CollateralTokenLogoIcon width={20} />
+              <GovernanceTokenLogoIcon width={20} />
             }
             value={displayMonetaryAmount(securityDeposit)}
             unitName={COLLATERAL_TOKEN_SYMBOL}
