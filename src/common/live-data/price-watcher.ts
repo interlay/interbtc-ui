@@ -20,9 +20,7 @@ const fetchPrices = async (dispatch: Dispatch, store: StoreState): Promise<void>
     if (
       prices.bitcoin.usd !== storePrices.bitcoin.usd ||
       prices[RELAY_CHAIN_NAME].usd !== storePrices.collateralToken.usd ||
-      // ray test touch <<
       prices[BRIDGE_PARACHAIN_NAME].usd !== storePrices.governanceToken.usd
-      // ray test touch >>
     ) {
       dispatch(updateOfPricesAction({
         bitcoin: prices.bitcoin,

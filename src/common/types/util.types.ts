@@ -59,11 +59,9 @@ export type Prices = {
   collateralToken: {
     usd: number;
   };
-  // ray test touch <<
   governanceToken: {
     usd: number;
   };
-  // ray test touch >>
 };
 
 export type GeneralState = {

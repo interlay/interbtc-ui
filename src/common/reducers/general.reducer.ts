@@ -40,9 +40,7 @@ const initialState = {
   prices: {
     bitcoin: { usd: 0 },
     collateralToken: { usd: 0 },
-    // ray test touch <<
     governanceToken: { usd: 0 }
-    // ray test touch >>
   }
 };
 

@@ -48,9 +48,7 @@ let COLLATERAL_TOKEN: CollateralToken;
 let GOVERNANCE_TOKEN: GovernanceToken;
 let PRICES_URL: string;
 let RELAY_CHAIN_NAME: string;
-// ray test touch <<
 let BRIDGE_PARACHAIN_NAME: string;
-// ray test touch >>
 let COLLATERAL_TOKEN_SYMBOL: string;
 let GOVERNANCE_TOKEN_SYMBOL: string;
 let WrappedTokenLogoIcon:
@@ -90,11 +88,9 @@ case POLKADOT: {
   COLLATERAL_TOKEN_SYMBOL = 'DOT';
   GOVERNANCE_TOKEN_SYMBOL = 'INTR';
   RELAY_CHAIN_NAME = 'polkadot';
-  // ray test touch <<
   BRIDGE_PARACHAIN_NAME = 'interlay';
   // eslint-disable-next-line max-len
   PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${RELAY_CHAIN_NAME},${BRIDGE_PARACHAIN_NAME}&vs_currencies=usd`;
-  // ray test touch >>
   WrappedTokenLogoIcon = InterBTCLogoIcon;
   WrappedTokenLogoWithTextIcon = InterBTCLogoWithTextIcon;
   CollateralTokenLogoIcon = DOTLogoIcon;
@@ -115,11 +111,9 @@ case KUSAMA: {
   COLLATERAL_TOKEN_SYMBOL = 'KSM';
   GOVERNANCE_TOKEN_SYMBOL = 'KINT';
   RELAY_CHAIN_NAME = 'kusama';
-  // ray test touch <<
   BRIDGE_PARACHAIN_NAME = 'kintsugi';
   // eslint-disable-next-line max-len
   PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${RELAY_CHAIN_NAME},${BRIDGE_PARACHAIN_NAME}&vs_currencies=usd`;
-  // ray test touch >>
   WrappedTokenLogoIcon = KintsugiLogoIcon;
   WrappedTokenLogoWithTextIcon = KintsugiLogoWithTextIcon;
   CollateralTokenLogoIcon = KSMLogoIcon;
@@ -151,9 +145,7 @@ export {
   COLLATERAL_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
   RELAY_CHAIN_NAME,
-  // ray test touch <<
   BRIDGE_PARACHAIN_NAME,
-  // ray test touch >>
   PRICES_URL,
   WrappedTokenLogoIcon,
   WrappedTokenLogoWithTextIcon,

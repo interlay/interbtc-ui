@@ -342,9 +342,7 @@ const IssueForm = (): JSX.Element | null => {
             }
             value={displayMonetaryAmount(securityDeposit)}
             unitName={GOVERNANCE_TOKEN_SYMBOL}
-            // ray test touch <<
             approxUSD={getUsdAmount(securityDeposit, prices.governanceToken.usd)}
-            // ray test touch >>
             tooltip={
               <InterlayTooltip label={t('issue_page.tooltip_security_deposit')}>
                 <InformationCircleIcon
