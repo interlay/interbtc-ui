@@ -37,7 +37,6 @@ export interface DashboardStatusUpdateInfo {
   proposedStatus: string;
   addError: string;
   removeError: string;
-  // eslint-disable-next-line camelcase
   btcBlockHash: string;
   yeas: number;
   nays: number;
@@ -60,6 +59,11 @@ export type Prices = {
   collateralToken: {
     usd: number;
   };
+  // ray test touch <<
+  governanceToken: {
+    usd: number;
+  };
+  // ray test touch >>
 };
 
 export type GeneralState = {
@@ -104,7 +108,6 @@ export type TimeDataPoint = {
 export type RelayedBlock = {
   height: string;
   hash: string;
-  // eslint-disable-next-line camelcase
   relayTs: string;
 };
 
