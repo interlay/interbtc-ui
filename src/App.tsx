@@ -23,7 +23,7 @@ import {
 import { Keyring } from '@polkadot/api';
 import {
   CollateralCurrency,
-  CurrencyUnit,
+  GovernanceUnit,
   tickerToCurrencyIdLiteral,
   SecurityStatusCode
 } from '@interlay/interbtc-api';
@@ -353,7 +353,7 @@ const App = (): JSX.Element => {
           await window.bridge.interBtcApi.tokens.subscribeToBalance(
             GOVERNANCE_TOKEN,
             address,
-            (_, balance: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>) => {
+            (_, balance: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>) => {
               if (!balance.eq(governanceTokenBalance)) {
                 dispatch(updateGovernanceTokenBalanceAction(balance));
               }
