@@ -86,7 +86,7 @@ const TransferForm = (): JSX.Element => {
     if (!activeToken) return;
 
     const balance =
-    newMonetaryAmount(activeToken.transferableBalance, activeToken.token as Currency<CurrencyUnit>, true);
+      newMonetaryAmount(activeToken.transferableBalance, activeToken.token as Currency<CurrencyUnit>, true);
     const transferAmount = newMonetaryAmount(value, activeToken.token as Currency<CurrencyUnit>, true);
 
     return balance.lt(transferAmount) ? t('insufficient_funds') : undefined;
