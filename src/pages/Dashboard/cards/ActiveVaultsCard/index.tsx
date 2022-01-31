@@ -1,12 +1,9 @@
-
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { VaultCountTimeData } from '@interlay/interbtc-index-client';
 
 import LineChart from '../../LineChart';
 import Stats, {
@@ -25,46 +22,59 @@ import {
   KINTSUGI_SUNDOWN
 } from 'utils/constants/colors';
 import { PAGES } from 'utils/constants/links';
-import genericFetcher, {
-  GENERIC_FETCHER
-} from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
+import graphqlFetcher, {
+  GraphqlReturn,
+  GRAPHQL_FETCHER
+} from 'services/fetchers/graphql-fetcher';
+import { getLastMidnightTimestamps } from 'common/utils/utils';
 
 interface Props {
   hasLinks?: boolean;
 }
 
+interface VaultRegistration {
+  id: string;
+  timestamp: number;
+}
+
 const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
   const {
-    isIdle: totalVaultsPerDayIdle,
-    isLoading: totalVaultsPerDayLoading,
-    data: totalVaultsPerDay,
-    error: totalVaultsPerDayError
-  } = useQuery<Array<VaultCountTimeData>, Error>(
+    isIdle: vaultsIdle,
+    isLoading: vaultsLoading,
+    data: vaults,
+    error: vaultsError
+  } = useQuery<GraphqlReturn<Array<VaultRegistration>>, Error>(
     [
-      GENERIC_FETCHER,
-      'interBtcIndex',
-      'getRecentDailyVaultCounts',
-      {}
+      GRAPHQL_FETCHER,
+      `query {
+        vaults(orderBy: registrationTimestamp_ASC) {
+          id
+          registrationTimestamp
+        }
+      }`
     ],
-    genericFetcher<Array<VaultCountTimeData>>(),
-    {
-      enabled: !!bridgeLoaded
-    }
+    graphqlFetcher<Array<VaultRegistration>>()
   );
-  useErrorHandler(totalVaultsPerDayError);
+  useErrorHandler(vaultsError);
 
   const renderContent = () => {
     // TODO: should use skeleton loaders
-    if (totalVaultsPerDayIdle || totalVaultsPerDayLoading) {
+    if (vaultsIdle || vaultsLoading) {
       return <>Loading...</>;
     }
-    if (totalVaultsPerDay === undefined) {
+    if (vaults === undefined) {
       throw new Error('Something went wrong!');
     }
+
+    const vaultRegistrations = vaults.data.vaults;
+    const graphTimestamps = getLastMidnightTimestamps(5, true);
+    const graphData = graphTimestamps.map(
+      timestamp => vaultRegistrations.filter(
+        registration => registration.timestamp <= timestamp
+      ).length
+    );
 
     let chartLineColor;
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
@@ -85,7 +95,7 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
                 {t('dashboard.vault.active_vaults')}
               </StatsDt>
               <StatsDd>
-                {totalVaultsPerDay[totalVaultsPerDay.length - 1]?.count}
+                {vaultRegistrations.length}
               </StatsDd>
             </>
           }
@@ -102,7 +112,7 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
           wrapperClassName='h-full'
           colors={[chartLineColor]}
           labels={[t('dashboard.vault.total_vaults_chart')]}
-          yLabels={totalVaultsPerDay.map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}
+          yLabels={graphTimestamps.map(date => new Date(date).toISOString().substring(0, 10))}
           yAxes={[
             {
               ticks: {
@@ -111,7 +121,7 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
               }
             }
           ]}
-          datasets={[totalVaultsPerDay.map(dataPoint => dataPoint.count)]} />
+          datasets={[graphData]} />
       </>
     );
   };

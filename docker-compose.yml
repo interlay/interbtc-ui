@@ -102,7 +102,7 @@ services:
           # sleep for 30s to wait for bitcoin to create the Charlie wallet
           # and also to ensure that the issue period and redeem period are set
           sleep 30
-          vault --keyfile="keyfile.json" --keyname="vault_1" --auto-register-with-collateral 1000000000000 --btc-parachain-url 'ws://interbtc:9944' --collateral-currency-id ${DOCKER_RELAY_CHAIN_CURRENCY} --wrapped-currency-id 'INTERBTC'
+          vault --keyfile="keyfile.json" --keyname="vault_1" --auto-register-with-collateral 1000000000000 --btc-parachain-url 'ws://interbtc:9944' --collateral-currency-id ${DOCKER_RELAY_CHAIN_CURRENCY} --wrapped-currency-id 'INTERBTC' --bitcoin-relay-start-height 1
     environment: &client-env
       BITCOIN_RPC_URL: http://bitcoind:18443
       BITCOIN_RPC_USER: rpcuser

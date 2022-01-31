@@ -1,11 +1,14 @@
+import { payments, networks } from 'bitcoinjs-lib';
 import {
-  bitcoin,
   Issue,
   Redeem,
   CurrencyUnit,
   InterbtcPrimitivesVaultId
 } from '@interlay/interbtc-api';
-import { NUMERIC_STRING_REGEX, BITCOIN_NETWORK, PARACHAIN_URL } from '../../constants';
+import {
+  NUMERIC_STRING_REGEX,
+  PARACHAIN_URL
+} from '../../constants';
 import Big from 'big.js';
 import {
   BitcoinAmount,
@@ -45,6 +48,20 @@ function formatDateTime(date: Date): string {
 // TODO: should use a package like `date-fns`
 function formatDateTimePrecise(date: Date): string {
   return date.toDateString().substring(4) + ' ' + date.toTimeString().substring(0, 8);
+}
+
+function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): Array<number> {
+  const midnights: number[] = [];
+  for (let index = 0; index < daysBack; index++) {
+    const dayBoundary = new Date(Date.now() - (startFromTonight ? index - 1 : index) * 3600 * 24 * 1000);
+    dayBoundary.setMilliseconds(0);
+    dayBoundary.setSeconds(0);
+    dayBoundary.setMinutes(0);
+    dayBoundary.setHours(0);
+    midnights.push(dayBoundary.getTime());
+  }
+
+  return midnights.reverse();
 }
 
 // TODO: replace these functions with internationalization functions
@@ -88,13 +105,6 @@ function range(start: number, end: number): number[] {
   return Array.from({ length: end - start }, (_, k) => k + start);
 }
 
-const BtcNetwork =
-  BITCOIN_NETWORK === 'mainnet' ?
-    bitcoin.networks.bitcoin :
-    BITCOIN_NETWORK === 'testnet' ?
-      bitcoin.networks.testnet :
-      bitcoin.networks.regtest;
-
 const requestsInStore = (
   storeRequests: Issue[] | Redeem[],
   parachainRequests: Issue[] | Redeem[]
@@ -114,6 +124,42 @@ const requestsInStore = (
     }
   });
   return inStore;
+};
+
+const btcAddressFromEventToString = (
+  addressObject: string,
+  // TODO: hardcoded
+  network: 'mainnet' | 'regtest' | 'testnet'
+): string => {
+  const parsedAddress = JSON.parse(addressObject);
+  const hash = Buffer.from(
+    Object.values<string>(parsedAddress)[0].substring(2),
+    'hex'
+  );
+  const paymentType = Object.keys(parsedAddress)[0].toUpperCase();
+
+  let payment;
+  switch (paymentType) {
+  case 'P2WPKHV0':
+    payment = payments.p2wpkh;
+    break;
+  case 'P2PKH':
+    payment = payments.p2pkh;
+    break;
+  case 'P2SH':
+    payment = payments.p2sh;
+    break;
+  default:
+    throw new Error('Something went wrong!');
+  }
+
+  return (
+    payment({
+      hash,
+      // TODO: hardcoded
+      network: networks[network === 'mainnet' ? 'bitcoin' : network]
+    }).address || ''
+  );
 };
 
 const copyToClipboard = (text: string): void => {
@@ -145,11 +191,12 @@ export {
   shortTxId,
   formatDateTime,
   formatDateTimePrecise,
+  getLastMidnightTimestamps,
   getUsdAmount,
   displayMonetaryAmount,
   isPositiveNumeric,
   range,
-  BtcNetwork,
+  btcAddressFromEventToString,
   requestsInStore,
   copyToClipboard,
   getRandomVaultIdWithCapacity,
