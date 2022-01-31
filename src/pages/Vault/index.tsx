@@ -217,8 +217,6 @@ const Vault = (): JSX.Element => {
     }
   ];
 
-  const interactionEnabled = vaultClientLoaded && address === selectedVaultAddress;
-
   return (
     <>
       <MainContainer className='fade-in-animation'>
@@ -273,7 +271,8 @@ const Vault = (): JSX.Element => {
             ))}
           </div>
         </div>
-        {interactionEnabled && (
+        {/* Check interaction with the vault */}
+        {vaultClientLoaded && address === selectedVaultAddress && (
           <div
             className={clsx(
               'grid',
