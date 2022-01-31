@@ -23,19 +23,13 @@ import {
 import { Keyring } from '@polkadot/api';
 import {
   CollateralCurrency,
-  CurrencyUnit,
   tickerToCurrencyIdLiteral,
-  SecurityStatusCode
+  SecurityStatusCode,
+  FaucetClient
 } from '@interlay/interbtc-api';
 import { createInterbtc } from '@interlay/interbtc';
 import {
-  FaucetClient,
-  CollateralUnit
 } from '@interlay/interbtc-api';
-import {
-  MonetaryAmount,
-  Currency
-} from '@interlay/monetary-js';
 
 import InterlayHelmet from 'parts/InterlayHelmet';
 import Layout from 'parts/Layout';
@@ -46,8 +40,7 @@ import {
   APP_NAME,
   WRAPPED_TOKEN,
   COLLATERAL_TOKEN,
-  GOVERNANCE_TOKEN,
-  WrappedTokenAmount
+  GOVERNANCE_TOKEN
 } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import { CLASS_NAMES } from 'utils/constants/styles';
@@ -71,29 +64,32 @@ import {
   isFaucetLoaded,
   isVaultClientLoaded,
   updateWrappedTokenBalanceAction,
+  updateWrappedTokenTransferableBalanceAction,
   updateCollateralTokenBalanceAction,
-  updateGovernanceTokenBalanceAction
+  updateCollateralTokenTransferableBalanceAction,
+  updateGovernanceTokenBalanceAction,
+  updateGovernanceTokenTransferableBalanceAction
 } from 'common/actions/general.actions';
 import 'react-toastify/dist/ReactToastify.css';
 
-// const Bridge = React.lazy(() =>
-//   import(/* webpackChunkName: 'bridge' */ 'pages/Bridge')
-// );
+const Bridge = React.lazy(() =>
+  import(/* webpackChunkName: 'bridge' */ 'pages/Bridge')
+);
 const Transfer = React.lazy(() =>
   import(/* webpackChunkName: 'transfer' */ 'pages/Transfer')
 );
-// const Transactions = React.lazy(() =>
-//   import(/* webpackChunkName: 'transactions' */ 'pages/Transactions')
-// );
-// const Staking = React.lazy(() =>
-//   import(/* webpackChunkName: 'staking' */ 'pages/Staking')
-// );
-// const Dashboard = React.lazy(() =>
-//   import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard')
-// );
-// const VaultDashboard = React.lazy(() =>
-//   import(/* webpackChunkName: 'vault' */ 'pages/Vault')
-// );
+const Transactions = React.lazy(() =>
+  import(/* webpackChunkName: 'transactions' */ 'pages/Transactions')
+);
+const Staking = React.lazy(() =>
+  import(/* webpackChunkName: 'staking' */ 'pages/Staking')
+);
+const Dashboard = React.lazy(() =>
+  import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard')
+);
+const VaultDashboard = React.lazy(() =>
+  import(/* webpackChunkName: 'vault' */ 'pages/Vault')
+);
 const NoMatch = React.lazy(() =>
   import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
 );
@@ -103,8 +99,12 @@ const App = (): JSX.Element => {
     bridgeLoaded,
     address,
     wrappedTokenBalance,
+    wrappedTokenTransferableBalance,
     collateralTokenBalance,
-    governanceTokenBalance
+    collateralTokenTransferableBalance,
+    governanceTokenBalance,
+    governanceTokenTransferableBalance,
+    vaultClientLoaded
   } = useSelector((state: StoreType) => state.general);
   const [isLoading, setIsLoading] = React.useState(true);
   const dispatch = useDispatch();
@@ -318,9 +318,12 @@ const App = (): JSX.Element => {
           await window.bridge.interBtcApi.tokens.subscribeToBalance(
             COLLATERAL_TOKEN,
             address,
-            (_, balance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>) => {
-              if (!balance.eq(collateralTokenBalance)) {
-                dispatch(updateCollateralTokenBalanceAction(balance));
+            (_, balance) => {
+              if (!balance.free.eq(collateralTokenBalance)) {
+                dispatch(updateCollateralTokenBalanceAction(balance.free));
+              }
+              if (!balance.transferable.eq(collateralTokenTransferableBalance)) {
+                dispatch(updateCollateralTokenTransferableBalanceAction(balance.transferable));
               }
             }
           );
@@ -335,9 +338,12 @@ const App = (): JSX.Element => {
           await window.bridge.interBtcApi.tokens.subscribeToBalance(
             WRAPPED_TOKEN,
             address,
-            (_, balance: WrappedTokenAmount) => {
-              if (!balance.eq(wrappedTokenBalance)) {
-                dispatch(updateWrappedTokenBalanceAction(balance));
+            (_, balance) => {
+              if (!balance.free.eq(wrappedTokenBalance)) {
+                dispatch(updateWrappedTokenBalanceAction(balance.free));
+              }
+              if (!balance.transferable.eq(wrappedTokenTransferableBalance)) {
+                dispatch(updateWrappedTokenTransferableBalanceAction(balance.transferable));
               }
             }
           );
@@ -352,9 +358,12 @@ const App = (): JSX.Element => {
           await window.bridge.interBtcApi.tokens.subscribeToBalance(
             GOVERNANCE_TOKEN,
             address,
-            (_, balance: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>) => {
-              if (!balance.eq(governanceTokenBalance)) {
-                dispatch(updateGovernanceTokenBalanceAction(balance));
+            (_, balance) => {
+              if (!balance.free.eq(governanceTokenBalance)) {
+                dispatch(updateGovernanceTokenBalanceAction(balance.free));
+              }
+              if (!balance.transferable.eq(governanceTokenTransferableBalance)) {
+                dispatch(updateGovernanceTokenTransferableBalanceAction(balance.transferable));
               }
             }
           );
@@ -379,8 +388,11 @@ const App = (): JSX.Element => {
     bridgeLoaded,
     address,
     wrappedTokenBalance,
+    wrappedTokenTransferableBalance,
     collateralTokenBalance,
-    governanceTokenBalance
+    collateralTokenTransferableBalance,
+    governanceTokenBalance,
+    governanceTokenTransferableBalance
   ]);
 
   React.useEffect(() => {
@@ -413,7 +425,7 @@ const App = (): JSX.Element => {
           render={({ location }) => (
             <React.Suspense fallback={<FullLoadingSpinner />}>
               <Switch location={location}>
-                {/* {vaultClientLoaded && (
+                {vaultClientLoaded && (
                   <Route path={PAGES.VAULT}>
                     <VaultDashboard />
                   </Route>
@@ -429,14 +441,14 @@ const App = (): JSX.Element => {
                 </Route>
                 <Route path={PAGES.BRIDGE}>
                   <Bridge />
-                </Route> */}
+                </Route>
                 <Route path={PAGES.TRANSFER}>
                   <Transfer />
                 </Route>
                 <Redirect
                   exact
                   from={PAGES.HOME}
-                  to={PAGES.TRANSFER} />
+                  to={PAGES.BRIDGE} />
                 <Route path='*'>
                   <NoMatch />
                 </Route>

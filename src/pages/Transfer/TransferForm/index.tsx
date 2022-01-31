@@ -85,7 +85,8 @@ const TransferForm = (): JSX.Element => {
   const validateTransferAmount = React.useCallback((value: number): string | undefined => {
     if (!activeToken) return;
 
-    const balance = newMonetaryAmount(activeToken.balance, activeToken.token as Currency<CurrencyUnit>, true);
+    const balance =
+      newMonetaryAmount(activeToken.transferableBalance, activeToken.token as Currency<CurrencyUnit>, true);
     const transferAmount = newMonetaryAmount(value, activeToken.token as Currency<CurrencyUnit>, true);
 
     return balance.lt(transferAmount) ? t('insufficient_funds') : undefined;
@@ -144,7 +145,7 @@ const TransferForm = (): JSX.Element => {
         process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
               { 'dark:text-kintsugiOchre':
         process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-            )}>Balance: {activeToken?.balance}
+            )}>Transferable balance: {activeToken?.transferableBalance}
           </p>
           <div
             className={clsx(
