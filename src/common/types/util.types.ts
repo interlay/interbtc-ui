@@ -12,7 +12,7 @@ import {
 } from '@interlay/monetary-js';
 import {
   CollateralUnit,
-  CurrencyUnit
+  GovernanceUnit
 } from '@interlay/interbtc-api';
 
 export interface StatusUpdate {
@@ -37,7 +37,6 @@ export interface DashboardStatusUpdateInfo {
   proposedStatus: string;
   addError: string;
   removeError: string;
-  // eslint-disable-next-line camelcase
   btcBlockHash: string;
   yeas: number;
   nays: number;
@@ -60,6 +59,9 @@ export type Prices = {
   collateralToken: {
     usd: number;
   };
+  governanceToken: {
+    usd: number;
+  };
 };
 
 export type GeneralState = {
@@ -71,7 +73,7 @@ export type GeneralState = {
   totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   wrappedTokenBalance: BitcoinAmount;
   collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
-  governanceTokenBalance: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
+  governanceTokenBalance: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
   extensions: string[];
   btcRelayHeight: number;
   bitcoinHeight: number;
@@ -104,7 +106,6 @@ export type TimeDataPoint = {
 export type RelayedBlock = {
   height: string;
   hash: string;
-  // eslint-disable-next-line camelcase
   relayTs: string;
 };
 
