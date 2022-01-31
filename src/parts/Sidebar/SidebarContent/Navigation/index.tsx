@@ -82,15 +82,15 @@ const Navigation = ({
   const NAVIGATION_ITEMS = React.useMemo(() => {
     return [
       {
+        name: 'nav_transfer',
+        link: PAGES.TRANSFER,
+        icon: SwitchHorizontalIcon
+      },
+      {
         name: 'nav_bridge',
         link: PAGES.BRIDGE,
         icon: RefreshIcon,
         disabled: true
-      },
-      {
-        name: 'nav_transfer',
-        link: PAGES.TRANSFER,
-        icon: SwitchHorizontalIcon
       },
       {
         name: 'nav_transactions',
