@@ -80,6 +80,7 @@
   "nav_feedback": "Feedback",
   "nav_docs": "Docs",
   "nav_terms_and_conditions": "Terms and Conditions",
+  "nav_coming_soon": "Coming soon",
   "report_bug": "Report a bug:",
   "request_funds": "{{tokenSymbol}} Faucet",
   "request_btc": "BTC Faucet",

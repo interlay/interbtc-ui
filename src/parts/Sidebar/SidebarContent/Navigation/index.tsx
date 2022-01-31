@@ -195,7 +195,7 @@ const Navigation = ({
                   onSmallScreen ? 'mr-4' : 'mr-3'
                 )}
                 aria-hidden='true' />
-              {t(navigationItem.name)}
+              {t(navigationItem.name)} ({t('nav_coming_soon')})
             </p>
           );
         }
