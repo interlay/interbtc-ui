@@ -169,7 +169,7 @@ const UpdateCollateralModal = ({
         throw new Error('Something went wrong!');
       }
 
-      const balanceLockedDOT = await window.bridge.interBtcApi.tokens.balanceLocked(COLLATERAL_TOKEN, vaultId);
+      const balanceLockedDOT = (await window.bridge.interBtcApi.tokens.balance(COLLATERAL_TOKEN, vaultId)).reserved;
       dispatch(updateCollateralAction(balanceLockedDOT));
 
       if (vaultCollateralization === undefined) {
