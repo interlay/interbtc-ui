@@ -119,7 +119,7 @@ const Vault = (): JSX.Element => {
           totalRedeemRequests
         ] = await Promise.allSettled([
           window.bridge.interBtcApi.vaults.get(vaultId, collateralIdLiteral),
-          window.bridge.interBtcApi.pools.getFeesWrapped(
+          window.bridge.interBtcApi.vaults.getFeesWrapped(
             newAccountId(window.bridge.interBtcApi.api, selectedVaultAddress),
             collateralIdLiteral,
             wrappedIdLiteral
@@ -127,7 +127,7 @@ const Vault = (): JSX.Element => {
           window.bridge.interBtcApi.vaults.getIssuedAmount(vaultId, collateralIdLiteral),
           window.bridge.interBtcApi.vaults.getVaultCollateralization(vaultId, collateralIdLiteral),
           window.bridge.interBtcApi.vaults.getAPY(vaultId, collateralIdLiteral),
-          window.bridge.interBtcApi.vaults.getIssuableAmount(vaultId, collateralIdLiteral),
+          window.bridge.interBtcApi.issue.getVaultIssuableAmount(vaultId, collateralIdLiteral),
           window
             .bridge
             .interBtcIndex
