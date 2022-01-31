@@ -109,7 +109,6 @@ export const updateOfPricesAction = (prices: Prices): UpdateOfPrices => ({
 });
 
 export const initGeneralDataAction = (
-  // TODO: add transferable amounts here?
   totalWrappedTokenAmount: BitcoinAmount,
   totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
   totalGovernanceTokenAmount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>,
