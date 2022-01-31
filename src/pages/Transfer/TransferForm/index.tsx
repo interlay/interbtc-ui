@@ -128,10 +128,6 @@ const TransferForm = (): JSX.Element => {
     t
   ]);
 
-  React.useEffect(() => {
-    console.log(activeToken);
-  }, [activeToken]);
-
   return (
     <>
       <form
