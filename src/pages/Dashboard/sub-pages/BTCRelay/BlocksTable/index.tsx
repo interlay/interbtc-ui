@@ -106,8 +106,9 @@ const BlocksTable = (): JSX.Element => {
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell({ value }: { value: number; }) {
-          const hash = reverseEndiannessHex(stripHexPrefix(value));
+        Cell: function FormattedCell({ value }: { value: string; }) {
+          const payload: { content: string; } = JSON.parse(value);
+          const hash = reverseEndiannessHex(stripHexPrefix(payload.content));
           return (
             <ExternalLink href={`${BTC_BLOCK_API}${hash}`}>
               {hash}

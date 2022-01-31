@@ -103,7 +103,7 @@
   "date": "Date",
   "enter_recipient_address": "Please enter the recipient address.",
   "blockstream": "Blockstream",
-  "insufficient_funds_dot": "Insufficient funds to pay for {{collateralTokenSymbol}} fees.",
+  "insufficient_funds_governance_token": "Insufficient funds to pay for {{governanceTokenSymbol}} fees.",
   "insufficient_funds": "Insufficient balance to transfer.",
   "interbtc_bridge_loading": "The {{wrappedTokenSymbol}} bridge is loading. Please wait a few seconds.",
   "issue_redeem_disabled": "Issue and Redeem is currently disabled.",
