@@ -23,20 +23,13 @@ import {
 import { Keyring } from '@polkadot/api';
 import {
   CollateralCurrency,
-  CurrencyUnit,
   tickerToCurrencyIdLiteral,
-  SecurityStatusCode
+  SecurityStatusCode,
+  FaucetClient
 } from '@interlay/interbtc-api';
 import { createInterbtc } from '@interlay/interbtc';
 import {
-  FaucetClient,
-  CollateralUnit,
-  newAccountId
 } from '@interlay/interbtc-api';
-import {
-  MonetaryAmount,
-  Currency
-} from '@interlay/monetary-js';
 
 import InterlayHelmet from 'parts/InterlayHelmet';
 import Layout from 'parts/Layout';
@@ -47,8 +40,7 @@ import {
   APP_NAME,
   WRAPPED_TOKEN,
   COLLATERAL_TOKEN,
-  GOVERNANCE_TOKEN,
-  WrappedTokenAmount
+  GOVERNANCE_TOKEN
 } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import { CLASS_NAMES } from 'utils/constants/styles';
@@ -317,11 +309,8 @@ const App = (): JSX.Element => {
     if (!address) return;
 
     let unsubscribeFromCollateral: () => void;
-    let unsubscribeFromCollateralTransferable: () => void;
     let unsubscribeFromWrapped: () => void;
-    let unsubscribeFromWrappedTransferable: () => void;
     let unsubscribeFromGovernance: () => void;
-    let unsubscribeFromGovernanceTransferable: () => void;
 
     (async () => {
       try {
@@ -329,9 +318,12 @@ const App = (): JSX.Element => {
           await window.bridge.interBtcApi.tokens.subscribeToBalance(
             COLLATERAL_TOKEN,
             address,
-            (_, balance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>) => {
-              if (!balance.eq(collateralTokenBalance)) {
-                dispatch(updateCollateralTokenBalanceAction(balance));
+            (_, balance) => {
+              if (!balance.free.eq(collateralTokenBalance)) {
+                dispatch(updateCollateralTokenBalanceAction(balance.free));
+              }
+              if (!balance.transferable.eq(collateralTokenTransferableBalance)) {
+                dispatch(updateCollateralTokenTransferableBalanceAction(balance.transferable));
               }
             }
           );
@@ -342,53 +334,19 @@ const App = (): JSX.Element => {
 
     (async () => {
       try {
-        unsubscribeFromCollateralTransferable = async () => {
-          const accountId = newAccountId(window.bridge.interBtcApi.api, address);
-          const balanceTransferable =
-            await window.bridge.interBtcApi.tokens.balanceTransferable(
-              COLLATERAL_TOKEN, accountId
-            );
-
-          if (!balanceTransferable.eq(collateralTokenTransferableBalance)) {
-            dispatch(updateCollateralTokenTransferableBalanceAction(balanceTransferable));
-          }
-        };
-      } catch (error) {
-        console.log('[App React.useEffect 5] error.message => ', error.message);
-      }
-    })();
-
-    (async () => {
-      try {
         unsubscribeFromWrapped =
           await window.bridge.interBtcApi.tokens.subscribeToBalance(
             WRAPPED_TOKEN,
             address,
-            (_, balance: WrappedTokenAmount) => {
-              if (!balance.eq(wrappedTokenBalance)) {
-                dispatch(updateWrappedTokenBalanceAction(balance));
+            (_, balance) => {
+              if (!balance.free.eq(wrappedTokenBalance)) {
+                dispatch(updateWrappedTokenBalanceAction(balance.free));
+              }
+              if (!balance.transferable.eq(wrappedTokenTransferableBalance)) {
+                dispatch(updateWrappedTokenTransferableBalanceAction(balance.transferable));
               }
             }
           );
-      } catch (error) {
-        console.log('[App React.useEffect 5] error.message => ', error.message);
-      }
-    })();
-
-    (async () => {
-      try {
-        unsubscribeFromWrappedTransferable = async () => {
-          const accountId = newAccountId(window.bridge.interBtcApi.api, address);
-
-          const balanceTransferable =
-            await window.bridge.interBtcApi.tokens.balanceTransferable(
-              WRAPPED_TOKEN, accountId
-            ) as WrappedTokenAmount;
-
-          if (!balanceTransferable.eq(wrappedTokenTransferableBalance)) {
-            dispatch(updateWrappedTokenTransferableBalanceAction(balanceTransferable));
-          }
-        };
       } catch (error) {
         console.log('[App React.useEffect 5] error.message => ', error.message);
       }
@@ -400,9 +358,12 @@ const App = (): JSX.Element => {
           await window.bridge.interBtcApi.tokens.subscribeToBalance(
             GOVERNANCE_TOKEN,
             address,
-            (_, balance: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>) => {
-              if (!balance.eq(governanceTokenBalance)) {
-                dispatch(updateGovernanceTokenBalanceAction(balance));
+            (_, balance) => {
+              if (!balance.free.eq(governanceTokenBalance)) {
+                dispatch(updateGovernanceTokenBalanceAction(balance.free));
+              }
+              if (!balance.transferable.eq(governanceTokenTransferableBalance)) {
+                dispatch(updateGovernanceTokenTransferableBalanceAction(balance.transferable));
               }
             }
           );
@@ -411,43 +372,15 @@ const App = (): JSX.Element => {
       }
     })();
 
-    (async () => {
-      try {
-        unsubscribeFromGovernanceTransferable = async () => {
-          const accountId = newAccountId(window.bridge.interBtcApi.api, address);
-
-          const balanceTransferable =
-            await window.bridge.interBtcApi.tokens.balanceTransferable(
-              GOVERNANCE_TOKEN, accountId
-            );
-
-          if (!balanceTransferable.eq(governanceTokenTransferableBalance)) {
-            dispatch(updateGovernanceTokenTransferableBalanceAction(balanceTransferable));
-          }
-        };
-      } catch (error) {
-        console.log('[App React.useEffect 5] error.message => ', error.message);
-      }
-    })();
-
     return () => {
       if (unsubscribeFromCollateral) {
         unsubscribeFromCollateral();
       }
-      if (unsubscribeFromCollateralTransferable) {
-        unsubscribeFromCollateralTransferable();
-      }
       if (unsubscribeFromWrapped) {
         unsubscribeFromWrapped();
       }
-      if (unsubscribeFromWrappedTransferable) {
-        unsubscribeFromWrappedTransferable();
-      }
       if (unsubscribeFromGovernance) {
         unsubscribeFromGovernance();
-      }
-      if (unsubscribeFromGovernanceTransferable) {
-        unsubscribeFromGovernanceTransferable();
       }
     };
   }, [

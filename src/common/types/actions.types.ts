@@ -2,7 +2,7 @@ import { StoreType, ParachainStatus, Prices } from './util.types';
 import {
   Issue,
   CollateralUnit,
-  CurrencyUnit
+  GovernanceUnit
 } from '@interlay/interbtc-api';
 import {
   BitcoinAmount,
@@ -75,7 +75,7 @@ export interface InitGeneralDataAction {
   type: typeof INIT_GENERAL_DATA_ACTION;
   totalWrappedTokenAmount: BitcoinAmount;
   totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
-  totalGovernanceTokenAmount: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
+  totalGovernanceTokenAmount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
   btcRelayHeight: number;
   bitcoinHeight: number;
   parachainStatus: ParachainStatus;
@@ -103,12 +103,12 @@ export interface UpdateCollateralTokenTransferableBalance {
 
 export interface UpdateGovernanceTokenBalance {
   type: typeof UPDATE_GOVERNANCE_TOKEN_BALANCE;
-  governanceTokenBalance: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
+  governanceTokenBalance: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
 }
 
 export interface UpdateGovernanceTokenTransferableBalance {
   type: typeof UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE;
-  governanceTokenTransferableBalance: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
+  governanceTokenTransferableBalance: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
 }
 
 export interface SetInstalledExtension {

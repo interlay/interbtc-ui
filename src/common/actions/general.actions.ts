@@ -5,7 +5,7 @@ import {
 } from '@interlay/monetary-js';
 import {
   CollateralUnit,
-  CurrencyUnit
+  GovernanceUnit
 } from '@interlay/interbtc-api';
 
 import {
@@ -90,14 +90,14 @@ export const updateCollateralTokenTransferableBalanceAction = (
 });
 
 export const updateGovernanceTokenBalanceAction = (
-  governanceTokenBalance: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>
+  governanceTokenBalance: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>
 ): UpdateGovernanceTokenBalance => ({
   type: UPDATE_GOVERNANCE_TOKEN_BALANCE,
   governanceTokenBalance
 });
 
 export const updateGovernanceTokenTransferableBalanceAction = (
-  governanceTokenTransferableBalance: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>
+  governanceTokenTransferableBalance: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>
 ): UpdateGovernanceTokenTransferableBalance => ({
   type: UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE,
   governanceTokenTransferableBalance
@@ -112,7 +112,7 @@ export const initGeneralDataAction = (
   // TODO: add transferable amounts here?
   totalWrappedTokenAmount: BitcoinAmount,
   totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
-  totalGovernanceTokenAmount: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>,
+  totalGovernanceTokenAmount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>,
   btcRelayHeight: number,
   bitcoinHeight: number,
   parachainStatus: ParachainStatus
