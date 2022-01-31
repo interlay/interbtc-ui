@@ -34,7 +34,7 @@ interface TokenOption {
   token: WrappedToken | CollateralToken | GovernanceToken;
   type: TokenType;
   balance: string;
-  transferableBalance?: string;
+  transferableBalance: string;
   symbol: string;
   icon: JSX.Element;
 }
