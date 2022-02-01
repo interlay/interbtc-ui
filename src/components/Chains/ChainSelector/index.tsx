@@ -39,7 +39,7 @@ const ChainSelector = ({
             <>
               <SelectBody
                 className={clsx(
-                  'w-52'
+                  'w-full'
                 )}>
                 <SelectButton variant={SELECT_VARIANTS.formField}>
                   <span
