@@ -52,7 +52,7 @@ const ChainSelector = ({
                     )}>
                     {currentChain.icon}
                     <SelectText>
-                      <span>
+                      <span className='capitalize'>
                         {currentChain.name}
                       </span>
                     </SelectText>
@@ -78,7 +78,7 @@ const ChainSelector = ({
                               )}>
                               {chainOption.icon}
                               <SelectText>
-                                <span>
+                                <span className='capitalize'>
                                   {chainOption.name}
                                 </span>
                               </SelectText>
