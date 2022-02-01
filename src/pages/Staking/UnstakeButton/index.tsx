@@ -22,7 +22,7 @@ const UnstakeButton = ({
       className
     )}
     endIcon={
-      <InterlayTooltip label='tooltip'>
+      <InterlayTooltip label={`You can unlock your staked ${GOVERNANCE_TOKEN_SYMBOL} on Dec 24, 2022 at 8:34:45`}>
         <InformationCircleIcon
           onClick={event => {
             event.stopPropagation();
