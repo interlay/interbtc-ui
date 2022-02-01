@@ -20,31 +20,15 @@ const CHAIN_OPTIONS: Array<ChainOption> = [
   }
 ];
 
-const getChainOption = (name: string) => CHAIN_OPTIONS?.find((chain: ChainOption) => chain.name === name);
-
 const Chains = (): JSX.Element => {
-  const [currentChain, setCurrentChain] = React.useState<ChainOption | undefined>(undefined);
-
-  const handleUpdateChain = (chain: string) => {
-    setCurrentChain(getChainOption(chain));
-  };
-
-  React.useEffect(() => {
-    if (!currentChain) {
-      setCurrentChain(CHAIN_OPTIONS[0]);
-    }
-  }, [currentChain]);
+  // Set initial value to first item in CHAIN_OPTIONS object
+  const [currentChain, setCurrentChain] = React.useState<ChainOption>(CHAIN_OPTIONS[0]);
 
   return (
-    <>
-      {currentChain ?
-        <ChainSelector
-          chainOptions={CHAIN_OPTIONS}
-          currentChain={currentChain}
-          onChange={handleUpdateChain} /> :
-        null
-      }
-    </>
+    <ChainSelector
+      chainOptions={CHAIN_OPTIONS}
+      currentChain={currentChain}
+      onChange={setCurrentChain} />
   );
 };
 

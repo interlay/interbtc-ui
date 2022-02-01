@@ -19,7 +19,7 @@ interface ChainOption {
 interface Props {
   chainOptions: Array<ChainOption>;
   currentChain: ChainOption;
-  onChange: (name: string) => void;
+  onChange: (chain: ChainOption) => void;
 }
 
 const ChainSelector = ({
@@ -33,7 +33,7 @@ const ChainSelector = ({
         <Select
           variant={SELECT_VARIANTS.formField}
           key={currentChain.name}
-          value={currentChain.name}
+          value={currentChain}
           onChange={onChange}>
           {({ open }) => (
             <>
@@ -63,7 +63,7 @@ const ChainSelector = ({
                     return (
                       <SelectOption
                         key={chainOption.name}
-                        value={chainOption.name}>
+                        value={chainOption}>
                         {({
                           selected,
                           active
