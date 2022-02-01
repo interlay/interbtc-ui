@@ -1,10 +1,12 @@
 
 import clsx from 'clsx';
-import { LockClosedIcon } from '@heroicons/react/solid';
 
 import InterlayDenimOrKintsugiMidnightContainedButton, {
   Props as InterlayDenimOrKintsugiMidnightContainedButtonProps
 } from 'components/buttons/InterlayDenimOrKintsugiMidnightContainedButton';
+import InterlayTooltip from 'components/UI/InterlayTooltip';
+import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
+import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const UnstakeButton = ({
   className,
@@ -19,16 +21,22 @@ const UnstakeButton = ({
       'rounded-md',
       className
     )}
-    startIcon={
-      <LockClosedIcon
-        className={clsx(
-          'w-5',
-          'h-5'
-        )} />
+    endIcon={
+      <InterlayTooltip label='tooltip'>
+        <InformationCircleIcon
+          onClick={event => {
+            event.stopPropagation();
+          }}
+          className={clsx(
+            'pointer-events-auto',
+            'w-5',
+            'h-5'
+          )} />
+      </InterlayTooltip>
     }
     disabled
     {...rest}>
-    Unstake Locked until Dec 2, 2023, 8:39:45
+    Unstake Locked {GOVERNANCE_TOKEN_SYMBOL} 24/12/2022
   </InterlayDenimOrKintsugiMidnightContainedButton>
 );
 

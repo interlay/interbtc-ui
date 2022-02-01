@@ -9,6 +9,7 @@ import {
 } from 'utils/constants/relay-chain-names';
 
 const EXTENDING_LOCK_TIME = 'extending-lock-time';
+const MIN_EXTENDING_LOCK_TIME = 2;
 const MAX_EXTENDING_LOCK_TIME = 56;
 
 // MEMO: inspired by https://medium.com/codex/making-html-5-numeric-inputs-only-accept-integers-d3d117973d56
@@ -78,7 +79,7 @@ const ExtendLockTimeUI = ({
             placeholder='0'
             pattern='/d+'
             step={1}
-            min={0}
+            min={MIN_EXTENDING_LOCK_TIME}
             max={MAX_EXTENDING_LOCK_TIME} />
           <span
             className={clsx(
