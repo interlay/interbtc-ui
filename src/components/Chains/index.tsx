@@ -3,8 +3,8 @@ import * as React from 'react';
 import ChainSelector, { ChainOption } from './ChainSelector';
 
 import {
-  WrappedTokenLogoIcon,
-  CollateralTokenLogoIcon,
+  RelayChainLogoIcon,
+  BridgeParachainLogoIcon,
   RELAY_CHAIN_NAME,
   BRIDGE_PARACHAIN_NAME
 } from 'config/relay-chains';
@@ -12,11 +12,11 @@ import {
 const CHAIN_OPTIONS: Array<ChainOption> = [
   {
     name: RELAY_CHAIN_NAME,
-    icon: <CollateralTokenLogoIcon height={46} />
+    icon: <RelayChainLogoIcon height={46} />
   },
   {
     name: BRIDGE_PARACHAIN_NAME,
-    icon: <WrappedTokenLogoIcon height={46} />
+    icon: <BridgeParachainLogoIcon height={46} />
   }
 ];
 
