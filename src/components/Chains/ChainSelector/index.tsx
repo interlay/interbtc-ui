@@ -102,5 +102,5 @@ const ChainSelector = ({
   );
 };
 
-export type { Props, ChainOption };
+export type { ChainOption };
 export default ChainSelector;
