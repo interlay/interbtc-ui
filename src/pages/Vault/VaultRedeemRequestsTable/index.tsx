@@ -41,7 +41,7 @@ import {
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
-import * as constants from '../../constants';
+import * as constants from '../../../constants';
 import STATUSES from 'utils/constants/statuses';
 import { WrappedTokenAmount } from 'config/relay-chains';
 

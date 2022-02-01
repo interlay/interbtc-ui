@@ -87,7 +87,7 @@ const Staking = React.lazy(() =>
 const Dashboard = React.lazy(() =>
   import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard')
 );
-const VaultDashboard = React.lazy(() =>
+const Vault = React.lazy(() =>
   import(/* webpackChunkName: 'vault' */ 'pages/Vault')
 );
 const NoMatch = React.lazy(() =>
@@ -103,8 +103,7 @@ const App = (): JSX.Element => {
     collateralTokenBalance,
     collateralTokenTransferableBalance,
     governanceTokenBalance,
-    governanceTokenTransferableBalance,
-    vaultClientLoaded
+    governanceTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
   const [isLoading, setIsLoading] = React.useState(true);
   const dispatch = useDispatch();
@@ -425,11 +424,9 @@ const App = (): JSX.Element => {
           render={({ location }) => (
             <React.Suspense fallback={<FullLoadingSpinner />}>
               <Switch location={location}>
-                {vaultClientLoaded && (
-                  <Route path={PAGES.VAULT}>
-                    <VaultDashboard />
-                  </Route>
-                )}
+                <Route path={PAGES.VAULT}>
+                  <Vault />
+                </Route>
                 <Route path={PAGES.DASHBOARD}>
                   <Dashboard />
                 </Route>

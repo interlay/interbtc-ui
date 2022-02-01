@@ -1,4 +1,5 @@
 
+import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 import { matchPath } from 'react-router';
 import { useSelector } from 'react-redux';
@@ -23,68 +24,11 @@ import {
   KUSAMA,
   POLKADOT
 } from 'utils/constants/relay-chain-names';
-import { PAGES } from 'utils/constants/links';
+import {
+  PAGES,
+  URL_PARAMETERS
+} from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
-
-const NAVIGATION_ITEMS = [
-  {
-    name: 'nav_bridge',
-    link: PAGES.BRIDGE,
-    icon: RefreshIcon
-  },
-  {
-    name: 'nav_transfer',
-    link: PAGES.TRANSFER,
-    icon: SwitchHorizontalIcon
-  },
-  {
-    name: 'nav_transactions',
-    link: PAGES.TRANSACTIONS,
-    icon: ClipboardListIcon
-  },
-  // TODO: blocked for now
-  // {
-  //   name: 'nav_staking',
-  //   link: PAGES.STAKING,
-  //   icon: CashIcon
-  // },
-  {
-    name: 'nav_dashboard',
-    link: PAGES.DASHBOARD,
-    icon: ChartSquareBarIcon
-  },
-  {
-    name: 'nav_vault',
-    link: PAGES.VAULT,
-    icon: ChipIcon
-  },
-  {
-    name: 'separator',
-    link: '#',
-    icon: () => null,
-    separator: true
-  },
-  {
-    name: 'nav_docs',
-    link: INTERLAY_DOCS_LINK,
-    icon: BookOpenIcon,
-    external: true,
-    rest: {
-      target: '_blank',
-      rel: 'noopener noreferrer'
-    }
-  },
-  {
-    name: 'nav_terms_and_conditions',
-    link: TERMS_AND_CONDITIONS_LINK,
-    icon: DocumentTextIcon,
-    external: true,
-    rest: {
-      target: '_blank',
-      rel: 'noopener noreferrer'
-    }
-  }
-];
 
 interface CustomProps {
   onSmallScreen?: boolean;
@@ -110,7 +54,75 @@ const Navigation = ({
 }: CustomProps & React.ComponentPropsWithRef<'nav'>): JSX.Element => {
   const location = useLocation();
   const { t } = useTranslation();
-  const { vaultClientLoaded } = useSelector((state: StoreType) => state.general);
+  const {
+    vaultClientLoaded,
+    address
+  } = useSelector((state: StoreType) => state.general);
+
+  const NAVIGATION_ITEMS = React.useMemo(() => {
+    if (!address) return [];
+
+    return [
+      {
+        name: 'nav_bridge',
+        link: PAGES.BRIDGE,
+        icon: RefreshIcon,
+        hidden: false
+      },
+      {
+        name: 'nav_transfer',
+        link: PAGES.TRANSFER,
+        icon: SwitchHorizontalIcon
+      },
+      {
+        name: 'nav_transactions',
+        link: PAGES.TRANSACTIONS,
+        icon: ClipboardListIcon,
+        hidden: false
+      },
+      {
+        name: 'nav_dashboard',
+        link: PAGES.DASHBOARD,
+        icon: ChartSquareBarIcon,
+        hidden: false
+      },
+      {
+        name: 'nav_vault',
+        link: `${PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT_ADDRESS}`, address)}`,
+        icon: ChipIcon,
+        hidden: !vaultClientLoaded
+      },
+      {
+        name: 'separator',
+        link: '#',
+        icon: () => null,
+        separator: true
+      },
+      {
+        name: 'nav_docs',
+        link: INTERLAY_DOCS_LINK,
+        icon: BookOpenIcon,
+        external: true,
+        rest: {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
+      },
+      {
+        name: 'nav_terms_and_conditions',
+        link: TERMS_AND_CONDITIONS_LINK,
+        icon: DocumentTextIcon,
+        external: true,
+        rest: {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
+      }
+    ];
+  }, [
+    address,
+    vaultClientLoaded
+  ]);
 
   return (
     <nav
@@ -128,8 +140,7 @@ const Navigation = ({
           );
         }
 
-        // TODO: could disable the vault link rather than hiding
-        if (navigationItem.link === PAGES.VAULT && !vaultClientLoaded) {
+        if (navigationItem.hidden) {
           return null;
         }
 
