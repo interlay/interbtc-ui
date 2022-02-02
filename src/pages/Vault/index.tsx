@@ -36,7 +36,8 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   COLLATERAL_TOKEN_SYMBOL,
   WRAPPED_TOKEN,
-  COLLATERAL_TOKEN
+  COLLATERAL_TOKEN,
+  GOVERNANCE_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import {
   POLKADOT,
@@ -156,7 +157,7 @@ const Vault = (): JSX.Element => {
     selectedVaultAddress
   ]);
 
-  const VAULT_ITEMS = [
+  const vaultItems = [
     {
       title: t('collateralization'),
       value: collateralization === '∞' ?
@@ -188,6 +189,12 @@ const Vault = (): JSX.Element => {
     {
       title: t('apy'),
       value: `≈${safeRoundTwoDecimals(apy)}%`
+    },
+    {
+      title: t('vault.rewards_earned_governance_token_symbol', {
+        governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
+      }),
+      value: ''
     }
   ];
 
@@ -212,7 +219,7 @@ const Vault = (): JSX.Element => {
               'gap-5',
               '2xl:gap-6'
             )}>
-            {VAULT_ITEMS.map(item => (
+            {vaultItems.map(item => (
               <Panel
                 key={item.title}
                 className={clsx(
