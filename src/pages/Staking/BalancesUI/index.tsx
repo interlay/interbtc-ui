@@ -83,7 +83,15 @@ const BalanceItem = ({
   </div>
 );
 
-const BalancesUI = (): JSX.Element => {
+interface Props {
+  governanceTokenBalance: string;
+  voteGovernanceTokenBalance: string;
+}
+
+const BalancesUI = ({
+  governanceTokenBalance,
+  voteGovernanceTokenBalance
+}: Props): JSX.Element => {
   return (
     <div
       className={clsx(
@@ -100,11 +108,11 @@ const BalancesUI = (): JSX.Element => {
       )}>
       <BalanceItem
         label={`My ${GOVERNANCE_TOKEN_SYMBOL} Balance`}
-        value='245.535'
+        value={governanceTokenBalance}
         tokenSymbol={GOVERNANCE_TOKEN_SYMBOL} />
       <BalanceItem
         label={`My Staked ${GOVERNANCE_TOKEN_SYMBOL}`}
-        value='26.00'
+        value={voteGovernanceTokenBalance}
         tokenSymbol={VOTE_GOVERNANCE_TOKEN_SYMBOL} />
     </div>
   );

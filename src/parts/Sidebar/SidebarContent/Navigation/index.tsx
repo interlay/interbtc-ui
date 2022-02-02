@@ -81,6 +81,11 @@ const Navigation = ({
         hidden: false
       },
       {
+        name: 'nav_staking',
+        link: PAGES.STAKING,
+        icon: CashIcon
+      },
+      {
         name: 'nav_dashboard',
         link: PAGES.DASHBOARD,
         icon: ChartSquareBarIcon,
