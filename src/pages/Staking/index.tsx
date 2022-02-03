@@ -30,7 +30,7 @@ import TokenField from 'components/TokenField';
 import SubmitButton from 'components/SubmitButton';
 import ErrorFallback from 'components/ErrorFallback';
 import {
-  // VOTE_GOVERNANCE_TOKEN_SYMBOL,
+  VOTE_GOVERNANCE_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import {
@@ -183,6 +183,11 @@ const Staking = (): JSX.Element => {
             label='Unlock date'
             value={unlockDateLabel}
             tooltip='Your staked amount will be locked until this date.' />
+          <InformationUI
+            label='Estimated APY'
+            value='12.24%'
+            // eslint-disable-next-line max-len
+            tooltip={`The estimated amount of KINT you will receive as rewards. Depends on your proportion of the total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}.`} />
           {/* ray test touch << */}
           {/* <InformationUI
             label='New unlock date'
@@ -192,11 +197,6 @@ const Staking = (): JSX.Element => {
             label='New total stake'
             value={`40.00 ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
             tooltip='Your total stake after this transaction.' />
-          <InformationUI
-            label='Estimated APY'
-            value='12.24%'
-            // eslint-disable-next-line max-len
-            tooltip={`The estimated amount of KINT you will receive as rewards. Depends on your proportion of the total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}.`} />
           <InformationUI
             label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
             value={`156.43  ${GOVERNANCE_TOKEN_SYMBOL}`}
