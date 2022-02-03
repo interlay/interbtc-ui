@@ -22,14 +22,15 @@ import {
 } from '@polkadot/extension-dapp';
 import { Keyring } from '@polkadot/api';
 import {
-  CollateralCurrency,
   tickerToCurrencyIdLiteral,
   SecurityStatusCode,
-  FaucetClient
+  FaucetClient,
+  ChainBalance,
+  CollateralUnit,
+  GovernanceUnit
 } from '@interlay/interbtc-api';
 import { createInterbtc } from '@interlay/interbtc';
-import {
-} from '@interlay/interbtc-api';
+import { BitcoinUnit } from '@interlay/monetary-js';
 
 import InterlayHelmet from 'parts/InterlayHelmet';
 import Layout from 'parts/Layout';
@@ -114,8 +115,6 @@ const App = (): JSX.Element => {
     try {
       window.bridge = await createInterbtc(
         constants.PARACHAIN_URL,
-        COLLATERAL_TOKEN as CollateralCurrency,
-        WRAPPED_TOKEN,
         constants.BITCOIN_NETWORK,
         constants.STATS_URL
       );
@@ -317,7 +316,7 @@ const App = (): JSX.Element => {
           await window.bridge.interBtcApi.tokens.subscribeToBalance(
             COLLATERAL_TOKEN,
             address,
-            (_, balance) => {
+            (_: string, balance: ChainBalance<CollateralUnit>) => {
               if (!balance.free.eq(collateralTokenBalance)) {
                 dispatch(updateCollateralTokenBalanceAction(balance.free));
               }
@@ -337,7 +336,7 @@ const App = (): JSX.Element => {
           await window.bridge.interBtcApi.tokens.subscribeToBalance(
             WRAPPED_TOKEN,
             address,
-            (_, balance) => {
+            (_: string, balance: ChainBalance<BitcoinUnit>) => {
               if (!balance.free.eq(wrappedTokenBalance)) {
                 dispatch(updateWrappedTokenBalanceAction(balance.free));
               }
@@ -357,7 +356,7 @@ const App = (): JSX.Element => {
           await window.bridge.interBtcApi.tokens.subscribeToBalance(
             GOVERNANCE_TOKEN,
             address,
-            (_, balance) => {
+            (_: string, balance: ChainBalance<GovernanceUnit>) => {
               if (!balance.free.eq(governanceTokenBalance)) {
                 dispatch(updateGovernanceTokenBalanceAction(balance.free));
               }
