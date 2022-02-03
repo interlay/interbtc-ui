@@ -24,10 +24,22 @@ const handleExtendingLockTimeChange = (event: KeyboardEvent) => {
   event.preventDefault();
 };
 
-const ExtendLockTimeUI = ({
+const LABEL_TEXT_COLOR_CLASSES = clsx(
+  // TODO: placeholder color
+  { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  // TODO: placeholder color
+  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+);
+
+interface CustomProps {
+  optional?: boolean;
+}
+
+const LockTimeField = ({
   className,
+  optional,
   ...rest
-}: React.ComponentPropsWithRef<'div'>): JSX.Element => {
+}: CustomProps & React.ComponentPropsWithRef<'div'>): JSX.Element => {
   const extendingWeeksInputRef = React.useRef<HTMLInputElement | null>(null);
 
   React.useEffect(() => {
@@ -45,26 +57,39 @@ const ExtendLockTimeUI = ({
 
   return (
     <div>
+      <label
+        htmlFor={EXTENDING_LOCK_TIME}
+        className={clsx(
+          'text-xs',
+          LABEL_TEXT_COLOR_CLASSES
+        )}>
+        Max {MAX_EXTENDING_LOCK_TIME} Weeks
+      </label>
       <div
         className={clsx(
           'flex',
           'justify-between',
+          'items-center',
           className
         )}
         {...rest}>
-        <div
-          className={clsx(
-            'inline-flex',
-            'items-center',
-            'space-x-1',
-            // TODO: placeholder color
-            { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-            // TODO: placeholder color
-            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-          )}>
-          <span>Extend lock time in weeks</span>
-          <span className='text-xs'>(Optional):</span>
-        </div>
+        {optional ? (
+          <div
+            className={clsx(
+              'inline-flex',
+              'items-center',
+              'space-x-1',
+              LABEL_TEXT_COLOR_CLASSES
+            )}>
+            <span>Extend lock time in weeks</span>
+            <span className='text-xs'>(Optional):</span>
+          </div>
+        ) : (
+          <span
+            className={LABEL_TEXT_COLOR_CLASSES}>
+            Choose lock time in weeks:
+          </span>
+        )}
         <div
           className={clsx(
             'inline-flex',
@@ -84,28 +109,14 @@ const ExtendLockTimeUI = ({
           <span
             className={clsx(
               'text-xs',
-              // TODO: placeholder color
-              { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-              // TODO: placeholder color
-              { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              LABEL_TEXT_COLOR_CLASSES
             )}>
             Weeks
           </span>
         </div>
       </div>
-      <label
-        htmlFor={EXTENDING_LOCK_TIME}
-        className={clsx(
-          'text-xs',
-          // TODO: placeholder color
-          { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-          // TODO: placeholder color
-          { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-        )}>
-        Max {MAX_EXTENDING_LOCK_TIME} Weeks
-      </label>
     </div>
   );
 };
 
-export default ExtendLockTimeUI;
+export default LockTimeField;

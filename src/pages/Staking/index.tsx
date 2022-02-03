@@ -19,7 +19,7 @@ import BalancesUI from './BalancesUI';
 import UnstakeButton from './UnstakeButton';
 import GovernanceTokenBalanceUI from './GovernanceTokenBalanceUI';
 import InformationUI from './InformationUI';
-import ExtendLockTimeUI from './ExtendLockTimeUI';
+import LockTimeField from './LockTimeField';
 import MainContainer from 'parts/MainContainer';
 import Panel from 'components/Panel';
 import TokenField from 'components/TokenField';
@@ -140,7 +140,7 @@ const Staking = (): JSX.Element => {
               error={!!errors[STAKING_AMOUNT]}
               helperText={errors[STAKING_AMOUNT]?.message} />
           </div>
-          <ExtendLockTimeUI />
+          <LockTimeField />
           <InformationUI
             label='New unlock date'
             value='Dec 16, 2023'

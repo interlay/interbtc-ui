@@ -320,15 +320,15 @@ const VaultsTable = (): JSX.Element => {
           'text-left'
         ],
         Cell: function FormattedCell({ value }: { value: string; }) {
-          let statusClassName;
+          let statusClasses;
           if (value === constants.VAULT_STATUS_ACTIVE) {
-            statusClassName = clsx(
+            statusClasses = clsx(
               'text-interlayConifer',
               'font-medium'
             );
           }
           if (value === constants.VAULT_STATUS_UNDER_COLLATERALIZED) {
-            statusClassName = clsx(
+            statusClasses = clsx(
               'text-interlayCalifornia',
               'font-medium'
             );
@@ -337,14 +337,14 @@ const VaultsTable = (): JSX.Element => {
             value === constants.VAULT_STATUS_THEFT ||
             value === constants.VAULT_STATUS_LIQUIDATED
           ) {
-            statusClassName = clsx(
+            statusClasses = clsx(
               'text-interlayCinnabar',
               'font-medium'
             );
           }
 
           return (
-            <span className={statusClassName}>{value}</span>
+            <span className={statusClasses}>{value}</span>
           );
         }
       }

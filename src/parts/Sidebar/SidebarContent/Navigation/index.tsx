@@ -35,13 +35,13 @@ interface CustomProps {
 }
 
 // TODO: could be reused
-const textClassesForSelected = clsx(
+const TEXT_CLASSES_FOR_SELECTED = clsx(
   { 'text-interlayDenim-700':
     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-kintsugiMidnight-700':
     process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
-const textClassesForUnselected = clsx(
+const TEXT_CLASSES_FOR_UNSELECTED = clsx(
   { 'text-interlayTextPrimaryInLightMode':
     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
@@ -165,14 +165,14 @@ const Navigation = ({
             className={clsx(
               match?.isExact ?
                 clsx(
-                  textClassesForSelected,
+                  TEXT_CLASSES_FOR_SELECTED,
                   { 'bg-interlayHaiti-50':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:bg-white':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 ) :
                 clsx(
-                  textClassesForUnselected,
+                  TEXT_CLASSES_FOR_UNSELECTED,
                   { 'hover:bg-interlayHaiti-50':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
@@ -190,8 +190,8 @@ const Navigation = ({
             <navigationItem.icon
               className={clsx(
                 match?.isExact ?
-                  textClassesForSelected :
-                  textClassesForUnselected,
+                  TEXT_CLASSES_FOR_SELECTED :
+                  TEXT_CLASSES_FOR_UNSELECTED,
                 onSmallScreen ? 'mr-4' : 'mr-3',
                 'flex-shrink-0',
                 'w-6',
