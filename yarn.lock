@@ -1585,10 +1585,10 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-api@1.5.17":
-  version "1.5.17"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-1.5.17.tgz#5a834d69d508a9834ea2ce1f2340b35a4360d44a"
-  integrity sha512-xdKzdifC4pJ6RjbSO2UAENNreBptfcyPfI/GN6af7GA0iI29fpGxYsy2HaTw5IBbBlA05rpqiJ5zo2Du/Bo0uQ==
+"@interlay/interbtc-api@1.5.18":
+  version "1.5.18"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-1.5.18.tgz#be431e725e4e599231839995ae2287c10bbea060"
+  integrity sha512-IAl+fldII2NDc9PRvT5vl7g3vvfsckwsR79PPMKTscENB8YHxIxbTmijddpnrd2Y1b7ZrYB8yzw7UQUMUx3bxg==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
     "@interlay/interbtc-types" "1.5.10"
@@ -1620,12 +1620,12 @@
   resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-1.5.10.tgz#8ff123e7886df06776e090deacca5c1b84ecf315"
   integrity sha512-7pUzNKmNeHi74uJl9WBoYzwyKh8+X18wZz9MVDvx58SgkDiEjUpyeafjhcmVhJptaB+OwPJ1V76RDbJRxr0T4w==
 
-"@interlay/interbtc@1.5.6":
-  version "1.5.6"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-1.5.6.tgz#97ca5cb29a43bfc3ef26d0e66edccb0fcafab76e"
-  integrity sha512-gKUP0r7pHVuDemiwucpaKTPK63Y/KNTUGl9gw1TcKhJBoCdatNR4MDJYlTZu90DPMf9DYg/CpNZmzrUhk6FpgA==
+"@interlay/interbtc@1.5.7":
+  version "1.5.7"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-1.5.7.tgz#8ec810d87e33a7241c71a9a185c89e8bb279ff17"
+  integrity sha512-wU4AmbJvfUuFMtdLgWc61q1qMEp5jRNGG56snmemOevAzyGpb+CcCTJQ3DC7FZkkwEfr+O6TT+CjA6jlOqxAiA==
   dependencies:
-    "@interlay/interbtc-api" "1.5.17"
+    "@interlay/interbtc-api" "1.5.18"
     "@interlay/interbtc-index-client" "1.6.0"
     "@interlay/interbtc-types" "1.3.0"
     "@interlay/monetary-js" "0.5.3"
