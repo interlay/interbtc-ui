@@ -23,7 +23,7 @@ import {
 
 import Title from './Title';
 import BalancesUI from './BalancesUI';
-// import UnstakeButton from './UnstakeButton';
+import UnstakeButton from './UnstakeButton';
 import GovernanceTokenBalanceUI from './GovernanceTokenBalanceUI';
 import InformationUI from './InformationUI';
 import LockTimeField from './LockTimeField';
@@ -141,7 +141,7 @@ const Staking = (): JSX.Element => {
 
   const unlockDateLabel = getUnlockDateLabel(parseInt(lockTime));
 
-  const lockTimeOptional = votingBalance.gt(ZERO_VOTE_GOVERNANCE_AMOUNT);
+  const votingBalanceGreaterThanZero = votingBalance.gt(ZERO_VOTE_GOVERNANCE_AMOUNT);
 
   return (
     <MainContainer>
@@ -161,9 +161,9 @@ const Staking = (): JSX.Element => {
           <BalancesUI
             governanceTokenBalance={governanceTokenBalanceLabel}
             voteGovernanceTokenBalance={votingBalanceLabel} />
-          {/* ray test touch << */}
-          {/* <UnstakeButton /> */}
-          {/* ray test touch >> */}
+          {votingBalanceGreaterThanZero && (
+            <UnstakeButton />
+          )}
           <div className='space-y-2'>
             <GovernanceTokenBalanceUI balance={governanceTokenBalanceLabel} />
             <TokenField
@@ -188,14 +188,14 @@ const Staking = (): JSX.Element => {
             min={0}
             ref={register({
               required: {
-                value: lockTimeOptional ? false : true,
+                value: votingBalanceGreaterThanZero ? false : true,
                 message: 'This field is required!'
               },
               validate: value => validateLockTime(value)
             })}
             error={!!errors[LOCK_TIME]}
             helperText={errors[LOCK_TIME]?.message}
-            optional={lockTimeOptional} />
+            optional={votingBalanceGreaterThanZero} />
           <InformationUI
             label='Unlock date'
             value={unlockDateLabel}
