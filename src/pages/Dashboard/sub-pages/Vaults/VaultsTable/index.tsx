@@ -8,6 +8,7 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { useQuery } from 'react-query';
+import { useHistory } from 'react-router-dom';
 import Big from 'big.js';
 import clsx from 'clsx';
 import {
@@ -45,6 +46,10 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
+import {
+  PAGES,
+  URL_PARAMETERS
+} from 'utils/constants/links';
 import {
   shortAddress,
   displayMonetaryAmount
@@ -107,6 +112,7 @@ interface Vault {
 const VaultsTable = (): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
+  const history = useHistory();
 
   const {
     isIdle: parachainHeightIdle,
@@ -228,7 +234,12 @@ const VaultsTable = (): JSX.Element => {
         accessor: 'vaultId',
         classNames: [
           'text-left'
-        ]
+        ],
+        Cell: function FormattedCell({ value }: { value: string; }) {
+          return (
+            <>{shortAddress(value)}</>
+          );
+        }
       },
       {
         Header: t('locked_dot', {
@@ -393,7 +404,7 @@ const VaultsTable = (): JSX.Element => {
       }
 
       vaults.push({
-        vaultId: shortAddress(vaultExt.id.toString()),
+        vaultId: vaultExt.id.accountId.toString(),
         // TODO: fetch collateral reserved
         lockedBTC: displayMonetaryAmount(settledTokens),
         lockedDOT: displayMonetaryAmount(vaultCollateral),
@@ -438,6 +449,10 @@ const VaultsTable = (): JSX.Element => {
       );
     }
 
+    const handleRowClick = (vaultId: string) => () => {
+      history.push(PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT_ADDRESS}`, vaultId));
+    };
+
     return (
       <InterlayTable {...getTableProps()}>
         <InterlayThead>
@@ -481,9 +496,21 @@ const VaultsTable = (): JSX.Element => {
           {rows.map((row: any) => {
             prepareRow(row);
 
+            const {
+              key,
+              className: rowClassName,
+              ...restRowProps
+            } = row.getRowProps();
+
             return (
-              // eslint-disable-next-line react/jsx-key
-              <InterlayTr {...row.getRowProps()}>
+              <InterlayTr
+                key={key}
+                className={clsx(
+                  rowClassName,
+                  'cursor-pointer'
+                )}
+                {...restRowProps}
+                onClick={handleRowClick(row.original.vaultId)}>
                 {/* TODO: should type properly */}
                 {row.cells.map((cell: any) => {
                   return (

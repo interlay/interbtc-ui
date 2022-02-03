@@ -11,8 +11,11 @@ import {
   INIT_GENERAL_DATA_ACTION,
   CHANGE_ADDRESS,
   UPDATE_COLLATERAL_TOKEN_BALANCE,
+  UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
   UPDATE_GOVERNANCE_TOKEN_BALANCE,
+  UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE,
   UPDATE_BALANCE_POLKA_BTC,
+  UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE,
   GeneralActions,
   SET_INSTALLED_EXTENSION,
   SHOW_ACCOUNT_MODAL,
@@ -31,15 +34,19 @@ const initialState = {
   totalWrappedTokenAmount: BitcoinAmount.zero,
   totalLockedCollateralTokenAmount: newMonetaryAmount(0, COLLATERAL_TOKEN),
   wrappedTokenBalance: BitcoinAmount.zero,
+  wrappedTokenTransferableBalance: BitcoinAmount.zero,
   collateralTokenBalance: newMonetaryAmount(0, COLLATERAL_TOKEN),
+  collateralTokenTransferableBalance: newMonetaryAmount(0, COLLATERAL_TOKEN),
   governanceTokenBalance: newMonetaryAmount(0, GOVERNANCE_TOKEN),
+  governanceTokenTransferableBalance: newMonetaryAmount(0, GOVERNANCE_TOKEN),
   extensions: [],
   btcRelayHeight: 0,
   bitcoinHeight: 0,
   parachainStatus: ParachainStatus.Loading,
   prices: {
     bitcoin: { usd: 0 },
-    collateralToken: { usd: 0 }
+    collateralToken: { usd: 0 },
+    governanceToken: { usd: 0 }
   }
 };
 
@@ -72,10 +79,16 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
     return { ...state, vaultClientLoaded: action.isLoaded };
   case UPDATE_COLLATERAL_TOKEN_BALANCE:
     return { ...state, collateralTokenBalance: action.collateralTokenBalance };
+  case UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE:
+    return { ...state, collateralTokenTransferableBalance: action.collateralTokenTransferableBalance };
   case UPDATE_GOVERNANCE_TOKEN_BALANCE:
     return { ...state, governanceTokenBalance: action.governanceTokenBalance };
+  case UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE:
+    return { ...state, governanceTokenTransferableBalance: action.governanceTokenTransferableBalance };
   case UPDATE_BALANCE_POLKA_BTC:
     return { ...state, wrappedTokenBalance: action.wrappedTokenBalance };
+  case UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE:
+    return { ...state, wrappedTokenTransferableBalance: action.wrappedTokenTransferableBalance };
   case SHOW_ACCOUNT_MODAL:
     return { ...state, showAccountModal: action.showAccountModal };
   case SET_INSTALLED_EXTENSION:

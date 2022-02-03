@@ -12,9 +12,13 @@ import {
 } from '@interlay/monetary-js';
 import {
   CollateralUnit,
-  CurrencyUnit
+  GovernanceUnit
 } from '@interlay/interbtc-api';
 
+import {
+  INTERLAY_TERMS_AND_CONDITIONS_LINK,
+  KINTSUGI_TERMS_AND_CONDITIONS_LINK
+} from 'config/links';
 import {
   POLKADOT,
   KUSAMA
@@ -34,15 +38,17 @@ if (!process.env.REACT_APP_RELAY_CHAIN_NAME) {
 
 type WrappedToken = Currency<BitcoinUnit>;
 type CollateralToken = Currency<CollateralUnit>;
-type GovernanceToken = Currency<CurrencyUnit>
+type GovernanceToken = Currency<GovernanceUnit>;
 
 let APP_NAME: string;
+let TERMS_AND_CONDITIONS_LINK: string;
 let WRAPPED_TOKEN_SYMBOL: string;
 let WRAPPED_TOKEN: WrappedToken;
 let COLLATERAL_TOKEN: CollateralToken;
 let GOVERNANCE_TOKEN: GovernanceToken;
 let PRICES_URL: string;
 let RELAY_CHAIN_NAME: string;
+let BRIDGE_PARACHAIN_NAME: string;
 let COLLATERAL_TOKEN_SYMBOL: string;
 let GOVERNANCE_TOKEN_SYMBOL: string;
 let WrappedTokenLogoIcon:
@@ -72,43 +78,49 @@ type WrappedTokenAmount =
 switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
 // Interlay
 case POLKADOT: {
-  APP_NAME = 'interBTC';
+  APP_NAME = 'Interlay';
+  TERMS_AND_CONDITIONS_LINK = INTERLAY_TERMS_AND_CONDITIONS_LINK;
   WRAPPED_TOKEN = InterBtc;
   COLLATERAL_TOKEN = Polkadot as Currency<CollateralUnit>;
   // TODO: Add GovernanceUnit type to lib following upgrade i.e. Currency<GovernanceUnit>
-  GOVERNANCE_TOKEN = Interlay as Currency<CurrencyUnit>;
+  GOVERNANCE_TOKEN = Interlay as Currency<GovernanceUnit>;
   WRAPPED_TOKEN_SYMBOL = 'interBTC';
   COLLATERAL_TOKEN_SYMBOL = 'DOT';
   GOVERNANCE_TOKEN_SYMBOL = 'INTR';
   RELAY_CHAIN_NAME = 'polkadot';
-  PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${RELAY_CHAIN_NAME}&vs_currencies=usd`;
+  BRIDGE_PARACHAIN_NAME = 'interlay';
+  // eslint-disable-next-line max-len
+  PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${RELAY_CHAIN_NAME},${BRIDGE_PARACHAIN_NAME}&vs_currencies=usd`;
   WrappedTokenLogoIcon = InterBTCLogoIcon;
   WrappedTokenLogoWithTextIcon = InterBTCLogoWithTextIcon;
   CollateralTokenLogoIcon = DOTLogoIcon;
   GovernanceTokenLogoIcon = InterlayLogoIcon;
   PUBLIC_ASSETS_FOLDER_NAME = 'interlay';
   APP_DOMAIN = 'https://bridge.interlay.io';
-  OPEN_GRAPH_IMAGE_FILE_NAME = 'interbtc-meta-image.jpg';
+  OPEN_GRAPH_IMAGE_FILE_NAME = 'interlay-meta-image.jpg';
   break;
 }
 // Kintsugi
 case KUSAMA: {
-  APP_NAME = 'kBTC';
+  APP_NAME = 'Kintsugi';
+  TERMS_AND_CONDITIONS_LINK = KINTSUGI_TERMS_AND_CONDITIONS_LINK;
   WRAPPED_TOKEN = KBtc;
   COLLATERAL_TOKEN = Kusama as Currency<CollateralUnit>;
-  GOVERNANCE_TOKEN = Kintsugi as Currency<CurrencyUnit>;
+  GOVERNANCE_TOKEN = Kintsugi as Currency<GovernanceUnit>;
   WRAPPED_TOKEN_SYMBOL = 'kBTC';
   COLLATERAL_TOKEN_SYMBOL = 'KSM';
   GOVERNANCE_TOKEN_SYMBOL = 'KINT';
   RELAY_CHAIN_NAME = 'kusama';
-  PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${RELAY_CHAIN_NAME}&vs_currencies=usd`;
+  BRIDGE_PARACHAIN_NAME = 'kintsugi';
+  // eslint-disable-next-line max-len
+  PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${RELAY_CHAIN_NAME},${BRIDGE_PARACHAIN_NAME}&vs_currencies=usd`;
   WrappedTokenLogoIcon = KintsugiLogoIcon;
   WrappedTokenLogoWithTextIcon = KintsugiLogoWithTextIcon;
   CollateralTokenLogoIcon = KSMLogoIcon;
   GovernanceTokenLogoIcon = KBTCLogoIcon;
   PUBLIC_ASSETS_FOLDER_NAME = 'kintsugi';
   APP_DOMAIN = ''; // TODO: should add the Kintsugi app domain once it's set up
-  OPEN_GRAPH_IMAGE_FILE_NAME = 'kbtc-meta-image.jpg';
+  OPEN_GRAPH_IMAGE_FILE_NAME = 'kintsugi-meta-image.jpg';
   break;
 }
 default: {
@@ -125,6 +137,7 @@ export type {
 
 export {
   APP_NAME,
+  TERMS_AND_CONDITIONS_LINK,
   WRAPPED_TOKEN,
   COLLATERAL_TOKEN,
   GOVERNANCE_TOKEN,
@@ -132,6 +145,7 @@ export {
   COLLATERAL_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
   RELAY_CHAIN_NAME,
+  BRIDGE_PARACHAIN_NAME,
   PRICES_URL,
   WrappedTokenLogoIcon,
   WrappedTokenLogoWithTextIcon,

@@ -48,14 +48,17 @@ import {
   displayMonetaryAmount
 } from 'common/utils/utils';
 
-const ReplaceTable = (): JSX.Element => {
-  const { t } = useTranslation();
-  const {
-    bridgeLoaded,
-    address
-  } = useSelector((state: StoreType) => state.general);
+interface Props {
+  vaultAddress: string;
+}
 
-  const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+const ReplaceTable = ({
+  vaultAddress
+}: Props): JSX.Element => {
+  const { t } = useTranslation();
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
+
+  const vaultId = window.bridge?.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
   const {
     isIdle: replaceRequestsIdle,
     isLoading: replaceRequestsLoading,

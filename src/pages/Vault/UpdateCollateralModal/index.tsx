@@ -62,17 +62,17 @@ interface Props {
   open: boolean;
   onClose: () => void;
   collateralUpdateStatus: CollateralUpdateStatus;
+  vaultAddress: string;
 }
 
 const UpdateCollateralModal = ({
   open,
   onClose,
-  collateralUpdateStatus
+  collateralUpdateStatus,
+  vaultAddress
 }: Props): JSX.Element => {
   const {
     bridgeLoaded,
-    vaultClientLoaded,
-    address,
     collateralTokenBalance
   } = useSelector((state: StoreType) => state.general);
   // Denoted in collateral token
@@ -94,7 +94,7 @@ const UpdateCollateralModal = ({
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
 
-  const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+  const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
 
   const {
     isIdle: requiredCollateralTokenAmountIdle,
@@ -156,7 +156,6 @@ const UpdateCollateralModal = ({
 
   const onSubmit = async (data: UpdateCollateralFormData) => {
     if (!bridgeLoaded) return;
-    if (!vaultClientLoaded) return;
 
     try {
       setSubmitStatus(STATUSES.PENDING);
@@ -169,7 +168,7 @@ const UpdateCollateralModal = ({
         throw new Error('Something went wrong!');
       }
 
-      const balanceLockedDOT = await window.bridge.interBtcApi.tokens.balanceLocked(COLLATERAL_TOKEN, vaultId);
+      const balanceLockedDOT = (await window.bridge.interBtcApi.tokens.balance(COLLATERAL_TOKEN, vaultId)).reserved;
       dispatch(updateCollateralAction(balanceLockedDOT));
 
       if (vaultCollateralization === undefined) {

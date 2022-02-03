@@ -20,23 +20,17 @@ import {
   web3Enable,
   web3FromAddress
 } from '@polkadot/extension-dapp';
-import keyring from '@polkadot/ui-keyring';
 import { Keyring } from '@polkadot/api';
 import {
-  CollateralCurrency,
-  CurrencyUnit,
   tickerToCurrencyIdLiteral,
-  SecurityStatusCode
+  SecurityStatusCode,
+  FaucetClient,
+  ChainBalance,
+  CollateralUnit,
+  GovernanceUnit
 } from '@interlay/interbtc-api';
 import { createInterbtc } from '@interlay/interbtc';
-import {
-  FaucetClient,
-  CollateralUnit
-} from '@interlay/interbtc-api';
-import {
-  MonetaryAmount,
-  Currency
-} from '@interlay/monetary-js';
+import { BitcoinUnit } from '@interlay/monetary-js';
 
 import InterlayHelmet from 'parts/InterlayHelmet';
 import Layout from 'parts/Layout';
@@ -47,8 +41,7 @@ import {
   APP_NAME,
   WRAPPED_TOKEN,
   COLLATERAL_TOKEN,
-  GOVERNANCE_TOKEN,
-  WrappedTokenAmount
+  GOVERNANCE_TOKEN
 } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import { CLASS_NAMES } from 'utils/constants/styles';
@@ -72,8 +65,11 @@ import {
   isFaucetLoaded,
   isVaultClientLoaded,
   updateWrappedTokenBalanceAction,
+  updateWrappedTokenTransferableBalanceAction,
   updateCollateralTokenBalanceAction,
-  updateGovernanceTokenBalanceAction
+  updateCollateralTokenTransferableBalanceAction,
+  updateGovernanceTokenBalanceAction,
+  updateGovernanceTokenTransferableBalanceAction
 } from 'common/actions/general.actions';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -92,7 +88,7 @@ const Staking = React.lazy(() =>
 const Dashboard = React.lazy(() =>
   import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard')
 );
-const VaultDashboard = React.lazy(() =>
+const Vault = React.lazy(() =>
   import(/* webpackChunkName: 'vault' */ 'pages/Vault')
 );
 const NoMatch = React.lazy(() =>
@@ -104,9 +100,11 @@ const App = (): JSX.Element => {
     bridgeLoaded,
     address,
     wrappedTokenBalance,
+    wrappedTokenTransferableBalance,
     collateralTokenBalance,
+    collateralTokenTransferableBalance,
     governanceTokenBalance,
-    vaultClientLoaded
+    governanceTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
   const [isLoading, setIsLoading] = React.useState(true);
   const dispatch = useDispatch();
@@ -117,15 +115,11 @@ const App = (): JSX.Element => {
     try {
       window.bridge = await createInterbtc(
         constants.PARACHAIN_URL,
-        COLLATERAL_TOKEN as CollateralCurrency,
-        WRAPPED_TOKEN,
         constants.BITCOIN_NETWORK,
         constants.STATS_URL
       );
       dispatch(isPolkaBtcLoaded(true));
       setIsLoading(false);
-      // NOTE: Catch clause variable type annotation must be 'any' or 'unknown'. Use of any here
-      // and throughout is to resolve type errors.
     } catch (error) {
       toast.warn('Unable to connect to the BTC-Parachain.');
       console.log('[loadPolkaBTC] error.message => ', error.message);
@@ -231,13 +225,13 @@ const App = (): JSX.Element => {
     bridgeLoaded
   ]);
 
-  // Loads the address for the currently select account and maybe loads the vault and staked relayer dashboards
+  // Loads the address for the currently select account and maybe loads the vault dashboard
   React.useEffect(() => {
     if (!bridgeLoaded) return;
 
     const trySetDefaultAccount = () => {
       if (constants.DEFAULT_ACCOUNT_SEED) {
-        const keyring = new Keyring({ type: 'sr25519' });
+        const keyring = new Keyring({ type: 'sr25519', ss58Format: constants.SS58_FORMAT });
         const defaultAccountKeyring = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED);
         window.bridge.interBtcApi.setAccount(defaultAccountKeyring);
         dispatch(changeAddressAction(defaultAccountKeyring.address));
@@ -254,7 +248,7 @@ const App = (): JSX.Element => {
 
         dispatch(setInstalledExtensionAction(theExtensions.map(extension => extension.name)));
 
-        const accounts = await web3Accounts();
+        const accounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
         if (accounts.length === 0) {
           dispatch(changeAddressAction(''));
           return;
@@ -289,8 +283,10 @@ const App = (): JSX.Element => {
           if (isLoading) setIsLoading(false);
         }, 3000);
         await loadPolkaBTC();
-        await loadFaucet();
-        keyring.loadAll({});
+        // Only load faucet on testnet
+        if (process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet') {
+          await loadFaucet();
+        }
       } catch (error) {
         console.log(error.message);
       }
@@ -320,9 +316,12 @@ const App = (): JSX.Element => {
           await window.bridge.interBtcApi.tokens.subscribeToBalance(
             COLLATERAL_TOKEN,
             address,
-            (_, balance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>) => {
-              if (!balance.eq(collateralTokenBalance)) {
-                dispatch(updateCollateralTokenBalanceAction(balance));
+            (_: string, balance: ChainBalance<CollateralUnit>) => {
+              if (!balance.free.eq(collateralTokenBalance)) {
+                dispatch(updateCollateralTokenBalanceAction(balance.free));
+              }
+              if (!balance.transferable.eq(collateralTokenTransferableBalance)) {
+                dispatch(updateCollateralTokenTransferableBalanceAction(balance.transferable));
               }
             }
           );
@@ -337,9 +336,12 @@ const App = (): JSX.Element => {
           await window.bridge.interBtcApi.tokens.subscribeToBalance(
             WRAPPED_TOKEN,
             address,
-            (_, balance: WrappedTokenAmount) => {
-              if (!balance.eq(wrappedTokenBalance)) {
-                dispatch(updateWrappedTokenBalanceAction(balance));
+            (_: string, balance: ChainBalance<BitcoinUnit>) => {
+              if (!balance.free.eq(wrappedTokenBalance)) {
+                dispatch(updateWrappedTokenBalanceAction(balance.free));
+              }
+              if (!balance.transferable.eq(wrappedTokenTransferableBalance)) {
+                dispatch(updateWrappedTokenTransferableBalanceAction(balance.transferable));
               }
             }
           );
@@ -354,9 +356,12 @@ const App = (): JSX.Element => {
           await window.bridge.interBtcApi.tokens.subscribeToBalance(
             GOVERNANCE_TOKEN,
             address,
-            (_, balance: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>) => {
-              if (!balance.eq(governanceTokenBalance)) {
-                dispatch(updateGovernanceTokenBalanceAction(balance));
+            (_: string, balance: ChainBalance<GovernanceUnit>) => {
+              if (!balance.free.eq(governanceTokenBalance)) {
+                dispatch(updateGovernanceTokenBalanceAction(balance.free));
+              }
+              if (!balance.transferable.eq(governanceTokenTransferableBalance)) {
+                dispatch(updateGovernanceTokenTransferableBalanceAction(balance.transferable));
               }
             }
           );
@@ -381,8 +386,11 @@ const App = (): JSX.Element => {
     bridgeLoaded,
     address,
     wrappedTokenBalance,
+    wrappedTokenTransferableBalance,
     collateralTokenBalance,
-    governanceTokenBalance
+    collateralTokenTransferableBalance,
+    governanceTokenBalance,
+    governanceTokenTransferableBalance
   ]);
 
   React.useEffect(() => {
@@ -415,11 +423,9 @@ const App = (): JSX.Element => {
           render={({ location }) => (
             <React.Suspense fallback={<FullLoadingSpinner />}>
               <Switch location={location}>
-                {vaultClientLoaded && (
-                  <Route path={PAGES.VAULT}>
-                    <VaultDashboard />
-                  </Route>
-                )}
+                <Route path={PAGES.VAULT}>
+                  <Vault />
+                </Route>
                 <Route path={PAGES.DASHBOARD}>
                   <Dashboard />
                 </Route>

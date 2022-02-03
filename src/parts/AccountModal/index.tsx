@@ -21,7 +21,10 @@ import InterlayModal, {
   InterlayModalTitle
 } from 'components/UI/InterlayModal';
 import InterlayButtonBase from 'components/UI/InterlayButtonBase';
-import { APP_NAME } from 'config/relay-chains';
+import {
+  APP_NAME,
+  TERMS_AND_CONDITIONS_LINK
+} from 'config/relay-chains';
 import {
   KUSAMA,
   POLKADOT
@@ -30,6 +33,8 @@ import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';
 import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
+// FIXME: name clash for constants so had to use relative path
+import * as constants from '../../constants';
 
 const POLKADOT_EXTENSION = 'https://polkadot.js.org/extension/';
 
@@ -60,7 +65,7 @@ const AccountModal = ({
 
     (async () => {
       try {
-        const theAccounts = await web3Accounts();
+        const theAccounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
         setAccounts(theAccounts);
       } catch (error) {
         // TODO: should add error handling properly
@@ -158,6 +163,8 @@ const AccountModal = ({
         <>
           <p>
             {t('install_supported_wallets')}
+            <ExternalLink href={TERMS_AND_CONDITIONS_LINK}>terms and conditions</ExternalLink>
+            .
           </p>
           <ExternalLink href={POLKADOT_EXTENSION}>
             <span

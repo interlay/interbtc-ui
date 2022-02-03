@@ -12,11 +12,11 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { AccountId } from '@polkadot/types/interfaces/runtime';
 import {
   Redeem,
   CollateralUnit,
-  newMonetaryAmount
+  newMonetaryAmount,
+  InterbtcPrimitivesVaultId
 } from '@interlay/interbtc-api';
 import {
   Bitcoin,
@@ -43,7 +43,6 @@ import {
   BALANCE_MAX_INTEGER_LENGTH,
   BTC_ADDRESS_REGEX
 } from '../../../constants';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
@@ -122,7 +121,8 @@ const RedeemForm = (): JSX.Element | null => {
       CollateralUnit
     >(Bitcoin, COLLATERAL_TOKEN, new Big(0))
   );
-  const [premiumRedeemVaults, setPremiumRedeemVaults] = React.useState<Map<AccountId, BitcoinAmount>>(new Map());
+  const [premiumRedeemVaults, setPremiumRedeemVaults] =
+    React.useState<Map<InterbtcPrimitivesVaultId, BitcoinAmount>>(new Map());
   const [premiumRedeemFee, setPremiumRedeemFee] = React.useState(new Big(0));
   const [currentInclusionFee, setCurrentInclusionFee] = React.useState(BitcoinAmount.zero);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
@@ -228,7 +228,7 @@ const RedeemForm = (): JSX.Element | null => {
         const wrappedTokenAmount = BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]);
 
         // Differentiate between premium and regular redeem
-        let vaultId;
+        let vaultId: InterbtcPrimitivesVaultId;
         if (premiumRedeemSelected) {
           // Select a vault from the premium redeem vault list
           for (const [id, redeemableTokens] of premiumRedeemVaults) {
@@ -261,14 +261,13 @@ const RedeemForm = (): JSX.Element | null => {
         }
 
         // FIXME: workaround to make premium redeem still possible
-        const relevantVaults = new Map<AccountId, BitcoinAmount>();
-        const id = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, vaultId);
+        const relevantVaults = new Map<InterbtcPrimitivesVaultId, BitcoinAmount>();
         // FIXME: a bit of a dirty workaround with the capacity
-        relevantVaults.set(id, wrappedTokenAmount.mul(2));
+        relevantVaults.set(vaultId, wrappedTokenAmount.mul(2));
         const result = await window.bridge.interBtcApi.redeem.request(
           wrappedTokenAmount,
           data[BTC_ADDRESS],
-          id
+          vaultId
         );
 
         // TODO: handle redeem aggregator

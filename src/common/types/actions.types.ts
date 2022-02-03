@@ -2,7 +2,7 @@ import { StoreType, ParachainStatus, Prices } from './util.types';
 import {
   Issue,
   CollateralUnit,
-  CurrencyUnit
+  GovernanceUnit
 } from '@interlay/interbtc-api';
 import {
   BitcoinAmount,
@@ -19,8 +19,11 @@ export const INIT_STATE = 'INIT_STATE';
 export const CHANGE_ADDRESS = 'CHANGE_ADDRESS';
 export const INIT_GENERAL_DATA_ACTION = 'INIT_GENERAL_DATA_ACTION';
 export const UPDATE_BALANCE_POLKA_BTC = 'UPDATE_BALANCE_POLKA_BTC';
+export const UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE = 'UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE';
 export const UPDATE_COLLATERAL_TOKEN_BALANCE = 'UPDATE_COLLATERAL_TOKEN_BALANCE';
+export const UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE = 'UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE';
 export const UPDATE_GOVERNANCE_TOKEN_BALANCE = 'UPDATE_GOVERNANCE_TOKEN_BALANCE';
+export const UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE = 'UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE';
 export const SET_INSTALLED_EXTENSION = 'SET_INSTALLED_EXTENSION';
 export const SHOW_ACCOUNT_MODAL = 'SHOW_ACCOUNT_MODAL';
 export const UPDATE_OF_PRICES = 'UPDATE_OF_PRICES';
@@ -72,7 +75,7 @@ export interface InitGeneralDataAction {
   type: typeof INIT_GENERAL_DATA_ACTION;
   totalWrappedTokenAmount: BitcoinAmount;
   totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
-  totalGovernanceTokenAmount: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
+  totalGovernanceTokenAmount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
   btcRelayHeight: number;
   bitcoinHeight: number;
   parachainStatus: ParachainStatus;
@@ -83,14 +86,29 @@ export interface UpdateBalancePolkaBTC {
   wrappedTokenBalance: BitcoinAmount;
 }
 
+export interface UpdateWrappedTokenTransferableBalance {
+  type: typeof UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE;
+  wrappedTokenTransferableBalance: BitcoinAmount;
+}
+
 export interface UpdateCollateralTokenBalance {
   type: typeof UPDATE_COLLATERAL_TOKEN_BALANCE;
   collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
 }
 
+export interface UpdateCollateralTokenTransferableBalance {
+  type: typeof UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE;
+  collateralTokenTransferableBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+}
+
 export interface UpdateGovernanceTokenBalance {
   type: typeof UPDATE_GOVERNANCE_TOKEN_BALANCE;
-  governanceTokenBalance: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
+  governanceTokenBalance: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
+}
+
+export interface UpdateGovernanceTokenTransferableBalance {
+  type: typeof UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE;
+  governanceTokenTransferableBalance: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
 }
 
 export interface SetInstalledExtension {
@@ -109,8 +127,11 @@ export type GeneralActions =
   | InitGeneralDataAction
   | IsVaultClientLoaded
   | UpdateBalancePolkaBTC
+  | UpdateWrappedTokenTransferableBalance
   | UpdateCollateralTokenBalance
+  | UpdateCollateralTokenTransferableBalance
   | UpdateGovernanceTokenBalance
+  | UpdateGovernanceTokenTransferableBalance
   | SetInstalledExtension
   | ShowAccountModal
   | UpdateOfPrices

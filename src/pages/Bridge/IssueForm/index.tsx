@@ -16,7 +16,7 @@ import { AccountId } from '@polkadot/types/interfaces';
 import {
   Issue,
   newMonetaryAmount,
-  CollateralUnit
+  GovernanceUnit
 } from '@interlay/interbtc-api';
 import {
   Bitcoin,
@@ -38,11 +38,11 @@ import ErrorFallback from 'components/ErrorFallback';
 import Hr2 from 'components/hrs/Hr2';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
 import {
-  COLLATERAL_TOKEN,
+  GOVERNANCE_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
-  COLLATERAL_TOKEN_SYMBOL,
+  GOVERNANCE_TOKEN_SYMBOL,
   WrappedTokenLogoIcon,
-  CollateralTokenLogoIcon
+  GovernanceTokenLogoIcon
 } from 'config/relay-chains';
 import {
   BLOCK_TIME,
@@ -97,7 +97,7 @@ const IssueForm = (): JSX.Element | null => {
     btcRelayHeight,
     prices,
     parachainStatus,
-    collateralTokenBalance
+    governanceTokenBalance
   } = useSelector((state: StoreType) => state.general);
 
   const {
@@ -115,13 +115,13 @@ const IssueForm = (): JSX.Element | null => {
   // Current fee model specification taken from: https://interlay.gitlab.io/polkabtc-spec/spec/fee.html
   const [feeRate, setFeeRate] = React.useState(0.005); // Set default to 0.5%
   const [depositRate, setDepositRate] = React.useState(0.00005); // Set default to 0.005%
-  const [btcToDOTRate, setBTCToDOTRate] = React.useState(
+  const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
     new ExchangeRate<
       Bitcoin,
       BitcoinUnit,
-      Currency<CollateralUnit>,
-      CollateralUnit
-    >(Bitcoin, COLLATERAL_TOKEN, new Big(0))
+      Currency<GovernanceUnit>,
+      GovernanceUnit
+    >(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
   );
   const [vaults, setVaults] = React.useState<Map<AccountId, BitcoinAmount>>();
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero);
@@ -143,7 +143,7 @@ const IssueForm = (): JSX.Element | null => {
           theDepositRate,
           issuePeriodInBlocks,
           theDustValue,
-          theBtcToDot,
+          theBtcToGovernanceToken,
           theVaults
         ] = await Promise.all([
           // Loading this data is not strictly required as long as the constantly set values did
@@ -152,7 +152,7 @@ const IssueForm = (): JSX.Element | null => {
           window.bridge.interBtcIndex.getIssueGriefingCollateral(),
           window.bridge.interBtcIndex.getIssuePeriod(),
           window.bridge.interBtcIndex.getDustValue(),
-          window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN),
+          window.bridge.interBtcApi.oracle.getExchangeRate(GOVERNANCE_TOKEN),
           // This data (the vaults) is strictly required to request issue
           window.bridge.interBtcApi.vaults.getVaultsWithIssuableTokens()
         ]);
@@ -163,7 +163,7 @@ const IssueForm = (): JSX.Element | null => {
         const issuePeriod = issuePeriodInBlocks * BLOCK_TIME;
         dispatch(updateIssuePeriodAction(issuePeriod));
         setDustValue(theDustValue);
-        setBTCToDOTRate(theBtcToDot);
+        setBTCToGovernanceTokenRate(theBtcToGovernanceToken);
 
         let theVaultMaxAmount = BitcoinAmount.zero;
         // The first item is the vault with the largest capacity
@@ -192,12 +192,12 @@ const IssueForm = (): JSX.Element | null => {
     const validateForm = (value = 0): string | undefined => {
       const btcAmount = BitcoinAmount.from.BTC(value);
 
-      const securityDeposit = btcToDOTRate.toCounter(btcAmount).mul(depositRate);
-      const minimumRequiredCollateralTokenAmount =
-        newMonetaryAmount(EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT, COLLATERAL_TOKEN, true).add(securityDeposit);
-      if (collateralTokenBalance.lte(minimumRequiredCollateralTokenAmount)) {
-        return t('insufficient_funds_dot', {
-          collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+      const securityDeposit = btcToGovernanceTokenRate.toCounter(btcAmount).mul(depositRate);
+      const minRequiredGovernanceTokenAmount =
+        newMonetaryAmount(EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT, GOVERNANCE_TOKEN, true).add(securityDeposit);
+      if (governanceTokenBalance.lte(minRequiredGovernanceTokenAmount)) {
+        return t('insufficient_funds_governance_token', {
+          governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
         });
       }
 
@@ -265,7 +265,7 @@ const IssueForm = (): JSX.Element | null => {
 
     const parsedBTCAmount = BitcoinAmount.from.BTC(btcAmount || 0);
     const bridgeFee = parsedBTCAmount.mul(feeRate);
-    const securityDeposit = btcToDOTRate.toCounter(parsedBTCAmount).mul(depositRate);
+    const securityDeposit = btcToGovernanceTokenRate.toCounter(parsedBTCAmount).mul(depositRate);
     const wrappedTokenAmount = parsedBTCAmount.sub(bridgeFee);
     const accountSet = !!address;
 
@@ -338,11 +338,11 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={
-              <CollateralTokenLogoIcon width={20} />
+              <GovernanceTokenLogoIcon width={20} />
             }
             value={displayMonetaryAmount(securityDeposit)}
-            unitName={COLLATERAL_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(securityDeposit, prices.collateralToken.usd)}
+            unitName={GOVERNANCE_TOKEN_SYMBOL}
+            approxUSD={getUsdAmount(securityDeposit, prices.governanceToken.usd)}
             tooltip={
               <InterlayTooltip label={t('issue_page.tooltip_security_deposit')}>
                 <InformationCircleIcon
