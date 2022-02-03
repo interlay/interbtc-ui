@@ -8,6 +8,10 @@ import {
 } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import {
+  format,
+  add
+} from 'date-fns';
+import {
   MonetaryAmount,
   Currency,
   KintsugiAmount
@@ -16,7 +20,7 @@ import { GovernanceUnit } from '@interlay/interbtc-api';
 
 import Title from './Title';
 import BalancesUI from './BalancesUI';
-import UnstakeButton from './UnstakeButton';
+// import UnstakeButton from './UnstakeButton';
 import GovernanceTokenBalanceUI from './GovernanceTokenBalanceUI';
 import InformationUI from './InformationUI';
 import LockTimeField from './LockTimeField';
@@ -26,13 +30,14 @@ import TokenField from 'components/TokenField';
 import SubmitButton from 'components/SubmitButton';
 import ErrorFallback from 'components/ErrorFallback';
 import {
-  GOVERNANCE_TOKEN_SYMBOL,
-  VOTE_GOVERNANCE_TOKEN_SYMBOL
+  // VOTE_GOVERNANCE_TOKEN_SYMBOL,
+  GOVERNANCE_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import {
   MIN_LOCK_TIME,
   MAX_LOCK_TIME
 } from 'config/staking';
+import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
 import {
   displayMonetaryAmount,
   getUsdAmount
@@ -65,7 +70,7 @@ const Staking = (): JSX.Element => {
     mode: 'onChange' // 'onBlur'
   });
   const stakingAmount = watch(STAKING_AMOUNT) || '0';
-  console.log('[Staking] stakingAmount => ', stakingAmount);
+  const lockTime = watch(LOCK_TIME) || '0';
 
   const {
     isIdle: votingBalanceIdle,
@@ -117,6 +122,11 @@ const Staking = (): JSX.Element => {
   const monetaryStakingAmount = KintsugiAmount.from.KINT(stakingAmount);
   const usdStakingAmount = getUsdAmount(monetaryStakingAmount, prices.governanceToken.usd);
 
+  const unlockDate = add(new Date(), {
+    weeks: parseInt(lockTime)
+  });
+  const unlockDateLabel = format(unlockDate, YEAR_MONTH_DAY_PATTERN);
+
   return (
     <MainContainer>
       <Panel
@@ -135,7 +145,9 @@ const Staking = (): JSX.Element => {
           <BalancesUI
             governanceTokenBalance={governanceTokenBalanceLabel}
             voteGovernanceTokenBalance={votingBalanceLabel} />
-          <UnstakeButton />
+          {/* ray test touch << */}
+          {/* <UnstakeButton /> */}
+          {/* ray test touch >> */}
           <div className='space-y-2'>
             <GovernanceTokenBalanceUI balance={governanceTokenBalanceLabel} />
             <TokenField
@@ -168,6 +180,11 @@ const Staking = (): JSX.Element => {
             error={!!errors[LOCK_TIME]}
             helperText={errors[LOCK_TIME]?.message} />
           <InformationUI
+            label='Unlock date'
+            value={unlockDateLabel}
+            tooltip='Your staked amount will be locked until this date.' />
+          {/* ray test touch << */}
+          {/* <InformationUI
             label='New unlock date'
             value='Dec 16, 2023'
             tooltip='Your original lock date plus the extended lock time.' />
@@ -183,7 +200,8 @@ const Staking = (): JSX.Element => {
           <InformationUI
             label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
             value={`156.43  ${GOVERNANCE_TOKEN_SYMBOL}`}
-            tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} />
+            tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} /> */}
+          {/* ray test touch >> */}
           <SubmitButton>
             Stake
           </SubmitButton>
