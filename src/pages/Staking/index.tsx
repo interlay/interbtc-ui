@@ -30,6 +30,10 @@ import {
   VOTE_GOVERNANCE_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import {
+  MIN_LOCK_TIME,
+  MAX_LOCK_TIME
+} from 'config/staking';
+import {
   displayMonetaryAmount,
   getUsdAmount
 } from 'common/utils/utils';
@@ -100,8 +104,10 @@ const Staking = (): JSX.Element => {
     return undefined;
   };
 
-  const validateLockTime = (value: string): string | undefined => {
-    console.log('[validateLockTime] value => ', value);
+  const validateLockTime = (value: number): string | undefined => {
+    if (value < MIN_LOCK_TIME || value > MAX_LOCK_TIME) {
+      return `Please enter a number between ${MIN_LOCK_TIME}-${MAX_LOCK_TIME}.`;
+    }
 
     return undefined;
   };

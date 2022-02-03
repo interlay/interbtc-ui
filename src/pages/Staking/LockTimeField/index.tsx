@@ -8,16 +8,17 @@ import {
 } from 'components/TextField';
 import NumberInput, { Props as NumberInputProps } from 'components/NumberInput';
 import {
+  MIN_LOCK_TIME,
+  MAX_LOCK_TIME
+} from 'config/staking';
+import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
 
-const MIN_EXTENDING_LOCK_TIME = 2;
-const MAX_EXTENDING_LOCK_TIME = 56;
-
 // MEMO: inspired by https://medium.com/codex/making-html-5-numeric-inputs-only-accept-integers-d3d117973d56
 const intRx = /\d/;
-const handleExtendingLockTimeChange = (event: KeyboardEvent) => {
+const handleLockTimeChange = (event: KeyboardEvent) => {
   if (
     (event.key.length > 1) ||
     ((event.key === '-') && (!(event.currentTarget as HTMLInputElement)?.value?.length)) ||
@@ -56,10 +57,10 @@ const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
 
     const wrappingRefCurrent = wrappingRef.current;
 
-    wrappingRefCurrent.addEventListener('keydown', handleExtendingLockTimeChange);
+    wrappingRefCurrent.addEventListener('keydown', handleLockTimeChange);
 
     return () => {
-      wrappingRefCurrent.removeEventListener('keydown', handleExtendingLockTimeChange);
+      wrappingRefCurrent.removeEventListener('keydown', handleLockTimeChange);
     };
   }, []);
 
@@ -71,8 +72,8 @@ const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
           '!text-xs',
           LABEL_TEXT_COLOR_CLASSES
         )}
-        required>
-        Max {MAX_EXTENDING_LOCK_TIME} Weeks
+        required={!optional}>
+        Max {MAX_LOCK_TIME} Weeks
       </TextFieldLabel>
       <div
         className={clsx(
@@ -122,8 +123,8 @@ const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
             placeholder='0'
             pattern='/d+'
             step={1}
-            min={MIN_EXTENDING_LOCK_TIME}
-            max={MAX_EXTENDING_LOCK_TIME} />
+            min={MIN_LOCK_TIME}
+            max={MAX_LOCK_TIME} />
           <span
             className={clsx(
               'text-xs',
