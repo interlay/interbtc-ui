@@ -48,22 +48,20 @@ const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
   error,
   helperText
 }, ref): JSX.Element => {
-  // ray test touch <<
-  const extendingWeeksInputRef = React.useRef<HTMLInputElement | null>(null);
+  const wrappingRef = React.useRef<HTMLInputElement | null>(null);
 
   React.useEffect(() => {
-    if (!extendingWeeksInputRef) return;
-    if (!extendingWeeksInputRef.current) return;
+    if (!wrappingRef) return;
+    if (!wrappingRef.current) return;
 
-    const countOfWeekInputRefCurrent = extendingWeeksInputRef.current;
+    const wrappingRefCurrent = wrappingRef.current;
 
-    countOfWeekInputRefCurrent.addEventListener('keydown', handleExtendingLockTimeChange);
+    wrappingRefCurrent.addEventListener('keydown', handleExtendingLockTimeChange);
 
     return () => {
-      countOfWeekInputRefCurrent.removeEventListener('keydown', handleExtendingLockTimeChange);
+      wrappingRefCurrent.removeEventListener('keydown', handleExtendingLockTimeChange);
     };
   }, []);
-  // ray test touch >>
 
   return (
     <div>
@@ -104,7 +102,8 @@ const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
             'inline-flex',
             'items-center',
             'space-x-2.5'
-          )}>
+          )}
+          ref={wrappingRef}>
           <NumberInput
             ref={ref}
             id={id}
