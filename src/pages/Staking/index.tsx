@@ -1,6 +1,16 @@
 
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
+import { useQuery } from 'react-query';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
+import {
+  MonetaryAmount,
+  Currency
+} from '@interlay/monetary-js';
+import { GovernanceUnit } from '@interlay/interbtc-api';
 
 import Title from './Title';
 import BalancesUI from './BalancesUI';
@@ -12,19 +22,53 @@ import MainContainer from 'parts/MainContainer';
 import Panel from 'components/Panel';
 import TokenField from 'components/TokenField';
 import SubmitButton from 'components/SubmitButton';
+import ErrorFallback from 'components/ErrorFallback';
 import {
   GOVERNANCE_TOKEN_SYMBOL,
   VOTE_GOVERNANCE_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
 const STAKING_GOVERNANCE_TOKEN_AMOUNT = 'staking-governance-token-amount';
 
 const Staking = (): JSX.Element => {
-  const { governanceTokenBalance } = useSelector((state: StoreType) => state.general);
+  const {
+    governanceTokenBalance,
+    bridgeLoaded,
+    address
+  } = useSelector((state: StoreType) => state.general);
 
-  const strGovernanceTokenBalance = displayMonetaryAmount(governanceTokenBalance);
+  const {
+    isIdle: votingBalanceIdle,
+    isLoading: votingBalanceLoading,
+    data: votingBalance,
+    error: votingBalanceError
+  } = useQuery<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcApi',
+      'escrow',
+      'votingBalance',
+      address
+    ],
+    genericFetcher<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(votingBalanceError);
+
+  if (votingBalanceIdle || votingBalanceLoading) {
+    return <>Loading...</>;
+  }
+  if (votingBalance === undefined) {
+    throw new Error('Something went wrong!');
+  }
+
+  const governanceTokenBalanceLabel = displayMonetaryAmount(governanceTokenBalance);
+  const votingBalanceLabel = displayMonetaryAmount(votingBalance);
 
   return (
     <MainContainer>
@@ -38,11 +82,11 @@ const Staking = (): JSX.Element => {
         )}>
         <Title />
         <BalancesUI
-          governanceTokenBalance={strGovernanceTokenBalance}
-          voteGovernanceTokenBalance='26.00' />
+          governanceTokenBalance={governanceTokenBalanceLabel}
+          voteGovernanceTokenBalance={votingBalanceLabel} />
         <UnstakeButton />
         <div className='space-y-2'>
-          <GovernanceTokenBalanceUI balance={strGovernanceTokenBalance} />
+          <GovernanceTokenBalanceUI balance={governanceTokenBalanceLabel} />
           <TokenField
             id={STAKING_GOVERNANCE_TOKEN_AMOUNT}
             name={STAKING_GOVERNANCE_TOKEN_AMOUNT}
@@ -76,4 +120,9 @@ const Staking = (): JSX.Element => {
   );
 };
 
-export default Staking;
+export default withErrorBoundary(Staking, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});
