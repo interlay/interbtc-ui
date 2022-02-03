@@ -394,6 +394,9 @@ module.exports = {
       textColor: [
         'important'
       ],
+      fontSize: [
+        'important'
+      ],
       display: [
         'important'
       ],

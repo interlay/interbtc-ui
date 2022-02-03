@@ -42,8 +42,10 @@ const TokenField = React.forwardRef<Ref, Props>(({
             'pr-36',
             {
               [clsx(
-                'border-interlayCinnabar',
-                'text-interlayCinnabar'
+                { 'border-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                { 'dark:border-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                { 'text-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                { 'text-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
               )]: error
             }
           )}
@@ -77,7 +79,12 @@ const TokenField = React.forwardRef<Ref, Props>(({
       </TextFieldContainer>
       <TextFieldHelperText
         className={clsx(
-          { 'text-interlayCinnabar': error },
+          {
+            [clsx(
+              { 'text-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'text-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )]: error
+          },
           'h-6'
         )}>
         {helperText}

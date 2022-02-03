@@ -2,13 +2,16 @@
 import * as React from 'react';
 import clsx from 'clsx';
 
-import NumberInput from 'components/NumberInput';
+import {
+  TextFieldHelperText,
+  TextFieldLabel
+} from 'components/TextField';
+import NumberInput, { Props as NumberInputProps } from 'components/NumberInput';
 import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
 
-const EXTENDING_LOCK_TIME = 'extending-lock-time';
 const MIN_EXTENDING_LOCK_TIME = 2;
 const MAX_EXTENDING_LOCK_TIME = 56;
 
@@ -33,13 +36,19 @@ const LABEL_TEXT_COLOR_CLASSES = clsx(
 
 interface CustomProps {
   optional?: boolean;
+  error?: boolean;
+  helperText?: JSX.Element | string;
 }
 
-const LockTimeField = ({
-  className,
+type Ref = HTMLInputElement;
+const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
   optional,
-  ...rest
-}: CustomProps & React.ComponentPropsWithRef<'div'>): JSX.Element => {
+  id,
+  name,
+  error,
+  helperText
+}, ref): JSX.Element => {
+  // ray test touch <<
   const extendingWeeksInputRef = React.useRef<HTMLInputElement | null>(null);
 
   React.useEffect(() => {
@@ -54,25 +63,25 @@ const LockTimeField = ({
       countOfWeekInputRefCurrent.removeEventListener('keydown', handleExtendingLockTimeChange);
     };
   }, []);
+  // ray test touch >>
 
   return (
     <div>
-      <label
-        htmlFor={EXTENDING_LOCK_TIME}
+      <TextFieldLabel
+        htmlFor={id}
         className={clsx(
-          'text-xs',
+          '!text-xs',
           LABEL_TEXT_COLOR_CLASSES
-        )}>
+        )}
+        required>
         Max {MAX_EXTENDING_LOCK_TIME} Weeks
-      </label>
+      </TextFieldLabel>
       <div
         className={clsx(
           'flex',
           'justify-between',
-          'items-center',
-          className
-        )}
-        {...rest}>
+          'items-center'
+        )}>
         {optional ? (
           <div
             className={clsx(
@@ -97,10 +106,22 @@ const LockTimeField = ({
             'space-x-2.5'
           )}>
           <NumberInput
-            ref={extendingWeeksInputRef}
-            id={EXTENDING_LOCK_TIME}
-            name={EXTENDING_LOCK_TIME}
-            className='!w-12'
+            ref={ref}
+            id={id}
+            // ray test touch <<
+            className={clsx(
+              '!w-12',
+              {
+                [clsx(
+                  { 'border-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:border-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                  { 'text-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'text-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )]: error
+              }
+            )}
+            // ray test touch >>
+            name={name}
             placeholder='0'
             pattern='/d+'
             step={1}
@@ -115,8 +136,21 @@ const LockTimeField = ({
           </span>
         </div>
       </div>
+      <TextFieldHelperText
+        className={clsx(
+          {
+            [clsx(
+              { 'text-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'text-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )]: error
+          },
+          'h-6'
+        )}>
+        {helperText}
+      </TextFieldHelperText>
     </div>
   );
-};
+});
+LockTimeField.displayName = 'LockTimeField';
 
 export default LockTimeField;
