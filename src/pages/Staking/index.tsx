@@ -37,9 +37,11 @@ import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetch
 import { StoreType } from 'common/types/util.types';
 
 const STAKING_AMOUNT = 'staking-amount';
+const LOCK_TIME = 'lock-time';
 
 type StakingFormData = {
   [STAKING_AMOUNT]: string;
+  [LOCK_TIME]: string;
 }
 
 const Staking = (): JSX.Element => {
@@ -98,6 +100,12 @@ const Staking = (): JSX.Element => {
     return undefined;
   };
 
+  const validateLockTime = (value: string): string | undefined => {
+    console.log('[validateLockTime] value => ', value);
+
+    return undefined;
+  };
+
   const governanceTokenBalanceLabel = displayMonetaryAmount(governanceTokenBalance);
   const votingBalanceLabel = displayMonetaryAmount(votingBalance);
   const monetaryStakingAmount = KintsugiAmount.from.KINT(stakingAmount);
@@ -140,9 +148,19 @@ const Staking = (): JSX.Element => {
               error={!!errors[STAKING_AMOUNT]}
               helperText={errors[STAKING_AMOUNT]?.message} />
           </div>
-          {/* ray test touch << */}
-          <LockTimeField />
-          {/* ray test touch >> */}
+          <LockTimeField
+            id={LOCK_TIME}
+            name={LOCK_TIME}
+            min={0}
+            ref={register({
+              required: {
+                value: true,
+                message: 'This field is required!'
+              },
+              validate: value => validateLockTime(value)
+            })}
+            error={!!errors[LOCK_TIME]}
+            helperText={errors[LOCK_TIME]?.message} />
           <InformationUI
             label='New unlock date'
             value='Dec 16, 2023'

@@ -108,7 +108,6 @@ const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
           <NumberInput
             ref={ref}
             id={id}
-            // ray test touch <<
             className={clsx(
               '!w-12',
               {
@@ -120,7 +119,6 @@ const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
                 )]: error
               }
             )}
-            // ray test touch >>
             name={name}
             placeholder='0'
             pattern='/d+'
