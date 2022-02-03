@@ -6,6 +6,7 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
+import { useForm } from 'react-hook-form';
 import {
   MonetaryAmount,
   Currency
@@ -31,7 +32,11 @@ import { displayMonetaryAmount } from 'common/utils/utils';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
-const STAKING_GOVERNANCE_TOKEN_AMOUNT = 'staking-governance-token-amount';
+const STAKING_AMOUNT = 'staking-amount';
+
+type StakingFormData = {
+  [STAKING_AMOUNT]: string;
+}
 
 const Staking = (): JSX.Element => {
   const {
@@ -39,6 +44,17 @@ const Staking = (): JSX.Element => {
     bridgeLoaded,
     address
   } = useSelector((state: StoreType) => state.general);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors }
+  } = useForm<StakingFormData>({
+    mode: 'onChange' // 'onBlur'
+  });
+  const stakingAmount = watch(STAKING_AMOUNT) || '0';
+  console.log('[Staking] stakingAmount => ', stakingAmount);
 
   const {
     isIdle: votingBalanceIdle,
@@ -67,6 +83,18 @@ const Staking = (): JSX.Element => {
     throw new Error('Something went wrong!');
   }
 
+  // ray test touch <<
+  const onSubmit = (data: StakingFormData) => {
+    console.log('[validateStakingAmount] data => ', data);
+  };
+
+  const validateStakingAmount = (value: string): string | undefined => {
+    console.log('[validateStakingAmount] value => ', value);
+
+    return undefined;
+  };
+  // ray test touch >>
+
   const governanceTokenBalanceLabel = displayMonetaryAmount(governanceTokenBalance);
   const votingBalanceLabel = displayMonetaryAmount(votingBalance);
 
@@ -76,45 +104,59 @@ const Staking = (): JSX.Element => {
         className={clsx(
           'mx-auto',
           'w-full',
-          'md:max-w-xl',
-          'p-8',
-          'space-y-8'
+          'md:max-w-xl'
         )}>
-        <Title />
-        <BalancesUI
-          governanceTokenBalance={governanceTokenBalanceLabel}
-          voteGovernanceTokenBalance={votingBalanceLabel} />
-        <UnstakeButton />
-        <div className='space-y-2'>
-          <GovernanceTokenBalanceUI balance={governanceTokenBalanceLabel} />
-          <TokenField
-            id={STAKING_GOVERNANCE_TOKEN_AMOUNT}
-            name={STAKING_GOVERNANCE_TOKEN_AMOUNT}
-            label={GOVERNANCE_TOKEN_SYMBOL}
-            approxUSD='≈ $ 325.12'
-            defaultValue='14.00' />
-        </div>
-        <ExtendLockTimeUI />
-        <InformationUI
-          label='New unlock date'
-          value='Dec 16, 2023'
-          tooltip='Your original lock date plus the extended lock time.' />
-        <InformationUI
-          label='New total stake'
-          value={`40.00 ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
-          tooltip='Your total stake after this transaction.' />
-        <InformationUI
-          label='Estimated APY'
-          value='12.24%'
-          // eslint-disable-next-line max-len
-          tooltip={`The estimated amount of KINT you will receive as rewards. Depends on your proportion of the total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}.`} />
-        <InformationUI
-          label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
-          value={`156.43  ${GOVERNANCE_TOKEN_SYMBOL}`}
-          tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} />
-        <SubmitButton>
-          Add more stake
-        </SubmitButton>
+        <form
+          className={clsx(
+            'p-8',
+            'space-y-8'
+          )}
+          onSubmit={handleSubmit(onSubmit)}>
+          <Title />
+          <BalancesUI
+            governanceTokenBalance={governanceTokenBalanceLabel}
+            voteGovernanceTokenBalance={votingBalanceLabel} />
+          <UnstakeButton />
+          <div className='space-y-2'>
+            <GovernanceTokenBalanceUI balance={governanceTokenBalanceLabel} />
+            <TokenField
+              id={STAKING_AMOUNT}
+              name={STAKING_AMOUNT}
+              label={GOVERNANCE_TOKEN_SYMBOL}
+              min={0}
+              ref={register({
+                required: {
+                  value: true,
+                  message: 'This field is required!'
+                },
+                validate: value => validateStakingAmount(value)
+              })}
+              approxUSD='≈ $ 325.12'
+              error={!!errors[STAKING_AMOUNT]}
+              helperText={errors[STAKING_AMOUNT]?.message} />
+          </div>
+          <ExtendLockTimeUI />
+          <InformationUI
+            label='New unlock date'
+            value='Dec 16, 2023'
+            tooltip='Your original lock date plus the extended lock time.' />
+          <InformationUI
+            label='New total stake'
+            value={`40.00 ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
+            tooltip='Your total stake after this transaction.' />
+          <InformationUI
+            label='Estimated APY'
+            value='12.24%'
+            // eslint-disable-next-line max-len
+            tooltip={`The estimated amount of KINT you will receive as rewards. Depends on your proportion of the total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}.`} />
+          <InformationUI
+            label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
+            value={`156.43  ${GOVERNANCE_TOKEN_SYMBOL}`}
+            tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} />
+          <SubmitButton>
+            Stake
+          </SubmitButton>
+        </form>
       </Panel>
     </MainContainer>
   );
