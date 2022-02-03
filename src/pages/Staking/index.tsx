@@ -49,6 +49,17 @@ import {
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
+const getUnlockDateLabel = (weeks: number) => {
+  if (weeks >= MIN_LOCK_TIME) {
+    const unlockDate = add(new Date(), {
+      weeks
+    });
+    return format(unlockDate, YEAR_MONTH_DAY_PATTERN);
+  } else {
+    return '-';
+  }
+};
+
 const ZERO_VOTE_GOVERNANCE_AMOUNT = newMonetaryAmount(0, VOTE_GOVERNANCE_TOKEN, true);
 
 const STAKING_AMOUNT = 'staking-amount';
@@ -128,10 +139,7 @@ const Staking = (): JSX.Element => {
   const monetaryStakingAmount = KintsugiAmount.from.KINT(stakingAmount);
   const usdStakingAmount = getUsdAmount(monetaryStakingAmount, prices.governanceToken.usd);
 
-  const unlockDate = add(new Date(), {
-    weeks: parseInt(lockTime)
-  });
-  const unlockDateLabel = format(unlockDate, YEAR_MONTH_DAY_PATTERN);
+  const unlockDateLabel = getUnlockDateLabel(parseInt(lockTime));
 
   const lockTimeOptional = votingBalance.gt(ZERO_VOTE_GOVERNANCE_AMOUNT);
 
