@@ -16,7 +16,10 @@ import {
   Currency,
   KintsugiAmount
 } from '@interlay/monetary-js';
-import { GovernanceUnit } from '@interlay/interbtc-api';
+import {
+  GovernanceUnit,
+  newMonetaryAmount
+} from '@interlay/interbtc-api';
 
 import Title from './Title';
 import BalancesUI from './BalancesUI';
@@ -31,7 +34,8 @@ import SubmitButton from 'components/SubmitButton';
 import ErrorFallback from 'components/ErrorFallback';
 import {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
-  GOVERNANCE_TOKEN_SYMBOL
+  GOVERNANCE_TOKEN_SYMBOL,
+  VOTE_GOVERNANCE_TOKEN
 } from 'config/relay-chains';
 import {
   MIN_LOCK_TIME,
@@ -44,6 +48,8 @@ import {
 } from 'common/utils/utils';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
+
+const ZERO_VOTE_GOVERNANCE_AMOUNT = newMonetaryAmount(0, VOTE_GOVERNANCE_TOKEN, true);
 
 const STAKING_AMOUNT = 'staking-amount';
 const LOCK_TIME = 'lock-time';
@@ -127,6 +133,8 @@ const Staking = (): JSX.Element => {
   });
   const unlockDateLabel = format(unlockDate, YEAR_MONTH_DAY_PATTERN);
 
+  const lockTimeOptional = votingBalance.gt(ZERO_VOTE_GOVERNANCE_AMOUNT);
+
   return (
     <MainContainer>
       <Panel
@@ -172,13 +180,14 @@ const Staking = (): JSX.Element => {
             min={0}
             ref={register({
               required: {
-                value: true,
+                value: lockTimeOptional ? false : true,
                 message: 'This field is required!'
               },
               validate: value => validateLockTime(value)
             })}
             error={!!errors[LOCK_TIME]}
-            helperText={errors[LOCK_TIME]?.message} />
+            helperText={errors[LOCK_TIME]?.message}
+            optional={lockTimeOptional} />
           <InformationUI
             label='Unlock date'
             value={unlockDateLabel}

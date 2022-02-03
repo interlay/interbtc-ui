@@ -12,7 +12,8 @@ import {
 } from '@interlay/monetary-js';
 import {
   CollateralUnit,
-  GovernanceUnit
+  GovernanceUnit,
+  VoteUnit
 } from '@interlay/interbtc-api';
 
 import {
@@ -39,6 +40,7 @@ if (!process.env.REACT_APP_RELAY_CHAIN_NAME) {
 type WrappedToken = Currency<BitcoinUnit>;
 type CollateralToken = Currency<CollateralUnit>;
 type GovernanceToken = Currency<GovernanceUnit>;
+type VoteGovernanceToken = Currency<VoteUnit>;
 
 let APP_NAME: string;
 let TERMS_AND_CONDITIONS_LINK: string;
@@ -46,6 +48,7 @@ let WRAPPED_TOKEN_SYMBOL: string;
 let WRAPPED_TOKEN: WrappedToken;
 let COLLATERAL_TOKEN: CollateralToken;
 let GOVERNANCE_TOKEN: GovernanceToken;
+let VOTE_GOVERNANCE_TOKEN: VoteGovernanceToken;
 let PRICES_URL: string;
 let RELAY_CHAIN_NAME: string;
 let BRIDGE_PARACHAIN_NAME: string;
@@ -94,8 +97,8 @@ case POLKADOT: {
   TERMS_AND_CONDITIONS_LINK = INTERLAY_TERMS_AND_CONDITIONS_LINK;
   WRAPPED_TOKEN = InterBtc;
   COLLATERAL_TOKEN = Polkadot as Currency<CollateralUnit>;
-  // TODO: Add GovernanceUnit type to lib following upgrade i.e. Currency<GovernanceUnit>
   GOVERNANCE_TOKEN = Interlay as Currency<GovernanceUnit>;
+  VOTE_GOVERNANCE_TOKEN = Interlay as Currency<VoteUnit>;
   WRAPPED_TOKEN_SYMBOL = 'interBTC';
   COLLATERAL_TOKEN_SYMBOL = 'DOT';
   GOVERNANCE_TOKEN_SYMBOL = 'INTR';
@@ -122,6 +125,7 @@ case KUSAMA: {
   WRAPPED_TOKEN = KBtc;
   COLLATERAL_TOKEN = Kusama as Currency<CollateralUnit>;
   GOVERNANCE_TOKEN = Kintsugi as Currency<GovernanceUnit>;
+  VOTE_GOVERNANCE_TOKEN = Kintsugi as Currency<VoteUnit>;
   WRAPPED_TOKEN_SYMBOL = 'kBTC';
   COLLATERAL_TOKEN_SYMBOL = 'KSM';
   GOVERNANCE_TOKEN_SYMBOL = 'KINT';
@@ -162,6 +166,7 @@ export {
   WRAPPED_TOKEN_SYMBOL,
   COLLATERAL_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
+  VOTE_GOVERNANCE_TOKEN,
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   RELAY_CHAIN_NAME,
   BRIDGE_PARACHAIN_NAME,
