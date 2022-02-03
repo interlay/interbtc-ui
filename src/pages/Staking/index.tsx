@@ -9,7 +9,8 @@ import {
 import { useForm } from 'react-hook-form';
 import {
   MonetaryAmount,
-  Currency
+  Currency,
+  KintsugiAmount
 } from '@interlay/monetary-js';
 import { GovernanceUnit } from '@interlay/interbtc-api';
 
@@ -28,7 +29,10 @@ import {
   GOVERNANCE_TOKEN_SYMBOL,
   VOTE_GOVERNANCE_TOKEN_SYMBOL
 } from 'config/relay-chains';
-import { displayMonetaryAmount } from 'common/utils/utils';
+import {
+  displayMonetaryAmount,
+  getUsdAmount
+} from 'common/utils/utils';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
@@ -42,7 +46,8 @@ const Staking = (): JSX.Element => {
   const {
     governanceTokenBalance,
     bridgeLoaded,
-    address
+    address,
+    prices
   } = useSelector((state: StoreType) => state.general);
 
   const {
@@ -83,7 +88,6 @@ const Staking = (): JSX.Element => {
     throw new Error('Something went wrong!');
   }
 
-  // ray test touch <<
   const onSubmit = (data: StakingFormData) => {
     console.log('[validateStakingAmount] data => ', data);
   };
@@ -93,10 +97,11 @@ const Staking = (): JSX.Element => {
 
     return undefined;
   };
-  // ray test touch >>
 
   const governanceTokenBalanceLabel = displayMonetaryAmount(governanceTokenBalance);
   const votingBalanceLabel = displayMonetaryAmount(votingBalance);
+  const monetaryStakingAmount = KintsugiAmount.from.KINT(stakingAmount);
+  const usdStakingAmount = getUsdAmount(monetaryStakingAmount, prices.governanceToken.usd);
 
   return (
     <MainContainer>
@@ -131,7 +136,7 @@ const Staking = (): JSX.Element => {
                 },
                 validate: value => validateStakingAmount(value)
               })}
-              approxUSD='≈ $ 325.12'
+              approxUSD={`≈ $ ${usdStakingAmount}`}
               error={!!errors[STAKING_AMOUNT]}
               helperText={errors[STAKING_AMOUNT]?.message} />
           </div>
