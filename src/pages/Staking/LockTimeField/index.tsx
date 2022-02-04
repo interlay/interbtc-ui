@@ -72,7 +72,7 @@ const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
           '!text-xs',
           LABEL_TEXT_COLOR_CLASSES
         )}
-        required={!optional}>
+        required={optional === false}>
         Max {MAX_LOCK_TIME} Weeks
       </TextFieldLabel>
       <div
@@ -81,7 +81,7 @@ const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
           'justify-between',
           'items-center'
         )}>
-        {optional ? (
+        {optional === true && (
           <div
             className={clsx(
               'inline-flex',
@@ -92,10 +92,15 @@ const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
             <span>Extend lock time in weeks</span>
             <span className='text-xs'>(Optional):</span>
           </div>
-        ) : (
-          <span
-            className={LABEL_TEXT_COLOR_CLASSES}>
+        )}
+        {optional === false && (
+          <span className={LABEL_TEXT_COLOR_CLASSES}>
             Choose lock time in weeks:
+          </span>
+        )}
+        {optional === undefined && (
+          <span className={LABEL_TEXT_COLOR_CLASSES}>
+            Checking...
           </span>
         )}
         <div

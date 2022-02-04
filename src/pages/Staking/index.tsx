@@ -36,6 +36,7 @@ import Panel from 'components/Panel';
 import TokenField from 'components/TokenField';
 import SubmitButton from 'components/SubmitButton';
 import ErrorFallback from 'components/ErrorFallback';
+import ErrorModal from 'components/ErrorModal';
 import {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
@@ -94,6 +95,7 @@ const Staking = (): JSX.Element => {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors }
   } = useForm<StakingFormData>({
     mode: 'onChange' // 'onBlur'
@@ -137,26 +139,18 @@ const Staking = (): JSX.Element => {
           'votingBalance',
           address
         ]);
-        // ray test touch <<
         console.log('[stakeMutation] variables => ', variables);
-        // ray test touch >>
+        reset({
+          [STAKING_AMOUNT]: '0.0',
+          [LOCK_TIME]: '0'
+        });
       },
       onError: error => {
-        // ray test touch <<
         // TODO: should add error handling UX
         console.log('[stakeMutation] error => ', error);
-        // ray test touch >>
       }
     }
   );
-
-  // TODO: should add loading UX
-  if (votingBalanceIdle || votingBalanceLoading) {
-    return <>Loading...</>;
-  }
-  if (votingBalance === undefined) {
-    throw new Error('Something went wrong!');
-  }
 
   const onSubmit = (data: StakingFormData) => {
     if (!bridgeLoaded) return;
@@ -188,96 +182,123 @@ const Staking = (): JSX.Element => {
   };
 
   const governanceTokenBalanceLabel = displayMonetaryAmount(governanceTokenBalance);
-  const votingBalanceLabel = displayMonetaryAmount(votingBalance);
+  const votingBalanceLabel = votingBalance ? displayMonetaryAmount(votingBalance) : '-';
   const monetaryStakingAmount = KintsugiAmount.from.KINT(stakingAmount);
   const usdStakingAmount = getUsdAmount(monetaryStakingAmount, prices.governanceToken.usd);
 
   const unlockDateLabel = getUnlockDateLabel(parseInt(lockTime));
 
-  const votingBalanceGreaterThanZero = votingBalance.gt(ZERO_VOTE_GOVERNANCE_AMOUNT);
+  const votingBalanceGreaterThanZero = votingBalance?.gt(ZERO_VOTE_GOVERNANCE_AMOUNT);
+
+  const initializing =
+    votingBalanceIdle ||
+    votingBalanceLoading;
+  let submitButtonLabel: string;
+  if (initializing) {
+    submitButtonLabel = 'Loading...';
+  } else {
+    submitButtonLabel = 'Stake';
+  }
 
   return (
-    <MainContainer>
-      <Panel
-        className={clsx(
-          'mx-auto',
-          'w-full',
-          'md:max-w-xl'
-        )}>
-        <form
+    <>
+      <MainContainer>
+        <Panel
           className={clsx(
-            'p-8',
-            'space-y-8'
-          )}
-          onSubmit={handleSubmit(onSubmit)}>
-          <Title />
-          <BalancesUI
-            governanceTokenBalance={governanceTokenBalanceLabel}
-            voteGovernanceTokenBalance={votingBalanceLabel} />
-          {votingBalanceGreaterThanZero && (
-            <UnstakeButton />
-          )}
-          <div className='space-y-2'>
-            <GovernanceTokenBalanceUI balance={governanceTokenBalanceLabel} />
-            <TokenField
-              id={STAKING_AMOUNT}
-              name={STAKING_AMOUNT}
-              label={GOVERNANCE_TOKEN_SYMBOL}
+            'mx-auto',
+            'w-full',
+            'md:max-w-xl'
+          )}>
+          <form
+            className={clsx(
+              'p-8',
+              'space-y-8'
+            )}
+            onSubmit={handleSubmit(onSubmit)}>
+            <Title />
+            <BalancesUI
+              governanceTokenBalance={governanceTokenBalanceLabel}
+              voteGovernanceTokenBalance={votingBalanceLabel} />
+            {votingBalanceGreaterThanZero && (
+              <UnstakeButton />
+            )}
+            <div className='space-y-2'>
+              <GovernanceTokenBalanceUI balance={governanceTokenBalanceLabel} />
+              <TokenField
+                id={STAKING_AMOUNT}
+                name={STAKING_AMOUNT}
+                label={GOVERNANCE_TOKEN_SYMBOL}
+                min={0}
+                ref={register({
+                  required: {
+                    value: true,
+                    message: 'This field is required!'
+                  },
+                  validate: value => validateStakingAmount(value)
+                })}
+                approxUSD={`≈ $ ${usdStakingAmount}`}
+                error={!!errors[STAKING_AMOUNT]}
+                helperText={errors[STAKING_AMOUNT]?.message} />
+            </div>
+            <LockTimeField
+              id={LOCK_TIME}
+              name={LOCK_TIME}
               min={0}
               ref={register({
                 required: {
-                  value: true,
+                  value: votingBalanceGreaterThanZero ? false : true,
                   message: 'This field is required!'
                 },
-                validate: value => validateStakingAmount(value)
+                validate: value => validateLockTime(value)
               })}
-              approxUSD={`≈ $ ${usdStakingAmount}`}
-              error={!!errors[STAKING_AMOUNT]}
-              helperText={errors[STAKING_AMOUNT]?.message} />
-          </div>
-          <LockTimeField
-            id={LOCK_TIME}
-            name={LOCK_TIME}
-            min={0}
-            ref={register({
-              required: {
-                value: votingBalanceGreaterThanZero ? false : true,
-                message: 'This field is required!'
-              },
-              validate: value => validateLockTime(value)
-            })}
-            error={!!errors[LOCK_TIME]}
-            helperText={errors[LOCK_TIME]?.message}
-            optional={votingBalanceGreaterThanZero} />
-          <InformationUI
-            label='Unlock date'
-            value={unlockDateLabel}
-            tooltip='Your staked amount will be locked until this date.' />
-          <InformationUI
-            label='Estimated APY'
-            value='12.24% (hardcoded)'
-            // eslint-disable-next-line max-len
-            tooltip={`The estimated amount of KINT you will receive as rewards. Depends on your proportion of the total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}.`} />
-          {/* ray test touch << */}
-          {/* <InformationUI
-            label='New unlock date'
-            value='Dec 16, 2023'
-            tooltip='Your original lock date plus the extended lock time.' />
-          <InformationUI
-            label='New total stake'
-            value={`40.00 ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
-            tooltip='Your total stake after this transaction.' />
-          <InformationUI
-            label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
-            value={`156.43  ${GOVERNANCE_TOKEN_SYMBOL}`}
-            tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} /> */}
-          {/* ray test touch >> */}
-          <SubmitButton>
-            Stake
-          </SubmitButton>
-        </form>
-      </Panel>
-    </MainContainer>
+              error={!!errors[LOCK_TIME]}
+              helperText={errors[LOCK_TIME]?.message}
+              optional={votingBalanceGreaterThanZero} />
+            <InformationUI
+              label='Unlock date'
+              value={unlockDateLabel}
+              tooltip='Your staked amount will be locked until this date.' />
+            <InformationUI
+              label='Estimated APY'
+              value='12.24% (hardcoded)'
+              // eslint-disable-next-line max-len
+              tooltip={`The estimated amount of KINT you will receive as rewards. Depends on your proportion of the total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}.`} />
+            {/* ray test touch << */}
+            {/* <InformationUI
+              label='New unlock date'
+              value='Dec 16, 2023'
+              tooltip='Your original lock date plus the extended lock time.' />
+            <InformationUI
+              label='New total stake'
+              value={`40.00 ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
+              tooltip='Your total stake after this transaction.' />
+            <InformationUI
+              label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
+              value={`156.43  ${GOVERNANCE_TOKEN_SYMBOL}`}
+              tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} /> */}
+            {/* ray test touch >> */}
+            <SubmitButton
+              disabled={initializing}
+              pending={stakeMutation.isLoading}>
+              {submitButtonLabel}
+            </SubmitButton>
+          </form>
+        </Panel>
+      </MainContainer>
+      {/* ray test test touch << */}
+      {stakeMutation.isError && (
+        <ErrorModal
+          open={stakeMutation.isError}
+          onClose={() => {
+            stakeMutation.reset();
+          }}
+          title='Error'
+          description={
+            stakeMutation.error?.message || ''
+          } />
+      )}
+      {/* ray test touch >> */}
+    </>
   );
 };
 
