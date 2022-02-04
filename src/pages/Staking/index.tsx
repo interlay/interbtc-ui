@@ -1,7 +1,11 @@
 
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
-import { useQuery } from 'react-query';
+import {
+  useQuery,
+  useMutation,
+  useQueryClient
+} from 'react-query';
 import {
   useErrorHandler,
   withErrorBoundary
@@ -35,12 +39,15 @@ import ErrorFallback from 'components/ErrorFallback';
 import {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
-  VOTE_GOVERNANCE_TOKEN
+  VOTE_GOVERNANCE_TOKEN,
+  GovernanceTokenAmount,
+  GOVERNANCE_TOKEN
 } from 'config/relay-chains';
 import {
   MIN_LOCK_TIME,
   MAX_LOCK_TIME
 } from 'config/staking';
+import { BLOCK_TIME } from 'config/parachain';
 import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
 import {
   displayMonetaryAmount,
@@ -68,6 +75,11 @@ const LOCK_TIME = 'lock-time';
 type StakingFormData = {
   [STAKING_AMOUNT]: string;
   [LOCK_TIME]: string;
+}
+
+interface Stake {
+  amount: GovernanceTokenAmount;
+  unlockHeight: number;
 }
 
 const Staking = (): JSX.Element => {
@@ -109,6 +121,36 @@ const Staking = (): JSX.Element => {
   );
   useErrorHandler(votingBalanceError);
 
+  const queryClient = useQueryClient();
+
+  const stakeMutation = useMutation<void, Error, Stake>(
+    (variables: Stake) => {
+      // TODO: double-check
+      return (window.bridge.interBtcApi as any).escrow.createLock(variables.amount, variables.unlockHeight);
+    },
+    {
+      onSuccess: (_, variables) => {
+        queryClient.invalidateQueries([
+          GENERIC_FETCHER,
+          'interBtcApi',
+          'escrow',
+          'votingBalance',
+          address
+        ]);
+        // ray test touch <<
+        console.log('[stakeMutation] variables => ', variables);
+        // ray test touch >>
+      },
+      onError: error => {
+        // ray test touch <<
+        // TODO: should add error handling UX
+        console.log('[stakeMutation] error => ', error);
+        // ray test touch >>
+      }
+    }
+  );
+
+  // TODO: should add loading UX
   if (votingBalanceIdle || votingBalanceLoading) {
     return <>Loading...</>;
   }
@@ -117,7 +159,18 @@ const Staking = (): JSX.Element => {
   }
 
   const onSubmit = (data: StakingFormData) => {
-    console.log('[validateStakingAmount] data => ', data);
+    if (!bridgeLoaded) return;
+
+    const monetaryAmount = newMonetaryAmount(data[STAKING_AMOUNT], GOVERNANCE_TOKEN, true);
+
+    const lockTime = parseInt(data[LOCK_TIME]); // Weeks
+    const unlockHeight = (lockTime * 7 * 24 * 3600) / BLOCK_TIME;
+
+    stakeMutation.mutate({
+      // TODO: double-check
+      amount: (monetaryAmount as GovernanceTokenAmount),
+      unlockHeight
+    });
   };
 
   const validateStakingAmount = (value: string): string | undefined => {
@@ -202,7 +255,7 @@ const Staking = (): JSX.Element => {
             tooltip='Your staked amount will be locked until this date.' />
           <InformationUI
             label='Estimated APY'
-            value='12.24%'
+            value='12.24% (hardcoded)'
             // eslint-disable-next-line max-len
             tooltip={`The estimated amount of KINT you will receive as rewards. Depends on your proportion of the total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}.`} />
           {/* ray test touch << */}
