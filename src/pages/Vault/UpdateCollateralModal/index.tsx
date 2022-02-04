@@ -17,7 +17,8 @@ import clsx from 'clsx';
 import {
   roundTwoDecimals,
   newMonetaryAmount,
-  CollateralUnit
+  CollateralUnit,
+  tickerToCurrencyIdLiteral
 } from '@interlay/interbtc-api';
 import {
   MonetaryAmount,
@@ -145,6 +146,7 @@ const UpdateCollateralModal = ({
       'vaults',
       'getVaultCollateralization',
       vaultId,
+      tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker),
       newCollateralTokenAmount
     ],
     genericFetcher<Big>(),
