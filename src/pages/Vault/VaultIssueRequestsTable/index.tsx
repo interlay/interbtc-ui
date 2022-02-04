@@ -44,12 +44,12 @@ import * as constants from '../../../constants';
 
 interface Props {
   totalIssueRequests: number;
-  vaultAddress: string;
+  vaultId: string;
 }
 
 const VaultIssueRequestsTable = ({
   totalIssueRequests,
-  vaultAddress
+  vaultId
 }: Props): JSX.Element | null => {
   const queryParams = useQueryParams();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
@@ -61,8 +61,8 @@ const VaultIssueRequestsTable = ({
   const { t } = useTranslation();
 
   const issueRequestFilter = React.useMemo(
-    () => [{ column: IssueColumns.VaultId, value: vaultAddress }], // filter requests by vault address
-    [vaultAddress]
+    () => [{ column: IssueColumns.VaultId, value: vaultId }], // filter requests by vault address
+    [vaultId]
   );
 
   React.useEffect(() => {

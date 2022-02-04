@@ -132,13 +132,19 @@ const Vault = (): JSX.Element => {
             .bridge
             .interBtcIndex
             .getFilteredTotalIssues({
-              filterIssueColumns: [{ column: IssueColumns.VaultId, value: selectedVaultAddress }]
+              filterIssueColumns: [{
+                column: IssueColumns.VaultId,
+                value: `${selectedVaultAddress}-${wrappedIdLiteral}-${collateralIdLiteral}`
+              }]
             }),
           window
             .bridge
             .interBtcIndex
             .getFilteredTotalRedeems({
-              filterRedeemColumns: [{ column: RedeemColumns.VaultId, value: selectedVaultAddress }]
+              filterRedeemColumns: [{
+                column: RedeemColumns.VaultId,
+                value: `${selectedVaultAddress}-${wrappedIdLiteral}-${collateralIdLiteral}`
+              }]
             })
         ]);
 
@@ -297,7 +303,7 @@ const Vault = (): JSX.Element => {
         )}
         <VaultIssueRequestsTable
           totalIssueRequests={totalIssueRequests}
-          vaultAddress={selectedVaultAddress} />
+          vaultId={selectedVaultAddress} />
         <VaultRedeemRequestsTable
           totalRedeemRequests={totalRedeemRequests}
           vaultAddress={selectedVaultAddress} />
