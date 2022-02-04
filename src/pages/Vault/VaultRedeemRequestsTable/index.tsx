@@ -47,12 +47,12 @@ import { WrappedTokenAmount } from 'config/relay-chains';
 
 interface Props {
   totalRedeemRequests: number;
-  vaultAddress: string;
+  vaultId: string;
 }
 
 const VaultRedeemRequestsTable = ({
   totalRedeemRequests,
-  vaultAddress
+  vaultId
 }: Props): JSX.Element | null => {
   const queryParams = useQueryParams();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
@@ -64,8 +64,8 @@ const VaultRedeemRequestsTable = ({
   const { t } = useTranslation();
 
   const redeemRequestFilter = React.useMemo(
-    () => [{ column: RedeemColumns.VaultId, value: vaultAddress }], // filter requests by vault address
-    [vaultAddress]
+    () => [{ column: RedeemColumns.VaultId, value: vaultId }], // filter requests by vault address
+    [vaultId]
   );
 
   React.useEffect(() => {

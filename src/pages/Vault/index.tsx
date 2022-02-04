@@ -77,6 +77,7 @@ const Vault = (): JSX.Element => {
   const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = React.useState(BitcoinAmount.zero);
   const [totalIssueRequests, setTotalIssueRequests] = React.useState(0);
   const [totalRedeemRequests, setTotalRedeemRequests] = React.useState(0);
+  const [vaultId, setVaultId] = React.useState('');
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -105,9 +106,11 @@ const Vault = (): JSX.Element => {
       if (!selectedVaultAddress) return;
 
       try {
-        const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, selectedVaultAddress);
+        const vaultAccountId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, selectedVaultAddress);
         const collateralIdLiteral = tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker) as CollateralIdLiteral;
         const wrappedIdLiteral = tickerToCurrencyIdLiteral(WRAPPED_TOKEN.ticker) as WrappedIdLiteral;
+        const encodedVaultId = `${selectedVaultAddress}-${wrappedIdLiteral}-${collateralIdLiteral}`;
+        setVaultId(encodedVaultId);
         const [
           vault,
           feesPolkaBTC,
@@ -118,23 +121,23 @@ const Vault = (): JSX.Element => {
           totalIssueRequests,
           totalRedeemRequests
         ] = await Promise.allSettled([
-          window.bridge.interBtcApi.vaults.get(vaultId, collateralIdLiteral),
+          window.bridge.interBtcApi.vaults.get(vaultAccountId, collateralIdLiteral),
           window.bridge.interBtcApi.vaults.getWrappedReward(
             newAccountId(window.bridge.interBtcApi.api, selectedVaultAddress),
             collateralIdLiteral,
             wrappedIdLiteral
           ),
-          window.bridge.interBtcApi.vaults.getIssuedAmount(vaultId, collateralIdLiteral),
-          window.bridge.interBtcApi.vaults.getVaultCollateralization(vaultId, collateralIdLiteral),
-          window.bridge.interBtcApi.vaults.getAPY(vaultId, collateralIdLiteral),
-          window.bridge.interBtcApi.issue.getVaultIssuableAmount(vaultId, collateralIdLiteral),
+          window.bridge.interBtcApi.vaults.getIssuedAmount(vaultAccountId, collateralIdLiteral),
+          window.bridge.interBtcApi.vaults.getVaultCollateralization(vaultAccountId, collateralIdLiteral),
+          window.bridge.interBtcApi.vaults.getAPY(vaultAccountId, collateralIdLiteral),
+          window.bridge.interBtcApi.issue.getVaultIssuableAmount(vaultAccountId, collateralIdLiteral),
           window
             .bridge
             .interBtcIndex
             .getFilteredTotalIssues({
               filterIssueColumns: [{
                 column: IssueColumns.VaultId,
-                value: `${selectedVaultAddress}-${wrappedIdLiteral}-${collateralIdLiteral}`
+                value: encodedVaultId
               }]
             }),
           window
@@ -143,7 +146,7 @@ const Vault = (): JSX.Element => {
             .getFilteredTotalRedeems({
               filterRedeemColumns: [{
                 column: RedeemColumns.VaultId,
-                value: `${selectedVaultAddress}-${wrappedIdLiteral}-${collateralIdLiteral}`
+                value: encodedVaultId
               }]
             })
         ]);
@@ -303,10 +306,10 @@ const Vault = (): JSX.Element => {
         )}
         <VaultIssueRequestsTable
           totalIssueRequests={totalIssueRequests}
-          vaultId={selectedVaultAddress} />
+          vaultId={vaultId} />
         <VaultRedeemRequestsTable
           totalRedeemRequests={totalRedeemRequests}
-          vaultAddress={selectedVaultAddress} />
+          vaultId={vaultId} />
         <ReplaceTable vaultAddress={selectedVaultAddress} />
       </MainContainer>
       {collateralUpdateStatus !== CollateralUpdateStatus.Close && (
