@@ -285,7 +285,6 @@ const Staking = (): JSX.Element => {
           </form>
         </Panel>
       </MainContainer>
-      {/* ray test test touch << */}
       {stakeMutation.isError && (
         <ErrorModal
           open={stakeMutation.isError}
@@ -297,7 +296,6 @@ const Staking = (): JSX.Element => {
             stakeMutation.error?.message || ''
           } />
       )}
-      {/* ray test touch >> */}
     </>
   );
 };
