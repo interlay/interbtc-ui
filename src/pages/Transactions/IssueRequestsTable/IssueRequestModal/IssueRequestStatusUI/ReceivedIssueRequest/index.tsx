@@ -104,8 +104,10 @@ const ReceivedIssueRequest = ({
     return <>Loading...</>;
   }
 
-  const requestConfirmations = request.btcConfirmationActiveBlockHeight ?
-    parachainHeight - Number(request.btcConfirmationActiveBlockHeight) : 0;
+  const requestConfirmations =
+    request.btcConfirmationActiveBlockHeight ?
+      parachainHeight - Number(request.btcConfirmationActiveBlockHeight) :
+      0;
 
   return (
     <RequestWrapper>
