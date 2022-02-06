@@ -68,7 +68,8 @@ const getUnlockDateLabel = (weeks: number) => {
   }
 };
 
-const ZERO_VOTE_GOVERNANCE_AMOUNT = newMonetaryAmount(0, VOTE_GOVERNANCE_TOKEN, true);
+const ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, VOTE_GOVERNANCE_TOKEN, true);
+const ZERO_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, GOVERNANCE_TOKEN, true);
 
 const STAKING_AMOUNT = 'staking-amount';
 const LOCK_TIME = 'lock-time';
@@ -127,8 +128,11 @@ const Staking = (): JSX.Element => {
 
   const stakeMutation = useMutation<void, Error, Stake>(
     (variables: Stake) => {
+      // ray test touch <<
+      // TODO: https://github.com/interlay/interbtc-api/blob/master/test/integration/parachain/staging/escrow.test.ts
       // TODO: double-check
       return (window.bridge.interBtcApi as any).escrow.createLock(variables.amount, variables.unlockHeight);
+      // ray test touch >>
     },
     {
       onSuccess: (_, variables) => {
@@ -167,8 +171,16 @@ const Staking = (): JSX.Element => {
     });
   };
 
-  const validateStakingAmount = (value: string): string | undefined => {
-    console.log('[validateStakingAmount] value => ', value);
+  const validateStakingAmount = (value = '0'): string | undefined => {
+    const monetaryStakingAmount = newMonetaryAmount(value, GOVERNANCE_TOKEN, true);
+
+    if (monetaryStakingAmount.lte(ZERO_GOVERNANCE_TOKEN_AMOUNT)) {
+      return 'Staking amount must be greater than zero!';
+    }
+
+    if (monetaryStakingAmount.gt(governanceTokenBalance)) {
+      return 'Staking amount must be less than governance token balance!';
+    }
 
     return undefined;
   };
@@ -188,7 +200,7 @@ const Staking = (): JSX.Element => {
 
   const unlockDateLabel = getUnlockDateLabel(parseInt(lockTime));
 
-  const votingBalanceGreaterThanZero = votingBalance?.gt(ZERO_VOTE_GOVERNANCE_AMOUNT);
+  const votingBalanceGreaterThanZero = votingBalance?.gt(ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT);
 
   const initializing =
     votingBalanceIdle ||
