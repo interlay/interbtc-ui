@@ -104,6 +104,25 @@ const Staking = (): JSX.Element => {
   const lockTime = watch(LOCK_TIME) || '0';
 
   const {
+    isIdle: currentBlockNumberIdle,
+    isLoading: currentBlockNumberLoading,
+    data: currentBlockNumber,
+    error: currentBlockNumberError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcApi',
+      'system',
+      'getCurrentBlockNumber'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(currentBlockNumberError);
+
+  const {
     isIdle: voteGovernanceTokenIdle,
     isLoading: voteGovernanceTokenLoading,
     data: voteGovernanceTokenBalance,
@@ -127,11 +146,8 @@ const Staking = (): JSX.Element => {
 
   const stakeMutation = useMutation<void, Error, Stake>(
     (variables: Stake) => {
-      // ray test touch <<
-      // TODO: https://github.com/interlay/interbtc-api/blob/master/test/integration/parachain/staging/escrow.test.ts
-      // TODO: double-check
+      // TODO: double-check with `any`
       return (window.bridge.interBtcApi as any).escrow.createLock(variables.amount, variables.unlockHeight);
-      // ray test touch >>
     },
     {
       onSuccess: (_, variables) => {
@@ -157,14 +173,16 @@ const Staking = (): JSX.Element => {
 
   const onSubmit = (data: StakingFormData) => {
     if (!bridgeLoaded) return;
+    if (currentBlockNumber === undefined) {
+      throw new Error('Something went wrong!');
+    }
 
     const monetaryAmount = newMonetaryAmount(data[STAKING_AMOUNT], GOVERNANCE_TOKEN, true);
 
     const lockTime = parseInt(data[LOCK_TIME]); // Weeks
-    const unlockHeight = (lockTime * 7 * 24 * 3600) / BLOCK_TIME;
+    const unlockHeight = currentBlockNumber + (lockTime * 7 * 24 * 3600) / BLOCK_TIME;
 
     stakeMutation.mutate({
-      // TODO: double-check
       amount: (monetaryAmount as GovernanceTokenAmount),
       unlockHeight
     });
@@ -216,13 +234,14 @@ const Staking = (): JSX.Element => {
       monetaryStakingAmount.add(voteGovernanceTokenBalance).toHuman();
 
   const initializing =
-    voteGovernanceTokenIdle ||
-    voteGovernanceTokenLoading;
+    (voteGovernanceTokenIdle || voteGovernanceTokenLoading) ||
+    (currentBlockNumberIdle || currentBlockNumberLoading);
+
   let submitButtonLabel: string;
   if (initializing) {
     submitButtonLabel = 'Loading...';
   } else {
-    submitButtonLabel = 'Stake';
+    submitButtonLabel = votingBalanceGreaterThanZero ? 'Add more stake' : 'Stake';
   }
 
   return (
