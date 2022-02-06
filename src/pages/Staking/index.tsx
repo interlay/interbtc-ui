@@ -17,8 +17,7 @@ import {
 } from 'date-fns';
 import {
   MonetaryAmount,
-  Currency,
-  KintsugiAmount
+  Currency
 } from '@interlay/monetary-js';
 import {
   GovernanceUnit,
@@ -200,11 +199,21 @@ const Staking = (): JSX.Element => {
   };
 
   const governanceTokenBalanceLabel = displayMonetaryAmount(governanceTokenBalance);
-  const votingBalanceLabel = voteGovernanceTokenBalance ? displayMonetaryAmount(voteGovernanceTokenBalance) : '-';
-  const monetaryStakingAmount = KintsugiAmount.from.KINT(stakingAmount);
-  const usdStakingAmount = getUsdAmount(monetaryStakingAmount, prices.governanceToken.usd);
+  const voteGovernanceTokenBalanceLabel =
+    voteGovernanceTokenBalance === undefined ?
+      '-' :
+      displayMonetaryAmount(voteGovernanceTokenBalance);
   const unlockDateLabel = getUnlockDateLabel(parseInt(lockTime));
+
+  const monetaryStakingAmount = newMonetaryAmount(stakingAmount, GOVERNANCE_TOKEN, true);
+  const usdStakingAmount = getUsdAmount(monetaryStakingAmount, prices.governanceToken.usd);
+
   const votingBalanceGreaterThanZero = voteGovernanceTokenBalance?.gt(ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT);
+
+  const newTotalStakeLabel =
+    voteGovernanceTokenBalance === undefined ?
+      '-' :
+      monetaryStakingAmount.add(voteGovernanceTokenBalance).toHuman();
 
   const initializing =
     voteGovernanceTokenIdle ||
@@ -234,7 +243,7 @@ const Staking = (): JSX.Element => {
             <Title />
             <BalancesUI
               governanceTokenBalance={governanceTokenBalanceLabel}
-              voteGovernanceTokenBalance={votingBalanceLabel} />
+              voteGovernanceTokenBalance={voteGovernanceTokenBalanceLabel} />
             {votingBalanceGreaterThanZero && (
               <UnstakeButton />
             )}
@@ -275,6 +284,12 @@ const Staking = (): JSX.Element => {
               label='Unlock date'
               value={unlockDateLabel}
               tooltip='Your staked amount will be locked until this date.' />
+            {votingBalanceGreaterThanZero && (
+              <InformationUI
+                label='New total stake'
+                value={`${newTotalStakeLabel} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
+                tooltip='Your total stake after this transaction.' />
+            )}
             <InformationUI
               label='Estimated APY'
               value='12.24% (hardcoded)'
@@ -285,10 +300,6 @@ const Staking = (): JSX.Element => {
               label='New unlock date'
               value='Dec 16, 2023'
               tooltip='Your original lock date plus the extended lock time.' />
-            <InformationUI
-              label='New total stake'
-              value={`40.00 ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
-              tooltip='Your total stake after this transaction.' />
             <InformationUI
               label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
               value={`156.43  ${GOVERNANCE_TOKEN_SYMBOL}`}
