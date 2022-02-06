@@ -47,7 +47,8 @@ const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
   id,
   name,
   error,
-  helperText
+  helperText,
+  ...rest
 }, ref): JSX.Element => {
   const wrappingRef = React.useRef<HTMLInputElement | null>(null);
 
@@ -129,7 +130,8 @@ const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
             pattern='/d+'
             step={1}
             min={MIN_LOCK_TIME}
-            max={MAX_LOCK_TIME} />
+            max={MAX_LOCK_TIME}
+            {...rest} />
           <span
             className={clsx(
               'text-xs',

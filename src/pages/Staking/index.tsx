@@ -105,10 +105,10 @@ const Staking = (): JSX.Element => {
   const lockTime = watch(LOCK_TIME) || '0';
 
   const {
-    isIdle: votingBalanceIdle,
-    isLoading: votingBalanceLoading,
-    data: votingBalance,
-    error: votingBalanceError
+    isIdle: voteGovernanceTokenIdle,
+    isLoading: voteGovernanceTokenLoading,
+    data: voteGovernanceTokenBalance,
+    error: voteGovernanceTokenError
   } = useQuery<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>, Error>(
     [
       GENERIC_FETCHER,
@@ -122,7 +122,7 @@ const Staking = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(votingBalanceError);
+  useErrorHandler(voteGovernanceTokenError);
 
   const queryClient = useQueryClient();
 
@@ -185,8 +185,14 @@ const Staking = (): JSX.Element => {
     return undefined;
   };
 
-  const validateLockTime = (value: number): string | undefined => {
-    if (value < MIN_LOCK_TIME || value > MAX_LOCK_TIME) {
+  const validateLockTime = (value = '0', optional: boolean): string | undefined => {
+    const numericValue = parseInt(value);
+
+    if (optional && numericValue === 0) {
+      return undefined;
+    }
+
+    if (numericValue < MIN_LOCK_TIME || numericValue > MAX_LOCK_TIME) {
       return `Please enter a number between ${MIN_LOCK_TIME}-${MAX_LOCK_TIME}.`;
     }
 
@@ -194,17 +200,15 @@ const Staking = (): JSX.Element => {
   };
 
   const governanceTokenBalanceLabel = displayMonetaryAmount(governanceTokenBalance);
-  const votingBalanceLabel = votingBalance ? displayMonetaryAmount(votingBalance) : '-';
+  const votingBalanceLabel = voteGovernanceTokenBalance ? displayMonetaryAmount(voteGovernanceTokenBalance) : '-';
   const monetaryStakingAmount = KintsugiAmount.from.KINT(stakingAmount);
   const usdStakingAmount = getUsdAmount(monetaryStakingAmount, prices.governanceToken.usd);
-
   const unlockDateLabel = getUnlockDateLabel(parseInt(lockTime));
-
-  const votingBalanceGreaterThanZero = votingBalance?.gt(ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT);
+  const votingBalanceGreaterThanZero = voteGovernanceTokenBalance?.gt(ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT);
 
   const initializing =
-    votingBalanceIdle ||
-    votingBalanceLoading;
+    voteGovernanceTokenIdle ||
+    voteGovernanceTokenLoading;
   let submitButtonLabel: string;
   if (initializing) {
     submitButtonLabel = 'Loading...';
@@ -261,11 +265,12 @@ const Staking = (): JSX.Element => {
                   value: votingBalanceGreaterThanZero ? false : true,
                   message: 'This field is required!'
                 },
-                validate: value => validateLockTime(value)
+                validate: value => validateLockTime(value, !!votingBalanceGreaterThanZero)
               })}
               error={!!errors[LOCK_TIME]}
               helperText={errors[LOCK_TIME]?.message}
-              optional={votingBalanceGreaterThanZero} />
+              optional={votingBalanceGreaterThanZero}
+              disabled={votingBalanceGreaterThanZero === undefined} />
             <InformationUI
               label='Unlock date'
               value={unlockDateLabel}
