@@ -22,7 +22,8 @@ import {
 } from '@interlay/interbtc-api';
 import {
   MonetaryAmount,
-  Currency
+  Currency,
+  BitcoinAmount
 } from '@interlay/monetary-js';
 
 import ErrorMessage from 'components/ErrorMessage';
@@ -64,13 +65,15 @@ interface Props {
   onClose: () => void;
   collateralUpdateStatus: CollateralUpdateStatus;
   vaultAddress: string;
+  lockedBTC: BitcoinAmount;
 }
 
 const UpdateCollateralModal = ({
   open,
   onClose,
   collateralUpdateStatus,
-  vaultAddress
+  vaultAddress,
+  lockedBTC
 }: Props): JSX.Element => {
   const {
     bridgeLoaded,
@@ -151,7 +154,7 @@ const UpdateCollateralModal = ({
     ],
     genericFetcher<Big>(),
     {
-      enabled: !!bridgeLoaded
+      enabled: !!bridgeLoaded && lockedBTC.gt(BitcoinAmount.zero)
     }
   );
   useErrorHandler(vaultCollateralizationError);
@@ -224,7 +227,7 @@ const UpdateCollateralModal = ({
     const initializing =
       requiredCollateralTokenAmountIdle ||
       requiredCollateralTokenAmountLoading ||
-      vaultCollateralizationIdle ||
+      (vaultCollateralizationIdle && lockedBTC.gt(BitcoinAmount.zero)) ||
       vaultCollateralizationLoading;
     const buttonText =
       initializing ?
@@ -246,12 +249,12 @@ const UpdateCollateralModal = ({
   };
 
   const renderNewCollateralizationLabel = () => {
-    if (vaultCollateralizationIdle || vaultCollateralizationLoading) {
+    if ((vaultCollateralizationIdle && lockedBTC.gt(BitcoinAmount.zero)) || vaultCollateralizationLoading) {
       // TODO: should use skeleton loaders
       return '-';
     }
 
-    if (vaultCollateralization === undefined) {
+    if (vaultCollateralization === undefined || lockedBTC.gt(BitcoinAmount.zero)) {
       return '∞';
     }
 
