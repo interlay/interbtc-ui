@@ -154,7 +154,7 @@ const UpdateCollateralModal = ({
     ],
     genericFetcher<Big>(),
     {
-      enabled: !!bridgeLoaded && lockedBTC.gt(BitcoinAmount.zero)
+      enabled: !!bridgeLoaded && !lockedBTC.eq(BitcoinAmount.zero)
     }
   );
   useErrorHandler(vaultCollateralizationError);
@@ -249,17 +249,17 @@ const UpdateCollateralModal = ({
   };
 
   const renderNewCollateralizationLabel = () => {
-    if ((vaultCollateralizationIdle && lockedBTC.gt(BitcoinAmount.zero)) || vaultCollateralizationLoading) {
+    if (vaultCollateralizationLoading) {
       // TODO: should use skeleton loaders
       return '-';
     }
 
-    if (vaultCollateralization === undefined || lockedBTC.gt(BitcoinAmount.zero)) {
+    if (vaultCollateralizationIdle && lockedBTC.eq(BitcoinAmount.zero)) {
       return '∞';
     }
 
     // The vault API returns collateralization as a regular number rather than a percentage
-    const strVaultCollateralizationPercentage = vaultCollateralization.mul(100).toString();
+    const strVaultCollateralizationPercentage = vaultCollateralization?.mul(100).toString();
     if (Number(strVaultCollateralizationPercentage) > 1000) {
       return 'more than 1000%';
     } else {
