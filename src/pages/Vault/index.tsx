@@ -311,7 +311,8 @@ const Vault = (): JSX.Element => {
           }
           onClose={handleUpdateCollateralModalClose}
           collateralUpdateStatus={collateralUpdateStatus}
-          vaultAddress={selectedVaultAddress} />
+          vaultAddress={selectedVaultAddress}
+          lockedBTC={lockedBTC} />
       )}
       <RequestReplacementModal
         onClose={handleRequestReplacementModalClose}
