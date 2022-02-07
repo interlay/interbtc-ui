@@ -7,10 +7,6 @@ import {
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import {
-  IssueColumns,
-  RedeemColumns
-} from '@interlay/interbtc-index-client';
 import { BitcoinAmount } from '@interlay/monetary-js';
 import {
   CollateralIdLiteral,
@@ -75,8 +71,6 @@ const Vault = (): JSX.Element => {
   } = useSelector((state: StoreType) => state.vault);
   const [capacity, setCapacity] = React.useState(BitcoinAmount.zero);
   const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = React.useState(BitcoinAmount.zero);
-  const [totalIssueRequests, setTotalIssueRequests] = React.useState(0);
-  const [totalRedeemRequests, setTotalRedeemRequests] = React.useState(0);
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -114,9 +108,7 @@ const Vault = (): JSX.Element => {
           lockedAmountBTC,
           collateralization,
           apyScore,
-          issuableAmount,
-          totalIssueRequests,
-          totalRedeemRequests
+          issuableAmount
         ] = await Promise.allSettled([
           window.bridge.interBtcApi.vaults.get(vaultId, collateralIdLiteral),
           window.bridge.interBtcApi.vaults.getWrappedReward(
@@ -127,19 +119,7 @@ const Vault = (): JSX.Element => {
           window.bridge.interBtcApi.vaults.getIssuedAmount(vaultId, collateralIdLiteral),
           window.bridge.interBtcApi.vaults.getVaultCollateralization(vaultId, collateralIdLiteral),
           window.bridge.interBtcApi.vaults.getAPY(vaultId, collateralIdLiteral),
-          window.bridge.interBtcApi.issue.getVaultIssuableAmount(vaultId, collateralIdLiteral),
-          window
-            .bridge
-            .interBtcIndex
-            .getFilteredTotalIssues({
-              filterIssueColumns: [{ column: IssueColumns.VaultId, value: selectedVaultAddress }]
-            }),
-          window
-            .bridge
-            .interBtcIndex
-            .getFilteredTotalRedeems({
-              filterRedeemColumns: [{ column: RedeemColumns.VaultId, value: selectedVaultAddress }]
-            })
+          window.bridge.interBtcApi.issue.getVaultIssuableAmount(vaultId, collateralIdLiteral)
         ]);
 
         if (vault.status === 'fulfilled') {
@@ -149,14 +129,6 @@ const Vault = (): JSX.Element => {
 
         if (feesPolkaBTC.status === 'fulfilled') {
           setFeesEarnedPolkaBTC(feesPolkaBTC.value);
-        }
-
-        if (totalIssueRequests.status === 'fulfilled') {
-          setTotalIssueRequests(totalIssueRequests.value);
-        }
-
-        if (totalRedeemRequests.status === 'fulfilled') {
-          setTotalRedeemRequests(totalRedeemRequests.value);
         }
 
         if (lockedAmountBTC.status === 'fulfilled') {
@@ -296,10 +268,8 @@ const Vault = (): JSX.Element => {
           </div>
         )}
         <VaultIssueRequestsTable
-          totalIssueRequests={totalIssueRequests}
           vaultAddress={selectedVaultAddress} />
         <VaultRedeemRequestsTable
-          totalRedeemRequests={totalRedeemRequests}
           vaultAddress={selectedVaultAddress} />
         <ReplaceTable vaultAddress={selectedVaultAddress} />
       </MainContainer>

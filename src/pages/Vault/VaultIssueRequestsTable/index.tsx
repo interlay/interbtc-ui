@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
+// /@ts-nocheck
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -9,9 +9,8 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { BitcoinNetwork, IssueColumns } from '@interlay/interbtc-index-client';
+import { useQuery } from 'react-query';
 import {
-  Issue,
   IssueStatus
 } from '@interlay/interbtc-api';
 
@@ -30,70 +29,124 @@ import InterlayTable, {
 } from 'components/UI/InterlayTable';
 import StatusCell from 'components/UI/InterlayTable/StatusCell';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
-import { WrappedTokenAmount } from 'config/relay-chains';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
+import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
+import issueCountQuery from 'services/queries/issue-count-query';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import STATUSES from 'utils/constants/statuses';
 import {
   shortAddress,
-  formatDateTimePrecise
+  formatDateTimePrecise,
+  displayMonetaryAmount
 } from 'common/utils/utils';
-import * as constants from '../../../constants';
+import issueFetcher, { getIssueWithStatus, ISSUE_FETCHER } from 'services/fetchers/issue-request-fetcher';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import { StoreType } from 'common/types/util.types';
 
 interface Props {
-  totalIssueRequests: number;
   vaultAddress: string;
 }
 
 const VaultIssueRequestsTable = ({
-  totalIssueRequests,
   vaultAddress
 }: Props): JSX.Element | null => {
   const queryParams = useQueryParams();
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
+  const selectedPageIndex = selectedPage - 1;
   const updateQueryParameters = useUpdateQueryParameters();
-  const [data, setData] = React.useState<Issue[]>([]);
-  const [status, setStatus] = React.useState(STATUSES.IDLE);
-  const handleError = useErrorHandler();
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
-  const issueRequestFilter = React.useMemo(
-    () => [{ column: IssueColumns.VaultId, value: vaultAddress }], // filter requests by vault address
-    [vaultAddress]
-  );
-
-  React.useEffect(() => {
-    if (!selectedPage) return;
-    if (!handleError) return;
-    if (!bridgeLoaded) return;
-
-    const selectedPageIndex = selectedPage - 1;
-
-    try {
-      (async () => {
-        setStatus(STATUSES.PENDING);
-        const response = await window.bridge.interBtcIndex.getFilteredIssues({
-          page: selectedPageIndex,
-          perPage: TABLE_PAGE_LIMIT,
-          network: constants.BITCOIN_NETWORK as BitcoinNetwork, // Not sure why cast is necessary here, but TS complains
-          filterIssueColumns: issueRequestFilter
-        });
-        setStatus(STATUSES.RESOLVED);
-        setData(response);
-      })();
-    } catch (error) {
-      setStatus(STATUSES.REJECTED);
-      handleError(error);
+  const {
+    isIdle: btcConfirmationsIdle,
+    isLoading: btcConfirmationsLoading,
+    data: btcConfirmations,
+    error: btcConfirmationsError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'getBtcConfirmations'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
     }
-  }, [
-    bridgeLoaded,
-    selectedPage,
-    issueRequestFilter,
-    handleError
-  ]);
+  );
+  useErrorHandler(btcConfirmationsError);
+
+  const {
+    isIdle: latestParachainActiveBlockIdle,
+    isLoading: latestParachainActiveBlockLoading,
+    data: latestParachainActiveBlock,
+    error: latestParachainActiveBlockError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'latestParachainActiveBlock'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(latestParachainActiveBlockError);
+
+  const {
+    isIdle: parachainConfirmationsIdle,
+    isLoading: parachainConfirmationsLoading,
+    data: parachainConfirmations,
+    error: parachainConfirmationsError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'getParachainConfirmations'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(parachainConfirmationsError);
+
+  const {
+    isIdle: issueRequestsTotalCountIdle,
+    isLoading: issueRequestsTotalCountLoading,
+    data: issueRequestsTotalCount,
+    error: issueRequestsTotalCountError
+  // TODO: should type properly (`Relay`)
+  } = useQuery<GraphqlReturn<any>, Error>(
+    [
+      GRAPHQL_FETCHER,
+      issueCountQuery(`vault: {accountId_eq: "${vaultAddress}"}`)
+    ],
+    graphqlFetcher<GraphqlReturn<any>>()
+  );
+  useErrorHandler(issueRequestsTotalCountError);
+
+  const {
+    isIdle: issueRequestsIdle,
+    isLoading: issueRequestsLoading,
+    data: issueRequests,
+    error: issueRequestsError
+  // TODO: should type properly (`Relay`)
+  } = useQuery<any, Error>(
+    [
+      ISSUE_FETCHER,
+      selectedPageIndex * TABLE_PAGE_LIMIT, // offset
+      TABLE_PAGE_LIMIT, // limit
+      btcConfirmations,
+      `vault: {accountId_eq: "${vaultAddress}"}` // `WHERE` condition
+    ],
+    issueFetcher,
+    {
+      enabled: btcConfirmations !== undefined
+    }
+  );
+  useErrorHandler(issueRequestsError);
 
   const columns = React.useMemo(
     () => [
@@ -105,25 +158,79 @@ const VaultIssueRequestsTable = ({
         ]
       },
       {
-        Header: t('date'),
-        accessor: 'creationTimestamp',
+        Header: t('date_created'),
+        accessor: 'request',
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }: { value: number; }) {
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: issue } }: any) {
           return (
             <>
-              {formatDateTimePrecise(new Date(Number(value)))}
+              {formatDateTimePrecise(new Date(issue.request.timestamp))}
             </>
           );
         }
       },
       {
         Header: t('vault.creation_block'),
-        accessor: 'creationBlock',
         classNames: [
           'text-right'
-        ]
+        ],
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: issue } }: any) {
+          return (
+            <>
+              {issue.request.height.active}
+            </>
+          );
+        }
+      },
+      {
+        Header: t('last_update'),
+        classNames: [
+          'text-left'
+        ],
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: issue } }: any) {
+          let date;
+          if (issue.execution) {
+            date = issue.execution.timestamp;
+          } else if (issue.cancellation) {
+            date = issue.cancellation.timestamp;
+          } else {
+            date = issue.request.timestamp;
+          }
+
+          return (
+            <>
+              {formatDateTimePrecise(new Date(date))}
+            </>
+          );
+        }
+      },
+      {
+        Header: t('last_update_block'),
+        classNames: [
+          'text-right'
+        ],
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: issue } }: any) {
+          let height;
+          if (issue.execution) {
+            height = issue.execution.height.active;
+          } else if (issue.cancellation) {
+            height = issue.cancellation.height.active;
+          } else {
+            height = issue.request.height.active;
+          }
+
+          return (
+            <>
+              {height}
+            </>
+          );
+        }
       },
       {
         Header: t('user'),
@@ -141,16 +248,21 @@ const VaultIssueRequestsTable = ({
       },
       {
         Header: t('issue_page.amount'),
-        accessor: 'wrappedAmount',
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell({ value }: {
-          value: WrappedTokenAmount;
-        }) {
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: issue } }: any) {
+          let wrappedTokenAmount;
+          if (issue.execution) {
+            wrappedTokenAmount = issue.execution.amountWrapped;
+          } else {
+            wrappedTokenAmount = issue.request.amountWrapped;
+          }
+
           return (
             <>
-              {value.toHuman()}
+              {displayMonetaryAmount(wrappedTokenAmount)}
             </>
           );
         }
@@ -161,17 +273,17 @@ const VaultIssueRequestsTable = ({
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell({ value }) {
+        Cell: function FormattedCell({ value }: { value: any; }) {
           return (
             <>
-              {value.toHuman()}
+              {displayMonetaryAmount(value)}
             </>
           );
         }
       },
       {
         Header: t('issue_page.vault_btc_address'),
-        accessor: 'vaultWrappedAddress',
+        accessor: 'vaultBackingAddress',
         classNames: [
           'text-left'
         ],
@@ -205,6 +317,24 @@ const VaultIssueRequestsTable = ({
     [t]
   );
 
+  const data =
+    (
+      issueRequests === undefined ||
+      btcConfirmations === undefined ||
+      parachainConfirmations === undefined ||
+      latestParachainActiveBlock === undefined
+    ) ?
+      [] :
+      issueRequests.map(
+        // TODO: should type properly (`Relay`)
+        (issueRequest: any) => getIssueWithStatus(
+          issueRequest,
+          btcConfirmations,
+          parachainConfirmations,
+          latestParachainActiveBlock
+        )
+      );
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -218,71 +348,86 @@ const VaultIssueRequestsTable = ({
     }
   );
 
+  if (
+    btcConfirmationsIdle ||
+    btcConfirmationsLoading ||
+    parachainConfirmationsIdle ||
+    parachainConfirmationsLoading ||
+    latestParachainActiveBlockIdle ||
+    latestParachainActiveBlockLoading ||
+    issueRequestsTotalCountIdle ||
+    issueRequestsTotalCountLoading ||
+    issueRequestsIdle ||
+    issueRequestsLoading
+  ) {
+    return (
+      <PrimaryColorEllipsisLoader />
+    );
+  }
+  if (issueRequestsTotalCount === undefined) {
+    throw new Error('Something went wrong!');
+  }
+
   const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number; }) => {
     updateQueryParameters({
       [QUERY_PARAMETERS.PAGE]: (newSelectedPageIndex + 1).toString()
     });
   };
 
-  const selectedPageIndex = selectedPage - 1;
-  const pageCount = Math.ceil(totalIssueRequests / TABLE_PAGE_LIMIT);
+  const totalSuccessfulIssueCount = issueRequestsTotalCount.data.issuesConnection.totalCount || 0;
+  const pageCount = Math.ceil(totalSuccessfulIssueCount / TABLE_PAGE_LIMIT);
 
   return (
     <InterlayTableContainer className='space-y-6'>
       <SectionTitle>
         {t('issue_requests')}
       </SectionTitle>
-      {(status === STATUSES.IDLE || status === STATUSES.PENDING) && (
-        <PrimaryColorEllipsisLoader />
-      )}
-      {status === STATUSES.RESOLVED && (
-        <InterlayTable {...getTableProps()}>
-          <InterlayThead>
-            {headerGroups.map(headerGroup => (
-              // eslint-disable-next-line react/jsx-key
-              <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
-                  // eslint-disable-next-line react/jsx-key
-                  <InterlayTh
-                    {...column.getHeaderProps([
-                      {
-                        className: clsx(column.classNames),
-                        style: column.style
-                      }
-                    ])}>
-                    {column.render('Header')}
-                  </InterlayTh>
-                ))}
-              </InterlayTr>
-            ))}
-          </InterlayThead>
-          <InterlayTbody {...getTableBodyProps()}>
-            {rows.map(row => {
-              prepareRow(row);
-
-              return (
+      <InterlayTable {...getTableProps()}>
+        <InterlayThead>
+          {headerGroups.map((headerGroup: any) => (
+            // eslint-disable-next-line react/jsx-key
+            <InterlayTr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column: any) => (
                 // eslint-disable-next-line react/jsx-key
-                <InterlayTr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
-                    return (
-                      // eslint-disable-next-line react/jsx-key
-                      <InterlayTd
-                        {...cell.getCellProps([
-                          {
-                            className: clsx(cell.column.classNames),
-                            style: cell.column.style
-                          }
-                        ])}>
-                        {cell.render('Cell')}
-                      </InterlayTd>
-                    );
-                  })}
-                </InterlayTr>
-              );
-            })}
-          </InterlayTbody>
-        </InterlayTable>
-      )}
+                <InterlayTh
+                  {...column.getHeaderProps([
+                    {
+                      className: clsx(column.classNames),
+                      style: column.style
+                    }
+                  ])}>
+                  {column.render('Header')}
+                </InterlayTh>
+              ))}
+            </InterlayTr>
+          ))}
+        </InterlayThead>
+        <InterlayTbody {...getTableBodyProps()}>
+          {rows.map((row: any) => {
+            prepareRow(row);
+
+            return (
+              // eslint-disable-next-line react/jsx-key
+              <InterlayTr {...row.getRowProps()}>
+                {row.cells.map((cell: any) => {
+                  return (
+                    // eslint-disable-next-line react/jsx-key
+                    <InterlayTd
+                      {...cell.getCellProps([
+                        {
+                          className: clsx(cell.column.classNames),
+                          style: cell.column.style
+                        }
+                      ])}>
+                      {cell.render('Cell')}
+                    </InterlayTd>
+                  );
+                })}
+              </InterlayTr>
+            );
+          })}
+        </InterlayTbody>
+      </InterlayTable>
       {pageCount > 0 && (
         <div
           className={clsx(

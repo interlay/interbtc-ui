@@ -57,6 +57,7 @@
   "feed": "Feed",
   "app": "App",
   "last_update": "Last Update",
+  "last_update_block": "Last Update Block",
   "exchange_rate": "Exchange Rate",
   "best_block_hash": "Best Block Hash",
   "no_oracles": "No active oracles",
