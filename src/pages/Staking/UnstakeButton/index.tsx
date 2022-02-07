@@ -22,7 +22,8 @@ const UnstakeButton = ({
       className
     )}
     endIcon={
-      <InterlayTooltip label={`You can unlock your staked ${GOVERNANCE_TOKEN_SYMBOL} on Dec 24, 2022 at 8:34:45`}>
+      <InterlayTooltip
+        label={`You can unlock your staked ${GOVERNANCE_TOKEN_SYMBOL} on Dec 24, 2022 at 8:34:45 (hardcoded)`}>
         <InformationCircleIcon
           onClick={event => {
             event.stopPropagation();
@@ -36,7 +37,7 @@ const UnstakeButton = ({
     }
     disabled
     {...rest}>
-    Unstake Locked {GOVERNANCE_TOKEN_SYMBOL} 24/12/2022
+    Unstake Locked {GOVERNANCE_TOKEN_SYMBOL} 24/12/2022 (hardcoded)
   </InterlayDenimOrKintsugiMidnightContainedButton>
 );
 

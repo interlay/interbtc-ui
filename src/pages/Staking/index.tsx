@@ -299,10 +299,19 @@ const Staking = (): JSX.Element => {
               helperText={errors[LOCK_TIME]?.message}
               optional={votingBalanceGreaterThanZero}
               disabled={votingBalanceGreaterThanZero === undefined} />
-            <InformationUI
-              label='Unlock date'
-              value={unlockDateLabel}
-              tooltip='Your staked amount will be locked until this date.' />
+            {votingBalanceGreaterThanZero ? (
+              // ray test touch <<
+              <InformationUI
+                label='New unlock date'
+                value='Dec 16, 2023 (hardcoded)'
+                tooltip='Your original lock date plus the extended lock time.' />
+              // ray test touch >>
+            ) : (
+              <InformationUI
+                label='Unlock date'
+                value={unlockDateLabel}
+                tooltip='Your staked amount will be locked until this date.' />
+            )}
             {votingBalanceGreaterThanZero && (
               <InformationUI
                 label='New total stake'
@@ -316,10 +325,6 @@ const Staking = (): JSX.Element => {
               tooltip={`The estimated amount of KINT you will receive as rewards. Depends on your proportion of the total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}.`} />
             {/* ray test touch << */}
             {/* <InformationUI
-              label='New unlock date'
-              value='Dec 16, 2023'
-              tooltip='Your original lock date plus the extended lock time.' />
-            <InformationUI
               label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
               value={`156.43  ${GOVERNANCE_TOKEN_SYMBOL}`}
               tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} /> */}
