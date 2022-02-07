@@ -7,10 +7,7 @@ import {
   TextFieldLabel
 } from 'components/TextField';
 import NumberInput, { Props as NumberInputProps } from 'components/NumberInput';
-import {
-  MIN_LOCK_TIME,
-  MAX_LOCK_TIME
-} from 'config/staking';
+import { STAKE_LOCK_TIME } from 'config/relay-chains';
 import {
   POLKADOT,
   KUSAMA
@@ -74,7 +71,7 @@ const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
           LABEL_TEXT_COLOR_CLASSES
         )}
         required={optional === false}>
-        Max {MAX_LOCK_TIME} Weeks
+        Max {STAKE_LOCK_TIME.MAX} Weeks
       </TextFieldLabel>
       <div
         className={clsx(
@@ -129,8 +126,8 @@ const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
             placeholder='0'
             pattern='/d+'
             step={1}
-            min={MIN_LOCK_TIME}
-            max={MAX_LOCK_TIME}
+            min={STAKE_LOCK_TIME.MIN}
+            max={STAKE_LOCK_TIME.MAX}
             {...rest} />
           <span
             className={clsx(

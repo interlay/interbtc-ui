@@ -41,12 +41,9 @@ import {
   GOVERNANCE_TOKEN_SYMBOL,
   VOTE_GOVERNANCE_TOKEN,
   GovernanceTokenAmount,
-  GOVERNANCE_TOKEN
+  GOVERNANCE_TOKEN,
+  STAKE_LOCK_TIME
 } from 'config/relay-chains';
-import {
-  MIN_LOCK_TIME,
-  MAX_LOCK_TIME
-} from 'config/staking';
 import { BLOCK_TIME } from 'config/parachain';
 import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
 import {
@@ -57,7 +54,7 @@ import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetch
 import { StoreType } from 'common/types/util.types';
 
 const getUnlockDateLabel = (weeks: number) => {
-  if (weeks >= MIN_LOCK_TIME) {
+  if (weeks >= STAKE_LOCK_TIME.MIN) {
     const unlockDate = add(new Date(), {
       weeks
     });
@@ -199,6 +196,10 @@ const Staking = (): JSX.Element => {
       return 'Staking amount must be less than governance token balance!';
     }
 
+    // ray test touch <<
+    // https://discord.com/channels/745259537707040778/935115900749750302/939154203157336184
+    // ray test touch >>
+
     return undefined;
   };
 
@@ -209,8 +210,8 @@ const Staking = (): JSX.Element => {
       return undefined;
     }
 
-    if (numericValue < MIN_LOCK_TIME || numericValue > MAX_LOCK_TIME) {
-      return `Please enter a number between ${MIN_LOCK_TIME}-${MAX_LOCK_TIME}.`;
+    if (numericValue < STAKE_LOCK_TIME.MIN || numericValue > STAKE_LOCK_TIME.MAX) {
+      return `Please enter a number between ${STAKE_LOCK_TIME.MIN}-${STAKE_LOCK_TIME.MAX}.`;
     }
 
     return undefined;

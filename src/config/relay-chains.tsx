@@ -87,6 +87,10 @@ let GovernanceTokenLogoIcon:
 let PUBLIC_ASSETS_FOLDER_NAME: string;
 let APP_DOMAIN: string;
 let OPEN_GRAPH_IMAGE_FILE_NAME: string;
+let STAKE_LOCK_TIME: { // Weeks
+  MIN: number;
+  MAX: number;
+};
 
 type WrappedTokenAmount =
   InterBtcAmount |
@@ -122,6 +126,10 @@ case POLKADOT: {
   PUBLIC_ASSETS_FOLDER_NAME = 'interlay';
   APP_DOMAIN = 'https://bridge.interlay.io';
   OPEN_GRAPH_IMAGE_FILE_NAME = 'interlay-meta-image.jpg';
+  STAKE_LOCK_TIME = {
+    MIN: 1,
+    MAX: 208
+  };
   break;
 }
 // Kintsugi
@@ -149,6 +157,10 @@ case KUSAMA: {
   PUBLIC_ASSETS_FOLDER_NAME = 'kintsugi';
   APP_DOMAIN = ''; // TODO: should add the Kintsugi app domain once it's set up
   OPEN_GRAPH_IMAGE_FILE_NAME = 'kintsugi-meta-image.jpg';
+  STAKE_LOCK_TIME = {
+    MIN: 2,
+    MAX: 96
+  };
   break;
 }
 default: {
@@ -186,5 +198,6 @@ export {
   GovernanceTokenLogoIcon,
   PUBLIC_ASSETS_FOLDER_NAME,
   APP_DOMAIN,
-  OPEN_GRAPH_IMAGE_FILE_NAME
+  OPEN_GRAPH_IMAGE_FILE_NAME,
+  STAKE_LOCK_TIME
 };
