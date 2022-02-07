@@ -32,15 +32,12 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
-import useQueryParams from 'utils/hooks/use-query-params';
 import {
   getUsdAmount,
   displayMonetaryAmount
 } from 'common/utils/utils';
-import { QUERY_PARAMETERS } from 'utils/constants/links';
-import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import { USER_REDEEM_REQUESTS_FETCHER } from 'services/user-redeem-requests-fetcher';
 import { StoreType } from 'common/types/util.types';
+import { REDEEM_FETCHER } from 'services/fetchers/redeem-request-fetcher';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -53,7 +50,6 @@ const ReimburseStatusUI = ({
   onClose
 }: Props): JSX.Element => {
   const {
-    address,
     bridgeLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
@@ -96,10 +92,6 @@ const ReimburseStatusUI = ({
     handleError
   ]);
 
-  const queryParams = useQueryParams();
-  const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
-  const selectedPageIndex = selectedPage - 1;
-
   const queryClient = useQueryClient();
   // TODO: should type properly (`Relay`)
   const retryMutation = useMutation<void, Error, any>(
@@ -109,10 +101,7 @@ const ReimburseStatusUI = ({
     {
       onSuccess: () => {
         queryClient.invalidateQueries([
-          USER_REDEEM_REQUESTS_FETCHER,
-          address,
-          selectedPageIndex,
-          TABLE_PAGE_LIMIT
+          REDEEM_FETCHER
         ]);
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();
@@ -131,10 +120,7 @@ const ReimburseStatusUI = ({
     {
       onSuccess: () => {
         queryClient.invalidateQueries([
-          USER_REDEEM_REQUESTS_FETCHER,
-          address,
-          selectedPageIndex,
-          TABLE_PAGE_LIMIT
+          REDEEM_FETCHER
         ]);
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();
