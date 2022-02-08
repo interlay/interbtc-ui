@@ -177,11 +177,12 @@ const UpdateCollateralModal = ({
       dispatch(updateCollateralAction(balanceLockedDOT));
 
       if (vaultCollateralization === undefined) {
-        throw new Error('Something went wrong!');
+        dispatch(updateCollateralizationAction('∞'));
+      } else {
+        // The vault API returns collateralization as a regular number rather than a percentage
+        const strVaultCollateralizationPercentage = vaultCollateralization.mul(100).toString();
+        dispatch(updateCollateralizationAction(strVaultCollateralizationPercentage));
       }
-      // The vault API returns collateralization as a regular number rather than a percentage
-      const strVaultCollateralizationPercentage = vaultCollateralization.mul(100).toString();
-      dispatch(updateCollateralizationAction(strVaultCollateralizationPercentage));
 
       toast.success(t('vault.successfully_updated_collateral'));
       setSubmitStatus(STATUSES.RESOLVED);
