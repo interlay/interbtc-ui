@@ -159,7 +159,10 @@ const Vault = (): JSX.Element => {
   const VAULT_ITEMS = [
     {
       title: t('collateralization'),
-      value: collateralization === '∞' ? '∞' : `${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`
+      value: collateralization ===
+        '∞' ?
+        collateralization :
+        `${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`
     },
     {
       title: t('vault.fees_earned_interbtc', {
@@ -282,7 +285,7 @@ const Vault = (): JSX.Element => {
           onClose={handleUpdateCollateralModalClose}
           collateralUpdateStatus={collateralUpdateStatus}
           vaultAddress={selectedVaultAddress}
-          lockedBTC={lockedBTC} />
+          hasLockedBTC={lockedBTC.eq(BitcoinAmount.zero)} />
       )}
       <RequestReplacementModal
         onClose={handleRequestReplacementModalClose}

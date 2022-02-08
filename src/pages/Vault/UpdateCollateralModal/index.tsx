@@ -22,8 +22,7 @@ import {
 } from '@interlay/interbtc-api';
 import {
   MonetaryAmount,
-  Currency,
-  BitcoinAmount
+  Currency
 } from '@interlay/monetary-js';
 
 import ErrorMessage from 'components/ErrorMessage';
@@ -65,7 +64,7 @@ interface Props {
   onClose: () => void;
   collateralUpdateStatus: CollateralUpdateStatus;
   vaultAddress: string;
-  lockedBTC: BitcoinAmount;
+  hasLockedBTC: boolean;
 }
 
 const UpdateCollateralModal = ({
@@ -73,7 +72,7 @@ const UpdateCollateralModal = ({
   onClose,
   collateralUpdateStatus,
   vaultAddress,
-  lockedBTC
+  hasLockedBTC
 }: Props): JSX.Element => {
   const {
     bridgeLoaded,
@@ -154,7 +153,7 @@ const UpdateCollateralModal = ({
     ],
     genericFetcher<Big>(),
     {
-      enabled: !!bridgeLoaded && !lockedBTC.eq(BitcoinAmount.zero)
+      enabled: !!bridgeLoaded && !hasLockedBTC
     }
   );
   useErrorHandler(vaultCollateralizationError);
@@ -228,7 +227,7 @@ const UpdateCollateralModal = ({
     const initializing =
       requiredCollateralTokenAmountIdle ||
       requiredCollateralTokenAmountLoading ||
-      (vaultCollateralizationIdle && lockedBTC.gt(BitcoinAmount.zero)) ||
+      (vaultCollateralizationIdle && hasLockedBTC) ||
       vaultCollateralizationLoading;
     const buttonText =
       initializing ?
@@ -255,7 +254,7 @@ const UpdateCollateralModal = ({
       return '-';
     }
 
-    if (lockedBTC.eq(BitcoinAmount.zero)) {
+    if (!hasLockedBTC) {
       return '∞';
     }
 
