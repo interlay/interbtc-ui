@@ -197,8 +197,8 @@ const Staking = (): JSX.Element => {
 
     // ray test touch <<
     // https://discord.com/channels/745259537707040778/935115900749750302/939154203157336184
+    // https://discord.com/channels/745259537707040778/935115900749750302/940517338497843200
     // https://discord.com/channels/745259537707040778/935115900749750302/940193456117153803
-    // https://discord.com/channels/745259537707040778/935115900749750302/940517474288422962
     // ray test touch >>
 
     return undefined;
