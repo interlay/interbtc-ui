@@ -187,7 +187,7 @@ const Vault = (): JSX.Element => {
   const VAULT_ITEMS = [
     {
       title: t('collateralization'),
-      value: `${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`
+      value: collateralization === '∞' ? '∞' : `${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`
     },
     {
       title: t('vault.fees_earned_interbtc', {
